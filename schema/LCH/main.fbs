@@ -1,0 +1,56 @@
+// Hash: 356cbbc336bd59f11f29c6f1624e71269991be598ca150f65e29715feeedb834
+// Version: 0.1.2
+// -----------------------------------END_HEADER
+/// Licensing challenge participant role
+enum licensingChallengeRole : byte {
+  Requester,
+  Provider
+}
+
+/// Licensing challenge message type
+enum licensingChallengeMessageType : byte {
+  Request,
+  Response,
+  Error
+}
+
+/// Licensing challenge message
+table LCH {
+  /// Message type
+  MESSAGE_TYPE: licensingChallengeMessageType = Request;
+  /// Sender role
+  ROLE: licensingChallengeRole = Requester;
+  /// Unique request identifier
+  REQUEST_ID: string (required);
+  /// Canonical module identifier
+  MODULE_ID: string (required);
+  /// Optional requested module version
+  MODULE_VERSION: string;
+  /// Requester peer identifier
+  REQUESTER_PEER_ID: string;
+  /// Requester account identity or wallet xpub
+  REQUESTER_XPUB: string;
+  /// Requester Ed25519 signing public key
+  REQUESTER_SIGNING_PUBKEY: [ubyte];
+  /// Requester ephemeral X25519 public key
+  REQUESTER_EPHEMERAL_PUBKEY: [ubyte];
+  /// Requested domain for policy evaluation
+  REQUESTED_DOMAIN: string;
+  /// Requested timeout in milliseconds
+  REQUESTED_TIMEOUT_MS: uint64;
+  /// Request timestamp in milliseconds since epoch
+  REQUESTED_AT: uint64;
+  /// Provider-issued challenge nonce
+  CHALLENGE_NONCE: [ubyte];
+  /// Challenge expiration time in milliseconds since epoch
+  EXPIRES_AT: uint64;
+  /// Provider peer identifier
+  PROVIDER_PEER_ID: string;
+  /// Structured error code
+  ERROR_CODE: string;
+  /// Structured error message
+  ERROR_MESSAGE: string;
+}
+
+root_type LCH;
+file_identifier "$LCH";

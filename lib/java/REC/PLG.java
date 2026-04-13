@@ -70,7 +70,7 @@ public final class PLG extends com.google.flatbuffers.Table {
   public ByteBuffer WASM_HASHAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
   public ByteBuffer WASM_HASHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
   /**
-   * Size of WASM binary in bytes
+   * Size of decrypted WASM binary in bytes
    */
   public long WASM_SIZE() { int o = __offset(18); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
@@ -80,94 +80,130 @@ public final class PLG extends com.google.flatbuffers.Table {
   public ByteBuffer WASM_CIDAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
   public ByteBuffer WASM_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
   /**
+   * SHA256 hash of the encrypted delivery artifact bytes
+   */
+  public int ENCRYPTED_WASM_HASH(int j) { int o = __offset(22); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int ENCRYPTED_WASM_HASHLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector encryptedWasmHashVector() { return encryptedWasmHashVector(new ByteVector()); }
+  public ByteVector encryptedWasmHashVector(ByteVector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ENCRYPTED_WASM_HASHAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer ENCRYPTED_WASM_HASHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Size of the encrypted delivery artifact in bytes
+   */
+  public long ENCRYPTED_WASM_SIZE() { int o = __offset(24); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
    * Entry point functions exported by the plugin
    */
   public EntryFunction ENTRY_FUNCTIONS(int j) { return ENTRY_FUNCTIONS(new EntryFunction(), j); }
-  public EntryFunction ENTRY_FUNCTIONS(EntryFunction obj, int j) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int ENTRY_FUNCTIONSLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
+  public EntryFunction ENTRY_FUNCTIONS(EntryFunction obj, int j) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int ENTRY_FUNCTIONSLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
   public EntryFunction.Vector entryFunctionsVector() { return entryFunctionsVector(new EntryFunction.Vector()); }
-  public EntryFunction.Vector entryFunctionsVector(EntryFunction.Vector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public EntryFunction.Vector entryFunctionsVector(EntryFunction.Vector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * FlatBuffer schemas required by this plugin
    */
-  public String REQUIRED_SCHEMAS(int j) { int o = __offset(24); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int REQUIRED_SCHEMASLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
+  public String REQUIRED_SCHEMAS(int j) { int o = __offset(28); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int REQUIRED_SCHEMASLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
   public StringVector requiredSchemasVector() { return requiredSchemasVector(new StringVector()); }
-  public StringVector requiredSchemasVector(StringVector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector requiredSchemasVector(StringVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Other plugins this depends on
    */
   public PluginDependency DEPENDENCIES(int j) { return DEPENDENCIES(new PluginDependency(), j); }
-  public PluginDependency DEPENDENCIES(PluginDependency obj, int j) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int DEPENDENCIESLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
+  public PluginDependency DEPENDENCIES(PluginDependency obj, int j) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int DEPENDENCIESLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
   public PluginDependency.Vector dependenciesVector() { return dependenciesVector(new PluginDependency.Vector()); }
-  public PluginDependency.Vector dependenciesVector(PluginDependency.Vector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public PluginDependency.Vector dependenciesVector(PluginDependency.Vector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Capabilities provided by this plugin
    */
   public PluginCapability CAPABILITIES(int j) { return CAPABILITIES(new PluginCapability(), j); }
-  public PluginCapability CAPABILITIES(PluginCapability obj, int j) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int CAPABILITIESLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
+  public PluginCapability CAPABILITIES(PluginCapability obj, int j) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int CAPABILITIESLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
   public PluginCapability.Vector capabilitiesVector() { return capabilitiesVector(new PluginCapability.Vector()); }
-  public PluginCapability.Vector capabilitiesVector(PluginCapability.Vector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public PluginCapability.Vector capabilitiesVector(PluginCapability.Vector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Peer ID of the plugin provider
    */
-  public String PROVIDER_PEER_ID() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer PROVIDER_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
-  public ByteBuffer PROVIDER_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  public String PROVIDER_PEER_ID() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROVIDER_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer PROVIDER_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
   /**
    * IPFS CID of provider's EPM (Entity Profile Message)
    */
-  public String PROVIDER_EPM_CID() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer PROVIDER_EPM_CIDAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
-  public ByteBuffer PROVIDER_EPM_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  public String PROVIDER_EPM_CID() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROVIDER_EPM_CIDAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer PROVIDER_EPM_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
   /**
    * Whether the WASM binary is encrypted
    */
-  public boolean ENCRYPTED() { int o = __offset(34); return o != 0 ? 0!=bb.get(o + bb_pos) : true; }
+  public boolean ENCRYPTED() { int o = __offset(38); return o != 0 ? 0!=bb.get(o + bb_pos) : true; }
+  /**
+   * Canonical required scope for grant issuance
+   */
+  public String REQUIRED_SCOPE() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REQUIRED_SCOPEAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer REQUIRED_SCOPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Provider-local identifier for the module content key
+   */
+  public String KEY_ID() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer KEY_IDAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer KEY_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * Allowed requester domains for module grants
+   */
+  public String ALLOWED_DOMAINS(int j) { int o = __offset(44); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int ALLOWED_DOMAINSLength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector allowedDomainsVector() { return allowedDomainsVector(new StringVector()); }
+  public StringVector allowedDomainsVector(StringVector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Maximum grant timeout allowed for this module publication
+   */
+  public long MAX_GRANT_TIMEOUT_MS() { int o = __offset(46); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
    * Minimum permissions required to run
    */
-  public String MIN_PERMISSIONS(int j) { int o = __offset(36); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int MIN_PERMISSIONSLength() { int o = __offset(36); return o != 0 ? __vector_len(o) : 0; }
+  public String MIN_PERMISSIONS(int j) { int o = __offset(48); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int MIN_PERMISSIONSLength() { int o = __offset(48); return o != 0 ? __vector_len(o) : 0; }
   public StringVector minPermissionsVector() { return minPermissionsVector(new StringVector()); }
-  public StringVector minPermissionsVector(StringVector obj) { int o = __offset(36); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector minPermissionsVector(StringVector obj) { int o = __offset(48); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Unix timestamp when plugin was created
    */
-  public long CREATED_AT() { int o = __offset(38); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public long CREATED_AT() { int o = __offset(50); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
    * Unix timestamp when plugin was last updated
    */
-  public long UPDATED_AT() { int o = __offset(40); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public long UPDATED_AT() { int o = __offset(52); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
    * URL to plugin documentation
    */
-  public String DOCUMENTATION_URL() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DOCUMENTATION_URLAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
-  public ByteBuffer DOCUMENTATION_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  public String DOCUMENTATION_URL() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DOCUMENTATION_URLAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
+  public ByteBuffer DOCUMENTATION_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
   /**
    * URL to plugin icon/logo
    */
-  public String ICON_URL() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ICON_URLAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
-  public ByteBuffer ICON_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  public String ICON_URL() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ICON_URLAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer ICON_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
   /**
    * License identifier (SPDX format)
    */
-  public String LICENSE() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LICENSEAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
-  public ByteBuffer LICENSEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  public String LICENSE() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LICENSEAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
+  public ByteBuffer LICENSEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
   /**
    * Ed25519 signature from provider over manifest
    */
-  public int SIGNATURE(int j) { int o = __offset(48); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
-  public int SIGNATURELength() { int o = __offset(48); return o != 0 ? __vector_len(o) : 0; }
+  public int SIGNATURE(int j) { int o = __offset(60); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int SIGNATURELength() { int o = __offset(60); return o != 0 ? __vector_len(o) : 0; }
   public ByteVector signatureVector() { return signatureVector(new ByteVector()); }
-  public ByteVector signatureVector(ByteVector obj) { int o = __offset(48); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
-  public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  public ByteVector signatureVector(ByteVector obj) { int o = __offset(60); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
 
   public static int createPLG(FlatBufferBuilder builder,
       int PLUGIN_IDOffset,
@@ -179,6 +215,8 @@ public final class PLG extends com.google.flatbuffers.Table {
       int WASM_HASHOffset,
       long WASM_SIZE,
       int WASM_CIDOffset,
+      int ENCRYPTED_WASM_HASHOffset,
+      long ENCRYPTED_WASM_SIZE,
       int ENTRY_FUNCTIONSOffset,
       int REQUIRED_SCHEMASOffset,
       int DEPENDENCIESOffset,
@@ -186,6 +224,10 @@ public final class PLG extends com.google.flatbuffers.Table {
       int PROVIDER_PEER_IDOffset,
       int PROVIDER_EPM_CIDOffset,
       boolean ENCRYPTED,
+      int REQUIRED_SCOPEOffset,
+      int KEY_IDOffset,
+      int ALLOWED_DOMAINSOffset,
+      long MAX_GRANT_TIMEOUT_MS,
       int MIN_PERMISSIONSOffset,
       long CREATED_AT,
       long UPDATED_AT,
@@ -193,21 +235,27 @@ public final class PLG extends com.google.flatbuffers.Table {
       int ICON_URLOffset,
       int LICENSEOffset,
       int SIGNATUREOffset) {
-    builder.startTable(23);
+    builder.startTable(29);
     PLG.addUpdatedAt(builder, UPDATED_AT);
     PLG.addCreatedAt(builder, CREATED_AT);
+    PLG.addMaxGrantTimeoutMs(builder, MAX_GRANT_TIMEOUT_MS);
+    PLG.addEncryptedWasmSize(builder, ENCRYPTED_WASM_SIZE);
     PLG.addWasmSize(builder, WASM_SIZE);
     PLG.addSignature(builder, SIGNATUREOffset);
     PLG.addLicense(builder, LICENSEOffset);
     PLG.addIconUrl(builder, ICON_URLOffset);
     PLG.addDocumentationUrl(builder, DOCUMENTATION_URLOffset);
     PLG.addMinPermissions(builder, MIN_PERMISSIONSOffset);
+    PLG.addAllowedDomains(builder, ALLOWED_DOMAINSOffset);
+    PLG.addKeyId(builder, KEY_IDOffset);
+    PLG.addRequiredScope(builder, REQUIRED_SCOPEOffset);
     PLG.addProviderEpmCid(builder, PROVIDER_EPM_CIDOffset);
     PLG.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
     PLG.addCapabilities(builder, CAPABILITIESOffset);
     PLG.addDependencies(builder, DEPENDENCIESOffset);
     PLG.addRequiredSchemas(builder, REQUIRED_SCHEMASOffset);
     PLG.addEntryFunctions(builder, ENTRY_FUNCTIONSOffset);
+    PLG.addEncryptedWasmHash(builder, ENCRYPTED_WASM_HASHOffset);
     PLG.addWasmCid(builder, WASM_CIDOffset);
     PLG.addWasmHash(builder, WASM_HASHOffset);
     PLG.addAbiVersion(builder, ABI_VERSION);
@@ -220,7 +268,7 @@ public final class PLG extends com.google.flatbuffers.Table {
     return PLG.endPLG(builder);
   }
 
-  public static void startPLG(FlatBufferBuilder builder) { builder.startTable(23); }
+  public static void startPLG(FlatBufferBuilder builder) { builder.startTable(29); }
   public static void addPluginId(FlatBufferBuilder builder, int PLUGIN_IDOffset) { builder.addOffset(0, PLUGIN_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addVersion(FlatBufferBuilder builder, int VERSIONOffset) { builder.addOffset(2, VERSIONOffset, 0); }
@@ -233,30 +281,41 @@ public final class PLG extends com.google.flatbuffers.Table {
   public static void startWasmHashVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static void addWasmSize(FlatBufferBuilder builder, long WASM_SIZE) { builder.addLong(7, WASM_SIZE, 0L); }
   public static void addWasmCid(FlatBufferBuilder builder, int WASM_CIDOffset) { builder.addOffset(8, WASM_CIDOffset, 0); }
-  public static void addEntryFunctions(FlatBufferBuilder builder, int ENTRY_FUNCTIONSOffset) { builder.addOffset(9, ENTRY_FUNCTIONSOffset, 0); }
+  public static void addEncryptedWasmHash(FlatBufferBuilder builder, int ENCRYPTED_WASM_HASHOffset) { builder.addOffset(9, ENCRYPTED_WASM_HASHOffset, 0); }
+  public static int createEncryptedWasmHashVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createEncryptedWasmHashVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startEncryptedWasmHashVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addEncryptedWasmSize(FlatBufferBuilder builder, long ENCRYPTED_WASM_SIZE) { builder.addLong(10, ENCRYPTED_WASM_SIZE, 0L); }
+  public static void addEntryFunctions(FlatBufferBuilder builder, int ENTRY_FUNCTIONSOffset) { builder.addOffset(11, ENTRY_FUNCTIONSOffset, 0); }
   public static int createEntryFunctionsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startEntryFunctionsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addRequiredSchemas(FlatBufferBuilder builder, int REQUIRED_SCHEMASOffset) { builder.addOffset(10, REQUIRED_SCHEMASOffset, 0); }
+  public static void addRequiredSchemas(FlatBufferBuilder builder, int REQUIRED_SCHEMASOffset) { builder.addOffset(12, REQUIRED_SCHEMASOffset, 0); }
   public static int createRequiredSchemasVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startRequiredSchemasVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addDependencies(FlatBufferBuilder builder, int DEPENDENCIESOffset) { builder.addOffset(11, DEPENDENCIESOffset, 0); }
+  public static void addDependencies(FlatBufferBuilder builder, int DEPENDENCIESOffset) { builder.addOffset(13, DEPENDENCIESOffset, 0); }
   public static int createDependenciesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startDependenciesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addCapabilities(FlatBufferBuilder builder, int CAPABILITIESOffset) { builder.addOffset(12, CAPABILITIESOffset, 0); }
+  public static void addCapabilities(FlatBufferBuilder builder, int CAPABILITIESOffset) { builder.addOffset(14, CAPABILITIESOffset, 0); }
   public static int createCapabilitiesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCapabilitiesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addProviderPeerId(FlatBufferBuilder builder, int PROVIDER_PEER_IDOffset) { builder.addOffset(13, PROVIDER_PEER_IDOffset, 0); }
-  public static void addProviderEpmCid(FlatBufferBuilder builder, int PROVIDER_EPM_CIDOffset) { builder.addOffset(14, PROVIDER_EPM_CIDOffset, 0); }
-  public static void addEncrypted(FlatBufferBuilder builder, boolean ENCRYPTED) { builder.addBoolean(15, ENCRYPTED, true); }
-  public static void addMinPermissions(FlatBufferBuilder builder, int MIN_PERMISSIONSOffset) { builder.addOffset(16, MIN_PERMISSIONSOffset, 0); }
+  public static void addProviderPeerId(FlatBufferBuilder builder, int PROVIDER_PEER_IDOffset) { builder.addOffset(15, PROVIDER_PEER_IDOffset, 0); }
+  public static void addProviderEpmCid(FlatBufferBuilder builder, int PROVIDER_EPM_CIDOffset) { builder.addOffset(16, PROVIDER_EPM_CIDOffset, 0); }
+  public static void addEncrypted(FlatBufferBuilder builder, boolean ENCRYPTED) { builder.addBoolean(17, ENCRYPTED, true); }
+  public static void addRequiredScope(FlatBufferBuilder builder, int REQUIRED_SCOPEOffset) { builder.addOffset(18, REQUIRED_SCOPEOffset, 0); }
+  public static void addKeyId(FlatBufferBuilder builder, int KEY_IDOffset) { builder.addOffset(19, KEY_IDOffset, 0); }
+  public static void addAllowedDomains(FlatBufferBuilder builder, int ALLOWED_DOMAINSOffset) { builder.addOffset(20, ALLOWED_DOMAINSOffset, 0); }
+  public static int createAllowedDomainsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startAllowedDomainsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addMaxGrantTimeoutMs(FlatBufferBuilder builder, long MAX_GRANT_TIMEOUT_MS) { builder.addLong(21, MAX_GRANT_TIMEOUT_MS, 0L); }
+  public static void addMinPermissions(FlatBufferBuilder builder, int MIN_PERMISSIONSOffset) { builder.addOffset(22, MIN_PERMISSIONSOffset, 0); }
   public static int createMinPermissionsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startMinPermissionsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addCreatedAt(FlatBufferBuilder builder, long CREATED_AT) { builder.addLong(17, CREATED_AT, 0L); }
-  public static void addUpdatedAt(FlatBufferBuilder builder, long UPDATED_AT) { builder.addLong(18, UPDATED_AT, 0L); }
-  public static void addDocumentationUrl(FlatBufferBuilder builder, int DOCUMENTATION_URLOffset) { builder.addOffset(19, DOCUMENTATION_URLOffset, 0); }
-  public static void addIconUrl(FlatBufferBuilder builder, int ICON_URLOffset) { builder.addOffset(20, ICON_URLOffset, 0); }
-  public static void addLicense(FlatBufferBuilder builder, int LICENSEOffset) { builder.addOffset(21, LICENSEOffset, 0); }
-  public static void addSignature(FlatBufferBuilder builder, int SIGNATUREOffset) { builder.addOffset(22, SIGNATUREOffset, 0); }
+  public static void addCreatedAt(FlatBufferBuilder builder, long CREATED_AT) { builder.addLong(23, CREATED_AT, 0L); }
+  public static void addUpdatedAt(FlatBufferBuilder builder, long UPDATED_AT) { builder.addLong(24, UPDATED_AT, 0L); }
+  public static void addDocumentationUrl(FlatBufferBuilder builder, int DOCUMENTATION_URLOffset) { builder.addOffset(25, DOCUMENTATION_URLOffset, 0); }
+  public static void addIconUrl(FlatBufferBuilder builder, int ICON_URLOffset) { builder.addOffset(26, ICON_URLOffset, 0); }
+  public static void addLicense(FlatBufferBuilder builder, int LICENSEOffset) { builder.addOffset(27, LICENSEOffset, 0); }
+  public static void addSignature(FlatBufferBuilder builder, int SIGNATUREOffset) { builder.addOffset(28, SIGNATUREOffset, 0); }
   public static int createSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }

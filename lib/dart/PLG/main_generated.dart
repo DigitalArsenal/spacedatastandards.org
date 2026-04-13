@@ -403,53 +403,71 @@ class PLG {
   ///  SHA256 hash of the decrypted WASM binary
   List<int>? get WASM_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
   List<int>? get wasmHash => WASM_HASH;
-  ///  Size of WASM binary in bytes
+  ///  Size of decrypted WASM binary in bytes
   int get WASM_SIZE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
   int get wasmSize => WASM_SIZE;
   ///  IPFS CID of the encrypted WASM binary
   String? get WASM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
   String? get wasmCid => WASM_CID;
+  ///  SHA256 hash of the encrypted delivery artifact bytes
+  List<int>? get ENCRYPTED_WASM_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 22);
+  List<int>? get encryptedWasmHash => ENCRYPTED_WASM_HASH;
+  ///  Size of the encrypted delivery artifact in bytes
+  int get ENCRYPTED_WASM_SIZE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  int get encryptedWasmSize => ENCRYPTED_WASM_SIZE;
   ///  Entry point functions exported by the plugin
-  List<EntryFunction>? get ENTRY_FUNCTIONS => const fb.ListReader<EntryFunction>(EntryFunction.reader).vTableGetNullable(_bc, _bcOffset, 22);
+  List<EntryFunction>? get ENTRY_FUNCTIONS => const fb.ListReader<EntryFunction>(EntryFunction.reader).vTableGetNullable(_bc, _bcOffset, 26);
   List<EntryFunction>? get entryFunctions => ENTRY_FUNCTIONS;
   ///  FlatBuffer schemas required by this plugin
-  List<String>? get REQUIRED_SCHEMAS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 24);
+  List<String>? get REQUIRED_SCHEMAS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 28);
   List<String>? get requiredSchemas => REQUIRED_SCHEMAS;
   ///  Other plugins this depends on
-  List<PluginDependency>? get DEPENDENCIES => const fb.ListReader<PluginDependency>(PluginDependency.reader).vTableGetNullable(_bc, _bcOffset, 26);
+  List<PluginDependency>? get DEPENDENCIES => const fb.ListReader<PluginDependency>(PluginDependency.reader).vTableGetNullable(_bc, _bcOffset, 30);
   ///  Capabilities provided by this plugin
-  List<PluginCapability>? get CAPABILITIES => const fb.ListReader<PluginCapability>(PluginCapability.reader).vTableGetNullable(_bc, _bcOffset, 28);
+  List<PluginCapability>? get CAPABILITIES => const fb.ListReader<PluginCapability>(PluginCapability.reader).vTableGetNullable(_bc, _bcOffset, 32);
   ///  Peer ID of the plugin provider
-  String? get PROVIDER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get PROVIDER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
   String? get providerPeerId => PROVIDER_PEER_ID;
   ///  IPFS CID of provider's EPM (Entity Profile Message)
-  String? get PROVIDER_EPM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get PROVIDER_EPM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
   String? get providerEpmCid => PROVIDER_EPM_CID;
   ///  Whether the WASM binary is encrypted
-  bool get ENCRYPTED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 34, true);
+  bool get ENCRYPTED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 38, true);
+  ///  Canonical required scope for grant issuance
+  String? get REQUIRED_SCOPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get requiredScope => REQUIRED_SCOPE;
+  ///  Provider-local identifier for the module content key
+  String? get KEY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get keyId => KEY_ID;
+  ///  Allowed requester domains for module grants
+  List<String>? get ALLOWED_DOMAINS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 44);
+  List<String>? get allowedDomains => ALLOWED_DOMAINS;
+  ///  Maximum grant timeout allowed for this module publication
+  int get MAX_GRANT_TIMEOUT_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 46, 0);
+  int get maxGrantTimeoutMs => MAX_GRANT_TIMEOUT_MS;
   ///  Minimum permissions required to run
-  List<String>? get MIN_PERMISSIONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 36);
+  List<String>? get MIN_PERMISSIONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 48);
   List<String>? get minPermissions => MIN_PERMISSIONS;
   ///  Unix timestamp when plugin was created
-  int get CREATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 38, 0);
+  int get CREATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 50, 0);
   int get createdAt => CREATED_AT;
   ///  Unix timestamp when plugin was last updated
-  int get UPDATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 40, 0);
+  int get UPDATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 52, 0);
   int get updatedAt => UPDATED_AT;
   ///  URL to plugin documentation
-  String? get DOCUMENTATION_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get DOCUMENTATION_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
   String? get documentationUrl => DOCUMENTATION_URL;
   ///  URL to plugin icon/logo
-  String? get ICON_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get ICON_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
   String? get iconUrl => ICON_URL;
   ///  License identifier (SPDX format)
-  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
   ///  Ed25519 signature from provider over manifest
-  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 48);
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 60);
 
   @override
   String toString() {
-    return 'PLG{pluginId: ${pluginId}, NAME: ${NAME}, VERSION: ${VERSION}, DESCRIPTION: ${DESCRIPTION}, pluginType: ${pluginType}, abiVersion: ${abiVersion}, wasmHash: ${wasmHash}, wasmSize: ${wasmSize}, wasmCid: ${wasmCid}, entryFunctions: ${entryFunctions}, requiredSchemas: ${requiredSchemas}, DEPENDENCIES: ${DEPENDENCIES}, CAPABILITIES: ${CAPABILITIES}, providerPeerId: ${providerPeerId}, providerEpmCid: ${providerEpmCid}, ENCRYPTED: ${ENCRYPTED}, minPermissions: ${minPermissions}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, documentationUrl: ${documentationUrl}, iconUrl: ${iconUrl}, LICENSE: ${LICENSE}, SIGNATURE: ${SIGNATURE}}';
+    return 'PLG{pluginId: ${pluginId}, NAME: ${NAME}, VERSION: ${VERSION}, DESCRIPTION: ${DESCRIPTION}, pluginType: ${pluginType}, abiVersion: ${abiVersion}, wasmHash: ${wasmHash}, wasmSize: ${wasmSize}, wasmCid: ${wasmCid}, encryptedWasmHash: ${encryptedWasmHash}, encryptedWasmSize: ${encryptedWasmSize}, entryFunctions: ${entryFunctions}, requiredSchemas: ${requiredSchemas}, DEPENDENCIES: ${DEPENDENCIES}, CAPABILITIES: ${CAPABILITIES}, providerPeerId: ${providerPeerId}, providerEpmCid: ${providerEpmCid}, ENCRYPTED: ${ENCRYPTED}, requiredScope: ${requiredScope}, keyId: ${keyId}, allowedDomains: ${allowedDomains}, maxGrantTimeoutMs: ${maxGrantTimeoutMs}, minPermissions: ${minPermissions}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, documentationUrl: ${documentationUrl}, iconUrl: ${iconUrl}, LICENSE: ${LICENSE}, SIGNATURE: ${SIGNATURE}}';
   }
 }
 
@@ -467,7 +485,7 @@ class PLGBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(23);
+    fbBuilder.startTable(29);
   }
 
   int addPluginIdOffset(int? offset) {
@@ -506,60 +524,84 @@ class PLGBuilder {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addEntryFunctionsOffset(int? offset) {
+  int addEncryptedWasmHashOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addRequiredSchemasOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
+  int addEncryptedWasmSize(int? ENCRYPTED_WASM_SIZE) {
+    fbBuilder.addUint64(10, ENCRYPTED_WASM_SIZE);
     return fbBuilder.offset;
   }
-  int addDependenciesOffset(int? offset) {
+  int addEntryFunctionsOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addCapabilitiesOffset(int? offset) {
+  int addRequiredSchemasOffset(int? offset) {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addProviderPeerIdOffset(int? offset) {
+  int addDependenciesOffset(int? offset) {
     fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
-  int addProviderEpmCidOffset(int? offset) {
+  int addCapabilitiesOffset(int? offset) {
     fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
-  int addEncrypted(bool? ENCRYPTED) {
-    fbBuilder.addBool(15, ENCRYPTED);
+  int addProviderPeerIdOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
-  int addMinPermissionsOffset(int? offset) {
+  int addProviderEpmCidOffset(int? offset) {
     fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
-  int addCreatedAt(int? CREATED_AT) {
-    fbBuilder.addUint64(17, CREATED_AT);
+  int addEncrypted(bool? ENCRYPTED) {
+    fbBuilder.addBool(17, ENCRYPTED);
     return fbBuilder.offset;
   }
-  int addUpdatedAt(int? UPDATED_AT) {
-    fbBuilder.addUint64(18, UPDATED_AT);
+  int addRequiredScopeOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
     return fbBuilder.offset;
   }
-  int addDocumentationUrlOffset(int? offset) {
+  int addKeyIdOffset(int? offset) {
     fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
-  int addIconUrlOffset(int? offset) {
+  int addAllowedDomainsOffset(int? offset) {
     fbBuilder.addOffset(20, offset);
     return fbBuilder.offset;
   }
+  int addMaxGrantTimeoutMs(int? MAX_GRANT_TIMEOUT_MS) {
+    fbBuilder.addUint64(21, MAX_GRANT_TIMEOUT_MS);
+    return fbBuilder.offset;
+  }
+  int addMinPermissionsOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addCreatedAt(int? CREATED_AT) {
+    fbBuilder.addUint64(23, CREATED_AT);
+    return fbBuilder.offset;
+  }
+  int addUpdatedAt(int? UPDATED_AT) {
+    fbBuilder.addUint64(24, UPDATED_AT);
+    return fbBuilder.offset;
+  }
+  int addDocumentationUrlOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addIconUrlOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
   int addLicenseOffset(int? offset) {
-    fbBuilder.addOffset(21, offset);
+    fbBuilder.addOffset(27, offset);
     return fbBuilder.offset;
   }
   int addSignatureOffset(int? offset) {
-    fbBuilder.addOffset(22, offset);
+    fbBuilder.addOffset(28, offset);
     return fbBuilder.offset;
   }
 
@@ -578,6 +620,8 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
   final List<int>? _WASM_HASH;
   final int? _WASM_SIZE;
   final String? _WASM_CID;
+  final List<int>? _ENCRYPTED_WASM_HASH;
+  final int? _ENCRYPTED_WASM_SIZE;
   final List<EntryFunctionObjectBuilder>? _ENTRY_FUNCTIONS;
   final List<String>? _REQUIRED_SCHEMAS;
   final List<PluginDependencyObjectBuilder>? _DEPENDENCIES;
@@ -585,6 +629,10 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
   final String? _PROVIDER_PEER_ID;
   final String? _PROVIDER_EPM_CID;
   final bool? _ENCRYPTED;
+  final String? _REQUIRED_SCOPE;
+  final String? _KEY_ID;
+  final List<String>? _ALLOWED_DOMAINS;
+  final int? _MAX_GRANT_TIMEOUT_MS;
   final List<String>? _MIN_PERMISSIONS;
   final int? _CREATED_AT;
   final int? _UPDATED_AT;
@@ -609,6 +657,10 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
     int? wasmSize,
     String? WASM_CID,
     String? wasmCid,
+    List<int>? ENCRYPTED_WASM_HASH,
+    List<int>? encryptedWasmHash,
+    int? ENCRYPTED_WASM_SIZE,
+    int? encryptedWasmSize,
     List<EntryFunctionObjectBuilder>? ENTRY_FUNCTIONS,
     List<EntryFunctionObjectBuilder>? entryFunctions,
     List<String>? REQUIRED_SCHEMAS,
@@ -620,6 +672,14 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
     String? PROVIDER_EPM_CID,
     String? providerEpmCid,
     bool? ENCRYPTED,
+    String? REQUIRED_SCOPE,
+    String? requiredScope,
+    String? KEY_ID,
+    String? keyId,
+    List<String>? ALLOWED_DOMAINS,
+    List<String>? allowedDomains,
+    int? MAX_GRANT_TIMEOUT_MS,
+    int? maxGrantTimeoutMs,
     List<String>? MIN_PERMISSIONS,
     List<String>? minPermissions,
     int? CREATED_AT,
@@ -642,6 +702,8 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
         _WASM_HASH = wasmHash ?? WASM_HASH,
         _WASM_SIZE = wasmSize ?? WASM_SIZE,
         _WASM_CID = wasmCid ?? WASM_CID,
+        _ENCRYPTED_WASM_HASH = encryptedWasmHash ?? ENCRYPTED_WASM_HASH,
+        _ENCRYPTED_WASM_SIZE = encryptedWasmSize ?? ENCRYPTED_WASM_SIZE,
         _ENTRY_FUNCTIONS = entryFunctions ?? ENTRY_FUNCTIONS,
         _REQUIRED_SCHEMAS = requiredSchemas ?? REQUIRED_SCHEMAS,
         _DEPENDENCIES = DEPENDENCIES,
@@ -649,6 +711,10 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
         _PROVIDER_PEER_ID = providerPeerId ?? PROVIDER_PEER_ID,
         _PROVIDER_EPM_CID = providerEpmCid ?? PROVIDER_EPM_CID,
         _ENCRYPTED = ENCRYPTED,
+        _REQUIRED_SCOPE = requiredScope ?? REQUIRED_SCOPE,
+        _KEY_ID = keyId ?? KEY_ID,
+        _ALLOWED_DOMAINS = allowedDomains ?? ALLOWED_DOMAINS,
+        _MAX_GRANT_TIMEOUT_MS = maxGrantTimeoutMs ?? MAX_GRANT_TIMEOUT_MS,
         _MIN_PERMISSIONS = minPermissions ?? MIN_PERMISSIONS,
         _CREATED_AT = createdAt ?? CREATED_AT,
         _UPDATED_AT = updatedAt ?? UPDATED_AT,
@@ -672,6 +738,8 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListUint8(_WASM_HASH!);
     final int? WASM_CIDOffset = _WASM_CID == null ? null
         : fbBuilder.writeString(_WASM_CID!);
+    final int? ENCRYPTED_WASM_HASHOffset = _ENCRYPTED_WASM_HASH == null ? null
+        : fbBuilder.writeListUint8(_ENCRYPTED_WASM_HASH!);
     final int? ENTRY_FUNCTIONSOffset = _ENTRY_FUNCTIONS == null ? null
         : fbBuilder.writeList(_ENTRY_FUNCTIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? REQUIRED_SCHEMASOffset = _REQUIRED_SCHEMAS == null ? null
@@ -684,6 +752,12 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_PROVIDER_PEER_ID!);
     final int? PROVIDER_EPM_CIDOffset = _PROVIDER_EPM_CID == null ? null
         : fbBuilder.writeString(_PROVIDER_EPM_CID!);
+    final int? REQUIRED_SCOPEOffset = _REQUIRED_SCOPE == null ? null
+        : fbBuilder.writeString(_REQUIRED_SCOPE!);
+    final int? KEY_IDOffset = _KEY_ID == null ? null
+        : fbBuilder.writeString(_KEY_ID!);
+    final int? ALLOWED_DOMAINSOffset = _ALLOWED_DOMAINS == null ? null
+        : fbBuilder.writeList(_ALLOWED_DOMAINS!.map(fbBuilder.writeString).toList());
     final int? MIN_PERMISSIONSOffset = _MIN_PERMISSIONS == null ? null
         : fbBuilder.writeList(_MIN_PERMISSIONS!.map(fbBuilder.writeString).toList());
     final int? DOCUMENTATION_URLOffset = _DOCUMENTATION_URL == null ? null
@@ -694,7 +768,7 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_LICENSE!);
     final int? SIGNATUREOffset = _SIGNATURE == null ? null
         : fbBuilder.writeListUint8(_SIGNATURE!);
-    fbBuilder.startTable(23);
+    fbBuilder.startTable(29);
     fbBuilder.addOffset(0, PLUGIN_IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addOffset(2, VERSIONOffset);
@@ -704,20 +778,26 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(6, WASM_HASHOffset);
     fbBuilder.addUint64(7, _WASM_SIZE);
     fbBuilder.addOffset(8, WASM_CIDOffset);
-    fbBuilder.addOffset(9, ENTRY_FUNCTIONSOffset);
-    fbBuilder.addOffset(10, REQUIRED_SCHEMASOffset);
-    fbBuilder.addOffset(11, DEPENDENCIESOffset);
-    fbBuilder.addOffset(12, CAPABILITIESOffset);
-    fbBuilder.addOffset(13, PROVIDER_PEER_IDOffset);
-    fbBuilder.addOffset(14, PROVIDER_EPM_CIDOffset);
-    fbBuilder.addBool(15, _ENCRYPTED);
-    fbBuilder.addOffset(16, MIN_PERMISSIONSOffset);
-    fbBuilder.addUint64(17, _CREATED_AT);
-    fbBuilder.addUint64(18, _UPDATED_AT);
-    fbBuilder.addOffset(19, DOCUMENTATION_URLOffset);
-    fbBuilder.addOffset(20, ICON_URLOffset);
-    fbBuilder.addOffset(21, LICENSEOffset);
-    fbBuilder.addOffset(22, SIGNATUREOffset);
+    fbBuilder.addOffset(9, ENCRYPTED_WASM_HASHOffset);
+    fbBuilder.addUint64(10, _ENCRYPTED_WASM_SIZE);
+    fbBuilder.addOffset(11, ENTRY_FUNCTIONSOffset);
+    fbBuilder.addOffset(12, REQUIRED_SCHEMASOffset);
+    fbBuilder.addOffset(13, DEPENDENCIESOffset);
+    fbBuilder.addOffset(14, CAPABILITIESOffset);
+    fbBuilder.addOffset(15, PROVIDER_PEER_IDOffset);
+    fbBuilder.addOffset(16, PROVIDER_EPM_CIDOffset);
+    fbBuilder.addBool(17, _ENCRYPTED);
+    fbBuilder.addOffset(18, REQUIRED_SCOPEOffset);
+    fbBuilder.addOffset(19, KEY_IDOffset);
+    fbBuilder.addOffset(20, ALLOWED_DOMAINSOffset);
+    fbBuilder.addUint64(21, _MAX_GRANT_TIMEOUT_MS);
+    fbBuilder.addOffset(22, MIN_PERMISSIONSOffset);
+    fbBuilder.addUint64(23, _CREATED_AT);
+    fbBuilder.addUint64(24, _UPDATED_AT);
+    fbBuilder.addOffset(25, DOCUMENTATION_URLOffset);
+    fbBuilder.addOffset(26, ICON_URLOffset);
+    fbBuilder.addOffset(27, LICENSEOffset);
+    fbBuilder.addOffset(28, SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

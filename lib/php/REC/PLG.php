@@ -117,7 +117,7 @@ class PLG extends Table
         return $this->__vector_as_bytes(16);
     }
 
-    /// Size of WASM binary in bytes
+    /// Size of decrypted WASM binary in bytes
     /**
      * @return ulong
      */
@@ -134,13 +134,51 @@ class PLG extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// SHA256 hash of the encrypted delivery artifact bytes
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getENCRYPTED_WASM_HASH($j)
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getENCRYPTED_WASM_HASHLength()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getENCRYPTED_WASM_HASHBytes()
+    {
+        return $this->__vector_as_bytes(22);
+    }
+
+    /// Size of the encrypted delivery artifact in bytes
+    /**
+     * @return ulong
+     */
+    public function getENCRYPTED_WASM_SIZE()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
     /// Entry point functions exported by the plugin
     /**
      * @returnVectorOffset
      */
     public function getENTRY_FUNCTIONS($j)
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(26);
         $obj = new EntryFunction();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -150,7 +188,7 @@ class PLG extends Table
      */
     public function getENTRY_FUNCTIONSLength()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -161,7 +199,7 @@ class PLG extends Table
      */
     public function getREQUIRED_SCHEMAS($j)
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -170,7 +208,7 @@ class PLG extends Table
      */
     public function getREQUIRED_SCHEMASLength()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -180,7 +218,7 @@ class PLG extends Table
      */
     public function getDEPENDENCIES($j)
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(30);
         $obj = new PluginDependency();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -190,7 +228,7 @@ class PLG extends Table
      */
     public function getDEPENDENCIESLength()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -200,7 +238,7 @@ class PLG extends Table
      */
     public function getCAPABILITIES($j)
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(32);
         $obj = new PluginCapability();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -210,21 +248,21 @@ class PLG extends Table
      */
     public function getCAPABILITIESLength()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /// Peer ID of the plugin provider
     public function getPROVIDER_PEER_ID()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// IPFS CID of provider's EPM (Entity Profile Message)
     public function getPROVIDER_EPM_CID()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -234,8 +272,52 @@ class PLG extends Table
      */
     public function getENCRYPTED()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : true;
+    }
+
+    /// Canonical required scope for grant issuance
+    public function getREQUIRED_SCOPE()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Provider-local identifier for the module content key
+    public function getKEY_ID()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Allowed requester domains for module grants
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getALLOWED_DOMAINS($j)
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getALLOWED_DOMAINSLength()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Maximum grant timeout allowed for this module publication
+    /**
+     * @return ulong
+     */
+    public function getMAX_GRANT_TIMEOUT_MS()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
     /// Minimum permissions required to run
@@ -245,7 +327,7 @@ class PLG extends Table
      */
     public function getMIN_PERMISSIONS($j)
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(48);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -254,7 +336,7 @@ class PLG extends Table
      */
     public function getMIN_PERMISSIONSLength()
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(48);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -264,7 +346,7 @@ class PLG extends Table
      */
     public function getCREATED_AT()
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(50);
         return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
@@ -274,28 +356,28 @@ class PLG extends Table
      */
     public function getUPDATED_AT()
     {
-        $o = $this->__offset(40);
+        $o = $this->__offset(52);
         return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
     /// URL to plugin documentation
     public function getDOCUMENTATION_URL()
     {
-        $o = $this->__offset(42);
+        $o = $this->__offset(54);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// URL to plugin icon/logo
     public function getICON_URL()
     {
-        $o = $this->__offset(44);
+        $o = $this->__offset(56);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// License identifier (SPDX format)
     public function getLICENSE()
     {
-        $o = $this->__offset(46);
+        $o = $this->__offset(58);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -306,7 +388,7 @@ class PLG extends Table
      */
     public function getSIGNATURE($j)
     {
-        $o = $this->__offset(48);
+        $o = $this->__offset(60);
         return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
     }
 
@@ -315,7 +397,7 @@ class PLG extends Table
      */
     public function getSIGNATURELength()
     {
-        $o = $this->__offset(48);
+        $o = $this->__offset(60);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -324,7 +406,7 @@ class PLG extends Table
      */
     public function getSIGNATUREBytes()
     {
-        return $this->__vector_as_bytes(48);
+        return $this->__vector_as_bytes(60);
     }
 
     /**
@@ -333,16 +415,16 @@ class PLG extends Table
      */
     public static function startPLG(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(23);
+        $builder->StartObject(29);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PLG
      */
-    public static function createPLG(FlatBufferBuilder $builder, $PLUGIN_ID, $NAME, $VERSION, $DESCRIPTION, $PLUGIN_TYPE, $ABI_VERSION, $WASM_HASH, $WASM_SIZE, $WASM_CID, $ENTRY_FUNCTIONS, $REQUIRED_SCHEMAS, $DEPENDENCIES, $CAPABILITIES, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $ENCRYPTED, $MIN_PERMISSIONS, $CREATED_AT, $UPDATED_AT, $DOCUMENTATION_URL, $ICON_URL, $LICENSE, $SIGNATURE)
+    public static function createPLG(FlatBufferBuilder $builder, $PLUGIN_ID, $NAME, $VERSION, $DESCRIPTION, $PLUGIN_TYPE, $ABI_VERSION, $WASM_HASH, $WASM_SIZE, $WASM_CID, $ENCRYPTED_WASM_HASH, $ENCRYPTED_WASM_SIZE, $ENTRY_FUNCTIONS, $REQUIRED_SCHEMAS, $DEPENDENCIES, $CAPABILITIES, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $ENCRYPTED, $REQUIRED_SCOPE, $KEY_ID, $ALLOWED_DOMAINS, $MAX_GRANT_TIMEOUT_MS, $MIN_PERMISSIONS, $CREATED_AT, $UPDATED_AT, $DOCUMENTATION_URL, $ICON_URL, $LICENSE, $SIGNATURE)
     {
-        $builder->startObject(23);
+        $builder->startObject(29);
         self::addPLUGIN_ID($builder, $PLUGIN_ID);
         self::addNAME($builder, $NAME);
         self::addVERSION($builder, $VERSION);
@@ -352,6 +434,8 @@ class PLG extends Table
         self::addWASM_HASH($builder, $WASM_HASH);
         self::addWASM_SIZE($builder, $WASM_SIZE);
         self::addWASM_CID($builder, $WASM_CID);
+        self::addENCRYPTED_WASM_HASH($builder, $ENCRYPTED_WASM_HASH);
+        self::addENCRYPTED_WASM_SIZE($builder, $ENCRYPTED_WASM_SIZE);
         self::addENTRY_FUNCTIONS($builder, $ENTRY_FUNCTIONS);
         self::addREQUIRED_SCHEMAS($builder, $REQUIRED_SCHEMAS);
         self::addDEPENDENCIES($builder, $DEPENDENCIES);
@@ -359,6 +443,10 @@ class PLG extends Table
         self::addPROVIDER_PEER_ID($builder, $PROVIDER_PEER_ID);
         self::addPROVIDER_EPM_CID($builder, $PROVIDER_EPM_CID);
         self::addENCRYPTED($builder, $ENCRYPTED);
+        self::addREQUIRED_SCOPE($builder, $REQUIRED_SCOPE);
+        self::addKEY_ID($builder, $KEY_ID);
+        self::addALLOWED_DOMAINS($builder, $ALLOWED_DOMAINS);
+        self::addMAX_GRANT_TIMEOUT_MS($builder, $MAX_GRANT_TIMEOUT_MS);
         self::addMIN_PERMISSIONS($builder, $MIN_PERMISSIONS);
         self::addCREATED_AT($builder, $CREATED_AT);
         self::addUPDATED_AT($builder, $UPDATED_AT);
@@ -492,9 +580,53 @@ class PLG extends Table
      * @param VectorOffset
      * @return void
      */
+    public static function addENCRYPTED_WASM_HASH(FlatBufferBuilder $builder, $ENCRYPTED_WASM_HASH)
+    {
+        $builder->addOffsetX(9, $ENCRYPTED_WASM_HASH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createENCRYPTED_WASM_HASHVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startENCRYPTED_WASM_HASHVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addENCRYPTED_WASM_SIZE(FlatBufferBuilder $builder, $ENCRYPTED_WASM_SIZE)
+    {
+        $builder->addUlongX(10, $ENCRYPTED_WASM_SIZE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
     public static function addENTRY_FUNCTIONS(FlatBufferBuilder $builder, $ENTRY_FUNCTIONS)
     {
-        $builder->addOffsetX(9, $ENTRY_FUNCTIONS, 0);
+        $builder->addOffsetX(11, $ENTRY_FUNCTIONS, 0);
     }
 
     /**
@@ -528,7 +660,7 @@ class PLG extends Table
      */
     public static function addREQUIRED_SCHEMAS(FlatBufferBuilder $builder, $REQUIRED_SCHEMAS)
     {
-        $builder->addOffsetX(10, $REQUIRED_SCHEMAS, 0);
+        $builder->addOffsetX(12, $REQUIRED_SCHEMAS, 0);
     }
 
     /**
@@ -562,7 +694,7 @@ class PLG extends Table
      */
     public static function addDEPENDENCIES(FlatBufferBuilder $builder, $DEPENDENCIES)
     {
-        $builder->addOffsetX(11, $DEPENDENCIES, 0);
+        $builder->addOffsetX(13, $DEPENDENCIES, 0);
     }
 
     /**
@@ -596,7 +728,7 @@ class PLG extends Table
      */
     public static function addCAPABILITIES(FlatBufferBuilder $builder, $CAPABILITIES)
     {
-        $builder->addOffsetX(12, $CAPABILITIES, 0);
+        $builder->addOffsetX(14, $CAPABILITIES, 0);
     }
 
     /**
@@ -630,7 +762,7 @@ class PLG extends Table
      */
     public static function addPROVIDER_PEER_ID(FlatBufferBuilder $builder, $PROVIDER_PEER_ID)
     {
-        $builder->addOffsetX(13, $PROVIDER_PEER_ID, 0);
+        $builder->addOffsetX(15, $PROVIDER_PEER_ID, 0);
     }
 
     /**
@@ -640,7 +772,7 @@ class PLG extends Table
      */
     public static function addPROVIDER_EPM_CID(FlatBufferBuilder $builder, $PROVIDER_EPM_CID)
     {
-        $builder->addOffsetX(14, $PROVIDER_EPM_CID, 0);
+        $builder->addOffsetX(16, $PROVIDER_EPM_CID, 0);
     }
 
     /**
@@ -650,7 +782,71 @@ class PLG extends Table
      */
     public static function addENCRYPTED(FlatBufferBuilder $builder, $ENCRYPTED)
     {
-        $builder->addBoolX(15, $ENCRYPTED, false);
+        $builder->addBoolX(17, $ENCRYPTED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREQUIRED_SCOPE(FlatBufferBuilder $builder, $REQUIRED_SCOPE)
+    {
+        $builder->addOffsetX(18, $REQUIRED_SCOPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addKEY_ID(FlatBufferBuilder $builder, $KEY_ID)
+    {
+        $builder->addOffsetX(19, $KEY_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addALLOWED_DOMAINS(FlatBufferBuilder $builder, $ALLOWED_DOMAINS)
+    {
+        $builder->addOffsetX(20, $ALLOWED_DOMAINS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createALLOWED_DOMAINSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startALLOWED_DOMAINSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addMAX_GRANT_TIMEOUT_MS(FlatBufferBuilder $builder, $MAX_GRANT_TIMEOUT_MS)
+    {
+        $builder->addUlongX(21, $MAX_GRANT_TIMEOUT_MS, 0);
     }
 
     /**
@@ -660,7 +856,7 @@ class PLG extends Table
      */
     public static function addMIN_PERMISSIONS(FlatBufferBuilder $builder, $MIN_PERMISSIONS)
     {
-        $builder->addOffsetX(16, $MIN_PERMISSIONS, 0);
+        $builder->addOffsetX(22, $MIN_PERMISSIONS, 0);
     }
 
     /**
@@ -694,7 +890,7 @@ class PLG extends Table
      */
     public static function addCREATED_AT(FlatBufferBuilder $builder, $CREATED_AT)
     {
-        $builder->addUlongX(17, $CREATED_AT, 0);
+        $builder->addUlongX(23, $CREATED_AT, 0);
     }
 
     /**
@@ -704,7 +900,7 @@ class PLG extends Table
      */
     public static function addUPDATED_AT(FlatBufferBuilder $builder, $UPDATED_AT)
     {
-        $builder->addUlongX(18, $UPDATED_AT, 0);
+        $builder->addUlongX(24, $UPDATED_AT, 0);
     }
 
     /**
@@ -714,7 +910,7 @@ class PLG extends Table
      */
     public static function addDOCUMENTATION_URL(FlatBufferBuilder $builder, $DOCUMENTATION_URL)
     {
-        $builder->addOffsetX(19, $DOCUMENTATION_URL, 0);
+        $builder->addOffsetX(25, $DOCUMENTATION_URL, 0);
     }
 
     /**
@@ -724,7 +920,7 @@ class PLG extends Table
      */
     public static function addICON_URL(FlatBufferBuilder $builder, $ICON_URL)
     {
-        $builder->addOffsetX(20, $ICON_URL, 0);
+        $builder->addOffsetX(26, $ICON_URL, 0);
     }
 
     /**
@@ -734,7 +930,7 @@ class PLG extends Table
      */
     public static function addLICENSE(FlatBufferBuilder $builder, $LICENSE)
     {
-        $builder->addOffsetX(21, $LICENSE, 0);
+        $builder->addOffsetX(27, $LICENSE, 0);
     }
 
     /**
@@ -744,7 +940,7 @@ class PLG extends Table
      */
     public static function addSIGNATURE(FlatBufferBuilder $builder, $SIGNATURE)
     {
-        $builder->addOffsetX(22, $SIGNATURE, 0);
+        $builder->addOffsetX(28, $SIGNATURE, 0);
     }
 
     /**

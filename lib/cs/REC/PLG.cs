@@ -64,7 +64,7 @@ public struct PLG : IFlatbufferObject
   public ArraySegment<byte>? GetWASM_HASHBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
   public byte[] GetWASM_HASHArray() { return __p.__vector_as_array<byte>(16); }
-  /// Size of WASM binary in bytes
+  /// Size of decrypted WASM binary in bytes
   public ulong WASM_SIZE { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// IPFS CID of the encrypted WASM binary
   public string WASM_CID { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
@@ -74,76 +74,108 @@ public struct PLG : IFlatbufferObject
   public ArraySegment<byte>? GetWASM_CIDBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
   public byte[] GetWASM_CIDArray() { return __p.__vector_as_array<byte>(20); }
+  /// SHA256 hash of the encrypted delivery artifact bytes
+  public byte ENCRYPTED_WASM_HASH(int j) { int o = __p.__offset(22); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int ENCRYPTED_WASM_HASHLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetENCRYPTED_WASM_HASHBytes() { return __p.__vector_as_span<byte>(22, 1); }
+#else
+  public ArraySegment<byte>? GetENCRYPTED_WASM_HASHBytes() { return __p.__vector_as_arraysegment(22); }
+#endif
+  public byte[] GetENCRYPTED_WASM_HASHArray() { return __p.__vector_as_array<byte>(22); }
+  /// Size of the encrypted delivery artifact in bytes
+  public ulong ENCRYPTED_WASM_SIZE { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// Entry point functions exported by the plugin
-  public EntryFunction? ENTRY_FUNCTIONS(int j) { int o = __p.__offset(22); return o != 0 ? (EntryFunction?)(new EntryFunction()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int ENTRY_FUNCTIONSLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public EntryFunction? ENTRY_FUNCTIONS(int j) { int o = __p.__offset(26); return o != 0 ? (EntryFunction?)(new EntryFunction()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int ENTRY_FUNCTIONSLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// FlatBuffer schemas required by this plugin
-  public string REQUIRED_SCHEMAS(int j) { int o = __p.__offset(24); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int REQUIRED_SCHEMASLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string REQUIRED_SCHEMAS(int j) { int o = __p.__offset(28); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int REQUIRED_SCHEMASLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Other plugins this depends on
-  public PluginDependency? DEPENDENCIES(int j) { int o = __p.__offset(26); return o != 0 ? (PluginDependency?)(new PluginDependency()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int DEPENDENCIESLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public PluginDependency? DEPENDENCIES(int j) { int o = __p.__offset(30); return o != 0 ? (PluginDependency?)(new PluginDependency()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int DEPENDENCIESLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Capabilities provided by this plugin
-  public PluginCapability? CAPABILITIES(int j) { int o = __p.__offset(28); return o != 0 ? (PluginCapability?)(new PluginCapability()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int CAPABILITIESLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public PluginCapability? CAPABILITIES(int j) { int o = __p.__offset(32); return o != 0 ? (PluginCapability?)(new PluginCapability()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int CAPABILITIESLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Peer ID of the plugin provider
-  public string PROVIDER_PEER_ID { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string PROVIDER_PEER_ID { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_span<byte>(30, 1); }
+  public Span<byte> GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_span<byte>(34, 1); }
 #else
-  public ArraySegment<byte>? GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_arraysegment(30); }
+  public ArraySegment<byte>? GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
-  public byte[] GetPROVIDER_PEER_IDArray() { return __p.__vector_as_array<byte>(30); }
+  public byte[] GetPROVIDER_PEER_IDArray() { return __p.__vector_as_array<byte>(34); }
   /// IPFS CID of provider's EPM (Entity Profile Message)
-  public string PROVIDER_EPM_CID { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string PROVIDER_EPM_CID { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPROVIDER_EPM_CIDBytes() { return __p.__vector_as_span<byte>(32, 1); }
+  public Span<byte> GetPROVIDER_EPM_CIDBytes() { return __p.__vector_as_span<byte>(36, 1); }
 #else
-  public ArraySegment<byte>? GetPROVIDER_EPM_CIDBytes() { return __p.__vector_as_arraysegment(32); }
+  public ArraySegment<byte>? GetPROVIDER_EPM_CIDBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
-  public byte[] GetPROVIDER_EPM_CIDArray() { return __p.__vector_as_array<byte>(32); }
+  public byte[] GetPROVIDER_EPM_CIDArray() { return __p.__vector_as_array<byte>(36); }
   /// Whether the WASM binary is encrypted
-  public bool ENCRYPTED { get { int o = __p.__offset(34); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
+  public bool ENCRYPTED { get { int o = __p.__offset(38); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
+  /// Canonical required scope for grant issuance
+  public string REQUIRED_SCOPE { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREQUIRED_SCOPEBytes() { return __p.__vector_as_span<byte>(40, 1); }
+#else
+  public ArraySegment<byte>? GetREQUIRED_SCOPEBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public byte[] GetREQUIRED_SCOPEArray() { return __p.__vector_as_array<byte>(40); }
+  /// Provider-local identifier for the module content key
+  public string KEY_ID { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetKEY_IDBytes() { return __p.__vector_as_span<byte>(42, 1); }
+#else
+  public ArraySegment<byte>? GetKEY_IDBytes() { return __p.__vector_as_arraysegment(42); }
+#endif
+  public byte[] GetKEY_IDArray() { return __p.__vector_as_array<byte>(42); }
+  /// Allowed requester domains for module grants
+  public string ALLOWED_DOMAINS(int j) { int o = __p.__offset(44); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int ALLOWED_DOMAINSLength { get { int o = __p.__offset(44); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Maximum grant timeout allowed for this module publication
+  public ulong MAX_GRANT_TIMEOUT_MS { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// Minimum permissions required to run
-  public string MIN_PERMISSIONS(int j) { int o = __p.__offset(36); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int MIN_PERMISSIONSLength { get { int o = __p.__offset(36); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string MIN_PERMISSIONS(int j) { int o = __p.__offset(48); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int MIN_PERMISSIONSLength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Unix timestamp when plugin was created
-  public ulong CREATED_AT { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public ulong CREATED_AT { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// Unix timestamp when plugin was last updated
-  public ulong UPDATED_AT { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public ulong UPDATED_AT { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// URL to plugin documentation
-  public string DOCUMENTATION_URL { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string DOCUMENTATION_URL { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDOCUMENTATION_URLBytes() { return __p.__vector_as_span<byte>(42, 1); }
+  public Span<byte> GetDOCUMENTATION_URLBytes() { return __p.__vector_as_span<byte>(54, 1); }
 #else
-  public ArraySegment<byte>? GetDOCUMENTATION_URLBytes() { return __p.__vector_as_arraysegment(42); }
+  public ArraySegment<byte>? GetDOCUMENTATION_URLBytes() { return __p.__vector_as_arraysegment(54); }
 #endif
-  public byte[] GetDOCUMENTATION_URLArray() { return __p.__vector_as_array<byte>(42); }
+  public byte[] GetDOCUMENTATION_URLArray() { return __p.__vector_as_array<byte>(54); }
   /// URL to plugin icon/logo
-  public string ICON_URL { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string ICON_URL { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetICON_URLBytes() { return __p.__vector_as_span<byte>(44, 1); }
+  public Span<byte> GetICON_URLBytes() { return __p.__vector_as_span<byte>(56, 1); }
 #else
-  public ArraySegment<byte>? GetICON_URLBytes() { return __p.__vector_as_arraysegment(44); }
+  public ArraySegment<byte>? GetICON_URLBytes() { return __p.__vector_as_arraysegment(56); }
 #endif
-  public byte[] GetICON_URLArray() { return __p.__vector_as_array<byte>(44); }
+  public byte[] GetICON_URLArray() { return __p.__vector_as_array<byte>(56); }
   /// License identifier (SPDX format)
-  public string LICENSE { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string LICENSE { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLICENSEBytes() { return __p.__vector_as_span<byte>(46, 1); }
+  public Span<byte> GetLICENSEBytes() { return __p.__vector_as_span<byte>(58, 1); }
 #else
-  public ArraySegment<byte>? GetLICENSEBytes() { return __p.__vector_as_arraysegment(46); }
+  public ArraySegment<byte>? GetLICENSEBytes() { return __p.__vector_as_arraysegment(58); }
 #endif
-  public byte[] GetLICENSEArray() { return __p.__vector_as_array<byte>(46); }
+  public byte[] GetLICENSEArray() { return __p.__vector_as_array<byte>(58); }
   /// Ed25519 signature from provider over manifest
-  public byte SIGNATURE(int j) { int o = __p.__offset(48); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
-  public int SIGNATURELength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte SIGNATURE(int j) { int o = __p.__offset(60); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int SIGNATURELength { get { int o = __p.__offset(60); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSIGNATUREBytes() { return __p.__vector_as_span<byte>(48, 1); }
+  public Span<byte> GetSIGNATUREBytes() { return __p.__vector_as_span<byte>(60, 1); }
 #else
-  public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(48); }
+  public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(60); }
 #endif
-  public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(48); }
+  public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(60); }
 
   public static Offset<PLG> CreatePLG(FlatBufferBuilder builder,
       StringOffset PLUGIN_IDOffset = default(StringOffset),
@@ -155,6 +187,8 @@ public struct PLG : IFlatbufferObject
       VectorOffset WASM_HASHOffset = default(VectorOffset),
       ulong WASM_SIZE = 0,
       StringOffset WASM_CIDOffset = default(StringOffset),
+      VectorOffset ENCRYPTED_WASM_HASHOffset = default(VectorOffset),
+      ulong ENCRYPTED_WASM_SIZE = 0,
       VectorOffset ENTRY_FUNCTIONSOffset = default(VectorOffset),
       VectorOffset REQUIRED_SCHEMASOffset = default(VectorOffset),
       VectorOffset DEPENDENCIESOffset = default(VectorOffset),
@@ -162,6 +196,10 @@ public struct PLG : IFlatbufferObject
       StringOffset PROVIDER_PEER_IDOffset = default(StringOffset),
       StringOffset PROVIDER_EPM_CIDOffset = default(StringOffset),
       bool ENCRYPTED = true,
+      StringOffset REQUIRED_SCOPEOffset = default(StringOffset),
+      StringOffset KEY_IDOffset = default(StringOffset),
+      VectorOffset ALLOWED_DOMAINSOffset = default(VectorOffset),
+      ulong MAX_GRANT_TIMEOUT_MS = 0,
       VectorOffset MIN_PERMISSIONSOffset = default(VectorOffset),
       ulong CREATED_AT = 0,
       ulong UPDATED_AT = 0,
@@ -169,21 +207,27 @@ public struct PLG : IFlatbufferObject
       StringOffset ICON_URLOffset = default(StringOffset),
       StringOffset LICENSEOffset = default(StringOffset),
       VectorOffset SIGNATUREOffset = default(VectorOffset)) {
-    builder.StartTable(23);
+    builder.StartTable(29);
     PLG.AddUPDATED_AT(builder, UPDATED_AT);
     PLG.AddCREATED_AT(builder, CREATED_AT);
+    PLG.AddMAX_GRANT_TIMEOUT_MS(builder, MAX_GRANT_TIMEOUT_MS);
+    PLG.AddENCRYPTED_WASM_SIZE(builder, ENCRYPTED_WASM_SIZE);
     PLG.AddWASM_SIZE(builder, WASM_SIZE);
     PLG.AddSIGNATURE(builder, SIGNATUREOffset);
     PLG.AddLICENSE(builder, LICENSEOffset);
     PLG.AddICON_URL(builder, ICON_URLOffset);
     PLG.AddDOCUMENTATION_URL(builder, DOCUMENTATION_URLOffset);
     PLG.AddMIN_PERMISSIONS(builder, MIN_PERMISSIONSOffset);
+    PLG.AddALLOWED_DOMAINS(builder, ALLOWED_DOMAINSOffset);
+    PLG.AddKEY_ID(builder, KEY_IDOffset);
+    PLG.AddREQUIRED_SCOPE(builder, REQUIRED_SCOPEOffset);
     PLG.AddPROVIDER_EPM_CID(builder, PROVIDER_EPM_CIDOffset);
     PLG.AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_IDOffset);
     PLG.AddCAPABILITIES(builder, CAPABILITIESOffset);
     PLG.AddDEPENDENCIES(builder, DEPENDENCIESOffset);
     PLG.AddREQUIRED_SCHEMAS(builder, REQUIRED_SCHEMASOffset);
     PLG.AddENTRY_FUNCTIONS(builder, ENTRY_FUNCTIONSOffset);
+    PLG.AddENCRYPTED_WASM_HASH(builder, ENCRYPTED_WASM_HASHOffset);
     PLG.AddWASM_CID(builder, WASM_CIDOffset);
     PLG.AddWASM_HASH(builder, WASM_HASHOffset);
     PLG.AddABI_VERSION(builder, ABI_VERSION);
@@ -196,7 +240,7 @@ public struct PLG : IFlatbufferObject
     return PLG.EndPLG(builder);
   }
 
-  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(23); }
+  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(29); }
   public static void AddPLUGIN_ID(FlatBufferBuilder builder, StringOffset PLUGIN_IDOffset) { builder.AddOffset(0, PLUGIN_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(2, VERSIONOffset.Value, 0); }
@@ -211,45 +255,61 @@ public struct PLG : IFlatbufferObject
   public static void StartWASM_HASHVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static void AddWASM_SIZE(FlatBufferBuilder builder, ulong WASM_SIZE) { builder.AddUlong(7, WASM_SIZE, 0); }
   public static void AddWASM_CID(FlatBufferBuilder builder, StringOffset WASM_CIDOffset) { builder.AddOffset(8, WASM_CIDOffset.Value, 0); }
-  public static void AddENTRY_FUNCTIONS(FlatBufferBuilder builder, VectorOffset ENTRY_FUNCTIONSOffset) { builder.AddOffset(9, ENTRY_FUNCTIONSOffset.Value, 0); }
+  public static void AddENCRYPTED_WASM_HASH(FlatBufferBuilder builder, VectorOffset ENCRYPTED_WASM_HASHOffset) { builder.AddOffset(9, ENCRYPTED_WASM_HASHOffset.Value, 0); }
+  public static VectorOffset CreateENCRYPTED_WASM_HASHVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateENCRYPTED_WASM_HASHVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateENCRYPTED_WASM_HASHVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateENCRYPTED_WASM_HASHVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartENCRYPTED_WASM_HASHVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddENCRYPTED_WASM_SIZE(FlatBufferBuilder builder, ulong ENCRYPTED_WASM_SIZE) { builder.AddUlong(10, ENCRYPTED_WASM_SIZE, 0); }
+  public static void AddENTRY_FUNCTIONS(FlatBufferBuilder builder, VectorOffset ENTRY_FUNCTIONSOffset) { builder.AddOffset(11, ENTRY_FUNCTIONSOffset.Value, 0); }
   public static VectorOffset CreateENTRY_FUNCTIONSVector(FlatBufferBuilder builder, Offset<EntryFunction>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateENTRY_FUNCTIONSVectorBlock(FlatBufferBuilder builder, Offset<EntryFunction>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateENTRY_FUNCTIONSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<EntryFunction>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateENTRY_FUNCTIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<EntryFunction>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartENTRY_FUNCTIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddREQUIRED_SCHEMAS(FlatBufferBuilder builder, VectorOffset REQUIRED_SCHEMASOffset) { builder.AddOffset(10, REQUIRED_SCHEMASOffset.Value, 0); }
+  public static void AddREQUIRED_SCHEMAS(FlatBufferBuilder builder, VectorOffset REQUIRED_SCHEMASOffset) { builder.AddOffset(12, REQUIRED_SCHEMASOffset.Value, 0); }
   public static VectorOffset CreateREQUIRED_SCHEMASVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateREQUIRED_SCHEMASVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateREQUIRED_SCHEMASVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateREQUIRED_SCHEMASVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartREQUIRED_SCHEMASVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddDEPENDENCIES(FlatBufferBuilder builder, VectorOffset DEPENDENCIESOffset) { builder.AddOffset(11, DEPENDENCIESOffset.Value, 0); }
+  public static void AddDEPENDENCIES(FlatBufferBuilder builder, VectorOffset DEPENDENCIESOffset) { builder.AddOffset(13, DEPENDENCIESOffset.Value, 0); }
   public static VectorOffset CreateDEPENDENCIESVector(FlatBufferBuilder builder, Offset<PluginDependency>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateDEPENDENCIESVectorBlock(FlatBufferBuilder builder, Offset<PluginDependency>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateDEPENDENCIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PluginDependency>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateDEPENDENCIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PluginDependency>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartDEPENDENCIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddCAPABILITIES(FlatBufferBuilder builder, VectorOffset CAPABILITIESOffset) { builder.AddOffset(12, CAPABILITIESOffset.Value, 0); }
+  public static void AddCAPABILITIES(FlatBufferBuilder builder, VectorOffset CAPABILITIESOffset) { builder.AddOffset(14, CAPABILITIESOffset.Value, 0); }
   public static VectorOffset CreateCAPABILITIESVector(FlatBufferBuilder builder, Offset<PluginCapability>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateCAPABILITIESVectorBlock(FlatBufferBuilder builder, Offset<PluginCapability>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCAPABILITIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PluginCapability>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCAPABILITIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PluginCapability>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCAPABILITIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddPROVIDER_PEER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_PEER_IDOffset) { builder.AddOffset(13, PROVIDER_PEER_IDOffset.Value, 0); }
-  public static void AddPROVIDER_EPM_CID(FlatBufferBuilder builder, StringOffset PROVIDER_EPM_CIDOffset) { builder.AddOffset(14, PROVIDER_EPM_CIDOffset.Value, 0); }
-  public static void AddENCRYPTED(FlatBufferBuilder builder, bool ENCRYPTED) { builder.AddBool(15, ENCRYPTED, true); }
-  public static void AddMIN_PERMISSIONS(FlatBufferBuilder builder, VectorOffset MIN_PERMISSIONSOffset) { builder.AddOffset(16, MIN_PERMISSIONSOffset.Value, 0); }
+  public static void AddPROVIDER_PEER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_PEER_IDOffset) { builder.AddOffset(15, PROVIDER_PEER_IDOffset.Value, 0); }
+  public static void AddPROVIDER_EPM_CID(FlatBufferBuilder builder, StringOffset PROVIDER_EPM_CIDOffset) { builder.AddOffset(16, PROVIDER_EPM_CIDOffset.Value, 0); }
+  public static void AddENCRYPTED(FlatBufferBuilder builder, bool ENCRYPTED) { builder.AddBool(17, ENCRYPTED, true); }
+  public static void AddREQUIRED_SCOPE(FlatBufferBuilder builder, StringOffset REQUIRED_SCOPEOffset) { builder.AddOffset(18, REQUIRED_SCOPEOffset.Value, 0); }
+  public static void AddKEY_ID(FlatBufferBuilder builder, StringOffset KEY_IDOffset) { builder.AddOffset(19, KEY_IDOffset.Value, 0); }
+  public static void AddALLOWED_DOMAINS(FlatBufferBuilder builder, VectorOffset ALLOWED_DOMAINSOffset) { builder.AddOffset(20, ALLOWED_DOMAINSOffset.Value, 0); }
+  public static VectorOffset CreateALLOWED_DOMAINSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateALLOWED_DOMAINSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateALLOWED_DOMAINSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateALLOWED_DOMAINSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartALLOWED_DOMAINSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMAX_GRANT_TIMEOUT_MS(FlatBufferBuilder builder, ulong MAX_GRANT_TIMEOUT_MS) { builder.AddUlong(21, MAX_GRANT_TIMEOUT_MS, 0); }
+  public static void AddMIN_PERMISSIONS(FlatBufferBuilder builder, VectorOffset MIN_PERMISSIONSOffset) { builder.AddOffset(22, MIN_PERMISSIONSOffset.Value, 0); }
   public static VectorOffset CreateMIN_PERMISSIONSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateMIN_PERMISSIONSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMIN_PERMISSIONSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMIN_PERMISSIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartMIN_PERMISSIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddCREATED_AT(FlatBufferBuilder builder, ulong CREATED_AT) { builder.AddUlong(17, CREATED_AT, 0); }
-  public static void AddUPDATED_AT(FlatBufferBuilder builder, ulong UPDATED_AT) { builder.AddUlong(18, UPDATED_AT, 0); }
-  public static void AddDOCUMENTATION_URL(FlatBufferBuilder builder, StringOffset DOCUMENTATION_URLOffset) { builder.AddOffset(19, DOCUMENTATION_URLOffset.Value, 0); }
-  public static void AddICON_URL(FlatBufferBuilder builder, StringOffset ICON_URLOffset) { builder.AddOffset(20, ICON_URLOffset.Value, 0); }
-  public static void AddLICENSE(FlatBufferBuilder builder, StringOffset LICENSEOffset) { builder.AddOffset(21, LICENSEOffset.Value, 0); }
-  public static void AddSIGNATURE(FlatBufferBuilder builder, VectorOffset SIGNATUREOffset) { builder.AddOffset(22, SIGNATUREOffset.Value, 0); }
+  public static void AddCREATED_AT(FlatBufferBuilder builder, ulong CREATED_AT) { builder.AddUlong(23, CREATED_AT, 0); }
+  public static void AddUPDATED_AT(FlatBufferBuilder builder, ulong UPDATED_AT) { builder.AddUlong(24, UPDATED_AT, 0); }
+  public static void AddDOCUMENTATION_URL(FlatBufferBuilder builder, StringOffset DOCUMENTATION_URLOffset) { builder.AddOffset(25, DOCUMENTATION_URLOffset.Value, 0); }
+  public static void AddICON_URL(FlatBufferBuilder builder, StringOffset ICON_URLOffset) { builder.AddOffset(26, ICON_URLOffset.Value, 0); }
+  public static void AddLICENSE(FlatBufferBuilder builder, StringOffset LICENSEOffset) { builder.AddOffset(27, LICENSEOffset.Value, 0); }
+  public static void AddSIGNATURE(FlatBufferBuilder builder, VectorOffset SIGNATUREOffset) { builder.AddOffset(28, SIGNATUREOffset.Value, 0); }
   public static VectorOffset CreateSIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
@@ -280,6 +340,9 @@ public struct PLG : IFlatbufferObject
     for (var _j = 0; _j < this.WASM_HASHLength; ++_j) {_o.WASM_HASH.Add(this.WASM_HASH(_j));}
     _o.WASM_SIZE = this.WASM_SIZE;
     _o.WASM_CID = this.WASM_CID;
+    _o.ENCRYPTED_WASM_HASH = new List<byte>();
+    for (var _j = 0; _j < this.ENCRYPTED_WASM_HASHLength; ++_j) {_o.ENCRYPTED_WASM_HASH.Add(this.ENCRYPTED_WASM_HASH(_j));}
+    _o.ENCRYPTED_WASM_SIZE = this.ENCRYPTED_WASM_SIZE;
     _o.ENTRY_FUNCTIONS = new List<EntryFunctionT>();
     for (var _j = 0; _j < this.ENTRY_FUNCTIONSLength; ++_j) {_o.ENTRY_FUNCTIONS.Add(this.ENTRY_FUNCTIONS(_j).HasValue ? this.ENTRY_FUNCTIONS(_j).Value.UnPack() : null);}
     _o.REQUIRED_SCHEMAS = new List<string>();
@@ -291,6 +354,11 @@ public struct PLG : IFlatbufferObject
     _o.PROVIDER_PEER_ID = this.PROVIDER_PEER_ID;
     _o.PROVIDER_EPM_CID = this.PROVIDER_EPM_CID;
     _o.ENCRYPTED = this.ENCRYPTED;
+    _o.REQUIRED_SCOPE = this.REQUIRED_SCOPE;
+    _o.KEY_ID = this.KEY_ID;
+    _o.ALLOWED_DOMAINS = new List<string>();
+    for (var _j = 0; _j < this.ALLOWED_DOMAINSLength; ++_j) {_o.ALLOWED_DOMAINS.Add(this.ALLOWED_DOMAINS(_j));}
+    _o.MAX_GRANT_TIMEOUT_MS = this.MAX_GRANT_TIMEOUT_MS;
     _o.MIN_PERMISSIONS = new List<string>();
     for (var _j = 0; _j < this.MIN_PERMISSIONSLength; ++_j) {_o.MIN_PERMISSIONS.Add(this.MIN_PERMISSIONS(_j));}
     _o.CREATED_AT = this.CREATED_AT;
@@ -313,6 +381,11 @@ public struct PLG : IFlatbufferObject
       _WASM_HASH = CreateWASM_HASHVector(builder, __WASM_HASH);
     }
     var _WASM_CID = _o.WASM_CID == null ? default(StringOffset) : builder.CreateString(_o.WASM_CID);
+    var _ENCRYPTED_WASM_HASH = default(VectorOffset);
+    if (_o.ENCRYPTED_WASM_HASH != null) {
+      var __ENCRYPTED_WASM_HASH = _o.ENCRYPTED_WASM_HASH.ToArray();
+      _ENCRYPTED_WASM_HASH = CreateENCRYPTED_WASM_HASHVector(builder, __ENCRYPTED_WASM_HASH);
+    }
     var _ENTRY_FUNCTIONS = default(VectorOffset);
     if (_o.ENTRY_FUNCTIONS != null) {
       var __ENTRY_FUNCTIONS = new Offset<EntryFunction>[_o.ENTRY_FUNCTIONS.Count];
@@ -339,6 +412,14 @@ public struct PLG : IFlatbufferObject
     }
     var _PROVIDER_PEER_ID = _o.PROVIDER_PEER_ID == null ? default(StringOffset) : builder.CreateString(_o.PROVIDER_PEER_ID);
     var _PROVIDER_EPM_CID = _o.PROVIDER_EPM_CID == null ? default(StringOffset) : builder.CreateString(_o.PROVIDER_EPM_CID);
+    var _REQUIRED_SCOPE = _o.REQUIRED_SCOPE == null ? default(StringOffset) : builder.CreateString(_o.REQUIRED_SCOPE);
+    var _KEY_ID = _o.KEY_ID == null ? default(StringOffset) : builder.CreateString(_o.KEY_ID);
+    var _ALLOWED_DOMAINS = default(VectorOffset);
+    if (_o.ALLOWED_DOMAINS != null) {
+      var __ALLOWED_DOMAINS = new StringOffset[_o.ALLOWED_DOMAINS.Count];
+      for (var _j = 0; _j < __ALLOWED_DOMAINS.Length; ++_j) { __ALLOWED_DOMAINS[_j] = builder.CreateString(_o.ALLOWED_DOMAINS[_j]); }
+      _ALLOWED_DOMAINS = CreateALLOWED_DOMAINSVector(builder, __ALLOWED_DOMAINS);
+    }
     var _MIN_PERMISSIONS = default(VectorOffset);
     if (_o.MIN_PERMISSIONS != null) {
       var __MIN_PERMISSIONS = new StringOffset[_o.MIN_PERMISSIONS.Count];
@@ -364,6 +445,8 @@ public struct PLG : IFlatbufferObject
       _WASM_HASH,
       _o.WASM_SIZE,
       _WASM_CID,
+      _ENCRYPTED_WASM_HASH,
+      _o.ENCRYPTED_WASM_SIZE,
       _ENTRY_FUNCTIONS,
       _REQUIRED_SCHEMAS,
       _DEPENDENCIES,
@@ -371,6 +454,10 @@ public struct PLG : IFlatbufferObject
       _PROVIDER_PEER_ID,
       _PROVIDER_EPM_CID,
       _o.ENCRYPTED,
+      _REQUIRED_SCOPE,
+      _KEY_ID,
+      _ALLOWED_DOMAINS,
+      _o.MAX_GRANT_TIMEOUT_MS,
       _MIN_PERMISSIONS,
       _o.CREATED_AT,
       _o.UPDATED_AT,
@@ -392,6 +479,8 @@ public class PLGT
   public List<byte> WASM_HASH { get; set; }
   public ulong WASM_SIZE { get; set; }
   public string WASM_CID { get; set; }
+  public List<byte> ENCRYPTED_WASM_HASH { get; set; }
+  public ulong ENCRYPTED_WASM_SIZE { get; set; }
   public List<EntryFunctionT> ENTRY_FUNCTIONS { get; set; }
   public List<string> REQUIRED_SCHEMAS { get; set; }
   public List<PluginDependencyT> DEPENDENCIES { get; set; }
@@ -399,6 +488,10 @@ public class PLGT
   public string PROVIDER_PEER_ID { get; set; }
   public string PROVIDER_EPM_CID { get; set; }
   public bool ENCRYPTED { get; set; }
+  public string REQUIRED_SCOPE { get; set; }
+  public string KEY_ID { get; set; }
+  public List<string> ALLOWED_DOMAINS { get; set; }
+  public ulong MAX_GRANT_TIMEOUT_MS { get; set; }
   public List<string> MIN_PERMISSIONS { get; set; }
   public ulong CREATED_AT { get; set; }
   public ulong UPDATED_AT { get; set; }
@@ -417,6 +510,8 @@ public class PLGT
     this.WASM_HASH = null;
     this.WASM_SIZE = 0;
     this.WASM_CID = null;
+    this.ENCRYPTED_WASM_HASH = null;
+    this.ENCRYPTED_WASM_SIZE = 0;
     this.ENTRY_FUNCTIONS = null;
     this.REQUIRED_SCHEMAS = null;
     this.DEPENDENCIES = null;
@@ -424,6 +519,10 @@ public class PLGT
     this.PROVIDER_PEER_ID = null;
     this.PROVIDER_EPM_CID = null;
     this.ENCRYPTED = true;
+    this.REQUIRED_SCOPE = null;
+    this.KEY_ID = null;
+    this.ALLOWED_DOMAINS = null;
+    this.MAX_GRANT_TIMEOUT_MS = 0;
     this.MIN_PERMISSIONS = null;
     this.CREATED_AT = 0;
     this.UPDATED_AT = 0;
@@ -457,20 +556,26 @@ static public class PLGVerify
       && verifier.VerifyVectorOfData(tablePos, 16 /*WASM_HASH*/, 1 /*byte*/, false)
       && verifier.VerifyField(tablePos, 18 /*WASM_SIZE*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyString(tablePos, 20 /*WASM_CID*/, false)
-      && verifier.VerifyVectorOfTables(tablePos, 22 /*ENTRY_FUNCTIONS*/, EntryFunctionVerify.Verify, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 24 /*REQUIRED_SCHEMAS*/, false)
-      && verifier.VerifyVectorOfTables(tablePos, 26 /*DEPENDENCIES*/, PluginDependencyVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 28 /*CAPABILITIES*/, PluginCapabilityVerify.Verify, false)
-      && verifier.VerifyString(tablePos, 30 /*PROVIDER_PEER_ID*/, false)
-      && verifier.VerifyString(tablePos, 32 /*PROVIDER_EPM_CID*/, false)
-      && verifier.VerifyField(tablePos, 34 /*ENCRYPTED*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 36 /*MIN_PERMISSIONS*/, false)
-      && verifier.VerifyField(tablePos, 38 /*CREATED_AT*/, 8 /*ulong*/, 8, false)
-      && verifier.VerifyField(tablePos, 40 /*UPDATED_AT*/, 8 /*ulong*/, 8, false)
-      && verifier.VerifyString(tablePos, 42 /*DOCUMENTATION_URL*/, false)
-      && verifier.VerifyString(tablePos, 44 /*ICON_URL*/, false)
-      && verifier.VerifyString(tablePos, 46 /*LICENSE*/, false)
-      && verifier.VerifyVectorOfData(tablePos, 48 /*SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 22 /*ENCRYPTED_WASM_HASH*/, 1 /*byte*/, false)
+      && verifier.VerifyField(tablePos, 24 /*ENCRYPTED_WASM_SIZE*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyVectorOfTables(tablePos, 26 /*ENTRY_FUNCTIONS*/, EntryFunctionVerify.Verify, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 28 /*REQUIRED_SCHEMAS*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 30 /*DEPENDENCIES*/, PluginDependencyVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 32 /*CAPABILITIES*/, PluginCapabilityVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 34 /*PROVIDER_PEER_ID*/, false)
+      && verifier.VerifyString(tablePos, 36 /*PROVIDER_EPM_CID*/, false)
+      && verifier.VerifyField(tablePos, 38 /*ENCRYPTED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 40 /*REQUIRED_SCOPE*/, false)
+      && verifier.VerifyString(tablePos, 42 /*KEY_ID*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 44 /*ALLOWED_DOMAINS*/, false)
+      && verifier.VerifyField(tablePos, 46 /*MAX_GRANT_TIMEOUT_MS*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 48 /*MIN_PERMISSIONS*/, false)
+      && verifier.VerifyField(tablePos, 50 /*CREATED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*UPDATED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 54 /*DOCUMENTATION_URL*/, false)
+      && verifier.VerifyString(tablePos, 56 /*ICON_URL*/, false)
+      && verifier.VerifyString(tablePos, 58 /*LICENSE*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 60 /*SIGNATURE*/, 1 /*byte*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

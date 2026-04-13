@@ -59,84 +59,89 @@ public enum RecordType : byte
   IRO = 52,
   KML = 53,
   LCC = 54,
-  LDM = 55,
-  LKS = 56,
-  LND = 57,
-  LNE = 58,
-  MET = 59,
-  MFE = 60,
-  MNF = 61,
-  MNV = 62,
-  MPE = 63,
-  MSL = 64,
-  MST = 65,
-  MTI = 66,
-  NAV = 67,
-  OBD = 68,
-  OBT = 69,
-  OCM = 70,
-  OEM = 71,
-  OMM = 72,
-  OOA = 73,
-  OOB = 74,
-  OOD = 75,
-  OOE = 76,
-  OOI = 77,
-  OOL = 78,
-  OON = 79,
-  OOS = 80,
-  OOT = 81,
-  OPM = 82,
-  OSM = 83,
-  PCF = 84,
-  PHY = 85,
-  PLD = 86,
-  PLG = 87,
-  PLK = 88,
-  PNM = 89,
-  PPE = 90,
-  PRG = 91,
-  PUR = 92,
-  RAF = 93,
-  RCF = 94,
-  RDM = 95,
-  RDO = 96,
-  REV = 97,
-  RFB = 98,
-  RFE = 99,
-  RFM = 100,
-  RFO = 101,
-  ROC = 102,
-  SAR = 103,
-  SCM = 104,
-  SDL = 105,
-  SEN = 106,
-  SEO = 107,
-  SEV = 108,
-  SIT = 109,
-  SKI = 110,
-  SNR = 111,
-  SOI = 112,
-  SON = 113,
-  SPP = 114,
-  SPW = 115,
-  STF = 116,
-  STR = 117,
-  STV = 118,
-  SWR = 119,
-  TCF = 120,
-  TDM = 121,
-  TIM = 122,
-  TKG = 123,
-  TME = 124,
-  TMF = 125,
-  TPN = 126,
-  TRK = 127,
-  TRN = 128,
-  VCM = 129,
-  WPN = 130,
-  WTH = 131,
-  XTC = 132,
+  LCH = 55,
+  LDM = 56,
+  LGR = 57,
+  LKS = 58,
+  LMR = 59,
+  LND = 60,
+  LNE = 61,
+  LPF = 62,
+  LWK = 63,
+  MET = 64,
+  MFE = 65,
+  MNF = 66,
+  MNV = 67,
+  MPE = 68,
+  MSL = 69,
+  MST = 70,
+  MTI = 71,
+  NAV = 72,
+  OBD = 73,
+  OBT = 74,
+  OCM = 75,
+  OEM = 76,
+  OMM = 77,
+  OOA = 78,
+  OOB = 79,
+  OOD = 80,
+  OOE = 81,
+  OOI = 82,
+  OOL = 83,
+  OON = 84,
+  OOS = 85,
+  OOT = 86,
+  OPM = 87,
+  OSM = 88,
+  PCF = 89,
+  PHY = 90,
+  PLD = 91,
+  PLG = 92,
+  PLK = 93,
+  PNM = 94,
+  PPE = 95,
+  PRG = 96,
+  PUR = 97,
+  RAF = 98,
+  RCF = 99,
+  RDM = 100,
+  RDO = 101,
+  REV = 102,
+  RFB = 103,
+  RFE = 104,
+  RFM = 105,
+  RFO = 106,
+  ROC = 107,
+  SAR = 108,
+  SCM = 109,
+  SDL = 110,
+  SEN = 111,
+  SEO = 112,
+  SEV = 113,
+  SIT = 114,
+  SKI = 115,
+  SNR = 116,
+  SOI = 117,
+  SON = 118,
+  SPP = 119,
+  SPW = 120,
+  STF = 121,
+  STR = 122,
+  STV = 123,
+  SWR = 124,
+  TCF = 125,
+  TDM = 126,
+  TIM = 127,
+  TKG = 128,
+  TME = 129,
+  TMF = 130,
+  TPN = 131,
+  TRK = 132,
+  TRN = 133,
+  VCM = 134,
+  WPN = 135,
+  WTH = 136,
+  XTC = 137,
 };
 
 public class RecordTypeUnion {
@@ -257,14 +262,24 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromKML(KMLT _kml) { return new RecordTypeUnion{ Type = RecordType.KML, Value = _kml }; }
   public LCCT AsLCC() { return this.As<LCCT>(); }
   public static RecordTypeUnion FromLCC(LCCT _lcc) { return new RecordTypeUnion{ Type = RecordType.LCC, Value = _lcc }; }
+  public LCHT AsLCH() { return this.As<LCHT>(); }
+  public static RecordTypeUnion FromLCH(LCHT _lch) { return new RecordTypeUnion{ Type = RecordType.LCH, Value = _lch }; }
   public LDMT AsLDM() { return this.As<LDMT>(); }
   public static RecordTypeUnion FromLDM(LDMT _ldm) { return new RecordTypeUnion{ Type = RecordType.LDM, Value = _ldm }; }
+  public LGRT AsLGR() { return this.As<LGRT>(); }
+  public static RecordTypeUnion FromLGR(LGRT _lgr) { return new RecordTypeUnion{ Type = RecordType.LGR, Value = _lgr }; }
   public LKST AsLKS() { return this.As<LKST>(); }
   public static RecordTypeUnion FromLKS(LKST _lks) { return new RecordTypeUnion{ Type = RecordType.LKS, Value = _lks }; }
+  public LMRT AsLMR() { return this.As<LMRT>(); }
+  public static RecordTypeUnion FromLMR(LMRT _lmr) { return new RecordTypeUnion{ Type = RecordType.LMR, Value = _lmr }; }
   public LNDT AsLND() { return this.As<LNDT>(); }
   public static RecordTypeUnion FromLND(LNDT _lnd) { return new RecordTypeUnion{ Type = RecordType.LND, Value = _lnd }; }
   public LNET AsLNE() { return this.As<LNET>(); }
   public static RecordTypeUnion FromLNE(LNET _lne) { return new RecordTypeUnion{ Type = RecordType.LNE, Value = _lne }; }
+  public LPFT AsLPF() { return this.As<LPFT>(); }
+  public static RecordTypeUnion FromLPF(LPFT _lpf) { return new RecordTypeUnion{ Type = RecordType.LPF, Value = _lpf }; }
+  public LWKT AsLWK() { return this.As<LWKT>(); }
+  public static RecordTypeUnion FromLWK(LWKT _lwk) { return new RecordTypeUnion{ Type = RecordType.LWK, Value = _lwk }; }
   public METT AsMET() { return this.As<METT>(); }
   public static RecordTypeUnion FromMET(METT _met) { return new RecordTypeUnion{ Type = RecordType.MET, Value = _met }; }
   public MFET AsMFE() { return this.As<MFET>(); }
@@ -471,10 +486,15 @@ public class RecordTypeUnion {
       case RecordType.IRO: return IRO.Pack(builder, _o.AsIRO()).Value;
       case RecordType.KML: return KML.Pack(builder, _o.AsKML()).Value;
       case RecordType.LCC: return LCC.Pack(builder, _o.AsLCC()).Value;
+      case RecordType.LCH: return LCH.Pack(builder, _o.AsLCH()).Value;
       case RecordType.LDM: return LDM.Pack(builder, _o.AsLDM()).Value;
+      case RecordType.LGR: return LGR.Pack(builder, _o.AsLGR()).Value;
       case RecordType.LKS: return LKS.Pack(builder, _o.AsLKS()).Value;
+      case RecordType.LMR: return LMR.Pack(builder, _o.AsLMR()).Value;
       case RecordType.LND: return LND.Pack(builder, _o.AsLND()).Value;
       case RecordType.LNE: return LNE.Pack(builder, _o.AsLNE()).Value;
+      case RecordType.LPF: return LPF.Pack(builder, _o.AsLPF()).Value;
+      case RecordType.LWK: return LWK.Pack(builder, _o.AsLWK()).Value;
       case RecordType.MET: return MET.Pack(builder, _o.AsMET()).Value;
       case RecordType.MFE: return MFE.Pack(builder, _o.AsMFE()).Value;
       case RecordType.MNF: return MNF.Pack(builder, _o.AsMNF()).Value;
@@ -724,17 +744,32 @@ static public class RecordTypeVerify
       case RecordType.LCC:
         result = LCCVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.LCH:
+        result = LCHVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.LDM:
         result = LDMVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.LGR:
+        result = LGRVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.LKS:
         result = LKSVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.LMR:
+        result = LMRVerify.Verify(verifier, tablePos);
         break;
       case RecordType.LND:
         result = LNDVerify.Verify(verifier, tablePos);
         break;
       case RecordType.LNE:
         result = LNEVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.LPF:
+        result = LPFVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.LWK:
+        result = LWKVerify.Verify(verifier, tablePos);
         break;
       case RecordType.MET:
         result = METVerify.Verify(verifier, tablePos);

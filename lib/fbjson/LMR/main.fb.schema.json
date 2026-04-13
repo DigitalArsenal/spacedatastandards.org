@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "licensingModuleRequestAction": {
+      "type": "string",
+      "enum": [
+        "Fetch",
+        "Register",
+        "Load",
+        "Error"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Fetch": {
+          "value": 0
+        },
+        "Register": {
+          "value": 1
+        },
+        "Load": {
+          "value": 2
+        },
+        "Error": {
+          "value": 3
+        }
+      }
+    },
+    "LMR": {
+      "type": "object",
+      "description": "Module fetch/register/load control message",
+      "properties": {
+        "ACTION": {
+          "$ref": "#/definitions/licensingModuleRequestAction",
+          "description": "Action being requested or reported",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Fetch": {
+              "value": 0
+            },
+            "Register": {
+              "value": 1
+            },
+            "Load": {
+              "value": 2
+            },
+            "Error": {
+              "value": 3
+            }
+          }
+        },
+        "REQUEST_ID": {
+          "type": "string",
+          "description": "Unique request identifier",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "MODULE_ID": {
+          "type": "string",
+          "description": "Canonical module identifier",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "MODULE_VERSION": {
+          "type": "string",
+          "description": "Optional module version",
+          "x-flatbuffer-type": "string"
+        },
+        "WASM_CID": {
+          "type": "string",
+          "description": "IPFS CID of the encrypted module artifact",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "SHA-256 hash of the decrypted module bytes",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "STATUS": {
+          "type": "string",
+          "description": "Human-readable status",
+          "x-flatbuffer-type": "string"
+        },
+        "ERROR_CODE": {
+          "type": "string",
+          "description": "Structured error code",
+          "x-flatbuffer-type": "string"
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Structured error message",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "REQUEST_ID",
+        "MODULE_ID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/LMR",
+  "x-flatbuffer-root-type": "LMR",
+  "x-flatbuffer-file-identifier": "$LMR"
+}

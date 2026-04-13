@@ -366,20 +366,26 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_WASM_HASH = 16,
     VT_WASM_SIZE = 18,
     VT_WASM_CID = 20,
-    VT_ENTRY_FUNCTIONS = 22,
-    VT_REQUIRED_SCHEMAS = 24,
-    VT_DEPENDENCIES = 26,
-    VT_CAPABILITIES = 28,
-    VT_PROVIDER_PEER_ID = 30,
-    VT_PROVIDER_EPM_CID = 32,
-    VT_ENCRYPTED = 34,
-    VT_MIN_PERMISSIONS = 36,
-    VT_CREATED_AT = 38,
-    VT_UPDATED_AT = 40,
-    VT_DOCUMENTATION_URL = 42,
-    VT_ICON_URL = 44,
-    VT_LICENSE = 46,
-    VT_SIGNATURE = 48
+    VT_ENCRYPTED_WASM_HASH = 22,
+    VT_ENCRYPTED_WASM_SIZE = 24,
+    VT_ENTRY_FUNCTIONS = 26,
+    VT_REQUIRED_SCHEMAS = 28,
+    VT_DEPENDENCIES = 30,
+    VT_CAPABILITIES = 32,
+    VT_PROVIDER_PEER_ID = 34,
+    VT_PROVIDER_EPM_CID = 36,
+    VT_ENCRYPTED = 38,
+    VT_REQUIRED_SCOPE = 40,
+    VT_KEY_ID = 42,
+    VT_ALLOWED_DOMAINS = 44,
+    VT_MAX_GRANT_TIMEOUT_MS = 46,
+    VT_MIN_PERMISSIONS = 48,
+    VT_CREATED_AT = 50,
+    VT_UPDATED_AT = 52,
+    VT_DOCUMENTATION_URL = 54,
+    VT_ICON_URL = 56,
+    VT_LICENSE = 58,
+    VT_SIGNATURE = 60
   };
   /// Unique identifier for the plugin
   const ::flatbuffers::String *PLUGIN_ID() const {
@@ -409,13 +415,21 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *WASM_HASH() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_WASM_HASH);
   }
-  /// Size of WASM binary in bytes
+  /// Size of decrypted WASM binary in bytes
   uint64_t WASM_SIZE() const {
     return GetField<uint64_t>(VT_WASM_SIZE, 0);
   }
   /// IPFS CID of the encrypted WASM binary
   const ::flatbuffers::String *WASM_CID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_WASM_CID);
+  }
+  /// SHA256 hash of the encrypted delivery artifact bytes
+  const ::flatbuffers::Vector<uint8_t> *ENCRYPTED_WASM_HASH() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_ENCRYPTED_WASM_HASH);
+  }
+  /// Size of the encrypted delivery artifact in bytes
+  uint64_t ENCRYPTED_WASM_SIZE() const {
+    return GetField<uint64_t>(VT_ENCRYPTED_WASM_SIZE, 0);
   }
   /// Entry point functions exported by the plugin
   const ::flatbuffers::Vector<::flatbuffers::Offset<EntryFunction>> *ENTRY_FUNCTIONS() const {
@@ -444,6 +458,22 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Whether the WASM binary is encrypted
   bool ENCRYPTED() const {
     return GetField<uint8_t>(VT_ENCRYPTED, 1) != 0;
+  }
+  /// Canonical required scope for grant issuance
+  const ::flatbuffers::String *REQUIRED_SCOPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REQUIRED_SCOPE);
+  }
+  /// Provider-local identifier for the module content key
+  const ::flatbuffers::String *KEY_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_KEY_ID);
+  }
+  /// Allowed requester domains for module grants
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ALLOWED_DOMAINS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ALLOWED_DOMAINS);
+  }
+  /// Maximum grant timeout allowed for this module publication
+  uint64_t MAX_GRANT_TIMEOUT_MS() const {
+    return GetField<uint64_t>(VT_MAX_GRANT_TIMEOUT_MS, 0);
   }
   /// Minimum permissions required to run
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MIN_PERMISSIONS() const {
@@ -491,6 +521,9 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint64_t>(verifier, VT_WASM_SIZE, 8) &&
            VerifyOffset(verifier, VT_WASM_CID) &&
            verifier.VerifyString(WASM_CID()) &&
+           VerifyOffset(verifier, VT_ENCRYPTED_WASM_HASH) &&
+           verifier.VerifyVector(ENCRYPTED_WASM_HASH()) &&
+           VerifyField<uint64_t>(verifier, VT_ENCRYPTED_WASM_SIZE, 8) &&
            VerifyOffset(verifier, VT_ENTRY_FUNCTIONS) &&
            verifier.VerifyVector(ENTRY_FUNCTIONS()) &&
            verifier.VerifyVectorOfTables(ENTRY_FUNCTIONS()) &&
@@ -508,6 +541,14 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_PROVIDER_EPM_CID) &&
            verifier.VerifyString(PROVIDER_EPM_CID()) &&
            VerifyField<uint8_t>(verifier, VT_ENCRYPTED, 1) &&
+           VerifyOffset(verifier, VT_REQUIRED_SCOPE) &&
+           verifier.VerifyString(REQUIRED_SCOPE()) &&
+           VerifyOffset(verifier, VT_KEY_ID) &&
+           verifier.VerifyString(KEY_ID()) &&
+           VerifyOffset(verifier, VT_ALLOWED_DOMAINS) &&
+           verifier.VerifyVector(ALLOWED_DOMAINS()) &&
+           verifier.VerifyVectorOfStrings(ALLOWED_DOMAINS()) &&
+           VerifyField<uint64_t>(verifier, VT_MAX_GRANT_TIMEOUT_MS, 8) &&
            VerifyOffset(verifier, VT_MIN_PERMISSIONS) &&
            verifier.VerifyVector(MIN_PERMISSIONS()) &&
            verifier.VerifyVectorOfStrings(MIN_PERMISSIONS()) &&
@@ -556,6 +597,12 @@ struct PLGBuilder {
   void add_WASM_CID(::flatbuffers::Offset<::flatbuffers::String> WASM_CID) {
     fbb_.AddOffset(PLG::VT_WASM_CID, WASM_CID);
   }
+  void add_ENCRYPTED_WASM_HASH(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> ENCRYPTED_WASM_HASH) {
+    fbb_.AddOffset(PLG::VT_ENCRYPTED_WASM_HASH, ENCRYPTED_WASM_HASH);
+  }
+  void add_ENCRYPTED_WASM_SIZE(uint64_t ENCRYPTED_WASM_SIZE) {
+    fbb_.AddElement<uint64_t>(PLG::VT_ENCRYPTED_WASM_SIZE, ENCRYPTED_WASM_SIZE, 0);
+  }
   void add_ENTRY_FUNCTIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EntryFunction>>> ENTRY_FUNCTIONS) {
     fbb_.AddOffset(PLG::VT_ENTRY_FUNCTIONS, ENTRY_FUNCTIONS);
   }
@@ -576,6 +623,18 @@ struct PLGBuilder {
   }
   void add_ENCRYPTED(bool ENCRYPTED) {
     fbb_.AddElement<uint8_t>(PLG::VT_ENCRYPTED, static_cast<uint8_t>(ENCRYPTED), 1);
+  }
+  void add_REQUIRED_SCOPE(::flatbuffers::Offset<::flatbuffers::String> REQUIRED_SCOPE) {
+    fbb_.AddOffset(PLG::VT_REQUIRED_SCOPE, REQUIRED_SCOPE);
+  }
+  void add_KEY_ID(::flatbuffers::Offset<::flatbuffers::String> KEY_ID) {
+    fbb_.AddOffset(PLG::VT_KEY_ID, KEY_ID);
+  }
+  void add_ALLOWED_DOMAINS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALLOWED_DOMAINS) {
+    fbb_.AddOffset(PLG::VT_ALLOWED_DOMAINS, ALLOWED_DOMAINS);
+  }
+  void add_MAX_GRANT_TIMEOUT_MS(uint64_t MAX_GRANT_TIMEOUT_MS) {
+    fbb_.AddElement<uint64_t>(PLG::VT_MAX_GRANT_TIMEOUT_MS, MAX_GRANT_TIMEOUT_MS, 0);
   }
   void add_MIN_PERMISSIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MIN_PERMISSIONS) {
     fbb_.AddOffset(PLG::VT_MIN_PERMISSIONS, MIN_PERMISSIONS);
@@ -623,6 +682,8 @@ inline ::flatbuffers::Offset<PLG> CreatePLG(
     ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> WASM_HASH = 0,
     uint64_t WASM_SIZE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> WASM_CID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> ENCRYPTED_WASM_HASH = 0,
+    uint64_t ENCRYPTED_WASM_SIZE = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EntryFunction>>> ENTRY_FUNCTIONS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> REQUIRED_SCHEMAS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PluginDependency>>> DEPENDENCIES = 0,
@@ -630,6 +691,10 @@ inline ::flatbuffers::Offset<PLG> CreatePLG(
     ::flatbuffers::Offset<::flatbuffers::String> PROVIDER_PEER_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PROVIDER_EPM_CID = 0,
     bool ENCRYPTED = true,
+    ::flatbuffers::Offset<::flatbuffers::String> REQUIRED_SCOPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> KEY_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALLOWED_DOMAINS = 0,
+    uint64_t MAX_GRANT_TIMEOUT_MS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MIN_PERMISSIONS = 0,
     uint64_t CREATED_AT = 0,
     uint64_t UPDATED_AT = 0,
@@ -640,18 +705,24 @@ inline ::flatbuffers::Offset<PLG> CreatePLG(
   PLGBuilder builder_(_fbb);
   builder_.add_UPDATED_AT(UPDATED_AT);
   builder_.add_CREATED_AT(CREATED_AT);
+  builder_.add_MAX_GRANT_TIMEOUT_MS(MAX_GRANT_TIMEOUT_MS);
+  builder_.add_ENCRYPTED_WASM_SIZE(ENCRYPTED_WASM_SIZE);
   builder_.add_WASM_SIZE(WASM_SIZE);
   builder_.add_SIGNATURE(SIGNATURE);
   builder_.add_LICENSE(LICENSE);
   builder_.add_ICON_URL(ICON_URL);
   builder_.add_DOCUMENTATION_URL(DOCUMENTATION_URL);
   builder_.add_MIN_PERMISSIONS(MIN_PERMISSIONS);
+  builder_.add_ALLOWED_DOMAINS(ALLOWED_DOMAINS);
+  builder_.add_KEY_ID(KEY_ID);
+  builder_.add_REQUIRED_SCOPE(REQUIRED_SCOPE);
   builder_.add_PROVIDER_EPM_CID(PROVIDER_EPM_CID);
   builder_.add_PROVIDER_PEER_ID(PROVIDER_PEER_ID);
   builder_.add_CAPABILITIES(CAPABILITIES);
   builder_.add_DEPENDENCIES(DEPENDENCIES);
   builder_.add_REQUIRED_SCHEMAS(REQUIRED_SCHEMAS);
   builder_.add_ENTRY_FUNCTIONS(ENTRY_FUNCTIONS);
+  builder_.add_ENCRYPTED_WASM_HASH(ENCRYPTED_WASM_HASH);
   builder_.add_WASM_CID(WASM_CID);
   builder_.add_WASM_HASH(WASM_HASH);
   builder_.add_ABI_VERSION(ABI_VERSION);
@@ -675,6 +746,8 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
     const std::vector<uint8_t> *WASM_HASH = nullptr,
     uint64_t WASM_SIZE = 0,
     const char *WASM_CID = nullptr,
+    const std::vector<uint8_t> *ENCRYPTED_WASM_HASH = nullptr,
+    uint64_t ENCRYPTED_WASM_SIZE = 0,
     const std::vector<::flatbuffers::Offset<EntryFunction>> *ENTRY_FUNCTIONS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *REQUIRED_SCHEMAS = nullptr,
     const std::vector<::flatbuffers::Offset<PluginDependency>> *DEPENDENCIES = nullptr,
@@ -682,6 +755,10 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
     const char *PROVIDER_PEER_ID = nullptr,
     const char *PROVIDER_EPM_CID = nullptr,
     bool ENCRYPTED = true,
+    const char *REQUIRED_SCOPE = nullptr,
+    const char *KEY_ID = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ALLOWED_DOMAINS = nullptr,
+    uint64_t MAX_GRANT_TIMEOUT_MS = 0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MIN_PERMISSIONS = nullptr,
     uint64_t CREATED_AT = 0,
     uint64_t UPDATED_AT = 0,
@@ -695,12 +772,16 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
   auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
   auto WASM_HASH__ = WASM_HASH ? _fbb.CreateVector<uint8_t>(*WASM_HASH) : 0;
   auto WASM_CID__ = WASM_CID ? _fbb.CreateString(WASM_CID) : 0;
+  auto ENCRYPTED_WASM_HASH__ = ENCRYPTED_WASM_HASH ? _fbb.CreateVector<uint8_t>(*ENCRYPTED_WASM_HASH) : 0;
   auto ENTRY_FUNCTIONS__ = ENTRY_FUNCTIONS ? _fbb.CreateVector<::flatbuffers::Offset<EntryFunction>>(*ENTRY_FUNCTIONS) : 0;
   auto REQUIRED_SCHEMAS__ = REQUIRED_SCHEMAS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*REQUIRED_SCHEMAS) : 0;
   auto DEPENDENCIES__ = DEPENDENCIES ? _fbb.CreateVector<::flatbuffers::Offset<PluginDependency>>(*DEPENDENCIES) : 0;
   auto CAPABILITIES__ = CAPABILITIES ? _fbb.CreateVector<::flatbuffers::Offset<PluginCapability>>(*CAPABILITIES) : 0;
   auto PROVIDER_PEER_ID__ = PROVIDER_PEER_ID ? _fbb.CreateString(PROVIDER_PEER_ID) : 0;
   auto PROVIDER_EPM_CID__ = PROVIDER_EPM_CID ? _fbb.CreateString(PROVIDER_EPM_CID) : 0;
+  auto REQUIRED_SCOPE__ = REQUIRED_SCOPE ? _fbb.CreateString(REQUIRED_SCOPE) : 0;
+  auto KEY_ID__ = KEY_ID ? _fbb.CreateString(KEY_ID) : 0;
+  auto ALLOWED_DOMAINS__ = ALLOWED_DOMAINS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ALLOWED_DOMAINS) : 0;
   auto MIN_PERMISSIONS__ = MIN_PERMISSIONS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MIN_PERMISSIONS) : 0;
   auto DOCUMENTATION_URL__ = DOCUMENTATION_URL ? _fbb.CreateString(DOCUMENTATION_URL) : 0;
   auto ICON_URL__ = ICON_URL ? _fbb.CreateString(ICON_URL) : 0;
@@ -717,6 +798,8 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
       WASM_HASH__,
       WASM_SIZE,
       WASM_CID__,
+      ENCRYPTED_WASM_HASH__,
+      ENCRYPTED_WASM_SIZE,
       ENTRY_FUNCTIONS__,
       REQUIRED_SCHEMAS__,
       DEPENDENCIES__,
@@ -724,6 +807,10 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
       PROVIDER_PEER_ID__,
       PROVIDER_EPM_CID__,
       ENCRYPTED,
+      REQUIRED_SCOPE__,
+      KEY_ID__,
+      ALLOWED_DOMAINS__,
+      MAX_GRANT_TIMEOUT_MS,
       MIN_PERMISSIONS__,
       CREATED_AT,
       UPDATED_AT,

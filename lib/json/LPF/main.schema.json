@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "licensingProofMessageType" : {
+      "type" : "string",
+      "enum": ["ProofRequest", "ProofAccepted", "ProofRejected"]
+    },
+    "LPF" : {
+      "type" : "object",
+      "description" : "Licensing proof message",
+      "properties" : {
+        "MESSAGE_TYPE" : {
+                "$ref" : "#/definitions/licensingProofMessageType",
+                "description" : "Message type"
+              },
+        "REQUEST_ID" : {
+                "type" : "string",
+                "description" : "Unique request identifier"
+              },
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "Canonical module identifier"
+              },
+        "MODULE_VERSION" : {
+                "type" : "string",
+                "description" : "Optional requested module version"
+              },
+        "REQUESTER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Requester peer identifier"
+              },
+        "REQUESTER_XPUB" : {
+                "type" : "string",
+                "description" : "Requester account identity or wallet xpub"
+              },
+        "REQUESTED_DOMAIN" : {
+                "type" : "string",
+                "description" : "Requested domain proved for policy evaluation"
+              },
+        "REQUESTED_TIMEOUT_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Requested timeout in milliseconds"
+              },
+        "REQUESTER_EPHEMERAL_PUBKEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Requester ephemeral X25519 public key"
+              },
+        "CHALLENGE_NONCE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Provider-issued challenge nonce being proved"
+              },
+        "CHALLENGE_EXPIRES_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Challenge expiration time being acknowledged"
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Provider peer identifier that issued the challenge"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Detached requester signature over the challenge payload"
+              },
+        "SIGNING_PUBKEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Requester signing public key"
+              },
+        "TIMESTAMP_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Proof timestamp in milliseconds since epoch"
+              },
+        "REJECTION_CODE" : {
+                "type" : "string",
+                "description" : "Structured rejection code"
+              },
+        "REJECTION_MESSAGE" : {
+                "type" : "string",
+                "description" : "Structured rejection message"
+              }
+      },
+      "required" : ["REQUEST_ID", "MODULE_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LPF"
+}

@@ -1404,6 +1404,113 @@
             },
             "$ref": "#/definitions/MNV"
         },
+        "LWK": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "licensingWrappedKeyAlgorithm": {
+                    "type": "string",
+                    "enum": [
+                        "X25519_HKDF_SHA256_AES_256_GCM"
+                    ]
+                },
+                "LWK": {
+                    "type": "object",
+                    "description": "Wrapped module content key",
+                    "properties": {
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Unique request identifier"
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier"
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Optional module version"
+                        },
+                        "CONTENT_KEY_ID": {
+                            "type": "string",
+                            "description": "Provider-local content key identifier"
+                        },
+                        "RECIPIENT_KEY_ID": {
+                            "type": "string",
+                            "description": "Recipient key identifier or fingerprint"
+                        },
+                        "ALGORITHM": {
+                            "$ref": "#/definitions/licensingWrappedKeyAlgorithm",
+                            "description": "Wrapped-key algorithm"
+                        },
+                        "REQUESTER_EPHEMERAL_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Requester ephemeral X25519 public key"
+                        },
+                        "PROVIDER_EPHEMERAL_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Provider ephemeral X25519 public key"
+                        },
+                        "HKDF_SALT": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "HKDF salt"
+                        },
+                        "IV": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "AES-GCM IV"
+                        },
+                        "CIPHERTEXT": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Wrapped key ciphertext"
+                        },
+                        "TAG": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "AES-GCM authentication tag"
+                        },
+                        "EXPIRES_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Envelope expiration time in milliseconds since epoch"
+                        }
+                    },
+                    "required": [
+                        "REQUEST_ID",
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/LWK"
+        },
         "CDM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -3697,6 +3804,127 @@
             },
             "$ref": "#/definitions/HEL"
         },
+        "LCH": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "licensingChallengeRole": {
+                    "type": "string",
+                    "enum": [
+                        "Requester",
+                        "Provider"
+                    ]
+                },
+                "licensingChallengeMessageType": {
+                    "type": "string",
+                    "enum": [
+                        "Request",
+                        "Response",
+                        "Error"
+                    ]
+                },
+                "LCH": {
+                    "type": "object",
+                    "description": "Licensing challenge message",
+                    "properties": {
+                        "MESSAGE_TYPE": {
+                            "$ref": "#/definitions/licensingChallengeMessageType",
+                            "description": "Message type"
+                        },
+                        "ROLE": {
+                            "$ref": "#/definitions/licensingChallengeRole",
+                            "description": "Sender role"
+                        },
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Unique request identifier"
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier"
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Optional requested module version"
+                        },
+                        "REQUESTER_PEER_ID": {
+                            "type": "string",
+                            "description": "Requester peer identifier"
+                        },
+                        "REQUESTER_XPUB": {
+                            "type": "string",
+                            "description": "Requester account identity or wallet xpub"
+                        },
+                        "REQUESTER_SIGNING_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Requester Ed25519 signing public key"
+                        },
+                        "REQUESTER_EPHEMERAL_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Requester ephemeral X25519 public key"
+                        },
+                        "REQUESTED_DOMAIN": {
+                            "type": "string",
+                            "description": "Requested domain for policy evaluation"
+                        },
+                        "REQUESTED_TIMEOUT_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Requested timeout in milliseconds"
+                        },
+                        "REQUESTED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Request timestamp in milliseconds since epoch"
+                        },
+                        "CHALLENGE_NONCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Provider-issued challenge nonce"
+                        },
+                        "EXPIRES_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Challenge expiration time in milliseconds since epoch"
+                        },
+                        "PROVIDER_PEER_ID": {
+                            "type": "string",
+                            "description": "Provider peer identifier"
+                        },
+                        "ERROR_CODE": {
+                            "type": "string",
+                            "description": "Structured error code"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Structured error message"
+                        }
+                    },
+                    "required": [
+                        "REQUEST_ID",
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/LCH"
+        },
         "DFH": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -5000,6 +5228,73 @@
             },
             "$ref": "#/definitions/SEV"
         },
+        "LMR": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "licensingModuleRequestAction": {
+                    "type": "string",
+                    "enum": [
+                        "Fetch",
+                        "Register",
+                        "Load",
+                        "Error"
+                    ]
+                },
+                "LMR": {
+                    "type": "object",
+                    "description": "Module fetch/register/load control message",
+                    "properties": {
+                        "ACTION": {
+                            "$ref": "#/definitions/licensingModuleRequestAction",
+                            "description": "Action being requested or reported"
+                        },
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Unique request identifier"
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier"
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Optional module version"
+                        },
+                        "WASM_CID": {
+                            "type": "string",
+                            "description": "IPFS CID of the encrypted module artifact"
+                        },
+                        "MODULE_HASH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "SHA-256 hash of the decrypted module bytes"
+                        },
+                        "STATUS": {
+                            "type": "string",
+                            "description": "Human-readable status"
+                        },
+                        "ERROR_CODE": {
+                            "type": "string",
+                            "description": "Structured error code"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Structured error message"
+                        }
+                    },
+                    "required": [
+                        "REQUEST_ID",
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/LMR"
+        },
         "PUR": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -5750,6 +6045,113 @@
                 }
             },
             "$ref": "#/definitions/CRM"
+        },
+        "LGR": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "licensingWrappedKeyAlgorithm": {
+                    "type": "string",
+                    "enum": [
+                        "X25519_HKDF_SHA256_AES_256_GCM"
+                    ]
+                },
+                "LWK": {
+                    "type": "object",
+                    "description": "Wrapped module content key",
+                    "properties": {
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Unique request identifier"
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier"
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Optional module version"
+                        },
+                        "CONTENT_KEY_ID": {
+                            "type": "string",
+                            "description": "Provider-local content key identifier"
+                        },
+                        "RECIPIENT_KEY_ID": {
+                            "type": "string",
+                            "description": "Recipient key identifier or fingerprint"
+                        },
+                        "ALGORITHM": {
+                            "$ref": "#/definitions/licensingWrappedKeyAlgorithm",
+                            "description": "Wrapped-key algorithm"
+                        },
+                        "REQUESTER_EPHEMERAL_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Requester ephemeral X25519 public key"
+                        },
+                        "PROVIDER_EPHEMERAL_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Provider ephemeral X25519 public key"
+                        },
+                        "HKDF_SALT": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "HKDF salt"
+                        },
+                        "IV": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "AES-GCM IV"
+                        },
+                        "CIPHERTEXT": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Wrapped key ciphertext"
+                        },
+                        "TAG": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "AES-GCM authentication tag"
+                        },
+                        "EXPIRES_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Envelope expiration time in milliseconds since epoch"
+                        }
+                    },
+                    "required": [
+                        "REQUEST_ID",
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/LWK"
         },
         "ION": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -15491,11 +15893,26 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 18446744073709551615,
-                            "description": "Size of WASM binary in bytes"
+                            "description": "Size of decrypted WASM binary in bytes"
                         },
                         "WASM_CID": {
                             "type": "string",
                             "description": "IPFS CID of the encrypted WASM binary"
+                        },
+                        "ENCRYPTED_WASM_HASH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "SHA256 hash of the encrypted delivery artifact bytes"
+                        },
+                        "ENCRYPTED_WASM_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Size of the encrypted delivery artifact in bytes"
                         },
                         "ENTRY_FUNCTIONS": {
                             "type": "array",
@@ -15536,6 +15953,27 @@
                         "ENCRYPTED": {
                             "type": "boolean",
                             "description": "Whether the WASM binary is encrypted"
+                        },
+                        "REQUIRED_SCOPE": {
+                            "type": "string",
+                            "description": "Canonical required scope for grant issuance"
+                        },
+                        "KEY_ID": {
+                            "type": "string",
+                            "description": "Provider-local identifier for the module content key"
+                        },
+                        "ALLOWED_DOMAINS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Allowed requester domains for module grants"
+                        },
+                        "MAX_GRANT_TIMEOUT_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Maximum grant timeout allowed for this module publication"
                         },
                         "MIN_PERMISSIONS": {
                             "type": "array",
@@ -27841,6 +28279,125 @@
                 }
             },
             "$ref": "#/definitions/ACM"
+        },
+        "LPF": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "licensingProofMessageType": {
+                    "type": "string",
+                    "enum": [
+                        "ProofRequest",
+                        "ProofAccepted",
+                        "ProofRejected"
+                    ]
+                },
+                "LPF": {
+                    "type": "object",
+                    "description": "Licensing proof message",
+                    "properties": {
+                        "MESSAGE_TYPE": {
+                            "$ref": "#/definitions/licensingProofMessageType",
+                            "description": "Message type"
+                        },
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Unique request identifier"
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier"
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Optional requested module version"
+                        },
+                        "REQUESTER_PEER_ID": {
+                            "type": "string",
+                            "description": "Requester peer identifier"
+                        },
+                        "REQUESTER_XPUB": {
+                            "type": "string",
+                            "description": "Requester account identity or wallet xpub"
+                        },
+                        "REQUESTED_DOMAIN": {
+                            "type": "string",
+                            "description": "Requested domain proved for policy evaluation"
+                        },
+                        "REQUESTED_TIMEOUT_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Requested timeout in milliseconds"
+                        },
+                        "REQUESTER_EPHEMERAL_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Requester ephemeral X25519 public key"
+                        },
+                        "CHALLENGE_NONCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Provider-issued challenge nonce being proved"
+                        },
+                        "CHALLENGE_EXPIRES_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Challenge expiration time being acknowledged"
+                        },
+                        "PROVIDER_PEER_ID": {
+                            "type": "string",
+                            "description": "Provider peer identifier that issued the challenge"
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Detached requester signature over the challenge payload"
+                        },
+                        "SIGNING_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Requester signing public key"
+                        },
+                        "TIMESTAMP_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Proof timestamp in milliseconds since epoch"
+                        },
+                        "REJECTION_CODE": {
+                            "type": "string",
+                            "description": "Structured rejection code"
+                        },
+                        "REJECTION_MESSAGE": {
+                            "type": "string",
+                            "description": "Structured rejection message"
+                        }
+                    },
+                    "required": [
+                        "REQUEST_ID",
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/LPF"
         },
         "SWR": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",

@@ -48,7 +48,7 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
     wasmHashLength(): number;
     wasmHashArray(): Uint8Array | null;
     /**
-     * Size of WASM binary in bytes
+     * Size of decrypted WASM binary in bytes
      */
     WASM_SIZE(): bigint;
     /**
@@ -56,6 +56,16 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
      */
     WASM_CID(): string | null;
     WASM_CID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * SHA256 hash of the encrypted delivery artifact bytes
+     */
+    ENCRYPTED_WASM_HASH(index: number): number | null;
+    encryptedWasmHashLength(): number;
+    encryptedWasmHashArray(): Uint8Array | null;
+    /**
+     * Size of the encrypted delivery artifact in bytes
+     */
+    ENCRYPTED_WASM_SIZE(): bigint;
     /**
      * Entry point functions exported by the plugin
      */
@@ -91,6 +101,26 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
      * Whether the WASM binary is encrypted
      */
     ENCRYPTED(): boolean;
+    /**
+     * Canonical required scope for grant issuance
+     */
+    REQUIRED_SCOPE(): string | null;
+    REQUIRED_SCOPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Provider-local identifier for the module content key
+     */
+    KEY_ID(): string | null;
+    KEY_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Allowed requester domains for module grants
+     */
+    ALLOWED_DOMAINS(index: number): string;
+    ALLOWED_DOMAINS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    allowedDomainsLength(): number;
+    /**
+     * Maximum grant timeout allowed for this module publication
+     */
+    MAX_GRANT_TIMEOUT_MS(): bigint;
     /**
      * Minimum permissions required to run
      */
@@ -138,6 +168,10 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
     static startWasmHashVector(builder: flatbuffers.Builder, numElems: number): void;
     static addWasmSize(builder: flatbuffers.Builder, WASM_SIZE: bigint): void;
     static addWasmCid(builder: flatbuffers.Builder, WASM_CIDOffset: flatbuffers.Offset): void;
+    static addEncryptedWasmHash(builder: flatbuffers.Builder, ENCRYPTED_WASM_HASHOffset: flatbuffers.Offset): void;
+    static createEncryptedWasmHashVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startEncryptedWasmHashVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addEncryptedWasmSize(builder: flatbuffers.Builder, ENCRYPTED_WASM_SIZE: bigint): void;
     static addEntryFunctions(builder: flatbuffers.Builder, ENTRY_FUNCTIONSOffset: flatbuffers.Offset): void;
     static createEntryFunctionsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startEntryFunctionsVector(builder: flatbuffers.Builder, numElems: number): void;
@@ -153,6 +187,12 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
     static addProviderPeerId(builder: flatbuffers.Builder, PROVIDER_PEER_IDOffset: flatbuffers.Offset): void;
     static addProviderEpmCid(builder: flatbuffers.Builder, PROVIDER_EPM_CIDOffset: flatbuffers.Offset): void;
     static addEncrypted(builder: flatbuffers.Builder, ENCRYPTED: boolean): void;
+    static addRequiredScope(builder: flatbuffers.Builder, REQUIRED_SCOPEOffset: flatbuffers.Offset): void;
+    static addKeyId(builder: flatbuffers.Builder, KEY_IDOffset: flatbuffers.Offset): void;
+    static addAllowedDomains(builder: flatbuffers.Builder, ALLOWED_DOMAINSOffset: flatbuffers.Offset): void;
+    static createAllowedDomainsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startAllowedDomainsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addMaxGrantTimeoutMs(builder: flatbuffers.Builder, MAX_GRANT_TIMEOUT_MS: bigint): void;
     static addMinPermissions(builder: flatbuffers.Builder, MIN_PERMISSIONSOffset: flatbuffers.Offset): void;
     static createMinPermissionsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startMinPermissionsVector(builder: flatbuffers.Builder, numElems: number): void;
@@ -167,7 +207,7 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
     static endPLG(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishPLGBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedPLGBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createPLG(builder: flatbuffers.Builder, PLUGIN_IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, PLUGIN_TYPE: pluginType, ABI_VERSION: number, WASM_HASHOffset: flatbuffers.Offset, WASM_SIZE: bigint, WASM_CIDOffset: flatbuffers.Offset, ENTRY_FUNCTIONSOffset: flatbuffers.Offset, REQUIRED_SCHEMASOffset: flatbuffers.Offset, DEPENDENCIESOffset: flatbuffers.Offset, CAPABILITIESOffset: flatbuffers.Offset, PROVIDER_PEER_IDOffset: flatbuffers.Offset, PROVIDER_EPM_CIDOffset: flatbuffers.Offset, ENCRYPTED: boolean, MIN_PERMISSIONSOffset: flatbuffers.Offset, CREATED_AT: bigint, UPDATED_AT: bigint, DOCUMENTATION_URLOffset: flatbuffers.Offset, ICON_URLOffset: flatbuffers.Offset, LICENSEOffset: flatbuffers.Offset, SIGNATUREOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createPLG(builder: flatbuffers.Builder, PLUGIN_IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, PLUGIN_TYPE: pluginType, ABI_VERSION: number, WASM_HASHOffset: flatbuffers.Offset, WASM_SIZE: bigint, WASM_CIDOffset: flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset: flatbuffers.Offset, ENCRYPTED_WASM_SIZE: bigint, ENTRY_FUNCTIONSOffset: flatbuffers.Offset, REQUIRED_SCHEMASOffset: flatbuffers.Offset, DEPENDENCIESOffset: flatbuffers.Offset, CAPABILITIESOffset: flatbuffers.Offset, PROVIDER_PEER_IDOffset: flatbuffers.Offset, PROVIDER_EPM_CIDOffset: flatbuffers.Offset, ENCRYPTED: boolean, REQUIRED_SCOPEOffset: flatbuffers.Offset, KEY_IDOffset: flatbuffers.Offset, ALLOWED_DOMAINSOffset: flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS: bigint, MIN_PERMISSIONSOffset: flatbuffers.Offset, CREATED_AT: bigint, UPDATED_AT: bigint, DOCUMENTATION_URLOffset: flatbuffers.Offset, ICON_URLOffset: flatbuffers.Offset, LICENSEOffset: flatbuffers.Offset, SIGNATUREOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PLGT;
     unpackTo(_o: PLGT): void;
 }
@@ -181,6 +221,8 @@ export declare class PLGT implements flatbuffers.IGeneratedObject {
     WASM_HASH: (number)[];
     WASM_SIZE: bigint;
     WASM_CID: string | Uint8Array | null;
+    ENCRYPTED_WASM_HASH: (number)[];
+    ENCRYPTED_WASM_SIZE: bigint;
     ENTRY_FUNCTIONS: (EntryFunctionT)[];
     REQUIRED_SCHEMAS: (string)[];
     DEPENDENCIES: (PluginDependencyT)[];
@@ -188,6 +230,10 @@ export declare class PLGT implements flatbuffers.IGeneratedObject {
     PROVIDER_PEER_ID: string | Uint8Array | null;
     PROVIDER_EPM_CID: string | Uint8Array | null;
     ENCRYPTED: boolean;
+    REQUIRED_SCOPE: string | Uint8Array | null;
+    KEY_ID: string | Uint8Array | null;
+    ALLOWED_DOMAINS: (string)[];
+    MAX_GRANT_TIMEOUT_MS: bigint;
     MIN_PERMISSIONS: (string)[];
     CREATED_AT: bigint;
     UPDATED_AT: bigint;
@@ -195,7 +241,7 @@ export declare class PLGT implements flatbuffers.IGeneratedObject {
     ICON_URL: string | Uint8Array | null;
     LICENSE: string | Uint8Array | null;
     SIGNATURE: (number)[];
-    constructor(PLUGIN_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, PLUGIN_TYPE?: pluginType, ABI_VERSION?: number, WASM_HASH?: (number)[], WASM_SIZE?: bigint, WASM_CID?: string | Uint8Array | null, ENTRY_FUNCTIONS?: (EntryFunctionT)[], REQUIRED_SCHEMAS?: (string)[], DEPENDENCIES?: (PluginDependencyT)[], CAPABILITIES?: (PluginCapabilityT)[], PROVIDER_PEER_ID?: string | Uint8Array | null, PROVIDER_EPM_CID?: string | Uint8Array | null, ENCRYPTED?: boolean, MIN_PERMISSIONS?: (string)[], CREATED_AT?: bigint, UPDATED_AT?: bigint, DOCUMENTATION_URL?: string | Uint8Array | null, ICON_URL?: string | Uint8Array | null, LICENSE?: string | Uint8Array | null, SIGNATURE?: (number)[]);
+    constructor(PLUGIN_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, PLUGIN_TYPE?: pluginType, ABI_VERSION?: number, WASM_HASH?: (number)[], WASM_SIZE?: bigint, WASM_CID?: string | Uint8Array | null, ENCRYPTED_WASM_HASH?: (number)[], ENCRYPTED_WASM_SIZE?: bigint, ENTRY_FUNCTIONS?: (EntryFunctionT)[], REQUIRED_SCHEMAS?: (string)[], DEPENDENCIES?: (PluginDependencyT)[], CAPABILITIES?: (PluginCapabilityT)[], PROVIDER_PEER_ID?: string | Uint8Array | null, PROVIDER_EPM_CID?: string | Uint8Array | null, ENCRYPTED?: boolean, REQUIRED_SCOPE?: string | Uint8Array | null, KEY_ID?: string | Uint8Array | null, ALLOWED_DOMAINS?: (string)[], MAX_GRANT_TIMEOUT_MS?: bigint, MIN_PERMISSIONS?: (string)[], CREATED_AT?: bigint, UPDATED_AT?: bigint, DOCUMENTATION_URL?: string | Uint8Array | null, ICON_URL?: string | Uint8Array | null, LICENSE?: string | Uint8Array | null, SIGNATURE?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PLG.d.ts.map

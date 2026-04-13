@@ -1,0 +1,35 @@
+// Hash: 446fec100baaf20209b76c6296b588cff8aaaf2146bac5306b99961a29973449
+// Version: 0.1.1
+// -----------------------------------END_HEADER
+/// Module lifecycle request action
+enum licensingModuleRequestAction : byte {
+  Fetch,
+  Register,
+  Load,
+  Error
+}
+
+/// Module fetch/register/load control message
+table LMR {
+  /// Action being requested or reported
+  ACTION: licensingModuleRequestAction = Fetch;
+  /// Unique request identifier
+  REQUEST_ID: string (required);
+  /// Canonical module identifier
+  MODULE_ID: string (required);
+  /// Optional module version
+  MODULE_VERSION: string;
+  /// IPFS CID of the encrypted module artifact
+  WASM_CID: string;
+  /// SHA-256 hash of the decrypted module bytes
+  MODULE_HASH: [ubyte];
+  /// Human-readable status
+  STATUS: string;
+  /// Structured error code
+  ERROR_CODE: string;
+  /// Structured error message
+  ERROR_MESSAGE: string;
+}
+
+root_type LMR;
+file_identifier "$LMR";

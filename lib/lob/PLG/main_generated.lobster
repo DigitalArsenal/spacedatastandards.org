@@ -163,73 +163,95 @@ class PLG : flatbuffers.handle
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 1)
     def WASM_HASH_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 16)
-    /// Size of WASM binary in bytes
+    /// Size of decrypted WASM binary in bytes
     def WASM_SIZE() -> int:
         return flatbuffers.field_uint64(buf_, pos_, 18, 0)
     /// IPFS CID of the encrypted WASM binary
     def WASM_CID() -> string:
         return flatbuffers.field_string(buf_, pos_, 20)
+    /// SHA256 hash of the encrypted delivery artifact bytes
+    def ENCRYPTED_WASM_HASH(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 1)
+    def ENCRYPTED_WASM_HASH_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 22)
+    /// Size of the encrypted delivery artifact in bytes
+    def ENCRYPTED_WASM_SIZE() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 24, 0)
     /// Entry point functions exported by the plugin
     def ENTRY_FUNCTIONS(i:int) -> EntryFunction:
-        return EntryFunction { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 22) + i * 4) }
+        return EntryFunction { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 26) + i * 4) }
     def ENTRY_FUNCTIONS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 22)
+        return flatbuffers.field_vector_len(buf_, pos_, 26)
     /// FlatBuffer schemas required by this plugin
     def REQUIRED_SCHEMAS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 4)
     def REQUIRED_SCHEMAS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 24)
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
     /// Other plugins this depends on
     def DEPENDENCIES(i:int) -> PluginDependency:
-        return PluginDependency { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 26) + i * 4) }
+        return PluginDependency { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 30) + i * 4) }
     def DEPENDENCIES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 26)
+        return flatbuffers.field_vector_len(buf_, pos_, 30)
     /// Capabilities provided by this plugin
     def CAPABILITIES(i:int) -> PluginCapability:
-        return PluginCapability { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 28) + i * 4) }
+        return PluginCapability { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
     def CAPABILITIES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 28)
+        return flatbuffers.field_vector_len(buf_, pos_, 32)
     /// Peer ID of the plugin provider
     def PROVIDER_PEER_ID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 30)
+        return flatbuffers.field_string(buf_, pos_, 34)
     /// IPFS CID of provider's EPM (Entity Profile Message)
     def PROVIDER_EPM_CID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 32)
+        return flatbuffers.field_string(buf_, pos_, 36)
     /// Whether the WASM binary is encrypted
     def ENCRYPTED() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 34, 1))
+        return bool(flatbuffers.field_int8(buf_, pos_, 38, 1))
+    /// Canonical required scope for grant issuance
+    def REQUIRED_SCOPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 40)
+    /// Provider-local identifier for the module content key
+    def KEY_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 42)
+    /// Allowed requester domains for module grants
+    def ALLOWED_DOMAINS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 44) + i * 4)
+    def ALLOWED_DOMAINS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 44)
+    /// Maximum grant timeout allowed for this module publication
+    def MAX_GRANT_TIMEOUT_MS() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 46, 0)
     /// Minimum permissions required to run
     def MIN_PERMISSIONS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 36) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 48) + i * 4)
     def MIN_PERMISSIONS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 36)
+        return flatbuffers.field_vector_len(buf_, pos_, 48)
     /// Unix timestamp when plugin was created
     def CREATED_AT() -> int:
-        return flatbuffers.field_uint64(buf_, pos_, 38, 0)
+        return flatbuffers.field_uint64(buf_, pos_, 50, 0)
     /// Unix timestamp when plugin was last updated
     def UPDATED_AT() -> int:
-        return flatbuffers.field_uint64(buf_, pos_, 40, 0)
+        return flatbuffers.field_uint64(buf_, pos_, 52, 0)
     /// URL to plugin documentation
     def DOCUMENTATION_URL() -> string:
-        return flatbuffers.field_string(buf_, pos_, 42)
+        return flatbuffers.field_string(buf_, pos_, 54)
     /// URL to plugin icon/logo
     def ICON_URL() -> string:
-        return flatbuffers.field_string(buf_, pos_, 44)
+        return flatbuffers.field_string(buf_, pos_, 56)
     /// License identifier (SPDX format)
     def LICENSE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 46)
+        return flatbuffers.field_string(buf_, pos_, 58)
     /// Ed25519 signature from provider over manifest
     def SIGNATURE(i:int) -> int:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 48) + i * 1)
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 60) + i * 1)
     def SIGNATURE_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 48)
+        return flatbuffers.field_vector_len(buf_, pos_, 60)
 
 def GetRootAsPLG(buf:string): return PLG { buf, flatbuffers.indirect(buf, 0) }
 
 struct PLGBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(23)
+        b_.StartObject(29)
         return this
     def add_PLUGIN_ID(PLUGIN_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, PLUGIN_ID)
@@ -258,47 +280,65 @@ struct PLGBuilder:
     def add_WASM_CID(WASM_CID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(8, WASM_CID)
         return this
+    def add_ENCRYPTED_WASM_HASH(ENCRYPTED_WASM_HASH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, ENCRYPTED_WASM_HASH)
+        return this
+    def add_ENCRYPTED_WASM_SIZE(ENCRYPTED_WASM_SIZE:int):
+        b_.PrependUint64Slot(10, ENCRYPTED_WASM_SIZE, 0)
+        return this
     def add_ENTRY_FUNCTIONS(ENTRY_FUNCTIONS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(9, ENTRY_FUNCTIONS)
+        b_.PrependUOffsetTRelativeSlot(11, ENTRY_FUNCTIONS)
         return this
     def add_REQUIRED_SCHEMAS(REQUIRED_SCHEMAS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(10, REQUIRED_SCHEMAS)
+        b_.PrependUOffsetTRelativeSlot(12, REQUIRED_SCHEMAS)
         return this
     def add_DEPENDENCIES(DEPENDENCIES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(11, DEPENDENCIES)
+        b_.PrependUOffsetTRelativeSlot(13, DEPENDENCIES)
         return this
     def add_CAPABILITIES(CAPABILITIES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(12, CAPABILITIES)
+        b_.PrependUOffsetTRelativeSlot(14, CAPABILITIES)
         return this
     def add_PROVIDER_PEER_ID(PROVIDER_PEER_ID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(13, PROVIDER_PEER_ID)
+        b_.PrependUOffsetTRelativeSlot(15, PROVIDER_PEER_ID)
         return this
     def add_PROVIDER_EPM_CID(PROVIDER_EPM_CID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(14, PROVIDER_EPM_CID)
+        b_.PrependUOffsetTRelativeSlot(16, PROVIDER_EPM_CID)
         return this
     def add_ENCRYPTED(ENCRYPTED:bool):
-        b_.PrependBoolSlot(15, ENCRYPTED, 1)
+        b_.PrependBoolSlot(17, ENCRYPTED, 1)
+        return this
+    def add_REQUIRED_SCOPE(REQUIRED_SCOPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, REQUIRED_SCOPE)
+        return this
+    def add_KEY_ID(KEY_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, KEY_ID)
+        return this
+    def add_ALLOWED_DOMAINS(ALLOWED_DOMAINS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, ALLOWED_DOMAINS)
+        return this
+    def add_MAX_GRANT_TIMEOUT_MS(MAX_GRANT_TIMEOUT_MS:int):
+        b_.PrependUint64Slot(21, MAX_GRANT_TIMEOUT_MS, 0)
         return this
     def add_MIN_PERMISSIONS(MIN_PERMISSIONS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(16, MIN_PERMISSIONS)
+        b_.PrependUOffsetTRelativeSlot(22, MIN_PERMISSIONS)
         return this
     def add_CREATED_AT(CREATED_AT:int):
-        b_.PrependUint64Slot(17, CREATED_AT, 0)
+        b_.PrependUint64Slot(23, CREATED_AT, 0)
         return this
     def add_UPDATED_AT(UPDATED_AT:int):
-        b_.PrependUint64Slot(18, UPDATED_AT, 0)
+        b_.PrependUint64Slot(24, UPDATED_AT, 0)
         return this
     def add_DOCUMENTATION_URL(DOCUMENTATION_URL:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(19, DOCUMENTATION_URL)
+        b_.PrependUOffsetTRelativeSlot(25, DOCUMENTATION_URL)
         return this
     def add_ICON_URL(ICON_URL:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(20, ICON_URL)
+        b_.PrependUOffsetTRelativeSlot(26, ICON_URL)
         return this
     def add_LICENSE(LICENSE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(21, LICENSE)
+        b_.PrependUOffsetTRelativeSlot(27, LICENSE)
         return this
     def add_SIGNATURE(SIGNATURE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(22, SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(28, SIGNATURE)
         return this
     def end():
         return b_.EndObject()
@@ -306,6 +346,13 @@ struct PLGBuilder:
 def PLGStartWASMHASHVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
 def PLGCreateWASMHASHVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+def PLGStartENCRYPTEDWASMHASHVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def PLGCreateENCRYPTEDWASMHASHVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)
@@ -334,6 +381,13 @@ def PLGCreateDEPENDENCIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset])
 def PLGStartCAPABILITIESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def PLGCreateCAPABILITIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def PLGStartALLOWEDDOMAINSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PLGCreateALLOWEDDOMAINSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

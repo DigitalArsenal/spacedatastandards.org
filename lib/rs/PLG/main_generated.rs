@@ -739,20 +739,26 @@ impl<'a> PLG<'a> {
   pub const VT_WASM_HASH: ::flatbuffers::VOffsetT = 16;
   pub const VT_WASM_SIZE: ::flatbuffers::VOffsetT = 18;
   pub const VT_WASM_CID: ::flatbuffers::VOffsetT = 20;
-  pub const VT_ENTRY_FUNCTIONS: ::flatbuffers::VOffsetT = 22;
-  pub const VT_REQUIRED_SCHEMAS: ::flatbuffers::VOffsetT = 24;
-  pub const VT_DEPENDENCIES: ::flatbuffers::VOffsetT = 26;
-  pub const VT_CAPABILITIES: ::flatbuffers::VOffsetT = 28;
-  pub const VT_PROVIDER_PEER_ID: ::flatbuffers::VOffsetT = 30;
-  pub const VT_PROVIDER_EPM_CID: ::flatbuffers::VOffsetT = 32;
-  pub const VT_ENCRYPTED: ::flatbuffers::VOffsetT = 34;
-  pub const VT_MIN_PERMISSIONS: ::flatbuffers::VOffsetT = 36;
-  pub const VT_CREATED_AT: ::flatbuffers::VOffsetT = 38;
-  pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 40;
-  pub const VT_DOCUMENTATION_URL: ::flatbuffers::VOffsetT = 42;
-  pub const VT_ICON_URL: ::flatbuffers::VOffsetT = 44;
-  pub const VT_LICENSE: ::flatbuffers::VOffsetT = 46;
-  pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 48;
+  pub const VT_ENCRYPTED_WASM_HASH: ::flatbuffers::VOffsetT = 22;
+  pub const VT_ENCRYPTED_WASM_SIZE: ::flatbuffers::VOffsetT = 24;
+  pub const VT_ENTRY_FUNCTIONS: ::flatbuffers::VOffsetT = 26;
+  pub const VT_REQUIRED_SCHEMAS: ::flatbuffers::VOffsetT = 28;
+  pub const VT_DEPENDENCIES: ::flatbuffers::VOffsetT = 30;
+  pub const VT_CAPABILITIES: ::flatbuffers::VOffsetT = 32;
+  pub const VT_PROVIDER_PEER_ID: ::flatbuffers::VOffsetT = 34;
+  pub const VT_PROVIDER_EPM_CID: ::flatbuffers::VOffsetT = 36;
+  pub const VT_ENCRYPTED: ::flatbuffers::VOffsetT = 38;
+  pub const VT_REQUIRED_SCOPE: ::flatbuffers::VOffsetT = 40;
+  pub const VT_KEY_ID: ::flatbuffers::VOffsetT = 42;
+  pub const VT_ALLOWED_DOMAINS: ::flatbuffers::VOffsetT = 44;
+  pub const VT_MAX_GRANT_TIMEOUT_MS: ::flatbuffers::VOffsetT = 46;
+  pub const VT_MIN_PERMISSIONS: ::flatbuffers::VOffsetT = 48;
+  pub const VT_CREATED_AT: ::flatbuffers::VOffsetT = 50;
+  pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 52;
+  pub const VT_DOCUMENTATION_URL: ::flatbuffers::VOffsetT = 54;
+  pub const VT_ICON_URL: ::flatbuffers::VOffsetT = 56;
+  pub const VT_LICENSE: ::flatbuffers::VOffsetT = 58;
+  pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 60;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -766,18 +772,24 @@ impl<'a> PLG<'a> {
     let mut builder = PLGBuilder::new(_fbb);
     builder.add_UPDATED_AT(args.UPDATED_AT);
     builder.add_CREATED_AT(args.CREATED_AT);
+    builder.add_MAX_GRANT_TIMEOUT_MS(args.MAX_GRANT_TIMEOUT_MS);
+    builder.add_ENCRYPTED_WASM_SIZE(args.ENCRYPTED_WASM_SIZE);
     builder.add_WASM_SIZE(args.WASM_SIZE);
     if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
     if let Some(x) = args.LICENSE { builder.add_LICENSE(x); }
     if let Some(x) = args.ICON_URL { builder.add_ICON_URL(x); }
     if let Some(x) = args.DOCUMENTATION_URL { builder.add_DOCUMENTATION_URL(x); }
     if let Some(x) = args.MIN_PERMISSIONS { builder.add_MIN_PERMISSIONS(x); }
+    if let Some(x) = args.ALLOWED_DOMAINS { builder.add_ALLOWED_DOMAINS(x); }
+    if let Some(x) = args.KEY_ID { builder.add_KEY_ID(x); }
+    if let Some(x) = args.REQUIRED_SCOPE { builder.add_REQUIRED_SCOPE(x); }
     if let Some(x) = args.PROVIDER_EPM_CID { builder.add_PROVIDER_EPM_CID(x); }
     if let Some(x) = args.PROVIDER_PEER_ID { builder.add_PROVIDER_PEER_ID(x); }
     if let Some(x) = args.CAPABILITIES { builder.add_CAPABILITIES(x); }
     if let Some(x) = args.DEPENDENCIES { builder.add_DEPENDENCIES(x); }
     if let Some(x) = args.REQUIRED_SCHEMAS { builder.add_REQUIRED_SCHEMAS(x); }
     if let Some(x) = args.ENTRY_FUNCTIONS { builder.add_ENTRY_FUNCTIONS(x); }
+    if let Some(x) = args.ENCRYPTED_WASM_HASH { builder.add_ENCRYPTED_WASM_HASH(x); }
     if let Some(x) = args.WASM_CID { builder.add_WASM_CID(x); }
     if let Some(x) = args.WASM_HASH { builder.add_WASM_HASH(x); }
     builder.add_ABI_VERSION(args.ABI_VERSION);
@@ -815,6 +827,10 @@ impl<'a> PLG<'a> {
     let WASM_CID = self.WASM_CID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let ENCRYPTED_WASM_HASH = self.ENCRYPTED_WASM_HASH().map(|x| {
+      x.into_iter().collect()
+    });
+    let ENCRYPTED_WASM_SIZE = self.ENCRYPTED_WASM_SIZE();
     let ENTRY_FUNCTIONS = self.ENTRY_FUNCTIONS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
@@ -834,6 +850,16 @@ impl<'a> PLG<'a> {
       alloc::string::ToString::to_string(x)
     });
     let ENCRYPTED = self.ENCRYPTED();
+    let REQUIRED_SCOPE = self.REQUIRED_SCOPE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let KEY_ID = self.KEY_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ALLOWED_DOMAINS = self.ALLOWED_DOMAINS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let MAX_GRANT_TIMEOUT_MS = self.MAX_GRANT_TIMEOUT_MS();
     let MIN_PERMISSIONS = self.MIN_PERMISSIONS().map(|x| {
       x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
     });
@@ -861,6 +887,8 @@ impl<'a> PLG<'a> {
       WASM_HASH,
       WASM_SIZE,
       WASM_CID,
+      ENCRYPTED_WASM_HASH,
+      ENCRYPTED_WASM_SIZE,
       ENTRY_FUNCTIONS,
       REQUIRED_SCHEMAS,
       DEPENDENCIES,
@@ -868,6 +896,10 @@ impl<'a> PLG<'a> {
       PROVIDER_PEER_ID,
       PROVIDER_EPM_CID,
       ENCRYPTED,
+      REQUIRED_SCOPE,
+      KEY_ID,
+      ALLOWED_DOMAINS,
+      MAX_GRANT_TIMEOUT_MS,
       MIN_PERMISSIONS,
       CREATED_AT,
       UPDATED_AT,
@@ -934,7 +966,7 @@ impl<'a> PLG<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(PLG::VT_WASM_HASH, None)}
   }
-  /// Size of WASM binary in bytes
+  /// Size of decrypted WASM binary in bytes
   #[inline]
   pub fn WASM_SIZE(&self) -> u64 {
     // Safety:
@@ -949,6 +981,22 @@ impl<'a> PLG<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_WASM_CID, None)}
+  }
+  /// SHA256 hash of the encrypted delivery artifact bytes
+  #[inline]
+  pub fn ENCRYPTED_WASM_HASH(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(PLG::VT_ENCRYPTED_WASM_HASH, None)}
+  }
+  /// Size of the encrypted delivery artifact in bytes
+  #[inline]
+  pub fn ENCRYPTED_WASM_SIZE(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PLG::VT_ENCRYPTED_WASM_SIZE, Some(0)).unwrap()}
   }
   /// Entry point functions exported by the plugin
   #[inline]
@@ -1005,6 +1053,38 @@ impl<'a> PLG<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(PLG::VT_ENCRYPTED, Some(true)).unwrap()}
+  }
+  /// Canonical required scope for grant issuance
+  #[inline]
+  pub fn REQUIRED_SCOPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_REQUIRED_SCOPE, None)}
+  }
+  /// Provider-local identifier for the module content key
+  #[inline]
+  pub fn KEY_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_KEY_ID, None)}
+  }
+  /// Allowed requester domains for module grants
+  #[inline]
+  pub fn ALLOWED_DOMAINS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_ALLOWED_DOMAINS, None)}
+  }
+  /// Maximum grant timeout allowed for this module publication
+  #[inline]
+  pub fn MAX_GRANT_TIMEOUT_MS(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PLG::VT_MAX_GRANT_TIMEOUT_MS, Some(0)).unwrap()}
   }
   /// Minimum permissions required to run
   #[inline]
@@ -1079,6 +1159,8 @@ impl ::flatbuffers::Verifiable for PLG<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("WASM_HASH", Self::VT_WASM_HASH, false)?
      .visit_field::<u64>("WASM_SIZE", Self::VT_WASM_SIZE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("WASM_CID", Self::VT_WASM_CID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("ENCRYPTED_WASM_HASH", Self::VT_ENCRYPTED_WASM_HASH, false)?
+     .visit_field::<u64>("ENCRYPTED_WASM_SIZE", Self::VT_ENCRYPTED_WASM_SIZE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<EntryFunction>>>>("ENTRY_FUNCTIONS", Self::VT_ENTRY_FUNCTIONS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("REQUIRED_SCHEMAS", Self::VT_REQUIRED_SCHEMAS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PluginDependency>>>>("DEPENDENCIES", Self::VT_DEPENDENCIES, false)?
@@ -1086,6 +1168,10 @@ impl ::flatbuffers::Verifiable for PLG<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_PEER_ID", Self::VT_PROVIDER_PEER_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_EPM_CID", Self::VT_PROVIDER_EPM_CID, false)?
      .visit_field::<bool>("ENCRYPTED", Self::VT_ENCRYPTED, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REQUIRED_SCOPE", Self::VT_REQUIRED_SCOPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KEY_ID", Self::VT_KEY_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ALLOWED_DOMAINS", Self::VT_ALLOWED_DOMAINS, false)?
+     .visit_field::<u64>("MAX_GRANT_TIMEOUT_MS", Self::VT_MAX_GRANT_TIMEOUT_MS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("MIN_PERMISSIONS", Self::VT_MIN_PERMISSIONS, false)?
      .visit_field::<u64>("CREATED_AT", Self::VT_CREATED_AT, false)?
      .visit_field::<u64>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
@@ -1107,6 +1193,8 @@ pub struct PLGArgs<'a> {
     pub WASM_HASH: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
     pub WASM_SIZE: u64,
     pub WASM_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ENCRYPTED_WASM_HASH: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub ENCRYPTED_WASM_SIZE: u64,
     pub ENTRY_FUNCTIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<EntryFunction<'a>>>>>,
     pub REQUIRED_SCHEMAS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub DEPENDENCIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PluginDependency<'a>>>>>,
@@ -1114,6 +1202,10 @@ pub struct PLGArgs<'a> {
     pub PROVIDER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PROVIDER_EPM_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ENCRYPTED: bool,
+    pub REQUIRED_SCOPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub KEY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ALLOWED_DOMAINS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub MAX_GRANT_TIMEOUT_MS: u64,
     pub MIN_PERMISSIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub CREATED_AT: u64,
     pub UPDATED_AT: u64,
@@ -1135,6 +1227,8 @@ impl<'a> Default for PLGArgs<'a> {
       WASM_HASH: None,
       WASM_SIZE: 0,
       WASM_CID: None,
+      ENCRYPTED_WASM_HASH: None,
+      ENCRYPTED_WASM_SIZE: 0,
       ENTRY_FUNCTIONS: None,
       REQUIRED_SCHEMAS: None,
       DEPENDENCIES: None,
@@ -1142,6 +1236,10 @@ impl<'a> Default for PLGArgs<'a> {
       PROVIDER_PEER_ID: None,
       PROVIDER_EPM_CID: None,
       ENCRYPTED: true,
+      REQUIRED_SCOPE: None,
+      KEY_ID: None,
+      ALLOWED_DOMAINS: None,
+      MAX_GRANT_TIMEOUT_MS: 0,
       MIN_PERMISSIONS: None,
       CREATED_AT: 0,
       UPDATED_AT: 0,
@@ -1195,6 +1293,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_WASM_CID, WASM_CID);
   }
   #[inline]
+  pub fn add_ENCRYPTED_WASM_HASH(&mut self, ENCRYPTED_WASM_HASH: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ENCRYPTED_WASM_HASH, ENCRYPTED_WASM_HASH);
+  }
+  #[inline]
+  pub fn add_ENCRYPTED_WASM_SIZE(&mut self, ENCRYPTED_WASM_SIZE: u64) {
+    self.fbb_.push_slot::<u64>(PLG::VT_ENCRYPTED_WASM_SIZE, ENCRYPTED_WASM_SIZE, 0);
+  }
+  #[inline]
   pub fn add_ENTRY_FUNCTIONS(&mut self, ENTRY_FUNCTIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<EntryFunction<'b >>>>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ENTRY_FUNCTIONS, ENTRY_FUNCTIONS);
   }
@@ -1221,6 +1327,22 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ENCRYPTED(&mut self, ENCRYPTED: bool) {
     self.fbb_.push_slot::<bool>(PLG::VT_ENCRYPTED, ENCRYPTED, true);
+  }
+  #[inline]
+  pub fn add_REQUIRED_SCOPE(&mut self, REQUIRED_SCOPE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_REQUIRED_SCOPE, REQUIRED_SCOPE);
+  }
+  #[inline]
+  pub fn add_KEY_ID(&mut self, KEY_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_KEY_ID, KEY_ID);
+  }
+  #[inline]
+  pub fn add_ALLOWED_DOMAINS(&mut self, ALLOWED_DOMAINS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ALLOWED_DOMAINS, ALLOWED_DOMAINS);
+  }
+  #[inline]
+  pub fn add_MAX_GRANT_TIMEOUT_MS(&mut self, MAX_GRANT_TIMEOUT_MS: u64) {
+    self.fbb_.push_slot::<u64>(PLG::VT_MAX_GRANT_TIMEOUT_MS, MAX_GRANT_TIMEOUT_MS, 0);
   }
   #[inline]
   pub fn add_MIN_PERMISSIONS(&mut self, MIN_PERMISSIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
@@ -1280,6 +1402,8 @@ impl ::core::fmt::Debug for PLG<'_> {
       ds.field("WASM_HASH", &self.WASM_HASH());
       ds.field("WASM_SIZE", &self.WASM_SIZE());
       ds.field("WASM_CID", &self.WASM_CID());
+      ds.field("ENCRYPTED_WASM_HASH", &self.ENCRYPTED_WASM_HASH());
+      ds.field("ENCRYPTED_WASM_SIZE", &self.ENCRYPTED_WASM_SIZE());
       ds.field("ENTRY_FUNCTIONS", &self.ENTRY_FUNCTIONS());
       ds.field("REQUIRED_SCHEMAS", &self.REQUIRED_SCHEMAS());
       ds.field("DEPENDENCIES", &self.DEPENDENCIES());
@@ -1287,6 +1411,10 @@ impl ::core::fmt::Debug for PLG<'_> {
       ds.field("PROVIDER_PEER_ID", &self.PROVIDER_PEER_ID());
       ds.field("PROVIDER_EPM_CID", &self.PROVIDER_EPM_CID());
       ds.field("ENCRYPTED", &self.ENCRYPTED());
+      ds.field("REQUIRED_SCOPE", &self.REQUIRED_SCOPE());
+      ds.field("KEY_ID", &self.KEY_ID());
+      ds.field("ALLOWED_DOMAINS", &self.ALLOWED_DOMAINS());
+      ds.field("MAX_GRANT_TIMEOUT_MS", &self.MAX_GRANT_TIMEOUT_MS());
       ds.field("MIN_PERMISSIONS", &self.MIN_PERMISSIONS());
       ds.field("CREATED_AT", &self.CREATED_AT());
       ds.field("UPDATED_AT", &self.UPDATED_AT());
@@ -1309,6 +1437,8 @@ pub struct PLGT {
   pub WASM_HASH: Option<alloc::vec::Vec<u8>>,
   pub WASM_SIZE: u64,
   pub WASM_CID: Option<alloc::string::String>,
+  pub ENCRYPTED_WASM_HASH: Option<alloc::vec::Vec<u8>>,
+  pub ENCRYPTED_WASM_SIZE: u64,
   pub ENTRY_FUNCTIONS: Option<alloc::vec::Vec<EntryFunctionT>>,
   pub REQUIRED_SCHEMAS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub DEPENDENCIES: Option<alloc::vec::Vec<PluginDependencyT>>,
@@ -1316,6 +1446,10 @@ pub struct PLGT {
   pub PROVIDER_PEER_ID: Option<alloc::string::String>,
   pub PROVIDER_EPM_CID: Option<alloc::string::String>,
   pub ENCRYPTED: bool,
+  pub REQUIRED_SCOPE: Option<alloc::string::String>,
+  pub KEY_ID: Option<alloc::string::String>,
+  pub ALLOWED_DOMAINS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub MAX_GRANT_TIMEOUT_MS: u64,
   pub MIN_PERMISSIONS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub CREATED_AT: u64,
   pub UPDATED_AT: u64,
@@ -1336,6 +1470,8 @@ impl Default for PLGT {
       WASM_HASH: None,
       WASM_SIZE: 0,
       WASM_CID: None,
+      ENCRYPTED_WASM_HASH: None,
+      ENCRYPTED_WASM_SIZE: 0,
       ENTRY_FUNCTIONS: None,
       REQUIRED_SCHEMAS: None,
       DEPENDENCIES: None,
@@ -1343,6 +1479,10 @@ impl Default for PLGT {
       PROVIDER_PEER_ID: None,
       PROVIDER_EPM_CID: None,
       ENCRYPTED: true,
+      REQUIRED_SCOPE: None,
+      KEY_ID: None,
+      ALLOWED_DOMAINS: None,
+      MAX_GRANT_TIMEOUT_MS: 0,
       MIN_PERMISSIONS: None,
       CREATED_AT: 0,
       UPDATED_AT: 0,
@@ -1382,6 +1522,10 @@ impl PLGT {
     let WASM_CID = self.WASM_CID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let ENCRYPTED_WASM_HASH = self.ENCRYPTED_WASM_HASH.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let ENCRYPTED_WASM_SIZE = self.ENCRYPTED_WASM_SIZE;
     let ENTRY_FUNCTIONS = self.ENTRY_FUNCTIONS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
@@ -1401,6 +1545,16 @@ impl PLGT {
       _fbb.create_string(x)
     });
     let ENCRYPTED = self.ENCRYPTED;
+    let REQUIRED_SCOPE = self.REQUIRED_SCOPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let KEY_ID = self.KEY_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ALLOWED_DOMAINS = self.ALLOWED_DOMAINS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let MAX_GRANT_TIMEOUT_MS = self.MAX_GRANT_TIMEOUT_MS;
     let MIN_PERMISSIONS = self.MIN_PERMISSIONS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
@@ -1428,6 +1582,8 @@ impl PLGT {
       WASM_HASH,
       WASM_SIZE,
       WASM_CID,
+      ENCRYPTED_WASM_HASH,
+      ENCRYPTED_WASM_SIZE,
       ENTRY_FUNCTIONS,
       REQUIRED_SCHEMAS,
       DEPENDENCIES,
@@ -1435,6 +1591,10 @@ impl PLGT {
       PROVIDER_PEER_ID,
       PROVIDER_EPM_CID,
       ENCRYPTED,
+      REQUIRED_SCOPE,
+      KEY_ID,
+      ALLOWED_DOMAINS,
+      MAX_GRANT_TIMEOUT_MS,
       MIN_PERMISSIONS,
       CREATED_AT,
       UPDATED_AT,

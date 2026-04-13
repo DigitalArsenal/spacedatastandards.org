@@ -206,7 +206,7 @@ func (rcv *PLG) MutateWasmHash(j int, n byte) bool {
 	return rcv.MutateWASM_HASH(j, n)
 }
 
-/// Size of WASM binary in bytes
+/// Size of decrypted WASM binary in bytes
 func (rcv *PLG) WASM_SIZE() uint64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -219,7 +219,7 @@ func (rcv *PLG) WasmSize() uint64 {
 	return rcv.WASM_SIZE()
 }
 
-/// Size of WASM binary in bytes
+/// Size of decrypted WASM binary in bytes
 func (rcv *PLG) MutateWASM_SIZE(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(18, n)
 }
@@ -242,9 +242,83 @@ func (rcv *PLG) WasmCid() []byte {
 }
 
 /// IPFS CID of the encrypted WASM binary
+/// SHA256 hash of the encrypted delivery artifact bytes
+func (rcv *PLG) ENCRYPTED_WASM_HASH(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *PLG) EncryptedWasmHash(j int) byte {
+	return rcv.ENCRYPTED_WASM_HASH(j)
+}
+
+func (rcv *PLG) ENCRYPTED_WASM_HASHLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) EncryptedWasmHashLength() int {
+	return rcv.ENCRYPTED_WASM_HASHLength()
+}
+
+func (rcv *PLG) ENCRYPTED_WASM_HASHBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PLG) EncryptedWasmHashBytes() []byte {
+	return rcv.ENCRYPTED_WASM_HASHBytes()
+}
+
+/// SHA256 hash of the encrypted delivery artifact bytes
+func (rcv *PLG) MutateENCRYPTED_WASM_HASH(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *PLG) MutateEncryptedWasmHash(j int, n byte) bool {
+	return rcv.MutateENCRYPTED_WASM_HASH(j, n)
+}
+
+/// Size of the encrypted delivery artifact in bytes
+func (rcv *PLG) ENCRYPTED_WASM_SIZE() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *PLG) EncryptedWasmSize() uint64 {
+	return rcv.ENCRYPTED_WASM_SIZE()
+}
+
+/// Size of the encrypted delivery artifact in bytes
+func (rcv *PLG) MutateENCRYPTED_WASM_SIZE(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(24, n)
+}
+
+func (rcv *PLG) MutateEncryptedWasmSize(n uint64) bool {
+	return rcv.MutateENCRYPTED_WASM_SIZE(n)
+}
+
 /// Entry point functions exported by the plugin
 func (rcv *PLG) ENTRY_FUNCTIONS(obj *EntryFunction, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -263,7 +337,7 @@ func (rcv *PLG) EntryFunctions(obj *EntryFunction, j int) bool {
 }
 
 func (rcv *PLG) ENTRY_FUNCTIONSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -277,7 +351,7 @@ func (rcv *PLG) EntryFunctionsLength() int {
 /// Entry point functions exported by the plugin
 /// FlatBuffer schemas required by this plugin
 func (rcv *PLG) REQUIRED_SCHEMAS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -290,7 +364,7 @@ func (rcv *PLG) RequiredSchemas(j int) []byte {
 }
 
 func (rcv *PLG) REQUIRED_SCHEMASLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -304,7 +378,7 @@ func (rcv *PLG) RequiredSchemasLength() int {
 /// FlatBuffer schemas required by this plugin
 /// Other plugins this depends on
 func (rcv *PLG) DEPENDENCIES(obj *PluginDependency, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -323,7 +397,7 @@ func (rcv *PLG) Dependencies(obj *PluginDependency, j int) bool {
 }
 
 func (rcv *PLG) DEPENDENCIESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -337,7 +411,7 @@ func (rcv *PLG) DependenciesLength() int {
 /// Other plugins this depends on
 /// Capabilities provided by this plugin
 func (rcv *PLG) CAPABILITIES(obj *PluginCapability, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -356,7 +430,7 @@ func (rcv *PLG) Capabilities(obj *PluginCapability, j int) bool {
 }
 
 func (rcv *PLG) CAPABILITIESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -370,7 +444,7 @@ func (rcv *PLG) CapabilitiesLength() int {
 /// Capabilities provided by this plugin
 /// Peer ID of the plugin provider
 func (rcv *PLG) PROVIDER_PEER_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -384,7 +458,7 @@ func (rcv *PLG) ProviderPeerId() []byte {
 /// Peer ID of the plugin provider
 /// IPFS CID of provider's EPM (Entity Profile Message)
 func (rcv *PLG) PROVIDER_EPM_CID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -398,7 +472,7 @@ func (rcv *PLG) ProviderEpmCid() []byte {
 /// IPFS CID of provider's EPM (Entity Profile Message)
 /// Whether the WASM binary is encrypted
 func (rcv *PLG) ENCRYPTED() bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
@@ -411,16 +485,93 @@ func (rcv *PLG) Encrypted() bool {
 
 /// Whether the WASM binary is encrypted
 func (rcv *PLG) MutateENCRYPTED(n bool) bool {
-	return rcv._tab.MutateBoolSlot(34, n)
+	return rcv._tab.MutateBoolSlot(38, n)
 }
 
 func (rcv *PLG) MutateEncrypted(n bool) bool {
 	return rcv.MutateENCRYPTED(n)
 }
 
+/// Canonical required scope for grant issuance
+func (rcv *PLG) REQUIRED_SCOPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PLG) RequiredScope() []byte {
+	return rcv.REQUIRED_SCOPE()
+}
+
+/// Canonical required scope for grant issuance
+/// Provider-local identifier for the module content key
+func (rcv *PLG) KEY_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PLG) KeyId() []byte {
+	return rcv.KEY_ID()
+}
+
+/// Provider-local identifier for the module content key
+/// Allowed requester domains for module grants
+func (rcv *PLG) ALLOWED_DOMAINS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *PLG) AllowedDomains(j int) []byte {
+	return rcv.ALLOWED_DOMAINS(j)
+}
+
+func (rcv *PLG) ALLOWED_DOMAINSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) AllowedDomainsLength() int {
+	return rcv.ALLOWED_DOMAINSLength()
+}
+
+/// Allowed requester domains for module grants
+/// Maximum grant timeout allowed for this module publication
+func (rcv *PLG) MAX_GRANT_TIMEOUT_MS() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *PLG) MaxGrantTimeoutMs() uint64 {
+	return rcv.MAX_GRANT_TIMEOUT_MS()
+}
+
+/// Maximum grant timeout allowed for this module publication
+func (rcv *PLG) MutateMAX_GRANT_TIMEOUT_MS(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(46, n)
+}
+
+func (rcv *PLG) MutateMaxGrantTimeoutMs(n uint64) bool {
+	return rcv.MutateMAX_GRANT_TIMEOUT_MS(n)
+}
+
 /// Minimum permissions required to run
 func (rcv *PLG) MIN_PERMISSIONS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -433,7 +584,7 @@ func (rcv *PLG) MinPermissions(j int) []byte {
 }
 
 func (rcv *PLG) MIN_PERMISSIONSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -447,7 +598,7 @@ func (rcv *PLG) MinPermissionsLength() int {
 /// Minimum permissions required to run
 /// Unix timestamp when plugin was created
 func (rcv *PLG) CREATED_AT() uint64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		return rcv._tab.GetUint64(o + rcv._tab.Pos)
 	}
@@ -460,7 +611,7 @@ func (rcv *PLG) CreatedAt() uint64 {
 
 /// Unix timestamp when plugin was created
 func (rcv *PLG) MutateCREATED_AT(n uint64) bool {
-	return rcv._tab.MutateUint64Slot(38, n)
+	return rcv._tab.MutateUint64Slot(50, n)
 }
 
 func (rcv *PLG) MutateCreatedAt(n uint64) bool {
@@ -469,7 +620,7 @@ func (rcv *PLG) MutateCreatedAt(n uint64) bool {
 
 /// Unix timestamp when plugin was last updated
 func (rcv *PLG) UPDATED_AT() uint64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
 		return rcv._tab.GetUint64(o + rcv._tab.Pos)
 	}
@@ -482,7 +633,7 @@ func (rcv *PLG) UpdatedAt() uint64 {
 
 /// Unix timestamp when plugin was last updated
 func (rcv *PLG) MutateUPDATED_AT(n uint64) bool {
-	return rcv._tab.MutateUint64Slot(40, n)
+	return rcv._tab.MutateUint64Slot(52, n)
 }
 
 func (rcv *PLG) MutateUpdatedAt(n uint64) bool {
@@ -491,7 +642,7 @@ func (rcv *PLG) MutateUpdatedAt(n uint64) bool {
 
 /// URL to plugin documentation
 func (rcv *PLG) DOCUMENTATION_URL() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -505,7 +656,7 @@ func (rcv *PLG) DocumentationUrl() []byte {
 /// URL to plugin documentation
 /// URL to plugin icon/logo
 func (rcv *PLG) ICON_URL() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -519,7 +670,7 @@ func (rcv *PLG) IconUrl() []byte {
 /// URL to plugin icon/logo
 /// License identifier (SPDX format)
 func (rcv *PLG) LICENSE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -533,7 +684,7 @@ func (rcv *PLG) License() []byte {
 /// License identifier (SPDX format)
 /// Ed25519 signature from provider over manifest
 func (rcv *PLG) SIGNATURE(j int) byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
@@ -546,7 +697,7 @@ func (rcv *PLG) Signature(j int) byte {
 }
 
 func (rcv *PLG) SIGNATURELength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -558,7 +709,7 @@ func (rcv *PLG) SignatureLength() int {
 }
 
 func (rcv *PLG) SIGNATUREBytes() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -571,7 +722,7 @@ func (rcv *PLG) SignatureBytes() []byte {
 
 /// Ed25519 signature from provider over manifest
 func (rcv *PLG) MutateSIGNATURE(j int, n byte) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
@@ -584,7 +735,7 @@ func (rcv *PLG) MutateSignature(j int, n byte) bool {
 }
 
 func PLGStart(builder *flatbuffers.Builder) {
-	builder.StartObject(23)
+	builder.StartObject(29)
 }
 func PLGAddPLUGIN_ID(builder *flatbuffers.Builder, PLUGIN_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PLUGIN_ID), 0)
@@ -646,8 +797,26 @@ func PLGAddWASM_CID(builder *flatbuffers.Builder, WASM_CID flatbuffers.UOffsetT)
 func PLGAddWasmCid(builder *flatbuffers.Builder, WASM_CID flatbuffers.UOffsetT) {
 	PLGAddWASM_CID(builder, WASM_CID)
 }
+func PLGAddENCRYPTED_WASM_HASH(builder *flatbuffers.Builder, ENCRYPTED_WASM_HASH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ENCRYPTED_WASM_HASH), 0)
+}
+func PLGAddEncryptedWasmHash(builder *flatbuffers.Builder, ENCRYPTED_WASM_HASH flatbuffers.UOffsetT) {
+	PLGAddENCRYPTED_WASM_HASH(builder, ENCRYPTED_WASM_HASH)
+}
+func PLGStartENCRYPTED_WASM_HASHVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func PLGStartEncryptedWasmHashVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartENCRYPTED_WASM_HASHVector(builder, numElems)
+}
+func PLGAddENCRYPTED_WASM_SIZE(builder *flatbuffers.Builder, ENCRYPTED_WASM_SIZE uint64) {
+	builder.PrependUint64Slot(10, ENCRYPTED_WASM_SIZE, 0)
+}
+func PLGAddEncryptedWasmSize(builder *flatbuffers.Builder, ENCRYPTED_WASM_SIZE uint64) {
+	PLGAddENCRYPTED_WASM_SIZE(builder, ENCRYPTED_WASM_SIZE)
+}
 func PLGAddENTRY_FUNCTIONS(builder *flatbuffers.Builder, ENTRY_FUNCTIONS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ENTRY_FUNCTIONS), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(ENTRY_FUNCTIONS), 0)
 }
 func PLGAddEntryFunctions(builder *flatbuffers.Builder, ENTRY_FUNCTIONS flatbuffers.UOffsetT) {
 	PLGAddENTRY_FUNCTIONS(builder, ENTRY_FUNCTIONS)
@@ -659,7 +828,7 @@ func PLGStartEntryFunctionsVector(builder *flatbuffers.Builder, numElems int) fl
 	return PLGStartENTRY_FUNCTIONSVector(builder, numElems)
 }
 func PLGAddREQUIRED_SCHEMAS(builder *flatbuffers.Builder, REQUIRED_SCHEMAS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(REQUIRED_SCHEMAS), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(REQUIRED_SCHEMAS), 0)
 }
 func PLGAddRequiredSchemas(builder *flatbuffers.Builder, REQUIRED_SCHEMAS flatbuffers.UOffsetT) {
 	PLGAddREQUIRED_SCHEMAS(builder, REQUIRED_SCHEMAS)
@@ -671,7 +840,7 @@ func PLGStartRequiredSchemasVector(builder *flatbuffers.Builder, numElems int) f
 	return PLGStartREQUIRED_SCHEMASVector(builder, numElems)
 }
 func PLGAddDEPENDENCIES(builder *flatbuffers.Builder, DEPENDENCIES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(DEPENDENCIES), 0)
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(DEPENDENCIES), 0)
 }
 func PLGAddDependencies(builder *flatbuffers.Builder, DEPENDENCIES flatbuffers.UOffsetT) {
 	PLGAddDEPENDENCIES(builder, DEPENDENCIES)
@@ -683,7 +852,7 @@ func PLGStartDependenciesVector(builder *flatbuffers.Builder, numElems int) flat
 	return PLGStartDEPENDENCIESVector(builder, numElems)
 }
 func PLGAddCAPABILITIES(builder *flatbuffers.Builder, CAPABILITIES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(CAPABILITIES), 0)
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(CAPABILITIES), 0)
 }
 func PLGAddCapabilities(builder *flatbuffers.Builder, CAPABILITIES flatbuffers.UOffsetT) {
 	PLGAddCAPABILITIES(builder, CAPABILITIES)
@@ -695,25 +864,55 @@ func PLGStartCapabilitiesVector(builder *flatbuffers.Builder, numElems int) flat
 	return PLGStartCAPABILITIESVector(builder, numElems)
 }
 func PLGAddPROVIDER_PEER_ID(builder *flatbuffers.Builder, PROVIDER_PEER_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(PROVIDER_PEER_ID), 0)
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(PROVIDER_PEER_ID), 0)
 }
 func PLGAddProviderPeerId(builder *flatbuffers.Builder, PROVIDER_PEER_ID flatbuffers.UOffsetT) {
 	PLGAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID)
 }
 func PLGAddPROVIDER_EPM_CID(builder *flatbuffers.Builder, PROVIDER_EPM_CID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(PROVIDER_EPM_CID), 0)
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(PROVIDER_EPM_CID), 0)
 }
 func PLGAddProviderEpmCid(builder *flatbuffers.Builder, PROVIDER_EPM_CID flatbuffers.UOffsetT) {
 	PLGAddPROVIDER_EPM_CID(builder, PROVIDER_EPM_CID)
 }
 func PLGAddENCRYPTED(builder *flatbuffers.Builder, ENCRYPTED bool) {
-	builder.PrependBoolSlot(15, ENCRYPTED, true)
+	builder.PrependBoolSlot(17, ENCRYPTED, true)
 }
 func PLGAddEncrypted(builder *flatbuffers.Builder, ENCRYPTED bool) {
 	PLGAddENCRYPTED(builder, ENCRYPTED)
 }
+func PLGAddREQUIRED_SCOPE(builder *flatbuffers.Builder, REQUIRED_SCOPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(REQUIRED_SCOPE), 0)
+}
+func PLGAddRequiredScope(builder *flatbuffers.Builder, REQUIRED_SCOPE flatbuffers.UOffsetT) {
+	PLGAddREQUIRED_SCOPE(builder, REQUIRED_SCOPE)
+}
+func PLGAddKEY_ID(builder *flatbuffers.Builder, KEY_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(KEY_ID), 0)
+}
+func PLGAddKeyId(builder *flatbuffers.Builder, KEY_ID flatbuffers.UOffsetT) {
+	PLGAddKEY_ID(builder, KEY_ID)
+}
+func PLGAddALLOWED_DOMAINS(builder *flatbuffers.Builder, ALLOWED_DOMAINS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(ALLOWED_DOMAINS), 0)
+}
+func PLGAddAllowedDomains(builder *flatbuffers.Builder, ALLOWED_DOMAINS flatbuffers.UOffsetT) {
+	PLGAddALLOWED_DOMAINS(builder, ALLOWED_DOMAINS)
+}
+func PLGStartALLOWED_DOMAINSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PLGStartAllowedDomainsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartALLOWED_DOMAINSVector(builder, numElems)
+}
+func PLGAddMAX_GRANT_TIMEOUT_MS(builder *flatbuffers.Builder, MAX_GRANT_TIMEOUT_MS uint64) {
+	builder.PrependUint64Slot(21, MAX_GRANT_TIMEOUT_MS, 0)
+}
+func PLGAddMaxGrantTimeoutMs(builder *flatbuffers.Builder, MAX_GRANT_TIMEOUT_MS uint64) {
+	PLGAddMAX_GRANT_TIMEOUT_MS(builder, MAX_GRANT_TIMEOUT_MS)
+}
 func PLGAddMIN_PERMISSIONS(builder *flatbuffers.Builder, MIN_PERMISSIONS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(MIN_PERMISSIONS), 0)
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(MIN_PERMISSIONS), 0)
 }
 func PLGAddMinPermissions(builder *flatbuffers.Builder, MIN_PERMISSIONS flatbuffers.UOffsetT) {
 	PLGAddMIN_PERMISSIONS(builder, MIN_PERMISSIONS)
@@ -725,37 +924,37 @@ func PLGStartMinPermissionsVector(builder *flatbuffers.Builder, numElems int) fl
 	return PLGStartMIN_PERMISSIONSVector(builder, numElems)
 }
 func PLGAddCREATED_AT(builder *flatbuffers.Builder, CREATED_AT uint64) {
-	builder.PrependUint64Slot(17, CREATED_AT, 0)
+	builder.PrependUint64Slot(23, CREATED_AT, 0)
 }
 func PLGAddCreatedAt(builder *flatbuffers.Builder, CREATED_AT uint64) {
 	PLGAddCREATED_AT(builder, CREATED_AT)
 }
 func PLGAddUPDATED_AT(builder *flatbuffers.Builder, UPDATED_AT uint64) {
-	builder.PrependUint64Slot(18, UPDATED_AT, 0)
+	builder.PrependUint64Slot(24, UPDATED_AT, 0)
 }
 func PLGAddUpdatedAt(builder *flatbuffers.Builder, UPDATED_AT uint64) {
 	PLGAddUPDATED_AT(builder, UPDATED_AT)
 }
 func PLGAddDOCUMENTATION_URL(builder *flatbuffers.Builder, DOCUMENTATION_URL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(DOCUMENTATION_URL), 0)
+	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(DOCUMENTATION_URL), 0)
 }
 func PLGAddDocumentationUrl(builder *flatbuffers.Builder, DOCUMENTATION_URL flatbuffers.UOffsetT) {
 	PLGAddDOCUMENTATION_URL(builder, DOCUMENTATION_URL)
 }
 func PLGAddICON_URL(builder *flatbuffers.Builder, ICON_URL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(ICON_URL), 0)
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(ICON_URL), 0)
 }
 func PLGAddIconUrl(builder *flatbuffers.Builder, ICON_URL flatbuffers.UOffsetT) {
 	PLGAddICON_URL(builder, ICON_URL)
 }
 func PLGAddLICENSE(builder *flatbuffers.Builder, LICENSE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(LICENSE), 0)
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(LICENSE), 0)
 }
 func PLGAddLicense(builder *flatbuffers.Builder, LICENSE flatbuffers.UOffsetT) {
 	PLGAddLICENSE(builder, LICENSE)
 }
 func PLGAddSIGNATURE(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(SIGNATURE), 0)
 }
 func PLGAddSignature(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
 	PLGAddSIGNATURE(builder, SIGNATURE)

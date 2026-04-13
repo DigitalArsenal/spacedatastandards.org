@@ -74,10 +74,15 @@ public struct Record : IFlatbufferObject
   public IRO valueAsIRO() { return value<IRO>().Value; }
   public KML valueAsKML() { return value<KML>().Value; }
   public LCC valueAsLCC() { return value<LCC>().Value; }
+  public LCH valueAsLCH() { return value<LCH>().Value; }
   public LDM valueAsLDM() { return value<LDM>().Value; }
+  public LGR valueAsLGR() { return value<LGR>().Value; }
   public LKS valueAsLKS() { return value<LKS>().Value; }
+  public LMR valueAsLMR() { return value<LMR>().Value; }
   public LND valueAsLND() { return value<LND>().Value; }
   public LNE valueAsLNE() { return value<LNE>().Value; }
+  public LPF valueAsLPF() { return value<LPF>().Value; }
+  public LWK valueAsLWK() { return value<LWK>().Value; }
   public MET valueAsMET() { return value<MET>().Value; }
   public MFE valueAsMFE() { return value<MFE>().Value; }
   public MNF valueAsMNF() { return value<MNF>().Value; }
@@ -352,17 +357,32 @@ public struct Record : IFlatbufferObject
       case RecordType.LCC:
         _o.value.Value = this.value<LCC>().HasValue ? this.value<LCC>().Value.UnPack() : null;
         break;
+      case RecordType.LCH:
+        _o.value.Value = this.value<LCH>().HasValue ? this.value<LCH>().Value.UnPack() : null;
+        break;
       case RecordType.LDM:
         _o.value.Value = this.value<LDM>().HasValue ? this.value<LDM>().Value.UnPack() : null;
         break;
+      case RecordType.LGR:
+        _o.value.Value = this.value<LGR>().HasValue ? this.value<LGR>().Value.UnPack() : null;
+        break;
       case RecordType.LKS:
         _o.value.Value = this.value<LKS>().HasValue ? this.value<LKS>().Value.UnPack() : null;
+        break;
+      case RecordType.LMR:
+        _o.value.Value = this.value<LMR>().HasValue ? this.value<LMR>().Value.UnPack() : null;
         break;
       case RecordType.LND:
         _o.value.Value = this.value<LND>().HasValue ? this.value<LND>().Value.UnPack() : null;
         break;
       case RecordType.LNE:
         _o.value.Value = this.value<LNE>().HasValue ? this.value<LNE>().Value.UnPack() : null;
+        break;
+      case RecordType.LPF:
+        _o.value.Value = this.value<LPF>().HasValue ? this.value<LPF>().Value.UnPack() : null;
+        break;
+      case RecordType.LWK:
+        _o.value.Value = this.value<LWK>().HasValue ? this.value<LWK>().Value.UnPack() : null;
         break;
       case RecordType.MET:
         _o.value.Value = this.value<MET>().HasValue ? this.value<MET>().Value.UnPack() : null;

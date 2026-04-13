@@ -234,20 +234,26 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     case WASM_HASH = 16
     case WASM_SIZE = 18
     case WASM_CID = 20
-    case ENTRY_FUNCTIONS = 22
-    case REQUIRED_SCHEMAS = 24
-    case DEPENDENCIES = 26
-    case CAPABILITIES = 28
-    case PROVIDER_PEER_ID = 30
-    case PROVIDER_EPM_CID = 32
-    case ENCRYPTED = 34
-    case MIN_PERMISSIONS = 36
-    case CREATED_AT = 38
-    case UPDATED_AT = 40
-    case DOCUMENTATION_URL = 42
-    case ICON_URL = 44
-    case LICENSE = 46
-    case SIGNATURE = 48
+    case ENCRYPTED_WASM_HASH = 22
+    case ENCRYPTED_WASM_SIZE = 24
+    case ENTRY_FUNCTIONS = 26
+    case REQUIRED_SCHEMAS = 28
+    case DEPENDENCIES = 30
+    case CAPABILITIES = 32
+    case PROVIDER_PEER_ID = 34
+    case PROVIDER_EPM_CID = 36
+    case ENCRYPTED = 38
+    case REQUIRED_SCOPE = 40
+    case KEY_ID = 42
+    case ALLOWED_DOMAINS = 44
+    case MAX_GRANT_TIMEOUT_MS = 46
+    case MIN_PERMISSIONS = 48
+    case CREATED_AT = 50
+    case UPDATED_AT = 52
+    case DOCUMENTATION_URL = 54
+    case ICON_URL = 56
+    case LICENSE = 58
+    case SIGNATURE = 60
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -271,11 +277,16 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  SHA256 hash of the decrypted WASM binary
   public var WASM_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.WASM_HASH.v, byteSize: 1) }
   public func withUnsafePointerToWasmHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.WASM_HASH.v, body: body) }
-  ///  Size of WASM binary in bytes
+  ///  Size of decrypted WASM binary in bytes
   public var WASM_SIZE: UInt64 { let o = _accessor.offset(VTOFFSET.WASM_SIZE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  IPFS CID of the encrypted WASM binary
   public var WASM_CID: String? { let o = _accessor.offset(VTOFFSET.WASM_CID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var WASM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.WASM_CID.v) }
+  ///  SHA256 hash of the encrypted delivery artifact bytes
+  public var ENCRYPTED_WASM_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.ENCRYPTED_WASM_HASH.v, byteSize: 1) }
+  public func withUnsafePointerToEncryptedWasmHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ENCRYPTED_WASM_HASH.v, body: body) }
+  ///  Size of the encrypted delivery artifact in bytes
+  public var ENCRYPTED_WASM_SIZE: UInt64 { let o = _accessor.offset(VTOFFSET.ENCRYPTED_WASM_SIZE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Entry point functions exported by the plugin
   public var ENTRY_FUNCTIONS: FlatbufferVector<EntryFunction> { return _accessor.vector(at: VTOFFSET.ENTRY_FUNCTIONS.v, byteSize: 4) }
   ///  FlatBuffer schemas required by this plugin
@@ -292,6 +303,16 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var PROVIDER_EPM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PROVIDER_EPM_CID.v) }
   ///  Whether the WASM binary is encrypted
   public var ENCRYPTED: Bool { let o = _accessor.offset(VTOFFSET.ENCRYPTED.v); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Canonical required scope for grant issuance
+  public var REQUIRED_SCOPE: String? { let o = _accessor.offset(VTOFFSET.REQUIRED_SCOPE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REQUIRED_SCOPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REQUIRED_SCOPE.v) }
+  ///  Provider-local identifier for the module content key
+  public var KEY_ID: String? { let o = _accessor.offset(VTOFFSET.KEY_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KEY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.KEY_ID.v) }
+  ///  Allowed requester domains for module grants
+  public var ALLOWED_DOMAINS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ALLOWED_DOMAINS.v, byteSize: 4) }
+  ///  Maximum grant timeout allowed for this module publication
+  public var MAX_GRANT_TIMEOUT_MS: UInt64 { let o = _accessor.offset(VTOFFSET.MAX_GRANT_TIMEOUT_MS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Minimum permissions required to run
   public var MIN_PERMISSIONS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MIN_PERMISSIONS.v, byteSize: 4) }
   ///  Unix timestamp when plugin was created
@@ -310,7 +331,7 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Ed25519 signature from provider over manifest
   public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.SIGNATURE.v, byteSize: 1) }
   public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SIGNATURE.v, body: body) }
-  public static func startPLG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
+  public static func startPLG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 29) }
   public static func add(PLUGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_ID, at: VTOFFSET.PLUGIN_ID.p) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VTOFFSET.VERSION.p) }
@@ -320,6 +341,8 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func addVectorOf(WASM_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WASM_HASH, at: VTOFFSET.WASM_HASH.p) }
   public static func add(WASM_SIZE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WASM_SIZE, def: 0, at: VTOFFSET.WASM_SIZE.p) }
   public static func add(WASM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WASM_CID, at: VTOFFSET.WASM_CID.p) }
+  public static func addVectorOf(ENCRYPTED_WASM_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTED_WASM_HASH, at: VTOFFSET.ENCRYPTED_WASM_HASH.p) }
+  public static func add(ENCRYPTED_WASM_SIZE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCRYPTED_WASM_SIZE, def: 0, at: VTOFFSET.ENCRYPTED_WASM_SIZE.p) }
   public static func addVectorOf(ENTRY_FUNCTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTRY_FUNCTIONS, at: VTOFFSET.ENTRY_FUNCTIONS.p) }
   public static func addVectorOf(REQUIRED_SCHEMAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUIRED_SCHEMAS, at: VTOFFSET.REQUIRED_SCHEMAS.p) }
   public static func addVectorOf(DEPENDENCIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEPENDENCIES, at: VTOFFSET.DEPENDENCIES.p) }
@@ -328,6 +351,10 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(PROVIDER_EPM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_EPM_CID, at: VTOFFSET.PROVIDER_EPM_CID.p) }
   public static func add(ENCRYPTED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCRYPTED, def: true,
    at: VTOFFSET.ENCRYPTED.p) }
+  public static func add(REQUIRED_SCOPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUIRED_SCOPE, at: VTOFFSET.REQUIRED_SCOPE.p) }
+  public static func add(KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ID, at: VTOFFSET.KEY_ID.p) }
+  public static func addVectorOf(ALLOWED_DOMAINS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_DOMAINS, at: VTOFFSET.ALLOWED_DOMAINS.p) }
+  public static func add(MAX_GRANT_TIMEOUT_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_GRANT_TIMEOUT_MS, def: 0, at: VTOFFSET.MAX_GRANT_TIMEOUT_MS.p) }
   public static func addVectorOf(MIN_PERMISSIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MIN_PERMISSIONS, at: VTOFFSET.MIN_PERMISSIONS.p) }
   public static func add(CREATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREATED_AT, def: 0, at: VTOFFSET.CREATED_AT.p) }
   public static func add(UPDATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATED_AT, def: 0, at: VTOFFSET.UPDATED_AT.p) }
@@ -347,6 +374,8 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     WASM_HASHVectorOffset WASM_HASH: Offset = Offset(),
     WASM_SIZE: UInt64 = 0,
     WASM_CIDOffset WASM_CID: Offset = Offset(),
+    ENCRYPTED_WASM_HASHVectorOffset ENCRYPTED_WASM_HASH: Offset = Offset(),
+    ENCRYPTED_WASM_SIZE: UInt64 = 0,
     ENTRY_FUNCTIONSVectorOffset ENTRY_FUNCTIONS: Offset = Offset(),
     REQUIRED_SCHEMASVectorOffset REQUIRED_SCHEMAS: Offset = Offset(),
     DEPENDENCIESVectorOffset DEPENDENCIES: Offset = Offset(),
@@ -354,6 +383,10 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     PROVIDER_PEER_IDOffset PROVIDER_PEER_ID: Offset = Offset(),
     PROVIDER_EPM_CIDOffset PROVIDER_EPM_CID: Offset = Offset(),
     ENCRYPTED: Bool = true,
+    REQUIRED_SCOPEOffset REQUIRED_SCOPE: Offset = Offset(),
+    KEY_IDOffset KEY_ID: Offset = Offset(),
+    ALLOWED_DOMAINSVectorOffset ALLOWED_DOMAINS: Offset = Offset(),
+    MAX_GRANT_TIMEOUT_MS: UInt64 = 0,
     MIN_PERMISSIONSVectorOffset MIN_PERMISSIONS: Offset = Offset(),
     CREATED_AT: UInt64 = 0,
     UPDATED_AT: UInt64 = 0,
@@ -372,6 +405,8 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     PLG.addVectorOf(WASM_HASH: WASM_HASH, &fbb)
     PLG.add(WASM_SIZE: WASM_SIZE, &fbb)
     PLG.add(WASM_CID: WASM_CID, &fbb)
+    PLG.addVectorOf(ENCRYPTED_WASM_HASH: ENCRYPTED_WASM_HASH, &fbb)
+    PLG.add(ENCRYPTED_WASM_SIZE: ENCRYPTED_WASM_SIZE, &fbb)
     PLG.addVectorOf(ENTRY_FUNCTIONS: ENTRY_FUNCTIONS, &fbb)
     PLG.addVectorOf(REQUIRED_SCHEMAS: REQUIRED_SCHEMAS, &fbb)
     PLG.addVectorOf(DEPENDENCIES: DEPENDENCIES, &fbb)
@@ -379,6 +414,10 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     PLG.add(PROVIDER_PEER_ID: PROVIDER_PEER_ID, &fbb)
     PLG.add(PROVIDER_EPM_CID: PROVIDER_EPM_CID, &fbb)
     PLG.add(ENCRYPTED: ENCRYPTED, &fbb)
+    PLG.add(REQUIRED_SCOPE: REQUIRED_SCOPE, &fbb)
+    PLG.add(KEY_ID: KEY_ID, &fbb)
+    PLG.addVectorOf(ALLOWED_DOMAINS: ALLOWED_DOMAINS, &fbb)
+    PLG.add(MAX_GRANT_TIMEOUT_MS: MAX_GRANT_TIMEOUT_MS, &fbb)
     PLG.addVectorOf(MIN_PERMISSIONS: MIN_PERMISSIONS, &fbb)
     PLG.add(CREATED_AT: CREATED_AT, &fbb)
     PLG.add(UPDATED_AT: UPDATED_AT, &fbb)
@@ -400,6 +439,8 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.WASM_HASH.p, fieldName: "WASM_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     try _v.visit(field: VTOFFSET.WASM_SIZE.p, fieldName: "WASM_SIZE", required: false, type: UInt64.self)
     try _v.visit(field: VTOFFSET.WASM_CID.p, fieldName: "WASM_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ENCRYPTED_WASM_HASH.p, fieldName: "ENCRYPTED_WASM_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VTOFFSET.ENCRYPTED_WASM_SIZE.p, fieldName: "ENCRYPTED_WASM_SIZE", required: false, type: UInt64.self)
     try _v.visit(field: VTOFFSET.ENTRY_FUNCTIONS.p, fieldName: "ENTRY_FUNCTIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<EntryFunction>, EntryFunction>>.self)
     try _v.visit(field: VTOFFSET.REQUIRED_SCHEMAS.p, fieldName: "REQUIRED_SCHEMAS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.DEPENDENCIES.p, fieldName: "DEPENDENCIES", required: false, type: ForwardOffset<Vector<ForwardOffset<PluginDependency>, PluginDependency>>.self)
@@ -407,6 +448,10 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.PROVIDER_PEER_ID.p, fieldName: "PROVIDER_PEER_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PROVIDER_EPM_CID.p, fieldName: "PROVIDER_EPM_CID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ENCRYPTED.p, fieldName: "ENCRYPTED", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.REQUIRED_SCOPE.p, fieldName: "REQUIRED_SCOPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.KEY_ID.p, fieldName: "KEY_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ALLOWED_DOMAINS.p, fieldName: "ALLOWED_DOMAINS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VTOFFSET.MAX_GRANT_TIMEOUT_MS.p, fieldName: "MAX_GRANT_TIMEOUT_MS", required: false, type: UInt64.self)
     try _v.visit(field: VTOFFSET.MIN_PERMISSIONS.p, fieldName: "MIN_PERMISSIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.CREATED_AT.p, fieldName: "CREATED_AT", required: false, type: UInt64.self)
     try _v.visit(field: VTOFFSET.UPDATED_AT.p, fieldName: "UPDATED_AT", required: false, type: UInt64.self)

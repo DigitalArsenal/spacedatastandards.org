@@ -1,0 +1,57 @@
+// Hash: 8b1a0c9b6b5c145daf8bd5e9c0d2118ab9c5eafc0531ca0e36e9c94295c589c7
+// Version: 0.1.2
+// -----------------------------------END_HEADER
+include "../PLG/main.fbs";
+include "../LWK/main.fbs";
+
+/// Licensing grant message type
+enum licensingGrantMessageType : byte {
+  Request,
+  Granted,
+  Denied
+}
+
+/// Licensing grant message
+table LGR {
+  /// Message type
+  MESSAGE_TYPE: licensingGrantMessageType = Request;
+  /// Unique request identifier
+  REQUEST_ID: string (required);
+  /// Canonical module identifier
+  MODULE_ID: string (required);
+  /// Optional module version
+  MODULE_VERSION: string;
+  /// Requester peer identifier
+  REQUESTER_PEER_ID: string;
+  /// Requester account identity or wallet xpub
+  REQUESTER_XPUB: string;
+  /// Requested domain
+  REQUESTED_DOMAIN: string;
+  /// Requested timeout in milliseconds
+  REQUESTED_TIMEOUT_MS: uint64;
+  /// Granted domain
+  GRANTED_DOMAIN: string;
+  /// Granted timeout in milliseconds
+  GRANTED_TIMEOUT_MS: uint64;
+  /// Grant expiration time in milliseconds since epoch
+  EXPIRES_AT: uint64;
+  /// Required scope for the publication
+  REQUIRED_SCOPE: string;
+  /// Grant status string
+  GRANT_STATUS: string;
+  /// Structured denial reason
+  DENIAL_REASON: string;
+  /// Issued capability token bytes
+  CAPABILITY_TOKEN: [ubyte];
+  /// Published module descriptor
+  MODULE_DESCRIPTOR: PLG;
+  /// Wrapped module content key
+  WRAPPED_CONTENT_KEY: LWK;
+  /// Provider public key used to verify the grant signature
+  GRANT_VERIFIER_PUBKEY: [ubyte];
+  /// Provider signature over the grant
+  PROVIDER_SIGNATURE: [ubyte];
+}
+
+root_type LGR;
+file_identifier "$LGR";

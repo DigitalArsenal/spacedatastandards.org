@@ -1,5 +1,5 @@
-// Hash: 10e390c7bdca60a3d55945e36dbfcd25f241a2710fd2a10095aaf67f0ed54364
-// Version: 1.0.2
+// Hash: a05bd85a663e5c6908f7fff3853ba9ba3b3663aa84d1a8982e9d1aa09d07e485
+// Version: 1.0.4
 // -----------------------------------END_HEADER
 /// Plugin type category
 enum pluginType : byte {
@@ -73,10 +73,14 @@ table PLG {
 
   /// SHA256 hash of the decrypted WASM binary
   WASM_HASH: [ubyte];
-  /// Size of WASM binary in bytes
+  /// Size of decrypted WASM binary in bytes
   WASM_SIZE: uint64;
   /// IPFS CID of the encrypted WASM binary
   WASM_CID: string;
+  /// SHA256 hash of the encrypted delivery artifact bytes
+  ENCRYPTED_WASM_HASH: [ubyte];
+  /// Size of the encrypted delivery artifact in bytes
+  ENCRYPTED_WASM_SIZE: uint64;
 
   /// Entry point functions exported by the plugin
   ENTRY_FUNCTIONS: [EntryFunction];
@@ -94,6 +98,14 @@ table PLG {
 
   /// Whether the WASM binary is encrypted
   ENCRYPTED: bool = true;
+  /// Canonical required scope for grant issuance
+  REQUIRED_SCOPE: string;
+  /// Provider-local identifier for the module content key
+  KEY_ID: string;
+  /// Allowed requester domains for module grants
+  ALLOWED_DOMAINS: [string];
+  /// Maximum grant timeout allowed for this module publication
+  MAX_GRANT_TIMEOUT_MS: uint64;
   /// Minimum permissions required to run
   MIN_PERMISSIONS: [string];
 

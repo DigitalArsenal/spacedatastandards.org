@@ -225,13 +225,30 @@
           "type": "integer",
           "minimum": 0,
           "maximum": 18446744073709551615,
-          "description": "Size of WASM binary in bytes",
+          "description": "Size of decrypted WASM binary in bytes",
           "x-flatbuffer-type": "uint64"
         },
         "WASM_CID": {
           "type": "string",
           "description": "IPFS CID of the encrypted WASM binary",
           "x-flatbuffer-type": "string"
+        },
+        "ENCRYPTED_WASM_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "SHA256 hash of the encrypted delivery artifact bytes",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "ENCRYPTED_WASM_SIZE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Size of the encrypted delivery artifact in bytes",
+          "x-flatbuffer-type": "uint64"
         },
         "ENTRY_FUNCTIONS": {
           "type": "array",
@@ -279,6 +296,31 @@
           "type": "boolean",
           "description": "Whether the WASM binary is encrypted",
           "x-flatbuffer-type": "bool"
+        },
+        "REQUIRED_SCOPE": {
+          "type": "string",
+          "description": "Canonical required scope for grant issuance",
+          "x-flatbuffer-type": "string"
+        },
+        "KEY_ID": {
+          "type": "string",
+          "description": "Provider-local identifier for the module content key",
+          "x-flatbuffer-type": "string"
+        },
+        "ALLOWED_DOMAINS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Allowed requester domains for module grants",
+          "x-flatbuffer-type": "[string]"
+        },
+        "MAX_GRANT_TIMEOUT_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Maximum grant timeout allowed for this module publication",
+          "x-flatbuffer-type": "uint64"
         },
         "MIN_PERMISSIONS": {
           "type": "array",

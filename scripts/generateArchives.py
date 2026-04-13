@@ -15,6 +15,9 @@ from SCM import SCMT
 from SCHEMA_STANDARD import SCHEMA_STANDARDT
 
 
+PRESERVED_DIST_FILES = {"sds_parsers.js", "sds_parsers.wasm"}
+
+
 def read_manifest_flatbuffer(file_path):
     """Read and parse the FlatBuffer file."""
     with open(file_path, "rb") as f:
@@ -101,10 +104,16 @@ def main():
             package_data = json.load(file)
         version = package_data.get("version", version)
 
-    # Clear and recreate the dist directory
+    # Rebuild archive subdirectories without deleting root-level wasm assets.
     if os.path.exists(dist_dir):
-        shutil.rmtree(dist_dir)
-    os.makedirs(dist_dir)
+        for entry in os.listdir(dist_dir):
+            entry_path = os.path.join(dist_dir, entry)
+            if os.path.isdir(entry_path):
+                shutil.rmtree(entry_path)
+            elif entry not in PRESERVED_DIST_FILES:
+                os.remove(entry_path)
+    else:
+        os.makedirs(dist_dir)
 
     # Process each child directory in lib_dir
     for subdir in os.listdir(lib_dir):

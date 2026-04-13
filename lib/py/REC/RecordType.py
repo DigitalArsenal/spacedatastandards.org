@@ -58,84 +58,89 @@ class RecordType(object):
     IRO = 52
     KML = 53
     LCC = 54
-    LDM = 55
-    LKS = 56
-    LND = 57
-    LNE = 58
-    MET = 59
-    MFE = 60
-    MNF = 61
-    MNV = 62
-    MPE = 63
-    MSL = 64
-    MST = 65
-    MTI = 66
-    NAV = 67
-    OBD = 68
-    OBT = 69
-    OCM = 70
-    OEM = 71
-    OMM = 72
-    OOA = 73
-    OOB = 74
-    OOD = 75
-    OOE = 76
-    OOI = 77
-    OOL = 78
-    OON = 79
-    OOS = 80
-    OOT = 81
-    OPM = 82
-    OSM = 83
-    PCF = 84
-    PHY = 85
-    PLD = 86
-    PLG = 87
-    PLK = 88
-    PNM = 89
-    PPE = 90
-    PRG = 91
-    PUR = 92
-    RAF = 93
-    RCF = 94
-    RDM = 95
-    RDO = 96
-    REV = 97
-    RFB = 98
-    RFE = 99
-    RFM = 100
-    RFO = 101
-    ROC = 102
-    SAR = 103
-    SCM = 104
-    SDL = 105
-    SEN = 106
-    SEO = 107
-    SEV = 108
-    SIT = 109
-    SKI = 110
-    SNR = 111
-    SOI = 112
-    SON = 113
-    SPP = 114
-    SPW = 115
-    STF = 116
-    STR = 117
-    STV = 118
-    SWR = 119
-    TCF = 120
-    TDM = 121
-    TIM = 122
-    TKG = 123
-    TME = 124
-    TMF = 125
-    TPN = 126
-    TRK = 127
-    TRN = 128
-    VCM = 129
-    WPN = 130
-    WTH = 131
-    XTC = 132
+    LCH = 55
+    LDM = 56
+    LGR = 57
+    LKS = 58
+    LMR = 59
+    LND = 60
+    LNE = 61
+    LPF = 62
+    LWK = 63
+    MET = 64
+    MFE = 65
+    MNF = 66
+    MNV = 67
+    MPE = 68
+    MSL = 69
+    MST = 70
+    MTI = 71
+    NAV = 72
+    OBD = 73
+    OBT = 74
+    OCM = 75
+    OEM = 76
+    OMM = 77
+    OOA = 78
+    OOB = 79
+    OOD = 80
+    OOE = 81
+    OOI = 82
+    OOL = 83
+    OON = 84
+    OOS = 85
+    OOT = 86
+    OPM = 87
+    OSM = 88
+    PCF = 89
+    PHY = 90
+    PLD = 91
+    PLG = 92
+    PLK = 93
+    PNM = 94
+    PPE = 95
+    PRG = 96
+    PUR = 97
+    RAF = 98
+    RCF = 99
+    RDM = 100
+    RDO = 101
+    REV = 102
+    RFB = 103
+    RFE = 104
+    RFM = 105
+    RFO = 106
+    ROC = 107
+    SAR = 108
+    SCM = 109
+    SDL = 110
+    SEN = 111
+    SEO = 112
+    SEV = 113
+    SIT = 114
+    SKI = 115
+    SNR = 116
+    SOI = 117
+    SON = 118
+    SPP = 119
+    SPW = 120
+    STF = 121
+    STR = 122
+    STV = 123
+    SWR = 124
+    TCF = 125
+    TDM = 126
+    TIM = 127
+    TKG = 128
+    TME = 129
+    TMF = 130
+    TPN = 131
+    TRK = 132
+    TRN = 133
+    VCM = 134
+    WPN = 135
+    WTH = 136
+    XTC = 137
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -303,18 +308,33 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.LCC:
         import LCC
         return LCC.LCCT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.LCH:
+        import LCH
+        return LCH.LCHT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.LDM:
         import LDM
         return LDM.LDMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.LGR:
+        import LGR
+        return LGR.LGRT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.LKS:
         import LKS
         return LKS.LKST.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.LMR:
+        import LMR
+        return LMR.LMRT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.LND:
         import LND
         return LND.LNDT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.LNE:
         import LNE
         return LNE.LNET.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.LPF:
+        import LPF
+        return LPF.LPFT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.LWK:
+        import LWK
+        return LWK.LWKT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.MET:
         import MET
         return MET.METT.InitFromBuf(table.Bytes, table.Pos)

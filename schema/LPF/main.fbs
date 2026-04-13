@@ -1,0 +1,50 @@
+// Hash: 816824771213ed1f1fe110371c1d2de22cbb6cf2008e7729d78c99ebd43d562a
+// Version: 0.1.2
+// -----------------------------------END_HEADER
+/// Licensing proof message type
+enum licensingProofMessageType : byte {
+  ProofRequest,
+  ProofAccepted,
+  ProofRejected
+}
+
+/// Licensing proof message
+table LPF {
+  /// Message type
+  MESSAGE_TYPE: licensingProofMessageType = ProofRequest;
+  /// Unique request identifier
+  REQUEST_ID: string (required);
+  /// Canonical module identifier
+  MODULE_ID: string (required);
+  /// Optional requested module version
+  MODULE_VERSION: string;
+  /// Requester peer identifier
+  REQUESTER_PEER_ID: string;
+  /// Requester account identity or wallet xpub
+  REQUESTER_XPUB: string;
+  /// Requested domain proved for policy evaluation
+  REQUESTED_DOMAIN: string;
+  /// Requested timeout in milliseconds
+  REQUESTED_TIMEOUT_MS: uint64;
+  /// Requester ephemeral X25519 public key
+  REQUESTER_EPHEMERAL_PUBKEY: [ubyte];
+  /// Provider-issued challenge nonce being proved
+  CHALLENGE_NONCE: [ubyte];
+  /// Challenge expiration time being acknowledged
+  CHALLENGE_EXPIRES_AT: uint64;
+  /// Provider peer identifier that issued the challenge
+  PROVIDER_PEER_ID: string;
+  /// Detached requester signature over the challenge payload
+  SIGNATURE: [ubyte];
+  /// Requester signing public key
+  SIGNING_PUBKEY: [ubyte];
+  /// Proof timestamp in milliseconds since epoch
+  TIMESTAMP_MS: uint64;
+  /// Structured rejection code
+  REJECTION_CODE: string;
+  /// Structured rejection message
+  REJECTION_MESSAGE: string;
+}
+
+root_type LPF;
+file_identifier "$LPF";

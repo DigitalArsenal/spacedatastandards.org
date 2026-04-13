@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "licensingModuleRequestAction" : {
+      "type" : "string",
+      "enum": ["Fetch", "Register", "Load", "Error"]
+    },
+    "LMR" : {
+      "type" : "object",
+      "description" : "Module fetch/register/load control message",
+      "properties" : {
+        "ACTION" : {
+                "$ref" : "#/definitions/licensingModuleRequestAction",
+                "description" : "Action being requested or reported"
+              },
+        "REQUEST_ID" : {
+                "type" : "string",
+                "description" : "Unique request identifier"
+              },
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "Canonical module identifier"
+              },
+        "MODULE_VERSION" : {
+                "type" : "string",
+                "description" : "Optional module version"
+              },
+        "WASM_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of the encrypted module artifact"
+              },
+        "MODULE_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "SHA-256 hash of the decrypted module bytes"
+              },
+        "STATUS" : {
+                "type" : "string",
+                "description" : "Human-readable status"
+              },
+        "ERROR_CODE" : {
+                "type" : "string",
+                "description" : "Structured error code"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string",
+                "description" : "Structured error message"
+              }
+      },
+      "required" : ["REQUEST_ID", "MODULE_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LMR"
+}

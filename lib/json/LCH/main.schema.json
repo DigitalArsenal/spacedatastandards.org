@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "licensingChallengeRole" : {
+      "type" : "string",
+      "enum": ["Requester", "Provider"]
+    },
+    "licensingChallengeMessageType" : {
+      "type" : "string",
+      "enum": ["Request", "Response", "Error"]
+    },
+    "LCH" : {
+      "type" : "object",
+      "description" : "Licensing challenge message",
+      "properties" : {
+        "MESSAGE_TYPE" : {
+                "$ref" : "#/definitions/licensingChallengeMessageType",
+                "description" : "Message type"
+              },
+        "ROLE" : {
+                "$ref" : "#/definitions/licensingChallengeRole",
+                "description" : "Sender role"
+              },
+        "REQUEST_ID" : {
+                "type" : "string",
+                "description" : "Unique request identifier"
+              },
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "Canonical module identifier"
+              },
+        "MODULE_VERSION" : {
+                "type" : "string",
+                "description" : "Optional requested module version"
+              },
+        "REQUESTER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Requester peer identifier"
+              },
+        "REQUESTER_XPUB" : {
+                "type" : "string",
+                "description" : "Requester account identity or wallet xpub"
+              },
+        "REQUESTER_SIGNING_PUBKEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Requester Ed25519 signing public key"
+              },
+        "REQUESTER_EPHEMERAL_PUBKEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Requester ephemeral X25519 public key"
+              },
+        "REQUESTED_DOMAIN" : {
+                "type" : "string",
+                "description" : "Requested domain for policy evaluation"
+              },
+        "REQUESTED_TIMEOUT_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Requested timeout in milliseconds"
+              },
+        "REQUESTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Request timestamp in milliseconds since epoch"
+              },
+        "CHALLENGE_NONCE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Provider-issued challenge nonce"
+              },
+        "EXPIRES_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Challenge expiration time in milliseconds since epoch"
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Provider peer identifier"
+              },
+        "ERROR_CODE" : {
+                "type" : "string",
+                "description" : "Structured error code"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string",
+                "description" : "Structured error message"
+              }
+      },
+      "required" : ["REQUEST_ID", "MODULE_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LCH"
+}

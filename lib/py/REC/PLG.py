@@ -105,7 +105,7 @@ class PLG(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         return o == 0
 
-    # Size of WASM binary in bytes
+    # Size of decrypted WASM binary in bytes
     # PLG
     def WASM_SIZE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -121,10 +121,46 @@ class PLG(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # SHA256 hash of the encrypted delivery artifact bytes
+    # PLG
+    def ENCRYPTED_WASM_HASH(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # PLG
+    def ENCRYPTED_WASM_HASHAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # PLG
+    def ENCRYPTED_WASM_HASHLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def ENCRYPTED_WASM_HASHIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        return o == 0
+
+    # Size of the encrypted delivery artifact in bytes
+    # PLG
+    def ENCRYPTED_WASM_SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
     # Entry point functions exported by the plugin
     # PLG
     def ENTRY_FUNCTIONS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -137,20 +173,20 @@ class PLG(object):
 
     # PLG
     def ENTRY_FUNCTIONSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # PLG
     def ENTRY_FUNCTIONSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
     # FlatBuffer schemas required by this plugin
     # PLG
     def REQUIRED_SCHEMAS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -158,20 +194,20 @@ class PLG(object):
 
     # PLG
     def REQUIRED_SCHEMASLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # PLG
     def REQUIRED_SCHEMASIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
     # Other plugins this depends on
     # PLG
     def DEPENDENCIES(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -184,20 +220,20 @@ class PLG(object):
 
     # PLG
     def DEPENDENCIESLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # PLG
     def DEPENDENCIESIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         return o == 0
 
     # Capabilities provided by this plugin
     # PLG
     def CAPABILITIES(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -210,20 +246,20 @@ class PLG(object):
 
     # PLG
     def CAPABILITIESLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # PLG
     def CAPABILITIESIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
     # Peer ID of the plugin provider
     # PLG
     def PROVIDER_PEER_ID(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -231,7 +267,7 @@ class PLG(object):
     # IPFS CID of provider's EPM (Entity Profile Message)
     # PLG
     def PROVIDER_EPM_CID(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -239,15 +275,60 @@ class PLG(object):
     # Whether the WASM binary is encrypted
     # PLG
     def ENCRYPTED(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return True
 
+    # Canonical required scope for grant issuance
+    # PLG
+    def REQUIRED_SCOPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Provider-local identifier for the module content key
+    # PLG
+    def KEY_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Allowed requester domains for module grants
+    # PLG
+    def ALLOWED_DOMAINS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # PLG
+    def ALLOWED_DOMAINSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def ALLOWED_DOMAINSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        return o == 0
+
+    # Maximum grant timeout allowed for this module publication
+    # PLG
+    def MAX_GRANT_TIMEOUT_MS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
     # Minimum permissions required to run
     # PLG
     def MIN_PERMISSIONS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -255,20 +336,20 @@ class PLG(object):
 
     # PLG
     def MIN_PERMISSIONSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # PLG
     def MIN_PERMISSIONSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         return o == 0
 
     # Unix timestamp when plugin was created
     # PLG
     def CREATED_AT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
@@ -276,7 +357,7 @@ class PLG(object):
     # Unix timestamp when plugin was last updated
     # PLG
     def UPDATED_AT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
@@ -284,7 +365,7 @@ class PLG(object):
     # URL to plugin documentation
     # PLG
     def DOCUMENTATION_URL(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -292,7 +373,7 @@ class PLG(object):
     # URL to plugin icon/logo
     # PLG
     def ICON_URL(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -300,7 +381,7 @@ class PLG(object):
     # License identifier (SPDX format)
     # PLG
     def LICENSE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -308,7 +389,7 @@ class PLG(object):
     # Ed25519 signature from provider over manifest
     # PLG
     def SIGNATURE(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
@@ -316,25 +397,25 @@ class PLG(object):
 
     # PLG
     def SIGNATUREAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
         return 0
 
     # PLG
     def SIGNATURELength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # PLG
     def SIGNATUREIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         return o == 0
 
 def PLGStart(builder):
-    builder.StartObject(23)
+    builder.StartObject(29)
 
 def Start(builder):
     PLGStart(builder)
@@ -409,8 +490,36 @@ def PLGAddWASM_CID(builder, WASM_CID):
 def AddWASM_CID(builder, WASM_CID):
     PLGAddWASM_CID(builder, WASM_CID)
 
+def PLGAddENCRYPTED_WASM_HASH(builder, ENCRYPTED_WASM_HASH):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ENCRYPTED_WASM_HASH), 0)
+
+def AddENCRYPTED_WASM_HASH(builder, ENCRYPTED_WASM_HASH):
+    PLGAddENCRYPTED_WASM_HASH(builder, ENCRYPTED_WASM_HASH)
+
+def PLGStartENCRYPTED_WASM_HASHVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartENCRYPTED_WASM_HASHVector(builder, numElems):
+    return PLGStartENCRYPTED_WASM_HASHVector(builder, numElems)
+
+def PLGCreateENCRYPTED_WASM_HASHVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateENCRYPTED_WASM_HASHVector(builder, data):
+    PLGCreateENCRYPTED_WASM_HASHVector(builder, data)
+
+def PLGAddENCRYPTED_WASM_SIZE(builder, ENCRYPTED_WASM_SIZE):
+    builder.PrependUint64Slot(10, ENCRYPTED_WASM_SIZE, 0)
+
+def AddENCRYPTED_WASM_SIZE(builder, ENCRYPTED_WASM_SIZE):
+    PLGAddENCRYPTED_WASM_SIZE(builder, ENCRYPTED_WASM_SIZE)
+
 def PLGAddENTRY_FUNCTIONS(builder, ENTRY_FUNCTIONS):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ENTRY_FUNCTIONS), 0)
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ENTRY_FUNCTIONS), 0)
 
 def AddENTRY_FUNCTIONS(builder, ENTRY_FUNCTIONS):
     PLGAddENTRY_FUNCTIONS(builder, ENTRY_FUNCTIONS)
@@ -428,7 +537,7 @@ def CreateENTRY_FUNCTIONSVector(builder, data):
     PLGCreateENTRY_FUNCTIONSVector(builder, data)
 
 def PLGAddREQUIRED_SCHEMAS(builder, REQUIRED_SCHEMAS):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(REQUIRED_SCHEMAS), 0)
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(REQUIRED_SCHEMAS), 0)
 
 def AddREQUIRED_SCHEMAS(builder, REQUIRED_SCHEMAS):
     PLGAddREQUIRED_SCHEMAS(builder, REQUIRED_SCHEMAS)
@@ -446,7 +555,7 @@ def CreateREQUIRED_SCHEMASVector(builder, data):
     PLGCreateREQUIRED_SCHEMASVector(builder, data)
 
 def PLGAddDEPENDENCIES(builder, DEPENDENCIES):
-    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(DEPENDENCIES), 0)
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(DEPENDENCIES), 0)
 
 def AddDEPENDENCIES(builder, DEPENDENCIES):
     PLGAddDEPENDENCIES(builder, DEPENDENCIES)
@@ -464,7 +573,7 @@ def CreateDEPENDENCIESVector(builder, data):
     PLGCreateDEPENDENCIESVector(builder, data)
 
 def PLGAddCAPABILITIES(builder, CAPABILITIES):
-    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(CAPABILITIES), 0)
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(CAPABILITIES), 0)
 
 def AddCAPABILITIES(builder, CAPABILITIES):
     PLGAddCAPABILITIES(builder, CAPABILITIES)
@@ -482,25 +591,61 @@ def CreateCAPABILITIESVector(builder, data):
     PLGCreateCAPABILITIESVector(builder, data)
 
 def PLGAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_PEER_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_PEER_ID), 0)
 
 def AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID):
     PLGAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID)
 
 def PLGAddPROVIDER_EPM_CID(builder, PROVIDER_EPM_CID):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_EPM_CID), 0)
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_EPM_CID), 0)
 
 def AddPROVIDER_EPM_CID(builder, PROVIDER_EPM_CID):
     PLGAddPROVIDER_EPM_CID(builder, PROVIDER_EPM_CID)
 
 def PLGAddENCRYPTED(builder, ENCRYPTED):
-    builder.PrependBoolSlot(15, ENCRYPTED, 1)
+    builder.PrependBoolSlot(17, ENCRYPTED, 1)
 
 def AddENCRYPTED(builder, ENCRYPTED):
     PLGAddENCRYPTED(builder, ENCRYPTED)
 
+def PLGAddREQUIRED_SCOPE(builder, REQUIRED_SCOPE):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(REQUIRED_SCOPE), 0)
+
+def AddREQUIRED_SCOPE(builder, REQUIRED_SCOPE):
+    PLGAddREQUIRED_SCOPE(builder, REQUIRED_SCOPE)
+
+def PLGAddKEY_ID(builder, KEY_ID):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(KEY_ID), 0)
+
+def AddKEY_ID(builder, KEY_ID):
+    PLGAddKEY_ID(builder, KEY_ID)
+
+def PLGAddALLOWED_DOMAINS(builder, ALLOWED_DOMAINS):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(ALLOWED_DOMAINS), 0)
+
+def AddALLOWED_DOMAINS(builder, ALLOWED_DOMAINS):
+    PLGAddALLOWED_DOMAINS(builder, ALLOWED_DOMAINS)
+
+def PLGStartALLOWED_DOMAINSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartALLOWED_DOMAINSVector(builder, numElems):
+    return PLGStartALLOWED_DOMAINSVector(builder, numElems)
+
+def PLGCreateALLOWED_DOMAINSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateALLOWED_DOMAINSVector(builder, data):
+    PLGCreateALLOWED_DOMAINSVector(builder, data)
+
+def PLGAddMAX_GRANT_TIMEOUT_MS(builder, MAX_GRANT_TIMEOUT_MS):
+    builder.PrependUint64Slot(21, MAX_GRANT_TIMEOUT_MS, 0)
+
+def AddMAX_GRANT_TIMEOUT_MS(builder, MAX_GRANT_TIMEOUT_MS):
+    PLGAddMAX_GRANT_TIMEOUT_MS(builder, MAX_GRANT_TIMEOUT_MS)
+
 def PLGAddMIN_PERMISSIONS(builder, MIN_PERMISSIONS):
-    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(MIN_PERMISSIONS), 0)
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(MIN_PERMISSIONS), 0)
 
 def AddMIN_PERMISSIONS(builder, MIN_PERMISSIONS):
     PLGAddMIN_PERMISSIONS(builder, MIN_PERMISSIONS)
@@ -518,37 +663,37 @@ def CreateMIN_PERMISSIONSVector(builder, data):
     PLGCreateMIN_PERMISSIONSVector(builder, data)
 
 def PLGAddCREATED_AT(builder, CREATED_AT):
-    builder.PrependUint64Slot(17, CREATED_AT, 0)
+    builder.PrependUint64Slot(23, CREATED_AT, 0)
 
 def AddCREATED_AT(builder, CREATED_AT):
     PLGAddCREATED_AT(builder, CREATED_AT)
 
 def PLGAddUPDATED_AT(builder, UPDATED_AT):
-    builder.PrependUint64Slot(18, UPDATED_AT, 0)
+    builder.PrependUint64Slot(24, UPDATED_AT, 0)
 
 def AddUPDATED_AT(builder, UPDATED_AT):
     PLGAddUPDATED_AT(builder, UPDATED_AT)
 
 def PLGAddDOCUMENTATION_URL(builder, DOCUMENTATION_URL):
-    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(DOCUMENTATION_URL), 0)
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(DOCUMENTATION_URL), 0)
 
 def AddDOCUMENTATION_URL(builder, DOCUMENTATION_URL):
     PLGAddDOCUMENTATION_URL(builder, DOCUMENTATION_URL)
 
 def PLGAddICON_URL(builder, ICON_URL):
-    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(ICON_URL), 0)
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(ICON_URL), 0)
 
 def AddICON_URL(builder, ICON_URL):
     PLGAddICON_URL(builder, ICON_URL)
 
 def PLGAddLICENSE(builder, LICENSE):
-    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(LICENSE), 0)
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(LICENSE), 0)
 
 def AddLICENSE(builder, LICENSE):
     PLGAddLICENSE(builder, LICENSE)
 
 def PLGAddSIGNATURE(builder, SIGNATURE):
-    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)
 
 def AddSIGNATURE(builder, SIGNATURE):
     PLGAddSIGNATURE(builder, SIGNATURE)
@@ -597,6 +742,8 @@ class PLGT(object):
         WASM_HASH = None,
         WASM_SIZE = 0,
         WASM_CID = None,
+        ENCRYPTED_WASM_HASH = None,
+        ENCRYPTED_WASM_SIZE = 0,
         ENTRY_FUNCTIONS = None,
         REQUIRED_SCHEMAS = None,
         DEPENDENCIES = None,
@@ -604,6 +751,10 @@ class PLGT(object):
         PROVIDER_PEER_ID = None,
         PROVIDER_EPM_CID = None,
         ENCRYPTED = True,
+        REQUIRED_SCOPE = None,
+        KEY_ID = None,
+        ALLOWED_DOMAINS = None,
+        MAX_GRANT_TIMEOUT_MS = 0,
         MIN_PERMISSIONS = None,
         CREATED_AT = 0,
         UPDATED_AT = 0,
@@ -621,6 +772,8 @@ class PLGT(object):
         self.WASM_HASH = WASM_HASH  # type: Optional[List[int]]
         self.WASM_SIZE = WASM_SIZE  # type: int
         self.WASM_CID = WASM_CID  # type: Optional[str]
+        self.ENCRYPTED_WASM_HASH = ENCRYPTED_WASM_HASH  # type: Optional[List[int]]
+        self.ENCRYPTED_WASM_SIZE = ENCRYPTED_WASM_SIZE  # type: int
         self.ENTRY_FUNCTIONS = ENTRY_FUNCTIONS  # type: Optional[List[EntryFunction.EntryFunctionT]]
         self.REQUIRED_SCHEMAS = REQUIRED_SCHEMAS  # type: Optional[List[Optional[str]]]
         self.DEPENDENCIES = DEPENDENCIES  # type: Optional[List[PluginDependency.PluginDependencyT]]
@@ -628,6 +781,10 @@ class PLGT(object):
         self.PROVIDER_PEER_ID = PROVIDER_PEER_ID  # type: Optional[str]
         self.PROVIDER_EPM_CID = PROVIDER_EPM_CID  # type: Optional[str]
         self.ENCRYPTED = ENCRYPTED  # type: bool
+        self.REQUIRED_SCOPE = REQUIRED_SCOPE  # type: Optional[str]
+        self.KEY_ID = KEY_ID  # type: Optional[str]
+        self.ALLOWED_DOMAINS = ALLOWED_DOMAINS  # type: Optional[List[Optional[str]]]
+        self.MAX_GRANT_TIMEOUT_MS = MAX_GRANT_TIMEOUT_MS  # type: int
         self.MIN_PERMISSIONS = MIN_PERMISSIONS  # type: Optional[List[Optional[str]]]
         self.CREATED_AT = CREATED_AT  # type: int
         self.UPDATED_AT = UPDATED_AT  # type: int
@@ -672,6 +829,14 @@ class PLGT(object):
                 self.WASM_HASH = PLG.WASM_HASHAsNumpy()
         self.WASM_SIZE = PLG.WASM_SIZE()
         self.WASM_CID = PLG.WASM_CID()
+        if not PLG.ENCRYPTED_WASM_HASHIsNone():
+            if np is None:
+                self.ENCRYPTED_WASM_HASH = []
+                for i in range(PLG.ENCRYPTED_WASM_HASHLength()):
+                    self.ENCRYPTED_WASM_HASH.append(PLG.ENCRYPTED_WASM_HASH(i))
+            else:
+                self.ENCRYPTED_WASM_HASH = PLG.ENCRYPTED_WASM_HASHAsNumpy()
+        self.ENCRYPTED_WASM_SIZE = PLG.ENCRYPTED_WASM_SIZE()
         if not PLG.ENTRY_FUNCTIONSIsNone():
             self.ENTRY_FUNCTIONS = []
             for i in range(PLG.ENTRY_FUNCTIONSLength()):
@@ -703,6 +868,13 @@ class PLGT(object):
         self.PROVIDER_PEER_ID = PLG.PROVIDER_PEER_ID()
         self.PROVIDER_EPM_CID = PLG.PROVIDER_EPM_CID()
         self.ENCRYPTED = PLG.ENCRYPTED()
+        self.REQUIRED_SCOPE = PLG.REQUIRED_SCOPE()
+        self.KEY_ID = PLG.KEY_ID()
+        if not PLG.ALLOWED_DOMAINSIsNone():
+            self.ALLOWED_DOMAINS = []
+            for i in range(PLG.ALLOWED_DOMAINSLength()):
+                self.ALLOWED_DOMAINS.append(PLG.ALLOWED_DOMAINS(i))
+        self.MAX_GRANT_TIMEOUT_MS = PLG.MAX_GRANT_TIMEOUT_MS()
         if not PLG.MIN_PERMISSIONSIsNone():
             self.MIN_PERMISSIONS = []
             for i in range(PLG.MIN_PERMISSIONSLength()):
@@ -740,6 +912,14 @@ class PLGT(object):
                 WASM_HASH = builder.EndVector()
         if self.WASM_CID is not None:
             WASM_CID = builder.CreateString(self.WASM_CID)
+        if self.ENCRYPTED_WASM_HASH is not None:
+            if np is not None and type(self.ENCRYPTED_WASM_HASH) is np.ndarray:
+                ENCRYPTED_WASM_HASH = builder.CreateNumpyVector(self.ENCRYPTED_WASM_HASH)
+            else:
+                PLGStartENCRYPTED_WASM_HASHVector(builder, len(self.ENCRYPTED_WASM_HASH))
+                for i in reversed(range(len(self.ENCRYPTED_WASM_HASH))):
+                    builder.PrependUint8(self.ENCRYPTED_WASM_HASH[i])
+                ENCRYPTED_WASM_HASH = builder.EndVector()
         if self.ENTRY_FUNCTIONS is not None:
             ENTRY_FUNCTIONSlist = []
             for i in range(len(self.ENTRY_FUNCTIONS)):
@@ -776,6 +956,18 @@ class PLGT(object):
             PROVIDER_PEER_ID = builder.CreateString(self.PROVIDER_PEER_ID)
         if self.PROVIDER_EPM_CID is not None:
             PROVIDER_EPM_CID = builder.CreateString(self.PROVIDER_EPM_CID)
+        if self.REQUIRED_SCOPE is not None:
+            REQUIRED_SCOPE = builder.CreateString(self.REQUIRED_SCOPE)
+        if self.KEY_ID is not None:
+            KEY_ID = builder.CreateString(self.KEY_ID)
+        if self.ALLOWED_DOMAINS is not None:
+            ALLOWED_DOMAINSlist = []
+            for i in range(len(self.ALLOWED_DOMAINS)):
+                ALLOWED_DOMAINSlist.append(builder.CreateString(self.ALLOWED_DOMAINS[i]))
+            PLGStartALLOWED_DOMAINSVector(builder, len(self.ALLOWED_DOMAINS))
+            for i in reversed(range(len(self.ALLOWED_DOMAINS))):
+                builder.PrependUOffsetTRelative(ALLOWED_DOMAINSlist[i])
+            ALLOWED_DOMAINS = builder.EndVector()
         if self.MIN_PERMISSIONS is not None:
             MIN_PERMISSIONSlist = []
             for i in range(len(self.MIN_PERMISSIONS)):
@@ -814,6 +1006,9 @@ class PLGT(object):
         PLGAddWASM_SIZE(builder, self.WASM_SIZE)
         if self.WASM_CID is not None:
             PLGAddWASM_CID(builder, WASM_CID)
+        if self.ENCRYPTED_WASM_HASH is not None:
+            PLGAddENCRYPTED_WASM_HASH(builder, ENCRYPTED_WASM_HASH)
+        PLGAddENCRYPTED_WASM_SIZE(builder, self.ENCRYPTED_WASM_SIZE)
         if self.ENTRY_FUNCTIONS is not None:
             PLGAddENTRY_FUNCTIONS(builder, ENTRY_FUNCTIONS)
         if self.REQUIRED_SCHEMAS is not None:
@@ -827,6 +1022,13 @@ class PLGT(object):
         if self.PROVIDER_EPM_CID is not None:
             PLGAddPROVIDER_EPM_CID(builder, PROVIDER_EPM_CID)
         PLGAddENCRYPTED(builder, self.ENCRYPTED)
+        if self.REQUIRED_SCOPE is not None:
+            PLGAddREQUIRED_SCOPE(builder, REQUIRED_SCOPE)
+        if self.KEY_ID is not None:
+            PLGAddKEY_ID(builder, KEY_ID)
+        if self.ALLOWED_DOMAINS is not None:
+            PLGAddALLOWED_DOMAINS(builder, ALLOWED_DOMAINS)
+        PLGAddMAX_GRANT_TIMEOUT_MS(builder, self.MAX_GRANT_TIMEOUT_MS)
         if self.MIN_PERMISSIONS is not None:
             PLGAddMIN_PERMISSIONS(builder, MIN_PERMISSIONS)
         PLGAddCREATED_AT(builder, self.CREATED_AT)

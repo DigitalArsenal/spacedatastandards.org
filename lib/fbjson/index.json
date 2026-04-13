@@ -3055,6 +3055,143 @@
             "x-flatbuffer-root-type": "MNV",
             "x-flatbuffer-file-identifier": "$MNV"
         },
+        "LWK": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "licensingWrappedKeyAlgorithm": {
+                    "type": "string",
+                    "enum": [
+                        "X25519_HKDF_SHA256_AES_256_GCM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "X25519_HKDF_SHA256_AES_256_GCM": {
+                            "value": 0
+                        }
+                    }
+                },
+                "LWK": {
+                    "type": "object",
+                    "description": "Wrapped module content key",
+                    "properties": {
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Unique request identifier",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Optional module version",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "CONTENT_KEY_ID": {
+                            "type": "string",
+                            "description": "Provider-local content key identifier",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "RECIPIENT_KEY_ID": {
+                            "type": "string",
+                            "description": "Recipient key identifier or fingerprint",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ALGORITHM": {
+                            "$ref": "#/definitions/licensingWrappedKeyAlgorithm",
+                            "description": "Wrapped-key algorithm",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "X25519_HKDF_SHA256_AES_256_GCM": {
+                                    "value": 0
+                                }
+                            }
+                        },
+                        "REQUESTER_EPHEMERAL_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Requester ephemeral X25519 public key",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "PROVIDER_EPHEMERAL_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Provider ephemeral X25519 public key",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "HKDF_SALT": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "HKDF salt",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "IV": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "AES-GCM IV",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "CIPHERTEXT": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Wrapped key ciphertext",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "TAG": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "AES-GCM authentication tag",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "EXPIRES_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Envelope expiration time in milliseconds since epoch",
+                            "x-flatbuffer-type": "uint64"
+                        }
+                    },
+                    "required": [
+                        "REQUEST_ID",
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/LWK",
+            "x-flatbuffer-root-type": "LWK",
+            "x-flatbuffer-file-identifier": "$LWK"
+        },
         "CDM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -7940,6 +8077,192 @@
             "x-flatbuffer-root-type": "HEL",
             "x-flatbuffer-file-identifier": "$HEL"
         },
+        "LCH": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "licensingChallengeRole": {
+                    "type": "string",
+                    "enum": [
+                        "Requester",
+                        "Provider"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Requester": {
+                            "value": 0
+                        },
+                        "Provider": {
+                            "value": 1
+                        }
+                    }
+                },
+                "licensingChallengeMessageType": {
+                    "type": "string",
+                    "enum": [
+                        "Request",
+                        "Response",
+                        "Error"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Request": {
+                            "value": 0
+                        },
+                        "Response": {
+                            "value": 1
+                        },
+                        "Error": {
+                            "value": 2
+                        }
+                    }
+                },
+                "LCH": {
+                    "type": "object",
+                    "description": "Licensing challenge message",
+                    "properties": {
+                        "MESSAGE_TYPE": {
+                            "$ref": "#/definitions/licensingChallengeMessageType",
+                            "description": "Message type",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Request": {
+                                    "value": 0
+                                },
+                                "Response": {
+                                    "value": 1
+                                },
+                                "Error": {
+                                    "value": 2
+                                }
+                            }
+                        },
+                        "ROLE": {
+                            "$ref": "#/definitions/licensingChallengeRole",
+                            "description": "Sender role",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Requester": {
+                                    "value": 0
+                                },
+                                "Provider": {
+                                    "value": 1
+                                }
+                            }
+                        },
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Unique request identifier",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Optional requested module version",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REQUESTER_PEER_ID": {
+                            "type": "string",
+                            "description": "Requester peer identifier",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REQUESTER_XPUB": {
+                            "type": "string",
+                            "description": "Requester account identity or wallet xpub",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REQUESTER_SIGNING_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Requester Ed25519 signing public key",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "REQUESTER_EPHEMERAL_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Requester ephemeral X25519 public key",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "REQUESTED_DOMAIN": {
+                            "type": "string",
+                            "description": "Requested domain for policy evaluation",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REQUESTED_TIMEOUT_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Requested timeout in milliseconds",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "REQUESTED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Request timestamp in milliseconds since epoch",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "CHALLENGE_NONCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Provider-issued challenge nonce",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "EXPIRES_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Challenge expiration time in milliseconds since epoch",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "PROVIDER_PEER_ID": {
+                            "type": "string",
+                            "description": "Provider peer identifier",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ERROR_CODE": {
+                            "type": "string",
+                            "description": "Structured error code",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Structured error message",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "required": [
+                        "REQUEST_ID",
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/LCH",
+            "x-flatbuffer-root-type": "LCH",
+            "x-flatbuffer-file-identifier": "$LCH"
+        },
         "DFH": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -11607,6 +11930,117 @@
             "x-flatbuffer-root-type": "SEV",
             "x-flatbuffer-file-identifier": "$SEV"
         },
+        "LMR": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "licensingModuleRequestAction": {
+                    "type": "string",
+                    "enum": [
+                        "Fetch",
+                        "Register",
+                        "Load",
+                        "Error"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Fetch": {
+                            "value": 0
+                        },
+                        "Register": {
+                            "value": 1
+                        },
+                        "Load": {
+                            "value": 2
+                        },
+                        "Error": {
+                            "value": 3
+                        }
+                    }
+                },
+                "LMR": {
+                    "type": "object",
+                    "description": "Module fetch/register/load control message",
+                    "properties": {
+                        "ACTION": {
+                            "$ref": "#/definitions/licensingModuleRequestAction",
+                            "description": "Action being requested or reported",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Fetch": {
+                                    "value": 0
+                                },
+                                "Register": {
+                                    "value": 1
+                                },
+                                "Load": {
+                                    "value": 2
+                                },
+                                "Error": {
+                                    "value": 3
+                                }
+                            }
+                        },
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Unique request identifier",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Optional module version",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "WASM_CID": {
+                            "type": "string",
+                            "description": "IPFS CID of the encrypted module artifact",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MODULE_HASH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "SHA-256 hash of the decrypted module bytes",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "STATUS": {
+                            "type": "string",
+                            "description": "Human-readable status",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ERROR_CODE": {
+                            "type": "string",
+                            "description": "Structured error code",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Structured error message",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "required": [
+                        "REQUEST_ID",
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/LMR",
+            "x-flatbuffer-root-type": "LMR",
+            "x-flatbuffer-file-identifier": "$LMR"
+        },
         "PUR": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -12668,6 +13102,143 @@
             "$ref": "#/definitions/CRM",
             "x-flatbuffer-root-type": "CRM",
             "x-flatbuffer-file-identifier": "$CRM"
+        },
+        "LGR": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "licensingWrappedKeyAlgorithm": {
+                    "type": "string",
+                    "enum": [
+                        "X25519_HKDF_SHA256_AES_256_GCM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "X25519_HKDF_SHA256_AES_256_GCM": {
+                            "value": 0
+                        }
+                    }
+                },
+                "LWK": {
+                    "type": "object",
+                    "description": "Wrapped module content key",
+                    "properties": {
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Unique request identifier",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Optional module version",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "CONTENT_KEY_ID": {
+                            "type": "string",
+                            "description": "Provider-local content key identifier",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "RECIPIENT_KEY_ID": {
+                            "type": "string",
+                            "description": "Recipient key identifier or fingerprint",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ALGORITHM": {
+                            "$ref": "#/definitions/licensingWrappedKeyAlgorithm",
+                            "description": "Wrapped-key algorithm",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "X25519_HKDF_SHA256_AES_256_GCM": {
+                                    "value": 0
+                                }
+                            }
+                        },
+                        "REQUESTER_EPHEMERAL_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Requester ephemeral X25519 public key",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "PROVIDER_EPHEMERAL_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Provider ephemeral X25519 public key",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "HKDF_SALT": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "HKDF salt",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "IV": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "AES-GCM IV",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "CIPHERTEXT": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Wrapped key ciphertext",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "TAG": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "AES-GCM authentication tag",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "EXPIRES_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Envelope expiration time in milliseconds since epoch",
+                            "x-flatbuffer-type": "uint64"
+                        }
+                    },
+                    "required": [
+                        "REQUEST_ID",
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/LWK",
+            "x-flatbuffer-root-type": "LGR",
+            "x-flatbuffer-file-identifier": "$LGR"
         },
         "ION": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -31421,13 +31992,30 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 18446744073709551615,
-                            "description": "Size of WASM binary in bytes",
+                            "description": "Size of decrypted WASM binary in bytes",
                             "x-flatbuffer-type": "uint64"
                         },
                         "WASM_CID": {
                             "type": "string",
                             "description": "IPFS CID of the encrypted WASM binary",
                             "x-flatbuffer-type": "string"
+                        },
+                        "ENCRYPTED_WASM_HASH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "SHA256 hash of the encrypted delivery artifact bytes",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "ENCRYPTED_WASM_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Size of the encrypted delivery artifact in bytes",
+                            "x-flatbuffer-type": "uint64"
                         },
                         "ENTRY_FUNCTIONS": {
                             "type": "array",
@@ -31475,6 +32063,31 @@
                             "type": "boolean",
                             "description": "Whether the WASM binary is encrypted",
                             "x-flatbuffer-type": "bool"
+                        },
+                        "REQUIRED_SCOPE": {
+                            "type": "string",
+                            "description": "Canonical required scope for grant issuance",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "KEY_ID": {
+                            "type": "string",
+                            "description": "Provider-local identifier for the module content key",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ALLOWED_DOMAINS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Allowed requester domains for module grants",
+                            "x-flatbuffer-type": "[string]"
+                        },
+                        "MAX_GRANT_TIMEOUT_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Maximum grant timeout allowed for this module publication",
+                            "x-flatbuffer-type": "uint64"
                         },
                         "MIN_PERMISSIONS": {
                             "type": "array",
@@ -54403,6 +55016,171 @@
             "$ref": "#/definitions/ACM",
             "x-flatbuffer-root-type": "ACM",
             "x-flatbuffer-file-identifier": "$ACM"
+        },
+        "LPF": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "licensingProofMessageType": {
+                    "type": "string",
+                    "enum": [
+                        "ProofRequest",
+                        "ProofAccepted",
+                        "ProofRejected"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "ProofRequest": {
+                            "value": 0
+                        },
+                        "ProofAccepted": {
+                            "value": 1
+                        },
+                        "ProofRejected": {
+                            "value": 2
+                        }
+                    }
+                },
+                "LPF": {
+                    "type": "object",
+                    "description": "Licensing proof message",
+                    "properties": {
+                        "MESSAGE_TYPE": {
+                            "$ref": "#/definitions/licensingProofMessageType",
+                            "description": "Message type",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "ProofRequest": {
+                                    "value": 0
+                                },
+                                "ProofAccepted": {
+                                    "value": 1
+                                },
+                                "ProofRejected": {
+                                    "value": 2
+                                }
+                            }
+                        },
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Unique request identifier",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier",
+                            "x-flatbuffer-type": "string",
+                            "x-flatbuffer-required": true
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Optional requested module version",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REQUESTER_PEER_ID": {
+                            "type": "string",
+                            "description": "Requester peer identifier",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REQUESTER_XPUB": {
+                            "type": "string",
+                            "description": "Requester account identity or wallet xpub",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REQUESTED_DOMAIN": {
+                            "type": "string",
+                            "description": "Requested domain proved for policy evaluation",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REQUESTED_TIMEOUT_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Requested timeout in milliseconds",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "REQUESTER_EPHEMERAL_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Requester ephemeral X25519 public key",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "CHALLENGE_NONCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Provider-issued challenge nonce being proved",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "CHALLENGE_EXPIRES_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Challenge expiration time being acknowledged",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "PROVIDER_PEER_ID": {
+                            "type": "string",
+                            "description": "Provider peer identifier that issued the challenge",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Detached requester signature over the challenge payload",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "SIGNING_PUBKEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Requester signing public key",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "TIMESTAMP_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Proof timestamp in milliseconds since epoch",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "REJECTION_CODE": {
+                            "type": "string",
+                            "description": "Structured rejection code",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REJECTION_MESSAGE": {
+                            "type": "string",
+                            "description": "Structured rejection message",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "required": [
+                        "REQUEST_ID",
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/LPF",
+            "x-flatbuffer-root-type": "LPF",
+            "x-flatbuffer-file-identifier": "$LPF"
         },
         "SWR": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
