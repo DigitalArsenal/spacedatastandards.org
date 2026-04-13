@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "keyMaterialRole": {
+      "type": "string",
+      "enum": [
+        "Unknown",
+        "PublicationContent",
+        "RequesterSigning",
+        "VerificationKey",
+        "DecryptKey"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unknown": {
+          "value": 0
+        },
+        "PublicationContent": {
+          "value": 1
+        },
+        "RequesterSigning": {
+          "value": 2
+        },
+        "VerificationKey": {
+          "value": 3
+        },
+        "DecryptKey": {
+          "value": 4
+        }
+      }
+    },
+    "keyMaterialAlgorithm": {
+      "type": "string",
+      "enum": [
+        "Unknown",
+        "Ed25519Seed",
+        "Ed25519Public",
+        "X25519Private",
+        "X25519Public",
+        "Aes256Gcm",
+        "Opaque"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unknown": {
+          "value": 0
+        },
+        "Ed25519Seed": {
+          "value": 1
+        },
+        "Ed25519Public": {
+          "value": 2
+        },
+        "X25519Private": {
+          "value": 3
+        },
+        "X25519Public": {
+          "value": 4
+        },
+        "Aes256Gcm": {
+          "value": 5
+        },
+        "Opaque": {
+          "value": 6
+        }
+      }
+    },
+    "keyMaterialEncoding": {
+      "type": "string",
+      "enum": [
+        "Unknown",
+        "RawBytes",
+        "Seed32",
+        "PublicKey32"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unknown": {
+          "value": 0
+        },
+        "RawBytes": {
+          "value": 1
+        },
+        "Seed32": {
+          "value": 2
+        },
+        "PublicKey32": {
+          "value": 3
+        }
+      }
+    },
+    "KMF": {
+      "type": "object",
+      "description": "Key Material Frame",
+      "properties": {
+        "KEY_ID": {
+          "type": "string",
+          "description": "Logical key identifier used across publication and grant records.",
+          "x-flatbuffer-type": "string"
+        },
+        "ROLE": {
+          "$ref": "#/definitions/keyMaterialRole",
+          "description": "Role the key bytes fulfill for the module flow.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unknown": {
+              "value": 0
+            },
+            "PublicationContent": {
+              "value": 1
+            },
+            "RequesterSigning": {
+              "value": 2
+            },
+            "VerificationKey": {
+              "value": 3
+            },
+            "DecryptKey": {
+              "value": 4
+            }
+          }
+        },
+        "ALGORITHM": {
+          "$ref": "#/definitions/keyMaterialAlgorithm",
+          "description": "Algorithm or key family for the key bytes.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unknown": {
+              "value": 0
+            },
+            "Ed25519Seed": {
+              "value": 1
+            },
+            "Ed25519Public": {
+              "value": 2
+            },
+            "X25519Private": {
+              "value": 3
+            },
+            "X25519Public": {
+              "value": 4
+            },
+            "Aes256Gcm": {
+              "value": 5
+            },
+            "Opaque": {
+              "value": 6
+            }
+          }
+        },
+        "ENCODING": {
+          "$ref": "#/definitions/keyMaterialEncoding",
+          "description": "Encoding of KEY_BYTES.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unknown": {
+              "value": 0
+            },
+            "RawBytes": {
+              "value": 1
+            },
+            "Seed32": {
+              "value": 2
+            },
+            "PublicKey32": {
+              "value": 3
+            }
+          }
+        },
+        "KEY_BYTES": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Explicit key bytes when a module must receive them on a port.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Logical version of the key material.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "EXPIRES_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Expiration time in unix milliseconds, or 0 if unbounded.",
+          "x-flatbuffer-type": "uint64"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/KMF",
+  "x-flatbuffer-root-type": "KMF",
+  "x-flatbuffer-file-identifier": "$KMF"
+}

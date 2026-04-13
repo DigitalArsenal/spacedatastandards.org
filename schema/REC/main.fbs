@@ -1,5 +1,5 @@
-// Hash: 5d7af62d1635f3ac2f7871ef8ee5e01ec85825e2b5572c3eaf4247320b1ecbf0
-// Version: 1.44.16
+// Hash: 4a5660366d3038cebcea73daab83d9afbc34f65f2f3335434677b7fcdc062a73
+// Version: 1.44.17
 // -----------------------------------END_HEADER
 include "../ACL/main.fbs";
 include "../ACM/main.fbs";
@@ -53,8 +53,11 @@ include "../HYP/main.fbs";
 include "../IDM/main.fbs";
 include "../ION/main.fbs";
 include "../IRO/main.fbs";
+include "../KMF/main.fbs";
 include "../KML/main.fbs";
+include "../KRF/main.fbs";
 include "../LCC/main.fbs";
+include "../LCF/main.fbs";
 include "../LCH/main.fbs";
 include "../LDM/main.fbs";
 include "../LGR/main.fbs";
@@ -153,28 +156,28 @@ union RecordType {
   GDI, GEO, GJN, GNO,
   GPX, GRV, GVH, HEL,
   HYP, IDM, ION, IRO,
-  KML, LCC, LCH, LDM,
-  LGR, LKS, LMR, LND,
-  LNE, LPF, LWK, MET,
-  MFE, MNF, MNV, MPE,
-  MSL, MST, MTI, NAV,
-  OBD, OBT, OCM, OEM,
-  OMM, OOA, OOB, OOD,
-  OOE, OOI, OOL, OON,
-  OOS, OOT, OPM, OSM,
-  PCF, PHY, PLD, PLG,
-  PLK, PNM, PPE, PRG,
-  PUR, RAF, RCF, RDM,
-  RDO, REV, RFB, RFE,
-  RFM, RFO, ROC, SAR,
-  SCM, SDL, SEN, SEO,
-  SEV, SIT, SKI, SNR,
-  SOI, SON, SPP, SPW,
-  STF, STR, STV, SWR,
-  TCF, TDM, TIM, TKG,
-  TME, TMF, TPN, TRK,
-  TRN, VCM, WPN, WTH,
-  XTC
+  KMF, KML, KRF, LCC,
+  LCF, LCH, LDM, LGR,
+  LKS, LMR, LND, LNE,
+  LPF, LWK, MET, MFE,
+  MNF, MNV, MPE, MSL,
+  MST, MTI, NAV, OBD,
+  OBT, OCM, OEM, OMM,
+  OOA, OOB, OOD, OOE,
+  OOI, OOL, OON, OOS,
+  OOT, OPM, OSM, PCF,
+  PHY, PLD, PLG, PLK,
+  PNM, PPE, PRG, PUR,
+  RAF, RCF, RDM, RDO,
+  REV, RFB, RFE, RFM,
+  RFO, ROC, SAR, SCM,
+  SDL, SEN, SEO, SEV,
+  SIT, SKI, SNR, SOI,
+  SON, SPP, SPW, STF,
+  STR, STV, SWR, TCF,
+  TDM, TIM, TKG, TME,
+  TMF, TPN, TRK, TRN,
+  VCM, WPN, WTH, XTC
 }  // Union of all record types
 
 /// Individual record wrapper for any standard type

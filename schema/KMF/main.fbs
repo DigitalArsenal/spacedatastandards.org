@@ -1,0 +1,48 @@
+// Hash: dc3ec8f842dd6d2fc053ee02a9f2d8648d87ac8fdb7af559de68e44c84920cc8
+// Version: 1.82.0
+// -----------------------------------END_HEADER
+enum keyMaterialRole : byte {
+  Unknown,
+  PublicationContent,
+  RequesterSigning,
+  VerificationKey,
+  DecryptKey
+}
+
+enum keyMaterialAlgorithm : byte {
+  Unknown,
+  Ed25519Seed,
+  Ed25519Public,
+  X25519Private,
+  X25519Public,
+  Aes256Gcm,
+  Opaque
+}
+
+enum keyMaterialEncoding : byte {
+  Unknown,
+  RawBytes,
+  Seed32,
+  PublicKey32
+}
+
+/// Key Material Frame
+table KMF {
+  /// Logical key identifier used across publication and grant records.
+  KEY_ID: string;
+  /// Role the key bytes fulfill for the module flow.
+  ROLE: keyMaterialRole = Unknown;
+  /// Algorithm or key family for the key bytes.
+  ALGORITHM: keyMaterialAlgorithm = Unknown;
+  /// Encoding of KEY_BYTES.
+  ENCODING: keyMaterialEncoding = Unknown;
+  /// Explicit key bytes when a module must receive them on a port.
+  KEY_BYTES: [ubyte];
+  /// Logical version of the key material.
+  VERSION: uint32;
+  /// Expiration time in unix milliseconds, or 0 if unbounded.
+  EXPIRES_AT: uint64;
+}
+
+root_type KMF;
+file_identifier "$KMF";

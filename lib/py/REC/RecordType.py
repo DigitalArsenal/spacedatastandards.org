@@ -56,91 +56,94 @@ class RecordType(object):
     IDM = 50
     ION = 51
     IRO = 52
-    KML = 53
-    LCC = 54
-    LCH = 55
-    LDM = 56
-    LGR = 57
-    LKS = 58
-    LMR = 59
-    LND = 60
-    LNE = 61
-    LPF = 62
-    LWK = 63
-    MET = 64
-    MFE = 65
-    MNF = 66
-    MNV = 67
-    MPE = 68
-    MSL = 69
-    MST = 70
-    MTI = 71
-    NAV = 72
-    OBD = 73
-    OBT = 74
-    OCM = 75
-    OEM = 76
-    OMM = 77
-    OOA = 78
-    OOB = 79
-    OOD = 80
-    OOE = 81
-    OOI = 82
-    OOL = 83
-    OON = 84
-    OOS = 85
-    OOT = 86
-    OPM = 87
-    OSM = 88
-    PCF = 89
-    PHY = 90
-    PLD = 91
-    PLG = 92
-    PLK = 93
-    PNM = 94
-    PPE = 95
-    PRG = 96
-    PUR = 97
-    RAF = 98
-    RCF = 99
-    RDM = 100
-    RDO = 101
-    REV = 102
-    RFB = 103
-    RFE = 104
-    RFM = 105
-    RFO = 106
-    ROC = 107
-    SAR = 108
-    SCM = 109
-    SDL = 110
-    SEN = 111
-    SEO = 112
-    SEV = 113
-    SIT = 114
-    SKI = 115
-    SNR = 116
-    SOI = 117
-    SON = 118
-    SPP = 119
-    SPW = 120
-    STF = 121
-    STR = 122
-    STV = 123
-    SWR = 124
-    TCF = 125
-    TDM = 126
-    TIM = 127
-    TKG = 128
-    TME = 129
-    TMF = 130
-    TPN = 131
-    TRK = 132
-    TRN = 133
-    VCM = 134
-    WPN = 135
-    WTH = 136
-    XTC = 137
+    KMF = 53
+    KML = 54
+    KRF = 55
+    LCC = 56
+    LCF = 57
+    LCH = 58
+    LDM = 59
+    LGR = 60
+    LKS = 61
+    LMR = 62
+    LND = 63
+    LNE = 64
+    LPF = 65
+    LWK = 66
+    MET = 67
+    MFE = 68
+    MNF = 69
+    MNV = 70
+    MPE = 71
+    MSL = 72
+    MST = 73
+    MTI = 74
+    NAV = 75
+    OBD = 76
+    OBT = 77
+    OCM = 78
+    OEM = 79
+    OMM = 80
+    OOA = 81
+    OOB = 82
+    OOD = 83
+    OOE = 84
+    OOI = 85
+    OOL = 86
+    OON = 87
+    OOS = 88
+    OOT = 89
+    OPM = 90
+    OSM = 91
+    PCF = 92
+    PHY = 93
+    PLD = 94
+    PLG = 95
+    PLK = 96
+    PNM = 97
+    PPE = 98
+    PRG = 99
+    PUR = 100
+    RAF = 101
+    RCF = 102
+    RDM = 103
+    RDO = 104
+    REV = 105
+    RFB = 106
+    RFE = 107
+    RFM = 108
+    RFO = 109
+    ROC = 110
+    SAR = 111
+    SCM = 112
+    SDL = 113
+    SEN = 114
+    SEO = 115
+    SEV = 116
+    SIT = 117
+    SKI = 118
+    SNR = 119
+    SOI = 120
+    SON = 121
+    SPP = 122
+    SPW = 123
+    STF = 124
+    STR = 125
+    STV = 126
+    SWR = 127
+    TCF = 128
+    TDM = 129
+    TIM = 130
+    TKG = 131
+    TME = 132
+    TMF = 133
+    TPN = 134
+    TRK = 135
+    TRN = 136
+    VCM = 137
+    WPN = 138
+    WTH = 139
+    XTC = 140
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -302,12 +305,21 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.IRO:
         import IRO
         return IRO.IROT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.KMF:
+        import KMF
+        return KMF.KMFT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.KML:
         import KML
         return KML.KMLT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.KRF:
+        import KRF
+        return KRF.KRFT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.LCC:
         import LCC
         return LCC.LCCT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.LCF:
+        import LCF
+        return LCF.LCFT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.LCH:
         import LCH
         return LCH.LCHT.InitFromBuf(table.Bytes, table.Pos)

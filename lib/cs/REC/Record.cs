@@ -72,8 +72,11 @@ public struct Record : IFlatbufferObject
   public IDM valueAsIDM() { return value<IDM>().Value; }
   public ION valueAsION() { return value<ION>().Value; }
   public IRO valueAsIRO() { return value<IRO>().Value; }
+  public KMF valueAsKMF() { return value<KMF>().Value; }
   public KML valueAsKML() { return value<KML>().Value; }
+  public KRF valueAsKRF() { return value<KRF>().Value; }
   public LCC valueAsLCC() { return value<LCC>().Value; }
+  public LCF valueAsLCF() { return value<LCF>().Value; }
   public LCH valueAsLCH() { return value<LCH>().Value; }
   public LDM valueAsLDM() { return value<LDM>().Value; }
   public LGR valueAsLGR() { return value<LGR>().Value; }
@@ -351,11 +354,20 @@ public struct Record : IFlatbufferObject
       case RecordType.IRO:
         _o.value.Value = this.value<IRO>().HasValue ? this.value<IRO>().Value.UnPack() : null;
         break;
+      case RecordType.KMF:
+        _o.value.Value = this.value<KMF>().HasValue ? this.value<KMF>().Value.UnPack() : null;
+        break;
       case RecordType.KML:
         _o.value.Value = this.value<KML>().HasValue ? this.value<KML>().Value.UnPack() : null;
         break;
+      case RecordType.KRF:
+        _o.value.Value = this.value<KRF>().HasValue ? this.value<KRF>().Value.UnPack() : null;
+        break;
       case RecordType.LCC:
         _o.value.Value = this.value<LCC>().HasValue ? this.value<LCC>().Value.UnPack() : null;
+        break;
+      case RecordType.LCF:
+        _o.value.Value = this.value<LCF>().HasValue ? this.value<LCF>().Value.UnPack() : null;
         break;
       case RecordType.LCH:
         _o.value.Value = this.value<LCH>().HasValue ? this.value<LCH>().Value.UnPack() : null;

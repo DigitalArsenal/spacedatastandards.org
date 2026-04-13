@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "keyReferenceRole" : {
+      "type" : "string",
+      "enum": ["Unknown", "ProviderSigning", "ProviderWrapping", "RequesterSigning", "PublicationContent", "VerificationKey", "DecryptKey"]
+    },
+    "keyReferenceAlgorithm" : {
+      "type" : "string",
+      "enum": ["Unknown", "Ed25519Seed", "Ed25519Public", "X25519Private", "X25519Public", "Aes256Gcm", "Opaque"]
+    },
+    "KRF" : {
+      "type" : "object",
+      "description" : "Key Reference Frame",
+      "properties" : {
+        "KEY_ID" : {
+                "type" : "string",
+                "description" : "Logical key identifier used across publication and grant records."
+              },
+        "SLOT_ID" : {
+                "type" : "string",
+                "description" : "Host-managed key slot or key handle identifier."
+              },
+        "ROLE" : {
+                "$ref" : "#/definitions/keyReferenceRole",
+                "description" : "Role the referenced key fulfills for the module flow."
+              },
+        "ALGORITHM" : {
+                "$ref" : "#/definitions/keyReferenceAlgorithm",
+                "description" : "Algorithm or key family for the referenced key."
+              },
+        "PUBLIC_KEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional public bytes for verification or peer identity binding."
+              },
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Logical version of the referenced key."
+              },
+        "EXPIRES_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Expiration time in unix milliseconds, or 0 if unbounded."
+              },
+        "HOST_MANAGED" : {
+                "type" : "boolean",
+                "description" : "True when the secret material remains in the host key slot."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/KRF"
+}

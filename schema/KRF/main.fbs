@@ -1,0 +1,45 @@
+// Hash: 512214a483c2d561bb775ad75c0bcba4134f2a9b17c1f835ab0b75f3768a1cb8
+// Version: 1.82.0
+// -----------------------------------END_HEADER
+enum keyReferenceRole : byte {
+  Unknown,
+  ProviderSigning,
+  ProviderWrapping,
+  RequesterSigning,
+  PublicationContent,
+  VerificationKey,
+  DecryptKey
+}
+
+enum keyReferenceAlgorithm : byte {
+  Unknown,
+  Ed25519Seed,
+  Ed25519Public,
+  X25519Private,
+  X25519Public,
+  Aes256Gcm,
+  Opaque
+}
+
+/// Key Reference Frame
+table KRF {
+  /// Logical key identifier used across publication and grant records.
+  KEY_ID: string;
+  /// Host-managed key slot or key handle identifier.
+  SLOT_ID: string;
+  /// Role the referenced key fulfills for the module flow.
+  ROLE: keyReferenceRole = Unknown;
+  /// Algorithm or key family for the referenced key.
+  ALGORITHM: keyReferenceAlgorithm = Unknown;
+  /// Optional public bytes for verification or peer identity binding.
+  PUBLIC_KEY: [ubyte];
+  /// Logical version of the referenced key.
+  VERSION: uint32;
+  /// Expiration time in unix milliseconds, or 0 if unbounded.
+  EXPIRES_AT: uint64;
+  /// True when the secret material remains in the host key slot.
+  HOST_MANAGED: bool = true;
+}
+
+root_type KRF;
+file_identifier "$KRF";
