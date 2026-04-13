@@ -10,6 +10,11 @@ use \Google\FlatBuffers\FlatBufferBuilder;
 class KMF extends Table
 {
     /**
+     * @var string|null Encryption context for decrypting encrypted fields
+     */
+    protected $encryptionCtx = null;
+
+    /**
      * @param ByteBuffer $bb
      * @return KMF
      */
@@ -17,6 +22,17 @@ class KMF extends Table
     {
         $obj = new KMF();
         return ($obj->init($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb));
+    }
+
+    /**
+     * @param ByteBuffer $bb
+     * @param string|null $encryptionCtx
+     * @return KMF
+     */
+    public static function getRootAsKMFWithEncryption(ByteBuffer $bb, $encryptionCtx)
+    {
+        $obj = new KMF();
+        return ($obj->initWithEncryption($bb->getInt($bb->getPosition()) + $bb->getPosition(), $bb, $encryptionCtx));
     }
 
     public static function KMFIdentifier()
@@ -38,6 +54,20 @@ class KMF extends Table
     {
         $this->bb_pos = $_i;
         $this->bb = $_bb;
+        return $this;
+    }
+
+    /**
+     * @param int $_i offset
+     * @param ByteBuffer $_bb
+     * @param string|null $_encryptionCtx
+     * @return KMF
+     **/
+    public function initWithEncryption($_i, ByteBuffer $_bb, $_encryptionCtx)
+    {
+        $this->bb_pos = $_i;
+        $this->bb = $_bb;
+        $this->encryptionCtx = $_encryptionCtx;
         return $this;
     }
 
@@ -79,6 +109,8 @@ class KMF extends Table
     }
 
     /// Explicit key bytes when a module must receive them on a port.
+    /// This may be field-encrypted using the SDS/da-flatbuffers header-first
+    /// encryption flow when transported to a specific recipient.
     /**
      * @param int offset
      * @return byte

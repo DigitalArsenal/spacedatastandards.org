@@ -1,8 +1,8 @@
-// Hash: 8b1a0c9b6b5c145daf8bd5e9c0d2118ab9c5eafc0531ca0e36e9c94295c589c7
-// Version: 0.1.2
+// Hash: 4bd00e23c916a4355b35960460b7db28f93c3265bf76369e4904b25d4acd8885
+// Version: 0.1.3
 // -----------------------------------END_HEADER
 include "../PLG/main.fbs";
-include "../LWK/main.fbs";
+include "../ENC/main.fbs";
 
 /// Licensing grant message type
 enum licensingGrantMessageType : byte {
@@ -45,8 +45,12 @@ table LGR {
   CAPABILITY_TOKEN: [ubyte];
   /// Published module descriptor
   MODULE_DESCRIPTOR: PLG;
-  /// Wrapped module content key
-  WRAPPED_CONTENT_KEY: LWK;
+  /// Encryption header for the recipient-specific wrapped content-key payload.
+  WRAPPED_CONTENT_KEY_HEADER: ENC;
+  /// Encrypted FlatBuffer payload containing the recipient-specific content key
+  /// material. The payload currently uses `$KMF` semantics and is decrypted
+  /// using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+  WRAPPED_CONTENT_KEY_PAYLOAD: [ubyte];
   /// Provider public key used to verify the grant signature
   GRANT_VERIFIER_PUBKEY: [ubyte];
   /// Provider signature over the grant

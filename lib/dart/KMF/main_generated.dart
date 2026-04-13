@@ -3,8 +3,118 @@
 
 import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
+import 'package:pointycastle/export.dart';
 
 
+
+/// FlatBuffers field-level encryption support using AES-256-CTR.
+class FlatbuffersEncryption {
+  /// Derive a 16-byte nonce from encryption context and field offset.
+  static Uint8List _deriveNonce(Uint8List ctx, int fieldOffset) {
+    if (ctx.length < 12) {
+      throw ArgumentError('Encryption context must be at least 12 bytes');
+    }
+    final nonce = Uint8List(16);
+    nonce.setRange(0, 12, ctx);
+    // Little-endian field offset
+    nonce[12] = fieldOffset & 0xFF;
+    nonce[13] = (fieldOffset >> 8) & 0xFF;
+    nonce[14] = (fieldOffset >> 16) & 0xFF;
+    nonce[15] = (fieldOffset >> 24) & 0xFF;
+    return nonce;
+  }
+
+  /// Decrypt bytes using AES-256-CTR.
+  static Uint8List _decryptBytes(Uint8List data, Uint8List ctx, int fieldOffset) {
+    if (ctx.length < 32) {
+      throw ArgumentError('Encryption context must be at least 32 bytes');
+    }
+    final key = ctx.sublist(0, 32);
+    final nonce = _deriveNonce(ctx, fieldOffset);
+    final cipher = CTRStreamCipher(AESEngine())
+      ..init(false, ParametersWithIV(KeyParameter(key), nonce));
+    return cipher.process(data);
+  }
+
+  /// Decrypt a boolean value.
+  static bool decryptScalar(bool value, Uint8List? ctx, int fieldOffset) {
+    if (ctx == null) return value;
+    final data = Uint8List(1)..[0] = value ? 1 : 0;
+    final decrypted = _decryptBytes(data, ctx, fieldOffset);
+    return decrypted[0] != 0;
+  }
+
+  /// Decrypt an int8/uint8 value.
+  static int decryptInt8(int value, Uint8List? ctx, int fieldOffset) {
+    if (ctx == null) return value;
+    final data = Uint8List(1)..[0] = value & 0xFF;
+    final decrypted = _decryptBytes(data, ctx, fieldOffset);
+    return decrypted[0];
+  }
+
+  /// Decrypt an int16/uint16 value.
+  static int decryptInt16(int value, Uint8List? ctx, int fieldOffset) {
+    if (ctx == null) return value;
+    final data = Uint8List(2);
+    data.buffer.asByteData().setInt16(0, value, Endian.little);
+    final decrypted = _decryptBytes(data, ctx, fieldOffset);
+    return decrypted.buffer.asByteData().getInt16(0, Endian.little);
+  }
+
+  /// Decrypt an int32/uint32 value.
+  static int decryptInt32(int value, Uint8List? ctx, int fieldOffset) {
+    if (ctx == null) return value;
+    final data = Uint8List(4);
+    data.buffer.asByteData().setInt32(0, value, Endian.little);
+    final decrypted = _decryptBytes(data, ctx, fieldOffset);
+    return decrypted.buffer.asByteData().getInt32(0, Endian.little);
+  }
+
+  /// Decrypt an int64/uint64 value.
+  static int decryptInt64(int value, Uint8List? ctx, int fieldOffset) {
+    if (ctx == null) return value;
+    final data = Uint8List(8);
+    data.buffer.asByteData().setInt64(0, value, Endian.little);
+    final decrypted = _decryptBytes(data, ctx, fieldOffset);
+    return decrypted.buffer.asByteData().getInt64(0, Endian.little);
+  }
+
+  /// Decrypt a float32 value.
+  static double decryptFloat32(double value, Uint8List? ctx, int fieldOffset) {
+    if (ctx == null) return value;
+    final data = Uint8List(4);
+    data.buffer.asByteData().setFloat32(0, value, Endian.little);
+    final decrypted = _decryptBytes(data, ctx, fieldOffset);
+    return decrypted.buffer.asByteData().getFloat32(0, Endian.little);
+  }
+
+  /// Decrypt a float64 value.
+  static double decryptFloat64(double value, Uint8List? ctx, int fieldOffset) {
+    if (ctx == null) return value;
+    final data = Uint8List(8);
+    data.buffer.asByteData().setFloat64(0, value, Endian.little);
+    final decrypted = _decryptBytes(data, ctx, fieldOffset);
+    return decrypted.buffer.asByteData().getFloat64(0, Endian.little);
+  }
+
+  /// Decrypt a string from raw bytes.
+  static String? decryptString(fb.BufferContext bc, int offset, Uint8List? ctx, int fieldOffset) {
+    // Read raw bytes from the vector
+    final vecOffset = bc.derefObject(offset);
+    final len = bc.buffer.getUint32(vecOffset, Endian.little);
+    final data = Uint8List(len);
+    for (var i = 0; i < len; i++) {
+      data[i] = bc.buffer.getUint8(vecOffset + 4 + i);
+    }
+    if (ctx == null) {
+      // No encryption context, decode as regular string
+      return String.fromCharCodes(data);
+    }
+    // Decrypt and decode
+    final decrypted = _decryptBytes(data, ctx, fieldOffset);
+    return String.fromCharCodes(decrypted);
+  }
+}
 
 enum keyMaterialRole {
   Unknown(0),
@@ -130,16 +240,22 @@ class _keyMaterialEncodingReader extends fb.Reader<keyMaterialEncoding> {
 
 ///  Key Material Frame
 class KMF {
-  KMF._(this._bc, this._bcOffset);
+  KMF._(this._bc, this._bcOffset, [this.encryptionCtx]);
   factory KMF(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
+  }
+  factory KMF.withEncryption(List<int> bytes, Uint8List encryptionCtx) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    final obj = reader.read(rootRef, 0);
+    return KMF._(obj._bc, obj._bcOffset, encryptionCtx);
   }
 
   static const fb.Reader<KMF> reader = _KMFReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
+  final Uint8List? encryptionCtx;
 
   ///  Logical key identifier used across publication and grant records.
   String? get KEY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
@@ -151,6 +267,8 @@ class KMF {
   ///  Encoding of KEY_BYTES.
   keyMaterialEncoding get ENCODING => keyMaterialEncoding.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
   ///  Explicit key bytes when a module must receive them on a port.
+  ///  This may be field-encrypted using the SDS/da-flatbuffers header-first
+  ///  encryption flow when transported to a specific recipient.
   List<int>? get KEY_BYTES => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
   List<int>? get keyBytes => KEY_BYTES;
   ///  Logical version of the key material.

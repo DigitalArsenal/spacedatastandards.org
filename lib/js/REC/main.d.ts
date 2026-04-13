@@ -233,6 +233,7 @@ export * from './FCSMode.js';
 export * from './FilterType.js';
 export * from './FixedFrameStream.js';
 export * from './FixedValueEntry.js';
+export * from './flatbuffers-encryption.js';
 export * from './FlightPhase.js';
 export * from './FloatArgumentType.js';
 export * from './FloatDataEncoding.js';

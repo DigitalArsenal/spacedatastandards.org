@@ -22,11 +22,22 @@ import kotlin.math.sign
 @Suppress("unused")
 class KMF : Table() {
 
+    /** Encryption context for decrypting encrypted fields */
+    var encryptionCtx: ByteArray? = null
+
     fun __init(_i: Int, _bb: ByteBuffer)  {
         __reset(_i, _bb)
     }
+    fun __init(_i: Int, _bb: ByteBuffer, _encryptionCtx: ByteArray?)  {
+        __reset(_i, _bb)
+        encryptionCtx = _encryptionCtx
+    }
     fun __assign(_i: Int, _bb: ByteBuffer) : KMF {
         __init(_i, _bb)
+        return this
+    }
+    fun __assign(_i: Int, _bb: ByteBuffer, _encryptionCtx: ByteArray?) : KMF {
+        __init(_i, _bb, _encryptionCtx)
         return this
     }
     /**
@@ -69,6 +80,8 @@ class KMF : Table() {
         }
     /**
      * Explicit key bytes when a module must receive them on a port.
+     * This may be field-encrypted using the SDS/da-flatbuffers header-first
+     * encryption flow when transported to a specific recipient.
      */
     fun keyBytes(j: Int) : UByte {
         val o = __offset(12)
@@ -106,6 +119,11 @@ class KMF : Table() {
         fun getRootAsKMF(_bb: ByteBuffer, obj: KMF): KMF {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
+        }
+        fun getRootAsKMF(_bb: ByteBuffer, _encryptionCtx: ByteArray?): KMF = getRootAsKMF(_bb, KMF(), _encryptionCtx)
+        fun getRootAsKMF(_bb: ByteBuffer, obj: KMF, _encryptionCtx: ByteArray?): KMF {
+            _bb.order(ByteOrder.LITTLE_ENDIAN)
+            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb, _encryptionCtx))
         }
         fun KMFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$KMF")
         fun createKMF(builder: FlatBufferBuilder, keyIdOffset: Int, role: Byte, algorithm: Byte, encoding: Byte, keyBytesOffset: Int, version: UInt, expiresAt: ULong) : Int {

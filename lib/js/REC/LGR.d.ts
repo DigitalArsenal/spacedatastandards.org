@@ -1,5 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
-import { LWK, LWKT } from './LWK.js';
+import { ENC, ENCT } from './ENC.js';
 import { PLG, PLGT } from './PLG.js';
 import { licensingGrantMessageType } from './licensingGrantMessageType.js';
 /**
@@ -89,9 +89,17 @@ export declare class LGR implements flatbuffers.IUnpackableObject<LGRT> {
      */
     MODULE_DESCRIPTOR(obj?: PLG): PLG | null;
     /**
-     * Wrapped module content key
+     * Encryption header for the recipient-specific wrapped content-key payload.
      */
-    WRAPPED_CONTENT_KEY(obj?: LWK): LWK | null;
+    WRAPPED_CONTENT_KEY_HEADER(obj?: ENC): ENC | null;
+    /**
+     * Encrypted FlatBuffer payload containing the recipient-specific content key
+     * material. The payload currently uses `$KMF` semantics and is decrypted
+     * using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+     */
+    WRAPPED_CONTENT_KEY_PAYLOAD(index: number): number | null;
+    wrappedContentKeyPayloadLength(): number;
+    wrappedContentKeyPayloadArray(): Uint8Array | null;
     /**
      * Provider public key used to verify the grant signature
      */
@@ -123,7 +131,10 @@ export declare class LGR implements flatbuffers.IUnpackableObject<LGRT> {
     static createCapabilityTokenVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startCapabilityTokenVector(builder: flatbuffers.Builder, numElems: number): void;
     static addModuleDescriptor(builder: flatbuffers.Builder, MODULE_DESCRIPTOROffset: flatbuffers.Offset): void;
-    static addWrappedContentKey(builder: flatbuffers.Builder, WRAPPED_CONTENT_KEYOffset: flatbuffers.Offset): void;
+    static addWrappedContentKeyHeader(builder: flatbuffers.Builder, WRAPPED_CONTENT_KEY_HEADEROffset: flatbuffers.Offset): void;
+    static addWrappedContentKeyPayload(builder: flatbuffers.Builder, WRAPPED_CONTENT_KEY_PAYLOADOffset: flatbuffers.Offset): void;
+    static createWrappedContentKeyPayloadVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startWrappedContentKeyPayloadVector(builder: flatbuffers.Builder, numElems: number): void;
     static addGrantVerifierPubkey(builder: flatbuffers.Builder, GRANT_VERIFIER_PUBKEYOffset: flatbuffers.Offset): void;
     static createGrantVerifierPubkeyVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startGrantVerifierPubkeyVector(builder: flatbuffers.Builder, numElems: number): void;
@@ -153,10 +164,11 @@ export declare class LGRT implements flatbuffers.IGeneratedObject {
     DENIAL_REASON: string | Uint8Array | null;
     CAPABILITY_TOKEN: (number)[];
     MODULE_DESCRIPTOR: PLGT | null;
-    WRAPPED_CONTENT_KEY: LWKT | null;
+    WRAPPED_CONTENT_KEY_HEADER: ENCT | null;
+    WRAPPED_CONTENT_KEY_PAYLOAD: (number)[];
     GRANT_VERIFIER_PUBKEY: (number)[];
     PROVIDER_SIGNATURE: (number)[];
-    constructor(MESSAGE_TYPE?: licensingGrantMessageType, REQUEST_ID?: string | Uint8Array | null, MODULE_ID?: string | Uint8Array | null, MODULE_VERSION?: string | Uint8Array | null, REQUESTER_PEER_ID?: string | Uint8Array | null, REQUESTER_XPUB?: string | Uint8Array | null, REQUESTED_DOMAIN?: string | Uint8Array | null, REQUESTED_TIMEOUT_MS?: bigint, GRANTED_DOMAIN?: string | Uint8Array | null, GRANTED_TIMEOUT_MS?: bigint, EXPIRES_AT?: bigint, REQUIRED_SCOPE?: string | Uint8Array | null, GRANT_STATUS?: string | Uint8Array | null, DENIAL_REASON?: string | Uint8Array | null, CAPABILITY_TOKEN?: (number)[], MODULE_DESCRIPTOR?: PLGT | null, WRAPPED_CONTENT_KEY?: LWKT | null, GRANT_VERIFIER_PUBKEY?: (number)[], PROVIDER_SIGNATURE?: (number)[]);
+    constructor(MESSAGE_TYPE?: licensingGrantMessageType, REQUEST_ID?: string | Uint8Array | null, MODULE_ID?: string | Uint8Array | null, MODULE_VERSION?: string | Uint8Array | null, REQUESTER_PEER_ID?: string | Uint8Array | null, REQUESTER_XPUB?: string | Uint8Array | null, REQUESTED_DOMAIN?: string | Uint8Array | null, REQUESTED_TIMEOUT_MS?: bigint, GRANTED_DOMAIN?: string | Uint8Array | null, GRANTED_TIMEOUT_MS?: bigint, EXPIRES_AT?: bigint, REQUIRED_SCOPE?: string | Uint8Array | null, GRANT_STATUS?: string | Uint8Array | null, DENIAL_REASON?: string | Uint8Array | null, CAPABILITY_TOKEN?: (number)[], MODULE_DESCRIPTOR?: PLGT | null, WRAPPED_CONTENT_KEY_HEADER?: ENCT | null, WRAPPED_CONTENT_KEY_PAYLOAD?: (number)[], GRANT_VERIFIER_PUBKEY?: (number)[], PROVIDER_SIGNATURE?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=LGR.d.ts.map

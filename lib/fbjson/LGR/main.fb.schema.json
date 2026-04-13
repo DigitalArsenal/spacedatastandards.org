@@ -1,137 +1,159 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "licensingWrappedKeyAlgorithm": {
+    "KeyExchange": {
       "type": "string",
       "enum": [
-        "X25519_HKDF_SHA256_AES_256_GCM"
+        "X25519",
+        "Secp256k1",
+        "P256"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
       "x-flatbuffer-enum-values": {
-        "X25519_HKDF_SHA256_AES_256_GCM": {
+        "X25519": {
           "value": 0
         }
       }
     },
-    "LWK": {
+    "SymmetricAlgo": {
+      "type": "string",
+      "enum": [
+        "AES_256_CTR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "AES_256_CTR": {
+          "value": 0
+        }
+      }
+    },
+    "KDF": {
+      "type": "string",
+      "enum": [
+        "HKDF_SHA256"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "HKDF_SHA256": {
+          "value": 0
+        }
+      }
+    },
+    "ENC": {
       "type": "object",
-      "description": "Wrapped module content key",
+      "description": "Encryption Header containing all parameters needed for decryption",
       "properties": {
-        "REQUEST_ID": {
-          "type": "string",
-          "description": "Unique request identifier",
-          "x-flatbuffer-type": "string",
-          "x-flatbuffer-required": true
+        "VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Schema version for forward compatibility",
+          "x-flatbuffer-type": "ubyte"
         },
-        "MODULE_ID": {
-          "type": "string",
-          "description": "Canonical module identifier",
-          "x-flatbuffer-type": "string",
-          "x-flatbuffer-required": true
-        },
-        "MODULE_VERSION": {
-          "type": "string",
-          "description": "Optional module version",
-          "x-flatbuffer-type": "string"
-        },
-        "CONTENT_KEY_ID": {
-          "type": "string",
-          "description": "Provider-local content key identifier",
-          "x-flatbuffer-type": "string"
-        },
-        "RECIPIENT_KEY_ID": {
-          "type": "string",
-          "description": "Recipient key identifier or fingerprint",
-          "x-flatbuffer-type": "string"
-        },
-        "ALGORITHM": {
-          "$ref": "#/definitions/licensingWrappedKeyAlgorithm",
-          "description": "Wrapped-key algorithm",
+        "KEY_EXCHANGE": {
+          "$ref": "#/definitions/KeyExchange",
+          "description": "Key exchange algorithm used",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
-            "X25519_HKDF_SHA256_AES_256_GCM": {
+            "X25519": {
               "value": 0
             }
           }
         },
-        "REQUESTER_EPHEMERAL_PUBKEY": {
+        "SYMMETRIC": {
+          "$ref": "#/definitions/SymmetricAlgo",
+          "description": "Symmetric encryption algorithm used",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "AES_256_CTR": {
+              "value": 0
+            }
+          }
+        },
+        "KEY_DERIVATION": {
+          "$ref": "#/definitions/KDF",
+          "description": "Key derivation function used",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "HKDF_SHA256": {
+              "value": 0
+            }
+          }
+        },
+        "EPHEMERAL_PUBLIC_KEY": {
           "type": "array",
           "items": {
             "type": "integer",
             "minimum": 0,
             "maximum": 255
           },
-          "description": "Requester ephemeral X25519 public key",
-          "x-flatbuffer-type": "[ubyte]"
+          "description": "Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
         },
-        "PROVIDER_EPHEMERAL_PUBKEY": {
+        "NONCE_START": {
           "type": "array",
           "items": {
             "type": "integer",
             "minimum": 0,
             "maximum": 255
           },
-          "description": "Provider ephemeral X25519 public key",
-          "x-flatbuffer-type": "[ubyte]"
+          "description": "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
         },
-        "HKDF_SALT": {
+        "RECIPIENT_KEY_ID": {
           "type": "array",
           "items": {
             "type": "integer",
             "minimum": 0,
             "maximum": 255
           },
-          "description": "HKDF salt",
+          "description": "Optional identifier for the recipient's public key (up to 32 bytes)",
           "x-flatbuffer-type": "[ubyte]"
         },
-        "IV": {
+        "CONTEXT": {
+          "type": "string",
+          "description": "Optional domain separation context string",
+          "x-flatbuffer-type": "string"
+        },
+        "SCHEMA_HASH": {
           "type": "array",
           "items": {
             "type": "integer",
             "minimum": 0,
             "maximum": 255
           },
-          "description": "AES-GCM IV",
+          "description": "Optional SHA-256 hash of the FlatBuffers schema (32 bytes)",
           "x-flatbuffer-type": "[ubyte]"
         },
-        "CIPHERTEXT": {
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 255
-          },
-          "description": "Wrapped key ciphertext",
-          "x-flatbuffer-type": "[ubyte]"
+        "ROOT_TYPE": {
+          "type": "string",
+          "description": "Optional root type name from the schema",
+          "x-flatbuffer-type": "string"
         },
-        "TAG": {
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 255
-          },
-          "description": "AES-GCM authentication tag",
-          "x-flatbuffer-type": "[ubyte]"
-        },
-        "EXPIRES_AT": {
+        "TIMESTAMP": {
           "type": "integer",
           "minimum": 0,
           "maximum": 18446744073709551615,
-          "description": "Envelope expiration time in milliseconds since epoch",
+          "description": "Optional Unix timestamp (milliseconds) when encryption was performed",
           "x-flatbuffer-type": "uint64"
         }
       },
       "required": [
-        "REQUEST_ID",
-        "MODULE_ID"
+        "EPHEMERAL_PUBLIC_KEY",
+        "NONCE_START"
       ],
       "additionalProperties": false
     }
   },
-  "$ref": "#/definitions/LWK",
+  "$ref": "#/definitions/ENC",
   "x-flatbuffer-root-type": "LGR",
   "x-flatbuffer-file-identifier": "$LGR"
 }

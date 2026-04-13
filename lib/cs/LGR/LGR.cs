@@ -118,26 +118,37 @@ public struct LGR : IFlatbufferObject
   public byte[] GetCAPABILITY_TOKENArray() { return __p.__vector_as_array<byte>(32); }
   /// Published module descriptor
   public PLG? MODULE_DESCRIPTOR { get { int o = __p.__offset(34); return o != 0 ? (PLG?)(new PLG()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// Wrapped module content key
-  public LWK? WRAPPED_CONTENT_KEY { get { int o = __p.__offset(36); return o != 0 ? (LWK?)(new LWK()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Encryption header for the recipient-specific wrapped content-key payload.
+  public ENC? WRAPPED_CONTENT_KEY_HEADER { get { int o = __p.__offset(36); return o != 0 ? (ENC?)(new ENC()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Encrypted FlatBuffer payload containing the recipient-specific content key
+  /// material. The payload currently uses `$KMF` semantics and is decrypted
+  /// using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+  public byte WRAPPED_CONTENT_KEY_PAYLOAD(int j) { int o = __p.__offset(38); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int WRAPPED_CONTENT_KEY_PAYLOADLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetWRAPPED_CONTENT_KEY_PAYLOADBytes() { return __p.__vector_as_span<byte>(38, 1); }
+#else
+  public ArraySegment<byte>? GetWRAPPED_CONTENT_KEY_PAYLOADBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public byte[] GetWRAPPED_CONTENT_KEY_PAYLOADArray() { return __p.__vector_as_array<byte>(38); }
   /// Provider public key used to verify the grant signature
-  public byte GRANT_VERIFIER_PUBKEY(int j) { int o = __p.__offset(38); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
-  public int GRANT_VERIFIER_PUBKEYLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte GRANT_VERIFIER_PUBKEY(int j) { int o = __p.__offset(40); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int GRANT_VERIFIER_PUBKEYLength { get { int o = __p.__offset(40); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetGRANT_VERIFIER_PUBKEYBytes() { return __p.__vector_as_span<byte>(38, 1); }
+  public Span<byte> GetGRANT_VERIFIER_PUBKEYBytes() { return __p.__vector_as_span<byte>(40, 1); }
 #else
-  public ArraySegment<byte>? GetGRANT_VERIFIER_PUBKEYBytes() { return __p.__vector_as_arraysegment(38); }
+  public ArraySegment<byte>? GetGRANT_VERIFIER_PUBKEYBytes() { return __p.__vector_as_arraysegment(40); }
 #endif
-  public byte[] GetGRANT_VERIFIER_PUBKEYArray() { return __p.__vector_as_array<byte>(38); }
+  public byte[] GetGRANT_VERIFIER_PUBKEYArray() { return __p.__vector_as_array<byte>(40); }
   /// Provider signature over the grant
-  public byte PROVIDER_SIGNATURE(int j) { int o = __p.__offset(40); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
-  public int PROVIDER_SIGNATURELength { get { int o = __p.__offset(40); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte PROVIDER_SIGNATURE(int j) { int o = __p.__offset(42); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int PROVIDER_SIGNATURELength { get { int o = __p.__offset(42); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPROVIDER_SIGNATUREBytes() { return __p.__vector_as_span<byte>(40, 1); }
+  public Span<byte> GetPROVIDER_SIGNATUREBytes() { return __p.__vector_as_span<byte>(42, 1); }
 #else
-  public ArraySegment<byte>? GetPROVIDER_SIGNATUREBytes() { return __p.__vector_as_arraysegment(40); }
+  public ArraySegment<byte>? GetPROVIDER_SIGNATUREBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
-  public byte[] GetPROVIDER_SIGNATUREArray() { return __p.__vector_as_array<byte>(40); }
+  public byte[] GetPROVIDER_SIGNATUREArray() { return __p.__vector_as_array<byte>(42); }
 
   public static Offset<LGR> CreateLGR(FlatBufferBuilder builder,
       licensingGrantMessageType MESSAGE_TYPE = licensingGrantMessageType.Request,
@@ -156,16 +167,18 @@ public struct LGR : IFlatbufferObject
       StringOffset DENIAL_REASONOffset = default(StringOffset),
       VectorOffset CAPABILITY_TOKENOffset = default(VectorOffset),
       Offset<PLG> MODULE_DESCRIPTOROffset = default(Offset<PLG>),
-      Offset<LWK> WRAPPED_CONTENT_KEYOffset = default(Offset<LWK>),
+      Offset<ENC> WRAPPED_CONTENT_KEY_HEADEROffset = default(Offset<ENC>),
+      VectorOffset WRAPPED_CONTENT_KEY_PAYLOADOffset = default(VectorOffset),
       VectorOffset GRANT_VERIFIER_PUBKEYOffset = default(VectorOffset),
       VectorOffset PROVIDER_SIGNATUREOffset = default(VectorOffset)) {
-    builder.StartTable(19);
+    builder.StartTable(20);
     LGR.AddEXPIRES_AT(builder, EXPIRES_AT);
     LGR.AddGRANTED_TIMEOUT_MS(builder, GRANTED_TIMEOUT_MS);
     LGR.AddREQUESTED_TIMEOUT_MS(builder, REQUESTED_TIMEOUT_MS);
     LGR.AddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATUREOffset);
     LGR.AddGRANT_VERIFIER_PUBKEY(builder, GRANT_VERIFIER_PUBKEYOffset);
-    LGR.AddWRAPPED_CONTENT_KEY(builder, WRAPPED_CONTENT_KEYOffset);
+    LGR.AddWRAPPED_CONTENT_KEY_PAYLOAD(builder, WRAPPED_CONTENT_KEY_PAYLOADOffset);
+    LGR.AddWRAPPED_CONTENT_KEY_HEADER(builder, WRAPPED_CONTENT_KEY_HEADEROffset);
     LGR.AddMODULE_DESCRIPTOR(builder, MODULE_DESCRIPTOROffset);
     LGR.AddCAPABILITY_TOKEN(builder, CAPABILITY_TOKENOffset);
     LGR.AddDENIAL_REASON(builder, DENIAL_REASONOffset);
@@ -182,7 +195,7 @@ public struct LGR : IFlatbufferObject
     return LGR.EndLGR(builder);
   }
 
-  public static void StartLGR(FlatBufferBuilder builder) { builder.StartTable(19); }
+  public static void StartLGR(FlatBufferBuilder builder) { builder.StartTable(20); }
   public static void AddMESSAGE_TYPE(FlatBufferBuilder builder, licensingGrantMessageType MESSAGE_TYPE) { builder.AddSbyte(0, (sbyte)MESSAGE_TYPE, 0); }
   public static void AddREQUEST_ID(FlatBufferBuilder builder, StringOffset REQUEST_IDOffset) { builder.AddOffset(1, REQUEST_IDOffset.Value, 0); }
   public static void AddMODULE_ID(FlatBufferBuilder builder, StringOffset MODULE_IDOffset) { builder.AddOffset(2, MODULE_IDOffset.Value, 0); }
@@ -204,14 +217,20 @@ public struct LGR : IFlatbufferObject
   public static VectorOffset CreateCAPABILITY_TOKENVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCAPABILITY_TOKENVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static void AddMODULE_DESCRIPTOR(FlatBufferBuilder builder, Offset<PLG> MODULE_DESCRIPTOROffset) { builder.AddOffset(15, MODULE_DESCRIPTOROffset.Value, 0); }
-  public static void AddWRAPPED_CONTENT_KEY(FlatBufferBuilder builder, Offset<LWK> WRAPPED_CONTENT_KEYOffset) { builder.AddOffset(16, WRAPPED_CONTENT_KEYOffset.Value, 0); }
-  public static void AddGRANT_VERIFIER_PUBKEY(FlatBufferBuilder builder, VectorOffset GRANT_VERIFIER_PUBKEYOffset) { builder.AddOffset(17, GRANT_VERIFIER_PUBKEYOffset.Value, 0); }
+  public static void AddWRAPPED_CONTENT_KEY_HEADER(FlatBufferBuilder builder, Offset<ENC> WRAPPED_CONTENT_KEY_HEADEROffset) { builder.AddOffset(16, WRAPPED_CONTENT_KEY_HEADEROffset.Value, 0); }
+  public static void AddWRAPPED_CONTENT_KEY_PAYLOAD(FlatBufferBuilder builder, VectorOffset WRAPPED_CONTENT_KEY_PAYLOADOffset) { builder.AddOffset(17, WRAPPED_CONTENT_KEY_PAYLOADOffset.Value, 0); }
+  public static VectorOffset CreateWRAPPED_CONTENT_KEY_PAYLOADVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateWRAPPED_CONTENT_KEY_PAYLOADVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateWRAPPED_CONTENT_KEY_PAYLOADVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateWRAPPED_CONTENT_KEY_PAYLOADVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartWRAPPED_CONTENT_KEY_PAYLOADVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddGRANT_VERIFIER_PUBKEY(FlatBufferBuilder builder, VectorOffset GRANT_VERIFIER_PUBKEYOffset) { builder.AddOffset(18, GRANT_VERIFIER_PUBKEYOffset.Value, 0); }
   public static VectorOffset CreateGRANT_VERIFIER_PUBKEYVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateGRANT_VERIFIER_PUBKEYVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateGRANT_VERIFIER_PUBKEYVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateGRANT_VERIFIER_PUBKEYVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartGRANT_VERIFIER_PUBKEYVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
-  public static void AddPROVIDER_SIGNATURE(FlatBufferBuilder builder, VectorOffset PROVIDER_SIGNATUREOffset) { builder.AddOffset(18, PROVIDER_SIGNATUREOffset.Value, 0); }
+  public static void AddPROVIDER_SIGNATURE(FlatBufferBuilder builder, VectorOffset PROVIDER_SIGNATUREOffset) { builder.AddOffset(19, PROVIDER_SIGNATUREOffset.Value, 0); }
   public static VectorOffset CreatePROVIDER_SIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreatePROVIDER_SIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePROVIDER_SIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
@@ -248,7 +267,9 @@ public struct LGR : IFlatbufferObject
     _o.CAPABILITY_TOKEN = new List<byte>();
     for (var _j = 0; _j < this.CAPABILITY_TOKENLength; ++_j) {_o.CAPABILITY_TOKEN.Add(this.CAPABILITY_TOKEN(_j));}
     _o.MODULE_DESCRIPTOR = this.MODULE_DESCRIPTOR.HasValue ? this.MODULE_DESCRIPTOR.Value.UnPack() : null;
-    _o.WRAPPED_CONTENT_KEY = this.WRAPPED_CONTENT_KEY.HasValue ? this.WRAPPED_CONTENT_KEY.Value.UnPack() : null;
+    _o.WRAPPED_CONTENT_KEY_HEADER = this.WRAPPED_CONTENT_KEY_HEADER.HasValue ? this.WRAPPED_CONTENT_KEY_HEADER.Value.UnPack() : null;
+    _o.WRAPPED_CONTENT_KEY_PAYLOAD = new List<byte>();
+    for (var _j = 0; _j < this.WRAPPED_CONTENT_KEY_PAYLOADLength; ++_j) {_o.WRAPPED_CONTENT_KEY_PAYLOAD.Add(this.WRAPPED_CONTENT_KEY_PAYLOAD(_j));}
     _o.GRANT_VERIFIER_PUBKEY = new List<byte>();
     for (var _j = 0; _j < this.GRANT_VERIFIER_PUBKEYLength; ++_j) {_o.GRANT_VERIFIER_PUBKEY.Add(this.GRANT_VERIFIER_PUBKEY(_j));}
     _o.PROVIDER_SIGNATURE = new List<byte>();
@@ -272,7 +293,12 @@ public struct LGR : IFlatbufferObject
       _CAPABILITY_TOKEN = CreateCAPABILITY_TOKENVector(builder, __CAPABILITY_TOKEN);
     }
     var _MODULE_DESCRIPTOR = _o.MODULE_DESCRIPTOR == null ? default(Offset<PLG>) : PLG.Pack(builder, _o.MODULE_DESCRIPTOR);
-    var _WRAPPED_CONTENT_KEY = _o.WRAPPED_CONTENT_KEY == null ? default(Offset<LWK>) : LWK.Pack(builder, _o.WRAPPED_CONTENT_KEY);
+    var _WRAPPED_CONTENT_KEY_HEADER = _o.WRAPPED_CONTENT_KEY_HEADER == null ? default(Offset<ENC>) : ENC.Pack(builder, _o.WRAPPED_CONTENT_KEY_HEADER);
+    var _WRAPPED_CONTENT_KEY_PAYLOAD = default(VectorOffset);
+    if (_o.WRAPPED_CONTENT_KEY_PAYLOAD != null) {
+      var __WRAPPED_CONTENT_KEY_PAYLOAD = _o.WRAPPED_CONTENT_KEY_PAYLOAD.ToArray();
+      _WRAPPED_CONTENT_KEY_PAYLOAD = CreateWRAPPED_CONTENT_KEY_PAYLOADVector(builder, __WRAPPED_CONTENT_KEY_PAYLOAD);
+    }
     var _GRANT_VERIFIER_PUBKEY = default(VectorOffset);
     if (_o.GRANT_VERIFIER_PUBKEY != null) {
       var __GRANT_VERIFIER_PUBKEY = _o.GRANT_VERIFIER_PUBKEY.ToArray();
@@ -301,7 +327,8 @@ public struct LGR : IFlatbufferObject
       _DENIAL_REASON,
       _CAPABILITY_TOKEN,
       _MODULE_DESCRIPTOR,
-      _WRAPPED_CONTENT_KEY,
+      _WRAPPED_CONTENT_KEY_HEADER,
+      _WRAPPED_CONTENT_KEY_PAYLOAD,
       _GRANT_VERIFIER_PUBKEY,
       _PROVIDER_SIGNATURE);
   }
@@ -325,7 +352,8 @@ public class LGRT
   public string DENIAL_REASON { get; set; }
   public List<byte> CAPABILITY_TOKEN { get; set; }
   public PLGT MODULE_DESCRIPTOR { get; set; }
-  public LWKT WRAPPED_CONTENT_KEY { get; set; }
+  public ENCT WRAPPED_CONTENT_KEY_HEADER { get; set; }
+  public List<byte> WRAPPED_CONTENT_KEY_PAYLOAD { get; set; }
   public List<byte> GRANT_VERIFIER_PUBKEY { get; set; }
   public List<byte> PROVIDER_SIGNATURE { get; set; }
 
@@ -346,7 +374,8 @@ public class LGRT
     this.DENIAL_REASON = null;
     this.CAPABILITY_TOKEN = null;
     this.MODULE_DESCRIPTOR = null;
-    this.WRAPPED_CONTENT_KEY = null;
+    this.WRAPPED_CONTENT_KEY_HEADER = null;
+    this.WRAPPED_CONTENT_KEY_PAYLOAD = null;
     this.GRANT_VERIFIER_PUBKEY = null;
     this.PROVIDER_SIGNATURE = null;
   }
@@ -382,9 +411,10 @@ static public class LGRVerify
       && verifier.VerifyString(tablePos, 30 /*DENIAL_REASON*/, false)
       && verifier.VerifyVectorOfData(tablePos, 32 /*CAPABILITY_TOKEN*/, 1 /*byte*/, false)
       && verifier.VerifyTable(tablePos, 34 /*MODULE_DESCRIPTOR*/, PLGVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 36 /*WRAPPED_CONTENT_KEY*/, LWKVerify.Verify, false)
-      && verifier.VerifyVectorOfData(tablePos, 38 /*GRANT_VERIFIER_PUBKEY*/, 1 /*byte*/, false)
-      && verifier.VerifyVectorOfData(tablePos, 40 /*PROVIDER_SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyTable(tablePos, 36 /*WRAPPED_CONTENT_KEY_HEADER*/, ENCVerify.Verify, false)
+      && verifier.VerifyVectorOfData(tablePos, 38 /*WRAPPED_CONTENT_KEY_PAYLOAD*/, 1 /*byte*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 40 /*GRANT_VERIFIER_PUBKEY*/, 1 /*byte*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 42 /*PROVIDER_SIGNATURE*/, 1 /*byte*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

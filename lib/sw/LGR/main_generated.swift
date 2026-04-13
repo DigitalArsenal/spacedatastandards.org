@@ -8,148 +8,156 @@ import Common
 
 import FlatBuffers
 
-///  Wrapped content-key envelope algorithm
-public enum licensingWrappedKeyAlgorithm: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Encryption Header for FlatBuffers field-level encryption
+///  Key exchange algorithm used to derive the shared secret
+public enum KeyExchange: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case x25519HkdfSha256Aes256Gcm = 0
+  case x25519 = 0
+  case secp256k1 = 1
+  case p256 = 2
 
-  public static var max: licensingWrappedKeyAlgorithm { return .x25519HkdfSha256Aes256Gcm }
-  public static var min: licensingWrappedKeyAlgorithm { return .x25519HkdfSha256Aes256Gcm }
+  public static var max: KeyExchange { return .p256 }
+  public static var min: KeyExchange { return .x25519 }
 }
 
 
-///  Wrapped module content key
-public struct LWK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  Symmetric encryption algorithm
+public enum SymmetricAlgo: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case aes256Ctr = 0
+
+  public static var max: SymmetricAlgo { return .aes256Ctr }
+  public static var min: SymmetricAlgo { return .aes256Ctr }
+}
+
+
+///  Key derivation function
+public enum KDF: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case hkdfSha256 = 0
+
+  public static var max: KDF { return .hkdfSha256 }
+  public static var min: KDF { return .hkdfSha256 }
+}
+
+
+///  Encryption Header containing all parameters needed for decryption
+public struct ENC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$LWK" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: LWK.id, addPrefix: prefix) }
+  public static var id: String { "$ENC" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ENC.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case REQUEST_ID = 4
-    case MODULE_ID = 6
-    case MODULE_VERSION = 8
-    case CONTENT_KEY_ID = 10
-    case RECIPIENT_KEY_ID = 12
-    case ALGORITHM = 14
-    case REQUESTER_EPHEMERAL_PUBKEY = 16
-    case PROVIDER_EPHEMERAL_PUBKEY = 18
-    case HKDF_SALT = 20
-    case IV = 22
-    case CIPHERTEXT = 24
-    case TAG = 26
-    case EXPIRES_AT = 28
+    case VERSION = 4
+    case KEY_EXCHANGE = 6
+    case SYMMETRIC = 8
+    case KEY_DERIVATION = 10
+    case EPHEMERAL_PUBLIC_KEY = 12
+    case NONCE_START = 14
+    case RECIPIENT_KEY_ID = 16
+    case CONTEXT = 18
+    case SCHEMA_HASH = 20
+    case ROOT_TYPE = 22
+    case TIMESTAMP = 24
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  ///  Unique request identifier
-  public var REQUEST_ID: String! { let o = _accessor.offset(VTOFFSET.REQUEST_ID.v); return _accessor.string(at: o) }
-  public var REQUEST_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.REQUEST_ID.v) }
-  ///  Canonical module identifier
-  public var MODULE_ID: String! { let o = _accessor.offset(VTOFFSET.MODULE_ID.v); return _accessor.string(at: o) }
-  public var MODULE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.MODULE_ID.v) }
-  ///  Optional module version
-  public var MODULE_VERSION: String? { let o = _accessor.offset(VTOFFSET.MODULE_VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MODULE_VERSION.v) }
-  ///  Provider-local content key identifier
-  public var CONTENT_KEY_ID: String? { let o = _accessor.offset(VTOFFSET.CONTENT_KEY_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTENT_KEY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTENT_KEY_ID.v) }
-  ///  Recipient key identifier or fingerprint
-  public var RECIPIENT_KEY_ID: String? { let o = _accessor.offset(VTOFFSET.RECIPIENT_KEY_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RECIPIENT_KEY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RECIPIENT_KEY_ID.v) }
-  ///  Wrapped-key algorithm
-  public var ALGORITHM: licensingWrappedKeyAlgorithm { let o = _accessor.offset(VTOFFSET.ALGORITHM.v); return o == 0 ? .x25519HkdfSha256Aes256Gcm : licensingWrappedKeyAlgorithm(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .x25519HkdfSha256Aes256Gcm }
-  ///  Requester ephemeral X25519 public key
-  public var REQUESTER_EPHEMERAL_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.REQUESTER_EPHEMERAL_PUBKEY.v, byteSize: 1) }
-  public func withUnsafePointerToRequesterEphemeralPubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.REQUESTER_EPHEMERAL_PUBKEY.v, body: body) }
-  ///  Provider ephemeral X25519 public key
-  public var PROVIDER_EPHEMERAL_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.PROVIDER_EPHEMERAL_PUBKEY.v, byteSize: 1) }
-  public func withUnsafePointerToProviderEphemeralPubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.PROVIDER_EPHEMERAL_PUBKEY.v, body: body) }
-  ///  HKDF salt
-  public var HKDF_SALT: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.HKDF_SALT.v, byteSize: 1) }
-  public func withUnsafePointerToHkdfSalt<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.HKDF_SALT.v, body: body) }
-  ///  AES-GCM IV
-  public var IV: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.IV.v, byteSize: 1) }
-  public func withUnsafePointerToIv<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.IV.v, body: body) }
-  ///  Wrapped key ciphertext
-  public var CIPHERTEXT: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.CIPHERTEXT.v, byteSize: 1) }
-  public func withUnsafePointerToCiphertext<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.CIPHERTEXT.v, body: body) }
-  ///  AES-GCM authentication tag
-  public var TAG: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.TAG.v, byteSize: 1) }
-  public func withUnsafePointerToTag<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.TAG.v, body: body) }
-  ///  Envelope expiration time in milliseconds since epoch
-  public var EXPIRES_AT: UInt64 { let o = _accessor.offset(VTOFFSET.EXPIRES_AT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public static func startLWK(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
-  public static func add(REQUEST_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_ID, at: VTOFFSET.REQUEST_ID.p) }
-  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VTOFFSET.MODULE_ID.p) }
-  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VTOFFSET.MODULE_VERSION.p) }
-  public static func add(CONTENT_KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT_KEY_ID, at: VTOFFSET.CONTENT_KEY_ID.p) }
-  public static func add(RECIPIENT_KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECIPIENT_KEY_ID, at: VTOFFSET.RECIPIENT_KEY_ID.p) }
-  public static func add(ALGORITHM: licensingWrappedKeyAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 0, at: VTOFFSET.ALGORITHM.p) }
-  public static func addVectorOf(REQUESTER_EPHEMERAL_PUBKEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTER_EPHEMERAL_PUBKEY, at: VTOFFSET.REQUESTER_EPHEMERAL_PUBKEY.p) }
-  public static func addVectorOf(PROVIDER_EPHEMERAL_PUBKEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_EPHEMERAL_PUBKEY, at: VTOFFSET.PROVIDER_EPHEMERAL_PUBKEY.p) }
-  public static func addVectorOf(HKDF_SALT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HKDF_SALT, at: VTOFFSET.HKDF_SALT.p) }
-  public static func addVectorOf(IV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IV, at: VTOFFSET.IV.p) }
-  public static func addVectorOf(CIPHERTEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CIPHERTEXT, at: VTOFFSET.CIPHERTEXT.p) }
-  public static func addVectorOf(TAG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAG, at: VTOFFSET.TAG.p) }
-  public static func add(EXPIRES_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXPIRES_AT, def: 0, at: VTOFFSET.EXPIRES_AT.p) }
-  public static func endLWK(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6]); return end }
-  public static func createLWK(
+  ///  Schema version for forward compatibility
+  public var VERSION: UInt8 { let o = _accessor.offset(VTOFFSET.VERSION.v); return o == 0 ? 1 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Key exchange algorithm used
+  public var KEY_EXCHANGE: KeyExchange { let o = _accessor.offset(VTOFFSET.KEY_EXCHANGE.v); return o == 0 ? .x25519 : KeyExchange(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .x25519 }
+  ///  Symmetric encryption algorithm used
+  public var SYMMETRIC: SymmetricAlgo { let o = _accessor.offset(VTOFFSET.SYMMETRIC.v); return o == 0 ? .aes256Ctr : SymmetricAlgo(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .aes256Ctr }
+  ///  Key derivation function used
+  public var KEY_DERIVATION: KDF { let o = _accessor.offset(VTOFFSET.KEY_DERIVATION.v); return o == 0 ? .hkdfSha256 : KDF(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .hkdfSha256 }
+  ///  Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
+  public var EPHEMERAL_PUBLIC_KEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.EPHEMERAL_PUBLIC_KEY.v, byteSize: 1) }
+  public func withUnsafePointerToEphemeralPublicKey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.EPHEMERAL_PUBLIC_KEY.v, body: body) }
+  ///  Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+  public var NONCE_START: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.NONCE_START.v, byteSize: 1) }
+  public func withUnsafePointerToNonceStart<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.NONCE_START.v, body: body) }
+  ///  Optional identifier for the recipient's public key (up to 32 bytes)
+  public var RECIPIENT_KEY_ID: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RECIPIENT_KEY_ID.v, byteSize: 1) }
+  public func withUnsafePointerToRecipientKeyId<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RECIPIENT_KEY_ID.v, body: body) }
+  ///  Optional domain separation context string
+  public var CONTEXT: String? { let o = _accessor.offset(VTOFFSET.CONTEXT.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTEXT.v) }
+  ///  Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
+  public var SCHEMA_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.SCHEMA_HASH.v, byteSize: 1) }
+  public func withUnsafePointerToSchemaHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SCHEMA_HASH.v, body: body) }
+  ///  Optional root type name from the schema
+  public var ROOT_TYPE: String? { let o = _accessor.offset(VTOFFSET.ROOT_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ROOT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ROOT_TYPE.v) }
+  ///  Optional Unix timestamp (milliseconds) when encryption was performed
+  public var TIMESTAMP: UInt64 { let o = _accessor.offset(VTOFFSET.TIMESTAMP.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startENC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(VERSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 1, at: VTOFFSET.VERSION.p) }
+  public static func add(KEY_EXCHANGE: KeyExchange, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KEY_EXCHANGE.rawValue, def: 0, at: VTOFFSET.KEY_EXCHANGE.p) }
+  public static func add(SYMMETRIC: SymmetricAlgo, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYMMETRIC.rawValue, def: 0, at: VTOFFSET.SYMMETRIC.p) }
+  public static func add(KEY_DERIVATION: KDF, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KEY_DERIVATION.rawValue, def: 0, at: VTOFFSET.KEY_DERIVATION.p) }
+  public static func addVectorOf(EPHEMERAL_PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERAL_PUBLIC_KEY, at: VTOFFSET.EPHEMERAL_PUBLIC_KEY.p) }
+  public static func addVectorOf(NONCE_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NONCE_START, at: VTOFFSET.NONCE_START.p) }
+  public static func addVectorOf(RECIPIENT_KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECIPIENT_KEY_ID, at: VTOFFSET.RECIPIENT_KEY_ID.p) }
+  public static func add(CONTEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT, at: VTOFFSET.CONTEXT.p) }
+  public static func addVectorOf(SCHEMA_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_HASH, at: VTOFFSET.SCHEMA_HASH.p) }
+  public static func add(ROOT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROOT_TYPE, at: VTOFFSET.ROOT_TYPE.p) }
+  public static func add(TIMESTAMP: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMESTAMP, def: 0, at: VTOFFSET.TIMESTAMP.p) }
+  public static func endENC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [12, 14]); return end }
+  public static func createENC(
     _ fbb: inout FlatBufferBuilder,
-    REQUEST_IDOffset REQUEST_ID: Offset,
-    MODULE_IDOffset MODULE_ID: Offset,
-    MODULE_VERSIONOffset MODULE_VERSION: Offset = Offset(),
-    CONTENT_KEY_IDOffset CONTENT_KEY_ID: Offset = Offset(),
-    RECIPIENT_KEY_IDOffset RECIPIENT_KEY_ID: Offset = Offset(),
-    ALGORITHM: licensingWrappedKeyAlgorithm = .x25519HkdfSha256Aes256Gcm,
-    REQUESTER_EPHEMERAL_PUBKEYVectorOffset REQUESTER_EPHEMERAL_PUBKEY: Offset = Offset(),
-    PROVIDER_EPHEMERAL_PUBKEYVectorOffset PROVIDER_EPHEMERAL_PUBKEY: Offset = Offset(),
-    HKDF_SALTVectorOffset HKDF_SALT: Offset = Offset(),
-    IVVectorOffset IV: Offset = Offset(),
-    CIPHERTEXTVectorOffset CIPHERTEXT: Offset = Offset(),
-    TAGVectorOffset TAG: Offset = Offset(),
-    EXPIRES_AT: UInt64 = 0
+    VERSION: UInt8 = 1,
+    KEY_EXCHANGE: KeyExchange = .x25519,
+    SYMMETRIC: SymmetricAlgo = .aes256Ctr,
+    KEY_DERIVATION: KDF = .hkdfSha256,
+    EPHEMERAL_PUBLIC_KEYVectorOffset EPHEMERAL_PUBLIC_KEY: Offset,
+    NONCE_STARTVectorOffset NONCE_START: Offset,
+    RECIPIENT_KEY_IDVectorOffset RECIPIENT_KEY_ID: Offset = Offset(),
+    CONTEXTOffset CONTEXT: Offset = Offset(),
+    SCHEMA_HASHVectorOffset SCHEMA_HASH: Offset = Offset(),
+    ROOT_TYPEOffset ROOT_TYPE: Offset = Offset(),
+    TIMESTAMP: UInt64 = 0
   ) -> Offset {
-    let __start = LWK.startLWK(&fbb)
-    LWK.add(REQUEST_ID: REQUEST_ID, &fbb)
-    LWK.add(MODULE_ID: MODULE_ID, &fbb)
-    LWK.add(MODULE_VERSION: MODULE_VERSION, &fbb)
-    LWK.add(CONTENT_KEY_ID: CONTENT_KEY_ID, &fbb)
-    LWK.add(RECIPIENT_KEY_ID: RECIPIENT_KEY_ID, &fbb)
-    LWK.add(ALGORITHM: ALGORITHM, &fbb)
-    LWK.addVectorOf(REQUESTER_EPHEMERAL_PUBKEY: REQUESTER_EPHEMERAL_PUBKEY, &fbb)
-    LWK.addVectorOf(PROVIDER_EPHEMERAL_PUBKEY: PROVIDER_EPHEMERAL_PUBKEY, &fbb)
-    LWK.addVectorOf(HKDF_SALT: HKDF_SALT, &fbb)
-    LWK.addVectorOf(IV: IV, &fbb)
-    LWK.addVectorOf(CIPHERTEXT: CIPHERTEXT, &fbb)
-    LWK.addVectorOf(TAG: TAG, &fbb)
-    LWK.add(EXPIRES_AT: EXPIRES_AT, &fbb)
-    return LWK.endLWK(&fbb, start: __start)
+    let __start = ENC.startENC(&fbb)
+    ENC.add(VERSION: VERSION, &fbb)
+    ENC.add(KEY_EXCHANGE: KEY_EXCHANGE, &fbb)
+    ENC.add(SYMMETRIC: SYMMETRIC, &fbb)
+    ENC.add(KEY_DERIVATION: KEY_DERIVATION, &fbb)
+    ENC.addVectorOf(EPHEMERAL_PUBLIC_KEY: EPHEMERAL_PUBLIC_KEY, &fbb)
+    ENC.addVectorOf(NONCE_START: NONCE_START, &fbb)
+    ENC.addVectorOf(RECIPIENT_KEY_ID: RECIPIENT_KEY_ID, &fbb)
+    ENC.add(CONTEXT: CONTEXT, &fbb)
+    ENC.addVectorOf(SCHEMA_HASH: SCHEMA_HASH, &fbb)
+    ENC.add(ROOT_TYPE: ROOT_TYPE, &fbb)
+    ENC.add(TIMESTAMP: TIMESTAMP, &fbb)
+    return ENC.endENC(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.REQUEST_ID.p, fieldName: "REQUEST_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MODULE_ID.p, fieldName: "MODULE_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MODULE_VERSION.p, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONTENT_KEY_ID.p, fieldName: "CONTENT_KEY_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RECIPIENT_KEY_ID.p, fieldName: "RECIPIENT_KEY_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ALGORITHM.p, fieldName: "ALGORITHM", required: false, type: licensingWrappedKeyAlgorithm.self)
-    try _v.visit(field: VTOFFSET.REQUESTER_EPHEMERAL_PUBKEY.p, fieldName: "REQUESTER_EPHEMERAL_PUBKEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.PROVIDER_EPHEMERAL_PUBKEY.p, fieldName: "PROVIDER_EPHEMERAL_PUBKEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.HKDF_SALT.p, fieldName: "HKDF_SALT", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.IV.p, fieldName: "IV", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.CIPHERTEXT.p, fieldName: "CIPHERTEXT", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.TAG.p, fieldName: "TAG", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.EXPIRES_AT.p, fieldName: "EXPIRES_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: false, type: UInt8.self)
+    try _v.visit(field: VTOFFSET.KEY_EXCHANGE.p, fieldName: "KEY_EXCHANGE", required: false, type: KeyExchange.self)
+    try _v.visit(field: VTOFFSET.SYMMETRIC.p, fieldName: "SYMMETRIC", required: false, type: SymmetricAlgo.self)
+    try _v.visit(field: VTOFFSET.KEY_DERIVATION.p, fieldName: "KEY_DERIVATION", required: false, type: KDF.self)
+    try _v.visit(field: VTOFFSET.EPHEMERAL_PUBLIC_KEY.p, fieldName: "EPHEMERAL_PUBLIC_KEY", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VTOFFSET.NONCE_START.p, fieldName: "NONCE_START", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VTOFFSET.RECIPIENT_KEY_ID.p, fieldName: "RECIPIENT_KEY_ID", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VTOFFSET.CONTEXT.p, fieldName: "CONTEXT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SCHEMA_HASH.p, fieldName: "SCHEMA_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VTOFFSET.ROOT_TYPE.p, fieldName: "ROOT_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TIMESTAMP.p, fieldName: "TIMESTAMP", required: false, type: UInt64.self)
     _v.finish()
   }
 }

@@ -353,13 +353,13 @@ func (rcv *LGR) ModuleDescriptor(obj *PLG) *PLG {
 }
 
 /// Published module descriptor
-/// Wrapped module content key
-func (rcv *LGR) WRAPPED_CONTENT_KEY(obj *LWK) *LWK {
+/// Encryption header for the recipient-specific wrapped content-key payload.
+func (rcv *LGR) WRAPPED_CONTENT_KEY_HEADER(obj *ENC) *ENC {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
-			obj = new(LWK)
+			obj = new(ENC)
 		}
 		obj.Init(rcv._tab.Bytes, x)
 		return obj
@@ -367,14 +367,70 @@ func (rcv *LGR) WRAPPED_CONTENT_KEY(obj *LWK) *LWK {
 	return nil
 }
 
-func (rcv *LGR) WrappedContentKey(obj *LWK) *LWK {
-	return rcv.WRAPPED_CONTENT_KEY(obj)
+func (rcv *LGR) WrappedContentKeyHeader(obj *ENC) *ENC {
+	return rcv.WRAPPED_CONTENT_KEY_HEADER(obj)
 }
 
-/// Wrapped module content key
+/// Encryption header for the recipient-specific wrapped content-key payload.
+/// Encrypted FlatBuffer payload containing the recipient-specific content key
+/// material. The payload currently uses `$KMF` semantics and is decrypted
+/// using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+func (rcv *LGR) WRAPPED_CONTENT_KEY_PAYLOAD(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *LGR) WrappedContentKeyPayload(j int) byte {
+	return rcv.WRAPPED_CONTENT_KEY_PAYLOAD(j)
+}
+
+func (rcv *LGR) WRAPPED_CONTENT_KEY_PAYLOADLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *LGR) WrappedContentKeyPayloadLength() int {
+	return rcv.WRAPPED_CONTENT_KEY_PAYLOADLength()
+}
+
+func (rcv *LGR) WRAPPED_CONTENT_KEY_PAYLOADBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *LGR) WrappedContentKeyPayloadBytes() []byte {
+	return rcv.WRAPPED_CONTENT_KEY_PAYLOADBytes()
+}
+
+/// Encrypted FlatBuffer payload containing the recipient-specific content key
+/// material. The payload currently uses `$KMF` semantics and is decrypted
+/// using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+func (rcv *LGR) MutateWRAPPED_CONTENT_KEY_PAYLOAD(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *LGR) MutateWrappedContentKeyPayload(j int, n byte) bool {
+	return rcv.MutateWRAPPED_CONTENT_KEY_PAYLOAD(j, n)
+}
+
 /// Provider public key used to verify the grant signature
 func (rcv *LGR) GRANT_VERIFIER_PUBKEY(j int) byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
@@ -387,7 +443,7 @@ func (rcv *LGR) GrantVerifierPubkey(j int) byte {
 }
 
 func (rcv *LGR) GRANT_VERIFIER_PUBKEYLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -399,7 +455,7 @@ func (rcv *LGR) GrantVerifierPubkeyLength() int {
 }
 
 func (rcv *LGR) GRANT_VERIFIER_PUBKEYBytes() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -412,7 +468,7 @@ func (rcv *LGR) GrantVerifierPubkeyBytes() []byte {
 
 /// Provider public key used to verify the grant signature
 func (rcv *LGR) MutateGRANT_VERIFIER_PUBKEY(j int, n byte) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
@@ -426,7 +482,7 @@ func (rcv *LGR) MutateGrantVerifierPubkey(j int, n byte) bool {
 
 /// Provider signature over the grant
 func (rcv *LGR) PROVIDER_SIGNATURE(j int) byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
@@ -439,7 +495,7 @@ func (rcv *LGR) ProviderSignature(j int) byte {
 }
 
 func (rcv *LGR) PROVIDER_SIGNATURELength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -451,7 +507,7 @@ func (rcv *LGR) ProviderSignatureLength() int {
 }
 
 func (rcv *LGR) PROVIDER_SIGNATUREBytes() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -464,7 +520,7 @@ func (rcv *LGR) ProviderSignatureBytes() []byte {
 
 /// Provider signature over the grant
 func (rcv *LGR) MutatePROVIDER_SIGNATURE(j int, n byte) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
@@ -477,7 +533,7 @@ func (rcv *LGR) MutateProviderSignature(j int, n byte) bool {
 }
 
 func LGRStart(builder *flatbuffers.Builder) {
-	builder.StartObject(19)
+	builder.StartObject(20)
 }
 func LGRAddMESSAGE_TYPE(builder *flatbuffers.Builder, MESSAGE_TYPE licensingGrantMessageType) {
 	builder.PrependInt8Slot(0, int8(MESSAGE_TYPE), 0)
@@ -581,14 +637,26 @@ func LGRAddMODULE_DESCRIPTOR(builder *flatbuffers.Builder, MODULE_DESCRIPTOR fla
 func LGRAddModuleDescriptor(builder *flatbuffers.Builder, MODULE_DESCRIPTOR flatbuffers.UOffsetT) {
 	LGRAddMODULE_DESCRIPTOR(builder, MODULE_DESCRIPTOR)
 }
-func LGRAddWRAPPED_CONTENT_KEY(builder *flatbuffers.Builder, WRAPPED_CONTENT_KEY flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(WRAPPED_CONTENT_KEY), 0)
+func LGRAddWRAPPED_CONTENT_KEY_HEADER(builder *flatbuffers.Builder, WRAPPED_CONTENT_KEY_HEADER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(WRAPPED_CONTENT_KEY_HEADER), 0)
 }
-func LGRAddWrappedContentKey(builder *flatbuffers.Builder, WRAPPED_CONTENT_KEY flatbuffers.UOffsetT) {
-	LGRAddWRAPPED_CONTENT_KEY(builder, WRAPPED_CONTENT_KEY)
+func LGRAddWrappedContentKeyHeader(builder *flatbuffers.Builder, WRAPPED_CONTENT_KEY_HEADER flatbuffers.UOffsetT) {
+	LGRAddWRAPPED_CONTENT_KEY_HEADER(builder, WRAPPED_CONTENT_KEY_HEADER)
+}
+func LGRAddWRAPPED_CONTENT_KEY_PAYLOAD(builder *flatbuffers.Builder, WRAPPED_CONTENT_KEY_PAYLOAD flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(WRAPPED_CONTENT_KEY_PAYLOAD), 0)
+}
+func LGRAddWrappedContentKeyPayload(builder *flatbuffers.Builder, WRAPPED_CONTENT_KEY_PAYLOAD flatbuffers.UOffsetT) {
+	LGRAddWRAPPED_CONTENT_KEY_PAYLOAD(builder, WRAPPED_CONTENT_KEY_PAYLOAD)
+}
+func LGRStartWRAPPED_CONTENT_KEY_PAYLOADVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func LGRStartWrappedContentKeyPayloadVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LGRStartWRAPPED_CONTENT_KEY_PAYLOADVector(builder, numElems)
 }
 func LGRAddGRANT_VERIFIER_PUBKEY(builder *flatbuffers.Builder, GRANT_VERIFIER_PUBKEY flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(GRANT_VERIFIER_PUBKEY), 0)
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(GRANT_VERIFIER_PUBKEY), 0)
 }
 func LGRAddGrantVerifierPubkey(builder *flatbuffers.Builder, GRANT_VERIFIER_PUBKEY flatbuffers.UOffsetT) {
 	LGRAddGRANT_VERIFIER_PUBKEY(builder, GRANT_VERIFIER_PUBKEY)
@@ -600,7 +668,7 @@ func LGRStartGrantVerifierPubkeyVector(builder *flatbuffers.Builder, numElems in
 	return LGRStartGRANT_VERIFIER_PUBKEYVector(builder, numElems)
 }
 func LGRAddPROVIDER_SIGNATURE(builder *flatbuffers.Builder, PROVIDER_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(PROVIDER_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(PROVIDER_SIGNATURE), 0)
 }
 func LGRAddProviderSignature(builder *flatbuffers.Builder, PROVIDER_SIGNATURE flatbuffers.UOffsetT) {
 	LGRAddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE)

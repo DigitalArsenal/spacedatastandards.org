@@ -4,30 +4,32 @@
 
 import flatbuffers
 from flatbuffers.compat import import_numpy
+from .FlatbuffersEncryption import FlatbuffersEncryption
 np = import_numpy()
 
 # Key Material Frame
 class KMF(object):
-    __slots__ = ['_tab']
+    __slots__ = ['_tab', '_encryption_ctx']
 
     @classmethod
-    def GetRootAs(cls, buf, offset=0):
+    def GetRootAs(cls, buf, offset=0, encryption_ctx=None):
         n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
         x = KMF()
-        x.Init(buf, n + offset)
+        x.Init(buf, n + offset, encryption_ctx)
         return x
 
     @classmethod
-    def GetRootAsKMF(cls, buf, offset=0):
+    def GetRootAsKMF(cls, buf, offset=0, encryption_ctx=None):
         """This method is deprecated. Please switch to GetRootAs."""
-        return cls.GetRootAs(buf, offset)
+        return cls.GetRootAs(buf, offset, encryption_ctx)
     @classmethod
     def KMFBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
         return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x46", size_prefixed=size_prefixed)
 
     # KMF
-    def Init(self, buf, pos):
+    def Init(self, buf, pos, encryption_ctx=None):
         self._tab = flatbuffers.table.Table(buf, pos)
+        self._encryption_ctx = encryption_ctx
 
     # Logical key identifier used across publication and grant records.
     # KMF
@@ -62,6 +64,8 @@ class KMF(object):
         return 0
 
     # Explicit key bytes when a module must receive them on a port.
+    # This may be field-encrypted using the SDS/da-flatbuffers header-first
+    # encryption flow when transported to a specific recipient.
     # KMF
     def KEY_BYTES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))

@@ -165,6 +165,8 @@ struct KMF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return static_cast<keyMaterialEncoding>(GetField<int8_t>(VT_ENCODING, 0));
   }
   /// Explicit key bytes when a module must receive them on a port.
+  /// This may be field-encrypted using the SDS/da-flatbuffers header-first
+  /// encryption flow when transported to a specific recipient.
   const ::flatbuffers::Vector<uint8_t> *KEY_BYTES() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_KEY_BYTES);
   }

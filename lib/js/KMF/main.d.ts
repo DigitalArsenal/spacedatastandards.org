@@ -1,3 +1,4 @@
+export * from './flatbuffers-encryption.js';
 export * from './keyMaterialAlgorithm.js';
 export * from './keyMaterialEncoding.js';
 export * from './keyMaterialRole.js';

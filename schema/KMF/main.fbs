@@ -1,6 +1,8 @@
-// Hash: dc3ec8f842dd6d2fc053ee02a9f2d8648d87ac8fdb7af559de68e44c84920cc8
-// Version: 1.82.0
+// Hash: d8de3ea254f27aafc70f13bc5a569b57be4f6ba0591dc85603a523c2525c3a24
+// Version: 1.82.1
 // -----------------------------------END_HEADER
+attribute "encrypted";
+
 enum keyMaterialRole : byte {
   Unknown,
   PublicationContent,
@@ -37,7 +39,9 @@ table KMF {
   /// Encoding of KEY_BYTES.
   ENCODING: keyMaterialEncoding = Unknown;
   /// Explicit key bytes when a module must receive them on a port.
-  KEY_BYTES: [ubyte];
+  /// This may be field-encrypted using the SDS/da-flatbuffers header-first
+  /// encryption flow when transported to a specific recipient.
+  KEY_BYTES: [ubyte] (encrypted);
   /// Logical version of the key material.
   VERSION: uint32;
   /// Expiration time in unix milliseconds, or 0 if unbounded.

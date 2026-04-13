@@ -10,14 +10,19 @@ using global::Google.FlatBuffers;
 public struct KMF : IFlatbufferObject
 {
   private Table __p;
+  public byte[] EncryptionCtx;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static KMF GetRootAsKMF(ByteBuffer _bb) { return GetRootAsKMF(_bb, new KMF()); }
   public static KMF GetRootAsKMF(ByteBuffer _bb, KMF obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static KMF GetRootAsKMF(ByteBuffer _bb, byte[] encryptionCtx) { return GetRootAsKMF(_bb, new KMF(), encryptionCtx); }
+  public static KMF GetRootAsKMF(ByteBuffer _bb, KMF obj, byte[] encryptionCtx) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb, encryptionCtx)); }
   public static bool KMFBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$KMF"); }
   public static bool VerifyKMF(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$KMF", false, KMFVerify.Verify); }
-  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); this.EncryptionCtx = null; }
+  public void __init(int _i, ByteBuffer _bb, byte[] encryptionCtx) { __p = new Table(_i, _bb); this.EncryptionCtx = encryptionCtx; }
   public KMF __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public KMF __assign(int _i, ByteBuffer _bb, byte[] encryptionCtx) { __init(_i, _bb, encryptionCtx); return this; }
 
   /// Logical key identifier used across publication and grant records.
   public string KEY_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
@@ -34,6 +39,8 @@ public struct KMF : IFlatbufferObject
   /// Encoding of KEY_BYTES.
   public keyMaterialEncoding ENCODING { get { int o = __p.__offset(10); return o != 0 ? (keyMaterialEncoding)__p.bb.GetSbyte(o + __p.bb_pos) : keyMaterialEncoding.Unknown; } }
   /// Explicit key bytes when a module must receive them on a port.
+  /// This may be field-encrypted using the SDS/da-flatbuffers header-first
+  /// encryption flow when transported to a specific recipient.
   public byte KEY_BYTES(int j) { int o = __p.__offset(12); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
   public int KEY_BYTESLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T

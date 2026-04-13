@@ -1,70 +1,70 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "licensingWrappedKeyAlgorithm" : {
+    "KeyExchange" : {
       "type" : "string",
-      "enum": ["X25519_HKDF_SHA256_AES_256_GCM"]
+      "enum": ["X25519", "Secp256k1", "P256"]
     },
-    "LWK" : {
+    "SymmetricAlgo" : {
+      "type" : "string",
+      "enum": ["AES_256_CTR"]
+    },
+    "KDF" : {
+      "type" : "string",
+      "enum": ["HKDF_SHA256"]
+    },
+    "ENC" : {
       "type" : "object",
-      "description" : "Wrapped module content key",
+      "description" : "Encryption Header containing all parameters needed for decryption",
       "properties" : {
-        "REQUEST_ID" : {
-                "type" : "string",
-                "description" : "Unique request identifier"
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Schema version for forward compatibility"
               },
-        "MODULE_ID" : {
-                "type" : "string",
-                "description" : "Canonical module identifier"
+        "KEY_EXCHANGE" : {
+                "$ref" : "#/definitions/KeyExchange",
+                "description" : "Key exchange algorithm used"
               },
-        "MODULE_VERSION" : {
-                "type" : "string",
-                "description" : "Optional module version"
+        "SYMMETRIC" : {
+                "$ref" : "#/definitions/SymmetricAlgo",
+                "description" : "Symmetric encryption algorithm used"
               },
-        "CONTENT_KEY_ID" : {
-                "type" : "string",
-                "description" : "Provider-local content key identifier"
+        "KEY_DERIVATION" : {
+                "$ref" : "#/definitions/KDF",
+                "description" : "Key derivation function used"
+              },
+        "EPHEMERAL_PUBLIC_KEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)"
+              },
+        "NONCE_START" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces."
               },
         "RECIPIENT_KEY_ID" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional identifier for the recipient's public key (up to 32 bytes)"
+              },
+        "CONTEXT" : {
                 "type" : "string",
-                "description" : "Recipient key identifier or fingerprint"
+                "description" : "Optional domain separation context string"
               },
-        "ALGORITHM" : {
-                "$ref" : "#/definitions/licensingWrappedKeyAlgorithm",
-                "description" : "Wrapped-key algorithm"
-              },
-        "REQUESTER_EPHEMERAL_PUBKEY" : {
+        "SCHEMA_HASH" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Requester ephemeral X25519 public key"
+                "description" : "Optional SHA-256 hash of the FlatBuffers schema (32 bytes)"
               },
-        "PROVIDER_EPHEMERAL_PUBKEY" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Provider ephemeral X25519 public key"
+        "ROOT_TYPE" : {
+                "type" : "string",
+                "description" : "Optional root type name from the schema"
               },
-        "HKDF_SALT" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "HKDF salt"
-              },
-        "IV" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "AES-GCM IV"
-              },
-        "CIPHERTEXT" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Wrapped key ciphertext"
-              },
-        "TAG" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "AES-GCM authentication tag"
-              },
-        "EXPIRES_AT" : {
+        "TIMESTAMP" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Envelope expiration time in milliseconds since epoch"
+                "description" : "Optional Unix timestamp (milliseconds) when encryption was performed"
               }
       },
-      "required" : ["REQUEST_ID", "MODULE_ID"],
+      "required" : ["EPHEMERAL_PUBLIC_KEY", "NONCE_START"],
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/LWK"
+  "$ref" : "#/definitions/ENC"
 }

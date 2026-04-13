@@ -8,9 +8,10 @@ import { keyMaterialRole } from './keyMaterialRole.js';
 export declare class KMF implements flatbuffers.IUnpackableObject<KMFT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;
-    __init(i: number, bb: flatbuffers.ByteBuffer): KMF;
-    static getRootAsKMF(bb: flatbuffers.ByteBuffer, obj?: KMF): KMF;
-    static getSizePrefixedRootAsKMF(bb: flatbuffers.ByteBuffer, obj?: KMF): KMF;
+    encryptionCtx: Uint8Array | null;
+    __init(i: number, bb: flatbuffers.ByteBuffer, encryptionCtx?: Uint8Array): KMF;
+    static getRootAsKMF(bb: flatbuffers.ByteBuffer, obj?: KMF, encryptionCtx?: Uint8Array): KMF;
+    static getSizePrefixedRootAsKMF(bb: flatbuffers.ByteBuffer, obj?: KMF, encryptionCtx?: Uint8Array): KMF;
     static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Logical key identifier used across publication and grant records.
@@ -31,6 +32,8 @@ export declare class KMF implements flatbuffers.IUnpackableObject<KMFT> {
     ENCODING(): keyMaterialEncoding;
     /**
      * Explicit key bytes when a module must receive them on a port.
+     * This may be field-encrypted using the SDS/da-flatbuffers header-first
+     * encryption flow when transported to a specific recipient.
      */
     KEY_BYTES(index: number): number | null;
     keyBytesLength(): number;

@@ -119,28 +119,39 @@ public final class LGR extends com.google.flatbuffers.Table {
   public PLG MODULE_DESCRIPTOR() { return MODULE_DESCRIPTOR(new PLG()); }
   public PLG MODULE_DESCRIPTOR(PLG obj) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
-   * Wrapped module content key
+   * Encryption header for the recipient-specific wrapped content-key payload.
    */
-  public LWK WRAPPED_CONTENT_KEY() { return WRAPPED_CONTENT_KEY(new LWK()); }
-  public LWK WRAPPED_CONTENT_KEY(LWK obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public ENC WRAPPED_CONTENT_KEY_HEADER() { return WRAPPED_CONTENT_KEY_HEADER(new ENC()); }
+  public ENC WRAPPED_CONTENT_KEY_HEADER(ENC obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Encrypted FlatBuffer payload containing the recipient-specific content key
+   * material. The payload currently uses `$KMF` semantics and is decrypted
+   * using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+   */
+  public int WRAPPED_CONTENT_KEY_PAYLOAD(int j) { int o = __offset(38); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int WRAPPED_CONTENT_KEY_PAYLOADLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector wrappedContentKeyPayloadVector() { return wrappedContentKeyPayloadVector(new ByteVector()); }
+  public ByteVector wrappedContentKeyPayloadVector(ByteVector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer WRAPPED_CONTENT_KEY_PAYLOADAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer WRAPPED_CONTENT_KEY_PAYLOADInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
   /**
    * Provider public key used to verify the grant signature
    */
-  public int GRANT_VERIFIER_PUBKEY(int j) { int o = __offset(38); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
-  public int GRANT_VERIFIER_PUBKEYLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
+  public int GRANT_VERIFIER_PUBKEY(int j) { int o = __offset(40); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int GRANT_VERIFIER_PUBKEYLength() { int o = __offset(40); return o != 0 ? __vector_len(o) : 0; }
   public ByteVector grantVerifierPubkeyVector() { return grantVerifierPubkeyVector(new ByteVector()); }
-  public ByteVector grantVerifierPubkeyVector(ByteVector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer GRANT_VERIFIER_PUBKEYAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
-  public ByteBuffer GRANT_VERIFIER_PUBKEYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  public ByteVector grantVerifierPubkeyVector(ByteVector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer GRANT_VERIFIER_PUBKEYAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer GRANT_VERIFIER_PUBKEYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
   /**
    * Provider signature over the grant
    */
-  public int PROVIDER_SIGNATURE(int j) { int o = __offset(40); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
-  public int PROVIDER_SIGNATURELength() { int o = __offset(40); return o != 0 ? __vector_len(o) : 0; }
+  public int PROVIDER_SIGNATURE(int j) { int o = __offset(42); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int PROVIDER_SIGNATURELength() { int o = __offset(42); return o != 0 ? __vector_len(o) : 0; }
   public ByteVector providerSignatureVector() { return providerSignatureVector(new ByteVector()); }
-  public ByteVector providerSignatureVector(ByteVector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer PROVIDER_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
-  public ByteBuffer PROVIDER_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  public ByteVector providerSignatureVector(ByteVector obj) { int o = __offset(42); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer PROVIDER_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer PROVIDER_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
 
   public static int createLGR(FlatBufferBuilder builder,
       byte MESSAGE_TYPE,
@@ -159,16 +170,18 @@ public final class LGR extends com.google.flatbuffers.Table {
       int DENIAL_REASONOffset,
       int CAPABILITY_TOKENOffset,
       int MODULE_DESCRIPTOROffset,
-      int WRAPPED_CONTENT_KEYOffset,
+      int WRAPPED_CONTENT_KEY_HEADEROffset,
+      int WRAPPED_CONTENT_KEY_PAYLOADOffset,
       int GRANT_VERIFIER_PUBKEYOffset,
       int PROVIDER_SIGNATUREOffset) {
-    builder.startTable(19);
+    builder.startTable(20);
     LGR.addExpiresAt(builder, EXPIRES_AT);
     LGR.addGrantedTimeoutMs(builder, GRANTED_TIMEOUT_MS);
     LGR.addRequestedTimeoutMs(builder, REQUESTED_TIMEOUT_MS);
     LGR.addProviderSignature(builder, PROVIDER_SIGNATUREOffset);
     LGR.addGrantVerifierPubkey(builder, GRANT_VERIFIER_PUBKEYOffset);
-    LGR.addWrappedContentKey(builder, WRAPPED_CONTENT_KEYOffset);
+    LGR.addWrappedContentKeyPayload(builder, WRAPPED_CONTENT_KEY_PAYLOADOffset);
+    LGR.addWrappedContentKeyHeader(builder, WRAPPED_CONTENT_KEY_HEADEROffset);
     LGR.addModuleDescriptor(builder, MODULE_DESCRIPTOROffset);
     LGR.addCapabilityToken(builder, CAPABILITY_TOKENOffset);
     LGR.addDenialReason(builder, DENIAL_REASONOffset);
@@ -185,7 +198,7 @@ public final class LGR extends com.google.flatbuffers.Table {
     return LGR.endLGR(builder);
   }
 
-  public static void startLGR(FlatBufferBuilder builder) { builder.startTable(19); }
+  public static void startLGR(FlatBufferBuilder builder) { builder.startTable(20); }
   public static void addMessageType(FlatBufferBuilder builder, byte MESSAGE_TYPE) { builder.addByte(0, MESSAGE_TYPE, 0); }
   public static void addRequestId(FlatBufferBuilder builder, int REQUEST_IDOffset) { builder.addOffset(1, REQUEST_IDOffset, 0); }
   public static void addModuleId(FlatBufferBuilder builder, int MODULE_IDOffset) { builder.addOffset(2, MODULE_IDOffset, 0); }
@@ -205,12 +218,16 @@ public final class LGR extends com.google.flatbuffers.Table {
   public static int createCapabilityTokenVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startCapabilityTokenVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static void addModuleDescriptor(FlatBufferBuilder builder, int MODULE_DESCRIPTOROffset) { builder.addOffset(15, MODULE_DESCRIPTOROffset, 0); }
-  public static void addWrappedContentKey(FlatBufferBuilder builder, int WRAPPED_CONTENT_KEYOffset) { builder.addOffset(16, WRAPPED_CONTENT_KEYOffset, 0); }
-  public static void addGrantVerifierPubkey(FlatBufferBuilder builder, int GRANT_VERIFIER_PUBKEYOffset) { builder.addOffset(17, GRANT_VERIFIER_PUBKEYOffset, 0); }
+  public static void addWrappedContentKeyHeader(FlatBufferBuilder builder, int WRAPPED_CONTENT_KEY_HEADEROffset) { builder.addOffset(16, WRAPPED_CONTENT_KEY_HEADEROffset, 0); }
+  public static void addWrappedContentKeyPayload(FlatBufferBuilder builder, int WRAPPED_CONTENT_KEY_PAYLOADOffset) { builder.addOffset(17, WRAPPED_CONTENT_KEY_PAYLOADOffset, 0); }
+  public static int createWrappedContentKeyPayloadVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createWrappedContentKeyPayloadVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startWrappedContentKeyPayloadVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addGrantVerifierPubkey(FlatBufferBuilder builder, int GRANT_VERIFIER_PUBKEYOffset) { builder.addOffset(18, GRANT_VERIFIER_PUBKEYOffset, 0); }
   public static int createGrantVerifierPubkeyVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createGrantVerifierPubkeyVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startGrantVerifierPubkeyVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
-  public static void addProviderSignature(FlatBufferBuilder builder, int PROVIDER_SIGNATUREOffset) { builder.addOffset(18, PROVIDER_SIGNATUREOffset, 0); }
+  public static void addProviderSignature(FlatBufferBuilder builder, int PROVIDER_SIGNATUREOffset) { builder.addOffset(19, PROVIDER_SIGNATUREOffset, 0); }
   public static int createProviderSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createProviderSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startProviderSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }

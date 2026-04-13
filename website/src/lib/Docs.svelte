@@ -559,51 +559,84 @@ table TelemetryMetaData {
             <div class="section-content">
               <p class="intro-text">
                 Space Data Standards supports field-level encryption, allowing individual fields to be
-                encrypted while headers and routing information remain readable. This enables secure
-                data sharing over public networks without compromising message routability.
+                encrypted while headers and routing information remain readable. The canonical
+                recipient flow is header-first: send <code>$ENC</code> first, then send the
+                encrypted payload, typically wrapped in <code>$REC</code> so the receiver knows
+                which generated schema to consume for the decrypt step.
               </p>
 
               <div class="encryption-diagram">
                 <pre class="ascii-diagram">{`
-+------------------------------------------+
-|             FlatBuffer Message           |
-+------------------------------------------+
-| Header (Unencrypted)                     |
-| +--------------------------------------+ |
-| | MESSAGE_ID: "CDM-2024-001"           | |  <-- Readable
-| | CREATED: "2024-06-22T16:56:20Z"      | |  <-- Readable
-| | ORIGINATOR: "USSPACECOM"             | |  <-- Readable
-| +--------------------------------------+ |
-+------------------------------------------+
-| Payload (Encrypted Fields)               |
-| +--------------------------------------+ |
-| | TCA: [ENCRYPTED: AES-256-GCM]        | |  <-- Protected
-| | MISS_DISTANCE: [ENCRYPTED]           | |  <-- Protected
-| | COLLISION_PROBABILITY: [ENCRYPTED]   | |  <-- Protected
-| +--------------------------------------+ |
-+------------------------------------------+
-| Encryption Metadata                      |
-| +--------------------------------------+ |
-| | PUBLIC_KEY: X25519 ephemeral key     | |
-| | NONCE: 12-byte random                | |
-| | TAG: GCM authentication tag          | |
-| +--------------------------------------+ |
-+------------------------------------------+`}</pre>
++----------------------------------------------+
+| 1. $ENC Header (sent first, unencrypted)     |
++----------------------------------------------+
+| KEY_EXCHANGE: X25519                         |
+| EPHEMERAL_PUBLIC_KEY: sender ephemeral key   |
+| NONCE_START: random nonce base               |
+| ROOT_TYPE: "KMF" (or other generated type)   |
+| CONTEXT: recipient / application domain      |
++----------------------------------------------+
+| 2. $REC Wrapper (payload selector)           |
++----------------------------------------------+
+| RECORD_TYPE: KMF                             |
+| RECORD_BYTES: encrypted generated payload    |
++----------------------------------------------+
+| 3. Encrypted Payload                         |
++----------------------------------------------+
+| KMF {                                        |
+|   KEY_ID: "module/dek/default"               |
+|   KEY_BYTES: [ENCRYPTED FIELD]               |
+|   EXPIRES_AT: 1760000000000                  |
+| }                                            |
++----------------------------------------------+
+| 4. Bob Decrypt                               |
++----------------------------------------------+
+| Read $ENC first                              |
+| Read $REC to locate/generated root type      |
+| Derive shared secret with Bob private key    |
+| Decrypt encrypted fields in payload          |
+| Consume generated KMF/REC bindings locally   |
++----------------------------------------------+`}</pre>
               </div>
 
-              <h3 class="subsection-title">ECIES Encryption (X25519 + AES-256-GCM)</h3>
+              <h3 class="subsection-title">Header-First Recipient Encryption</h3>
               <div class="encryption-features">
                 <div class="encrypt-card">
-                  <h4>X25519 Key Exchange</h4>
-                  <p>Elliptic Curve Diffie-Hellman for efficient, secure key agreement. 256-bit security with compact 32-byte keys.</p>
+                  <h4>$ENC First</h4>
+                  <p>The encryption header is transmitted before the payload so the receiver can derive the correct decrypt context before touching encrypted fields.</p>
                 </div>
                 <div class="encrypt-card">
-                  <h4>AES-256-GCM</h4>
-                  <p>Authenticated encryption providing both confidentiality and integrity verification.</p>
+                  <h4>$REC Consumption</h4>
+                  <p>The encrypted payload should be carried in the generated <code>$REC</code> wrapper so Bob can identify the generated schema type and run the correct decrypt path.</p>
                 </div>
                 <div class="encrypt-card">
-                  <h4>Per-Field Encryption</h4>
-                  <p>Each sensitive field can be independently encrypted with its own key derivation.</p>
+                  <h4>Per-Field Protection</h4>
+                  <p>Fields marked <code>(encrypted)</code> stay in their generated FlatBuffer layout while sensitive bytes, such as <code>KMF.KEY_BYTES</code>, are protected for the intended recipient.</p>
+                </div>
+              </div>
+
+              <h3 class="subsection-title">Bob Decrypt Checklist</h3>
+              <div class="use-case-list">
+                <div class="use-case">
+                  <span class="use-case-icon">1</span>
+                  <div>
+                    <strong>Read <code>$ENC</code> Before Payload</strong>
+                    <p>Bob must parse the encryption header first to recover the ephemeral public key, nonce base, and generated root type information.</p>
+                  </div>
+                </div>
+                <div class="use-case">
+                  <span class="use-case-icon">2</span>
+                  <div>
+                    <strong>Consume the Generated <code>$REC</code> Wrapper</strong>
+                    <p>The payload should be consumed through generated <code>REC</code> bindings so Bob can resolve the record type and dispatch to the correct generated schema before decrypting fields.</p>
+                  </div>
+                </div>
+                <div class="use-case">
+                  <span class="use-case-icon">3</span>
+                  <div>
+                    <strong>Decrypt Encrypted Fields In-Place</strong>
+                    <p>Once Bob derives the shared secret from the header, he decrypts the encrypted fields in the generated payload buffer and then reads the normal generated object graph.</p>
+                  </div>
                 </div>
               </div>
 

@@ -21,12 +21,18 @@ import java.nio.ByteOrder;
  */
 @SuppressWarnings("unused")
 public final class KMF extends com.google.flatbuffers.Table {
+  private byte[] encryptionCtx;
+
   public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static KMF getRootAsKMF(ByteBuffer _bb) { return getRootAsKMF(_bb, new KMF()); }
   public static KMF getRootAsKMF(ByteBuffer _bb, KMF obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static KMF getRootAsKMF(ByteBuffer _bb, byte[] encryptionCtx) { return getRootAsKMF(_bb, new KMF(), encryptionCtx); }
+  public static KMF getRootAsKMF(ByteBuffer _bb, KMF obj, byte[] encryptionCtx) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb, encryptionCtx)); }
   public static boolean KMFBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$KMF"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
+  public void __init(int _i, ByteBuffer _bb, byte[] _encryptionCtx) { __reset(_i, _bb); this.encryptionCtx = _encryptionCtx; }
   public KMF __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public KMF __assign(int _i, ByteBuffer _bb, byte[] _encryptionCtx) { __init(_i, _bb, _encryptionCtx); return this; }
 
   /**
    * Logical key identifier used across publication and grant records.
@@ -48,6 +54,8 @@ public final class KMF extends com.google.flatbuffers.Table {
   public byte ENCODING() { int o = __offset(10); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * Explicit key bytes when a module must receive them on a port.
+   * This may be field-encrypted using the SDS/da-flatbuffers header-first
+   * encryption flow when transported to a specific recipient.
    */
   public int KEY_BYTES(int j) { int o = __offset(12); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
   public int KEY_BYTESLength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }

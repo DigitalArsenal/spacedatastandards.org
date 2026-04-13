@@ -4,37 +4,46 @@ extern crate alloc;
 
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_LICENSING_WRAPPED_KEY_ALGORITHM: i8 = 0;
+pub const ENUM_MIN_KEY_EXCHANGE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_LICENSING_WRAPPED_KEY_ALGORITHM: i8 = 0;
+pub const ENUM_MAX_KEY_EXCHANGE: i8 = 2;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_LICENSING_WRAPPED_KEY_ALGORITHM: [licensingWrappedKeyAlgorithm; 1] = [
-  licensingWrappedKeyAlgorithm::X25519_HKDF_SHA256_AES_256_GCM,
+pub const ENUM_VALUES_KEY_EXCHANGE: [KeyExchange; 3] = [
+  KeyExchange::X25519,
+  KeyExchange::Secp256k1,
+  KeyExchange::P256,
 ];
 
-/// Wrapped content-key envelope algorithm
+/// Encryption Header for FlatBuffers field-level encryption
+/// Key exchange algorithm used to derive the shared secret
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct licensingWrappedKeyAlgorithm(pub i8);
+pub struct KeyExchange(pub i8);
 #[allow(non_upper_case_globals)]
-impl licensingWrappedKeyAlgorithm {
-  pub const X25519_HKDF_SHA256_AES_256_GCM: Self = Self(0);
+impl KeyExchange {
+  pub const X25519: Self = Self(0);
+  pub const Secp256k1: Self = Self(1);
+  pub const P256: Self = Self(2);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::X25519_HKDF_SHA256_AES_256_GCM,
+    Self::X25519,
+    Self::Secp256k1,
+    Self::P256,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::X25519_HKDF_SHA256_AES_256_GCM => Some("X25519_HKDF_SHA256_AES_256_GCM"),
+      Self::X25519 => Some("X25519"),
+      Self::Secp256k1 => Some("Secp256k1"),
+      Self::P256 => Some("P256"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for licensingWrappedKeyAlgorithm {
+impl ::core::fmt::Debug for KeyExchange {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -43,7 +52,7 @@ impl ::core::fmt::Debug for licensingWrappedKeyAlgorithm {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for licensingWrappedKeyAlgorithm {
+impl<'a> ::flatbuffers::Follow<'a> for KeyExchange {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -52,15 +61,15 @@ impl<'a> ::flatbuffers::Follow<'a> for licensingWrappedKeyAlgorithm {
   }
 }
 
-impl ::flatbuffers::Push for licensingWrappedKeyAlgorithm {
-    type Output = licensingWrappedKeyAlgorithm;
+impl ::flatbuffers::Push for KeyExchange {
+    type Output = KeyExchange;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for licensingWrappedKeyAlgorithm {
+impl ::flatbuffers::EndianScalar for KeyExchange {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -74,7 +83,7 @@ impl ::flatbuffers::EndianScalar for licensingWrappedKeyAlgorithm {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for licensingWrappedKeyAlgorithm {
+impl<'a> ::flatbuffers::Verifiable for KeyExchange {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -83,552 +92,646 @@ impl<'a> ::flatbuffers::Verifiable for licensingWrappedKeyAlgorithm {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for licensingWrappedKeyAlgorithm {}
-pub enum LWKOffset {}
+impl ::flatbuffers::SimpleToVerifyInSlice for KeyExchange {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SYMMETRIC_ALGO: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SYMMETRIC_ALGO: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SYMMETRIC_ALGO: [SymmetricAlgo; 1] = [
+  SymmetricAlgo::AES_256_CTR,
+];
+
+/// Symmetric encryption algorithm
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct SymmetricAlgo(pub i8);
+#[allow(non_upper_case_globals)]
+impl SymmetricAlgo {
+  pub const AES_256_CTR: Self = Self(0);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 0;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::AES_256_CTR,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::AES_256_CTR => Some("AES_256_CTR"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for SymmetricAlgo {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for SymmetricAlgo {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for SymmetricAlgo {
+    type Output = SymmetricAlgo;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for SymmetricAlgo {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for SymmetricAlgo {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for SymmetricAlgo {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_KDF: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_KDF: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_KDF: [KDF; 1] = [
+  KDF::HKDF_SHA256,
+];
+
+/// Key derivation function
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct KDF(pub i8);
+#[allow(non_upper_case_globals)]
+impl KDF {
+  pub const HKDF_SHA256: Self = Self(0);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 0;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::HKDF_SHA256,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::HKDF_SHA256 => Some("HKDF_SHA256"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for KDF {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for KDF {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for KDF {
+    type Output = KDF;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for KDF {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for KDF {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for KDF {}
+pub enum ENCOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Wrapped module content key
-pub struct LWK<'a> {
+/// Encryption Header containing all parameters needed for decryption
+pub struct ENC<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for LWK<'a> {
-  type Inner = LWK<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for ENC<'a> {
+  type Inner = ENC<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> LWK<'a> {
-  pub const VT_REQUEST_ID: ::flatbuffers::VOffsetT = 4;
-  pub const VT_MODULE_ID: ::flatbuffers::VOffsetT = 6;
-  pub const VT_MODULE_VERSION: ::flatbuffers::VOffsetT = 8;
-  pub const VT_CONTENT_KEY_ID: ::flatbuffers::VOffsetT = 10;
-  pub const VT_RECIPIENT_KEY_ID: ::flatbuffers::VOffsetT = 12;
-  pub const VT_ALGORITHM: ::flatbuffers::VOffsetT = 14;
-  pub const VT_REQUESTER_EPHEMERAL_PUBKEY: ::flatbuffers::VOffsetT = 16;
-  pub const VT_PROVIDER_EPHEMERAL_PUBKEY: ::flatbuffers::VOffsetT = 18;
-  pub const VT_HKDF_SALT: ::flatbuffers::VOffsetT = 20;
-  pub const VT_IV: ::flatbuffers::VOffsetT = 22;
-  pub const VT_CIPHERTEXT: ::flatbuffers::VOffsetT = 24;
-  pub const VT_TAG: ::flatbuffers::VOffsetT = 26;
-  pub const VT_EXPIRES_AT: ::flatbuffers::VOffsetT = 28;
+impl<'a> ENC<'a> {
+  pub const VT_VERSION: ::flatbuffers::VOffsetT = 4;
+  pub const VT_KEY_EXCHANGE: ::flatbuffers::VOffsetT = 6;
+  pub const VT_SYMMETRIC: ::flatbuffers::VOffsetT = 8;
+  pub const VT_KEY_DERIVATION: ::flatbuffers::VOffsetT = 10;
+  pub const VT_EPHEMERAL_PUBLIC_KEY: ::flatbuffers::VOffsetT = 12;
+  pub const VT_NONCE_START: ::flatbuffers::VOffsetT = 14;
+  pub const VT_RECIPIENT_KEY_ID: ::flatbuffers::VOffsetT = 16;
+  pub const VT_CONTEXT: ::flatbuffers::VOffsetT = 18;
+  pub const VT_SCHEMA_HASH: ::flatbuffers::VOffsetT = 20;
+  pub const VT_ROOT_TYPE: ::flatbuffers::VOffsetT = 22;
+  pub const VT_TIMESTAMP: ::flatbuffers::VOffsetT = 24;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    LWK { _tab: table }
+    ENC { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args LWKArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<LWK<'bldr>> {
-    let mut builder = LWKBuilder::new(_fbb);
-    builder.add_EXPIRES_AT(args.EXPIRES_AT);
-    if let Some(x) = args.TAG { builder.add_TAG(x); }
-    if let Some(x) = args.CIPHERTEXT { builder.add_CIPHERTEXT(x); }
-    if let Some(x) = args.IV { builder.add_IV(x); }
-    if let Some(x) = args.HKDF_SALT { builder.add_HKDF_SALT(x); }
-    if let Some(x) = args.PROVIDER_EPHEMERAL_PUBKEY { builder.add_PROVIDER_EPHEMERAL_PUBKEY(x); }
-    if let Some(x) = args.REQUESTER_EPHEMERAL_PUBKEY { builder.add_REQUESTER_EPHEMERAL_PUBKEY(x); }
+    args: &'args ENCArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<ENC<'bldr>> {
+    let mut builder = ENCBuilder::new(_fbb);
+    builder.add_TIMESTAMP(args.TIMESTAMP);
+    if let Some(x) = args.ROOT_TYPE { builder.add_ROOT_TYPE(x); }
+    if let Some(x) = args.SCHEMA_HASH { builder.add_SCHEMA_HASH(x); }
+    if let Some(x) = args.CONTEXT { builder.add_CONTEXT(x); }
     if let Some(x) = args.RECIPIENT_KEY_ID { builder.add_RECIPIENT_KEY_ID(x); }
-    if let Some(x) = args.CONTENT_KEY_ID { builder.add_CONTENT_KEY_ID(x); }
-    if let Some(x) = args.MODULE_VERSION { builder.add_MODULE_VERSION(x); }
-    if let Some(x) = args.MODULE_ID { builder.add_MODULE_ID(x); }
-    if let Some(x) = args.REQUEST_ID { builder.add_REQUEST_ID(x); }
-    builder.add_ALGORITHM(args.ALGORITHM);
+    if let Some(x) = args.NONCE_START { builder.add_NONCE_START(x); }
+    if let Some(x) = args.EPHEMERAL_PUBLIC_KEY { builder.add_EPHEMERAL_PUBLIC_KEY(x); }
+    builder.add_KEY_DERIVATION(args.KEY_DERIVATION);
+    builder.add_SYMMETRIC(args.SYMMETRIC);
+    builder.add_KEY_EXCHANGE(args.KEY_EXCHANGE);
+    builder.add_VERSION(args.VERSION);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> LWKT {
-    let REQUEST_ID = {
-      let x = self.REQUEST_ID();
-      alloc::string::ToString::to_string(x)
+  pub fn unpack(&self) -> ENCT {
+    let VERSION = self.VERSION();
+    let KEY_EXCHANGE = self.KEY_EXCHANGE();
+    let SYMMETRIC = self.SYMMETRIC();
+    let KEY_DERIVATION = self.KEY_DERIVATION();
+    let EPHEMERAL_PUBLIC_KEY = {
+      let x = self.EPHEMERAL_PUBLIC_KEY();
+      x.into_iter().collect()
     };
-    let MODULE_ID = {
-      let x = self.MODULE_ID();
-      alloc::string::ToString::to_string(x)
+    let NONCE_START = {
+      let x = self.NONCE_START();
+      x.into_iter().collect()
     };
-    let MODULE_VERSION = self.MODULE_VERSION().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let CONTENT_KEY_ID = self.CONTENT_KEY_ID().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
     let RECIPIENT_KEY_ID = self.RECIPIENT_KEY_ID().map(|x| {
+      x.into_iter().collect()
+    });
+    let CONTEXT = self.CONTEXT().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let ALGORITHM = self.ALGORITHM();
-    let REQUESTER_EPHEMERAL_PUBKEY = self.REQUESTER_EPHEMERAL_PUBKEY().map(|x| {
+    let SCHEMA_HASH = self.SCHEMA_HASH().map(|x| {
       x.into_iter().collect()
     });
-    let PROVIDER_EPHEMERAL_PUBKEY = self.PROVIDER_EPHEMERAL_PUBKEY().map(|x| {
-      x.into_iter().collect()
+    let ROOT_TYPE = self.ROOT_TYPE().map(|x| {
+      alloc::string::ToString::to_string(x)
     });
-    let HKDF_SALT = self.HKDF_SALT().map(|x| {
-      x.into_iter().collect()
-    });
-    let IV = self.IV().map(|x| {
-      x.into_iter().collect()
-    });
-    let CIPHERTEXT = self.CIPHERTEXT().map(|x| {
-      x.into_iter().collect()
-    });
-    let TAG = self.TAG().map(|x| {
-      x.into_iter().collect()
-    });
-    let EXPIRES_AT = self.EXPIRES_AT();
-    LWKT {
-      REQUEST_ID,
-      MODULE_ID,
-      MODULE_VERSION,
-      CONTENT_KEY_ID,
+    let TIMESTAMP = self.TIMESTAMP();
+    ENCT {
+      VERSION,
+      KEY_EXCHANGE,
+      SYMMETRIC,
+      KEY_DERIVATION,
+      EPHEMERAL_PUBLIC_KEY,
+      NONCE_START,
       RECIPIENT_KEY_ID,
-      ALGORITHM,
-      REQUESTER_EPHEMERAL_PUBKEY,
-      PROVIDER_EPHEMERAL_PUBKEY,
-      HKDF_SALT,
-      IV,
-      CIPHERTEXT,
-      TAG,
-      EXPIRES_AT,
+      CONTEXT,
+      SCHEMA_HASH,
+      ROOT_TYPE,
+      TIMESTAMP,
     }
   }
 
-  /// Unique request identifier
+  /// Schema version for forward compatibility
   #[inline]
-  pub fn REQUEST_ID(&self) -> &'a str {
+  pub fn VERSION(&self) -> u8 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LWK::VT_REQUEST_ID, None).unwrap()}
+    unsafe { self._tab.get::<u8>(ENC::VT_VERSION, Some(1)).unwrap()}
   }
-  /// Canonical module identifier
+  /// Key exchange algorithm used
   #[inline]
-  pub fn MODULE_ID(&self) -> &'a str {
+  pub fn KEY_EXCHANGE(&self) -> KeyExchange {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LWK::VT_MODULE_ID, None).unwrap()}
+    unsafe { self._tab.get::<KeyExchange>(ENC::VT_KEY_EXCHANGE, Some(KeyExchange::X25519)).unwrap()}
   }
-  /// Optional module version
+  /// Symmetric encryption algorithm used
   #[inline]
-  pub fn MODULE_VERSION(&self) -> Option<&'a str> {
+  pub fn SYMMETRIC(&self) -> SymmetricAlgo {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LWK::VT_MODULE_VERSION, None)}
+    unsafe { self._tab.get::<SymmetricAlgo>(ENC::VT_SYMMETRIC, Some(SymmetricAlgo::AES_256_CTR)).unwrap()}
   }
-  /// Provider-local content key identifier
+  /// Key derivation function used
   #[inline]
-  pub fn CONTENT_KEY_ID(&self) -> Option<&'a str> {
+  pub fn KEY_DERIVATION(&self) -> KDF {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LWK::VT_CONTENT_KEY_ID, None)}
+    unsafe { self._tab.get::<KDF>(ENC::VT_KEY_DERIVATION, Some(KDF::HKDF_SHA256)).unwrap()}
   }
-  /// Recipient key identifier or fingerprint
+  /// Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
   #[inline]
-  pub fn RECIPIENT_KEY_ID(&self) -> Option<&'a str> {
+  pub fn EPHEMERAL_PUBLIC_KEY(&self) -> ::flatbuffers::Vector<'a, u8> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LWK::VT_RECIPIENT_KEY_ID, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ENC::VT_EPHEMERAL_PUBLIC_KEY, None).unwrap()}
   }
-  /// Wrapped-key algorithm
+  /// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
   #[inline]
-  pub fn ALGORITHM(&self) -> licensingWrappedKeyAlgorithm {
+  pub fn NONCE_START(&self) -> ::flatbuffers::Vector<'a, u8> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<licensingWrappedKeyAlgorithm>(LWK::VT_ALGORITHM, Some(licensingWrappedKeyAlgorithm::X25519_HKDF_SHA256_AES_256_GCM)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ENC::VT_NONCE_START, None).unwrap()}
   }
-  /// Requester ephemeral X25519 public key
+  /// Optional identifier for the recipient's public key (up to 32 bytes)
   #[inline]
-  pub fn REQUESTER_EPHEMERAL_PUBKEY(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+  pub fn RECIPIENT_KEY_ID(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(LWK::VT_REQUESTER_EPHEMERAL_PUBKEY, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ENC::VT_RECIPIENT_KEY_ID, None)}
   }
-  /// Provider ephemeral X25519 public key
+  /// Optional domain separation context string
   #[inline]
-  pub fn PROVIDER_EPHEMERAL_PUBKEY(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+  pub fn CONTEXT(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(LWK::VT_PROVIDER_EPHEMERAL_PUBKEY, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ENC::VT_CONTEXT, None)}
   }
-  /// HKDF salt
+  /// Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
   #[inline]
-  pub fn HKDF_SALT(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+  pub fn SCHEMA_HASH(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(LWK::VT_HKDF_SALT, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ENC::VT_SCHEMA_HASH, None)}
   }
-  /// AES-GCM IV
+  /// Optional root type name from the schema
   #[inline]
-  pub fn IV(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+  pub fn ROOT_TYPE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(LWK::VT_IV, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ENC::VT_ROOT_TYPE, None)}
   }
-  /// Wrapped key ciphertext
+  /// Optional Unix timestamp (milliseconds) when encryption was performed
   #[inline]
-  pub fn CIPHERTEXT(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+  pub fn TIMESTAMP(&self) -> u64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(LWK::VT_CIPHERTEXT, None)}
-  }
-  /// AES-GCM authentication tag
-  #[inline]
-  pub fn TAG(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(LWK::VT_TAG, None)}
-  }
-  /// Envelope expiration time in milliseconds since epoch
-  #[inline]
-  pub fn EXPIRES_AT(&self) -> u64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u64>(LWK::VT_EXPIRES_AT, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u64>(ENC::VT_TIMESTAMP, Some(0)).unwrap()}
   }
 }
 
-impl ::flatbuffers::Verifiable for LWK<'_> {
+impl ::flatbuffers::Verifiable for ENC<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REQUEST_ID", Self::VT_REQUEST_ID, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_ID", Self::VT_MODULE_ID, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_VERSION", Self::VT_MODULE_VERSION, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONTENT_KEY_ID", Self::VT_CONTENT_KEY_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RECIPIENT_KEY_ID", Self::VT_RECIPIENT_KEY_ID, false)?
-     .visit_field::<licensingWrappedKeyAlgorithm>("ALGORITHM", Self::VT_ALGORITHM, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("REQUESTER_EPHEMERAL_PUBKEY", Self::VT_REQUESTER_EPHEMERAL_PUBKEY, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("PROVIDER_EPHEMERAL_PUBKEY", Self::VT_PROVIDER_EPHEMERAL_PUBKEY, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("HKDF_SALT", Self::VT_HKDF_SALT, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("IV", Self::VT_IV, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("CIPHERTEXT", Self::VT_CIPHERTEXT, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("TAG", Self::VT_TAG, false)?
-     .visit_field::<u64>("EXPIRES_AT", Self::VT_EXPIRES_AT, false)?
+     .visit_field::<u8>("VERSION", Self::VT_VERSION, false)?
+     .visit_field::<KeyExchange>("KEY_EXCHANGE", Self::VT_KEY_EXCHANGE, false)?
+     .visit_field::<SymmetricAlgo>("SYMMETRIC", Self::VT_SYMMETRIC, false)?
+     .visit_field::<KDF>("KEY_DERIVATION", Self::VT_KEY_DERIVATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("EPHEMERAL_PUBLIC_KEY", Self::VT_EPHEMERAL_PUBLIC_KEY, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("NONCE_START", Self::VT_NONCE_START, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("RECIPIENT_KEY_ID", Self::VT_RECIPIENT_KEY_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONTEXT", Self::VT_CONTEXT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SCHEMA_HASH", Self::VT_SCHEMA_HASH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ROOT_TYPE", Self::VT_ROOT_TYPE, false)?
+     .visit_field::<u64>("TIMESTAMP", Self::VT_TIMESTAMP, false)?
      .finish();
     Ok(())
   }
 }
-pub struct LWKArgs<'a> {
-    pub REQUEST_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub MODULE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub MODULE_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub CONTENT_KEY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub RECIPIENT_KEY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub ALGORITHM: licensingWrappedKeyAlgorithm,
-    pub REQUESTER_EPHEMERAL_PUBKEY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
-    pub PROVIDER_EPHEMERAL_PUBKEY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
-    pub HKDF_SALT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
-    pub IV: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
-    pub CIPHERTEXT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
-    pub TAG: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
-    pub EXPIRES_AT: u64,
+pub struct ENCArgs<'a> {
+    pub VERSION: u8,
+    pub KEY_EXCHANGE: KeyExchange,
+    pub SYMMETRIC: SymmetricAlgo,
+    pub KEY_DERIVATION: KDF,
+    pub EPHEMERAL_PUBLIC_KEY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub NONCE_START: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub RECIPIENT_KEY_ID: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub CONTEXT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SCHEMA_HASH: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub ROOT_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TIMESTAMP: u64,
 }
-impl<'a> Default for LWKArgs<'a> {
+impl<'a> Default for ENCArgs<'a> {
   #[inline]
   fn default() -> Self {
-    LWKArgs {
-      REQUEST_ID: None, // required field
-      MODULE_ID: None, // required field
-      MODULE_VERSION: None,
-      CONTENT_KEY_ID: None,
+    ENCArgs {
+      VERSION: 1,
+      KEY_EXCHANGE: KeyExchange::X25519,
+      SYMMETRIC: SymmetricAlgo::AES_256_CTR,
+      KEY_DERIVATION: KDF::HKDF_SHA256,
+      EPHEMERAL_PUBLIC_KEY: None, // required field
+      NONCE_START: None, // required field
       RECIPIENT_KEY_ID: None,
-      ALGORITHM: licensingWrappedKeyAlgorithm::X25519_HKDF_SHA256_AES_256_GCM,
-      REQUESTER_EPHEMERAL_PUBKEY: None,
-      PROVIDER_EPHEMERAL_PUBKEY: None,
-      HKDF_SALT: None,
-      IV: None,
-      CIPHERTEXT: None,
-      TAG: None,
-      EXPIRES_AT: 0,
+      CONTEXT: None,
+      SCHEMA_HASH: None,
+      ROOT_TYPE: None,
+      TIMESTAMP: 0,
     }
   }
 }
 
-pub struct LWKBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct ENCBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> LWKBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ENCBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_REQUEST_ID(&mut self, REQUEST_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LWK::VT_REQUEST_ID, REQUEST_ID);
+  pub fn add_VERSION(&mut self, VERSION: u8) {
+    self.fbb_.push_slot::<u8>(ENC::VT_VERSION, VERSION, 1);
   }
   #[inline]
-  pub fn add_MODULE_ID(&mut self, MODULE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LWK::VT_MODULE_ID, MODULE_ID);
+  pub fn add_KEY_EXCHANGE(&mut self, KEY_EXCHANGE: KeyExchange) {
+    self.fbb_.push_slot::<KeyExchange>(ENC::VT_KEY_EXCHANGE, KEY_EXCHANGE, KeyExchange::X25519);
   }
   #[inline]
-  pub fn add_MODULE_VERSION(&mut self, MODULE_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LWK::VT_MODULE_VERSION, MODULE_VERSION);
+  pub fn add_SYMMETRIC(&mut self, SYMMETRIC: SymmetricAlgo) {
+    self.fbb_.push_slot::<SymmetricAlgo>(ENC::VT_SYMMETRIC, SYMMETRIC, SymmetricAlgo::AES_256_CTR);
   }
   #[inline]
-  pub fn add_CONTENT_KEY_ID(&mut self, CONTENT_KEY_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LWK::VT_CONTENT_KEY_ID, CONTENT_KEY_ID);
+  pub fn add_KEY_DERIVATION(&mut self, KEY_DERIVATION: KDF) {
+    self.fbb_.push_slot::<KDF>(ENC::VT_KEY_DERIVATION, KEY_DERIVATION, KDF::HKDF_SHA256);
   }
   #[inline]
-  pub fn add_RECIPIENT_KEY_ID(&mut self, RECIPIENT_KEY_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LWK::VT_RECIPIENT_KEY_ID, RECIPIENT_KEY_ID);
+  pub fn add_EPHEMERAL_PUBLIC_KEY(&mut self, EPHEMERAL_PUBLIC_KEY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ENC::VT_EPHEMERAL_PUBLIC_KEY, EPHEMERAL_PUBLIC_KEY);
   }
   #[inline]
-  pub fn add_ALGORITHM(&mut self, ALGORITHM: licensingWrappedKeyAlgorithm) {
-    self.fbb_.push_slot::<licensingWrappedKeyAlgorithm>(LWK::VT_ALGORITHM, ALGORITHM, licensingWrappedKeyAlgorithm::X25519_HKDF_SHA256_AES_256_GCM);
+  pub fn add_NONCE_START(&mut self, NONCE_START: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ENC::VT_NONCE_START, NONCE_START);
   }
   #[inline]
-  pub fn add_REQUESTER_EPHEMERAL_PUBKEY(&mut self, REQUESTER_EPHEMERAL_PUBKEY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LWK::VT_REQUESTER_EPHEMERAL_PUBKEY, REQUESTER_EPHEMERAL_PUBKEY);
+  pub fn add_RECIPIENT_KEY_ID(&mut self, RECIPIENT_KEY_ID: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ENC::VT_RECIPIENT_KEY_ID, RECIPIENT_KEY_ID);
   }
   #[inline]
-  pub fn add_PROVIDER_EPHEMERAL_PUBKEY(&mut self, PROVIDER_EPHEMERAL_PUBKEY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LWK::VT_PROVIDER_EPHEMERAL_PUBKEY, PROVIDER_EPHEMERAL_PUBKEY);
+  pub fn add_CONTEXT(&mut self, CONTEXT: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ENC::VT_CONTEXT, CONTEXT);
   }
   #[inline]
-  pub fn add_HKDF_SALT(&mut self, HKDF_SALT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LWK::VT_HKDF_SALT, HKDF_SALT);
+  pub fn add_SCHEMA_HASH(&mut self, SCHEMA_HASH: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ENC::VT_SCHEMA_HASH, SCHEMA_HASH);
   }
   #[inline]
-  pub fn add_IV(&mut self, IV: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LWK::VT_IV, IV);
+  pub fn add_ROOT_TYPE(&mut self, ROOT_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ENC::VT_ROOT_TYPE, ROOT_TYPE);
   }
   #[inline]
-  pub fn add_CIPHERTEXT(&mut self, CIPHERTEXT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LWK::VT_CIPHERTEXT, CIPHERTEXT);
+  pub fn add_TIMESTAMP(&mut self, TIMESTAMP: u64) {
+    self.fbb_.push_slot::<u64>(ENC::VT_TIMESTAMP, TIMESTAMP, 0);
   }
   #[inline]
-  pub fn add_TAG(&mut self, TAG: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LWK::VT_TAG, TAG);
-  }
-  #[inline]
-  pub fn add_EXPIRES_AT(&mut self, EXPIRES_AT: u64) {
-    self.fbb_.push_slot::<u64>(LWK::VT_EXPIRES_AT, EXPIRES_AT, 0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> LWKBuilder<'a, 'b, A> {
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ENCBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    LWKBuilder {
+    ENCBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<LWK<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<ENC<'a>> {
     let o = self.fbb_.end_table(self.start_);
-    self.fbb_.required(o, LWK::VT_REQUEST_ID,"REQUEST_ID");
-    self.fbb_.required(o, LWK::VT_MODULE_ID,"MODULE_ID");
+    self.fbb_.required(o, ENC::VT_EPHEMERAL_PUBLIC_KEY,"EPHEMERAL_PUBLIC_KEY");
+    self.fbb_.required(o, ENC::VT_NONCE_START,"NONCE_START");
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for LWK<'_> {
+impl ::core::fmt::Debug for ENC<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("LWK");
-      ds.field("REQUEST_ID", &self.REQUEST_ID());
-      ds.field("MODULE_ID", &self.MODULE_ID());
-      ds.field("MODULE_VERSION", &self.MODULE_VERSION());
-      ds.field("CONTENT_KEY_ID", &self.CONTENT_KEY_ID());
+    let mut ds = f.debug_struct("ENC");
+      ds.field("VERSION", &self.VERSION());
+      ds.field("KEY_EXCHANGE", &self.KEY_EXCHANGE());
+      ds.field("SYMMETRIC", &self.SYMMETRIC());
+      ds.field("KEY_DERIVATION", &self.KEY_DERIVATION());
+      ds.field("EPHEMERAL_PUBLIC_KEY", &self.EPHEMERAL_PUBLIC_KEY());
+      ds.field("NONCE_START", &self.NONCE_START());
       ds.field("RECIPIENT_KEY_ID", &self.RECIPIENT_KEY_ID());
-      ds.field("ALGORITHM", &self.ALGORITHM());
-      ds.field("REQUESTER_EPHEMERAL_PUBKEY", &self.REQUESTER_EPHEMERAL_PUBKEY());
-      ds.field("PROVIDER_EPHEMERAL_PUBKEY", &self.PROVIDER_EPHEMERAL_PUBKEY());
-      ds.field("HKDF_SALT", &self.HKDF_SALT());
-      ds.field("IV", &self.IV());
-      ds.field("CIPHERTEXT", &self.CIPHERTEXT());
-      ds.field("TAG", &self.TAG());
-      ds.field("EXPIRES_AT", &self.EXPIRES_AT());
+      ds.field("CONTEXT", &self.CONTEXT());
+      ds.field("SCHEMA_HASH", &self.SCHEMA_HASH());
+      ds.field("ROOT_TYPE", &self.ROOT_TYPE());
+      ds.field("TIMESTAMP", &self.TIMESTAMP());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct LWKT {
-  pub REQUEST_ID: alloc::string::String,
-  pub MODULE_ID: alloc::string::String,
-  pub MODULE_VERSION: Option<alloc::string::String>,
-  pub CONTENT_KEY_ID: Option<alloc::string::String>,
-  pub RECIPIENT_KEY_ID: Option<alloc::string::String>,
-  pub ALGORITHM: licensingWrappedKeyAlgorithm,
-  pub REQUESTER_EPHEMERAL_PUBKEY: Option<alloc::vec::Vec<u8>>,
-  pub PROVIDER_EPHEMERAL_PUBKEY: Option<alloc::vec::Vec<u8>>,
-  pub HKDF_SALT: Option<alloc::vec::Vec<u8>>,
-  pub IV: Option<alloc::vec::Vec<u8>>,
-  pub CIPHERTEXT: Option<alloc::vec::Vec<u8>>,
-  pub TAG: Option<alloc::vec::Vec<u8>>,
-  pub EXPIRES_AT: u64,
+pub struct ENCT {
+  pub VERSION: u8,
+  pub KEY_EXCHANGE: KeyExchange,
+  pub SYMMETRIC: SymmetricAlgo,
+  pub KEY_DERIVATION: KDF,
+  pub EPHEMERAL_PUBLIC_KEY: alloc::vec::Vec<u8>,
+  pub NONCE_START: alloc::vec::Vec<u8>,
+  pub RECIPIENT_KEY_ID: Option<alloc::vec::Vec<u8>>,
+  pub CONTEXT: Option<alloc::string::String>,
+  pub SCHEMA_HASH: Option<alloc::vec::Vec<u8>>,
+  pub ROOT_TYPE: Option<alloc::string::String>,
+  pub TIMESTAMP: u64,
 }
-impl Default for LWKT {
+impl Default for ENCT {
   fn default() -> Self {
     Self {
-      REQUEST_ID: alloc::string::ToString::to_string(""),
-      MODULE_ID: alloc::string::ToString::to_string(""),
-      MODULE_VERSION: None,
-      CONTENT_KEY_ID: None,
+      VERSION: 1,
+      KEY_EXCHANGE: KeyExchange::X25519,
+      SYMMETRIC: SymmetricAlgo::AES_256_CTR,
+      KEY_DERIVATION: KDF::HKDF_SHA256,
+      EPHEMERAL_PUBLIC_KEY: Default::default(),
+      NONCE_START: Default::default(),
       RECIPIENT_KEY_ID: None,
-      ALGORITHM: licensingWrappedKeyAlgorithm::X25519_HKDF_SHA256_AES_256_GCM,
-      REQUESTER_EPHEMERAL_PUBKEY: None,
-      PROVIDER_EPHEMERAL_PUBKEY: None,
-      HKDF_SALT: None,
-      IV: None,
-      CIPHERTEXT: None,
-      TAG: None,
-      EXPIRES_AT: 0,
+      CONTEXT: None,
+      SCHEMA_HASH: None,
+      ROOT_TYPE: None,
+      TIMESTAMP: 0,
     }
   }
 }
-impl LWKT {
+impl ENCT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<LWK<'b>> {
-    let REQUEST_ID = Some({
-      let x = &self.REQUEST_ID;
-      _fbb.create_string(x)
+  ) -> ::flatbuffers::WIPOffset<ENC<'b>> {
+    let VERSION = self.VERSION;
+    let KEY_EXCHANGE = self.KEY_EXCHANGE;
+    let SYMMETRIC = self.SYMMETRIC;
+    let KEY_DERIVATION = self.KEY_DERIVATION;
+    let EPHEMERAL_PUBLIC_KEY = Some({
+      let x = &self.EPHEMERAL_PUBLIC_KEY;
+      _fbb.create_vector(x)
     });
-    let MODULE_ID = Some({
-      let x = &self.MODULE_ID;
-      _fbb.create_string(x)
-    });
-    let MODULE_VERSION = self.MODULE_VERSION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let CONTENT_KEY_ID = self.CONTENT_KEY_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let NONCE_START = Some({
+      let x = &self.NONCE_START;
+      _fbb.create_vector(x)
     });
     let RECIPIENT_KEY_ID = self.RECIPIENT_KEY_ID.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let CONTEXT = self.CONTEXT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ALGORITHM = self.ALGORITHM;
-    let REQUESTER_EPHEMERAL_PUBKEY = self.REQUESTER_EPHEMERAL_PUBKEY.as_ref().map(|x|{
+    let SCHEMA_HASH = self.SCHEMA_HASH.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
-    let PROVIDER_EPHEMERAL_PUBKEY = self.PROVIDER_EPHEMERAL_PUBKEY.as_ref().map(|x|{
-      _fbb.create_vector(x)
+    let ROOT_TYPE = self.ROOT_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
     });
-    let HKDF_SALT = self.HKDF_SALT.as_ref().map(|x|{
-      _fbb.create_vector(x)
-    });
-    let IV = self.IV.as_ref().map(|x|{
-      _fbb.create_vector(x)
-    });
-    let CIPHERTEXT = self.CIPHERTEXT.as_ref().map(|x|{
-      _fbb.create_vector(x)
-    });
-    let TAG = self.TAG.as_ref().map(|x|{
-      _fbb.create_vector(x)
-    });
-    let EXPIRES_AT = self.EXPIRES_AT;
-    LWK::create(_fbb, &LWKArgs{
-      REQUEST_ID,
-      MODULE_ID,
-      MODULE_VERSION,
-      CONTENT_KEY_ID,
+    let TIMESTAMP = self.TIMESTAMP;
+    ENC::create(_fbb, &ENCArgs{
+      VERSION,
+      KEY_EXCHANGE,
+      SYMMETRIC,
+      KEY_DERIVATION,
+      EPHEMERAL_PUBLIC_KEY,
+      NONCE_START,
       RECIPIENT_KEY_ID,
-      ALGORITHM,
-      REQUESTER_EPHEMERAL_PUBKEY,
-      PROVIDER_EPHEMERAL_PUBKEY,
-      HKDF_SALT,
-      IV,
-      CIPHERTEXT,
-      TAG,
-      EXPIRES_AT,
+      CONTEXT,
+      SCHEMA_HASH,
+      ROOT_TYPE,
+      TIMESTAMP,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `LWK`
+/// Verifies that a buffer of bytes contains a `ENC`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_lwk_unchecked`.
-pub fn root_as_lwk(buf: &[u8]) -> Result<LWK<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<LWK>(buf)
+/// `root_as_enc_unchecked`.
+pub fn root_as_enc(buf: &[u8]) -> Result<ENC<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<ENC>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `LWK` and returns it.
+/// `ENC` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_lwk_unchecked`.
-pub fn size_prefixed_root_as_lwk(buf: &[u8]) -> Result<LWK<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<LWK>(buf)
+/// `size_prefixed_root_as_enc_unchecked`.
+pub fn size_prefixed_root_as_enc(buf: &[u8]) -> Result<ENC<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<ENC>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `LWK` and returns it.
+/// contains a `ENC` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_lwk_unchecked`.
-pub fn root_as_lwk_with_opts<'b, 'o>(
+/// `root_as_enc_unchecked`.
+pub fn root_as_enc_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<LWK<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<LWK<'b>>(opts, buf)
+) -> Result<ENC<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<ENC<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `LWK` and returns
+/// bytes contains a size prefixed `ENC` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_lwk_unchecked`.
-pub fn size_prefixed_root_as_lwk_with_opts<'b, 'o>(
+/// `root_as_enc_unchecked`.
+pub fn size_prefixed_root_as_enc_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<LWK<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<LWK<'b>>(opts, buf)
+) -> Result<ENC<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<ENC<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a LWK and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a ENC and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `LWK`.
-pub unsafe fn root_as_lwk_unchecked(buf: &[u8]) -> LWK<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<LWK>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `ENC`.
+pub unsafe fn root_as_enc_unchecked(buf: &[u8]) -> ENC<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<ENC>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed LWK and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed ENC and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `LWK`.
-pub unsafe fn size_prefixed_root_as_lwk_unchecked(buf: &[u8]) -> LWK<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<LWK>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `ENC`.
+pub unsafe fn size_prefixed_root_as_enc_unchecked(buf: &[u8]) -> ENC<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<ENC>(buf) }
 }
-pub const LWK_IDENTIFIER: &str = "$LWK";
+pub const ENC_IDENTIFIER: &str = "$ENC";
 
 #[inline]
-pub fn lwk_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, LWK_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn lwk_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, LWK_IDENTIFIER, true)
+pub fn enc_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, ENC_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_lwk_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn enc_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, ENC_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_enc_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<LWK<'a>>) {
-  fbb.finish(root, Some(LWK_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<ENC<'a>>) {
+  fbb.finish(root, Some(ENC_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_lwk_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<LWK<'a>>) {
-  fbb.finish_size_prefixed(root, Some(LWK_IDENTIFIER));
+pub fn finish_size_prefixed_enc_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<ENC<'a>>) {
+  fbb.finish_size_prefixed(root, Some(ENC_IDENTIFIER));
 }

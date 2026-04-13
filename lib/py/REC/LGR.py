@@ -181,22 +181,52 @@ class LGR(object):
             return obj
         return None
 
-    # Wrapped module content key
+    # Encryption header for the recipient-specific wrapped content-key payload.
     # LGR
-    def WRAPPED_CONTENT_KEY(self):
+    def WRAPPED_CONTENT_KEY_HEADER(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
-            from LWK import LWK
-            obj = LWK()
+            from ENC import ENC
+            obj = ENC()
             obj.Init(self._tab.Bytes, x)
             return obj
         return None
 
+    # Encrypted FlatBuffer payload containing the recipient-specific content key
+    # material. The payload currently uses `$KMF` semantics and is decrypted
+    # using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+    # LGR
+    def WRAPPED_CONTENT_KEY_PAYLOAD(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # LGR
+    def WRAPPED_CONTENT_KEY_PAYLOADAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # LGR
+    def WRAPPED_CONTENT_KEY_PAYLOADLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # LGR
+    def WRAPPED_CONTENT_KEY_PAYLOADIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        return o == 0
+
     # Provider public key used to verify the grant signature
     # LGR
     def GRANT_VERIFIER_PUBKEY(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
@@ -204,27 +234,27 @@ class LGR(object):
 
     # LGR
     def GRANT_VERIFIER_PUBKEYAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
         return 0
 
     # LGR
     def GRANT_VERIFIER_PUBKEYLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # LGR
     def GRANT_VERIFIER_PUBKEYIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         return o == 0
 
     # Provider signature over the grant
     # LGR
     def PROVIDER_SIGNATURE(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
@@ -232,25 +262,25 @@ class LGR(object):
 
     # LGR
     def PROVIDER_SIGNATUREAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
         return 0
 
     # LGR
     def PROVIDER_SIGNATURELength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # LGR
     def PROVIDER_SIGNATUREIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         return o == 0
 
 def LGRStart(builder):
-    builder.StartObject(19)
+    builder.StartObject(20)
 
 def Start(builder):
     LGRStart(builder)
@@ -367,14 +397,36 @@ def LGRAddMODULE_DESCRIPTOR(builder, MODULE_DESCRIPTOR):
 def AddMODULE_DESCRIPTOR(builder, MODULE_DESCRIPTOR):
     LGRAddMODULE_DESCRIPTOR(builder, MODULE_DESCRIPTOR)
 
-def LGRAddWRAPPED_CONTENT_KEY(builder, WRAPPED_CONTENT_KEY):
-    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(WRAPPED_CONTENT_KEY), 0)
+def LGRAddWRAPPED_CONTENT_KEY_HEADER(builder, WRAPPED_CONTENT_KEY_HEADER):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(WRAPPED_CONTENT_KEY_HEADER), 0)
 
-def AddWRAPPED_CONTENT_KEY(builder, WRAPPED_CONTENT_KEY):
-    LGRAddWRAPPED_CONTENT_KEY(builder, WRAPPED_CONTENT_KEY)
+def AddWRAPPED_CONTENT_KEY_HEADER(builder, WRAPPED_CONTENT_KEY_HEADER):
+    LGRAddWRAPPED_CONTENT_KEY_HEADER(builder, WRAPPED_CONTENT_KEY_HEADER)
+
+def LGRAddWRAPPED_CONTENT_KEY_PAYLOAD(builder, WRAPPED_CONTENT_KEY_PAYLOAD):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(WRAPPED_CONTENT_KEY_PAYLOAD), 0)
+
+def AddWRAPPED_CONTENT_KEY_PAYLOAD(builder, WRAPPED_CONTENT_KEY_PAYLOAD):
+    LGRAddWRAPPED_CONTENT_KEY_PAYLOAD(builder, WRAPPED_CONTENT_KEY_PAYLOAD)
+
+def LGRStartWRAPPED_CONTENT_KEY_PAYLOADVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartWRAPPED_CONTENT_KEY_PAYLOADVector(builder, numElems):
+    return LGRStartWRAPPED_CONTENT_KEY_PAYLOADVector(builder, numElems)
+
+def LGRCreateWRAPPED_CONTENT_KEY_PAYLOADVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateWRAPPED_CONTENT_KEY_PAYLOADVector(builder, data):
+    LGRCreateWRAPPED_CONTENT_KEY_PAYLOADVector(builder, data)
 
 def LGRAddGRANT_VERIFIER_PUBKEY(builder, GRANT_VERIFIER_PUBKEY):
-    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(GRANT_VERIFIER_PUBKEY), 0)
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(GRANT_VERIFIER_PUBKEY), 0)
 
 def AddGRANT_VERIFIER_PUBKEY(builder, GRANT_VERIFIER_PUBKEY):
     LGRAddGRANT_VERIFIER_PUBKEY(builder, GRANT_VERIFIER_PUBKEY)
@@ -396,7 +448,7 @@ def CreateGRANT_VERIFIER_PUBKEYVector(builder, data):
     LGRCreateGRANT_VERIFIER_PUBKEYVector(builder, data)
 
 def LGRAddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE):
-    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_SIGNATURE), 0)
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_SIGNATURE), 0)
 
 def AddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE):
     LGRAddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE)
@@ -423,7 +475,7 @@ def LGREnd(builder):
 def End(builder):
     return LGREnd(builder)
 
-import LWK
+import ENC
 import PLG
 try:
     from typing import List, Optional
@@ -451,7 +503,8 @@ class LGRT(object):
         DENIAL_REASON = None,
         CAPABILITY_TOKEN = None,
         MODULE_DESCRIPTOR = None,
-        WRAPPED_CONTENT_KEY = None,
+        WRAPPED_CONTENT_KEY_HEADER = None,
+        WRAPPED_CONTENT_KEY_PAYLOAD = None,
         GRANT_VERIFIER_PUBKEY = None,
         PROVIDER_SIGNATURE = None,
     ):
@@ -471,7 +524,8 @@ class LGRT(object):
         self.DENIAL_REASON = DENIAL_REASON  # type: Optional[str]
         self.CAPABILITY_TOKEN = CAPABILITY_TOKEN  # type: Optional[List[int]]
         self.MODULE_DESCRIPTOR = MODULE_DESCRIPTOR  # type: Optional[PLG.PLGT]
-        self.WRAPPED_CONTENT_KEY = WRAPPED_CONTENT_KEY  # type: Optional[LWK.LWKT]
+        self.WRAPPED_CONTENT_KEY_HEADER = WRAPPED_CONTENT_KEY_HEADER  # type: Optional[ENC.ENCT]
+        self.WRAPPED_CONTENT_KEY_PAYLOAD = WRAPPED_CONTENT_KEY_PAYLOAD  # type: Optional[List[int]]
         self.GRANT_VERIFIER_PUBKEY = GRANT_VERIFIER_PUBKEY  # type: Optional[List[int]]
         self.PROVIDER_SIGNATURE = PROVIDER_SIGNATURE  # type: Optional[List[int]]
 
@@ -519,8 +573,15 @@ class LGRT(object):
                 self.CAPABILITY_TOKEN = LGR.CAPABILITY_TOKENAsNumpy()
         if LGR.MODULE_DESCRIPTOR() is not None:
             self.MODULE_DESCRIPTOR = PLG.PLGT.InitFromObj(LGR.MODULE_DESCRIPTOR())
-        if LGR.WRAPPED_CONTENT_KEY() is not None:
-            self.WRAPPED_CONTENT_KEY = LWK.LWKT.InitFromObj(LGR.WRAPPED_CONTENT_KEY())
+        if LGR.WRAPPED_CONTENT_KEY_HEADER() is not None:
+            self.WRAPPED_CONTENT_KEY_HEADER = ENC.ENCT.InitFromObj(LGR.WRAPPED_CONTENT_KEY_HEADER())
+        if not LGR.WRAPPED_CONTENT_KEY_PAYLOADIsNone():
+            if np is None:
+                self.WRAPPED_CONTENT_KEY_PAYLOAD = []
+                for i in range(LGR.WRAPPED_CONTENT_KEY_PAYLOADLength()):
+                    self.WRAPPED_CONTENT_KEY_PAYLOAD.append(LGR.WRAPPED_CONTENT_KEY_PAYLOAD(i))
+            else:
+                self.WRAPPED_CONTENT_KEY_PAYLOAD = LGR.WRAPPED_CONTENT_KEY_PAYLOADAsNumpy()
         if not LGR.GRANT_VERIFIER_PUBKEYIsNone():
             if np is None:
                 self.GRANT_VERIFIER_PUBKEY = []
@@ -568,8 +629,16 @@ class LGRT(object):
                 CAPABILITY_TOKEN = builder.EndVector()
         if self.MODULE_DESCRIPTOR is not None:
             MODULE_DESCRIPTOR = self.MODULE_DESCRIPTOR.Pack(builder)
-        if self.WRAPPED_CONTENT_KEY is not None:
-            WRAPPED_CONTENT_KEY = self.WRAPPED_CONTENT_KEY.Pack(builder)
+        if self.WRAPPED_CONTENT_KEY_HEADER is not None:
+            WRAPPED_CONTENT_KEY_HEADER = self.WRAPPED_CONTENT_KEY_HEADER.Pack(builder)
+        if self.WRAPPED_CONTENT_KEY_PAYLOAD is not None:
+            if np is not None and type(self.WRAPPED_CONTENT_KEY_PAYLOAD) is np.ndarray:
+                WRAPPED_CONTENT_KEY_PAYLOAD = builder.CreateNumpyVector(self.WRAPPED_CONTENT_KEY_PAYLOAD)
+            else:
+                LGRStartWRAPPED_CONTENT_KEY_PAYLOADVector(builder, len(self.WRAPPED_CONTENT_KEY_PAYLOAD))
+                for i in reversed(range(len(self.WRAPPED_CONTENT_KEY_PAYLOAD))):
+                    builder.PrependUint8(self.WRAPPED_CONTENT_KEY_PAYLOAD[i])
+                WRAPPED_CONTENT_KEY_PAYLOAD = builder.EndVector()
         if self.GRANT_VERIFIER_PUBKEY is not None:
             if np is not None and type(self.GRANT_VERIFIER_PUBKEY) is np.ndarray:
                 GRANT_VERIFIER_PUBKEY = builder.CreateNumpyVector(self.GRANT_VERIFIER_PUBKEY)
@@ -615,8 +684,10 @@ class LGRT(object):
             LGRAddCAPABILITY_TOKEN(builder, CAPABILITY_TOKEN)
         if self.MODULE_DESCRIPTOR is not None:
             LGRAddMODULE_DESCRIPTOR(builder, MODULE_DESCRIPTOR)
-        if self.WRAPPED_CONTENT_KEY is not None:
-            LGRAddWRAPPED_CONTENT_KEY(builder, WRAPPED_CONTENT_KEY)
+        if self.WRAPPED_CONTENT_KEY_HEADER is not None:
+            LGRAddWRAPPED_CONTENT_KEY_HEADER(builder, WRAPPED_CONTENT_KEY_HEADER)
+        if self.WRAPPED_CONTENT_KEY_PAYLOAD is not None:
+            LGRAddWRAPPED_CONTENT_KEY_PAYLOAD(builder, WRAPPED_CONTENT_KEY_PAYLOAD)
         if self.GRANT_VERIFIER_PUBKEY is not None:
             LGRAddGRANT_VERIFIER_PUBKEY(builder, GRANT_VERIFIER_PUBKEY)
         if self.PROVIDER_SIGNATURE is not None:

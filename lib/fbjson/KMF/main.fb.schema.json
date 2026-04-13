@@ -180,7 +180,7 @@
             "minimum": 0,
             "maximum": 255
           },
-          "description": "Explicit key bytes when a module must receive them on a port.",
+          "description": "Explicit key bytes when a module must receive them on a port.\nThis may be field-encrypted using the SDS/da-flatbuffers header-first\nencryption flow when transported to a specific recipient.",
           "x-flatbuffer-type": "[ubyte]"
         },
         "VERSION": {

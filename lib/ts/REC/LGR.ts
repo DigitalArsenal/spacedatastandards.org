@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { LWK, LWKT } from './LWK.js';
+import { ENC, ENCT } from './ENC.js';
 import { PLG, PLGT } from './PLG.js';
 import { licensingGrantMessageType } from './licensingGrantMessageType.js';
 
@@ -193,28 +193,48 @@ MODULE_DESCRIPTOR(obj?:PLG):PLG|null {
 }
 
 /**
- * Wrapped module content key
+ * Encryption header for the recipient-specific wrapped content-key payload.
  */
-WRAPPED_CONTENT_KEY(obj?:LWK):LWK|null {
+WRAPPED_CONTENT_KEY_HEADER(obj?:ENC):ENC|null {
   const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? (obj || new LWK()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+  return offset ? (obj || new ENC()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Encrypted FlatBuffer payload containing the recipient-specific content key
+ * material. The payload currently uses `$KMF` semantics and is decrypted
+ * using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+ */
+WRAPPED_CONTENT_KEY_PAYLOAD(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+wrappedContentKeyPayloadLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+wrappedContentKeyPayloadArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
 /**
  * Provider public key used to verify the grant signature
  */
 GRANT_VERIFIER_PUBKEY(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 38);
+  const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
 }
 
 grantVerifierPubkeyLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 38);
+  const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 grantVerifierPubkeyArray():Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 38);
+  const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
@@ -222,22 +242,22 @@ grantVerifierPubkeyArray():Uint8Array|null {
  * Provider signature over the grant
  */
 PROVIDER_SIGNATURE(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 40);
+  const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
 }
 
 providerSignatureLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 40);
+  const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 providerSignatureArray():Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 40);
+  const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
 static startLGR(builder:flatbuffers.Builder) {
-  builder.startObject(19);
+  builder.startObject(20);
 }
 
 static addMessageType(builder:flatbuffers.Builder, MESSAGE_TYPE:licensingGrantMessageType) {
@@ -316,12 +336,28 @@ static addModuleDescriptor(builder:flatbuffers.Builder, MODULE_DESCRIPTOROffset:
   builder.addFieldOffset(15, MODULE_DESCRIPTOROffset, 0);
 }
 
-static addWrappedContentKey(builder:flatbuffers.Builder, WRAPPED_CONTENT_KEYOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(16, WRAPPED_CONTENT_KEYOffset, 0);
+static addWrappedContentKeyHeader(builder:flatbuffers.Builder, WRAPPED_CONTENT_KEY_HEADEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, WRAPPED_CONTENT_KEY_HEADEROffset, 0);
+}
+
+static addWrappedContentKeyPayload(builder:flatbuffers.Builder, WRAPPED_CONTENT_KEY_PAYLOADOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, WRAPPED_CONTENT_KEY_PAYLOADOffset, 0);
+}
+
+static createWrappedContentKeyPayloadVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startWrappedContentKeyPayloadVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
 }
 
 static addGrantVerifierPubkey(builder:flatbuffers.Builder, GRANT_VERIFIER_PUBKEYOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(17, GRANT_VERIFIER_PUBKEYOffset, 0);
+  builder.addFieldOffset(18, GRANT_VERIFIER_PUBKEYOffset, 0);
 }
 
 static createGrantVerifierPubkeyVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
@@ -337,7 +373,7 @@ static startGrantVerifierPubkeyVector(builder:flatbuffers.Builder, numElems:numb
 }
 
 static addProviderSignature(builder:flatbuffers.Builder, PROVIDER_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(18, PROVIDER_SIGNATUREOffset, 0);
+  builder.addFieldOffset(19, PROVIDER_SIGNATUREOffset, 0);
 }
 
 static createProviderSignatureVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
@@ -386,7 +422,8 @@ unpack(): LGRT {
     this.DENIAL_REASON(),
     this.bb!.createScalarList<number>(this.CAPABILITY_TOKEN.bind(this), this.capabilityTokenLength()),
     (this.MODULE_DESCRIPTOR() !== null ? this.MODULE_DESCRIPTOR()!.unpack() : null),
-    (this.WRAPPED_CONTENT_KEY() !== null ? this.WRAPPED_CONTENT_KEY()!.unpack() : null),
+    (this.WRAPPED_CONTENT_KEY_HEADER() !== null ? this.WRAPPED_CONTENT_KEY_HEADER()!.unpack() : null),
+    this.bb!.createScalarList<number>(this.WRAPPED_CONTENT_KEY_PAYLOAD.bind(this), this.wrappedContentKeyPayloadLength()),
     this.bb!.createScalarList<number>(this.GRANT_VERIFIER_PUBKEY.bind(this), this.grantVerifierPubkeyLength()),
     this.bb!.createScalarList<number>(this.PROVIDER_SIGNATURE.bind(this), this.providerSignatureLength())
   );
@@ -410,7 +447,8 @@ unpackTo(_o: LGRT): void {
   _o.DENIAL_REASON = this.DENIAL_REASON();
   _o.CAPABILITY_TOKEN = this.bb!.createScalarList<number>(this.CAPABILITY_TOKEN.bind(this), this.capabilityTokenLength());
   _o.MODULE_DESCRIPTOR = (this.MODULE_DESCRIPTOR() !== null ? this.MODULE_DESCRIPTOR()!.unpack() : null);
-  _o.WRAPPED_CONTENT_KEY = (this.WRAPPED_CONTENT_KEY() !== null ? this.WRAPPED_CONTENT_KEY()!.unpack() : null);
+  _o.WRAPPED_CONTENT_KEY_HEADER = (this.WRAPPED_CONTENT_KEY_HEADER() !== null ? this.WRAPPED_CONTENT_KEY_HEADER()!.unpack() : null);
+  _o.WRAPPED_CONTENT_KEY_PAYLOAD = this.bb!.createScalarList<number>(this.WRAPPED_CONTENT_KEY_PAYLOAD.bind(this), this.wrappedContentKeyPayloadLength());
   _o.GRANT_VERIFIER_PUBKEY = this.bb!.createScalarList<number>(this.GRANT_VERIFIER_PUBKEY.bind(this), this.grantVerifierPubkeyLength());
   _o.PROVIDER_SIGNATURE = this.bb!.createScalarList<number>(this.PROVIDER_SIGNATURE.bind(this), this.providerSignatureLength());
 }
@@ -434,7 +472,8 @@ constructor(
   public DENIAL_REASON: string|Uint8Array|null = null,
   public CAPABILITY_TOKEN: (number)[] = [],
   public MODULE_DESCRIPTOR: PLGT|null = null,
-  public WRAPPED_CONTENT_KEY: LWKT|null = null,
+  public WRAPPED_CONTENT_KEY_HEADER: ENCT|null = null,
+  public WRAPPED_CONTENT_KEY_PAYLOAD: (number)[] = [],
   public GRANT_VERIFIER_PUBKEY: (number)[] = [],
   public PROVIDER_SIGNATURE: (number)[] = []
 ){}
@@ -453,7 +492,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const DENIAL_REASON = (this.DENIAL_REASON !== null ? builder.createString(this.DENIAL_REASON!) : 0);
   const CAPABILITY_TOKEN = LGR.createCapabilityTokenVector(builder, this.CAPABILITY_TOKEN);
   const MODULE_DESCRIPTOR = (this.MODULE_DESCRIPTOR !== null ? this.MODULE_DESCRIPTOR!.pack(builder) : 0);
-  const WRAPPED_CONTENT_KEY = (this.WRAPPED_CONTENT_KEY !== null ? this.WRAPPED_CONTENT_KEY!.pack(builder) : 0);
+  const WRAPPED_CONTENT_KEY_HEADER = (this.WRAPPED_CONTENT_KEY_HEADER !== null ? this.WRAPPED_CONTENT_KEY_HEADER!.pack(builder) : 0);
+  const WRAPPED_CONTENT_KEY_PAYLOAD = LGR.createWrappedContentKeyPayloadVector(builder, this.WRAPPED_CONTENT_KEY_PAYLOAD);
   const GRANT_VERIFIER_PUBKEY = LGR.createGrantVerifierPubkeyVector(builder, this.GRANT_VERIFIER_PUBKEY);
   const PROVIDER_SIGNATURE = LGR.createProviderSignatureVector(builder, this.PROVIDER_SIGNATURE);
 
@@ -474,7 +514,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   LGR.addDenialReason(builder, DENIAL_REASON);
   LGR.addCapabilityToken(builder, CAPABILITY_TOKEN);
   LGR.addModuleDescriptor(builder, MODULE_DESCRIPTOR);
-  LGR.addWrappedContentKey(builder, WRAPPED_CONTENT_KEY);
+  LGR.addWrappedContentKeyHeader(builder, WRAPPED_CONTENT_KEY_HEADER);
+  LGR.addWrappedContentKeyPayload(builder, WRAPPED_CONTENT_KEY_PAYLOAD);
   LGR.addGrantVerifierPubkey(builder, GRANT_VERIFIER_PUBKEY);
   LGR.addProviderSignature(builder, PROVIDER_SIGNATURE);
 

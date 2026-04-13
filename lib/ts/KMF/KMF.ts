@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { FlatbuffersEncryption } from './flatbuffers-encryption.js';
 import { keyMaterialAlgorithm } from './keyMaterialAlgorithm.js';
 import { keyMaterialEncoding } from './keyMaterialEncoding.js';
 import { keyMaterialRole } from './keyMaterialRole.js';
@@ -15,19 +16,21 @@ import { keyMaterialRole } from './keyMaterialRole.js';
 export class KMF implements flatbuffers.IUnpackableObject<KMFT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
-  __init(i:number, bb:flatbuffers.ByteBuffer):KMF {
+  encryptionCtx: Uint8Array|null = null;
+  __init(i:number, bb:flatbuffers.ByteBuffer, encryptionCtx?: Uint8Array):KMF {
   this.bb_pos = i;
   this.bb = bb;
+  this.encryptionCtx = encryptionCtx || null;
   return this;
 }
 
-static getRootAsKMF(bb:flatbuffers.ByteBuffer, obj?:KMF):KMF {
-  return (obj || new KMF()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+static getRootAsKMF(bb:flatbuffers.ByteBuffer, obj?:KMF, encryptionCtx?: Uint8Array):KMF {
+  return (obj || new KMF()).__init(bb.readInt32(bb.position()) + bb.position(), bb, encryptionCtx);
 }
 
-static getSizePrefixedRootAsKMF(bb:flatbuffers.ByteBuffer, obj?:KMF):KMF {
+static getSizePrefixedRootAsKMF(bb:flatbuffers.ByteBuffer, obj?:KMF, encryptionCtx?: Uint8Array):KMF {
   bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-  return (obj || new KMF()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+  return (obj || new KMF()).__init(bb.readInt32(bb.position()) + bb.position(), bb, encryptionCtx);
 }
 
 static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
@@ -70,6 +73,8 @@ ENCODING():keyMaterialEncoding {
 
 /**
  * Explicit key bytes when a module must receive them on a port.
+ * This may be field-encrypted using the SDS/da-flatbuffers header-first
+ * encryption flow when transported to a specific recipient.
  */
 KEY_BYTES(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);

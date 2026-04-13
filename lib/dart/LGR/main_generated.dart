@@ -6,161 +6,218 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-///  Wrapped content-key envelope algorithm
-enum licensingWrappedKeyAlgorithm {
-  X25519_HKDF_SHA256_AES_256_GCM(0);
+///  Encryption Header for FlatBuffers field-level encryption
+///  Key exchange algorithm used to derive the shared secret
+enum KeyExchange {
+  X25519(0),
+  Secp256k1(1),
+  P256(2);
 
   final int value;
-  const licensingWrappedKeyAlgorithm(this.value);
+  const KeyExchange(this.value);
 
-  factory licensingWrappedKeyAlgorithm.fromValue(int value) {
+  factory KeyExchange.fromValue(int value) {
     switch (value) {
-      case 0: return licensingWrappedKeyAlgorithm.X25519_HKDF_SHA256_AES_256_GCM;
+      case 0: return KeyExchange.X25519;
+      case 1: return KeyExchange.Secp256k1;
+      case 2: return KeyExchange.P256;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static licensingWrappedKeyAlgorithm? _createOrNull(int? value) =>
-      value == null ? null : licensingWrappedKeyAlgorithm.fromValue(value);
+  static KeyExchange? _createOrNull(int? value) =>
+      value == null ? null : KeyExchange.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 0;
-  static const fb.Reader<licensingWrappedKeyAlgorithm> reader = _licensingWrappedKeyAlgorithmReader();
+  static const int maxValue = 2;
+  static const fb.Reader<KeyExchange> reader = _KeyExchangeReader();
 }
 
-class _licensingWrappedKeyAlgorithmReader extends fb.Reader<licensingWrappedKeyAlgorithm> {
-  const _licensingWrappedKeyAlgorithmReader();
+class _KeyExchangeReader extends fb.Reader<KeyExchange> {
+  const _KeyExchangeReader();
 
   @override
   int get size => 1;
 
   @override
-  licensingWrappedKeyAlgorithm read(fb.BufferContext bc, int offset) =>
-      licensingWrappedKeyAlgorithm.fromValue(const fb.Int8Reader().read(bc, offset));
+  KeyExchange read(fb.BufferContext bc, int offset) =>
+      KeyExchange.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Wrapped module content key
-class LWK {
-  LWK._(this._bc, this._bcOffset);
-  factory LWK(List<int> bytes) {
+///  Symmetric encryption algorithm
+enum SymmetricAlgo {
+  AES_256_CTR(0);
+
+  final int value;
+  const SymmetricAlgo(this.value);
+
+  factory SymmetricAlgo.fromValue(int value) {
+    switch (value) {
+      case 0: return SymmetricAlgo.AES_256_CTR;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static SymmetricAlgo? _createOrNull(int? value) =>
+      value == null ? null : SymmetricAlgo.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 0;
+  static const fb.Reader<SymmetricAlgo> reader = _SymmetricAlgoReader();
+}
+
+class _SymmetricAlgoReader extends fb.Reader<SymmetricAlgo> {
+  const _SymmetricAlgoReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  SymmetricAlgo read(fb.BufferContext bc, int offset) =>
+      SymmetricAlgo.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Key derivation function
+enum KDF {
+  HKDF_SHA256(0);
+
+  final int value;
+  const KDF(this.value);
+
+  factory KDF.fromValue(int value) {
+    switch (value) {
+      case 0: return KDF.HKDF_SHA256;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static KDF? _createOrNull(int? value) =>
+      value == null ? null : KDF.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 0;
+  static const fb.Reader<KDF> reader = _KDFReader();
+}
+
+class _KDFReader extends fb.Reader<KDF> {
+  const _KDFReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  KDF read(fb.BufferContext bc, int offset) =>
+      KDF.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Encryption Header containing all parameters needed for decryption
+class ENC {
+  ENC._(this._bc, this._bcOffset);
+  factory ENC(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<LWK> reader = _LWKReader();
+  static const fb.Reader<ENC> reader = _ENCReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Unique request identifier
-  String? get REQUEST_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get requestId => REQUEST_ID;
-  ///  Canonical module identifier
-  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get moduleId => MODULE_ID;
-  ///  Optional module version
-  String? get MODULE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get moduleVersion => MODULE_VERSION;
-  ///  Provider-local content key identifier
-  String? get CONTENT_KEY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get contentKeyId => CONTENT_KEY_ID;
-  ///  Recipient key identifier or fingerprint
-  String? get RECIPIENT_KEY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get recipientKeyId => RECIPIENT_KEY_ID;
-  ///  Wrapped-key algorithm
-  licensingWrappedKeyAlgorithm get ALGORITHM => licensingWrappedKeyAlgorithm.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
-  ///  Requester ephemeral X25519 public key
-  List<int>? get REQUESTER_EPHEMERAL_PUBKEY => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
-  List<int>? get requesterEphemeralPubkey => REQUESTER_EPHEMERAL_PUBKEY;
-  ///  Provider ephemeral X25519 public key
-  List<int>? get PROVIDER_EPHEMERAL_PUBKEY => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 18);
-  List<int>? get providerEphemeralPubkey => PROVIDER_EPHEMERAL_PUBKEY;
-  ///  HKDF salt
-  List<int>? get HKDF_SALT => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 20);
-  List<int>? get hkdfSalt => HKDF_SALT;
-  ///  AES-GCM IV
-  List<int>? get IV => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 22);
-  ///  Wrapped key ciphertext
-  List<int>? get CIPHERTEXT => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 24);
-  ///  AES-GCM authentication tag
-  List<int>? get TAG => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 26);
-  ///  Envelope expiration time in milliseconds since epoch
-  int get EXPIRES_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 28, 0);
-  int get expiresAt => EXPIRES_AT;
+  ///  Schema version for forward compatibility
+  int get VERSION => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 1);
+  ///  Key exchange algorithm used
+  KeyExchange get KEY_EXCHANGE => KeyExchange.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  KeyExchange get keyExchange => KEY_EXCHANGE;
+  ///  Symmetric encryption algorithm used
+  SymmetricAlgo get SYMMETRIC => SymmetricAlgo.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  ///  Key derivation function used
+  KDF get KEY_DERIVATION => KDF.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  KDF get keyDerivation => KEY_DERIVATION;
+  ///  Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
+  List<int>? get EPHEMERAL_PUBLIC_KEY => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
+  List<int>? get ephemeralPublicKey => EPHEMERAL_PUBLIC_KEY;
+  ///  Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+  List<int>? get NONCE_START => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 14);
+  List<int>? get nonceStart => NONCE_START;
+  ///  Optional identifier for the recipient's public key (up to 32 bytes)
+  List<int>? get RECIPIENT_KEY_ID => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
+  List<int>? get recipientKeyId => RECIPIENT_KEY_ID;
+  ///  Optional domain separation context string
+  String? get CONTEXT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
+  List<int>? get SCHEMA_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 20);
+  List<int>? get schemaHash => SCHEMA_HASH;
+  ///  Optional root type name from the schema
+  String? get ROOT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get rootType => ROOT_TYPE;
+  ///  Optional Unix timestamp (milliseconds) when encryption was performed
+  int get TIMESTAMP => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 24, 0);
 
   @override
   String toString() {
-    return 'LWK{requestId: ${requestId}, moduleId: ${moduleId}, moduleVersion: ${moduleVersion}, contentKeyId: ${contentKeyId}, recipientKeyId: ${recipientKeyId}, ALGORITHM: ${ALGORITHM}, requesterEphemeralPubkey: ${requesterEphemeralPubkey}, providerEphemeralPubkey: ${providerEphemeralPubkey}, hkdfSalt: ${hkdfSalt}, IV: ${IV}, CIPHERTEXT: ${CIPHERTEXT}, TAG: ${TAG}, expiresAt: ${expiresAt}}';
+    return 'ENC{VERSION: ${VERSION}, keyExchange: ${keyExchange}, SYMMETRIC: ${SYMMETRIC}, keyDerivation: ${keyDerivation}, ephemeralPublicKey: ${ephemeralPublicKey}, nonceStart: ${nonceStart}, recipientKeyId: ${recipientKeyId}, CONTEXT: ${CONTEXT}, schemaHash: ${schemaHash}, rootType: ${rootType}, TIMESTAMP: ${TIMESTAMP}}';
   }
 }
 
-class _LWKReader extends fb.TableReader<LWK> {
-  const _LWKReader();
+class _ENCReader extends fb.TableReader<ENC> {
+  const _ENCReader();
 
   @override
-  LWK createObject(fb.BufferContext bc, int offset) => 
-    LWK._(bc, offset);
+  ENC createObject(fb.BufferContext bc, int offset) => 
+    ENC._(bc, offset);
 }
 
-class LWKBuilder {
-  LWKBuilder(this.fbBuilder);
+class ENCBuilder {
+  ENCBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(11);
   }
 
-  int addRequestIdOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addVersion(int? VERSION) {
+    fbBuilder.addUint8(0, VERSION);
     return fbBuilder.offset;
   }
-  int addModuleIdOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addKeyExchange(KeyExchange? KEY_EXCHANGE) {
+    fbBuilder.addInt8(1, KEY_EXCHANGE?.value);
     return fbBuilder.offset;
   }
-  int addModuleVersionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+  int addSymmetric(SymmetricAlgo? SYMMETRIC) {
+    fbBuilder.addInt8(2, SYMMETRIC?.value);
     return fbBuilder.offset;
   }
-  int addContentKeyIdOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addKeyDerivation(KDF? KEY_DERIVATION) {
+    fbBuilder.addInt8(3, KEY_DERIVATION?.value);
     return fbBuilder.offset;
   }
-  int addRecipientKeyIdOffset(int? offset) {
+  int addEphemeralPublicKeyOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addAlgorithm(licensingWrappedKeyAlgorithm? ALGORITHM) {
-    fbBuilder.addInt8(5, ALGORITHM?.value);
+  int addNonceStartOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addRequesterEphemeralPubkeyOffset(int? offset) {
+  int addRecipientKeyIdOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addProviderEphemeralPubkeyOffset(int? offset) {
+  int addContextOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addHkdfSaltOffset(int? offset) {
+  int addSchemaHashOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addIvOffset(int? offset) {
+  int addRootTypeOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addCiphertextOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-  int addTagOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
-    return fbBuilder.offset;
-  }
-  int addExpiresAt(int? EXPIRES_AT) {
-    fbBuilder.addUint64(12, EXPIRES_AT);
+  int addTimestamp(int? TIMESTAMP) {
+    fbBuilder.addUint64(10, TIMESTAMP);
     return fbBuilder.offset;
   }
 
@@ -169,98 +226,78 @@ class LWKBuilder {
   }
 }
 
-class LWKObjectBuilder extends fb.ObjectBuilder {
-  final String? _REQUEST_ID;
-  final String? _MODULE_ID;
-  final String? _MODULE_VERSION;
-  final String? _CONTENT_KEY_ID;
-  final String? _RECIPIENT_KEY_ID;
-  final licensingWrappedKeyAlgorithm? _ALGORITHM;
-  final List<int>? _REQUESTER_EPHEMERAL_PUBKEY;
-  final List<int>? _PROVIDER_EPHEMERAL_PUBKEY;
-  final List<int>? _HKDF_SALT;
-  final List<int>? _IV;
-  final List<int>? _CIPHERTEXT;
-  final List<int>? _TAG;
-  final int? _EXPIRES_AT;
+class ENCObjectBuilder extends fb.ObjectBuilder {
+  final int? _VERSION;
+  final KeyExchange? _KEY_EXCHANGE;
+  final SymmetricAlgo? _SYMMETRIC;
+  final KDF? _KEY_DERIVATION;
+  final List<int>? _EPHEMERAL_PUBLIC_KEY;
+  final List<int>? _NONCE_START;
+  final List<int>? _RECIPIENT_KEY_ID;
+  final String? _CONTEXT;
+  final List<int>? _SCHEMA_HASH;
+  final String? _ROOT_TYPE;
+  final int? _TIMESTAMP;
 
-  LWKObjectBuilder({
-    String? REQUEST_ID,
-    String? requestId,
-    String? MODULE_ID,
-    String? moduleId,
-    String? MODULE_VERSION,
-    String? moduleVersion,
-    String? CONTENT_KEY_ID,
-    String? contentKeyId,
-    String? RECIPIENT_KEY_ID,
-    String? recipientKeyId,
-    licensingWrappedKeyAlgorithm? ALGORITHM,
-    List<int>? REQUESTER_EPHEMERAL_PUBKEY,
-    List<int>? requesterEphemeralPubkey,
-    List<int>? PROVIDER_EPHEMERAL_PUBKEY,
-    List<int>? providerEphemeralPubkey,
-    List<int>? HKDF_SALT,
-    List<int>? hkdfSalt,
-    List<int>? IV,
-    List<int>? CIPHERTEXT,
-    List<int>? TAG,
-    int? EXPIRES_AT,
-    int? expiresAt,
+  ENCObjectBuilder({
+    int? VERSION,
+    KeyExchange? KEY_EXCHANGE,
+    KeyExchange? keyExchange,
+    SymmetricAlgo? SYMMETRIC,
+    KDF? KEY_DERIVATION,
+    KDF? keyDerivation,
+    List<int>? EPHEMERAL_PUBLIC_KEY,
+    List<int>? ephemeralPublicKey,
+    List<int>? NONCE_START,
+    List<int>? nonceStart,
+    List<int>? RECIPIENT_KEY_ID,
+    List<int>? recipientKeyId,
+    String? CONTEXT,
+    List<int>? SCHEMA_HASH,
+    List<int>? schemaHash,
+    String? ROOT_TYPE,
+    String? rootType,
+    int? TIMESTAMP,
   })
-      : _REQUEST_ID = requestId ?? REQUEST_ID,
-        _MODULE_ID = moduleId ?? MODULE_ID,
-        _MODULE_VERSION = moduleVersion ?? MODULE_VERSION,
-        _CONTENT_KEY_ID = contentKeyId ?? CONTENT_KEY_ID,
+      : _VERSION = VERSION,
+        _KEY_EXCHANGE = keyExchange ?? KEY_EXCHANGE,
+        _SYMMETRIC = SYMMETRIC,
+        _KEY_DERIVATION = keyDerivation ?? KEY_DERIVATION,
+        _EPHEMERAL_PUBLIC_KEY = ephemeralPublicKey ?? EPHEMERAL_PUBLIC_KEY,
+        _NONCE_START = nonceStart ?? NONCE_START,
         _RECIPIENT_KEY_ID = recipientKeyId ?? RECIPIENT_KEY_ID,
-        _ALGORITHM = ALGORITHM,
-        _REQUESTER_EPHEMERAL_PUBKEY = requesterEphemeralPubkey ?? REQUESTER_EPHEMERAL_PUBKEY,
-        _PROVIDER_EPHEMERAL_PUBKEY = providerEphemeralPubkey ?? PROVIDER_EPHEMERAL_PUBKEY,
-        _HKDF_SALT = hkdfSalt ?? HKDF_SALT,
-        _IV = IV,
-        _CIPHERTEXT = CIPHERTEXT,
-        _TAG = TAG,
-        _EXPIRES_AT = expiresAt ?? EXPIRES_AT;
+        _CONTEXT = CONTEXT,
+        _SCHEMA_HASH = schemaHash ?? SCHEMA_HASH,
+        _ROOT_TYPE = rootType ?? ROOT_TYPE,
+        _TIMESTAMP = TIMESTAMP;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? REQUEST_IDOffset = _REQUEST_ID == null ? null
-        : fbBuilder.writeString(_REQUEST_ID!);
-    final int? MODULE_IDOffset = _MODULE_ID == null ? null
-        : fbBuilder.writeString(_MODULE_ID!);
-    final int? MODULE_VERSIONOffset = _MODULE_VERSION == null ? null
-        : fbBuilder.writeString(_MODULE_VERSION!);
-    final int? CONTENT_KEY_IDOffset = _CONTENT_KEY_ID == null ? null
-        : fbBuilder.writeString(_CONTENT_KEY_ID!);
+    final int? EPHEMERAL_PUBLIC_KEYOffset = _EPHEMERAL_PUBLIC_KEY == null ? null
+        : fbBuilder.writeListUint8(_EPHEMERAL_PUBLIC_KEY!);
+    final int? NONCE_STARTOffset = _NONCE_START == null ? null
+        : fbBuilder.writeListUint8(_NONCE_START!);
     final int? RECIPIENT_KEY_IDOffset = _RECIPIENT_KEY_ID == null ? null
-        : fbBuilder.writeString(_RECIPIENT_KEY_ID!);
-    final int? REQUESTER_EPHEMERAL_PUBKEYOffset = _REQUESTER_EPHEMERAL_PUBKEY == null ? null
-        : fbBuilder.writeListUint8(_REQUESTER_EPHEMERAL_PUBKEY!);
-    final int? PROVIDER_EPHEMERAL_PUBKEYOffset = _PROVIDER_EPHEMERAL_PUBKEY == null ? null
-        : fbBuilder.writeListUint8(_PROVIDER_EPHEMERAL_PUBKEY!);
-    final int? HKDF_SALTOffset = _HKDF_SALT == null ? null
-        : fbBuilder.writeListUint8(_HKDF_SALT!);
-    final int? IVOffset = _IV == null ? null
-        : fbBuilder.writeListUint8(_IV!);
-    final int? CIPHERTEXTOffset = _CIPHERTEXT == null ? null
-        : fbBuilder.writeListUint8(_CIPHERTEXT!);
-    final int? TAGOffset = _TAG == null ? null
-        : fbBuilder.writeListUint8(_TAG!);
-    fbBuilder.startTable(13);
-    fbBuilder.addOffset(0, REQUEST_IDOffset);
-    fbBuilder.addOffset(1, MODULE_IDOffset);
-    fbBuilder.addOffset(2, MODULE_VERSIONOffset);
-    fbBuilder.addOffset(3, CONTENT_KEY_IDOffset);
-    fbBuilder.addOffset(4, RECIPIENT_KEY_IDOffset);
-    fbBuilder.addInt8(5, _ALGORITHM?.value);
-    fbBuilder.addOffset(6, REQUESTER_EPHEMERAL_PUBKEYOffset);
-    fbBuilder.addOffset(7, PROVIDER_EPHEMERAL_PUBKEYOffset);
-    fbBuilder.addOffset(8, HKDF_SALTOffset);
-    fbBuilder.addOffset(9, IVOffset);
-    fbBuilder.addOffset(10, CIPHERTEXTOffset);
-    fbBuilder.addOffset(11, TAGOffset);
-    fbBuilder.addUint64(12, _EXPIRES_AT);
+        : fbBuilder.writeListUint8(_RECIPIENT_KEY_ID!);
+    final int? CONTEXTOffset = _CONTEXT == null ? null
+        : fbBuilder.writeString(_CONTEXT!);
+    final int? SCHEMA_HASHOffset = _SCHEMA_HASH == null ? null
+        : fbBuilder.writeListUint8(_SCHEMA_HASH!);
+    final int? ROOT_TYPEOffset = _ROOT_TYPE == null ? null
+        : fbBuilder.writeString(_ROOT_TYPE!);
+    fbBuilder.startTable(11);
+    fbBuilder.addUint8(0, _VERSION);
+    fbBuilder.addInt8(1, _KEY_EXCHANGE?.value);
+    fbBuilder.addInt8(2, _SYMMETRIC?.value);
+    fbBuilder.addInt8(3, _KEY_DERIVATION?.value);
+    fbBuilder.addOffset(4, EPHEMERAL_PUBLIC_KEYOffset);
+    fbBuilder.addOffset(5, NONCE_STARTOffset);
+    fbBuilder.addOffset(6, RECIPIENT_KEY_IDOffset);
+    fbBuilder.addOffset(7, CONTEXTOffset);
+    fbBuilder.addOffset(8, SCHEMA_HASHOffset);
+    fbBuilder.addOffset(9, ROOT_TYPEOffset);
+    fbBuilder.addUint64(10, _TIMESTAMP);
     return fbBuilder.endTable();
   }
 

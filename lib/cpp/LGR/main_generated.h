@@ -13,313 +13,340 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-struct LWK;
-struct LWKBuilder;
+struct ENC;
+struct ENCBuilder;
 
-/// Wrapped content-key envelope algorithm
-enum licensingWrappedKeyAlgorithm : int8_t {
-  licensingWrappedKeyAlgorithm_X25519_HKDF_SHA256_AES_256_GCM = 0,
-  licensingWrappedKeyAlgorithm_MIN = licensingWrappedKeyAlgorithm_X25519_HKDF_SHA256_AES_256_GCM,
-  licensingWrappedKeyAlgorithm_MAX = licensingWrappedKeyAlgorithm_X25519_HKDF_SHA256_AES_256_GCM
+/// Encryption Header for FlatBuffers field-level encryption
+/// Key exchange algorithm used to derive the shared secret
+enum KeyExchange : int8_t {
+  KeyExchange_X25519 = 0,
+  KeyExchange_Secp256k1 = 1,
+  KeyExchange_P256 = 2,
+  KeyExchange_MIN = KeyExchange_X25519,
+  KeyExchange_MAX = KeyExchange_P256
 };
 
-inline const licensingWrappedKeyAlgorithm (&EnumValueslicensingWrappedKeyAlgorithm())[1] {
-  static const licensingWrappedKeyAlgorithm values[] = {
-    licensingWrappedKeyAlgorithm_X25519_HKDF_SHA256_AES_256_GCM
+inline const KeyExchange (&EnumValuesKeyExchange())[3] {
+  static const KeyExchange values[] = {
+    KeyExchange_X25519,
+    KeyExchange_Secp256k1,
+    KeyExchange_P256
   };
   return values;
 }
 
-inline const char * const *EnumNameslicensingWrappedKeyAlgorithm() {
-  static const char * const names[2] = {
-    "X25519_HKDF_SHA256_AES_256_GCM",
+inline const char * const *EnumNamesKeyExchange() {
+  static const char * const names[4] = {
+    "X25519",
+    "Secp256k1",
+    "P256",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNamelicensingWrappedKeyAlgorithm(licensingWrappedKeyAlgorithm e) {
-  if (::flatbuffers::IsOutRange(e, licensingWrappedKeyAlgorithm_X25519_HKDF_SHA256_AES_256_GCM, licensingWrappedKeyAlgorithm_X25519_HKDF_SHA256_AES_256_GCM)) return "";
+inline const char *EnumNameKeyExchange(KeyExchange e) {
+  if (::flatbuffers::IsOutRange(e, KeyExchange_X25519, KeyExchange_P256)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNameslicensingWrappedKeyAlgorithm()[index];
+  return EnumNamesKeyExchange()[index];
 }
 
-/// Wrapped module content key
-struct LWK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef LWKBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_REQUEST_ID = 4,
-    VT_MODULE_ID = 6,
-    VT_MODULE_VERSION = 8,
-    VT_CONTENT_KEY_ID = 10,
-    VT_RECIPIENT_KEY_ID = 12,
-    VT_ALGORITHM = 14,
-    VT_REQUESTER_EPHEMERAL_PUBKEY = 16,
-    VT_PROVIDER_EPHEMERAL_PUBKEY = 18,
-    VT_HKDF_SALT = 20,
-    VT_IV = 22,
-    VT_CIPHERTEXT = 24,
-    VT_TAG = 26,
-    VT_EXPIRES_AT = 28
+/// Symmetric encryption algorithm
+enum SymmetricAlgo : int8_t {
+  SymmetricAlgo_AES_256_CTR = 0,
+  SymmetricAlgo_MIN = SymmetricAlgo_AES_256_CTR,
+  SymmetricAlgo_MAX = SymmetricAlgo_AES_256_CTR
+};
+
+inline const SymmetricAlgo (&EnumValuesSymmetricAlgo())[1] {
+  static const SymmetricAlgo values[] = {
+    SymmetricAlgo_AES_256_CTR
   };
-  /// Unique request identifier
-  const ::flatbuffers::String *REQUEST_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_REQUEST_ID);
+  return values;
+}
+
+inline const char * const *EnumNamesSymmetricAlgo() {
+  static const char * const names[2] = {
+    "AES_256_CTR",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameSymmetricAlgo(SymmetricAlgo e) {
+  if (::flatbuffers::IsOutRange(e, SymmetricAlgo_AES_256_CTR, SymmetricAlgo_AES_256_CTR)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesSymmetricAlgo()[index];
+}
+
+/// Key derivation function
+enum KDF : int8_t {
+  KDF_HKDF_SHA256 = 0,
+  KDF_MIN = KDF_HKDF_SHA256,
+  KDF_MAX = KDF_HKDF_SHA256
+};
+
+inline const KDF (&EnumValuesKDF())[1] {
+  static const KDF values[] = {
+    KDF_HKDF_SHA256
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesKDF() {
+  static const char * const names[2] = {
+    "HKDF_SHA256",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameKDF(KDF e) {
+  if (::flatbuffers::IsOutRange(e, KDF_HKDF_SHA256, KDF_HKDF_SHA256)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesKDF()[index];
+}
+
+/// Encryption Header containing all parameters needed for decryption
+struct ENC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ENCBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_VERSION = 4,
+    VT_KEY_EXCHANGE = 6,
+    VT_SYMMETRIC = 8,
+    VT_KEY_DERIVATION = 10,
+    VT_EPHEMERAL_PUBLIC_KEY = 12,
+    VT_NONCE_START = 14,
+    VT_RECIPIENT_KEY_ID = 16,
+    VT_CONTEXT = 18,
+    VT_SCHEMA_HASH = 20,
+    VT_ROOT_TYPE = 22,
+    VT_TIMESTAMP = 24
+  };
+  /// Schema version for forward compatibility
+  uint8_t VERSION() const {
+    return GetField<uint8_t>(VT_VERSION, 1);
   }
-  /// Canonical module identifier
-  const ::flatbuffers::String *MODULE_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_MODULE_ID);
+  /// Key exchange algorithm used
+  KeyExchange KEY_EXCHANGE() const {
+    return static_cast<KeyExchange>(GetField<int8_t>(VT_KEY_EXCHANGE, 0));
   }
-  /// Optional module version
-  const ::flatbuffers::String *MODULE_VERSION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_MODULE_VERSION);
+  /// Symmetric encryption algorithm used
+  SymmetricAlgo SYMMETRIC() const {
+    return static_cast<SymmetricAlgo>(GetField<int8_t>(VT_SYMMETRIC, 0));
   }
-  /// Provider-local content key identifier
-  const ::flatbuffers::String *CONTENT_KEY_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CONTENT_KEY_ID);
+  /// Key derivation function used
+  KDF KEY_DERIVATION() const {
+    return static_cast<KDF>(GetField<int8_t>(VT_KEY_DERIVATION, 0));
   }
-  /// Recipient key identifier or fingerprint
-  const ::flatbuffers::String *RECIPIENT_KEY_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RECIPIENT_KEY_ID);
+  /// Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
+  const ::flatbuffers::Vector<uint8_t> *EPHEMERAL_PUBLIC_KEY() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_EPHEMERAL_PUBLIC_KEY);
   }
-  /// Wrapped-key algorithm
-  licensingWrappedKeyAlgorithm ALGORITHM() const {
-    return static_cast<licensingWrappedKeyAlgorithm>(GetField<int8_t>(VT_ALGORITHM, 0));
+  /// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+  const ::flatbuffers::Vector<uint8_t> *NONCE_START() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_NONCE_START);
   }
-  /// Requester ephemeral X25519 public key
-  const ::flatbuffers::Vector<uint8_t> *REQUESTER_EPHEMERAL_PUBKEY() const {
-    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_REQUESTER_EPHEMERAL_PUBKEY);
+  /// Optional identifier for the recipient's public key (up to 32 bytes)
+  const ::flatbuffers::Vector<uint8_t> *RECIPIENT_KEY_ID() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_RECIPIENT_KEY_ID);
   }
-  /// Provider ephemeral X25519 public key
-  const ::flatbuffers::Vector<uint8_t> *PROVIDER_EPHEMERAL_PUBKEY() const {
-    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_PROVIDER_EPHEMERAL_PUBKEY);
+  /// Optional domain separation context string
+  const ::flatbuffers::String *CONTEXT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CONTEXT);
   }
-  /// HKDF salt
-  const ::flatbuffers::Vector<uint8_t> *HKDF_SALT() const {
-    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_HKDF_SALT);
+  /// Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
+  const ::flatbuffers::Vector<uint8_t> *SCHEMA_HASH() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_SCHEMA_HASH);
   }
-  /// AES-GCM IV
-  const ::flatbuffers::Vector<uint8_t> *IV() const {
-    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_IV);
+  /// Optional root type name from the schema
+  const ::flatbuffers::String *ROOT_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ROOT_TYPE);
   }
-  /// Wrapped key ciphertext
-  const ::flatbuffers::Vector<uint8_t> *CIPHERTEXT() const {
-    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_CIPHERTEXT);
-  }
-  /// AES-GCM authentication tag
-  const ::flatbuffers::Vector<uint8_t> *TAG() const {
-    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_TAG);
-  }
-  /// Envelope expiration time in milliseconds since epoch
-  uint64_t EXPIRES_AT() const {
-    return GetField<uint64_t>(VT_EXPIRES_AT, 0);
+  /// Optional Unix timestamp (milliseconds) when encryption was performed
+  uint64_t TIMESTAMP() const {
+    return GetField<uint64_t>(VT_TIMESTAMP, 0);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffsetRequired(verifier, VT_REQUEST_ID) &&
-           verifier.VerifyString(REQUEST_ID()) &&
-           VerifyOffsetRequired(verifier, VT_MODULE_ID) &&
-           verifier.VerifyString(MODULE_ID()) &&
-           VerifyOffset(verifier, VT_MODULE_VERSION) &&
-           verifier.VerifyString(MODULE_VERSION()) &&
-           VerifyOffset(verifier, VT_CONTENT_KEY_ID) &&
-           verifier.VerifyString(CONTENT_KEY_ID()) &&
+           VerifyField<uint8_t>(verifier, VT_VERSION, 1) &&
+           VerifyField<int8_t>(verifier, VT_KEY_EXCHANGE, 1) &&
+           VerifyField<int8_t>(verifier, VT_SYMMETRIC, 1) &&
+           VerifyField<int8_t>(verifier, VT_KEY_DERIVATION, 1) &&
+           VerifyOffsetRequired(verifier, VT_EPHEMERAL_PUBLIC_KEY) &&
+           verifier.VerifyVector(EPHEMERAL_PUBLIC_KEY()) &&
+           VerifyOffsetRequired(verifier, VT_NONCE_START) &&
+           verifier.VerifyVector(NONCE_START()) &&
            VerifyOffset(verifier, VT_RECIPIENT_KEY_ID) &&
-           verifier.VerifyString(RECIPIENT_KEY_ID()) &&
-           VerifyField<int8_t>(verifier, VT_ALGORITHM, 1) &&
-           VerifyOffset(verifier, VT_REQUESTER_EPHEMERAL_PUBKEY) &&
-           verifier.VerifyVector(REQUESTER_EPHEMERAL_PUBKEY()) &&
-           VerifyOffset(verifier, VT_PROVIDER_EPHEMERAL_PUBKEY) &&
-           verifier.VerifyVector(PROVIDER_EPHEMERAL_PUBKEY()) &&
-           VerifyOffset(verifier, VT_HKDF_SALT) &&
-           verifier.VerifyVector(HKDF_SALT()) &&
-           VerifyOffset(verifier, VT_IV) &&
-           verifier.VerifyVector(IV()) &&
-           VerifyOffset(verifier, VT_CIPHERTEXT) &&
-           verifier.VerifyVector(CIPHERTEXT()) &&
-           VerifyOffset(verifier, VT_TAG) &&
-           verifier.VerifyVector(TAG()) &&
-           VerifyField<uint64_t>(verifier, VT_EXPIRES_AT, 8) &&
+           verifier.VerifyVector(RECIPIENT_KEY_ID()) &&
+           VerifyOffset(verifier, VT_CONTEXT) &&
+           verifier.VerifyString(CONTEXT()) &&
+           VerifyOffset(verifier, VT_SCHEMA_HASH) &&
+           verifier.VerifyVector(SCHEMA_HASH()) &&
+           VerifyOffset(verifier, VT_ROOT_TYPE) &&
+           verifier.VerifyString(ROOT_TYPE()) &&
+           VerifyField<uint64_t>(verifier, VT_TIMESTAMP, 8) &&
            verifier.EndTable();
   }
 };
 
-struct LWKBuilder {
-  typedef LWK Table;
+struct ENCBuilder {
+  typedef ENC Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_REQUEST_ID(::flatbuffers::Offset<::flatbuffers::String> REQUEST_ID) {
-    fbb_.AddOffset(LWK::VT_REQUEST_ID, REQUEST_ID);
+  void add_VERSION(uint8_t VERSION) {
+    fbb_.AddElement<uint8_t>(ENC::VT_VERSION, VERSION, 1);
   }
-  void add_MODULE_ID(::flatbuffers::Offset<::flatbuffers::String> MODULE_ID) {
-    fbb_.AddOffset(LWK::VT_MODULE_ID, MODULE_ID);
+  void add_KEY_EXCHANGE(KeyExchange KEY_EXCHANGE) {
+    fbb_.AddElement<int8_t>(ENC::VT_KEY_EXCHANGE, static_cast<int8_t>(KEY_EXCHANGE), 0);
   }
-  void add_MODULE_VERSION(::flatbuffers::Offset<::flatbuffers::String> MODULE_VERSION) {
-    fbb_.AddOffset(LWK::VT_MODULE_VERSION, MODULE_VERSION);
+  void add_SYMMETRIC(SymmetricAlgo SYMMETRIC) {
+    fbb_.AddElement<int8_t>(ENC::VT_SYMMETRIC, static_cast<int8_t>(SYMMETRIC), 0);
   }
-  void add_CONTENT_KEY_ID(::flatbuffers::Offset<::flatbuffers::String> CONTENT_KEY_ID) {
-    fbb_.AddOffset(LWK::VT_CONTENT_KEY_ID, CONTENT_KEY_ID);
+  void add_KEY_DERIVATION(KDF KEY_DERIVATION) {
+    fbb_.AddElement<int8_t>(ENC::VT_KEY_DERIVATION, static_cast<int8_t>(KEY_DERIVATION), 0);
   }
-  void add_RECIPIENT_KEY_ID(::flatbuffers::Offset<::flatbuffers::String> RECIPIENT_KEY_ID) {
-    fbb_.AddOffset(LWK::VT_RECIPIENT_KEY_ID, RECIPIENT_KEY_ID);
+  void add_EPHEMERAL_PUBLIC_KEY(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> EPHEMERAL_PUBLIC_KEY) {
+    fbb_.AddOffset(ENC::VT_EPHEMERAL_PUBLIC_KEY, EPHEMERAL_PUBLIC_KEY);
   }
-  void add_ALGORITHM(licensingWrappedKeyAlgorithm ALGORITHM) {
-    fbb_.AddElement<int8_t>(LWK::VT_ALGORITHM, static_cast<int8_t>(ALGORITHM), 0);
+  void add_NONCE_START(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> NONCE_START) {
+    fbb_.AddOffset(ENC::VT_NONCE_START, NONCE_START);
   }
-  void add_REQUESTER_EPHEMERAL_PUBKEY(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> REQUESTER_EPHEMERAL_PUBKEY) {
-    fbb_.AddOffset(LWK::VT_REQUESTER_EPHEMERAL_PUBKEY, REQUESTER_EPHEMERAL_PUBKEY);
+  void add_RECIPIENT_KEY_ID(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> RECIPIENT_KEY_ID) {
+    fbb_.AddOffset(ENC::VT_RECIPIENT_KEY_ID, RECIPIENT_KEY_ID);
   }
-  void add_PROVIDER_EPHEMERAL_PUBKEY(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PROVIDER_EPHEMERAL_PUBKEY) {
-    fbb_.AddOffset(LWK::VT_PROVIDER_EPHEMERAL_PUBKEY, PROVIDER_EPHEMERAL_PUBKEY);
+  void add_CONTEXT(::flatbuffers::Offset<::flatbuffers::String> CONTEXT) {
+    fbb_.AddOffset(ENC::VT_CONTEXT, CONTEXT);
   }
-  void add_HKDF_SALT(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> HKDF_SALT) {
-    fbb_.AddOffset(LWK::VT_HKDF_SALT, HKDF_SALT);
+  void add_SCHEMA_HASH(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SCHEMA_HASH) {
+    fbb_.AddOffset(ENC::VT_SCHEMA_HASH, SCHEMA_HASH);
   }
-  void add_IV(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> IV) {
-    fbb_.AddOffset(LWK::VT_IV, IV);
+  void add_ROOT_TYPE(::flatbuffers::Offset<::flatbuffers::String> ROOT_TYPE) {
+    fbb_.AddOffset(ENC::VT_ROOT_TYPE, ROOT_TYPE);
   }
-  void add_CIPHERTEXT(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CIPHERTEXT) {
-    fbb_.AddOffset(LWK::VT_CIPHERTEXT, CIPHERTEXT);
+  void add_TIMESTAMP(uint64_t TIMESTAMP) {
+    fbb_.AddElement<uint64_t>(ENC::VT_TIMESTAMP, TIMESTAMP, 0);
   }
-  void add_TAG(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> TAG) {
-    fbb_.AddOffset(LWK::VT_TAG, TAG);
-  }
-  void add_EXPIRES_AT(uint64_t EXPIRES_AT) {
-    fbb_.AddElement<uint64_t>(LWK::VT_EXPIRES_AT, EXPIRES_AT, 0);
-  }
-  explicit LWKBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit ENCBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<LWK> Finish() {
+  ::flatbuffers::Offset<ENC> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<LWK>(end);
-    fbb_.Required(o, LWK::VT_REQUEST_ID);
-    fbb_.Required(o, LWK::VT_MODULE_ID);
+    auto o = ::flatbuffers::Offset<ENC>(end);
+    fbb_.Required(o, ENC::VT_EPHEMERAL_PUBLIC_KEY);
+    fbb_.Required(o, ENC::VT_NONCE_START);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<LWK> CreateLWK(
+inline ::flatbuffers::Offset<ENC> CreateENC(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> REQUEST_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> MODULE_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> MODULE_VERSION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CONTENT_KEY_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> RECIPIENT_KEY_ID = 0,
-    licensingWrappedKeyAlgorithm ALGORITHM = licensingWrappedKeyAlgorithm_X25519_HKDF_SHA256_AES_256_GCM,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> REQUESTER_EPHEMERAL_PUBKEY = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PROVIDER_EPHEMERAL_PUBKEY = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> HKDF_SALT = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> IV = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CIPHERTEXT = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> TAG = 0,
-    uint64_t EXPIRES_AT = 0) {
-  LWKBuilder builder_(_fbb);
-  builder_.add_EXPIRES_AT(EXPIRES_AT);
-  builder_.add_TAG(TAG);
-  builder_.add_CIPHERTEXT(CIPHERTEXT);
-  builder_.add_IV(IV);
-  builder_.add_HKDF_SALT(HKDF_SALT);
-  builder_.add_PROVIDER_EPHEMERAL_PUBKEY(PROVIDER_EPHEMERAL_PUBKEY);
-  builder_.add_REQUESTER_EPHEMERAL_PUBKEY(REQUESTER_EPHEMERAL_PUBKEY);
+    uint8_t VERSION = 1,
+    KeyExchange KEY_EXCHANGE = KeyExchange_X25519,
+    SymmetricAlgo SYMMETRIC = SymmetricAlgo_AES_256_CTR,
+    KDF KEY_DERIVATION = KDF_HKDF_SHA256,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> EPHEMERAL_PUBLIC_KEY = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> NONCE_START = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> RECIPIENT_KEY_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CONTEXT = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SCHEMA_HASH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ROOT_TYPE = 0,
+    uint64_t TIMESTAMP = 0) {
+  ENCBuilder builder_(_fbb);
+  builder_.add_TIMESTAMP(TIMESTAMP);
+  builder_.add_ROOT_TYPE(ROOT_TYPE);
+  builder_.add_SCHEMA_HASH(SCHEMA_HASH);
+  builder_.add_CONTEXT(CONTEXT);
   builder_.add_RECIPIENT_KEY_ID(RECIPIENT_KEY_ID);
-  builder_.add_CONTENT_KEY_ID(CONTENT_KEY_ID);
-  builder_.add_MODULE_VERSION(MODULE_VERSION);
-  builder_.add_MODULE_ID(MODULE_ID);
-  builder_.add_REQUEST_ID(REQUEST_ID);
-  builder_.add_ALGORITHM(ALGORITHM);
+  builder_.add_NONCE_START(NONCE_START);
+  builder_.add_EPHEMERAL_PUBLIC_KEY(EPHEMERAL_PUBLIC_KEY);
+  builder_.add_KEY_DERIVATION(KEY_DERIVATION);
+  builder_.add_SYMMETRIC(SYMMETRIC);
+  builder_.add_KEY_EXCHANGE(KEY_EXCHANGE);
+  builder_.add_VERSION(VERSION);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<LWK> CreateLWKDirect(
+inline ::flatbuffers::Offset<ENC> CreateENCDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *REQUEST_ID = nullptr,
-    const char *MODULE_ID = nullptr,
-    const char *MODULE_VERSION = nullptr,
-    const char *CONTENT_KEY_ID = nullptr,
-    const char *RECIPIENT_KEY_ID = nullptr,
-    licensingWrappedKeyAlgorithm ALGORITHM = licensingWrappedKeyAlgorithm_X25519_HKDF_SHA256_AES_256_GCM,
-    const std::vector<uint8_t> *REQUESTER_EPHEMERAL_PUBKEY = nullptr,
-    const std::vector<uint8_t> *PROVIDER_EPHEMERAL_PUBKEY = nullptr,
-    const std::vector<uint8_t> *HKDF_SALT = nullptr,
-    const std::vector<uint8_t> *IV = nullptr,
-    const std::vector<uint8_t> *CIPHERTEXT = nullptr,
-    const std::vector<uint8_t> *TAG = nullptr,
-    uint64_t EXPIRES_AT = 0) {
-  auto REQUEST_ID__ = REQUEST_ID ? _fbb.CreateString(REQUEST_ID) : 0;
-  auto MODULE_ID__ = MODULE_ID ? _fbb.CreateString(MODULE_ID) : 0;
-  auto MODULE_VERSION__ = MODULE_VERSION ? _fbb.CreateString(MODULE_VERSION) : 0;
-  auto CONTENT_KEY_ID__ = CONTENT_KEY_ID ? _fbb.CreateString(CONTENT_KEY_ID) : 0;
-  auto RECIPIENT_KEY_ID__ = RECIPIENT_KEY_ID ? _fbb.CreateString(RECIPIENT_KEY_ID) : 0;
-  auto REQUESTER_EPHEMERAL_PUBKEY__ = REQUESTER_EPHEMERAL_PUBKEY ? _fbb.CreateVector<uint8_t>(*REQUESTER_EPHEMERAL_PUBKEY) : 0;
-  auto PROVIDER_EPHEMERAL_PUBKEY__ = PROVIDER_EPHEMERAL_PUBKEY ? _fbb.CreateVector<uint8_t>(*PROVIDER_EPHEMERAL_PUBKEY) : 0;
-  auto HKDF_SALT__ = HKDF_SALT ? _fbb.CreateVector<uint8_t>(*HKDF_SALT) : 0;
-  auto IV__ = IV ? _fbb.CreateVector<uint8_t>(*IV) : 0;
-  auto CIPHERTEXT__ = CIPHERTEXT ? _fbb.CreateVector<uint8_t>(*CIPHERTEXT) : 0;
-  auto TAG__ = TAG ? _fbb.CreateVector<uint8_t>(*TAG) : 0;
-  return CreateLWK(
+    uint8_t VERSION = 1,
+    KeyExchange KEY_EXCHANGE = KeyExchange_X25519,
+    SymmetricAlgo SYMMETRIC = SymmetricAlgo_AES_256_CTR,
+    KDF KEY_DERIVATION = KDF_HKDF_SHA256,
+    const std::vector<uint8_t> *EPHEMERAL_PUBLIC_KEY = nullptr,
+    const std::vector<uint8_t> *NONCE_START = nullptr,
+    const std::vector<uint8_t> *RECIPIENT_KEY_ID = nullptr,
+    const char *CONTEXT = nullptr,
+    const std::vector<uint8_t> *SCHEMA_HASH = nullptr,
+    const char *ROOT_TYPE = nullptr,
+    uint64_t TIMESTAMP = 0) {
+  auto EPHEMERAL_PUBLIC_KEY__ = EPHEMERAL_PUBLIC_KEY ? _fbb.CreateVector<uint8_t>(*EPHEMERAL_PUBLIC_KEY) : 0;
+  auto NONCE_START__ = NONCE_START ? _fbb.CreateVector<uint8_t>(*NONCE_START) : 0;
+  auto RECIPIENT_KEY_ID__ = RECIPIENT_KEY_ID ? _fbb.CreateVector<uint8_t>(*RECIPIENT_KEY_ID) : 0;
+  auto CONTEXT__ = CONTEXT ? _fbb.CreateString(CONTEXT) : 0;
+  auto SCHEMA_HASH__ = SCHEMA_HASH ? _fbb.CreateVector<uint8_t>(*SCHEMA_HASH) : 0;
+  auto ROOT_TYPE__ = ROOT_TYPE ? _fbb.CreateString(ROOT_TYPE) : 0;
+  return CreateENC(
       _fbb,
-      REQUEST_ID__,
-      MODULE_ID__,
-      MODULE_VERSION__,
-      CONTENT_KEY_ID__,
+      VERSION,
+      KEY_EXCHANGE,
+      SYMMETRIC,
+      KEY_DERIVATION,
+      EPHEMERAL_PUBLIC_KEY__,
+      NONCE_START__,
       RECIPIENT_KEY_ID__,
-      ALGORITHM,
-      REQUESTER_EPHEMERAL_PUBKEY__,
-      PROVIDER_EPHEMERAL_PUBKEY__,
-      HKDF_SALT__,
-      IV__,
-      CIPHERTEXT__,
-      TAG__,
-      EXPIRES_AT);
+      CONTEXT__,
+      SCHEMA_HASH__,
+      ROOT_TYPE__,
+      TIMESTAMP);
 }
 
-inline const LWK *GetLWK(const void *buf) {
-  return ::flatbuffers::GetRoot<LWK>(buf);
+inline const ENC *GetENC(const void *buf) {
+  return ::flatbuffers::GetRoot<ENC>(buf);
 }
 
-inline const LWK *GetSizePrefixedLWK(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<LWK>(buf);
+inline const ENC *GetSizePrefixedENC(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<ENC>(buf);
 }
 
-inline const char *LWKIdentifier() {
-  return "$LWK";
+inline const char *ENCIdentifier() {
+  return "$ENC";
 }
 
-inline bool LWKBufferHasIdentifier(const void *buf) {
+inline bool ENCBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, LWKIdentifier());
+      buf, ENCIdentifier());
 }
 
-inline bool SizePrefixedLWKBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedENCBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, LWKIdentifier(), true);
+      buf, ENCIdentifier(), true);
 }
 
 template <bool B = false>
-inline bool VerifyLWKBuffer(
+inline bool VerifyENCBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<LWK>(LWKIdentifier());
+  return verifier.template VerifyBuffer<ENC>(ENCIdentifier());
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedLWKBuffer(
+inline bool VerifySizePrefixedENCBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<LWK>(LWKIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<ENC>(ENCIdentifier());
 }
 
-inline void FinishLWKBuffer(
+inline void FinishENCBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<LWK> root) {
-  fbb.Finish(root, LWKIdentifier());
+    ::flatbuffers::Offset<ENC> root) {
+  fbb.Finish(root, ENCIdentifier());
 }
 
-inline void FinishSizePrefixedLWKBuffer(
+inline void FinishSizePrefixedENCBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<LWK> root) {
-  fbb.FinishSizePrefixed(root, LWKIdentifier());
+    ::flatbuffers::Offset<ENC> root) {
+  fbb.FinishSizePrefixed(root, ENCIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

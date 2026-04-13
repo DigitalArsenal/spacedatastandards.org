@@ -9,14 +9,15 @@ import (
 /// Key Material Frame
 type KMF struct {
 	_tab flatbuffers.Table
+	encryptionCtx []byte
 }
 
 const KMFIdentifier = "$KMF"
 
-func GetRootAsKMF(buf []byte, offset flatbuffers.UOffsetT) *KMF {
+func GetRootAsKMF(buf []byte, offset flatbuffers.UOffsetT, encryptionCtx ...[]byte) *KMF {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &KMF{}
-	x.Init(buf, n+offset)
+	x.Init(buf, n+offset, encryptionCtx...)
 	return x
 }
 
@@ -29,10 +30,10 @@ func KMFBufferHasIdentifier(buf []byte) bool {
 	return flatbuffers.BufferHasIdentifier(buf, KMFIdentifier)
 }
 
-func GetSizePrefixedRootAsKMF(buf []byte, offset flatbuffers.UOffsetT) *KMF {
+func GetSizePrefixedRootAsKMF(buf []byte, offset flatbuffers.UOffsetT, encryptionCtx ...[]byte) *KMF {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &KMF{}
-	x.Init(buf, n+offset+flatbuffers.SizeUint32)
+	x.Init(buf, n+offset+flatbuffers.SizeUint32, encryptionCtx...)
 	return x
 }
 
@@ -45,9 +46,12 @@ func SizePrefixedKMFBufferHasIdentifier(buf []byte) bool {
 	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, KMFIdentifier)
 }
 
-func (rcv *KMF) Init(buf []byte, i flatbuffers.UOffsetT) {
+func (rcv *KMF) Init(buf []byte, i flatbuffers.UOffsetT, encryptionCtx ...[]byte) {
 	rcv._tab.Bytes = buf
 	rcv._tab.Pos = i
+	if len(encryptionCtx) > 0 {
+		rcv.encryptionCtx = encryptionCtx[0]
+	}
 }
 
 func (rcv *KMF) Table() flatbuffers.Table {
@@ -135,6 +139,8 @@ func (rcv *KMF) MutateEncoding(n keyMaterialEncoding) bool {
 }
 
 /// Explicit key bytes when a module must receive them on a port.
+/// This may be field-encrypted using the SDS/da-flatbuffers header-first
+/// encryption flow when transported to a specific recipient.
 func (rcv *KMF) KEY_BYTES(j int) byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -173,6 +179,8 @@ func (rcv *KMF) KeyBytesBytes() []byte {
 }
 
 /// Explicit key bytes when a module must receive them on a port.
+/// This may be field-encrypted using the SDS/da-flatbuffers header-first
+/// encryption flow when transported to a specific recipient.
 func (rcv *KMF) MutateKEY_BYTES(j int, n byte) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {

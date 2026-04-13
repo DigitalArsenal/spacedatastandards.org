@@ -187,12 +187,42 @@ class LGR extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /// Wrapped module content key
-    public function getWRAPPED_CONTENT_KEY()
+    /// Encryption header for the recipient-specific wrapped content-key payload.
+    public function getWRAPPED_CONTENT_KEY_HEADER()
     {
-        $obj = new LWK();
+        $obj = new ENC();
         $o = $this->__offset(36);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Encrypted FlatBuffer payload containing the recipient-specific content key
+    /// material. The payload currently uses `$KMF` semantics and is decrypted
+    /// using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getWRAPPED_CONTENT_KEY_PAYLOAD($j)
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWRAPPED_CONTENT_KEY_PAYLOADLength()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWRAPPED_CONTENT_KEY_PAYLOADBytes()
+    {
+        return $this->__vector_as_bytes(38);
     }
 
     /// Provider public key used to verify the grant signature
@@ -202,7 +232,7 @@ class LGR extends Table
      */
     public function getGRANT_VERIFIER_PUBKEY($j)
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
     }
 
@@ -211,7 +241,7 @@ class LGR extends Table
      */
     public function getGRANT_VERIFIER_PUBKEYLength()
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -220,7 +250,7 @@ class LGR extends Table
      */
     public function getGRANT_VERIFIER_PUBKEYBytes()
     {
-        return $this->__vector_as_bytes(38);
+        return $this->__vector_as_bytes(40);
     }
 
     /// Provider signature over the grant
@@ -230,7 +260,7 @@ class LGR extends Table
      */
     public function getPROVIDER_SIGNATURE($j)
     {
-        $o = $this->__offset(40);
+        $o = $this->__offset(42);
         return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
     }
 
@@ -239,7 +269,7 @@ class LGR extends Table
      */
     public function getPROVIDER_SIGNATURELength()
     {
-        $o = $this->__offset(40);
+        $o = $this->__offset(42);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -248,7 +278,7 @@ class LGR extends Table
      */
     public function getPROVIDER_SIGNATUREBytes()
     {
-        return $this->__vector_as_bytes(40);
+        return $this->__vector_as_bytes(42);
     }
 
     /**
@@ -257,16 +287,16 @@ class LGR extends Table
      */
     public static function startLGR(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(19);
+        $builder->StartObject(20);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return LGR
      */
-    public static function createLGR(FlatBufferBuilder $builder, $MESSAGE_TYPE, $REQUEST_ID, $MODULE_ID, $MODULE_VERSION, $REQUESTER_PEER_ID, $REQUESTER_XPUB, $REQUESTED_DOMAIN, $REQUESTED_TIMEOUT_MS, $GRANTED_DOMAIN, $GRANTED_TIMEOUT_MS, $EXPIRES_AT, $REQUIRED_SCOPE, $GRANT_STATUS, $DENIAL_REASON, $CAPABILITY_TOKEN, $MODULE_DESCRIPTOR, $WRAPPED_CONTENT_KEY, $GRANT_VERIFIER_PUBKEY, $PROVIDER_SIGNATURE)
+    public static function createLGR(FlatBufferBuilder $builder, $MESSAGE_TYPE, $REQUEST_ID, $MODULE_ID, $MODULE_VERSION, $REQUESTER_PEER_ID, $REQUESTER_XPUB, $REQUESTED_DOMAIN, $REQUESTED_TIMEOUT_MS, $GRANTED_DOMAIN, $GRANTED_TIMEOUT_MS, $EXPIRES_AT, $REQUIRED_SCOPE, $GRANT_STATUS, $DENIAL_REASON, $CAPABILITY_TOKEN, $MODULE_DESCRIPTOR, $WRAPPED_CONTENT_KEY_HEADER, $WRAPPED_CONTENT_KEY_PAYLOAD, $GRANT_VERIFIER_PUBKEY, $PROVIDER_SIGNATURE)
     {
-        $builder->startObject(19);
+        $builder->startObject(20);
         self::addMESSAGE_TYPE($builder, $MESSAGE_TYPE);
         self::addREQUEST_ID($builder, $REQUEST_ID);
         self::addMODULE_ID($builder, $MODULE_ID);
@@ -283,7 +313,8 @@ class LGR extends Table
         self::addDENIAL_REASON($builder, $DENIAL_REASON);
         self::addCAPABILITY_TOKEN($builder, $CAPABILITY_TOKEN);
         self::addMODULE_DESCRIPTOR($builder, $MODULE_DESCRIPTOR);
-        self::addWRAPPED_CONTENT_KEY($builder, $WRAPPED_CONTENT_KEY);
+        self::addWRAPPED_CONTENT_KEY_HEADER($builder, $WRAPPED_CONTENT_KEY_HEADER);
+        self::addWRAPPED_CONTENT_KEY_PAYLOAD($builder, $WRAPPED_CONTENT_KEY_PAYLOAD);
         self::addGRANT_VERIFIER_PUBKEY($builder, $GRANT_VERIFIER_PUBKEY);
         self::addPROVIDER_SIGNATURE($builder, $PROVIDER_SIGNATURE);
         $o = $builder->endObject();
@@ -481,9 +512,43 @@ class LGR extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addWRAPPED_CONTENT_KEY(FlatBufferBuilder $builder, $WRAPPED_CONTENT_KEY)
+    public static function addWRAPPED_CONTENT_KEY_HEADER(FlatBufferBuilder $builder, $WRAPPED_CONTENT_KEY_HEADER)
     {
-        $builder->addOffsetX(16, $WRAPPED_CONTENT_KEY, 0);
+        $builder->addOffsetX(16, $WRAPPED_CONTENT_KEY_HEADER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addWRAPPED_CONTENT_KEY_PAYLOAD(FlatBufferBuilder $builder, $WRAPPED_CONTENT_KEY_PAYLOAD)
+    {
+        $builder->addOffsetX(17, $WRAPPED_CONTENT_KEY_PAYLOAD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createWRAPPED_CONTENT_KEY_PAYLOADVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startWRAPPED_CONTENT_KEY_PAYLOADVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**
@@ -493,7 +558,7 @@ class LGR extends Table
      */
     public static function addGRANT_VERIFIER_PUBKEY(FlatBufferBuilder $builder, $GRANT_VERIFIER_PUBKEY)
     {
-        $builder->addOffsetX(17, $GRANT_VERIFIER_PUBKEY, 0);
+        $builder->addOffsetX(18, $GRANT_VERIFIER_PUBKEY, 0);
     }
 
     /**
@@ -527,7 +592,7 @@ class LGR extends Table
      */
     public static function addPROVIDER_SIGNATURE(FlatBufferBuilder $builder, $PROVIDER_SIGNATURE)
     {
-        $builder->addOffsetX(18, $PROVIDER_SIGNATURE, 0);
+        $builder->addOffsetX(19, $PROVIDER_SIGNATURE, 0);
     }
 
     /**

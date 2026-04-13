@@ -231,10 +231,10 @@ class LGR : Table() {
         }
     }
     /**
-     * Wrapped module content key
+     * Encryption header for the recipient-specific wrapped content-key payload.
      */
-    val wrappedContentKey : LWK? get() = wrappedContentKey(LWK())
-    fun wrappedContentKey(obj: LWK) : LWK? {
+    val wrappedContentKeyHeader : ENC? get() = wrappedContentKeyHeader(ENC())
+    fun wrappedContentKeyHeader(obj: ENC) : ENC? {
         val o = __offset(36)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -243,10 +243,29 @@ class LGR : Table() {
         }
     }
     /**
+     * Encrypted FlatBuffer payload containing the recipient-specific content key
+     * material. The payload currently uses `$KMF` semantics and is decrypted
+     * using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+     */
+    fun wrappedContentKeyPayload(j: Int) : UByte {
+        val o = __offset(38)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val wrappedContentKeyPayloadLength : Int
+        get() {
+            val o = __offset(38); return if (o != 0) __vector_len(o) else 0
+        }
+    val wrappedContentKeyPayloadAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun wrappedContentKeyPayloadInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
      * Provider public key used to verify the grant signature
      */
     fun grantVerifierPubkey(j: Int) : UByte {
-        val o = __offset(38)
+        val o = __offset(40)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
         } else {
@@ -255,15 +274,15 @@ class LGR : Table() {
     }
     val grantVerifierPubkeyLength : Int
         get() {
-            val o = __offset(38); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(40); return if (o != 0) __vector_len(o) else 0
         }
-    val grantVerifierPubkeyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
-    fun grantVerifierPubkeyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    val grantVerifierPubkeyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun grantVerifierPubkeyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
     /**
      * Provider signature over the grant
      */
     fun providerSignature(j: Int) : UByte {
-        val o = __offset(40)
+        val o = __offset(42)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
         } else {
@@ -272,10 +291,10 @@ class LGR : Table() {
     }
     val providerSignatureLength : Int
         get() {
-            val o = __offset(40); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(42); return if (o != 0) __vector_len(o) else 0
         }
-    val providerSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
-    fun providerSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
+    val providerSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
+    fun providerSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsLGR(_bb: ByteBuffer): LGR = getRootAsLGR(_bb, LGR())
@@ -284,14 +303,15 @@ class LGR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun LGRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LGR")
-        fun createLGR(builder: FlatBufferBuilder, messageType: Byte, requestIdOffset: Int, moduleIdOffset: Int, moduleVersionOffset: Int, requesterPeerIdOffset: Int, requesterXpubOffset: Int, requestedDomainOffset: Int, requestedTimeoutMs: ULong, grantedDomainOffset: Int, grantedTimeoutMs: ULong, expiresAt: ULong, requiredScopeOffset: Int, grantStatusOffset: Int, denialReasonOffset: Int, capabilityTokenOffset: Int, moduleDescriptorOffset: Int, wrappedContentKeyOffset: Int, grantVerifierPubkeyOffset: Int, providerSignatureOffset: Int) : Int {
-            builder.startTable(19)
+        fun createLGR(builder: FlatBufferBuilder, messageType: Byte, requestIdOffset: Int, moduleIdOffset: Int, moduleVersionOffset: Int, requesterPeerIdOffset: Int, requesterXpubOffset: Int, requestedDomainOffset: Int, requestedTimeoutMs: ULong, grantedDomainOffset: Int, grantedTimeoutMs: ULong, expiresAt: ULong, requiredScopeOffset: Int, grantStatusOffset: Int, denialReasonOffset: Int, capabilityTokenOffset: Int, moduleDescriptorOffset: Int, wrappedContentKeyHeaderOffset: Int, wrappedContentKeyPayloadOffset: Int, grantVerifierPubkeyOffset: Int, providerSignatureOffset: Int) : Int {
+            builder.startTable(20)
             addEXPIRESAT(builder, expiresAt)
             addGRANTEDTIMEOUTMS(builder, grantedTimeoutMs)
             addREQUESTEDTIMEOUTMS(builder, requestedTimeoutMs)
             addPROVIDERSIGNATURE(builder, providerSignatureOffset)
             addGRANTVERIFIERPUBKEY(builder, grantVerifierPubkeyOffset)
-            addWRAPPEDCONTENTKEY(builder, wrappedContentKeyOffset)
+            addWRAPPEDCONTENTKEYPAYLOAD(builder, wrappedContentKeyPayloadOffset)
+            addWRAPPEDCONTENTKEYHEADER(builder, wrappedContentKeyHeaderOffset)
             addMODULEDESCRIPTOR(builder, moduleDescriptorOffset)
             addCAPABILITYTOKEN(builder, capabilityTokenOffset)
             addDENIALREASON(builder, denialReasonOffset)
@@ -307,7 +327,7 @@ class LGR : Table() {
             addMESSAGETYPE(builder, messageType)
             return endLGR(builder)
         }
-        fun startLGR(builder: FlatBufferBuilder) = builder.startTable(19)
+        fun startLGR(builder: FlatBufferBuilder) = builder.startTable(20)
         fun addMESSAGETYPE(builder: FlatBufferBuilder, messageType: Byte) = builder.addByte(0, messageType, 0)
         fun addREQUESTID(builder: FlatBufferBuilder, requestId: Int) = builder.addOffset(1, requestId, 0)
         fun addMODULEID(builder: FlatBufferBuilder, moduleId: Int) = builder.addOffset(2, moduleId, 0)
@@ -333,8 +353,18 @@ class LGR : Table() {
         }
         fun startCapabilityTokenVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun addMODULEDESCRIPTOR(builder: FlatBufferBuilder, moduleDescriptor: Int) = builder.addOffset(15, moduleDescriptor, 0)
-        fun addWRAPPEDCONTENTKEY(builder: FlatBufferBuilder, wrappedContentKey: Int) = builder.addOffset(16, wrappedContentKey, 0)
-        fun addGRANTVERIFIERPUBKEY(builder: FlatBufferBuilder, grantVerifierPubkey: Int) = builder.addOffset(17, grantVerifierPubkey, 0)
+        fun addWRAPPEDCONTENTKEYHEADER(builder: FlatBufferBuilder, wrappedContentKeyHeader: Int) = builder.addOffset(16, wrappedContentKeyHeader, 0)
+        fun addWRAPPEDCONTENTKEYPAYLOAD(builder: FlatBufferBuilder, wrappedContentKeyPayload: Int) = builder.addOffset(17, wrappedContentKeyPayload, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createWrappedContentKeyPayloadVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startWrappedContentKeyPayloadVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addGRANTVERIFIERPUBKEY(builder: FlatBufferBuilder, grantVerifierPubkey: Int) = builder.addOffset(18, grantVerifierPubkey, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createGrantVerifierPubkeyVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -344,7 +374,7 @@ class LGR : Table() {
             return builder.endVector()
         }
         fun startGrantVerifierPubkeyVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addPROVIDERSIGNATURE(builder: FlatBufferBuilder, providerSignature: Int) = builder.addOffset(18, providerSignature, 0)
+        fun addPROVIDERSIGNATURE(builder: FlatBufferBuilder, providerSignature: Int) = builder.addOffset(19, providerSignature, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createProviderSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
