@@ -1,5 +1,5 @@
-// Hash: a05bd85a663e5c6908f7fff3853ba9ba3b3663aa84d1a8982e9d1aa09d07e485
-// Version: 1.0.4
+// Hash: 6e871dedcfec3f3338be13dadcbef6d6e2488f5fc9e80890b034bd28221ba1d4
+// Version: 1.0.5
 // -----------------------------------END_HEADER
 /// Plugin type category
 enum pluginType : byte {
@@ -21,6 +21,26 @@ enum pluginType : byte {
   Physics,
   /// GLSL shader plugins for custom visualization
   Shader
+}
+
+/// Storefront payment model for the plugin listing
+enum paymentModel : byte {
+  /// No payment required
+  Free,
+  /// Single one-time purchase
+  OneTime,
+  /// Recurring subscription purchase
+  Subscription
+}
+
+/// Publication visibility for the plugin listing
+enum listingStatus : byte {
+  /// Discoverable in public storefront listings
+  Public,
+  /// Addressable directly but hidden from public browse surfaces
+  Unlisted,
+  /// No longer offered for new installs or purchases
+  Retired
 }
 
 /// Plugin capability declaration
@@ -55,7 +75,7 @@ table EntryFunction {
   OUTPUT_SCHEMA: string;
 }
 
-/// Plugin Manifest - WASM plugin distribution
+/// Plugin Manifest - canonical signed storefront and WASM distribution record
 table PLG {
   /// Unique identifier for the plugin
   PLUGIN_ID: string (required);
@@ -65,8 +85,26 @@ table PLG {
   VERSION: string (required);
   /// Detailed description of plugin functionality
   DESCRIPTION: string;
+  /// Short marketing summary shown in storefront listings
+  TAGLINE: string;
   /// Type/category of the plugin
   PLUGIN_TYPE: pluginType;
+  /// Human-readable publisher or organization name
+  PUBLISHER_NAME: string;
+  /// Publisher handle or username
+  PUBLISHER_HANDLE: string;
+  /// Canonical publisher website
+  PUBLISHER_URL: string;
+  /// Support or helpdesk URL for this plugin
+  SUPPORT_URL: string;
+  /// Search and categorization tags for discovery
+  TAGS: [string];
+  /// Short feature bullets highlighted in storefront listings
+  FEATURES: [string];
+  /// Screenshot URLs showing the plugin in use
+  SCREENSHOT_URLS: [string];
+  /// Optional hero/banner image URL for the listing
+  BANNER_URL: string;
 
   /// ABI version for compatibility checking
   ABI_VERSION: uint32 = 1;
@@ -115,10 +153,22 @@ table PLG {
   UPDATED_AT: uint64;
   /// URL to plugin documentation
   DOCUMENTATION_URL: string;
+  /// URL to plugin changelog or release notes
+  CHANGELOG_URL: string;
   /// URL to plugin icon/logo
   ICON_URL: string;
   /// License identifier (SPDX format)
   LICENSE: string;
+  /// Commercial model used for storefront purchase flows
+  PAYMENT_MODEL: paymentModel = Free;
+  /// Price in USD cents for one-time purchase or subscription period
+  PRICE_USD_CENTS: uint32;
+  /// Subscription billing period length in days
+  SUBSCRIPTION_PERIOD_DAYS: uint32;
+  /// Accepted payment methods, e.g. "stripe", "sol", "usdc"
+  ACCEPTED_PAYMENT_METHODS: [string];
+  /// Storefront publication state for this manifest version
+  LISTING_STATUS: listingStatus = Public;
 
   /// Ed25519 signature from provider over manifest
   SIGNATURE: [ubyte];

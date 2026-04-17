@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Plugin Manifest - WASM plugin distribution
+ * Plugin Manifest - canonical signed storefront and WASM distribution record
  */
 @Suppress("unused")
 class PLG : Table() {
@@ -86,50 +86,59 @@ class PLG : Table() {
     val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
     fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
+     * Short marketing summary shown in storefront listings
+     */
+    val tagline : String?
+        get() {
+            val o = __offset(12)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val taglineAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun taglineInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
      * Type/category of the plugin
      */
     val pluginType : Byte
         get() {
-            val o = __offset(12)
+            val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     /**
-     * ABI version for compatibility checking
+     * Human-readable publisher or organization name
      */
-    val abiVersion : UInt
+    val publisherName : String?
         get() {
-            val o = __offset(14)
-            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 1u
+            val o = __offset(16)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
+    val publisherNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun publisherNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
-     * SHA256 hash of the decrypted WASM binary
+     * Publisher handle or username
      */
-    fun wasmHash(j: Int) : UByte {
-        val o = __offset(16)
-        return if (o != 0) {
-            bb.get(__vector(o) + j * 1).toUByte()
-        } else {
-            0u
-        }
-    }
-    val wasmHashLength : Int
-        get() {
-            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
-        }
-    val wasmHashAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
-    fun wasmHashInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
-    /**
-     * Size of decrypted WASM binary in bytes
-     */
-    val wasmSize : ULong
+    val publisherHandle : String?
         get() {
             val o = __offset(18)
-            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
+    val publisherHandleAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun publisherHandleInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
-     * IPFS CID of the encrypted WASM binary
+     * Canonical publisher website
      */
-    val wasmCid : String?
+    val publisherUrl : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -138,13 +147,133 @@ class PLG : Table() {
                 null
             }
         }
-    val wasmCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
-    fun wasmCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    val publisherUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun publisherUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * Support or helpdesk URL for this plugin
+     */
+    val supportUrl : String?
+        get() {
+            val o = __offset(22)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val supportUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun supportUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * Search and categorization tags for discovery
+     */
+    fun tags(j: Int) : String? {
+        val o = __offset(24)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val tagsLength : Int
+        get() {
+            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Short feature bullets highlighted in storefront listings
+     */
+    fun features(j: Int) : String? {
+        val o = __offset(26)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val featuresLength : Int
+        get() {
+            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Screenshot URLs showing the plugin in use
+     */
+    fun screenshotUrls(j: Int) : String? {
+        val o = __offset(28)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val screenshotUrlsLength : Int
+        get() {
+            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Optional hero/banner image URL for the listing
+     */
+    val bannerUrl : String?
+        get() {
+            val o = __offset(30)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val bannerUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun bannerUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * ABI version for compatibility checking
+     */
+    val abiVersion : UInt
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 1u
+        }
+    /**
+     * SHA256 hash of the decrypted WASM binary
+     */
+    fun wasmHash(j: Int) : UByte {
+        val o = __offset(34)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val wasmHashLength : Int
+        get() {
+            val o = __offset(34); return if (o != 0) __vector_len(o) else 0
+        }
+    val wasmHashAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun wasmHashInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Size of decrypted WASM binary in bytes
+     */
+    val wasmSize : ULong
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * IPFS CID of the encrypted WASM binary
+     */
+    val wasmCid : String?
+        get() {
+            val o = __offset(38)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val wasmCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun wasmCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
     /**
      * SHA256 hash of the encrypted delivery artifact bytes
      */
     fun encryptedWasmHash(j: Int) : UByte {
-        val o = __offset(22)
+        val o = __offset(40)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
         } else {
@@ -153,16 +282,16 @@ class PLG : Table() {
     }
     val encryptedWasmHashLength : Int
         get() {
-            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(40); return if (o != 0) __vector_len(o) else 0
         }
-    val encryptedWasmHashAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
-    fun encryptedWasmHashInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
+    val encryptedWasmHashAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun encryptedWasmHashInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
     /**
      * Size of the encrypted delivery artifact in bytes
      */
     val encryptedWasmSize : ULong
         get() {
-            val o = __offset(24)
+            val o = __offset(42)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
     /**
@@ -170,7 +299,7 @@ class PLG : Table() {
      */
     fun entryFunctions(j: Int) : EntryFunction? = entryFunctions(EntryFunction(), j)
     fun entryFunctions(obj: EntryFunction, j: Int) : EntryFunction? {
-        val o = __offset(26)
+        val o = __offset(44)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -179,13 +308,13 @@ class PLG : Table() {
     }
     val entryFunctionsLength : Int
         get() {
-            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(44); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * FlatBuffer schemas required by this plugin
      */
     fun requiredSchemas(j: Int) : String? {
-        val o = __offset(28)
+        val o = __offset(46)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -194,14 +323,14 @@ class PLG : Table() {
     }
     val requiredSchemasLength : Int
         get() {
-            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(46); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Other plugins this depends on
      */
     fun dependencies(j: Int) : PluginDependency? = dependencies(PluginDependency(), j)
     fun dependencies(obj: PluginDependency, j: Int) : PluginDependency? {
-        val o = __offset(30)
+        val o = __offset(48)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -210,14 +339,14 @@ class PLG : Table() {
     }
     val dependenciesLength : Int
         get() {
-            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(48); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Capabilities provided by this plugin
      */
     fun capabilities(j: Int) : PluginCapability? = capabilities(PluginCapability(), j)
     fun capabilities(obj: PluginCapability, j: Int) : PluginCapability? {
-        val o = __offset(32)
+        val o = __offset(50)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -226,130 +355,26 @@ class PLG : Table() {
     }
     val capabilitiesLength : Int
         get() {
-            val o = __offset(32); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(50); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Peer ID of the plugin provider
      */
     val providerPeerId : String?
         get() {
-            val o = __offset(34)
+            val o = __offset(52)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val providerPeerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
-    fun providerPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    val providerPeerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
+    fun providerPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
     /**
      * IPFS CID of provider's EPM (Entity Profile Message)
      */
     val providerEpmCid : String?
-        get() {
-            val o = __offset(36)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val providerEpmCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
-    fun providerEpmCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
-    /**
-     * Whether the WASM binary is encrypted
-     */
-    val encrypted : Boolean
-        get() {
-            val o = __offset(38)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else true
-        }
-    /**
-     * Canonical required scope for grant issuance
-     */
-    val requiredScope : String?
-        get() {
-            val o = __offset(40)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val requiredScopeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
-    fun requiredScopeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
-    /**
-     * Provider-local identifier for the module content key
-     */
-    val keyId : String?
-        get() {
-            val o = __offset(42)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val keyIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
-    fun keyIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
-    /**
-     * Allowed requester domains for module grants
-     */
-    fun allowedDomains(j: Int) : String? {
-        val o = __offset(44)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val allowedDomainsLength : Int
-        get() {
-            val o = __offset(44); return if (o != 0) __vector_len(o) else 0
-        }
-    /**
-     * Maximum grant timeout allowed for this module publication
-     */
-    val maxGrantTimeoutMs : ULong
-        get() {
-            val o = __offset(46)
-            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
-        }
-    /**
-     * Minimum permissions required to run
-     */
-    fun minPermissions(j: Int) : String? {
-        val o = __offset(48)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val minPermissionsLength : Int
-        get() {
-            val o = __offset(48); return if (o != 0) __vector_len(o) else 0
-        }
-    /**
-     * Unix timestamp when plugin was created
-     */
-    val createdAt : ULong
-        get() {
-            val o = __offset(50)
-            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
-        }
-    /**
-     * Unix timestamp when plugin was last updated
-     */
-    val updatedAt : ULong
-        get() {
-            val o = __offset(52)
-            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
-        }
-    /**
-     * URL to plugin documentation
-     */
-    val documentationUrl : String?
         get() {
             val o = __offset(54)
             return if (o != 0) {
@@ -358,26 +383,20 @@ class PLG : Table() {
                 null
             }
         }
-    val documentationUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(54, 1)
-    fun documentationUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 54, 1)
+    val providerEpmCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(54, 1)
+    fun providerEpmCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 54, 1)
     /**
-     * URL to plugin icon/logo
+     * Whether the WASM binary is encrypted
      */
-    val iconUrl : String?
+    val encrypted : Boolean
         get() {
             val o = __offset(56)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else true
         }
-    val iconUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
-    fun iconUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
     /**
-     * License identifier (SPDX format)
+     * Canonical required scope for grant issuance
      */
-    val license : String?
+    val requiredScope : String?
         get() {
             val o = __offset(58)
             return if (o != 0) {
@@ -386,13 +405,184 @@ class PLG : Table() {
                 null
             }
         }
-    val licenseAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
-    fun licenseInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
+    val requiredScopeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
+    fun requiredScopeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
+    /**
+     * Provider-local identifier for the module content key
+     */
+    val keyId : String?
+        get() {
+            val o = __offset(60)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val keyIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun keyIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * Allowed requester domains for module grants
+     */
+    fun allowedDomains(j: Int) : String? {
+        val o = __offset(62)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val allowedDomainsLength : Int
+        get() {
+            val o = __offset(62); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Maximum grant timeout allowed for this module publication
+     */
+    val maxGrantTimeoutMs : ULong
+        get() {
+            val o = __offset(64)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Minimum permissions required to run
+     */
+    fun minPermissions(j: Int) : String? {
+        val o = __offset(66)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val minPermissionsLength : Int
+        get() {
+            val o = __offset(66); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Unix timestamp when plugin was created
+     */
+    val createdAt : ULong
+        get() {
+            val o = __offset(68)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Unix timestamp when plugin was last updated
+     */
+    val updatedAt : ULong
+        get() {
+            val o = __offset(70)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * URL to plugin documentation
+     */
+    val documentationUrl : String?
+        get() {
+            val o = __offset(72)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val documentationUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(72, 1)
+    fun documentationUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 72, 1)
+    /**
+     * URL to plugin changelog or release notes
+     */
+    val changelogUrl : String?
+        get() {
+            val o = __offset(74)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val changelogUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(74, 1)
+    fun changelogUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 74, 1)
+    /**
+     * URL to plugin icon/logo
+     */
+    val iconUrl : String?
+        get() {
+            val o = __offset(76)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val iconUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(76, 1)
+    fun iconUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 76, 1)
+    /**
+     * License identifier (SPDX format)
+     */
+    val license : String?
+        get() {
+            val o = __offset(78)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val licenseAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(78, 1)
+    fun licenseInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 78, 1)
+    /**
+     * Commercial model used for storefront purchase flows
+     */
+    val paymentModel : Byte
+        get() {
+            val o = __offset(80)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Price in USD cents for one-time purchase or subscription period
+     */
+    val priceUsdCents : UInt
+        get() {
+            val o = __offset(82)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Subscription billing period length in days
+     */
+    val subscriptionPeriodDays : UInt
+        get() {
+            val o = __offset(84)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Accepted payment methods, e.g. "stripe", "sol", "usdc"
+     */
+    fun acceptedPaymentMethods(j: Int) : String? {
+        val o = __offset(86)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val acceptedPaymentMethodsLength : Int
+        get() {
+            val o = __offset(86); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Storefront publication state for this manifest version
+     */
+    val listingStatus : Byte
+        get() {
+            val o = __offset(88)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
     /**
      * Ed25519 signature from provider over manifest
      */
     fun signature(j: Int) : UByte {
-        val o = __offset(60)
+        val o = __offset(90)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
         } else {
@@ -401,10 +591,10 @@ class PLG : Table() {
     }
     val signatureLength : Int
         get() {
-            val o = __offset(60); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(90); return if (o != 0) __vector_len(o) else 0
         }
-    val signatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
-    fun signatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
+    val signatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(90, 1)
+    fun signatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 90, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPLG(_bb: ByteBuffer): PLG = getRootAsPLG(_bb, PLG())
@@ -413,16 +603,20 @@ class PLG : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PLGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PLG")
-        fun createPLG(builder: FlatBufferBuilder, pluginIdOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, pluginType: Byte, abiVersion: UInt, wasmHashOffset: Int, wasmSize: ULong, wasmCidOffset: Int, encryptedWasmHashOffset: Int, encryptedWasmSize: ULong, entryFunctionsOffset: Int, requiredSchemasOffset: Int, dependenciesOffset: Int, capabilitiesOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, encrypted: Boolean, requiredScopeOffset: Int, keyIdOffset: Int, allowedDomainsOffset: Int, maxGrantTimeoutMs: ULong, minPermissionsOffset: Int, createdAt: ULong, updatedAt: ULong, documentationUrlOffset: Int, iconUrlOffset: Int, licenseOffset: Int, signatureOffset: Int) : Int {
-            builder.startTable(29)
+        fun createPLG(builder: FlatBufferBuilder, pluginIdOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, taglineOffset: Int, pluginType: Byte, publisherNameOffset: Int, publisherHandleOffset: Int, publisherUrlOffset: Int, supportUrlOffset: Int, tagsOffset: Int, featuresOffset: Int, screenshotUrlsOffset: Int, bannerUrlOffset: Int, abiVersion: UInt, wasmHashOffset: Int, wasmSize: ULong, wasmCidOffset: Int, encryptedWasmHashOffset: Int, encryptedWasmSize: ULong, entryFunctionsOffset: Int, requiredSchemasOffset: Int, dependenciesOffset: Int, capabilitiesOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, encrypted: Boolean, requiredScopeOffset: Int, keyIdOffset: Int, allowedDomainsOffset: Int, maxGrantTimeoutMs: ULong, minPermissionsOffset: Int, createdAt: ULong, updatedAt: ULong, documentationUrlOffset: Int, changelogUrlOffset: Int, iconUrlOffset: Int, licenseOffset: Int, paymentModel: Byte, priceUsdCents: UInt, subscriptionPeriodDays: UInt, acceptedPaymentMethodsOffset: Int, listingStatus: Byte, signatureOffset: Int) : Int {
+            builder.startTable(44)
             addUPDATEDAT(builder, updatedAt)
             addCREATEDAT(builder, createdAt)
             addMAXGRANTTIMEOUTMS(builder, maxGrantTimeoutMs)
             addENCRYPTEDWASMSIZE(builder, encryptedWasmSize)
             addWASMSIZE(builder, wasmSize)
             addSIGNATURE(builder, signatureOffset)
+            addACCEPTEDPAYMENTMETHODS(builder, acceptedPaymentMethodsOffset)
+            addSUBSCRIPTIONPERIODDAYS(builder, subscriptionPeriodDays)
+            addPRICEUSDCENTS(builder, priceUsdCents)
             addLICENSE(builder, licenseOffset)
             addICONURL(builder, iconUrlOffset)
+            addCHANGELOGURL(builder, changelogUrlOffset)
             addDOCUMENTATIONURL(builder, documentationUrlOffset)
             addMINPERMISSIONS(builder, minPermissionsOffset)
             addALLOWEDDOMAINS(builder, allowedDomainsOffset)
@@ -438,22 +632,66 @@ class PLG : Table() {
             addWASMCID(builder, wasmCidOffset)
             addWASMHASH(builder, wasmHashOffset)
             addABIVERSION(builder, abiVersion)
+            addBANNERURL(builder, bannerUrlOffset)
+            addSCREENSHOTURLS(builder, screenshotUrlsOffset)
+            addFEATURES(builder, featuresOffset)
+            addTAGS(builder, tagsOffset)
+            addSUPPORTURL(builder, supportUrlOffset)
+            addPUBLISHERURL(builder, publisherUrlOffset)
+            addPUBLISHERHANDLE(builder, publisherHandleOffset)
+            addPUBLISHERNAME(builder, publisherNameOffset)
+            addTAGLINE(builder, taglineOffset)
             addDESCRIPTION(builder, descriptionOffset)
             addVERSION(builder, versionOffset)
             addNAME(builder, nameOffset)
             addPLUGINID(builder, pluginIdOffset)
+            addLISTINGSTATUS(builder, listingStatus)
+            addPAYMENTMODEL(builder, paymentModel)
             addENCRYPTED(builder, encrypted)
             addPLUGINTYPE(builder, pluginType)
             return endPLG(builder)
         }
-        fun startPLG(builder: FlatBufferBuilder) = builder.startTable(29)
+        fun startPLG(builder: FlatBufferBuilder) = builder.startTable(44)
         fun addPLUGINID(builder: FlatBufferBuilder, pluginId: Int) = builder.addOffset(0, pluginId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(2, version, 0)
         fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(3, description, 0)
-        fun addPLUGINTYPE(builder: FlatBufferBuilder, pluginType: Byte) = builder.addByte(4, pluginType, 0)
-        fun addABIVERSION(builder: FlatBufferBuilder, abiVersion: UInt) = builder.addInt(5, abiVersion.toInt(), 1)
-        fun addWASMHASH(builder: FlatBufferBuilder, wasmHash: Int) = builder.addOffset(6, wasmHash, 0)
+        fun addTAGLINE(builder: FlatBufferBuilder, tagline: Int) = builder.addOffset(4, tagline, 0)
+        fun addPLUGINTYPE(builder: FlatBufferBuilder, pluginType: Byte) = builder.addByte(5, pluginType, 0)
+        fun addPUBLISHERNAME(builder: FlatBufferBuilder, publisherName: Int) = builder.addOffset(6, publisherName, 0)
+        fun addPUBLISHERHANDLE(builder: FlatBufferBuilder, publisherHandle: Int) = builder.addOffset(7, publisherHandle, 0)
+        fun addPUBLISHERURL(builder: FlatBufferBuilder, publisherUrl: Int) = builder.addOffset(8, publisherUrl, 0)
+        fun addSUPPORTURL(builder: FlatBufferBuilder, supportUrl: Int) = builder.addOffset(9, supportUrl, 0)
+        fun addTAGS(builder: FlatBufferBuilder, tags: Int) = builder.addOffset(10, tags, 0)
+        fun createTagsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startTagsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addFEATURES(builder: FlatBufferBuilder, features: Int) = builder.addOffset(11, features, 0)
+        fun createFeaturesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startFeaturesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSCREENSHOTURLS(builder: FlatBufferBuilder, screenshotUrls: Int) = builder.addOffset(12, screenshotUrls, 0)
+        fun createScreenshotUrlsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startScreenshotUrlsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addBANNERURL(builder: FlatBufferBuilder, bannerUrl: Int) = builder.addOffset(13, bannerUrl, 0)
+        fun addABIVERSION(builder: FlatBufferBuilder, abiVersion: UInt) = builder.addInt(14, abiVersion.toInt(), 1)
+        fun addWASMHASH(builder: FlatBufferBuilder, wasmHash: Int) = builder.addOffset(15, wasmHash, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createWasmHashVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -463,9 +701,9 @@ class PLG : Table() {
             return builder.endVector()
         }
         fun startWasmHashVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addWASMSIZE(builder: FlatBufferBuilder, wasmSize: ULong) = builder.addLong(7, wasmSize.toLong(), 0)
-        fun addWASMCID(builder: FlatBufferBuilder, wasmCid: Int) = builder.addOffset(8, wasmCid, 0)
-        fun addENCRYPTEDWASMHASH(builder: FlatBufferBuilder, encryptedWasmHash: Int) = builder.addOffset(9, encryptedWasmHash, 0)
+        fun addWASMSIZE(builder: FlatBufferBuilder, wasmSize: ULong) = builder.addLong(16, wasmSize.toLong(), 0)
+        fun addWASMCID(builder: FlatBufferBuilder, wasmCid: Int) = builder.addOffset(17, wasmCid, 0)
+        fun addENCRYPTEDWASMHASH(builder: FlatBufferBuilder, encryptedWasmHash: Int) = builder.addOffset(18, encryptedWasmHash, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createEncryptedWasmHashVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -475,8 +713,8 @@ class PLG : Table() {
             return builder.endVector()
         }
         fun startEncryptedWasmHashVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addENCRYPTEDWASMSIZE(builder: FlatBufferBuilder, encryptedWasmSize: ULong) = builder.addLong(10, encryptedWasmSize.toLong(), 0)
-        fun addENTRYFUNCTIONS(builder: FlatBufferBuilder, entryFunctions: Int) = builder.addOffset(11, entryFunctions, 0)
+        fun addENCRYPTEDWASMSIZE(builder: FlatBufferBuilder, encryptedWasmSize: ULong) = builder.addLong(19, encryptedWasmSize.toLong(), 0)
+        fun addENTRYFUNCTIONS(builder: FlatBufferBuilder, entryFunctions: Int) = builder.addOffset(20, entryFunctions, 0)
         fun createEntryFunctionsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -485,7 +723,7 @@ class PLG : Table() {
             return builder.endVector()
         }
         fun startEntryFunctionsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addREQUIREDSCHEMAS(builder: FlatBufferBuilder, requiredSchemas: Int) = builder.addOffset(12, requiredSchemas, 0)
+        fun addREQUIREDSCHEMAS(builder: FlatBufferBuilder, requiredSchemas: Int) = builder.addOffset(21, requiredSchemas, 0)
         fun createRequiredSchemasVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -494,7 +732,7 @@ class PLG : Table() {
             return builder.endVector()
         }
         fun startRequiredSchemasVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addDEPENDENCIES(builder: FlatBufferBuilder, dependencies: Int) = builder.addOffset(13, dependencies, 0)
+        fun addDEPENDENCIES(builder: FlatBufferBuilder, dependencies: Int) = builder.addOffset(22, dependencies, 0)
         fun createDependenciesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -503,7 +741,7 @@ class PLG : Table() {
             return builder.endVector()
         }
         fun startDependenciesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCAPABILITIES(builder: FlatBufferBuilder, capabilities: Int) = builder.addOffset(14, capabilities, 0)
+        fun addCAPABILITIES(builder: FlatBufferBuilder, capabilities: Int) = builder.addOffset(23, capabilities, 0)
         fun createCapabilitiesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -512,12 +750,12 @@ class PLG : Table() {
             return builder.endVector()
         }
         fun startCapabilitiesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPROVIDERPEERID(builder: FlatBufferBuilder, providerPeerId: Int) = builder.addOffset(15, providerPeerId, 0)
-        fun addPROVIDEREPMCID(builder: FlatBufferBuilder, providerEpmCid: Int) = builder.addOffset(16, providerEpmCid, 0)
-        fun addENCRYPTED(builder: FlatBufferBuilder, encrypted: Boolean) = builder.addBoolean(17, encrypted, true)
-        fun addREQUIREDSCOPE(builder: FlatBufferBuilder, requiredScope: Int) = builder.addOffset(18, requiredScope, 0)
-        fun addKEYID(builder: FlatBufferBuilder, keyId: Int) = builder.addOffset(19, keyId, 0)
-        fun addALLOWEDDOMAINS(builder: FlatBufferBuilder, allowedDomains: Int) = builder.addOffset(20, allowedDomains, 0)
+        fun addPROVIDERPEERID(builder: FlatBufferBuilder, providerPeerId: Int) = builder.addOffset(24, providerPeerId, 0)
+        fun addPROVIDEREPMCID(builder: FlatBufferBuilder, providerEpmCid: Int) = builder.addOffset(25, providerEpmCid, 0)
+        fun addENCRYPTED(builder: FlatBufferBuilder, encrypted: Boolean) = builder.addBoolean(26, encrypted, true)
+        fun addREQUIREDSCOPE(builder: FlatBufferBuilder, requiredScope: Int) = builder.addOffset(27, requiredScope, 0)
+        fun addKEYID(builder: FlatBufferBuilder, keyId: Int) = builder.addOffset(28, keyId, 0)
+        fun addALLOWEDDOMAINS(builder: FlatBufferBuilder, allowedDomains: Int) = builder.addOffset(29, allowedDomains, 0)
         fun createAllowedDomainsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -526,8 +764,8 @@ class PLG : Table() {
             return builder.endVector()
         }
         fun startAllowedDomainsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMAXGRANTTIMEOUTMS(builder: FlatBufferBuilder, maxGrantTimeoutMs: ULong) = builder.addLong(21, maxGrantTimeoutMs.toLong(), 0)
-        fun addMINPERMISSIONS(builder: FlatBufferBuilder, minPermissions: Int) = builder.addOffset(22, minPermissions, 0)
+        fun addMAXGRANTTIMEOUTMS(builder: FlatBufferBuilder, maxGrantTimeoutMs: ULong) = builder.addLong(30, maxGrantTimeoutMs.toLong(), 0)
+        fun addMINPERMISSIONS(builder: FlatBufferBuilder, minPermissions: Int) = builder.addOffset(31, minPermissions, 0)
         fun createMinPermissionsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -536,12 +774,26 @@ class PLG : Table() {
             return builder.endVector()
         }
         fun startMinPermissionsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCREATEDAT(builder: FlatBufferBuilder, createdAt: ULong) = builder.addLong(23, createdAt.toLong(), 0)
-        fun addUPDATEDAT(builder: FlatBufferBuilder, updatedAt: ULong) = builder.addLong(24, updatedAt.toLong(), 0)
-        fun addDOCUMENTATIONURL(builder: FlatBufferBuilder, documentationUrl: Int) = builder.addOffset(25, documentationUrl, 0)
-        fun addICONURL(builder: FlatBufferBuilder, iconUrl: Int) = builder.addOffset(26, iconUrl, 0)
-        fun addLICENSE(builder: FlatBufferBuilder, license: Int) = builder.addOffset(27, license, 0)
-        fun addSIGNATURE(builder: FlatBufferBuilder, signature: Int) = builder.addOffset(28, signature, 0)
+        fun addCREATEDAT(builder: FlatBufferBuilder, createdAt: ULong) = builder.addLong(32, createdAt.toLong(), 0)
+        fun addUPDATEDAT(builder: FlatBufferBuilder, updatedAt: ULong) = builder.addLong(33, updatedAt.toLong(), 0)
+        fun addDOCUMENTATIONURL(builder: FlatBufferBuilder, documentationUrl: Int) = builder.addOffset(34, documentationUrl, 0)
+        fun addCHANGELOGURL(builder: FlatBufferBuilder, changelogUrl: Int) = builder.addOffset(35, changelogUrl, 0)
+        fun addICONURL(builder: FlatBufferBuilder, iconUrl: Int) = builder.addOffset(36, iconUrl, 0)
+        fun addLICENSE(builder: FlatBufferBuilder, license: Int) = builder.addOffset(37, license, 0)
+        fun addPAYMENTMODEL(builder: FlatBufferBuilder, paymentModel: Byte) = builder.addByte(38, paymentModel, 0)
+        fun addPRICEUSDCENTS(builder: FlatBufferBuilder, priceUsdCents: UInt) = builder.addInt(39, priceUsdCents.toInt(), 0)
+        fun addSUBSCRIPTIONPERIODDAYS(builder: FlatBufferBuilder, subscriptionPeriodDays: UInt) = builder.addInt(40, subscriptionPeriodDays.toInt(), 0)
+        fun addACCEPTEDPAYMENTMETHODS(builder: FlatBufferBuilder, acceptedPaymentMethods: Int) = builder.addOffset(41, acceptedPaymentMethods, 0)
+        fun createAcceptedPaymentMethodsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startAcceptedPaymentMethodsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addLISTINGSTATUS(builder: FlatBufferBuilder, listingStatus: Byte) = builder.addByte(42, listingStatus, 0)
+        fun addSIGNATURE(builder: FlatBufferBuilder, signature: Int) = builder.addOffset(43, signature, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

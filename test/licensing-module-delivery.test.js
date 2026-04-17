@@ -101,4 +101,41 @@ describe('Licensing module delivery schemas', () => {
             assert.match(generatedTs, new RegExp(`\\b${field}\\b`), `PLG TS bindings missing ${field}`);
         }
     });
+
+    it('extends PLG with canonical storefront listing fields and enums', async () => {
+        const source = await fs.readFile(path.join(repoRoot, 'schema', 'PLG', 'main.fbs'), 'utf8');
+        const generatedTs = await fs.readFile(path.join(repoRoot, 'lib', 'ts', 'PLG', 'PLG.ts'), 'utf8');
+        const generatedGo = await fs.readFile(path.join(repoRoot, 'lib', 'go', 'PLG', 'PLG.go'), 'utf8');
+
+        for (const field of [
+            'TAGLINE',
+            'PUBLISHER_NAME',
+            'PUBLISHER_HANDLE',
+            'PUBLISHER_URL',
+            'SUPPORT_URL',
+            'TAGS',
+            'FEATURES',
+            'SCREENSHOT_URLS',
+            'BANNER_URL',
+            'PAYMENT_MODEL',
+            'PRICE_USD_CENTS',
+            'SUBSCRIPTION_PERIOD_DAYS',
+            'ACCEPTED_PAYMENT_METHODS',
+            'LISTING_STATUS',
+            'CHANGELOG_URL'
+        ]) {
+            assert.match(source, new RegExp(`\\b${field}\\b`), `PLG missing ${field}`);
+            assert.match(generatedTs, new RegExp(`\\b${field}\\b`), `PLG TS bindings missing ${field}`);
+            assert.match(generatedGo, new RegExp(`\\b${field}\\b`), `PLG Go bindings missing ${field}`);
+        }
+
+        for (const enumName of ['paymentModel', 'listingStatus']) {
+            assert.match(source, new RegExp(`enum\\s+${enumName}\\s*:`), `PLG missing enum ${enumName}`);
+        }
+
+        await fs.access(path.join(repoRoot, 'lib', 'ts', 'PLG', 'paymentModel.ts'));
+        await fs.access(path.join(repoRoot, 'lib', 'ts', 'PLG', 'listingStatus.ts'));
+        await fs.access(path.join(repoRoot, 'lib', 'go', 'PLG', 'paymentModel.go'));
+        await fs.access(path.join(repoRoot, 'lib', 'go', 'PLG', 'listingStatus.go'));
+    });
 });

@@ -7,11 +7,13 @@ import * as flatbuffers from 'flatbuffers';
 import { EntryFunction, EntryFunctionT } from './EntryFunction.js';
 import { PluginCapability, PluginCapabilityT } from './PluginCapability.js';
 import { PluginDependency, PluginDependencyT } from './PluginDependency.js';
+import { listingStatus } from './listingStatus.js';
+import { paymentModel } from './paymentModel.js';
 import { pluginType } from './pluginType.js';
 
 
 /**
- * Plugin Manifest - WASM plugin distribution
+ * Plugin Manifest - canonical signed storefront and WASM distribution record
  */
 export class PLG implements flatbuffers.IUnpackableObject<PLGT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -76,18 +78,123 @@ DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
+ * Short marketing summary shown in storefront listings
+ */
+TAGLINE():string|null
+TAGLINE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TAGLINE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
  * Type/category of the plugin
  */
 PLUGIN_TYPE():pluginType {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : pluginType.Sensor;
+}
+
+/**
+ * Human-readable publisher or organization name
+ */
+PUBLISHER_NAME():string|null
+PUBLISHER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PUBLISHER_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Publisher handle or username
+ */
+PUBLISHER_HANDLE():string|null
+PUBLISHER_HANDLE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PUBLISHER_HANDLE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Canonical publisher website
+ */
+PUBLISHER_URL():string|null
+PUBLISHER_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PUBLISHER_URL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Support or helpdesk URL for this plugin
+ */
+SUPPORT_URL():string|null
+SUPPORT_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SUPPORT_URL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Search and categorization tags for discovery
+ */
+TAGS(index: number):string
+TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+tagsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Short feature bullets highlighted in storefront listings
+ */
+FEATURES(index: number):string
+FEATURES(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+FEATURES(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+featuresLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Screenshot URLs showing the plugin in use
+ */
+SCREENSHOT_URLS(index: number):string
+SCREENSHOT_URLS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+SCREENSHOT_URLS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+screenshotUrlsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Optional hero/banner image URL for the listing
+ */
+BANNER_URL():string|null
+BANNER_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+BANNER_URL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 /**
  * ABI version for compatibility checking
  */
 ABI_VERSION():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 1;
 }
 
@@ -95,17 +202,17 @@ ABI_VERSION():number {
  * SHA256 hash of the decrypted WASM binary
  */
 WASM_HASH(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
 }
 
 wasmHashLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 wasmHashArray():Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
@@ -113,7 +220,7 @@ wasmHashArray():Uint8Array|null {
  * Size of decrypted WASM binary in bytes
  */
 WASM_SIZE():bigint {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
@@ -123,7 +230,7 @@ WASM_SIZE():bigint {
 WASM_CID():string|null
 WASM_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 WASM_CID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -131,17 +238,17 @@ WASM_CID(optionalEncoding?:any):string|Uint8Array|null {
  * SHA256 hash of the encrypted delivery artifact bytes
  */
 ENCRYPTED_WASM_HASH(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
 }
 
 encryptedWasmHashLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 encryptedWasmHashArray():Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
@@ -149,7 +256,7 @@ encryptedWasmHashArray():Uint8Array|null {
  * Size of the encrypted delivery artifact in bytes
  */
 ENCRYPTED_WASM_SIZE():bigint {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
@@ -157,12 +264,12 @@ ENCRYPTED_WASM_SIZE():bigint {
  * Entry point functions exported by the plugin
  */
 ENTRY_FUNCTIONS(index: number, obj?:EntryFunction):EntryFunction|null {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? (obj || new EntryFunction()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 entryFunctionsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -172,12 +279,12 @@ entryFunctionsLength():number {
 REQUIRED_SCHEMAS(index: number):string
 REQUIRED_SCHEMAS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 REQUIRED_SCHEMAS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 requiredSchemasLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -185,12 +292,12 @@ requiredSchemasLength():number {
  * Other plugins this depends on
  */
 DEPENDENCIES(index: number, obj?:PluginDependency):PluginDependency|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? (obj || new PluginDependency()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 dependenciesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -198,12 +305,12 @@ dependenciesLength():number {
  * Capabilities provided by this plugin
  */
 CAPABILITIES(index: number, obj?:PluginCapability):PluginCapability|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? (obj || new PluginCapability()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 capabilitiesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -213,7 +320,7 @@ capabilitiesLength():number {
 PROVIDER_PEER_ID():string|null
 PROVIDER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 PROVIDER_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
+  const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -223,7 +330,7 @@ PROVIDER_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
 PROVIDER_EPM_CID():string|null
 PROVIDER_EPM_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 PROVIDER_EPM_CID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
+  const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -231,7 +338,7 @@ PROVIDER_EPM_CID(optionalEncoding?:any):string|Uint8Array|null {
  * Whether the WASM binary is encrypted
  */
 ENCRYPTED():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 38);
+  const offset = this.bb!.__offset(this.bb_pos, 56);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : true;
 }
 
@@ -241,7 +348,7 @@ ENCRYPTED():boolean {
 REQUIRED_SCOPE():string|null
 REQUIRED_SCOPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 REQUIRED_SCOPE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 40);
+  const offset = this.bb!.__offset(this.bb_pos, 58);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -251,7 +358,7 @@ REQUIRED_SCOPE(optionalEncoding?:any):string|Uint8Array|null {
 KEY_ID():string|null
 KEY_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 KEY_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 42);
+  const offset = this.bb!.__offset(this.bb_pos, 60);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -261,12 +368,12 @@ KEY_ID(optionalEncoding?:any):string|Uint8Array|null {
 ALLOWED_DOMAINS(index: number):string
 ALLOWED_DOMAINS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 ALLOWED_DOMAINS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 44);
+  const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 allowedDomainsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 44);
+  const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -274,7 +381,7 @@ allowedDomainsLength():number {
  * Maximum grant timeout allowed for this module publication
  */
 MAX_GRANT_TIMEOUT_MS():bigint {
-  const offset = this.bb!.__offset(this.bb_pos, 46);
+  const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
@@ -284,12 +391,12 @@ MAX_GRANT_TIMEOUT_MS():bigint {
 MIN_PERMISSIONS(index: number):string
 MIN_PERMISSIONS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 MIN_PERMISSIONS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 48);
+  const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 minPermissionsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 48);
+  const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -297,7 +404,7 @@ minPermissionsLength():number {
  * Unix timestamp when plugin was created
  */
 CREATED_AT():bigint {
-  const offset = this.bb!.__offset(this.bb_pos, 50);
+  const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
@@ -305,7 +412,7 @@ CREATED_AT():bigint {
  * Unix timestamp when plugin was last updated
  */
 UPDATED_AT():bigint {
-  const offset = this.bb!.__offset(this.bb_pos, 52);
+  const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
@@ -315,7 +422,17 @@ UPDATED_AT():bigint {
 DOCUMENTATION_URL():string|null
 DOCUMENTATION_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DOCUMENTATION_URL(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 54);
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * URL to plugin changelog or release notes
+ */
+CHANGELOG_URL():string|null
+CHANGELOG_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CHANGELOG_URL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -325,7 +442,7 @@ DOCUMENTATION_URL(optionalEncoding?:any):string|Uint8Array|null {
 ICON_URL():string|null
 ICON_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ICON_URL(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 56);
+  const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -335,30 +452,77 @@ ICON_URL(optionalEncoding?:any):string|Uint8Array|null {
 LICENSE():string|null
 LICENSE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 LICENSE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 58);
+  const offset = this.bb!.__offset(this.bb_pos, 78);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Commercial model used for storefront purchase flows
+ */
+PAYMENT_MODEL():paymentModel {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : paymentModel.Free;
+}
+
+/**
+ * Price in USD cents for one-time purchase or subscription period
+ */
+PRICE_USD_CENTS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Subscription billing period length in days
+ */
+SUBSCRIPTION_PERIOD_DAYS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Accepted payment methods, e.g. "stripe", "sol", "usdc"
+ */
+ACCEPTED_PAYMENT_METHODS(index: number):string
+ACCEPTED_PAYMENT_METHODS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+ACCEPTED_PAYMENT_METHODS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+acceptedPaymentMethodsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Storefront publication state for this manifest version
+ */
+LISTING_STATUS():listingStatus {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : listingStatus.Public;
 }
 
 /**
  * Ed25519 signature from provider over manifest
  */
 SIGNATURE(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 60);
+  const offset = this.bb!.__offset(this.bb_pos, 90);
   return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
 }
 
 signatureLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 60);
+  const offset = this.bb!.__offset(this.bb_pos, 90);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 signatureArray():Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 60);
+  const offset = this.bb!.__offset(this.bb_pos, 90);
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
 static startPLG(builder:flatbuffers.Builder) {
-  builder.startObject(29);
+  builder.startObject(44);
 }
 
 static addPluginId(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset) {
@@ -377,16 +541,88 @@ static addDescription(builder:flatbuffers.Builder, DESCRIPTIONOffset:flatbuffers
   builder.addFieldOffset(3, DESCRIPTIONOffset, 0);
 }
 
+static addTagline(builder:flatbuffers.Builder, TAGLINEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, TAGLINEOffset, 0);
+}
+
 static addPluginType(builder:flatbuffers.Builder, PLUGIN_TYPE:pluginType) {
-  builder.addFieldInt8(4, PLUGIN_TYPE, pluginType.Sensor);
+  builder.addFieldInt8(5, PLUGIN_TYPE, pluginType.Sensor);
+}
+
+static addPublisherName(builder:flatbuffers.Builder, PUBLISHER_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, PUBLISHER_NAMEOffset, 0);
+}
+
+static addPublisherHandle(builder:flatbuffers.Builder, PUBLISHER_HANDLEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, PUBLISHER_HANDLEOffset, 0);
+}
+
+static addPublisherUrl(builder:flatbuffers.Builder, PUBLISHER_URLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, PUBLISHER_URLOffset, 0);
+}
+
+static addSupportUrl(builder:flatbuffers.Builder, SUPPORT_URLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, SUPPORT_URLOffset, 0);
+}
+
+static addTags(builder:flatbuffers.Builder, TAGSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, TAGSOffset, 0);
+}
+
+static createTagsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startTagsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addFeatures(builder:flatbuffers.Builder, FEATURESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, FEATURESOffset, 0);
+}
+
+static createFeaturesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startFeaturesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addScreenshotUrls(builder:flatbuffers.Builder, SCREENSHOT_URLSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, SCREENSHOT_URLSOffset, 0);
+}
+
+static createScreenshotUrlsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startScreenshotUrlsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addBannerUrl(builder:flatbuffers.Builder, BANNER_URLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, BANNER_URLOffset, 0);
 }
 
 static addAbiVersion(builder:flatbuffers.Builder, ABI_VERSION:number) {
-  builder.addFieldInt32(5, ABI_VERSION, 1);
+  builder.addFieldInt32(14, ABI_VERSION, 1);
 }
 
 static addWasmHash(builder:flatbuffers.Builder, WASM_HASHOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, WASM_HASHOffset, 0);
+  builder.addFieldOffset(15, WASM_HASHOffset, 0);
 }
 
 static createWasmHashVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
@@ -402,15 +638,15 @@ static startWasmHashVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addWasmSize(builder:flatbuffers.Builder, WASM_SIZE:bigint) {
-  builder.addFieldInt64(7, WASM_SIZE, BigInt('0'));
+  builder.addFieldInt64(16, WASM_SIZE, BigInt('0'));
 }
 
 static addWasmCid(builder:flatbuffers.Builder, WASM_CIDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, WASM_CIDOffset, 0);
+  builder.addFieldOffset(17, WASM_CIDOffset, 0);
 }
 
 static addEncryptedWasmHash(builder:flatbuffers.Builder, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, ENCRYPTED_WASM_HASHOffset, 0);
+  builder.addFieldOffset(18, ENCRYPTED_WASM_HASHOffset, 0);
 }
 
 static createEncryptedWasmHashVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
@@ -426,11 +662,11 @@ static startEncryptedWasmHashVector(builder:flatbuffers.Builder, numElems:number
 }
 
 static addEncryptedWasmSize(builder:flatbuffers.Builder, ENCRYPTED_WASM_SIZE:bigint) {
-  builder.addFieldInt64(10, ENCRYPTED_WASM_SIZE, BigInt('0'));
+  builder.addFieldInt64(19, ENCRYPTED_WASM_SIZE, BigInt('0'));
 }
 
 static addEntryFunctions(builder:flatbuffers.Builder, ENTRY_FUNCTIONSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, ENTRY_FUNCTIONSOffset, 0);
+  builder.addFieldOffset(20, ENTRY_FUNCTIONSOffset, 0);
 }
 
 static createEntryFunctionsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -446,7 +682,7 @@ static startEntryFunctionsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addRequiredSchemas(builder:flatbuffers.Builder, REQUIRED_SCHEMASOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, REQUIRED_SCHEMASOffset, 0);
+  builder.addFieldOffset(21, REQUIRED_SCHEMASOffset, 0);
 }
 
 static createRequiredSchemasVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -462,7 +698,7 @@ static startRequiredSchemasVector(builder:flatbuffers.Builder, numElems:number) 
 }
 
 static addDependencies(builder:flatbuffers.Builder, DEPENDENCIESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, DEPENDENCIESOffset, 0);
+  builder.addFieldOffset(22, DEPENDENCIESOffset, 0);
 }
 
 static createDependenciesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -478,7 +714,7 @@ static startDependenciesVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addCapabilities(builder:flatbuffers.Builder, CAPABILITIESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, CAPABILITIESOffset, 0);
+  builder.addFieldOffset(23, CAPABILITIESOffset, 0);
 }
 
 static createCapabilitiesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -494,27 +730,27 @@ static startCapabilitiesVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addProviderPeerId(builder:flatbuffers.Builder, PROVIDER_PEER_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, PROVIDER_PEER_IDOffset, 0);
+  builder.addFieldOffset(24, PROVIDER_PEER_IDOffset, 0);
 }
 
 static addProviderEpmCid(builder:flatbuffers.Builder, PROVIDER_EPM_CIDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(16, PROVIDER_EPM_CIDOffset, 0);
+  builder.addFieldOffset(25, PROVIDER_EPM_CIDOffset, 0);
 }
 
 static addEncrypted(builder:flatbuffers.Builder, ENCRYPTED:boolean) {
-  builder.addFieldInt8(17, +ENCRYPTED, +true);
+  builder.addFieldInt8(26, +ENCRYPTED, +true);
 }
 
 static addRequiredScope(builder:flatbuffers.Builder, REQUIRED_SCOPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(18, REQUIRED_SCOPEOffset, 0);
+  builder.addFieldOffset(27, REQUIRED_SCOPEOffset, 0);
 }
 
 static addKeyId(builder:flatbuffers.Builder, KEY_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(19, KEY_IDOffset, 0);
+  builder.addFieldOffset(28, KEY_IDOffset, 0);
 }
 
 static addAllowedDomains(builder:flatbuffers.Builder, ALLOWED_DOMAINSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(20, ALLOWED_DOMAINSOffset, 0);
+  builder.addFieldOffset(29, ALLOWED_DOMAINSOffset, 0);
 }
 
 static createAllowedDomainsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -530,11 +766,11 @@ static startAllowedDomainsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addMaxGrantTimeoutMs(builder:flatbuffers.Builder, MAX_GRANT_TIMEOUT_MS:bigint) {
-  builder.addFieldInt64(21, MAX_GRANT_TIMEOUT_MS, BigInt('0'));
+  builder.addFieldInt64(30, MAX_GRANT_TIMEOUT_MS, BigInt('0'));
 }
 
 static addMinPermissions(builder:flatbuffers.Builder, MIN_PERMISSIONSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(22, MIN_PERMISSIONSOffset, 0);
+  builder.addFieldOffset(31, MIN_PERMISSIONSOffset, 0);
 }
 
 static createMinPermissionsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -550,27 +786,63 @@ static startMinPermissionsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addCreatedAt(builder:flatbuffers.Builder, CREATED_AT:bigint) {
-  builder.addFieldInt64(23, CREATED_AT, BigInt('0'));
+  builder.addFieldInt64(32, CREATED_AT, BigInt('0'));
 }
 
 static addUpdatedAt(builder:flatbuffers.Builder, UPDATED_AT:bigint) {
-  builder.addFieldInt64(24, UPDATED_AT, BigInt('0'));
+  builder.addFieldInt64(33, UPDATED_AT, BigInt('0'));
 }
 
 static addDocumentationUrl(builder:flatbuffers.Builder, DOCUMENTATION_URLOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(25, DOCUMENTATION_URLOffset, 0);
+  builder.addFieldOffset(34, DOCUMENTATION_URLOffset, 0);
+}
+
+static addChangelogUrl(builder:flatbuffers.Builder, CHANGELOG_URLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(35, CHANGELOG_URLOffset, 0);
 }
 
 static addIconUrl(builder:flatbuffers.Builder, ICON_URLOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(26, ICON_URLOffset, 0);
+  builder.addFieldOffset(36, ICON_URLOffset, 0);
 }
 
 static addLicense(builder:flatbuffers.Builder, LICENSEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(27, LICENSEOffset, 0);
+  builder.addFieldOffset(37, LICENSEOffset, 0);
+}
+
+static addPaymentModel(builder:flatbuffers.Builder, PAYMENT_MODEL:paymentModel) {
+  builder.addFieldInt8(38, PAYMENT_MODEL, paymentModel.Free);
+}
+
+static addPriceUsdCents(builder:flatbuffers.Builder, PRICE_USD_CENTS:number) {
+  builder.addFieldInt32(39, PRICE_USD_CENTS, 0);
+}
+
+static addSubscriptionPeriodDays(builder:flatbuffers.Builder, SUBSCRIPTION_PERIOD_DAYS:number) {
+  builder.addFieldInt32(40, SUBSCRIPTION_PERIOD_DAYS, 0);
+}
+
+static addAcceptedPaymentMethods(builder:flatbuffers.Builder, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(41, ACCEPTED_PAYMENT_METHODSOffset, 0);
+}
+
+static createAcceptedPaymentMethodsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startAcceptedPaymentMethodsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addListingStatus(builder:flatbuffers.Builder, LISTING_STATUS:listingStatus) {
+  builder.addFieldInt8(42, LISTING_STATUS, listingStatus.Public);
 }
 
 static addSignature(builder:flatbuffers.Builder, SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(28, SIGNATUREOffset, 0);
+  builder.addFieldOffset(43, SIGNATUREOffset, 0);
 }
 
 static createSignatureVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
@@ -601,13 +873,22 @@ static finishSizePrefixedPLGBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$PLG', true);
 }
 
-static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginType, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, ALLOWED_DOMAINSOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, TAGLINEOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginType, PUBLISHER_NAMEOffset:flatbuffers.Offset, PUBLISHER_HANDLEOffset:flatbuffers.Offset, PUBLISHER_URLOffset:flatbuffers.Offset, SUPPORT_URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, SCREENSHOT_URLSOffset:flatbuffers.Offset, BANNER_URLOffset:flatbuffers.Offset, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, ALLOWED_DOMAINSOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, CHANGELOG_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, PAYMENT_MODEL:paymentModel, PRICE_USD_CENTS:number, SUBSCRIPTION_PERIOD_DAYS:number, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset, LISTING_STATUS:listingStatus, SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
   PLG.startPLG(builder);
   PLG.addPluginId(builder, PLUGIN_IDOffset);
   PLG.addName(builder, NAMEOffset);
   PLG.addVersion(builder, VERSIONOffset);
   PLG.addDescription(builder, DESCRIPTIONOffset);
+  PLG.addTagline(builder, TAGLINEOffset);
   PLG.addPluginType(builder, PLUGIN_TYPE);
+  PLG.addPublisherName(builder, PUBLISHER_NAMEOffset);
+  PLG.addPublisherHandle(builder, PUBLISHER_HANDLEOffset);
+  PLG.addPublisherUrl(builder, PUBLISHER_URLOffset);
+  PLG.addSupportUrl(builder, SUPPORT_URLOffset);
+  PLG.addTags(builder, TAGSOffset);
+  PLG.addFeatures(builder, FEATURESOffset);
+  PLG.addScreenshotUrls(builder, SCREENSHOT_URLSOffset);
+  PLG.addBannerUrl(builder, BANNER_URLOffset);
   PLG.addAbiVersion(builder, ABI_VERSION);
   PLG.addWasmHash(builder, WASM_HASHOffset);
   PLG.addWasmSize(builder, WASM_SIZE);
@@ -629,8 +910,14 @@ static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset
   PLG.addCreatedAt(builder, CREATED_AT);
   PLG.addUpdatedAt(builder, UPDATED_AT);
   PLG.addDocumentationUrl(builder, DOCUMENTATION_URLOffset);
+  PLG.addChangelogUrl(builder, CHANGELOG_URLOffset);
   PLG.addIconUrl(builder, ICON_URLOffset);
   PLG.addLicense(builder, LICENSEOffset);
+  PLG.addPaymentModel(builder, PAYMENT_MODEL);
+  PLG.addPriceUsdCents(builder, PRICE_USD_CENTS);
+  PLG.addSubscriptionPeriodDays(builder, SUBSCRIPTION_PERIOD_DAYS);
+  PLG.addAcceptedPaymentMethods(builder, ACCEPTED_PAYMENT_METHODSOffset);
+  PLG.addListingStatus(builder, LISTING_STATUS);
   PLG.addSignature(builder, SIGNATUREOffset);
   return PLG.endPLG(builder);
 }
@@ -641,7 +928,16 @@ unpack(): PLGT {
     this.NAME(),
     this.VERSION(),
     this.DESCRIPTION(),
+    this.TAGLINE(),
     this.PLUGIN_TYPE(),
+    this.PUBLISHER_NAME(),
+    this.PUBLISHER_HANDLE(),
+    this.PUBLISHER_URL(),
+    this.SUPPORT_URL(),
+    this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength()),
+    this.bb!.createScalarList<string>(this.FEATURES.bind(this), this.featuresLength()),
+    this.bb!.createScalarList<string>(this.SCREENSHOT_URLS.bind(this), this.screenshotUrlsLength()),
+    this.BANNER_URL(),
     this.ABI_VERSION(),
     this.bb!.createScalarList<number>(this.WASM_HASH.bind(this), this.wasmHashLength()),
     this.WASM_SIZE(),
@@ -663,8 +959,14 @@ unpack(): PLGT {
     this.CREATED_AT(),
     this.UPDATED_AT(),
     this.DOCUMENTATION_URL(),
+    this.CHANGELOG_URL(),
     this.ICON_URL(),
     this.LICENSE(),
+    this.PAYMENT_MODEL(),
+    this.PRICE_USD_CENTS(),
+    this.SUBSCRIPTION_PERIOD_DAYS(),
+    this.bb!.createScalarList<string>(this.ACCEPTED_PAYMENT_METHODS.bind(this), this.acceptedPaymentMethodsLength()),
+    this.LISTING_STATUS(),
     this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength())
   );
 }
@@ -675,7 +977,16 @@ unpackTo(_o: PLGT): void {
   _o.NAME = this.NAME();
   _o.VERSION = this.VERSION();
   _o.DESCRIPTION = this.DESCRIPTION();
+  _o.TAGLINE = this.TAGLINE();
   _o.PLUGIN_TYPE = this.PLUGIN_TYPE();
+  _o.PUBLISHER_NAME = this.PUBLISHER_NAME();
+  _o.PUBLISHER_HANDLE = this.PUBLISHER_HANDLE();
+  _o.PUBLISHER_URL = this.PUBLISHER_URL();
+  _o.SUPPORT_URL = this.SUPPORT_URL();
+  _o.TAGS = this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength());
+  _o.FEATURES = this.bb!.createScalarList<string>(this.FEATURES.bind(this), this.featuresLength());
+  _o.SCREENSHOT_URLS = this.bb!.createScalarList<string>(this.SCREENSHOT_URLS.bind(this), this.screenshotUrlsLength());
+  _o.BANNER_URL = this.BANNER_URL();
   _o.ABI_VERSION = this.ABI_VERSION();
   _o.WASM_HASH = this.bb!.createScalarList<number>(this.WASM_HASH.bind(this), this.wasmHashLength());
   _o.WASM_SIZE = this.WASM_SIZE();
@@ -697,8 +1008,14 @@ unpackTo(_o: PLGT): void {
   _o.CREATED_AT = this.CREATED_AT();
   _o.UPDATED_AT = this.UPDATED_AT();
   _o.DOCUMENTATION_URL = this.DOCUMENTATION_URL();
+  _o.CHANGELOG_URL = this.CHANGELOG_URL();
   _o.ICON_URL = this.ICON_URL();
   _o.LICENSE = this.LICENSE();
+  _o.PAYMENT_MODEL = this.PAYMENT_MODEL();
+  _o.PRICE_USD_CENTS = this.PRICE_USD_CENTS();
+  _o.SUBSCRIPTION_PERIOD_DAYS = this.SUBSCRIPTION_PERIOD_DAYS();
+  _o.ACCEPTED_PAYMENT_METHODS = this.bb!.createScalarList<string>(this.ACCEPTED_PAYMENT_METHODS.bind(this), this.acceptedPaymentMethodsLength());
+  _o.LISTING_STATUS = this.LISTING_STATUS();
   _o.SIGNATURE = this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength());
 }
 }
@@ -709,7 +1026,16 @@ constructor(
   public NAME: string|Uint8Array|null = null,
   public VERSION: string|Uint8Array|null = null,
   public DESCRIPTION: string|Uint8Array|null = null,
+  public TAGLINE: string|Uint8Array|null = null,
   public PLUGIN_TYPE: pluginType = pluginType.Sensor,
+  public PUBLISHER_NAME: string|Uint8Array|null = null,
+  public PUBLISHER_HANDLE: string|Uint8Array|null = null,
+  public PUBLISHER_URL: string|Uint8Array|null = null,
+  public SUPPORT_URL: string|Uint8Array|null = null,
+  public TAGS: (string)[] = [],
+  public FEATURES: (string)[] = [],
+  public SCREENSHOT_URLS: (string)[] = [],
+  public BANNER_URL: string|Uint8Array|null = null,
   public ABI_VERSION: number = 1,
   public WASM_HASH: (number)[] = [],
   public WASM_SIZE: bigint = BigInt('0'),
@@ -731,8 +1057,14 @@ constructor(
   public CREATED_AT: bigint = BigInt('0'),
   public UPDATED_AT: bigint = BigInt('0'),
   public DOCUMENTATION_URL: string|Uint8Array|null = null,
+  public CHANGELOG_URL: string|Uint8Array|null = null,
   public ICON_URL: string|Uint8Array|null = null,
   public LICENSE: string|Uint8Array|null = null,
+  public PAYMENT_MODEL: paymentModel = paymentModel.Free,
+  public PRICE_USD_CENTS: number = 0,
+  public SUBSCRIPTION_PERIOD_DAYS: number = 0,
+  public ACCEPTED_PAYMENT_METHODS: (string)[] = [],
+  public LISTING_STATUS: listingStatus = listingStatus.Public,
   public SIGNATURE: (number)[] = []
 ){}
 
@@ -742,6 +1074,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
   const VERSION = (this.VERSION !== null ? builder.createString(this.VERSION!) : 0);
   const DESCRIPTION = (this.DESCRIPTION !== null ? builder.createString(this.DESCRIPTION!) : 0);
+  const TAGLINE = (this.TAGLINE !== null ? builder.createString(this.TAGLINE!) : 0);
+  const PUBLISHER_NAME = (this.PUBLISHER_NAME !== null ? builder.createString(this.PUBLISHER_NAME!) : 0);
+  const PUBLISHER_HANDLE = (this.PUBLISHER_HANDLE !== null ? builder.createString(this.PUBLISHER_HANDLE!) : 0);
+  const PUBLISHER_URL = (this.PUBLISHER_URL !== null ? builder.createString(this.PUBLISHER_URL!) : 0);
+  const SUPPORT_URL = (this.SUPPORT_URL !== null ? builder.createString(this.SUPPORT_URL!) : 0);
+  const TAGS = PLG.createTagsVector(builder, builder.createObjectOffsetList(this.TAGS));
+  const FEATURES = PLG.createFeaturesVector(builder, builder.createObjectOffsetList(this.FEATURES));
+  const SCREENSHOT_URLS = PLG.createScreenshotUrlsVector(builder, builder.createObjectOffsetList(this.SCREENSHOT_URLS));
+  const BANNER_URL = (this.BANNER_URL !== null ? builder.createString(this.BANNER_URL!) : 0);
   const WASM_HASH = PLG.createWasmHashVector(builder, this.WASM_HASH);
   const WASM_CID = (this.WASM_CID !== null ? builder.createString(this.WASM_CID!) : 0);
   const ENCRYPTED_WASM_HASH = PLG.createEncryptedWasmHashVector(builder, this.ENCRYPTED_WASM_HASH);
@@ -756,8 +1097,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ALLOWED_DOMAINS = PLG.createAllowedDomainsVector(builder, builder.createObjectOffsetList(this.ALLOWED_DOMAINS));
   const MIN_PERMISSIONS = PLG.createMinPermissionsVector(builder, builder.createObjectOffsetList(this.MIN_PERMISSIONS));
   const DOCUMENTATION_URL = (this.DOCUMENTATION_URL !== null ? builder.createString(this.DOCUMENTATION_URL!) : 0);
+  const CHANGELOG_URL = (this.CHANGELOG_URL !== null ? builder.createString(this.CHANGELOG_URL!) : 0);
   const ICON_URL = (this.ICON_URL !== null ? builder.createString(this.ICON_URL!) : 0);
   const LICENSE = (this.LICENSE !== null ? builder.createString(this.LICENSE!) : 0);
+  const ACCEPTED_PAYMENT_METHODS = PLG.createAcceptedPaymentMethodsVector(builder, builder.createObjectOffsetList(this.ACCEPTED_PAYMENT_METHODS));
   const SIGNATURE = PLG.createSignatureVector(builder, this.SIGNATURE);
 
   return PLG.createPLG(builder,
@@ -765,7 +1108,16 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     NAME,
     VERSION,
     DESCRIPTION,
+    TAGLINE,
     this.PLUGIN_TYPE,
+    PUBLISHER_NAME,
+    PUBLISHER_HANDLE,
+    PUBLISHER_URL,
+    SUPPORT_URL,
+    TAGS,
+    FEATURES,
+    SCREENSHOT_URLS,
+    BANNER_URL,
     this.ABI_VERSION,
     WASM_HASH,
     this.WASM_SIZE,
@@ -787,8 +1139,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.CREATED_AT,
     this.UPDATED_AT,
     DOCUMENTATION_URL,
+    CHANGELOG_URL,
     ICON_URL,
     LICENSE,
+    this.PAYMENT_MODEL,
+    this.PRICE_USD_CENTS,
+    this.SUBSCRIPTION_PERIOD_DAYS,
+    ACCEPTED_PAYMENT_METHODS,
+    this.LISTING_STATUS,
     SIGNATURE
   );
 }

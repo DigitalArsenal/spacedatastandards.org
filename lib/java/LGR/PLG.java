@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Plugin Manifest - WASM plugin distribution
+ * Plugin Manifest - canonical signed storefront and WASM distribution record
  */
 @SuppressWarnings("unused")
 public final class PLG extends com.google.flatbuffers.Table {
@@ -53,164 +53,259 @@ public final class PLG extends com.google.flatbuffers.Table {
   public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
   /**
+   * Short marketing summary shown in storefront listings
+   */
+  public String TAGLINE() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TAGLINEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer TAGLINEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
    * Type/category of the plugin
    */
-  public byte PLUGIN_TYPE() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte PLUGIN_TYPE() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Human-readable publisher or organization name
+   */
+  public String PUBLISHER_NAME() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PUBLISHER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer PUBLISHER_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Publisher handle or username
+   */
+  public String PUBLISHER_HANDLE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PUBLISHER_HANDLEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer PUBLISHER_HANDLEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * Canonical publisher website
+   */
+  public String PUBLISHER_URL() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PUBLISHER_URLAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer PUBLISHER_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  /**
+   * Support or helpdesk URL for this plugin
+   */
+  public String SUPPORT_URL() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SUPPORT_URLAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer SUPPORT_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Search and categorization tags for discovery
+   */
+  public String TAGS(int j) { int o = __offset(24); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int TAGSLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector tagsVector() { return tagsVector(new StringVector()); }
+  public StringVector tagsVector(StringVector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Short feature bullets highlighted in storefront listings
+   */
+  public String FEATURES(int j) { int o = __offset(26); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int FEATURESLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector featuresVector() { return featuresVector(new StringVector()); }
+  public StringVector featuresVector(StringVector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Screenshot URLs showing the plugin in use
+   */
+  public String SCREENSHOT_URLS(int j) { int o = __offset(28); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int SCREENSHOT_URLSLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector screenshotUrlsVector() { return screenshotUrlsVector(new StringVector()); }
+  public StringVector screenshotUrlsVector(StringVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Optional hero/banner image URL for the listing
+   */
+  public String BANNER_URL() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BANNER_URLAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer BANNER_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
   /**
    * ABI version for compatibility checking
    */
-  public long ABI_VERSION() { int o = __offset(14); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 1L; }
+  public long ABI_VERSION() { int o = __offset(32); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 1L; }
   /**
    * SHA256 hash of the decrypted WASM binary
    */
-  public int WASM_HASH(int j) { int o = __offset(16); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
-  public int WASM_HASHLength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
+  public int WASM_HASH(int j) { int o = __offset(34); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int WASM_HASHLength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
   public ByteVector wasmHashVector() { return wasmHashVector(new ByteVector()); }
-  public ByteVector wasmHashVector(ByteVector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer WASM_HASHAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer WASM_HASHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  public ByteVector wasmHashVector(ByteVector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer WASM_HASHAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer WASM_HASHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
   /**
    * Size of decrypted WASM binary in bytes
    */
-  public long WASM_SIZE() { int o = __offset(18); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public long WASM_SIZE() { int o = __offset(36); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
    * IPFS CID of the encrypted WASM binary
    */
-  public String WASM_CID() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer WASM_CIDAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer WASM_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  public String WASM_CID() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer WASM_CIDAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer WASM_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
   /**
    * SHA256 hash of the encrypted delivery artifact bytes
    */
-  public int ENCRYPTED_WASM_HASH(int j) { int o = __offset(22); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
-  public int ENCRYPTED_WASM_HASHLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
+  public int ENCRYPTED_WASM_HASH(int j) { int o = __offset(40); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int ENCRYPTED_WASM_HASHLength() { int o = __offset(40); return o != 0 ? __vector_len(o) : 0; }
   public ByteVector encryptedWasmHashVector() { return encryptedWasmHashVector(new ByteVector()); }
-  public ByteVector encryptedWasmHashVector(ByteVector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer ENCRYPTED_WASM_HASHAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
-  public ByteBuffer ENCRYPTED_WASM_HASHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  public ByteVector encryptedWasmHashVector(ByteVector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ENCRYPTED_WASM_HASHAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer ENCRYPTED_WASM_HASHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
   /**
    * Size of the encrypted delivery artifact in bytes
    */
-  public long ENCRYPTED_WASM_SIZE() { int o = __offset(24); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public long ENCRYPTED_WASM_SIZE() { int o = __offset(42); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
    * Entry point functions exported by the plugin
    */
   public EntryFunction ENTRY_FUNCTIONS(int j) { return ENTRY_FUNCTIONS(new EntryFunction(), j); }
-  public EntryFunction ENTRY_FUNCTIONS(EntryFunction obj, int j) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int ENTRY_FUNCTIONSLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
+  public EntryFunction ENTRY_FUNCTIONS(EntryFunction obj, int j) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int ENTRY_FUNCTIONSLength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
   public EntryFunction.Vector entryFunctionsVector() { return entryFunctionsVector(new EntryFunction.Vector()); }
-  public EntryFunction.Vector entryFunctionsVector(EntryFunction.Vector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public EntryFunction.Vector entryFunctionsVector(EntryFunction.Vector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * FlatBuffer schemas required by this plugin
    */
-  public String REQUIRED_SCHEMAS(int j) { int o = __offset(28); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int REQUIRED_SCHEMASLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
+  public String REQUIRED_SCHEMAS(int j) { int o = __offset(46); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int REQUIRED_SCHEMASLength() { int o = __offset(46); return o != 0 ? __vector_len(o) : 0; }
   public StringVector requiredSchemasVector() { return requiredSchemasVector(new StringVector()); }
-  public StringVector requiredSchemasVector(StringVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector requiredSchemasVector(StringVector obj) { int o = __offset(46); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Other plugins this depends on
    */
   public PluginDependency DEPENDENCIES(int j) { return DEPENDENCIES(new PluginDependency(), j); }
-  public PluginDependency DEPENDENCIES(PluginDependency obj, int j) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int DEPENDENCIESLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
+  public PluginDependency DEPENDENCIES(PluginDependency obj, int j) { int o = __offset(48); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int DEPENDENCIESLength() { int o = __offset(48); return o != 0 ? __vector_len(o) : 0; }
   public PluginDependency.Vector dependenciesVector() { return dependenciesVector(new PluginDependency.Vector()); }
-  public PluginDependency.Vector dependenciesVector(PluginDependency.Vector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public PluginDependency.Vector dependenciesVector(PluginDependency.Vector obj) { int o = __offset(48); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Capabilities provided by this plugin
    */
   public PluginCapability CAPABILITIES(int j) { return CAPABILITIES(new PluginCapability(), j); }
-  public PluginCapability CAPABILITIES(PluginCapability obj, int j) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int CAPABILITIESLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
+  public PluginCapability CAPABILITIES(PluginCapability obj, int j) { int o = __offset(50); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int CAPABILITIESLength() { int o = __offset(50); return o != 0 ? __vector_len(o) : 0; }
   public PluginCapability.Vector capabilitiesVector() { return capabilitiesVector(new PluginCapability.Vector()); }
-  public PluginCapability.Vector capabilitiesVector(PluginCapability.Vector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public PluginCapability.Vector capabilitiesVector(PluginCapability.Vector obj) { int o = __offset(50); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Peer ID of the plugin provider
    */
-  public String PROVIDER_PEER_ID() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer PROVIDER_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
-  public ByteBuffer PROVIDER_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  public String PROVIDER_PEER_ID() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROVIDER_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
+  public ByteBuffer PROVIDER_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
   /**
    * IPFS CID of provider's EPM (Entity Profile Message)
    */
-  public String PROVIDER_EPM_CID() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer PROVIDER_EPM_CIDAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
-  public ByteBuffer PROVIDER_EPM_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  public String PROVIDER_EPM_CID() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROVIDER_EPM_CIDAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
+  public ByteBuffer PROVIDER_EPM_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
   /**
    * Whether the WASM binary is encrypted
    */
-  public boolean ENCRYPTED() { int o = __offset(38); return o != 0 ? 0!=bb.get(o + bb_pos) : true; }
+  public boolean ENCRYPTED() { int o = __offset(56); return o != 0 ? 0!=bb.get(o + bb_pos) : true; }
   /**
    * Canonical required scope for grant issuance
    */
-  public String REQUIRED_SCOPE() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer REQUIRED_SCOPEAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
-  public ByteBuffer REQUIRED_SCOPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  public String REQUIRED_SCOPE() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REQUIRED_SCOPEAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
+  public ByteBuffer REQUIRED_SCOPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
   /**
    * Provider-local identifier for the module content key
    */
-  public String KEY_ID() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer KEY_IDAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
-  public ByteBuffer KEY_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  public String KEY_ID() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer KEY_IDAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer KEY_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
   /**
    * Allowed requester domains for module grants
    */
-  public String ALLOWED_DOMAINS(int j) { int o = __offset(44); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int ALLOWED_DOMAINSLength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
+  public String ALLOWED_DOMAINS(int j) { int o = __offset(62); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int ALLOWED_DOMAINSLength() { int o = __offset(62); return o != 0 ? __vector_len(o) : 0; }
   public StringVector allowedDomainsVector() { return allowedDomainsVector(new StringVector()); }
-  public StringVector allowedDomainsVector(StringVector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector allowedDomainsVector(StringVector obj) { int o = __offset(62); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Maximum grant timeout allowed for this module publication
    */
-  public long MAX_GRANT_TIMEOUT_MS() { int o = __offset(46); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public long MAX_GRANT_TIMEOUT_MS() { int o = __offset(64); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
    * Minimum permissions required to run
    */
-  public String MIN_PERMISSIONS(int j) { int o = __offset(48); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int MIN_PERMISSIONSLength() { int o = __offset(48); return o != 0 ? __vector_len(o) : 0; }
+  public String MIN_PERMISSIONS(int j) { int o = __offset(66); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int MIN_PERMISSIONSLength() { int o = __offset(66); return o != 0 ? __vector_len(o) : 0; }
   public StringVector minPermissionsVector() { return minPermissionsVector(new StringVector()); }
-  public StringVector minPermissionsVector(StringVector obj) { int o = __offset(48); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector minPermissionsVector(StringVector obj) { int o = __offset(66); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Unix timestamp when plugin was created
    */
-  public long CREATED_AT() { int o = __offset(50); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public long CREATED_AT() { int o = __offset(68); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
    * Unix timestamp when plugin was last updated
    */
-  public long UPDATED_AT() { int o = __offset(52); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public long UPDATED_AT() { int o = __offset(70); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
    * URL to plugin documentation
    */
-  public String DOCUMENTATION_URL() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DOCUMENTATION_URLAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
-  public ByteBuffer DOCUMENTATION_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
+  public String DOCUMENTATION_URL() { int o = __offset(72); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DOCUMENTATION_URLAsByteBuffer() { return __vector_as_bytebuffer(72, 1); }
+  public ByteBuffer DOCUMENTATION_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 1); }
+  /**
+   * URL to plugin changelog or release notes
+   */
+  public String CHANGELOG_URL() { int o = __offset(74); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CHANGELOG_URLAsByteBuffer() { return __vector_as_bytebuffer(74, 1); }
+  public ByteBuffer CHANGELOG_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 74, 1); }
   /**
    * URL to plugin icon/logo
    */
-  public String ICON_URL() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ICON_URLAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
-  public ByteBuffer ICON_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  public String ICON_URL() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ICON_URLAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
+  public ByteBuffer ICON_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
   /**
    * License identifier (SPDX format)
    */
-  public String LICENSE() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LICENSEAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
-  public ByteBuffer LICENSEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
+  public String LICENSE() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LICENSEAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
+  public ByteBuffer LICENSEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
+  /**
+   * Commercial model used for storefront purchase flows
+   */
+  public byte PAYMENT_MODEL() { int o = __offset(80); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Price in USD cents for one-time purchase or subscription period
+   */
+  public long PRICE_USD_CENTS() { int o = __offset(82); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Subscription billing period length in days
+   */
+  public long SUBSCRIPTION_PERIOD_DAYS() { int o = __offset(84); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Accepted payment methods, e.g. "stripe", "sol", "usdc"
+   */
+  public String ACCEPTED_PAYMENT_METHODS(int j) { int o = __offset(86); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int ACCEPTED_PAYMENT_METHODSLength() { int o = __offset(86); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector acceptedPaymentMethodsVector() { return acceptedPaymentMethodsVector(new StringVector()); }
+  public StringVector acceptedPaymentMethodsVector(StringVector obj) { int o = __offset(86); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Storefront publication state for this manifest version
+   */
+  public byte LISTING_STATUS() { int o = __offset(88); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * Ed25519 signature from provider over manifest
    */
-  public int SIGNATURE(int j) { int o = __offset(60); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
-  public int SIGNATURELength() { int o = __offset(60); return o != 0 ? __vector_len(o) : 0; }
+  public int SIGNATURE(int j) { int o = __offset(90); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int SIGNATURELength() { int o = __offset(90); return o != 0 ? __vector_len(o) : 0; }
   public ByteVector signatureVector() { return signatureVector(new ByteVector()); }
-  public ByteVector signatureVector(ByteVector obj) { int o = __offset(60); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
-  public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  public ByteVector signatureVector(ByteVector obj) { int o = __offset(90); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(90, 1); }
+  public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 90, 1); }
 
   public static int createPLG(FlatBufferBuilder builder,
       int PLUGIN_IDOffset,
       int NAMEOffset,
       int VERSIONOffset,
       int DESCRIPTIONOffset,
+      int TAGLINEOffset,
       byte PLUGIN_TYPE,
+      int PUBLISHER_NAMEOffset,
+      int PUBLISHER_HANDLEOffset,
+      int PUBLISHER_URLOffset,
+      int SUPPORT_URLOffset,
+      int TAGSOffset,
+      int FEATURESOffset,
+      int SCREENSHOT_URLSOffset,
+      int BANNER_URLOffset,
       long ABI_VERSION,
       int WASM_HASHOffset,
       long WASM_SIZE,
@@ -232,18 +327,28 @@ public final class PLG extends com.google.flatbuffers.Table {
       long CREATED_AT,
       long UPDATED_AT,
       int DOCUMENTATION_URLOffset,
+      int CHANGELOG_URLOffset,
       int ICON_URLOffset,
       int LICENSEOffset,
+      byte PAYMENT_MODEL,
+      long PRICE_USD_CENTS,
+      long SUBSCRIPTION_PERIOD_DAYS,
+      int ACCEPTED_PAYMENT_METHODSOffset,
+      byte LISTING_STATUS,
       int SIGNATUREOffset) {
-    builder.startTable(29);
+    builder.startTable(44);
     PLG.addUpdatedAt(builder, UPDATED_AT);
     PLG.addCreatedAt(builder, CREATED_AT);
     PLG.addMaxGrantTimeoutMs(builder, MAX_GRANT_TIMEOUT_MS);
     PLG.addEncryptedWasmSize(builder, ENCRYPTED_WASM_SIZE);
     PLG.addWasmSize(builder, WASM_SIZE);
     PLG.addSignature(builder, SIGNATUREOffset);
+    PLG.addAcceptedPaymentMethods(builder, ACCEPTED_PAYMENT_METHODSOffset);
+    PLG.addSubscriptionPeriodDays(builder, SUBSCRIPTION_PERIOD_DAYS);
+    PLG.addPriceUsdCents(builder, PRICE_USD_CENTS);
     PLG.addLicense(builder, LICENSEOffset);
     PLG.addIconUrl(builder, ICON_URLOffset);
+    PLG.addChangelogUrl(builder, CHANGELOG_URLOffset);
     PLG.addDocumentationUrl(builder, DOCUMENTATION_URLOffset);
     PLG.addMinPermissions(builder, MIN_PERMISSIONSOffset);
     PLG.addAllowedDomains(builder, ALLOWED_DOMAINSOffset);
@@ -259,63 +364,97 @@ public final class PLG extends com.google.flatbuffers.Table {
     PLG.addWasmCid(builder, WASM_CIDOffset);
     PLG.addWasmHash(builder, WASM_HASHOffset);
     PLG.addAbiVersion(builder, ABI_VERSION);
+    PLG.addBannerUrl(builder, BANNER_URLOffset);
+    PLG.addScreenshotUrls(builder, SCREENSHOT_URLSOffset);
+    PLG.addFeatures(builder, FEATURESOffset);
+    PLG.addTags(builder, TAGSOffset);
+    PLG.addSupportUrl(builder, SUPPORT_URLOffset);
+    PLG.addPublisherUrl(builder, PUBLISHER_URLOffset);
+    PLG.addPublisherHandle(builder, PUBLISHER_HANDLEOffset);
+    PLG.addPublisherName(builder, PUBLISHER_NAMEOffset);
+    PLG.addTagline(builder, TAGLINEOffset);
     PLG.addDescription(builder, DESCRIPTIONOffset);
     PLG.addVersion(builder, VERSIONOffset);
     PLG.addName(builder, NAMEOffset);
     PLG.addPluginId(builder, PLUGIN_IDOffset);
+    PLG.addListingStatus(builder, LISTING_STATUS);
+    PLG.addPaymentModel(builder, PAYMENT_MODEL);
     PLG.addEncrypted(builder, ENCRYPTED);
     PLG.addPluginType(builder, PLUGIN_TYPE);
     return PLG.endPLG(builder);
   }
 
-  public static void startPLG(FlatBufferBuilder builder) { builder.startTable(29); }
+  public static void startPLG(FlatBufferBuilder builder) { builder.startTable(44); }
   public static void addPluginId(FlatBufferBuilder builder, int PLUGIN_IDOffset) { builder.addOffset(0, PLUGIN_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addVersion(FlatBufferBuilder builder, int VERSIONOffset) { builder.addOffset(2, VERSIONOffset, 0); }
   public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(3, DESCRIPTIONOffset, 0); }
-  public static void addPluginType(FlatBufferBuilder builder, byte PLUGIN_TYPE) { builder.addByte(4, PLUGIN_TYPE, 0); }
-  public static void addAbiVersion(FlatBufferBuilder builder, long ABI_VERSION) { builder.addInt(5, (int) ABI_VERSION, (int) 1L); }
-  public static void addWasmHash(FlatBufferBuilder builder, int WASM_HASHOffset) { builder.addOffset(6, WASM_HASHOffset, 0); }
+  public static void addTagline(FlatBufferBuilder builder, int TAGLINEOffset) { builder.addOffset(4, TAGLINEOffset, 0); }
+  public static void addPluginType(FlatBufferBuilder builder, byte PLUGIN_TYPE) { builder.addByte(5, PLUGIN_TYPE, 0); }
+  public static void addPublisherName(FlatBufferBuilder builder, int PUBLISHER_NAMEOffset) { builder.addOffset(6, PUBLISHER_NAMEOffset, 0); }
+  public static void addPublisherHandle(FlatBufferBuilder builder, int PUBLISHER_HANDLEOffset) { builder.addOffset(7, PUBLISHER_HANDLEOffset, 0); }
+  public static void addPublisherUrl(FlatBufferBuilder builder, int PUBLISHER_URLOffset) { builder.addOffset(8, PUBLISHER_URLOffset, 0); }
+  public static void addSupportUrl(FlatBufferBuilder builder, int SUPPORT_URLOffset) { builder.addOffset(9, SUPPORT_URLOffset, 0); }
+  public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(10, TAGSOffset, 0); }
+  public static int createTagsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startTagsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addFeatures(FlatBufferBuilder builder, int FEATURESOffset) { builder.addOffset(11, FEATURESOffset, 0); }
+  public static int createFeaturesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startFeaturesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addScreenshotUrls(FlatBufferBuilder builder, int SCREENSHOT_URLSOffset) { builder.addOffset(12, SCREENSHOT_URLSOffset, 0); }
+  public static int createScreenshotUrlsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startScreenshotUrlsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addBannerUrl(FlatBufferBuilder builder, int BANNER_URLOffset) { builder.addOffset(13, BANNER_URLOffset, 0); }
+  public static void addAbiVersion(FlatBufferBuilder builder, long ABI_VERSION) { builder.addInt(14, (int) ABI_VERSION, (int) 1L); }
+  public static void addWasmHash(FlatBufferBuilder builder, int WASM_HASHOffset) { builder.addOffset(15, WASM_HASHOffset, 0); }
   public static int createWasmHashVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createWasmHashVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startWasmHashVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
-  public static void addWasmSize(FlatBufferBuilder builder, long WASM_SIZE) { builder.addLong(7, WASM_SIZE, 0L); }
-  public static void addWasmCid(FlatBufferBuilder builder, int WASM_CIDOffset) { builder.addOffset(8, WASM_CIDOffset, 0); }
-  public static void addEncryptedWasmHash(FlatBufferBuilder builder, int ENCRYPTED_WASM_HASHOffset) { builder.addOffset(9, ENCRYPTED_WASM_HASHOffset, 0); }
+  public static void addWasmSize(FlatBufferBuilder builder, long WASM_SIZE) { builder.addLong(16, WASM_SIZE, 0L); }
+  public static void addWasmCid(FlatBufferBuilder builder, int WASM_CIDOffset) { builder.addOffset(17, WASM_CIDOffset, 0); }
+  public static void addEncryptedWasmHash(FlatBufferBuilder builder, int ENCRYPTED_WASM_HASHOffset) { builder.addOffset(18, ENCRYPTED_WASM_HASHOffset, 0); }
   public static int createEncryptedWasmHashVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createEncryptedWasmHashVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startEncryptedWasmHashVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
-  public static void addEncryptedWasmSize(FlatBufferBuilder builder, long ENCRYPTED_WASM_SIZE) { builder.addLong(10, ENCRYPTED_WASM_SIZE, 0L); }
-  public static void addEntryFunctions(FlatBufferBuilder builder, int ENTRY_FUNCTIONSOffset) { builder.addOffset(11, ENTRY_FUNCTIONSOffset, 0); }
+  public static void addEncryptedWasmSize(FlatBufferBuilder builder, long ENCRYPTED_WASM_SIZE) { builder.addLong(19, ENCRYPTED_WASM_SIZE, 0L); }
+  public static void addEntryFunctions(FlatBufferBuilder builder, int ENTRY_FUNCTIONSOffset) { builder.addOffset(20, ENTRY_FUNCTIONSOffset, 0); }
   public static int createEntryFunctionsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startEntryFunctionsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addRequiredSchemas(FlatBufferBuilder builder, int REQUIRED_SCHEMASOffset) { builder.addOffset(12, REQUIRED_SCHEMASOffset, 0); }
+  public static void addRequiredSchemas(FlatBufferBuilder builder, int REQUIRED_SCHEMASOffset) { builder.addOffset(21, REQUIRED_SCHEMASOffset, 0); }
   public static int createRequiredSchemasVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startRequiredSchemasVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addDependencies(FlatBufferBuilder builder, int DEPENDENCIESOffset) { builder.addOffset(13, DEPENDENCIESOffset, 0); }
+  public static void addDependencies(FlatBufferBuilder builder, int DEPENDENCIESOffset) { builder.addOffset(22, DEPENDENCIESOffset, 0); }
   public static int createDependenciesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startDependenciesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addCapabilities(FlatBufferBuilder builder, int CAPABILITIESOffset) { builder.addOffset(14, CAPABILITIESOffset, 0); }
+  public static void addCapabilities(FlatBufferBuilder builder, int CAPABILITIESOffset) { builder.addOffset(23, CAPABILITIESOffset, 0); }
   public static int createCapabilitiesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCapabilitiesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addProviderPeerId(FlatBufferBuilder builder, int PROVIDER_PEER_IDOffset) { builder.addOffset(15, PROVIDER_PEER_IDOffset, 0); }
-  public static void addProviderEpmCid(FlatBufferBuilder builder, int PROVIDER_EPM_CIDOffset) { builder.addOffset(16, PROVIDER_EPM_CIDOffset, 0); }
-  public static void addEncrypted(FlatBufferBuilder builder, boolean ENCRYPTED) { builder.addBoolean(17, ENCRYPTED, true); }
-  public static void addRequiredScope(FlatBufferBuilder builder, int REQUIRED_SCOPEOffset) { builder.addOffset(18, REQUIRED_SCOPEOffset, 0); }
-  public static void addKeyId(FlatBufferBuilder builder, int KEY_IDOffset) { builder.addOffset(19, KEY_IDOffset, 0); }
-  public static void addAllowedDomains(FlatBufferBuilder builder, int ALLOWED_DOMAINSOffset) { builder.addOffset(20, ALLOWED_DOMAINSOffset, 0); }
+  public static void addProviderPeerId(FlatBufferBuilder builder, int PROVIDER_PEER_IDOffset) { builder.addOffset(24, PROVIDER_PEER_IDOffset, 0); }
+  public static void addProviderEpmCid(FlatBufferBuilder builder, int PROVIDER_EPM_CIDOffset) { builder.addOffset(25, PROVIDER_EPM_CIDOffset, 0); }
+  public static void addEncrypted(FlatBufferBuilder builder, boolean ENCRYPTED) { builder.addBoolean(26, ENCRYPTED, true); }
+  public static void addRequiredScope(FlatBufferBuilder builder, int REQUIRED_SCOPEOffset) { builder.addOffset(27, REQUIRED_SCOPEOffset, 0); }
+  public static void addKeyId(FlatBufferBuilder builder, int KEY_IDOffset) { builder.addOffset(28, KEY_IDOffset, 0); }
+  public static void addAllowedDomains(FlatBufferBuilder builder, int ALLOWED_DOMAINSOffset) { builder.addOffset(29, ALLOWED_DOMAINSOffset, 0); }
   public static int createAllowedDomainsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startAllowedDomainsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addMaxGrantTimeoutMs(FlatBufferBuilder builder, long MAX_GRANT_TIMEOUT_MS) { builder.addLong(21, MAX_GRANT_TIMEOUT_MS, 0L); }
-  public static void addMinPermissions(FlatBufferBuilder builder, int MIN_PERMISSIONSOffset) { builder.addOffset(22, MIN_PERMISSIONSOffset, 0); }
+  public static void addMaxGrantTimeoutMs(FlatBufferBuilder builder, long MAX_GRANT_TIMEOUT_MS) { builder.addLong(30, MAX_GRANT_TIMEOUT_MS, 0L); }
+  public static void addMinPermissions(FlatBufferBuilder builder, int MIN_PERMISSIONSOffset) { builder.addOffset(31, MIN_PERMISSIONSOffset, 0); }
   public static int createMinPermissionsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startMinPermissionsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addCreatedAt(FlatBufferBuilder builder, long CREATED_AT) { builder.addLong(23, CREATED_AT, 0L); }
-  public static void addUpdatedAt(FlatBufferBuilder builder, long UPDATED_AT) { builder.addLong(24, UPDATED_AT, 0L); }
-  public static void addDocumentationUrl(FlatBufferBuilder builder, int DOCUMENTATION_URLOffset) { builder.addOffset(25, DOCUMENTATION_URLOffset, 0); }
-  public static void addIconUrl(FlatBufferBuilder builder, int ICON_URLOffset) { builder.addOffset(26, ICON_URLOffset, 0); }
-  public static void addLicense(FlatBufferBuilder builder, int LICENSEOffset) { builder.addOffset(27, LICENSEOffset, 0); }
-  public static void addSignature(FlatBufferBuilder builder, int SIGNATUREOffset) { builder.addOffset(28, SIGNATUREOffset, 0); }
+  public static void addCreatedAt(FlatBufferBuilder builder, long CREATED_AT) { builder.addLong(32, CREATED_AT, 0L); }
+  public static void addUpdatedAt(FlatBufferBuilder builder, long UPDATED_AT) { builder.addLong(33, UPDATED_AT, 0L); }
+  public static void addDocumentationUrl(FlatBufferBuilder builder, int DOCUMENTATION_URLOffset) { builder.addOffset(34, DOCUMENTATION_URLOffset, 0); }
+  public static void addChangelogUrl(FlatBufferBuilder builder, int CHANGELOG_URLOffset) { builder.addOffset(35, CHANGELOG_URLOffset, 0); }
+  public static void addIconUrl(FlatBufferBuilder builder, int ICON_URLOffset) { builder.addOffset(36, ICON_URLOffset, 0); }
+  public static void addLicense(FlatBufferBuilder builder, int LICENSEOffset) { builder.addOffset(37, LICENSEOffset, 0); }
+  public static void addPaymentModel(FlatBufferBuilder builder, byte PAYMENT_MODEL) { builder.addByte(38, PAYMENT_MODEL, 0); }
+  public static void addPriceUsdCents(FlatBufferBuilder builder, long PRICE_USD_CENTS) { builder.addInt(39, (int) PRICE_USD_CENTS, (int) 0L); }
+  public static void addSubscriptionPeriodDays(FlatBufferBuilder builder, long SUBSCRIPTION_PERIOD_DAYS) { builder.addInt(40, (int) SUBSCRIPTION_PERIOD_DAYS, (int) 0L); }
+  public static void addAcceptedPaymentMethods(FlatBufferBuilder builder, int ACCEPTED_PAYMENT_METHODSOffset) { builder.addOffset(41, ACCEPTED_PAYMENT_METHODSOffset, 0); }
+  public static int createAcceptedPaymentMethodsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startAcceptedPaymentMethodsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addListingStatus(FlatBufferBuilder builder, byte LISTING_STATUS) { builder.addByte(42, LISTING_STATUS, 0); }
+  public static void addSignature(FlatBufferBuilder builder, int SIGNATUREOffset) { builder.addOffset(43, SIGNATUREOffset, 0); }
   public static int createSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }

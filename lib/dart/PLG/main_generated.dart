@@ -55,6 +55,80 @@ class _pluginTypeReader extends fb.Reader<pluginType> {
       pluginType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Storefront payment model for the plugin listing
+enum paymentModel {
+  Free(0),
+  OneTime(1),
+  Subscription(2);
+
+  final int value;
+  const paymentModel(this.value);
+
+  factory paymentModel.fromValue(int value) {
+    switch (value) {
+      case 0: return paymentModel.Free;
+      case 1: return paymentModel.OneTime;
+      case 2: return paymentModel.Subscription;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static paymentModel? _createOrNull(int? value) =>
+      value == null ? null : paymentModel.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<paymentModel> reader = _paymentModelReader();
+}
+
+class _paymentModelReader extends fb.Reader<paymentModel> {
+  const _paymentModelReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  paymentModel read(fb.BufferContext bc, int offset) =>
+      paymentModel.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Publication visibility for the plugin listing
+enum listingStatus {
+  Public(0),
+  Unlisted(1),
+  Retired(2);
+
+  final int value;
+  const listingStatus(this.value);
+
+  factory listingStatus.fromValue(int value) {
+    switch (value) {
+      case 0: return listingStatus.Public;
+      case 1: return listingStatus.Unlisted;
+      case 2: return listingStatus.Retired;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static listingStatus? _createOrNull(int? value) =>
+      value == null ? null : listingStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<listingStatus> reader = _listingStatusReader();
+}
+
+class _listingStatusReader extends fb.Reader<listingStatus> {
+  const _listingStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  listingStatus read(fb.BufferContext bc, int offset) =>
+      listingStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Plugin capability declaration
 class PluginCapability {
   PluginCapability._(this._bc, this._bcOffset);
@@ -372,7 +446,7 @@ class EntryFunctionObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Plugin Manifest - WASM plugin distribution
+///  Plugin Manifest - canonical signed storefront and WASM distribution record
 class PLG {
   PLG._(this._bc, this._bcOffset);
   factory PLG(List<int> bytes) {
@@ -394,80 +468,122 @@ class PLG {
   String? get VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   ///  Detailed description of plugin functionality
   String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Short marketing summary shown in storefront listings
+  String? get TAGLINE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Type/category of the plugin
-  pluginType get PLUGIN_TYPE => pluginType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  pluginType get PLUGIN_TYPE => pluginType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
   pluginType get pluginType => PLUGIN_TYPE;
+  ///  Human-readable publisher or organization name
+  String? get PUBLISHER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get publisherName => PUBLISHER_NAME;
+  ///  Publisher handle or username
+  String? get PUBLISHER_HANDLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get publisherHandle => PUBLISHER_HANDLE;
+  ///  Canonical publisher website
+  String? get PUBLISHER_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get publisherUrl => PUBLISHER_URL;
+  ///  Support or helpdesk URL for this plugin
+  String? get SUPPORT_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get supportUrl => SUPPORT_URL;
+  ///  Search and categorization tags for discovery
+  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Short feature bullets highlighted in storefront listings
+  List<String>? get FEATURES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Screenshot URLs showing the plugin in use
+  List<String>? get SCREENSHOT_URLS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 28);
+  List<String>? get screenshotUrls => SCREENSHOT_URLS;
+  ///  Optional hero/banner image URL for the listing
+  String? get BANNER_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get bannerUrl => BANNER_URL;
   ///  ABI version for compatibility checking
-  int get ABI_VERSION => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 1);
+  int get ABI_VERSION => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 32, 1);
   int get abiVersion => ABI_VERSION;
   ///  SHA256 hash of the decrypted WASM binary
-  List<int>? get WASM_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 16);
+  List<int>? get WASM_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 34);
   List<int>? get wasmHash => WASM_HASH;
   ///  Size of decrypted WASM binary in bytes
-  int get WASM_SIZE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get WASM_SIZE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 36, 0);
   int get wasmSize => WASM_SIZE;
   ///  IPFS CID of the encrypted WASM binary
-  String? get WASM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get WASM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
   String? get wasmCid => WASM_CID;
   ///  SHA256 hash of the encrypted delivery artifact bytes
-  List<int>? get ENCRYPTED_WASM_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 22);
+  List<int>? get ENCRYPTED_WASM_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 40);
   List<int>? get encryptedWasmHash => ENCRYPTED_WASM_HASH;
   ///  Size of the encrypted delivery artifact in bytes
-  int get ENCRYPTED_WASM_SIZE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  int get ENCRYPTED_WASM_SIZE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 42, 0);
   int get encryptedWasmSize => ENCRYPTED_WASM_SIZE;
   ///  Entry point functions exported by the plugin
-  List<EntryFunction>? get ENTRY_FUNCTIONS => const fb.ListReader<EntryFunction>(EntryFunction.reader).vTableGetNullable(_bc, _bcOffset, 26);
+  List<EntryFunction>? get ENTRY_FUNCTIONS => const fb.ListReader<EntryFunction>(EntryFunction.reader).vTableGetNullable(_bc, _bcOffset, 44);
   List<EntryFunction>? get entryFunctions => ENTRY_FUNCTIONS;
   ///  FlatBuffer schemas required by this plugin
-  List<String>? get REQUIRED_SCHEMAS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 28);
+  List<String>? get REQUIRED_SCHEMAS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 46);
   List<String>? get requiredSchemas => REQUIRED_SCHEMAS;
   ///  Other plugins this depends on
-  List<PluginDependency>? get DEPENDENCIES => const fb.ListReader<PluginDependency>(PluginDependency.reader).vTableGetNullable(_bc, _bcOffset, 30);
+  List<PluginDependency>? get DEPENDENCIES => const fb.ListReader<PluginDependency>(PluginDependency.reader).vTableGetNullable(_bc, _bcOffset, 48);
   ///  Capabilities provided by this plugin
-  List<PluginCapability>? get CAPABILITIES => const fb.ListReader<PluginCapability>(PluginCapability.reader).vTableGetNullable(_bc, _bcOffset, 32);
+  List<PluginCapability>? get CAPABILITIES => const fb.ListReader<PluginCapability>(PluginCapability.reader).vTableGetNullable(_bc, _bcOffset, 50);
   ///  Peer ID of the plugin provider
-  String? get PROVIDER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get PROVIDER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
   String? get providerPeerId => PROVIDER_PEER_ID;
   ///  IPFS CID of provider's EPM (Entity Profile Message)
-  String? get PROVIDER_EPM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get PROVIDER_EPM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
   String? get providerEpmCid => PROVIDER_EPM_CID;
   ///  Whether the WASM binary is encrypted
-  bool get ENCRYPTED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 38, true);
+  bool get ENCRYPTED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 56, true);
   ///  Canonical required scope for grant issuance
-  String? get REQUIRED_SCOPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get REQUIRED_SCOPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
   String? get requiredScope => REQUIRED_SCOPE;
   ///  Provider-local identifier for the module content key
-  String? get KEY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get KEY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
   String? get keyId => KEY_ID;
   ///  Allowed requester domains for module grants
-  List<String>? get ALLOWED_DOMAINS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 44);
+  List<String>? get ALLOWED_DOMAINS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 62);
   List<String>? get allowedDomains => ALLOWED_DOMAINS;
   ///  Maximum grant timeout allowed for this module publication
-  int get MAX_GRANT_TIMEOUT_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 46, 0);
+  int get MAX_GRANT_TIMEOUT_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 64, 0);
   int get maxGrantTimeoutMs => MAX_GRANT_TIMEOUT_MS;
   ///  Minimum permissions required to run
-  List<String>? get MIN_PERMISSIONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 48);
+  List<String>? get MIN_PERMISSIONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 66);
   List<String>? get minPermissions => MIN_PERMISSIONS;
   ///  Unix timestamp when plugin was created
-  int get CREATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 50, 0);
+  int get CREATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 68, 0);
   int get createdAt => CREATED_AT;
   ///  Unix timestamp when plugin was last updated
-  int get UPDATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 52, 0);
+  int get UPDATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 70, 0);
   int get updatedAt => UPDATED_AT;
   ///  URL to plugin documentation
-  String? get DOCUMENTATION_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  String? get DOCUMENTATION_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
   String? get documentationUrl => DOCUMENTATION_URL;
+  ///  URL to plugin changelog or release notes
+  String? get CHANGELOG_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
+  String? get changelogUrl => CHANGELOG_URL;
   ///  URL to plugin icon/logo
-  String? get ICON_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  String? get ICON_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
   String? get iconUrl => ICON_URL;
   ///  License identifier (SPDX format)
-  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
+  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
+  ///  Commercial model used for storefront purchase flows
+  paymentModel get PAYMENT_MODEL => paymentModel.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 80, 0));
+  paymentModel get paymentModel => PAYMENT_MODEL;
+  ///  Price in USD cents for one-time purchase or subscription period
+  int get PRICE_USD_CENTS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 82, 0);
+  int get priceUsdCents => PRICE_USD_CENTS;
+  ///  Subscription billing period length in days
+  int get SUBSCRIPTION_PERIOD_DAYS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 84, 0);
+  int get subscriptionPeriodDays => SUBSCRIPTION_PERIOD_DAYS;
+  ///  Accepted payment methods, e.g. "stripe", "sol", "usdc"
+  List<String>? get ACCEPTED_PAYMENT_METHODS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 86);
+  List<String>? get acceptedPaymentMethods => ACCEPTED_PAYMENT_METHODS;
+  ///  Storefront publication state for this manifest version
+  listingStatus get LISTING_STATUS => listingStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 88, 0));
+  listingStatus get listingStatus => LISTING_STATUS;
   ///  Ed25519 signature from provider over manifest
-  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 60);
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 90);
 
   @override
   String toString() {
-    return 'PLG{pluginId: ${pluginId}, NAME: ${NAME}, VERSION: ${VERSION}, DESCRIPTION: ${DESCRIPTION}, pluginType: ${pluginType}, abiVersion: ${abiVersion}, wasmHash: ${wasmHash}, wasmSize: ${wasmSize}, wasmCid: ${wasmCid}, encryptedWasmHash: ${encryptedWasmHash}, encryptedWasmSize: ${encryptedWasmSize}, entryFunctions: ${entryFunctions}, requiredSchemas: ${requiredSchemas}, DEPENDENCIES: ${DEPENDENCIES}, CAPABILITIES: ${CAPABILITIES}, providerPeerId: ${providerPeerId}, providerEpmCid: ${providerEpmCid}, ENCRYPTED: ${ENCRYPTED}, requiredScope: ${requiredScope}, keyId: ${keyId}, allowedDomains: ${allowedDomains}, maxGrantTimeoutMs: ${maxGrantTimeoutMs}, minPermissions: ${minPermissions}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, documentationUrl: ${documentationUrl}, iconUrl: ${iconUrl}, LICENSE: ${LICENSE}, SIGNATURE: ${SIGNATURE}}';
+    return 'PLG{pluginId: ${pluginId}, NAME: ${NAME}, VERSION: ${VERSION}, DESCRIPTION: ${DESCRIPTION}, TAGLINE: ${TAGLINE}, pluginType: ${pluginType}, publisherName: ${publisherName}, publisherHandle: ${publisherHandle}, publisherUrl: ${publisherUrl}, supportUrl: ${supportUrl}, TAGS: ${TAGS}, FEATURES: ${FEATURES}, screenshotUrls: ${screenshotUrls}, bannerUrl: ${bannerUrl}, abiVersion: ${abiVersion}, wasmHash: ${wasmHash}, wasmSize: ${wasmSize}, wasmCid: ${wasmCid}, encryptedWasmHash: ${encryptedWasmHash}, encryptedWasmSize: ${encryptedWasmSize}, entryFunctions: ${entryFunctions}, requiredSchemas: ${requiredSchemas}, DEPENDENCIES: ${DEPENDENCIES}, CAPABILITIES: ${CAPABILITIES}, providerPeerId: ${providerPeerId}, providerEpmCid: ${providerEpmCid}, ENCRYPTED: ${ENCRYPTED}, requiredScope: ${requiredScope}, keyId: ${keyId}, allowedDomains: ${allowedDomains}, maxGrantTimeoutMs: ${maxGrantTimeoutMs}, minPermissions: ${minPermissions}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, documentationUrl: ${documentationUrl}, changelogUrl: ${changelogUrl}, iconUrl: ${iconUrl}, LICENSE: ${LICENSE}, paymentModel: ${paymentModel}, priceUsdCents: ${priceUsdCents}, subscriptionPeriodDays: ${subscriptionPeriodDays}, acceptedPaymentMethods: ${acceptedPaymentMethods}, listingStatus: ${listingStatus}, SIGNATURE: ${SIGNATURE}}';
   }
 }
 
@@ -485,7 +601,7 @@ class PLGBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(29);
+    fbBuilder.startTable(44);
   }
 
   int addPluginIdOffset(int? offset) {
@@ -504,104 +620,164 @@ class PLGBuilder {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
+  int addTaglineOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
   int addPluginType(pluginType? PLUGIN_TYPE) {
-    fbBuilder.addInt8(4, PLUGIN_TYPE?.value);
+    fbBuilder.addInt8(5, PLUGIN_TYPE?.value);
     return fbBuilder.offset;
   }
-  int addAbiVersion(int? ABI_VERSION) {
-    fbBuilder.addUint32(5, ABI_VERSION);
-    return fbBuilder.offset;
-  }
-  int addWasmHashOffset(int? offset) {
+  int addPublisherNameOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addWasmSize(int? WASM_SIZE) {
-    fbBuilder.addUint64(7, WASM_SIZE);
+  int addPublisherHandleOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addWasmCidOffset(int? offset) {
+  int addPublisherUrlOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addEncryptedWasmHashOffset(int? offset) {
+  int addSupportUrlOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addEncryptedWasmSize(int? ENCRYPTED_WASM_SIZE) {
-    fbBuilder.addUint64(10, ENCRYPTED_WASM_SIZE);
+  int addTagsOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addEntryFunctionsOffset(int? offset) {
+  int addFeaturesOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addRequiredSchemasOffset(int? offset) {
+  int addScreenshotUrlsOffset(int? offset) {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addDependenciesOffset(int? offset) {
+  int addBannerUrlOffset(int? offset) {
     fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
-  int addCapabilitiesOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
+  int addAbiVersion(int? ABI_VERSION) {
+    fbBuilder.addUint32(14, ABI_VERSION);
     return fbBuilder.offset;
   }
-  int addProviderPeerIdOffset(int? offset) {
+  int addWasmHashOffset(int? offset) {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
-  int addProviderEpmCidOffset(int? offset) {
-    fbBuilder.addOffset(16, offset);
+  int addWasmSize(int? WASM_SIZE) {
+    fbBuilder.addUint64(16, WASM_SIZE);
     return fbBuilder.offset;
   }
-  int addEncrypted(bool? ENCRYPTED) {
-    fbBuilder.addBool(17, ENCRYPTED);
+  int addWasmCidOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
     return fbBuilder.offset;
   }
-  int addRequiredScopeOffset(int? offset) {
+  int addEncryptedWasmHashOffset(int? offset) {
     fbBuilder.addOffset(18, offset);
     return fbBuilder.offset;
   }
-  int addKeyIdOffset(int? offset) {
-    fbBuilder.addOffset(19, offset);
+  int addEncryptedWasmSize(int? ENCRYPTED_WASM_SIZE) {
+    fbBuilder.addUint64(19, ENCRYPTED_WASM_SIZE);
     return fbBuilder.offset;
   }
-  int addAllowedDomainsOffset(int? offset) {
+  int addEntryFunctionsOffset(int? offset) {
     fbBuilder.addOffset(20, offset);
     return fbBuilder.offset;
   }
-  int addMaxGrantTimeoutMs(int? MAX_GRANT_TIMEOUT_MS) {
-    fbBuilder.addUint64(21, MAX_GRANT_TIMEOUT_MS);
+  int addRequiredSchemasOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
     return fbBuilder.offset;
   }
-  int addMinPermissionsOffset(int? offset) {
+  int addDependenciesOffset(int? offset) {
     fbBuilder.addOffset(22, offset);
     return fbBuilder.offset;
   }
-  int addCreatedAt(int? CREATED_AT) {
-    fbBuilder.addUint64(23, CREATED_AT);
+  int addCapabilitiesOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
     return fbBuilder.offset;
   }
-  int addUpdatedAt(int? UPDATED_AT) {
-    fbBuilder.addUint64(24, UPDATED_AT);
+  int addProviderPeerIdOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
     return fbBuilder.offset;
   }
-  int addDocumentationUrlOffset(int? offset) {
+  int addProviderEpmCidOffset(int? offset) {
     fbBuilder.addOffset(25, offset);
     return fbBuilder.offset;
   }
-  int addIconUrlOffset(int? offset) {
-    fbBuilder.addOffset(26, offset);
+  int addEncrypted(bool? ENCRYPTED) {
+    fbBuilder.addBool(26, ENCRYPTED);
     return fbBuilder.offset;
   }
-  int addLicenseOffset(int? offset) {
+  int addRequiredScopeOffset(int? offset) {
     fbBuilder.addOffset(27, offset);
     return fbBuilder.offset;
   }
-  int addSignatureOffset(int? offset) {
+  int addKeyIdOffset(int? offset) {
     fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addAllowedDomainsOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addMaxGrantTimeoutMs(int? MAX_GRANT_TIMEOUT_MS) {
+    fbBuilder.addUint64(30, MAX_GRANT_TIMEOUT_MS);
+    return fbBuilder.offset;
+  }
+  int addMinPermissionsOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addCreatedAt(int? CREATED_AT) {
+    fbBuilder.addUint64(32, CREATED_AT);
+    return fbBuilder.offset;
+  }
+  int addUpdatedAt(int? UPDATED_AT) {
+    fbBuilder.addUint64(33, UPDATED_AT);
+    return fbBuilder.offset;
+  }
+  int addDocumentationUrlOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addChangelogUrlOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addIconUrlOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addLicenseOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addPaymentModel(paymentModel? PAYMENT_MODEL) {
+    fbBuilder.addInt8(38, PAYMENT_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addPriceUsdCents(int? PRICE_USD_CENTS) {
+    fbBuilder.addUint32(39, PRICE_USD_CENTS);
+    return fbBuilder.offset;
+  }
+  int addSubscriptionPeriodDays(int? SUBSCRIPTION_PERIOD_DAYS) {
+    fbBuilder.addUint32(40, SUBSCRIPTION_PERIOD_DAYS);
+    return fbBuilder.offset;
+  }
+  int addAcceptedPaymentMethodsOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addListingStatus(listingStatus? LISTING_STATUS) {
+    fbBuilder.addInt8(42, LISTING_STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
     return fbBuilder.offset;
   }
 
@@ -615,7 +791,16 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
   final String? _NAME;
   final String? _VERSION;
   final String? _DESCRIPTION;
+  final String? _TAGLINE;
   final pluginType? _PLUGIN_TYPE;
+  final String? _PUBLISHER_NAME;
+  final String? _PUBLISHER_HANDLE;
+  final String? _PUBLISHER_URL;
+  final String? _SUPPORT_URL;
+  final List<String>? _TAGS;
+  final List<String>? _FEATURES;
+  final List<String>? _SCREENSHOT_URLS;
+  final String? _BANNER_URL;
   final int? _ABI_VERSION;
   final List<int>? _WASM_HASH;
   final int? _WASM_SIZE;
@@ -637,8 +822,14 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
   final int? _CREATED_AT;
   final int? _UPDATED_AT;
   final String? _DOCUMENTATION_URL;
+  final String? _CHANGELOG_URL;
   final String? _ICON_URL;
   final String? _LICENSE;
+  final paymentModel? _PAYMENT_MODEL;
+  final int? _PRICE_USD_CENTS;
+  final int? _SUBSCRIPTION_PERIOD_DAYS;
+  final List<String>? _ACCEPTED_PAYMENT_METHODS;
+  final listingStatus? _LISTING_STATUS;
   final List<int>? _SIGNATURE;
 
   PLGObjectBuilder({
@@ -647,8 +838,23 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
     String? NAME,
     String? VERSION,
     String? DESCRIPTION,
+    String? TAGLINE,
     pluginType? PLUGIN_TYPE,
     pluginType? pluginType,
+    String? PUBLISHER_NAME,
+    String? publisherName,
+    String? PUBLISHER_HANDLE,
+    String? publisherHandle,
+    String? PUBLISHER_URL,
+    String? publisherUrl,
+    String? SUPPORT_URL,
+    String? supportUrl,
+    List<String>? TAGS,
+    List<String>? FEATURES,
+    List<String>? SCREENSHOT_URLS,
+    List<String>? screenshotUrls,
+    String? BANNER_URL,
+    String? bannerUrl,
     int? ABI_VERSION,
     int? abiVersion,
     List<int>? WASM_HASH,
@@ -688,16 +894,37 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
     int? updatedAt,
     String? DOCUMENTATION_URL,
     String? documentationUrl,
+    String? CHANGELOG_URL,
+    String? changelogUrl,
     String? ICON_URL,
     String? iconUrl,
     String? LICENSE,
+    paymentModel? PAYMENT_MODEL,
+    paymentModel? paymentModel,
+    int? PRICE_USD_CENTS,
+    int? priceUsdCents,
+    int? SUBSCRIPTION_PERIOD_DAYS,
+    int? subscriptionPeriodDays,
+    List<String>? ACCEPTED_PAYMENT_METHODS,
+    List<String>? acceptedPaymentMethods,
+    listingStatus? LISTING_STATUS,
+    listingStatus? listingStatus,
     List<int>? SIGNATURE,
   })
       : _PLUGIN_ID = pluginId ?? PLUGIN_ID,
         _NAME = NAME,
         _VERSION = VERSION,
         _DESCRIPTION = DESCRIPTION,
+        _TAGLINE = TAGLINE,
         _PLUGIN_TYPE = pluginType ?? PLUGIN_TYPE,
+        _PUBLISHER_NAME = publisherName ?? PUBLISHER_NAME,
+        _PUBLISHER_HANDLE = publisherHandle ?? PUBLISHER_HANDLE,
+        _PUBLISHER_URL = publisherUrl ?? PUBLISHER_URL,
+        _SUPPORT_URL = supportUrl ?? SUPPORT_URL,
+        _TAGS = TAGS,
+        _FEATURES = FEATURES,
+        _SCREENSHOT_URLS = screenshotUrls ?? SCREENSHOT_URLS,
+        _BANNER_URL = bannerUrl ?? BANNER_URL,
         _ABI_VERSION = abiVersion ?? ABI_VERSION,
         _WASM_HASH = wasmHash ?? WASM_HASH,
         _WASM_SIZE = wasmSize ?? WASM_SIZE,
@@ -719,8 +946,14 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
         _CREATED_AT = createdAt ?? CREATED_AT,
         _UPDATED_AT = updatedAt ?? UPDATED_AT,
         _DOCUMENTATION_URL = documentationUrl ?? DOCUMENTATION_URL,
+        _CHANGELOG_URL = changelogUrl ?? CHANGELOG_URL,
         _ICON_URL = iconUrl ?? ICON_URL,
         _LICENSE = LICENSE,
+        _PAYMENT_MODEL = paymentModel ?? PAYMENT_MODEL,
+        _PRICE_USD_CENTS = priceUsdCents ?? PRICE_USD_CENTS,
+        _SUBSCRIPTION_PERIOD_DAYS = subscriptionPeriodDays ?? SUBSCRIPTION_PERIOD_DAYS,
+        _ACCEPTED_PAYMENT_METHODS = acceptedPaymentMethods ?? ACCEPTED_PAYMENT_METHODS,
+        _LISTING_STATUS = listingStatus ?? LISTING_STATUS,
         _SIGNATURE = SIGNATURE;
 
   /// Finish building, and store into the [fbBuilder].
@@ -734,6 +967,24 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_VERSION!);
     final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
         : fbBuilder.writeString(_DESCRIPTION!);
+    final int? TAGLINEOffset = _TAGLINE == null ? null
+        : fbBuilder.writeString(_TAGLINE!);
+    final int? PUBLISHER_NAMEOffset = _PUBLISHER_NAME == null ? null
+        : fbBuilder.writeString(_PUBLISHER_NAME!);
+    final int? PUBLISHER_HANDLEOffset = _PUBLISHER_HANDLE == null ? null
+        : fbBuilder.writeString(_PUBLISHER_HANDLE!);
+    final int? PUBLISHER_URLOffset = _PUBLISHER_URL == null ? null
+        : fbBuilder.writeString(_PUBLISHER_URL!);
+    final int? SUPPORT_URLOffset = _SUPPORT_URL == null ? null
+        : fbBuilder.writeString(_SUPPORT_URL!);
+    final int? TAGSOffset = _TAGS == null ? null
+        : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
+    final int? FEATURESOffset = _FEATURES == null ? null
+        : fbBuilder.writeList(_FEATURES!.map(fbBuilder.writeString).toList());
+    final int? SCREENSHOT_URLSOffset = _SCREENSHOT_URLS == null ? null
+        : fbBuilder.writeList(_SCREENSHOT_URLS!.map(fbBuilder.writeString).toList());
+    final int? BANNER_URLOffset = _BANNER_URL == null ? null
+        : fbBuilder.writeString(_BANNER_URL!);
     final int? WASM_HASHOffset = _WASM_HASH == null ? null
         : fbBuilder.writeListUint8(_WASM_HASH!);
     final int? WASM_CIDOffset = _WASM_CID == null ? null
@@ -762,42 +1013,61 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_MIN_PERMISSIONS!.map(fbBuilder.writeString).toList());
     final int? DOCUMENTATION_URLOffset = _DOCUMENTATION_URL == null ? null
         : fbBuilder.writeString(_DOCUMENTATION_URL!);
+    final int? CHANGELOG_URLOffset = _CHANGELOG_URL == null ? null
+        : fbBuilder.writeString(_CHANGELOG_URL!);
     final int? ICON_URLOffset = _ICON_URL == null ? null
         : fbBuilder.writeString(_ICON_URL!);
     final int? LICENSEOffset = _LICENSE == null ? null
         : fbBuilder.writeString(_LICENSE!);
+    final int? ACCEPTED_PAYMENT_METHODSOffset = _ACCEPTED_PAYMENT_METHODS == null ? null
+        : fbBuilder.writeList(_ACCEPTED_PAYMENT_METHODS!.map(fbBuilder.writeString).toList());
     final int? SIGNATUREOffset = _SIGNATURE == null ? null
         : fbBuilder.writeListUint8(_SIGNATURE!);
-    fbBuilder.startTable(29);
+    fbBuilder.startTable(44);
     fbBuilder.addOffset(0, PLUGIN_IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addOffset(2, VERSIONOffset);
     fbBuilder.addOffset(3, DESCRIPTIONOffset);
-    fbBuilder.addInt8(4, _PLUGIN_TYPE?.value);
-    fbBuilder.addUint32(5, _ABI_VERSION);
-    fbBuilder.addOffset(6, WASM_HASHOffset);
-    fbBuilder.addUint64(7, _WASM_SIZE);
-    fbBuilder.addOffset(8, WASM_CIDOffset);
-    fbBuilder.addOffset(9, ENCRYPTED_WASM_HASHOffset);
-    fbBuilder.addUint64(10, _ENCRYPTED_WASM_SIZE);
-    fbBuilder.addOffset(11, ENTRY_FUNCTIONSOffset);
-    fbBuilder.addOffset(12, REQUIRED_SCHEMASOffset);
-    fbBuilder.addOffset(13, DEPENDENCIESOffset);
-    fbBuilder.addOffset(14, CAPABILITIESOffset);
-    fbBuilder.addOffset(15, PROVIDER_PEER_IDOffset);
-    fbBuilder.addOffset(16, PROVIDER_EPM_CIDOffset);
-    fbBuilder.addBool(17, _ENCRYPTED);
-    fbBuilder.addOffset(18, REQUIRED_SCOPEOffset);
-    fbBuilder.addOffset(19, KEY_IDOffset);
-    fbBuilder.addOffset(20, ALLOWED_DOMAINSOffset);
-    fbBuilder.addUint64(21, _MAX_GRANT_TIMEOUT_MS);
-    fbBuilder.addOffset(22, MIN_PERMISSIONSOffset);
-    fbBuilder.addUint64(23, _CREATED_AT);
-    fbBuilder.addUint64(24, _UPDATED_AT);
-    fbBuilder.addOffset(25, DOCUMENTATION_URLOffset);
-    fbBuilder.addOffset(26, ICON_URLOffset);
-    fbBuilder.addOffset(27, LICENSEOffset);
-    fbBuilder.addOffset(28, SIGNATUREOffset);
+    fbBuilder.addOffset(4, TAGLINEOffset);
+    fbBuilder.addInt8(5, _PLUGIN_TYPE?.value);
+    fbBuilder.addOffset(6, PUBLISHER_NAMEOffset);
+    fbBuilder.addOffset(7, PUBLISHER_HANDLEOffset);
+    fbBuilder.addOffset(8, PUBLISHER_URLOffset);
+    fbBuilder.addOffset(9, SUPPORT_URLOffset);
+    fbBuilder.addOffset(10, TAGSOffset);
+    fbBuilder.addOffset(11, FEATURESOffset);
+    fbBuilder.addOffset(12, SCREENSHOT_URLSOffset);
+    fbBuilder.addOffset(13, BANNER_URLOffset);
+    fbBuilder.addUint32(14, _ABI_VERSION);
+    fbBuilder.addOffset(15, WASM_HASHOffset);
+    fbBuilder.addUint64(16, _WASM_SIZE);
+    fbBuilder.addOffset(17, WASM_CIDOffset);
+    fbBuilder.addOffset(18, ENCRYPTED_WASM_HASHOffset);
+    fbBuilder.addUint64(19, _ENCRYPTED_WASM_SIZE);
+    fbBuilder.addOffset(20, ENTRY_FUNCTIONSOffset);
+    fbBuilder.addOffset(21, REQUIRED_SCHEMASOffset);
+    fbBuilder.addOffset(22, DEPENDENCIESOffset);
+    fbBuilder.addOffset(23, CAPABILITIESOffset);
+    fbBuilder.addOffset(24, PROVIDER_PEER_IDOffset);
+    fbBuilder.addOffset(25, PROVIDER_EPM_CIDOffset);
+    fbBuilder.addBool(26, _ENCRYPTED);
+    fbBuilder.addOffset(27, REQUIRED_SCOPEOffset);
+    fbBuilder.addOffset(28, KEY_IDOffset);
+    fbBuilder.addOffset(29, ALLOWED_DOMAINSOffset);
+    fbBuilder.addUint64(30, _MAX_GRANT_TIMEOUT_MS);
+    fbBuilder.addOffset(31, MIN_PERMISSIONSOffset);
+    fbBuilder.addUint64(32, _CREATED_AT);
+    fbBuilder.addUint64(33, _UPDATED_AT);
+    fbBuilder.addOffset(34, DOCUMENTATION_URLOffset);
+    fbBuilder.addOffset(35, CHANGELOG_URLOffset);
+    fbBuilder.addOffset(36, ICON_URLOffset);
+    fbBuilder.addOffset(37, LICENSEOffset);
+    fbBuilder.addInt8(38, _PAYMENT_MODEL?.value);
+    fbBuilder.addUint32(39, _PRICE_USD_CENTS);
+    fbBuilder.addUint32(40, _SUBSCRIPTION_PERIOD_DAYS);
+    fbBuilder.addOffset(41, ACCEPTED_PAYMENT_METHODSOffset);
+    fbBuilder.addInt8(42, _LISTING_STATUS?.value);
+    fbBuilder.addOffset(43, SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

@@ -22,6 +22,24 @@ enum pluginType:
     /// GLSL shader plugins for custom visualization
     pluginType_Shader = 8
 
+/// Storefront payment model for the plugin listing
+enum paymentModel:
+    /// No payment required
+    paymentModel_Free = 0
+    /// Single one-time purchase
+    paymentModel_OneTime = 1
+    /// Recurring subscription purchase
+    paymentModel_Subscription = 2
+
+/// Publication visibility for the plugin listing
+enum listingStatus:
+    /// Discoverable in public storefront listings
+    listingStatus_Public = 0
+    /// Addressable directly but hidden from public browse surfaces
+    listingStatus_Unlisted = 1
+    /// No longer offered for new installs or purchases
+    listingStatus_Retired = 2
+
 class PluginCapability
 
 class PluginDependency
@@ -138,7 +156,7 @@ def EntryFunctionCreateINPUTSCHEMASVector(b_:flatbuffers.builder, v_:[flatbuffer
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-/// Plugin Manifest - WASM plugin distribution
+/// Plugin Manifest - canonical signed storefront and WASM distribution record
 class PLG : flatbuffers.handle
     /// Unique identifier for the plugin
     def PLUGIN_ID() -> string:
@@ -152,106 +170,159 @@ class PLG : flatbuffers.handle
     /// Detailed description of plugin functionality
     def DESCRIPTION() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
+    /// Short marketing summary shown in storefront listings
+    def TAGLINE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
     /// Type/category of the plugin
     def PLUGIN_TYPE() -> pluginType:
-        return pluginType(flatbuffers.field_int8(buf_, pos_, 12, 0))
+        return pluginType(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    /// Human-readable publisher or organization name
+    def PUBLISHER_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// Publisher handle or username
+    def PUBLISHER_HANDLE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    /// Canonical publisher website
+    def PUBLISHER_URL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
+    /// Support or helpdesk URL for this plugin
+    def SUPPORT_URL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    /// Search and categorization tags for discovery
+    def TAGS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 4)
+    def TAGS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
+    /// Short feature bullets highlighted in storefront listings
+    def FEATURES(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 26) + i * 4)
+    def FEATURES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 26)
+    /// Screenshot URLs showing the plugin in use
+    def SCREENSHOT_URLS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 4)
+    def SCREENSHOT_URLS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
+    /// Optional hero/banner image URL for the listing
+    def BANNER_URL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 30)
     /// ABI version for compatibility checking
     def ABI_VERSION() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 14, 1)
+        return flatbuffers.field_uint32(buf_, pos_, 32, 1)
     /// SHA256 hash of the decrypted WASM binary
     def WASM_HASH(i:int) -> int:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 1)
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 34) + i * 1)
     def WASM_HASH_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 16)
+        return flatbuffers.field_vector_len(buf_, pos_, 34)
     /// Size of decrypted WASM binary in bytes
     def WASM_SIZE() -> int:
-        return flatbuffers.field_uint64(buf_, pos_, 18, 0)
+        return flatbuffers.field_uint64(buf_, pos_, 36, 0)
     /// IPFS CID of the encrypted WASM binary
     def WASM_CID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 20)
+        return flatbuffers.field_string(buf_, pos_, 38)
     /// SHA256 hash of the encrypted delivery artifact bytes
     def ENCRYPTED_WASM_HASH(i:int) -> int:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 1)
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 40) + i * 1)
     def ENCRYPTED_WASM_HASH_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 22)
+        return flatbuffers.field_vector_len(buf_, pos_, 40)
     /// Size of the encrypted delivery artifact in bytes
     def ENCRYPTED_WASM_SIZE() -> int:
-        return flatbuffers.field_uint64(buf_, pos_, 24, 0)
+        return flatbuffers.field_uint64(buf_, pos_, 42, 0)
     /// Entry point functions exported by the plugin
     def ENTRY_FUNCTIONS(i:int) -> EntryFunction:
-        return EntryFunction { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 26) + i * 4) }
+        return EntryFunction { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 44) + i * 4) }
     def ENTRY_FUNCTIONS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 26)
+        return flatbuffers.field_vector_len(buf_, pos_, 44)
     /// FlatBuffer schemas required by this plugin
     def REQUIRED_SCHEMAS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 46) + i * 4)
     def REQUIRED_SCHEMAS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 28)
+        return flatbuffers.field_vector_len(buf_, pos_, 46)
     /// Other plugins this depends on
     def DEPENDENCIES(i:int) -> PluginDependency:
-        return PluginDependency { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 30) + i * 4) }
+        return PluginDependency { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 48) + i * 4) }
     def DEPENDENCIES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 30)
+        return flatbuffers.field_vector_len(buf_, pos_, 48)
     /// Capabilities provided by this plugin
     def CAPABILITIES(i:int) -> PluginCapability:
-        return PluginCapability { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
+        return PluginCapability { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 50) + i * 4) }
     def CAPABILITIES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 32)
+        return flatbuffers.field_vector_len(buf_, pos_, 50)
     /// Peer ID of the plugin provider
     def PROVIDER_PEER_ID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 34)
+        return flatbuffers.field_string(buf_, pos_, 52)
     /// IPFS CID of provider's EPM (Entity Profile Message)
     def PROVIDER_EPM_CID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 36)
+        return flatbuffers.field_string(buf_, pos_, 54)
     /// Whether the WASM binary is encrypted
     def ENCRYPTED() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 38, 1))
+        return bool(flatbuffers.field_int8(buf_, pos_, 56, 1))
     /// Canonical required scope for grant issuance
     def REQUIRED_SCOPE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 40)
+        return flatbuffers.field_string(buf_, pos_, 58)
     /// Provider-local identifier for the module content key
     def KEY_ID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 42)
+        return flatbuffers.field_string(buf_, pos_, 60)
     /// Allowed requester domains for module grants
     def ALLOWED_DOMAINS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 44) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 62) + i * 4)
     def ALLOWED_DOMAINS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 44)
+        return flatbuffers.field_vector_len(buf_, pos_, 62)
     /// Maximum grant timeout allowed for this module publication
     def MAX_GRANT_TIMEOUT_MS() -> int:
-        return flatbuffers.field_uint64(buf_, pos_, 46, 0)
+        return flatbuffers.field_uint64(buf_, pos_, 64, 0)
     /// Minimum permissions required to run
     def MIN_PERMISSIONS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 48) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 66) + i * 4)
     def MIN_PERMISSIONS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 48)
+        return flatbuffers.field_vector_len(buf_, pos_, 66)
     /// Unix timestamp when plugin was created
     def CREATED_AT() -> int:
-        return flatbuffers.field_uint64(buf_, pos_, 50, 0)
+        return flatbuffers.field_uint64(buf_, pos_, 68, 0)
     /// Unix timestamp when plugin was last updated
     def UPDATED_AT() -> int:
-        return flatbuffers.field_uint64(buf_, pos_, 52, 0)
+        return flatbuffers.field_uint64(buf_, pos_, 70, 0)
     /// URL to plugin documentation
     def DOCUMENTATION_URL() -> string:
-        return flatbuffers.field_string(buf_, pos_, 54)
+        return flatbuffers.field_string(buf_, pos_, 72)
+    /// URL to plugin changelog or release notes
+    def CHANGELOG_URL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 74)
     /// URL to plugin icon/logo
     def ICON_URL() -> string:
-        return flatbuffers.field_string(buf_, pos_, 56)
+        return flatbuffers.field_string(buf_, pos_, 76)
     /// License identifier (SPDX format)
     def LICENSE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 58)
+        return flatbuffers.field_string(buf_, pos_, 78)
+    /// Commercial model used for storefront purchase flows
+    def PAYMENT_MODEL() -> paymentModel:
+        return paymentModel(flatbuffers.field_int8(buf_, pos_, 80, 0))
+    /// Price in USD cents for one-time purchase or subscription period
+    def PRICE_USD_CENTS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 82, 0)
+    /// Subscription billing period length in days
+    def SUBSCRIPTION_PERIOD_DAYS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 84, 0)
+    /// Accepted payment methods, e.g. "stripe", "sol", "usdc"
+    def ACCEPTED_PAYMENT_METHODS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 86) + i * 4)
+    def ACCEPTED_PAYMENT_METHODS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 86)
+    /// Storefront publication state for this manifest version
+    def LISTING_STATUS() -> listingStatus:
+        return listingStatus(flatbuffers.field_int8(buf_, pos_, 88, 0))
     /// Ed25519 signature from provider over manifest
     def SIGNATURE(i:int) -> int:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 60) + i * 1)
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 90) + i * 1)
     def SIGNATURE_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 60)
+        return flatbuffers.field_vector_len(buf_, pos_, 90)
 
 def GetRootAsPLG(buf:string): return PLG { buf, flatbuffers.indirect(buf, 0) }
 
 struct PLGBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(29)
+        b_.StartObject(44)
         return this
     def add_PLUGIN_ID(PLUGIN_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, PLUGIN_ID)
@@ -265,83 +336,149 @@ struct PLGBuilder:
     def add_DESCRIPTION(DESCRIPTION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, DESCRIPTION)
         return this
+    def add_TAGLINE(TAGLINE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, TAGLINE)
+        return this
     def add_PLUGIN_TYPE(PLUGIN_TYPE:pluginType):
-        b_.PrependInt8Slot(4, PLUGIN_TYPE, 0)
+        b_.PrependInt8Slot(5, PLUGIN_TYPE, 0)
+        return this
+    def add_PUBLISHER_NAME(PUBLISHER_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, PUBLISHER_NAME)
+        return this
+    def add_PUBLISHER_HANDLE(PUBLISHER_HANDLE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, PUBLISHER_HANDLE)
+        return this
+    def add_PUBLISHER_URL(PUBLISHER_URL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, PUBLISHER_URL)
+        return this
+    def add_SUPPORT_URL(SUPPORT_URL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, SUPPORT_URL)
+        return this
+    def add_TAGS(TAGS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, TAGS)
+        return this
+    def add_FEATURES(FEATURES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, FEATURES)
+        return this
+    def add_SCREENSHOT_URLS(SCREENSHOT_URLS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, SCREENSHOT_URLS)
+        return this
+    def add_BANNER_URL(BANNER_URL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, BANNER_URL)
         return this
     def add_ABI_VERSION(ABI_VERSION:int):
-        b_.PrependUint32Slot(5, ABI_VERSION, 1)
+        b_.PrependUint32Slot(14, ABI_VERSION, 1)
         return this
     def add_WASM_HASH(WASM_HASH:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(6, WASM_HASH)
+        b_.PrependUOffsetTRelativeSlot(15, WASM_HASH)
         return this
     def add_WASM_SIZE(WASM_SIZE:int):
-        b_.PrependUint64Slot(7, WASM_SIZE, 0)
+        b_.PrependUint64Slot(16, WASM_SIZE, 0)
         return this
     def add_WASM_CID(WASM_CID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(8, WASM_CID)
+        b_.PrependUOffsetTRelativeSlot(17, WASM_CID)
         return this
     def add_ENCRYPTED_WASM_HASH(ENCRYPTED_WASM_HASH:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(9, ENCRYPTED_WASM_HASH)
+        b_.PrependUOffsetTRelativeSlot(18, ENCRYPTED_WASM_HASH)
         return this
     def add_ENCRYPTED_WASM_SIZE(ENCRYPTED_WASM_SIZE:int):
-        b_.PrependUint64Slot(10, ENCRYPTED_WASM_SIZE, 0)
+        b_.PrependUint64Slot(19, ENCRYPTED_WASM_SIZE, 0)
         return this
     def add_ENTRY_FUNCTIONS(ENTRY_FUNCTIONS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(11, ENTRY_FUNCTIONS)
+        b_.PrependUOffsetTRelativeSlot(20, ENTRY_FUNCTIONS)
         return this
     def add_REQUIRED_SCHEMAS(REQUIRED_SCHEMAS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(12, REQUIRED_SCHEMAS)
+        b_.PrependUOffsetTRelativeSlot(21, REQUIRED_SCHEMAS)
         return this
     def add_DEPENDENCIES(DEPENDENCIES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(13, DEPENDENCIES)
+        b_.PrependUOffsetTRelativeSlot(22, DEPENDENCIES)
         return this
     def add_CAPABILITIES(CAPABILITIES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(14, CAPABILITIES)
+        b_.PrependUOffsetTRelativeSlot(23, CAPABILITIES)
         return this
     def add_PROVIDER_PEER_ID(PROVIDER_PEER_ID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(15, PROVIDER_PEER_ID)
+        b_.PrependUOffsetTRelativeSlot(24, PROVIDER_PEER_ID)
         return this
     def add_PROVIDER_EPM_CID(PROVIDER_EPM_CID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(16, PROVIDER_EPM_CID)
+        b_.PrependUOffsetTRelativeSlot(25, PROVIDER_EPM_CID)
         return this
     def add_ENCRYPTED(ENCRYPTED:bool):
-        b_.PrependBoolSlot(17, ENCRYPTED, 1)
+        b_.PrependBoolSlot(26, ENCRYPTED, 1)
         return this
     def add_REQUIRED_SCOPE(REQUIRED_SCOPE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(18, REQUIRED_SCOPE)
+        b_.PrependUOffsetTRelativeSlot(27, REQUIRED_SCOPE)
         return this
     def add_KEY_ID(KEY_ID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(19, KEY_ID)
+        b_.PrependUOffsetTRelativeSlot(28, KEY_ID)
         return this
     def add_ALLOWED_DOMAINS(ALLOWED_DOMAINS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(20, ALLOWED_DOMAINS)
+        b_.PrependUOffsetTRelativeSlot(29, ALLOWED_DOMAINS)
         return this
     def add_MAX_GRANT_TIMEOUT_MS(MAX_GRANT_TIMEOUT_MS:int):
-        b_.PrependUint64Slot(21, MAX_GRANT_TIMEOUT_MS, 0)
+        b_.PrependUint64Slot(30, MAX_GRANT_TIMEOUT_MS, 0)
         return this
     def add_MIN_PERMISSIONS(MIN_PERMISSIONS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(22, MIN_PERMISSIONS)
+        b_.PrependUOffsetTRelativeSlot(31, MIN_PERMISSIONS)
         return this
     def add_CREATED_AT(CREATED_AT:int):
-        b_.PrependUint64Slot(23, CREATED_AT, 0)
+        b_.PrependUint64Slot(32, CREATED_AT, 0)
         return this
     def add_UPDATED_AT(UPDATED_AT:int):
-        b_.PrependUint64Slot(24, UPDATED_AT, 0)
+        b_.PrependUint64Slot(33, UPDATED_AT, 0)
         return this
     def add_DOCUMENTATION_URL(DOCUMENTATION_URL:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(25, DOCUMENTATION_URL)
+        b_.PrependUOffsetTRelativeSlot(34, DOCUMENTATION_URL)
+        return this
+    def add_CHANGELOG_URL(CHANGELOG_URL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(35, CHANGELOG_URL)
         return this
     def add_ICON_URL(ICON_URL:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(26, ICON_URL)
+        b_.PrependUOffsetTRelativeSlot(36, ICON_URL)
         return this
     def add_LICENSE(LICENSE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(27, LICENSE)
+        b_.PrependUOffsetTRelativeSlot(37, LICENSE)
+        return this
+    def add_PAYMENT_MODEL(PAYMENT_MODEL:paymentModel):
+        b_.PrependInt8Slot(38, PAYMENT_MODEL, 0)
+        return this
+    def add_PRICE_USD_CENTS(PRICE_USD_CENTS:int):
+        b_.PrependUint32Slot(39, PRICE_USD_CENTS, 0)
+        return this
+    def add_SUBSCRIPTION_PERIOD_DAYS(SUBSCRIPTION_PERIOD_DAYS:int):
+        b_.PrependUint32Slot(40, SUBSCRIPTION_PERIOD_DAYS, 0)
+        return this
+    def add_ACCEPTED_PAYMENT_METHODS(ACCEPTED_PAYMENT_METHODS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(41, ACCEPTED_PAYMENT_METHODS)
+        return this
+    def add_LISTING_STATUS(LISTING_STATUS:listingStatus):
+        b_.PrependInt8Slot(42, LISTING_STATUS, 0)
         return this
     def add_SIGNATURE(SIGNATURE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(28, SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(43, SIGNATURE)
         return this
     def end():
         return b_.EndObject()
+
+def PLGStartTAGSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PLGCreateTAGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def PLGStartFEATURESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PLGCreateFEATURESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def PLGStartSCREENSHOTURLSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PLGCreateSCREENSHOTURLSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
 
 def PLGStartWASMHASHVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
@@ -395,6 +532,13 @@ def PLGCreateALLOWEDDOMAINSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset
 def PLGStartMINPERMISSIONSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def PLGCreateMINPERMISSIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def PLGStartACCEPTEDPAYMENTMETHODSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PLGCreateACCEPTEDPAYMENTMETHODSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

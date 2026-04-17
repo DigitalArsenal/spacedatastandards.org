@@ -66,7 +66,7 @@ Space Data Standards modernizes decades-old formats while maintaining compatibil
 
 ### Marketplace
 
-**STF, PUR, REV, ACL** — Storefront, purchase, review, and access control for data commerce
+**STF, PLG, PLK, PUR, REV, ACL** — Storefront listings, canonical plugin marketplace manifests, licenses, purchases, reviews, and access control for data commerce
 
 ### Geospatial
 

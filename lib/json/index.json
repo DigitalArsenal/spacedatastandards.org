@@ -16018,6 +16018,22 @@
                         "Shader"
                     ]
                 },
+                "paymentModel": {
+                    "type": "string",
+                    "enum": [
+                        "Free",
+                        "OneTime",
+                        "Subscription"
+                    ]
+                },
+                "listingStatus": {
+                    "type": "string",
+                    "enum": [
+                        "Public",
+                        "Unlisted",
+                        "Retired"
+                    ]
+                },
                 "PluginCapability": {
                     "type": "object",
                     "description": "Plugin capability declaration",
@@ -16087,7 +16103,7 @@
                 },
                 "PLG": {
                     "type": "object",
-                    "description": "Plugin Manifest - WASM plugin distribution",
+                    "description": "Plugin Manifest - canonical signed storefront and WASM distribution record",
                     "properties": {
                         "PLUGIN_ID": {
                             "type": "string",
@@ -16105,9 +16121,54 @@
                             "type": "string",
                             "description": "Detailed description of plugin functionality"
                         },
+                        "TAGLINE": {
+                            "type": "string",
+                            "description": "Short marketing summary shown in storefront listings"
+                        },
                         "PLUGIN_TYPE": {
                             "$ref": "#/definitions/pluginType",
                             "description": "Type/category of the plugin"
+                        },
+                        "PUBLISHER_NAME": {
+                            "type": "string",
+                            "description": "Human-readable publisher or organization name"
+                        },
+                        "PUBLISHER_HANDLE": {
+                            "type": "string",
+                            "description": "Publisher handle or username"
+                        },
+                        "PUBLISHER_URL": {
+                            "type": "string",
+                            "description": "Canonical publisher website"
+                        },
+                        "SUPPORT_URL": {
+                            "type": "string",
+                            "description": "Support or helpdesk URL for this plugin"
+                        },
+                        "TAGS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Search and categorization tags for discovery"
+                        },
+                        "FEATURES": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Short feature bullets highlighted in storefront listings"
+                        },
+                        "SCREENSHOT_URLS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Screenshot URLs showing the plugin in use"
+                        },
+                        "BANNER_URL": {
+                            "type": "string",
+                            "description": "Optional hero/banner image URL for the listing"
                         },
                         "ABI_VERSION": {
                             "type": "integer",
@@ -16233,6 +16294,10 @@
                             "type": "string",
                             "description": "URL to plugin documentation"
                         },
+                        "CHANGELOG_URL": {
+                            "type": "string",
+                            "description": "URL to plugin changelog or release notes"
+                        },
                         "ICON_URL": {
                             "type": "string",
                             "description": "URL to plugin icon/logo"
@@ -16240,6 +16305,33 @@
                         "LICENSE": {
                             "type": "string",
                             "description": "License identifier (SPDX format)"
+                        },
+                        "PAYMENT_MODEL": {
+                            "$ref": "#/definitions/paymentModel",
+                            "description": "Commercial model used for storefront purchase flows"
+                        },
+                        "PRICE_USD_CENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Price in USD cents for one-time purchase or subscription period"
+                        },
+                        "SUBSCRIPTION_PERIOD_DAYS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Subscription billing period length in days"
+                        },
+                        "ACCEPTED_PAYMENT_METHODS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Accepted payment methods, e.g. \"stripe\", \"sol\", \"usdc\""
+                        },
+                        "LISTING_STATUS": {
+                            "$ref": "#/definitions/listingStatus",
+                            "description": "Storefront publication state for this manifest version"
                         },
                         "SIGNATURE": {
                             "type": "array",

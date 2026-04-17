@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Plugin Manifest - WASM plugin distribution
+/// Plugin Manifest - canonical signed storefront and WASM distribution record
 public struct PLG : IFlatbufferObject
 {
   private Table __p;
@@ -51,138 +51,223 @@ public struct PLG : IFlatbufferObject
   public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(10); }
+  /// Short marketing summary shown in storefront listings
+  public string TAGLINE { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTAGLINEBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetTAGLINEBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetTAGLINEArray() { return __p.__vector_as_array<byte>(12); }
   /// Type/category of the plugin
-  public pluginType PLUGIN_TYPE { get { int o = __p.__offset(12); return o != 0 ? (pluginType)__p.bb.GetSbyte(o + __p.bb_pos) : pluginType.Sensor; } }
+  public pluginType PLUGIN_TYPE { get { int o = __p.__offset(14); return o != 0 ? (pluginType)__p.bb.GetSbyte(o + __p.bb_pos) : pluginType.Sensor; } }
+  /// Human-readable publisher or organization name
+  public string PUBLISHER_NAME { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPUBLISHER_NAMEBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetPUBLISHER_NAMEBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetPUBLISHER_NAMEArray() { return __p.__vector_as_array<byte>(16); }
+  /// Publisher handle or username
+  public string PUBLISHER_HANDLE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPUBLISHER_HANDLEBytes() { return __p.__vector_as_span<byte>(18, 1); }
+#else
+  public ArraySegment<byte>? GetPUBLISHER_HANDLEBytes() { return __p.__vector_as_arraysegment(18); }
+#endif
+  public byte[] GetPUBLISHER_HANDLEArray() { return __p.__vector_as_array<byte>(18); }
+  /// Canonical publisher website
+  public string PUBLISHER_URL { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPUBLISHER_URLBytes() { return __p.__vector_as_span<byte>(20, 1); }
+#else
+  public ArraySegment<byte>? GetPUBLISHER_URLBytes() { return __p.__vector_as_arraysegment(20); }
+#endif
+  public byte[] GetPUBLISHER_URLArray() { return __p.__vector_as_array<byte>(20); }
+  /// Support or helpdesk URL for this plugin
+  public string SUPPORT_URL { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSUPPORT_URLBytes() { return __p.__vector_as_span<byte>(22, 1); }
+#else
+  public ArraySegment<byte>? GetSUPPORT_URLBytes() { return __p.__vector_as_arraysegment(22); }
+#endif
+  public byte[] GetSUPPORT_URLArray() { return __p.__vector_as_array<byte>(22); }
+  /// Search and categorization tags for discovery
+  public string TAGS(int j) { int o = __p.__offset(24); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int TAGSLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Short feature bullets highlighted in storefront listings
+  public string FEATURES(int j) { int o = __p.__offset(26); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int FEATURESLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Screenshot URLs showing the plugin in use
+  public string SCREENSHOT_URLS(int j) { int o = __p.__offset(28); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int SCREENSHOT_URLSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Optional hero/banner image URL for the listing
+  public string BANNER_URL { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetBANNER_URLBytes() { return __p.__vector_as_span<byte>(30, 1); }
+#else
+  public ArraySegment<byte>? GetBANNER_URLBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public byte[] GetBANNER_URLArray() { return __p.__vector_as_array<byte>(30); }
   /// ABI version for compatibility checking
-  public uint ABI_VERSION { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)1; } }
+  public uint ABI_VERSION { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)1; } }
   /// SHA256 hash of the decrypted WASM binary
-  public byte WASM_HASH(int j) { int o = __p.__offset(16); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
-  public int WASM_HASHLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte WASM_HASH(int j) { int o = __p.__offset(34); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int WASM_HASHLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetWASM_HASHBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetWASM_HASHBytes() { return __p.__vector_as_span<byte>(34, 1); }
 #else
-  public ArraySegment<byte>? GetWASM_HASHBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetWASM_HASHBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
-  public byte[] GetWASM_HASHArray() { return __p.__vector_as_array<byte>(16); }
+  public byte[] GetWASM_HASHArray() { return __p.__vector_as_array<byte>(34); }
   /// Size of decrypted WASM binary in bytes
-  public ulong WASM_SIZE { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public ulong WASM_SIZE { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// IPFS CID of the encrypted WASM binary
-  public string WASM_CID { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string WASM_CID { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetWASM_CIDBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetWASM_CIDBytes() { return __p.__vector_as_span<byte>(38, 1); }
 #else
-  public ArraySegment<byte>? GetWASM_CIDBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetWASM_CIDBytes() { return __p.__vector_as_arraysegment(38); }
 #endif
-  public byte[] GetWASM_CIDArray() { return __p.__vector_as_array<byte>(20); }
+  public byte[] GetWASM_CIDArray() { return __p.__vector_as_array<byte>(38); }
   /// SHA256 hash of the encrypted delivery artifact bytes
-  public byte ENCRYPTED_WASM_HASH(int j) { int o = __p.__offset(22); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
-  public int ENCRYPTED_WASM_HASHLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte ENCRYPTED_WASM_HASH(int j) { int o = __p.__offset(40); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int ENCRYPTED_WASM_HASHLength { get { int o = __p.__offset(40); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetENCRYPTED_WASM_HASHBytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetENCRYPTED_WASM_HASHBytes() { return __p.__vector_as_span<byte>(40, 1); }
 #else
-  public ArraySegment<byte>? GetENCRYPTED_WASM_HASHBytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetENCRYPTED_WASM_HASHBytes() { return __p.__vector_as_arraysegment(40); }
 #endif
-  public byte[] GetENCRYPTED_WASM_HASHArray() { return __p.__vector_as_array<byte>(22); }
+  public byte[] GetENCRYPTED_WASM_HASHArray() { return __p.__vector_as_array<byte>(40); }
   /// Size of the encrypted delivery artifact in bytes
-  public ulong ENCRYPTED_WASM_SIZE { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public ulong ENCRYPTED_WASM_SIZE { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// Entry point functions exported by the plugin
-  public EntryFunction? ENTRY_FUNCTIONS(int j) { int o = __p.__offset(26); return o != 0 ? (EntryFunction?)(new EntryFunction()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int ENTRY_FUNCTIONSLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public EntryFunction? ENTRY_FUNCTIONS(int j) { int o = __p.__offset(44); return o != 0 ? (EntryFunction?)(new EntryFunction()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int ENTRY_FUNCTIONSLength { get { int o = __p.__offset(44); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// FlatBuffer schemas required by this plugin
-  public string REQUIRED_SCHEMAS(int j) { int o = __p.__offset(28); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int REQUIRED_SCHEMASLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string REQUIRED_SCHEMAS(int j) { int o = __p.__offset(46); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int REQUIRED_SCHEMASLength { get { int o = __p.__offset(46); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Other plugins this depends on
-  public PluginDependency? DEPENDENCIES(int j) { int o = __p.__offset(30); return o != 0 ? (PluginDependency?)(new PluginDependency()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int DEPENDENCIESLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public PluginDependency? DEPENDENCIES(int j) { int o = __p.__offset(48); return o != 0 ? (PluginDependency?)(new PluginDependency()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int DEPENDENCIESLength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Capabilities provided by this plugin
-  public PluginCapability? CAPABILITIES(int j) { int o = __p.__offset(32); return o != 0 ? (PluginCapability?)(new PluginCapability()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int CAPABILITIESLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public PluginCapability? CAPABILITIES(int j) { int o = __p.__offset(50); return o != 0 ? (PluginCapability?)(new PluginCapability()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int CAPABILITIESLength { get { int o = __p.__offset(50); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Peer ID of the plugin provider
-  public string PROVIDER_PEER_ID { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string PROVIDER_PEER_ID { get { int o = __p.__offset(52); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_span<byte>(34, 1); }
+  public Span<byte> GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_span<byte>(52, 1); }
 #else
-  public ArraySegment<byte>? GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_arraysegment(34); }
+  public ArraySegment<byte>? GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_arraysegment(52); }
 #endif
-  public byte[] GetPROVIDER_PEER_IDArray() { return __p.__vector_as_array<byte>(34); }
+  public byte[] GetPROVIDER_PEER_IDArray() { return __p.__vector_as_array<byte>(52); }
   /// IPFS CID of provider's EPM (Entity Profile Message)
-  public string PROVIDER_EPM_CID { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string PROVIDER_EPM_CID { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPROVIDER_EPM_CIDBytes() { return __p.__vector_as_span<byte>(36, 1); }
+  public Span<byte> GetPROVIDER_EPM_CIDBytes() { return __p.__vector_as_span<byte>(54, 1); }
 #else
-  public ArraySegment<byte>? GetPROVIDER_EPM_CIDBytes() { return __p.__vector_as_arraysegment(36); }
+  public ArraySegment<byte>? GetPROVIDER_EPM_CIDBytes() { return __p.__vector_as_arraysegment(54); }
 #endif
-  public byte[] GetPROVIDER_EPM_CIDArray() { return __p.__vector_as_array<byte>(36); }
+  public byte[] GetPROVIDER_EPM_CIDArray() { return __p.__vector_as_array<byte>(54); }
   /// Whether the WASM binary is encrypted
-  public bool ENCRYPTED { get { int o = __p.__offset(38); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
+  public bool ENCRYPTED { get { int o = __p.__offset(56); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
   /// Canonical required scope for grant issuance
-  public string REQUIRED_SCOPE { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string REQUIRED_SCOPE { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetREQUIRED_SCOPEBytes() { return __p.__vector_as_span<byte>(40, 1); }
+  public Span<byte> GetREQUIRED_SCOPEBytes() { return __p.__vector_as_span<byte>(58, 1); }
 #else
-  public ArraySegment<byte>? GetREQUIRED_SCOPEBytes() { return __p.__vector_as_arraysegment(40); }
+  public ArraySegment<byte>? GetREQUIRED_SCOPEBytes() { return __p.__vector_as_arraysegment(58); }
 #endif
-  public byte[] GetREQUIRED_SCOPEArray() { return __p.__vector_as_array<byte>(40); }
+  public byte[] GetREQUIRED_SCOPEArray() { return __p.__vector_as_array<byte>(58); }
   /// Provider-local identifier for the module content key
-  public string KEY_ID { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string KEY_ID { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetKEY_IDBytes() { return __p.__vector_as_span<byte>(42, 1); }
+  public Span<byte> GetKEY_IDBytes() { return __p.__vector_as_span<byte>(60, 1); }
 #else
-  public ArraySegment<byte>? GetKEY_IDBytes() { return __p.__vector_as_arraysegment(42); }
+  public ArraySegment<byte>? GetKEY_IDBytes() { return __p.__vector_as_arraysegment(60); }
 #endif
-  public byte[] GetKEY_IDArray() { return __p.__vector_as_array<byte>(42); }
+  public byte[] GetKEY_IDArray() { return __p.__vector_as_array<byte>(60); }
   /// Allowed requester domains for module grants
-  public string ALLOWED_DOMAINS(int j) { int o = __p.__offset(44); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int ALLOWED_DOMAINSLength { get { int o = __p.__offset(44); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string ALLOWED_DOMAINS(int j) { int o = __p.__offset(62); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int ALLOWED_DOMAINSLength { get { int o = __p.__offset(62); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Maximum grant timeout allowed for this module publication
-  public ulong MAX_GRANT_TIMEOUT_MS { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public ulong MAX_GRANT_TIMEOUT_MS { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// Minimum permissions required to run
-  public string MIN_PERMISSIONS(int j) { int o = __p.__offset(48); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int MIN_PERMISSIONSLength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string MIN_PERMISSIONS(int j) { int o = __p.__offset(66); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int MIN_PERMISSIONSLength { get { int o = __p.__offset(66); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Unix timestamp when plugin was created
-  public ulong CREATED_AT { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public ulong CREATED_AT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// Unix timestamp when plugin was last updated
-  public ulong UPDATED_AT { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public ulong UPDATED_AT { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// URL to plugin documentation
-  public string DOCUMENTATION_URL { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string DOCUMENTATION_URL { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDOCUMENTATION_URLBytes() { return __p.__vector_as_span<byte>(54, 1); }
+  public Span<byte> GetDOCUMENTATION_URLBytes() { return __p.__vector_as_span<byte>(72, 1); }
 #else
-  public ArraySegment<byte>? GetDOCUMENTATION_URLBytes() { return __p.__vector_as_arraysegment(54); }
+  public ArraySegment<byte>? GetDOCUMENTATION_URLBytes() { return __p.__vector_as_arraysegment(72); }
 #endif
-  public byte[] GetDOCUMENTATION_URLArray() { return __p.__vector_as_array<byte>(54); }
+  public byte[] GetDOCUMENTATION_URLArray() { return __p.__vector_as_array<byte>(72); }
+  /// URL to plugin changelog or release notes
+  public string CHANGELOG_URL { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCHANGELOG_URLBytes() { return __p.__vector_as_span<byte>(74, 1); }
+#else
+  public ArraySegment<byte>? GetCHANGELOG_URLBytes() { return __p.__vector_as_arraysegment(74); }
+#endif
+  public byte[] GetCHANGELOG_URLArray() { return __p.__vector_as_array<byte>(74); }
   /// URL to plugin icon/logo
-  public string ICON_URL { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string ICON_URL { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetICON_URLBytes() { return __p.__vector_as_span<byte>(56, 1); }
+  public Span<byte> GetICON_URLBytes() { return __p.__vector_as_span<byte>(76, 1); }
 #else
-  public ArraySegment<byte>? GetICON_URLBytes() { return __p.__vector_as_arraysegment(56); }
+  public ArraySegment<byte>? GetICON_URLBytes() { return __p.__vector_as_arraysegment(76); }
 #endif
-  public byte[] GetICON_URLArray() { return __p.__vector_as_array<byte>(56); }
+  public byte[] GetICON_URLArray() { return __p.__vector_as_array<byte>(76); }
   /// License identifier (SPDX format)
-  public string LICENSE { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string LICENSE { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLICENSEBytes() { return __p.__vector_as_span<byte>(58, 1); }
+  public Span<byte> GetLICENSEBytes() { return __p.__vector_as_span<byte>(78, 1); }
 #else
-  public ArraySegment<byte>? GetLICENSEBytes() { return __p.__vector_as_arraysegment(58); }
+  public ArraySegment<byte>? GetLICENSEBytes() { return __p.__vector_as_arraysegment(78); }
 #endif
-  public byte[] GetLICENSEArray() { return __p.__vector_as_array<byte>(58); }
+  public byte[] GetLICENSEArray() { return __p.__vector_as_array<byte>(78); }
+  /// Commercial model used for storefront purchase flows
+  public paymentModel PAYMENT_MODEL { get { int o = __p.__offset(80); return o != 0 ? (paymentModel)__p.bb.GetSbyte(o + __p.bb_pos) : paymentModel.Free; } }
+  /// Price in USD cents for one-time purchase or subscription period
+  public uint PRICE_USD_CENTS { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Subscription billing period length in days
+  public uint SUBSCRIPTION_PERIOD_DAYS { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Accepted payment methods, e.g. "stripe", "sol", "usdc"
+  public string ACCEPTED_PAYMENT_METHODS(int j) { int o = __p.__offset(86); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int ACCEPTED_PAYMENT_METHODSLength { get { int o = __p.__offset(86); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Storefront publication state for this manifest version
+  public listingStatus LISTING_STATUS { get { int o = __p.__offset(88); return o != 0 ? (listingStatus)__p.bb.GetSbyte(o + __p.bb_pos) : listingStatus.Public; } }
   /// Ed25519 signature from provider over manifest
-  public byte SIGNATURE(int j) { int o = __p.__offset(60); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
-  public int SIGNATURELength { get { int o = __p.__offset(60); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte SIGNATURE(int j) { int o = __p.__offset(90); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int SIGNATURELength { get { int o = __p.__offset(90); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSIGNATUREBytes() { return __p.__vector_as_span<byte>(60, 1); }
+  public Span<byte> GetSIGNATUREBytes() { return __p.__vector_as_span<byte>(90, 1); }
 #else
-  public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(60); }
+  public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(90); }
 #endif
-  public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(60); }
+  public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(90); }
 
   public static Offset<PLG> CreatePLG(FlatBufferBuilder builder,
       StringOffset PLUGIN_IDOffset = default(StringOffset),
       StringOffset NAMEOffset = default(StringOffset),
       StringOffset VERSIONOffset = default(StringOffset),
       StringOffset DESCRIPTIONOffset = default(StringOffset),
+      StringOffset TAGLINEOffset = default(StringOffset),
       pluginType PLUGIN_TYPE = pluginType.Sensor,
+      StringOffset PUBLISHER_NAMEOffset = default(StringOffset),
+      StringOffset PUBLISHER_HANDLEOffset = default(StringOffset),
+      StringOffset PUBLISHER_URLOffset = default(StringOffset),
+      StringOffset SUPPORT_URLOffset = default(StringOffset),
+      VectorOffset TAGSOffset = default(VectorOffset),
+      VectorOffset FEATURESOffset = default(VectorOffset),
+      VectorOffset SCREENSHOT_URLSOffset = default(VectorOffset),
+      StringOffset BANNER_URLOffset = default(StringOffset),
       uint ABI_VERSION = 1,
       VectorOffset WASM_HASHOffset = default(VectorOffset),
       ulong WASM_SIZE = 0,
@@ -204,18 +289,28 @@ public struct PLG : IFlatbufferObject
       ulong CREATED_AT = 0,
       ulong UPDATED_AT = 0,
       StringOffset DOCUMENTATION_URLOffset = default(StringOffset),
+      StringOffset CHANGELOG_URLOffset = default(StringOffset),
       StringOffset ICON_URLOffset = default(StringOffset),
       StringOffset LICENSEOffset = default(StringOffset),
+      paymentModel PAYMENT_MODEL = paymentModel.Free,
+      uint PRICE_USD_CENTS = 0,
+      uint SUBSCRIPTION_PERIOD_DAYS = 0,
+      VectorOffset ACCEPTED_PAYMENT_METHODSOffset = default(VectorOffset),
+      listingStatus LISTING_STATUS = listingStatus.Public,
       VectorOffset SIGNATUREOffset = default(VectorOffset)) {
-    builder.StartTable(29);
+    builder.StartTable(44);
     PLG.AddUPDATED_AT(builder, UPDATED_AT);
     PLG.AddCREATED_AT(builder, CREATED_AT);
     PLG.AddMAX_GRANT_TIMEOUT_MS(builder, MAX_GRANT_TIMEOUT_MS);
     PLG.AddENCRYPTED_WASM_SIZE(builder, ENCRYPTED_WASM_SIZE);
     PLG.AddWASM_SIZE(builder, WASM_SIZE);
     PLG.AddSIGNATURE(builder, SIGNATUREOffset);
+    PLG.AddACCEPTED_PAYMENT_METHODS(builder, ACCEPTED_PAYMENT_METHODSOffset);
+    PLG.AddSUBSCRIPTION_PERIOD_DAYS(builder, SUBSCRIPTION_PERIOD_DAYS);
+    PLG.AddPRICE_USD_CENTS(builder, PRICE_USD_CENTS);
     PLG.AddLICENSE(builder, LICENSEOffset);
     PLG.AddICON_URL(builder, ICON_URLOffset);
+    PLG.AddCHANGELOG_URL(builder, CHANGELOG_URLOffset);
     PLG.AddDOCUMENTATION_URL(builder, DOCUMENTATION_URLOffset);
     PLG.AddMIN_PERMISSIONS(builder, MIN_PERMISSIONSOffset);
     PLG.AddALLOWED_DOMAINS(builder, ALLOWED_DOMAINSOffset);
@@ -231,85 +326,131 @@ public struct PLG : IFlatbufferObject
     PLG.AddWASM_CID(builder, WASM_CIDOffset);
     PLG.AddWASM_HASH(builder, WASM_HASHOffset);
     PLG.AddABI_VERSION(builder, ABI_VERSION);
+    PLG.AddBANNER_URL(builder, BANNER_URLOffset);
+    PLG.AddSCREENSHOT_URLS(builder, SCREENSHOT_URLSOffset);
+    PLG.AddFEATURES(builder, FEATURESOffset);
+    PLG.AddTAGS(builder, TAGSOffset);
+    PLG.AddSUPPORT_URL(builder, SUPPORT_URLOffset);
+    PLG.AddPUBLISHER_URL(builder, PUBLISHER_URLOffset);
+    PLG.AddPUBLISHER_HANDLE(builder, PUBLISHER_HANDLEOffset);
+    PLG.AddPUBLISHER_NAME(builder, PUBLISHER_NAMEOffset);
+    PLG.AddTAGLINE(builder, TAGLINEOffset);
     PLG.AddDESCRIPTION(builder, DESCRIPTIONOffset);
     PLG.AddVERSION(builder, VERSIONOffset);
     PLG.AddNAME(builder, NAMEOffset);
     PLG.AddPLUGIN_ID(builder, PLUGIN_IDOffset);
+    PLG.AddLISTING_STATUS(builder, LISTING_STATUS);
+    PLG.AddPAYMENT_MODEL(builder, PAYMENT_MODEL);
     PLG.AddENCRYPTED(builder, ENCRYPTED);
     PLG.AddPLUGIN_TYPE(builder, PLUGIN_TYPE);
     return PLG.EndPLG(builder);
   }
 
-  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(29); }
+  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(44); }
   public static void AddPLUGIN_ID(FlatBufferBuilder builder, StringOffset PLUGIN_IDOffset) { builder.AddOffset(0, PLUGIN_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(2, VERSIONOffset.Value, 0); }
   public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(3, DESCRIPTIONOffset.Value, 0); }
-  public static void AddPLUGIN_TYPE(FlatBufferBuilder builder, pluginType PLUGIN_TYPE) { builder.AddSbyte(4, (sbyte)PLUGIN_TYPE, 0); }
-  public static void AddABI_VERSION(FlatBufferBuilder builder, uint ABI_VERSION) { builder.AddUint(5, ABI_VERSION, 1); }
-  public static void AddWASM_HASH(FlatBufferBuilder builder, VectorOffset WASM_HASHOffset) { builder.AddOffset(6, WASM_HASHOffset.Value, 0); }
+  public static void AddTAGLINE(FlatBufferBuilder builder, StringOffset TAGLINEOffset) { builder.AddOffset(4, TAGLINEOffset.Value, 0); }
+  public static void AddPLUGIN_TYPE(FlatBufferBuilder builder, pluginType PLUGIN_TYPE) { builder.AddSbyte(5, (sbyte)PLUGIN_TYPE, 0); }
+  public static void AddPUBLISHER_NAME(FlatBufferBuilder builder, StringOffset PUBLISHER_NAMEOffset) { builder.AddOffset(6, PUBLISHER_NAMEOffset.Value, 0); }
+  public static void AddPUBLISHER_HANDLE(FlatBufferBuilder builder, StringOffset PUBLISHER_HANDLEOffset) { builder.AddOffset(7, PUBLISHER_HANDLEOffset.Value, 0); }
+  public static void AddPUBLISHER_URL(FlatBufferBuilder builder, StringOffset PUBLISHER_URLOffset) { builder.AddOffset(8, PUBLISHER_URLOffset.Value, 0); }
+  public static void AddSUPPORT_URL(FlatBufferBuilder builder, StringOffset SUPPORT_URLOffset) { builder.AddOffset(9, SUPPORT_URLOffset.Value, 0); }
+  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(10, TAGSOffset.Value, 0); }
+  public static VectorOffset CreateTAGSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartTAGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddFEATURES(FlatBufferBuilder builder, VectorOffset FEATURESOffset) { builder.AddOffset(11, FEATURESOffset.Value, 0); }
+  public static VectorOffset CreateFEATURESVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateFEATURESVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFEATURESVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFEATURESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartFEATURESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSCREENSHOT_URLS(FlatBufferBuilder builder, VectorOffset SCREENSHOT_URLSOffset) { builder.AddOffset(12, SCREENSHOT_URLSOffset.Value, 0); }
+  public static VectorOffset CreateSCREENSHOT_URLSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSCREENSHOT_URLSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSCREENSHOT_URLSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSCREENSHOT_URLSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSCREENSHOT_URLSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddBANNER_URL(FlatBufferBuilder builder, StringOffset BANNER_URLOffset) { builder.AddOffset(13, BANNER_URLOffset.Value, 0); }
+  public static void AddABI_VERSION(FlatBufferBuilder builder, uint ABI_VERSION) { builder.AddUint(14, ABI_VERSION, 1); }
+  public static void AddWASM_HASH(FlatBufferBuilder builder, VectorOffset WASM_HASHOffset) { builder.AddOffset(15, WASM_HASHOffset.Value, 0); }
   public static VectorOffset CreateWASM_HASHVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateWASM_HASHVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateWASM_HASHVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateWASM_HASHVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartWASM_HASHVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
-  public static void AddWASM_SIZE(FlatBufferBuilder builder, ulong WASM_SIZE) { builder.AddUlong(7, WASM_SIZE, 0); }
-  public static void AddWASM_CID(FlatBufferBuilder builder, StringOffset WASM_CIDOffset) { builder.AddOffset(8, WASM_CIDOffset.Value, 0); }
-  public static void AddENCRYPTED_WASM_HASH(FlatBufferBuilder builder, VectorOffset ENCRYPTED_WASM_HASHOffset) { builder.AddOffset(9, ENCRYPTED_WASM_HASHOffset.Value, 0); }
+  public static void AddWASM_SIZE(FlatBufferBuilder builder, ulong WASM_SIZE) { builder.AddUlong(16, WASM_SIZE, 0); }
+  public static void AddWASM_CID(FlatBufferBuilder builder, StringOffset WASM_CIDOffset) { builder.AddOffset(17, WASM_CIDOffset.Value, 0); }
+  public static void AddENCRYPTED_WASM_HASH(FlatBufferBuilder builder, VectorOffset ENCRYPTED_WASM_HASHOffset) { builder.AddOffset(18, ENCRYPTED_WASM_HASHOffset.Value, 0); }
   public static VectorOffset CreateENCRYPTED_WASM_HASHVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateENCRYPTED_WASM_HASHVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateENCRYPTED_WASM_HASHVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateENCRYPTED_WASM_HASHVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartENCRYPTED_WASM_HASHVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
-  public static void AddENCRYPTED_WASM_SIZE(FlatBufferBuilder builder, ulong ENCRYPTED_WASM_SIZE) { builder.AddUlong(10, ENCRYPTED_WASM_SIZE, 0); }
-  public static void AddENTRY_FUNCTIONS(FlatBufferBuilder builder, VectorOffset ENTRY_FUNCTIONSOffset) { builder.AddOffset(11, ENTRY_FUNCTIONSOffset.Value, 0); }
+  public static void AddENCRYPTED_WASM_SIZE(FlatBufferBuilder builder, ulong ENCRYPTED_WASM_SIZE) { builder.AddUlong(19, ENCRYPTED_WASM_SIZE, 0); }
+  public static void AddENTRY_FUNCTIONS(FlatBufferBuilder builder, VectorOffset ENTRY_FUNCTIONSOffset) { builder.AddOffset(20, ENTRY_FUNCTIONSOffset.Value, 0); }
   public static VectorOffset CreateENTRY_FUNCTIONSVector(FlatBufferBuilder builder, Offset<EntryFunction>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateENTRY_FUNCTIONSVectorBlock(FlatBufferBuilder builder, Offset<EntryFunction>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateENTRY_FUNCTIONSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<EntryFunction>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateENTRY_FUNCTIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<EntryFunction>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartENTRY_FUNCTIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddREQUIRED_SCHEMAS(FlatBufferBuilder builder, VectorOffset REQUIRED_SCHEMASOffset) { builder.AddOffset(12, REQUIRED_SCHEMASOffset.Value, 0); }
+  public static void AddREQUIRED_SCHEMAS(FlatBufferBuilder builder, VectorOffset REQUIRED_SCHEMASOffset) { builder.AddOffset(21, REQUIRED_SCHEMASOffset.Value, 0); }
   public static VectorOffset CreateREQUIRED_SCHEMASVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateREQUIRED_SCHEMASVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateREQUIRED_SCHEMASVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateREQUIRED_SCHEMASVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartREQUIRED_SCHEMASVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddDEPENDENCIES(FlatBufferBuilder builder, VectorOffset DEPENDENCIESOffset) { builder.AddOffset(13, DEPENDENCIESOffset.Value, 0); }
+  public static void AddDEPENDENCIES(FlatBufferBuilder builder, VectorOffset DEPENDENCIESOffset) { builder.AddOffset(22, DEPENDENCIESOffset.Value, 0); }
   public static VectorOffset CreateDEPENDENCIESVector(FlatBufferBuilder builder, Offset<PluginDependency>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateDEPENDENCIESVectorBlock(FlatBufferBuilder builder, Offset<PluginDependency>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateDEPENDENCIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PluginDependency>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateDEPENDENCIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PluginDependency>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartDEPENDENCIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddCAPABILITIES(FlatBufferBuilder builder, VectorOffset CAPABILITIESOffset) { builder.AddOffset(14, CAPABILITIESOffset.Value, 0); }
+  public static void AddCAPABILITIES(FlatBufferBuilder builder, VectorOffset CAPABILITIESOffset) { builder.AddOffset(23, CAPABILITIESOffset.Value, 0); }
   public static VectorOffset CreateCAPABILITIESVector(FlatBufferBuilder builder, Offset<PluginCapability>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateCAPABILITIESVectorBlock(FlatBufferBuilder builder, Offset<PluginCapability>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCAPABILITIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PluginCapability>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCAPABILITIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PluginCapability>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCAPABILITIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddPROVIDER_PEER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_PEER_IDOffset) { builder.AddOffset(15, PROVIDER_PEER_IDOffset.Value, 0); }
-  public static void AddPROVIDER_EPM_CID(FlatBufferBuilder builder, StringOffset PROVIDER_EPM_CIDOffset) { builder.AddOffset(16, PROVIDER_EPM_CIDOffset.Value, 0); }
-  public static void AddENCRYPTED(FlatBufferBuilder builder, bool ENCRYPTED) { builder.AddBool(17, ENCRYPTED, true); }
-  public static void AddREQUIRED_SCOPE(FlatBufferBuilder builder, StringOffset REQUIRED_SCOPEOffset) { builder.AddOffset(18, REQUIRED_SCOPEOffset.Value, 0); }
-  public static void AddKEY_ID(FlatBufferBuilder builder, StringOffset KEY_IDOffset) { builder.AddOffset(19, KEY_IDOffset.Value, 0); }
-  public static void AddALLOWED_DOMAINS(FlatBufferBuilder builder, VectorOffset ALLOWED_DOMAINSOffset) { builder.AddOffset(20, ALLOWED_DOMAINSOffset.Value, 0); }
+  public static void AddPROVIDER_PEER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_PEER_IDOffset) { builder.AddOffset(24, PROVIDER_PEER_IDOffset.Value, 0); }
+  public static void AddPROVIDER_EPM_CID(FlatBufferBuilder builder, StringOffset PROVIDER_EPM_CIDOffset) { builder.AddOffset(25, PROVIDER_EPM_CIDOffset.Value, 0); }
+  public static void AddENCRYPTED(FlatBufferBuilder builder, bool ENCRYPTED) { builder.AddBool(26, ENCRYPTED, true); }
+  public static void AddREQUIRED_SCOPE(FlatBufferBuilder builder, StringOffset REQUIRED_SCOPEOffset) { builder.AddOffset(27, REQUIRED_SCOPEOffset.Value, 0); }
+  public static void AddKEY_ID(FlatBufferBuilder builder, StringOffset KEY_IDOffset) { builder.AddOffset(28, KEY_IDOffset.Value, 0); }
+  public static void AddALLOWED_DOMAINS(FlatBufferBuilder builder, VectorOffset ALLOWED_DOMAINSOffset) { builder.AddOffset(29, ALLOWED_DOMAINSOffset.Value, 0); }
   public static VectorOffset CreateALLOWED_DOMAINSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateALLOWED_DOMAINSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateALLOWED_DOMAINSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateALLOWED_DOMAINSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartALLOWED_DOMAINSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddMAX_GRANT_TIMEOUT_MS(FlatBufferBuilder builder, ulong MAX_GRANT_TIMEOUT_MS) { builder.AddUlong(21, MAX_GRANT_TIMEOUT_MS, 0); }
-  public static void AddMIN_PERMISSIONS(FlatBufferBuilder builder, VectorOffset MIN_PERMISSIONSOffset) { builder.AddOffset(22, MIN_PERMISSIONSOffset.Value, 0); }
+  public static void AddMAX_GRANT_TIMEOUT_MS(FlatBufferBuilder builder, ulong MAX_GRANT_TIMEOUT_MS) { builder.AddUlong(30, MAX_GRANT_TIMEOUT_MS, 0); }
+  public static void AddMIN_PERMISSIONS(FlatBufferBuilder builder, VectorOffset MIN_PERMISSIONSOffset) { builder.AddOffset(31, MIN_PERMISSIONSOffset.Value, 0); }
   public static VectorOffset CreateMIN_PERMISSIONSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateMIN_PERMISSIONSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMIN_PERMISSIONSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMIN_PERMISSIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartMIN_PERMISSIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddCREATED_AT(FlatBufferBuilder builder, ulong CREATED_AT) { builder.AddUlong(23, CREATED_AT, 0); }
-  public static void AddUPDATED_AT(FlatBufferBuilder builder, ulong UPDATED_AT) { builder.AddUlong(24, UPDATED_AT, 0); }
-  public static void AddDOCUMENTATION_URL(FlatBufferBuilder builder, StringOffset DOCUMENTATION_URLOffset) { builder.AddOffset(25, DOCUMENTATION_URLOffset.Value, 0); }
-  public static void AddICON_URL(FlatBufferBuilder builder, StringOffset ICON_URLOffset) { builder.AddOffset(26, ICON_URLOffset.Value, 0); }
-  public static void AddLICENSE(FlatBufferBuilder builder, StringOffset LICENSEOffset) { builder.AddOffset(27, LICENSEOffset.Value, 0); }
-  public static void AddSIGNATURE(FlatBufferBuilder builder, VectorOffset SIGNATUREOffset) { builder.AddOffset(28, SIGNATUREOffset.Value, 0); }
+  public static void AddCREATED_AT(FlatBufferBuilder builder, ulong CREATED_AT) { builder.AddUlong(32, CREATED_AT, 0); }
+  public static void AddUPDATED_AT(FlatBufferBuilder builder, ulong UPDATED_AT) { builder.AddUlong(33, UPDATED_AT, 0); }
+  public static void AddDOCUMENTATION_URL(FlatBufferBuilder builder, StringOffset DOCUMENTATION_URLOffset) { builder.AddOffset(34, DOCUMENTATION_URLOffset.Value, 0); }
+  public static void AddCHANGELOG_URL(FlatBufferBuilder builder, StringOffset CHANGELOG_URLOffset) { builder.AddOffset(35, CHANGELOG_URLOffset.Value, 0); }
+  public static void AddICON_URL(FlatBufferBuilder builder, StringOffset ICON_URLOffset) { builder.AddOffset(36, ICON_URLOffset.Value, 0); }
+  public static void AddLICENSE(FlatBufferBuilder builder, StringOffset LICENSEOffset) { builder.AddOffset(37, LICENSEOffset.Value, 0); }
+  public static void AddPAYMENT_MODEL(FlatBufferBuilder builder, paymentModel PAYMENT_MODEL) { builder.AddSbyte(38, (sbyte)PAYMENT_MODEL, 0); }
+  public static void AddPRICE_USD_CENTS(FlatBufferBuilder builder, uint PRICE_USD_CENTS) { builder.AddUint(39, PRICE_USD_CENTS, 0); }
+  public static void AddSUBSCRIPTION_PERIOD_DAYS(FlatBufferBuilder builder, uint SUBSCRIPTION_PERIOD_DAYS) { builder.AddUint(40, SUBSCRIPTION_PERIOD_DAYS, 0); }
+  public static void AddACCEPTED_PAYMENT_METHODS(FlatBufferBuilder builder, VectorOffset ACCEPTED_PAYMENT_METHODSOffset) { builder.AddOffset(41, ACCEPTED_PAYMENT_METHODSOffset.Value, 0); }
+  public static VectorOffset CreateACCEPTED_PAYMENT_METHODSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateACCEPTED_PAYMENT_METHODSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateACCEPTED_PAYMENT_METHODSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateACCEPTED_PAYMENT_METHODSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartACCEPTED_PAYMENT_METHODSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddLISTING_STATUS(FlatBufferBuilder builder, listingStatus LISTING_STATUS) { builder.AddSbyte(42, (sbyte)LISTING_STATUS, 0); }
+  public static void AddSIGNATURE(FlatBufferBuilder builder, VectorOffset SIGNATUREOffset) { builder.AddOffset(43, SIGNATUREOffset.Value, 0); }
   public static VectorOffset CreateSIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
@@ -334,7 +475,19 @@ public struct PLG : IFlatbufferObject
     _o.NAME = this.NAME;
     _o.VERSION = this.VERSION;
     _o.DESCRIPTION = this.DESCRIPTION;
+    _o.TAGLINE = this.TAGLINE;
     _o.PLUGIN_TYPE = this.PLUGIN_TYPE;
+    _o.PUBLISHER_NAME = this.PUBLISHER_NAME;
+    _o.PUBLISHER_HANDLE = this.PUBLISHER_HANDLE;
+    _o.PUBLISHER_URL = this.PUBLISHER_URL;
+    _o.SUPPORT_URL = this.SUPPORT_URL;
+    _o.TAGS = new List<string>();
+    for (var _j = 0; _j < this.TAGSLength; ++_j) {_o.TAGS.Add(this.TAGS(_j));}
+    _o.FEATURES = new List<string>();
+    for (var _j = 0; _j < this.FEATURESLength; ++_j) {_o.FEATURES.Add(this.FEATURES(_j));}
+    _o.SCREENSHOT_URLS = new List<string>();
+    for (var _j = 0; _j < this.SCREENSHOT_URLSLength; ++_j) {_o.SCREENSHOT_URLS.Add(this.SCREENSHOT_URLS(_j));}
+    _o.BANNER_URL = this.BANNER_URL;
     _o.ABI_VERSION = this.ABI_VERSION;
     _o.WASM_HASH = new List<byte>();
     for (var _j = 0; _j < this.WASM_HASHLength; ++_j) {_o.WASM_HASH.Add(this.WASM_HASH(_j));}
@@ -364,8 +517,15 @@ public struct PLG : IFlatbufferObject
     _o.CREATED_AT = this.CREATED_AT;
     _o.UPDATED_AT = this.UPDATED_AT;
     _o.DOCUMENTATION_URL = this.DOCUMENTATION_URL;
+    _o.CHANGELOG_URL = this.CHANGELOG_URL;
     _o.ICON_URL = this.ICON_URL;
     _o.LICENSE = this.LICENSE;
+    _o.PAYMENT_MODEL = this.PAYMENT_MODEL;
+    _o.PRICE_USD_CENTS = this.PRICE_USD_CENTS;
+    _o.SUBSCRIPTION_PERIOD_DAYS = this.SUBSCRIPTION_PERIOD_DAYS;
+    _o.ACCEPTED_PAYMENT_METHODS = new List<string>();
+    for (var _j = 0; _j < this.ACCEPTED_PAYMENT_METHODSLength; ++_j) {_o.ACCEPTED_PAYMENT_METHODS.Add(this.ACCEPTED_PAYMENT_METHODS(_j));}
+    _o.LISTING_STATUS = this.LISTING_STATUS;
     _o.SIGNATURE = new List<byte>();
     for (var _j = 0; _j < this.SIGNATURELength; ++_j) {_o.SIGNATURE.Add(this.SIGNATURE(_j));}
   }
@@ -375,6 +535,30 @@ public struct PLG : IFlatbufferObject
     var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
     var _VERSION = _o.VERSION == null ? default(StringOffset) : builder.CreateString(_o.VERSION);
     var _DESCRIPTION = _o.DESCRIPTION == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTION);
+    var _TAGLINE = _o.TAGLINE == null ? default(StringOffset) : builder.CreateString(_o.TAGLINE);
+    var _PUBLISHER_NAME = _o.PUBLISHER_NAME == null ? default(StringOffset) : builder.CreateString(_o.PUBLISHER_NAME);
+    var _PUBLISHER_HANDLE = _o.PUBLISHER_HANDLE == null ? default(StringOffset) : builder.CreateString(_o.PUBLISHER_HANDLE);
+    var _PUBLISHER_URL = _o.PUBLISHER_URL == null ? default(StringOffset) : builder.CreateString(_o.PUBLISHER_URL);
+    var _SUPPORT_URL = _o.SUPPORT_URL == null ? default(StringOffset) : builder.CreateString(_o.SUPPORT_URL);
+    var _TAGS = default(VectorOffset);
+    if (_o.TAGS != null) {
+      var __TAGS = new StringOffset[_o.TAGS.Count];
+      for (var _j = 0; _j < __TAGS.Length; ++_j) { __TAGS[_j] = builder.CreateString(_o.TAGS[_j]); }
+      _TAGS = CreateTAGSVector(builder, __TAGS);
+    }
+    var _FEATURES = default(VectorOffset);
+    if (_o.FEATURES != null) {
+      var __FEATURES = new StringOffset[_o.FEATURES.Count];
+      for (var _j = 0; _j < __FEATURES.Length; ++_j) { __FEATURES[_j] = builder.CreateString(_o.FEATURES[_j]); }
+      _FEATURES = CreateFEATURESVector(builder, __FEATURES);
+    }
+    var _SCREENSHOT_URLS = default(VectorOffset);
+    if (_o.SCREENSHOT_URLS != null) {
+      var __SCREENSHOT_URLS = new StringOffset[_o.SCREENSHOT_URLS.Count];
+      for (var _j = 0; _j < __SCREENSHOT_URLS.Length; ++_j) { __SCREENSHOT_URLS[_j] = builder.CreateString(_o.SCREENSHOT_URLS[_j]); }
+      _SCREENSHOT_URLS = CreateSCREENSHOT_URLSVector(builder, __SCREENSHOT_URLS);
+    }
+    var _BANNER_URL = _o.BANNER_URL == null ? default(StringOffset) : builder.CreateString(_o.BANNER_URL);
     var _WASM_HASH = default(VectorOffset);
     if (_o.WASM_HASH != null) {
       var __WASM_HASH = _o.WASM_HASH.ToArray();
@@ -427,8 +611,15 @@ public struct PLG : IFlatbufferObject
       _MIN_PERMISSIONS = CreateMIN_PERMISSIONSVector(builder, __MIN_PERMISSIONS);
     }
     var _DOCUMENTATION_URL = _o.DOCUMENTATION_URL == null ? default(StringOffset) : builder.CreateString(_o.DOCUMENTATION_URL);
+    var _CHANGELOG_URL = _o.CHANGELOG_URL == null ? default(StringOffset) : builder.CreateString(_o.CHANGELOG_URL);
     var _ICON_URL = _o.ICON_URL == null ? default(StringOffset) : builder.CreateString(_o.ICON_URL);
     var _LICENSE = _o.LICENSE == null ? default(StringOffset) : builder.CreateString(_o.LICENSE);
+    var _ACCEPTED_PAYMENT_METHODS = default(VectorOffset);
+    if (_o.ACCEPTED_PAYMENT_METHODS != null) {
+      var __ACCEPTED_PAYMENT_METHODS = new StringOffset[_o.ACCEPTED_PAYMENT_METHODS.Count];
+      for (var _j = 0; _j < __ACCEPTED_PAYMENT_METHODS.Length; ++_j) { __ACCEPTED_PAYMENT_METHODS[_j] = builder.CreateString(_o.ACCEPTED_PAYMENT_METHODS[_j]); }
+      _ACCEPTED_PAYMENT_METHODS = CreateACCEPTED_PAYMENT_METHODSVector(builder, __ACCEPTED_PAYMENT_METHODS);
+    }
     var _SIGNATURE = default(VectorOffset);
     if (_o.SIGNATURE != null) {
       var __SIGNATURE = _o.SIGNATURE.ToArray();
@@ -440,7 +631,16 @@ public struct PLG : IFlatbufferObject
       _NAME,
       _VERSION,
       _DESCRIPTION,
+      _TAGLINE,
       _o.PLUGIN_TYPE,
+      _PUBLISHER_NAME,
+      _PUBLISHER_HANDLE,
+      _PUBLISHER_URL,
+      _SUPPORT_URL,
+      _TAGS,
+      _FEATURES,
+      _SCREENSHOT_URLS,
+      _BANNER_URL,
       _o.ABI_VERSION,
       _WASM_HASH,
       _o.WASM_SIZE,
@@ -462,8 +662,14 @@ public struct PLG : IFlatbufferObject
       _o.CREATED_AT,
       _o.UPDATED_AT,
       _DOCUMENTATION_URL,
+      _CHANGELOG_URL,
       _ICON_URL,
       _LICENSE,
+      _o.PAYMENT_MODEL,
+      _o.PRICE_USD_CENTS,
+      _o.SUBSCRIPTION_PERIOD_DAYS,
+      _ACCEPTED_PAYMENT_METHODS,
+      _o.LISTING_STATUS,
       _SIGNATURE);
   }
 }
@@ -474,7 +680,16 @@ public class PLGT
   public string NAME { get; set; }
   public string VERSION { get; set; }
   public string DESCRIPTION { get; set; }
+  public string TAGLINE { get; set; }
   public pluginType PLUGIN_TYPE { get; set; }
+  public string PUBLISHER_NAME { get; set; }
+  public string PUBLISHER_HANDLE { get; set; }
+  public string PUBLISHER_URL { get; set; }
+  public string SUPPORT_URL { get; set; }
+  public List<string> TAGS { get; set; }
+  public List<string> FEATURES { get; set; }
+  public List<string> SCREENSHOT_URLS { get; set; }
+  public string BANNER_URL { get; set; }
   public uint ABI_VERSION { get; set; }
   public List<byte> WASM_HASH { get; set; }
   public ulong WASM_SIZE { get; set; }
@@ -496,8 +711,14 @@ public class PLGT
   public ulong CREATED_AT { get; set; }
   public ulong UPDATED_AT { get; set; }
   public string DOCUMENTATION_URL { get; set; }
+  public string CHANGELOG_URL { get; set; }
   public string ICON_URL { get; set; }
   public string LICENSE { get; set; }
+  public paymentModel PAYMENT_MODEL { get; set; }
+  public uint PRICE_USD_CENTS { get; set; }
+  public uint SUBSCRIPTION_PERIOD_DAYS { get; set; }
+  public List<string> ACCEPTED_PAYMENT_METHODS { get; set; }
+  public listingStatus LISTING_STATUS { get; set; }
   public List<byte> SIGNATURE { get; set; }
 
   public PLGT() {
@@ -505,7 +726,16 @@ public class PLGT
     this.NAME = null;
     this.VERSION = null;
     this.DESCRIPTION = null;
+    this.TAGLINE = null;
     this.PLUGIN_TYPE = pluginType.Sensor;
+    this.PUBLISHER_NAME = null;
+    this.PUBLISHER_HANDLE = null;
+    this.PUBLISHER_URL = null;
+    this.SUPPORT_URL = null;
+    this.TAGS = null;
+    this.FEATURES = null;
+    this.SCREENSHOT_URLS = null;
+    this.BANNER_URL = null;
     this.ABI_VERSION = 1;
     this.WASM_HASH = null;
     this.WASM_SIZE = 0;
@@ -527,8 +757,14 @@ public class PLGT
     this.CREATED_AT = 0;
     this.UPDATED_AT = 0;
     this.DOCUMENTATION_URL = null;
+    this.CHANGELOG_URL = null;
     this.ICON_URL = null;
     this.LICENSE = null;
+    this.PAYMENT_MODEL = paymentModel.Free;
+    this.PRICE_USD_CENTS = 0;
+    this.SUBSCRIPTION_PERIOD_DAYS = 0;
+    this.ACCEPTED_PAYMENT_METHODS = null;
+    this.LISTING_STATUS = listingStatus.Public;
     this.SIGNATURE = null;
   }
   public static PLGT DeserializeFromBinary(byte[] fbBuffer) {
@@ -551,31 +787,46 @@ static public class PLGVerify
       && verifier.VerifyString(tablePos, 6 /*NAME*/, true)
       && verifier.VerifyString(tablePos, 8 /*VERSION*/, true)
       && verifier.VerifyString(tablePos, 10 /*DESCRIPTION*/, false)
-      && verifier.VerifyField(tablePos, 12 /*PLUGIN_TYPE*/, 1 /*pluginType*/, 1, false)
-      && verifier.VerifyField(tablePos, 14 /*ABI_VERSION*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyVectorOfData(tablePos, 16 /*WASM_HASH*/, 1 /*byte*/, false)
-      && verifier.VerifyField(tablePos, 18 /*WASM_SIZE*/, 8 /*ulong*/, 8, false)
-      && verifier.VerifyString(tablePos, 20 /*WASM_CID*/, false)
-      && verifier.VerifyVectorOfData(tablePos, 22 /*ENCRYPTED_WASM_HASH*/, 1 /*byte*/, false)
-      && verifier.VerifyField(tablePos, 24 /*ENCRYPTED_WASM_SIZE*/, 8 /*ulong*/, 8, false)
-      && verifier.VerifyVectorOfTables(tablePos, 26 /*ENTRY_FUNCTIONS*/, EntryFunctionVerify.Verify, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 28 /*REQUIRED_SCHEMAS*/, false)
-      && verifier.VerifyVectorOfTables(tablePos, 30 /*DEPENDENCIES*/, PluginDependencyVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 32 /*CAPABILITIES*/, PluginCapabilityVerify.Verify, false)
-      && verifier.VerifyString(tablePos, 34 /*PROVIDER_PEER_ID*/, false)
-      && verifier.VerifyString(tablePos, 36 /*PROVIDER_EPM_CID*/, false)
-      && verifier.VerifyField(tablePos, 38 /*ENCRYPTED*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 40 /*REQUIRED_SCOPE*/, false)
-      && verifier.VerifyString(tablePos, 42 /*KEY_ID*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 44 /*ALLOWED_DOMAINS*/, false)
-      && verifier.VerifyField(tablePos, 46 /*MAX_GRANT_TIMEOUT_MS*/, 8 /*ulong*/, 8, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 48 /*MIN_PERMISSIONS*/, false)
-      && verifier.VerifyField(tablePos, 50 /*CREATED_AT*/, 8 /*ulong*/, 8, false)
-      && verifier.VerifyField(tablePos, 52 /*UPDATED_AT*/, 8 /*ulong*/, 8, false)
-      && verifier.VerifyString(tablePos, 54 /*DOCUMENTATION_URL*/, false)
-      && verifier.VerifyString(tablePos, 56 /*ICON_URL*/, false)
-      && verifier.VerifyString(tablePos, 58 /*LICENSE*/, false)
-      && verifier.VerifyVectorOfData(tablePos, 60 /*SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyString(tablePos, 12 /*TAGLINE*/, false)
+      && verifier.VerifyField(tablePos, 14 /*PLUGIN_TYPE*/, 1 /*pluginType*/, 1, false)
+      && verifier.VerifyString(tablePos, 16 /*PUBLISHER_NAME*/, false)
+      && verifier.VerifyString(tablePos, 18 /*PUBLISHER_HANDLE*/, false)
+      && verifier.VerifyString(tablePos, 20 /*PUBLISHER_URL*/, false)
+      && verifier.VerifyString(tablePos, 22 /*SUPPORT_URL*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 24 /*TAGS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 26 /*FEATURES*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 28 /*SCREENSHOT_URLS*/, false)
+      && verifier.VerifyString(tablePos, 30 /*BANNER_URL*/, false)
+      && verifier.VerifyField(tablePos, 32 /*ABI_VERSION*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyVectorOfData(tablePos, 34 /*WASM_HASH*/, 1 /*byte*/, false)
+      && verifier.VerifyField(tablePos, 36 /*WASM_SIZE*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 38 /*WASM_CID*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 40 /*ENCRYPTED_WASM_HASH*/, 1 /*byte*/, false)
+      && verifier.VerifyField(tablePos, 42 /*ENCRYPTED_WASM_SIZE*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyVectorOfTables(tablePos, 44 /*ENTRY_FUNCTIONS*/, EntryFunctionVerify.Verify, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 46 /*REQUIRED_SCHEMAS*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 48 /*DEPENDENCIES*/, PluginDependencyVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 50 /*CAPABILITIES*/, PluginCapabilityVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 52 /*PROVIDER_PEER_ID*/, false)
+      && verifier.VerifyString(tablePos, 54 /*PROVIDER_EPM_CID*/, false)
+      && verifier.VerifyField(tablePos, 56 /*ENCRYPTED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 58 /*REQUIRED_SCOPE*/, false)
+      && verifier.VerifyString(tablePos, 60 /*KEY_ID*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 62 /*ALLOWED_DOMAINS*/, false)
+      && verifier.VerifyField(tablePos, 64 /*MAX_GRANT_TIMEOUT_MS*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 66 /*MIN_PERMISSIONS*/, false)
+      && verifier.VerifyField(tablePos, 68 /*CREATED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 70 /*UPDATED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 72 /*DOCUMENTATION_URL*/, false)
+      && verifier.VerifyString(tablePos, 74 /*CHANGELOG_URL*/, false)
+      && verifier.VerifyString(tablePos, 76 /*ICON_URL*/, false)
+      && verifier.VerifyString(tablePos, 78 /*LICENSE*/, false)
+      && verifier.VerifyField(tablePos, 80 /*PAYMENT_MODEL*/, 1 /*paymentModel*/, 1, false)
+      && verifier.VerifyField(tablePos, 82 /*PRICE_USD_CENTS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 84 /*SUBSCRIPTION_PERIOD_DAYS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 86 /*ACCEPTED_PAYMENT_METHODS*/, false)
+      && verifier.VerifyField(tablePos, 88 /*LISTING_STATUS*/, 1 /*listingStatus*/, 1, false)
+      && verifier.VerifyVectorOfData(tablePos, 90 /*SIGNATURE*/, 1 /*byte*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

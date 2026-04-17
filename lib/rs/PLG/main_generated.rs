@@ -125,6 +125,190 @@ impl<'a> ::flatbuffers::Verifiable for pluginType {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for pluginType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PAYMENT_MODEL: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PAYMENT_MODEL: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PAYMENT_MODEL: [paymentModel; 3] = [
+  paymentModel::Free,
+  paymentModel::OneTime,
+  paymentModel::Subscription,
+];
+
+/// Storefront payment model for the plugin listing
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct paymentModel(pub i8);
+#[allow(non_upper_case_globals)]
+impl paymentModel {
+  /// No payment required
+  pub const Free: Self = Self(0);
+  /// Single one-time purchase
+  pub const OneTime: Self = Self(1);
+  /// Recurring subscription purchase
+  pub const Subscription: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::Free,
+    Self::OneTime,
+    Self::Subscription,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::Free => Some("Free"),
+      Self::OneTime => Some("OneTime"),
+      Self::Subscription => Some("Subscription"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for paymentModel {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for paymentModel {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for paymentModel {
+    type Output = paymentModel;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for paymentModel {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for paymentModel {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for paymentModel {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_LISTING_STATUS: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_LISTING_STATUS: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_LISTING_STATUS: [listingStatus; 3] = [
+  listingStatus::Public,
+  listingStatus::Unlisted,
+  listingStatus::Retired,
+];
+
+/// Publication visibility for the plugin listing
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct listingStatus(pub i8);
+#[allow(non_upper_case_globals)]
+impl listingStatus {
+  /// Discoverable in public storefront listings
+  pub const Public: Self = Self(0);
+  /// Addressable directly but hidden from public browse surfaces
+  pub const Unlisted: Self = Self(1);
+  /// No longer offered for new installs or purchases
+  pub const Retired: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::Public,
+    Self::Unlisted,
+    Self::Retired,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::Public => Some("Public"),
+      Self::Unlisted => Some("Unlisted"),
+      Self::Retired => Some("Retired"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for listingStatus {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for listingStatus {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for listingStatus {
+    type Output = listingStatus;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for listingStatus {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for listingStatus {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for listingStatus {}
 pub enum PluginCapabilityOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -716,7 +900,7 @@ impl EntryFunctionT {
 pub enum PLGOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Plugin Manifest - WASM plugin distribution
+/// Plugin Manifest - canonical signed storefront and WASM distribution record
 pub struct PLG<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -734,31 +918,46 @@ impl<'a> PLG<'a> {
   pub const VT_NAME: ::flatbuffers::VOffsetT = 6;
   pub const VT_VERSION: ::flatbuffers::VOffsetT = 8;
   pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 10;
-  pub const VT_PLUGIN_TYPE: ::flatbuffers::VOffsetT = 12;
-  pub const VT_ABI_VERSION: ::flatbuffers::VOffsetT = 14;
-  pub const VT_WASM_HASH: ::flatbuffers::VOffsetT = 16;
-  pub const VT_WASM_SIZE: ::flatbuffers::VOffsetT = 18;
-  pub const VT_WASM_CID: ::flatbuffers::VOffsetT = 20;
-  pub const VT_ENCRYPTED_WASM_HASH: ::flatbuffers::VOffsetT = 22;
-  pub const VT_ENCRYPTED_WASM_SIZE: ::flatbuffers::VOffsetT = 24;
-  pub const VT_ENTRY_FUNCTIONS: ::flatbuffers::VOffsetT = 26;
-  pub const VT_REQUIRED_SCHEMAS: ::flatbuffers::VOffsetT = 28;
-  pub const VT_DEPENDENCIES: ::flatbuffers::VOffsetT = 30;
-  pub const VT_CAPABILITIES: ::flatbuffers::VOffsetT = 32;
-  pub const VT_PROVIDER_PEER_ID: ::flatbuffers::VOffsetT = 34;
-  pub const VT_PROVIDER_EPM_CID: ::flatbuffers::VOffsetT = 36;
-  pub const VT_ENCRYPTED: ::flatbuffers::VOffsetT = 38;
-  pub const VT_REQUIRED_SCOPE: ::flatbuffers::VOffsetT = 40;
-  pub const VT_KEY_ID: ::flatbuffers::VOffsetT = 42;
-  pub const VT_ALLOWED_DOMAINS: ::flatbuffers::VOffsetT = 44;
-  pub const VT_MAX_GRANT_TIMEOUT_MS: ::flatbuffers::VOffsetT = 46;
-  pub const VT_MIN_PERMISSIONS: ::flatbuffers::VOffsetT = 48;
-  pub const VT_CREATED_AT: ::flatbuffers::VOffsetT = 50;
-  pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 52;
-  pub const VT_DOCUMENTATION_URL: ::flatbuffers::VOffsetT = 54;
-  pub const VT_ICON_URL: ::flatbuffers::VOffsetT = 56;
-  pub const VT_LICENSE: ::flatbuffers::VOffsetT = 58;
-  pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 60;
+  pub const VT_TAGLINE: ::flatbuffers::VOffsetT = 12;
+  pub const VT_PLUGIN_TYPE: ::flatbuffers::VOffsetT = 14;
+  pub const VT_PUBLISHER_NAME: ::flatbuffers::VOffsetT = 16;
+  pub const VT_PUBLISHER_HANDLE: ::flatbuffers::VOffsetT = 18;
+  pub const VT_PUBLISHER_URL: ::flatbuffers::VOffsetT = 20;
+  pub const VT_SUPPORT_URL: ::flatbuffers::VOffsetT = 22;
+  pub const VT_TAGS: ::flatbuffers::VOffsetT = 24;
+  pub const VT_FEATURES: ::flatbuffers::VOffsetT = 26;
+  pub const VT_SCREENSHOT_URLS: ::flatbuffers::VOffsetT = 28;
+  pub const VT_BANNER_URL: ::flatbuffers::VOffsetT = 30;
+  pub const VT_ABI_VERSION: ::flatbuffers::VOffsetT = 32;
+  pub const VT_WASM_HASH: ::flatbuffers::VOffsetT = 34;
+  pub const VT_WASM_SIZE: ::flatbuffers::VOffsetT = 36;
+  pub const VT_WASM_CID: ::flatbuffers::VOffsetT = 38;
+  pub const VT_ENCRYPTED_WASM_HASH: ::flatbuffers::VOffsetT = 40;
+  pub const VT_ENCRYPTED_WASM_SIZE: ::flatbuffers::VOffsetT = 42;
+  pub const VT_ENTRY_FUNCTIONS: ::flatbuffers::VOffsetT = 44;
+  pub const VT_REQUIRED_SCHEMAS: ::flatbuffers::VOffsetT = 46;
+  pub const VT_DEPENDENCIES: ::flatbuffers::VOffsetT = 48;
+  pub const VT_CAPABILITIES: ::flatbuffers::VOffsetT = 50;
+  pub const VT_PROVIDER_PEER_ID: ::flatbuffers::VOffsetT = 52;
+  pub const VT_PROVIDER_EPM_CID: ::flatbuffers::VOffsetT = 54;
+  pub const VT_ENCRYPTED: ::flatbuffers::VOffsetT = 56;
+  pub const VT_REQUIRED_SCOPE: ::flatbuffers::VOffsetT = 58;
+  pub const VT_KEY_ID: ::flatbuffers::VOffsetT = 60;
+  pub const VT_ALLOWED_DOMAINS: ::flatbuffers::VOffsetT = 62;
+  pub const VT_MAX_GRANT_TIMEOUT_MS: ::flatbuffers::VOffsetT = 64;
+  pub const VT_MIN_PERMISSIONS: ::flatbuffers::VOffsetT = 66;
+  pub const VT_CREATED_AT: ::flatbuffers::VOffsetT = 68;
+  pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 70;
+  pub const VT_DOCUMENTATION_URL: ::flatbuffers::VOffsetT = 72;
+  pub const VT_CHANGELOG_URL: ::flatbuffers::VOffsetT = 74;
+  pub const VT_ICON_URL: ::flatbuffers::VOffsetT = 76;
+  pub const VT_LICENSE: ::flatbuffers::VOffsetT = 78;
+  pub const VT_PAYMENT_MODEL: ::flatbuffers::VOffsetT = 80;
+  pub const VT_PRICE_USD_CENTS: ::flatbuffers::VOffsetT = 82;
+  pub const VT_SUBSCRIPTION_PERIOD_DAYS: ::flatbuffers::VOffsetT = 84;
+  pub const VT_ACCEPTED_PAYMENT_METHODS: ::flatbuffers::VOffsetT = 86;
+  pub const VT_LISTING_STATUS: ::flatbuffers::VOffsetT = 88;
+  pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 90;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -776,8 +975,12 @@ impl<'a> PLG<'a> {
     builder.add_ENCRYPTED_WASM_SIZE(args.ENCRYPTED_WASM_SIZE);
     builder.add_WASM_SIZE(args.WASM_SIZE);
     if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
+    if let Some(x) = args.ACCEPTED_PAYMENT_METHODS { builder.add_ACCEPTED_PAYMENT_METHODS(x); }
+    builder.add_SUBSCRIPTION_PERIOD_DAYS(args.SUBSCRIPTION_PERIOD_DAYS);
+    builder.add_PRICE_USD_CENTS(args.PRICE_USD_CENTS);
     if let Some(x) = args.LICENSE { builder.add_LICENSE(x); }
     if let Some(x) = args.ICON_URL { builder.add_ICON_URL(x); }
+    if let Some(x) = args.CHANGELOG_URL { builder.add_CHANGELOG_URL(x); }
     if let Some(x) = args.DOCUMENTATION_URL { builder.add_DOCUMENTATION_URL(x); }
     if let Some(x) = args.MIN_PERMISSIONS { builder.add_MIN_PERMISSIONS(x); }
     if let Some(x) = args.ALLOWED_DOMAINS { builder.add_ALLOWED_DOMAINS(x); }
@@ -793,10 +996,21 @@ impl<'a> PLG<'a> {
     if let Some(x) = args.WASM_CID { builder.add_WASM_CID(x); }
     if let Some(x) = args.WASM_HASH { builder.add_WASM_HASH(x); }
     builder.add_ABI_VERSION(args.ABI_VERSION);
+    if let Some(x) = args.BANNER_URL { builder.add_BANNER_URL(x); }
+    if let Some(x) = args.SCREENSHOT_URLS { builder.add_SCREENSHOT_URLS(x); }
+    if let Some(x) = args.FEATURES { builder.add_FEATURES(x); }
+    if let Some(x) = args.TAGS { builder.add_TAGS(x); }
+    if let Some(x) = args.SUPPORT_URL { builder.add_SUPPORT_URL(x); }
+    if let Some(x) = args.PUBLISHER_URL { builder.add_PUBLISHER_URL(x); }
+    if let Some(x) = args.PUBLISHER_HANDLE { builder.add_PUBLISHER_HANDLE(x); }
+    if let Some(x) = args.PUBLISHER_NAME { builder.add_PUBLISHER_NAME(x); }
+    if let Some(x) = args.TAGLINE { builder.add_TAGLINE(x); }
     if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
     if let Some(x) = args.VERSION { builder.add_VERSION(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
     if let Some(x) = args.PLUGIN_ID { builder.add_PLUGIN_ID(x); }
+    builder.add_LISTING_STATUS(args.LISTING_STATUS);
+    builder.add_PAYMENT_MODEL(args.PAYMENT_MODEL);
     builder.add_ENCRYPTED(args.ENCRYPTED);
     builder.add_PLUGIN_TYPE(args.PLUGIN_TYPE);
     builder.finish()
@@ -818,7 +1032,34 @@ impl<'a> PLG<'a> {
     let DESCRIPTION = self.DESCRIPTION().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let TAGLINE = self.TAGLINE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     let PLUGIN_TYPE = self.PLUGIN_TYPE();
+    let PUBLISHER_NAME = self.PUBLISHER_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PUBLISHER_HANDLE = self.PUBLISHER_HANDLE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PUBLISHER_URL = self.PUBLISHER_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SUPPORT_URL = self.SUPPORT_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TAGS = self.TAGS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let FEATURES = self.FEATURES().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let SCREENSHOT_URLS = self.SCREENSHOT_URLS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let BANNER_URL = self.BANNER_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     let ABI_VERSION = self.ABI_VERSION();
     let WASM_HASH = self.WASM_HASH().map(|x| {
       x.into_iter().collect()
@@ -868,12 +1109,22 @@ impl<'a> PLG<'a> {
     let DOCUMENTATION_URL = self.DOCUMENTATION_URL().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let CHANGELOG_URL = self.CHANGELOG_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     let ICON_URL = self.ICON_URL().map(|x| {
       alloc::string::ToString::to_string(x)
     });
     let LICENSE = self.LICENSE().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let PAYMENT_MODEL = self.PAYMENT_MODEL();
+    let PRICE_USD_CENTS = self.PRICE_USD_CENTS();
+    let SUBSCRIPTION_PERIOD_DAYS = self.SUBSCRIPTION_PERIOD_DAYS();
+    let ACCEPTED_PAYMENT_METHODS = self.ACCEPTED_PAYMENT_METHODS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let LISTING_STATUS = self.LISTING_STATUS();
     let SIGNATURE = self.SIGNATURE().map(|x| {
       x.into_iter().collect()
     });
@@ -882,7 +1133,16 @@ impl<'a> PLG<'a> {
       NAME,
       VERSION,
       DESCRIPTION,
+      TAGLINE,
       PLUGIN_TYPE,
+      PUBLISHER_NAME,
+      PUBLISHER_HANDLE,
+      PUBLISHER_URL,
+      SUPPORT_URL,
+      TAGS,
+      FEATURES,
+      SCREENSHOT_URLS,
+      BANNER_URL,
       ABI_VERSION,
       WASM_HASH,
       WASM_SIZE,
@@ -904,8 +1164,14 @@ impl<'a> PLG<'a> {
       CREATED_AT,
       UPDATED_AT,
       DOCUMENTATION_URL,
+      CHANGELOG_URL,
       ICON_URL,
       LICENSE,
+      PAYMENT_MODEL,
+      PRICE_USD_CENTS,
+      SUBSCRIPTION_PERIOD_DAYS,
+      ACCEPTED_PAYMENT_METHODS,
+      LISTING_STATUS,
       SIGNATURE,
     }
   }
@@ -942,6 +1208,14 @@ impl<'a> PLG<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_DESCRIPTION, None)}
   }
+  /// Short marketing summary shown in storefront listings
+  #[inline]
+  pub fn TAGLINE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_TAGLINE, None)}
+  }
   /// Type/category of the plugin
   #[inline]
   pub fn PLUGIN_TYPE(&self) -> pluginType {
@@ -949,6 +1223,70 @@ impl<'a> PLG<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<pluginType>(PLG::VT_PLUGIN_TYPE, Some(pluginType::Sensor)).unwrap()}
+  }
+  /// Human-readable publisher or organization name
+  #[inline]
+  pub fn PUBLISHER_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_PUBLISHER_NAME, None)}
+  }
+  /// Publisher handle or username
+  #[inline]
+  pub fn PUBLISHER_HANDLE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_PUBLISHER_HANDLE, None)}
+  }
+  /// Canonical publisher website
+  #[inline]
+  pub fn PUBLISHER_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_PUBLISHER_URL, None)}
+  }
+  /// Support or helpdesk URL for this plugin
+  #[inline]
+  pub fn SUPPORT_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_SUPPORT_URL, None)}
+  }
+  /// Search and categorization tags for discovery
+  #[inline]
+  pub fn TAGS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_TAGS, None)}
+  }
+  /// Short feature bullets highlighted in storefront listings
+  #[inline]
+  pub fn FEATURES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_FEATURES, None)}
+  }
+  /// Screenshot URLs showing the plugin in use
+  #[inline]
+  pub fn SCREENSHOT_URLS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_SCREENSHOT_URLS, None)}
+  }
+  /// Optional hero/banner image URL for the listing
+  #[inline]
+  pub fn BANNER_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_BANNER_URL, None)}
   }
   /// ABI version for compatibility checking
   #[inline]
@@ -1118,6 +1456,14 @@ impl<'a> PLG<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_DOCUMENTATION_URL, None)}
   }
+  /// URL to plugin changelog or release notes
+  #[inline]
+  pub fn CHANGELOG_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_CHANGELOG_URL, None)}
+  }
   /// URL to plugin icon/logo
   #[inline]
   pub fn ICON_URL(&self) -> Option<&'a str> {
@@ -1133,6 +1479,46 @@ impl<'a> PLG<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_LICENSE, None)}
+  }
+  /// Commercial model used for storefront purchase flows
+  #[inline]
+  pub fn PAYMENT_MODEL(&self) -> paymentModel {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<paymentModel>(PLG::VT_PAYMENT_MODEL, Some(paymentModel::Free)).unwrap()}
+  }
+  /// Price in USD cents for one-time purchase or subscription period
+  #[inline]
+  pub fn PRICE_USD_CENTS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(PLG::VT_PRICE_USD_CENTS, Some(0)).unwrap()}
+  }
+  /// Subscription billing period length in days
+  #[inline]
+  pub fn SUBSCRIPTION_PERIOD_DAYS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(PLG::VT_SUBSCRIPTION_PERIOD_DAYS, Some(0)).unwrap()}
+  }
+  /// Accepted payment methods, e.g. "stripe", "sol", "usdc"
+  #[inline]
+  pub fn ACCEPTED_PAYMENT_METHODS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_ACCEPTED_PAYMENT_METHODS, None)}
+  }
+  /// Storefront publication state for this manifest version
+  #[inline]
+  pub fn LISTING_STATUS(&self) -> listingStatus {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<listingStatus>(PLG::VT_LISTING_STATUS, Some(listingStatus::Public)).unwrap()}
   }
   /// Ed25519 signature from provider over manifest
   #[inline]
@@ -1154,7 +1540,16 @@ impl ::flatbuffers::Verifiable for PLG<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, true)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VERSION", Self::VT_VERSION, true)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TAGLINE", Self::VT_TAGLINE, false)?
      .visit_field::<pluginType>("PLUGIN_TYPE", Self::VT_PLUGIN_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PUBLISHER_NAME", Self::VT_PUBLISHER_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PUBLISHER_HANDLE", Self::VT_PUBLISHER_HANDLE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PUBLISHER_URL", Self::VT_PUBLISHER_URL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SUPPORT_URL", Self::VT_SUPPORT_URL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("FEATURES", Self::VT_FEATURES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("SCREENSHOT_URLS", Self::VT_SCREENSHOT_URLS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BANNER_URL", Self::VT_BANNER_URL, false)?
      .visit_field::<u32>("ABI_VERSION", Self::VT_ABI_VERSION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("WASM_HASH", Self::VT_WASM_HASH, false)?
      .visit_field::<u64>("WASM_SIZE", Self::VT_WASM_SIZE, false)?
@@ -1176,8 +1571,14 @@ impl ::flatbuffers::Verifiable for PLG<'_> {
      .visit_field::<u64>("CREATED_AT", Self::VT_CREATED_AT, false)?
      .visit_field::<u64>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DOCUMENTATION_URL", Self::VT_DOCUMENTATION_URL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CHANGELOG_URL", Self::VT_CHANGELOG_URL, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ICON_URL", Self::VT_ICON_URL, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LICENSE", Self::VT_LICENSE, false)?
+     .visit_field::<paymentModel>("PAYMENT_MODEL", Self::VT_PAYMENT_MODEL, false)?
+     .visit_field::<u32>("PRICE_USD_CENTS", Self::VT_PRICE_USD_CENTS, false)?
+     .visit_field::<u32>("SUBSCRIPTION_PERIOD_DAYS", Self::VT_SUBSCRIPTION_PERIOD_DAYS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ACCEPTED_PAYMENT_METHODS", Self::VT_ACCEPTED_PAYMENT_METHODS, false)?
+     .visit_field::<listingStatus>("LISTING_STATUS", Self::VT_LISTING_STATUS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, false)?
      .finish();
     Ok(())
@@ -1188,7 +1589,16 @@ pub struct PLGArgs<'a> {
     pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TAGLINE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PLUGIN_TYPE: pluginType,
+    pub PUBLISHER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PUBLISHER_HANDLE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PUBLISHER_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SUPPORT_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TAGS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub FEATURES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub SCREENSHOT_URLS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub BANNER_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ABI_VERSION: u32,
     pub WASM_HASH: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
     pub WASM_SIZE: u64,
@@ -1210,8 +1620,14 @@ pub struct PLGArgs<'a> {
     pub CREATED_AT: u64,
     pub UPDATED_AT: u64,
     pub DOCUMENTATION_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CHANGELOG_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ICON_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub LICENSE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PAYMENT_MODEL: paymentModel,
+    pub PRICE_USD_CENTS: u32,
+    pub SUBSCRIPTION_PERIOD_DAYS: u32,
+    pub ACCEPTED_PAYMENT_METHODS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub LISTING_STATUS: listingStatus,
     pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
 }
 impl<'a> Default for PLGArgs<'a> {
@@ -1222,7 +1638,16 @@ impl<'a> Default for PLGArgs<'a> {
       NAME: None, // required field
       VERSION: None, // required field
       DESCRIPTION: None,
+      TAGLINE: None,
       PLUGIN_TYPE: pluginType::Sensor,
+      PUBLISHER_NAME: None,
+      PUBLISHER_HANDLE: None,
+      PUBLISHER_URL: None,
+      SUPPORT_URL: None,
+      TAGS: None,
+      FEATURES: None,
+      SCREENSHOT_URLS: None,
+      BANNER_URL: None,
       ABI_VERSION: 1,
       WASM_HASH: None,
       WASM_SIZE: 0,
@@ -1244,8 +1669,14 @@ impl<'a> Default for PLGArgs<'a> {
       CREATED_AT: 0,
       UPDATED_AT: 0,
       DOCUMENTATION_URL: None,
+      CHANGELOG_URL: None,
       ICON_URL: None,
       LICENSE: None,
+      PAYMENT_MODEL: paymentModel::Free,
+      PRICE_USD_CENTS: 0,
+      SUBSCRIPTION_PERIOD_DAYS: 0,
+      ACCEPTED_PAYMENT_METHODS: None,
+      LISTING_STATUS: listingStatus::Public,
       SIGNATURE: None,
     }
   }
@@ -1273,8 +1704,44 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_DESCRIPTION, DESCRIPTION);
   }
   #[inline]
+  pub fn add_TAGLINE(&mut self, TAGLINE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_TAGLINE, TAGLINE);
+  }
+  #[inline]
   pub fn add_PLUGIN_TYPE(&mut self, PLUGIN_TYPE: pluginType) {
     self.fbb_.push_slot::<pluginType>(PLG::VT_PLUGIN_TYPE, PLUGIN_TYPE, pluginType::Sensor);
+  }
+  #[inline]
+  pub fn add_PUBLISHER_NAME(&mut self, PUBLISHER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_PUBLISHER_NAME, PUBLISHER_NAME);
+  }
+  #[inline]
+  pub fn add_PUBLISHER_HANDLE(&mut self, PUBLISHER_HANDLE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_PUBLISHER_HANDLE, PUBLISHER_HANDLE);
+  }
+  #[inline]
+  pub fn add_PUBLISHER_URL(&mut self, PUBLISHER_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_PUBLISHER_URL, PUBLISHER_URL);
+  }
+  #[inline]
+  pub fn add_SUPPORT_URL(&mut self, SUPPORT_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_SUPPORT_URL, SUPPORT_URL);
+  }
+  #[inline]
+  pub fn add_TAGS(&mut self, TAGS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_TAGS, TAGS);
+  }
+  #[inline]
+  pub fn add_FEATURES(&mut self, FEATURES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_FEATURES, FEATURES);
+  }
+  #[inline]
+  pub fn add_SCREENSHOT_URLS(&mut self, SCREENSHOT_URLS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_SCREENSHOT_URLS, SCREENSHOT_URLS);
+  }
+  #[inline]
+  pub fn add_BANNER_URL(&mut self, BANNER_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_BANNER_URL, BANNER_URL);
   }
   #[inline]
   pub fn add_ABI_VERSION(&mut self, ABI_VERSION: u32) {
@@ -1361,12 +1828,36 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_DOCUMENTATION_URL, DOCUMENTATION_URL);
   }
   #[inline]
+  pub fn add_CHANGELOG_URL(&mut self, CHANGELOG_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_CHANGELOG_URL, CHANGELOG_URL);
+  }
+  #[inline]
   pub fn add_ICON_URL(&mut self, ICON_URL: ::flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ICON_URL, ICON_URL);
   }
   #[inline]
   pub fn add_LICENSE(&mut self, LICENSE: ::flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_LICENSE, LICENSE);
+  }
+  #[inline]
+  pub fn add_PAYMENT_MODEL(&mut self, PAYMENT_MODEL: paymentModel) {
+    self.fbb_.push_slot::<paymentModel>(PLG::VT_PAYMENT_MODEL, PAYMENT_MODEL, paymentModel::Free);
+  }
+  #[inline]
+  pub fn add_PRICE_USD_CENTS(&mut self, PRICE_USD_CENTS: u32) {
+    self.fbb_.push_slot::<u32>(PLG::VT_PRICE_USD_CENTS, PRICE_USD_CENTS, 0);
+  }
+  #[inline]
+  pub fn add_SUBSCRIPTION_PERIOD_DAYS(&mut self, SUBSCRIPTION_PERIOD_DAYS: u32) {
+    self.fbb_.push_slot::<u32>(PLG::VT_SUBSCRIPTION_PERIOD_DAYS, SUBSCRIPTION_PERIOD_DAYS, 0);
+  }
+  #[inline]
+  pub fn add_ACCEPTED_PAYMENT_METHODS(&mut self, ACCEPTED_PAYMENT_METHODS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ACCEPTED_PAYMENT_METHODS, ACCEPTED_PAYMENT_METHODS);
+  }
+  #[inline]
+  pub fn add_LISTING_STATUS(&mut self, LISTING_STATUS: listingStatus) {
+    self.fbb_.push_slot::<listingStatus>(PLG::VT_LISTING_STATUS, LISTING_STATUS, listingStatus::Public);
   }
   #[inline]
   pub fn add_SIGNATURE(&mut self, SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
@@ -1397,7 +1888,16 @@ impl ::core::fmt::Debug for PLG<'_> {
       ds.field("NAME", &self.NAME());
       ds.field("VERSION", &self.VERSION());
       ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.field("TAGLINE", &self.TAGLINE());
       ds.field("PLUGIN_TYPE", &self.PLUGIN_TYPE());
+      ds.field("PUBLISHER_NAME", &self.PUBLISHER_NAME());
+      ds.field("PUBLISHER_HANDLE", &self.PUBLISHER_HANDLE());
+      ds.field("PUBLISHER_URL", &self.PUBLISHER_URL());
+      ds.field("SUPPORT_URL", &self.SUPPORT_URL());
+      ds.field("TAGS", &self.TAGS());
+      ds.field("FEATURES", &self.FEATURES());
+      ds.field("SCREENSHOT_URLS", &self.SCREENSHOT_URLS());
+      ds.field("BANNER_URL", &self.BANNER_URL());
       ds.field("ABI_VERSION", &self.ABI_VERSION());
       ds.field("WASM_HASH", &self.WASM_HASH());
       ds.field("WASM_SIZE", &self.WASM_SIZE());
@@ -1419,8 +1919,14 @@ impl ::core::fmt::Debug for PLG<'_> {
       ds.field("CREATED_AT", &self.CREATED_AT());
       ds.field("UPDATED_AT", &self.UPDATED_AT());
       ds.field("DOCUMENTATION_URL", &self.DOCUMENTATION_URL());
+      ds.field("CHANGELOG_URL", &self.CHANGELOG_URL());
       ds.field("ICON_URL", &self.ICON_URL());
       ds.field("LICENSE", &self.LICENSE());
+      ds.field("PAYMENT_MODEL", &self.PAYMENT_MODEL());
+      ds.field("PRICE_USD_CENTS", &self.PRICE_USD_CENTS());
+      ds.field("SUBSCRIPTION_PERIOD_DAYS", &self.SUBSCRIPTION_PERIOD_DAYS());
+      ds.field("ACCEPTED_PAYMENT_METHODS", &self.ACCEPTED_PAYMENT_METHODS());
+      ds.field("LISTING_STATUS", &self.LISTING_STATUS());
       ds.field("SIGNATURE", &self.SIGNATURE());
       ds.finish()
   }
@@ -1432,7 +1938,16 @@ pub struct PLGT {
   pub NAME: alloc::string::String,
   pub VERSION: alloc::string::String,
   pub DESCRIPTION: Option<alloc::string::String>,
+  pub TAGLINE: Option<alloc::string::String>,
   pub PLUGIN_TYPE: pluginType,
+  pub PUBLISHER_NAME: Option<alloc::string::String>,
+  pub PUBLISHER_HANDLE: Option<alloc::string::String>,
+  pub PUBLISHER_URL: Option<alloc::string::String>,
+  pub SUPPORT_URL: Option<alloc::string::String>,
+  pub TAGS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub FEATURES: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub SCREENSHOT_URLS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub BANNER_URL: Option<alloc::string::String>,
   pub ABI_VERSION: u32,
   pub WASM_HASH: Option<alloc::vec::Vec<u8>>,
   pub WASM_SIZE: u64,
@@ -1454,8 +1969,14 @@ pub struct PLGT {
   pub CREATED_AT: u64,
   pub UPDATED_AT: u64,
   pub DOCUMENTATION_URL: Option<alloc::string::String>,
+  pub CHANGELOG_URL: Option<alloc::string::String>,
   pub ICON_URL: Option<alloc::string::String>,
   pub LICENSE: Option<alloc::string::String>,
+  pub PAYMENT_MODEL: paymentModel,
+  pub PRICE_USD_CENTS: u32,
+  pub SUBSCRIPTION_PERIOD_DAYS: u32,
+  pub ACCEPTED_PAYMENT_METHODS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub LISTING_STATUS: listingStatus,
   pub SIGNATURE: Option<alloc::vec::Vec<u8>>,
 }
 impl Default for PLGT {
@@ -1465,7 +1986,16 @@ impl Default for PLGT {
       NAME: alloc::string::ToString::to_string(""),
       VERSION: alloc::string::ToString::to_string(""),
       DESCRIPTION: None,
+      TAGLINE: None,
       PLUGIN_TYPE: pluginType::Sensor,
+      PUBLISHER_NAME: None,
+      PUBLISHER_HANDLE: None,
+      PUBLISHER_URL: None,
+      SUPPORT_URL: None,
+      TAGS: None,
+      FEATURES: None,
+      SCREENSHOT_URLS: None,
+      BANNER_URL: None,
       ABI_VERSION: 1,
       WASM_HASH: None,
       WASM_SIZE: 0,
@@ -1487,8 +2017,14 @@ impl Default for PLGT {
       CREATED_AT: 0,
       UPDATED_AT: 0,
       DOCUMENTATION_URL: None,
+      CHANGELOG_URL: None,
       ICON_URL: None,
       LICENSE: None,
+      PAYMENT_MODEL: paymentModel::Free,
+      PRICE_USD_CENTS: 0,
+      SUBSCRIPTION_PERIOD_DAYS: 0,
+      ACCEPTED_PAYMENT_METHODS: None,
+      LISTING_STATUS: listingStatus::Public,
       SIGNATURE: None,
     }
   }
@@ -1513,7 +2049,34 @@ impl PLGT {
     let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let TAGLINE = self.TAGLINE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let PLUGIN_TYPE = self.PLUGIN_TYPE;
+    let PUBLISHER_NAME = self.PUBLISHER_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PUBLISHER_HANDLE = self.PUBLISHER_HANDLE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PUBLISHER_URL = self.PUBLISHER_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SUPPORT_URL = self.SUPPORT_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TAGS = self.TAGS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let FEATURES = self.FEATURES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let SCREENSHOT_URLS = self.SCREENSHOT_URLS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let BANNER_URL = self.BANNER_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let ABI_VERSION = self.ABI_VERSION;
     let WASM_HASH = self.WASM_HASH.as_ref().map(|x|{
       _fbb.create_vector(x)
@@ -1563,12 +2126,22 @@ impl PLGT {
     let DOCUMENTATION_URL = self.DOCUMENTATION_URL.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let CHANGELOG_URL = self.CHANGELOG_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let ICON_URL = self.ICON_URL.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let LICENSE = self.LICENSE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let PAYMENT_MODEL = self.PAYMENT_MODEL;
+    let PRICE_USD_CENTS = self.PRICE_USD_CENTS;
+    let SUBSCRIPTION_PERIOD_DAYS = self.SUBSCRIPTION_PERIOD_DAYS;
+    let ACCEPTED_PAYMENT_METHODS = self.ACCEPTED_PAYMENT_METHODS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let LISTING_STATUS = self.LISTING_STATUS;
     let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
@@ -1577,7 +2150,16 @@ impl PLGT {
       NAME,
       VERSION,
       DESCRIPTION,
+      TAGLINE,
       PLUGIN_TYPE,
+      PUBLISHER_NAME,
+      PUBLISHER_HANDLE,
+      PUBLISHER_URL,
+      SUPPORT_URL,
+      TAGS,
+      FEATURES,
+      SCREENSHOT_URLS,
+      BANNER_URL,
       ABI_VERSION,
       WASM_HASH,
       WASM_SIZE,
@@ -1599,8 +2181,14 @@ impl PLGT {
       CREATED_AT,
       UPDATED_AT,
       DOCUMENTATION_URL,
+      CHANGELOG_URL,
       ICON_URL,
       LICENSE,
+      PAYMENT_MODEL,
+      PRICE_USD_CENTS,
+      SUBSCRIPTION_PERIOD_DAYS,
+      ACCEPTED_PAYMENT_METHODS,
+      LISTING_STATUS,
       SIGNATURE,
     })
   }

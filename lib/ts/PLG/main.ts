@@ -3,6 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export * from './EntryFunction.js';
+export * from './listingStatus.js';
+export * from './paymentModel.js';
 export * from './PLG.js';
 export * from './PluginCapability.js';
 export * from './PluginDependency.js';

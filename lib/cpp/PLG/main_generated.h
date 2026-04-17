@@ -86,6 +86,80 @@ inline const char *EnumNamepluginType(pluginType e) {
   return EnumNamespluginType()[index];
 }
 
+/// Storefront payment model for the plugin listing
+enum paymentModel : int8_t {
+  /// No payment required
+  paymentModel_Free = 0,
+  /// Single one-time purchase
+  paymentModel_OneTime = 1,
+  /// Recurring subscription purchase
+  paymentModel_Subscription = 2,
+  paymentModel_MIN = paymentModel_Free,
+  paymentModel_MAX = paymentModel_Subscription
+};
+
+inline const paymentModel (&EnumValuespaymentModel())[3] {
+  static const paymentModel values[] = {
+    paymentModel_Free,
+    paymentModel_OneTime,
+    paymentModel_Subscription
+  };
+  return values;
+}
+
+inline const char * const *EnumNamespaymentModel() {
+  static const char * const names[4] = {
+    "Free",
+    "OneTime",
+    "Subscription",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamepaymentModel(paymentModel e) {
+  if (::flatbuffers::IsOutRange(e, paymentModel_Free, paymentModel_Subscription)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamespaymentModel()[index];
+}
+
+/// Publication visibility for the plugin listing
+enum listingStatus : int8_t {
+  /// Discoverable in public storefront listings
+  listingStatus_Public = 0,
+  /// Addressable directly but hidden from public browse surfaces
+  listingStatus_Unlisted = 1,
+  /// No longer offered for new installs or purchases
+  listingStatus_Retired = 2,
+  listingStatus_MIN = listingStatus_Public,
+  listingStatus_MAX = listingStatus_Retired
+};
+
+inline const listingStatus (&EnumValueslistingStatus())[3] {
+  static const listingStatus values[] = {
+    listingStatus_Public,
+    listingStatus_Unlisted,
+    listingStatus_Retired
+  };
+  return values;
+}
+
+inline const char * const *EnumNameslistingStatus() {
+  static const char * const names[4] = {
+    "Public",
+    "Unlisted",
+    "Retired",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamelistingStatus(listingStatus e) {
+  if (::flatbuffers::IsOutRange(e, listingStatus_Public, listingStatus_Retired)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameslistingStatus()[index];
+}
+
 /// Plugin capability declaration
 struct PluginCapability FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PluginCapabilityBuilder Builder;
@@ -353,7 +427,7 @@ inline ::flatbuffers::Offset<EntryFunction> CreateEntryFunctionDirect(
       OUTPUT_SCHEMA__);
 }
 
-/// Plugin Manifest - WASM plugin distribution
+/// Plugin Manifest - canonical signed storefront and WASM distribution record
 struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PLGBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -361,31 +435,46 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_NAME = 6,
     VT_VERSION = 8,
     VT_DESCRIPTION = 10,
-    VT_PLUGIN_TYPE = 12,
-    VT_ABI_VERSION = 14,
-    VT_WASM_HASH = 16,
-    VT_WASM_SIZE = 18,
-    VT_WASM_CID = 20,
-    VT_ENCRYPTED_WASM_HASH = 22,
-    VT_ENCRYPTED_WASM_SIZE = 24,
-    VT_ENTRY_FUNCTIONS = 26,
-    VT_REQUIRED_SCHEMAS = 28,
-    VT_DEPENDENCIES = 30,
-    VT_CAPABILITIES = 32,
-    VT_PROVIDER_PEER_ID = 34,
-    VT_PROVIDER_EPM_CID = 36,
-    VT_ENCRYPTED = 38,
-    VT_REQUIRED_SCOPE = 40,
-    VT_KEY_ID = 42,
-    VT_ALLOWED_DOMAINS = 44,
-    VT_MAX_GRANT_TIMEOUT_MS = 46,
-    VT_MIN_PERMISSIONS = 48,
-    VT_CREATED_AT = 50,
-    VT_UPDATED_AT = 52,
-    VT_DOCUMENTATION_URL = 54,
-    VT_ICON_URL = 56,
-    VT_LICENSE = 58,
-    VT_SIGNATURE = 60
+    VT_TAGLINE = 12,
+    VT_PLUGIN_TYPE = 14,
+    VT_PUBLISHER_NAME = 16,
+    VT_PUBLISHER_HANDLE = 18,
+    VT_PUBLISHER_URL = 20,
+    VT_SUPPORT_URL = 22,
+    VT_TAGS = 24,
+    VT_FEATURES = 26,
+    VT_SCREENSHOT_URLS = 28,
+    VT_BANNER_URL = 30,
+    VT_ABI_VERSION = 32,
+    VT_WASM_HASH = 34,
+    VT_WASM_SIZE = 36,
+    VT_WASM_CID = 38,
+    VT_ENCRYPTED_WASM_HASH = 40,
+    VT_ENCRYPTED_WASM_SIZE = 42,
+    VT_ENTRY_FUNCTIONS = 44,
+    VT_REQUIRED_SCHEMAS = 46,
+    VT_DEPENDENCIES = 48,
+    VT_CAPABILITIES = 50,
+    VT_PROVIDER_PEER_ID = 52,
+    VT_PROVIDER_EPM_CID = 54,
+    VT_ENCRYPTED = 56,
+    VT_REQUIRED_SCOPE = 58,
+    VT_KEY_ID = 60,
+    VT_ALLOWED_DOMAINS = 62,
+    VT_MAX_GRANT_TIMEOUT_MS = 64,
+    VT_MIN_PERMISSIONS = 66,
+    VT_CREATED_AT = 68,
+    VT_UPDATED_AT = 70,
+    VT_DOCUMENTATION_URL = 72,
+    VT_CHANGELOG_URL = 74,
+    VT_ICON_URL = 76,
+    VT_LICENSE = 78,
+    VT_PAYMENT_MODEL = 80,
+    VT_PRICE_USD_CENTS = 82,
+    VT_SUBSCRIPTION_PERIOD_DAYS = 84,
+    VT_ACCEPTED_PAYMENT_METHODS = 86,
+    VT_LISTING_STATUS = 88,
+    VT_SIGNATURE = 90
   };
   /// Unique identifier for the plugin
   const ::flatbuffers::String *PLUGIN_ID() const {
@@ -403,9 +492,45 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *DESCRIPTION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
   }
+  /// Short marketing summary shown in storefront listings
+  const ::flatbuffers::String *TAGLINE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TAGLINE);
+  }
   /// Type/category of the plugin
   pluginType PLUGIN_TYPE() const {
     return static_cast<pluginType>(GetField<int8_t>(VT_PLUGIN_TYPE, 0));
+  }
+  /// Human-readable publisher or organization name
+  const ::flatbuffers::String *PUBLISHER_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PUBLISHER_NAME);
+  }
+  /// Publisher handle or username
+  const ::flatbuffers::String *PUBLISHER_HANDLE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PUBLISHER_HANDLE);
+  }
+  /// Canonical publisher website
+  const ::flatbuffers::String *PUBLISHER_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PUBLISHER_URL);
+  }
+  /// Support or helpdesk URL for this plugin
+  const ::flatbuffers::String *SUPPORT_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SUPPORT_URL);
+  }
+  /// Search and categorization tags for discovery
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
+  }
+  /// Short feature bullets highlighted in storefront listings
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *FEATURES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_FEATURES);
+  }
+  /// Screenshot URLs showing the plugin in use
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SCREENSHOT_URLS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SCREENSHOT_URLS);
+  }
+  /// Optional hero/banner image URL for the listing
+  const ::flatbuffers::String *BANNER_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BANNER_URL);
   }
   /// ABI version for compatibility checking
   uint32_t ABI_VERSION() const {
@@ -491,6 +616,10 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *DOCUMENTATION_URL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DOCUMENTATION_URL);
   }
+  /// URL to plugin changelog or release notes
+  const ::flatbuffers::String *CHANGELOG_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CHANGELOG_URL);
+  }
   /// URL to plugin icon/logo
   const ::flatbuffers::String *ICON_URL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ICON_URL);
@@ -498,6 +627,26 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// License identifier (SPDX format)
   const ::flatbuffers::String *LICENSE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LICENSE);
+  }
+  /// Commercial model used for storefront purchase flows
+  paymentModel PAYMENT_MODEL() const {
+    return static_cast<paymentModel>(GetField<int8_t>(VT_PAYMENT_MODEL, 0));
+  }
+  /// Price in USD cents for one-time purchase or subscription period
+  uint32_t PRICE_USD_CENTS() const {
+    return GetField<uint32_t>(VT_PRICE_USD_CENTS, 0);
+  }
+  /// Subscription billing period length in days
+  uint32_t SUBSCRIPTION_PERIOD_DAYS() const {
+    return GetField<uint32_t>(VT_SUBSCRIPTION_PERIOD_DAYS, 0);
+  }
+  /// Accepted payment methods, e.g. "stripe", "sol", "usdc"
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ACCEPTED_PAYMENT_METHODS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ACCEPTED_PAYMENT_METHODS);
+  }
+  /// Storefront publication state for this manifest version
+  listingStatus LISTING_STATUS() const {
+    return static_cast<listingStatus>(GetField<int8_t>(VT_LISTING_STATUS, 0));
   }
   /// Ed25519 signature from provider over manifest
   const ::flatbuffers::Vector<uint8_t> *SIGNATURE() const {
@@ -514,7 +663,28 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(VERSION()) &&
            VerifyOffset(verifier, VT_DESCRIPTION) &&
            verifier.VerifyString(DESCRIPTION()) &&
+           VerifyOffset(verifier, VT_TAGLINE) &&
+           verifier.VerifyString(TAGLINE()) &&
            VerifyField<int8_t>(verifier, VT_PLUGIN_TYPE, 1) &&
+           VerifyOffset(verifier, VT_PUBLISHER_NAME) &&
+           verifier.VerifyString(PUBLISHER_NAME()) &&
+           VerifyOffset(verifier, VT_PUBLISHER_HANDLE) &&
+           verifier.VerifyString(PUBLISHER_HANDLE()) &&
+           VerifyOffset(verifier, VT_PUBLISHER_URL) &&
+           verifier.VerifyString(PUBLISHER_URL()) &&
+           VerifyOffset(verifier, VT_SUPPORT_URL) &&
+           verifier.VerifyString(SUPPORT_URL()) &&
+           VerifyOffset(verifier, VT_TAGS) &&
+           verifier.VerifyVector(TAGS()) &&
+           verifier.VerifyVectorOfStrings(TAGS()) &&
+           VerifyOffset(verifier, VT_FEATURES) &&
+           verifier.VerifyVector(FEATURES()) &&
+           verifier.VerifyVectorOfStrings(FEATURES()) &&
+           VerifyOffset(verifier, VT_SCREENSHOT_URLS) &&
+           verifier.VerifyVector(SCREENSHOT_URLS()) &&
+           verifier.VerifyVectorOfStrings(SCREENSHOT_URLS()) &&
+           VerifyOffset(verifier, VT_BANNER_URL) &&
+           verifier.VerifyString(BANNER_URL()) &&
            VerifyField<uint32_t>(verifier, VT_ABI_VERSION, 4) &&
            VerifyOffset(verifier, VT_WASM_HASH) &&
            verifier.VerifyVector(WASM_HASH()) &&
@@ -556,10 +726,19 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint64_t>(verifier, VT_UPDATED_AT, 8) &&
            VerifyOffset(verifier, VT_DOCUMENTATION_URL) &&
            verifier.VerifyString(DOCUMENTATION_URL()) &&
+           VerifyOffset(verifier, VT_CHANGELOG_URL) &&
+           verifier.VerifyString(CHANGELOG_URL()) &&
            VerifyOffset(verifier, VT_ICON_URL) &&
            verifier.VerifyString(ICON_URL()) &&
            VerifyOffset(verifier, VT_LICENSE) &&
            verifier.VerifyString(LICENSE()) &&
+           VerifyField<int8_t>(verifier, VT_PAYMENT_MODEL, 1) &&
+           VerifyField<uint32_t>(verifier, VT_PRICE_USD_CENTS, 4) &&
+           VerifyField<uint32_t>(verifier, VT_SUBSCRIPTION_PERIOD_DAYS, 4) &&
+           VerifyOffset(verifier, VT_ACCEPTED_PAYMENT_METHODS) &&
+           verifier.VerifyVector(ACCEPTED_PAYMENT_METHODS()) &&
+           verifier.VerifyVectorOfStrings(ACCEPTED_PAYMENT_METHODS()) &&
+           VerifyField<int8_t>(verifier, VT_LISTING_STATUS, 1) &&
            VerifyOffset(verifier, VT_SIGNATURE) &&
            verifier.VerifyVector(SIGNATURE()) &&
            verifier.EndTable();
@@ -582,8 +761,35 @@ struct PLGBuilder {
   void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
     fbb_.AddOffset(PLG::VT_DESCRIPTION, DESCRIPTION);
   }
+  void add_TAGLINE(::flatbuffers::Offset<::flatbuffers::String> TAGLINE) {
+    fbb_.AddOffset(PLG::VT_TAGLINE, TAGLINE);
+  }
   void add_PLUGIN_TYPE(pluginType PLUGIN_TYPE) {
     fbb_.AddElement<int8_t>(PLG::VT_PLUGIN_TYPE, static_cast<int8_t>(PLUGIN_TYPE), 0);
+  }
+  void add_PUBLISHER_NAME(::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_NAME) {
+    fbb_.AddOffset(PLG::VT_PUBLISHER_NAME, PUBLISHER_NAME);
+  }
+  void add_PUBLISHER_HANDLE(::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_HANDLE) {
+    fbb_.AddOffset(PLG::VT_PUBLISHER_HANDLE, PUBLISHER_HANDLE);
+  }
+  void add_PUBLISHER_URL(::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_URL) {
+    fbb_.AddOffset(PLG::VT_PUBLISHER_URL, PUBLISHER_URL);
+  }
+  void add_SUPPORT_URL(::flatbuffers::Offset<::flatbuffers::String> SUPPORT_URL) {
+    fbb_.AddOffset(PLG::VT_SUPPORT_URL, SUPPORT_URL);
+  }
+  void add_TAGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS) {
+    fbb_.AddOffset(PLG::VT_TAGS, TAGS);
+  }
+  void add_FEATURES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> FEATURES) {
+    fbb_.AddOffset(PLG::VT_FEATURES, FEATURES);
+  }
+  void add_SCREENSHOT_URLS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SCREENSHOT_URLS) {
+    fbb_.AddOffset(PLG::VT_SCREENSHOT_URLS, SCREENSHOT_URLS);
+  }
+  void add_BANNER_URL(::flatbuffers::Offset<::flatbuffers::String> BANNER_URL) {
+    fbb_.AddOffset(PLG::VT_BANNER_URL, BANNER_URL);
   }
   void add_ABI_VERSION(uint32_t ABI_VERSION) {
     fbb_.AddElement<uint32_t>(PLG::VT_ABI_VERSION, ABI_VERSION, 1);
@@ -648,11 +854,29 @@ struct PLGBuilder {
   void add_DOCUMENTATION_URL(::flatbuffers::Offset<::flatbuffers::String> DOCUMENTATION_URL) {
     fbb_.AddOffset(PLG::VT_DOCUMENTATION_URL, DOCUMENTATION_URL);
   }
+  void add_CHANGELOG_URL(::flatbuffers::Offset<::flatbuffers::String> CHANGELOG_URL) {
+    fbb_.AddOffset(PLG::VT_CHANGELOG_URL, CHANGELOG_URL);
+  }
   void add_ICON_URL(::flatbuffers::Offset<::flatbuffers::String> ICON_URL) {
     fbb_.AddOffset(PLG::VT_ICON_URL, ICON_URL);
   }
   void add_LICENSE(::flatbuffers::Offset<::flatbuffers::String> LICENSE) {
     fbb_.AddOffset(PLG::VT_LICENSE, LICENSE);
+  }
+  void add_PAYMENT_MODEL(paymentModel PAYMENT_MODEL) {
+    fbb_.AddElement<int8_t>(PLG::VT_PAYMENT_MODEL, static_cast<int8_t>(PAYMENT_MODEL), 0);
+  }
+  void add_PRICE_USD_CENTS(uint32_t PRICE_USD_CENTS) {
+    fbb_.AddElement<uint32_t>(PLG::VT_PRICE_USD_CENTS, PRICE_USD_CENTS, 0);
+  }
+  void add_SUBSCRIPTION_PERIOD_DAYS(uint32_t SUBSCRIPTION_PERIOD_DAYS) {
+    fbb_.AddElement<uint32_t>(PLG::VT_SUBSCRIPTION_PERIOD_DAYS, SUBSCRIPTION_PERIOD_DAYS, 0);
+  }
+  void add_ACCEPTED_PAYMENT_METHODS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ACCEPTED_PAYMENT_METHODS) {
+    fbb_.AddOffset(PLG::VT_ACCEPTED_PAYMENT_METHODS, ACCEPTED_PAYMENT_METHODS);
+  }
+  void add_LISTING_STATUS(listingStatus LISTING_STATUS) {
+    fbb_.AddElement<int8_t>(PLG::VT_LISTING_STATUS, static_cast<int8_t>(LISTING_STATUS), 0);
   }
   void add_SIGNATURE(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE) {
     fbb_.AddOffset(PLG::VT_SIGNATURE, SIGNATURE);
@@ -677,7 +901,16 @@ inline ::flatbuffers::Offset<PLG> CreatePLG(
     ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> VERSION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TAGLINE = 0,
     pluginType PLUGIN_TYPE = pluginType_Sensor,
+    ::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_HANDLE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_URL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SUPPORT_URL = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> FEATURES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SCREENSHOT_URLS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> BANNER_URL = 0,
     uint32_t ABI_VERSION = 1,
     ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> WASM_HASH = 0,
     uint64_t WASM_SIZE = 0,
@@ -699,8 +932,14 @@ inline ::flatbuffers::Offset<PLG> CreatePLG(
     uint64_t CREATED_AT = 0,
     uint64_t UPDATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DOCUMENTATION_URL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CHANGELOG_URL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ICON_URL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LICENSE = 0,
+    paymentModel PAYMENT_MODEL = paymentModel_Free,
+    uint32_t PRICE_USD_CENTS = 0,
+    uint32_t SUBSCRIPTION_PERIOD_DAYS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ACCEPTED_PAYMENT_METHODS = 0,
+    listingStatus LISTING_STATUS = listingStatus_Public,
     ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE = 0) {
   PLGBuilder builder_(_fbb);
   builder_.add_UPDATED_AT(UPDATED_AT);
@@ -709,8 +948,12 @@ inline ::flatbuffers::Offset<PLG> CreatePLG(
   builder_.add_ENCRYPTED_WASM_SIZE(ENCRYPTED_WASM_SIZE);
   builder_.add_WASM_SIZE(WASM_SIZE);
   builder_.add_SIGNATURE(SIGNATURE);
+  builder_.add_ACCEPTED_PAYMENT_METHODS(ACCEPTED_PAYMENT_METHODS);
+  builder_.add_SUBSCRIPTION_PERIOD_DAYS(SUBSCRIPTION_PERIOD_DAYS);
+  builder_.add_PRICE_USD_CENTS(PRICE_USD_CENTS);
   builder_.add_LICENSE(LICENSE);
   builder_.add_ICON_URL(ICON_URL);
+  builder_.add_CHANGELOG_URL(CHANGELOG_URL);
   builder_.add_DOCUMENTATION_URL(DOCUMENTATION_URL);
   builder_.add_MIN_PERMISSIONS(MIN_PERMISSIONS);
   builder_.add_ALLOWED_DOMAINS(ALLOWED_DOMAINS);
@@ -726,10 +969,21 @@ inline ::flatbuffers::Offset<PLG> CreatePLG(
   builder_.add_WASM_CID(WASM_CID);
   builder_.add_WASM_HASH(WASM_HASH);
   builder_.add_ABI_VERSION(ABI_VERSION);
+  builder_.add_BANNER_URL(BANNER_URL);
+  builder_.add_SCREENSHOT_URLS(SCREENSHOT_URLS);
+  builder_.add_FEATURES(FEATURES);
+  builder_.add_TAGS(TAGS);
+  builder_.add_SUPPORT_URL(SUPPORT_URL);
+  builder_.add_PUBLISHER_URL(PUBLISHER_URL);
+  builder_.add_PUBLISHER_HANDLE(PUBLISHER_HANDLE);
+  builder_.add_PUBLISHER_NAME(PUBLISHER_NAME);
+  builder_.add_TAGLINE(TAGLINE);
   builder_.add_DESCRIPTION(DESCRIPTION);
   builder_.add_VERSION(VERSION);
   builder_.add_NAME(NAME);
   builder_.add_PLUGIN_ID(PLUGIN_ID);
+  builder_.add_LISTING_STATUS(LISTING_STATUS);
+  builder_.add_PAYMENT_MODEL(PAYMENT_MODEL);
   builder_.add_ENCRYPTED(ENCRYPTED);
   builder_.add_PLUGIN_TYPE(PLUGIN_TYPE);
   return builder_.Finish();
@@ -741,7 +995,16 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
     const char *NAME = nullptr,
     const char *VERSION = nullptr,
     const char *DESCRIPTION = nullptr,
+    const char *TAGLINE = nullptr,
     pluginType PLUGIN_TYPE = pluginType_Sensor,
+    const char *PUBLISHER_NAME = nullptr,
+    const char *PUBLISHER_HANDLE = nullptr,
+    const char *PUBLISHER_URL = nullptr,
+    const char *SUPPORT_URL = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *FEATURES = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SCREENSHOT_URLS = nullptr,
+    const char *BANNER_URL = nullptr,
     uint32_t ABI_VERSION = 1,
     const std::vector<uint8_t> *WASM_HASH = nullptr,
     uint64_t WASM_SIZE = 0,
@@ -763,13 +1026,28 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
     uint64_t CREATED_AT = 0,
     uint64_t UPDATED_AT = 0,
     const char *DOCUMENTATION_URL = nullptr,
+    const char *CHANGELOG_URL = nullptr,
     const char *ICON_URL = nullptr,
     const char *LICENSE = nullptr,
+    paymentModel PAYMENT_MODEL = paymentModel_Free,
+    uint32_t PRICE_USD_CENTS = 0,
+    uint32_t SUBSCRIPTION_PERIOD_DAYS = 0,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ACCEPTED_PAYMENT_METHODS = nullptr,
+    listingStatus LISTING_STATUS = listingStatus_Public,
     const std::vector<uint8_t> *SIGNATURE = nullptr) {
   auto PLUGIN_ID__ = PLUGIN_ID ? _fbb.CreateString(PLUGIN_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto VERSION__ = VERSION ? _fbb.CreateString(VERSION) : 0;
   auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  auto TAGLINE__ = TAGLINE ? _fbb.CreateString(TAGLINE) : 0;
+  auto PUBLISHER_NAME__ = PUBLISHER_NAME ? _fbb.CreateString(PUBLISHER_NAME) : 0;
+  auto PUBLISHER_HANDLE__ = PUBLISHER_HANDLE ? _fbb.CreateString(PUBLISHER_HANDLE) : 0;
+  auto PUBLISHER_URL__ = PUBLISHER_URL ? _fbb.CreateString(PUBLISHER_URL) : 0;
+  auto SUPPORT_URL__ = SUPPORT_URL ? _fbb.CreateString(SUPPORT_URL) : 0;
+  auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
+  auto FEATURES__ = FEATURES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*FEATURES) : 0;
+  auto SCREENSHOT_URLS__ = SCREENSHOT_URLS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SCREENSHOT_URLS) : 0;
+  auto BANNER_URL__ = BANNER_URL ? _fbb.CreateString(BANNER_URL) : 0;
   auto WASM_HASH__ = WASM_HASH ? _fbb.CreateVector<uint8_t>(*WASM_HASH) : 0;
   auto WASM_CID__ = WASM_CID ? _fbb.CreateString(WASM_CID) : 0;
   auto ENCRYPTED_WASM_HASH__ = ENCRYPTED_WASM_HASH ? _fbb.CreateVector<uint8_t>(*ENCRYPTED_WASM_HASH) : 0;
@@ -784,8 +1062,10 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
   auto ALLOWED_DOMAINS__ = ALLOWED_DOMAINS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ALLOWED_DOMAINS) : 0;
   auto MIN_PERMISSIONS__ = MIN_PERMISSIONS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MIN_PERMISSIONS) : 0;
   auto DOCUMENTATION_URL__ = DOCUMENTATION_URL ? _fbb.CreateString(DOCUMENTATION_URL) : 0;
+  auto CHANGELOG_URL__ = CHANGELOG_URL ? _fbb.CreateString(CHANGELOG_URL) : 0;
   auto ICON_URL__ = ICON_URL ? _fbb.CreateString(ICON_URL) : 0;
   auto LICENSE__ = LICENSE ? _fbb.CreateString(LICENSE) : 0;
+  auto ACCEPTED_PAYMENT_METHODS__ = ACCEPTED_PAYMENT_METHODS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ACCEPTED_PAYMENT_METHODS) : 0;
   auto SIGNATURE__ = SIGNATURE ? _fbb.CreateVector<uint8_t>(*SIGNATURE) : 0;
   return CreatePLG(
       _fbb,
@@ -793,7 +1073,16 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
       NAME__,
       VERSION__,
       DESCRIPTION__,
+      TAGLINE__,
       PLUGIN_TYPE,
+      PUBLISHER_NAME__,
+      PUBLISHER_HANDLE__,
+      PUBLISHER_URL__,
+      SUPPORT_URL__,
+      TAGS__,
+      FEATURES__,
+      SCREENSHOT_URLS__,
+      BANNER_URL__,
       ABI_VERSION,
       WASM_HASH__,
       WASM_SIZE,
@@ -815,8 +1104,14 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
       CREATED_AT,
       UPDATED_AT,
       DOCUMENTATION_URL__,
+      CHANGELOG_URL__,
       ICON_URL__,
       LICENSE__,
+      PAYMENT_MODEL,
+      PRICE_USD_CENTS,
+      SUBSCRIPTION_PERIOD_DAYS,
+      ACCEPTED_PAYMENT_METHODS__,
+      LISTING_STATUS,
       SIGNATURE__);
 }
 

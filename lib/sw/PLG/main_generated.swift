@@ -37,6 +37,40 @@ public enum pluginType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 }
 
 
+///  Storefront payment model for the plugin listing
+public enum paymentModel: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  No payment required
+  case free = 0
+  ///  Single one-time purchase
+  case onetime = 1
+  ///  Recurring subscription purchase
+  case subscription = 2
+
+  public static var max: paymentModel { return .subscription }
+  public static var min: paymentModel { return .free }
+}
+
+
+///  Publication visibility for the plugin listing
+public enum listingStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Discoverable in public storefront listings
+  case public_ = 0
+  ///  Addressable directly but hidden from public browse surfaces
+  case unlisted = 1
+  ///  No longer offered for new installs or purchases
+  case retired = 2
+
+  public static var max: listingStatus { return .retired }
+  public static var min: listingStatus { return .public_ }
+}
+
+
 ///  Plugin capability declaration
 public struct PluginCapability: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
@@ -212,7 +246,7 @@ public struct EntryFunction: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   }
 }
 
-///  Plugin Manifest - WASM plugin distribution
+///  Plugin Manifest - canonical signed storefront and WASM distribution record
 public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -229,31 +263,46 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     case NAME = 6
     case VERSION = 8
     case DESCRIPTION = 10
-    case PLUGIN_TYPE = 12
-    case ABI_VERSION = 14
-    case WASM_HASH = 16
-    case WASM_SIZE = 18
-    case WASM_CID = 20
-    case ENCRYPTED_WASM_HASH = 22
-    case ENCRYPTED_WASM_SIZE = 24
-    case ENTRY_FUNCTIONS = 26
-    case REQUIRED_SCHEMAS = 28
-    case DEPENDENCIES = 30
-    case CAPABILITIES = 32
-    case PROVIDER_PEER_ID = 34
-    case PROVIDER_EPM_CID = 36
-    case ENCRYPTED = 38
-    case REQUIRED_SCOPE = 40
-    case KEY_ID = 42
-    case ALLOWED_DOMAINS = 44
-    case MAX_GRANT_TIMEOUT_MS = 46
-    case MIN_PERMISSIONS = 48
-    case CREATED_AT = 50
-    case UPDATED_AT = 52
-    case DOCUMENTATION_URL = 54
-    case ICON_URL = 56
-    case LICENSE = 58
-    case SIGNATURE = 60
+    case TAGLINE = 12
+    case PLUGIN_TYPE = 14
+    case PUBLISHER_NAME = 16
+    case PUBLISHER_HANDLE = 18
+    case PUBLISHER_URL = 20
+    case SUPPORT_URL = 22
+    case TAGS = 24
+    case FEATURES = 26
+    case SCREENSHOT_URLS = 28
+    case BANNER_URL = 30
+    case ABI_VERSION = 32
+    case WASM_HASH = 34
+    case WASM_SIZE = 36
+    case WASM_CID = 38
+    case ENCRYPTED_WASM_HASH = 40
+    case ENCRYPTED_WASM_SIZE = 42
+    case ENTRY_FUNCTIONS = 44
+    case REQUIRED_SCHEMAS = 46
+    case DEPENDENCIES = 48
+    case CAPABILITIES = 50
+    case PROVIDER_PEER_ID = 52
+    case PROVIDER_EPM_CID = 54
+    case ENCRYPTED = 56
+    case REQUIRED_SCOPE = 58
+    case KEY_ID = 60
+    case ALLOWED_DOMAINS = 62
+    case MAX_GRANT_TIMEOUT_MS = 64
+    case MIN_PERMISSIONS = 66
+    case CREATED_AT = 68
+    case UPDATED_AT = 70
+    case DOCUMENTATION_URL = 72
+    case CHANGELOG_URL = 74
+    case ICON_URL = 76
+    case LICENSE = 78
+    case PAYMENT_MODEL = 80
+    case PRICE_USD_CENTS = 82
+    case SUBSCRIPTION_PERIOD_DAYS = 84
+    case ACCEPTED_PAYMENT_METHODS = 86
+    case LISTING_STATUS = 88
+    case SIGNATURE = 90
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -270,8 +319,32 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Detailed description of plugin functionality
   public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  ///  Short marketing summary shown in storefront listings
+  public var TAGLINE: String? { let o = _accessor.offset(VTOFFSET.TAGLINE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TAGLINESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TAGLINE.v) }
   ///  Type/category of the plugin
   public var PLUGIN_TYPE: pluginType { let o = _accessor.offset(VTOFFSET.PLUGIN_TYPE.v); return o == 0 ? .sensor : pluginType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sensor }
+  ///  Human-readable publisher or organization name
+  public var PUBLISHER_NAME: String? { let o = _accessor.offset(VTOFFSET.PUBLISHER_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PUBLISHER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PUBLISHER_NAME.v) }
+  ///  Publisher handle or username
+  public var PUBLISHER_HANDLE: String? { let o = _accessor.offset(VTOFFSET.PUBLISHER_HANDLE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PUBLISHER_HANDLESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PUBLISHER_HANDLE.v) }
+  ///  Canonical publisher website
+  public var PUBLISHER_URL: String? { let o = _accessor.offset(VTOFFSET.PUBLISHER_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PUBLISHER_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PUBLISHER_URL.v) }
+  ///  Support or helpdesk URL for this plugin
+  public var SUPPORT_URL: String? { let o = _accessor.offset(VTOFFSET.SUPPORT_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SUPPORT_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SUPPORT_URL.v) }
+  ///  Search and categorization tags for discovery
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TAGS.v, byteSize: 4) }
+  ///  Short feature bullets highlighted in storefront listings
+  public var FEATURES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.FEATURES.v, byteSize: 4) }
+  ///  Screenshot URLs showing the plugin in use
+  public var SCREENSHOT_URLS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SCREENSHOT_URLS.v, byteSize: 4) }
+  ///  Optional hero/banner image URL for the listing
+  public var BANNER_URL: String? { let o = _accessor.offset(VTOFFSET.BANNER_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BANNER_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BANNER_URL.v) }
   ///  ABI version for compatibility checking
   public var ABI_VERSION: UInt32 { let o = _accessor.offset(VTOFFSET.ABI_VERSION.v); return o == 0 ? 1 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  SHA256 hash of the decrypted WASM binary
@@ -322,21 +395,43 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  URL to plugin documentation
   public var DOCUMENTATION_URL: String? { let o = _accessor.offset(VTOFFSET.DOCUMENTATION_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DOCUMENTATION_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DOCUMENTATION_URL.v) }
+  ///  URL to plugin changelog or release notes
+  public var CHANGELOG_URL: String? { let o = _accessor.offset(VTOFFSET.CHANGELOG_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHANGELOG_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CHANGELOG_URL.v) }
   ///  URL to plugin icon/logo
   public var ICON_URL: String? { let o = _accessor.offset(VTOFFSET.ICON_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ICON_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ICON_URL.v) }
   ///  License identifier (SPDX format)
   public var LICENSE: String? { let o = _accessor.offset(VTOFFSET.LICENSE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LICENSE.v) }
+  ///  Commercial model used for storefront purchase flows
+  public var PAYMENT_MODEL: paymentModel { let o = _accessor.offset(VTOFFSET.PAYMENT_MODEL.v); return o == 0 ? .free : paymentModel(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .free }
+  ///  Price in USD cents for one-time purchase or subscription period
+  public var PRICE_USD_CENTS: UInt32 { let o = _accessor.offset(VTOFFSET.PRICE_USD_CENTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Subscription billing period length in days
+  public var SUBSCRIPTION_PERIOD_DAYS: UInt32 { let o = _accessor.offset(VTOFFSET.SUBSCRIPTION_PERIOD_DAYS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Accepted payment methods, e.g. "stripe", "sol", "usdc"
+  public var ACCEPTED_PAYMENT_METHODS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ACCEPTED_PAYMENT_METHODS.v, byteSize: 4) }
+  ///  Storefront publication state for this manifest version
+  public var LISTING_STATUS: listingStatus { let o = _accessor.offset(VTOFFSET.LISTING_STATUS.v); return o == 0 ? .public_ : listingStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .public_ }
   ///  Ed25519 signature from provider over manifest
   public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.SIGNATURE.v, byteSize: 1) }
   public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SIGNATURE.v, body: body) }
-  public static func startPLG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 29) }
+  public static func startPLG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 44) }
   public static func add(PLUGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_ID, at: VTOFFSET.PLUGIN_ID.p) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VTOFFSET.VERSION.p) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
+  public static func add(TAGLINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGLINE, at: VTOFFSET.TAGLINE.p) }
   public static func add(PLUGIN_TYPE: pluginType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLUGIN_TYPE.rawValue, def: 0, at: VTOFFSET.PLUGIN_TYPE.p) }
+  public static func add(PUBLISHER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISHER_NAME, at: VTOFFSET.PUBLISHER_NAME.p) }
+  public static func add(PUBLISHER_HANDLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISHER_HANDLE, at: VTOFFSET.PUBLISHER_HANDLE.p) }
+  public static func add(PUBLISHER_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISHER_URL, at: VTOFFSET.PUBLISHER_URL.p) }
+  public static func add(SUPPORT_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUPPORT_URL, at: VTOFFSET.SUPPORT_URL.p) }
+  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VTOFFSET.TAGS.p) }
+  public static func addVectorOf(FEATURES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FEATURES, at: VTOFFSET.FEATURES.p) }
+  public static func addVectorOf(SCREENSHOT_URLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCREENSHOT_URLS, at: VTOFFSET.SCREENSHOT_URLS.p) }
+  public static func add(BANNER_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BANNER_URL, at: VTOFFSET.BANNER_URL.p) }
   public static func add(ABI_VERSION: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ABI_VERSION, def: 1, at: VTOFFSET.ABI_VERSION.p) }
   public static func addVectorOf(WASM_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WASM_HASH, at: VTOFFSET.WASM_HASH.p) }
   public static func add(WASM_SIZE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WASM_SIZE, def: 0, at: VTOFFSET.WASM_SIZE.p) }
@@ -359,8 +454,14 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(CREATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREATED_AT, def: 0, at: VTOFFSET.CREATED_AT.p) }
   public static func add(UPDATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATED_AT, def: 0, at: VTOFFSET.UPDATED_AT.p) }
   public static func add(DOCUMENTATION_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOCUMENTATION_URL, at: VTOFFSET.DOCUMENTATION_URL.p) }
+  public static func add(CHANGELOG_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANGELOG_URL, at: VTOFFSET.CHANGELOG_URL.p) }
   public static func add(ICON_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_URL, at: VTOFFSET.ICON_URL.p) }
   public static func add(LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE, at: VTOFFSET.LICENSE.p) }
+  public static func add(PAYMENT_MODEL: paymentModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYMENT_MODEL.rawValue, def: 0, at: VTOFFSET.PAYMENT_MODEL.p) }
+  public static func add(PRICE_USD_CENTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRICE_USD_CENTS, def: 0, at: VTOFFSET.PRICE_USD_CENTS.p) }
+  public static func add(SUBSCRIPTION_PERIOD_DAYS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUBSCRIPTION_PERIOD_DAYS, def: 0, at: VTOFFSET.SUBSCRIPTION_PERIOD_DAYS.p) }
+  public static func addVectorOf(ACCEPTED_PAYMENT_METHODS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCEPTED_PAYMENT_METHODS, at: VTOFFSET.ACCEPTED_PAYMENT_METHODS.p) }
+  public static func add(LISTING_STATUS: listingStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LISTING_STATUS.rawValue, def: 0, at: VTOFFSET.LISTING_STATUS.p) }
   public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VTOFFSET.SIGNATURE.p) }
   public static func endPLG(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8]); return end }
   public static func createPLG(
@@ -369,7 +470,16 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     NAMEOffset NAME: Offset,
     VERSIONOffset VERSION: Offset,
     DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
+    TAGLINEOffset TAGLINE: Offset = Offset(),
     PLUGIN_TYPE: pluginType = .sensor,
+    PUBLISHER_NAMEOffset PUBLISHER_NAME: Offset = Offset(),
+    PUBLISHER_HANDLEOffset PUBLISHER_HANDLE: Offset = Offset(),
+    PUBLISHER_URLOffset PUBLISHER_URL: Offset = Offset(),
+    SUPPORT_URLOffset SUPPORT_URL: Offset = Offset(),
+    TAGSVectorOffset TAGS: Offset = Offset(),
+    FEATURESVectorOffset FEATURES: Offset = Offset(),
+    SCREENSHOT_URLSVectorOffset SCREENSHOT_URLS: Offset = Offset(),
+    BANNER_URLOffset BANNER_URL: Offset = Offset(),
     ABI_VERSION: UInt32 = 1,
     WASM_HASHVectorOffset WASM_HASH: Offset = Offset(),
     WASM_SIZE: UInt64 = 0,
@@ -391,8 +501,14 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     CREATED_AT: UInt64 = 0,
     UPDATED_AT: UInt64 = 0,
     DOCUMENTATION_URLOffset DOCUMENTATION_URL: Offset = Offset(),
+    CHANGELOG_URLOffset CHANGELOG_URL: Offset = Offset(),
     ICON_URLOffset ICON_URL: Offset = Offset(),
     LICENSEOffset LICENSE: Offset = Offset(),
+    PAYMENT_MODEL: paymentModel = .free,
+    PRICE_USD_CENTS: UInt32 = 0,
+    SUBSCRIPTION_PERIOD_DAYS: UInt32 = 0,
+    ACCEPTED_PAYMENT_METHODSVectorOffset ACCEPTED_PAYMENT_METHODS: Offset = Offset(),
+    LISTING_STATUS: listingStatus = .public_,
     SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
   ) -> Offset {
     let __start = PLG.startPLG(&fbb)
@@ -400,7 +516,16 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     PLG.add(NAME: NAME, &fbb)
     PLG.add(VERSION: VERSION, &fbb)
     PLG.add(DESCRIPTION: DESCRIPTION, &fbb)
+    PLG.add(TAGLINE: TAGLINE, &fbb)
     PLG.add(PLUGIN_TYPE: PLUGIN_TYPE, &fbb)
+    PLG.add(PUBLISHER_NAME: PUBLISHER_NAME, &fbb)
+    PLG.add(PUBLISHER_HANDLE: PUBLISHER_HANDLE, &fbb)
+    PLG.add(PUBLISHER_URL: PUBLISHER_URL, &fbb)
+    PLG.add(SUPPORT_URL: SUPPORT_URL, &fbb)
+    PLG.addVectorOf(TAGS: TAGS, &fbb)
+    PLG.addVectorOf(FEATURES: FEATURES, &fbb)
+    PLG.addVectorOf(SCREENSHOT_URLS: SCREENSHOT_URLS, &fbb)
+    PLG.add(BANNER_URL: BANNER_URL, &fbb)
     PLG.add(ABI_VERSION: ABI_VERSION, &fbb)
     PLG.addVectorOf(WASM_HASH: WASM_HASH, &fbb)
     PLG.add(WASM_SIZE: WASM_SIZE, &fbb)
@@ -422,8 +547,14 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     PLG.add(CREATED_AT: CREATED_AT, &fbb)
     PLG.add(UPDATED_AT: UPDATED_AT, &fbb)
     PLG.add(DOCUMENTATION_URL: DOCUMENTATION_URL, &fbb)
+    PLG.add(CHANGELOG_URL: CHANGELOG_URL, &fbb)
     PLG.add(ICON_URL: ICON_URL, &fbb)
     PLG.add(LICENSE: LICENSE, &fbb)
+    PLG.add(PAYMENT_MODEL: PAYMENT_MODEL, &fbb)
+    PLG.add(PRICE_USD_CENTS: PRICE_USD_CENTS, &fbb)
+    PLG.add(SUBSCRIPTION_PERIOD_DAYS: SUBSCRIPTION_PERIOD_DAYS, &fbb)
+    PLG.addVectorOf(ACCEPTED_PAYMENT_METHODS: ACCEPTED_PAYMENT_METHODS, &fbb)
+    PLG.add(LISTING_STATUS: LISTING_STATUS, &fbb)
     PLG.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
     return PLG.endPLG(&fbb, start: __start)
   }
@@ -434,7 +565,16 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TAGLINE.p, fieldName: "TAGLINE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PLUGIN_TYPE.p, fieldName: "PLUGIN_TYPE", required: false, type: pluginType.self)
+    try _v.visit(field: VTOFFSET.PUBLISHER_NAME.p, fieldName: "PUBLISHER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.PUBLISHER_HANDLE.p, fieldName: "PUBLISHER_HANDLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.PUBLISHER_URL.p, fieldName: "PUBLISHER_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SUPPORT_URL.p, fieldName: "SUPPORT_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TAGS.p, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VTOFFSET.FEATURES.p, fieldName: "FEATURES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VTOFFSET.SCREENSHOT_URLS.p, fieldName: "SCREENSHOT_URLS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VTOFFSET.BANNER_URL.p, fieldName: "BANNER_URL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ABI_VERSION.p, fieldName: "ABI_VERSION", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.WASM_HASH.p, fieldName: "WASM_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     try _v.visit(field: VTOFFSET.WASM_SIZE.p, fieldName: "WASM_SIZE", required: false, type: UInt64.self)
@@ -456,8 +596,14 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.CREATED_AT.p, fieldName: "CREATED_AT", required: false, type: UInt64.self)
     try _v.visit(field: VTOFFSET.UPDATED_AT.p, fieldName: "UPDATED_AT", required: false, type: UInt64.self)
     try _v.visit(field: VTOFFSET.DOCUMENTATION_URL.p, fieldName: "DOCUMENTATION_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.CHANGELOG_URL.p, fieldName: "CHANGELOG_URL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ICON_URL.p, fieldName: "ICON_URL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LICENSE.p, fieldName: "LICENSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.PAYMENT_MODEL.p, fieldName: "PAYMENT_MODEL", required: false, type: paymentModel.self)
+    try _v.visit(field: VTOFFSET.PRICE_USD_CENTS.p, fieldName: "PRICE_USD_CENTS", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.SUBSCRIPTION_PERIOD_DAYS.p, fieldName: "SUBSCRIPTION_PERIOD_DAYS", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.ACCEPTED_PAYMENT_METHODS.p, fieldName: "ACCEPTED_PAYMENT_METHODS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VTOFFSET.LISTING_STATUS.p, fieldName: "LISTING_STATUS", required: false, type: listingStatus.self)
     try _v.visit(field: VTOFFSET.SIGNATURE.p, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }

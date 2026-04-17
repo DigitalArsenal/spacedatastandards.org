@@ -32423,6 +32423,54 @@
                         }
                     }
                 },
+                "paymentModel": {
+                    "type": "string",
+                    "enum": [
+                        "Free",
+                        "OneTime",
+                        "Subscription"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Free": {
+                            "value": 0,
+                            "description": "No payment required"
+                        },
+                        "OneTime": {
+                            "value": 1,
+                            "description": "Single one-time purchase"
+                        },
+                        "Subscription": {
+                            "value": 2,
+                            "description": "Recurring subscription purchase"
+                        }
+                    }
+                },
+                "listingStatus": {
+                    "type": "string",
+                    "enum": [
+                        "Public",
+                        "Unlisted",
+                        "Retired"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Public": {
+                            "value": 0,
+                            "description": "Discoverable in public storefront listings"
+                        },
+                        "Unlisted": {
+                            "value": 1,
+                            "description": "Addressable directly but hidden from public browse surfaces"
+                        },
+                        "Retired": {
+                            "value": 2,
+                            "description": "No longer offered for new installs or purchases"
+                        }
+                    }
+                },
                 "PluginCapability": {
                     "type": "object",
                     "description": "Plugin capability declaration",
@@ -32503,7 +32551,7 @@
                 },
                 "PLG": {
                     "type": "object",
-                    "description": "Plugin Manifest - WASM plugin distribution",
+                    "description": "Plugin Manifest - canonical signed storefront and WASM distribution record",
                     "properties": {
                         "PLUGIN_ID": {
                             "type": "string",
@@ -32526,6 +32574,11 @@
                         "DESCRIPTION": {
                             "type": "string",
                             "description": "Detailed description of plugin functionality",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "TAGLINE": {
+                            "type": "string",
+                            "description": "Short marketing summary shown in storefront listings",
                             "x-flatbuffer-type": "string"
                         },
                         "PLUGIN_TYPE": {
@@ -32571,6 +32624,55 @@
                                     "description": "GLSL shader plugins for custom visualization"
                                 }
                             }
+                        },
+                        "PUBLISHER_NAME": {
+                            "type": "string",
+                            "description": "Human-readable publisher or organization name",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PUBLISHER_HANDLE": {
+                            "type": "string",
+                            "description": "Publisher handle or username",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PUBLISHER_URL": {
+                            "type": "string",
+                            "description": "Canonical publisher website",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SUPPORT_URL": {
+                            "type": "string",
+                            "description": "Support or helpdesk URL for this plugin",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "TAGS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Search and categorization tags for discovery",
+                            "x-flatbuffer-type": "[string]"
+                        },
+                        "FEATURES": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Short feature bullets highlighted in storefront listings",
+                            "x-flatbuffer-type": "[string]"
+                        },
+                        "SCREENSHOT_URLS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Screenshot URLs showing the plugin in use",
+                            "x-flatbuffer-type": "[string]"
+                        },
+                        "BANNER_URL": {
+                            "type": "string",
+                            "description": "Optional hero/banner image URL for the listing",
+                            "x-flatbuffer-type": "string"
                         },
                         "ABI_VERSION": {
                             "type": "integer",
@@ -32717,6 +32819,11 @@
                             "description": "URL to plugin documentation",
                             "x-flatbuffer-type": "string"
                         },
+                        "CHANGELOG_URL": {
+                            "type": "string",
+                            "description": "URL to plugin changelog or release notes",
+                            "x-flatbuffer-type": "string"
+                        },
                         "ICON_URL": {
                             "type": "string",
                             "description": "URL to plugin icon/logo",
@@ -32726,6 +32833,68 @@
                             "type": "string",
                             "description": "License identifier (SPDX format)",
                             "x-flatbuffer-type": "string"
+                        },
+                        "PAYMENT_MODEL": {
+                            "$ref": "#/definitions/paymentModel",
+                            "description": "Commercial model used for storefront purchase flows",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Free": {
+                                    "value": 0,
+                                    "description": "No payment required"
+                                },
+                                "OneTime": {
+                                    "value": 1,
+                                    "description": "Single one-time purchase"
+                                },
+                                "Subscription": {
+                                    "value": 2,
+                                    "description": "Recurring subscription purchase"
+                                }
+                            }
+                        },
+                        "PRICE_USD_CENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Price in USD cents for one-time purchase or subscription period",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "SUBSCRIPTION_PERIOD_DAYS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Subscription billing period length in days",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "ACCEPTED_PAYMENT_METHODS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Accepted payment methods, e.g. \"stripe\", \"sol\", \"usdc\"",
+                            "x-flatbuffer-type": "[string]"
+                        },
+                        "LISTING_STATUS": {
+                            "$ref": "#/definitions/listingStatus",
+                            "description": "Storefront publication state for this manifest version",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Public": {
+                                    "value": 0,
+                                    "description": "Discoverable in public storefront listings"
+                                },
+                                "Unlisted": {
+                                    "value": 1,
+                                    "description": "Addressable directly but hidden from public browse surfaces"
+                                },
+                                "Retired": {
+                                    "value": 2,
+                                    "description": "No longer offered for new installs or purchases"
+                                }
+                            }
                         },
                         "SIGNATURE": {
                             "type": "array",

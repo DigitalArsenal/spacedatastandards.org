@@ -2,9 +2,11 @@ import * as flatbuffers from 'flatbuffers';
 import { EntryFunction, EntryFunctionT } from './EntryFunction.js';
 import { PluginCapability, PluginCapabilityT } from './PluginCapability.js';
 import { PluginDependency, PluginDependencyT } from './PluginDependency.js';
+import { listingStatus } from './listingStatus.js';
+import { paymentModel } from './paymentModel.js';
 import { pluginType } from './pluginType.js';
 /**
- * Plugin Manifest - WASM plugin distribution
+ * Plugin Manifest - canonical signed storefront and WASM distribution record
  */
 export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -34,9 +36,57 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
     DESCRIPTION(): string | null;
     DESCRIPTION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
+     * Short marketing summary shown in storefront listings
+     */
+    TAGLINE(): string | null;
+    TAGLINE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
      * Type/category of the plugin
      */
     PLUGIN_TYPE(): pluginType;
+    /**
+     * Human-readable publisher or organization name
+     */
+    PUBLISHER_NAME(): string | null;
+    PUBLISHER_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Publisher handle or username
+     */
+    PUBLISHER_HANDLE(): string | null;
+    PUBLISHER_HANDLE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Canonical publisher website
+     */
+    PUBLISHER_URL(): string | null;
+    PUBLISHER_URL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Support or helpdesk URL for this plugin
+     */
+    SUPPORT_URL(): string | null;
+    SUPPORT_URL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Search and categorization tags for discovery
+     */
+    TAGS(index: number): string;
+    TAGS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    tagsLength(): number;
+    /**
+     * Short feature bullets highlighted in storefront listings
+     */
+    FEATURES(index: number): string;
+    FEATURES(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    featuresLength(): number;
+    /**
+     * Screenshot URLs showing the plugin in use
+     */
+    SCREENSHOT_URLS(index: number): string;
+    SCREENSHOT_URLS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    screenshotUrlsLength(): number;
+    /**
+     * Optional hero/banner image URL for the listing
+     */
+    BANNER_URL(): string | null;
+    BANNER_URL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * ABI version for compatibility checking
      */
@@ -141,6 +191,11 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
     DOCUMENTATION_URL(): string | null;
     DOCUMENTATION_URL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
+     * URL to plugin changelog or release notes
+     */
+    CHANGELOG_URL(): string | null;
+    CHANGELOG_URL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
      * URL to plugin icon/logo
      */
     ICON_URL(): string | null;
@@ -150,6 +205,28 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
      */
     LICENSE(): string | null;
     LICENSE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Commercial model used for storefront purchase flows
+     */
+    PAYMENT_MODEL(): paymentModel;
+    /**
+     * Price in USD cents for one-time purchase or subscription period
+     */
+    PRICE_USD_CENTS(): number;
+    /**
+     * Subscription billing period length in days
+     */
+    SUBSCRIPTION_PERIOD_DAYS(): number;
+    /**
+     * Accepted payment methods, e.g. "stripe", "sol", "usdc"
+     */
+    ACCEPTED_PAYMENT_METHODS(index: number): string;
+    ACCEPTED_PAYMENT_METHODS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    acceptedPaymentMethodsLength(): number;
+    /**
+     * Storefront publication state for this manifest version
+     */
+    LISTING_STATUS(): listingStatus;
     /**
      * Ed25519 signature from provider over manifest
      */
@@ -161,7 +238,22 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
     static addVersion(builder: flatbuffers.Builder, VERSIONOffset: flatbuffers.Offset): void;
     static addDescription(builder: flatbuffers.Builder, DESCRIPTIONOffset: flatbuffers.Offset): void;
+    static addTagline(builder: flatbuffers.Builder, TAGLINEOffset: flatbuffers.Offset): void;
     static addPluginType(builder: flatbuffers.Builder, PLUGIN_TYPE: pluginType): void;
+    static addPublisherName(builder: flatbuffers.Builder, PUBLISHER_NAMEOffset: flatbuffers.Offset): void;
+    static addPublisherHandle(builder: flatbuffers.Builder, PUBLISHER_HANDLEOffset: flatbuffers.Offset): void;
+    static addPublisherUrl(builder: flatbuffers.Builder, PUBLISHER_URLOffset: flatbuffers.Offset): void;
+    static addSupportUrl(builder: flatbuffers.Builder, SUPPORT_URLOffset: flatbuffers.Offset): void;
+    static addTags(builder: flatbuffers.Builder, TAGSOffset: flatbuffers.Offset): void;
+    static createTagsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startTagsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addFeatures(builder: flatbuffers.Builder, FEATURESOffset: flatbuffers.Offset): void;
+    static createFeaturesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startFeaturesVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addScreenshotUrls(builder: flatbuffers.Builder, SCREENSHOT_URLSOffset: flatbuffers.Offset): void;
+    static createScreenshotUrlsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startScreenshotUrlsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addBannerUrl(builder: flatbuffers.Builder, BANNER_URLOffset: flatbuffers.Offset): void;
     static addAbiVersion(builder: flatbuffers.Builder, ABI_VERSION: number): void;
     static addWasmHash(builder: flatbuffers.Builder, WASM_HASHOffset: flatbuffers.Offset): void;
     static createWasmHashVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
@@ -199,15 +291,23 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
     static addCreatedAt(builder: flatbuffers.Builder, CREATED_AT: bigint): void;
     static addUpdatedAt(builder: flatbuffers.Builder, UPDATED_AT: bigint): void;
     static addDocumentationUrl(builder: flatbuffers.Builder, DOCUMENTATION_URLOffset: flatbuffers.Offset): void;
+    static addChangelogUrl(builder: flatbuffers.Builder, CHANGELOG_URLOffset: flatbuffers.Offset): void;
     static addIconUrl(builder: flatbuffers.Builder, ICON_URLOffset: flatbuffers.Offset): void;
     static addLicense(builder: flatbuffers.Builder, LICENSEOffset: flatbuffers.Offset): void;
+    static addPaymentModel(builder: flatbuffers.Builder, PAYMENT_MODEL: paymentModel): void;
+    static addPriceUsdCents(builder: flatbuffers.Builder, PRICE_USD_CENTS: number): void;
+    static addSubscriptionPeriodDays(builder: flatbuffers.Builder, SUBSCRIPTION_PERIOD_DAYS: number): void;
+    static addAcceptedPaymentMethods(builder: flatbuffers.Builder, ACCEPTED_PAYMENT_METHODSOffset: flatbuffers.Offset): void;
+    static createAcceptedPaymentMethodsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startAcceptedPaymentMethodsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addListingStatus(builder: flatbuffers.Builder, LISTING_STATUS: listingStatus): void;
     static addSignature(builder: flatbuffers.Builder, SIGNATUREOffset: flatbuffers.Offset): void;
     static createSignatureVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startSignatureVector(builder: flatbuffers.Builder, numElems: number): void;
     static endPLG(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishPLGBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedPLGBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createPLG(builder: flatbuffers.Builder, PLUGIN_IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, PLUGIN_TYPE: pluginType, ABI_VERSION: number, WASM_HASHOffset: flatbuffers.Offset, WASM_SIZE: bigint, WASM_CIDOffset: flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset: flatbuffers.Offset, ENCRYPTED_WASM_SIZE: bigint, ENTRY_FUNCTIONSOffset: flatbuffers.Offset, REQUIRED_SCHEMASOffset: flatbuffers.Offset, DEPENDENCIESOffset: flatbuffers.Offset, CAPABILITIESOffset: flatbuffers.Offset, PROVIDER_PEER_IDOffset: flatbuffers.Offset, PROVIDER_EPM_CIDOffset: flatbuffers.Offset, ENCRYPTED: boolean, REQUIRED_SCOPEOffset: flatbuffers.Offset, KEY_IDOffset: flatbuffers.Offset, ALLOWED_DOMAINSOffset: flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS: bigint, MIN_PERMISSIONSOffset: flatbuffers.Offset, CREATED_AT: bigint, UPDATED_AT: bigint, DOCUMENTATION_URLOffset: flatbuffers.Offset, ICON_URLOffset: flatbuffers.Offset, LICENSEOffset: flatbuffers.Offset, SIGNATUREOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createPLG(builder: flatbuffers.Builder, PLUGIN_IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, TAGLINEOffset: flatbuffers.Offset, PLUGIN_TYPE: pluginType, PUBLISHER_NAMEOffset: flatbuffers.Offset, PUBLISHER_HANDLEOffset: flatbuffers.Offset, PUBLISHER_URLOffset: flatbuffers.Offset, SUPPORT_URLOffset: flatbuffers.Offset, TAGSOffset: flatbuffers.Offset, FEATURESOffset: flatbuffers.Offset, SCREENSHOT_URLSOffset: flatbuffers.Offset, BANNER_URLOffset: flatbuffers.Offset, ABI_VERSION: number, WASM_HASHOffset: flatbuffers.Offset, WASM_SIZE: bigint, WASM_CIDOffset: flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset: flatbuffers.Offset, ENCRYPTED_WASM_SIZE: bigint, ENTRY_FUNCTIONSOffset: flatbuffers.Offset, REQUIRED_SCHEMASOffset: flatbuffers.Offset, DEPENDENCIESOffset: flatbuffers.Offset, CAPABILITIESOffset: flatbuffers.Offset, PROVIDER_PEER_IDOffset: flatbuffers.Offset, PROVIDER_EPM_CIDOffset: flatbuffers.Offset, ENCRYPTED: boolean, REQUIRED_SCOPEOffset: flatbuffers.Offset, KEY_IDOffset: flatbuffers.Offset, ALLOWED_DOMAINSOffset: flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS: bigint, MIN_PERMISSIONSOffset: flatbuffers.Offset, CREATED_AT: bigint, UPDATED_AT: bigint, DOCUMENTATION_URLOffset: flatbuffers.Offset, CHANGELOG_URLOffset: flatbuffers.Offset, ICON_URLOffset: flatbuffers.Offset, LICENSEOffset: flatbuffers.Offset, PAYMENT_MODEL: paymentModel, PRICE_USD_CENTS: number, SUBSCRIPTION_PERIOD_DAYS: number, ACCEPTED_PAYMENT_METHODSOffset: flatbuffers.Offset, LISTING_STATUS: listingStatus, SIGNATUREOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PLGT;
     unpackTo(_o: PLGT): void;
 }
@@ -216,7 +316,16 @@ export declare class PLGT implements flatbuffers.IGeneratedObject {
     NAME: string | Uint8Array | null;
     VERSION: string | Uint8Array | null;
     DESCRIPTION: string | Uint8Array | null;
+    TAGLINE: string | Uint8Array | null;
     PLUGIN_TYPE: pluginType;
+    PUBLISHER_NAME: string | Uint8Array | null;
+    PUBLISHER_HANDLE: string | Uint8Array | null;
+    PUBLISHER_URL: string | Uint8Array | null;
+    SUPPORT_URL: string | Uint8Array | null;
+    TAGS: (string)[];
+    FEATURES: (string)[];
+    SCREENSHOT_URLS: (string)[];
+    BANNER_URL: string | Uint8Array | null;
     ABI_VERSION: number;
     WASM_HASH: (number)[];
     WASM_SIZE: bigint;
@@ -238,10 +347,16 @@ export declare class PLGT implements flatbuffers.IGeneratedObject {
     CREATED_AT: bigint;
     UPDATED_AT: bigint;
     DOCUMENTATION_URL: string | Uint8Array | null;
+    CHANGELOG_URL: string | Uint8Array | null;
     ICON_URL: string | Uint8Array | null;
     LICENSE: string | Uint8Array | null;
+    PAYMENT_MODEL: paymentModel;
+    PRICE_USD_CENTS: number;
+    SUBSCRIPTION_PERIOD_DAYS: number;
+    ACCEPTED_PAYMENT_METHODS: (string)[];
+    LISTING_STATUS: listingStatus;
     SIGNATURE: (number)[];
-    constructor(PLUGIN_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, PLUGIN_TYPE?: pluginType, ABI_VERSION?: number, WASM_HASH?: (number)[], WASM_SIZE?: bigint, WASM_CID?: string | Uint8Array | null, ENCRYPTED_WASM_HASH?: (number)[], ENCRYPTED_WASM_SIZE?: bigint, ENTRY_FUNCTIONS?: (EntryFunctionT)[], REQUIRED_SCHEMAS?: (string)[], DEPENDENCIES?: (PluginDependencyT)[], CAPABILITIES?: (PluginCapabilityT)[], PROVIDER_PEER_ID?: string | Uint8Array | null, PROVIDER_EPM_CID?: string | Uint8Array | null, ENCRYPTED?: boolean, REQUIRED_SCOPE?: string | Uint8Array | null, KEY_ID?: string | Uint8Array | null, ALLOWED_DOMAINS?: (string)[], MAX_GRANT_TIMEOUT_MS?: bigint, MIN_PERMISSIONS?: (string)[], CREATED_AT?: bigint, UPDATED_AT?: bigint, DOCUMENTATION_URL?: string | Uint8Array | null, ICON_URL?: string | Uint8Array | null, LICENSE?: string | Uint8Array | null, SIGNATURE?: (number)[]);
+    constructor(PLUGIN_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, TAGLINE?: string | Uint8Array | null, PLUGIN_TYPE?: pluginType, PUBLISHER_NAME?: string | Uint8Array | null, PUBLISHER_HANDLE?: string | Uint8Array | null, PUBLISHER_URL?: string | Uint8Array | null, SUPPORT_URL?: string | Uint8Array | null, TAGS?: (string)[], FEATURES?: (string)[], SCREENSHOT_URLS?: (string)[], BANNER_URL?: string | Uint8Array | null, ABI_VERSION?: number, WASM_HASH?: (number)[], WASM_SIZE?: bigint, WASM_CID?: string | Uint8Array | null, ENCRYPTED_WASM_HASH?: (number)[], ENCRYPTED_WASM_SIZE?: bigint, ENTRY_FUNCTIONS?: (EntryFunctionT)[], REQUIRED_SCHEMAS?: (string)[], DEPENDENCIES?: (PluginDependencyT)[], CAPABILITIES?: (PluginCapabilityT)[], PROVIDER_PEER_ID?: string | Uint8Array | null, PROVIDER_EPM_CID?: string | Uint8Array | null, ENCRYPTED?: boolean, REQUIRED_SCOPE?: string | Uint8Array | null, KEY_ID?: string | Uint8Array | null, ALLOWED_DOMAINS?: (string)[], MAX_GRANT_TIMEOUT_MS?: bigint, MIN_PERMISSIONS?: (string)[], CREATED_AT?: bigint, UPDATED_AT?: bigint, DOCUMENTATION_URL?: string | Uint8Array | null, CHANGELOG_URL?: string | Uint8Array | null, ICON_URL?: string | Uint8Array | null, LICENSE?: string | Uint8Array | null, PAYMENT_MODEL?: paymentModel, PRICE_USD_CENTS?: number, SUBSCRIPTION_PERIOD_DAYS?: number, ACCEPTED_PAYMENT_METHODS?: (string)[], LISTING_STATUS?: listingStatus, SIGNATURE?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PLG.d.ts.map
