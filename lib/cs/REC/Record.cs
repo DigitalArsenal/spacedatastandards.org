@@ -86,6 +86,7 @@ public struct Record : IFlatbufferObject
   public LNE valueAsLNE() { return value<LNE>().Value; }
   public LPF valueAsLPF() { return value<LPF>().Value; }
   public LWK valueAsLWK() { return value<LWK>().Value; }
+  public MBL valueAsMBL() { return value<MBL>().Value; }
   public MET valueAsMET() { return value<MET>().Value; }
   public MFE valueAsMFE() { return value<MFE>().Value; }
   public MNF valueAsMNF() { return value<MNF>().Value; }
@@ -395,6 +396,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.LWK:
         _o.value.Value = this.value<LWK>().HasValue ? this.value<LWK>().Value.UnPack() : null;
+        break;
+      case RecordType.MBL:
+        _o.value.Value = this.value<MBL>().HasValue ? this.value<MBL>().Value.UnPack() : null;
         break;
       case RecordType.MET:
         _o.value.Value = this.value<MET>().HasValue ? this.value<MET>().Value.UnPack() : null;

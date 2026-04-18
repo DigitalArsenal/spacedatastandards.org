@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ModuleBundleEntryRole" : {
+      "type" : "string",
+      "enum": ["MANIFEST", "AUTHORIZATION", "SIGNATURE", "TRANSPORT", "ATTESTATION", "AUXILIARY"]
+    },
+    "ModulePayloadEncoding" : {
+      "type" : "string",
+      "enum": ["RAW_BYTES", "FLATBUFFER", "JSON_UTF8", "CBOR"]
+    },
+    "CanonicalizationRule" : {
+      "type" : "object",
+      "description" : "Canonicalization rule applied before hashing or signature verification.",
+      "properties" : {
+        "version" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Schema version for the canonicalization contract."
+              },
+        "stripped_custom_section_prefix" : {
+                "type" : "string",
+                "description" : "Strip any custom section whose name starts with this prefix before\nhashing the module for signature verification."
+              },
+        "bundle_section_name" : {
+                "type" : "string",
+                "description" : "Logical container name used for the module bundle record within the\ndelivery artifact."
+              },
+        "hash_algorithm" : {
+                "type" : "string",
+                "description" : "Hash function identifier, for example `sha256`."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ModuleBundleEntry" : {
+      "type" : "object",
+      "description" : "One payload carried inside the module bundle.",
+      "properties" : {
+        "entry_id" : {
+                "type" : "string",
+                "description" : "Stable bundle-local identifier."
+              },
+        "role" : {
+                "$ref" : "#/definitions/ModuleBundleEntryRole",
+                "description" : "High-level semantic role of the payload."
+              },
+        "section_name" : {
+                "type" : "string",
+                "description" : "Optional logical section name within the bundle, for example\n`sds.authorization`."
+              },
+        "type_ref" : {
+                "type" : "string",
+                "description" : "SDS/shared-module schema identity when the payload is itself a\nFlatBuffer. Stored as canonical JSON text for portability."
+              },
+        "payload_encoding" : {
+                "$ref" : "#/definitions/ModulePayloadEncoding",
+                "description" : "Encoding used for `payload`."
+              },
+        "media_type" : {
+                "type" : "string",
+                "description" : "Optional media type for transitional payloads such as JSON envelopes."
+              },
+        "flags" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Implementation-defined bit flags for signed/encrypted/compressed state."
+              },
+        "sha256" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "SHA-256 of the payload bytes."
+              },
+        "payload" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Embedded payload bytes. For single-file deployment this should be\npopulated for every entry."
+              },
+        "description" : {
+                "type" : "string",
+                "description" : "Human-readable description for tooling and diagnostics."
+              }
+      },
+      "required" : ["entry_id"],
+      "additionalProperties" : false
+    },
+    "MBL" : {
+      "type" : "object",
+      "description" : "Metadata stored in the REC trailer for one module delivery artifact.",
+      "properties" : {
+        "bundle_version" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Bundle schema version."
+              },
+        "module_format" : {
+                "type" : "string",
+                "description" : "Human-readable package format label."
+              },
+        "canonicalization" : {
+                "$ref" : "#/definitions/CanonicalizationRule",
+                "description" : "Canonicalization rule used to compute module hashes."
+              },
+        "canonical_module_hash" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "SHA-256 of the wasm module after stripping SDS-owned custom sections."
+              },
+        "manifest_hash" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "SHA-256 of the canonical plugin manifest bytes."
+              },
+        "manifest_export_symbol" : {
+                "type" : "string",
+                "description" : "Legacy ABI export retained for backward compatibility."
+              },
+        "manifest_size_symbol" : {
+                "type" : "string",
+                "description" : "Legacy ABI export retained for backward compatibility."
+              },
+        "entries" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ModuleBundleEntry"},
+                "description" : "Payloads embedded in the bundle."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MBL"
+}

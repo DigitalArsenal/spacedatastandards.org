@@ -1,0 +1,266 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ModuleBundleEntryRole": {
+      "type": "string",
+      "enum": [
+        "MANIFEST",
+        "AUTHORIZATION",
+        "SIGNATURE",
+        "TRANSPORT",
+        "ATTESTATION",
+        "AUXILIARY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "MANIFEST": {
+          "value": 0
+        },
+        "AUTHORIZATION": {
+          "value": 1
+        },
+        "SIGNATURE": {
+          "value": 2
+        },
+        "TRANSPORT": {
+          "value": 3
+        },
+        "ATTESTATION": {
+          "value": 4
+        },
+        "AUXILIARY": {
+          "value": 5
+        }
+      }
+    },
+    "ModulePayloadEncoding": {
+      "type": "string",
+      "enum": [
+        "RAW_BYTES",
+        "FLATBUFFER",
+        "JSON_UTF8",
+        "CBOR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "RAW_BYTES": {
+          "value": 0
+        },
+        "FLATBUFFER": {
+          "value": 1
+        },
+        "JSON_UTF8": {
+          "value": 2
+        },
+        "CBOR": {
+          "value": 3
+        }
+      }
+    },
+    "CanonicalizationRule": {
+      "type": "object",
+      "description": "Canonicalization rule applied before hashing or signature verification.",
+      "properties": {
+        "version": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Schema version for the canonicalization contract.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "stripped_custom_section_prefix": {
+          "type": "string",
+          "description": "Strip any custom section whose name starts with this prefix before\nhashing the module for signature verification.",
+          "x-flatbuffer-type": "string"
+        },
+        "bundle_section_name": {
+          "type": "string",
+          "description": "Logical container name used for the module bundle record within the\ndelivery artifact.",
+          "x-flatbuffer-type": "string"
+        },
+        "hash_algorithm": {
+          "type": "string",
+          "description": "Hash function identifier, for example `sha256`.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ModuleBundleEntry": {
+      "type": "object",
+      "description": "One payload carried inside the module bundle.",
+      "properties": {
+        "entry_id": {
+          "type": "string",
+          "description": "Stable bundle-local identifier.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "role": {
+          "$ref": "#/definitions/ModuleBundleEntryRole",
+          "description": "High-level semantic role of the payload.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "MANIFEST": {
+              "value": 0
+            },
+            "AUTHORIZATION": {
+              "value": 1
+            },
+            "SIGNATURE": {
+              "value": 2
+            },
+            "TRANSPORT": {
+              "value": 3
+            },
+            "ATTESTATION": {
+              "value": 4
+            },
+            "AUXILIARY": {
+              "value": 5
+            }
+          }
+        },
+        "section_name": {
+          "type": "string",
+          "description": "Optional logical section name within the bundle, for example\n`sds.authorization`.",
+          "x-flatbuffer-type": "string"
+        },
+        "type_ref": {
+          "type": "string",
+          "description": "SDS/shared-module schema identity when the payload is itself a\nFlatBuffer. Stored as canonical JSON text for portability.",
+          "x-flatbuffer-type": "string"
+        },
+        "payload_encoding": {
+          "$ref": "#/definitions/ModulePayloadEncoding",
+          "description": "Encoding used for `payload`.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "RAW_BYTES": {
+              "value": 0
+            },
+            "FLATBUFFER": {
+              "value": 1
+            },
+            "JSON_UTF8": {
+              "value": 2
+            },
+            "CBOR": {
+              "value": 3
+            }
+          }
+        },
+        "media_type": {
+          "type": "string",
+          "description": "Optional media type for transitional payloads such as JSON envelopes.",
+          "x-flatbuffer-type": "string"
+        },
+        "flags": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Implementation-defined bit flags for signed/encrypted/compressed state.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "sha256": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "SHA-256 of the payload bytes.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "payload": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Embedded payload bytes. For single-file deployment this should be\npopulated for every entry.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description for tooling and diagnostics.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "entry_id"
+      ],
+      "additionalProperties": false
+    },
+    "MBL": {
+      "type": "object",
+      "description": "Metadata stored in the REC trailer for one module delivery artifact.",
+      "properties": {
+        "bundle_version": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Bundle schema version.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "module_format": {
+          "type": "string",
+          "description": "Human-readable package format label.",
+          "x-flatbuffer-type": "string"
+        },
+        "canonicalization": {
+          "$ref": "#/definitions/CanonicalizationRule",
+          "description": "Canonicalization rule used to compute module hashes.",
+          "x-flatbuffer-type": "CanonicalizationRule"
+        },
+        "canonical_module_hash": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "SHA-256 of the wasm module after stripping SDS-owned custom sections.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "manifest_hash": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "SHA-256 of the canonical plugin manifest bytes.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "manifest_export_symbol": {
+          "type": "string",
+          "description": "Legacy ABI export retained for backward compatibility.",
+          "x-flatbuffer-type": "string"
+        },
+        "manifest_size_symbol": {
+          "type": "string",
+          "description": "Legacy ABI export retained for backward compatibility.",
+          "x-flatbuffer-type": "string"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModuleBundleEntry"
+          },
+          "description": "Payloads embedded in the bundle.",
+          "x-flatbuffer-type": "[ModuleBundleEntry]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/MBL",
+  "x-flatbuffer-root-type": "MBL",
+  "x-flatbuffer-file-identifier": "$MBL"
+}
