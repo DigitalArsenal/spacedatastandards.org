@@ -1,0 +1,173 @@
+// Hash: 9f193a8ef4100709509c92fdf0ead4be0a4fdb63f63a9c4c7f57742fdaa918e2
+// Version: 0.0.1
+// -----------------------------------END_HEADER
+/// Propagator Runtime Wire — arena-addressed init / batch request / batch
+/// response envelopes for orbital propagators that produce state vectors
+/// into a shared memory arena.
+///
+/// Data interchange for the underlying content (state vectors, covariance,
+/// maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris)
+/// lives in SDS `OCM` + `OMM` + `PPE` + `RFM` + `ATM`. PRW is the runtime
+/// wire that moves those across a JS ↔ WASM boundary, not a substitute for
+/// any of them.
+
+/// Runtime state-flag bitfield (sized to match a single uint).
+/// Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;
+/// HAS_COVARIANCE is implicit from OCM.COVARIANCE_DATA. The remaining
+/// flags live here because they describe runtime propagation health, not
+/// a persisted record.
+enum propagatorStateFlags : uint (bit_flags) {
+  /// State vector data is valid.
+  VALID,
+  /// Satellite is in Earth's shadow at this epoch.
+  IN_ECLIPSE,
+  /// Orbit has decayed (re-entry imminent or complete).
+  DECAYED,
+  /// Propagation extrapolated beyond the input epoch.
+  EXTRAPOLATED,
+  /// Reserved.
+  RESERVED_4,
+  /// Reserved.
+  RESERVED_5,
+  /// Reserved.
+  RESERVED_6,
+  /// Reserved.
+  RESERVED_7
+}
+
+/// Error codes surfaced by runtime propagation calls.
+enum propagatorErrorCode : int {
+  /// No error.
+  OK,
+  /// Unknown / unspecified error.
+  UNKNOWN,
+  /// One or more entity handles not found.
+  UNKNOWN_ENTITY,
+  /// Invalid epoch (NaN, out of range, before earliest init epoch, etc.).
+  INVALID_EPOCH,
+  /// Output buffer too small for the requested count.
+  OUTPUT_BUFFER_OVERFLOW,
+  /// Propagator not initialized.
+  NOT_INITIALIZED
+}
+
+/// Propagator initialization request — assigns TLE / OMM / Keplerian /
+/// polynomial inputs to entity handles.
+///
+/// The actual per-entity source record is carried inline as raw bytes
+/// tagged with SOURCE_KIND and, where useful, a SDS file_identifier.
+/// Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the
+/// bytes verbatim; the propagator uses SOURCE_KIND to decide how to
+/// consume them.
+table PRWInit {
+  /// Entity handles to assign results to (same order as SOURCES[]).
+  ENTITY_HANDLES:[uint];
+  /// Per-entity source records, encoded as SDS FlatBuffers.
+  SOURCES:[PRWInitSource];
+}
+
+enum prwSourceKind : ubyte {
+  /// Source is an OMM (CCSDS mean elements) FlatBuffer.
+  OMM,
+  /// Source is a raw TLE line pair (3LE supported via NAME).
+  TLE,
+  /// Source is an OCM FlatBuffer.
+  OCM,
+  /// Source is an OEM FlatBuffer.
+  OEM,
+  /// Source is a PPE (polynomial ephemeris) FlatBuffer.
+  PPE,
+  /// Source is a single classical Keplerian element set.
+  KEPLERIAN
+}
+
+table PRWKeplerianElements {
+  /// Gravitational parameter of the central body (km^3 / s^2).
+  MU:double;
+  /// Semi-major axis (km).
+  SEMI_MAJOR_AXIS:double;
+  /// Eccentricity (0 = circular, <1 = ellipse).
+  ECCENTRICITY:double;
+  /// Inclination (radians).
+  INCLINATION:double;
+  /// Right ascension of the ascending node (radians).
+  RAAN:double;
+  /// Argument of periapsis (radians).
+  ARG_PERIAPSIS:double;
+  /// True anomaly (radians).
+  TRUE_ANOMALY:double;
+  /// Epoch as Julian date.
+  EPOCH:double;
+}
+
+table PRWTleLines {
+  /// TLE line 1 (69 characters).
+  LINE1:string;
+  /// TLE line 2 (69 characters).
+  LINE2:string;
+  /// Satellite name (optional, line 0 of 3LE).
+  NAME:string;
+  /// NORAD catalog number parsed from the TLE.
+  NORAD_ID:uint;
+}
+
+table PRWInitSource {
+  /// Wire kind identifier for BYTES.
+  KIND:prwSourceKind;
+  /// Optional SDS file_identifier for BYTES (`$OMM`, `$OCM`, `$OEM`, `$PPE`).
+  FILE_IDENTIFIER:string;
+  /// Encoded source record as a FlatBuffer (consumed per KIND).
+  BYTES:[uint8];
+  /// Convenience inline form when KIND == KEPLERIAN.
+  KEPLERIAN:PRWKeplerianElements;
+  /// Convenience inline form when KIND == TLE.
+  TLE:PRWTleLines;
+}
+
+/// Batch propagation request — propagate every entity in ENTITY_HANDLES[] to
+/// EPOCH and write the result StateVector stream to OUTPUT_OFFSET in the
+/// shared arena.
+table PRWBatchRequest {
+  /// Target epoch as a Julian date (TIME_SYSTEM is configured on the host).
+  EPOCH:double;
+  /// Entity handles to propagate (empty = all initialized entities).
+  ENTITY_HANDLES:[uint];
+  /// Output buffer offset in the arena where the StateVector stream begins.
+  OUTPUT_OFFSET:uint;
+  /// Maximum entities to process in this call (0 = unbounded).
+  MAX_COUNT:uint;
+  /// Target reference frame for the output state stream. Matches enum
+  /// values in SDS `RFM`. If zero, the propagator chooses its native frame.
+  TARGET_FRAME:string;
+}
+
+/// Batch propagation response header — describes the stream written to
+/// OUTPUT_OFFSET and reports errors. The stream itself is
+/// `STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.
+table PRWBatchResponse {
+  /// Number of state vectors written.
+  COUNT:uint;
+  /// Offset in the arena where the state-vector stream begins.
+  OUTPUT_OFFSET:uint;
+  /// Components per state vector (6 = PV, 9 = PVA). Mirrors OCM.STATE_VECTOR_SIZE.
+  STATE_VECTOR_SIZE:uint8;
+  /// Reference frame for the stream (SDS `RFM`-compatible string tag).
+  REFERENCE_FRAME:string;
+  /// Per-entity status flags (same cardinality as COUNT).
+  FLAGS:[propagatorStateFlags];
+  /// Error code (0 == OK).
+  ERROR_CODE:propagatorErrorCode;
+  /// Optional error message when ERROR_CODE != OK.
+  ERROR_MESSAGE:string;
+}
+
+/// Propagator Runtime Wire — envelope that carries either an init request,
+/// a batch request, or a batch response across a runtime boundary.
+table PRW {
+  INIT:PRWInit;
+  BATCH_REQUEST:PRWBatchRequest;
+  BATCH_RESPONSE:PRWBatchResponse;
+}
+
+root_type PRW;
+file_identifier "$PRW";

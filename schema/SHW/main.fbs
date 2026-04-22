@@ -1,0 +1,107 @@
+// Hash: 61a420de987bce771bfb4a2591be54d9de03184d0571f47e695ce07f3828dff5
+// Version: 0.0.1
+// -----------------------------------END_HEADER
+/// Shader Wire — wire contract for GLSL / WebGL shader plugins that compile
+/// and expose parameterized fragments that a host injects into its own
+/// pipeline. Carries compile request + response, a uniform description
+/// table, and the injection-point enum a host consumes to know where to
+/// splice a shader fragment into its stage graph.
+
+/// Shader stage into which a compiled fragment should be injected.
+enum shaderStage : ubyte {
+  VERTEX,
+  FRAGMENT,
+  COMPUTE,
+  GEOMETRY,
+  TESS_CONTROL,
+  TESS_EVALUATION
+}
+
+/// Logical location inside a host pipeline where a compiled shader
+/// fragment is meant to be spliced. A host maps these onto its own
+/// concrete splice points.
+enum shaderInjectionPoint : ubyte {
+  NONE,
+  VERTEX_PRE_TRANSFORM,
+  VERTEX_POST_TRANSFORM,
+  FRAGMENT_PRE_SHADE,
+  FRAGMENT_POST_SHADE,
+  FRAGMENT_FINAL_COLOR,
+  POSTPROCESS
+}
+
+/// Scalar / vector type of a uniform value.
+enum shaderUniformType : ubyte {
+  FLOAT,
+  VEC2,
+  VEC3,
+  VEC4,
+  INT,
+  IVEC2,
+  IVEC3,
+  IVEC4,
+  UINT,
+  UVEC2,
+  UVEC3,
+  UVEC4,
+  BOOL,
+  BVEC2,
+  BVEC3,
+  BVEC4,
+  MAT2,
+  MAT3,
+  MAT4,
+  SAMPLER_2D,
+  SAMPLER_CUBE,
+  SAMPLER_2D_ARRAY
+}
+
+/// Uniform descriptor — name + type + optional default value.
+table SHWUniform {
+  NAME:string;
+  TYPE:shaderUniformType;
+  /// Optional human-readable description.
+  DESCRIPTION:string;
+  /// Optional default value encoded as bytes in the native type layout.
+  DEFAULT_VALUE:[uint8];
+}
+
+/// Compile request — one shader source (typically a fragment of a
+/// larger stage) plus metadata for the host splice.
+table SHWCompileRequest {
+  /// Logical shader name (used in logs and uniform prefixing).
+  NAME:string;
+  /// Target GLSL stage.
+  STAGE:shaderStage;
+  /// Intended injection point in the host pipeline.
+  INJECTION_POINT:shaderInjectionPoint;
+  /// GLSL source (or preprocessed chunk).
+  SOURCE:string;
+  /// GLSL version string (for example `300 es`).
+  GLSL_VERSION:string;
+  /// Expected uniforms declared by the source.
+  UNIFORMS:[SHWUniform];
+}
+
+/// Compile response — whether the shader compiled, with diagnostics.
+table SHWCompileResponse {
+  NAME:string;
+  /// Whether compilation succeeded.
+  SUCCESS:bool;
+  /// Optional GLSL info log.
+  INFO_LOG:string;
+  /// Optional compiled binary (if the compiler emits one).
+  COMPILED_BINARY:[uint8];
+  /// Echo of the uniforms the compiler actually linked.
+  LINKED_UNIFORMS:[SHWUniform];
+}
+
+/// Shader Wire envelope — carries either a compile request or a compile
+/// response across the runtime boundary.
+table SHW {
+  COMPILE_REQUEST:SHWCompileRequest;
+  COMPILE_RESPONSE:SHWCompileResponse;
+}
+
+root_type SHW;
+file_identifier "$SHW";

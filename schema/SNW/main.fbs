@@ -1,0 +1,80 @@
+// Hash: 39dbb6c295aee3bf1ad6a26e9661336e136ac9ba1cf728e8e802285a361476e2
+// Version: 0.0.1
+// -----------------------------------END_HEADER
+/// Sensor Runtime Wire — arena-addressed batch request / response envelopes
+/// for sensor detection plugins. Complements the already-published `SDR`
+/// (Sensor Detection Report, which carries per-frame configuration +
+/// single-frame + detection-result payload shapes). SNW is the runtime
+/// transport that moves a batch of target states into a sensor and pulls a
+/// batch of detection results back out across a JS ↔ WASM boundary.
+///
+/// Persistent sensor hardware catalog → SDS `SNR`.
+/// Sensor maintenance event log → SDS `SEN`.
+/// Per-plugin wire contract + config + compact single-frame → SDS `SDR`.
+
+enum snwErrorCode : int {
+  OK,
+  UNKNOWN,
+  UNKNOWN_SENSOR,
+  INVALID_EPOCH,
+  OUTPUT_BUFFER_OVERFLOW,
+  NOT_INITIALIZED
+}
+
+/// Batch target detection request.
+///
+/// Sensor position and orientation are passed inline (not via an arena
+/// offset) because they are small and uniform across a batch. The target
+/// stream lives at INPUT_OFFSET as a tightly packed array of `targetState`
+/// structs from SDR; the output detection stream is written to
+/// OUTPUT_OFFSET as a tightly packed array of SDR `detectionResult` structs.
+table SNWBatchRequest {
+  /// Sensor-configuration identifier assigned during sensor registration.
+  SENSOR_ID:uint;
+  /// Sensor position in ECEF (meters).
+  SENSOR_POS_X:double;
+  SENSOR_POS_Y:double;
+  SENSOR_POS_Z:double;
+  /// Sensor orientation as a unit quaternion (W, X, Y, Z).
+  SENSOR_ORIENT_W:double;
+  SENSOR_ORIENT_X:double;
+  SENSOR_ORIENT_Y:double;
+  SENSOR_ORIENT_Z:double;
+  /// Byte offset in the arena where the targetState[] input stream begins.
+  INPUT_OFFSET:uint;
+  /// Required start alignment for INPUT_OFFSET (bytes).
+  INPUT_ALIGNMENT:uint;
+  /// Number of target records at INPUT_OFFSET.
+  TARGET_COUNT:uint;
+  /// Byte offset in the arena where the detectionResult[] output stream
+  /// will be written.
+  OUTPUT_OFFSET:uint;
+  /// Required start alignment for OUTPUT_OFFSET (bytes).
+  OUTPUT_ALIGNMENT:uint;
+  /// Current time as a Julian date.
+  EPOCH:double;
+}
+
+/// Batch target detection response header.
+table SNWBatchResponse {
+  /// Number of detection records written to OUTPUT_OFFSET.
+  COUNT:uint;
+  /// Number of targets whose SNR met the detection threshold.
+  DETECTED_COUNT:uint;
+  /// Byte offset where the detectionResult[] stream starts.
+  OUTPUT_OFFSET:uint;
+  /// Error code (0 == OK).
+  ERROR_CODE:snwErrorCode;
+  /// Optional error message when ERROR_CODE != OK.
+  ERROR_MESSAGE:string;
+}
+
+/// Sensor Runtime Wire envelope — carries either a batch request or a batch
+/// response across the runtime boundary.
+table SNW {
+  BATCH_REQUEST:SNWBatchRequest;
+  BATCH_RESPONSE:SNWBatchResponse;
+}
+
+root_type SNW;
+file_identifier "$SNW";

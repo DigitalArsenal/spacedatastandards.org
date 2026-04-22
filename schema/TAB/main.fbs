@@ -1,0 +1,69 @@
+// Hash: e420ff873ca0f79e60260a2280bba2f00eb0a91cc10c714a01666c3c4a238cf8
+// Version: 0.0.1
+// -----------------------------------END_HEADER
+/// Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
+/// through an arena-backed plugin stream. Carries enough identity for a
+/// receiver to dispatch on schema without inspecting the payload bytes.
+
+/// Logical payload wire format for a stream frame or an accepted port type.
+enum payloadWireFormat : ubyte {
+  /// Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF.
+  FLATBUFFER,
+  /// Body is a raw aligned binary chunk (for example zero-copy structs).
+  ALIGNED_BINARY
+}
+
+/// Buffer mutability contract advertised by a stream port.
+enum bufferMutability : ubyte {
+  /// Buffer is immutable after produce.
+  IMMUTABLE,
+  /// Buffer may be written in place by the owner (single writer).
+  SINGLE_WRITER_MUTABLE,
+  /// Buffer is append-only (rings / logs).
+  APPEND_ONLY
+}
+
+/// Buffer ownership contract advertised by a stream port.
+enum bufferOwnership : ubyte {
+  /// Arena / host owns the backing bytes; receiver must not free.
+  HOST_OWNED,
+  /// Plugin owns the backing bytes; host must not free.
+  PLUGIN_OWNED,
+  /// Ownership transfers with the frame (hand-off semantics).
+  TRANSFERRED
+}
+
+/// Payload-schema identity for a stream frame or an accepted port type.
+table FlatBufferTypeRef {
+  /// Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
+  SCHEMA_NAME:string;
+  /// Optional 4-byte FlatBuffer file identifier.
+  FILE_IDENTIFIER:string;
+  /// Optional semver or schema revision string.
+  SCHEMA_VERSION:string;
+  /// Optional root type name within the schema.
+  ROOT_TYPE:string;
+}
+
+/// Typed Arena Buffer — one descriptor for a payload slot in a shared arena.
+table TAB {
+  /// Byte offset of the payload body within the arena.
+  OFFSET:uint;
+  /// Byte length of the payload body.
+  SIZE:uint;
+  /// Required start alignment of the payload body (in bytes).
+  ALIGNMENT:uint;
+  /// Wire format for the body.
+  WIRE_FORMAT:payloadWireFormat;
+  /// Optional payload schema identity.
+  TYPE_REF:FlatBufferTypeRef;
+  /// Mutability contract for the slot.
+  MUTABILITY:bufferMutability;
+  /// Ownership contract for the slot.
+  OWNERSHIP:bufferOwnership;
+  /// Optional opaque frame identifier for stream bookkeeping.
+  FRAME_ID:ulong;
+}
+
+root_type TAB;
+file_identifier "$TAB";
