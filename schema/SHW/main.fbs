@@ -1,4 +1,4 @@
-// Hash: 61a420de987bce771bfb4a2591be54d9de03184d0571f47e695ce07f3828dff5
+// Hash: 79df1363c6e26d9a44b691c918685abe43ddacc338fe4536b5d2b428c06d8283
 // Version: 0.0.1
 // -----------------------------------END_HEADER
 /// Shader Wire — wire contract for GLSL / WebGL shader plugins that compile
@@ -58,36 +58,36 @@ enum shaderUniformType : ubyte {
 
 /// Uniform descriptor — name + type + optional default value.
 table SHWUniform {
-  NAME:string;
-  TYPE:shaderUniformType;
+  UNIFORM_NAME:string;
+  UNIFORM_TYPE:shaderUniformType;
   /// Optional human-readable description.
-  DESCRIPTION:string;
+  UNIFORM_DESCRIPTION:string;
   /// Optional default value encoded as bytes in the native type layout.
-  DEFAULT_VALUE:[uint8];
+  UNIFORM_DEFAULT_VALUE:[uint8];
 }
 
 /// Compile request — one shader source (typically a fragment of a
 /// larger stage) plus metadata for the host splice.
 table SHWCompileRequest {
   /// Logical shader name (used in logs and uniform prefixing).
-  NAME:string;
+  SHADER_NAME:string;
   /// Target GLSL stage.
-  STAGE:shaderStage;
+  SHADER_STAGE:shaderStage;
   /// Intended injection point in the host pipeline.
-  INJECTION_POINT:shaderInjectionPoint;
+  SHADER_INJECTION_POINT:shaderInjectionPoint;
   /// GLSL source (or preprocessed chunk).
-  SOURCE:string;
+  SHADER_SOURCE:string;
   /// GLSL version string (for example `300 es`).
   GLSL_VERSION:string;
   /// Expected uniforms declared by the source.
-  UNIFORMS:[SHWUniform];
+  SHADER_UNIFORMS:[SHWUniform];
 }
 
 /// Compile response — whether the shader compiled, with diagnostics.
 table SHWCompileResponse {
-  NAME:string;
+  SHADER_NAME:string;
   /// Whether compilation succeeded.
-  SUCCESS:bool;
+  COMPILE_SUCCESS:bool;
   /// Optional GLSL info log.
   INFO_LOG:string;
   /// Optional compiled binary (if the compiler emits one).
