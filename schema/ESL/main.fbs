@@ -1,0 +1,31 @@
+// Hash: 8b14cf57cbc2d7bdb1b9ae0f4ebfc0d0f3db89f4d1e22c0fd99916059e66f6d5
+// Version: 0.0.1
+// -----------------------------------END_HEADER
+/// Entity / Standards Link — join-table row connecting a host-local entity
+/// metadata record to a standards record index row, enabling cascade-safe
+/// mutation and cross-plugin query ownership.
+table ESL {
+  /// Stable local link key for one entity / record association.
+  LINK_KEY:string;
+  /// Stable host-local entity id on the entity side of the association.
+  ENTITY_ID:string;
+  /// Stable local entity metadata record key (for example `ENTITY:<id>`).
+  ENTITY_RECORD_KEY:string;
+  /// FlatSQL row id for the linked entity metadata row when known.
+  ENTITY_ROWID:double;
+  /// Stable local standards record key on the record side of the association.
+  RECORD_KEY:string;
+  /// SDS schema family for the linked record (`OMM`, `CAT`, `OEM`, `CDM`, etc.).
+  SCHEMA_NAME:string;
+  /// FlatSQL row id for the linked standards record row when known.
+  RECORD_ROWID:double;
+  /// Whether entity deletion should cascade to the linked standards record.
+  CASCADE_DELETE:bool;
+  /// Milliseconds since epoch when the association was last refreshed.
+  UPDATED_AT_MS:double;
+  /// Reserved for forward-compatible growth.
+  RESERVED:[uint8];
+}
+
+root_type ESL;
+file_identifier "$ESL";

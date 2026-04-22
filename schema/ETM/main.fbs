@@ -1,0 +1,78 @@
+// Hash: 86e8508b45d0d87d397824cd537e4b1c4a0943eca3e00afe4009546598108142
+// Version: 0.0.1
+// -----------------------------------END_HEADER
+/// Entity category for shared entity metadata index rows.
+enum entityKind : byte {
+  ENTITY,
+  SPACE,
+  GROUND,
+  AIRCRAFT,
+  MISSILE,
+  SHIP,
+  VEHICLE,
+  SENSOR,
+  OTHER = 127
+}
+
+/// Entity Metadata — generic queryable metadata for a host-local entity.
+/// Participates in shared FlatSQL/WASM runtimes where multiple plugins
+/// cross-query the same entity collection.
+table ETM {
+  /// Stable host-local entity identifier.
+  ENTITY_ID:string;
+  /// Human-readable entity name used for shared query/search surfaces.
+  NAME:string;
+  /// Broad entity category.
+  KIND:entityKind;
+  /// More specific runtime subtype or class name.
+  SUBTYPE:string;
+  /// Optional parent entity id for hierarchy / linkage queries.
+  PARENT_ENTITY_ID:string;
+  /// Collection-scoped WASM handle used for batch visibility application.
+  WASM_HANDLE:uint;
+  /// Optional NORAD catalog id for standards-backed entities.
+  NORAD_CAT_ID:uint;
+  /// Primary object name surfaced by attached standards metadata.
+  OBJECT_NAME:string;
+  /// Primary international / object designator surfaced by attached standards metadata.
+  OBJECT_ID:string;
+  /// Secondary CAT object name when different from the primary object name.
+  CAT_OBJECT_NAME:string;
+  /// Secondary CAT object id when different from the primary object id.
+  CAT_OBJECT_ID:string;
+  /// Ground / facility subtype metadata for non-space entity search.
+  FACILITY_TYPE:string;
+  /// Pre-normalized phrase-search text for collection-wide shared queries.
+  SEARCH_TEXT:string;
+  /// CAT owner country code.
+  OWNER:string;
+  /// CAT operational status code.
+  STATUS_CODE:string;
+  /// CAT launch date.
+  LAUNCH_DATE:string;
+  /// Launch year derived from launch date.
+  LAUNCH_YEAR:string;
+  /// Derived orbit regime classification.
+  ORBIT_REGIME:string;
+  /// Orbital period in minutes.
+  PERIOD:double;
+  /// Inclination in degrees.
+  INCLINATION:double;
+  /// Apogee altitude in kilometers.
+  APOGEE:double;
+  /// Perigee altitude in kilometers.
+  PERIGEE:double;
+  /// Mean motion in revolutions per day.
+  MEAN_MOTION:double;
+  /// Orbital eccentricity.
+  ECCENTRICITY:double;
+  /// B* drag term from OMM.
+  BSTAR:double;
+  /// Whether GP / OMM state is present for the entity.
+  HAS_GP:bool;
+  /// Reserved for forward-compatible growth.
+  RESERVED:[uint8];
+}
+
+root_type ETM;
+file_identifier "$ETM";

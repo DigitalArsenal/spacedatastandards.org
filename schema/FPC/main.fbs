@@ -1,0 +1,104 @@
+// Hash: ed9122b34cd7dd561b012919a09a249413c0e244df8640eb7f5dae86cf968a84
+// Version: 0.0.1
+// -----------------------------------END_HEADER
+/// Algorithm selection hint for single-source shortest-path solves.
+enum shortestPathAlgorithm : ubyte {
+  /// Let the runtime choose.
+  AUTO,
+  /// Frontier-shrinking solver.
+  FRONTIER,
+  /// Dijkstra's algorithm.
+  DIJKSTRA
+}
+
+/// Weighted directed edge (16 bytes, 8-byte aligned for zero-copy ingestion).
+struct weightedEdge {
+  SRC:uint;
+  DST:uint;
+  WEIGHT:double;
+}
+
+/// Graph creation / reset request.
+table FPCGraphDefinition {
+  /// Number of vertices in the graph.
+  VERTEX_COUNT:uint;
+}
+
+/// Bulk weighted-edge ingestion request.
+table FPCWeightedEdgeList {
+  /// Optional vertex capacity for implicit graph creation.
+  VERTEX_COUNT:uint;
+  /// Weighted directed edge records.
+  EDGES:[weightedEdge];
+  /// Build a CSR representation after ingest.
+  BUILD_GRAPH:bool;
+}
+
+/// Pre-built CSR graph ingestion request.
+table FPCCSRGraph {
+  /// Number of vertices in the graph.
+  VERTEX_COUNT:uint;
+  /// CSR row offsets (V + 1 entries).
+  OFFSETS:[uint];
+  /// CSR destination indices.
+  DESTINATIONS:[uint];
+  /// CSR edge weights.
+  WEIGHTS:[double];
+}
+
+/// Single-source shortest-path request.
+table FPCShortestPathRequest {
+  /// Source vertex index.
+  SOURCE:uint;
+  /// Algorithm selection hint.
+  ALGORITHM:shortestPathAlgorithm;
+}
+
+/// Single-source shortest-path result.
+table FPCShortestPathResult {
+  /// Source vertex index.
+  SOURCE:uint;
+  /// Number of vertices in the solved graph.
+  VERTEX_COUNT:uint;
+  /// Number of reachable vertices (finite distances).
+  REACHABLE_COUNT:uint;
+  /// Distance array (length == VERTEX_COUNT).
+  DISTANCES:[double];
+  /// Predecessor array (length == VERTEX_COUNT; UINT32_MAX means none / source).
+  PREDECESSORS:[uint];
+}
+
+/// Path reconstruction request.
+table FPCPathRequest {
+  /// Target vertex index.
+  TARGET:uint;
+}
+
+/// Path reconstruction result.
+table FPCPathResult {
+  /// Source vertex index from the latest SSSP solve.
+  SOURCE:uint;
+  /// Requested target vertex index.
+  TARGET:uint;
+  /// Whether a path exists from SOURCE to TARGET.
+  REACHABLE:bool;
+  /// Total distance from SOURCE to TARGET (Infinity if unreachable).
+  DISTANCE:double;
+  /// Vertex sequence from SOURCE to TARGET.
+  PATH:[uint];
+}
+
+/// Fastest Path Compute — envelope message for weighted graph ingestion and
+/// single-source shortest path execution.
+table FPC {
+  GRAPH_DEFINITION:FPCGraphDefinition;
+  EDGES:FPCWeightedEdgeList;
+  CSR:FPCCSRGraph;
+  SHORTEST_PATH_REQUEST:FPCShortestPathRequest;
+  SHORTEST_PATH_RESULT:FPCShortestPathResult;
+  PATH_REQUEST:FPCPathRequest;
+  PATH_RESULT:FPCPathResult;
+}
+
+root_type FPC;
+file_identifier "$FPC";

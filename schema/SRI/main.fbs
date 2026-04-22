@@ -1,0 +1,25 @@
+// Hash: d1ced00476c94d9858dcf17fd740ae35541913e4cd13148032fd7d8e8a50231c
+// Version: 0.0.1
+// -----------------------------------END_HEADER
+/// Standards Record Index — local wrapper for a standards payload's identity
+/// and mutation metadata, participating in shared FlatSQL query and cascade
+/// paths across plugins that read the same record universe.
+table SRI {
+  /// Stable host-local record key for one standards payload.
+  RECORD_KEY:string;
+  /// SDS schema family for the record (`OMM`, `CAT`, `OEM`, `CDM`, etc.).
+  SCHEMA_NAME:string;
+  /// Attachment role when one standards message produces multiple entity records.
+  ROLE:string;
+  /// Ingest path that registered this record (`stream-*`, `manual-api`, etc.).
+  ATTACHED_VIA:string;
+  /// High-level payload representation retained by the mutation registry.
+  PAYLOAD_KIND:string;
+  /// Milliseconds since epoch when the local mutation record was last refreshed.
+  UPDATED_AT_MS:double;
+  /// Reserved for forward-compatible growth.
+  RESERVED:[uint8];
+}
+
+root_type SRI;
+file_identifier "$SRI";

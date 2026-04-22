@@ -1,0 +1,208 @@
+// Hash: a01502f5249472d83d3ae0c9ce257f8fd12601e21e6e29c059d20f6f589329e4
+// Version: 0.0.1
+// -----------------------------------END_HEADER
+/// Sensor Detection Report — runtime I/O contract for sensor detection
+/// plugins. Distinct from SNR (sensor hardware catalog) and SEN (sensor
+/// maintenance log); SDR carries per-frame target states, configuration,
+/// and detection results.
+
+/// Sensor category for a report.
+enum sensorCategory : ubyte {
+  RADAR,
+  ELECTRO_OPTICAL,
+  INFRARED,
+  ACOUSTIC,
+  RF,
+  LIDAR,
+  CUSTOM = 255
+}
+
+/// Sensor operational-state bit flags.
+enum sensorOperationalFlags : uint (bit_flags) {
+  ACTIVE,
+  TRACK_MODE,
+  SEARCH_MODE,
+  JAMMED,
+  SLEWING,
+  CALIBRATING
+}
+
+/// Detection result bit flags.
+enum detectionResultFlags : uint (bit_flags) {
+  VALID,
+  TRACKED,
+  MARGINAL,
+  IN_CLUTTER,
+  JAMMED,
+  SIDELOBE,
+  MERGED
+}
+
+/// Target state input (40 bytes, 8-byte aligned).
+struct targetState {
+  /// Target position X in ECEF (meters).
+  POS_X:double;
+  /// Target position Y in ECEF (meters).
+  POS_Y:double;
+  /// Target position Z in ECEF (meters).
+  POS_Z:double;
+  /// Radar cross section (m^2).
+  RCS:double;
+  /// Unique target identifier.
+  TARGET_ID:uint;
+  /// Target flags (reserved).
+  FLAGS:uint;
+}
+
+/// Detection result output (48 bytes, 8-byte aligned).
+struct detectionResult {
+  /// Index of target in input array.
+  TARGET_INDEX:uint;
+  /// Detection flag (1 == detected, 0 == not detected).
+  DETECTED:uint;
+  /// Range to target (meters).
+  RANGE:double;
+  /// Signal-to-noise ratio (dB).
+  SNR:double;
+  /// Doppler shift (Hz).
+  DOPPLER:double;
+  /// Probability of detection (0.0 – 1.0).
+  PROBABILITY:double;
+  /// Detection flags (detectionResultFlags bitfield).
+  FLAGS:uint;
+  /// Reserved for future use.
+  RESERVED:uint;
+}
+
+/// Radar sensor configuration.
+table SDRRadarConfig {
+  /// Operating frequency (Hz).
+  FREQUENCY:double;
+  /// Transmit power (W).
+  POWER:double;
+  /// Antenna gain (dB).
+  GAIN:double;
+  /// Receiver bandwidth (Hz).
+  BANDWIDTH:double;
+  /// Noise figure (dB).
+  NOISE_FIGURE:double;
+  /// System losses (dB).
+  SYSTEM_LOSS:double;
+  /// Pulse repetition frequency (Hz).
+  PRF:double;
+  /// Pulse width (seconds).
+  PULSE_WIDTH:double;
+  /// Detection threshold SNR (dB).
+  DETECTION_THRESHOLD:double;
+  /// Minimum detection range (meters).
+  MIN_RANGE:double;
+  /// Maximum detection range (meters).
+  MAX_RANGE:double;
+}
+
+/// Generic sensor configuration.
+table SDRSensorConfig {
+  CATEGORY:sensorCategory;
+  /// Sensor position in ECEF (meters) — X.
+  POS_X:double;
+  /// Sensor position in ECEF (meters) — Y.
+  POS_Y:double;
+  /// Sensor position in ECEF (meters) — Z.
+  POS_Z:double;
+  /// Sensor orientation as quaternion (W, X, Y, Z).
+  ORIENT_W:double;
+  ORIENT_X:double;
+  ORIENT_Y:double;
+  ORIENT_Z:double;
+  /// Radar-specific config when CATEGORY == RADAR.
+  RADAR:SDRRadarConfig;
+  /// Operational flags.
+  FLAGS:sensorOperationalFlags;
+}
+
+/// Batch detection request (arena-addressed, zero-copy).
+table SDRBatchRequest {
+  /// Sensor position in ECEF (meters) — X.
+  SENSOR_POS_X:double;
+  SENSOR_POS_Y:double;
+  SENSOR_POS_Z:double;
+  /// Sensor orientation as quaternion (W, X, Y, Z).
+  SENSOR_ORIENT_W:double;
+  SENSOR_ORIENT_X:double;
+  SENSOR_ORIENT_Y:double;
+  SENSOR_ORIENT_Z:double;
+  /// Input buffer offset where targetState[] starts.
+  INPUT_OFFSET:uint;
+  /// Number of targets in the input buffer.
+  TARGET_COUNT:uint;
+  /// Output buffer offset where detectionResult[] is written.
+  OUTPUT_OFFSET:uint;
+  /// Current time as a Julian date.
+  EPOCH:double;
+}
+
+/// Batch detection response header.
+table SDRBatchResponse {
+  /// Number of detection results written.
+  COUNT:uint;
+  /// Number of targets detected (SNR >= threshold).
+  DETECTED_COUNT:uint;
+  /// Offset in arena where detectionResult[] starts.
+  OUTPUT_OFFSET:uint;
+  /// Error code (0 == success).
+  ERROR_CODE:int;
+  /// Error message when ERROR_CODE != 0.
+  ERROR_MESSAGE:string;
+}
+
+/// Compact single-frame detection input used by pluggable sensor models that
+/// do not drive arena-backed batches.
+table SDRSingleInput {
+  /// Target position in ECEF (meters) — X.
+  TARGET_POS_X:double;
+  TARGET_POS_Y:double;
+  TARGET_POS_Z:double;
+  /// Sensor position in ECEF (meters) — X.
+  SENSOR_POS_X:double;
+  SENSOR_POS_Y:double;
+  SENSOR_POS_Z:double;
+  /// Radar cross section (m^2).
+  RCS:double;
+  /// Sensor operating frequency (Hz).
+  FREQUENCY:double;
+  /// Transmit power (W).
+  TX_POWER:double;
+  /// Unix timestamp (milliseconds since epoch).
+  TIMESTAMP_MS:ulong;
+}
+
+/// Compact single-frame detection result.
+table SDRSingleResult {
+  DETECTED:bool;
+  /// Range to target (meters).
+  RANGE:double;
+  /// Signal-to-noise ratio (dB).
+  SNR:double;
+  /// Azimuth angle to target (radians).
+  AZIMUTH:double;
+  /// Elevation angle to target (radians).
+  ELEVATION:double;
+  /// Range rate / Doppler velocity (m/s).
+  RANGE_RATE:double;
+  /// Detection timestamp (milliseconds since epoch).
+  TIMESTAMP_MS:ulong;
+  /// Track identifier (0 if not tracking).
+  TRACK_ID:uint;
+}
+
+/// Sensor Detection Report envelope message.
+table SDR {
+  CONFIG:SDRSensorConfig;
+  BATCH_REQUEST:SDRBatchRequest;
+  BATCH_RESPONSE:SDRBatchResponse;
+  SINGLE_INPUT:SDRSingleInput;
+  SINGLE_RESULT:SDRSingleResult;
+}
+
+root_type SDR;
+file_identifier "$SDR";

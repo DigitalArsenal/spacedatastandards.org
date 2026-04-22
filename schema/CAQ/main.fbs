@@ -1,0 +1,58 @@
+// Hash: 30ed90e9d611b531d18af5991c539ae12f4ad4426658bc38b3ad89270074baa5
+// Version: 0.0.1
+// -----------------------------------END_HEADER
+include "../ETM/main.fbs";
+
+/// Catalog query discriminator. Callers and host plugins use this enum to
+/// select a query shape for in-memory catalog queries answered by a host
+/// runtime (for example the shared FlatSQL entity collection).
+enum catalogQueryKind : ubyte {
+  /// Return matched entity metadata rows.
+  ROWS,
+  /// Return only the matched entity indices.
+  ENTITY_INDICES,
+  /// Return a packed visibility mask (one byte per entity).
+  VISIBILITY_MASK,
+  /// Return a single catalog row by entity index.
+  CATALOG_ROW
+}
+
+/// Catalog query request payload.
+table CAQRequest {
+  KIND:catalogQueryKind;
+  /// Host-specific query string (for example a FlatSQL or DSL expression).
+  QUERY:string;
+  /// Entity index for single-row queries.
+  ENTITY_INDEX:uint;
+  /// Upper bound on the number of rows / indices to return (0 = unbounded).
+  MAX_COUNT:uint;
+  /// Expected number of entities in the catalog at the time the request was
+  /// issued, used to size visibility masks.
+  ENTITY_COUNT:uint;
+}
+
+/// Catalog query result payload.
+table CAQResult {
+  KIND:catalogQueryKind;
+  /// Populated when KIND == ROWS.
+  ROWS:[ETM];
+  /// Populated when KIND == ENTITY_INDICES.
+  ENTITY_INDICES:[uint];
+  /// Populated when KIND == VISIBILITY_MASK (one byte per entity).
+  MASK:[uint8];
+  /// Number of visible (masked-in) entities in MASK.
+  VISIBLE_COUNT:uint;
+  /// Populated when KIND == CATALOG_ROW.
+  ENTITY_INDEX:uint;
+  /// Single matched row when KIND == CATALOG_ROW.
+  ROW:ETM;
+}
+
+/// Catalog query envelope — carries either a request or a result payload.
+table CAQ {
+  REQUEST:CAQRequest;
+  RESULT:CAQResult;
+}
+
+root_type CAQ;
+file_identifier "$CAQ";

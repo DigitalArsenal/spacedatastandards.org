@@ -1,0 +1,181 @@
+// Hash: 3637281f467be2c505b46de85333ca6583e6a3787c9db17cb38e88bf6d07bce9
+// Version: 0.0.1
+// -----------------------------------END_HEADER
+/// Signed Distance Field — detection and containment queries for sensor /
+/// geometric volumes.
+///
+/// Convention for signed-distance values:
+///   - Negative values are inside the volume.
+///   - Zero is on the boundary.
+///   - Positive values are outside the volume.
+
+/// Primitive shape family for an SDF volume.
+enum sdfPrimitive : ubyte {
+  /// Cone with apex at origin, +Z boresight.
+  CONE,
+  /// Rectangular pyramid (four planes + range cap).
+  RECTANGULAR,
+  /// Sphere centered at origin.
+  SPHERE,
+  /// Cylinder along Z axis.
+  CYLINDER,
+  /// Plugin-defined custom SDF.
+  CUSTOM = 255
+}
+
+/// Constructive solid-geometry composition operation for SDFs.
+enum sdfOperation : ubyte {
+  /// No composition (primitive only).
+  NONE,
+  /// Union (min of SDFs) — inside either.
+  UNION,
+  /// Intersection (max of SDFs) — inside both.
+  INTERSECTION,
+  /// Subtraction (A - B) — inside A but not B.
+  SUBTRACTION,
+  /// Smooth union with a blend radius.
+  SMOOTH_UNION
+}
+
+/// Result of a single SDF point-in-volume query (24 bytes, 8-byte aligned).
+struct sdfResult {
+  /// Entity identifier.
+  ENTITY_ID:uint;
+  /// Detection flag (1 == inside, 0 == outside).
+  DETECTED:uint;
+  /// Signed distance (negative inside, zero on boundary, positive outside).
+  SIGNED_DISTANCE:double;
+  /// Distance to the closest boundary point (always positive).
+  CLOSEST_DISTANCE:double;
+}
+
+/// Result of a time-range SDF query (40 bytes, 8-byte aligned).
+struct sdfTimeRangeResult {
+  /// Entity identifier.
+  ENTITY_ID:uint;
+  /// Flags (reserved).
+  FLAGS:uint;
+  /// Julian date when the entity entered the volume (0 == never entered).
+  ENTRY_TIME:double;
+  /// Julian date when the entity exited the volume (0 == still inside).
+  EXIT_TIME:double;
+  /// Most negative signed distance (closest approach to center).
+  MIN_DISTANCE:double;
+  /// Total time inside volume (seconds).
+  DWELL_TIME:double;
+}
+
+/// Conical SDF parameters.
+table SDFConical {
+  HALF_ANGLE:double;
+  /// Inner half-angle for hollow cones (0 == solid).
+  INNER_HALF_ANGLE:double;
+  /// Minimum range (inner cap distance).
+  MIN_RANGE:double;
+  /// Maximum range (outer cap distance).
+  MAX_RANGE:double;
+  /// Use a flat cap (true) or a spherical cap (false).
+  FLAT_CAP:bool;
+}
+
+/// Rectangular (pyramidal) SDF parameters.
+table SDFRectangular {
+  X_HALF_ANGLE:double;
+  Y_HALF_ANGLE:double;
+  MIN_RANGE:double;
+  MAX_RANGE:double;
+}
+
+/// Spherical SDF parameters.
+table SDFSpherical {
+  RADIUS:double;
+  /// Inner radius for hollow sphere (0 == solid).
+  INNER_RADIUS:double;
+}
+
+/// Cylindrical SDF parameters.
+table SDFCylindrical {
+  RADIUS:double;
+  HALF_HEIGHT:double;
+}
+
+/// Custom SDF defined by a set of unit boundary-direction vectors.
+table SDFCustom {
+  /// Unit vectors defining the boundary packed as [x0, y0, z0, x1, y1, z1, ...].
+  DIRECTIONS:[double];
+  MAX_RANGE:double;
+}
+
+/// Constructive composition of two SDFs.
+table SDFComposition {
+  OPERATION:sdfOperation;
+  /// First operand (index into SDF.COMPONENTS[]).
+  OPERAND_A:uint;
+  /// Second operand (index into SDF.COMPONENTS[]).
+  OPERAND_B:uint;
+  /// Blend radius for smooth operations.
+  BLEND_RADIUS:double;
+}
+
+/// Single component in a composed SDF.
+table SDFComponent {
+  PRIMITIVE:sdfPrimitive;
+  CONE:SDFConical;
+  RECTANGULAR:SDFRectangular;
+  SPHERICAL:SDFSpherical;
+  CYLINDRICAL:SDFCylindrical;
+  CUSTOM:SDFCustom;
+}
+
+/// Complete SDF configuration.
+table SDFConfig {
+  /// Root primitive type (useful when COMPONENTS[] is empty).
+  PRIMITIVE:sdfPrimitive;
+  /// One or more components that may be combined via COMPOSITIONS[].
+  COMPONENTS:[SDFComponent];
+  /// Composition tree over COMPONENTS[].
+  COMPOSITIONS:[SDFComposition];
+  /// World-to-local transform (4x4 column-major, 16 doubles).
+  INVERSE_TRANSFORM:[double];
+}
+
+/// Batch SDF evaluation request (arena-addressed, zero-copy).
+table SDFBatchRequest {
+  /// Input buffer offset (arena bytes) where the Vec3[] of world points begins.
+  INPUT_OFFSET:uint;
+  /// Number of points to evaluate.
+  POINT_COUNT:uint;
+  /// Entity-ids buffer offset corresponding to each point (optional).
+  ENTITY_IDS_OFFSET:uint;
+  /// Output buffer offset where sdfResult[] is written.
+  OUTPUT_OFFSET:uint;
+  /// Inverse-transform buffer offset (4x4 matrix, 128 bytes).
+  INVERSE_TRANSFORM_OFFSET:uint;
+}
+
+/// Batch SDF evaluation response header.
+table SDFBatchResponse {
+  /// Number of results written.
+  COUNT:uint;
+  /// Number of points inside the volume.
+  INSIDE_COUNT:uint;
+  /// Output offset where sdfResult[] starts.
+  OUTPUT_OFFSET:uint;
+  /// Error code (0 == success).
+  ERROR_CODE:int;
+  /// Optional error message when ERROR_CODE != 0.
+  ERROR_MESSAGE:string;
+}
+
+/// Signed Distance Field envelope message — carries a configuration, a batch
+/// request, a batch response, or single / time-range result records.
+table SDF {
+  CONFIG:SDFConfig;
+  BATCH_REQUEST:SDFBatchRequest;
+  BATCH_RESPONSE:SDFBatchResponse;
+  RESULTS:[sdfResult];
+  TIME_RANGE_RESULTS:[sdfTimeRangeResult];
+}
+
+root_type SDF;
+file_identifier "$SDF";
