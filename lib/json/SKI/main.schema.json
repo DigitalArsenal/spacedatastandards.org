@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "imageType" : {
+    "imageCategory" : {
       "type" : "string",
       "enum": ["VISIBLE", "INFRARED", "MULTISPECTRAL", "HYPERSPECTRAL", "UV", "BROADBAND"]
     },
@@ -66,7 +66,7 @@
                 "description" : "Sensor quaternion rate"
               },
         "IMAGE_TYPE" : {
-                "$ref" : "#/definitions/imageType",
+                "$ref" : "#/definitions/imageCategory",
                 "description" : "Image type"
               },
         "EXP_START_TIME" : {

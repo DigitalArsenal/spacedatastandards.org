@@ -437,7 +437,7 @@
         "CustomFrameWrapper"
       ]
     },
-    "timeSystem": {
+    "timingStandard": {
       "type": "string",
       "enum": [
         "GMST",
@@ -1463,7 +1463,7 @@
         }
       }
     },
-    "objectType": {
+    "spaceObjectClass": {
       "type": "string",
       "enum": [
         "PAYLOAD",
@@ -1492,7 +1492,7 @@
         }
       }
     },
-    "opsStatusCode": {
+    "operationalState": {
       "type": "string",
       "enum": [
         "OPERATIONAL",
@@ -1541,7 +1541,7 @@
         }
       }
     },
-    "dataStatusCode": {
+    "dataAvailability": {
       "type": "string",
       "enum": [
         "NO_CURRENT_ELEMENTS",
@@ -1570,7 +1570,7 @@
         }
       }
     },
-    "orbitType": {
+    "orbitRegime": {
       "type": "string",
       "enum": [
         "ORBIT",
@@ -1604,7 +1604,7 @@
         }
       }
     },
-    "massType": {
+    "massCategory": {
       "type": "string",
       "enum": [
         "DRY",
@@ -1679,7 +1679,7 @@
         }
       }
     },
-    "sizeShapeType": {
+    "sizeShapeProfile": {
       "type": "string",
       "enum": [
         "SMA",
@@ -2104,7 +2104,7 @@
       "description": "Time System",
       "properties": {
         "TIME_SYSTEM": {
-          "$ref": "#/definitions/timeSystem",
+          "$ref": "#/definitions/timingStandard",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -3191,7 +3191,7 @@
           "x-flatbuffer-type": "uint"
         },
         "OBJECT_TYPE": {
-          "$ref": "#/definitions/objectType",
+          "$ref": "#/definitions/spaceObjectClass",
           "description": "Object type (Payload, Rocket body, Debris, Unknown)",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -3215,7 +3215,7 @@
           }
         },
         "OPS_STATUS_CODE": {
-          "$ref": "#/definitions/opsStatusCode",
+          "$ref": "#/definitions/operationalState",
           "description": "Operational Status Code",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -3807,7 +3807,7 @@
           "x-flatbuffer-type": "double"
         },
         "DATA_STATUS_CODE": {
-          "$ref": "#/definitions/dataStatusCode",
+          "$ref": "#/definitions/dataAvailability",
           "description": "Data status code; blank otherwise",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -3836,7 +3836,7 @@
           "x-flatbuffer-type": "string"
         },
         "ORBIT_TYPE": {
-          "$ref": "#/definitions/orbitType",
+          "$ref": "#/definitions/orbitRegime",
           "description": "Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -3884,7 +3884,7 @@
           "x-flatbuffer-type": "double"
         },
         "MASS_TYPE": {
-          "$ref": "#/definitions/massType",
+          "$ref": "#/definitions/massCategory",
           "description": "Mass type (Dry, Wet)",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -4072,7 +4072,7 @@
           }
         },
         "SIZE_SHAPE_TYPE": {
-          "$ref": "#/definitions/sizeShapeType",
+          "$ref": "#/definitions/sizeShapeProfile",
           "description": "Parameterization of the first orbital element (SMA vs R_PERIAPSIS).",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -4211,7 +4211,7 @@
           "x-flatbuffer-type": "RFM"
         },
         "TIME_SYSTEM": {
-          "$ref": "#/definitions/timeSystem",
+          "$ref": "#/definitions/timingStandard",
           "description": "Time system used for all epochs in this message.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",

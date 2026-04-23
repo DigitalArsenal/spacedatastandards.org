@@ -134,7 +134,7 @@ public struct OBT : IFlatbufferObject
 #endif
   public byte[] GetCHARLIE_LINEArray() { return __p.__vector_as_array<byte>(44); }
   /// Area of uncertainty type
-  public aouType AOU_TYPE { get { int o = __p.__offset(46); return o != 0 ? (aouType)__p.bb.GetSbyte(o + __p.bb_pos) : aouType.CIRCULAR; } }
+  public aouCategory AOU_TYPE { get { int o = __p.__offset(46); return o != 0 ? (aouCategory)__p.bb.GetSbyte(o + __p.bb_pos) : aouCategory.CIRCULAR; } }
   /// Area of uncertainty data
   public double AOU_DATA(int j) { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int AOU_DATALength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
@@ -226,7 +226,7 @@ public struct OBT : IFlatbufferObject
       StringOffset COUNTRY_CODEOffset = default(StringOffset),
       double DECAY = 0.0,
       StringOffset CHARLIE_LINEOffset = default(StringOffset),
-      aouType AOU_TYPE = aouType.CIRCULAR,
+      aouCategory AOU_TYPE = aouCategory.CIRCULAR,
       VectorOffset AOU_DATAOffset = default(VectorOffset),
       double CNTNMNT = 0.0,
       StringOffset XREFOffset = default(StringOffset),
@@ -305,7 +305,7 @@ public struct OBT : IFlatbufferObject
   public static void AddCOUNTRY_CODE(FlatBufferBuilder builder, StringOffset COUNTRY_CODEOffset) { builder.AddOffset(18, COUNTRY_CODEOffset.Value, 0); }
   public static void AddDECAY(FlatBufferBuilder builder, double DECAY) { builder.AddDouble(19, DECAY, 0.0); }
   public static void AddCHARLIE_LINE(FlatBufferBuilder builder, StringOffset CHARLIE_LINEOffset) { builder.AddOffset(20, CHARLIE_LINEOffset.Value, 0); }
-  public static void AddAOU_TYPE(FlatBufferBuilder builder, aouType AOU_TYPE) { builder.AddSbyte(21, (sbyte)AOU_TYPE, 0); }
+  public static void AddAOU_TYPE(FlatBufferBuilder builder, aouCategory AOU_TYPE) { builder.AddSbyte(21, (sbyte)AOU_TYPE, 0); }
   public static void AddAOU_DATA(FlatBufferBuilder builder, VectorOffset AOU_DATAOffset) { builder.AddOffset(22, AOU_DATAOffset.Value, 0); }
   public static VectorOffset CreateAOU_DATAVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateAOU_DATAVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
@@ -478,7 +478,7 @@ public class OBTT
   public string COUNTRY_CODE { get; set; }
   public double DECAY { get; set; }
   public string CHARLIE_LINE { get; set; }
-  public aouType AOU_TYPE { get; set; }
+  public aouCategory AOU_TYPE { get; set; }
   public List<double> AOU_DATA { get; set; }
   public double CNTNMNT { get; set; }
   public string XREF { get; set; }
@@ -517,7 +517,7 @@ public class OBTT
     this.COUNTRY_CODE = null;
     this.DECAY = 0.0;
     this.CHARLIE_LINE = null;
-    this.AOU_TYPE = aouType.CIRCULAR;
+    this.AOU_TYPE = aouCategory.CIRCULAR;
     this.AOU_DATA = null;
     this.CNTNMNT = 0.0;
     this.XREF = null;
@@ -571,7 +571,7 @@ static public class OBTVerify
       && verifier.VerifyString(tablePos, 40 /*COUNTRY_CODE*/, false)
       && verifier.VerifyField(tablePos, 42 /*DECAY*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 44 /*CHARLIE_LINE*/, false)
-      && verifier.VerifyField(tablePos, 46 /*AOU_TYPE*/, 1 /*aouType*/, 1, false)
+      && verifier.VerifyField(tablePos, 46 /*AOU_TYPE*/, 1 /*aouCategory*/, 1, false)
       && verifier.VerifyVectorOfData(tablePos, 48 /*AOU_DATA*/, 8 /*double*/, false)
       && verifier.VerifyField(tablePos, 50 /*CNTNMNT*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 52 /*XREF*/, false)

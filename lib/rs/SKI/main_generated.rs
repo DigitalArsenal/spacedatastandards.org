@@ -4,25 +4,25 @@ extern crate alloc;
 
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_IMAGE_TYPE: i8 = 0;
+pub const ENUM_MIN_IMAGE_CATEGORY: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_IMAGE_TYPE: i8 = 5;
+pub const ENUM_MAX_IMAGE_CATEGORY: i8 = 5;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_IMAGE_TYPE: [imageType; 6] = [
-  imageType::VISIBLE,
-  imageType::INFRARED,
-  imageType::MULTISPECTRAL,
-  imageType::HYPERSPECTRAL,
-  imageType::UV,
-  imageType::BROADBAND,
+pub const ENUM_VALUES_IMAGE_CATEGORY: [imageCategory; 6] = [
+  imageCategory::VISIBLE,
+  imageCategory::INFRARED,
+  imageCategory::MULTISPECTRAL,
+  imageCategory::HYPERSPECTRAL,
+  imageCategory::UV,
+  imageCategory::BROADBAND,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct imageType(pub i8);
+pub struct imageCategory(pub i8);
 #[allow(non_upper_case_globals)]
-impl imageType {
+impl imageCategory {
   pub const VISIBLE: Self = Self(0);
   pub const INFRARED: Self = Self(1);
   pub const MULTISPECTRAL: Self = Self(2);
@@ -53,7 +53,7 @@ impl imageType {
     }
   }
 }
-impl ::core::fmt::Debug for imageType {
+impl ::core::fmt::Debug for imageCategory {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -62,7 +62,7 @@ impl ::core::fmt::Debug for imageType {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for imageType {
+impl<'a> ::flatbuffers::Follow<'a> for imageCategory {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -71,15 +71,15 @@ impl<'a> ::flatbuffers::Follow<'a> for imageType {
   }
 }
 
-impl ::flatbuffers::Push for imageType {
-    type Output = imageType;
+impl ::flatbuffers::Push for imageCategory {
+    type Output = imageCategory;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for imageType {
+impl ::flatbuffers::EndianScalar for imageCategory {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -93,7 +93,7 @@ impl ::flatbuffers::EndianScalar for imageType {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for imageType {
+impl<'a> ::flatbuffers::Verifiable for imageCategory {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -102,7 +102,7 @@ impl<'a> ::flatbuffers::Verifiable for imageType {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for imageType {}
+impl ::flatbuffers::SimpleToVerifyInSlice for imageCategory {}
 pub enum SKIOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -455,11 +455,11 @@ impl<'a> SKI<'a> {
   }
   /// Image type
   #[inline]
-  pub fn IMAGE_TYPE(&self) -> imageType {
+  pub fn IMAGE_TYPE(&self) -> imageCategory {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<imageType>(SKI::VT_IMAGE_TYPE, Some(imageType::VISIBLE)).unwrap()}
+    unsafe { self._tab.get::<imageCategory>(SKI::VT_IMAGE_TYPE, Some(imageCategory::VISIBLE)).unwrap()}
   }
   /// Exposure start time (ISO 8601)
   #[inline]
@@ -691,7 +691,7 @@ impl ::flatbuffers::Verifiable for SKI<'_> {
      .visit_field::<f64>("SENZ", Self::VT_SENZ, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SEN_QUAT", Self::VT_SEN_QUAT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SEN_QUAT_DOT", Self::VT_SEN_QUAT_DOT, false)?
-     .visit_field::<imageType>("IMAGE_TYPE", Self::VT_IMAGE_TYPE, false)?
+     .visit_field::<imageCategory>("IMAGE_TYPE", Self::VT_IMAGE_TYPE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EXP_START_TIME", Self::VT_EXP_START_TIME, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EXP_END_TIME", Self::VT_EXP_END_TIME, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("IMAGE_SOURCE_INFO", Self::VT_IMAGE_SOURCE_INFO, false)?
@@ -737,7 +737,7 @@ pub struct SKIArgs<'a> {
     pub SENZ: f64,
     pub SEN_QUAT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub SEN_QUAT_DOT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub IMAGE_TYPE: imageType,
+    pub IMAGE_TYPE: imageCategory,
     pub EXP_START_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub EXP_END_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub IMAGE_SOURCE_INFO: Option<::flatbuffers::WIPOffset<&'a str>>,
@@ -783,7 +783,7 @@ impl<'a> Default for SKIArgs<'a> {
       SENZ: 0.0,
       SEN_QUAT: None,
       SEN_QUAT_DOT: None,
-      IMAGE_TYPE: imageType::VISIBLE,
+      IMAGE_TYPE: imageCategory::VISIBLE,
       EXP_START_TIME: None,
       EXP_END_TIME: None,
       IMAGE_SOURCE_INFO: None,
@@ -876,8 +876,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SKIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SKI::VT_SEN_QUAT_DOT, SEN_QUAT_DOT);
   }
   #[inline]
-  pub fn add_IMAGE_TYPE(&mut self, IMAGE_TYPE: imageType) {
-    self.fbb_.push_slot::<imageType>(SKI::VT_IMAGE_TYPE, IMAGE_TYPE, imageType::VISIBLE);
+  pub fn add_IMAGE_TYPE(&mut self, IMAGE_TYPE: imageCategory) {
+    self.fbb_.push_slot::<imageCategory>(SKI::VT_IMAGE_TYPE, IMAGE_TYPE, imageCategory::VISIBLE);
   }
   #[inline]
   pub fn add_EXP_START_TIME(&mut self, EXP_START_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
@@ -1062,7 +1062,7 @@ pub struct SKIT {
   pub SENZ: f64,
   pub SEN_QUAT: Option<alloc::vec::Vec<f64>>,
   pub SEN_QUAT_DOT: Option<alloc::vec::Vec<f64>>,
-  pub IMAGE_TYPE: imageType,
+  pub IMAGE_TYPE: imageCategory,
   pub EXP_START_TIME: Option<alloc::string::String>,
   pub EXP_END_TIME: Option<alloc::string::String>,
   pub IMAGE_SOURCE_INFO: Option<alloc::string::String>,
@@ -1107,7 +1107,7 @@ impl Default for SKIT {
       SENZ: 0.0,
       SEN_QUAT: None,
       SEN_QUAT_DOT: None,
-      IMAGE_TYPE: imageType::VISIBLE,
+      IMAGE_TYPE: imageCategory::VISIBLE,
       EXP_START_TIME: None,
       EXP_END_TIME: None,
       IMAGE_SOURCE_INFO: None,

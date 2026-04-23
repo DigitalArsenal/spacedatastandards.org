@@ -73,9 +73,9 @@ public struct OMM : IFlatbufferObject
 #endif
   public byte[] GetREFERENCE_FRAME_EPOCHArray() { return __p.__vector_as_array<byte>(18); }
   /// Time System [M, UTC]
-  public timeSystem TIME_SYSTEM { get { int o = __p.__offset(20); return o != 0 ? (timeSystem)__p.bb.GetSbyte(o + __p.bb_pos) : timeSystem.UTC; } }
+  public timingStandard TIME_SYSTEM { get { int o = __p.__offset(20); return o != 0 ? (timingStandard)__p.bb.GetSbyte(o + __p.bb_pos) : timingStandard.UTC; } }
   /// Mean Element Theory
-  public meanElementTheory MEAN_ELEMENT_THEORY { get { int o = __p.__offset(22); return o != 0 ? (meanElementTheory)__p.bb.GetSbyte(o + __p.bb_pos) : meanElementTheory.SGP4; } }
+  public meanElementSource MEAN_ELEMENT_THEORY { get { int o = __p.__offset(22); return o != 0 ? (meanElementSource)__p.bb.GetSbyte(o + __p.bb_pos) : meanElementSource.SGP4; } }
   /// COMMENT (O)
   public string COMMENT { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -120,7 +120,7 @@ public struct OMM : IFlatbufferObject
   public double DRAG_COEFF { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
   /// EPHEMERIS_TYPE Default=0
-  public ephemerisType EPHEMERIS_TYPE { get { int o = __p.__offset(54); return o != 0 ? (ephemerisType)__p.bb.GetSbyte(o + __p.bb_pos) : ephemerisType.SGP4; } }
+  public ephemerisFormat EPHEMERIS_TYPE { get { int o = __p.__offset(54); return o != 0 ? (ephemerisFormat)__p.bb.GetSbyte(o + __p.bb_pos) : ephemerisFormat.SGP4; } }
   /// CLASSIFICATION_TYPE Default=U
   public string CLASSIFICATION_TYPE { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -191,8 +191,8 @@ public struct OMM : IFlatbufferObject
       StringOffset CENTER_NAMEOffset = default(StringOffset),
       Offset<RFM> REFERENCE_FRAMEOffset = default(Offset<RFM>),
       StringOffset REFERENCE_FRAME_EPOCHOffset = default(StringOffset),
-      timeSystem TIME_SYSTEM = timeSystem.UTC,
-      meanElementTheory MEAN_ELEMENT_THEORY = meanElementTheory.SGP4,
+      timingStandard TIME_SYSTEM = timingStandard.UTC,
+      meanElementSource MEAN_ELEMENT_THEORY = meanElementSource.SGP4,
       StringOffset COMMENTOffset = default(StringOffset),
       StringOffset EPOCHOffset = default(StringOffset),
       double SEMI_MAJOR_AXIS = 0.0,
@@ -208,7 +208,7 @@ public struct OMM : IFlatbufferObject
       double SOLAR_RAD_COEFF = 0.0,
       double DRAG_AREA = 0.0,
       double DRAG_COEFF = 0.0,
-      ephemerisType EPHEMERIS_TYPE = ephemerisType.SGP4,
+      ephemerisFormat EPHEMERIS_TYPE = ephemerisFormat.SGP4,
       StringOffset CLASSIFICATION_TYPEOffset = default(StringOffset),
       uint NORAD_CAT_ID = 0,
       uint ELEMENT_SET_NO = 0,
@@ -276,8 +276,8 @@ public struct OMM : IFlatbufferObject
   public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(5, CENTER_NAMEOffset.Value, 0); }
   public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> REFERENCE_FRAMEOffset) { builder.AddOffset(6, REFERENCE_FRAMEOffset.Value, 0); }
   public static void AddREFERENCE_FRAME_EPOCH(FlatBufferBuilder builder, StringOffset REFERENCE_FRAME_EPOCHOffset) { builder.AddOffset(7, REFERENCE_FRAME_EPOCHOffset.Value, 0); }
-  public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timeSystem TIME_SYSTEM) { builder.AddSbyte(8, (sbyte)TIME_SYSTEM, 11); }
-  public static void AddMEAN_ELEMENT_THEORY(FlatBufferBuilder builder, meanElementTheory MEAN_ELEMENT_THEORY) { builder.AddSbyte(9, (sbyte)MEAN_ELEMENT_THEORY, 0); }
+  public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timingStandard TIME_SYSTEM) { builder.AddSbyte(8, (sbyte)TIME_SYSTEM, 11); }
+  public static void AddMEAN_ELEMENT_THEORY(FlatBufferBuilder builder, meanElementSource MEAN_ELEMENT_THEORY) { builder.AddSbyte(9, (sbyte)MEAN_ELEMENT_THEORY, 0); }
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(10, COMMENTOffset.Value, 0); }
   public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(11, EPOCHOffset.Value, 0); }
   public static void AddSEMI_MAJOR_AXIS(FlatBufferBuilder builder, double SEMI_MAJOR_AXIS) { builder.AddDouble(12, SEMI_MAJOR_AXIS, 0.0); }
@@ -293,7 +293,7 @@ public struct OMM : IFlatbufferObject
   public static void AddSOLAR_RAD_COEFF(FlatBufferBuilder builder, double SOLAR_RAD_COEFF) { builder.AddDouble(22, SOLAR_RAD_COEFF, 0.0); }
   public static void AddDRAG_AREA(FlatBufferBuilder builder, double DRAG_AREA) { builder.AddDouble(23, DRAG_AREA, 0.0); }
   public static void AddDRAG_COEFF(FlatBufferBuilder builder, double DRAG_COEFF) { builder.AddDouble(24, DRAG_COEFF, 0.0); }
-  public static void AddEPHEMERIS_TYPE(FlatBufferBuilder builder, ephemerisType EPHEMERIS_TYPE) { builder.AddSbyte(25, (sbyte)EPHEMERIS_TYPE, 1); }
+  public static void AddEPHEMERIS_TYPE(FlatBufferBuilder builder, ephemerisFormat EPHEMERIS_TYPE) { builder.AddSbyte(25, (sbyte)EPHEMERIS_TYPE, 1); }
   public static void AddCLASSIFICATION_TYPE(FlatBufferBuilder builder, StringOffset CLASSIFICATION_TYPEOffset) { builder.AddOffset(26, CLASSIFICATION_TYPEOffset.Value, 0); }
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(27, NORAD_CAT_ID, 0); }
   public static void AddELEMENT_SET_NO(FlatBufferBuilder builder, uint ELEMENT_SET_NO) { builder.AddUint(28, ELEMENT_SET_NO, 0); }
@@ -442,8 +442,8 @@ public class OMMT
   public string CENTER_NAME { get; set; }
   public RFMT REFERENCE_FRAME { get; set; }
   public string REFERENCE_FRAME_EPOCH { get; set; }
-  public timeSystem TIME_SYSTEM { get; set; }
-  public meanElementTheory MEAN_ELEMENT_THEORY { get; set; }
+  public timingStandard TIME_SYSTEM { get; set; }
+  public meanElementSource MEAN_ELEMENT_THEORY { get; set; }
   public string COMMENT { get; set; }
   public string EPOCH { get; set; }
   public double SEMI_MAJOR_AXIS { get; set; }
@@ -459,7 +459,7 @@ public class OMMT
   public double SOLAR_RAD_COEFF { get; set; }
   public double DRAG_AREA { get; set; }
   public double DRAG_COEFF { get; set; }
-  public ephemerisType EPHEMERIS_TYPE { get; set; }
+  public ephemerisFormat EPHEMERIS_TYPE { get; set; }
   public string CLASSIFICATION_TYPE { get; set; }
   public uint NORAD_CAT_ID { get; set; }
   public uint ELEMENT_SET_NO { get; set; }
@@ -484,8 +484,8 @@ public class OMMT
     this.CENTER_NAME = null;
     this.REFERENCE_FRAME = null;
     this.REFERENCE_FRAME_EPOCH = null;
-    this.TIME_SYSTEM = timeSystem.UTC;
-    this.MEAN_ELEMENT_THEORY = meanElementTheory.SGP4;
+    this.TIME_SYSTEM = timingStandard.UTC;
+    this.MEAN_ELEMENT_THEORY = meanElementSource.SGP4;
     this.COMMENT = null;
     this.EPOCH = null;
     this.SEMI_MAJOR_AXIS = 0.0;
@@ -501,7 +501,7 @@ public class OMMT
     this.SOLAR_RAD_COEFF = 0.0;
     this.DRAG_AREA = 0.0;
     this.DRAG_COEFF = 0.0;
-    this.EPHEMERIS_TYPE = ephemerisType.SGP4;
+    this.EPHEMERIS_TYPE = ephemerisFormat.SGP4;
     this.CLASSIFICATION_TYPE = null;
     this.NORAD_CAT_ID = 0;
     this.ELEMENT_SET_NO = 0;
@@ -541,8 +541,8 @@ static public class OMMVerify
       && verifier.VerifyString(tablePos, 14 /*CENTER_NAME*/, false)
       && verifier.VerifyTable(tablePos, 16 /*REFERENCE_FRAME*/, RFMVerify.Verify, false)
       && verifier.VerifyString(tablePos, 18 /*REFERENCE_FRAME_EPOCH*/, false)
-      && verifier.VerifyField(tablePos, 20 /*TIME_SYSTEM*/, 1 /*timeSystem*/, 1, false)
-      && verifier.VerifyField(tablePos, 22 /*MEAN_ELEMENT_THEORY*/, 1 /*meanElementTheory*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*TIME_SYSTEM*/, 1 /*timingStandard*/, 1, false)
+      && verifier.VerifyField(tablePos, 22 /*MEAN_ELEMENT_THEORY*/, 1 /*meanElementSource*/, 1, false)
       && verifier.VerifyString(tablePos, 24 /*COMMENT*/, false)
       && verifier.VerifyString(tablePos, 26 /*EPOCH*/, false)
       && verifier.VerifyField(tablePos, 28 /*SEMI_MAJOR_AXIS*/, 8 /*double*/, 8, false)
@@ -558,7 +558,7 @@ static public class OMMVerify
       && verifier.VerifyField(tablePos, 48 /*SOLAR_RAD_COEFF*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 50 /*DRAG_AREA*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 52 /*DRAG_COEFF*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 54 /*EPHEMERIS_TYPE*/, 1 /*ephemerisType*/, 1, false)
+      && verifier.VerifyField(tablePos, 54 /*EPHEMERIS_TYPE*/, 1 /*ephemerisFormat*/, 1, false)
       && verifier.VerifyString(tablePos, 56 /*CLASSIFICATION_TYPE*/, false)
       && verifier.VerifyField(tablePos, 58 /*NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
       && verifier.VerifyField(tablePos, 60 /*ELEMENT_SET_NO*/, 4 /*uint*/, 4, false)

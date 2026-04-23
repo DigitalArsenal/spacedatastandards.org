@@ -95,7 +95,7 @@ public struct PLK : IFlatbufferObject
   public string ALLOWED_TLDS(int j) { int o = __p.__offset(22); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int ALLOWED_TLDSLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Type of license
-  public licenseType LICENSE_TYPE { get { int o = __p.__offset(24); return o != 0 ? (licenseType)__p.bb.GetSbyte(o + __p.bb_pos) : licenseType.Trial; } }
+  public licenseCategory LICENSE_TYPE { get { int o = __p.__offset(24); return o != 0 ? (licenseCategory)__p.bb.GetSbyte(o + __p.bb_pos) : licenseCategory.Trial; } }
   /// Maximum concurrent activations (0 = unlimited)
   public uint MAX_ACTIVATIONS { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Unix timestamp when license was issued
@@ -133,7 +133,7 @@ public struct PLK : IFlatbufferObject
       VectorOffset ISSUER_PUBKEYOffset = default(VectorOffset),
       VectorOffset ALLOWED_DOMAINSOffset = default(VectorOffset),
       VectorOffset ALLOWED_TLDSOffset = default(VectorOffset),
-      licenseType LICENSE_TYPE = licenseType.Trial,
+      licenseCategory LICENSE_TYPE = licenseCategory.Trial,
       uint MAX_ACTIVATIONS = 0,
       ulong ISSUED_AT = 0,
       ulong VALID_FROM = 0,
@@ -192,7 +192,7 @@ public struct PLK : IFlatbufferObject
   public static VectorOffset CreateALLOWED_TLDSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateALLOWED_TLDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartALLOWED_TLDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddLICENSE_TYPE(FlatBufferBuilder builder, licenseType LICENSE_TYPE) { builder.AddSbyte(10, (sbyte)LICENSE_TYPE, 0); }
+  public static void AddLICENSE_TYPE(FlatBufferBuilder builder, licenseCategory LICENSE_TYPE) { builder.AddSbyte(10, (sbyte)LICENSE_TYPE, 0); }
   public static void AddMAX_ACTIVATIONS(FlatBufferBuilder builder, uint MAX_ACTIVATIONS) { builder.AddUint(11, MAX_ACTIVATIONS, 0); }
   public static void AddISSUED_AT(FlatBufferBuilder builder, ulong ISSUED_AT) { builder.AddUlong(12, ISSUED_AT, 0); }
   public static void AddVALID_FROM(FlatBufferBuilder builder, ulong VALID_FROM) { builder.AddUlong(13, VALID_FROM, 0); }
@@ -312,7 +312,7 @@ public class PLKT
   public List<byte> ISSUER_PUBKEY { get; set; }
   public List<string> ALLOWED_DOMAINS { get; set; }
   public List<string> ALLOWED_TLDS { get; set; }
-  public licenseType LICENSE_TYPE { get; set; }
+  public licenseCategory LICENSE_TYPE { get; set; }
   public uint MAX_ACTIVATIONS { get; set; }
   public ulong ISSUED_AT { get; set; }
   public ulong VALID_FROM { get; set; }
@@ -331,7 +331,7 @@ public class PLKT
     this.ISSUER_PUBKEY = null;
     this.ALLOWED_DOMAINS = null;
     this.ALLOWED_TLDS = null;
-    this.LICENSE_TYPE = licenseType.Trial;
+    this.LICENSE_TYPE = licenseCategory.Trial;
     this.MAX_ACTIVATIONS = 0;
     this.ISSUED_AT = 0;
     this.VALID_FROM = 0;
@@ -365,7 +365,7 @@ static public class PLKVerify
       && verifier.VerifyVectorOfData(tablePos, 18 /*ISSUER_PUBKEY*/, 1 /*byte*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 20 /*ALLOWED_DOMAINS*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 22 /*ALLOWED_TLDS*/, false)
-      && verifier.VerifyField(tablePos, 24 /*LICENSE_TYPE*/, 1 /*licenseType*/, 1, false)
+      && verifier.VerifyField(tablePos, 24 /*LICENSE_TYPE*/, 1 /*licenseCategory*/, 1, false)
       && verifier.VerifyField(tablePos, 26 /*MAX_ACTIVATIONS*/, 4 /*uint*/, 4, false)
       && verifier.VerifyField(tablePos, 28 /*ISSUED_AT*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyField(tablePos, 30 /*VALID_FROM*/, 8 /*ulong*/, 8, false)

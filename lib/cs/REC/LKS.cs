@@ -64,9 +64,9 @@ public struct LKS : IFlatbufferObject
 #endif
   public byte[] GetLINK_NAMEArray() { return __p.__vector_as_array<byte>(16); }
   /// Link type
-  public linkType LINK_TYPE { get { int o = __p.__offset(18); return o != 0 ? (linkType)__p.bb.GetSbyte(o + __p.bb_pos) : linkType.UPLINK; } }
+  public linkCategory LINK_TYPE { get { int o = __p.__offset(18); return o != 0 ? (linkCategory)__p.bb.GetSbyte(o + __p.bb_pos) : linkCategory.UPLINK; } }
   /// Link state
-  public linkState LINK_STATE { get { int o = __p.__offset(20); return o != 0 ? (linkState)__p.bb.GetSbyte(o + __p.bb_pos) : linkState.ESTABLISHED; } }
+  public linkCondition LINK_STATE { get { int o = __p.__offset(20); return o != 0 ? (linkCondition)__p.bb.GetSbyte(o + __p.bb_pos) : linkCondition.ESTABLISHED; } }
   /// RF band
   public string BAND { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -160,8 +160,8 @@ public struct LKS : IFlatbufferObject
       uint SAT_NO2 = 0,
       StringOffset CONSTELLATIONOffset = default(StringOffset),
       StringOffset LINK_NAMEOffset = default(StringOffset),
-      linkType LINK_TYPE = linkType.UPLINK,
-      linkState LINK_STATE = linkState.ESTABLISHED,
+      linkCategory LINK_TYPE = linkCategory.UPLINK,
+      linkCondition LINK_STATE = linkCondition.ESTABLISHED,
       StringOffset BANDOffset = default(StringOffset),
       StringOffset LINK_START_TIMEOffset = default(StringOffset),
       StringOffset LINK_STOP_TIMEOffset = default(StringOffset),
@@ -213,8 +213,8 @@ public struct LKS : IFlatbufferObject
   public static void AddSAT_NO2(FlatBufferBuilder builder, uint SAT_NO2) { builder.AddUint(4, SAT_NO2, 0); }
   public static void AddCONSTELLATION(FlatBufferBuilder builder, StringOffset CONSTELLATIONOffset) { builder.AddOffset(5, CONSTELLATIONOffset.Value, 0); }
   public static void AddLINK_NAME(FlatBufferBuilder builder, StringOffset LINK_NAMEOffset) { builder.AddOffset(6, LINK_NAMEOffset.Value, 0); }
-  public static void AddLINK_TYPE(FlatBufferBuilder builder, linkType LINK_TYPE) { builder.AddSbyte(7, (sbyte)LINK_TYPE, 0); }
-  public static void AddLINK_STATE(FlatBufferBuilder builder, linkState LINK_STATE) { builder.AddSbyte(8, (sbyte)LINK_STATE, 0); }
+  public static void AddLINK_TYPE(FlatBufferBuilder builder, linkCategory LINK_TYPE) { builder.AddSbyte(7, (sbyte)LINK_TYPE, 0); }
+  public static void AddLINK_STATE(FlatBufferBuilder builder, linkCondition LINK_STATE) { builder.AddSbyte(8, (sbyte)LINK_STATE, 0); }
   public static void AddBAND(FlatBufferBuilder builder, StringOffset BANDOffset) { builder.AddOffset(9, BANDOffset.Value, 0); }
   public static void AddLINK_START_TIME(FlatBufferBuilder builder, StringOffset LINK_START_TIMEOffset) { builder.AddOffset(10, LINK_START_TIMEOffset.Value, 0); }
   public static void AddLINK_STOP_TIME(FlatBufferBuilder builder, StringOffset LINK_STOP_TIMEOffset) { builder.AddOffset(11, LINK_STOP_TIMEOffset.Value, 0); }
@@ -321,8 +321,8 @@ public class LKST
   public uint SAT_NO2 { get; set; }
   public string CONSTELLATION { get; set; }
   public string LINK_NAME { get; set; }
-  public linkType LINK_TYPE { get; set; }
-  public linkState LINK_STATE { get; set; }
+  public linkCategory LINK_TYPE { get; set; }
+  public linkCondition LINK_STATE { get; set; }
   public string BAND { get; set; }
   public string LINK_START_TIME { get; set; }
   public string LINK_STOP_TIME { get; set; }
@@ -347,8 +347,8 @@ public class LKST
     this.SAT_NO2 = 0;
     this.CONSTELLATION = null;
     this.LINK_NAME = null;
-    this.LINK_TYPE = linkType.UPLINK;
-    this.LINK_STATE = linkState.ESTABLISHED;
+    this.LINK_TYPE = linkCategory.UPLINK;
+    this.LINK_STATE = linkCondition.ESTABLISHED;
     this.BAND = null;
     this.LINK_START_TIME = null;
     this.LINK_STOP_TIME = null;
@@ -388,8 +388,8 @@ static public class LKSVerify
       && verifier.VerifyField(tablePos, 12 /*SAT_NO2*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 14 /*CONSTELLATION*/, false)
       && verifier.VerifyString(tablePos, 16 /*LINK_NAME*/, false)
-      && verifier.VerifyField(tablePos, 18 /*LINK_TYPE*/, 1 /*linkType*/, 1, false)
-      && verifier.VerifyField(tablePos, 20 /*LINK_STATE*/, 1 /*linkState*/, 1, false)
+      && verifier.VerifyField(tablePos, 18 /*LINK_TYPE*/, 1 /*linkCategory*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*LINK_STATE*/, 1 /*linkCondition*/, 1, false)
       && verifier.VerifyString(tablePos, 22 /*BAND*/, false)
       && verifier.VerifyString(tablePos, 24 /*LINK_START_TIME*/, false)
       && verifier.VerifyString(tablePos, 26 /*LINK_STOP_TIME*/, false)

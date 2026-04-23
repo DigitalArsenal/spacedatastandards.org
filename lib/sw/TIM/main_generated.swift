@@ -8,7 +8,7 @@ import Common
 
 import FlatBuffers
 
-public enum timeSystem: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum timingStandard: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -37,8 +37,8 @@ public enum timeSystem: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   ///  Coordinated Universal Time
   case utc = 11
 
-  public static var max: timeSystem { return .utc }
-  public static var min: timeSystem { return .gmst }
+  public static var max: timingStandard { return .utc }
+  public static var min: timingStandard { return .gmst }
 }
 
 
@@ -60,13 +60,13 @@ public struct TIM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
-  public var TIME_SYSTEM: timeSystem { let o = _accessor.offset(VTOFFSET.TIME_SYSTEM.v); return o == 0 ? .gmst : timeSystem(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
+  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VTOFFSET.TIME_SYSTEM.v); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
   public static func startTIM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(TIME_SYSTEM: timeSystem, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VTOFFSET.TIME_SYSTEM.p) }
+  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VTOFFSET.TIME_SYSTEM.p) }
   public static func endTIM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTIM(
     _ fbb: inout FlatBufferBuilder,
-    TIME_SYSTEM: timeSystem = .gmst
+    TIME_SYSTEM: timingStandard = .gmst
   ) -> Offset {
     let __start = TIM.startTIM(&fbb)
     TIM.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
@@ -75,7 +75,7 @@ public struct TIM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.TIME_SYSTEM.p, fieldName: "TIME_SYSTEM", required: false, type: timeSystem.self)
+    try _v.visit(field: VTOFFSET.TIME_SYSTEM.p, fieldName: "TIME_SYSTEM", required: false, type: timingStandard.self)
     _v.finish()
   }
 }

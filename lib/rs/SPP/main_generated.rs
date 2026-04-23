@@ -4,21 +4,21 @@ extern crate alloc;
 
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_PACKET_TYPE: i8 = 0;
+pub const ENUM_MIN_PACKET_KIND: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PACKET_TYPE: i8 = 1;
+pub const ENUM_MAX_PACKET_KIND: i8 = 1;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PACKET_TYPE: [packetType; 2] = [
-  packetType::TM,
-  packetType::TC,
+pub const ENUM_VALUES_PACKET_KIND: [packetKind; 2] = [
+  packetKind::TM,
+  packetKind::TC,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct packetType(pub i8);
+pub struct packetKind(pub i8);
 #[allow(non_upper_case_globals)]
-impl packetType {
+impl packetKind {
   pub const TM: Self = Self(0);
   pub const TC: Self = Self(1);
 
@@ -37,7 +37,7 @@ impl packetType {
     }
   }
 }
-impl ::core::fmt::Debug for packetType {
+impl ::core::fmt::Debug for packetKind {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -46,7 +46,7 @@ impl ::core::fmt::Debug for packetType {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for packetType {
+impl<'a> ::flatbuffers::Follow<'a> for packetKind {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -55,15 +55,15 @@ impl<'a> ::flatbuffers::Follow<'a> for packetType {
   }
 }
 
-impl ::flatbuffers::Push for packetType {
-    type Output = packetType;
+impl ::flatbuffers::Push for packetKind {
+    type Output = packetKind;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for packetType {
+impl ::flatbuffers::EndianScalar for packetKind {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -77,7 +77,7 @@ impl ::flatbuffers::EndianScalar for packetType {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for packetType {
+impl<'a> ::flatbuffers::Verifiable for packetKind {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -86,7 +86,7 @@ impl<'a> ::flatbuffers::Verifiable for packetType {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for packetType {}
+impl ::flatbuffers::SimpleToVerifyInSlice for packetKind {}
 pub enum SPPOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -167,11 +167,11 @@ impl<'a> SPP<'a> {
   }
   /// Packet type (TM or TC)
   #[inline]
-  pub fn PACKET_TYPE(&self) -> packetType {
+  pub fn PACKET_TYPE(&self) -> packetKind {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<packetType>(SPP::VT_PACKET_TYPE, Some(packetType::TM)).unwrap()}
+    unsafe { self._tab.get::<packetKind>(SPP::VT_PACKET_TYPE, Some(packetKind::TM)).unwrap()}
   }
   /// Secondary header flag
   #[inline]
@@ -230,7 +230,7 @@ impl ::flatbuffers::Verifiable for SPP<'_> {
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
      .visit_field::<u8>("VERSION", Self::VT_VERSION, false)?
-     .visit_field::<packetType>("PACKET_TYPE", Self::VT_PACKET_TYPE, false)?
+     .visit_field::<packetKind>("PACKET_TYPE", Self::VT_PACKET_TYPE, false)?
      .visit_field::<bool>("SEC_HDR_FLAG", Self::VT_SEC_HDR_FLAG, false)?
      .visit_field::<u16>("APID", Self::VT_APID, false)?
      .visit_field::<u8>("SEQUENCE_FLAGS", Self::VT_SEQUENCE_FLAGS, false)?
@@ -243,7 +243,7 @@ impl ::flatbuffers::Verifiable for SPP<'_> {
 }
 pub struct SPPArgs<'a> {
     pub VERSION: u8,
-    pub PACKET_TYPE: packetType,
+    pub PACKET_TYPE: packetKind,
     pub SEC_HDR_FLAG: bool,
     pub APID: u16,
     pub SEQUENCE_FLAGS: u8,
@@ -256,7 +256,7 @@ impl<'a> Default for SPPArgs<'a> {
   fn default() -> Self {
     SPPArgs {
       VERSION: 0,
-      PACKET_TYPE: packetType::TM,
+      PACKET_TYPE: packetKind::TM,
       SEC_HDR_FLAG: false,
       APID: 0,
       SEQUENCE_FLAGS: 0,
@@ -277,8 +277,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SPPBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<u8>(SPP::VT_VERSION, VERSION, 0);
   }
   #[inline]
-  pub fn add_PACKET_TYPE(&mut self, PACKET_TYPE: packetType) {
-    self.fbb_.push_slot::<packetType>(SPP::VT_PACKET_TYPE, PACKET_TYPE, packetType::TM);
+  pub fn add_PACKET_TYPE(&mut self, PACKET_TYPE: packetKind) {
+    self.fbb_.push_slot::<packetKind>(SPP::VT_PACKET_TYPE, PACKET_TYPE, packetKind::TM);
   }
   #[inline]
   pub fn add_SEC_HDR_FLAG(&mut self, SEC_HDR_FLAG: bool) {
@@ -337,7 +337,7 @@ impl ::core::fmt::Debug for SPP<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct SPPT {
   pub VERSION: u8,
-  pub PACKET_TYPE: packetType,
+  pub PACKET_TYPE: packetKind,
   pub SEC_HDR_FLAG: bool,
   pub APID: u16,
   pub SEQUENCE_FLAGS: u8,
@@ -349,7 +349,7 @@ impl Default for SPPT {
   fn default() -> Self {
     Self {
       VERSION: 0,
-      PACKET_TYPE: packetType::TM,
+      PACKET_TYPE: packetKind::TM,
       SEC_HDR_FLAG: false,
       APID: 0,
       SEQUENCE_FLAGS: 0,

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "sarMode" : {
+    "sarMission" : {
       "type" : "string",
       "enum": ["STRIPMAP", "SPOTLIGHT", "SCANSAR", "TOPSAR", "ISAR", "GMTI", "MARITIME", "UNKNOWN"]
     },
@@ -78,7 +78,7 @@
                 "description" : "Orbit state description"
               },
         "SAR_MODE" : {
-                "$ref" : "#/definitions/sarMode",
+                "$ref" : "#/definitions/sarMission",
                 "description" : "SAR imaging mode"
               },
         "OPERATING_BAND" : {

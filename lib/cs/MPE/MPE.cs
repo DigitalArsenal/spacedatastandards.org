@@ -44,7 +44,7 @@ public struct MPE : IFlatbufferObject
   /// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
   public double BSTAR { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Description of the Mean Element Theory (SGP4, DSST, USM)
-  public meanElementTheory MEAN_ELEMENT_THEORY { get { int o = __p.__offset(22); return o != 0 ? (meanElementTheory)__p.bb.GetSbyte(o + __p.bb_pos) : meanElementTheory.SGP4; } }
+  public meanElementSource MEAN_ELEMENT_THEORY { get { int o = __p.__offset(22); return o != 0 ? (meanElementSource)__p.bb.GetSbyte(o + __p.bb_pos) : meanElementSource.SGP4; } }
 
   public static Offset<MPE> CreateMPE(FlatBufferBuilder builder,
       StringOffset ENTITY_IDOffset = default(StringOffset),
@@ -56,7 +56,7 @@ public struct MPE : IFlatbufferObject
       double ARG_OF_PERICENTER = 0.0,
       double MEAN_ANOMALY = 0.0,
       double BSTAR = 0.0,
-      meanElementTheory MEAN_ELEMENT_THEORY = meanElementTheory.SGP4) {
+      meanElementSource MEAN_ELEMENT_THEORY = meanElementSource.SGP4) {
     builder.StartTable(10);
     MPE.AddBSTAR(builder, BSTAR);
     MPE.AddMEAN_ANOMALY(builder, MEAN_ANOMALY);
@@ -81,7 +81,7 @@ public struct MPE : IFlatbufferObject
   public static void AddARG_OF_PERICENTER(FlatBufferBuilder builder, double ARG_OF_PERICENTER) { builder.AddDouble(6, ARG_OF_PERICENTER, 0.0); }
   public static void AddMEAN_ANOMALY(FlatBufferBuilder builder, double MEAN_ANOMALY) { builder.AddDouble(7, MEAN_ANOMALY, 0.0); }
   public static void AddBSTAR(FlatBufferBuilder builder, double BSTAR) { builder.AddDouble(8, BSTAR, 0.0); }
-  public static void AddMEAN_ELEMENT_THEORY(FlatBufferBuilder builder, meanElementTheory MEAN_ELEMENT_THEORY) { builder.AddSbyte(9, (sbyte)MEAN_ELEMENT_THEORY, 0); }
+  public static void AddMEAN_ELEMENT_THEORY(FlatBufferBuilder builder, meanElementSource MEAN_ELEMENT_THEORY) { builder.AddSbyte(9, (sbyte)MEAN_ELEMENT_THEORY, 0); }
   public static Offset<MPE> EndMPE(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<MPE>(o);
@@ -134,7 +134,7 @@ public class MPET
   public double ARG_OF_PERICENTER { get; set; }
   public double MEAN_ANOMALY { get; set; }
   public double BSTAR { get; set; }
-  public meanElementTheory MEAN_ELEMENT_THEORY { get; set; }
+  public meanElementSource MEAN_ELEMENT_THEORY { get; set; }
 
   public MPET() {
     this.ENTITY_ID = null;
@@ -146,7 +146,7 @@ public class MPET
     this.ARG_OF_PERICENTER = 0.0;
     this.MEAN_ANOMALY = 0.0;
     this.BSTAR = 0.0;
-    this.MEAN_ELEMENT_THEORY = meanElementTheory.SGP4;
+    this.MEAN_ELEMENT_THEORY = meanElementSource.SGP4;
   }
   public static MPET DeserializeFromBinary(byte[] fbBuffer) {
     return MPE.GetRootAsMPE(new ByteBuffer(fbBuffer)).UnPack();
@@ -173,7 +173,7 @@ static public class MPEVerify
       && verifier.VerifyField(tablePos, 16 /*ARG_OF_PERICENTER*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 18 /*MEAN_ANOMALY*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 20 /*BSTAR*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 22 /*MEAN_ELEMENT_THEORY*/, 1 /*meanElementTheory*/, 1, false)
+      && verifier.VerifyField(tablePos, 22 /*MEAN_ELEMENT_THEORY*/, 1 /*meanElementSource*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

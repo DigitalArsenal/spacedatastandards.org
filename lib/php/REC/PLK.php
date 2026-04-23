@@ -189,7 +189,7 @@ class PLK extends Table
     public function getLICENSE_TYPE()
     {
         $o = $this->__offset(24);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \licenseType::Trial;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \licenseCategory::Trial;
     }
 
     /// Maximum concurrent activations (0 = unlimited)

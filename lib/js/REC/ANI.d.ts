@@ -1,5 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
-import { analyticType } from './analyticType.js';
+import { analyticProfile } from './analyticProfile.js';
 /**
  * Analytic Imagery Product
  */
@@ -28,7 +28,7 @@ export declare class ANI implements flatbuffers.IUnpackableObject<ANIT> {
     /**
      * Analytic product type
      */
-    ANALYTIC_TYPE(): analyticType;
+    ANALYTIC_TYPE(): analyticProfile;
     /**
      * Processing algorithm or pipeline name
      */
@@ -113,7 +113,7 @@ export declare class ANI implements flatbuffers.IUnpackableObject<ANIT> {
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addSourceId(builder: flatbuffers.Builder, SOURCE_IDOffset: flatbuffers.Offset): void;
     static addSourceType(builder: flatbuffers.Builder, SOURCE_TYPEOffset: flatbuffers.Offset): void;
-    static addAnalyticType(builder: flatbuffers.Builder, ANALYTIC_TYPE: analyticType): void;
+    static addAnalyticType(builder: flatbuffers.Builder, ANALYTIC_TYPE: analyticProfile): void;
     static addAlgorithm(builder: flatbuffers.Builder, ALGORITHMOffset: flatbuffers.Offset): void;
     static addAlgorithmVersion(builder: flatbuffers.Builder, ALGORITHM_VERSIONOffset: flatbuffers.Offset): void;
     static addProcessingTime(builder: flatbuffers.Builder, PROCESSING_TIMEOffset: flatbuffers.Offset): void;
@@ -148,7 +148,7 @@ export declare class ANI implements flatbuffers.IUnpackableObject<ANIT> {
     static endANI(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishANIBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedANIBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createANI(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, SOURCE_IDOffset: flatbuffers.Offset, SOURCE_TYPEOffset: flatbuffers.Offset, ANALYTIC_TYPE: analyticType, ALGORITHMOffset: flatbuffers.Offset, ALGORITHM_VERSIONOffset: flatbuffers.Offset, PROCESSING_TIMEOffset: flatbuffers.Offset, OBS_TIMEOffset: flatbuffers.Offset, SAT_NO: number, OBJECT_DESIGNATOROffset: flatbuffers.Offset, RA: number, DEC: number, FOV: number, VISUAL_MAG: number, MAG_UNCERTAINTY: number, OBJECT_COUNT: number, LABELSOffset: flatbuffers.Offset, CONFIDENCEOffset: flatbuffers.Offset, FEATURESOffset: flatbuffers.Offset, QUALITY: number, NOTESOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createANI(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, SOURCE_IDOffset: flatbuffers.Offset, SOURCE_TYPEOffset: flatbuffers.Offset, ANALYTIC_TYPE: analyticProfile, ALGORITHMOffset: flatbuffers.Offset, ALGORITHM_VERSIONOffset: flatbuffers.Offset, PROCESSING_TIMEOffset: flatbuffers.Offset, OBS_TIMEOffset: flatbuffers.Offset, SAT_NO: number, OBJECT_DESIGNATOROffset: flatbuffers.Offset, RA: number, DEC: number, FOV: number, VISUAL_MAG: number, MAG_UNCERTAINTY: number, OBJECT_COUNT: number, LABELSOffset: flatbuffers.Offset, CONFIDENCEOffset: flatbuffers.Offset, FEATURESOffset: flatbuffers.Offset, QUALITY: number, NOTESOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): ANIT;
     unpackTo(_o: ANIT): void;
 }
@@ -156,7 +156,7 @@ export declare class ANIT implements flatbuffers.IGeneratedObject {
     ID: string | Uint8Array | null;
     SOURCE_ID: string | Uint8Array | null;
     SOURCE_TYPE: string | Uint8Array | null;
-    ANALYTIC_TYPE: analyticType;
+    ANALYTIC_TYPE: analyticProfile;
     ALGORITHM: string | Uint8Array | null;
     ALGORITHM_VERSION: string | Uint8Array | null;
     PROCESSING_TIME: string | Uint8Array | null;
@@ -174,7 +174,7 @@ export declare class ANIT implements flatbuffers.IGeneratedObject {
     FEATURES: (number)[];
     QUALITY: number;
     NOTES: string | Uint8Array | null;
-    constructor(ID?: string | Uint8Array | null, SOURCE_ID?: string | Uint8Array | null, SOURCE_TYPE?: string | Uint8Array | null, ANALYTIC_TYPE?: analyticType, ALGORITHM?: string | Uint8Array | null, ALGORITHM_VERSION?: string | Uint8Array | null, PROCESSING_TIME?: string | Uint8Array | null, OBS_TIME?: string | Uint8Array | null, SAT_NO?: number, OBJECT_DESIGNATOR?: string | Uint8Array | null, RA?: number, DEC?: number, FOV?: number, VISUAL_MAG?: number, MAG_UNCERTAINTY?: number, OBJECT_COUNT?: number, LABELS?: (string)[], CONFIDENCE?: (number)[], FEATURES?: (number)[], QUALITY?: number, NOTES?: string | Uint8Array | null);
+    constructor(ID?: string | Uint8Array | null, SOURCE_ID?: string | Uint8Array | null, SOURCE_TYPE?: string | Uint8Array | null, ANALYTIC_TYPE?: analyticProfile, ALGORITHM?: string | Uint8Array | null, ALGORITHM_VERSION?: string | Uint8Array | null, PROCESSING_TIME?: string | Uint8Array | null, OBS_TIME?: string | Uint8Array | null, SAT_NO?: number, OBJECT_DESIGNATOR?: string | Uint8Array | null, RA?: number, DEC?: number, FOV?: number, VISUAL_MAG?: number, MAG_UNCERTAINTY?: number, OBJECT_COUNT?: number, LABELS?: (string)[], CONFIDENCE?: (number)[], FEATURES?: (number)[], QUALITY?: number, NOTES?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ANI.d.ts.map

@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Access type for data listings
-public enum accessType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum accessCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -22,8 +22,8 @@ public enum accessType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   ///  Query-based access
   case query = 3
 
-  public static var max: accessType { return .query }
-  public static var min: accessType { return .onetime }
+  public static var max: accessCategory { return .query }
+  public static var min: accessCategory { return .onetime }
 }
 
 
@@ -345,7 +345,7 @@ public struct STF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var SAMPLE_CID: String? { let o = _accessor.offset(VTOFFSET.SAMPLE_CID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SAMPLE_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SAMPLE_CID.v) }
   ///  Type of access offered
-  public var ACCESS_TYPE: accessType { let o = _accessor.offset(VTOFFSET.ACCESS_TYPE.v); return o == 0 ? .onetime : accessType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .onetime }
+  public var ACCESS_TYPE: accessCategory { let o = _accessor.offset(VTOFFSET.ACCESS_TYPE.v); return o == 0 ? .onetime : accessCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .onetime }
   ///  Whether encryption is required for data delivery
   public var ENCRYPTION_REQUIRED: Bool { let o = _accessor.offset(VTOFFSET.ENCRYPTION_REQUIRED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Available pricing tiers
@@ -370,7 +370,7 @@ public struct STF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func addVectorOf(DATA_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_TYPES, at: VTOFFSET.DATA_TYPES.p) }
   public static func add(COVERAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVERAGE, at: VTOFFSET.COVERAGE.p) }
   public static func add(SAMPLE_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLE_CID, at: VTOFFSET.SAMPLE_CID.p) }
-  public static func add(ACCESS_TYPE: accessType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCESS_TYPE.rawValue, def: 0, at: VTOFFSET.ACCESS_TYPE.p) }
+  public static func add(ACCESS_TYPE: accessCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCESS_TYPE.rawValue, def: 0, at: VTOFFSET.ACCESS_TYPE.p) }
   public static func add(ENCRYPTION_REQUIRED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCRYPTION_REQUIRED, def: false,
    at: VTOFFSET.ENCRYPTION_REQUIRED.p) }
   public static func addVectorOf(PRICING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRICING, at: VTOFFSET.PRICING.p) }
@@ -391,7 +391,7 @@ public struct STF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     DATA_TYPESVectorOffset DATA_TYPES: Offset = Offset(),
     COVERAGEOffset COVERAGE: Offset = Offset(),
     SAMPLE_CIDOffset SAMPLE_CID: Offset = Offset(),
-    ACCESS_TYPE: accessType = .onetime,
+    ACCESS_TYPE: accessCategory = .onetime,
     ENCRYPTION_REQUIRED: Bool = false,
     PRICINGVectorOffset PRICING: Offset = Offset(),
     ACCEPTED_PAYMENTSVectorOffset ACCEPTED_PAYMENTS: Offset = Offset(),
@@ -430,7 +430,7 @@ public struct STF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.DATA_TYPES.p, fieldName: "DATA_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.COVERAGE.p, fieldName: "COVERAGE", required: false, type: ForwardOffset<DataCoverage>.self)
     try _v.visit(field: VTOFFSET.SAMPLE_CID.p, fieldName: "SAMPLE_CID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ACCESS_TYPE.p, fieldName: "ACCESS_TYPE", required: false, type: accessType.self)
+    try _v.visit(field: VTOFFSET.ACCESS_TYPE.p, fieldName: "ACCESS_TYPE", required: false, type: accessCategory.self)
     try _v.visit(field: VTOFFSET.ENCRYPTION_REQUIRED.p, fieldName: "ENCRYPTION_REQUIRED", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.PRICING.p, fieldName: "PRICING", required: false, type: ForwardOffset<Vector<ForwardOffset<PricingTier>, PricingTier>>.self)
     try _v.visit(field: VTOFFSET.ACCEPTED_PAYMENTS.p, fieldName: "ACCEPTED_PAYMENTS", required: false, type: ForwardOffset<Vector<paymentMethod, paymentMethod>>.self)

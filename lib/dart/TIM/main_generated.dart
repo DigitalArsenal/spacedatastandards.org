@@ -6,7 +6,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-enum timeSystem {
+enum timingStandard {
   GMST(0),
   GPS(1),
   MET(2),
@@ -21,43 +21,43 @@ enum timeSystem {
   UTC(11);
 
   final int value;
-  const timeSystem(this.value);
+  const timingStandard(this.value);
 
-  factory timeSystem.fromValue(int value) {
+  factory timingStandard.fromValue(int value) {
     switch (value) {
-      case 0: return timeSystem.GMST;
-      case 1: return timeSystem.GPS;
-      case 2: return timeSystem.MET;
-      case 3: return timeSystem.MRT;
-      case 4: return timeSystem.SCLK;
-      case 5: return timeSystem.TAI;
-      case 6: return timeSystem.TCB;
-      case 7: return timeSystem.TDB;
-      case 8: return timeSystem.TCG;
-      case 9: return timeSystem.TT;
-      case 10: return timeSystem.UT1;
-      case 11: return timeSystem.UTC;
+      case 0: return timingStandard.GMST;
+      case 1: return timingStandard.GPS;
+      case 2: return timingStandard.MET;
+      case 3: return timingStandard.MRT;
+      case 4: return timingStandard.SCLK;
+      case 5: return timingStandard.TAI;
+      case 6: return timingStandard.TCB;
+      case 7: return timingStandard.TDB;
+      case 8: return timingStandard.TCG;
+      case 9: return timingStandard.TT;
+      case 10: return timingStandard.UT1;
+      case 11: return timingStandard.UTC;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static timeSystem? _createOrNull(int? value) =>
-      value == null ? null : timeSystem.fromValue(value);
+  static timingStandard? _createOrNull(int? value) =>
+      value == null ? null : timingStandard.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 11;
-  static const fb.Reader<timeSystem> reader = _timeSystemReader();
+  static const fb.Reader<timingStandard> reader = _timingStandardReader();
 }
 
-class _timeSystemReader extends fb.Reader<timeSystem> {
-  const _timeSystemReader();
+class _timingStandardReader extends fb.Reader<timingStandard> {
+  const _timingStandardReader();
 
   @override
   int get size => 1;
 
   @override
-  timeSystem read(fb.BufferContext bc, int offset) =>
-      timeSystem.fromValue(const fb.Int8Reader().read(bc, offset));
+  timingStandard read(fb.BufferContext bc, int offset) =>
+      timingStandard.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Time System
@@ -73,8 +73,8 @@ class TIM {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  timeSystem get TIME_SYSTEM => timeSystem.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  timeSystem get timeSystem => TIME_SYSTEM;
+  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  timingStandard get timeSystem => TIME_SYSTEM;
 
   @override
   String toString() {
@@ -99,7 +99,7 @@ class TIMBuilder {
     fbBuilder.startTable(1);
   }
 
-  int addTimeSystem(timeSystem? TIME_SYSTEM) {
+  int addTimeSystem(timingStandard? TIME_SYSTEM) {
     fbBuilder.addInt8(0, TIME_SYSTEM?.value);
     return fbBuilder.offset;
   }
@@ -110,11 +110,11 @@ class TIMBuilder {
 }
 
 class TIMObjectBuilder extends fb.ObjectBuilder {
-  final timeSystem? _TIME_SYSTEM;
+  final timingStandard? _TIME_SYSTEM;
 
   TIMObjectBuilder({
-    timeSystem? TIME_SYSTEM,
-    timeSystem? timeSystem,
+    timingStandard? TIME_SYSTEM,
+    timingStandard? timeSystem,
   })
       : _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM;
 

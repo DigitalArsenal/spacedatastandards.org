@@ -1364,7 +1364,7 @@
         "SPP": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "packetType": {
+                "packetKind": {
                     "type": "string",
                     "enum": [
                         "TM",
@@ -1393,7 +1393,7 @@
                             "x-flatbuffer-type": "ubyte"
                         },
                         "PACKET_TYPE": {
-                            "$ref": "#/definitions/packetType",
+                            "$ref": "#/definitions/packetKind",
                             "description": "Packet type (TM or TC)",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -1460,7 +1460,7 @@
         "PLK": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "licenseType": {
+                "licenseCategory": {
                     "type": "string",
                     "enum": [
                         "Trial",
@@ -1573,7 +1573,7 @@
                             "x-flatbuffer-type": "[string]"
                         },
                         "LICENSE_TYPE": {
-                            "$ref": "#/definitions/licenseType",
+                            "$ref": "#/definitions/licenseCategory",
                             "description": "Type of license",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -1959,7 +1959,7 @@
         "VCM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "meanElementTheory": {
+                "meanElementSource": {
                     "type": "string",
                     "enum": [
                         "SGP4",
@@ -1993,7 +1993,7 @@
                     "description": "Mean Element Theory",
                     "properties": {
                         "MEAN_ELEMENT_THEORY": {
-                            "$ref": "#/definitions/meanElementTheory",
+                            "$ref": "#/definitions/meanElementSource",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
                             "x-flatbuffer-enum-values": {
@@ -5936,7 +5936,7 @@
         "ANI": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "analyticType": {
+                "analyticProfile": {
                     "type": "string",
                     "enum": [
                         "SPECTRAL",
@@ -6001,7 +6001,7 @@
                             "x-flatbuffer-type": "string"
                         },
                         "ANALYTIC_TYPE": {
-                            "$ref": "#/definitions/analyticType",
+                            "$ref": "#/definitions/analyticProfile",
                             "description": "Analytic product type",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -8903,7 +8903,7 @@
         "SHW": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "shaderStage": {
+                "glslStage": {
                     "type": "string",
                     "enum": [
                         "VERTEX",
@@ -8936,7 +8936,7 @@
                         }
                     }
                 },
-                "shaderInjectionPoint": {
+                "shaderHookPoint": {
                     "type": "string",
                     "enum": [
                         "NONE",
@@ -9179,7 +9179,7 @@
                             "x-flatbuffer-type": "string"
                         },
                         "SHADER_STAGE": {
-                            "$ref": "#/definitions/shaderStage",
+                            "$ref": "#/definitions/glslStage",
                             "description": "Target GLSL stage.",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "ubyte",
@@ -9205,7 +9205,7 @@
                             }
                         },
                         "SHADER_INJECTION_POINT": {
-                            "$ref": "#/definitions/shaderInjectionPoint",
+                            "$ref": "#/definitions/shaderHookPoint",
                             "description": "Intended injection point in the host pipeline.",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "ubyte",
@@ -14153,7 +14153,7 @@
         "PUR": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "accessType": {
+                "accessCategory": {
                     "type": "string",
                     "enum": [
                         "OneTime",
@@ -14392,7 +14392,7 @@
                             "x-flatbuffer-type": "string"
                         },
                         "ACCESS_TYPE": {
-                            "$ref": "#/definitions/accessType",
+                            "$ref": "#/definitions/accessCategory",
                             "description": "Type of access offered",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -17691,7 +17691,7 @@
         "MET": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "meanElementTheory": {
+                "meanElementSource": {
                     "type": "string",
                     "enum": [
                         "SGP4",
@@ -17725,7 +17725,7 @@
                     "description": "Mean Element Theory",
                     "properties": {
                         "MEAN_ELEMENT_THEORY": {
-                            "$ref": "#/definitions/meanElementTheory",
+                            "$ref": "#/definitions/meanElementSource",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
                             "x-flatbuffer-enum-values": {
@@ -18904,7 +18904,7 @@
                         "CustomFrameWrapper"
                     ]
                 },
-                "timeSystem": {
+                "timingStandard": {
                     "type": "string",
                     "enum": [
                         "GMST",
@@ -19930,7 +19930,7 @@
                         }
                     }
                 },
-                "objectType": {
+                "spaceObjectClass": {
                     "type": "string",
                     "enum": [
                         "PAYLOAD",
@@ -19959,7 +19959,7 @@
                         }
                     }
                 },
-                "opsStatusCode": {
+                "operationalState": {
                     "type": "string",
                     "enum": [
                         "OPERATIONAL",
@@ -20008,7 +20008,7 @@
                         }
                     }
                 },
-                "dataStatusCode": {
+                "dataAvailability": {
                     "type": "string",
                     "enum": [
                         "NO_CURRENT_ELEMENTS",
@@ -20037,7 +20037,7 @@
                         }
                     }
                 },
-                "orbitType": {
+                "orbitRegime": {
                     "type": "string",
                     "enum": [
                         "ORBIT",
@@ -20071,7 +20071,7 @@
                         }
                     }
                 },
-                "massType": {
+                "massCategory": {
                     "type": "string",
                     "enum": [
                         "DRY",
@@ -20146,7 +20146,7 @@
                         }
                     }
                 },
-                "sizeShapeType": {
+                "sizeShapeProfile": {
                     "type": "string",
                     "enum": [
                         "SMA",
@@ -20571,7 +20571,7 @@
                     "description": "Time System",
                     "properties": {
                         "TIME_SYSTEM": {
-                            "$ref": "#/definitions/timeSystem",
+                            "$ref": "#/definitions/timingStandard",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
                             "x-flatbuffer-enum-values": {
@@ -21658,7 +21658,7 @@
                             "x-flatbuffer-type": "uint"
                         },
                         "OBJECT_TYPE": {
-                            "$ref": "#/definitions/objectType",
+                            "$ref": "#/definitions/spaceObjectClass",
                             "description": "Object type (Payload, Rocket body, Debris, Unknown)",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -21682,7 +21682,7 @@
                             }
                         },
                         "OPS_STATUS_CODE": {
-                            "$ref": "#/definitions/opsStatusCode",
+                            "$ref": "#/definitions/operationalState",
                             "description": "Operational Status Code",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -22274,7 +22274,7 @@
                             "x-flatbuffer-type": "double"
                         },
                         "DATA_STATUS_CODE": {
-                            "$ref": "#/definitions/dataStatusCode",
+                            "$ref": "#/definitions/dataAvailability",
                             "description": "Data status code; blank otherwise",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -22303,7 +22303,7 @@
                             "x-flatbuffer-type": "string"
                         },
                         "ORBIT_TYPE": {
-                            "$ref": "#/definitions/orbitType",
+                            "$ref": "#/definitions/orbitRegime",
                             "description": "Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -22351,7 +22351,7 @@
                             "x-flatbuffer-type": "double"
                         },
                         "MASS_TYPE": {
-                            "$ref": "#/definitions/massType",
+                            "$ref": "#/definitions/massCategory",
                             "description": "Mass type (Dry, Wet)",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -22539,7 +22539,7 @@
                             }
                         },
                         "SIZE_SHAPE_TYPE": {
-                            "$ref": "#/definitions/sizeShapeType",
+                            "$ref": "#/definitions/sizeShapeProfile",
                             "description": "Parameterization of the first orbital element (SMA vs R_PERIAPSIS).",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -22678,7 +22678,7 @@
                             "x-flatbuffer-type": "RFM"
                         },
                         "TIME_SYSTEM": {
-                            "$ref": "#/definitions/timeSystem",
+                            "$ref": "#/definitions/timingStandard",
                             "description": "Time system used for all epochs in this message.",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -28946,7 +28946,7 @@
                         }
                     }
                 },
-                "aouType": {
+                "aouCategory": {
                     "type": "string",
                     "enum": [
                         "CIRCULAR",
@@ -29101,7 +29101,7 @@
                             "x-flatbuffer-type": "string"
                         },
                         "AOU_TYPE": {
-                            "$ref": "#/definitions/aouType",
+                            "$ref": "#/definitions/aouCategory",
                             "description": "Area of uncertainty type",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -29448,7 +29448,7 @@
         "TIM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "timeSystem": {
+                "timingStandard": {
                     "type": "string",
                     "enum": [
                         "GMST",
@@ -29522,7 +29522,7 @@
                     "description": "Time System",
                     "properties": {
                         "TIME_SYSTEM": {
-                            "$ref": "#/definitions/timeSystem",
+                            "$ref": "#/definitions/timingStandard",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
                             "x-flatbuffer-enum-values": {
@@ -34213,7 +34213,7 @@
         "OMM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "meanElementTheory": {
+                "meanElementSource": {
                     "type": "string",
                     "enum": [
                         "SGP4",
@@ -34247,7 +34247,7 @@
                     "description": "Mean Element Theory",
                     "properties": {
                         "MEAN_ELEMENT_THEORY": {
-                            "$ref": "#/definitions/meanElementTheory",
+                            "$ref": "#/definitions/meanElementSource",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
                             "x-flatbuffer-enum-values": {
@@ -46647,7 +46647,7 @@
         "SAR": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "sarMode": {
+                "sarMission": {
                     "type": "string",
                     "enum": [
                         "STRIPMAP",
@@ -46820,7 +46820,7 @@
                             "x-flatbuffer-type": "string"
                         },
                         "SAR_MODE": {
-                            "$ref": "#/definitions/sarMode",
+                            "$ref": "#/definitions/sarMission",
                             "description": "SAR imaging mode",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -47140,7 +47140,7 @@
         "SKI": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "imageType": {
+                "imageCategory": {
                     "type": "string",
                     "enum": [
                         "VISIBLE",
@@ -47256,7 +47256,7 @@
                             "x-flatbuffer-type": "[double]"
                         },
                         "IMAGE_TYPE": {
-                            "$ref": "#/definitions/imageType",
+                            "$ref": "#/definitions/imageCategory",
                             "description": "Image type",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -47765,7 +47765,7 @@
         "MPE": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "meanElementTheory": {
+                "meanElementSource": {
                     "type": "string",
                     "enum": [
                         "SGP4",
@@ -47799,7 +47799,7 @@
                     "description": "Mean Element Theory",
                     "properties": {
                         "MEAN_ELEMENT_THEORY": {
-                            "$ref": "#/definitions/meanElementTheory",
+                            "$ref": "#/definitions/meanElementSource",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
                             "x-flatbuffer-enum-values": {
@@ -50989,7 +50989,7 @@
         "LKS": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "linkType": {
+                "linkCategory": {
                     "type": "string",
                     "enum": [
                         "UPLINK",
@@ -51022,7 +51022,7 @@
                         }
                     }
                 },
-                "linkState": {
+                "linkCondition": {
                     "type": "string",
                     "enum": [
                         "ESTABLISHED",
@@ -51099,7 +51099,7 @@
                             "x-flatbuffer-type": "string"
                         },
                         "LINK_TYPE": {
-                            "$ref": "#/definitions/linkType",
+                            "$ref": "#/definitions/linkCategory",
                             "description": "Link type",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -51125,7 +51125,7 @@
                             }
                         },
                         "LINK_STATE": {
-                            "$ref": "#/definitions/linkState",
+                            "$ref": "#/definitions/linkCondition",
                             "description": "Link state",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -56309,7 +56309,7 @@
         "ACL": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "accessType": {
+                "accessCategory": {
                     "type": "string",
                     "enum": [
                         "OneTime",
@@ -56548,7 +56548,7 @@
                             "x-flatbuffer-type": "string"
                         },
                         "ACCESS_TYPE": {
-                            "$ref": "#/definitions/accessType",
+                            "$ref": "#/definitions/accessCategory",
                             "description": "Type of access offered",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -57149,7 +57149,7 @@
         "CFP": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "pduType": {
+                "pduKind": {
                     "type": "string",
                     "enum": [
                         "FILE_DIRECTIVE",
@@ -57166,7 +57166,7 @@
                         }
                     }
                 },
-                "transmissionMode": {
+                "transmissionClass": {
                     "type": "string",
                     "enum": [
                         "ACKNOWLEDGED",
@@ -57195,7 +57195,7 @@
                             "x-flatbuffer-type": "ubyte"
                         },
                         "PDU_TYPE": {
-                            "$ref": "#/definitions/pduType",
+                            "$ref": "#/definitions/pduKind",
                             "description": "PDU type",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -57216,7 +57216,7 @@
                             "x-flatbuffer-type": "ubyte"
                         },
                         "TRANSMISSION_MODE": {
-                            "$ref": "#/definitions/transmissionMode",
+                            "$ref": "#/definitions/transmissionClass",
                             "description": "Transmission mode",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -58217,7 +58217,7 @@
         "STF": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "accessType": {
+                "accessCategory": {
                     "type": "string",
                     "enum": [
                         "OneTime",
@@ -58456,7 +58456,7 @@
                             "x-flatbuffer-type": "string"
                         },
                         "ACCESS_TYPE": {
-                            "$ref": "#/definitions/accessType",
+                            "$ref": "#/definitions/accessCategory",
                             "description": "Type of access offered",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",

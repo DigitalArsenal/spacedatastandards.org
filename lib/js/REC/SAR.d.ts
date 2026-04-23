@@ -1,5 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
-import { sarMode } from './sarMode.js';
+import { sarMission } from './sarMission.js';
 import { sarPolarization } from './sarPolarization.js';
 /**
  * SAR Observation
@@ -92,7 +92,7 @@ export declare class SAR implements flatbuffers.IUnpackableObject<SART> {
     /**
      * SAR imaging mode
      */
-    SAR_MODE(): sarMode;
+    SAR_MODE(): sarMission;
     /**
      * Operating RF band (e.g., X, C, L, S, P)
      */
@@ -287,7 +287,7 @@ export declare class SAR implements flatbuffers.IUnpackableObject<SART> {
     static addDetectionEnd(builder: flatbuffers.Builder, DETECTION_ENDOffset: flatbuffers.Offset): void;
     static addDwellTime(builder: flatbuffers.Builder, DWELL_TIME: number): void;
     static addOrbitState(builder: flatbuffers.Builder, ORBIT_STATEOffset: flatbuffers.Offset): void;
-    static addSarMode(builder: flatbuffers.Builder, SAR_MODE: sarMode): void;
+    static addSarMode(builder: flatbuffers.Builder, SAR_MODE: sarMission): void;
     static addOperatingBand(builder: flatbuffers.Builder, OPERATING_BANDOffset: flatbuffers.Offset): void;
     static addOperatingFreq(builder: flatbuffers.Builder, OPERATING_FREQ: number): void;
     static addSnr(builder: flatbuffers.Builder, SNR: number): void;
@@ -338,7 +338,7 @@ export declare class SAR implements flatbuffers.IUnpackableObject<SART> {
     static endSAR(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishSARBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedSARBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createSAR(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, SAT_NO: number, ORIG_OBJECT_IDOffset: flatbuffers.Offset, ON_ORBITOffset: flatbuffers.Offset, ID_SENSOROffset: flatbuffers.Offset, ORIG_SENSOR_IDOffset: flatbuffers.Offset, EXTERNAL_IDOffset: flatbuffers.Offset, COLLECTION_IDOffset: flatbuffers.Offset, DETECTION_IDOffset: flatbuffers.Offset, COLLECTION_STARTOffset: flatbuffers.Offset, COLLECTION_ENDOffset: flatbuffers.Offset, CENTER_TIMEOffset: flatbuffers.Offset, DETECTION_STARTOffset: flatbuffers.Offset, DETECTION_ENDOffset: flatbuffers.Offset, DWELL_TIME: number, ORBIT_STATEOffset: flatbuffers.Offset, SAR_MODE: sarMode, OPERATING_BANDOffset: flatbuffers.Offset, OPERATING_FREQ: number, SNR: number, TX_POLARIZATION: sarPolarization, RX_POLARIZATION: sarPolarization, GRAZE_ANGLE: number, INCIDENCE_ANGLE: number, SQUINT_ANGLE: number, PULSE_BANDWIDTH: number, PULSE_DURATION: number, CONTINUOUS_SPOT_ANGLE: number, SLANT_RANGE: number, NEAR_RANGE: number, FAR_RANGE: number, SWATH_LENGTH: number, AGJSONOffset: flatbuffers.Offset, ATEXTOffset: flatbuffers.Offset, ATYPEOffset: flatbuffers.Offset, COORD_SYSOffset: flatbuffers.Offset, SPACING_RANGE: number, SPACING_AZIMUTH: number, LOOKS_AZIMUTH: number, LOOKS_RANGE: number, RESOLUTION_RANGE: number, RESOLUTION_AZIMUTH: number, OB_DIRECTIONOffset: flatbuffers.Offset, TARGETPOSX: number, TARGETPOSY: number, TARGETPOSZ: number, SENALT: number, SENVELX: number, SENVELY: number, SENVELZ: number, SENLAT_START: number, SENLON_START: number, SENLAT_END: number, SENLON_END: number, TRANSACTION_IDOffset: flatbuffers.Offset, TAGSOffset: flatbuffers.Offset, SRC_TYPSOffset: flatbuffers.Offset, SRC_IDSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createSAR(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, SAT_NO: number, ORIG_OBJECT_IDOffset: flatbuffers.Offset, ON_ORBITOffset: flatbuffers.Offset, ID_SENSOROffset: flatbuffers.Offset, ORIG_SENSOR_IDOffset: flatbuffers.Offset, EXTERNAL_IDOffset: flatbuffers.Offset, COLLECTION_IDOffset: flatbuffers.Offset, DETECTION_IDOffset: flatbuffers.Offset, COLLECTION_STARTOffset: flatbuffers.Offset, COLLECTION_ENDOffset: flatbuffers.Offset, CENTER_TIMEOffset: flatbuffers.Offset, DETECTION_STARTOffset: flatbuffers.Offset, DETECTION_ENDOffset: flatbuffers.Offset, DWELL_TIME: number, ORBIT_STATEOffset: flatbuffers.Offset, SAR_MODE: sarMission, OPERATING_BANDOffset: flatbuffers.Offset, OPERATING_FREQ: number, SNR: number, TX_POLARIZATION: sarPolarization, RX_POLARIZATION: sarPolarization, GRAZE_ANGLE: number, INCIDENCE_ANGLE: number, SQUINT_ANGLE: number, PULSE_BANDWIDTH: number, PULSE_DURATION: number, CONTINUOUS_SPOT_ANGLE: number, SLANT_RANGE: number, NEAR_RANGE: number, FAR_RANGE: number, SWATH_LENGTH: number, AGJSONOffset: flatbuffers.Offset, ATEXTOffset: flatbuffers.Offset, ATYPEOffset: flatbuffers.Offset, COORD_SYSOffset: flatbuffers.Offset, SPACING_RANGE: number, SPACING_AZIMUTH: number, LOOKS_AZIMUTH: number, LOOKS_RANGE: number, RESOLUTION_RANGE: number, RESOLUTION_AZIMUTH: number, OB_DIRECTIONOffset: flatbuffers.Offset, TARGETPOSX: number, TARGETPOSY: number, TARGETPOSZ: number, SENALT: number, SENVELX: number, SENVELY: number, SENVELZ: number, SENLAT_START: number, SENLON_START: number, SENLAT_END: number, SENLON_END: number, TRANSACTION_IDOffset: flatbuffers.Offset, TAGSOffset: flatbuffers.Offset, SRC_TYPSOffset: flatbuffers.Offset, SRC_IDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): SART;
     unpackTo(_o: SART): void;
 }
@@ -359,7 +359,7 @@ export declare class SART implements flatbuffers.IGeneratedObject {
     DETECTION_END: string | Uint8Array | null;
     DWELL_TIME: number;
     ORBIT_STATE: string | Uint8Array | null;
-    SAR_MODE: sarMode;
+    SAR_MODE: sarMission;
     OPERATING_BAND: string | Uint8Array | null;
     OPERATING_FREQ: number;
     SNR: number;
@@ -401,7 +401,7 @@ export declare class SART implements flatbuffers.IGeneratedObject {
     TAGS: (string)[];
     SRC_TYPS: (string)[];
     SRC_IDS: (string)[];
-    constructor(ID?: string | Uint8Array | null, SAT_NO?: number, ORIG_OBJECT_ID?: string | Uint8Array | null, ON_ORBIT?: string | Uint8Array | null, ID_SENSOR?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, EXTERNAL_ID?: string | Uint8Array | null, COLLECTION_ID?: string | Uint8Array | null, DETECTION_ID?: string | Uint8Array | null, COLLECTION_START?: string | Uint8Array | null, COLLECTION_END?: string | Uint8Array | null, CENTER_TIME?: string | Uint8Array | null, DETECTION_START?: string | Uint8Array | null, DETECTION_END?: string | Uint8Array | null, DWELL_TIME?: number, ORBIT_STATE?: string | Uint8Array | null, SAR_MODE?: sarMode, OPERATING_BAND?: string | Uint8Array | null, OPERATING_FREQ?: number, SNR?: number, TX_POLARIZATION?: sarPolarization, RX_POLARIZATION?: sarPolarization, GRAZE_ANGLE?: number, INCIDENCE_ANGLE?: number, SQUINT_ANGLE?: number, PULSE_BANDWIDTH?: number, PULSE_DURATION?: number, CONTINUOUS_SPOT_ANGLE?: number, SLANT_RANGE?: number, NEAR_RANGE?: number, FAR_RANGE?: number, SWATH_LENGTH?: number, AGJSON?: string | Uint8Array | null, ATEXT?: string | Uint8Array | null, ATYPE?: string | Uint8Array | null, COORD_SYS?: string | Uint8Array | null, SPACING_RANGE?: number, SPACING_AZIMUTH?: number, LOOKS_AZIMUTH?: number, LOOKS_RANGE?: number, RESOLUTION_RANGE?: number, RESOLUTION_AZIMUTH?: number, OB_DIRECTION?: string | Uint8Array | null, TARGETPOSX?: number, TARGETPOSY?: number, TARGETPOSZ?: number, SENALT?: number, SENVELX?: number, SENVELY?: number, SENVELZ?: number, SENLAT_START?: number, SENLON_START?: number, SENLAT_END?: number, SENLON_END?: number, TRANSACTION_ID?: string | Uint8Array | null, TAGS?: (string)[], SRC_TYPS?: (string)[], SRC_IDS?: (string)[]);
+    constructor(ID?: string | Uint8Array | null, SAT_NO?: number, ORIG_OBJECT_ID?: string | Uint8Array | null, ON_ORBIT?: string | Uint8Array | null, ID_SENSOR?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, EXTERNAL_ID?: string | Uint8Array | null, COLLECTION_ID?: string | Uint8Array | null, DETECTION_ID?: string | Uint8Array | null, COLLECTION_START?: string | Uint8Array | null, COLLECTION_END?: string | Uint8Array | null, CENTER_TIME?: string | Uint8Array | null, DETECTION_START?: string | Uint8Array | null, DETECTION_END?: string | Uint8Array | null, DWELL_TIME?: number, ORBIT_STATE?: string | Uint8Array | null, SAR_MODE?: sarMission, OPERATING_BAND?: string | Uint8Array | null, OPERATING_FREQ?: number, SNR?: number, TX_POLARIZATION?: sarPolarization, RX_POLARIZATION?: sarPolarization, GRAZE_ANGLE?: number, INCIDENCE_ANGLE?: number, SQUINT_ANGLE?: number, PULSE_BANDWIDTH?: number, PULSE_DURATION?: number, CONTINUOUS_SPOT_ANGLE?: number, SLANT_RANGE?: number, NEAR_RANGE?: number, FAR_RANGE?: number, SWATH_LENGTH?: number, AGJSON?: string | Uint8Array | null, ATEXT?: string | Uint8Array | null, ATYPE?: string | Uint8Array | null, COORD_SYS?: string | Uint8Array | null, SPACING_RANGE?: number, SPACING_AZIMUTH?: number, LOOKS_AZIMUTH?: number, LOOKS_RANGE?: number, RESOLUTION_RANGE?: number, RESOLUTION_AZIMUTH?: number, OB_DIRECTION?: string | Uint8Array | null, TARGETPOSX?: number, TARGETPOSY?: number, TARGETPOSZ?: number, SENALT?: number, SENVELX?: number, SENVELY?: number, SENVELZ?: number, SENLAT_START?: number, SENLON_START?: number, SENLAT_END?: number, SENLON_END?: number, TRANSACTION_ID?: string | Uint8Array | null, TAGS?: (string)[], SRC_TYPS?: (string)[], SRC_IDS?: (string)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SAR.d.ts.map

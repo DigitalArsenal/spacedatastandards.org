@@ -182,46 +182,46 @@ func (rcv *OMM) ReferenceFrameEpoch() []byte {
 
 /// Reference Frame Epoch (ISO 8601 UTC format)
 /// Time System [M, UTC]
-func (rcv *OMM) TIME_SYSTEM() timeSystem {
+func (rcv *OMM) TIME_SYSTEM() timingStandard {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
-		return timeSystem(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return timingStandard(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 11
 }
 
-func (rcv *OMM) TimeSystem() timeSystem {
+func (rcv *OMM) TimeSystem() timingStandard {
 	return rcv.TIME_SYSTEM()
 }
 
 /// Time System [M, UTC]
-func (rcv *OMM) MutateTIME_SYSTEM(n timeSystem) bool {
+func (rcv *OMM) MutateTIME_SYSTEM(n timingStandard) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
 }
 
-func (rcv *OMM) MutateTimeSystem(n timeSystem) bool {
+func (rcv *OMM) MutateTimeSystem(n timingStandard) bool {
 	return rcv.MutateTIME_SYSTEM(n)
 }
 
 /// Mean Element Theory
-func (rcv *OMM) MEAN_ELEMENT_THEORY() meanElementTheory {
+func (rcv *OMM) MEAN_ELEMENT_THEORY() meanElementSource {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
-		return meanElementTheory(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return meanElementSource(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *OMM) MeanElementTheory() meanElementTheory {
+func (rcv *OMM) MeanElementTheory() meanElementSource {
 	return rcv.MEAN_ELEMENT_THEORY()
 }
 
 /// Mean Element Theory
-func (rcv *OMM) MutateMEAN_ELEMENT_THEORY(n meanElementTheory) bool {
+func (rcv *OMM) MutateMEAN_ELEMENT_THEORY(n meanElementSource) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
 }
 
-func (rcv *OMM) MutateMeanElementTheory(n meanElementTheory) bool {
+func (rcv *OMM) MutateMeanElementTheory(n meanElementSource) bool {
 	return rcv.MutateMEAN_ELEMENT_THEORY(n)
 }
 
@@ -541,25 +541,25 @@ func (rcv *OMM) MutateDragCoeff(n float64) bool {
 
 /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
 /// EPHEMERIS_TYPE Default=0
-func (rcv *OMM) EPHEMERIS_TYPE() ephemerisType {
+func (rcv *OMM) EPHEMERIS_TYPE() ephemerisFormat {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
-		return ephemerisType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return ephemerisFormat(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 1
 }
 
-func (rcv *OMM) EphemerisType() ephemerisType {
+func (rcv *OMM) EphemerisType() ephemerisFormat {
 	return rcv.EPHEMERIS_TYPE()
 }
 
 /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
 /// EPHEMERIS_TYPE Default=0
-func (rcv *OMM) MutateEPHEMERIS_TYPE(n ephemerisType) bool {
+func (rcv *OMM) MutateEPHEMERIS_TYPE(n ephemerisFormat) bool {
 	return rcv._tab.MutateInt8Slot(54, int8(n))
 }
 
-func (rcv *OMM) MutateEphemerisType(n ephemerisType) bool {
+func (rcv *OMM) MutateEphemerisType(n ephemerisFormat) bool {
 	return rcv.MutateEPHEMERIS_TYPE(n)
 }
 
@@ -927,16 +927,16 @@ func OMMAddREFERENCE_FRAME_EPOCH(builder *flatbuffers.Builder, REFERENCE_FRAME_E
 func OMMAddReferenceFrameEpoch(builder *flatbuffers.Builder, REFERENCE_FRAME_EPOCH flatbuffers.UOffsetT) {
 	OMMAddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH)
 }
-func OMMAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
+func OMMAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timingStandard) {
 	builder.PrependInt8Slot(8, int8(TIME_SYSTEM), 11)
 }
-func OMMAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
+func OMMAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM timingStandard) {
 	OMMAddTIME_SYSTEM(builder, TIME_SYSTEM)
 }
-func OMMAddMEAN_ELEMENT_THEORY(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementTheory) {
+func OMMAddMEAN_ELEMENT_THEORY(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementSource) {
 	builder.PrependInt8Slot(9, int8(MEAN_ELEMENT_THEORY), 0)
 }
-func OMMAddMeanElementTheory(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementTheory) {
+func OMMAddMeanElementTheory(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementSource) {
 	OMMAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
 }
 func OMMAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
@@ -1029,10 +1029,10 @@ func OMMAddDRAG_COEFF(builder *flatbuffers.Builder, DRAG_COEFF float64) {
 func OMMAddDragCoeff(builder *flatbuffers.Builder, DRAG_COEFF float64) {
 	OMMAddDRAG_COEFF(builder, DRAG_COEFF)
 }
-func OMMAddEPHEMERIS_TYPE(builder *flatbuffers.Builder, EPHEMERIS_TYPE ephemerisType) {
+func OMMAddEPHEMERIS_TYPE(builder *flatbuffers.Builder, EPHEMERIS_TYPE ephemerisFormat) {
 	builder.PrependInt8Slot(25, int8(EPHEMERIS_TYPE), 1)
 }
-func OMMAddEphemerisType(builder *flatbuffers.Builder, EPHEMERIS_TYPE ephemerisType) {
+func OMMAddEphemerisType(builder *flatbuffers.Builder, EPHEMERIS_TYPE ephemerisFormat) {
 	OMMAddEPHEMERIS_TYPE(builder, EPHEMERIS_TYPE)
 }
 func OMMAddCLASSIFICATION_TYPE(builder *flatbuffers.Builder, CLASSIFICATION_TYPE flatbuffers.UOffsetT) {

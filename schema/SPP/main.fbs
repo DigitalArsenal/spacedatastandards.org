@@ -1,7 +1,7 @@
-// Hash: 59daeed99d0f75bf954b82f4b899e6e170fd4dee63c90c6358616320a10fe16a
-// Version: 0.0.2
+// Hash: 4273614b2c83f9753458492399f636bc04b8b10c23bf47e4a2c32c4bf992bdda
+// Version: 0.0.3
 // -----------------------------------END_HEADER
-enum packetType : byte {
+enum packetKind : byte {
   TM,
   TC
 }
@@ -11,7 +11,7 @@ table SPP {
   /// Packet version number
   VERSION:ubyte;
   /// Packet type (TM or TC)
-  PACKET_TYPE:packetType;
+  PACKET_TYPE:packetKind;
   /// Secondary header flag
   SEC_HDR_FLAG:bool;
   /// Application Process Identifier

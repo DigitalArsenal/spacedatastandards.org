@@ -7,42 +7,42 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 ///  Access type for data listings
-enum accessType {
+enum accessCategory {
   OneTime(0),
   Subscription(1),
   Streaming(2),
   Query(3);
 
   final int value;
-  const accessType(this.value);
+  const accessCategory(this.value);
 
-  factory accessType.fromValue(int value) {
+  factory accessCategory.fromValue(int value) {
     switch (value) {
-      case 0: return accessType.OneTime;
-      case 1: return accessType.Subscription;
-      case 2: return accessType.Streaming;
-      case 3: return accessType.Query;
+      case 0: return accessCategory.OneTime;
+      case 1: return accessCategory.Subscription;
+      case 2: return accessCategory.Streaming;
+      case 3: return accessCategory.Query;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static accessType? _createOrNull(int? value) =>
-      value == null ? null : accessType.fromValue(value);
+  static accessCategory? _createOrNull(int? value) =>
+      value == null ? null : accessCategory.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 3;
-  static const fb.Reader<accessType> reader = _accessTypeReader();
+  static const fb.Reader<accessCategory> reader = _accessCategoryReader();
 }
 
-class _accessTypeReader extends fb.Reader<accessType> {
-  const _accessTypeReader();
+class _accessCategoryReader extends fb.Reader<accessCategory> {
+  const _accessCategoryReader();
 
   @override
   int get size => 1;
 
   @override
-  accessType read(fb.BufferContext bc, int offset) =>
-      accessType.fromValue(const fb.Int8Reader().read(bc, offset));
+  accessCategory read(fb.BufferContext bc, int offset) =>
+      accessCategory.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Payment method accepted
@@ -563,8 +563,8 @@ class STF {
   String? get SAMPLE_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
   String? get sampleCid => SAMPLE_CID;
   ///  Type of access offered
-  accessType get ACCESS_TYPE => accessType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
-  accessType get accessType => ACCESS_TYPE;
+  accessCategory get ACCESS_TYPE => accessCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  accessCategory get accessType => ACCESS_TYPE;
   ///  Whether encryption is required for data delivery
   bool get ENCRYPTION_REQUIRED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
   bool get encryptionRequired => ENCRYPTION_REQUIRED;
@@ -639,7 +639,7 @@ class STFBuilder {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addAccessType(accessType? ACCESS_TYPE) {
+  int addAccessType(accessCategory? ACCESS_TYPE) {
     fbBuilder.addInt8(8, ACCESS_TYPE?.value);
     return fbBuilder.offset;
   }
@@ -686,7 +686,7 @@ class STFObjectBuilder extends fb.ObjectBuilder {
   final List<String>? _DATA_TYPES;
   final DataCoverageObjectBuilder? _COVERAGE;
   final String? _SAMPLE_CID;
-  final accessType? _ACCESS_TYPE;
+  final accessCategory? _ACCESS_TYPE;
   final bool? _ENCRYPTION_REQUIRED;
   final List<PricingTierObjectBuilder>? _PRICING;
   final List<paymentMethod>? _ACCEPTED_PAYMENTS;
@@ -709,8 +709,8 @@ class STFObjectBuilder extends fb.ObjectBuilder {
     DataCoverageObjectBuilder? COVERAGE,
     String? SAMPLE_CID,
     String? sampleCid,
-    accessType? ACCESS_TYPE,
-    accessType? accessType,
+    accessCategory? ACCESS_TYPE,
+    accessCategory? accessType,
     bool? ENCRYPTION_REQUIRED,
     bool? encryptionRequired,
     List<PricingTierObjectBuilder>? PRICING,

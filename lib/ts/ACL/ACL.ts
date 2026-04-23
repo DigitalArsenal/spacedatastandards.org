@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { accessType } from './accessType.js';
+import { accessCategory } from './accessCategory.js';
 import { paymentMethod } from './paymentMethod.js';
 
 
@@ -84,9 +84,9 @@ buyerEncryptionPubkeyArray():Uint8Array|null {
 /**
  * Type of access granted
  */
-ACCESS_TYPE():accessType {
+ACCESS_TYPE():accessCategory {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : accessType.OneTime;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : accessCategory.OneTime;
 }
 
 /**
@@ -183,8 +183,8 @@ static startBuyerEncryptionPubkeyVector(builder:flatbuffers.Builder, numElems:nu
   builder.startVector(1, numElems, 1);
 }
 
-static addAccessType(builder:flatbuffers.Builder, ACCESS_TYPE:accessType) {
-  builder.addFieldInt8(4, ACCESS_TYPE, accessType.OneTime);
+static addAccessType(builder:flatbuffers.Builder, ACCESS_TYPE:accessCategory) {
+  builder.addFieldInt8(4, ACCESS_TYPE, accessCategory.OneTime);
 }
 
 static addTierName(builder:flatbuffers.Builder, TIER_NAMEOffset:flatbuffers.Offset) {
@@ -239,7 +239,7 @@ static finishSizePrefixedACLBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$ACL', true);
 }
 
-static createACL(builder:flatbuffers.Builder, GRANT_IDOffset:flatbuffers.Offset, LISTING_IDOffset:flatbuffers.Offset, BUYER_PEER_IDOffset:flatbuffers.Offset, BUYER_ENCRYPTION_PUBKEYOffset:flatbuffers.Offset, ACCESS_TYPE:accessType, TIER_NAMEOffset:flatbuffers.Offset, GRANTED_AT:bigint, EXPIRES_AT:bigint, PAYMENT_TX_HASHOffset:flatbuffers.Offset, PAYMENT_METHOD:paymentMethod, PROVIDER_SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createACL(builder:flatbuffers.Builder, GRANT_IDOffset:flatbuffers.Offset, LISTING_IDOffset:flatbuffers.Offset, BUYER_PEER_IDOffset:flatbuffers.Offset, BUYER_ENCRYPTION_PUBKEYOffset:flatbuffers.Offset, ACCESS_TYPE:accessCategory, TIER_NAMEOffset:flatbuffers.Offset, GRANTED_AT:bigint, EXPIRES_AT:bigint, PAYMENT_TX_HASHOffset:flatbuffers.Offset, PAYMENT_METHOD:paymentMethod, PROVIDER_SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
   ACL.startACL(builder);
   ACL.addGrantId(builder, GRANT_IDOffset);
   ACL.addListingId(builder, LISTING_IDOffset);
@@ -293,7 +293,7 @@ constructor(
   public LISTING_ID: string|Uint8Array|null = null,
   public BUYER_PEER_ID: string|Uint8Array|null = null,
   public BUYER_ENCRYPTION_PUBKEY: (number)[] = [],
-  public ACCESS_TYPE: accessType = accessType.OneTime,
+  public ACCESS_TYPE: accessCategory = accessCategory.OneTime,
   public TIER_NAME: string|Uint8Array|null = null,
   public GRANTED_AT: bigint = BigInt('0'),
   public EXPIRES_AT: bigint = BigInt('0'),

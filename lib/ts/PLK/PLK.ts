@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { licenseType } from './licenseType.js';
+import { licenseCategory } from './licenseCategory.js';
 
 
 /**
@@ -164,9 +164,9 @@ allowedTldsLength():number {
 /**
  * Type of license
  */
-LICENSE_TYPE():licenseType {
+LICENSE_TYPE():licenseCategory {
   const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : licenseType.Trial;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : licenseCategory.Trial;
 }
 
 /**
@@ -321,8 +321,8 @@ static startAllowedTldsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
-static addLicenseType(builder:flatbuffers.Builder, LICENSE_TYPE:licenseType) {
-  builder.addFieldInt8(10, LICENSE_TYPE, licenseType.Trial);
+static addLicenseType(builder:flatbuffers.Builder, LICENSE_TYPE:licenseCategory) {
+  builder.addFieldInt8(10, LICENSE_TYPE, licenseCategory.Trial);
 }
 
 static addMaxActivations(builder:flatbuffers.Builder, MAX_ACTIVATIONS:number) {
@@ -377,7 +377,7 @@ static finishSizePrefixedPLKBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$PLK', true);
 }
 
-static createPLK(builder:flatbuffers.Builder, LICENSE_IDOffset:flatbuffers.Offset, PLUGIN_IDOffset:flatbuffers.Offset, PLUGIN_VERSIONOffset:flatbuffers.Offset, LICENSEE_ORGOffset:flatbuffers.Offset, LICENSEE_EMAILOffset:flatbuffers.Offset, LICENSEE_PEER_IDOffset:flatbuffers.Offset, LICENSEE_PUBKEYOffset:flatbuffers.Offset, ISSUER_PUBKEYOffset:flatbuffers.Offset, ALLOWED_DOMAINSOffset:flatbuffers.Offset, ALLOWED_TLDSOffset:flatbuffers.Offset, LICENSE_TYPE:licenseType, MAX_ACTIVATIONS:number, ISSUED_AT:bigint, VALID_FROM:bigint, EXPIRES_AT:bigint, ISSUER_PEER_IDOffset:flatbuffers.Offset, SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPLK(builder:flatbuffers.Builder, LICENSE_IDOffset:flatbuffers.Offset, PLUGIN_IDOffset:flatbuffers.Offset, PLUGIN_VERSIONOffset:flatbuffers.Offset, LICENSEE_ORGOffset:flatbuffers.Offset, LICENSEE_EMAILOffset:flatbuffers.Offset, LICENSEE_PEER_IDOffset:flatbuffers.Offset, LICENSEE_PUBKEYOffset:flatbuffers.Offset, ISSUER_PUBKEYOffset:flatbuffers.Offset, ALLOWED_DOMAINSOffset:flatbuffers.Offset, ALLOWED_TLDSOffset:flatbuffers.Offset, LICENSE_TYPE:licenseCategory, MAX_ACTIVATIONS:number, ISSUED_AT:bigint, VALID_FROM:bigint, EXPIRES_AT:bigint, ISSUER_PEER_IDOffset:flatbuffers.Offset, SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
   PLK.startPLK(builder);
   PLK.addLicenseId(builder, LICENSE_IDOffset);
   PLK.addPluginId(builder, PLUGIN_IDOffset);
@@ -455,7 +455,7 @@ constructor(
   public ISSUER_PUBKEY: (number)[] = [],
   public ALLOWED_DOMAINS: (string)[] = [],
   public ALLOWED_TLDS: (string)[] = [],
-  public LICENSE_TYPE: licenseType = licenseType.Trial,
+  public LICENSE_TYPE: licenseCategory = licenseCategory.Trial,
   public MAX_ACTIVATIONS: number = 0,
   public ISSUED_AT: bigint = BigInt('0'),
   public VALID_FROM: bigint = BigInt('0'),

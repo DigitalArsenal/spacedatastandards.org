@@ -48,7 +48,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
   /// Reference frame for the covariance matrix
   public RFM? COV_REFERENCE_FRAME { get { int o = __p.__offset(14); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Time system used for the orbit state and covariance matrix. (UTC)
-  public timeSystem TIME_SYSTEM { get { int o = __p.__offset(16); return o != 0 ? (timeSystem)__p.bb.GetSbyte(o + __p.bb_pos) : timeSystem.GMST; } }
+  public timingStandard TIME_SYSTEM { get { int o = __p.__offset(16); return o != 0 ? (timingStandard)__p.bb.GetSbyte(o + __p.bb_pos) : timingStandard.GMST; } }
   /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
   public string START_TIME { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -140,7 +140,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
       Offset<RFM> REFERENCE_FRAMEOffset = default(Offset<RFM>),
       StringOffset REFERENCE_FRAME_EPOCHOffset = default(StringOffset),
       Offset<RFM> COV_REFERENCE_FRAMEOffset = default(Offset<RFM>),
-      timeSystem TIME_SYSTEM = timeSystem.GMST,
+      timingStandard TIME_SYSTEM = timingStandard.GMST,
       StringOffset START_TIMEOffset = default(StringOffset),
       StringOffset USEABLE_START_TIMEOffset = default(StringOffset),
       StringOffset USEABLE_STOP_TIMEOffset = default(StringOffset),
@@ -183,7 +183,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
   public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> REFERENCE_FRAMEOffset) { builder.AddOffset(3, REFERENCE_FRAMEOffset.Value, 0); }
   public static void AddREFERENCE_FRAME_EPOCH(FlatBufferBuilder builder, StringOffset REFERENCE_FRAME_EPOCHOffset) { builder.AddOffset(4, REFERENCE_FRAME_EPOCHOffset.Value, 0); }
   public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> COV_REFERENCE_FRAMEOffset) { builder.AddOffset(5, COV_REFERENCE_FRAMEOffset.Value, 0); }
-  public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timeSystem TIME_SYSTEM) { builder.AddSbyte(6, (sbyte)TIME_SYSTEM, 0); }
+  public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timingStandard TIME_SYSTEM) { builder.AddSbyte(6, (sbyte)TIME_SYSTEM, 0); }
   public static void AddSTART_TIME(FlatBufferBuilder builder, StringOffset START_TIMEOffset) { builder.AddOffset(7, START_TIMEOffset.Value, 0); }
   public static void AddUSEABLE_START_TIME(FlatBufferBuilder builder, StringOffset USEABLE_START_TIMEOffset) { builder.AddOffset(8, USEABLE_START_TIMEOffset.Value, 0); }
   public static void AddUSEABLE_STOP_TIME(FlatBufferBuilder builder, StringOffset USEABLE_STOP_TIMEOffset) { builder.AddOffset(9, USEABLE_STOP_TIMEOffset.Value, 0); }
@@ -318,7 +318,7 @@ public class ephemerisDataBlockT
   public RFMT REFERENCE_FRAME { get; set; }
   public string REFERENCE_FRAME_EPOCH { get; set; }
   public RFMT COV_REFERENCE_FRAME { get; set; }
-  public timeSystem TIME_SYSTEM { get; set; }
+  public timingStandard TIME_SYSTEM { get; set; }
   public string START_TIME { get; set; }
   public string USEABLE_START_TIME { get; set; }
   public string USEABLE_STOP_TIME { get; set; }
@@ -339,7 +339,7 @@ public class ephemerisDataBlockT
     this.REFERENCE_FRAME = null;
     this.REFERENCE_FRAME_EPOCH = null;
     this.COV_REFERENCE_FRAME = null;
-    this.TIME_SYSTEM = timeSystem.GMST;
+    this.TIME_SYSTEM = timingStandard.GMST;
     this.START_TIME = null;
     this.USEABLE_START_TIME = null;
     this.USEABLE_STOP_TIME = null;
@@ -367,7 +367,7 @@ static public class ephemerisDataBlockVerify
       && verifier.VerifyTable(tablePos, 10 /*REFERENCE_FRAME*/, RFMVerify.Verify, false)
       && verifier.VerifyString(tablePos, 12 /*REFERENCE_FRAME_EPOCH*/, false)
       && verifier.VerifyTable(tablePos, 14 /*COV_REFERENCE_FRAME*/, RFMVerify.Verify, false)
-      && verifier.VerifyField(tablePos, 16 /*TIME_SYSTEM*/, 1 /*timeSystem*/, 1, false)
+      && verifier.VerifyField(tablePos, 16 /*TIME_SYSTEM*/, 1 /*timingStandard*/, 1, false)
       && verifier.VerifyString(tablePos, 18 /*START_TIME*/, false)
       && verifier.VerifyString(tablePos, 20 /*USEABLE_START_TIME*/, false)
       && verifier.VerifyString(tablePos, 22 /*USEABLE_STOP_TIME*/, false)

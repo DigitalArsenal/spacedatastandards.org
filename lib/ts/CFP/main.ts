@@ -3,5 +3,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export * from './CFP.js';
-export * from './pduType.js';
-export * from './transmissionMode.js';
+export * from './pduKind.js';
+export * from './transmissionClass.js';

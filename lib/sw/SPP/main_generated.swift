@@ -8,15 +8,15 @@ import Common
 
 import FlatBuffers
 
-public enum packetType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum packetKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
   case tm = 0
   case tc = 1
 
-  public static var max: packetType { return .tc }
-  public static var min: packetType { return .tm }
+  public static var max: packetKind { return .tc }
+  public static var min: packetKind { return .tm }
 }
 
 
@@ -48,7 +48,7 @@ public struct SPP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Packet version number
   public var VERSION: UInt8 { let o = _accessor.offset(VTOFFSET.VERSION.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Packet type (TM or TC)
-  public var PACKET_TYPE: packetType { let o = _accessor.offset(VTOFFSET.PACKET_TYPE.v); return o == 0 ? .tm : packetType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .tm }
+  public var PACKET_TYPE: packetKind { let o = _accessor.offset(VTOFFSET.PACKET_TYPE.v); return o == 0 ? .tm : packetKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .tm }
   ///  Secondary header flag
   public var SEC_HDR_FLAG: Bool { let o = _accessor.offset(VTOFFSET.SEC_HDR_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Application Process Identifier
@@ -64,7 +64,7 @@ public struct SPP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DATA.v, body: body) }
   public static func startSPP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(VERSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VTOFFSET.VERSION.p) }
-  public static func add(PACKET_TYPE: packetType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PACKET_TYPE.rawValue, def: 0, at: VTOFFSET.PACKET_TYPE.p) }
+  public static func add(PACKET_TYPE: packetKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PACKET_TYPE.rawValue, def: 0, at: VTOFFSET.PACKET_TYPE.p) }
   public static func add(SEC_HDR_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEC_HDR_FLAG, def: false,
    at: VTOFFSET.SEC_HDR_FLAG.p) }
   public static func add(APID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APID, def: 0, at: VTOFFSET.APID.p) }
@@ -76,7 +76,7 @@ public struct SPP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func createSPP(
     _ fbb: inout FlatBufferBuilder,
     VERSION: UInt8 = 0,
-    PACKET_TYPE: packetType = .tm,
+    PACKET_TYPE: packetKind = .tm,
     SEC_HDR_FLAG: Bool = false,
     APID: UInt16 = 0,
     SEQUENCE_FLAGS: UInt8 = 0,
@@ -99,7 +99,7 @@ public struct SPP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.PACKET_TYPE.p, fieldName: "PACKET_TYPE", required: false, type: packetType.self)
+    try _v.visit(field: VTOFFSET.PACKET_TYPE.p, fieldName: "PACKET_TYPE", required: false, type: packetKind.self)
     try _v.visit(field: VTOFFSET.SEC_HDR_FLAG.p, fieldName: "SEC_HDR_FLAG", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.APID.p, fieldName: "APID", required: false, type: UInt16.self)
     try _v.visit(field: VTOFFSET.SEQUENCE_FLAGS.p, fieldName: "SEQUENCE_FLAGS", required: false, type: UInt8.self)

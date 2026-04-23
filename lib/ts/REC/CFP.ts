@@ -4,8 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { pduType } from './pduType.js';
-import { transmissionMode } from './transmissionMode.js';
+import { pduKind } from './pduKind.js';
+import { transmissionClass } from './transmissionClass.js';
 
 
 /**
@@ -44,9 +44,9 @@ VERSION():number {
 /**
  * PDU type
  */
-PDU_TYPE():pduType {
+PDU_TYPE():pduKind {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : pduType.FILE_DIRECTIVE;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : pduKind.FILE_DIRECTIVE;
 }
 
 /**
@@ -60,9 +60,9 @@ DIRECTION():number {
 /**
  * Transmission mode
  */
-TRANSMISSION_MODE():transmissionMode {
+TRANSMISSION_MODE():transmissionClass {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : transmissionMode.ACKNOWLEDGED;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : transmissionClass.ACKNOWLEDGED;
 }
 
 /**
@@ -175,16 +175,16 @@ static addVersion(builder:flatbuffers.Builder, VERSION:number) {
   builder.addFieldInt8(0, VERSION, 0);
 }
 
-static addPduType(builder:flatbuffers.Builder, PDU_TYPE:pduType) {
-  builder.addFieldInt8(1, PDU_TYPE, pduType.FILE_DIRECTIVE);
+static addPduType(builder:flatbuffers.Builder, PDU_TYPE:pduKind) {
+  builder.addFieldInt8(1, PDU_TYPE, pduKind.FILE_DIRECTIVE);
 }
 
 static addDirection(builder:flatbuffers.Builder, DIRECTION:number) {
   builder.addFieldInt8(2, DIRECTION, 0);
 }
 
-static addTransmissionMode(builder:flatbuffers.Builder, TRANSMISSION_MODE:transmissionMode) {
-  builder.addFieldInt8(3, TRANSMISSION_MODE, transmissionMode.ACKNOWLEDGED);
+static addTransmissionMode(builder:flatbuffers.Builder, TRANSMISSION_MODE:transmissionClass) {
+  builder.addFieldInt8(3, TRANSMISSION_MODE, transmissionClass.ACKNOWLEDGED);
 }
 
 static addCrcFlag(builder:flatbuffers.Builder, CRC_FLAG:boolean) {
@@ -256,7 +256,7 @@ static finishSizePrefixedCFPBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CFP', true);
 }
 
-static createCFP(builder:flatbuffers.Builder, VERSION:number, PDU_TYPE:pduType, DIRECTION:number, TRANSMISSION_MODE:transmissionMode, CRC_FLAG:boolean, LARGE_FILE_FLAG:boolean, DATA_FIELD_LENGTH:number, SOURCE_ENTITY_ID:bigint, TRANSACTION_SEQ_NUM:bigint, DESTINATION_ENTITY_ID:bigint, CHECKSUM_TYPE:number, FILE_SIZE:bigint, SOURCE_FILENAMEOffset:flatbuffers.Offset, DESTINATION_FILENAMEOffset:flatbuffers.Offset, DATAOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCFP(builder:flatbuffers.Builder, VERSION:number, PDU_TYPE:pduKind, DIRECTION:number, TRANSMISSION_MODE:transmissionClass, CRC_FLAG:boolean, LARGE_FILE_FLAG:boolean, DATA_FIELD_LENGTH:number, SOURCE_ENTITY_ID:bigint, TRANSACTION_SEQ_NUM:bigint, DESTINATION_ENTITY_ID:bigint, CHECKSUM_TYPE:number, FILE_SIZE:bigint, SOURCE_FILENAMEOffset:flatbuffers.Offset, DESTINATION_FILENAMEOffset:flatbuffers.Offset, DATAOffset:flatbuffers.Offset):flatbuffers.Offset {
   CFP.startCFP(builder);
   CFP.addVersion(builder, VERSION);
   CFP.addPduType(builder, PDU_TYPE);
@@ -319,9 +319,9 @@ unpackTo(_o: CFPT): void {
 export class CFPT implements flatbuffers.IGeneratedObject {
 constructor(
   public VERSION: number = 0,
-  public PDU_TYPE: pduType = pduType.FILE_DIRECTIVE,
+  public PDU_TYPE: pduKind = pduKind.FILE_DIRECTIVE,
   public DIRECTION: number = 0,
-  public TRANSMISSION_MODE: transmissionMode = transmissionMode.ACKNOWLEDGED,
+  public TRANSMISSION_MODE: transmissionClass = transmissionClass.ACKNOWLEDGED,
   public CRC_FLAG: boolean = false,
   public LARGE_FILE_FLAG: boolean = false,
   public DATA_FIELD_LENGTH: number = 0,

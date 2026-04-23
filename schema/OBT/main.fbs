@@ -1,5 +1,5 @@
-// Hash: cd2c9ca3e60d8e68aa80c7eafb546878c5380a2485816c1b4012123440cc938e
-// Version: 0.0.3
+// Hash: 49405f31544ed8a2ec5f922d98d740b80a5fb0edf17178e0a409afc95984370d
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 enum orbitObjectType : byte {
   PAYLOAD,
@@ -9,7 +9,7 @@ enum orbitObjectType : byte {
   UNKNOWN
 }
 
-enum aouType : byte {
+enum aouCategory : byte {
   CIRCULAR,
   ELLIPTICAL,
   RECTANGULAR,
@@ -61,7 +61,7 @@ table OBT {
   /// Charlie line data (amplification text)
   CHARLIE_LINE:string;
   /// Area of uncertainty type
-  AOU_TYPE:aouType;
+  AOU_TYPE:aouCategory;
   /// Area of uncertainty data
   AOU_DATA:[double];
   /// Containment probability (0-1)

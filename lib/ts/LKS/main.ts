@@ -2,6 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './linkState.js';
-export * from './linkType.js';
+export * from './linkCategory.js';
+export * from './linkCondition.js';
 export * from './LKS.js';

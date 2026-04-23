@@ -19,17 +19,17 @@ public struct TIM : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public TIM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public timeSystem TIME_SYSTEM { get { int o = __p.__offset(4); return o != 0 ? (timeSystem)__p.bb.GetSbyte(o + __p.bb_pos) : timeSystem.GMST; } }
+  public timingStandard TIME_SYSTEM { get { int o = __p.__offset(4); return o != 0 ? (timingStandard)__p.bb.GetSbyte(o + __p.bb_pos) : timingStandard.GMST; } }
 
   public static Offset<TIM> CreateTIM(FlatBufferBuilder builder,
-      timeSystem TIME_SYSTEM = timeSystem.GMST) {
+      timingStandard TIME_SYSTEM = timingStandard.GMST) {
     builder.StartTable(1);
     TIM.AddTIME_SYSTEM(builder, TIME_SYSTEM);
     return TIM.EndTIM(builder);
   }
 
   public static void StartTIM(FlatBufferBuilder builder) { builder.StartTable(1); }
-  public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timeSystem TIME_SYSTEM) { builder.AddSbyte(0, (sbyte)TIME_SYSTEM, 0); }
+  public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timingStandard TIME_SYSTEM) { builder.AddSbyte(0, (sbyte)TIME_SYSTEM, 0); }
   public static Offset<TIM> EndTIM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<TIM>(o);
@@ -54,10 +54,10 @@ public struct TIM : IFlatbufferObject
 
 public class TIMT
 {
-  public timeSystem TIME_SYSTEM { get; set; }
+  public timingStandard TIME_SYSTEM { get; set; }
 
   public TIMT() {
-    this.TIME_SYSTEM = timeSystem.GMST;
+    this.TIME_SYSTEM = timingStandard.GMST;
   }
   public static TIMT DeserializeFromBinary(byte[] fbBuffer) {
     return TIM.GetRootAsTIM(new ByteBuffer(fbBuffer)).UnPack();
@@ -75,7 +75,7 @@ static public class TIMVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*TIME_SYSTEM*/, 1 /*timeSystem*/, 1, false)
+      && verifier.VerifyField(tablePos, 4 /*TIME_SYSTEM*/, 1 /*timingStandard*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

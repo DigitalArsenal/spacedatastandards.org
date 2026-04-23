@@ -1,7 +1,7 @@
-// Hash: 6249ba868a102d60f27aea94dc497b18fb5505b545bf08b363a8fcb752c7d88e
-// Version: 1.0.1
+// Hash: 4704303474281bd094245a41c594caefde3309d0ffd6816a4b87a48f176235d1
+// Version: 1.0.2
 // -----------------------------------END_HEADER
-enum meanElementTheory : byte {
+enum meanElementSource : byte {
   /// Simplified General Perturbation Model 4
   SGP4,
   /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
@@ -14,7 +14,7 @@ enum meanElementTheory : byte {
 
 /// Mean Element Theory
 table MET {
-  MEAN_ELEMENT_THEORY:meanElementTheory;
+  MEAN_ELEMENT_THEORY:meanElementSource;
 }
 root_type MET;
 file_identifier "$MET";

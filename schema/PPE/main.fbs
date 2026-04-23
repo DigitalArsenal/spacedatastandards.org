@@ -1,5 +1,5 @@
-// Hash: 02c2480a6dbebfb927897c8ef1642e05970835a81a16c64881cef8fdcea0e992
-// Version: 1.0.1
+// Hash: fe5160d454c33a395094179293b3c094b99fe77d1173564e70f592fb3e1886aa
+// Version: 1.0.3
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -73,7 +73,7 @@ enum ppeAnomalyType : byte {
 }
 
 /// Orbital element parameterization for the first element (size/shape).
-enum sizeShapeType : byte {
+enum sizeShapeProfile : byte {
   /// Semi-major axis (km). Standard for elliptical orbits.
   SMA,
 
@@ -177,7 +177,7 @@ table PPEOrbitalElementRecord {
   BASIS_TYPE: polynomialBasisType = CHEBYSHEV;
 
   /// Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
-  SIZE_SHAPE_TYPE: sizeShapeType = SMA;
+  SIZE_SHAPE_TYPE: sizeShapeProfile = SMA;
 
   /// Anomaly type for the sixth orbital element.
   ANOMALY_TYPE: ppeAnomalyType = TRUE_ANOMALY;
@@ -238,7 +238,7 @@ table PPE {
   REFERENCE_FRAME: RFM;
 
   /// Time system used for all epochs in this message.
-  TIME_SYSTEM: timeSystem;
+  TIME_SYSTEM: timingStandard;
 
   /// Start of the total time span covered by this ephemeris (ISO 8601).
   START_TIME: string;

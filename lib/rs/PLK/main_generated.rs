@@ -4,26 +4,26 @@ extern crate alloc;
 
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_LICENSE_TYPE: i8 = 0;
+pub const ENUM_MIN_LICENSE_CATEGORY: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_LICENSE_TYPE: i8 = 5;
+pub const ENUM_MAX_LICENSE_CATEGORY: i8 = 5;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_LICENSE_TYPE: [licenseType; 6] = [
-  licenseType::Trial,
-  licenseType::Commercial,
-  licenseType::Enterprise,
-  licenseType::Educational,
-  licenseType::OpenSource,
-  licenseType::Internal,
+pub const ENUM_VALUES_LICENSE_CATEGORY: [licenseCategory; 6] = [
+  licenseCategory::Trial,
+  licenseCategory::Commercial,
+  licenseCategory::Enterprise,
+  licenseCategory::Educational,
+  licenseCategory::OpenSource,
+  licenseCategory::Internal,
 ];
 
 /// License type for plugin access
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct licenseType(pub i8);
+pub struct licenseCategory(pub i8);
 #[allow(non_upper_case_globals)]
-impl licenseType {
+impl licenseCategory {
   /// Evaluation/trial license
   pub const Trial: Self = Self(0);
   /// Standard commercial license
@@ -60,7 +60,7 @@ impl licenseType {
     }
   }
 }
-impl ::core::fmt::Debug for licenseType {
+impl ::core::fmt::Debug for licenseCategory {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -69,7 +69,7 @@ impl ::core::fmt::Debug for licenseType {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for licenseType {
+impl<'a> ::flatbuffers::Follow<'a> for licenseCategory {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -78,15 +78,15 @@ impl<'a> ::flatbuffers::Follow<'a> for licenseType {
   }
 }
 
-impl ::flatbuffers::Push for licenseType {
-    type Output = licenseType;
+impl ::flatbuffers::Push for licenseCategory {
+    type Output = licenseCategory;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for licenseType {
+impl ::flatbuffers::EndianScalar for licenseCategory {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -100,7 +100,7 @@ impl ::flatbuffers::EndianScalar for licenseType {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for licenseType {
+impl<'a> ::flatbuffers::Verifiable for licenseCategory {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -109,7 +109,7 @@ impl<'a> ::flatbuffers::Verifiable for licenseType {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for licenseType {}
+impl ::flatbuffers::SimpleToVerifyInSlice for licenseCategory {}
 pub enum PLKOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -326,11 +326,11 @@ impl<'a> PLK<'a> {
   }
   /// Type of license
   #[inline]
-  pub fn LICENSE_TYPE(&self) -> licenseType {
+  pub fn LICENSE_TYPE(&self) -> licenseCategory {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<licenseType>(PLK::VT_LICENSE_TYPE, Some(licenseType::Trial)).unwrap()}
+    unsafe { self._tab.get::<licenseCategory>(PLK::VT_LICENSE_TYPE, Some(licenseCategory::Trial)).unwrap()}
   }
   /// Maximum concurrent activations (0 = unlimited)
   #[inline]
@@ -398,7 +398,7 @@ impl ::flatbuffers::Verifiable for PLK<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("ISSUER_PUBKEY", Self::VT_ISSUER_PUBKEY, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ALLOWED_DOMAINS", Self::VT_ALLOWED_DOMAINS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ALLOWED_TLDS", Self::VT_ALLOWED_TLDS, false)?
-     .visit_field::<licenseType>("LICENSE_TYPE", Self::VT_LICENSE_TYPE, false)?
+     .visit_field::<licenseCategory>("LICENSE_TYPE", Self::VT_LICENSE_TYPE, false)?
      .visit_field::<u32>("MAX_ACTIVATIONS", Self::VT_MAX_ACTIVATIONS, false)?
      .visit_field::<u64>("ISSUED_AT", Self::VT_ISSUED_AT, false)?
      .visit_field::<u64>("VALID_FROM", Self::VT_VALID_FROM, false)?
@@ -420,7 +420,7 @@ pub struct PLKArgs<'a> {
     pub ISSUER_PUBKEY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
     pub ALLOWED_DOMAINS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub ALLOWED_TLDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub LICENSE_TYPE: licenseType,
+    pub LICENSE_TYPE: licenseCategory,
     pub MAX_ACTIVATIONS: u32,
     pub ISSUED_AT: u64,
     pub VALID_FROM: u64,
@@ -442,7 +442,7 @@ impl<'a> Default for PLKArgs<'a> {
       ISSUER_PUBKEY: None,
       ALLOWED_DOMAINS: None,
       ALLOWED_TLDS: None,
-      LICENSE_TYPE: licenseType::Trial,
+      LICENSE_TYPE: licenseCategory::Trial,
       MAX_ACTIVATIONS: 0,
       ISSUED_AT: 0,
       VALID_FROM: 0,
@@ -499,8 +499,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLKBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLK::VT_ALLOWED_TLDS, ALLOWED_TLDS);
   }
   #[inline]
-  pub fn add_LICENSE_TYPE(&mut self, LICENSE_TYPE: licenseType) {
-    self.fbb_.push_slot::<licenseType>(PLK::VT_LICENSE_TYPE, LICENSE_TYPE, licenseType::Trial);
+  pub fn add_LICENSE_TYPE(&mut self, LICENSE_TYPE: licenseCategory) {
+    self.fbb_.push_slot::<licenseCategory>(PLK::VT_LICENSE_TYPE, LICENSE_TYPE, licenseCategory::Trial);
   }
   #[inline]
   pub fn add_MAX_ACTIVATIONS(&mut self, MAX_ACTIVATIONS: u32) {
@@ -580,7 +580,7 @@ pub struct PLKT {
   pub ISSUER_PUBKEY: Option<alloc::vec::Vec<u8>>,
   pub ALLOWED_DOMAINS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub ALLOWED_TLDS: Option<alloc::vec::Vec<alloc::string::String>>,
-  pub LICENSE_TYPE: licenseType,
+  pub LICENSE_TYPE: licenseCategory,
   pub MAX_ACTIVATIONS: u32,
   pub ISSUED_AT: u64,
   pub VALID_FROM: u64,
@@ -601,7 +601,7 @@ impl Default for PLKT {
       ISSUER_PUBKEY: None,
       ALLOWED_DOMAINS: None,
       ALLOWED_TLDS: None,
-      LICENSE_TYPE: licenseType::Trial,
+      LICENSE_TYPE: licenseCategory::Trial,
       MAX_ACTIVATIONS: 0,
       ISSUED_AT: 0,
       VALID_FROM: 0,

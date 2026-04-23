@@ -54,33 +54,33 @@ func (rcv *TIM) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *TIM) TIME_SYSTEM() timeSystem {
+func (rcv *TIM) TIME_SYSTEM() timingStandard {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return timeSystem(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return timingStandard(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *TIM) TimeSystem() timeSystem {
+func (rcv *TIM) TimeSystem() timingStandard {
 	return rcv.TIME_SYSTEM()
 }
 
-func (rcv *TIM) MutateTIME_SYSTEM(n timeSystem) bool {
+func (rcv *TIM) MutateTIME_SYSTEM(n timingStandard) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
 }
 
-func (rcv *TIM) MutateTimeSystem(n timeSystem) bool {
+func (rcv *TIM) MutateTimeSystem(n timingStandard) bool {
 	return rcv.MutateTIME_SYSTEM(n)
 }
 
 func TIMStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
-func TIMAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
+func TIMAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timingStandard) {
 	builder.PrependInt8Slot(0, int8(TIME_SYSTEM), 0)
 }
-func TIMAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
+func TIMAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM timingStandard) {
 	TIMAddTIME_SYSTEM(builder, TIME_SYSTEM)
 }
 func TIMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {

@@ -97,24 +97,24 @@ func (rcv *ANI) SourceType() []byte {
 
 /// Source imagery type
 /// Analytic product type
-func (rcv *ANI) ANALYTIC_TYPE() analyticType {
+func (rcv *ANI) ANALYTIC_TYPE() analyticProfile {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		return analyticType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return analyticProfile(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *ANI) AnalyticType() analyticType {
+func (rcv *ANI) AnalyticType() analyticProfile {
 	return rcv.ANALYTIC_TYPE()
 }
 
 /// Analytic product type
-func (rcv *ANI) MutateANALYTIC_TYPE(n analyticType) bool {
+func (rcv *ANI) MutateANALYTIC_TYPE(n analyticProfile) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
 }
 
-func (rcv *ANI) MutateAnalyticType(n analyticType) bool {
+func (rcv *ANI) MutateAnalyticType(n analyticProfile) bool {
 	return rcv.MutateANALYTIC_TYPE(n)
 }
 
@@ -506,10 +506,10 @@ func ANIAddSOURCE_TYPE(builder *flatbuffers.Builder, SOURCE_TYPE flatbuffers.UOf
 func ANIAddSourceType(builder *flatbuffers.Builder, SOURCE_TYPE flatbuffers.UOffsetT) {
 	ANIAddSOURCE_TYPE(builder, SOURCE_TYPE)
 }
-func ANIAddANALYTIC_TYPE(builder *flatbuffers.Builder, ANALYTIC_TYPE analyticType) {
+func ANIAddANALYTIC_TYPE(builder *flatbuffers.Builder, ANALYTIC_TYPE analyticProfile) {
 	builder.PrependInt8Slot(3, int8(ANALYTIC_TYPE), 0)
 }
-func ANIAddAnalyticType(builder *flatbuffers.Builder, ANALYTIC_TYPE analyticType) {
+func ANIAddAnalyticType(builder *flatbuffers.Builder, ANALYTIC_TYPE analyticProfile) {
 	ANIAddANALYTIC_TYPE(builder, ANALYTIC_TYPE)
 }
 func ANIAddALGORITHM(builder *flatbuffers.Builder, ALGORITHM flatbuffers.UOffsetT) {

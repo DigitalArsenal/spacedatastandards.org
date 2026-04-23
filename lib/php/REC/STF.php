@@ -118,7 +118,7 @@ class STF extends Table
     public function getACCESS_TYPE()
     {
         $o = $this->__offset(20);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \accessType::OneTime;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \accessCategory::OneTime;
     }
 
     /// Whether encryption is required for data delivery

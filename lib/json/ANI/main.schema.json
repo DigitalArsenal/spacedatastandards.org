@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "analyticType" : {
+    "analyticProfile" : {
       "type" : "string",
       "enum": ["SPECTRAL", "PHOTOMETRIC", "ASTROMETRIC", "RADIOMETRIC", "SIGNATURE", "FEATURE_EXTRACTION", "CHANGE_DETECTION", "CLASSIFICATION", "FUSION"]
     },
@@ -22,7 +22,7 @@
                 "description" : "Source imagery type"
               },
         "ANALYTIC_TYPE" : {
-                "$ref" : "#/definitions/analyticType",
+                "$ref" : "#/definitions/analyticProfile",
                 "description" : "Analytic product type"
               },
         "ALGORITHM" : {

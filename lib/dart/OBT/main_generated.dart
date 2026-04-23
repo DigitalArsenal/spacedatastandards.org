@@ -46,42 +46,42 @@ class _orbitObjectTypeReader extends fb.Reader<orbitObjectType> {
       orbitObjectType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum aouType {
+enum aouCategory {
   CIRCULAR(0),
   ELLIPTICAL(1),
   RECTANGULAR(2),
   NONE(3);
 
   final int value;
-  const aouType(this.value);
+  const aouCategory(this.value);
 
-  factory aouType.fromValue(int value) {
+  factory aouCategory.fromValue(int value) {
     switch (value) {
-      case 0: return aouType.CIRCULAR;
-      case 1: return aouType.ELLIPTICAL;
-      case 2: return aouType.RECTANGULAR;
-      case 3: return aouType.NONE;
+      case 0: return aouCategory.CIRCULAR;
+      case 1: return aouCategory.ELLIPTICAL;
+      case 2: return aouCategory.RECTANGULAR;
+      case 3: return aouCategory.NONE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static aouType? _createOrNull(int? value) =>
-      value == null ? null : aouType.fromValue(value);
+  static aouCategory? _createOrNull(int? value) =>
+      value == null ? null : aouCategory.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 3;
-  static const fb.Reader<aouType> reader = _aouTypeReader();
+  static const fb.Reader<aouCategory> reader = _aouCategoryReader();
 }
 
-class _aouTypeReader extends fb.Reader<aouType> {
-  const _aouTypeReader();
+class _aouCategoryReader extends fb.Reader<aouCategory> {
+  const _aouCategoryReader();
 
   @override
   int get size => 1;
 
   @override
-  aouType read(fb.BufferContext bc, int offset) =>
-      aouType.fromValue(const fb.Int8Reader().read(bc, offset));
+  aouCategory read(fb.BufferContext bc, int offset) =>
+      aouCategory.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Orbit Track
@@ -154,8 +154,8 @@ class OBT {
   String? get CHARLIE_LINE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
   String? get charlieLine => CHARLIE_LINE;
   ///  Area of uncertainty type
-  aouType get AOU_TYPE => aouType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 46, 0));
-  aouType get aouType => AOU_TYPE;
+  aouCategory get AOU_TYPE => aouCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 46, 0));
+  aouCategory get aouType => AOU_TYPE;
   ///  Area of uncertainty data
   List<double>? get AOU_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 48);
   List<double>? get aouData => AOU_DATA;
@@ -299,7 +299,7 @@ class OBTBuilder {
     fbBuilder.addOffset(20, offset);
     return fbBuilder.offset;
   }
-  int addAouType(aouType? AOU_TYPE) {
+  int addAouType(aouCategory? AOU_TYPE) {
     fbBuilder.addInt8(21, AOU_TYPE?.value);
     return fbBuilder.offset;
   }
@@ -391,7 +391,7 @@ class OBTObjectBuilder extends fb.ObjectBuilder {
   final String? _COUNTRY_CODE;
   final double? _DECAY;
   final String? _CHARLIE_LINE;
-  final aouType? _AOU_TYPE;
+  final aouCategory? _AOU_TYPE;
   final List<double>? _AOU_DATA;
   final double? _CNTNMNT;
   final String? _XREF;
@@ -444,8 +444,8 @@ class OBTObjectBuilder extends fb.ObjectBuilder {
     double? DECAY,
     String? CHARLIE_LINE,
     String? charlieLine,
-    aouType? AOU_TYPE,
-    aouType? aouType,
+    aouCategory? AOU_TYPE,
+    aouCategory? aouType,
     List<double>? AOU_DATA,
     List<double>? aouData,
     double? CNTNMNT,

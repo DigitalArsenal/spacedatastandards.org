@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "packetType": {
+    "packetKind": {
       "type": "string",
       "enum": [
         "TM",
@@ -30,7 +30,7 @@
           "x-flatbuffer-type": "ubyte"
         },
         "PACKET_TYPE": {
-          "$ref": "#/definitions/packetType",
+          "$ref": "#/definitions/packetKind",
           "description": "Packet type (TM or TC)",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",

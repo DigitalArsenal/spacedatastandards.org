@@ -100,23 +100,23 @@ impl<'a> ::flatbuffers::Verifiable for orbitObjectType {
 
 impl ::flatbuffers::SimpleToVerifyInSlice for orbitObjectType {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_AOU_TYPE: i8 = 0;
+pub const ENUM_MIN_AOU_CATEGORY: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_AOU_TYPE: i8 = 3;
+pub const ENUM_MAX_AOU_CATEGORY: i8 = 3;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_AOU_TYPE: [aouType; 4] = [
-  aouType::CIRCULAR,
-  aouType::ELLIPTICAL,
-  aouType::RECTANGULAR,
-  aouType::NONE,
+pub const ENUM_VALUES_AOU_CATEGORY: [aouCategory; 4] = [
+  aouCategory::CIRCULAR,
+  aouCategory::ELLIPTICAL,
+  aouCategory::RECTANGULAR,
+  aouCategory::NONE,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct aouType(pub i8);
+pub struct aouCategory(pub i8);
 #[allow(non_upper_case_globals)]
-impl aouType {
+impl aouCategory {
   pub const CIRCULAR: Self = Self(0);
   pub const ELLIPTICAL: Self = Self(1);
   pub const RECTANGULAR: Self = Self(2);
@@ -141,7 +141,7 @@ impl aouType {
     }
   }
 }
-impl ::core::fmt::Debug for aouType {
+impl ::core::fmt::Debug for aouCategory {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -150,7 +150,7 @@ impl ::core::fmt::Debug for aouType {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for aouType {
+impl<'a> ::flatbuffers::Follow<'a> for aouCategory {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -159,15 +159,15 @@ impl<'a> ::flatbuffers::Follow<'a> for aouType {
   }
 }
 
-impl ::flatbuffers::Push for aouType {
-    type Output = aouType;
+impl ::flatbuffers::Push for aouCategory {
+    type Output = aouCategory;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for aouType {
+impl ::flatbuffers::EndianScalar for aouCategory {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -181,7 +181,7 @@ impl ::flatbuffers::EndianScalar for aouType {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for aouType {
+impl<'a> ::flatbuffers::Verifiable for aouCategory {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -190,7 +190,7 @@ impl<'a> ::flatbuffers::Verifiable for aouType {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for aouType {}
+impl ::flatbuffers::SimpleToVerifyInSlice for aouCategory {}
 pub enum OBTOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -583,11 +583,11 @@ impl<'a> OBT<'a> {
   }
   /// Area of uncertainty type
   #[inline]
-  pub fn AOU_TYPE(&self) -> aouType {
+  pub fn AOU_TYPE(&self) -> aouCategory {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<aouType>(OBT::VT_AOU_TYPE, Some(aouType::CIRCULAR)).unwrap()}
+    unsafe { self._tab.get::<aouCategory>(OBT::VT_AOU_TYPE, Some(aouCategory::CIRCULAR)).unwrap()}
   }
   /// Area of uncertainty data
   #[inline]
@@ -738,7 +738,7 @@ impl ::flatbuffers::Verifiable for OBT<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COUNTRY_CODE", Self::VT_COUNTRY_CODE, false)?
      .visit_field::<f64>("DECAY", Self::VT_DECAY, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CHARLIE_LINE", Self::VT_CHARLIE_LINE, false)?
-     .visit_field::<aouType>("AOU_TYPE", Self::VT_AOU_TYPE, false)?
+     .visit_field::<aouCategory>("AOU_TYPE", Self::VT_AOU_TYPE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("AOU_DATA", Self::VT_AOU_DATA, false)?
      .visit_field::<f64>("CNTNMNT", Self::VT_CNTNMNT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("XREF", Self::VT_XREF, false)?
@@ -780,7 +780,7 @@ pub struct OBTArgs<'a> {
     pub COUNTRY_CODE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub DECAY: f64,
     pub CHARLIE_LINE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub AOU_TYPE: aouType,
+    pub AOU_TYPE: aouCategory,
     pub AOU_DATA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub CNTNMNT: f64,
     pub XREF: Option<::flatbuffers::WIPOffset<&'a str>>,
@@ -822,7 +822,7 @@ impl<'a> Default for OBTArgs<'a> {
       COUNTRY_CODE: None,
       DECAY: 0.0,
       CHARLIE_LINE: None,
-      AOU_TYPE: aouType::CIRCULAR,
+      AOU_TYPE: aouCategory::CIRCULAR,
       AOU_DATA: None,
       CNTNMNT: 0.0,
       XREF: None,
@@ -932,8 +932,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OBTBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OBT::VT_CHARLIE_LINE, CHARLIE_LINE);
   }
   #[inline]
-  pub fn add_AOU_TYPE(&mut self, AOU_TYPE: aouType) {
-    self.fbb_.push_slot::<aouType>(OBT::VT_AOU_TYPE, AOU_TYPE, aouType::CIRCULAR);
+  pub fn add_AOU_TYPE(&mut self, AOU_TYPE: aouCategory) {
+    self.fbb_.push_slot::<aouCategory>(OBT::VT_AOU_TYPE, AOU_TYPE, aouCategory::CIRCULAR);
   }
   #[inline]
   pub fn add_AOU_DATA(&mut self, AOU_DATA: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
@@ -1077,7 +1077,7 @@ pub struct OBTT {
   pub COUNTRY_CODE: Option<alloc::string::String>,
   pub DECAY: f64,
   pub CHARLIE_LINE: Option<alloc::string::String>,
-  pub AOU_TYPE: aouType,
+  pub AOU_TYPE: aouCategory,
   pub AOU_DATA: Option<alloc::vec::Vec<f64>>,
   pub CNTNMNT: f64,
   pub XREF: Option<alloc::string::String>,
@@ -1118,7 +1118,7 @@ impl Default for OBTT {
       COUNTRY_CODE: None,
       DECAY: 0.0,
       CHARLIE_LINE: None,
-      AOU_TYPE: aouType::CIRCULAR,
+      AOU_TYPE: aouCategory::CIRCULAR,
       AOU_DATA: None,
       CNTNMNT: 0.0,
       XREF: None,

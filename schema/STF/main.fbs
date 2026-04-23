@@ -1,8 +1,8 @@
-// Hash: dbdb17407c2ee4d78f5e9ec77631c27813246acad984953f954fb35519a98780
-// Version: 1.0.1
+// Hash: 6e0418bda412f4a96a440f4347e93f494e936e6e48a17c0151eafafb79e2ca21
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 /// Access type for data listings
-enum accessType : byte {
+enum accessCategory : byte {
   /// One-time purchase
   OneTime,
   /// Recurring subscription
@@ -96,7 +96,7 @@ table STF {
   SAMPLE_CID: string;
 
   /// Type of access offered
-  ACCESS_TYPE: accessType;
+  ACCESS_TYPE: accessCategory;
   /// Whether encryption is required for data delivery
   ENCRYPTION_REQUIRED: bool;
 

@@ -4,18 +4,18 @@ extern crate alloc;
 
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_SHADER_STAGE: u8 = 0;
+pub const ENUM_MIN_GLSL_STAGE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SHADER_STAGE: u8 = 5;
+pub const ENUM_MAX_GLSL_STAGE: u8 = 5;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SHADER_STAGE: [shaderStage; 6] = [
-  shaderStage::VERTEX,
-  shaderStage::FRAGMENT,
-  shaderStage::COMPUTE,
-  shaderStage::GEOMETRY,
-  shaderStage::TESS_CONTROL,
-  shaderStage::TESS_EVALUATION,
+pub const ENUM_VALUES_GLSL_STAGE: [glslStage; 6] = [
+  glslStage::VERTEX,
+  glslStage::FRAGMENT,
+  glslStage::COMPUTE,
+  glslStage::GEOMETRY,
+  glslStage::TESS_CONTROL,
+  glslStage::TESS_EVALUATION,
 ];
 
 /// Shader Wire — wire contract for GLSL / WebGL shader plugins that compile
@@ -26,9 +26,9 @@ pub const ENUM_VALUES_SHADER_STAGE: [shaderStage; 6] = [
 /// Shader stage into which a compiled fragment should be injected.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct shaderStage(pub u8);
+pub struct glslStage(pub u8);
 #[allow(non_upper_case_globals)]
-impl shaderStage {
+impl glslStage {
   pub const VERTEX: Self = Self(0);
   pub const FRAGMENT: Self = Self(1);
   pub const COMPUTE: Self = Self(2);
@@ -59,7 +59,7 @@ impl shaderStage {
     }
   }
 }
-impl ::core::fmt::Debug for shaderStage {
+impl ::core::fmt::Debug for glslStage {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -68,7 +68,7 @@ impl ::core::fmt::Debug for shaderStage {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for shaderStage {
+impl<'a> ::flatbuffers::Follow<'a> for glslStage {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -77,15 +77,15 @@ impl<'a> ::flatbuffers::Follow<'a> for shaderStage {
   }
 }
 
-impl ::flatbuffers::Push for shaderStage {
-    type Output = shaderStage;
+impl ::flatbuffers::Push for glslStage {
+    type Output = glslStage;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for shaderStage {
+impl ::flatbuffers::EndianScalar for glslStage {
   type Scalar = u8;
   #[inline]
   fn to_little_endian(self) -> u8 {
@@ -99,7 +99,7 @@ impl ::flatbuffers::EndianScalar for shaderStage {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for shaderStage {
+impl<'a> ::flatbuffers::Verifiable for glslStage {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -108,21 +108,21 @@ impl<'a> ::flatbuffers::Verifiable for shaderStage {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for shaderStage {}
+impl ::flatbuffers::SimpleToVerifyInSlice for glslStage {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_SHADER_INJECTION_POINT: u8 = 0;
+pub const ENUM_MIN_SHADER_HOOK_POINT: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SHADER_INJECTION_POINT: u8 = 6;
+pub const ENUM_MAX_SHADER_HOOK_POINT: u8 = 6;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SHADER_INJECTION_POINT: [shaderInjectionPoint; 7] = [
-  shaderInjectionPoint::NONE,
-  shaderInjectionPoint::VERTEX_PRE_TRANSFORM,
-  shaderInjectionPoint::VERTEX_POST_TRANSFORM,
-  shaderInjectionPoint::FRAGMENT_PRE_SHADE,
-  shaderInjectionPoint::FRAGMENT_POST_SHADE,
-  shaderInjectionPoint::FRAGMENT_FINAL_COLOR,
-  shaderInjectionPoint::POSTPROCESS,
+pub const ENUM_VALUES_SHADER_HOOK_POINT: [shaderHookPoint; 7] = [
+  shaderHookPoint::NONE,
+  shaderHookPoint::VERTEX_PRE_TRANSFORM,
+  shaderHookPoint::VERTEX_POST_TRANSFORM,
+  shaderHookPoint::FRAGMENT_PRE_SHADE,
+  shaderHookPoint::FRAGMENT_POST_SHADE,
+  shaderHookPoint::FRAGMENT_FINAL_COLOR,
+  shaderHookPoint::POSTPROCESS,
 ];
 
 /// Logical location inside a host pipeline where a compiled shader
@@ -130,9 +130,9 @@ pub const ENUM_VALUES_SHADER_INJECTION_POINT: [shaderInjectionPoint; 7] = [
 /// concrete splice points.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct shaderInjectionPoint(pub u8);
+pub struct shaderHookPoint(pub u8);
 #[allow(non_upper_case_globals)]
-impl shaderInjectionPoint {
+impl shaderHookPoint {
   pub const NONE: Self = Self(0);
   pub const VERTEX_PRE_TRANSFORM: Self = Self(1);
   pub const VERTEX_POST_TRANSFORM: Self = Self(2);
@@ -166,7 +166,7 @@ impl shaderInjectionPoint {
     }
   }
 }
-impl ::core::fmt::Debug for shaderInjectionPoint {
+impl ::core::fmt::Debug for shaderHookPoint {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -175,7 +175,7 @@ impl ::core::fmt::Debug for shaderInjectionPoint {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for shaderInjectionPoint {
+impl<'a> ::flatbuffers::Follow<'a> for shaderHookPoint {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -184,15 +184,15 @@ impl<'a> ::flatbuffers::Follow<'a> for shaderInjectionPoint {
   }
 }
 
-impl ::flatbuffers::Push for shaderInjectionPoint {
-    type Output = shaderInjectionPoint;
+impl ::flatbuffers::Push for shaderHookPoint {
+    type Output = shaderHookPoint;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for shaderInjectionPoint {
+impl ::flatbuffers::EndianScalar for shaderHookPoint {
   type Scalar = u8;
   #[inline]
   fn to_little_endian(self) -> u8 {
@@ -206,7 +206,7 @@ impl ::flatbuffers::EndianScalar for shaderInjectionPoint {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for shaderInjectionPoint {
+impl<'a> ::flatbuffers::Verifiable for shaderHookPoint {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -215,7 +215,7 @@ impl<'a> ::flatbuffers::Verifiable for shaderInjectionPoint {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for shaderInjectionPoint {}
+impl ::flatbuffers::SimpleToVerifyInSlice for shaderHookPoint {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SHADER_UNIFORM_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -669,19 +669,19 @@ impl<'a> SHWCompileRequest<'a> {
   }
   /// Target GLSL stage.
   #[inline]
-  pub fn SHADER_STAGE(&self) -> shaderStage {
+  pub fn SHADER_STAGE(&self) -> glslStage {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<shaderStage>(SHWCompileRequest::VT_SHADER_STAGE, Some(shaderStage::VERTEX)).unwrap()}
+    unsafe { self._tab.get::<glslStage>(SHWCompileRequest::VT_SHADER_STAGE, Some(glslStage::VERTEX)).unwrap()}
   }
   /// Intended injection point in the host pipeline.
   #[inline]
-  pub fn SHADER_INJECTION_POINT(&self) -> shaderInjectionPoint {
+  pub fn SHADER_INJECTION_POINT(&self) -> shaderHookPoint {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<shaderInjectionPoint>(SHWCompileRequest::VT_SHADER_INJECTION_POINT, Some(shaderInjectionPoint::NONE)).unwrap()}
+    unsafe { self._tab.get::<shaderHookPoint>(SHWCompileRequest::VT_SHADER_INJECTION_POINT, Some(shaderHookPoint::NONE)).unwrap()}
   }
   /// GLSL source (or preprocessed chunk).
   #[inline]
@@ -716,8 +716,8 @@ impl ::flatbuffers::Verifiable for SHWCompileRequest<'_> {
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SHADER_NAME", Self::VT_SHADER_NAME, false)?
-     .visit_field::<shaderStage>("SHADER_STAGE", Self::VT_SHADER_STAGE, false)?
-     .visit_field::<shaderInjectionPoint>("SHADER_INJECTION_POINT", Self::VT_SHADER_INJECTION_POINT, false)?
+     .visit_field::<glslStage>("SHADER_STAGE", Self::VT_SHADER_STAGE, false)?
+     .visit_field::<shaderHookPoint>("SHADER_INJECTION_POINT", Self::VT_SHADER_INJECTION_POINT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SHADER_SOURCE", Self::VT_SHADER_SOURCE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GLSL_VERSION", Self::VT_GLSL_VERSION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SHWUniform>>>>("SHADER_UNIFORMS", Self::VT_SHADER_UNIFORMS, false)?
@@ -727,8 +727,8 @@ impl ::flatbuffers::Verifiable for SHWCompileRequest<'_> {
 }
 pub struct SHWCompileRequestArgs<'a> {
     pub SHADER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub SHADER_STAGE: shaderStage,
-    pub SHADER_INJECTION_POINT: shaderInjectionPoint,
+    pub SHADER_STAGE: glslStage,
+    pub SHADER_INJECTION_POINT: shaderHookPoint,
     pub SHADER_SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub GLSL_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SHADER_UNIFORMS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SHWUniform<'a>>>>>,
@@ -738,8 +738,8 @@ impl<'a> Default for SHWCompileRequestArgs<'a> {
   fn default() -> Self {
     SHWCompileRequestArgs {
       SHADER_NAME: None,
-      SHADER_STAGE: shaderStage::VERTEX,
-      SHADER_INJECTION_POINT: shaderInjectionPoint::NONE,
+      SHADER_STAGE: glslStage::VERTEX,
+      SHADER_INJECTION_POINT: shaderHookPoint::NONE,
       SHADER_SOURCE: None,
       GLSL_VERSION: None,
       SHADER_UNIFORMS: None,
@@ -757,12 +757,12 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SHWCompileRequestBuilder<'a, 
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SHWCompileRequest::VT_SHADER_NAME, SHADER_NAME);
   }
   #[inline]
-  pub fn add_SHADER_STAGE(&mut self, SHADER_STAGE: shaderStage) {
-    self.fbb_.push_slot::<shaderStage>(SHWCompileRequest::VT_SHADER_STAGE, SHADER_STAGE, shaderStage::VERTEX);
+  pub fn add_SHADER_STAGE(&mut self, SHADER_STAGE: glslStage) {
+    self.fbb_.push_slot::<glslStage>(SHWCompileRequest::VT_SHADER_STAGE, SHADER_STAGE, glslStage::VERTEX);
   }
   #[inline]
-  pub fn add_SHADER_INJECTION_POINT(&mut self, SHADER_INJECTION_POINT: shaderInjectionPoint) {
-    self.fbb_.push_slot::<shaderInjectionPoint>(SHWCompileRequest::VT_SHADER_INJECTION_POINT, SHADER_INJECTION_POINT, shaderInjectionPoint::NONE);
+  pub fn add_SHADER_INJECTION_POINT(&mut self, SHADER_INJECTION_POINT: shaderHookPoint) {
+    self.fbb_.push_slot::<shaderHookPoint>(SHWCompileRequest::VT_SHADER_INJECTION_POINT, SHADER_INJECTION_POINT, shaderHookPoint::NONE);
   }
   #[inline]
   pub fn add_SHADER_SOURCE(&mut self, SHADER_SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
@@ -807,8 +807,8 @@ impl ::core::fmt::Debug for SHWCompileRequest<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct SHWCompileRequestT {
   pub SHADER_NAME: Option<alloc::string::String>,
-  pub SHADER_STAGE: shaderStage,
-  pub SHADER_INJECTION_POINT: shaderInjectionPoint,
+  pub SHADER_STAGE: glslStage,
+  pub SHADER_INJECTION_POINT: shaderHookPoint,
   pub SHADER_SOURCE: Option<alloc::string::String>,
   pub GLSL_VERSION: Option<alloc::string::String>,
   pub SHADER_UNIFORMS: Option<alloc::vec::Vec<SHWUniformT>>,
@@ -817,8 +817,8 @@ impl Default for SHWCompileRequestT {
   fn default() -> Self {
     Self {
       SHADER_NAME: None,
-      SHADER_STAGE: shaderStage::VERTEX,
-      SHADER_INJECTION_POINT: shaderInjectionPoint::NONE,
+      SHADER_STAGE: glslStage::VERTEX,
+      SHADER_INJECTION_POINT: shaderHookPoint::NONE,
       SHADER_SOURCE: None,
       GLSL_VERSION: None,
       SHADER_UNIFORMS: None,

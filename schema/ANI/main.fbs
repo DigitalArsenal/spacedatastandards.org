@@ -1,7 +1,7 @@
-// Hash: e0ae7c395f6b67a212633662ae3ef3bbe084a72e23e888a2a680bb7fc3b53b6c
-// Version: 0.0.2
+// Hash: 6ecc81c2da6ad79eddfaf421477e701ddcf06646d4c90bcde82fefbc7dde38e5
+// Version: 0.0.3
 // -----------------------------------END_HEADER
-enum analyticType : byte {
+enum analyticProfile : byte {
   SPECTRAL,
   PHOTOMETRIC,
   ASTROMETRIC,
@@ -22,7 +22,7 @@ table ANI {
   /// Source imagery type
   SOURCE_TYPE:string;
   /// Analytic product type
-  ANALYTIC_TYPE:analyticType;
+  ANALYTIC_TYPE:analyticProfile;
   /// Processing algorithm or pipeline name
   ALGORITHM:string;
   /// Algorithm version

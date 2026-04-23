@@ -5,8 +5,8 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { SHWUniform, SHWUniformT } from './SHWUniform.js';
-import { shaderInjectionPoint } from './shaderInjectionPoint.js';
-import { shaderStage } from './shaderStage.js';
+import { glslStage } from './glslStage.js';
+import { shaderHookPoint } from './shaderHookPoint.js';
 
 
 /**
@@ -44,17 +44,17 @@ SHADER_NAME(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Target GLSL stage.
  */
-SHADER_STAGE():shaderStage {
+SHADER_STAGE():glslStage {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : shaderStage.VERTEX;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : glslStage.VERTEX;
 }
 
 /**
  * Intended injection point in the host pipeline.
  */
-SHADER_INJECTION_POINT():shaderInjectionPoint {
+SHADER_INJECTION_POINT():shaderHookPoint {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : shaderInjectionPoint.NONE;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : shaderHookPoint.NONE;
 }
 
 /**
@@ -98,12 +98,12 @@ static addShaderName(builder:flatbuffers.Builder, SHADER_NAMEOffset:flatbuffers.
   builder.addFieldOffset(0, SHADER_NAMEOffset, 0);
 }
 
-static addShaderStage(builder:flatbuffers.Builder, SHADER_STAGE:shaderStage) {
-  builder.addFieldInt8(1, SHADER_STAGE, shaderStage.VERTEX);
+static addShaderStage(builder:flatbuffers.Builder, SHADER_STAGE:glslStage) {
+  builder.addFieldInt8(1, SHADER_STAGE, glslStage.VERTEX);
 }
 
-static addShaderInjectionPoint(builder:flatbuffers.Builder, SHADER_INJECTION_POINT:shaderInjectionPoint) {
-  builder.addFieldInt8(2, SHADER_INJECTION_POINT, shaderInjectionPoint.NONE);
+static addShaderInjectionPoint(builder:flatbuffers.Builder, SHADER_INJECTION_POINT:shaderHookPoint) {
+  builder.addFieldInt8(2, SHADER_INJECTION_POINT, shaderHookPoint.NONE);
 }
 
 static addShaderSource(builder:flatbuffers.Builder, SHADER_SOURCEOffset:flatbuffers.Offset) {
@@ -135,7 +135,7 @@ static endSHWCompileRequest(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createSHWCompileRequest(builder:flatbuffers.Builder, SHADER_NAMEOffset:flatbuffers.Offset, SHADER_STAGE:shaderStage, SHADER_INJECTION_POINT:shaderInjectionPoint, SHADER_SOURCEOffset:flatbuffers.Offset, GLSL_VERSIONOffset:flatbuffers.Offset, SHADER_UNIFORMSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSHWCompileRequest(builder:flatbuffers.Builder, SHADER_NAMEOffset:flatbuffers.Offset, SHADER_STAGE:glslStage, SHADER_INJECTION_POINT:shaderHookPoint, SHADER_SOURCEOffset:flatbuffers.Offset, GLSL_VERSIONOffset:flatbuffers.Offset, SHADER_UNIFORMSOffset:flatbuffers.Offset):flatbuffers.Offset {
   SHWCompileRequest.startSHWCompileRequest(builder);
   SHWCompileRequest.addShaderName(builder, SHADER_NAMEOffset);
   SHWCompileRequest.addShaderStage(builder, SHADER_STAGE);
@@ -171,8 +171,8 @@ unpackTo(_o: SHWCompileRequestT): void {
 export class SHWCompileRequestT implements flatbuffers.IGeneratedObject {
 constructor(
   public SHADER_NAME: string|Uint8Array|null = null,
-  public SHADER_STAGE: shaderStage = shaderStage.VERTEX,
-  public SHADER_INJECTION_POINT: shaderInjectionPoint = shaderInjectionPoint.NONE,
+  public SHADER_STAGE: glslStage = glslStage.VERTEX,
+  public SHADER_INJECTION_POINT: shaderHookPoint = shaderHookPoint.NONE,
   public SHADER_SOURCE: string|Uint8Array|null = null,
   public GLSL_VERSION: string|Uint8Array|null = null,
   public SHADER_UNIFORMS: (SHWUniformT)[] = []

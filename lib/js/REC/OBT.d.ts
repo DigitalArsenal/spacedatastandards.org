@@ -1,5 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
-import { aouType } from './aouType.js';
+import { aouCategory } from './aouCategory.js';
 import { orbitObjectType } from './orbitObjectType.js';
 /**
  * Orbit Track
@@ -110,7 +110,7 @@ export declare class OBT implements flatbuffers.IUnpackableObject<OBTT> {
     /**
      * Area of uncertainty type
      */
-    AOU_TYPE(): aouType;
+    AOU_TYPE(): aouCategory;
     /**
      * Area of uncertainty data
      */
@@ -202,7 +202,7 @@ export declare class OBT implements flatbuffers.IUnpackableObject<OBTT> {
     static addCountryCode(builder: flatbuffers.Builder, COUNTRY_CODEOffset: flatbuffers.Offset): void;
     static addDecay(builder: flatbuffers.Builder, DECAY: number): void;
     static addCharlieLine(builder: flatbuffers.Builder, CHARLIE_LINEOffset: flatbuffers.Offset): void;
-    static addAouType(builder: flatbuffers.Builder, AOU_TYPE: aouType): void;
+    static addAouType(builder: flatbuffers.Builder, AOU_TYPE: aouCategory): void;
     static addAouData(builder: flatbuffers.Builder, AOU_DATAOffset: flatbuffers.Offset): void;
     static createAouDataVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
     /**
@@ -229,7 +229,7 @@ export declare class OBT implements flatbuffers.IUnpackableObject<OBTT> {
     static endOBT(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishOBTBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedOBTBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createOBT(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, SAT_NO: number, ORIG_OBJECT_IDOffset: flatbuffers.Offset, ON_ORBITOffset: flatbuffers.Offset, TSOffset: flatbuffers.Offset, LAT: number, LON: number, ALT: number, SPD: number, ANG_ELEV: number, RDF_RF: number, CALL_SIGNOffset: flatbuffers.Offset, RPT_NUMOffset: flatbuffers.Offset, TRK_IDOffset: flatbuffers.Offset, OBJ_IDENTOffset: flatbuffers.Offset, IDENT_AMPOffset: flatbuffers.Offset, SAT_STATUSOffset: flatbuffers.Offset, OBJ_TYPE: orbitObjectType, COUNTRY_CODEOffset: flatbuffers.Offset, DECAY: number, CHARLIE_LINEOffset: flatbuffers.Offset, AOU_TYPE: aouType, AOU_DATAOffset: flatbuffers.Offset, CNTNMNT: number, XREFOffset: flatbuffers.Offset, CH_XREFOffset: flatbuffers.Offset, AMPLIFICATIONOffset: flatbuffers.Offset, IFFOffset: flatbuffers.Offset, VEH_TYPEOffset: flatbuffers.Offset, REINFORCED: boolean, REDUCED: boolean, HQ: boolean, DUMMY: boolean, TASK_FORCE: boolean, FEINT: boolean, INSTALLATION: boolean, TRACK_SENSORSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createOBT(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, SAT_NO: number, ORIG_OBJECT_IDOffset: flatbuffers.Offset, ON_ORBITOffset: flatbuffers.Offset, TSOffset: flatbuffers.Offset, LAT: number, LON: number, ALT: number, SPD: number, ANG_ELEV: number, RDF_RF: number, CALL_SIGNOffset: flatbuffers.Offset, RPT_NUMOffset: flatbuffers.Offset, TRK_IDOffset: flatbuffers.Offset, OBJ_IDENTOffset: flatbuffers.Offset, IDENT_AMPOffset: flatbuffers.Offset, SAT_STATUSOffset: flatbuffers.Offset, OBJ_TYPE: orbitObjectType, COUNTRY_CODEOffset: flatbuffers.Offset, DECAY: number, CHARLIE_LINEOffset: flatbuffers.Offset, AOU_TYPE: aouCategory, AOU_DATAOffset: flatbuffers.Offset, CNTNMNT: number, XREFOffset: flatbuffers.Offset, CH_XREFOffset: flatbuffers.Offset, AMPLIFICATIONOffset: flatbuffers.Offset, IFFOffset: flatbuffers.Offset, VEH_TYPEOffset: flatbuffers.Offset, REINFORCED: boolean, REDUCED: boolean, HQ: boolean, DUMMY: boolean, TASK_FORCE: boolean, FEINT: boolean, INSTALLATION: boolean, TRACK_SENSORSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): OBTT;
     unpackTo(_o: OBTT): void;
 }
@@ -255,7 +255,7 @@ export declare class OBTT implements flatbuffers.IGeneratedObject {
     COUNTRY_CODE: string | Uint8Array | null;
     DECAY: number;
     CHARLIE_LINE: string | Uint8Array | null;
-    AOU_TYPE: aouType;
+    AOU_TYPE: aouCategory;
     AOU_DATA: (number)[];
     CNTNMNT: number;
     XREF: string | Uint8Array | null;
@@ -271,7 +271,7 @@ export declare class OBTT implements flatbuffers.IGeneratedObject {
     FEINT: boolean;
     INSTALLATION: boolean;
     TRACK_SENSORS: (string)[];
-    constructor(ID?: string | Uint8Array | null, SAT_NO?: number, ORIG_OBJECT_ID?: string | Uint8Array | null, ON_ORBIT?: string | Uint8Array | null, TS?: string | Uint8Array | null, LAT?: number, LON?: number, ALT?: number, SPD?: number, ANG_ELEV?: number, RDF_RF?: number, CALL_SIGN?: string | Uint8Array | null, RPT_NUM?: string | Uint8Array | null, TRK_ID?: string | Uint8Array | null, OBJ_IDENT?: string | Uint8Array | null, IDENT_AMP?: string | Uint8Array | null, SAT_STATUS?: string | Uint8Array | null, OBJ_TYPE?: orbitObjectType, COUNTRY_CODE?: string | Uint8Array | null, DECAY?: number, CHARLIE_LINE?: string | Uint8Array | null, AOU_TYPE?: aouType, AOU_DATA?: (number)[], CNTNMNT?: number, XREF?: string | Uint8Array | null, CH_XREF?: string | Uint8Array | null, AMPLIFICATION?: string | Uint8Array | null, IFF?: string | Uint8Array | null, VEH_TYPE?: string | Uint8Array | null, REINFORCED?: boolean, REDUCED?: boolean, HQ?: boolean, DUMMY?: boolean, TASK_FORCE?: boolean, FEINT?: boolean, INSTALLATION?: boolean, TRACK_SENSORS?: (string)[]);
+    constructor(ID?: string | Uint8Array | null, SAT_NO?: number, ORIG_OBJECT_ID?: string | Uint8Array | null, ON_ORBIT?: string | Uint8Array | null, TS?: string | Uint8Array | null, LAT?: number, LON?: number, ALT?: number, SPD?: number, ANG_ELEV?: number, RDF_RF?: number, CALL_SIGN?: string | Uint8Array | null, RPT_NUM?: string | Uint8Array | null, TRK_ID?: string | Uint8Array | null, OBJ_IDENT?: string | Uint8Array | null, IDENT_AMP?: string | Uint8Array | null, SAT_STATUS?: string | Uint8Array | null, OBJ_TYPE?: orbitObjectType, COUNTRY_CODE?: string | Uint8Array | null, DECAY?: number, CHARLIE_LINE?: string | Uint8Array | null, AOU_TYPE?: aouCategory, AOU_DATA?: (number)[], CNTNMNT?: number, XREF?: string | Uint8Array | null, CH_XREF?: string | Uint8Array | null, AMPLIFICATION?: string | Uint8Array | null, IFF?: string | Uint8Array | null, VEH_TYPE?: string | Uint8Array | null, REINFORCED?: boolean, REDUCED?: boolean, HQ?: boolean, DUMMY?: boolean, TASK_FORCE?: boolean, FEINT?: boolean, INSTALLATION?: boolean, TRACK_SENSORS?: (string)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OBT.d.ts.map

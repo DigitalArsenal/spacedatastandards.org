@@ -56,7 +56,7 @@ class SHWCompileRequest extends Table
     public function getSHADER_STAGE()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \shaderStage::VERTEX;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \glslStage::VERTEX;
     }
 
     /// Intended injection point in the host pipeline.
@@ -66,7 +66,7 @@ class SHWCompileRequest extends Table
     public function getSHADER_INJECTION_POINT()
     {
         $o = $this->__offset(8);
-        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \shaderInjectionPoint::NONE;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \shaderHookPoint::NONE;
     }
 
     /// GLSL source (or preprocessed chunk).

@@ -1,5 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
-import { accessType } from './accessType.js';
+import { accessCategory } from './accessCategory.js';
 import { paymentMethod } from './paymentMethod.js';
 /**
  * Access Control Grant - Permission to access purchased data
@@ -35,7 +35,7 @@ export declare class ACL implements flatbuffers.IUnpackableObject<ACLT> {
     /**
      * Type of access granted
      */
-    ACCESS_TYPE(): accessType;
+    ACCESS_TYPE(): accessCategory;
     /**
      * Name of the pricing tier purchased
      */
@@ -71,7 +71,7 @@ export declare class ACL implements flatbuffers.IUnpackableObject<ACLT> {
     static addBuyerEncryptionPubkey(builder: flatbuffers.Builder, BUYER_ENCRYPTION_PUBKEYOffset: flatbuffers.Offset): void;
     static createBuyerEncryptionPubkeyVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startBuyerEncryptionPubkeyVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addAccessType(builder: flatbuffers.Builder, ACCESS_TYPE: accessType): void;
+    static addAccessType(builder: flatbuffers.Builder, ACCESS_TYPE: accessCategory): void;
     static addTierName(builder: flatbuffers.Builder, TIER_NAMEOffset: flatbuffers.Offset): void;
     static addGrantedAt(builder: flatbuffers.Builder, GRANTED_AT: bigint): void;
     static addExpiresAt(builder: flatbuffers.Builder, EXPIRES_AT: bigint): void;
@@ -83,7 +83,7 @@ export declare class ACL implements flatbuffers.IUnpackableObject<ACLT> {
     static endACL(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishACLBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedACLBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createACL(builder: flatbuffers.Builder, GRANT_IDOffset: flatbuffers.Offset, LISTING_IDOffset: flatbuffers.Offset, BUYER_PEER_IDOffset: flatbuffers.Offset, BUYER_ENCRYPTION_PUBKEYOffset: flatbuffers.Offset, ACCESS_TYPE: accessType, TIER_NAMEOffset: flatbuffers.Offset, GRANTED_AT: bigint, EXPIRES_AT: bigint, PAYMENT_TX_HASHOffset: flatbuffers.Offset, PAYMENT_METHOD: paymentMethod, PROVIDER_SIGNATUREOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createACL(builder: flatbuffers.Builder, GRANT_IDOffset: flatbuffers.Offset, LISTING_IDOffset: flatbuffers.Offset, BUYER_PEER_IDOffset: flatbuffers.Offset, BUYER_ENCRYPTION_PUBKEYOffset: flatbuffers.Offset, ACCESS_TYPE: accessCategory, TIER_NAMEOffset: flatbuffers.Offset, GRANTED_AT: bigint, EXPIRES_AT: bigint, PAYMENT_TX_HASHOffset: flatbuffers.Offset, PAYMENT_METHOD: paymentMethod, PROVIDER_SIGNATUREOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): ACLT;
     unpackTo(_o: ACLT): void;
 }
@@ -92,14 +92,14 @@ export declare class ACLT implements flatbuffers.IGeneratedObject {
     LISTING_ID: string | Uint8Array | null;
     BUYER_PEER_ID: string | Uint8Array | null;
     BUYER_ENCRYPTION_PUBKEY: (number)[];
-    ACCESS_TYPE: accessType;
+    ACCESS_TYPE: accessCategory;
     TIER_NAME: string | Uint8Array | null;
     GRANTED_AT: bigint;
     EXPIRES_AT: bigint;
     PAYMENT_TX_HASH: string | Uint8Array | null;
     PAYMENT_METHOD: paymentMethod;
     PROVIDER_SIGNATURE: (number)[];
-    constructor(GRANT_ID?: string | Uint8Array | null, LISTING_ID?: string | Uint8Array | null, BUYER_PEER_ID?: string | Uint8Array | null, BUYER_ENCRYPTION_PUBKEY?: (number)[], ACCESS_TYPE?: accessType, TIER_NAME?: string | Uint8Array | null, GRANTED_AT?: bigint, EXPIRES_AT?: bigint, PAYMENT_TX_HASH?: string | Uint8Array | null, PAYMENT_METHOD?: paymentMethod, PROVIDER_SIGNATURE?: (number)[]);
+    constructor(GRANT_ID?: string | Uint8Array | null, LISTING_ID?: string | Uint8Array | null, BUYER_PEER_ID?: string | Uint8Array | null, BUYER_ENCRYPTION_PUBKEY?: (number)[], ACCESS_TYPE?: accessCategory, TIER_NAME?: string | Uint8Array | null, GRANTED_AT?: bigint, EXPIRES_AT?: bigint, PAYMENT_TX_HASH?: string | Uint8Array | null, PAYMENT_METHOD?: paymentMethod, PROVIDER_SIGNATURE?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ACL.d.ts.map

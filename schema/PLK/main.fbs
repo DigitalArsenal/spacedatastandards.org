@@ -1,8 +1,8 @@
-// Hash: 09b2abd0fe15ebad8ddf22d64adce877547ccd6f96466a4a3fbb7b33f6a37bc5
-// Version: 1.1.1
+// Hash: d220a27a212b4b71214270be72025d89f8753945f79683cf6b498007050c559a
+// Version: 1.1.2
 // -----------------------------------END_HEADER
 /// License type for plugin access
-enum licenseType : byte {
+enum licenseCategory : byte {
   /// Evaluation/trial license
   Trial,
   /// Standard commercial license
@@ -47,7 +47,7 @@ table PLK {
   ALLOWED_TLDS: [string];
 
   /// Type of license
-  LICENSE_TYPE: licenseType;
+  LICENSE_TYPE: licenseCategory;
   /// Maximum concurrent activations (0 = unlimited)
   MAX_ACTIVATIONS: uint32;
 

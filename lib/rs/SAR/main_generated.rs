@@ -4,27 +4,27 @@ extern crate alloc;
 
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_SAR_MODE: i8 = 0;
+pub const ENUM_MIN_SAR_MISSION: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SAR_MODE: i8 = 7;
+pub const ENUM_MAX_SAR_MISSION: i8 = 7;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SAR_MODE: [sarMode; 8] = [
-  sarMode::STRIPMAP,
-  sarMode::SPOTLIGHT,
-  sarMode::SCANSAR,
-  sarMode::TOPSAR,
-  sarMode::ISAR,
-  sarMode::GMTI,
-  sarMode::MARITIME,
-  sarMode::UNKNOWN,
+pub const ENUM_VALUES_SAR_MISSION: [sarMission; 8] = [
+  sarMission::STRIPMAP,
+  sarMission::SPOTLIGHT,
+  sarMission::SCANSAR,
+  sarMission::TOPSAR,
+  sarMission::ISAR,
+  sarMission::GMTI,
+  sarMission::MARITIME,
+  sarMission::UNKNOWN,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct sarMode(pub i8);
+pub struct sarMission(pub i8);
 #[allow(non_upper_case_globals)]
-impl sarMode {
+impl sarMission {
   pub const STRIPMAP: Self = Self(0);
   pub const SPOTLIGHT: Self = Self(1);
   pub const SCANSAR: Self = Self(2);
@@ -61,7 +61,7 @@ impl sarMode {
     }
   }
 }
-impl ::core::fmt::Debug for sarMode {
+impl ::core::fmt::Debug for sarMission {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -70,7 +70,7 @@ impl ::core::fmt::Debug for sarMode {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for sarMode {
+impl<'a> ::flatbuffers::Follow<'a> for sarMission {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -79,15 +79,15 @@ impl<'a> ::flatbuffers::Follow<'a> for sarMode {
   }
 }
 
-impl ::flatbuffers::Push for sarMode {
-    type Output = sarMode;
+impl ::flatbuffers::Push for sarMission {
+    type Output = sarMission;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for sarMode {
+impl ::flatbuffers::EndianScalar for sarMission {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -101,7 +101,7 @@ impl ::flatbuffers::EndianScalar for sarMode {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for sarMode {
+impl<'a> ::flatbuffers::Verifiable for sarMission {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -110,7 +110,7 @@ impl<'a> ::flatbuffers::Verifiable for sarMode {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for sarMode {}
+impl ::flatbuffers::SimpleToVerifyInSlice for sarMission {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SAR_POLARIZATION: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -669,11 +669,11 @@ impl<'a> SAR<'a> {
   }
   /// SAR imaging mode
   #[inline]
-  pub fn SAR_MODE(&self) -> sarMode {
+  pub fn SAR_MODE(&self) -> sarMission {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<sarMode>(SAR::VT_SAR_MODE, Some(sarMode::STRIPMAP)).unwrap()}
+    unsafe { self._tab.get::<sarMission>(SAR::VT_SAR_MODE, Some(sarMission::STRIPMAP)).unwrap()}
   }
   /// Operating RF band (e.g., X, C, L, S, P)
   #[inline]
@@ -1027,7 +1027,7 @@ impl ::flatbuffers::Verifiable for SAR<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DETECTION_END", Self::VT_DETECTION_END, false)?
      .visit_field::<f64>("DWELL_TIME", Self::VT_DWELL_TIME, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORBIT_STATE", Self::VT_ORBIT_STATE, false)?
-     .visit_field::<sarMode>("SAR_MODE", Self::VT_SAR_MODE, false)?
+     .visit_field::<sarMission>("SAR_MODE", Self::VT_SAR_MODE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OPERATING_BAND", Self::VT_OPERATING_BAND, false)?
      .visit_field::<f64>("OPERATING_FREQ", Self::VT_OPERATING_FREQ, false)?
      .visit_field::<f64>("SNR", Self::VT_SNR, false)?
@@ -1090,7 +1090,7 @@ pub struct SARArgs<'a> {
     pub DETECTION_END: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub DWELL_TIME: f64,
     pub ORBIT_STATE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub SAR_MODE: sarMode,
+    pub SAR_MODE: sarMission,
     pub OPERATING_BAND: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub OPERATING_FREQ: f64,
     pub SNR: f64,
@@ -1153,7 +1153,7 @@ impl<'a> Default for SARArgs<'a> {
       DETECTION_END: None,
       DWELL_TIME: 0.0,
       ORBIT_STATE: None,
-      SAR_MODE: sarMode::STRIPMAP,
+      SAR_MODE: sarMission::STRIPMAP,
       OPERATING_BAND: None,
       OPERATING_FREQ: 0.0,
       SNR: 0.0,
@@ -1269,8 +1269,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SARBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SAR::VT_ORBIT_STATE, ORBIT_STATE);
   }
   #[inline]
-  pub fn add_SAR_MODE(&mut self, SAR_MODE: sarMode) {
-    self.fbb_.push_slot::<sarMode>(SAR::VT_SAR_MODE, SAR_MODE, sarMode::STRIPMAP);
+  pub fn add_SAR_MODE(&mut self, SAR_MODE: sarMission) {
+    self.fbb_.push_slot::<sarMission>(SAR::VT_SAR_MODE, SAR_MODE, sarMission::STRIPMAP);
   }
   #[inline]
   pub fn add_OPERATING_BAND(&mut self, OPERATING_BAND: ::flatbuffers::WIPOffset<&'b  str>) {
@@ -1534,7 +1534,7 @@ pub struct SART {
   pub DETECTION_END: Option<alloc::string::String>,
   pub DWELL_TIME: f64,
   pub ORBIT_STATE: Option<alloc::string::String>,
-  pub SAR_MODE: sarMode,
+  pub SAR_MODE: sarMission,
   pub OPERATING_BAND: Option<alloc::string::String>,
   pub OPERATING_FREQ: f64,
   pub SNR: f64,
@@ -1596,7 +1596,7 @@ impl Default for SART {
       DETECTION_END: None,
       DWELL_TIME: 0.0,
       ORBIT_STATE: None,
-      SAR_MODE: sarMode::STRIPMAP,
+      SAR_MODE: sarMission::STRIPMAP,
       OPERATING_BAND: None,
       OPERATING_FREQ: 0.0,
       SNR: 0.0,

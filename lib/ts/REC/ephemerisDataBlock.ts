@@ -9,7 +9,7 @@ import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { RFM, RFMT } from './RFM.js';
 import { covarianceMatrixLine, covarianceMatrixLineT } from './covarianceMatrixLine.js';
 import { ephemerisDataLine, ephemerisDataLineT } from './ephemerisDataLine.js';
-import { timeSystem } from './timeSystem.js';
+import { timingStandard } from './timingStandard.js';
 
 
 /**
@@ -90,9 +90,9 @@ COV_REFERENCE_FRAME(obj?:RFM):RFM|null {
 /**
  * Time system used for the orbit state and covariance matrix. (UTC)
  */
-TIME_SYSTEM():timeSystem {
+TIME_SYSTEM():timingStandard {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : timeSystem.GMST;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : timingStandard.GMST;
 }
 
 /**
@@ -273,8 +273,8 @@ static addCovReferenceFrame(builder:flatbuffers.Builder, COV_REFERENCE_FRAMEOffs
   builder.addFieldOffset(5, COV_REFERENCE_FRAMEOffset, 0);
 }
 
-static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEM:timeSystem) {
-  builder.addFieldInt8(6, TIME_SYSTEM, timeSystem.GMST);
+static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEM:timingStandard) {
+  builder.addFieldInt8(6, TIME_SYSTEM, timingStandard.GMST);
 }
 
 static addStartTime(builder:flatbuffers.Builder, START_TIMEOffset:flatbuffers.Offset) {
@@ -440,7 +440,7 @@ constructor(
   public REFERENCE_FRAME: RFMT|null = null,
   public REFERENCE_FRAME_EPOCH: string|Uint8Array|null = null,
   public COV_REFERENCE_FRAME: RFMT|null = null,
-  public TIME_SYSTEM: timeSystem = timeSystem.GMST,
+  public TIME_SYSTEM: timingStandard = timingStandard.GMST,
   public START_TIME: string|Uint8Array|null = null,
   public USEABLE_START_TIME: string|Uint8Array|null = null,
   public USEABLE_STOP_TIME: string|Uint8Array|null = null,

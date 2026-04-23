@@ -1,5 +1,5 @@
-// Hash: 8bb3c8a1012e0fb9b855a1caee7b6c32d46f88dff2fc7212bcbf29388d5ef2db
-// Version: 1.0.1
+// Hash: 8b8e9651ecb1b2dcf0c9b7096ef1a59a016d262c8d330c4380329f6f1b7c57a8
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 include "../STF/main.fbs";
 
@@ -15,7 +15,7 @@ table ACL {
   BUYER_ENCRYPTION_PUBKEY: [ubyte];
 
   /// Type of access granted
-  ACCESS_TYPE: accessType;
+  ACCESS_TYPE: accessCategory;
   /// Name of the pricing tier purchased
   TIER_NAME: string;
 

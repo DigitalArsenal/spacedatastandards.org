@@ -134,24 +134,24 @@ func (rcv *CDMObject) EphemerisName() []byte {
 
 /// Ephemeris name
 /// Covariance method
-func (rcv *CDMObject) COVARIANCE_METHOD() covarianceMethod {
+func (rcv *CDMObject) COVARIANCE_METHOD() covarianceAlgorithm {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		return covarianceMethod(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return covarianceAlgorithm(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *CDMObject) CovarianceMethod() covarianceMethod {
+func (rcv *CDMObject) CovarianceMethod() covarianceAlgorithm {
 	return rcv.COVARIANCE_METHOD()
 }
 
 /// Covariance method
-func (rcv *CDMObject) MutateCOVARIANCE_METHOD(n covarianceMethod) bool {
+func (rcv *CDMObject) MutateCOVARIANCE_METHOD(n covarianceAlgorithm) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
 }
 
-func (rcv *CDMObject) MutateCovarianceMethod(n covarianceMethod) bool {
+func (rcv *CDMObject) MutateCovarianceMethod(n covarianceAlgorithm) bool {
 	return rcv.MutateCOVARIANCE_METHOD(n)
 }
 
@@ -817,10 +817,10 @@ func CDMObjectAddEPHEMERIS_NAME(builder *flatbuffers.Builder, EPHEMERIS_NAME fla
 func CDMObjectAddEphemerisName(builder *flatbuffers.Builder, EPHEMERIS_NAME flatbuffers.UOffsetT) {
 	CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME)
 }
-func CDMObjectAddCOVARIANCE_METHOD(builder *flatbuffers.Builder, COVARIANCE_METHOD covarianceMethod) {
+func CDMObjectAddCOVARIANCE_METHOD(builder *flatbuffers.Builder, COVARIANCE_METHOD covarianceAlgorithm) {
 	builder.PrependInt8Slot(6, int8(COVARIANCE_METHOD), 0)
 }
-func CDMObjectAddCovarianceMethod(builder *flatbuffers.Builder, COVARIANCE_METHOD covarianceMethod) {
+func CDMObjectAddCovarianceMethod(builder *flatbuffers.Builder, COVARIANCE_METHOD covarianceAlgorithm) {
 	CDMObjectAddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD)
 }
 func CDMObjectAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {

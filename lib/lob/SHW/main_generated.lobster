@@ -7,25 +7,25 @@ import flatbuffers
 /// table, and the injection-point enum a host consumes to know where to
 /// splice a shader fragment into its stage graph.
 /// Shader stage into which a compiled fragment should be injected.
-enum shaderStage:
-    shaderStage_VERTEX = 0
-    shaderStage_FRAGMENT = 1
-    shaderStage_COMPUTE = 2
-    shaderStage_GEOMETRY = 3
-    shaderStage_TESS_CONTROL = 4
-    shaderStage_TESS_EVALUATION = 5
+enum glslStage:
+    glslStage_VERTEX = 0
+    glslStage_FRAGMENT = 1
+    glslStage_COMPUTE = 2
+    glslStage_GEOMETRY = 3
+    glslStage_TESS_CONTROL = 4
+    glslStage_TESS_EVALUATION = 5
 
 /// Logical location inside a host pipeline where a compiled shader
 /// fragment is meant to be spliced. A host maps these onto its own
 /// concrete splice points.
-enum shaderInjectionPoint:
-    shaderInjectionPoint_NONE = 0
-    shaderInjectionPoint_VERTEX_PRE_TRANSFORM = 1
-    shaderInjectionPoint_VERTEX_POST_TRANSFORM = 2
-    shaderInjectionPoint_FRAGMENT_PRE_SHADE = 3
-    shaderInjectionPoint_FRAGMENT_POST_SHADE = 4
-    shaderInjectionPoint_FRAGMENT_FINAL_COLOR = 5
-    shaderInjectionPoint_POSTPROCESS = 6
+enum shaderHookPoint:
+    shaderHookPoint_NONE = 0
+    shaderHookPoint_VERTEX_PRE_TRANSFORM = 1
+    shaderHookPoint_VERTEX_POST_TRANSFORM = 2
+    shaderHookPoint_FRAGMENT_PRE_SHADE = 3
+    shaderHookPoint_FRAGMENT_POST_SHADE = 4
+    shaderHookPoint_FRAGMENT_FINAL_COLOR = 5
+    shaderHookPoint_POSTPROCESS = 6
 
 /// Scalar / vector type of a uniform value.
 enum shaderUniformType:
@@ -111,11 +111,11 @@ class SHWCompileRequest : flatbuffers.handle
     def SHADER_NAME() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
     /// Target GLSL stage.
-    def SHADER_STAGE() -> shaderStage:
-        return shaderStage(flatbuffers.field_uint8(buf_, pos_, 6, 0))
+    def SHADER_STAGE() -> glslStage:
+        return glslStage(flatbuffers.field_uint8(buf_, pos_, 6, 0))
     /// Intended injection point in the host pipeline.
-    def SHADER_INJECTION_POINT() -> shaderInjectionPoint:
-        return shaderInjectionPoint(flatbuffers.field_uint8(buf_, pos_, 8, 0))
+    def SHADER_INJECTION_POINT() -> shaderHookPoint:
+        return shaderHookPoint(flatbuffers.field_uint8(buf_, pos_, 8, 0))
     /// GLSL source (or preprocessed chunk).
     def SHADER_SOURCE() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
@@ -138,10 +138,10 @@ struct SHWCompileRequestBuilder:
     def add_SHADER_NAME(SHADER_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, SHADER_NAME)
         return this
-    def add_SHADER_STAGE(SHADER_STAGE:shaderStage):
+    def add_SHADER_STAGE(SHADER_STAGE:glslStage):
         b_.PrependUint8Slot(1, SHADER_STAGE, 0)
         return this
-    def add_SHADER_INJECTION_POINT(SHADER_INJECTION_POINT:shaderInjectionPoint):
+    def add_SHADER_INJECTION_POINT(SHADER_INJECTION_POINT:shaderHookPoint):
         b_.PrependUint8Slot(2, SHADER_INJECTION_POINT, 0)
         return this
     def add_SHADER_SOURCE(SHADER_SOURCE:flatbuffers.offset):

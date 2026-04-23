@@ -133,24 +133,24 @@ func (rcv *PPEOrbitalElementRecord) MutateBasisType(n polynomialBasisType) bool 
 }
 
 /// Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
-func (rcv *PPEOrbitalElementRecord) SIZE_SHAPE_TYPE() sizeShapeType {
+func (rcv *PPEOrbitalElementRecord) SIZE_SHAPE_TYPE() sizeShapeProfile {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return sizeShapeType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return sizeShapeProfile(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *PPEOrbitalElementRecord) SizeShapeType() sizeShapeType {
+func (rcv *PPEOrbitalElementRecord) SizeShapeType() sizeShapeProfile {
 	return rcv.SIZE_SHAPE_TYPE()
 }
 
 /// Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
-func (rcv *PPEOrbitalElementRecord) MutateSIZE_SHAPE_TYPE(n sizeShapeType) bool {
+func (rcv *PPEOrbitalElementRecord) MutateSIZE_SHAPE_TYPE(n sizeShapeProfile) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
 }
 
-func (rcv *PPEOrbitalElementRecord) MutateSizeShapeType(n sizeShapeType) bool {
+func (rcv *PPEOrbitalElementRecord) MutateSizeShapeType(n sizeShapeProfile) bool {
 	return rcv.MutateSIZE_SHAPE_TYPE(n)
 }
 
@@ -501,10 +501,10 @@ func PPEOrbitalElementRecordAddBASIS_TYPE(builder *flatbuffers.Builder, BASIS_TY
 func PPEOrbitalElementRecordAddBasisType(builder *flatbuffers.Builder, BASIS_TYPE polynomialBasisType) {
 	PPEOrbitalElementRecordAddBASIS_TYPE(builder, BASIS_TYPE)
 }
-func PPEOrbitalElementRecordAddSIZE_SHAPE_TYPE(builder *flatbuffers.Builder, SIZE_SHAPE_TYPE sizeShapeType) {
+func PPEOrbitalElementRecordAddSIZE_SHAPE_TYPE(builder *flatbuffers.Builder, SIZE_SHAPE_TYPE sizeShapeProfile) {
 	builder.PrependInt8Slot(4, int8(SIZE_SHAPE_TYPE), 0)
 }
-func PPEOrbitalElementRecordAddSizeShapeType(builder *flatbuffers.Builder, SIZE_SHAPE_TYPE sizeShapeType) {
+func PPEOrbitalElementRecordAddSizeShapeType(builder *flatbuffers.Builder, SIZE_SHAPE_TYPE sizeShapeProfile) {
 	PPEOrbitalElementRecordAddSIZE_SHAPE_TYPE(builder, SIZE_SHAPE_TYPE)
 }
 func PPEOrbitalElementRecordAddANOMALY_TYPE(builder *flatbuffers.Builder, ANOMALY_TYPE ppeAnomalyType) {

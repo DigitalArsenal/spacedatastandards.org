@@ -4,21 +4,21 @@ extern crate alloc;
 
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_PDU_TYPE: i8 = 0;
+pub const ENUM_MIN_PDU_KIND: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PDU_TYPE: i8 = 1;
+pub const ENUM_MAX_PDU_KIND: i8 = 1;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PDU_TYPE: [pduType; 2] = [
-  pduType::FILE_DIRECTIVE,
-  pduType::FILE_DATA,
+pub const ENUM_VALUES_PDU_KIND: [pduKind; 2] = [
+  pduKind::FILE_DIRECTIVE,
+  pduKind::FILE_DATA,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct pduType(pub i8);
+pub struct pduKind(pub i8);
 #[allow(non_upper_case_globals)]
-impl pduType {
+impl pduKind {
   pub const FILE_DIRECTIVE: Self = Self(0);
   pub const FILE_DATA: Self = Self(1);
 
@@ -37,7 +37,7 @@ impl pduType {
     }
   }
 }
-impl ::core::fmt::Debug for pduType {
+impl ::core::fmt::Debug for pduKind {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -46,7 +46,7 @@ impl ::core::fmt::Debug for pduType {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for pduType {
+impl<'a> ::flatbuffers::Follow<'a> for pduKind {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -55,15 +55,15 @@ impl<'a> ::flatbuffers::Follow<'a> for pduType {
   }
 }
 
-impl ::flatbuffers::Push for pduType {
-    type Output = pduType;
+impl ::flatbuffers::Push for pduKind {
+    type Output = pduKind;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for pduType {
+impl ::flatbuffers::EndianScalar for pduKind {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -77,7 +77,7 @@ impl ::flatbuffers::EndianScalar for pduType {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for pduType {
+impl<'a> ::flatbuffers::Verifiable for pduKind {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -86,23 +86,23 @@ impl<'a> ::flatbuffers::Verifiable for pduType {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for pduType {}
+impl ::flatbuffers::SimpleToVerifyInSlice for pduKind {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_TRANSMISSION_MODE: i8 = 0;
+pub const ENUM_MIN_TRANSMISSION_CLASS: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TRANSMISSION_MODE: i8 = 1;
+pub const ENUM_MAX_TRANSMISSION_CLASS: i8 = 1;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TRANSMISSION_MODE: [transmissionMode; 2] = [
-  transmissionMode::ACKNOWLEDGED,
-  transmissionMode::UNACKNOWLEDGED,
+pub const ENUM_VALUES_TRANSMISSION_CLASS: [transmissionClass; 2] = [
+  transmissionClass::ACKNOWLEDGED,
+  transmissionClass::UNACKNOWLEDGED,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct transmissionMode(pub i8);
+pub struct transmissionClass(pub i8);
 #[allow(non_upper_case_globals)]
-impl transmissionMode {
+impl transmissionClass {
   pub const ACKNOWLEDGED: Self = Self(0);
   pub const UNACKNOWLEDGED: Self = Self(1);
 
@@ -121,7 +121,7 @@ impl transmissionMode {
     }
   }
 }
-impl ::core::fmt::Debug for transmissionMode {
+impl ::core::fmt::Debug for transmissionClass {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -130,7 +130,7 @@ impl ::core::fmt::Debug for transmissionMode {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for transmissionMode {
+impl<'a> ::flatbuffers::Follow<'a> for transmissionClass {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -139,15 +139,15 @@ impl<'a> ::flatbuffers::Follow<'a> for transmissionMode {
   }
 }
 
-impl ::flatbuffers::Push for transmissionMode {
-    type Output = transmissionMode;
+impl ::flatbuffers::Push for transmissionClass {
+    type Output = transmissionClass;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for transmissionMode {
+impl ::flatbuffers::EndianScalar for transmissionClass {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -161,7 +161,7 @@ impl ::flatbuffers::EndianScalar for transmissionMode {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for transmissionMode {
+impl<'a> ::flatbuffers::Verifiable for transmissionClass {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -170,7 +170,7 @@ impl<'a> ::flatbuffers::Verifiable for transmissionMode {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for transmissionMode {}
+impl ::flatbuffers::SimpleToVerifyInSlice for transmissionClass {}
 pub enum CFPOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -283,11 +283,11 @@ impl<'a> CFP<'a> {
   }
   /// PDU type
   #[inline]
-  pub fn PDU_TYPE(&self) -> pduType {
+  pub fn PDU_TYPE(&self) -> pduKind {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<pduType>(CFP::VT_PDU_TYPE, Some(pduType::FILE_DIRECTIVE)).unwrap()}
+    unsafe { self._tab.get::<pduKind>(CFP::VT_PDU_TYPE, Some(pduKind::FILE_DIRECTIVE)).unwrap()}
   }
   /// Direction (toward receiver or sender)
   #[inline]
@@ -299,11 +299,11 @@ impl<'a> CFP<'a> {
   }
   /// Transmission mode
   #[inline]
-  pub fn TRANSMISSION_MODE(&self) -> transmissionMode {
+  pub fn TRANSMISSION_MODE(&self) -> transmissionClass {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<transmissionMode>(CFP::VT_TRANSMISSION_MODE, Some(transmissionMode::ACKNOWLEDGED)).unwrap()}
+    unsafe { self._tab.get::<transmissionClass>(CFP::VT_TRANSMISSION_MODE, Some(transmissionClass::ACKNOWLEDGED)).unwrap()}
   }
   /// CRC present flag
   #[inline]
@@ -402,9 +402,9 @@ impl ::flatbuffers::Verifiable for CFP<'_> {
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
      .visit_field::<u8>("VERSION", Self::VT_VERSION, false)?
-     .visit_field::<pduType>("PDU_TYPE", Self::VT_PDU_TYPE, false)?
+     .visit_field::<pduKind>("PDU_TYPE", Self::VT_PDU_TYPE, false)?
      .visit_field::<u8>("DIRECTION", Self::VT_DIRECTION, false)?
-     .visit_field::<transmissionMode>("TRANSMISSION_MODE", Self::VT_TRANSMISSION_MODE, false)?
+     .visit_field::<transmissionClass>("TRANSMISSION_MODE", Self::VT_TRANSMISSION_MODE, false)?
      .visit_field::<bool>("CRC_FLAG", Self::VT_CRC_FLAG, false)?
      .visit_field::<bool>("LARGE_FILE_FLAG", Self::VT_LARGE_FILE_FLAG, false)?
      .visit_field::<u16>("DATA_FIELD_LENGTH", Self::VT_DATA_FIELD_LENGTH, false)?
@@ -422,9 +422,9 @@ impl ::flatbuffers::Verifiable for CFP<'_> {
 }
 pub struct CFPArgs<'a> {
     pub VERSION: u8,
-    pub PDU_TYPE: pduType,
+    pub PDU_TYPE: pduKind,
     pub DIRECTION: u8,
-    pub TRANSMISSION_MODE: transmissionMode,
+    pub TRANSMISSION_MODE: transmissionClass,
     pub CRC_FLAG: bool,
     pub LARGE_FILE_FLAG: bool,
     pub DATA_FIELD_LENGTH: u16,
@@ -442,9 +442,9 @@ impl<'a> Default for CFPArgs<'a> {
   fn default() -> Self {
     CFPArgs {
       VERSION: 0,
-      PDU_TYPE: pduType::FILE_DIRECTIVE,
+      PDU_TYPE: pduKind::FILE_DIRECTIVE,
       DIRECTION: 0,
-      TRANSMISSION_MODE: transmissionMode::ACKNOWLEDGED,
+      TRANSMISSION_MODE: transmissionClass::ACKNOWLEDGED,
       CRC_FLAG: false,
       LARGE_FILE_FLAG: false,
       DATA_FIELD_LENGTH: 0,
@@ -470,16 +470,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CFPBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<u8>(CFP::VT_VERSION, VERSION, 0);
   }
   #[inline]
-  pub fn add_PDU_TYPE(&mut self, PDU_TYPE: pduType) {
-    self.fbb_.push_slot::<pduType>(CFP::VT_PDU_TYPE, PDU_TYPE, pduType::FILE_DIRECTIVE);
+  pub fn add_PDU_TYPE(&mut self, PDU_TYPE: pduKind) {
+    self.fbb_.push_slot::<pduKind>(CFP::VT_PDU_TYPE, PDU_TYPE, pduKind::FILE_DIRECTIVE);
   }
   #[inline]
   pub fn add_DIRECTION(&mut self, DIRECTION: u8) {
     self.fbb_.push_slot::<u8>(CFP::VT_DIRECTION, DIRECTION, 0);
   }
   #[inline]
-  pub fn add_TRANSMISSION_MODE(&mut self, TRANSMISSION_MODE: transmissionMode) {
-    self.fbb_.push_slot::<transmissionMode>(CFP::VT_TRANSMISSION_MODE, TRANSMISSION_MODE, transmissionMode::ACKNOWLEDGED);
+  pub fn add_TRANSMISSION_MODE(&mut self, TRANSMISSION_MODE: transmissionClass) {
+    self.fbb_.push_slot::<transmissionClass>(CFP::VT_TRANSMISSION_MODE, TRANSMISSION_MODE, transmissionClass::ACKNOWLEDGED);
   }
   #[inline]
   pub fn add_CRC_FLAG(&mut self, CRC_FLAG: bool) {
@@ -565,9 +565,9 @@ impl ::core::fmt::Debug for CFP<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct CFPT {
   pub VERSION: u8,
-  pub PDU_TYPE: pduType,
+  pub PDU_TYPE: pduKind,
   pub DIRECTION: u8,
-  pub TRANSMISSION_MODE: transmissionMode,
+  pub TRANSMISSION_MODE: transmissionClass,
   pub CRC_FLAG: bool,
   pub LARGE_FILE_FLAG: bool,
   pub DATA_FIELD_LENGTH: u16,
@@ -584,9 +584,9 @@ impl Default for CFPT {
   fn default() -> Self {
     Self {
       VERSION: 0,
-      PDU_TYPE: pduType::FILE_DIRECTIVE,
+      PDU_TYPE: pduKind::FILE_DIRECTIVE,
       DIRECTION: 0,
-      TRANSMISSION_MODE: transmissionMode::ACKNOWLEDGED,
+      TRANSMISSION_MODE: transmissionClass::ACKNOWLEDGED,
       CRC_FLAG: false,
       LARGE_FILE_FLAG: false,
       DATA_FIELD_LENGTH: 0,

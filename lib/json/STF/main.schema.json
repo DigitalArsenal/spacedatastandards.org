@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "accessType" : {
+    "accessCategory" : {
       "type" : "string",
       "enum": ["OneTime", "Subscription", "Streaming", "Query"]
     },
@@ -134,7 +134,7 @@
                 "description" : "IPFS CID of sample data"
               },
         "ACCESS_TYPE" : {
-                "$ref" : "#/definitions/accessType",
+                "$ref" : "#/definitions/accessCategory",
                 "description" : "Type of access offered"
               },
         "ENCRYPTION_REQUIRED" : {

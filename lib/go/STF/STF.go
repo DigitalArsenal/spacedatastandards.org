@@ -185,24 +185,24 @@ func (rcv *STF) SampleCid() []byte {
 
 /// IPFS CID of sample data
 /// Type of access offered
-func (rcv *STF) ACCESS_TYPE() accessType {
+func (rcv *STF) ACCESS_TYPE() accessCategory {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
-		return accessType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return accessCategory(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *STF) AccessType() accessType {
+func (rcv *STF) AccessType() accessCategory {
 	return rcv.ACCESS_TYPE()
 }
 
 /// Type of access offered
-func (rcv *STF) MutateACCESS_TYPE(n accessType) bool {
+func (rcv *STF) MutateACCESS_TYPE(n accessCategory) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
 }
 
-func (rcv *STF) MutateAccessType(n accessType) bool {
+func (rcv *STF) MutateAccessType(n accessCategory) bool {
 	return rcv.MutateACCESS_TYPE(n)
 }
 
@@ -476,10 +476,10 @@ func STFAddSAMPLE_CID(builder *flatbuffers.Builder, SAMPLE_CID flatbuffers.UOffs
 func STFAddSampleCid(builder *flatbuffers.Builder, SAMPLE_CID flatbuffers.UOffsetT) {
 	STFAddSAMPLE_CID(builder, SAMPLE_CID)
 }
-func STFAddACCESS_TYPE(builder *flatbuffers.Builder, ACCESS_TYPE accessType) {
+func STFAddACCESS_TYPE(builder *flatbuffers.Builder, ACCESS_TYPE accessCategory) {
 	builder.PrependInt8Slot(8, int8(ACCESS_TYPE), 0)
 }
-func STFAddAccessType(builder *flatbuffers.Builder, ACCESS_TYPE accessType) {
+func STFAddAccessType(builder *flatbuffers.Builder, ACCESS_TYPE accessCategory) {
 	STFAddACCESS_TYPE(builder, ACCESS_TYPE)
 }
 func STFAddENCRYPTION_REQUIRED(builder *flatbuffers.Builder, ENCRYPTION_REQUIRED bool) {

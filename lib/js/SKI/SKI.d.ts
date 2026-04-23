@@ -1,5 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
-import { imageType } from './imageType.js';
+import { imageCategory } from './imageCategory.js';
 /**
  * Sky Imagery
  */
@@ -78,7 +78,7 @@ export declare class SKI implements flatbuffers.IUnpackableObject<SKIT> {
     /**
      * Image type
      */
-    IMAGE_TYPE(): imageType;
+    IMAGE_TYPE(): imageCategory;
     /**
      * Exposure start time (ISO 8601)
      */
@@ -224,7 +224,7 @@ export declare class SKI implements flatbuffers.IUnpackableObject<SKIT> {
      */
     static createSenQuatDotVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startSenQuatDotVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addImageType(builder: flatbuffers.Builder, IMAGE_TYPE: imageType): void;
+    static addImageType(builder: flatbuffers.Builder, IMAGE_TYPE: imageCategory): void;
     static addExpStartTime(builder: flatbuffers.Builder, EXP_START_TIMEOffset: flatbuffers.Offset): void;
     static addExpEndTime(builder: flatbuffers.Builder, EXP_END_TIMEOffset: flatbuffers.Offset): void;
     static addImageSourceInfo(builder: flatbuffers.Builder, IMAGE_SOURCE_INFOOffset: flatbuffers.Offset): void;
@@ -258,7 +258,7 @@ export declare class SKI implements flatbuffers.IUnpackableObject<SKIT> {
     static endSKI(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishSKIBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedSKIBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createSKI(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, ON_ORBITOffset: flatbuffers.Offset, ORIG_OBJECT_IDOffset: flatbuffers.Offset, SAT_NO: number, ID_SENSOROffset: flatbuffers.Offset, ORIG_SENSOR_IDOffset: flatbuffers.Offset, SENLAT: number, SENLON: number, SENALT: number, SENX: number, SENY: number, SENZ: number, SEN_QUATOffset: flatbuffers.Offset, SEN_QUAT_DOTOffset: flatbuffers.Offset, IMAGE_TYPE: imageType, EXP_START_TIMEOffset: flatbuffers.Offset, EXP_END_TIMEOffset: flatbuffers.Offset, IMAGE_SOURCE_INFOOffset: flatbuffers.Offset, TOP_LEFT_START_AZ: number, TOP_LEFT_START_EL: number, TOP_LEFT_STOP_AZ: number, TOP_LEFT_STOP_EL: number, IMAGE_SET_IDOffset: flatbuffers.Offset, IMAGE_SET_LENGTH: number, SEQUENCE_ID: number, FRAME_FOVWIDTH: number, FRAME_FOVHEIGHT: number, PIXEL_FOVWIDTH: number, PIXEL_FOVHEIGHT: number, FRAME_WIDTH_PIXELS: number, FRAME_HEIGHT_PIXELS: number, PIXEL_BIT_DEPTH: number, ANNOTATION_KEYOffset: flatbuffers.Offset, CALIBRATION_KEYOffset: flatbuffers.Offset, FILENAMEOffset: flatbuffers.Offset, FILESIZE: bigint, CHECKSUM_VALUEOffset: flatbuffers.Offset, TRANSACTION_IDOffset: flatbuffers.Offset, TAGSOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, EO_OBSERVATIONSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createSKI(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, ON_ORBITOffset: flatbuffers.Offset, ORIG_OBJECT_IDOffset: flatbuffers.Offset, SAT_NO: number, ID_SENSOROffset: flatbuffers.Offset, ORIG_SENSOR_IDOffset: flatbuffers.Offset, SENLAT: number, SENLON: number, SENALT: number, SENX: number, SENY: number, SENZ: number, SEN_QUATOffset: flatbuffers.Offset, SEN_QUAT_DOTOffset: flatbuffers.Offset, IMAGE_TYPE: imageCategory, EXP_START_TIMEOffset: flatbuffers.Offset, EXP_END_TIMEOffset: flatbuffers.Offset, IMAGE_SOURCE_INFOOffset: flatbuffers.Offset, TOP_LEFT_START_AZ: number, TOP_LEFT_START_EL: number, TOP_LEFT_STOP_AZ: number, TOP_LEFT_STOP_EL: number, IMAGE_SET_IDOffset: flatbuffers.Offset, IMAGE_SET_LENGTH: number, SEQUENCE_ID: number, FRAME_FOVWIDTH: number, FRAME_FOVHEIGHT: number, PIXEL_FOVWIDTH: number, PIXEL_FOVHEIGHT: number, FRAME_WIDTH_PIXELS: number, FRAME_HEIGHT_PIXELS: number, PIXEL_BIT_DEPTH: number, ANNOTATION_KEYOffset: flatbuffers.Offset, CALIBRATION_KEYOffset: flatbuffers.Offset, FILENAMEOffset: flatbuffers.Offset, FILESIZE: bigint, CHECKSUM_VALUEOffset: flatbuffers.Offset, TRANSACTION_IDOffset: flatbuffers.Offset, TAGSOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, EO_OBSERVATIONSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): SKIT;
     unpackTo(_o: SKIT): void;
 }
@@ -277,7 +277,7 @@ export declare class SKIT implements flatbuffers.IGeneratedObject {
     SENZ: number;
     SEN_QUAT: (number)[];
     SEN_QUAT_DOT: (number)[];
-    IMAGE_TYPE: imageType;
+    IMAGE_TYPE: imageCategory;
     EXP_START_TIME: string | Uint8Array | null;
     EXP_END_TIME: string | Uint8Array | null;
     IMAGE_SOURCE_INFO: string | Uint8Array | null;
@@ -304,7 +304,7 @@ export declare class SKIT implements flatbuffers.IGeneratedObject {
     TAGS: (string)[];
     DESCRIPTION: string | Uint8Array | null;
     EO_OBSERVATIONS: (string)[];
-    constructor(ID?: string | Uint8Array | null, ON_ORBIT?: string | Uint8Array | null, ORIG_OBJECT_ID?: string | Uint8Array | null, SAT_NO?: number, ID_SENSOR?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, SENLAT?: number, SENLON?: number, SENALT?: number, SENX?: number, SENY?: number, SENZ?: number, SEN_QUAT?: (number)[], SEN_QUAT_DOT?: (number)[], IMAGE_TYPE?: imageType, EXP_START_TIME?: string | Uint8Array | null, EXP_END_TIME?: string | Uint8Array | null, IMAGE_SOURCE_INFO?: string | Uint8Array | null, TOP_LEFT_START_AZ?: number, TOP_LEFT_START_EL?: number, TOP_LEFT_STOP_AZ?: number, TOP_LEFT_STOP_EL?: number, IMAGE_SET_ID?: string | Uint8Array | null, IMAGE_SET_LENGTH?: number, SEQUENCE_ID?: number, FRAME_FOVWIDTH?: number, FRAME_FOVHEIGHT?: number, PIXEL_FOVWIDTH?: number, PIXEL_FOVHEIGHT?: number, FRAME_WIDTH_PIXELS?: number, FRAME_HEIGHT_PIXELS?: number, PIXEL_BIT_DEPTH?: number, ANNOTATION_KEY?: string | Uint8Array | null, CALIBRATION_KEY?: string | Uint8Array | null, FILENAME?: string | Uint8Array | null, FILESIZE?: bigint, CHECKSUM_VALUE?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null, TAGS?: (string)[], DESCRIPTION?: string | Uint8Array | null, EO_OBSERVATIONS?: (string)[]);
+    constructor(ID?: string | Uint8Array | null, ON_ORBIT?: string | Uint8Array | null, ORIG_OBJECT_ID?: string | Uint8Array | null, SAT_NO?: number, ID_SENSOR?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, SENLAT?: number, SENLON?: number, SENALT?: number, SENX?: number, SENY?: number, SENZ?: number, SEN_QUAT?: (number)[], SEN_QUAT_DOT?: (number)[], IMAGE_TYPE?: imageCategory, EXP_START_TIME?: string | Uint8Array | null, EXP_END_TIME?: string | Uint8Array | null, IMAGE_SOURCE_INFO?: string | Uint8Array | null, TOP_LEFT_START_AZ?: number, TOP_LEFT_START_EL?: number, TOP_LEFT_STOP_AZ?: number, TOP_LEFT_STOP_EL?: number, IMAGE_SET_ID?: string | Uint8Array | null, IMAGE_SET_LENGTH?: number, SEQUENCE_ID?: number, FRAME_FOVWIDTH?: number, FRAME_FOVHEIGHT?: number, PIXEL_FOVWIDTH?: number, PIXEL_FOVHEIGHT?: number, FRAME_WIDTH_PIXELS?: number, FRAME_HEIGHT_PIXELS?: number, PIXEL_BIT_DEPTH?: number, ANNOTATION_KEY?: string | Uint8Array | null, CALIBRATION_KEY?: string | Uint8Array | null, FILENAME?: string | Uint8Array | null, FILESIZE?: bigint, CHECKSUM_VALUE?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null, TAGS?: (string)[], DESCRIPTION?: string | Uint8Array | null, EO_OBSERVATIONS?: (string)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SKI.d.ts.map

@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "pduType" : {
+    "pduKind" : {
       "type" : "string",
       "enum": ["FILE_DIRECTIVE", "FILE_DATA"]
     },
-    "transmissionMode" : {
+    "transmissionClass" : {
       "type" : "string",
       "enum": ["ACKNOWLEDGED", "UNACKNOWLEDGED"]
     },
@@ -18,7 +18,7 @@
                 "description" : "PDU version"
               },
         "PDU_TYPE" : {
-                "$ref" : "#/definitions/pduType",
+                "$ref" : "#/definitions/pduKind",
                 "description" : "PDU type"
               },
         "DIRECTION" : {
@@ -26,7 +26,7 @@
                 "description" : "Direction (toward receiver or sender)"
               },
         "TRANSMISSION_MODE" : {
-                "$ref" : "#/definitions/transmissionMode",
+                "$ref" : "#/definitions/transmissionClass",
                 "description" : "Transmission mode"
               },
         "CRC_FLAG" : {

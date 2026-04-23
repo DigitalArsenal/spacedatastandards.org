@@ -1,5 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
-import { licenseType } from './licenseType.js';
+import { licenseCategory } from './licenseCategory.js';
 /**
  * Plugin License Key - Issued license for plugin access
  * Uses ECIES: both parties derive symmetric key via X25519 ECDH
@@ -70,7 +70,7 @@ export declare class PLK implements flatbuffers.IUnpackableObject<PLKT> {
     /**
      * Type of license
      */
-    LICENSE_TYPE(): licenseType;
+    LICENSE_TYPE(): licenseCategory;
     /**
      * Maximum concurrent activations (0 = unlimited)
      */
@@ -117,7 +117,7 @@ export declare class PLK implements flatbuffers.IUnpackableObject<PLKT> {
     static addAllowedTlds(builder: flatbuffers.Builder, ALLOWED_TLDSOffset: flatbuffers.Offset): void;
     static createAllowedTldsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startAllowedTldsVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addLicenseType(builder: flatbuffers.Builder, LICENSE_TYPE: licenseType): void;
+    static addLicenseType(builder: flatbuffers.Builder, LICENSE_TYPE: licenseCategory): void;
     static addMaxActivations(builder: flatbuffers.Builder, MAX_ACTIVATIONS: number): void;
     static addIssuedAt(builder: flatbuffers.Builder, ISSUED_AT: bigint): void;
     static addValidFrom(builder: flatbuffers.Builder, VALID_FROM: bigint): void;
@@ -129,7 +129,7 @@ export declare class PLK implements flatbuffers.IUnpackableObject<PLKT> {
     static endPLK(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishPLKBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedPLKBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createPLK(builder: flatbuffers.Builder, LICENSE_IDOffset: flatbuffers.Offset, PLUGIN_IDOffset: flatbuffers.Offset, PLUGIN_VERSIONOffset: flatbuffers.Offset, LICENSEE_ORGOffset: flatbuffers.Offset, LICENSEE_EMAILOffset: flatbuffers.Offset, LICENSEE_PEER_IDOffset: flatbuffers.Offset, LICENSEE_PUBKEYOffset: flatbuffers.Offset, ISSUER_PUBKEYOffset: flatbuffers.Offset, ALLOWED_DOMAINSOffset: flatbuffers.Offset, ALLOWED_TLDSOffset: flatbuffers.Offset, LICENSE_TYPE: licenseType, MAX_ACTIVATIONS: number, ISSUED_AT: bigint, VALID_FROM: bigint, EXPIRES_AT: bigint, ISSUER_PEER_IDOffset: flatbuffers.Offset, SIGNATUREOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createPLK(builder: flatbuffers.Builder, LICENSE_IDOffset: flatbuffers.Offset, PLUGIN_IDOffset: flatbuffers.Offset, PLUGIN_VERSIONOffset: flatbuffers.Offset, LICENSEE_ORGOffset: flatbuffers.Offset, LICENSEE_EMAILOffset: flatbuffers.Offset, LICENSEE_PEER_IDOffset: flatbuffers.Offset, LICENSEE_PUBKEYOffset: flatbuffers.Offset, ISSUER_PUBKEYOffset: flatbuffers.Offset, ALLOWED_DOMAINSOffset: flatbuffers.Offset, ALLOWED_TLDSOffset: flatbuffers.Offset, LICENSE_TYPE: licenseCategory, MAX_ACTIVATIONS: number, ISSUED_AT: bigint, VALID_FROM: bigint, EXPIRES_AT: bigint, ISSUER_PEER_IDOffset: flatbuffers.Offset, SIGNATUREOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PLKT;
     unpackTo(_o: PLKT): void;
 }
@@ -144,14 +144,14 @@ export declare class PLKT implements flatbuffers.IGeneratedObject {
     ISSUER_PUBKEY: (number)[];
     ALLOWED_DOMAINS: (string)[];
     ALLOWED_TLDS: (string)[];
-    LICENSE_TYPE: licenseType;
+    LICENSE_TYPE: licenseCategory;
     MAX_ACTIVATIONS: number;
     ISSUED_AT: bigint;
     VALID_FROM: bigint;
     EXPIRES_AT: bigint;
     ISSUER_PEER_ID: string | Uint8Array | null;
     SIGNATURE: (number)[];
-    constructor(LICENSE_ID?: string | Uint8Array | null, PLUGIN_ID?: string | Uint8Array | null, PLUGIN_VERSION?: string | Uint8Array | null, LICENSEE_ORG?: string | Uint8Array | null, LICENSEE_EMAIL?: string | Uint8Array | null, LICENSEE_PEER_ID?: string | Uint8Array | null, LICENSEE_PUBKEY?: (number)[], ISSUER_PUBKEY?: (number)[], ALLOWED_DOMAINS?: (string)[], ALLOWED_TLDS?: (string)[], LICENSE_TYPE?: licenseType, MAX_ACTIVATIONS?: number, ISSUED_AT?: bigint, VALID_FROM?: bigint, EXPIRES_AT?: bigint, ISSUER_PEER_ID?: string | Uint8Array | null, SIGNATURE?: (number)[]);
+    constructor(LICENSE_ID?: string | Uint8Array | null, PLUGIN_ID?: string | Uint8Array | null, PLUGIN_VERSION?: string | Uint8Array | null, LICENSEE_ORG?: string | Uint8Array | null, LICENSEE_EMAIL?: string | Uint8Array | null, LICENSEE_PEER_ID?: string | Uint8Array | null, LICENSEE_PUBKEY?: (number)[], ISSUER_PUBKEY?: (number)[], ALLOWED_DOMAINS?: (string)[], ALLOWED_TLDS?: (string)[], LICENSE_TYPE?: licenseCategory, MAX_ACTIVATIONS?: number, ISSUED_AT?: bigint, VALID_FROM?: bigint, EXPIRES_AT?: bigint, ISSUER_PEER_ID?: string | Uint8Array | null, SIGNATURE?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PLK.d.ts.map

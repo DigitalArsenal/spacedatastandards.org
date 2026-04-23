@@ -43,7 +43,7 @@ class propagatorConfig extends Table
     public function getPROPAGATOR_TYPE()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \propagatorType::NONE;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \propagatorFamily::NONE;
     }
 
     /**

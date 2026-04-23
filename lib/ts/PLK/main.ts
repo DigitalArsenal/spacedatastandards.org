@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './licenseType.js';
+export * from './licenseCategory.js';
 export * from './PLK.js';

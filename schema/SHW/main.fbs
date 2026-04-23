@@ -1,5 +1,5 @@
-// Hash: 64a4b40a956fe0549149119d4aa09bbe8e675855098adcfd9c3329a31c68732b
-// Version: 0.0.2
+// Hash: 967b270c817b95d0f721afe754839b6b874b0ea1a94757851b27f9f6e01164ad
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 /// Shader Wire — wire contract for GLSL / WebGL shader plugins that compile
 /// and expose parameterized fragments that a host injects into its own
@@ -8,7 +8,7 @@
 /// splice a shader fragment into its stage graph.
 
 /// Shader stage into which a compiled fragment should be injected.
-enum shaderStage : ubyte {
+enum glslStage : ubyte {
   VERTEX,
   FRAGMENT,
   COMPUTE,
@@ -20,7 +20,7 @@ enum shaderStage : ubyte {
 /// Logical location inside a host pipeline where a compiled shader
 /// fragment is meant to be spliced. A host maps these onto its own
 /// concrete splice points.
-enum shaderInjectionPoint : ubyte {
+enum shaderHookPoint : ubyte {
   NONE,
   VERTEX_PRE_TRANSFORM,
   VERTEX_POST_TRANSFORM,
@@ -72,9 +72,9 @@ table SHWCompileRequest {
   /// Logical shader name (used in logs and uniform prefixing).
   SHADER_NAME:string;
   /// Target GLSL stage.
-  SHADER_STAGE:shaderStage;
+  SHADER_STAGE:glslStage;
   /// Intended injection point in the host pipeline.
-  SHADER_INJECTION_POINT:shaderInjectionPoint;
+  SHADER_INJECTION_POINT:shaderHookPoint;
   /// GLSL source (or preprocessed chunk).
   SHADER_SOURCE:string;
   /// GLSL version string (for example `300 es`).

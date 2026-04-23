@@ -4,24 +4,24 @@ extern crate alloc;
 
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_ACCESS_TYPE: i8 = 0;
+pub const ENUM_MIN_ACCESS_CATEGORY: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_ACCESS_TYPE: i8 = 3;
+pub const ENUM_MAX_ACCESS_CATEGORY: i8 = 3;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_ACCESS_TYPE: [accessType; 4] = [
-  accessType::OneTime,
-  accessType::Subscription,
-  accessType::Streaming,
-  accessType::Query,
+pub const ENUM_VALUES_ACCESS_CATEGORY: [accessCategory; 4] = [
+  accessCategory::OneTime,
+  accessCategory::Subscription,
+  accessCategory::Streaming,
+  accessCategory::Query,
 ];
 
 /// Access type for data listings
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct accessType(pub i8);
+pub struct accessCategory(pub i8);
 #[allow(non_upper_case_globals)]
-impl accessType {
+impl accessCategory {
   /// One-time purchase
   pub const OneTime: Self = Self(0);
   /// Recurring subscription
@@ -50,7 +50,7 @@ impl accessType {
     }
   }
 }
-impl ::core::fmt::Debug for accessType {
+impl ::core::fmt::Debug for accessCategory {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -59,7 +59,7 @@ impl ::core::fmt::Debug for accessType {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for accessType {
+impl<'a> ::flatbuffers::Follow<'a> for accessCategory {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -68,15 +68,15 @@ impl<'a> ::flatbuffers::Follow<'a> for accessType {
   }
 }
 
-impl ::flatbuffers::Push for accessType {
-    type Output = accessType;
+impl ::flatbuffers::Push for accessCategory {
+    type Output = accessCategory;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for accessType {
+impl ::flatbuffers::EndianScalar for accessCategory {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -90,7 +90,7 @@ impl ::flatbuffers::EndianScalar for accessType {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for accessType {
+impl<'a> ::flatbuffers::Verifiable for accessCategory {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -99,7 +99,7 @@ impl<'a> ::flatbuffers::Verifiable for accessType {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for accessType {}
+impl ::flatbuffers::SimpleToVerifyInSlice for accessCategory {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_PAYMENT_METHOD: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -1214,11 +1214,11 @@ impl<'a> STF<'a> {
   }
   /// Type of access offered
   #[inline]
-  pub fn ACCESS_TYPE(&self) -> accessType {
+  pub fn ACCESS_TYPE(&self) -> accessCategory {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<accessType>(STF::VT_ACCESS_TYPE, Some(accessType::OneTime)).unwrap()}
+    unsafe { self._tab.get::<accessCategory>(STF::VT_ACCESS_TYPE, Some(accessCategory::OneTime)).unwrap()}
   }
   /// Whether encryption is required for data delivery
   #[inline]
@@ -1292,7 +1292,7 @@ impl ::flatbuffers::Verifiable for STF<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("DATA_TYPES", Self::VT_DATA_TYPES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<DataCoverage>>("COVERAGE", Self::VT_COVERAGE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SAMPLE_CID", Self::VT_SAMPLE_CID, false)?
-     .visit_field::<accessType>("ACCESS_TYPE", Self::VT_ACCESS_TYPE, false)?
+     .visit_field::<accessCategory>("ACCESS_TYPE", Self::VT_ACCESS_TYPE, false)?
      .visit_field::<bool>("ENCRYPTION_REQUIRED", Self::VT_ENCRYPTION_REQUIRED, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PricingTier>>>>("PRICING", Self::VT_PRICING, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, paymentMethod>>>("ACCEPTED_PAYMENTS", Self::VT_ACCEPTED_PAYMENTS, false)?
@@ -1313,7 +1313,7 @@ pub struct STFArgs<'a> {
     pub DATA_TYPES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub COVERAGE: Option<::flatbuffers::WIPOffset<DataCoverage<'a>>>,
     pub SAMPLE_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub ACCESS_TYPE: accessType,
+    pub ACCESS_TYPE: accessCategory,
     pub ENCRYPTION_REQUIRED: bool,
     pub PRICING: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PricingTier<'a>>>>>,
     pub ACCEPTED_PAYMENTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, paymentMethod>>>,
@@ -1334,7 +1334,7 @@ impl<'a> Default for STFArgs<'a> {
       DATA_TYPES: None,
       COVERAGE: None,
       SAMPLE_CID: None,
-      ACCESS_TYPE: accessType::OneTime,
+      ACCESS_TYPE: accessCategory::OneTime,
       ENCRYPTION_REQUIRED: false,
       PRICING: None,
       ACCEPTED_PAYMENTS: None,
@@ -1384,8 +1384,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> STFBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_SAMPLE_CID, SAMPLE_CID);
   }
   #[inline]
-  pub fn add_ACCESS_TYPE(&mut self, ACCESS_TYPE: accessType) {
-    self.fbb_.push_slot::<accessType>(STF::VT_ACCESS_TYPE, ACCESS_TYPE, accessType::OneTime);
+  pub fn add_ACCESS_TYPE(&mut self, ACCESS_TYPE: accessCategory) {
+    self.fbb_.push_slot::<accessCategory>(STF::VT_ACCESS_TYPE, ACCESS_TYPE, accessCategory::OneTime);
   }
   #[inline]
   pub fn add_ENCRYPTION_REQUIRED(&mut self, ENCRYPTION_REQUIRED: bool) {
@@ -1466,7 +1466,7 @@ pub struct STFT {
   pub DATA_TYPES: Option<alloc::vec::Vec<alloc::string::String>>,
   pub COVERAGE: Option<alloc::boxed::Box<DataCoverageT>>,
   pub SAMPLE_CID: Option<alloc::string::String>,
-  pub ACCESS_TYPE: accessType,
+  pub ACCESS_TYPE: accessCategory,
   pub ENCRYPTION_REQUIRED: bool,
   pub PRICING: Option<alloc::vec::Vec<PricingTierT>>,
   pub ACCEPTED_PAYMENTS: Option<alloc::vec::Vec<paymentMethod>>,
@@ -1486,7 +1486,7 @@ impl Default for STFT {
       DATA_TYPES: None,
       COVERAGE: None,
       SAMPLE_CID: None,
-      ACCESS_TYPE: accessType::OneTime,
+      ACCESS_TYPE: accessCategory::OneTime,
       ENCRYPTION_REQUIRED: false,
       PRICING: None,
       ACCEPTED_PAYMENTS: None,

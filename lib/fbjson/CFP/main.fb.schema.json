@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "pduType": {
+    "pduKind": {
       "type": "string",
       "enum": [
         "FILE_DIRECTIVE",
@@ -18,7 +18,7 @@
         }
       }
     },
-    "transmissionMode": {
+    "transmissionClass": {
       "type": "string",
       "enum": [
         "ACKNOWLEDGED",
@@ -47,7 +47,7 @@
           "x-flatbuffer-type": "ubyte"
         },
         "PDU_TYPE": {
-          "$ref": "#/definitions/pduType",
+          "$ref": "#/definitions/pduKind",
           "description": "PDU type",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -68,7 +68,7 @@
           "x-flatbuffer-type": "ubyte"
         },
         "TRANSMISSION_MODE": {
-          "$ref": "#/definitions/transmissionMode",
+          "$ref": "#/definitions/transmissionClass",
           "description": "Transmission mode",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",

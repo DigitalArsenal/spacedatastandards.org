@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { meanElementTheory } from './meanElementTheory.js';
+import { meanElementSource } from './meanElementSource.js';
 
 
 /**
@@ -109,9 +109,9 @@ BSTAR():number {
 /**
  * Description of the Mean Element Theory (SGP4, DSST, USM)
  */
-MEAN_ELEMENT_THEORY():meanElementTheory {
+MEAN_ELEMENT_THEORY():meanElementSource {
   const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : meanElementTheory.SGP4;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : meanElementSource.SGP4;
 }
 
 static startMPE(builder:flatbuffers.Builder) {
@@ -154,8 +154,8 @@ static addBstar(builder:flatbuffers.Builder, BSTAR:number) {
   builder.addFieldFloat64(8, BSTAR, 0.0);
 }
 
-static addMeanElementTheory(builder:flatbuffers.Builder, MEAN_ELEMENT_THEORY:meanElementTheory) {
-  builder.addFieldInt8(9, MEAN_ELEMENT_THEORY, meanElementTheory.SGP4);
+static addMeanElementTheory(builder:flatbuffers.Builder, MEAN_ELEMENT_THEORY:meanElementSource) {
+  builder.addFieldInt8(9, MEAN_ELEMENT_THEORY, meanElementSource.SGP4);
 }
 
 static endMPE(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -171,7 +171,7 @@ static finishSizePrefixedMPEBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$MPE', true);
 }
 
-static createMPE(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset, EPOCH:number, MEAN_MOTION:number, ECCENTRICITY:number, INCLINATION:number, RA_OF_ASC_NODE:number, ARG_OF_PERICENTER:number, MEAN_ANOMALY:number, BSTAR:number, MEAN_ELEMENT_THEORY:meanElementTheory):flatbuffers.Offset {
+static createMPE(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset, EPOCH:number, MEAN_MOTION:number, ECCENTRICITY:number, INCLINATION:number, RA_OF_ASC_NODE:number, ARG_OF_PERICENTER:number, MEAN_ANOMALY:number, BSTAR:number, MEAN_ELEMENT_THEORY:meanElementSource):flatbuffers.Offset {
   MPE.startMPE(builder);
   MPE.addEntityId(builder, ENTITY_IDOffset);
   MPE.addEpoch(builder, EPOCH);
@@ -227,7 +227,7 @@ constructor(
   public ARG_OF_PERICENTER: number = 0.0,
   public MEAN_ANOMALY: number = 0.0,
   public BSTAR: number = 0.0,
-  public MEAN_ELEMENT_THEORY: meanElementTheory = meanElementTheory.SGP4
+  public MEAN_ELEMENT_THEORY: meanElementSource = meanElementSource.SGP4
 ){}
 
 

@@ -4,31 +4,31 @@ extern crate alloc;
 
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_TIME_SYSTEM: i8 = 0;
+pub const ENUM_MIN_TIMING_STANDARD: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TIME_SYSTEM: i8 = 11;
+pub const ENUM_MAX_TIMING_STANDARD: i8 = 11;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TIME_SYSTEM: [timeSystem; 12] = [
-  timeSystem::GMST,
-  timeSystem::GPS,
-  timeSystem::MET,
-  timeSystem::MRT,
-  timeSystem::SCLK,
-  timeSystem::TAI,
-  timeSystem::TCB,
-  timeSystem::TDB,
-  timeSystem::TCG,
-  timeSystem::TT,
-  timeSystem::UT1,
-  timeSystem::UTC,
+pub const ENUM_VALUES_TIMING_STANDARD: [timingStandard; 12] = [
+  timingStandard::GMST,
+  timingStandard::GPS,
+  timingStandard::MET,
+  timingStandard::MRT,
+  timingStandard::SCLK,
+  timingStandard::TAI,
+  timingStandard::TCB,
+  timingStandard::TDB,
+  timingStandard::TCG,
+  timingStandard::TT,
+  timingStandard::UT1,
+  timingStandard::UTC,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct timeSystem(pub i8);
+pub struct timingStandard(pub i8);
 #[allow(non_upper_case_globals)]
-impl timeSystem {
+impl timingStandard {
   /// Greenwich Mean Sidereal Time
   pub const GMST: Self = Self(0);
   /// Global Positioning System
@@ -89,7 +89,7 @@ impl timeSystem {
     }
   }
 }
-impl ::core::fmt::Debug for timeSystem {
+impl ::core::fmt::Debug for timingStandard {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -98,7 +98,7 @@ impl ::core::fmt::Debug for timeSystem {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for timeSystem {
+impl<'a> ::flatbuffers::Follow<'a> for timingStandard {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -107,15 +107,15 @@ impl<'a> ::flatbuffers::Follow<'a> for timeSystem {
   }
 }
 
-impl ::flatbuffers::Push for timeSystem {
-    type Output = timeSystem;
+impl ::flatbuffers::Push for timingStandard {
+    type Output = timingStandard;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for timeSystem {
+impl ::flatbuffers::EndianScalar for timingStandard {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -129,7 +129,7 @@ impl ::flatbuffers::EndianScalar for timeSystem {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for timeSystem {
+impl<'a> ::flatbuffers::Verifiable for timingStandard {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -138,7 +138,7 @@ impl<'a> ::flatbuffers::Verifiable for timeSystem {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for timeSystem {}
+impl ::flatbuffers::SimpleToVerifyInSlice for timingStandard {}
 pub enum TIMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -180,11 +180,11 @@ impl<'a> TIM<'a> {
   }
 
   #[inline]
-  pub fn TIME_SYSTEM(&self) -> timeSystem {
+  pub fn TIME_SYSTEM(&self) -> timingStandard {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<timeSystem>(TIM::VT_TIME_SYSTEM, Some(timeSystem::GMST)).unwrap()}
+    unsafe { self._tab.get::<timingStandard>(TIM::VT_TIME_SYSTEM, Some(timingStandard::GMST)).unwrap()}
   }
 }
 
@@ -194,19 +194,19 @@ impl ::flatbuffers::Verifiable for TIM<'_> {
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<timeSystem>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
+     .visit_field::<timingStandard>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
      .finish();
     Ok(())
   }
 }
 pub struct TIMArgs {
-    pub TIME_SYSTEM: timeSystem,
+    pub TIME_SYSTEM: timingStandard,
 }
 impl<'a> Default for TIMArgs {
   #[inline]
   fn default() -> Self {
     TIMArgs {
-      TIME_SYSTEM: timeSystem::GMST,
+      TIME_SYSTEM: timingStandard::GMST,
     }
   }
 }
@@ -217,8 +217,8 @@ pub struct TIMBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
 }
 impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TIMBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timeSystem) {
-    self.fbb_.push_slot::<timeSystem>(TIM::VT_TIME_SYSTEM, TIME_SYSTEM, timeSystem::GMST);
+  pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timingStandard) {
+    self.fbb_.push_slot::<timingStandard>(TIM::VT_TIME_SYSTEM, TIME_SYSTEM, timingStandard::GMST);
   }
   #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TIMBuilder<'a, 'b, A> {
@@ -245,12 +245,12 @@ impl ::core::fmt::Debug for TIM<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct TIMT {
-  pub TIME_SYSTEM: timeSystem,
+  pub TIME_SYSTEM: timingStandard,
 }
 impl Default for TIMT {
   fn default() -> Self {
     Self {
-      TIME_SYSTEM: timeSystem::GMST,
+      TIME_SYSTEM: timingStandard::GMST,
     }
   }
 }

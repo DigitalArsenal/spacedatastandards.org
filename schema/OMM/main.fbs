@@ -1,5 +1,5 @@
-// Hash: 6e207382d01b38479b2a36518f7417a3d42925347ece473becb592f1b0855f9e
-// Version: 2.0.1
+// Hash: 41119da85431e9a18dd1e943e90a052668c13cf8840268356051fedc4890678d
+// Version: 2.0.3
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -15,7 +15,7 @@ include "../MET/main.fbs";
 // Legacy format description can be found here.
 // CCSDS Reference documentation: 502x0b2c1e2.
 
-enum ephemerisType : byte {
+enum ephemerisFormat : byte {
   /// Simplified General Perturbation Model
   SGP,
   /// Simplified General Perturbation Model 4
@@ -49,9 +49,9 @@ table OMM {
   /// Reference Frame Epoch (ISO 8601 UTC format)
   REFERENCE_FRAME_EPOCH:string;
   /// Time System [M, UTC]
-  TIME_SYSTEM:timeSystem = UTC;
+  TIME_SYSTEM:timingStandard = UTC;
   /// Mean Element Theory
-  MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
+  MEAN_ELEMENT_THEORY:meanElementSource = SGP4;
 
   /// COMMENT (O)
   COMMENT:string;
@@ -87,7 +87,7 @@ table OMM {
 
   /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
   /// EPHEMERIS_TYPE Default=0
-  EPHEMERIS_TYPE:ephemerisType = SGP4;
+  EPHEMERIS_TYPE:ephemerisFormat = SGP4;
   /// CLASSIFICATION_TYPE Default=U
   CLASSIFICATION_TYPE:string;
   /// NORAD_CAT_ID (integer) [O if SGP/SGP4]

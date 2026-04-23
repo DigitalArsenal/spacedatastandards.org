@@ -4,12 +4,12 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { atmosphericModel } from './atmosphericModel.js';
-import { geopotentialModel } from './geopotentialModel.js';
-import { lunarPerturbationModel } from './lunarPerturbationModel.js';
+import { atmosphericSource } from './atmosphericSource.js';
+import { geopotentialSource } from './geopotentialSource.js';
+import { lunarPerturbationSource } from './lunarPerturbationSource.js';
 import { perturbationStatus } from './perturbationStatus.js';
-import { resonanceModel } from './resonanceModel.js';
-import { solarPerturbationModel } from './solarPerturbationModel.js';
+import { resonanceSource } from './resonanceSource.js';
+import { solarPerturbationSource } from './solarPerturbationSource.js';
 import { solarRadiationPressureModel } from './solarRadiationPressureModel.js';
 
 
@@ -34,14 +34,14 @@ static getSizePrefixedRootAsVCMAtmosphericModelData(bb:flatbuffers.ByteBuffer, o
   return (obj || new VCMAtmosphericModelData()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-ATMOSPHERIC_MODEL():atmosphericModel {
+ATMOSPHERIC_MODEL():atmosphericSource {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : atmosphericModel.NONE;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : atmosphericSource.NONE;
 }
 
-GEOPOTENTIAL_MODEL():geopotentialModel {
+GEOPOTENTIAL_MODEL():geopotentialSource {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : geopotentialModel.NONE;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : geopotentialSource.NONE;
 }
 
 LUNAR_SOLAR_PERTURBATION():perturbationStatus {
@@ -49,14 +49,14 @@ LUNAR_SOLAR_PERTURBATION():perturbationStatus {
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : perturbationStatus.OFF;
 }
 
-LUNAR_PERTURBATION_MODEL():lunarPerturbationModel {
+LUNAR_PERTURBATION_MODEL():lunarPerturbationSource {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : lunarPerturbationModel.NONE;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : lunarPerturbationSource.NONE;
 }
 
-SOLAR_PERTURBATION_MODEL():solarPerturbationModel {
+SOLAR_PERTURBATION_MODEL():solarPerturbationSource {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : solarPerturbationModel.NONE;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : solarPerturbationSource.NONE;
 }
 
 SOLAR_RADIATION_PRESSURE():perturbationStatus {
@@ -69,33 +69,33 @@ SRP_MODEL():solarRadiationPressureModel {
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : solarRadiationPressureModel.NONE;
 }
 
-RESONANCE_MODEL():resonanceModel {
+RESONANCE_MODEL():resonanceSource {
   const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : resonanceModel.NONE;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : resonanceSource.NONE;
 }
 
 static startVCMAtmosphericModelData(builder:flatbuffers.Builder) {
   builder.startObject(8);
 }
 
-static addAtmosphericModel(builder:flatbuffers.Builder, ATMOSPHERIC_MODEL:atmosphericModel) {
-  builder.addFieldInt8(0, ATMOSPHERIC_MODEL, atmosphericModel.NONE);
+static addAtmosphericModel(builder:flatbuffers.Builder, ATMOSPHERIC_MODEL:atmosphericSource) {
+  builder.addFieldInt8(0, ATMOSPHERIC_MODEL, atmosphericSource.NONE);
 }
 
-static addGeopotentialModel(builder:flatbuffers.Builder, GEOPOTENTIAL_MODEL:geopotentialModel) {
-  builder.addFieldInt8(1, GEOPOTENTIAL_MODEL, geopotentialModel.NONE);
+static addGeopotentialModel(builder:flatbuffers.Builder, GEOPOTENTIAL_MODEL:geopotentialSource) {
+  builder.addFieldInt8(1, GEOPOTENTIAL_MODEL, geopotentialSource.NONE);
 }
 
 static addLunarSolarPerturbation(builder:flatbuffers.Builder, LUNAR_SOLAR_PERTURBATION:perturbationStatus) {
   builder.addFieldInt8(2, LUNAR_SOLAR_PERTURBATION, perturbationStatus.OFF);
 }
 
-static addLunarPerturbationModel(builder:flatbuffers.Builder, LUNAR_PERTURBATION_MODEL:lunarPerturbationModel) {
-  builder.addFieldInt8(3, LUNAR_PERTURBATION_MODEL, lunarPerturbationModel.NONE);
+static addLunarPerturbationModel(builder:flatbuffers.Builder, LUNAR_PERTURBATION_MODEL:lunarPerturbationSource) {
+  builder.addFieldInt8(3, LUNAR_PERTURBATION_MODEL, lunarPerturbationSource.NONE);
 }
 
-static addSolarPerturbationModel(builder:flatbuffers.Builder, SOLAR_PERTURBATION_MODEL:solarPerturbationModel) {
-  builder.addFieldInt8(4, SOLAR_PERTURBATION_MODEL, solarPerturbationModel.NONE);
+static addSolarPerturbationModel(builder:flatbuffers.Builder, SOLAR_PERTURBATION_MODEL:solarPerturbationSource) {
+  builder.addFieldInt8(4, SOLAR_PERTURBATION_MODEL, solarPerturbationSource.NONE);
 }
 
 static addSolarRadiationPressure(builder:flatbuffers.Builder, SOLAR_RADIATION_PRESSURE:perturbationStatus) {
@@ -106,8 +106,8 @@ static addSrpModel(builder:flatbuffers.Builder, SRP_MODEL:solarRadiationPressure
   builder.addFieldInt8(6, SRP_MODEL, solarRadiationPressureModel.NONE);
 }
 
-static addResonanceModel(builder:flatbuffers.Builder, RESONANCE_MODEL:resonanceModel) {
-  builder.addFieldInt8(7, RESONANCE_MODEL, resonanceModel.NONE);
+static addResonanceModel(builder:flatbuffers.Builder, RESONANCE_MODEL:resonanceSource) {
+  builder.addFieldInt8(7, RESONANCE_MODEL, resonanceSource.NONE);
 }
 
 static endVCMAtmosphericModelData(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -115,7 +115,7 @@ static endVCMAtmosphericModelData(builder:flatbuffers.Builder):flatbuffers.Offse
   return offset;
 }
 
-static createVCMAtmosphericModelData(builder:flatbuffers.Builder, ATMOSPHERIC_MODEL:atmosphericModel, GEOPOTENTIAL_MODEL:geopotentialModel, LUNAR_SOLAR_PERTURBATION:perturbationStatus, LUNAR_PERTURBATION_MODEL:lunarPerturbationModel, SOLAR_PERTURBATION_MODEL:solarPerturbationModel, SOLAR_RADIATION_PRESSURE:perturbationStatus, SRP_MODEL:solarRadiationPressureModel, RESONANCE_MODEL:resonanceModel):flatbuffers.Offset {
+static createVCMAtmosphericModelData(builder:flatbuffers.Builder, ATMOSPHERIC_MODEL:atmosphericSource, GEOPOTENTIAL_MODEL:geopotentialSource, LUNAR_SOLAR_PERTURBATION:perturbationStatus, LUNAR_PERTURBATION_MODEL:lunarPerturbationSource, SOLAR_PERTURBATION_MODEL:solarPerturbationSource, SOLAR_RADIATION_PRESSURE:perturbationStatus, SRP_MODEL:solarRadiationPressureModel, RESONANCE_MODEL:resonanceSource):flatbuffers.Offset {
   VCMAtmosphericModelData.startVCMAtmosphericModelData(builder);
   VCMAtmosphericModelData.addAtmosphericModel(builder, ATMOSPHERIC_MODEL);
   VCMAtmosphericModelData.addGeopotentialModel(builder, GEOPOTENTIAL_MODEL);
@@ -156,14 +156,14 @@ unpackTo(_o: VCMAtmosphericModelDataT): void {
 
 export class VCMAtmosphericModelDataT implements flatbuffers.IGeneratedObject {
 constructor(
-  public ATMOSPHERIC_MODEL: atmosphericModel = atmosphericModel.NONE,
-  public GEOPOTENTIAL_MODEL: geopotentialModel = geopotentialModel.NONE,
+  public ATMOSPHERIC_MODEL: atmosphericSource = atmosphericSource.NONE,
+  public GEOPOTENTIAL_MODEL: geopotentialSource = geopotentialSource.NONE,
   public LUNAR_SOLAR_PERTURBATION: perturbationStatus = perturbationStatus.OFF,
-  public LUNAR_PERTURBATION_MODEL: lunarPerturbationModel = lunarPerturbationModel.NONE,
-  public SOLAR_PERTURBATION_MODEL: solarPerturbationModel = solarPerturbationModel.NONE,
+  public LUNAR_PERTURBATION_MODEL: lunarPerturbationSource = lunarPerturbationSource.NONE,
+  public SOLAR_PERTURBATION_MODEL: solarPerturbationSource = solarPerturbationSource.NONE,
   public SOLAR_RADIATION_PRESSURE: perturbationStatus = perturbationStatus.OFF,
   public SRP_MODEL: solarRadiationPressureModel = solarRadiationPressureModel.NONE,
-  public RESONANCE_MODEL: resonanceModel = resonanceModel.NONE
+  public RESONANCE_MODEL: resonanceSource = resonanceSource.NONE
 ){}
 
 

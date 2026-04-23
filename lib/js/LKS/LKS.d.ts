@@ -1,6 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
-import { linkState } from './linkState.js';
-import { linkType } from './linkType.js';
+import { linkCategory } from './linkCategory.js';
+import { linkCondition } from './linkCondition.js';
 /**
  * Link Status
  */
@@ -47,11 +47,11 @@ export declare class LKS implements flatbuffers.IUnpackableObject<LKST> {
     /**
      * Link type
      */
-    LINK_TYPE(): linkType;
+    LINK_TYPE(): linkCategory;
     /**
      * Link state
      */
-    LINK_STATE(): linkState;
+    LINK_STATE(): linkCondition;
     /**
      * RF band
      */
@@ -129,8 +129,8 @@ export declare class LKS implements flatbuffers.IUnpackableObject<LKST> {
     static addSatNo2(builder: flatbuffers.Builder, SAT_NO2: number): void;
     static addConstellation(builder: flatbuffers.Builder, CONSTELLATIONOffset: flatbuffers.Offset): void;
     static addLinkName(builder: flatbuffers.Builder, LINK_NAMEOffset: flatbuffers.Offset): void;
-    static addLinkType(builder: flatbuffers.Builder, LINK_TYPE: linkType): void;
-    static addLinkState(builder: flatbuffers.Builder, LINK_STATE: linkState): void;
+    static addLinkType(builder: flatbuffers.Builder, LINK_TYPE: linkCategory): void;
+    static addLinkState(builder: flatbuffers.Builder, LINK_STATE: linkCondition): void;
     static addBand(builder: flatbuffers.Builder, BANDOffset: flatbuffers.Offset): void;
     static addLinkStartTime(builder: flatbuffers.Builder, LINK_START_TIMEOffset: flatbuffers.Offset): void;
     static addLinkStopTime(builder: flatbuffers.Builder, LINK_STOP_TIMEOffset: flatbuffers.Offset): void;
@@ -149,7 +149,7 @@ export declare class LKS implements flatbuffers.IUnpackableObject<LKST> {
     static endLKS(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishLKSBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedLKSBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createLKS(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, ID_ON_ORBIT1Offset: flatbuffers.Offset, SAT_NO1: number, ID_ON_ORBIT2Offset: flatbuffers.Offset, SAT_NO2: number, CONSTELLATIONOffset: flatbuffers.Offset, LINK_NAMEOffset: flatbuffers.Offset, LINK_TYPE: linkType, LINK_STATE: linkState, BANDOffset: flatbuffers.Offset, LINK_START_TIMEOffset: flatbuffers.Offset, LINK_STOP_TIMEOffset: flatbuffers.Offset, ID_BEAM1Offset: flatbuffers.Offset, END_POINT1_NAMEOffset: flatbuffers.Offset, END_POINT1_LAT: number, END_POINT1_LON: number, ID_BEAM2Offset: flatbuffers.Offset, END_POINT2_NAMEOffset: flatbuffers.Offset, END_POINT2_LAT: number, END_POINT2_LON: number, DATA_RATE1_TO2: number, DATA_RATE2_TO1: number, SYS_CAPOffset: flatbuffers.Offset, OPS_CAPOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createLKS(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, ID_ON_ORBIT1Offset: flatbuffers.Offset, SAT_NO1: number, ID_ON_ORBIT2Offset: flatbuffers.Offset, SAT_NO2: number, CONSTELLATIONOffset: flatbuffers.Offset, LINK_NAMEOffset: flatbuffers.Offset, LINK_TYPE: linkCategory, LINK_STATE: linkCondition, BANDOffset: flatbuffers.Offset, LINK_START_TIMEOffset: flatbuffers.Offset, LINK_STOP_TIMEOffset: flatbuffers.Offset, ID_BEAM1Offset: flatbuffers.Offset, END_POINT1_NAMEOffset: flatbuffers.Offset, END_POINT1_LAT: number, END_POINT1_LON: number, ID_BEAM2Offset: flatbuffers.Offset, END_POINT2_NAMEOffset: flatbuffers.Offset, END_POINT2_LAT: number, END_POINT2_LON: number, DATA_RATE1_TO2: number, DATA_RATE2_TO1: number, SYS_CAPOffset: flatbuffers.Offset, OPS_CAPOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): LKST;
     unpackTo(_o: LKST): void;
 }
@@ -161,8 +161,8 @@ export declare class LKST implements flatbuffers.IGeneratedObject {
     SAT_NO2: number;
     CONSTELLATION: string | Uint8Array | null;
     LINK_NAME: string | Uint8Array | null;
-    LINK_TYPE: linkType;
-    LINK_STATE: linkState;
+    LINK_TYPE: linkCategory;
+    LINK_STATE: linkCondition;
     BAND: string | Uint8Array | null;
     LINK_START_TIME: string | Uint8Array | null;
     LINK_STOP_TIME: string | Uint8Array | null;
@@ -178,7 +178,7 @@ export declare class LKST implements flatbuffers.IGeneratedObject {
     DATA_RATE2_TO1: number;
     SYS_CAP: string | Uint8Array | null;
     OPS_CAP: string | Uint8Array | null;
-    constructor(ID?: string | Uint8Array | null, ID_ON_ORBIT1?: string | Uint8Array | null, SAT_NO1?: number, ID_ON_ORBIT2?: string | Uint8Array | null, SAT_NO2?: number, CONSTELLATION?: string | Uint8Array | null, LINK_NAME?: string | Uint8Array | null, LINK_TYPE?: linkType, LINK_STATE?: linkState, BAND?: string | Uint8Array | null, LINK_START_TIME?: string | Uint8Array | null, LINK_STOP_TIME?: string | Uint8Array | null, ID_BEAM1?: string | Uint8Array | null, END_POINT1_NAME?: string | Uint8Array | null, END_POINT1_LAT?: number, END_POINT1_LON?: number, ID_BEAM2?: string | Uint8Array | null, END_POINT2_NAME?: string | Uint8Array | null, END_POINT2_LAT?: number, END_POINT2_LON?: number, DATA_RATE1_TO2?: number, DATA_RATE2_TO1?: number, SYS_CAP?: string | Uint8Array | null, OPS_CAP?: string | Uint8Array | null);
+    constructor(ID?: string | Uint8Array | null, ID_ON_ORBIT1?: string | Uint8Array | null, SAT_NO1?: number, ID_ON_ORBIT2?: string | Uint8Array | null, SAT_NO2?: number, CONSTELLATION?: string | Uint8Array | null, LINK_NAME?: string | Uint8Array | null, LINK_TYPE?: linkCategory, LINK_STATE?: linkCondition, BAND?: string | Uint8Array | null, LINK_START_TIME?: string | Uint8Array | null, LINK_STOP_TIME?: string | Uint8Array | null, ID_BEAM1?: string | Uint8Array | null, END_POINT1_NAME?: string | Uint8Array | null, END_POINT1_LAT?: number, END_POINT1_LON?: number, ID_BEAM2?: string | Uint8Array | null, END_POINT2_NAME?: string | Uint8Array | null, END_POINT2_LAT?: number, END_POINT2_LON?: number, DATA_RATE1_TO2?: number, DATA_RATE2_TO1?: number, SYS_CAP?: string | Uint8Array | null, OPS_CAP?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=LKS.d.ts.map

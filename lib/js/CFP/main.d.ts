@@ -1,4 +1,4 @@
 export * from './CFP.js';
-export * from './pduType.js';
-export * from './transmissionMode.js';
+export * from './pduKind.js';
+export * from './transmissionClass.js';
 //# sourceMappingURL=main.d.ts.map

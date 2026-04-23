@@ -8,7 +8,7 @@ import Common
 
 import FlatBuffers
 
-public enum linkType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum linkCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -19,12 +19,12 @@ public enum linkType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   case groundToGround = 4
   case relay = 5
 
-  public static var max: linkType { return .relay }
-  public static var min: linkType { return .uplink }
+  public static var max: linkCategory { return .relay }
+  public static var min: linkCategory { return .uplink }
 }
 
 
-public enum linkState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum linkCondition: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -35,8 +35,8 @@ public enum linkState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   case terminated = 4
   case unknown = 5
 
-  public static var max: linkState { return .unknown }
-  public static var min: linkState { return .established }
+  public static var max: linkCondition { return .unknown }
+  public static var min: linkCondition { return .established }
 }
 
 
@@ -101,9 +101,9 @@ public struct LKS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var LINK_NAME: String? { let o = _accessor.offset(VTOFFSET.LINK_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LINK_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_NAME.v) }
   ///  Link type
-  public var LINK_TYPE: linkType { let o = _accessor.offset(VTOFFSET.LINK_TYPE.v); return o == 0 ? .uplink : linkType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .uplink }
+  public var LINK_TYPE: linkCategory { let o = _accessor.offset(VTOFFSET.LINK_TYPE.v); return o == 0 ? .uplink : linkCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .uplink }
   ///  Link state
-  public var LINK_STATE: linkState { let o = _accessor.offset(VTOFFSET.LINK_STATE.v); return o == 0 ? .established : linkState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .established }
+  public var LINK_STATE: linkCondition { let o = _accessor.offset(VTOFFSET.LINK_STATE.v); return o == 0 ? .established : linkCondition(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .established }
   ///  RF band
   public var BAND: String? { let o = _accessor.offset(VTOFFSET.BAND.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var BANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BAND.v) }
@@ -151,8 +151,8 @@ public struct LKS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(SAT_NO2: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO2, def: 0, at: VTOFFSET.SAT_NO2.p) }
   public static func add(CONSTELLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTELLATION, at: VTOFFSET.CONSTELLATION.p) }
   public static func add(LINK_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_NAME, at: VTOFFSET.LINK_NAME.p) }
-  public static func add(LINK_TYPE: linkType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINK_TYPE.rawValue, def: 0, at: VTOFFSET.LINK_TYPE.p) }
-  public static func add(LINK_STATE: linkState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINK_STATE.rawValue, def: 0, at: VTOFFSET.LINK_STATE.p) }
+  public static func add(LINK_TYPE: linkCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINK_TYPE.rawValue, def: 0, at: VTOFFSET.LINK_TYPE.p) }
+  public static func add(LINK_STATE: linkCondition, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINK_STATE.rawValue, def: 0, at: VTOFFSET.LINK_STATE.p) }
   public static func add(BAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND, at: VTOFFSET.BAND.p) }
   public static func add(LINK_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_START_TIME, at: VTOFFSET.LINK_START_TIME.p) }
   public static func add(LINK_STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_STOP_TIME, at: VTOFFSET.LINK_STOP_TIME.p) }
@@ -178,8 +178,8 @@ public struct LKS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     SAT_NO2: UInt32 = 0,
     CONSTELLATIONOffset CONSTELLATION: Offset = Offset(),
     LINK_NAMEOffset LINK_NAME: Offset = Offset(),
-    LINK_TYPE: linkType = .uplink,
-    LINK_STATE: linkState = .established,
+    LINK_TYPE: linkCategory = .uplink,
+    LINK_STATE: linkCondition = .established,
     BANDOffset BAND: Offset = Offset(),
     LINK_START_TIMEOffset LINK_START_TIME: Offset = Offset(),
     LINK_STOP_TIMEOffset LINK_STOP_TIME: Offset = Offset(),
@@ -233,8 +233,8 @@ public struct LKS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.SAT_NO2.p, fieldName: "SAT_NO2", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.CONSTELLATION.p, fieldName: "CONSTELLATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LINK_NAME.p, fieldName: "LINK_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINK_TYPE.p, fieldName: "LINK_TYPE", required: false, type: linkType.self)
-    try _v.visit(field: VTOFFSET.LINK_STATE.p, fieldName: "LINK_STATE", required: false, type: linkState.self)
+    try _v.visit(field: VTOFFSET.LINK_TYPE.p, fieldName: "LINK_TYPE", required: false, type: linkCategory.self)
+    try _v.visit(field: VTOFFSET.LINK_STATE.p, fieldName: "LINK_STATE", required: false, type: linkCondition.self)
     try _v.visit(field: VTOFFSET.BAND.p, fieldName: "BAND", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LINK_START_TIME.p, fieldName: "LINK_START_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LINK_STOP_TIME.p, fieldName: "LINK_STOP_TIME", required: false, type: ForwardOffset<String>.self)

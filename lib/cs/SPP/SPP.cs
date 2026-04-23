@@ -22,7 +22,7 @@ public struct SPP : IFlatbufferObject
   /// Packet version number
   public byte VERSION { get { int o = __p.__offset(4); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   /// Packet type (TM or TC)
-  public packetType PACKET_TYPE { get { int o = __p.__offset(6); return o != 0 ? (packetType)__p.bb.GetSbyte(o + __p.bb_pos) : packetType.TM; } }
+  public packetKind PACKET_TYPE { get { int o = __p.__offset(6); return o != 0 ? (packetKind)__p.bb.GetSbyte(o + __p.bb_pos) : packetKind.TM; } }
   /// Secondary header flag
   public bool SEC_HDR_FLAG { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Application Process Identifier
@@ -45,7 +45,7 @@ public struct SPP : IFlatbufferObject
 
   public static Offset<SPP> CreateSPP(FlatBufferBuilder builder,
       byte VERSION = 0,
-      packetType PACKET_TYPE = packetType.TM,
+      packetKind PACKET_TYPE = packetKind.TM,
       bool SEC_HDR_FLAG = false,
       ushort APID = 0,
       byte SEQUENCE_FLAGS = 0,
@@ -66,7 +66,7 @@ public struct SPP : IFlatbufferObject
 
   public static void StartSPP(FlatBufferBuilder builder) { builder.StartTable(8); }
   public static void AddVERSION(FlatBufferBuilder builder, byte VERSION) { builder.AddByte(0, VERSION, 0); }
-  public static void AddPACKET_TYPE(FlatBufferBuilder builder, packetType PACKET_TYPE) { builder.AddSbyte(1, (sbyte)PACKET_TYPE, 0); }
+  public static void AddPACKET_TYPE(FlatBufferBuilder builder, packetKind PACKET_TYPE) { builder.AddSbyte(1, (sbyte)PACKET_TYPE, 0); }
   public static void AddSEC_HDR_FLAG(FlatBufferBuilder builder, bool SEC_HDR_FLAG) { builder.AddBool(2, SEC_HDR_FLAG, false); }
   public static void AddAPID(FlatBufferBuilder builder, ushort APID) { builder.AddUshort(3, APID, 0); }
   public static void AddSEQUENCE_FLAGS(FlatBufferBuilder builder, byte SEQUENCE_FLAGS) { builder.AddByte(4, SEQUENCE_FLAGS, 0); }
@@ -123,7 +123,7 @@ public struct SPP : IFlatbufferObject
 public class SPPT
 {
   public byte VERSION { get; set; }
-  public packetType PACKET_TYPE { get; set; }
+  public packetKind PACKET_TYPE { get; set; }
   public bool SEC_HDR_FLAG { get; set; }
   public ushort APID { get; set; }
   public byte SEQUENCE_FLAGS { get; set; }
@@ -133,7 +133,7 @@ public class SPPT
 
   public SPPT() {
     this.VERSION = 0;
-    this.PACKET_TYPE = packetType.TM;
+    this.PACKET_TYPE = packetKind.TM;
     this.SEC_HDR_FLAG = false;
     this.APID = 0;
     this.SEQUENCE_FLAGS = 0;
@@ -158,7 +158,7 @@ static public class SPPVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*VERSION*/, 1 /*byte*/, 1, false)
-      && verifier.VerifyField(tablePos, 6 /*PACKET_TYPE*/, 1 /*packetType*/, 1, false)
+      && verifier.VerifyField(tablePos, 6 /*PACKET_TYPE*/, 1 /*packetKind*/, 1, false)
       && verifier.VerifyField(tablePos, 8 /*SEC_HDR_FLAG*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 10 /*APID*/, 2 /*ushort*/, 2, false)
       && verifier.VerifyField(tablePos, 12 /*SEQUENCE_FLAGS*/, 1 /*byte*/, 1, false)

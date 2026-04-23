@@ -29,30 +29,30 @@ struct STF;
 struct STFBuilder;
 
 /// Access type for data listings
-enum accessType : int8_t {
+enum accessCategory : int8_t {
   /// One-time purchase
-  accessType_OneTime = 0,
+  accessCategory_OneTime = 0,
   /// Recurring subscription
-  accessType_Subscription = 1,
+  accessCategory_Subscription = 1,
   /// Real-time streaming access
-  accessType_Streaming = 2,
+  accessCategory_Streaming = 2,
   /// Query-based access
-  accessType_Query = 3,
-  accessType_MIN = accessType_OneTime,
-  accessType_MAX = accessType_Query
+  accessCategory_Query = 3,
+  accessCategory_MIN = accessCategory_OneTime,
+  accessCategory_MAX = accessCategory_Query
 };
 
-inline const accessType (&EnumValuesaccessType())[4] {
-  static const accessType values[] = {
-    accessType_OneTime,
-    accessType_Subscription,
-    accessType_Streaming,
-    accessType_Query
+inline const accessCategory (&EnumValuesaccessCategory())[4] {
+  static const accessCategory values[] = {
+    accessCategory_OneTime,
+    accessCategory_Subscription,
+    accessCategory_Streaming,
+    accessCategory_Query
   };
   return values;
 }
 
-inline const char * const *EnumNamesaccessType() {
+inline const char * const *EnumNamesaccessCategory() {
   static const char * const names[5] = {
     "OneTime",
     "Subscription",
@@ -63,10 +63,10 @@ inline const char * const *EnumNamesaccessType() {
   return names;
 }
 
-inline const char *EnumNameaccessType(accessType e) {
-  if (::flatbuffers::IsOutRange(e, accessType_OneTime, accessType_Query)) return "";
+inline const char *EnumNameaccessCategory(accessCategory e) {
+  if (::flatbuffers::IsOutRange(e, accessCategory_OneTime, accessCategory_Query)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesaccessType()[index];
+  return EnumNamesaccessCategory()[index];
 }
 
 /// Payment method accepted
@@ -536,8 +536,8 @@ struct STF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_SAMPLE_CID);
   }
   /// Type of access offered
-  accessType ACCESS_TYPE() const {
-    return static_cast<accessType>(GetField<int8_t>(VT_ACCESS_TYPE, 0));
+  accessCategory ACCESS_TYPE() const {
+    return static_cast<accessCategory>(GetField<int8_t>(VT_ACCESS_TYPE, 0));
   }
   /// Whether encryption is required for data delivery
   bool ENCRYPTION_REQUIRED() const {
@@ -631,7 +631,7 @@ struct STFBuilder {
   void add_SAMPLE_CID(::flatbuffers::Offset<::flatbuffers::String> SAMPLE_CID) {
     fbb_.AddOffset(STF::VT_SAMPLE_CID, SAMPLE_CID);
   }
-  void add_ACCESS_TYPE(accessType ACCESS_TYPE) {
+  void add_ACCESS_TYPE(accessCategory ACCESS_TYPE) {
     fbb_.AddElement<int8_t>(STF::VT_ACCESS_TYPE, static_cast<int8_t>(ACCESS_TYPE), 0);
   }
   void add_ENCRYPTION_REQUIRED(bool ENCRYPTION_REQUIRED) {
@@ -679,7 +679,7 @@ inline ::flatbuffers::Offset<STF> CreateSTF(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> DATA_TYPES = 0,
     ::flatbuffers::Offset<DataCoverage> COVERAGE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SAMPLE_CID = 0,
-    accessType ACCESS_TYPE = accessType_OneTime,
+    accessCategory ACCESS_TYPE = accessCategory_OneTime,
     bool ENCRYPTION_REQUIRED = false,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PricingTier>>> PRICING = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<int8_t>> ACCEPTED_PAYMENTS = 0,
@@ -717,7 +717,7 @@ inline ::flatbuffers::Offset<STF> CreateSTFDirect(
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *DATA_TYPES = nullptr,
     ::flatbuffers::Offset<DataCoverage> COVERAGE = 0,
     const char *SAMPLE_CID = nullptr,
-    accessType ACCESS_TYPE = accessType_OneTime,
+    accessCategory ACCESS_TYPE = accessCategory_OneTime,
     bool ENCRYPTION_REQUIRED = false,
     const std::vector<::flatbuffers::Offset<PricingTier>> *PRICING = nullptr,
     const std::vector<int8_t> *ACCEPTED_PAYMENTS = nullptr,

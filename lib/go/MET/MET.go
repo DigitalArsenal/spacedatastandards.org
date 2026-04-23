@@ -54,33 +54,33 @@ func (rcv *MET) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *MET) MEAN_ELEMENT_THEORY() meanElementTheory {
+func (rcv *MET) MEAN_ELEMENT_THEORY() meanElementSource {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return meanElementTheory(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return meanElementSource(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MET) MeanElementTheory() meanElementTheory {
+func (rcv *MET) MeanElementTheory() meanElementSource {
 	return rcv.MEAN_ELEMENT_THEORY()
 }
 
-func (rcv *MET) MutateMEAN_ELEMENT_THEORY(n meanElementTheory) bool {
+func (rcv *MET) MutateMEAN_ELEMENT_THEORY(n meanElementSource) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
 }
 
-func (rcv *MET) MutateMeanElementTheory(n meanElementTheory) bool {
+func (rcv *MET) MutateMeanElementTheory(n meanElementSource) bool {
 	return rcv.MutateMEAN_ELEMENT_THEORY(n)
 }
 
 func METStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
-func METAddMEAN_ELEMENT_THEORY(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementTheory) {
+func METAddMEAN_ELEMENT_THEORY(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementSource) {
 	builder.PrependInt8Slot(0, int8(MEAN_ELEMENT_THEORY), 0)
 }
-func METAddMeanElementTheory(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementTheory) {
+func METAddMeanElementTheory(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementSource) {
 	METAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
 }
 func METEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {

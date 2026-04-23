@@ -47,7 +47,7 @@ class TIM extends Table
     public function getTIME_SYSTEM()
     {
         $o = $this->__offset(4);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \timeSystem::GMST;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \timingStandard::GMST;
     }
 
     /**

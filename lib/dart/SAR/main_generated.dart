@@ -6,7 +6,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-enum sarMode {
+enum sarMission {
   STRIPMAP(0),
   SPOTLIGHT(1),
   SCANSAR(2),
@@ -17,39 +17,39 @@ enum sarMode {
   UNKNOWN(7);
 
   final int value;
-  const sarMode(this.value);
+  const sarMission(this.value);
 
-  factory sarMode.fromValue(int value) {
+  factory sarMission.fromValue(int value) {
     switch (value) {
-      case 0: return sarMode.STRIPMAP;
-      case 1: return sarMode.SPOTLIGHT;
-      case 2: return sarMode.SCANSAR;
-      case 3: return sarMode.TOPSAR;
-      case 4: return sarMode.ISAR;
-      case 5: return sarMode.GMTI;
-      case 6: return sarMode.MARITIME;
-      case 7: return sarMode.UNKNOWN;
+      case 0: return sarMission.STRIPMAP;
+      case 1: return sarMission.SPOTLIGHT;
+      case 2: return sarMission.SCANSAR;
+      case 3: return sarMission.TOPSAR;
+      case 4: return sarMission.ISAR;
+      case 5: return sarMission.GMTI;
+      case 6: return sarMission.MARITIME;
+      case 7: return sarMission.UNKNOWN;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static sarMode? _createOrNull(int? value) =>
-      value == null ? null : sarMode.fromValue(value);
+  static sarMission? _createOrNull(int? value) =>
+      value == null ? null : sarMission.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 7;
-  static const fb.Reader<sarMode> reader = _sarModeReader();
+  static const fb.Reader<sarMission> reader = _sarMissionReader();
 }
 
-class _sarModeReader extends fb.Reader<sarMode> {
-  const _sarModeReader();
+class _sarMissionReader extends fb.Reader<sarMission> {
+  const _sarMissionReader();
 
   @override
   int get size => 1;
 
   @override
-  sarMode read(fb.BufferContext bc, int offset) =>
-      sarMode.fromValue(const fb.Int8Reader().read(bc, offset));
+  sarMission read(fb.BufferContext bc, int offset) =>
+      sarMission.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 enum sarPolarization {
@@ -161,8 +161,8 @@ class SAR {
   String? get ORBIT_STATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
   String? get orbitState => ORBIT_STATE;
   ///  SAR imaging mode
-  sarMode get SAR_MODE => sarMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0));
-  sarMode get sarMode => SAR_MODE;
+  sarMission get SAR_MODE => sarMission.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0));
+  sarMission get sarMode => SAR_MODE;
   ///  Operating RF band (e.g., X, C, L, S, P)
   String? get OPERATING_BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
   String? get operatingBand => OPERATING_BAND;
@@ -362,7 +362,7 @@ class SARBuilder {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
-  int addSarMode(sarMode? SAR_MODE) {
+  int addSarMode(sarMission? SAR_MODE) {
     fbBuilder.addInt8(16, SAR_MODE?.value);
     return fbBuilder.offset;
   }
@@ -553,7 +553,7 @@ class SARObjectBuilder extends fb.ObjectBuilder {
   final String? _DETECTION_END;
   final double? _DWELL_TIME;
   final String? _ORBIT_STATE;
-  final sarMode? _SAR_MODE;
+  final sarMission? _SAR_MODE;
   final String? _OPERATING_BAND;
   final double? _OPERATING_FREQ;
   final double? _SNR;
@@ -628,8 +628,8 @@ class SARObjectBuilder extends fb.ObjectBuilder {
     double? dwellTime,
     String? ORBIT_STATE,
     String? orbitState,
-    sarMode? SAR_MODE,
-    sarMode? sarMode,
+    sarMission? SAR_MODE,
+    sarMission? sarMode,
     String? OPERATING_BAND,
     String? operatingBand,
     double? OPERATING_FREQ,

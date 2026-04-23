@@ -27,9 +27,9 @@ public struct SHWCompileRequest : IFlatbufferObject
 #endif
   public byte[] GetSHADER_NAMEArray() { return __p.__vector_as_array<byte>(4); }
   /// Target GLSL stage.
-  public shaderStage SHADER_STAGE { get { int o = __p.__offset(6); return o != 0 ? (shaderStage)__p.bb.Get(o + __p.bb_pos) : shaderStage.VERTEX; } }
+  public glslStage SHADER_STAGE { get { int o = __p.__offset(6); return o != 0 ? (glslStage)__p.bb.Get(o + __p.bb_pos) : glslStage.VERTEX; } }
   /// Intended injection point in the host pipeline.
-  public shaderInjectionPoint SHADER_INJECTION_POINT { get { int o = __p.__offset(8); return o != 0 ? (shaderInjectionPoint)__p.bb.Get(o + __p.bb_pos) : shaderInjectionPoint.NONE; } }
+  public shaderHookPoint SHADER_INJECTION_POINT { get { int o = __p.__offset(8); return o != 0 ? (shaderHookPoint)__p.bb.Get(o + __p.bb_pos) : shaderHookPoint.NONE; } }
   /// GLSL source (or preprocessed chunk).
   public string SHADER_SOURCE { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -52,8 +52,8 @@ public struct SHWCompileRequest : IFlatbufferObject
 
   public static Offset<SHWCompileRequest> CreateSHWCompileRequest(FlatBufferBuilder builder,
       StringOffset SHADER_NAMEOffset = default(StringOffset),
-      shaderStage SHADER_STAGE = shaderStage.VERTEX,
-      shaderInjectionPoint SHADER_INJECTION_POINT = shaderInjectionPoint.NONE,
+      glslStage SHADER_STAGE = glslStage.VERTEX,
+      shaderHookPoint SHADER_INJECTION_POINT = shaderHookPoint.NONE,
       StringOffset SHADER_SOURCEOffset = default(StringOffset),
       StringOffset GLSL_VERSIONOffset = default(StringOffset),
       VectorOffset SHADER_UNIFORMSOffset = default(VectorOffset)) {
@@ -69,8 +69,8 @@ public struct SHWCompileRequest : IFlatbufferObject
 
   public static void StartSHWCompileRequest(FlatBufferBuilder builder) { builder.StartTable(6); }
   public static void AddSHADER_NAME(FlatBufferBuilder builder, StringOffset SHADER_NAMEOffset) { builder.AddOffset(0, SHADER_NAMEOffset.Value, 0); }
-  public static void AddSHADER_STAGE(FlatBufferBuilder builder, shaderStage SHADER_STAGE) { builder.AddByte(1, (byte)SHADER_STAGE, 0); }
-  public static void AddSHADER_INJECTION_POINT(FlatBufferBuilder builder, shaderInjectionPoint SHADER_INJECTION_POINT) { builder.AddByte(2, (byte)SHADER_INJECTION_POINT, 0); }
+  public static void AddSHADER_STAGE(FlatBufferBuilder builder, glslStage SHADER_STAGE) { builder.AddByte(1, (byte)SHADER_STAGE, 0); }
+  public static void AddSHADER_INJECTION_POINT(FlatBufferBuilder builder, shaderHookPoint SHADER_INJECTION_POINT) { builder.AddByte(2, (byte)SHADER_INJECTION_POINT, 0); }
   public static void AddSHADER_SOURCE(FlatBufferBuilder builder, StringOffset SHADER_SOURCEOffset) { builder.AddOffset(3, SHADER_SOURCEOffset.Value, 0); }
   public static void AddGLSL_VERSION(FlatBufferBuilder builder, StringOffset GLSL_VERSIONOffset) { builder.AddOffset(4, GLSL_VERSIONOffset.Value, 0); }
   public static void AddSHADER_UNIFORMS(FlatBufferBuilder builder, VectorOffset SHADER_UNIFORMSOffset) { builder.AddOffset(5, SHADER_UNIFORMSOffset.Value, 0); }
@@ -122,16 +122,16 @@ public struct SHWCompileRequest : IFlatbufferObject
 public class SHWCompileRequestT
 {
   public string SHADER_NAME { get; set; }
-  public shaderStage SHADER_STAGE { get; set; }
-  public shaderInjectionPoint SHADER_INJECTION_POINT { get; set; }
+  public glslStage SHADER_STAGE { get; set; }
+  public shaderHookPoint SHADER_INJECTION_POINT { get; set; }
   public string SHADER_SOURCE { get; set; }
   public string GLSL_VERSION { get; set; }
   public List<SHWUniformT> SHADER_UNIFORMS { get; set; }
 
   public SHWCompileRequestT() {
     this.SHADER_NAME = null;
-    this.SHADER_STAGE = shaderStage.VERTEX;
-    this.SHADER_INJECTION_POINT = shaderInjectionPoint.NONE;
+    this.SHADER_STAGE = glslStage.VERTEX;
+    this.SHADER_INJECTION_POINT = shaderHookPoint.NONE;
     this.SHADER_SOURCE = null;
     this.GLSL_VERSION = null;
     this.SHADER_UNIFORMS = null;
@@ -145,8 +145,8 @@ static public class SHWCompileRequestVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*SHADER_NAME*/, false)
-      && verifier.VerifyField(tablePos, 6 /*SHADER_STAGE*/, 1 /*shaderStage*/, 1, false)
-      && verifier.VerifyField(tablePos, 8 /*SHADER_INJECTION_POINT*/, 1 /*shaderInjectionPoint*/, 1, false)
+      && verifier.VerifyField(tablePos, 6 /*SHADER_STAGE*/, 1 /*glslStage*/, 1, false)
+      && verifier.VerifyField(tablePos, 8 /*SHADER_INJECTION_POINT*/, 1 /*shaderHookPoint*/, 1, false)
       && verifier.VerifyString(tablePos, 10 /*SHADER_SOURCE*/, false)
       && verifier.VerifyString(tablePos, 12 /*GLSL_VERSION*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 14 /*SHADER_UNIFORMS*/, SHWUniformVerify.Verify, false)

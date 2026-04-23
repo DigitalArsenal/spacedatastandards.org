@@ -90,7 +90,7 @@ class CDMObject extends Table
     public function getCOVARIANCE_METHOD()
     {
         $o = $this->__offset(16);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \covarianceMethod::CALCULATED;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \covarianceAlgorithm::CALCULATED;
     }
 
     /// Reference Frame in which the object position is defined

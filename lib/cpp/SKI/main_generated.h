@@ -16,30 +16,30 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct SKI;
 struct SKIBuilder;
 
-enum imageType : int8_t {
-  imageType_VISIBLE = 0,
-  imageType_INFRARED = 1,
-  imageType_MULTISPECTRAL = 2,
-  imageType_HYPERSPECTRAL = 3,
-  imageType_UV = 4,
-  imageType_BROADBAND = 5,
-  imageType_MIN = imageType_VISIBLE,
-  imageType_MAX = imageType_BROADBAND
+enum imageCategory : int8_t {
+  imageCategory_VISIBLE = 0,
+  imageCategory_INFRARED = 1,
+  imageCategory_MULTISPECTRAL = 2,
+  imageCategory_HYPERSPECTRAL = 3,
+  imageCategory_UV = 4,
+  imageCategory_BROADBAND = 5,
+  imageCategory_MIN = imageCategory_VISIBLE,
+  imageCategory_MAX = imageCategory_BROADBAND
 };
 
-inline const imageType (&EnumValuesimageType())[6] {
-  static const imageType values[] = {
-    imageType_VISIBLE,
-    imageType_INFRARED,
-    imageType_MULTISPECTRAL,
-    imageType_HYPERSPECTRAL,
-    imageType_UV,
-    imageType_BROADBAND
+inline const imageCategory (&EnumValuesimageCategory())[6] {
+  static const imageCategory values[] = {
+    imageCategory_VISIBLE,
+    imageCategory_INFRARED,
+    imageCategory_MULTISPECTRAL,
+    imageCategory_HYPERSPECTRAL,
+    imageCategory_UV,
+    imageCategory_BROADBAND
   };
   return values;
 }
 
-inline const char * const *EnumNamesimageType() {
+inline const char * const *EnumNamesimageCategory() {
   static const char * const names[7] = {
     "VISIBLE",
     "INFRARED",
@@ -52,10 +52,10 @@ inline const char * const *EnumNamesimageType() {
   return names;
 }
 
-inline const char *EnumNameimageType(imageType e) {
-  if (::flatbuffers::IsOutRange(e, imageType_VISIBLE, imageType_BROADBAND)) return "";
+inline const char *EnumNameimageCategory(imageCategory e) {
+  if (::flatbuffers::IsOutRange(e, imageCategory_VISIBLE, imageCategory_BROADBAND)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesimageType()[index];
+  return EnumNamesimageCategory()[index];
 }
 
 /// Sky Imagery
@@ -161,8 +161,8 @@ struct SKI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SEN_QUAT_DOT);
   }
   /// Image type
-  imageType IMAGE_TYPE() const {
-    return static_cast<imageType>(GetField<int8_t>(VT_IMAGE_TYPE, 0));
+  imageCategory IMAGE_TYPE() const {
+    return static_cast<imageCategory>(GetField<int8_t>(VT_IMAGE_TYPE, 0));
   }
   /// Exposure start time (ISO 8601)
   const ::flatbuffers::String *EXP_START_TIME() const {
@@ -383,7 +383,7 @@ struct SKIBuilder {
   void add_SEN_QUAT_DOT(::flatbuffers::Offset<::flatbuffers::Vector<double>> SEN_QUAT_DOT) {
     fbb_.AddOffset(SKI::VT_SEN_QUAT_DOT, SEN_QUAT_DOT);
   }
-  void add_IMAGE_TYPE(imageType IMAGE_TYPE) {
+  void add_IMAGE_TYPE(imageCategory IMAGE_TYPE) {
     fbb_.AddElement<int8_t>(SKI::VT_IMAGE_TYPE, static_cast<int8_t>(IMAGE_TYPE), 0);
   }
   void add_EXP_START_TIME(::flatbuffers::Offset<::flatbuffers::String> EXP_START_TIME) {
@@ -491,7 +491,7 @@ inline ::flatbuffers::Offset<SKI> CreateSKI(
     double SENZ = 0.0,
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> SEN_QUAT = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> SEN_QUAT_DOT = 0,
-    imageType IMAGE_TYPE = imageType_VISIBLE,
+    imageCategory IMAGE_TYPE = imageCategory_VISIBLE,
     ::flatbuffers::Offset<::flatbuffers::String> EXP_START_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EXP_END_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> IMAGE_SOURCE_INFO = 0,
@@ -579,7 +579,7 @@ inline ::flatbuffers::Offset<SKI> CreateSKIDirect(
     double SENZ = 0.0,
     const std::vector<double> *SEN_QUAT = nullptr,
     const std::vector<double> *SEN_QUAT_DOT = nullptr,
-    imageType IMAGE_TYPE = imageType_VISIBLE,
+    imageCategory IMAGE_TYPE = imageCategory_VISIBLE,
     const char *EXP_START_TIME = nullptr,
     const char *EXP_END_TIME = nullptr,
     const char *IMAGE_SOURCE_INFO = nullptr,

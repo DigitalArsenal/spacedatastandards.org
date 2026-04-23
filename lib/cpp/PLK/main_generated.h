@@ -17,36 +17,36 @@ struct PLK;
 struct PLKBuilder;
 
 /// License type for plugin access
-enum licenseType : int8_t {
+enum licenseCategory : int8_t {
   /// Evaluation/trial license
-  licenseType_Trial = 0,
+  licenseCategory_Trial = 0,
   /// Standard commercial license
-  licenseType_Commercial = 1,
+  licenseCategory_Commercial = 1,
   /// Enterprise site license
-  licenseType_Enterprise = 2,
+  licenseCategory_Enterprise = 2,
   /// Educational/academic license
-  licenseType_Educational = 3,
+  licenseCategory_Educational = 3,
   /// Open source project license
-  licenseType_OpenSource = 4,
+  licenseCategory_OpenSource = 4,
   /// Internal OrbPro default plugins
-  licenseType_Internal = 5,
-  licenseType_MIN = licenseType_Trial,
-  licenseType_MAX = licenseType_Internal
+  licenseCategory_Internal = 5,
+  licenseCategory_MIN = licenseCategory_Trial,
+  licenseCategory_MAX = licenseCategory_Internal
 };
 
-inline const licenseType (&EnumValueslicenseType())[6] {
-  static const licenseType values[] = {
-    licenseType_Trial,
-    licenseType_Commercial,
-    licenseType_Enterprise,
-    licenseType_Educational,
-    licenseType_OpenSource,
-    licenseType_Internal
+inline const licenseCategory (&EnumValueslicenseCategory())[6] {
+  static const licenseCategory values[] = {
+    licenseCategory_Trial,
+    licenseCategory_Commercial,
+    licenseCategory_Enterprise,
+    licenseCategory_Educational,
+    licenseCategory_OpenSource,
+    licenseCategory_Internal
   };
   return values;
 }
 
-inline const char * const *EnumNameslicenseType() {
+inline const char * const *EnumNameslicenseCategory() {
   static const char * const names[7] = {
     "Trial",
     "Commercial",
@@ -59,10 +59,10 @@ inline const char * const *EnumNameslicenseType() {
   return names;
 }
 
-inline const char *EnumNamelicenseType(licenseType e) {
-  if (::flatbuffers::IsOutRange(e, licenseType_Trial, licenseType_Internal)) return "";
+inline const char *EnumNamelicenseCategory(licenseCategory e) {
+  if (::flatbuffers::IsOutRange(e, licenseCategory_Trial, licenseCategory_Internal)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNameslicenseType()[index];
+  return EnumNameslicenseCategory()[index];
 }
 
 /// Plugin License Key - Issued license for plugin access
@@ -131,8 +131,8 @@ struct PLK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ALLOWED_TLDS);
   }
   /// Type of license
-  licenseType LICENSE_TYPE() const {
-    return static_cast<licenseType>(GetField<int8_t>(VT_LICENSE_TYPE, 0));
+  licenseCategory LICENSE_TYPE() const {
+    return static_cast<licenseCategory>(GetField<int8_t>(VT_LICENSE_TYPE, 0));
   }
   /// Maximum concurrent activations (0 = unlimited)
   uint32_t MAX_ACTIVATIONS() const {
@@ -230,7 +230,7 @@ struct PLKBuilder {
   void add_ALLOWED_TLDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALLOWED_TLDS) {
     fbb_.AddOffset(PLK::VT_ALLOWED_TLDS, ALLOWED_TLDS);
   }
-  void add_LICENSE_TYPE(licenseType LICENSE_TYPE) {
+  void add_LICENSE_TYPE(licenseCategory LICENSE_TYPE) {
     fbb_.AddElement<int8_t>(PLK::VT_LICENSE_TYPE, static_cast<int8_t>(LICENSE_TYPE), 0);
   }
   void add_MAX_ACTIVATIONS(uint32_t MAX_ACTIVATIONS) {
@@ -277,7 +277,7 @@ inline ::flatbuffers::Offset<PLK> CreatePLK(
     ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> ISSUER_PUBKEY = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALLOWED_DOMAINS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALLOWED_TLDS = 0,
-    licenseType LICENSE_TYPE = licenseType_Trial,
+    licenseCategory LICENSE_TYPE = licenseCategory_Trial,
     uint32_t MAX_ACTIVATIONS = 0,
     uint64_t ISSUED_AT = 0,
     uint64_t VALID_FROM = 0,
@@ -317,7 +317,7 @@ inline ::flatbuffers::Offset<PLK> CreatePLKDirect(
     const std::vector<uint8_t> *ISSUER_PUBKEY = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ALLOWED_DOMAINS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ALLOWED_TLDS = nullptr,
-    licenseType LICENSE_TYPE = licenseType_Trial,
+    licenseCategory LICENSE_TYPE = licenseCategory_Trial,
     uint32_t MAX_ACTIVATIONS = 0,
     uint64_t ISSUED_AT = 0,
     uint64_t VALID_FROM = 0,

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "sarMode": {
+    "sarMission": {
       "type": "string",
       "enum": [
         "STRIPMAP",
@@ -174,7 +174,7 @@
           "x-flatbuffer-type": "string"
         },
         "SAR_MODE": {
-          "$ref": "#/definitions/sarMode",
+          "$ref": "#/definitions/sarMission",
           "description": "SAR imaging mode",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",

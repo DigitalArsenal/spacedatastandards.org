@@ -103,7 +103,7 @@ class LKS extends Table
     public function getLINK_TYPE()
     {
         $o = $this->__offset(18);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \linkType::UPLINK;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \linkCategory::UPLINK;
     }
 
     /// Link state
@@ -113,7 +113,7 @@ class LKS extends Table
     public function getLINK_STATE()
     {
         $o = $this->__offset(20);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \linkState::ESTABLISHED;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \linkCondition::ESTABLISHED;
     }
 
     /// RF band

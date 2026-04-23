@@ -53,7 +53,7 @@ public struct ACL : IFlatbufferObject
 #endif
   public byte[] GetBUYER_ENCRYPTION_PUBKEYArray() { return __p.__vector_as_array<byte>(10); }
   /// Type of access granted
-  public accessType ACCESS_TYPE { get { int o = __p.__offset(12); return o != 0 ? (accessType)__p.bb.GetSbyte(o + __p.bb_pos) : accessType.OneTime; } }
+  public accessCategory ACCESS_TYPE { get { int o = __p.__offset(12); return o != 0 ? (accessCategory)__p.bb.GetSbyte(o + __p.bb_pos) : accessCategory.OneTime; } }
   /// Name of the pricing tier purchased
   public string TIER_NAME { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -91,7 +91,7 @@ public struct ACL : IFlatbufferObject
       StringOffset LISTING_IDOffset = default(StringOffset),
       StringOffset BUYER_PEER_IDOffset = default(StringOffset),
       VectorOffset BUYER_ENCRYPTION_PUBKEYOffset = default(VectorOffset),
-      accessType ACCESS_TYPE = accessType.OneTime,
+      accessCategory ACCESS_TYPE = accessCategory.OneTime,
       StringOffset TIER_NAMEOffset = default(StringOffset),
       ulong GRANTED_AT = 0,
       ulong EXPIRES_AT = 0,
@@ -123,7 +123,7 @@ public struct ACL : IFlatbufferObject
   public static VectorOffset CreateBUYER_ENCRYPTION_PUBKEYVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateBUYER_ENCRYPTION_PUBKEYVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartBUYER_ENCRYPTION_PUBKEYVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
-  public static void AddACCESS_TYPE(FlatBufferBuilder builder, accessType ACCESS_TYPE) { builder.AddSbyte(4, (sbyte)ACCESS_TYPE, 0); }
+  public static void AddACCESS_TYPE(FlatBufferBuilder builder, accessCategory ACCESS_TYPE) { builder.AddSbyte(4, (sbyte)ACCESS_TYPE, 0); }
   public static void AddTIER_NAME(FlatBufferBuilder builder, StringOffset TIER_NAMEOffset) { builder.AddOffset(5, TIER_NAMEOffset.Value, 0); }
   public static void AddGRANTED_AT(FlatBufferBuilder builder, ulong GRANTED_AT) { builder.AddUlong(6, GRANTED_AT, 0); }
   public static void AddEXPIRES_AT(FlatBufferBuilder builder, ulong EXPIRES_AT) { builder.AddUlong(7, EXPIRES_AT, 0); }
@@ -203,7 +203,7 @@ public class ACLT
   public string LISTING_ID { get; set; }
   public string BUYER_PEER_ID { get; set; }
   public List<byte> BUYER_ENCRYPTION_PUBKEY { get; set; }
-  public accessType ACCESS_TYPE { get; set; }
+  public accessCategory ACCESS_TYPE { get; set; }
   public string TIER_NAME { get; set; }
   public ulong GRANTED_AT { get; set; }
   public ulong EXPIRES_AT { get; set; }
@@ -216,7 +216,7 @@ public class ACLT
     this.LISTING_ID = null;
     this.BUYER_PEER_ID = null;
     this.BUYER_ENCRYPTION_PUBKEY = null;
-    this.ACCESS_TYPE = accessType.OneTime;
+    this.ACCESS_TYPE = accessCategory.OneTime;
     this.TIER_NAME = null;
     this.GRANTED_AT = 0;
     this.EXPIRES_AT = 0;
@@ -244,7 +244,7 @@ static public class ACLVerify
       && verifier.VerifyString(tablePos, 6 /*LISTING_ID*/, true)
       && verifier.VerifyString(tablePos, 8 /*BUYER_PEER_ID*/, true)
       && verifier.VerifyVectorOfData(tablePos, 10 /*BUYER_ENCRYPTION_PUBKEY*/, 1 /*byte*/, false)
-      && verifier.VerifyField(tablePos, 12 /*ACCESS_TYPE*/, 1 /*accessType*/, 1, false)
+      && verifier.VerifyField(tablePos, 12 /*ACCESS_TYPE*/, 1 /*accessCategory*/, 1, false)
       && verifier.VerifyString(tablePos, 14 /*TIER_NAME*/, false)
       && verifier.VerifyField(tablePos, 16 /*GRANTED_AT*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyField(tablePos, 18 /*EXPIRES_AT*/, 8 /*ulong*/, 8, false)

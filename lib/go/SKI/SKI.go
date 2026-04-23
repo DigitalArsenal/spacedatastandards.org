@@ -359,24 +359,24 @@ func (rcv *SKI) MutateSenQuatDot(j int, n float64) bool {
 }
 
 /// Image type
-func (rcv *SKI) IMAGE_TYPE() imageType {
+func (rcv *SKI) IMAGE_TYPE() imageCategory {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
-		return imageType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return imageCategory(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *SKI) ImageType() imageType {
+func (rcv *SKI) ImageType() imageCategory {
 	return rcv.IMAGE_TYPE()
 }
 
 /// Image type
-func (rcv *SKI) MutateIMAGE_TYPE(n imageType) bool {
+func (rcv *SKI) MutateIMAGE_TYPE(n imageCategory) bool {
 	return rcv._tab.MutateInt8Slot(32, int8(n))
 }
 
-func (rcv *SKI) MutateImageType(n imageType) bool {
+func (rcv *SKI) MutateImageType(n imageCategory) bool {
 	return rcv.MutateIMAGE_TYPE(n)
 }
 
@@ -981,10 +981,10 @@ func SKIStartSEN_QUAT_DOTVector(builder *flatbuffers.Builder, numElems int) flat
 func SKIStartSenQuatDotVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return SKIStartSEN_QUAT_DOTVector(builder, numElems)
 }
-func SKIAddIMAGE_TYPE(builder *flatbuffers.Builder, IMAGE_TYPE imageType) {
+func SKIAddIMAGE_TYPE(builder *flatbuffers.Builder, IMAGE_TYPE imageCategory) {
 	builder.PrependInt8Slot(14, int8(IMAGE_TYPE), 0)
 }
-func SKIAddImageType(builder *flatbuffers.Builder, IMAGE_TYPE imageType) {
+func SKIAddImageType(builder *flatbuffers.Builder, IMAGE_TYPE imageCategory) {
 	SKIAddIMAGE_TYPE(builder, IMAGE_TYPE)
 }
 func SKIAddEXP_START_TIME(builder *flatbuffers.Builder, EXP_START_TIME flatbuffers.UOffsetT) {

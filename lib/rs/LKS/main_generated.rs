@@ -4,25 +4,25 @@ extern crate alloc;
 
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_LINK_TYPE: i8 = 0;
+pub const ENUM_MIN_LINK_CATEGORY: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_LINK_TYPE: i8 = 5;
+pub const ENUM_MAX_LINK_CATEGORY: i8 = 5;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_LINK_TYPE: [linkType; 6] = [
-  linkType::UPLINK,
-  linkType::DOWNLINK,
-  linkType::CROSSLINK,
-  linkType::INTER_SATELLITE,
-  linkType::GROUND_TO_GROUND,
-  linkType::RELAY,
+pub const ENUM_VALUES_LINK_CATEGORY: [linkCategory; 6] = [
+  linkCategory::UPLINK,
+  linkCategory::DOWNLINK,
+  linkCategory::CROSSLINK,
+  linkCategory::INTER_SATELLITE,
+  linkCategory::GROUND_TO_GROUND,
+  linkCategory::RELAY,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct linkType(pub i8);
+pub struct linkCategory(pub i8);
 #[allow(non_upper_case_globals)]
-impl linkType {
+impl linkCategory {
   pub const UPLINK: Self = Self(0);
   pub const DOWNLINK: Self = Self(1);
   pub const CROSSLINK: Self = Self(2);
@@ -53,7 +53,7 @@ impl linkType {
     }
   }
 }
-impl ::core::fmt::Debug for linkType {
+impl ::core::fmt::Debug for linkCategory {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -62,7 +62,7 @@ impl ::core::fmt::Debug for linkType {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for linkType {
+impl<'a> ::flatbuffers::Follow<'a> for linkCategory {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -71,15 +71,15 @@ impl<'a> ::flatbuffers::Follow<'a> for linkType {
   }
 }
 
-impl ::flatbuffers::Push for linkType {
-    type Output = linkType;
+impl ::flatbuffers::Push for linkCategory {
+    type Output = linkCategory;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for linkType {
+impl ::flatbuffers::EndianScalar for linkCategory {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -93,7 +93,7 @@ impl ::flatbuffers::EndianScalar for linkType {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for linkType {
+impl<'a> ::flatbuffers::Verifiable for linkCategory {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -102,27 +102,27 @@ impl<'a> ::flatbuffers::Verifiable for linkType {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for linkType {}
+impl ::flatbuffers::SimpleToVerifyInSlice for linkCategory {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_LINK_STATE: i8 = 0;
+pub const ENUM_MIN_LINK_CONDITION: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_LINK_STATE: i8 = 5;
+pub const ENUM_MAX_LINK_CONDITION: i8 = 5;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_LINK_STATE: [linkState; 6] = [
-  linkState::ESTABLISHED,
-  linkState::DEGRADED,
-  linkState::INTERRUPTED,
-  linkState::PLANNED,
-  linkState::TERMINATED,
-  linkState::UNKNOWN,
+pub const ENUM_VALUES_LINK_CONDITION: [linkCondition; 6] = [
+  linkCondition::ESTABLISHED,
+  linkCondition::DEGRADED,
+  linkCondition::INTERRUPTED,
+  linkCondition::PLANNED,
+  linkCondition::TERMINATED,
+  linkCondition::UNKNOWN,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct linkState(pub i8);
+pub struct linkCondition(pub i8);
 #[allow(non_upper_case_globals)]
-impl linkState {
+impl linkCondition {
   pub const ESTABLISHED: Self = Self(0);
   pub const DEGRADED: Self = Self(1);
   pub const INTERRUPTED: Self = Self(2);
@@ -153,7 +153,7 @@ impl linkState {
     }
   }
 }
-impl ::core::fmt::Debug for linkState {
+impl ::core::fmt::Debug for linkCondition {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -162,7 +162,7 @@ impl ::core::fmt::Debug for linkState {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for linkState {
+impl<'a> ::flatbuffers::Follow<'a> for linkCondition {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -171,15 +171,15 @@ impl<'a> ::flatbuffers::Follow<'a> for linkState {
   }
 }
 
-impl ::flatbuffers::Push for linkState {
-    type Output = linkState;
+impl ::flatbuffers::Push for linkCondition {
+    type Output = linkCondition;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for linkState {
+impl ::flatbuffers::EndianScalar for linkCondition {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -193,7 +193,7 @@ impl ::flatbuffers::EndianScalar for linkState {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for linkState {
+impl<'a> ::flatbuffers::Verifiable for linkCondition {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -202,7 +202,7 @@ impl<'a> ::flatbuffers::Verifiable for linkState {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for linkState {}
+impl ::flatbuffers::SimpleToVerifyInSlice for linkCondition {}
 pub enum LKSOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -421,19 +421,19 @@ impl<'a> LKS<'a> {
   }
   /// Link type
   #[inline]
-  pub fn LINK_TYPE(&self) -> linkType {
+  pub fn LINK_TYPE(&self) -> linkCategory {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<linkType>(LKS::VT_LINK_TYPE, Some(linkType::UPLINK)).unwrap()}
+    unsafe { self._tab.get::<linkCategory>(LKS::VT_LINK_TYPE, Some(linkCategory::UPLINK)).unwrap()}
   }
   /// Link state
   #[inline]
-  pub fn LINK_STATE(&self) -> linkState {
+  pub fn LINK_STATE(&self) -> linkCondition {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<linkState>(LKS::VT_LINK_STATE, Some(linkState::ESTABLISHED)).unwrap()}
+    unsafe { self._tab.get::<linkCondition>(LKS::VT_LINK_STATE, Some(linkCondition::ESTABLISHED)).unwrap()}
   }
   /// RF band
   #[inline]
@@ -570,8 +570,8 @@ impl ::flatbuffers::Verifiable for LKS<'_> {
      .visit_field::<u32>("SAT_NO2", Self::VT_SAT_NO2, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONSTELLATION", Self::VT_CONSTELLATION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LINK_NAME", Self::VT_LINK_NAME, false)?
-     .visit_field::<linkType>("LINK_TYPE", Self::VT_LINK_TYPE, false)?
-     .visit_field::<linkState>("LINK_STATE", Self::VT_LINK_STATE, false)?
+     .visit_field::<linkCategory>("LINK_TYPE", Self::VT_LINK_TYPE, false)?
+     .visit_field::<linkCondition>("LINK_STATE", Self::VT_LINK_STATE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BAND", Self::VT_BAND, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LINK_START_TIME", Self::VT_LINK_START_TIME, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LINK_STOP_TIME", Self::VT_LINK_STOP_TIME, false)?
@@ -599,8 +599,8 @@ pub struct LKSArgs<'a> {
     pub SAT_NO2: u32,
     pub CONSTELLATION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub LINK_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub LINK_TYPE: linkType,
-    pub LINK_STATE: linkState,
+    pub LINK_TYPE: linkCategory,
+    pub LINK_STATE: linkCondition,
     pub BAND: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub LINK_START_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub LINK_STOP_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
@@ -628,8 +628,8 @@ impl<'a> Default for LKSArgs<'a> {
       SAT_NO2: 0,
       CONSTELLATION: None,
       LINK_NAME: None,
-      LINK_TYPE: linkType::UPLINK,
-      LINK_STATE: linkState::ESTABLISHED,
+      LINK_TYPE: linkCategory::UPLINK,
+      LINK_STATE: linkCondition::ESTABLISHED,
       BAND: None,
       LINK_START_TIME: None,
       LINK_STOP_TIME: None,
@@ -683,12 +683,12 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> LKSBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LKS::VT_LINK_NAME, LINK_NAME);
   }
   #[inline]
-  pub fn add_LINK_TYPE(&mut self, LINK_TYPE: linkType) {
-    self.fbb_.push_slot::<linkType>(LKS::VT_LINK_TYPE, LINK_TYPE, linkType::UPLINK);
+  pub fn add_LINK_TYPE(&mut self, LINK_TYPE: linkCategory) {
+    self.fbb_.push_slot::<linkCategory>(LKS::VT_LINK_TYPE, LINK_TYPE, linkCategory::UPLINK);
   }
   #[inline]
-  pub fn add_LINK_STATE(&mut self, LINK_STATE: linkState) {
-    self.fbb_.push_slot::<linkState>(LKS::VT_LINK_STATE, LINK_STATE, linkState::ESTABLISHED);
+  pub fn add_LINK_STATE(&mut self, LINK_STATE: linkCondition) {
+    self.fbb_.push_slot::<linkCondition>(LKS::VT_LINK_STATE, LINK_STATE, linkCondition::ESTABLISHED);
   }
   #[inline]
   pub fn add_BAND(&mut self, BAND: ::flatbuffers::WIPOffset<&'b  str>) {
@@ -805,8 +805,8 @@ pub struct LKST {
   pub SAT_NO2: u32,
   pub CONSTELLATION: Option<alloc::string::String>,
   pub LINK_NAME: Option<alloc::string::String>,
-  pub LINK_TYPE: linkType,
-  pub LINK_STATE: linkState,
+  pub LINK_TYPE: linkCategory,
+  pub LINK_STATE: linkCondition,
   pub BAND: Option<alloc::string::String>,
   pub LINK_START_TIME: Option<alloc::string::String>,
   pub LINK_STOP_TIME: Option<alloc::string::String>,
@@ -833,8 +833,8 @@ impl Default for LKST {
       SAT_NO2: 0,
       CONSTELLATION: None,
       LINK_NAME: None,
-      LINK_TYPE: linkType::UPLINK,
-      LINK_STATE: linkState::ESTABLISHED,
+      LINK_TYPE: linkCategory::UPLINK,
+      LINK_STATE: linkCondition::ESTABLISHED,
       BAND: None,
       LINK_START_TIME: None,
       LINK_STOP_TIME: None,

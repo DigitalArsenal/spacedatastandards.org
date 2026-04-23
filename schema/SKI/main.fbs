@@ -1,7 +1,7 @@
-// Hash: 6d7619cc89b54a7fe3afaaf2300d6d9bfcd5ff5d7764cb3dbba15ace1ee093e6
-// Version: 0.0.3
+// Hash: 5771e0b46222977e934a32c1ee6b534bc5a23b2cd772886f9741196907649920
+// Version: 0.0.4
 // -----------------------------------END_HEADER
-enum imageType : byte {
+enum imageCategory : byte {
   VISIBLE,
   INFRARED,
   MULTISPECTRAL,
@@ -41,7 +41,7 @@ table SKI {
   /// Sensor quaternion rate
   SEN_QUAT_DOT:[double];
   /// Image type
-  IMAGE_TYPE:imageType;
+  IMAGE_TYPE:imageCategory;
   /// Exposure start time (ISO 8601)
   EXP_START_TIME:string;
   /// Exposure end time (ISO 8601)

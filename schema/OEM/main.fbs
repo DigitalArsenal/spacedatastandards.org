@@ -1,5 +1,5 @@
-// Hash: 15e8172fbcc4451889e52e0ffefb319816a2fa40c0ab4df49424eef40ec576bb
-// Version: 1.1.1
+// Hash: a4a1e30f4d578312e1ed78ff72eaef64d6f81b7fe7106d7a2a5be7eaef6892fe
+// Version: 1.1.3
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -172,7 +172,7 @@ table ephemerisDataBlock {
   /// Reference frame for the covariance matrix
   COV_REFERENCE_FRAME:RFM;
   /// Time system used for the orbit state and covariance matrix. (UTC)
-  TIME_SYSTEM:timeSystem;
+  TIME_SYSTEM:timingStandard;
   /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
   START_TIME:string;
   /// Optional start USEABLE time span covered by ephemeris data (ISO 8601)

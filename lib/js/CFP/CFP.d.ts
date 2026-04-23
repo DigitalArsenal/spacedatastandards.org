@@ -1,6 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
-import { pduType } from './pduType.js';
-import { transmissionMode } from './transmissionMode.js';
+import { pduKind } from './pduKind.js';
+import { transmissionClass } from './transmissionClass.js';
 /**
  * CCSDS File Delivery Protocol PDU (CCSDS 727.0-B-5)
  */
@@ -18,7 +18,7 @@ export declare class CFP implements flatbuffers.IUnpackableObject<CFPT> {
     /**
      * PDU type
      */
-    PDU_TYPE(): pduType;
+    PDU_TYPE(): pduKind;
     /**
      * Direction (toward receiver or sender)
      */
@@ -26,7 +26,7 @@ export declare class CFP implements flatbuffers.IUnpackableObject<CFPT> {
     /**
      * Transmission mode
      */
-    TRANSMISSION_MODE(): transmissionMode;
+    TRANSMISSION_MODE(): transmissionClass;
     /**
      * CRC present flag
      */
@@ -77,9 +77,9 @@ export declare class CFP implements flatbuffers.IUnpackableObject<CFPT> {
     dataArray(): Uint8Array | null;
     static startCFP(builder: flatbuffers.Builder): void;
     static addVersion(builder: flatbuffers.Builder, VERSION: number): void;
-    static addPduType(builder: flatbuffers.Builder, PDU_TYPE: pduType): void;
+    static addPduType(builder: flatbuffers.Builder, PDU_TYPE: pduKind): void;
     static addDirection(builder: flatbuffers.Builder, DIRECTION: number): void;
-    static addTransmissionMode(builder: flatbuffers.Builder, TRANSMISSION_MODE: transmissionMode): void;
+    static addTransmissionMode(builder: flatbuffers.Builder, TRANSMISSION_MODE: transmissionClass): void;
     static addCrcFlag(builder: flatbuffers.Builder, CRC_FLAG: boolean): void;
     static addLargeFileFlag(builder: flatbuffers.Builder, LARGE_FILE_FLAG: boolean): void;
     static addDataFieldLength(builder: flatbuffers.Builder, DATA_FIELD_LENGTH: number): void;
@@ -96,15 +96,15 @@ export declare class CFP implements flatbuffers.IUnpackableObject<CFPT> {
     static endCFP(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishCFPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedCFPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createCFP(builder: flatbuffers.Builder, VERSION: number, PDU_TYPE: pduType, DIRECTION: number, TRANSMISSION_MODE: transmissionMode, CRC_FLAG: boolean, LARGE_FILE_FLAG: boolean, DATA_FIELD_LENGTH: number, SOURCE_ENTITY_ID: bigint, TRANSACTION_SEQ_NUM: bigint, DESTINATION_ENTITY_ID: bigint, CHECKSUM_TYPE: number, FILE_SIZE: bigint, SOURCE_FILENAMEOffset: flatbuffers.Offset, DESTINATION_FILENAMEOffset: flatbuffers.Offset, DATAOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createCFP(builder: flatbuffers.Builder, VERSION: number, PDU_TYPE: pduKind, DIRECTION: number, TRANSMISSION_MODE: transmissionClass, CRC_FLAG: boolean, LARGE_FILE_FLAG: boolean, DATA_FIELD_LENGTH: number, SOURCE_ENTITY_ID: bigint, TRANSACTION_SEQ_NUM: bigint, DESTINATION_ENTITY_ID: bigint, CHECKSUM_TYPE: number, FILE_SIZE: bigint, SOURCE_FILENAMEOffset: flatbuffers.Offset, DESTINATION_FILENAMEOffset: flatbuffers.Offset, DATAOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): CFPT;
     unpackTo(_o: CFPT): void;
 }
 export declare class CFPT implements flatbuffers.IGeneratedObject {
     VERSION: number;
-    PDU_TYPE: pduType;
+    PDU_TYPE: pduKind;
     DIRECTION: number;
-    TRANSMISSION_MODE: transmissionMode;
+    TRANSMISSION_MODE: transmissionClass;
     CRC_FLAG: boolean;
     LARGE_FILE_FLAG: boolean;
     DATA_FIELD_LENGTH: number;
@@ -116,7 +116,7 @@ export declare class CFPT implements flatbuffers.IGeneratedObject {
     SOURCE_FILENAME: string | Uint8Array | null;
     DESTINATION_FILENAME: string | Uint8Array | null;
     DATA: (number)[];
-    constructor(VERSION?: number, PDU_TYPE?: pduType, DIRECTION?: number, TRANSMISSION_MODE?: transmissionMode, CRC_FLAG?: boolean, LARGE_FILE_FLAG?: boolean, DATA_FIELD_LENGTH?: number, SOURCE_ENTITY_ID?: bigint, TRANSACTION_SEQ_NUM?: bigint, DESTINATION_ENTITY_ID?: bigint, CHECKSUM_TYPE?: number, FILE_SIZE?: bigint, SOURCE_FILENAME?: string | Uint8Array | null, DESTINATION_FILENAME?: string | Uint8Array | null, DATA?: (number)[]);
+    constructor(VERSION?: number, PDU_TYPE?: pduKind, DIRECTION?: number, TRANSMISSION_MODE?: transmissionClass, CRC_FLAG?: boolean, LARGE_FILE_FLAG?: boolean, DATA_FIELD_LENGTH?: number, SOURCE_ENTITY_ID?: bigint, TRANSACTION_SEQ_NUM?: bigint, DESTINATION_ENTITY_ID?: bigint, CHECKSUM_TYPE?: number, FILE_SIZE?: bigint, SOURCE_FILENAME?: string | Uint8Array | null, DESTINATION_FILENAME?: string | Uint8Array | null, DATA?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CFP.d.ts.map

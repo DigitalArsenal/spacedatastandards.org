@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "licenseType": {
+    "licenseCategory": {
       "type": "string",
       "enum": [
         "Trial",
@@ -114,7 +114,7 @@
           "x-flatbuffer-type": "[string]"
         },
         "LICENSE_TYPE": {
-          "$ref": "#/definitions/licenseType",
+          "$ref": "#/definitions/licenseCategory",
           "description": "Type of license",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",

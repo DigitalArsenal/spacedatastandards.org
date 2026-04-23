@@ -8,7 +8,7 @@ import Common
 
 import FlatBuffers
 
-public enum meanElementTheory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum meanElementSource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -21,8 +21,8 @@ public enum meanElementTheory: Int8, FlatbuffersVectorInitializable, Enum, Verif
   ///  Universal Semianalytical Method
   case usm = 3
 
-  public static var max: meanElementTheory { return .usm }
-  public static var min: meanElementTheory { return .sgp4 }
+  public static var max: meanElementSource { return .usm }
+  public static var min: meanElementSource { return .sgp4 }
 }
 
 
@@ -44,13 +44,13 @@ public struct MET: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
-  public var MEAN_ELEMENT_THEORY: meanElementTheory { let o = _accessor.offset(VTOFFSET.MEAN_ELEMENT_THEORY.v); return o == 0 ? .sgp4 : meanElementTheory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sgp4 }
+  public var MEAN_ELEMENT_THEORY: meanElementSource { let o = _accessor.offset(VTOFFSET.MEAN_ELEMENT_THEORY.v); return o == 0 ? .sgp4 : meanElementSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sgp4 }
   public static func startMET(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(MEAN_ELEMENT_THEORY: meanElementTheory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 0, at: VTOFFSET.MEAN_ELEMENT_THEORY.p) }
+  public static func add(MEAN_ELEMENT_THEORY: meanElementSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 0, at: VTOFFSET.MEAN_ELEMENT_THEORY.p) }
   public static func endMET(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMET(
     _ fbb: inout FlatBufferBuilder,
-    MEAN_ELEMENT_THEORY: meanElementTheory = .sgp4
+    MEAN_ELEMENT_THEORY: meanElementSource = .sgp4
   ) -> Offset {
     let __start = MET.startMET(&fbb)
     MET.add(MEAN_ELEMENT_THEORY: MEAN_ELEMENT_THEORY, &fbb)
@@ -59,7 +59,7 @@ public struct MET: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.MEAN_ELEMENT_THEORY.p, fieldName: "MEAN_ELEMENT_THEORY", required: false, type: meanElementTheory.self)
+    try _v.visit(field: VTOFFSET.MEAN_ELEMENT_THEORY.p, fieldName: "MEAN_ELEMENT_THEORY", required: false, type: meanElementSource.self)
     _v.finish()
   }
 }

@@ -1,7 +1,7 @@
-// Hash: df3237261fceb13a96bd7984323536437796c3bb5f3665be67d691def21ef818
-// Version: 0.0.3
+// Hash: 7826576bb9c9c8ff2104c786e1c38a0443983d56247007425afc7762dfc1311f
+// Version: 0.0.4
 // -----------------------------------END_HEADER
-enum linkType : byte {
+enum linkCategory : byte {
   UPLINK,
   DOWNLINK,
   CROSSLINK,
@@ -10,7 +10,7 @@ enum linkType : byte {
   RELAY
 }
 
-enum linkState : byte {
+enum linkCondition : byte {
   ESTABLISHED,
   DEGRADED,
   INTERRUPTED,
@@ -36,9 +36,9 @@ table LKS {
   /// Link name or identifier
   LINK_NAME:string;
   /// Link type
-  LINK_TYPE:linkType;
+  LINK_TYPE:linkCategory;
   /// Link state
-  LINK_STATE:linkState;
+  LINK_STATE:linkCondition;
   /// RF band
   BAND:string;
   /// Link start time (ISO 8601)

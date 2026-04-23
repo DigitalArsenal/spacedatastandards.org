@@ -1,12 +1,12 @@
-// Hash: 44d0ac66e039b9a459a4e2216958c6bdde12b4397d82f8235d2b2eddc969df07
-// Version: 1.0.1
+// Hash: 639bbf26a8fef59aee5e18e8d94fc383bbde72269c12971914e859279a2cf88b
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 include "../PLD/main.fbs";
 include "../LCC/main.fbs";
 
 // https://www.celestrak.com/satcat/satcat-format.php
 
-enum objectType: byte {
+enum spaceObjectClass: byte {
   /// 0
   PAYLOAD,
   /// 1
@@ -17,7 +17,7 @@ enum objectType: byte {
   UNKNOWN
 }
 
-enum opsStatusCode: byte {
+enum operationalState: byte {
   /// +
   OPERATIONAL,
   /// -
@@ -36,7 +36,7 @@ enum opsStatusCode: byte {
   UNKNOWN
 }
 
-enum dataStatusCode: byte {
+enum dataAvailability: byte {
   /// NCE
   NO_CURRENT_ELEMENTS,
   /// NIE
@@ -47,7 +47,7 @@ enum dataStatusCode: byte {
   OK
 }
 
-enum orbitType: byte {
+enum orbitRegime: byte {
   /// 0
   ORBIT,
   /// 1
@@ -60,7 +60,7 @@ enum orbitType: byte {
   ROUNDTRIP
 }
 
-enum massType: byte {
+enum massCategory: byte {
   DRY,
   WET
 }
@@ -74,9 +74,9 @@ table CAT {
   /// NORAD Catalog Number
   NORAD_CAT_ID: uint;
   /// Object type (Payload, Rocket body, Debris, Unknown)
-  OBJECT_TYPE: objectType = UNKNOWN;
+  OBJECT_TYPE: spaceObjectClass = UNKNOWN;
   /// Operational Status Code
-  OPS_STATUS_CODE: opsStatusCode = UNKNOWN;
+  OPS_STATUS_CODE: operationalState = UNKNOWN;
   /// Ownership, typically country or company
   OWNER: legacyCountryCode;
   /// Launch Date [year-month-day] (ISO 8601)
@@ -96,11 +96,11 @@ table CAT {
   /// Radar Cross Section [meters2]; blank if no data available
   RCS: double;
   /// Data status code; blank otherwise
-  DATA_STATUS_CODE: dataStatusCode;
+  DATA_STATUS_CODE: dataAvailability;
   /// Orbit center
   ORBIT_CENTER: string;
   /// Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
-  ORBIT_TYPE: orbitType;
+  ORBIT_TYPE: orbitRegime;
   /// Deployment Date [year-month-day] (ISO 8601)
   DEPLOYMENT_DATE: string;
   /// Indicates if the object is maneuverable
@@ -110,7 +110,7 @@ table CAT {
   /// Mass [kilograms]; blank if no data available
   MASS: double;
   /// Mass type (Dry, Wet)
-  MASS_TYPE: massType = DRY;
+  MASS_TYPE: massCategory = DRY;
   /// Vector of PAYLOADS
   PAYLOADS: [PLD];
 }

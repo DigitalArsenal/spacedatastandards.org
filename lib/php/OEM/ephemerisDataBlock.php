@@ -93,7 +93,7 @@ class ephemerisDataBlock extends Table
     public function getTIME_SYSTEM()
     {
         $o = $this->__offset(16);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \timeSystem::GMST;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \timingStandard::GMST;
     }
 
     /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)

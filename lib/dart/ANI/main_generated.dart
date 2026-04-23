@@ -6,7 +6,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-enum analyticType {
+enum analyticProfile {
   SPECTRAL(0),
   PHOTOMETRIC(1),
   ASTROMETRIC(2),
@@ -18,40 +18,40 @@ enum analyticType {
   FUSION(8);
 
   final int value;
-  const analyticType(this.value);
+  const analyticProfile(this.value);
 
-  factory analyticType.fromValue(int value) {
+  factory analyticProfile.fromValue(int value) {
     switch (value) {
-      case 0: return analyticType.SPECTRAL;
-      case 1: return analyticType.PHOTOMETRIC;
-      case 2: return analyticType.ASTROMETRIC;
-      case 3: return analyticType.RADIOMETRIC;
-      case 4: return analyticType.SIGNATURE;
-      case 5: return analyticType.FEATURE_EXTRACTION;
-      case 6: return analyticType.CHANGE_DETECTION;
-      case 7: return analyticType.CLASSIFICATION;
-      case 8: return analyticType.FUSION;
+      case 0: return analyticProfile.SPECTRAL;
+      case 1: return analyticProfile.PHOTOMETRIC;
+      case 2: return analyticProfile.ASTROMETRIC;
+      case 3: return analyticProfile.RADIOMETRIC;
+      case 4: return analyticProfile.SIGNATURE;
+      case 5: return analyticProfile.FEATURE_EXTRACTION;
+      case 6: return analyticProfile.CHANGE_DETECTION;
+      case 7: return analyticProfile.CLASSIFICATION;
+      case 8: return analyticProfile.FUSION;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static analyticType? _createOrNull(int? value) =>
-      value == null ? null : analyticType.fromValue(value);
+  static analyticProfile? _createOrNull(int? value) =>
+      value == null ? null : analyticProfile.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 8;
-  static const fb.Reader<analyticType> reader = _analyticTypeReader();
+  static const fb.Reader<analyticProfile> reader = _analyticProfileReader();
 }
 
-class _analyticTypeReader extends fb.Reader<analyticType> {
-  const _analyticTypeReader();
+class _analyticProfileReader extends fb.Reader<analyticProfile> {
+  const _analyticProfileReader();
 
   @override
   int get size => 1;
 
   @override
-  analyticType read(fb.BufferContext bc, int offset) =>
-      analyticType.fromValue(const fb.Int8Reader().read(bc, offset));
+  analyticProfile read(fb.BufferContext bc, int offset) =>
+      analyticProfile.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Analytic Imagery Product
@@ -76,8 +76,8 @@ class ANI {
   String? get SOURCE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get sourceType => SOURCE_TYPE;
   ///  Analytic product type
-  analyticType get ANALYTIC_TYPE => analyticType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  analyticType get analyticType => ANALYTIC_TYPE;
+  analyticProfile get ANALYTIC_TYPE => analyticProfile.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  analyticProfile get analyticType => ANALYTIC_TYPE;
   ///  Processing algorithm or pipeline name
   String? get ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Algorithm version
@@ -156,7 +156,7 @@ class ANIBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addAnalyticType(analyticType? ANALYTIC_TYPE) {
+  int addAnalyticType(analyticProfile? ANALYTIC_TYPE) {
     fbBuilder.addInt8(3, ANALYTIC_TYPE?.value);
     return fbBuilder.offset;
   }
@@ -238,7 +238,7 @@ class ANIObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final String? _SOURCE_ID;
   final String? _SOURCE_TYPE;
-  final analyticType? _ANALYTIC_TYPE;
+  final analyticProfile? _ANALYTIC_TYPE;
   final String? _ALGORITHM;
   final String? _ALGORITHM_VERSION;
   final String? _PROCESSING_TIME;
@@ -263,8 +263,8 @@ class ANIObjectBuilder extends fb.ObjectBuilder {
     String? sourceId,
     String? SOURCE_TYPE,
     String? sourceType,
-    analyticType? ANALYTIC_TYPE,
-    analyticType? analyticType,
+    analyticProfile? ANALYTIC_TYPE,
+    analyticProfile? analyticType,
     String? ALGORITHM,
     String? ALGORITHM_VERSION,
     String? algorithmVersion,

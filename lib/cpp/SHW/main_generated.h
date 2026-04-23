@@ -31,30 +31,30 @@ struct SHWBuilder;
 /// table, and the injection-point enum a host consumes to know where to
 /// splice a shader fragment into its stage graph.
 /// Shader stage into which a compiled fragment should be injected.
-enum shaderStage : uint8_t {
-  shaderStage_VERTEX = 0,
-  shaderStage_FRAGMENT = 1,
-  shaderStage_COMPUTE = 2,
-  shaderStage_GEOMETRY = 3,
-  shaderStage_TESS_CONTROL = 4,
-  shaderStage_TESS_EVALUATION = 5,
-  shaderStage_MIN = shaderStage_VERTEX,
-  shaderStage_MAX = shaderStage_TESS_EVALUATION
+enum glslStage : uint8_t {
+  glslStage_VERTEX = 0,
+  glslStage_FRAGMENT = 1,
+  glslStage_COMPUTE = 2,
+  glslStage_GEOMETRY = 3,
+  glslStage_TESS_CONTROL = 4,
+  glslStage_TESS_EVALUATION = 5,
+  glslStage_MIN = glslStage_VERTEX,
+  glslStage_MAX = glslStage_TESS_EVALUATION
 };
 
-inline const shaderStage (&EnumValuesshaderStage())[6] {
-  static const shaderStage values[] = {
-    shaderStage_VERTEX,
-    shaderStage_FRAGMENT,
-    shaderStage_COMPUTE,
-    shaderStage_GEOMETRY,
-    shaderStage_TESS_CONTROL,
-    shaderStage_TESS_EVALUATION
+inline const glslStage (&EnumValuesglslStage())[6] {
+  static const glslStage values[] = {
+    glslStage_VERTEX,
+    glslStage_FRAGMENT,
+    glslStage_COMPUTE,
+    glslStage_GEOMETRY,
+    glslStage_TESS_CONTROL,
+    glslStage_TESS_EVALUATION
   };
   return values;
 }
 
-inline const char * const *EnumNamesshaderStage() {
+inline const char * const *EnumNamesglslStage() {
   static const char * const names[7] = {
     "VERTEX",
     "FRAGMENT",
@@ -67,41 +67,41 @@ inline const char * const *EnumNamesshaderStage() {
   return names;
 }
 
-inline const char *EnumNameshaderStage(shaderStage e) {
-  if (::flatbuffers::IsOutRange(e, shaderStage_VERTEX, shaderStage_TESS_EVALUATION)) return "";
+inline const char *EnumNameglslStage(glslStage e) {
+  if (::flatbuffers::IsOutRange(e, glslStage_VERTEX, glslStage_TESS_EVALUATION)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesshaderStage()[index];
+  return EnumNamesglslStage()[index];
 }
 
 /// Logical location inside a host pipeline where a compiled shader
 /// fragment is meant to be spliced. A host maps these onto its own
 /// concrete splice points.
-enum shaderInjectionPoint : uint8_t {
-  shaderInjectionPoint_NONE = 0,
-  shaderInjectionPoint_VERTEX_PRE_TRANSFORM = 1,
-  shaderInjectionPoint_VERTEX_POST_TRANSFORM = 2,
-  shaderInjectionPoint_FRAGMENT_PRE_SHADE = 3,
-  shaderInjectionPoint_FRAGMENT_POST_SHADE = 4,
-  shaderInjectionPoint_FRAGMENT_FINAL_COLOR = 5,
-  shaderInjectionPoint_POSTPROCESS = 6,
-  shaderInjectionPoint_MIN = shaderInjectionPoint_NONE,
-  shaderInjectionPoint_MAX = shaderInjectionPoint_POSTPROCESS
+enum shaderHookPoint : uint8_t {
+  shaderHookPoint_NONE = 0,
+  shaderHookPoint_VERTEX_PRE_TRANSFORM = 1,
+  shaderHookPoint_VERTEX_POST_TRANSFORM = 2,
+  shaderHookPoint_FRAGMENT_PRE_SHADE = 3,
+  shaderHookPoint_FRAGMENT_POST_SHADE = 4,
+  shaderHookPoint_FRAGMENT_FINAL_COLOR = 5,
+  shaderHookPoint_POSTPROCESS = 6,
+  shaderHookPoint_MIN = shaderHookPoint_NONE,
+  shaderHookPoint_MAX = shaderHookPoint_POSTPROCESS
 };
 
-inline const shaderInjectionPoint (&EnumValuesshaderInjectionPoint())[7] {
-  static const shaderInjectionPoint values[] = {
-    shaderInjectionPoint_NONE,
-    shaderInjectionPoint_VERTEX_PRE_TRANSFORM,
-    shaderInjectionPoint_VERTEX_POST_TRANSFORM,
-    shaderInjectionPoint_FRAGMENT_PRE_SHADE,
-    shaderInjectionPoint_FRAGMENT_POST_SHADE,
-    shaderInjectionPoint_FRAGMENT_FINAL_COLOR,
-    shaderInjectionPoint_POSTPROCESS
+inline const shaderHookPoint (&EnumValuesshaderHookPoint())[7] {
+  static const shaderHookPoint values[] = {
+    shaderHookPoint_NONE,
+    shaderHookPoint_VERTEX_PRE_TRANSFORM,
+    shaderHookPoint_VERTEX_POST_TRANSFORM,
+    shaderHookPoint_FRAGMENT_PRE_SHADE,
+    shaderHookPoint_FRAGMENT_POST_SHADE,
+    shaderHookPoint_FRAGMENT_FINAL_COLOR,
+    shaderHookPoint_POSTPROCESS
   };
   return values;
 }
 
-inline const char * const *EnumNamesshaderInjectionPoint() {
+inline const char * const *EnumNamesshaderHookPoint() {
   static const char * const names[8] = {
     "NONE",
     "VERTEX_PRE_TRANSFORM",
@@ -115,10 +115,10 @@ inline const char * const *EnumNamesshaderInjectionPoint() {
   return names;
 }
 
-inline const char *EnumNameshaderInjectionPoint(shaderInjectionPoint e) {
-  if (::flatbuffers::IsOutRange(e, shaderInjectionPoint_NONE, shaderInjectionPoint_POSTPROCESS)) return "";
+inline const char *EnumNameshaderHookPoint(shaderHookPoint e) {
+  if (::flatbuffers::IsOutRange(e, shaderHookPoint_NONE, shaderHookPoint_POSTPROCESS)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesshaderInjectionPoint()[index];
+  return EnumNamesshaderHookPoint()[index];
 }
 
 /// Scalar / vector type of a uniform value.
@@ -324,12 +324,12 @@ struct SHWCompileRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
     return GetPointer<const ::flatbuffers::String *>(VT_SHADER_NAME);
   }
   /// Target GLSL stage.
-  shaderStage SHADER_STAGE() const {
-    return static_cast<shaderStage>(GetField<uint8_t>(VT_SHADER_STAGE, 0));
+  glslStage SHADER_STAGE() const {
+    return static_cast<glslStage>(GetField<uint8_t>(VT_SHADER_STAGE, 0));
   }
   /// Intended injection point in the host pipeline.
-  shaderInjectionPoint SHADER_INJECTION_POINT() const {
-    return static_cast<shaderInjectionPoint>(GetField<uint8_t>(VT_SHADER_INJECTION_POINT, 0));
+  shaderHookPoint SHADER_INJECTION_POINT() const {
+    return static_cast<shaderHookPoint>(GetField<uint8_t>(VT_SHADER_INJECTION_POINT, 0));
   }
   /// GLSL source (or preprocessed chunk).
   const ::flatbuffers::String *SHADER_SOURCE() const {
@@ -368,10 +368,10 @@ struct SHWCompileRequestBuilder {
   void add_SHADER_NAME(::flatbuffers::Offset<::flatbuffers::String> SHADER_NAME) {
     fbb_.AddOffset(SHWCompileRequest::VT_SHADER_NAME, SHADER_NAME);
   }
-  void add_SHADER_STAGE(shaderStage SHADER_STAGE) {
+  void add_SHADER_STAGE(glslStage SHADER_STAGE) {
     fbb_.AddElement<uint8_t>(SHWCompileRequest::VT_SHADER_STAGE, static_cast<uint8_t>(SHADER_STAGE), 0);
   }
-  void add_SHADER_INJECTION_POINT(shaderInjectionPoint SHADER_INJECTION_POINT) {
+  void add_SHADER_INJECTION_POINT(shaderHookPoint SHADER_INJECTION_POINT) {
     fbb_.AddElement<uint8_t>(SHWCompileRequest::VT_SHADER_INJECTION_POINT, static_cast<uint8_t>(SHADER_INJECTION_POINT), 0);
   }
   void add_SHADER_SOURCE(::flatbuffers::Offset<::flatbuffers::String> SHADER_SOURCE) {
@@ -397,8 +397,8 @@ struct SHWCompileRequestBuilder {
 inline ::flatbuffers::Offset<SHWCompileRequest> CreateSHWCompileRequest(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> SHADER_NAME = 0,
-    shaderStage SHADER_STAGE = shaderStage_VERTEX,
-    shaderInjectionPoint SHADER_INJECTION_POINT = shaderInjectionPoint_NONE,
+    glslStage SHADER_STAGE = glslStage_VERTEX,
+    shaderHookPoint SHADER_INJECTION_POINT = shaderHookPoint_NONE,
     ::flatbuffers::Offset<::flatbuffers::String> SHADER_SOURCE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> GLSL_VERSION = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SHWUniform>>> SHADER_UNIFORMS = 0) {
@@ -415,8 +415,8 @@ inline ::flatbuffers::Offset<SHWCompileRequest> CreateSHWCompileRequest(
 inline ::flatbuffers::Offset<SHWCompileRequest> CreateSHWCompileRequestDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *SHADER_NAME = nullptr,
-    shaderStage SHADER_STAGE = shaderStage_VERTEX,
-    shaderInjectionPoint SHADER_INJECTION_POINT = shaderInjectionPoint_NONE,
+    glslStage SHADER_STAGE = glslStage_VERTEX,
+    shaderHookPoint SHADER_INJECTION_POINT = shaderHookPoint_NONE,
     const char *SHADER_SOURCE = nullptr,
     const char *GLSL_VERSION = nullptr,
     const std::vector<::flatbuffers::Offset<SHWUniform>> *SHADER_UNIFORMS = nullptr) {

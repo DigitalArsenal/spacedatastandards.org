@@ -5,9 +5,9 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { RFM, RFMT } from './RFM.js';
-import { ephemerisType } from './ephemerisType.js';
-import { meanElementTheory } from './meanElementTheory.js';
-import { timeSystem } from './timeSystem.js';
+import { ephemerisFormat } from './ephemerisFormat.js';
+import { meanElementSource } from './meanElementSource.js';
+import { timingStandard } from './timingStandard.js';
 
 
 /**
@@ -115,17 +115,17 @@ REFERENCE_FRAME_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Time System [M, UTC]
  */
-TIME_SYSTEM():timeSystem {
+TIME_SYSTEM():timingStandard {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : timeSystem.UTC;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : timingStandard.UTC;
 }
 
 /**
  * Mean Element Theory
  */
-MEAN_ELEMENT_THEORY():meanElementTheory {
+MEAN_ELEMENT_THEORY():meanElementSource {
   const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : meanElementTheory.SGP4;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : meanElementSource.SGP4;
 }
 
 /**
@@ -256,9 +256,9 @@ DRAG_COEFF():number {
  * TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
  * EPHEMERIS_TYPE Default=0
  */
-EPHEMERIS_TYPE():ephemerisType {
+EPHEMERIS_TYPE():ephemerisFormat {
   const offset = this.bb!.__offset(this.bb_pos, 54);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : ephemerisType.SGP4;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : ephemerisFormat.SGP4;
 }
 
 /**
@@ -432,12 +432,12 @@ static addReferenceFrameEpoch(builder:flatbuffers.Builder, REFERENCE_FRAME_EPOCH
   builder.addFieldOffset(7, REFERENCE_FRAME_EPOCHOffset, 0);
 }
 
-static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEM:timeSystem) {
-  builder.addFieldInt8(8, TIME_SYSTEM, timeSystem.UTC);
+static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEM:timingStandard) {
+  builder.addFieldInt8(8, TIME_SYSTEM, timingStandard.UTC);
 }
 
-static addMeanElementTheory(builder:flatbuffers.Builder, MEAN_ELEMENT_THEORY:meanElementTheory) {
-  builder.addFieldInt8(9, MEAN_ELEMENT_THEORY, meanElementTheory.SGP4);
+static addMeanElementTheory(builder:flatbuffers.Builder, MEAN_ELEMENT_THEORY:meanElementSource) {
+  builder.addFieldInt8(9, MEAN_ELEMENT_THEORY, meanElementSource.SGP4);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -500,8 +500,8 @@ static addDragCoeff(builder:flatbuffers.Builder, DRAG_COEFF:number) {
   builder.addFieldFloat64(24, DRAG_COEFF, 0.0);
 }
 
-static addEphemerisType(builder:flatbuffers.Builder, EPHEMERIS_TYPE:ephemerisType) {
-  builder.addFieldInt8(25, EPHEMERIS_TYPE, ephemerisType.SGP4);
+static addEphemerisType(builder:flatbuffers.Builder, EPHEMERIS_TYPE:ephemerisFormat) {
+  builder.addFieldInt8(25, EPHEMERIS_TYPE, ephemerisFormat.SGP4);
 }
 
 static addClassificationType(builder:flatbuffers.Builder, CLASSIFICATION_TYPEOffset:flatbuffers.Offset) {
@@ -691,8 +691,8 @@ constructor(
   public CENTER_NAME: string|Uint8Array|null = null,
   public REFERENCE_FRAME: RFMT|null = null,
   public REFERENCE_FRAME_EPOCH: string|Uint8Array|null = null,
-  public TIME_SYSTEM: timeSystem = timeSystem.UTC,
-  public MEAN_ELEMENT_THEORY: meanElementTheory = meanElementTheory.SGP4,
+  public TIME_SYSTEM: timingStandard = timingStandard.UTC,
+  public MEAN_ELEMENT_THEORY: meanElementSource = meanElementSource.SGP4,
   public COMMENT: string|Uint8Array|null = null,
   public EPOCH: string|Uint8Array|null = null,
   public SEMI_MAJOR_AXIS: number = 0.0,
@@ -708,7 +708,7 @@ constructor(
   public SOLAR_RAD_COEFF: number = 0.0,
   public DRAG_AREA: number = 0.0,
   public DRAG_COEFF: number = 0.0,
-  public EPHEMERIS_TYPE: ephemerisType = ephemerisType.SGP4,
+  public EPHEMERIS_TYPE: ephemerisFormat = ephemerisFormat.SGP4,
   public CLASSIFICATION_TYPE: string|Uint8Array|null = null,
   public NORAD_CAT_ID: number = 0,
   public ELEMENT_SET_NO: number = 0,

@@ -8,7 +8,7 @@ import Common
 
 import FlatBuffers
 
-public enum imageType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum imageCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -19,8 +19,8 @@ public enum imageType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   case uv = 4
   case broadband = 5
 
-  public static var max: imageType { return .broadband }
-  public static var min: imageType { return .visible }
+  public static var max: imageCategory { return .broadband }
+  public static var min: imageCategory { return .visible }
 }
 
 
@@ -118,7 +118,7 @@ public struct SKI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var SEN_QUAT_DOT: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SEN_QUAT_DOT.v, byteSize: 8) }
   public func withUnsafePointerToSenQuatDot<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SEN_QUAT_DOT.v, body: body) }
   ///  Image type
-  public var IMAGE_TYPE: imageType { let o = _accessor.offset(VTOFFSET.IMAGE_TYPE.v); return o == 0 ? .visible : imageType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .visible }
+  public var IMAGE_TYPE: imageCategory { let o = _accessor.offset(VTOFFSET.IMAGE_TYPE.v); return o == 0 ? .visible : imageCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .visible }
   ///  Exposure start time (ISO 8601)
   public var EXP_START_TIME: String? { let o = _accessor.offset(VTOFFSET.EXP_START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EXP_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXP_START_TIME.v) }
@@ -196,7 +196,7 @@ public struct SKI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(SENZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENZ, def: 0.0, at: VTOFFSET.SENZ.p) }
   public static func addVectorOf(SEN_QUAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_QUAT, at: VTOFFSET.SEN_QUAT.p) }
   public static func addVectorOf(SEN_QUAT_DOT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_QUAT_DOT, at: VTOFFSET.SEN_QUAT_DOT.p) }
-  public static func add(IMAGE_TYPE: imageType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_TYPE.rawValue, def: 0, at: VTOFFSET.IMAGE_TYPE.p) }
+  public static func add(IMAGE_TYPE: imageCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_TYPE.rawValue, def: 0, at: VTOFFSET.IMAGE_TYPE.p) }
   public static func add(EXP_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXP_START_TIME, at: VTOFFSET.EXP_START_TIME.p) }
   public static func add(EXP_END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXP_END_TIME, at: VTOFFSET.EXP_END_TIME.p) }
   public static func add(IMAGE_SOURCE_INFO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE_SOURCE_INFO, at: VTOFFSET.IMAGE_SOURCE_INFO.p) }
@@ -240,7 +240,7 @@ public struct SKI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     SENZ: Double = 0.0,
     SEN_QUATVectorOffset SEN_QUAT: Offset = Offset(),
     SEN_QUAT_DOTVectorOffset SEN_QUAT_DOT: Offset = Offset(),
-    IMAGE_TYPE: imageType = .visible,
+    IMAGE_TYPE: imageCategory = .visible,
     EXP_START_TIMEOffset EXP_START_TIME: Offset = Offset(),
     EXP_END_TIMEOffset EXP_END_TIME: Offset = Offset(),
     IMAGE_SOURCE_INFOOffset IMAGE_SOURCE_INFO: Offset = Offset(),
@@ -329,7 +329,7 @@ public struct SKI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.SENZ.p, fieldName: "SENZ", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SEN_QUAT.p, fieldName: "SEN_QUAT", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VTOFFSET.SEN_QUAT_DOT.p, fieldName: "SEN_QUAT_DOT", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.IMAGE_TYPE.p, fieldName: "IMAGE_TYPE", required: false, type: imageType.self)
+    try _v.visit(field: VTOFFSET.IMAGE_TYPE.p, fieldName: "IMAGE_TYPE", required: false, type: imageCategory.self)
     try _v.visit(field: VTOFFSET.EXP_START_TIME.p, fieldName: "EXP_START_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.EXP_END_TIME.p, fieldName: "EXP_END_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.IMAGE_SOURCE_INFO.p, fieldName: "IMAGE_SOURCE_INFO", required: false, type: ForwardOffset<String>.self)

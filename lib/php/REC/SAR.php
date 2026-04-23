@@ -166,7 +166,7 @@ class SAR extends Table
     public function getSAR_MODE()
     {
         $o = $this->__offset(36);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \sarMode::STRIPMAP;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \sarMission::STRIPMAP;
     }
 
     /// Operating RF band (e.g., X, C, L, S, P)

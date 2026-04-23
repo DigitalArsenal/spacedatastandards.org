@@ -54,23 +54,23 @@ func (rcv *propagatorConfig) PropagatorName() []byte {
 	return rcv.PROPAGATOR_NAME()
 }
 
-func (rcv *propagatorConfig) PROPAGATOR_TYPE() propagatorType {
+func (rcv *propagatorConfig) PROPAGATOR_TYPE() propagatorFamily {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return propagatorType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return propagatorFamily(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *propagatorConfig) PropagatorType() propagatorType {
+func (rcv *propagatorConfig) PropagatorType() propagatorFamily {
 	return rcv.PROPAGATOR_TYPE()
 }
 
-func (rcv *propagatorConfig) MutatePROPAGATOR_TYPE(n propagatorType) bool {
+func (rcv *propagatorConfig) MutatePROPAGATOR_TYPE(n propagatorFamily) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
 }
 
-func (rcv *propagatorConfig) MutatePropagatorType(n propagatorType) bool {
+func (rcv *propagatorConfig) MutatePropagatorType(n propagatorFamily) bool {
 	return rcv.MutatePROPAGATOR_TYPE(n)
 }
 
@@ -178,10 +178,10 @@ func propagatorConfigAddPROPAGATOR_NAME(builder *flatbuffers.Builder, PROPAGATOR
 func propagatorConfigAddPropagatorName(builder *flatbuffers.Builder, PROPAGATOR_NAME flatbuffers.UOffsetT) {
 	propagatorConfigAddPROPAGATOR_NAME(builder, PROPAGATOR_NAME)
 }
-func propagatorConfigAddPROPAGATOR_TYPE(builder *flatbuffers.Builder, PROPAGATOR_TYPE propagatorType) {
+func propagatorConfigAddPROPAGATOR_TYPE(builder *flatbuffers.Builder, PROPAGATOR_TYPE propagatorFamily) {
 	builder.PrependInt8Slot(1, int8(PROPAGATOR_TYPE), 0)
 }
-func propagatorConfigAddPropagatorType(builder *flatbuffers.Builder, PROPAGATOR_TYPE propagatorType) {
+func propagatorConfigAddPropagatorType(builder *flatbuffers.Builder, PROPAGATOR_TYPE propagatorFamily) {
 	propagatorConfigAddPROPAGATOR_TYPE(builder, PROPAGATOR_TYPE)
 }
 func propagatorConfigAddFORCE_MODELS(builder *flatbuffers.Builder, FORCE_MODELS flatbuffers.UOffsetT) {

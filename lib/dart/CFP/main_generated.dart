@@ -6,72 +6,72 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-enum pduType {
+enum pduKind {
   FILE_DIRECTIVE(0),
   FILE_DATA(1);
 
   final int value;
-  const pduType(this.value);
+  const pduKind(this.value);
 
-  factory pduType.fromValue(int value) {
+  factory pduKind.fromValue(int value) {
     switch (value) {
-      case 0: return pduType.FILE_DIRECTIVE;
-      case 1: return pduType.FILE_DATA;
+      case 0: return pduKind.FILE_DIRECTIVE;
+      case 1: return pduKind.FILE_DATA;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static pduType? _createOrNull(int? value) =>
-      value == null ? null : pduType.fromValue(value);
+  static pduKind? _createOrNull(int? value) =>
+      value == null ? null : pduKind.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 1;
-  static const fb.Reader<pduType> reader = _pduTypeReader();
+  static const fb.Reader<pduKind> reader = _pduKindReader();
 }
 
-class _pduTypeReader extends fb.Reader<pduType> {
-  const _pduTypeReader();
+class _pduKindReader extends fb.Reader<pduKind> {
+  const _pduKindReader();
 
   @override
   int get size => 1;
 
   @override
-  pduType read(fb.BufferContext bc, int offset) =>
-      pduType.fromValue(const fb.Int8Reader().read(bc, offset));
+  pduKind read(fb.BufferContext bc, int offset) =>
+      pduKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum transmissionMode {
+enum transmissionClass {
   ACKNOWLEDGED(0),
   UNACKNOWLEDGED(1);
 
   final int value;
-  const transmissionMode(this.value);
+  const transmissionClass(this.value);
 
-  factory transmissionMode.fromValue(int value) {
+  factory transmissionClass.fromValue(int value) {
     switch (value) {
-      case 0: return transmissionMode.ACKNOWLEDGED;
-      case 1: return transmissionMode.UNACKNOWLEDGED;
+      case 0: return transmissionClass.ACKNOWLEDGED;
+      case 1: return transmissionClass.UNACKNOWLEDGED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static transmissionMode? _createOrNull(int? value) =>
-      value == null ? null : transmissionMode.fromValue(value);
+  static transmissionClass? _createOrNull(int? value) =>
+      value == null ? null : transmissionClass.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 1;
-  static const fb.Reader<transmissionMode> reader = _transmissionModeReader();
+  static const fb.Reader<transmissionClass> reader = _transmissionClassReader();
 }
 
-class _transmissionModeReader extends fb.Reader<transmissionMode> {
-  const _transmissionModeReader();
+class _transmissionClassReader extends fb.Reader<transmissionClass> {
+  const _transmissionClassReader();
 
   @override
   int get size => 1;
 
   @override
-  transmissionMode read(fb.BufferContext bc, int offset) =>
-      transmissionMode.fromValue(const fb.Int8Reader().read(bc, offset));
+  transmissionClass read(fb.BufferContext bc, int offset) =>
+      transmissionClass.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  CCSDS File Delivery Protocol PDU (CCSDS 727.0-B-5)
@@ -90,13 +90,13 @@ class CFP {
   ///  PDU version
   int get VERSION => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0);
   ///  PDU type
-  pduType get PDU_TYPE => pduType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  pduType get pduType => PDU_TYPE;
+  pduKind get PDU_TYPE => pduKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  pduKind get pduType => PDU_TYPE;
   ///  Direction (toward receiver or sender)
   int get DIRECTION => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0);
   ///  Transmission mode
-  transmissionMode get TRANSMISSION_MODE => transmissionMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  transmissionMode get transmissionMode => TRANSMISSION_MODE;
+  transmissionClass get TRANSMISSION_MODE => transmissionClass.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  transmissionClass get transmissionMode => TRANSMISSION_MODE;
   ///  CRC present flag
   bool get CRC_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
   bool get crcFlag => CRC_FLAG;
@@ -157,7 +157,7 @@ class CFPBuilder {
     fbBuilder.addUint8(0, VERSION);
     return fbBuilder.offset;
   }
-  int addPduType(pduType? PDU_TYPE) {
+  int addPduType(pduKind? PDU_TYPE) {
     fbBuilder.addInt8(1, PDU_TYPE?.value);
     return fbBuilder.offset;
   }
@@ -165,7 +165,7 @@ class CFPBuilder {
     fbBuilder.addUint8(2, DIRECTION);
     return fbBuilder.offset;
   }
-  int addTransmissionMode(transmissionMode? TRANSMISSION_MODE) {
+  int addTransmissionMode(transmissionClass? TRANSMISSION_MODE) {
     fbBuilder.addInt8(3, TRANSMISSION_MODE?.value);
     return fbBuilder.offset;
   }
@@ -221,9 +221,9 @@ class CFPBuilder {
 
 class CFPObjectBuilder extends fb.ObjectBuilder {
   final int? _VERSION;
-  final pduType? _PDU_TYPE;
+  final pduKind? _PDU_TYPE;
   final int? _DIRECTION;
-  final transmissionMode? _TRANSMISSION_MODE;
+  final transmissionClass? _TRANSMISSION_MODE;
   final bool? _CRC_FLAG;
   final bool? _LARGE_FILE_FLAG;
   final int? _DATA_FIELD_LENGTH;
@@ -238,11 +238,11 @@ class CFPObjectBuilder extends fb.ObjectBuilder {
 
   CFPObjectBuilder({
     int? VERSION,
-    pduType? PDU_TYPE,
-    pduType? pduType,
+    pduKind? PDU_TYPE,
+    pduKind? pduType,
     int? DIRECTION,
-    transmissionMode? TRANSMISSION_MODE,
-    transmissionMode? transmissionMode,
+    transmissionClass? TRANSMISSION_MODE,
+    transmissionClass? transmissionMode,
     bool? CRC_FLAG,
     bool? crcFlag,
     bool? LARGE_FILE_FLAG,

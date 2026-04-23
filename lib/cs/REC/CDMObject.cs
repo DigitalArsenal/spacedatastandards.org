@@ -52,7 +52,7 @@ public struct CDMObject : IFlatbufferObject
 #endif
   public byte[] GetEPHEMERIS_NAMEArray() { return __p.__vector_as_array<byte>(14); }
   /// Covariance method
-  public covarianceMethod COVARIANCE_METHOD { get { int o = __p.__offset(16); return o != 0 ? (covarianceMethod)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceMethod.CALCULATED; } }
+  public covarianceAlgorithm COVARIANCE_METHOD { get { int o = __p.__offset(16); return o != 0 ? (covarianceAlgorithm)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceAlgorithm.CALCULATED; } }
   /// Reference Frame in which the object position is defined
   public RFM? REFERENCE_FRAME { get { int o = __p.__offset(18); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Gravity model
@@ -164,7 +164,7 @@ public struct CDMObject : IFlatbufferObject
       StringOffset OPERATOR_CONTACT_POSITIONOffset = default(StringOffset),
       StringOffset OPERATOR_ORGANIZATIONOffset = default(StringOffset),
       StringOffset EPHEMERIS_NAMEOffset = default(StringOffset),
-      covarianceMethod COVARIANCE_METHOD = covarianceMethod.CALCULATED,
+      covarianceAlgorithm COVARIANCE_METHOD = covarianceAlgorithm.CALCULATED,
       Offset<RFM> REFERENCE_FRAMEOffset = default(Offset<RFM>),
       StringOffset GRAVITY_MODELOffset = default(StringOffset),
       StringOffset ATMOSPHERIC_MODELOffset = default(StringOffset),
@@ -243,7 +243,7 @@ public struct CDMObject : IFlatbufferObject
   public static void AddOPERATOR_CONTACT_POSITION(FlatBufferBuilder builder, StringOffset OPERATOR_CONTACT_POSITIONOffset) { builder.AddOffset(3, OPERATOR_CONTACT_POSITIONOffset.Value, 0); }
   public static void AddOPERATOR_ORGANIZATION(FlatBufferBuilder builder, StringOffset OPERATOR_ORGANIZATIONOffset) { builder.AddOffset(4, OPERATOR_ORGANIZATIONOffset.Value, 0); }
   public static void AddEPHEMERIS_NAME(FlatBufferBuilder builder, StringOffset EPHEMERIS_NAMEOffset) { builder.AddOffset(5, EPHEMERIS_NAMEOffset.Value, 0); }
-  public static void AddCOVARIANCE_METHOD(FlatBufferBuilder builder, covarianceMethod COVARIANCE_METHOD) { builder.AddSbyte(6, (sbyte)COVARIANCE_METHOD, 0); }
+  public static void AddCOVARIANCE_METHOD(FlatBufferBuilder builder, covarianceAlgorithm COVARIANCE_METHOD) { builder.AddSbyte(6, (sbyte)COVARIANCE_METHOD, 0); }
   public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> REFERENCE_FRAMEOffset) { builder.AddOffset(7, REFERENCE_FRAMEOffset.Value, 0); }
   public static void AddGRAVITY_MODEL(FlatBufferBuilder builder, StringOffset GRAVITY_MODELOffset) { builder.AddOffset(8, GRAVITY_MODELOffset.Value, 0); }
   public static void AddATMOSPHERIC_MODEL(FlatBufferBuilder builder, StringOffset ATMOSPHERIC_MODELOffset) { builder.AddOffset(9, ATMOSPHERIC_MODELOffset.Value, 0); }
@@ -397,7 +397,7 @@ public class CDMObjectT
   public string OPERATOR_CONTACT_POSITION { get; set; }
   public string OPERATOR_ORGANIZATION { get; set; }
   public string EPHEMERIS_NAME { get; set; }
-  public covarianceMethod COVARIANCE_METHOD { get; set; }
+  public covarianceAlgorithm COVARIANCE_METHOD { get; set; }
   public RFMT REFERENCE_FRAME { get; set; }
   public string GRAVITY_MODEL { get; set; }
   public string ATMOSPHERIC_MODEL { get; set; }
@@ -436,7 +436,7 @@ public class CDMObjectT
     this.OPERATOR_CONTACT_POSITION = null;
     this.OPERATOR_ORGANIZATION = null;
     this.EPHEMERIS_NAME = null;
-    this.COVARIANCE_METHOD = covarianceMethod.CALCULATED;
+    this.COVARIANCE_METHOD = covarianceAlgorithm.CALCULATED;
     this.REFERENCE_FRAME = null;
     this.GRAVITY_MODEL = null;
     this.ATMOSPHERIC_MODEL = null;
@@ -482,7 +482,7 @@ static public class CDMObjectVerify
       && verifier.VerifyString(tablePos, 10 /*OPERATOR_CONTACT_POSITION*/, false)
       && verifier.VerifyString(tablePos, 12 /*OPERATOR_ORGANIZATION*/, false)
       && verifier.VerifyString(tablePos, 14 /*EPHEMERIS_NAME*/, false)
-      && verifier.VerifyField(tablePos, 16 /*COVARIANCE_METHOD*/, 1 /*covarianceMethod*/, 1, false)
+      && verifier.VerifyField(tablePos, 16 /*COVARIANCE_METHOD*/, 1 /*covarianceAlgorithm*/, 1, false)
       && verifier.VerifyTable(tablePos, 18 /*REFERENCE_FRAME*/, RFMVerify.Verify, false)
       && verifier.VerifyString(tablePos, 20 /*GRAVITY_MODEL*/, false)
       && verifier.VerifyString(tablePos, 22 /*ATMOSPHERIC_MODEL*/, false)

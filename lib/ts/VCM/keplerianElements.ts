@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { anomalyType } from './anomalyType.js';
+import { anomalyConvention } from './anomalyConvention.js';
 
 
 /**
@@ -53,9 +53,9 @@ ARG_OF_PERICENTER():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ANOMALY_TYPE():anomalyType {
+ANOMALY_TYPE():anomalyConvention {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : anomalyType.TRUE_ANOMALY;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : anomalyConvention.TRUE_ANOMALY;
 }
 
 ANOMALY():number {
@@ -87,8 +87,8 @@ static addArgOfPericenter(builder:flatbuffers.Builder, ARG_OF_PERICENTER:number)
   builder.addFieldFloat64(4, ARG_OF_PERICENTER, 0.0);
 }
 
-static addAnomalyType(builder:flatbuffers.Builder, ANOMALY_TYPE:anomalyType) {
-  builder.addFieldInt8(5, ANOMALY_TYPE, anomalyType.TRUE_ANOMALY);
+static addAnomalyType(builder:flatbuffers.Builder, ANOMALY_TYPE:anomalyConvention) {
+  builder.addFieldInt8(5, ANOMALY_TYPE, anomalyConvention.TRUE_ANOMALY);
 }
 
 static addAnomaly(builder:flatbuffers.Builder, ANOMALY:number) {
@@ -100,7 +100,7 @@ static endkeplerianElements(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createkeplerianElements(builder:flatbuffers.Builder, SEMI_MAJOR_AXIS:number, ECCENTRICITY:number, INCLINATION:number, RA_OF_ASC_NODE:number, ARG_OF_PERICENTER:number, ANOMALY_TYPE:anomalyType, ANOMALY:number):flatbuffers.Offset {
+static createkeplerianElements(builder:flatbuffers.Builder, SEMI_MAJOR_AXIS:number, ECCENTRICITY:number, INCLINATION:number, RA_OF_ASC_NODE:number, ARG_OF_PERICENTER:number, ANOMALY_TYPE:anomalyConvention, ANOMALY:number):flatbuffers.Offset {
   keplerianElements.startkeplerianElements(builder);
   keplerianElements.addSemiMajorAxis(builder, SEMI_MAJOR_AXIS);
   keplerianElements.addEccentricity(builder, ECCENTRICITY);
@@ -143,7 +143,7 @@ constructor(
   public INCLINATION: number = 0.0,
   public RA_OF_ASC_NODE: number = 0.0,
   public ARG_OF_PERICENTER: number = 0.0,
-  public ANOMALY_TYPE: anomalyType = anomalyType.TRUE_ANOMALY,
+  public ANOMALY_TYPE: anomalyConvention = anomalyConvention.TRUE_ANOMALY,
   public ANOMALY: number = 0.0
 ){}
 

@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { packetType } from './packetType.js';
+import { packetKind } from './packetKind.js';
 
 
 /**
@@ -43,9 +43,9 @@ VERSION():number {
 /**
  * Packet type (TM or TC)
  */
-PACKET_TYPE():packetType {
+PACKET_TYPE():packetKind {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : packetType.TM;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : packetKind.TM;
 }
 
 /**
@@ -114,8 +114,8 @@ static addVersion(builder:flatbuffers.Builder, VERSION:number) {
   builder.addFieldInt8(0, VERSION, 0);
 }
 
-static addPacketType(builder:flatbuffers.Builder, PACKET_TYPE:packetType) {
-  builder.addFieldInt8(1, PACKET_TYPE, packetType.TM);
+static addPacketType(builder:flatbuffers.Builder, PACKET_TYPE:packetKind) {
+  builder.addFieldInt8(1, PACKET_TYPE, packetKind.TM);
 }
 
 static addSecHdrFlag(builder:flatbuffers.Builder, SEC_HDR_FLAG:boolean) {
@@ -167,7 +167,7 @@ static finishSizePrefixedSPPBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$SPP', true);
 }
 
-static createSPP(builder:flatbuffers.Builder, VERSION:number, PACKET_TYPE:packetType, SEC_HDR_FLAG:boolean, APID:number, SEQUENCE_FLAGS:number, SEQUENCE_COUNT:number, DATA_LENGTH:number, DATAOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSPP(builder:flatbuffers.Builder, VERSION:number, PACKET_TYPE:packetKind, SEC_HDR_FLAG:boolean, APID:number, SEQUENCE_FLAGS:number, SEQUENCE_COUNT:number, DATA_LENGTH:number, DATAOffset:flatbuffers.Offset):flatbuffers.Offset {
   SPP.startSPP(builder);
   SPP.addVersion(builder, VERSION);
   SPP.addPacketType(builder, PACKET_TYPE);
@@ -209,7 +209,7 @@ unpackTo(_o: SPPT): void {
 export class SPPT implements flatbuffers.IGeneratedObject {
 constructor(
   public VERSION: number = 0,
-  public PACKET_TYPE: packetType = packetType.TM,
+  public PACKET_TYPE: packetKind = packetKind.TM,
   public SEC_HDR_FLAG: boolean = false,
   public APID: number = 0,
   public SEQUENCE_FLAGS: number = 0,

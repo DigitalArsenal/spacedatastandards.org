@@ -92,7 +92,7 @@ public struct SKI : IFlatbufferObject
 #endif
   public double[] GetSEN_QUAT_DOTArray() { return __p.__vector_as_array<double>(30); }
   /// Image type
-  public imageType IMAGE_TYPE { get { int o = __p.__offset(32); return o != 0 ? (imageType)__p.bb.GetSbyte(o + __p.bb_pos) : imageType.VISIBLE; } }
+  public imageCategory IMAGE_TYPE { get { int o = __p.__offset(32); return o != 0 ? (imageCategory)__p.bb.GetSbyte(o + __p.bb_pos) : imageCategory.VISIBLE; } }
   /// Exposure start time (ISO 8601)
   public string EXP_START_TIME { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -223,7 +223,7 @@ public struct SKI : IFlatbufferObject
       double SENZ = 0.0,
       VectorOffset SEN_QUATOffset = default(VectorOffset),
       VectorOffset SEN_QUAT_DOTOffset = default(VectorOffset),
-      imageType IMAGE_TYPE = imageType.VISIBLE,
+      imageCategory IMAGE_TYPE = imageCategory.VISIBLE,
       StringOffset EXP_START_TIMEOffset = default(StringOffset),
       StringOffset EXP_END_TIMEOffset = default(StringOffset),
       StringOffset IMAGE_SOURCE_INFOOffset = default(StringOffset),
@@ -320,7 +320,7 @@ public struct SKI : IFlatbufferObject
   public static VectorOffset CreateSEN_QUAT_DOTVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSEN_QUAT_DOTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSEN_QUAT_DOTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
-  public static void AddIMAGE_TYPE(FlatBufferBuilder builder, imageType IMAGE_TYPE) { builder.AddSbyte(14, (sbyte)IMAGE_TYPE, 0); }
+  public static void AddIMAGE_TYPE(FlatBufferBuilder builder, imageCategory IMAGE_TYPE) { builder.AddSbyte(14, (sbyte)IMAGE_TYPE, 0); }
   public static void AddEXP_START_TIME(FlatBufferBuilder builder, StringOffset EXP_START_TIMEOffset) { builder.AddOffset(15, EXP_START_TIMEOffset.Value, 0); }
   public static void AddEXP_END_TIME(FlatBufferBuilder builder, StringOffset EXP_END_TIMEOffset) { builder.AddOffset(16, EXP_END_TIMEOffset.Value, 0); }
   public static void AddIMAGE_SOURCE_INFO(FlatBufferBuilder builder, StringOffset IMAGE_SOURCE_INFOOffset) { builder.AddOffset(17, IMAGE_SOURCE_INFOOffset.Value, 0); }
@@ -516,7 +516,7 @@ public class SKIT
   public double SENZ { get; set; }
   public List<double> SEN_QUAT { get; set; }
   public List<double> SEN_QUAT_DOT { get; set; }
-  public imageType IMAGE_TYPE { get; set; }
+  public imageCategory IMAGE_TYPE { get; set; }
   public string EXP_START_TIME { get; set; }
   public string EXP_END_TIME { get; set; }
   public string IMAGE_SOURCE_INFO { get; set; }
@@ -559,7 +559,7 @@ public class SKIT
     this.SENZ = 0.0;
     this.SEN_QUAT = null;
     this.SEN_QUAT_DOT = null;
-    this.IMAGE_TYPE = imageType.VISIBLE;
+    this.IMAGE_TYPE = imageCategory.VISIBLE;
     this.EXP_START_TIME = null;
     this.EXP_END_TIME = null;
     this.IMAGE_SOURCE_INFO = null;
@@ -617,7 +617,7 @@ static public class SKIVerify
       && verifier.VerifyField(tablePos, 26 /*SENZ*/, 8 /*double*/, 8, false)
       && verifier.VerifyVectorOfData(tablePos, 28 /*SEN_QUAT*/, 8 /*double*/, false)
       && verifier.VerifyVectorOfData(tablePos, 30 /*SEN_QUAT_DOT*/, 8 /*double*/, false)
-      && verifier.VerifyField(tablePos, 32 /*IMAGE_TYPE*/, 1 /*imageType*/, 1, false)
+      && verifier.VerifyField(tablePos, 32 /*IMAGE_TYPE*/, 1 /*imageCategory*/, 1, false)
       && verifier.VerifyString(tablePos, 34 /*EXP_START_TIME*/, false)
       && verifier.VerifyString(tablePos, 36 /*EXP_END_TIME*/, false)
       && verifier.VerifyString(tablePos, 38 /*IMAGE_SOURCE_INFO*/, false)

@@ -3,4 +3,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export * from './TIM.js';
-export * from './timeSystem.js';
+export * from './timingStandard.js';

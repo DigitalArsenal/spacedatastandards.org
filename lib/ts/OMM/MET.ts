@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { meanElementTheory } from './meanElementTheory.js';
+import { meanElementSource } from './meanElementSource.js';
 
 
 /**
@@ -32,17 +32,17 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$MET');
 }
 
-MEAN_ELEMENT_THEORY():meanElementTheory {
+MEAN_ELEMENT_THEORY():meanElementSource {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : meanElementTheory.SGP4;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : meanElementSource.SGP4;
 }
 
 static startMET(builder:flatbuffers.Builder) {
   builder.startObject(1);
 }
 
-static addMeanElementTheory(builder:flatbuffers.Builder, MEAN_ELEMENT_THEORY:meanElementTheory) {
-  builder.addFieldInt8(0, MEAN_ELEMENT_THEORY, meanElementTheory.SGP4);
+static addMeanElementTheory(builder:flatbuffers.Builder, MEAN_ELEMENT_THEORY:meanElementSource) {
+  builder.addFieldInt8(0, MEAN_ELEMENT_THEORY, meanElementSource.SGP4);
 }
 
 static endMET(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -58,7 +58,7 @@ static finishSizePrefixedMETBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$MET', true);
 }
 
-static createMET(builder:flatbuffers.Builder, MEAN_ELEMENT_THEORY:meanElementTheory):flatbuffers.Offset {
+static createMET(builder:flatbuffers.Builder, MEAN_ELEMENT_THEORY:meanElementSource):flatbuffers.Offset {
   MET.startMET(builder);
   MET.addMeanElementTheory(builder, MEAN_ELEMENT_THEORY);
   return MET.endMET(builder);
@@ -78,7 +78,7 @@ unpackTo(_o: METT): void {
 
 export class METT implements flatbuffers.IGeneratedObject {
 constructor(
-  public MEAN_ELEMENT_THEORY: meanElementTheory = meanElementTheory.SGP4
+  public MEAN_ELEMENT_THEORY: meanElementSource = meanElementSource.SGP4
 ){}
 
 

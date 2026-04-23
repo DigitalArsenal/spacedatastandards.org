@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "imageType": {
+    "imageCategory": {
       "type": "string",
       "enum": [
         "VISIBLE",
@@ -117,7 +117,7 @@
           "x-flatbuffer-type": "[double]"
         },
         "IMAGE_TYPE": {
-          "$ref": "#/definitions/imageType",
+          "$ref": "#/definitions/imageCategory",
           "description": "Image type",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",

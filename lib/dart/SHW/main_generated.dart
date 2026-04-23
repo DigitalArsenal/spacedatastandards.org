@@ -12,7 +12,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 ///  table, and the injection-point enum a host consumes to know where to
 ///  splice a shader fragment into its stage graph.
 ///  Shader stage into which a compiled fragment should be injected.
-enum shaderStage {
+enum glslStage {
   VERTEX(0),
   FRAGMENT(1),
   COMPUTE(2),
@@ -21,43 +21,43 @@ enum shaderStage {
   TESS_EVALUATION(5);
 
   final int value;
-  const shaderStage(this.value);
+  const glslStage(this.value);
 
-  factory shaderStage.fromValue(int value) {
+  factory glslStage.fromValue(int value) {
     switch (value) {
-      case 0: return shaderStage.VERTEX;
-      case 1: return shaderStage.FRAGMENT;
-      case 2: return shaderStage.COMPUTE;
-      case 3: return shaderStage.GEOMETRY;
-      case 4: return shaderStage.TESS_CONTROL;
-      case 5: return shaderStage.TESS_EVALUATION;
+      case 0: return glslStage.VERTEX;
+      case 1: return glslStage.FRAGMENT;
+      case 2: return glslStage.COMPUTE;
+      case 3: return glslStage.GEOMETRY;
+      case 4: return glslStage.TESS_CONTROL;
+      case 5: return glslStage.TESS_EVALUATION;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static shaderStage? _createOrNull(int? value) =>
-      value == null ? null : shaderStage.fromValue(value);
+  static glslStage? _createOrNull(int? value) =>
+      value == null ? null : glslStage.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 5;
-  static const fb.Reader<shaderStage> reader = _shaderStageReader();
+  static const fb.Reader<glslStage> reader = _glslStageReader();
 }
 
-class _shaderStageReader extends fb.Reader<shaderStage> {
-  const _shaderStageReader();
+class _glslStageReader extends fb.Reader<glslStage> {
+  const _glslStageReader();
 
   @override
   int get size => 1;
 
   @override
-  shaderStage read(fb.BufferContext bc, int offset) =>
-      shaderStage.fromValue(const fb.Uint8Reader().read(bc, offset));
+  glslStage read(fb.BufferContext bc, int offset) =>
+      glslStage.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
 ///  Logical location inside a host pipeline where a compiled shader
 ///  fragment is meant to be spliced. A host maps these onto its own
 ///  concrete splice points.
-enum shaderInjectionPoint {
+enum shaderHookPoint {
   NONE(0),
   VERTEX_PRE_TRANSFORM(1),
   VERTEX_POST_TRANSFORM(2),
@@ -67,38 +67,38 @@ enum shaderInjectionPoint {
   POSTPROCESS(6);
 
   final int value;
-  const shaderInjectionPoint(this.value);
+  const shaderHookPoint(this.value);
 
-  factory shaderInjectionPoint.fromValue(int value) {
+  factory shaderHookPoint.fromValue(int value) {
     switch (value) {
-      case 0: return shaderInjectionPoint.NONE;
-      case 1: return shaderInjectionPoint.VERTEX_PRE_TRANSFORM;
-      case 2: return shaderInjectionPoint.VERTEX_POST_TRANSFORM;
-      case 3: return shaderInjectionPoint.FRAGMENT_PRE_SHADE;
-      case 4: return shaderInjectionPoint.FRAGMENT_POST_SHADE;
-      case 5: return shaderInjectionPoint.FRAGMENT_FINAL_COLOR;
-      case 6: return shaderInjectionPoint.POSTPROCESS;
+      case 0: return shaderHookPoint.NONE;
+      case 1: return shaderHookPoint.VERTEX_PRE_TRANSFORM;
+      case 2: return shaderHookPoint.VERTEX_POST_TRANSFORM;
+      case 3: return shaderHookPoint.FRAGMENT_PRE_SHADE;
+      case 4: return shaderHookPoint.FRAGMENT_POST_SHADE;
+      case 5: return shaderHookPoint.FRAGMENT_FINAL_COLOR;
+      case 6: return shaderHookPoint.POSTPROCESS;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static shaderInjectionPoint? _createOrNull(int? value) =>
-      value == null ? null : shaderInjectionPoint.fromValue(value);
+  static shaderHookPoint? _createOrNull(int? value) =>
+      value == null ? null : shaderHookPoint.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 6;
-  static const fb.Reader<shaderInjectionPoint> reader = _shaderInjectionPointReader();
+  static const fb.Reader<shaderHookPoint> reader = _shaderHookPointReader();
 }
 
-class _shaderInjectionPointReader extends fb.Reader<shaderInjectionPoint> {
-  const _shaderInjectionPointReader();
+class _shaderHookPointReader extends fb.Reader<shaderHookPoint> {
+  const _shaderHookPointReader();
 
   @override
   int get size => 1;
 
   @override
-  shaderInjectionPoint read(fb.BufferContext bc, int offset) =>
-      shaderInjectionPoint.fromValue(const fb.Uint8Reader().read(bc, offset));
+  shaderHookPoint read(fb.BufferContext bc, int offset) =>
+      shaderHookPoint.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
 ///  Scalar / vector type of a uniform value.
@@ -309,11 +309,11 @@ class SHWCompileRequest {
   String? get SHADER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   String? get shaderName => SHADER_NAME;
   ///  Target GLSL stage.
-  shaderStage get SHADER_STAGE => shaderStage.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  shaderStage get shaderStage => SHADER_STAGE;
+  glslStage get SHADER_STAGE => glslStage.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  glslStage get shaderStage => SHADER_STAGE;
   ///  Intended injection point in the host pipeline.
-  shaderInjectionPoint get SHADER_INJECTION_POINT => shaderInjectionPoint.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  shaderInjectionPoint get shaderInjectionPoint => SHADER_INJECTION_POINT;
+  shaderHookPoint get SHADER_INJECTION_POINT => shaderHookPoint.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  shaderHookPoint get shaderInjectionPoint => SHADER_INJECTION_POINT;
   ///  GLSL source (or preprocessed chunk).
   String? get SHADER_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   String? get shaderSource => SHADER_SOURCE;
@@ -351,11 +351,11 @@ class SHWCompileRequestBuilder {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addShaderStage(shaderStage? SHADER_STAGE) {
+  int addShaderStage(glslStage? SHADER_STAGE) {
     fbBuilder.addUint8(1, SHADER_STAGE?.value);
     return fbBuilder.offset;
   }
-  int addShaderInjectionPoint(shaderInjectionPoint? SHADER_INJECTION_POINT) {
+  int addShaderInjectionPoint(shaderHookPoint? SHADER_INJECTION_POINT) {
     fbBuilder.addUint8(2, SHADER_INJECTION_POINT?.value);
     return fbBuilder.offset;
   }
@@ -379,8 +379,8 @@ class SHWCompileRequestBuilder {
 
 class SHWCompileRequestObjectBuilder extends fb.ObjectBuilder {
   final String? _SHADER_NAME;
-  final shaderStage? _SHADER_STAGE;
-  final shaderInjectionPoint? _SHADER_INJECTION_POINT;
+  final glslStage? _SHADER_STAGE;
+  final shaderHookPoint? _SHADER_INJECTION_POINT;
   final String? _SHADER_SOURCE;
   final String? _GLSL_VERSION;
   final List<SHWUniformObjectBuilder>? _SHADER_UNIFORMS;
@@ -388,10 +388,10 @@ class SHWCompileRequestObjectBuilder extends fb.ObjectBuilder {
   SHWCompileRequestObjectBuilder({
     String? SHADER_NAME,
     String? shaderName,
-    shaderStage? SHADER_STAGE,
-    shaderStage? shaderStage,
-    shaderInjectionPoint? SHADER_INJECTION_POINT,
-    shaderInjectionPoint? shaderInjectionPoint,
+    glslStage? SHADER_STAGE,
+    glslStage? shaderStage,
+    shaderHookPoint? SHADER_INJECTION_POINT,
+    shaderHookPoint? shaderInjectionPoint,
     String? SHADER_SOURCE,
     String? shaderSource,
     String? GLSL_VERSION,

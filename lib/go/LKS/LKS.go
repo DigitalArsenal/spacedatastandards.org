@@ -169,46 +169,46 @@ func (rcv *LKS) LinkName() []byte {
 
 /// Link name or identifier
 /// Link type
-func (rcv *LKS) LINK_TYPE() linkType {
+func (rcv *LKS) LINK_TYPE() linkCategory {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
-		return linkType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return linkCategory(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *LKS) LinkType() linkType {
+func (rcv *LKS) LinkType() linkCategory {
 	return rcv.LINK_TYPE()
 }
 
 /// Link type
-func (rcv *LKS) MutateLINK_TYPE(n linkType) bool {
+func (rcv *LKS) MutateLINK_TYPE(n linkCategory) bool {
 	return rcv._tab.MutateInt8Slot(18, int8(n))
 }
 
-func (rcv *LKS) MutateLinkType(n linkType) bool {
+func (rcv *LKS) MutateLinkType(n linkCategory) bool {
 	return rcv.MutateLINK_TYPE(n)
 }
 
 /// Link state
-func (rcv *LKS) LINK_STATE() linkState {
+func (rcv *LKS) LINK_STATE() linkCondition {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
-		return linkState(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return linkCondition(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *LKS) LinkState() linkState {
+func (rcv *LKS) LinkState() linkCondition {
 	return rcv.LINK_STATE()
 }
 
 /// Link state
-func (rcv *LKS) MutateLINK_STATE(n linkState) bool {
+func (rcv *LKS) MutateLINK_STATE(n linkCondition) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
 }
 
-func (rcv *LKS) MutateLinkState(n linkState) bool {
+func (rcv *LKS) MutateLinkState(n linkCondition) bool {
 	return rcv.MutateLINK_STATE(n)
 }
 
@@ -515,16 +515,16 @@ func LKSAddLINK_NAME(builder *flatbuffers.Builder, LINK_NAME flatbuffers.UOffset
 func LKSAddLinkName(builder *flatbuffers.Builder, LINK_NAME flatbuffers.UOffsetT) {
 	LKSAddLINK_NAME(builder, LINK_NAME)
 }
-func LKSAddLINK_TYPE(builder *flatbuffers.Builder, LINK_TYPE linkType) {
+func LKSAddLINK_TYPE(builder *flatbuffers.Builder, LINK_TYPE linkCategory) {
 	builder.PrependInt8Slot(7, int8(LINK_TYPE), 0)
 }
-func LKSAddLinkType(builder *flatbuffers.Builder, LINK_TYPE linkType) {
+func LKSAddLinkType(builder *flatbuffers.Builder, LINK_TYPE linkCategory) {
 	LKSAddLINK_TYPE(builder, LINK_TYPE)
 }
-func LKSAddLINK_STATE(builder *flatbuffers.Builder, LINK_STATE linkState) {
+func LKSAddLINK_STATE(builder *flatbuffers.Builder, LINK_STATE linkCondition) {
 	builder.PrependInt8Slot(8, int8(LINK_STATE), 0)
 }
-func LKSAddLinkState(builder *flatbuffers.Builder, LINK_STATE linkState) {
+func LKSAddLinkState(builder *flatbuffers.Builder, LINK_STATE linkCondition) {
 	LKSAddLINK_STATE(builder, LINK_STATE)
 }
 func LKSAddBAND(builder *flatbuffers.Builder, BAND flatbuffers.UOffsetT) {

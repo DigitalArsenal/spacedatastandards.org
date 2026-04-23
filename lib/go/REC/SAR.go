@@ -295,24 +295,24 @@ func (rcv *SAR) OrbitState() []byte {
 
 /// Orbit state description
 /// SAR imaging mode
-func (rcv *SAR) SAR_MODE() sarMode {
+func (rcv *SAR) SAR_MODE() sarMission {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
-		return sarMode(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return sarMission(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *SAR) SarMode() sarMode {
+func (rcv *SAR) SarMode() sarMission {
 	return rcv.SAR_MODE()
 }
 
 /// SAR imaging mode
-func (rcv *SAR) MutateSAR_MODE(n sarMode) bool {
+func (rcv *SAR) MutateSAR_MODE(n sarMission) bool {
 	return rcv._tab.MutateInt8Slot(36, int8(n))
 }
 
-func (rcv *SAR) MutateSarMode(n sarMode) bool {
+func (rcv *SAR) MutateSarMode(n sarMission) bool {
 	return rcv.MutateSAR_MODE(n)
 }
 
@@ -1276,10 +1276,10 @@ func SARAddORBIT_STATE(builder *flatbuffers.Builder, ORBIT_STATE flatbuffers.UOf
 func SARAddOrbitState(builder *flatbuffers.Builder, ORBIT_STATE flatbuffers.UOffsetT) {
 	SARAddORBIT_STATE(builder, ORBIT_STATE)
 }
-func SARAddSAR_MODE(builder *flatbuffers.Builder, SAR_MODE sarMode) {
+func SARAddSAR_MODE(builder *flatbuffers.Builder, SAR_MODE sarMission) {
 	builder.PrependInt8Slot(16, int8(SAR_MODE), 0)
 }
-func SARAddSarMode(builder *flatbuffers.Builder, SAR_MODE sarMode) {
+func SARAddSarMode(builder *flatbuffers.Builder, SAR_MODE sarMission) {
 	SARAddSAR_MODE(builder, SAR_MODE)
 }
 func SARAddOPERATING_BAND(builder *flatbuffers.Builder, OPERATING_BAND flatbuffers.UOffsetT) {

@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { imageType } from './imageType.js';
+import { imageCategory } from './imageCategory.js';
 
 
 /**
@@ -177,9 +177,9 @@ senQuatDotArray():Float64Array|null {
 /**
  * Image type
  */
-IMAGE_TYPE():imageType {
+IMAGE_TYPE():imageCategory {
   const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : imageType.VISIBLE;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : imageCategory.VISIBLE;
 }
 
 /**
@@ -518,8 +518,8 @@ static startSenQuatDotVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(8, numElems, 8);
 }
 
-static addImageType(builder:flatbuffers.Builder, IMAGE_TYPE:imageType) {
-  builder.addFieldInt8(14, IMAGE_TYPE, imageType.VISIBLE);
+static addImageType(builder:flatbuffers.Builder, IMAGE_TYPE:imageCategory) {
+  builder.addFieldInt8(14, IMAGE_TYPE, imageCategory.VISIBLE);
 }
 
 static addExpStartTime(builder:flatbuffers.Builder, EXP_START_TIMEOffset:flatbuffers.Offset) {
@@ -663,7 +663,7 @@ static finishSizePrefixedSKIBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$SKI', true);
 }
 
-static createSKI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, SAT_NO:number, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, SEN_QUATOffset:flatbuffers.Offset, SEN_QUAT_DOTOffset:flatbuffers.Offset, IMAGE_TYPE:imageType, EXP_START_TIMEOffset:flatbuffers.Offset, EXP_END_TIMEOffset:flatbuffers.Offset, IMAGE_SOURCE_INFOOffset:flatbuffers.Offset, TOP_LEFT_START_AZ:number, TOP_LEFT_START_EL:number, TOP_LEFT_STOP_AZ:number, TOP_LEFT_STOP_EL:number, IMAGE_SET_IDOffset:flatbuffers.Offset, IMAGE_SET_LENGTH:number, SEQUENCE_ID:number, FRAME_FOVWIDTH:number, FRAME_FOVHEIGHT:number, PIXEL_FOVWIDTH:number, PIXEL_FOVHEIGHT:number, FRAME_WIDTH_PIXELS:number, FRAME_HEIGHT_PIXELS:number, PIXEL_BIT_DEPTH:number, ANNOTATION_KEYOffset:flatbuffers.Offset, CALIBRATION_KEYOffset:flatbuffers.Offset, FILENAMEOffset:flatbuffers.Offset, FILESIZE:bigint, CHECKSUM_VALUEOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, EO_OBSERVATIONSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSKI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, SAT_NO:number, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, SEN_QUATOffset:flatbuffers.Offset, SEN_QUAT_DOTOffset:flatbuffers.Offset, IMAGE_TYPE:imageCategory, EXP_START_TIMEOffset:flatbuffers.Offset, EXP_END_TIMEOffset:flatbuffers.Offset, IMAGE_SOURCE_INFOOffset:flatbuffers.Offset, TOP_LEFT_START_AZ:number, TOP_LEFT_START_EL:number, TOP_LEFT_STOP_AZ:number, TOP_LEFT_STOP_EL:number, IMAGE_SET_IDOffset:flatbuffers.Offset, IMAGE_SET_LENGTH:number, SEQUENCE_ID:number, FRAME_FOVWIDTH:number, FRAME_FOVHEIGHT:number, PIXEL_FOVWIDTH:number, PIXEL_FOVHEIGHT:number, FRAME_WIDTH_PIXELS:number, FRAME_HEIGHT_PIXELS:number, PIXEL_BIT_DEPTH:number, ANNOTATION_KEYOffset:flatbuffers.Offset, CALIBRATION_KEYOffset:flatbuffers.Offset, FILENAMEOffset:flatbuffers.Offset, FILESIZE:bigint, CHECKSUM_VALUEOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, EO_OBSERVATIONSOffset:flatbuffers.Offset):flatbuffers.Offset {
   SKI.startSKI(builder);
   SKI.addId(builder, IDOffset);
   SKI.addOnOrbit(builder, ON_ORBITOffset);
@@ -817,7 +817,7 @@ constructor(
   public SENZ: number = 0.0,
   public SEN_QUAT: (number)[] = [],
   public SEN_QUAT_DOT: (number)[] = [],
-  public IMAGE_TYPE: imageType = imageType.VISIBLE,
+  public IMAGE_TYPE: imageCategory = imageCategory.VISIBLE,
   public EXP_START_TIME: string|Uint8Array|null = null,
   public EXP_END_TIME: string|Uint8Array|null = null,
   public IMAGE_SOURCE_INFO: string|Uint8Array|null = null,

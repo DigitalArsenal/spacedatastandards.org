@@ -30,7 +30,7 @@
         }
       }
     },
-    "aouType": {
+    "aouCategory": {
       "type": "string",
       "enum": [
         "CIRCULAR",
@@ -185,7 +185,7 @@
           "x-flatbuffer-type": "string"
         },
         "AOU_TYPE": {
-          "$ref": "#/definitions/aouType",
+          "$ref": "#/definitions/aouCategory",
           "description": "Area of uncertainty type",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",

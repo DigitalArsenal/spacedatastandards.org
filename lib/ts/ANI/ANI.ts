@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { analyticType } from './analyticType.js';
+import { analyticProfile } from './analyticProfile.js';
 
 
 /**
@@ -65,9 +65,9 @@ SOURCE_TYPE(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Analytic product type
  */
-ANALYTIC_TYPE():analyticType {
+ANALYTIC_TYPE():analyticProfile {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : analyticType.SPECTRAL;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : analyticProfile.SPECTRAL;
 }
 
 /**
@@ -261,8 +261,8 @@ static addSourceType(builder:flatbuffers.Builder, SOURCE_TYPEOffset:flatbuffers.
   builder.addFieldOffset(2, SOURCE_TYPEOffset, 0);
 }
 
-static addAnalyticType(builder:flatbuffers.Builder, ANALYTIC_TYPE:analyticType) {
-  builder.addFieldInt8(3, ANALYTIC_TYPE, analyticType.SPECTRAL);
+static addAnalyticType(builder:flatbuffers.Builder, ANALYTIC_TYPE:analyticProfile) {
+  builder.addFieldInt8(3, ANALYTIC_TYPE, analyticProfile.SPECTRAL);
 }
 
 static addAlgorithm(builder:flatbuffers.Builder, ALGORITHMOffset:flatbuffers.Offset) {
@@ -392,7 +392,7 @@ static finishSizePrefixedANIBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$ANI', true);
 }
 
-static createANI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SOURCE_IDOffset:flatbuffers.Offset, SOURCE_TYPEOffset:flatbuffers.Offset, ANALYTIC_TYPE:analyticType, ALGORITHMOffset:flatbuffers.Offset, ALGORITHM_VERSIONOffset:flatbuffers.Offset, PROCESSING_TIMEOffset:flatbuffers.Offset, OBS_TIMEOffset:flatbuffers.Offset, SAT_NO:number, OBJECT_DESIGNATOROffset:flatbuffers.Offset, RA:number, DEC:number, FOV:number, VISUAL_MAG:number, MAG_UNCERTAINTY:number, OBJECT_COUNT:number, LABELSOffset:flatbuffers.Offset, CONFIDENCEOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, QUALITY:number, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createANI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SOURCE_IDOffset:flatbuffers.Offset, SOURCE_TYPEOffset:flatbuffers.Offset, ANALYTIC_TYPE:analyticProfile, ALGORITHMOffset:flatbuffers.Offset, ALGORITHM_VERSIONOffset:flatbuffers.Offset, PROCESSING_TIMEOffset:flatbuffers.Offset, OBS_TIMEOffset:flatbuffers.Offset, SAT_NO:number, OBJECT_DESIGNATOROffset:flatbuffers.Offset, RA:number, DEC:number, FOV:number, VISUAL_MAG:number, MAG_UNCERTAINTY:number, OBJECT_COUNT:number, LABELSOffset:flatbuffers.Offset, CONFIDENCEOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, QUALITY:number, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
   ANI.startANI(builder);
   ANI.addId(builder, IDOffset);
   ANI.addSourceId(builder, SOURCE_IDOffset);
@@ -475,7 +475,7 @@ constructor(
   public ID: string|Uint8Array|null = null,
   public SOURCE_ID: string|Uint8Array|null = null,
   public SOURCE_TYPE: string|Uint8Array|null = null,
-  public ANALYTIC_TYPE: analyticType = analyticType.SPECTRAL,
+  public ANALYTIC_TYPE: analyticProfile = analyticProfile.SPECTRAL,
   public ALGORITHM: string|Uint8Array|null = null,
   public ALGORITHM_VERSION: string|Uint8Array|null = null,
   public PROCESSING_TIME: string|Uint8Array|null = null,

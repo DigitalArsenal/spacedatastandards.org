@@ -37,7 +37,7 @@ class VCMAtmosphericModelData extends Table
     public function getATMOSPHERIC_MODEL()
     {
         $o = $this->__offset(4);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \atmosphericModel::NONE;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \atmosphericSource::NONE;
     }
 
     /**
@@ -46,7 +46,7 @@ class VCMAtmosphericModelData extends Table
     public function getGEOPOTENTIAL_MODEL()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \geopotentialModel::NONE;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \geopotentialSource::NONE;
     }
 
     /**
@@ -64,7 +64,7 @@ class VCMAtmosphericModelData extends Table
     public function getLUNAR_PERTURBATION_MODEL()
     {
         $o = $this->__offset(10);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \lunarPerturbationModel::NONE;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \lunarPerturbationSource::NONE;
     }
 
     /**
@@ -73,7 +73,7 @@ class VCMAtmosphericModelData extends Table
     public function getSOLAR_PERTURBATION_MODEL()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \solarPerturbationModel::NONE;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \solarPerturbationSource::NONE;
     }
 
     /**
@@ -100,7 +100,7 @@ class VCMAtmosphericModelData extends Table
     public function getRESONANCE_MODEL()
     {
         $o = $this->__offset(18);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \resonanceModel::NONE;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \resonanceSource::NONE;
     }
 
     /**

@@ -5,12 +5,12 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { PLD, PLDT } from './PLD.js';
-import { dataStatusCode } from './dataStatusCode.js';
+import { dataAvailability } from './dataAvailability.js';
 import { legacyCountryCode } from './legacyCountryCode.js';
-import { massType } from './massType.js';
-import { objectType } from './objectType.js';
-import { opsStatusCode } from './opsStatusCode.js';
-import { orbitType } from './orbitType.js';
+import { massCategory } from './massCategory.js';
+import { operationalState } from './operationalState.js';
+import { orbitRegime } from './orbitRegime.js';
+import { spaceObjectClass } from './spaceObjectClass.js';
 
 
 /**
@@ -69,17 +69,17 @@ NORAD_CAT_ID():number {
 /**
  * Object type (Payload, Rocket body, Debris, Unknown)
  */
-OBJECT_TYPE():objectType {
+OBJECT_TYPE():spaceObjectClass {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : objectType.UNKNOWN;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : spaceObjectClass.UNKNOWN;
 }
 
 /**
  * Operational Status Code
  */
-OPS_STATUS_CODE():opsStatusCode {
+OPS_STATUS_CODE():operationalState {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : opsStatusCode.UNKNOWN;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : operationalState.UNKNOWN;
 }
 
 /**
@@ -163,9 +163,9 @@ RCS():number {
 /**
  * Data status code; blank otherwise
  */
-DATA_STATUS_CODE():dataStatusCode {
+DATA_STATUS_CODE():dataAvailability {
   const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : dataStatusCode.NO_CURRENT_ELEMENTS;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : dataAvailability.NO_CURRENT_ELEMENTS;
 }
 
 /**
@@ -181,9 +181,9 @@ ORBIT_CENTER(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
  */
-ORBIT_TYPE():orbitType {
+ORBIT_TYPE():orbitRegime {
   const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : orbitType.ORBIT;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : orbitRegime.ORBIT;
 }
 
 /**
@@ -223,9 +223,9 @@ MASS():number {
 /**
  * Mass type (Dry, Wet)
  */
-MASS_TYPE():massType {
+MASS_TYPE():massCategory {
   const offset = this.bb!.__offset(this.bb_pos, 46);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : massType.DRY;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : massCategory.DRY;
 }
 
 /**
@@ -257,12 +257,12 @@ static addNoradCatId(builder:flatbuffers.Builder, NORAD_CAT_ID:number) {
   builder.addFieldInt32(2, NORAD_CAT_ID, 0);
 }
 
-static addObjectType(builder:flatbuffers.Builder, OBJECT_TYPE:objectType) {
-  builder.addFieldInt8(3, OBJECT_TYPE, objectType.UNKNOWN);
+static addObjectType(builder:flatbuffers.Builder, OBJECT_TYPE:spaceObjectClass) {
+  builder.addFieldInt8(3, OBJECT_TYPE, spaceObjectClass.UNKNOWN);
 }
 
-static addOpsStatusCode(builder:flatbuffers.Builder, OPS_STATUS_CODE:opsStatusCode) {
-  builder.addFieldInt8(4, OPS_STATUS_CODE, opsStatusCode.UNKNOWN);
+static addOpsStatusCode(builder:flatbuffers.Builder, OPS_STATUS_CODE:operationalState) {
+  builder.addFieldInt8(4, OPS_STATUS_CODE, operationalState.UNKNOWN);
 }
 
 static addOwner(builder:flatbuffers.Builder, OWNER:legacyCountryCode) {
@@ -301,16 +301,16 @@ static addRcs(builder:flatbuffers.Builder, RCS:number) {
   builder.addFieldFloat64(13, RCS, 0.0);
 }
 
-static addDataStatusCode(builder:flatbuffers.Builder, DATA_STATUS_CODE:dataStatusCode) {
-  builder.addFieldInt8(14, DATA_STATUS_CODE, dataStatusCode.NO_CURRENT_ELEMENTS);
+static addDataStatusCode(builder:flatbuffers.Builder, DATA_STATUS_CODE:dataAvailability) {
+  builder.addFieldInt8(14, DATA_STATUS_CODE, dataAvailability.NO_CURRENT_ELEMENTS);
 }
 
 static addOrbitCenter(builder:flatbuffers.Builder, ORBIT_CENTEROffset:flatbuffers.Offset) {
   builder.addFieldOffset(15, ORBIT_CENTEROffset, 0);
 }
 
-static addOrbitType(builder:flatbuffers.Builder, ORBIT_TYPE:orbitType) {
-  builder.addFieldInt8(16, ORBIT_TYPE, orbitType.ORBIT);
+static addOrbitType(builder:flatbuffers.Builder, ORBIT_TYPE:orbitRegime) {
+  builder.addFieldInt8(16, ORBIT_TYPE, orbitRegime.ORBIT);
 }
 
 static addDeploymentDate(builder:flatbuffers.Builder, DEPLOYMENT_DATEOffset:flatbuffers.Offset) {
@@ -329,8 +329,8 @@ static addMass(builder:flatbuffers.Builder, MASS:number) {
   builder.addFieldFloat64(20, MASS, 0.0);
 }
 
-static addMassType(builder:flatbuffers.Builder, MASS_TYPE:massType) {
-  builder.addFieldInt8(21, MASS_TYPE, massType.DRY);
+static addMassType(builder:flatbuffers.Builder, MASS_TYPE:massCategory) {
+  builder.addFieldInt8(21, MASS_TYPE, massCategory.DRY);
 }
 
 static addPayloads(builder:flatbuffers.Builder, PAYLOADSOffset:flatbuffers.Offset) {
@@ -362,7 +362,7 @@ static finishSizePrefixedCATBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CAT', true);
 }
 
-static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:objectType, OPS_STATUS_CODE:opsStatusCode, OWNER:legacyCountryCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataStatusCode, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitType, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massType, PAYLOADSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:spaceObjectClass, OPS_STATUS_CODE:operationalState, OWNER:legacyCountryCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataAvailability, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitRegime, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massCategory, PAYLOADSOffset:flatbuffers.Offset):flatbuffers.Offset {
   CAT.startCAT(builder);
   CAT.addObjectName(builder, OBJECT_NAMEOffset);
   CAT.addObjectId(builder, OBJECT_IDOffset);
@@ -451,8 +451,8 @@ constructor(
   public OBJECT_NAME: string|Uint8Array|null = null,
   public OBJECT_ID: string|Uint8Array|null = null,
   public NORAD_CAT_ID: number = 0,
-  public OBJECT_TYPE: objectType = objectType.UNKNOWN,
-  public OPS_STATUS_CODE: opsStatusCode = opsStatusCode.UNKNOWN,
+  public OBJECT_TYPE: spaceObjectClass = spaceObjectClass.UNKNOWN,
+  public OPS_STATUS_CODE: operationalState = operationalState.UNKNOWN,
   public OWNER: legacyCountryCode = legacyCountryCode.AB,
   public LAUNCH_DATE: string|Uint8Array|null = null,
   public LAUNCH_SITE: string|Uint8Array|null = null,
@@ -462,14 +462,14 @@ constructor(
   public APOGEE: number = 0.0,
   public PERIGEE: number = 0.0,
   public RCS: number = 0.0,
-  public DATA_STATUS_CODE: dataStatusCode = dataStatusCode.NO_CURRENT_ELEMENTS,
+  public DATA_STATUS_CODE: dataAvailability = dataAvailability.NO_CURRENT_ELEMENTS,
   public ORBIT_CENTER: string|Uint8Array|null = null,
-  public ORBIT_TYPE: orbitType = orbitType.ORBIT,
+  public ORBIT_TYPE: orbitRegime = orbitRegime.ORBIT,
   public DEPLOYMENT_DATE: string|Uint8Array|null = null,
   public MANEUVERABLE: boolean = false,
   public SIZE: number = 0.0,
   public MASS: number = 0.0,
-  public MASS_TYPE: massType = massType.DRY,
+  public MASS_TYPE: massCategory = massCategory.DRY,
   public PAYLOADS: (PLDT)[] = []
 ){}
 

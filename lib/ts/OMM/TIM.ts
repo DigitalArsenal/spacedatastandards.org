@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { timeSystem } from './timeSystem.js';
+import { timingStandard } from './timingStandard.js';
 
 
 /**
@@ -32,17 +32,17 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$TIM');
 }
 
-TIME_SYSTEM():timeSystem {
+TIME_SYSTEM():timingStandard {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : timeSystem.GMST;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : timingStandard.GMST;
 }
 
 static startTIM(builder:flatbuffers.Builder) {
   builder.startObject(1);
 }
 
-static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEM:timeSystem) {
-  builder.addFieldInt8(0, TIME_SYSTEM, timeSystem.GMST);
+static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEM:timingStandard) {
+  builder.addFieldInt8(0, TIME_SYSTEM, timingStandard.GMST);
 }
 
 static endTIM(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -58,7 +58,7 @@ static finishSizePrefixedTIMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$TIM', true);
 }
 
-static createTIM(builder:flatbuffers.Builder, TIME_SYSTEM:timeSystem):flatbuffers.Offset {
+static createTIM(builder:flatbuffers.Builder, TIME_SYSTEM:timingStandard):flatbuffers.Offset {
   TIM.startTIM(builder);
   TIM.addTimeSystem(builder, TIME_SYSTEM);
   return TIM.endTIM(builder);
@@ -78,7 +78,7 @@ unpackTo(_o: TIMT): void {
 
 export class TIMT implements flatbuffers.IGeneratedObject {
 constructor(
-  public TIME_SYSTEM: timeSystem = timeSystem.GMST
+  public TIME_SYSTEM: timingStandard = timingStandard.GMST
 ){}
 
 

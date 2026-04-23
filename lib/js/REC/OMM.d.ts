@@ -1,8 +1,8 @@
 import * as flatbuffers from 'flatbuffers';
 import { RFM, RFMT } from './RFM.js';
-import { ephemerisType } from './ephemerisType.js';
-import { meanElementTheory } from './meanElementTheory.js';
-import { timeSystem } from './timeSystem.js';
+import { ephemerisFormat } from './ephemerisFormat.js';
+import { meanElementSource } from './meanElementSource.js';
+import { timingStandard } from './timingStandard.js';
 /**
  * Orbit Mean Elements Message
  */
@@ -55,11 +55,11 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
     /**
      * Time System [M, UTC]
      */
-    TIME_SYSTEM(): timeSystem;
+    TIME_SYSTEM(): timingStandard;
     /**
      * Mean Element Theory
      */
-    MEAN_ELEMENT_THEORY(): meanElementTheory;
+    MEAN_ELEMENT_THEORY(): meanElementSource;
     /**
      * COMMENT (O)
      */
@@ -126,7 +126,7 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
      * TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
      * EPHEMERIS_TYPE Default=0
      */
-    EPHEMERIS_TYPE(): ephemerisType;
+    EPHEMERIS_TYPE(): ephemerisFormat;
     /**
      * CLASSIFICATION_TYPE Default=U
      */
@@ -204,8 +204,8 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
     static addCenterName(builder: flatbuffers.Builder, CENTER_NAMEOffset: flatbuffers.Offset): void;
     static addReferenceFrame(builder: flatbuffers.Builder, REFERENCE_FRAMEOffset: flatbuffers.Offset): void;
     static addReferenceFrameEpoch(builder: flatbuffers.Builder, REFERENCE_FRAME_EPOCHOffset: flatbuffers.Offset): void;
-    static addTimeSystem(builder: flatbuffers.Builder, TIME_SYSTEM: timeSystem): void;
-    static addMeanElementTheory(builder: flatbuffers.Builder, MEAN_ELEMENT_THEORY: meanElementTheory): void;
+    static addTimeSystem(builder: flatbuffers.Builder, TIME_SYSTEM: timingStandard): void;
+    static addMeanElementTheory(builder: flatbuffers.Builder, MEAN_ELEMENT_THEORY: meanElementSource): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static addEpoch(builder: flatbuffers.Builder, EPOCHOffset: flatbuffers.Offset): void;
     static addSemiMajorAxis(builder: flatbuffers.Builder, SEMI_MAJOR_AXIS: number): void;
@@ -221,7 +221,7 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
     static addSolarRadCoeff(builder: flatbuffers.Builder, SOLAR_RAD_COEFF: number): void;
     static addDragArea(builder: flatbuffers.Builder, DRAG_AREA: number): void;
     static addDragCoeff(builder: flatbuffers.Builder, DRAG_COEFF: number): void;
-    static addEphemerisType(builder: flatbuffers.Builder, EPHEMERIS_TYPE: ephemerisType): void;
+    static addEphemerisType(builder: flatbuffers.Builder, EPHEMERIS_TYPE: ephemerisFormat): void;
     static addClassificationType(builder: flatbuffers.Builder, CLASSIFICATION_TYPEOffset: flatbuffers.Offset): void;
     static addNoradCatId(builder: flatbuffers.Builder, NORAD_CAT_ID: number): void;
     static addElementSetNo(builder: flatbuffers.Builder, ELEMENT_SET_NO: number): void;
@@ -257,8 +257,8 @@ export declare class OMMT implements flatbuffers.IGeneratedObject {
     CENTER_NAME: string | Uint8Array | null;
     REFERENCE_FRAME: RFMT | null;
     REFERENCE_FRAME_EPOCH: string | Uint8Array | null;
-    TIME_SYSTEM: timeSystem;
-    MEAN_ELEMENT_THEORY: meanElementTheory;
+    TIME_SYSTEM: timingStandard;
+    MEAN_ELEMENT_THEORY: meanElementSource;
     COMMENT: string | Uint8Array | null;
     EPOCH: string | Uint8Array | null;
     SEMI_MAJOR_AXIS: number;
@@ -274,7 +274,7 @@ export declare class OMMT implements flatbuffers.IGeneratedObject {
     SOLAR_RAD_COEFF: number;
     DRAG_AREA: number;
     DRAG_COEFF: number;
-    EPHEMERIS_TYPE: ephemerisType;
+    EPHEMERIS_TYPE: ephemerisFormat;
     CLASSIFICATION_TYPE: string | Uint8Array | null;
     NORAD_CAT_ID: number;
     ELEMENT_SET_NO: number;
@@ -289,7 +289,7 @@ export declare class OMMT implements flatbuffers.IGeneratedObject {
     USER_DEFINED_EARTH_MODEL: string | Uint8Array | null;
     USER_DEFINED_EPOCH_TIMESTAMP: number;
     USER_DEFINED_MICROSECONDS: number;
-    constructor(CCSDS_OMM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, TIME_SYSTEM?: timeSystem, MEAN_ELEMENT_THEORY?: meanElementTheory, COMMENT?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, SEMI_MAJOR_AXIS?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, GM?: number, MASS?: number, SOLAR_RAD_AREA?: number, SOLAR_RAD_COEFF?: number, DRAG_AREA?: number, DRAG_COEFF?: number, EPHEMERIS_TYPE?: ephemerisType, CLASSIFICATION_TYPE?: string | Uint8Array | null, NORAD_CAT_ID?: number, ELEMENT_SET_NO?: number, REV_AT_EPOCH?: number, BSTAR?: number, MEAN_MOTION_DOT?: number, MEAN_MOTION_DDOT?: number, COV_REFERENCE_FRAME?: RFMT | null, COVARIANCE?: (number)[], USER_DEFINED_BIP_0044_TYPE?: number, USER_DEFINED_OBJECT_DESIGNATOR?: string | Uint8Array | null, USER_DEFINED_EARTH_MODEL?: string | Uint8Array | null, USER_DEFINED_EPOCH_TIMESTAMP?: number, USER_DEFINED_MICROSECONDS?: number);
+    constructor(CCSDS_OMM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, TIME_SYSTEM?: timingStandard, MEAN_ELEMENT_THEORY?: meanElementSource, COMMENT?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, SEMI_MAJOR_AXIS?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, GM?: number, MASS?: number, SOLAR_RAD_AREA?: number, SOLAR_RAD_COEFF?: number, DRAG_AREA?: number, DRAG_COEFF?: number, EPHEMERIS_TYPE?: ephemerisFormat, CLASSIFICATION_TYPE?: string | Uint8Array | null, NORAD_CAT_ID?: number, ELEMENT_SET_NO?: number, REV_AT_EPOCH?: number, BSTAR?: number, MEAN_MOTION_DOT?: number, MEAN_MOTION_DDOT?: number, COV_REFERENCE_FRAME?: RFMT | null, COVARIANCE?: (number)[], USER_DEFINED_BIP_0044_TYPE?: number, USER_DEFINED_OBJECT_DESIGNATOR?: string | Uint8Array | null, USER_DEFINED_EARTH_MODEL?: string | Uint8Array | null, USER_DEFINED_EPOCH_TIMESTAMP?: number, USER_DEFINED_MICROSECONDS?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OMM.d.ts.map

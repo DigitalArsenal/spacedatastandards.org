@@ -136,7 +136,7 @@ public struct SAR : IFlatbufferObject
 #endif
   public byte[] GetORBIT_STATEArray() { return __p.__vector_as_array<byte>(34); }
   /// SAR imaging mode
-  public sarMode SAR_MODE { get { int o = __p.__offset(36); return o != 0 ? (sarMode)__p.bb.GetSbyte(o + __p.bb_pos) : sarMode.STRIPMAP; } }
+  public sarMission SAR_MODE { get { int o = __p.__offset(36); return o != 0 ? (sarMission)__p.bb.GetSbyte(o + __p.bb_pos) : sarMission.STRIPMAP; } }
   /// Operating RF band (e.g., X, C, L, S, P)
   public string OPERATING_BAND { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -282,7 +282,7 @@ public struct SAR : IFlatbufferObject
       StringOffset DETECTION_ENDOffset = default(StringOffset),
       double DWELL_TIME = 0.0,
       StringOffset ORBIT_STATEOffset = default(StringOffset),
-      sarMode SAR_MODE = sarMode.STRIPMAP,
+      sarMission SAR_MODE = sarMission.STRIPMAP,
       StringOffset OPERATING_BANDOffset = default(StringOffset),
       double OPERATING_FREQ = 0.0,
       double SNR = 0.0,
@@ -403,7 +403,7 @@ public struct SAR : IFlatbufferObject
   public static void AddDETECTION_END(FlatBufferBuilder builder, StringOffset DETECTION_ENDOffset) { builder.AddOffset(13, DETECTION_ENDOffset.Value, 0); }
   public static void AddDWELL_TIME(FlatBufferBuilder builder, double DWELL_TIME) { builder.AddDouble(14, DWELL_TIME, 0.0); }
   public static void AddORBIT_STATE(FlatBufferBuilder builder, StringOffset ORBIT_STATEOffset) { builder.AddOffset(15, ORBIT_STATEOffset.Value, 0); }
-  public static void AddSAR_MODE(FlatBufferBuilder builder, sarMode SAR_MODE) { builder.AddSbyte(16, (sbyte)SAR_MODE, 0); }
+  public static void AddSAR_MODE(FlatBufferBuilder builder, sarMission SAR_MODE) { builder.AddSbyte(16, (sbyte)SAR_MODE, 0); }
   public static void AddOPERATING_BAND(FlatBufferBuilder builder, StringOffset OPERATING_BANDOffset) { builder.AddOffset(17, OPERATING_BANDOffset.Value, 0); }
   public static void AddOPERATING_FREQ(FlatBufferBuilder builder, double OPERATING_FREQ) { builder.AddDouble(18, OPERATING_FREQ, 0.0); }
   public static void AddSNR(FlatBufferBuilder builder, double SNR) { builder.AddDouble(19, SNR, 0.0); }
@@ -656,7 +656,7 @@ public class SART
   public string DETECTION_END { get; set; }
   public double DWELL_TIME { get; set; }
   public string ORBIT_STATE { get; set; }
-  public sarMode SAR_MODE { get; set; }
+  public sarMission SAR_MODE { get; set; }
   public string OPERATING_BAND { get; set; }
   public double OPERATING_FREQ { get; set; }
   public double SNR { get; set; }
@@ -716,7 +716,7 @@ public class SART
     this.DETECTION_END = null;
     this.DWELL_TIME = 0.0;
     this.ORBIT_STATE = null;
-    this.SAR_MODE = sarMode.STRIPMAP;
+    this.SAR_MODE = sarMission.STRIPMAP;
     this.OPERATING_BAND = null;
     this.OPERATING_FREQ = 0.0;
     this.SNR = 0.0;
@@ -791,7 +791,7 @@ static public class SARVerify
       && verifier.VerifyString(tablePos, 30 /*DETECTION_END*/, false)
       && verifier.VerifyField(tablePos, 32 /*DWELL_TIME*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 34 /*ORBIT_STATE*/, false)
-      && verifier.VerifyField(tablePos, 36 /*SAR_MODE*/, 1 /*sarMode*/, 1, false)
+      && verifier.VerifyField(tablePos, 36 /*SAR_MODE*/, 1 /*sarMission*/, 1, false)
       && verifier.VerifyString(tablePos, 38 /*OPERATING_BAND*/, false)
       && verifier.VerifyField(tablePos, 40 /*OPERATING_FREQ*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 42 /*SNR*/, 8 /*double*/, 8, false)

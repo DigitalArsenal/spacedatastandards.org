@@ -42,43 +42,43 @@ func (rcv *VCMAtmosphericModelData) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *VCMAtmosphericModelData) ATMOSPHERIC_MODEL() atmosphericModel {
+func (rcv *VCMAtmosphericModelData) ATMOSPHERIC_MODEL() atmosphericSource {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return atmosphericModel(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return atmosphericSource(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *VCMAtmosphericModelData) AtmosphericModel() atmosphericModel {
+func (rcv *VCMAtmosphericModelData) AtmosphericModel() atmosphericSource {
 	return rcv.ATMOSPHERIC_MODEL()
 }
 
-func (rcv *VCMAtmosphericModelData) MutateATMOSPHERIC_MODEL(n atmosphericModel) bool {
+func (rcv *VCMAtmosphericModelData) MutateATMOSPHERIC_MODEL(n atmosphericSource) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
 }
 
-func (rcv *VCMAtmosphericModelData) MutateAtmosphericModel(n atmosphericModel) bool {
+func (rcv *VCMAtmosphericModelData) MutateAtmosphericModel(n atmosphericSource) bool {
 	return rcv.MutateATMOSPHERIC_MODEL(n)
 }
 
-func (rcv *VCMAtmosphericModelData) GEOPOTENTIAL_MODEL() geopotentialModel {
+func (rcv *VCMAtmosphericModelData) GEOPOTENTIAL_MODEL() geopotentialSource {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return geopotentialModel(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return geopotentialSource(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *VCMAtmosphericModelData) GeopotentialModel() geopotentialModel {
+func (rcv *VCMAtmosphericModelData) GeopotentialModel() geopotentialSource {
 	return rcv.GEOPOTENTIAL_MODEL()
 }
 
-func (rcv *VCMAtmosphericModelData) MutateGEOPOTENTIAL_MODEL(n geopotentialModel) bool {
+func (rcv *VCMAtmosphericModelData) MutateGEOPOTENTIAL_MODEL(n geopotentialSource) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
 }
 
-func (rcv *VCMAtmosphericModelData) MutateGeopotentialModel(n geopotentialModel) bool {
+func (rcv *VCMAtmosphericModelData) MutateGeopotentialModel(n geopotentialSource) bool {
 	return rcv.MutateGEOPOTENTIAL_MODEL(n)
 }
 
@@ -102,43 +102,43 @@ func (rcv *VCMAtmosphericModelData) MutateLunarSolarPerturbation(n perturbationS
 	return rcv.MutateLUNAR_SOLAR_PERTURBATION(n)
 }
 
-func (rcv *VCMAtmosphericModelData) LUNAR_PERTURBATION_MODEL() lunarPerturbationModel {
+func (rcv *VCMAtmosphericModelData) LUNAR_PERTURBATION_MODEL() lunarPerturbationSource {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		return lunarPerturbationModel(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return lunarPerturbationSource(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *VCMAtmosphericModelData) LunarPerturbationModel() lunarPerturbationModel {
+func (rcv *VCMAtmosphericModelData) LunarPerturbationModel() lunarPerturbationSource {
 	return rcv.LUNAR_PERTURBATION_MODEL()
 }
 
-func (rcv *VCMAtmosphericModelData) MutateLUNAR_PERTURBATION_MODEL(n lunarPerturbationModel) bool {
+func (rcv *VCMAtmosphericModelData) MutateLUNAR_PERTURBATION_MODEL(n lunarPerturbationSource) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
 }
 
-func (rcv *VCMAtmosphericModelData) MutateLunarPerturbationModel(n lunarPerturbationModel) bool {
+func (rcv *VCMAtmosphericModelData) MutateLunarPerturbationModel(n lunarPerturbationSource) bool {
 	return rcv.MutateLUNAR_PERTURBATION_MODEL(n)
 }
 
-func (rcv *VCMAtmosphericModelData) SOLAR_PERTURBATION_MODEL() solarPerturbationModel {
+func (rcv *VCMAtmosphericModelData) SOLAR_PERTURBATION_MODEL() solarPerturbationSource {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return solarPerturbationModel(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return solarPerturbationSource(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *VCMAtmosphericModelData) SolarPerturbationModel() solarPerturbationModel {
+func (rcv *VCMAtmosphericModelData) SolarPerturbationModel() solarPerturbationSource {
 	return rcv.SOLAR_PERTURBATION_MODEL()
 }
 
-func (rcv *VCMAtmosphericModelData) MutateSOLAR_PERTURBATION_MODEL(n solarPerturbationModel) bool {
+func (rcv *VCMAtmosphericModelData) MutateSOLAR_PERTURBATION_MODEL(n solarPerturbationSource) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
 }
 
-func (rcv *VCMAtmosphericModelData) MutateSolarPerturbationModel(n solarPerturbationModel) bool {
+func (rcv *VCMAtmosphericModelData) MutateSolarPerturbationModel(n solarPerturbationSource) bool {
 	return rcv.MutateSOLAR_PERTURBATION_MODEL(n)
 }
 
@@ -182,39 +182,39 @@ func (rcv *VCMAtmosphericModelData) MutateSrpModel(n solarRadiationPressureModel
 	return rcv.MutateSRP_MODEL(n)
 }
 
-func (rcv *VCMAtmosphericModelData) RESONANCE_MODEL() resonanceModel {
+func (rcv *VCMAtmosphericModelData) RESONANCE_MODEL() resonanceSource {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
-		return resonanceModel(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return resonanceSource(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *VCMAtmosphericModelData) ResonanceModel() resonanceModel {
+func (rcv *VCMAtmosphericModelData) ResonanceModel() resonanceSource {
 	return rcv.RESONANCE_MODEL()
 }
 
-func (rcv *VCMAtmosphericModelData) MutateRESONANCE_MODEL(n resonanceModel) bool {
+func (rcv *VCMAtmosphericModelData) MutateRESONANCE_MODEL(n resonanceSource) bool {
 	return rcv._tab.MutateInt8Slot(18, int8(n))
 }
 
-func (rcv *VCMAtmosphericModelData) MutateResonanceModel(n resonanceModel) bool {
+func (rcv *VCMAtmosphericModelData) MutateResonanceModel(n resonanceSource) bool {
 	return rcv.MutateRESONANCE_MODEL(n)
 }
 
 func VCMAtmosphericModelDataStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
 }
-func VCMAtmosphericModelDataAddATMOSPHERIC_MODEL(builder *flatbuffers.Builder, ATMOSPHERIC_MODEL atmosphericModel) {
+func VCMAtmosphericModelDataAddATMOSPHERIC_MODEL(builder *flatbuffers.Builder, ATMOSPHERIC_MODEL atmosphericSource) {
 	builder.PrependInt8Slot(0, int8(ATMOSPHERIC_MODEL), 0)
 }
-func VCMAtmosphericModelDataAddAtmosphericModel(builder *flatbuffers.Builder, ATMOSPHERIC_MODEL atmosphericModel) {
+func VCMAtmosphericModelDataAddAtmosphericModel(builder *flatbuffers.Builder, ATMOSPHERIC_MODEL atmosphericSource) {
 	VCMAtmosphericModelDataAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
 }
-func VCMAtmosphericModelDataAddGEOPOTENTIAL_MODEL(builder *flatbuffers.Builder, GEOPOTENTIAL_MODEL geopotentialModel) {
+func VCMAtmosphericModelDataAddGEOPOTENTIAL_MODEL(builder *flatbuffers.Builder, GEOPOTENTIAL_MODEL geopotentialSource) {
 	builder.PrependInt8Slot(1, int8(GEOPOTENTIAL_MODEL), 0)
 }
-func VCMAtmosphericModelDataAddGeopotentialModel(builder *flatbuffers.Builder, GEOPOTENTIAL_MODEL geopotentialModel) {
+func VCMAtmosphericModelDataAddGeopotentialModel(builder *flatbuffers.Builder, GEOPOTENTIAL_MODEL geopotentialSource) {
 	VCMAtmosphericModelDataAddGEOPOTENTIAL_MODEL(builder, GEOPOTENTIAL_MODEL)
 }
 func VCMAtmosphericModelDataAddLUNAR_SOLAR_PERTURBATION(builder *flatbuffers.Builder, LUNAR_SOLAR_PERTURBATION perturbationStatus) {
@@ -223,16 +223,16 @@ func VCMAtmosphericModelDataAddLUNAR_SOLAR_PERTURBATION(builder *flatbuffers.Bui
 func VCMAtmosphericModelDataAddLunarSolarPerturbation(builder *flatbuffers.Builder, LUNAR_SOLAR_PERTURBATION perturbationStatus) {
 	VCMAtmosphericModelDataAddLUNAR_SOLAR_PERTURBATION(builder, LUNAR_SOLAR_PERTURBATION)
 }
-func VCMAtmosphericModelDataAddLUNAR_PERTURBATION_MODEL(builder *flatbuffers.Builder, LUNAR_PERTURBATION_MODEL lunarPerturbationModel) {
+func VCMAtmosphericModelDataAddLUNAR_PERTURBATION_MODEL(builder *flatbuffers.Builder, LUNAR_PERTURBATION_MODEL lunarPerturbationSource) {
 	builder.PrependInt8Slot(3, int8(LUNAR_PERTURBATION_MODEL), 0)
 }
-func VCMAtmosphericModelDataAddLunarPerturbationModel(builder *flatbuffers.Builder, LUNAR_PERTURBATION_MODEL lunarPerturbationModel) {
+func VCMAtmosphericModelDataAddLunarPerturbationModel(builder *flatbuffers.Builder, LUNAR_PERTURBATION_MODEL lunarPerturbationSource) {
 	VCMAtmosphericModelDataAddLUNAR_PERTURBATION_MODEL(builder, LUNAR_PERTURBATION_MODEL)
 }
-func VCMAtmosphericModelDataAddSOLAR_PERTURBATION_MODEL(builder *flatbuffers.Builder, SOLAR_PERTURBATION_MODEL solarPerturbationModel) {
+func VCMAtmosphericModelDataAddSOLAR_PERTURBATION_MODEL(builder *flatbuffers.Builder, SOLAR_PERTURBATION_MODEL solarPerturbationSource) {
 	builder.PrependInt8Slot(4, int8(SOLAR_PERTURBATION_MODEL), 0)
 }
-func VCMAtmosphericModelDataAddSolarPerturbationModel(builder *flatbuffers.Builder, SOLAR_PERTURBATION_MODEL solarPerturbationModel) {
+func VCMAtmosphericModelDataAddSolarPerturbationModel(builder *flatbuffers.Builder, SOLAR_PERTURBATION_MODEL solarPerturbationSource) {
 	VCMAtmosphericModelDataAddSOLAR_PERTURBATION_MODEL(builder, SOLAR_PERTURBATION_MODEL)
 }
 func VCMAtmosphericModelDataAddSOLAR_RADIATION_PRESSURE(builder *flatbuffers.Builder, SOLAR_RADIATION_PRESSURE perturbationStatus) {
@@ -247,10 +247,10 @@ func VCMAtmosphericModelDataAddSRP_MODEL(builder *flatbuffers.Builder, SRP_MODEL
 func VCMAtmosphericModelDataAddSrpModel(builder *flatbuffers.Builder, SRP_MODEL solarRadiationPressureModel) {
 	VCMAtmosphericModelDataAddSRP_MODEL(builder, SRP_MODEL)
 }
-func VCMAtmosphericModelDataAddRESONANCE_MODEL(builder *flatbuffers.Builder, RESONANCE_MODEL resonanceModel) {
+func VCMAtmosphericModelDataAddRESONANCE_MODEL(builder *flatbuffers.Builder, RESONANCE_MODEL resonanceSource) {
 	builder.PrependInt8Slot(7, int8(RESONANCE_MODEL), 0)
 }
-func VCMAtmosphericModelDataAddResonanceModel(builder *flatbuffers.Builder, RESONANCE_MODEL resonanceModel) {
+func VCMAtmosphericModelDataAddResonanceModel(builder *flatbuffers.Builder, RESONANCE_MODEL resonanceSource) {
 	VCMAtmosphericModelDataAddRESONANCE_MODEL(builder, RESONANCE_MODEL)
 }
 func VCMAtmosphericModelDataEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {

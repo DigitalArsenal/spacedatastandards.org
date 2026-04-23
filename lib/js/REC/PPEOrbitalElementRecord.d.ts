@@ -1,7 +1,7 @@
 import * as flatbuffers from 'flatbuffers';
 import { polynomialBasisType } from './polynomialBasisType.js';
 import { ppeAnomalyType } from './ppeAnomalyType.js';
-import { sizeShapeType } from './sizeShapeType.js';
+import { sizeShapeProfile } from './sizeShapeProfile.js';
 /**
  * A single time-segment record of polynomial coefficients for classical orbital elements.
  *
@@ -41,7 +41,7 @@ export declare class PPEOrbitalElementRecord implements flatbuffers.IUnpackableO
     /**
      * Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
      */
-    SIZE_SHAPE_TYPE(): sizeShapeType;
+    SIZE_SHAPE_TYPE(): sizeShapeProfile;
     /**
      * Anomaly type for the sixth orbital element.
      */
@@ -102,7 +102,7 @@ export declare class PPEOrbitalElementRecord implements flatbuffers.IUnpackableO
     static addEpochHalfSpan(builder: flatbuffers.Builder, EPOCH_HALF_SPAN: number): void;
     static addNumCoefficients(builder: flatbuffers.Builder, NUM_COEFFICIENTS: number): void;
     static addBasisType(builder: flatbuffers.Builder, BASIS_TYPE: polynomialBasisType): void;
-    static addSizeShapeType(builder: flatbuffers.Builder, SIZE_SHAPE_TYPE: sizeShapeType): void;
+    static addSizeShapeType(builder: flatbuffers.Builder, SIZE_SHAPE_TYPE: sizeShapeProfile): void;
     static addAnomalyType(builder: flatbuffers.Builder, ANOMALY_TYPE: ppeAnomalyType): void;
     static addCoeffSizeShape(builder: flatbuffers.Builder, COEFF_SIZE_SHAPEOffset: flatbuffers.Offset): void;
     static createCoeffSizeShapeVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
@@ -149,7 +149,7 @@ export declare class PPEOrbitalElementRecord implements flatbuffers.IUnpackableO
     static addMaxElementResidual(builder: flatbuffers.Builder, MAX_ELEMENT_RESIDUAL: number): void;
     static addRmsElementResidual(builder: flatbuffers.Builder, RMS_ELEMENT_RESIDUAL: number): void;
     static endPPEOrbitalElementRecord(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createPPEOrbitalElementRecord(builder: flatbuffers.Builder, EPOCH_MIDOffset: flatbuffers.Offset, EPOCH_HALF_SPAN: number, NUM_COEFFICIENTS: number, BASIS_TYPE: polynomialBasisType, SIZE_SHAPE_TYPE: sizeShapeType, ANOMALY_TYPE: ppeAnomalyType, COEFF_SIZE_SHAPEOffset: flatbuffers.Offset, COEFF_ECCENTRICITYOffset: flatbuffers.Offset, COEFF_INCLINATIONOffset: flatbuffers.Offset, COEFF_RAANOffset: flatbuffers.Offset, COEFF_ARG_PERIAPSISOffset: flatbuffers.Offset, COEFF_ANOMALYOffset: flatbuffers.Offset, MAX_ELEMENT_RESIDUAL: number, RMS_ELEMENT_RESIDUAL: number): flatbuffers.Offset;
+    static createPPEOrbitalElementRecord(builder: flatbuffers.Builder, EPOCH_MIDOffset: flatbuffers.Offset, EPOCH_HALF_SPAN: number, NUM_COEFFICIENTS: number, BASIS_TYPE: polynomialBasisType, SIZE_SHAPE_TYPE: sizeShapeProfile, ANOMALY_TYPE: ppeAnomalyType, COEFF_SIZE_SHAPEOffset: flatbuffers.Offset, COEFF_ECCENTRICITYOffset: flatbuffers.Offset, COEFF_INCLINATIONOffset: flatbuffers.Offset, COEFF_RAANOffset: flatbuffers.Offset, COEFF_ARG_PERIAPSISOffset: flatbuffers.Offset, COEFF_ANOMALYOffset: flatbuffers.Offset, MAX_ELEMENT_RESIDUAL: number, RMS_ELEMENT_RESIDUAL: number): flatbuffers.Offset;
     unpack(): PPEOrbitalElementRecordT;
     unpackTo(_o: PPEOrbitalElementRecordT): void;
 }
@@ -158,7 +158,7 @@ export declare class PPEOrbitalElementRecordT implements flatbuffers.IGeneratedO
     EPOCH_HALF_SPAN: number;
     NUM_COEFFICIENTS: number;
     BASIS_TYPE: polynomialBasisType;
-    SIZE_SHAPE_TYPE: sizeShapeType;
+    SIZE_SHAPE_TYPE: sizeShapeProfile;
     ANOMALY_TYPE: ppeAnomalyType;
     COEFF_SIZE_SHAPE: (number)[];
     COEFF_ECCENTRICITY: (number)[];
@@ -168,7 +168,7 @@ export declare class PPEOrbitalElementRecordT implements flatbuffers.IGeneratedO
     COEFF_ANOMALY: (number)[];
     MAX_ELEMENT_RESIDUAL: number;
     RMS_ELEMENT_RESIDUAL: number;
-    constructor(EPOCH_MID?: string | Uint8Array | null, EPOCH_HALF_SPAN?: number, NUM_COEFFICIENTS?: number, BASIS_TYPE?: polynomialBasisType, SIZE_SHAPE_TYPE?: sizeShapeType, ANOMALY_TYPE?: ppeAnomalyType, COEFF_SIZE_SHAPE?: (number)[], COEFF_ECCENTRICITY?: (number)[], COEFF_INCLINATION?: (number)[], COEFF_RAAN?: (number)[], COEFF_ARG_PERIAPSIS?: (number)[], COEFF_ANOMALY?: (number)[], MAX_ELEMENT_RESIDUAL?: number, RMS_ELEMENT_RESIDUAL?: number);
+    constructor(EPOCH_MID?: string | Uint8Array | null, EPOCH_HALF_SPAN?: number, NUM_COEFFICIENTS?: number, BASIS_TYPE?: polynomialBasisType, SIZE_SHAPE_TYPE?: sizeShapeProfile, ANOMALY_TYPE?: ppeAnomalyType, COEFF_SIZE_SHAPE?: (number)[], COEFF_ECCENTRICITY?: (number)[], COEFF_INCLINATION?: (number)[], COEFF_RAAN?: (number)[], COEFF_ARG_PERIAPSIS?: (number)[], COEFF_ANOMALY?: (number)[], MAX_ELEMENT_RESIDUAL?: number, RMS_ELEMENT_RESIDUAL?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PPEOrbitalElementRecord.d.ts.map

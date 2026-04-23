@@ -222,7 +222,7 @@ class OBT extends Table
     public function getAOU_TYPE()
     {
         $o = $this->__offset(46);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \aouType::CIRCULAR;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \aouCategory::CIRCULAR;
     }
 
     /// Area of uncertainty data

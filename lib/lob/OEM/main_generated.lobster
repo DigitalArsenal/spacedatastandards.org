@@ -29,11 +29,11 @@ enum ppeAnomalyType:
     ppeAnomalyType_ECCENTRIC_ANOMALY = 2
 
 /// Orbital element parameterization for the first element (size/shape).
-enum sizeShapeType:
+enum sizeShapeProfile:
     /// Semi-major axis (km). Standard for elliptical orbits.
-    sizeShapeType_SMA = 0
+    sizeShapeProfile_SMA = 0
     /// Radius of periapsis (km). Preferred for hyperbolic orbits.
-    sizeShapeType_R_PERIAPSIS = 1
+    sizeShapeProfile_R_PERIAPSIS = 1
 
 class PPEPositionRecord
 
@@ -232,8 +232,8 @@ class PPEOrbitalElementRecord : flatbuffers.handle
     def BASIS_TYPE() -> polynomialBasisType:
         return polynomialBasisType(flatbuffers.field_int8(buf_, pos_, 10, 0))
     /// Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
-    def SIZE_SHAPE_TYPE() -> sizeShapeType:
-        return sizeShapeType(flatbuffers.field_int8(buf_, pos_, 12, 0))
+    def SIZE_SHAPE_TYPE() -> sizeShapeProfile:
+        return sizeShapeProfile(flatbuffers.field_int8(buf_, pos_, 12, 0))
     /// Anomaly type for the sixth orbital element.
     def ANOMALY_TYPE() -> ppeAnomalyType:
         return ppeAnomalyType(flatbuffers.field_int8(buf_, pos_, 14, 0))
@@ -300,7 +300,7 @@ struct PPEOrbitalElementRecordBuilder:
     def add_BASIS_TYPE(BASIS_TYPE:polynomialBasisType):
         b_.PrependInt8Slot(3, BASIS_TYPE, 0)
         return this
-    def add_SIZE_SHAPE_TYPE(SIZE_SHAPE_TYPE:sizeShapeType):
+    def add_SIZE_SHAPE_TYPE(SIZE_SHAPE_TYPE:sizeShapeProfile):
         b_.PrependInt8Slot(4, SIZE_SHAPE_TYPE, 0)
         return this
     def add_ANOMALY_TYPE(ANOMALY_TYPE:ppeAnomalyType):
@@ -399,8 +399,8 @@ class PPE : flatbuffers.handle
         let o = flatbuffers.field_table(buf_, pos_, 10)
         return if o: RFM { buf_, o } else: nil
     /// Time system used for all epochs in this message.
-    def TIME_SYSTEM() -> timeSystem:
-        return timeSystem(flatbuffers.field_int8(buf_, pos_, 12, 0))
+    def TIME_SYSTEM() -> timingStandard:
+        return timingStandard(flatbuffers.field_int8(buf_, pos_, 12, 0))
     /// Start of the total time span covered by this ephemeris (ISO 8601).
     def START_TIME() -> string:
         return flatbuffers.field_string(buf_, pos_, 14)
@@ -454,7 +454,7 @@ struct PPEBuilder:
     def add_REFERENCE_FRAME(REFERENCE_FRAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, REFERENCE_FRAME)
         return this
-    def add_TIME_SYSTEM(TIME_SYSTEM:timeSystem):
+    def add_TIME_SYSTEM(TIME_SYSTEM:timingStandard):
         b_.PrependInt8Slot(4, TIME_SYSTEM, 0)
         return this
     def add_START_TIME(START_TIME:flatbuffers.offset):

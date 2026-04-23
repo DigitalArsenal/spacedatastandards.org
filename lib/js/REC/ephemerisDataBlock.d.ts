@@ -4,7 +4,7 @@ import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { RFM, RFMT } from './RFM.js';
 import { covarianceMatrixLine, covarianceMatrixLineT } from './covarianceMatrixLine.js';
 import { ephemerisDataLine, ephemerisDataLineT } from './ephemerisDataLine.js';
-import { timeSystem } from './timeSystem.js';
+import { timingStandard } from './timingStandard.js';
 /**
  * OEM Ephemeris Data Block
  */
@@ -44,7 +44,7 @@ export declare class ephemerisDataBlock implements flatbuffers.IUnpackableObject
     /**
      * Time system used for the orbit state and covariance matrix. (UTC)
      */
-    TIME_SYSTEM(): timeSystem;
+    TIME_SYSTEM(): timingStandard;
     /**
      * Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
      */
@@ -129,7 +129,7 @@ export declare class ephemerisDataBlock implements flatbuffers.IUnpackableObject
     static addReferenceFrame(builder: flatbuffers.Builder, REFERENCE_FRAMEOffset: flatbuffers.Offset): void;
     static addReferenceFrameEpoch(builder: flatbuffers.Builder, REFERENCE_FRAME_EPOCHOffset: flatbuffers.Offset): void;
     static addCovReferenceFrame(builder: flatbuffers.Builder, COV_REFERENCE_FRAMEOffset: flatbuffers.Offset): void;
-    static addTimeSystem(builder: flatbuffers.Builder, TIME_SYSTEM: timeSystem): void;
+    static addTimeSystem(builder: flatbuffers.Builder, TIME_SYSTEM: timingStandard): void;
     static addStartTime(builder: flatbuffers.Builder, START_TIMEOffset: flatbuffers.Offset): void;
     static addUseableStartTime(builder: flatbuffers.Builder, USEABLE_START_TIMEOffset: flatbuffers.Offset): void;
     static addUseableStopTime(builder: flatbuffers.Builder, USEABLE_STOP_TIMEOffset: flatbuffers.Offset): void;
@@ -165,7 +165,7 @@ export declare class ephemerisDataBlockT implements flatbuffers.IGeneratedObject
     REFERENCE_FRAME: RFMT | null;
     REFERENCE_FRAME_EPOCH: string | Uint8Array | null;
     COV_REFERENCE_FRAME: RFMT | null;
-    TIME_SYSTEM: timeSystem;
+    TIME_SYSTEM: timingStandard;
     START_TIME: string | Uint8Array | null;
     USEABLE_START_TIME: string | Uint8Array | null;
     USEABLE_STOP_TIME: string | Uint8Array | null;
@@ -178,7 +178,7 @@ export declare class ephemerisDataBlockT implements flatbuffers.IGeneratedObject
     EPHEMERIS_DATA_LINES: (ephemerisDataLineT)[];
     COVARIANCE_MATRIX_LINES: (covarianceMatrixLineT)[];
     POLYNOMIAL_POSITION_RECORDS: (PPEPositionRecordT)[];
-    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, COV_REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timeSystem, START_TIME?: string | Uint8Array | null, USEABLE_START_TIME?: string | Uint8Array | null, USEABLE_STOP_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, INTERPOLATION?: string | Uint8Array | null, INTERPOLATION_DEGREE?: number, STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, EPHEMERIS_DATA?: (number)[], EPHEMERIS_DATA_LINES?: (ephemerisDataLineT)[], COVARIANCE_MATRIX_LINES?: (covarianceMatrixLineT)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[]);
+    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, COV_REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timingStandard, START_TIME?: string | Uint8Array | null, USEABLE_START_TIME?: string | Uint8Array | null, USEABLE_STOP_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, INTERPOLATION?: string | Uint8Array | null, INTERPOLATION_DEGREE?: number, STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, EPHEMERIS_DATA?: (number)[], EPHEMERIS_DATA_LINES?: (ephemerisDataLineT)[], COVARIANCE_MATRIX_LINES?: (covarianceMatrixLineT)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ephemerisDataBlock.d.ts.map

@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { sarMode } from './sarMode.js';
+import { sarMission } from './sarMission.js';
 import { sarPolarization } from './sarPolarization.js';
 
 
@@ -192,9 +192,9 @@ ORBIT_STATE(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * SAR imaging mode
  */
-SAR_MODE():sarMode {
+SAR_MODE():sarMission {
   const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : sarMode.STRIPMAP;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : sarMission.STRIPMAP;
 }
 
 /**
@@ -628,8 +628,8 @@ static addOrbitState(builder:flatbuffers.Builder, ORBIT_STATEOffset:flatbuffers.
   builder.addFieldOffset(15, ORBIT_STATEOffset, 0);
 }
 
-static addSarMode(builder:flatbuffers.Builder, SAR_MODE:sarMode) {
-  builder.addFieldInt8(16, SAR_MODE, sarMode.STRIPMAP);
+static addSarMode(builder:flatbuffers.Builder, SAR_MODE:sarMission) {
+  builder.addFieldInt8(16, SAR_MODE, sarMission.STRIPMAP);
 }
 
 static addOperatingBand(builder:flatbuffers.Builder, OPERATING_BANDOffset:flatbuffers.Offset) {
@@ -845,7 +845,7 @@ static finishSizePrefixedSARBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$SAR', true);
 }
 
-static createSAR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, EXTERNAL_IDOffset:flatbuffers.Offset, COLLECTION_IDOffset:flatbuffers.Offset, DETECTION_IDOffset:flatbuffers.Offset, COLLECTION_STARTOffset:flatbuffers.Offset, COLLECTION_ENDOffset:flatbuffers.Offset, CENTER_TIMEOffset:flatbuffers.Offset, DETECTION_STARTOffset:flatbuffers.Offset, DETECTION_ENDOffset:flatbuffers.Offset, DWELL_TIME:number, ORBIT_STATEOffset:flatbuffers.Offset, SAR_MODE:sarMode, OPERATING_BANDOffset:flatbuffers.Offset, OPERATING_FREQ:number, SNR:number, TX_POLARIZATION:sarPolarization, RX_POLARIZATION:sarPolarization, GRAZE_ANGLE:number, INCIDENCE_ANGLE:number, SQUINT_ANGLE:number, PULSE_BANDWIDTH:number, PULSE_DURATION:number, CONTINUOUS_SPOT_ANGLE:number, SLANT_RANGE:number, NEAR_RANGE:number, FAR_RANGE:number, SWATH_LENGTH:number, AGJSONOffset:flatbuffers.Offset, ATEXTOffset:flatbuffers.Offset, ATYPEOffset:flatbuffers.Offset, COORD_SYSOffset:flatbuffers.Offset, SPACING_RANGE:number, SPACING_AZIMUTH:number, LOOKS_AZIMUTH:number, LOOKS_RANGE:number, RESOLUTION_RANGE:number, RESOLUTION_AZIMUTH:number, OB_DIRECTIONOffset:flatbuffers.Offset, TARGETPOSX:number, TARGETPOSY:number, TARGETPOSZ:number, SENALT:number, SENVELX:number, SENVELY:number, SENVELZ:number, SENLAT_START:number, SENLON_START:number, SENLAT_END:number, SENLON_END:number, TRANSACTION_IDOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSAR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, EXTERNAL_IDOffset:flatbuffers.Offset, COLLECTION_IDOffset:flatbuffers.Offset, DETECTION_IDOffset:flatbuffers.Offset, COLLECTION_STARTOffset:flatbuffers.Offset, COLLECTION_ENDOffset:flatbuffers.Offset, CENTER_TIMEOffset:flatbuffers.Offset, DETECTION_STARTOffset:flatbuffers.Offset, DETECTION_ENDOffset:flatbuffers.Offset, DWELL_TIME:number, ORBIT_STATEOffset:flatbuffers.Offset, SAR_MODE:sarMission, OPERATING_BANDOffset:flatbuffers.Offset, OPERATING_FREQ:number, SNR:number, TX_POLARIZATION:sarPolarization, RX_POLARIZATION:sarPolarization, GRAZE_ANGLE:number, INCIDENCE_ANGLE:number, SQUINT_ANGLE:number, PULSE_BANDWIDTH:number, PULSE_DURATION:number, CONTINUOUS_SPOT_ANGLE:number, SLANT_RANGE:number, NEAR_RANGE:number, FAR_RANGE:number, SWATH_LENGTH:number, AGJSONOffset:flatbuffers.Offset, ATEXTOffset:flatbuffers.Offset, ATYPEOffset:flatbuffers.Offset, COORD_SYSOffset:flatbuffers.Offset, SPACING_RANGE:number, SPACING_AZIMUTH:number, LOOKS_AZIMUTH:number, LOOKS_RANGE:number, RESOLUTION_RANGE:number, RESOLUTION_AZIMUTH:number, OB_DIRECTIONOffset:flatbuffers.Offset, TARGETPOSX:number, TARGETPOSY:number, TARGETPOSZ:number, SENALT:number, SENVELX:number, SENVELY:number, SENVELZ:number, SENLAT_START:number, SENLON_START:number, SENLAT_END:number, SENLON_END:number, TRANSACTION_IDOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset):flatbuffers.Offset {
   SAR.startSAR(builder);
   SAR.addId(builder, IDOffset);
   SAR.addSatNo(builder, SAT_NO);
@@ -1052,7 +1052,7 @@ constructor(
   public DETECTION_END: string|Uint8Array|null = null,
   public DWELL_TIME: number = 0.0,
   public ORBIT_STATE: string|Uint8Array|null = null,
-  public SAR_MODE: sarMode = sarMode.STRIPMAP,
+  public SAR_MODE: sarMission = sarMission.STRIPMAP,
   public OPERATING_BAND: string|Uint8Array|null = null,
   public OPERATING_FREQ: number = 0.0,
   public SNR: number = 0.0,

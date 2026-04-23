@@ -1,7 +1,7 @@
-// Hash: af813818b2917f80f7a0f423e22a07f17a07f776d50b8e6dc5c54c6c12260e98
-// Version: 1.0.1
+// Hash: d9bc5932351f9978e33a7d171deae5336586bd77537cb00adb7a4cd5fa2323b0
+// Version: 1.0.3
 // -----------------------------------END_HEADER
-enum timeSystem : byte {
+enum timingStandard : byte {
   /// Greenwich Mean Sidereal Time
   GMST,
   /// Global Positioning System
@@ -30,7 +30,7 @@ enum timeSystem : byte {
 
 /// Time System
 table TIM {
-  TIME_SYSTEM: timeSystem;
+  TIME_SYSTEM: timingStandard;
 }
 root_type TIM;
 file_identifier "$TIM";

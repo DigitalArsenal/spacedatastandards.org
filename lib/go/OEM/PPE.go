@@ -139,24 +139,24 @@ func (rcv *PPE) ReferenceFrame(obj *RFM) *RFM {
 
 /// Reference frame for position/velocity coefficients.
 /// Time system used for all epochs in this message.
-func (rcv *PPE) TIME_SYSTEM() timeSystem {
+func (rcv *PPE) TIME_SYSTEM() timingStandard {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return timeSystem(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return timingStandard(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *PPE) TimeSystem() timeSystem {
+func (rcv *PPE) TimeSystem() timingStandard {
 	return rcv.TIME_SYSTEM()
 }
 
 /// Time system used for all epochs in this message.
-func (rcv *PPE) MutateTIME_SYSTEM(n timeSystem) bool {
+func (rcv *PPE) MutateTIME_SYSTEM(n timingStandard) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
 }
 
-func (rcv *PPE) MutateTimeSystem(n timeSystem) bool {
+func (rcv *PPE) MutateTimeSystem(n timingStandard) bool {
 	return rcv.MutateTIME_SYSTEM(n)
 }
 
@@ -377,10 +377,10 @@ func PPEAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuf
 func PPEAddReferenceFrame(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
 	PPEAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
 }
-func PPEAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
+func PPEAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timingStandard) {
 	builder.PrependInt8Slot(4, int8(TIME_SYSTEM), 0)
 }
-func PPEAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
+func PPEAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM timingStandard) {
 	PPEAddTIME_SYSTEM(builder, TIME_SYSTEM)
 }
 func PPEAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {

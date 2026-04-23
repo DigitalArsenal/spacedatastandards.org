@@ -6,7 +6,7 @@ import * as flatbuffers from 'flatbuffers';
 
 import { DataCoverage, DataCoverageT } from './DataCoverage.js';
 import { PricingTier, PricingTierT } from './PricingTier.js';
-import { accessType } from './accessType.js';
+import { accessCategory } from './accessCategory.js';
 import { paymentMethod } from './paymentMethod.js';
 
 
@@ -121,9 +121,9 @@ SAMPLE_CID(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Type of access offered
  */
-ACCESS_TYPE():accessType {
+ACCESS_TYPE():accessCategory {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : accessType.OneTime;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : accessCategory.OneTime;
 }
 
 /**
@@ -255,8 +255,8 @@ static addSampleCid(builder:flatbuffers.Builder, SAMPLE_CIDOffset:flatbuffers.Of
   builder.addFieldOffset(7, SAMPLE_CIDOffset, 0);
 }
 
-static addAccessType(builder:flatbuffers.Builder, ACCESS_TYPE:accessType) {
-  builder.addFieldInt8(8, ACCESS_TYPE, accessType.OneTime);
+static addAccessType(builder:flatbuffers.Builder, ACCESS_TYPE:accessCategory) {
+  builder.addFieldInt8(8, ACCESS_TYPE, accessCategory.OneTime);
 }
 
 static addEncryptionRequired(builder:flatbuffers.Builder, ENCRYPTION_REQUIRED:boolean) {
@@ -392,7 +392,7 @@ constructor(
   public DATA_TYPES: (string)[] = [],
   public COVERAGE: DataCoverageT|null = null,
   public SAMPLE_CID: string|Uint8Array|null = null,
-  public ACCESS_TYPE: accessType = accessType.OneTime,
+  public ACCESS_TYPE: accessCategory = accessCategory.OneTime,
   public ENCRYPTION_REQUIRED: boolean = false,
   public PRICING: (PricingTierT)[] = [],
   public ACCEPTED_PAYMENTS: (paymentMethod)[] = [],

@@ -72,7 +72,7 @@ class CAT extends Table
     public function getOBJECT_TYPE()
     {
         $o = $this->__offset(10);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \objectType::UNKNOWN;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \spaceObjectClass::UNKNOWN;
     }
 
     /// Operational Status Code
@@ -82,7 +82,7 @@ class CAT extends Table
     public function getOPS_STATUS_CODE()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \opsStatusCode::UNKNOWN;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \operationalState::UNKNOWN;
     }
 
     /// Ownership, typically country or company
@@ -173,7 +173,7 @@ class CAT extends Table
     public function getDATA_STATUS_CODE()
     {
         $o = $this->__offset(32);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \dataStatusCode::NO_CURRENT_ELEMENTS;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \dataAvailability::NO_CURRENT_ELEMENTS;
     }
 
     /// Orbit center
@@ -190,7 +190,7 @@ class CAT extends Table
     public function getORBIT_TYPE()
     {
         $o = $this->__offset(36);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \orbitType::ORBIT;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \orbitRegime::ORBIT;
     }
 
     /// Deployment Date [year-month-day] (ISO 8601)
@@ -237,7 +237,7 @@ class CAT extends Table
     public function getMASS_TYPE()
     {
         $o = $this->__offset(46);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \massType::DRY;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \massCategory::DRY;
     }
 
     /// Vector of PAYLOADS

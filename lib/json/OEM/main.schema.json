@@ -21,7 +21,7 @@
       "type" : "string",
       "enum": ["NONE", "CelestialFrameWrapper", "SpacecraftFrameWrapper", "OrbitFrameWrapper", "CustomFrameWrapper"]
     },
-    "timeSystem" : {
+    "timingStandard" : {
       "type" : "string",
       "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC"]
     },
@@ -45,23 +45,23 @@
       "type" : "string",
       "enum": ["AB", "ABS", "AC", "ALG", "ANG", "ARGN", "ARM", "ASRA", "AUS", "AZER", "BEL", "BELA", "BERM", "BGD", "BHUT", "BOL", "BRAZ", "BUL", "CA", "CHBZ", "CHTU", "CHLE", "CIS", "COL", "CRI", "CZCH", "DEN", "DJI", "ECU", "EGYP", "ESA", "ESRO", "EST", "ETH", "EUME", "EUTE", "FGER", "FIN", "FR", "FRIT", "GER", "GHA", "GLOB", "GREC", "GRSA", "GUAT", "HUN", "IM", "IND", "INDO", "IRAN", "IRAQ", "IRID", "IRL", "ISRA", "ISRO", "ISS", "IT", "ITSO", "JPN", "KAZ", "KEN", "LAOS", "LKA", "LTU", "LUXE", "MA", "MALA", "MCO", "MDA", "MEX", "MMR", "MNG", "MUS", "NATO", "NETH", "NICO", "NIG", "NKOR", "NOR", "NPL", "NZ", "O3B", "ORB", "PAKI", "PERU", "POL", "POR", "PRC", "PRY", "PRES", "QAT", "RASC", "ROC", "ROM", "RP", "RWA", "SAFR", "SAUD", "SDN", "SEAL", "SES", "SGJP", "SING", "SKOR", "SPN", "STCT", "SVN", "SWED", "SWTZ", "TBD", "THAI", "TMMC", "TUN", "TURK", "UAE", "UK", "UKR", "UNK", "URY", "US", "USBZ", "VAT", "VENZ", "VTNM", "ZWE"]
     },
-    "objectType" : {
+    "spaceObjectClass" : {
       "type" : "string",
       "enum": ["PAYLOAD", "ROCKET_BODY", "DEBRIS", "UNKNOWN"]
     },
-    "opsStatusCode" : {
+    "operationalState" : {
       "type" : "string",
       "enum": ["OPERATIONAL", "NONOPERATIONAL", "PARTIALLY_OPERATIONAL", "BACKUP_STANDBY", "SPARE", "EXTENDED_MISSION", "DECAYED", "UNKNOWN"]
     },
-    "dataStatusCode" : {
+    "dataAvailability" : {
       "type" : "string",
       "enum": ["NO_CURRENT_ELEMENTS", "NO_INITIAL_ELEMENTS", "NO_ELEMENTS_AVAILABLE", "OK"]
     },
-    "orbitType" : {
+    "orbitRegime" : {
       "type" : "string",
       "enum": ["ORBIT", "LANDING", "IMPACT", "DOCKED", "ROUNDTRIP"]
     },
-    "massType" : {
+    "massCategory" : {
       "type" : "string",
       "enum": ["DRY", "WET"]
     },
@@ -73,7 +73,7 @@
       "type" : "string",
       "enum": ["TRUE_ANOMALY", "MEAN_ANOMALY", "ECCENTRIC_ANOMALY"]
     },
-    "sizeShapeType" : {
+    "sizeShapeProfile" : {
       "type" : "string",
       "enum": ["SMA", "R_PERIAPSIS"]
     },
@@ -137,7 +137,7 @@
       "description" : "Time System",
       "properties" : {
         "TIME_SYSTEM" : {
-                "$ref" : "#/definitions/timeSystem"
+                "$ref" : "#/definitions/timingStandard"
               }
       },
       "additionalProperties" : false
@@ -373,11 +373,11 @@
                 "description" : "NORAD Catalog Number"
               },
         "OBJECT_TYPE" : {
-                "$ref" : "#/definitions/objectType",
+                "$ref" : "#/definitions/spaceObjectClass",
                 "description" : "Object type (Payload, Rocket body, Debris, Unknown)"
               },
         "OPS_STATUS_CODE" : {
-                "$ref" : "#/definitions/opsStatusCode",
+                "$ref" : "#/definitions/operationalState",
                 "description" : "Operational Status Code"
               },
         "OWNER" : {
@@ -417,7 +417,7 @@
                 "description" : "Radar Cross Section [meters2]; blank if no data available"
               },
         "DATA_STATUS_CODE" : {
-                "$ref" : "#/definitions/dataStatusCode",
+                "$ref" : "#/definitions/dataAvailability",
                 "description" : "Data status code; blank otherwise"
               },
         "ORBIT_CENTER" : {
@@ -425,7 +425,7 @@
                 "description" : "Orbit center"
               },
         "ORBIT_TYPE" : {
-                "$ref" : "#/definitions/orbitType",
+                "$ref" : "#/definitions/orbitRegime",
                 "description" : "Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)"
               },
         "DEPLOYMENT_DATE" : {
@@ -445,7 +445,7 @@
                 "description" : "Mass [kilograms]; blank if no data available"
               },
         "MASS_TYPE" : {
-                "$ref" : "#/definitions/massType",
+                "$ref" : "#/definitions/massCategory",
                 "description" : "Mass type (Dry, Wet)"
               },
         "PAYLOADS" : {
@@ -536,7 +536,7 @@
                 "description" : "Polynomial basis type for interpreting the coefficient arrays."
               },
         "SIZE_SHAPE_TYPE" : {
-                "$ref" : "#/definitions/sizeShapeType",
+                "$ref" : "#/definitions/sizeShapeProfile",
                 "description" : "Parameterization of the first orbital element (SMA vs R_PERIAPSIS)."
               },
         "ANOMALY_TYPE" : {
@@ -600,7 +600,7 @@
                 "description" : "Reference frame for position/velocity coefficients."
               },
         "TIME_SYSTEM" : {
-                "$ref" : "#/definitions/timeSystem",
+                "$ref" : "#/definitions/timingStandard",
                 "description" : "Time system used for all epochs in this message."
               },
         "START_TIME" : {

@@ -14,7 +14,7 @@ import FlatBuffers
 ///  table, and the injection-point enum a host consumes to know where to
 ///  splice a shader fragment into its stage graph.
 ///  Shader stage into which a compiled fragment should be injected.
-public enum shaderStage: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum glslStage: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
@@ -25,15 +25,15 @@ public enum shaderStage: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable
   case tessControl = 4
   case tessEvaluation = 5
 
-  public static var max: shaderStage { return .tessEvaluation }
-  public static var min: shaderStage { return .vertex }
+  public static var max: glslStage { return .tessEvaluation }
+  public static var min: glslStage { return .vertex }
 }
 
 
 ///  Logical location inside a host pipeline where a compiled shader
 ///  fragment is meant to be spliced. A host maps these onto its own
 ///  concrete splice points.
-public enum shaderInjectionPoint: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum shaderHookPoint: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
@@ -45,8 +45,8 @@ public enum shaderInjectionPoint: UInt8, FlatbuffersVectorInitializable, Enum, V
   case fragmentFinalColor = 5
   case postprocess = 6
 
-  public static var max: shaderInjectionPoint { return .postprocess }
-  public static var min: shaderInjectionPoint { return .none_ }
+  public static var max: shaderHookPoint { return .postprocess }
+  public static var min: shaderHookPoint { return .none_ }
 }
 
 
@@ -172,9 +172,9 @@ public struct SHWCompileRequest: FlatBufferTable, FlatbuffersVectorInitializable
   public var SHADER_NAME: String? { let o = _accessor.offset(VTOFFSET.SHADER_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SHADER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADER_NAME.v) }
   ///  Target GLSL stage.
-  public var SHADER_STAGE: shaderStage { let o = _accessor.offset(VTOFFSET.SHADER_STAGE.v); return o == 0 ? .vertex : shaderStage(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .vertex }
+  public var SHADER_STAGE: glslStage { let o = _accessor.offset(VTOFFSET.SHADER_STAGE.v); return o == 0 ? .vertex : glslStage(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .vertex }
   ///  Intended injection point in the host pipeline.
-  public var SHADER_INJECTION_POINT: shaderInjectionPoint { let o = _accessor.offset(VTOFFSET.SHADER_INJECTION_POINT.v); return o == 0 ? .none_ : shaderInjectionPoint(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  public var SHADER_INJECTION_POINT: shaderHookPoint { let o = _accessor.offset(VTOFFSET.SHADER_INJECTION_POINT.v); return o == 0 ? .none_ : shaderHookPoint(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
   ///  GLSL source (or preprocessed chunk).
   public var SHADER_SOURCE: String? { let o = _accessor.offset(VTOFFSET.SHADER_SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SHADER_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADER_SOURCE.v) }
@@ -185,8 +185,8 @@ public struct SHWCompileRequest: FlatBufferTable, FlatbuffersVectorInitializable
   public var SHADER_UNIFORMS: FlatbufferVector<SHWUniform> { return _accessor.vector(at: VTOFFSET.SHADER_UNIFORMS.v, byteSize: 4) }
   public static func startSHWCompileRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
   public static func add(SHADER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADER_NAME, at: VTOFFSET.SHADER_NAME.p) }
-  public static func add(SHADER_STAGE: shaderStage, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHADER_STAGE.rawValue, def: 0, at: VTOFFSET.SHADER_STAGE.p) }
-  public static func add(SHADER_INJECTION_POINT: shaderInjectionPoint, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHADER_INJECTION_POINT.rawValue, def: 0, at: VTOFFSET.SHADER_INJECTION_POINT.p) }
+  public static func add(SHADER_STAGE: glslStage, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHADER_STAGE.rawValue, def: 0, at: VTOFFSET.SHADER_STAGE.p) }
+  public static func add(SHADER_INJECTION_POINT: shaderHookPoint, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHADER_INJECTION_POINT.rawValue, def: 0, at: VTOFFSET.SHADER_INJECTION_POINT.p) }
   public static func add(SHADER_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADER_SOURCE, at: VTOFFSET.SHADER_SOURCE.p) }
   public static func add(GLSL_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GLSL_VERSION, at: VTOFFSET.GLSL_VERSION.p) }
   public static func addVectorOf(SHADER_UNIFORMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADER_UNIFORMS, at: VTOFFSET.SHADER_UNIFORMS.p) }
@@ -194,8 +194,8 @@ public struct SHWCompileRequest: FlatBufferTable, FlatbuffersVectorInitializable
   public static func createSHWCompileRequest(
     _ fbb: inout FlatBufferBuilder,
     SHADER_NAMEOffset SHADER_NAME: Offset = Offset(),
-    SHADER_STAGE: shaderStage = .vertex,
-    SHADER_INJECTION_POINT: shaderInjectionPoint = .none_,
+    SHADER_STAGE: glslStage = .vertex,
+    SHADER_INJECTION_POINT: shaderHookPoint = .none_,
     SHADER_SOURCEOffset SHADER_SOURCE: Offset = Offset(),
     GLSL_VERSIONOffset GLSL_VERSION: Offset = Offset(),
     SHADER_UNIFORMSVectorOffset SHADER_UNIFORMS: Offset = Offset()
@@ -213,8 +213,8 @@ public struct SHWCompileRequest: FlatBufferTable, FlatbuffersVectorInitializable
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.SHADER_NAME.p, fieldName: "SHADER_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHADER_STAGE.p, fieldName: "SHADER_STAGE", required: false, type: shaderStage.self)
-    try _v.visit(field: VTOFFSET.SHADER_INJECTION_POINT.p, fieldName: "SHADER_INJECTION_POINT", required: false, type: shaderInjectionPoint.self)
+    try _v.visit(field: VTOFFSET.SHADER_STAGE.p, fieldName: "SHADER_STAGE", required: false, type: glslStage.self)
+    try _v.visit(field: VTOFFSET.SHADER_INJECTION_POINT.p, fieldName: "SHADER_INJECTION_POINT", required: false, type: shaderHookPoint.self)
     try _v.visit(field: VTOFFSET.SHADER_SOURCE.p, fieldName: "SHADER_SOURCE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.GLSL_VERSION.p, fieldName: "GLSL_VERSION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.SHADER_UNIFORMS.p, fieldName: "SHADER_UNIFORMS", required: false, type: ForwardOffset<Vector<ForwardOffset<SHWUniform>, SHWUniform>>.self)

@@ -5,7 +5,7 @@
       "type" : "string",
       "enum": ["PAYLOAD", "ROCKET_BODY", "DEBRIS", "TBA", "UNKNOWN"]
     },
-    "aouType" : {
+    "aouCategory" : {
       "type" : "string",
       "enum": ["CIRCULAR", "ELLIPTICAL", "RECTANGULAR", "NONE"]
     },
@@ -98,7 +98,7 @@
                 "description" : "Charlie line data (amplification text)"
               },
         "AOU_TYPE" : {
-                "$ref" : "#/definitions/aouType",
+                "$ref" : "#/definitions/aouCategory",
                 "description" : "Area of uncertainty type"
               },
         "AOU_DATA" : {

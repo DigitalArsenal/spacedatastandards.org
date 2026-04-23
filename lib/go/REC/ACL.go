@@ -149,24 +149,24 @@ func (rcv *ACL) MutateBuyerEncryptionPubkey(j int, n byte) bool {
 }
 
 /// Type of access granted
-func (rcv *ACL) ACCESS_TYPE() accessType {
+func (rcv *ACL) ACCESS_TYPE() accessCategory {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return accessType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return accessCategory(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *ACL) AccessType() accessType {
+func (rcv *ACL) AccessType() accessCategory {
 	return rcv.ACCESS_TYPE()
 }
 
 /// Type of access granted
-func (rcv *ACL) MutateACCESS_TYPE(n accessType) bool {
+func (rcv *ACL) MutateACCESS_TYPE(n accessCategory) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
 }
 
-func (rcv *ACL) MutateAccessType(n accessType) bool {
+func (rcv *ACL) MutateAccessType(n accessCategory) bool {
 	return rcv.MutateACCESS_TYPE(n)
 }
 
@@ -349,10 +349,10 @@ func ACLStartBUYER_ENCRYPTION_PUBKEYVector(builder *flatbuffers.Builder, numElem
 func ACLStartBuyerEncryptionPubkeyVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return ACLStartBUYER_ENCRYPTION_PUBKEYVector(builder, numElems)
 }
-func ACLAddACCESS_TYPE(builder *flatbuffers.Builder, ACCESS_TYPE accessType) {
+func ACLAddACCESS_TYPE(builder *flatbuffers.Builder, ACCESS_TYPE accessCategory) {
 	builder.PrependInt8Slot(4, int8(ACCESS_TYPE), 0)
 }
-func ACLAddAccessType(builder *flatbuffers.Builder, ACCESS_TYPE accessType) {
+func ACLAddAccessType(builder *flatbuffers.Builder, ACCESS_TYPE accessCategory) {
 	ACLAddACCESS_TYPE(builder, ACCESS_TYPE)
 }
 func ACLAddTIER_NAME(builder *flatbuffers.Builder, TIER_NAME flatbuffers.UOffsetT) {

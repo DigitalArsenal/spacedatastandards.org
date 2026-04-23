@@ -4,8 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { linkState } from './linkState.js';
-import { linkType } from './linkType.js';
+import { linkCategory } from './linkCategory.js';
+import { linkCondition } from './linkCondition.js';
 
 
 /**
@@ -102,17 +102,17 @@ LINK_NAME(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Link type
  */
-LINK_TYPE():linkType {
+LINK_TYPE():linkCategory {
   const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : linkType.UPLINK;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : linkCategory.UPLINK;
 }
 
 /**
  * Link state
  */
-LINK_STATE():linkState {
+LINK_STATE():linkCondition {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : linkState.ESTABLISHED;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : linkCondition.ESTABLISHED;
 }
 
 /**
@@ -285,12 +285,12 @@ static addLinkName(builder:flatbuffers.Builder, LINK_NAMEOffset:flatbuffers.Offs
   builder.addFieldOffset(6, LINK_NAMEOffset, 0);
 }
 
-static addLinkType(builder:flatbuffers.Builder, LINK_TYPE:linkType) {
-  builder.addFieldInt8(7, LINK_TYPE, linkType.UPLINK);
+static addLinkType(builder:flatbuffers.Builder, LINK_TYPE:linkCategory) {
+  builder.addFieldInt8(7, LINK_TYPE, linkCategory.UPLINK);
 }
 
-static addLinkState(builder:flatbuffers.Builder, LINK_STATE:linkState) {
-  builder.addFieldInt8(8, LINK_STATE, linkState.ESTABLISHED);
+static addLinkState(builder:flatbuffers.Builder, LINK_STATE:linkCondition) {
+  builder.addFieldInt8(8, LINK_STATE, linkCondition.ESTABLISHED);
 }
 
 static addBand(builder:flatbuffers.Builder, BANDOffset:flatbuffers.Offset) {
@@ -366,7 +366,7 @@ static finishSizePrefixedLKSBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$LKS', true);
 }
 
-static createLKS(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ON_ORBIT1Offset:flatbuffers.Offset, SAT_NO1:number, ID_ON_ORBIT2Offset:flatbuffers.Offset, SAT_NO2:number, CONSTELLATIONOffset:flatbuffers.Offset, LINK_NAMEOffset:flatbuffers.Offset, LINK_TYPE:linkType, LINK_STATE:linkState, BANDOffset:flatbuffers.Offset, LINK_START_TIMEOffset:flatbuffers.Offset, LINK_STOP_TIMEOffset:flatbuffers.Offset, ID_BEAM1Offset:flatbuffers.Offset, END_POINT1_NAMEOffset:flatbuffers.Offset, END_POINT1_LAT:number, END_POINT1_LON:number, ID_BEAM2Offset:flatbuffers.Offset, END_POINT2_NAMEOffset:flatbuffers.Offset, END_POINT2_LAT:number, END_POINT2_LON:number, DATA_RATE1_TO2:number, DATA_RATE2_TO1:number, SYS_CAPOffset:flatbuffers.Offset, OPS_CAPOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createLKS(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ON_ORBIT1Offset:flatbuffers.Offset, SAT_NO1:number, ID_ON_ORBIT2Offset:flatbuffers.Offset, SAT_NO2:number, CONSTELLATIONOffset:flatbuffers.Offset, LINK_NAMEOffset:flatbuffers.Offset, LINK_TYPE:linkCategory, LINK_STATE:linkCondition, BANDOffset:flatbuffers.Offset, LINK_START_TIMEOffset:flatbuffers.Offset, LINK_STOP_TIMEOffset:flatbuffers.Offset, ID_BEAM1Offset:flatbuffers.Offset, END_POINT1_NAMEOffset:flatbuffers.Offset, END_POINT1_LAT:number, END_POINT1_LON:number, ID_BEAM2Offset:flatbuffers.Offset, END_POINT2_NAMEOffset:flatbuffers.Offset, END_POINT2_LAT:number, END_POINT2_LON:number, DATA_RATE1_TO2:number, DATA_RATE2_TO1:number, SYS_CAPOffset:flatbuffers.Offset, OPS_CAPOffset:flatbuffers.Offset):flatbuffers.Offset {
   LKS.startLKS(builder);
   LKS.addId(builder, IDOffset);
   LKS.addIdOnOrbit1(builder, ID_ON_ORBIT1Offset);
@@ -462,8 +462,8 @@ constructor(
   public SAT_NO2: number = 0,
   public CONSTELLATION: string|Uint8Array|null = null,
   public LINK_NAME: string|Uint8Array|null = null,
-  public LINK_TYPE: linkType = linkType.UPLINK,
-  public LINK_STATE: linkState = linkState.ESTABLISHED,
+  public LINK_TYPE: linkCategory = linkCategory.UPLINK,
+  public LINK_STATE: linkCondition = linkCondition.ESTABLISHED,
   public BAND: string|Uint8Array|null = null,
   public LINK_START_TIME: string|Uint8Array|null = null,
   public LINK_STOP_TIME: string|Uint8Array|null = null,

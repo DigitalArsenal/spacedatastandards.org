@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  License type for plugin access
-public enum licenseType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum licenseCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -26,8 +26,8 @@ public enum licenseType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
   ///  Internal OrbPro default plugins
   case internal_ = 5
 
-  public static var max: licenseType { return .internal_ }
-  public static var min: licenseType { return .trial }
+  public static var max: licenseCategory { return .internal_ }
+  public static var min: licenseCategory { return .trial }
 }
 
 
@@ -97,7 +97,7 @@ public struct PLK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  TLD restrictions (e.g., ".gov", ".mil", ".edu")
   public var ALLOWED_TLDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ALLOWED_TLDS.v, byteSize: 4) }
   ///  Type of license
-  public var LICENSE_TYPE: licenseType { let o = _accessor.offset(VTOFFSET.LICENSE_TYPE.v); return o == 0 ? .trial : licenseType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .trial }
+  public var LICENSE_TYPE: licenseCategory { let o = _accessor.offset(VTOFFSET.LICENSE_TYPE.v); return o == 0 ? .trial : licenseCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .trial }
   ///  Maximum concurrent activations (0 = unlimited)
   public var MAX_ACTIVATIONS: UInt32 { let o = _accessor.offset(VTOFFSET.MAX_ACTIVATIONS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Unix timestamp when license was issued
@@ -123,7 +123,7 @@ public struct PLK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func addVectorOf(ISSUER_PUBKEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ISSUER_PUBKEY, at: VTOFFSET.ISSUER_PUBKEY.p) }
   public static func addVectorOf(ALLOWED_DOMAINS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_DOMAINS, at: VTOFFSET.ALLOWED_DOMAINS.p) }
   public static func addVectorOf(ALLOWED_TLDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_TLDS, at: VTOFFSET.ALLOWED_TLDS.p) }
-  public static func add(LICENSE_TYPE: licenseType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LICENSE_TYPE.rawValue, def: 0, at: VTOFFSET.LICENSE_TYPE.p) }
+  public static func add(LICENSE_TYPE: licenseCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LICENSE_TYPE.rawValue, def: 0, at: VTOFFSET.LICENSE_TYPE.p) }
   public static func add(MAX_ACTIVATIONS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ACTIVATIONS, def: 0, at: VTOFFSET.MAX_ACTIVATIONS.p) }
   public static func add(ISSUED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISSUED_AT, def: 0, at: VTOFFSET.ISSUED_AT.p) }
   public static func add(VALID_FROM: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_FROM, def: 0, at: VTOFFSET.VALID_FROM.p) }
@@ -143,7 +143,7 @@ public struct PLK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     ISSUER_PUBKEYVectorOffset ISSUER_PUBKEY: Offset = Offset(),
     ALLOWED_DOMAINSVectorOffset ALLOWED_DOMAINS: Offset = Offset(),
     ALLOWED_TLDSVectorOffset ALLOWED_TLDS: Offset = Offset(),
-    LICENSE_TYPE: licenseType = .trial,
+    LICENSE_TYPE: licenseCategory = .trial,
     MAX_ACTIVATIONS: UInt32 = 0,
     ISSUED_AT: UInt64 = 0,
     VALID_FROM: UInt64 = 0,
@@ -184,7 +184,7 @@ public struct PLK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.ISSUER_PUBKEY.p, fieldName: "ISSUER_PUBKEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     try _v.visit(field: VTOFFSET.ALLOWED_DOMAINS.p, fieldName: "ALLOWED_DOMAINS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.ALLOWED_TLDS.p, fieldName: "ALLOWED_TLDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.LICENSE_TYPE.p, fieldName: "LICENSE_TYPE", required: false, type: licenseType.self)
+    try _v.visit(field: VTOFFSET.LICENSE_TYPE.p, fieldName: "LICENSE_TYPE", required: false, type: licenseCategory.self)
     try _v.visit(field: VTOFFSET.MAX_ACTIVATIONS.p, fieldName: "MAX_ACTIVATIONS", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.ISSUED_AT.p, fieldName: "ISSUED_AT", required: false, type: UInt64.self)
     try _v.visit(field: VTOFFSET.VALID_FROM.p, fieldName: "VALID_FROM", required: false, type: UInt64.self)

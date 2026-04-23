@@ -245,24 +245,24 @@ func (rcv *MPE) MutateBstar(n float64) bool {
 }
 
 /// Description of the Mean Element Theory (SGP4, DSST, USM)
-func (rcv *MPE) MEAN_ELEMENT_THEORY() meanElementTheory {
+func (rcv *MPE) MEAN_ELEMENT_THEORY() meanElementSource {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
-		return meanElementTheory(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return meanElementSource(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *MPE) MeanElementTheory() meanElementTheory {
+func (rcv *MPE) MeanElementTheory() meanElementSource {
 	return rcv.MEAN_ELEMENT_THEORY()
 }
 
 /// Description of the Mean Element Theory (SGP4, DSST, USM)
-func (rcv *MPE) MutateMEAN_ELEMENT_THEORY(n meanElementTheory) bool {
+func (rcv *MPE) MutateMEAN_ELEMENT_THEORY(n meanElementSource) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
 }
 
-func (rcv *MPE) MutateMeanElementTheory(n meanElementTheory) bool {
+func (rcv *MPE) MutateMeanElementTheory(n meanElementSource) bool {
 	return rcv.MutateMEAN_ELEMENT_THEORY(n)
 }
 
@@ -323,10 +323,10 @@ func MPEAddBSTAR(builder *flatbuffers.Builder, BSTAR float64) {
 func MPEAddBstar(builder *flatbuffers.Builder, BSTAR float64) {
 	MPEAddBSTAR(builder, BSTAR)
 }
-func MPEAddMEAN_ELEMENT_THEORY(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementTheory) {
+func MPEAddMEAN_ELEMENT_THEORY(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementSource) {
 	builder.PrependInt8Slot(9, int8(MEAN_ELEMENT_THEORY), 0)
 }
-func MPEAddMeanElementTheory(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementTheory) {
+func MPEAddMeanElementTheory(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementSource) {
 	MPEAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
 }
 func MPEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "licenseType" : {
+    "licenseCategory" : {
       "type" : "string",
       "enum": ["Trial", "Commercial", "Enterprise", "Educational", "OpenSource", "Internal"]
     },
@@ -50,7 +50,7 @@
                 "description" : "TLD restrictions (e.g., \".gov\", \".mil\", \".edu\")"
               },
         "LICENSE_TYPE" : {
-                "$ref" : "#/definitions/licenseType",
+                "$ref" : "#/definitions/licenseCategory",
                 "description" : "Type of license"
               },
         "MAX_ACTIVATIONS" : {

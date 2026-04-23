@@ -1,7 +1,7 @@
-// Hash: d06a27a10397b9a7ebf1e7eb1911523c0df018edeec4edd673cf5f662ef4fc16
-// Version: 0.0.3
+// Hash: 660ce17a03e70ddace9decc7d6caac270ee782bc5ebb9a37958f14da1e395d4e
+// Version: 0.0.4
 // -----------------------------------END_HEADER
-enum sarMode : byte {
+enum sarMission : byte {
   STRIPMAP,
   SPOTLIGHT,
   SCANSAR,
@@ -59,7 +59,7 @@ table SAR {
   /// Orbit state description
   ORBIT_STATE:string;
   /// SAR imaging mode
-  SAR_MODE:sarMode;
+  SAR_MODE:sarMission;
   /// Operating RF band (e.g., X, C, L, S, P)
   OPERATING_BAND:string;
   /// Operating frequency (GHz)

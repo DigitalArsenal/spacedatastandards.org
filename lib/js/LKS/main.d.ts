@@ -1,4 +1,4 @@
-export * from './linkState.js';
-export * from './linkType.js';
+export * from './linkCategory.js';
+export * from './linkCondition.js';
 export * from './LKS.js';
 //# sourceMappingURL=main.d.ts.map

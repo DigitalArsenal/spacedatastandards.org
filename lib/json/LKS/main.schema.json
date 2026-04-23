@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "linkType" : {
+    "linkCategory" : {
       "type" : "string",
       "enum": ["UPLINK", "DOWNLINK", "CROSSLINK", "INTER_SATELLITE", "GROUND_TO_GROUND", "RELAY"]
     },
-    "linkState" : {
+    "linkCondition" : {
       "type" : "string",
       "enum": ["ESTABLISHED", "DEGRADED", "INTERRUPTED", "PLANNED", "TERMINATED", "UNKNOWN"]
     },
@@ -42,11 +42,11 @@
                 "description" : "Link name or identifier"
               },
         "LINK_TYPE" : {
-                "$ref" : "#/definitions/linkType",
+                "$ref" : "#/definitions/linkCategory",
                 "description" : "Link type"
               },
         "LINK_STATE" : {
-                "$ref" : "#/definitions/linkState",
+                "$ref" : "#/definitions/linkCondition",
                 "description" : "Link state"
               },
         "BAND" : {

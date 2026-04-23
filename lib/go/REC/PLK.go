@@ -301,24 +301,24 @@ func (rcv *PLK) AllowedTldsLength() int {
 
 /// TLD restrictions (e.g., ".gov", ".mil", ".edu")
 /// Type of license
-func (rcv *PLK) LICENSE_TYPE() licenseType {
+func (rcv *PLK) LICENSE_TYPE() licenseCategory {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
-		return licenseType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return licenseCategory(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *PLK) LicenseType() licenseType {
+func (rcv *PLK) LicenseType() licenseCategory {
 	return rcv.LICENSE_TYPE()
 }
 
 /// Type of license
-func (rcv *PLK) MutateLICENSE_TYPE(n licenseType) bool {
+func (rcv *PLK) MutateLICENSE_TYPE(n licenseCategory) bool {
 	return rcv._tab.MutateInt8Slot(24, int8(n))
 }
 
-func (rcv *PLK) MutateLicenseType(n licenseType) bool {
+func (rcv *PLK) MutateLicenseType(n licenseCategory) bool {
 	return rcv.MutateLICENSE_TYPE(n)
 }
 
@@ -563,10 +563,10 @@ func PLKStartALLOWED_TLDSVector(builder *flatbuffers.Builder, numElems int) flat
 func PLKStartAllowedTldsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PLKStartALLOWED_TLDSVector(builder, numElems)
 }
-func PLKAddLICENSE_TYPE(builder *flatbuffers.Builder, LICENSE_TYPE licenseType) {
+func PLKAddLICENSE_TYPE(builder *flatbuffers.Builder, LICENSE_TYPE licenseCategory) {
 	builder.PrependInt8Slot(10, int8(LICENSE_TYPE), 0)
 }
-func PLKAddLicenseType(builder *flatbuffers.Builder, LICENSE_TYPE licenseType) {
+func PLKAddLicenseType(builder *flatbuffers.Builder, LICENSE_TYPE licenseCategory) {
 	PLKAddLICENSE_TYPE(builder, LICENSE_TYPE)
 }
 func PLKAddMAX_ACTIVATIONS(builder *flatbuffers.Builder, MAX_ACTIVATIONS uint32) {

@@ -287,7 +287,7 @@
         "SPP": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "packetType": {
+                "packetKind": {
                     "type": "string",
                     "enum": [
                         "TM",
@@ -305,7 +305,7 @@
                             "description": "Packet version number"
                         },
                         "PACKET_TYPE": {
-                            "$ref": "#/definitions/packetType",
+                            "$ref": "#/definitions/packetKind",
                             "description": "Packet type (TM or TC)"
                         },
                         "SEC_HDR_FLAG": {
@@ -354,7 +354,7 @@
         "PLK": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "licenseType": {
+                "licenseCategory": {
                     "type": "string",
                     "enum": [
                         "Trial",
@@ -426,7 +426,7 @@
                             "description": "TLD restrictions (e.g., \".gov\", \".mil\", \".edu\")"
                         },
                         "LICENSE_TYPE": {
-                            "$ref": "#/definitions/licenseType",
+                            "$ref": "#/definitions/licenseCategory",
                             "description": "Type of license"
                         },
                         "MAX_ACTIVATIONS": {
@@ -692,7 +692,7 @@
         "VCM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "meanElementTheory": {
+                "meanElementSource": {
                     "type": "string",
                     "enum": [
                         "SGP4",
@@ -706,7 +706,7 @@
                     "description": "Mean Element Theory",
                     "properties": {
                         "MEAN_ELEMENT_THEORY": {
-                            "$ref": "#/definitions/meanElementTheory"
+                            "$ref": "#/definitions/meanElementSource"
                         }
                     },
                     "additionalProperties": false
@@ -2463,7 +2463,7 @@
         "ANI": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "analyticType": {
+                "analyticProfile": {
                     "type": "string",
                     "enum": [
                         "SPECTRAL",
@@ -2494,7 +2494,7 @@
                             "description": "Source imagery type"
                         },
                         "ANALYTIC_TYPE": {
-                            "$ref": "#/definitions/analyticType",
+                            "$ref": "#/definitions/analyticProfile",
                             "description": "Analytic product type"
                         },
                         "ALGORITHM": {
@@ -4289,7 +4289,7 @@
         "SHW": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "shaderStage": {
+                "glslStage": {
                     "type": "string",
                     "enum": [
                         "VERTEX",
@@ -4300,7 +4300,7 @@
                         "TESS_EVALUATION"
                     ]
                 },
-                "shaderInjectionPoint": {
+                "shaderHookPoint": {
                     "type": "string",
                     "enum": [
                         "NONE",
@@ -4374,11 +4374,11 @@
                             "description": "Logical shader name (used in logs and uniform prefixing)."
                         },
                         "SHADER_STAGE": {
-                            "$ref": "#/definitions/shaderStage",
+                            "$ref": "#/definitions/glslStage",
                             "description": "Target GLSL stage."
                         },
                         "SHADER_INJECTION_POINT": {
-                            "$ref": "#/definitions/shaderInjectionPoint",
+                            "$ref": "#/definitions/shaderHookPoint",
                             "description": "Intended injection point in the host pipeline."
                         },
                         "SHADER_SOURCE": {
@@ -6529,7 +6529,7 @@
         "PUR": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "accessType": {
+                "accessCategory": {
                     "type": "string",
                     "enum": [
                         "OneTime",
@@ -6694,7 +6694,7 @@
                             "description": "IPFS CID of sample data"
                         },
                         "ACCESS_TYPE": {
-                            "$ref": "#/definitions/accessType",
+                            "$ref": "#/definitions/accessCategory",
                             "description": "Type of access offered"
                         },
                         "ENCRYPTION_REQUIRED": {
@@ -8831,7 +8831,7 @@
         "MET": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "meanElementTheory": {
+                "meanElementSource": {
                     "type": "string",
                     "enum": [
                         "SGP4",
@@ -8845,7 +8845,7 @@
                     "description": "Mean Element Theory",
                     "properties": {
                         "MEAN_ELEMENT_THEORY": {
-                            "$ref": "#/definitions/meanElementTheory"
+                            "$ref": "#/definitions/meanElementSource"
                         }
                     },
                     "additionalProperties": false
@@ -9441,7 +9441,7 @@
                         "CustomFrameWrapper"
                     ]
                 },
-                "timeSystem": {
+                "timingStandard": {
                     "type": "string",
                     "enum": [
                         "GMST",
@@ -9667,7 +9667,7 @@
                         "ZWE"
                     ]
                 },
-                "objectType": {
+                "spaceObjectClass": {
                     "type": "string",
                     "enum": [
                         "PAYLOAD",
@@ -9676,7 +9676,7 @@
                         "UNKNOWN"
                     ]
                 },
-                "opsStatusCode": {
+                "operationalState": {
                     "type": "string",
                     "enum": [
                         "OPERATIONAL",
@@ -9689,7 +9689,7 @@
                         "UNKNOWN"
                     ]
                 },
-                "dataStatusCode": {
+                "dataAvailability": {
                     "type": "string",
                     "enum": [
                         "NO_CURRENT_ELEMENTS",
@@ -9698,7 +9698,7 @@
                         "OK"
                     ]
                 },
-                "orbitType": {
+                "orbitRegime": {
                     "type": "string",
                     "enum": [
                         "ORBIT",
@@ -9708,7 +9708,7 @@
                         "ROUNDTRIP"
                     ]
                 },
-                "massType": {
+                "massCategory": {
                     "type": "string",
                     "enum": [
                         "DRY",
@@ -9733,7 +9733,7 @@
                         "ECCENTRIC_ANOMALY"
                     ]
                 },
-                "sizeShapeType": {
+                "sizeShapeProfile": {
                     "type": "string",
                     "enum": [
                         "SMA",
@@ -9815,7 +9815,7 @@
                     "description": "Time System",
                     "properties": {
                         "TIME_SYSTEM": {
-                            "$ref": "#/definitions/timeSystem"
+                            "$ref": "#/definitions/timingStandard"
                         }
                     },
                     "additionalProperties": false
@@ -10059,11 +10059,11 @@
                             "description": "NORAD Catalog Number"
                         },
                         "OBJECT_TYPE": {
-                            "$ref": "#/definitions/objectType",
+                            "$ref": "#/definitions/spaceObjectClass",
                             "description": "Object type (Payload, Rocket body, Debris, Unknown)"
                         },
                         "OPS_STATUS_CODE": {
-                            "$ref": "#/definitions/opsStatusCode",
+                            "$ref": "#/definitions/operationalState",
                             "description": "Operational Status Code"
                         },
                         "OWNER": {
@@ -10103,7 +10103,7 @@
                             "description": "Radar Cross Section [meters2]; blank if no data available"
                         },
                         "DATA_STATUS_CODE": {
-                            "$ref": "#/definitions/dataStatusCode",
+                            "$ref": "#/definitions/dataAvailability",
                             "description": "Data status code; blank otherwise"
                         },
                         "ORBIT_CENTER": {
@@ -10111,7 +10111,7 @@
                             "description": "Orbit center"
                         },
                         "ORBIT_TYPE": {
-                            "$ref": "#/definitions/orbitType",
+                            "$ref": "#/definitions/orbitRegime",
                             "description": "Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)"
                         },
                         "DEPLOYMENT_DATE": {
@@ -10131,7 +10131,7 @@
                             "description": "Mass [kilograms]; blank if no data available"
                         },
                         "MASS_TYPE": {
-                            "$ref": "#/definitions/massType",
+                            "$ref": "#/definitions/massCategory",
                             "description": "Mass type (Dry, Wet)"
                         },
                         "PAYLOADS": {
@@ -10252,7 +10252,7 @@
                             "description": "Polynomial basis type for interpreting the coefficient arrays."
                         },
                         "SIZE_SHAPE_TYPE": {
-                            "$ref": "#/definitions/sizeShapeType",
+                            "$ref": "#/definitions/sizeShapeProfile",
                             "description": "Parameterization of the first orbital element (SMA vs R_PERIAPSIS)."
                         },
                         "ANOMALY_TYPE": {
@@ -10345,7 +10345,7 @@
                             "description": "Reference frame for position/velocity coefficients."
                         },
                         "TIME_SYSTEM": {
-                            "$ref": "#/definitions/timeSystem",
+                            "$ref": "#/definitions/timingStandard",
                             "description": "Time system used for all epochs in this message."
                         },
                         "START_TIME": {
@@ -14277,7 +14277,7 @@
                         "UNKNOWN"
                     ]
                 },
-                "aouType": {
+                "aouCategory": {
                     "type": "string",
                     "enum": [
                         "CIRCULAR",
@@ -14377,7 +14377,7 @@
                             "description": "Charlie line data (amplification text)"
                         },
                         "AOU_TYPE": {
-                            "$ref": "#/definitions/aouType",
+                            "$ref": "#/definitions/aouCategory",
                             "description": "Area of uncertainty type"
                         },
                         "AOU_DATA": {
@@ -14623,7 +14623,7 @@
         "TIM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "timeSystem": {
+                "timingStandard": {
                     "type": "string",
                     "enum": [
                         "GMST",
@@ -14645,7 +14645,7 @@
                     "description": "Time System",
                     "properties": {
                         "TIME_SYSTEM": {
-                            "$ref": "#/definitions/timeSystem"
+                            "$ref": "#/definitions/timingStandard"
                         }
                     },
                     "additionalProperties": false
@@ -17264,7 +17264,7 @@
         "OMM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "meanElementTheory": {
+                "meanElementSource": {
                     "type": "string",
                     "enum": [
                         "SGP4",
@@ -17278,7 +17278,7 @@
                     "description": "Mean Element Theory",
                     "properties": {
                         "MEAN_ELEMENT_THEORY": {
-                            "$ref": "#/definitions/meanElementTheory"
+                            "$ref": "#/definitions/meanElementSource"
                         }
                     },
                     "additionalProperties": false
@@ -24380,7 +24380,7 @@
         "SAR": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "sarMode": {
+                "sarMission": {
                     "type": "string",
                     "enum": [
                         "STRIPMAP",
@@ -24478,7 +24478,7 @@
                             "description": "Orbit state description"
                         },
                         "SAR_MODE": {
-                            "$ref": "#/definitions/sarMode",
+                            "$ref": "#/definitions/sarMission",
                             "description": "SAR imaging mode"
                         },
                         "OPERATING_BAND": {
@@ -24667,7 +24667,7 @@
         "SKI": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "imageType": {
+                "imageCategory": {
                     "type": "string",
                     "enum": [
                         "VISIBLE",
@@ -24747,7 +24747,7 @@
                             "description": "Sensor quaternion rate"
                         },
                         "IMAGE_TYPE": {
-                            "$ref": "#/definitions/imageType",
+                            "$ref": "#/definitions/imageCategory",
                             "description": "Image type"
                         },
                         "EXP_START_TIME": {
@@ -25017,7 +25017,7 @@
         "MPE": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "meanElementTheory": {
+                "meanElementSource": {
                     "type": "string",
                     "enum": [
                         "SGP4",
@@ -25031,7 +25031,7 @@
                     "description": "Mean Element Theory",
                     "properties": {
                         "MEAN_ELEMENT_THEORY": {
-                            "$ref": "#/definitions/meanElementTheory"
+                            "$ref": "#/definitions/meanElementSource"
                         }
                     },
                     "additionalProperties": false
@@ -26919,7 +26919,7 @@
         "LKS": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "linkType": {
+                "linkCategory": {
                     "type": "string",
                     "enum": [
                         "UPLINK",
@@ -26930,7 +26930,7 @@
                         "RELAY"
                     ]
                 },
-                "linkState": {
+                "linkCondition": {
                     "type": "string",
                     "enum": [
                         "ESTABLISHED",
@@ -26978,11 +26978,11 @@
                             "description": "Link name or identifier"
                         },
                         "LINK_TYPE": {
-                            "$ref": "#/definitions/linkType",
+                            "$ref": "#/definitions/linkCategory",
                             "description": "Link type"
                         },
                         "LINK_STATE": {
-                            "$ref": "#/definitions/linkState",
+                            "$ref": "#/definitions/linkCondition",
                             "description": "Link state"
                         },
                         "BAND": {
@@ -28934,7 +28934,7 @@
         "ACL": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "accessType": {
+                "accessCategory": {
                     "type": "string",
                     "enum": [
                         "OneTime",
@@ -29099,7 +29099,7 @@
                             "description": "IPFS CID of sample data"
                         },
                         "ACCESS_TYPE": {
-                            "$ref": "#/definitions/accessType",
+                            "$ref": "#/definitions/accessCategory",
                             "description": "Type of access offered"
                         },
                         "ENCRYPTION_REQUIRED": {
@@ -29507,14 +29507,14 @@
         "CFP": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "pduType": {
+                "pduKind": {
                     "type": "string",
                     "enum": [
                         "FILE_DIRECTIVE",
                         "FILE_DATA"
                     ]
                 },
-                "transmissionMode": {
+                "transmissionClass": {
                     "type": "string",
                     "enum": [
                         "ACKNOWLEDGED",
@@ -29532,7 +29532,7 @@
                             "description": "PDU version"
                         },
                         "PDU_TYPE": {
-                            "$ref": "#/definitions/pduType",
+                            "$ref": "#/definitions/pduKind",
                             "description": "PDU type"
                         },
                         "DIRECTION": {
@@ -29542,7 +29542,7 @@
                             "description": "Direction (toward receiver or sender)"
                         },
                         "TRANSMISSION_MODE": {
-                            "$ref": "#/definitions/transmissionMode",
+                            "$ref": "#/definitions/transmissionClass",
                             "description": "Transmission mode"
                         },
                         "CRC_FLAG": {
@@ -30128,7 +30128,7 @@
         "STF": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "accessType": {
+                "accessCategory": {
                     "type": "string",
                     "enum": [
                         "OneTime",
@@ -30293,7 +30293,7 @@
                             "description": "IPFS CID of sample data"
                         },
                         "ACCESS_TYPE": {
-                            "$ref": "#/definitions/accessType",
+                            "$ref": "#/definitions/accessCategory",
                             "description": "Type of access offered"
                         },
                         "ENCRYPTION_REQUIRED": {

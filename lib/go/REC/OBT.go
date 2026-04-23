@@ -421,24 +421,24 @@ func (rcv *OBT) CharlieLine() []byte {
 
 /// Charlie line data (amplification text)
 /// Area of uncertainty type
-func (rcv *OBT) AOU_TYPE() aouType {
+func (rcv *OBT) AOU_TYPE() aouCategory {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
-		return aouType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return aouCategory(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *OBT) AouType() aouType {
+func (rcv *OBT) AouType() aouCategory {
 	return rcv.AOU_TYPE()
 }
 
 /// Area of uncertainty type
-func (rcv *OBT) MutateAOU_TYPE(n aouType) bool {
+func (rcv *OBT) MutateAOU_TYPE(n aouCategory) bool {
 	return rcv._tab.MutateInt8Slot(46, int8(n))
 }
 
-func (rcv *OBT) MutateAouType(n aouType) bool {
+func (rcv *OBT) MutateAouType(n aouCategory) bool {
 	return rcv.MutateAOU_TYPE(n)
 }
 
@@ -884,10 +884,10 @@ func OBTAddCHARLIE_LINE(builder *flatbuffers.Builder, CHARLIE_LINE flatbuffers.U
 func OBTAddCharlieLine(builder *flatbuffers.Builder, CHARLIE_LINE flatbuffers.UOffsetT) {
 	OBTAddCHARLIE_LINE(builder, CHARLIE_LINE)
 }
-func OBTAddAOU_TYPE(builder *flatbuffers.Builder, AOU_TYPE aouType) {
+func OBTAddAOU_TYPE(builder *flatbuffers.Builder, AOU_TYPE aouCategory) {
 	builder.PrependInt8Slot(21, int8(AOU_TYPE), 0)
 }
-func OBTAddAouType(builder *flatbuffers.Builder, AOU_TYPE aouType) {
+func OBTAddAouType(builder *flatbuffers.Builder, AOU_TYPE aouCategory) {
 	OBTAddAOU_TYPE(builder, AOU_TYPE)
 }
 func OBTAddAOU_DATA(builder *flatbuffers.Builder, AOU_DATA flatbuffers.UOffsetT) {

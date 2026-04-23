@@ -38,9 +38,9 @@ public struct CAT : IFlatbufferObject
   /// NORAD Catalog Number
   public uint NORAD_CAT_ID { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Object type (Payload, Rocket body, Debris, Unknown)
-  public objectType OBJECT_TYPE { get { int o = __p.__offset(10); return o != 0 ? (objectType)__p.bb.GetSbyte(o + __p.bb_pos) : objectType.UNKNOWN; } }
+  public spaceObjectClass OBJECT_TYPE { get { int o = __p.__offset(10); return o != 0 ? (spaceObjectClass)__p.bb.GetSbyte(o + __p.bb_pos) : spaceObjectClass.UNKNOWN; } }
   /// Operational Status Code
-  public opsStatusCode OPS_STATUS_CODE { get { int o = __p.__offset(12); return o != 0 ? (opsStatusCode)__p.bb.GetSbyte(o + __p.bb_pos) : opsStatusCode.UNKNOWN; } }
+  public operationalState OPS_STATUS_CODE { get { int o = __p.__offset(12); return o != 0 ? (operationalState)__p.bb.GetSbyte(o + __p.bb_pos) : operationalState.UNKNOWN; } }
   /// Ownership, typically country or company
   public legacyCountryCode OWNER { get { int o = __p.__offset(14); return o != 0 ? (legacyCountryCode)__p.bb.GetSbyte(o + __p.bb_pos) : legacyCountryCode.AB; } }
   /// Launch Date [year-month-day] (ISO 8601)
@@ -78,7 +78,7 @@ public struct CAT : IFlatbufferObject
   /// Radar Cross Section [meters2]; blank if no data available
   public double RCS { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Data status code; blank otherwise
-  public dataStatusCode DATA_STATUS_CODE { get { int o = __p.__offset(32); return o != 0 ? (dataStatusCode)__p.bb.GetSbyte(o + __p.bb_pos) : dataStatusCode.NO_CURRENT_ELEMENTS; } }
+  public dataAvailability DATA_STATUS_CODE { get { int o = __p.__offset(32); return o != 0 ? (dataAvailability)__p.bb.GetSbyte(o + __p.bb_pos) : dataAvailability.NO_CURRENT_ELEMENTS; } }
   /// Orbit center
   public string ORBIT_CENTER { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -88,7 +88,7 @@ public struct CAT : IFlatbufferObject
 #endif
   public byte[] GetORBIT_CENTERArray() { return __p.__vector_as_array<byte>(34); }
   /// Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
-  public orbitType ORBIT_TYPE { get { int o = __p.__offset(36); return o != 0 ? (orbitType)__p.bb.GetSbyte(o + __p.bb_pos) : orbitType.ORBIT; } }
+  public orbitRegime ORBIT_TYPE { get { int o = __p.__offset(36); return o != 0 ? (orbitRegime)__p.bb.GetSbyte(o + __p.bb_pos) : orbitRegime.ORBIT; } }
   /// Deployment Date [year-month-day] (ISO 8601)
   public string DEPLOYMENT_DATE { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -104,7 +104,7 @@ public struct CAT : IFlatbufferObject
   /// Mass [kilograms]; blank if no data available
   public double MASS { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Mass type (Dry, Wet)
-  public massType MASS_TYPE { get { int o = __p.__offset(46); return o != 0 ? (massType)__p.bb.GetSbyte(o + __p.bb_pos) : massType.DRY; } }
+  public massCategory MASS_TYPE { get { int o = __p.__offset(46); return o != 0 ? (massCategory)__p.bb.GetSbyte(o + __p.bb_pos) : massCategory.DRY; } }
   /// Vector of PAYLOADS
   public PLD? PAYLOADS(int j) { int o = __p.__offset(48); return o != 0 ? (PLD?)(new PLD()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int PAYLOADSLength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
@@ -113,8 +113,8 @@ public struct CAT : IFlatbufferObject
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
       StringOffset OBJECT_IDOffset = default(StringOffset),
       uint NORAD_CAT_ID = 0,
-      objectType OBJECT_TYPE = objectType.UNKNOWN,
-      opsStatusCode OPS_STATUS_CODE = opsStatusCode.UNKNOWN,
+      spaceObjectClass OBJECT_TYPE = spaceObjectClass.UNKNOWN,
+      operationalState OPS_STATUS_CODE = operationalState.UNKNOWN,
       legacyCountryCode OWNER = legacyCountryCode.AB,
       StringOffset LAUNCH_DATEOffset = default(StringOffset),
       StringOffset LAUNCH_SITEOffset = default(StringOffset),
@@ -124,14 +124,14 @@ public struct CAT : IFlatbufferObject
       double APOGEE = 0.0,
       double PERIGEE = 0.0,
       double RCS = 0.0,
-      dataStatusCode DATA_STATUS_CODE = dataStatusCode.NO_CURRENT_ELEMENTS,
+      dataAvailability DATA_STATUS_CODE = dataAvailability.NO_CURRENT_ELEMENTS,
       StringOffset ORBIT_CENTEROffset = default(StringOffset),
-      orbitType ORBIT_TYPE = orbitType.ORBIT,
+      orbitRegime ORBIT_TYPE = orbitRegime.ORBIT,
       StringOffset DEPLOYMENT_DATEOffset = default(StringOffset),
       bool MANEUVERABLE = false,
       double SIZE = 0.0,
       double MASS = 0.0,
-      massType MASS_TYPE = massType.DRY,
+      massCategory MASS_TYPE = massCategory.DRY,
       VectorOffset PAYLOADSOffset = default(VectorOffset)) {
     builder.StartTable(23);
     CAT.AddMASS(builder, MASS);
@@ -164,8 +164,8 @@ public struct CAT : IFlatbufferObject
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(0, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(1, OBJECT_IDOffset.Value, 0); }
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(2, NORAD_CAT_ID, 0); }
-  public static void AddOBJECT_TYPE(FlatBufferBuilder builder, objectType OBJECT_TYPE) { builder.AddSbyte(3, (sbyte)OBJECT_TYPE, 3); }
-  public static void AddOPS_STATUS_CODE(FlatBufferBuilder builder, opsStatusCode OPS_STATUS_CODE) { builder.AddSbyte(4, (sbyte)OPS_STATUS_CODE, 7); }
+  public static void AddOBJECT_TYPE(FlatBufferBuilder builder, spaceObjectClass OBJECT_TYPE) { builder.AddSbyte(3, (sbyte)OBJECT_TYPE, 3); }
+  public static void AddOPS_STATUS_CODE(FlatBufferBuilder builder, operationalState OPS_STATUS_CODE) { builder.AddSbyte(4, (sbyte)OPS_STATUS_CODE, 7); }
   public static void AddOWNER(FlatBufferBuilder builder, legacyCountryCode OWNER) { builder.AddSbyte(5, (sbyte)OWNER, 0); }
   public static void AddLAUNCH_DATE(FlatBufferBuilder builder, StringOffset LAUNCH_DATEOffset) { builder.AddOffset(6, LAUNCH_DATEOffset.Value, 0); }
   public static void AddLAUNCH_SITE(FlatBufferBuilder builder, StringOffset LAUNCH_SITEOffset) { builder.AddOffset(7, LAUNCH_SITEOffset.Value, 0); }
@@ -175,14 +175,14 @@ public struct CAT : IFlatbufferObject
   public static void AddAPOGEE(FlatBufferBuilder builder, double APOGEE) { builder.AddDouble(11, APOGEE, 0.0); }
   public static void AddPERIGEE(FlatBufferBuilder builder, double PERIGEE) { builder.AddDouble(12, PERIGEE, 0.0); }
   public static void AddRCS(FlatBufferBuilder builder, double RCS) { builder.AddDouble(13, RCS, 0.0); }
-  public static void AddDATA_STATUS_CODE(FlatBufferBuilder builder, dataStatusCode DATA_STATUS_CODE) { builder.AddSbyte(14, (sbyte)DATA_STATUS_CODE, 0); }
+  public static void AddDATA_STATUS_CODE(FlatBufferBuilder builder, dataAvailability DATA_STATUS_CODE) { builder.AddSbyte(14, (sbyte)DATA_STATUS_CODE, 0); }
   public static void AddORBIT_CENTER(FlatBufferBuilder builder, StringOffset ORBIT_CENTEROffset) { builder.AddOffset(15, ORBIT_CENTEROffset.Value, 0); }
-  public static void AddORBIT_TYPE(FlatBufferBuilder builder, orbitType ORBIT_TYPE) { builder.AddSbyte(16, (sbyte)ORBIT_TYPE, 0); }
+  public static void AddORBIT_TYPE(FlatBufferBuilder builder, orbitRegime ORBIT_TYPE) { builder.AddSbyte(16, (sbyte)ORBIT_TYPE, 0); }
   public static void AddDEPLOYMENT_DATE(FlatBufferBuilder builder, StringOffset DEPLOYMENT_DATEOffset) { builder.AddOffset(17, DEPLOYMENT_DATEOffset.Value, 0); }
   public static void AddMANEUVERABLE(FlatBufferBuilder builder, bool MANEUVERABLE) { builder.AddBool(18, MANEUVERABLE, false); }
   public static void AddSIZE(FlatBufferBuilder builder, double SIZE) { builder.AddDouble(19, SIZE, 0.0); }
   public static void AddMASS(FlatBufferBuilder builder, double MASS) { builder.AddDouble(20, MASS, 0.0); }
-  public static void AddMASS_TYPE(FlatBufferBuilder builder, massType MASS_TYPE) { builder.AddSbyte(21, (sbyte)MASS_TYPE, 0); }
+  public static void AddMASS_TYPE(FlatBufferBuilder builder, massCategory MASS_TYPE) { builder.AddSbyte(21, (sbyte)MASS_TYPE, 0); }
   public static void AddPAYLOADS(FlatBufferBuilder builder, VectorOffset PAYLOADSOffset) { builder.AddOffset(22, PAYLOADSOffset.Value, 0); }
   public static VectorOffset CreatePAYLOADSVector(FlatBufferBuilder builder, Offset<PLD>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreatePAYLOADSVectorBlock(FlatBufferBuilder builder, Offset<PLD>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -274,8 +274,8 @@ public class CATT
   public string OBJECT_NAME { get; set; }
   public string OBJECT_ID { get; set; }
   public uint NORAD_CAT_ID { get; set; }
-  public objectType OBJECT_TYPE { get; set; }
-  public opsStatusCode OPS_STATUS_CODE { get; set; }
+  public spaceObjectClass OBJECT_TYPE { get; set; }
+  public operationalState OPS_STATUS_CODE { get; set; }
   public legacyCountryCode OWNER { get; set; }
   public string LAUNCH_DATE { get; set; }
   public string LAUNCH_SITE { get; set; }
@@ -285,22 +285,22 @@ public class CATT
   public double APOGEE { get; set; }
   public double PERIGEE { get; set; }
   public double RCS { get; set; }
-  public dataStatusCode DATA_STATUS_CODE { get; set; }
+  public dataAvailability DATA_STATUS_CODE { get; set; }
   public string ORBIT_CENTER { get; set; }
-  public orbitType ORBIT_TYPE { get; set; }
+  public orbitRegime ORBIT_TYPE { get; set; }
   public string DEPLOYMENT_DATE { get; set; }
   public bool MANEUVERABLE { get; set; }
   public double SIZE { get; set; }
   public double MASS { get; set; }
-  public massType MASS_TYPE { get; set; }
+  public massCategory MASS_TYPE { get; set; }
   public List<PLDT> PAYLOADS { get; set; }
 
   public CATT() {
     this.OBJECT_NAME = null;
     this.OBJECT_ID = null;
     this.NORAD_CAT_ID = 0;
-    this.OBJECT_TYPE = objectType.UNKNOWN;
-    this.OPS_STATUS_CODE = opsStatusCode.UNKNOWN;
+    this.OBJECT_TYPE = spaceObjectClass.UNKNOWN;
+    this.OPS_STATUS_CODE = operationalState.UNKNOWN;
     this.OWNER = legacyCountryCode.AB;
     this.LAUNCH_DATE = null;
     this.LAUNCH_SITE = null;
@@ -310,14 +310,14 @@ public class CATT
     this.APOGEE = 0.0;
     this.PERIGEE = 0.0;
     this.RCS = 0.0;
-    this.DATA_STATUS_CODE = dataStatusCode.NO_CURRENT_ELEMENTS;
+    this.DATA_STATUS_CODE = dataAvailability.NO_CURRENT_ELEMENTS;
     this.ORBIT_CENTER = null;
-    this.ORBIT_TYPE = orbitType.ORBIT;
+    this.ORBIT_TYPE = orbitRegime.ORBIT;
     this.DEPLOYMENT_DATE = null;
     this.MANEUVERABLE = false;
     this.SIZE = 0.0;
     this.MASS = 0.0;
-    this.MASS_TYPE = massType.DRY;
+    this.MASS_TYPE = massCategory.DRY;
     this.PAYLOADS = null;
   }
   public static CATT DeserializeFromBinary(byte[] fbBuffer) {
@@ -339,8 +339,8 @@ static public class CATVerify
       && verifier.VerifyString(tablePos, 4 /*OBJECT_NAME*/, false)
       && verifier.VerifyString(tablePos, 6 /*OBJECT_ID*/, false)
       && verifier.VerifyField(tablePos, 8 /*NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyField(tablePos, 10 /*OBJECT_TYPE*/, 1 /*objectType*/, 1, false)
-      && verifier.VerifyField(tablePos, 12 /*OPS_STATUS_CODE*/, 1 /*opsStatusCode*/, 1, false)
+      && verifier.VerifyField(tablePos, 10 /*OBJECT_TYPE*/, 1 /*spaceObjectClass*/, 1, false)
+      && verifier.VerifyField(tablePos, 12 /*OPS_STATUS_CODE*/, 1 /*operationalState*/, 1, false)
       && verifier.VerifyField(tablePos, 14 /*OWNER*/, 1 /*legacyCountryCode*/, 1, false)
       && verifier.VerifyString(tablePos, 16 /*LAUNCH_DATE*/, false)
       && verifier.VerifyString(tablePos, 18 /*LAUNCH_SITE*/, false)
@@ -350,14 +350,14 @@ static public class CATVerify
       && verifier.VerifyField(tablePos, 26 /*APOGEE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 28 /*PERIGEE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 30 /*RCS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 32 /*DATA_STATUS_CODE*/, 1 /*dataStatusCode*/, 1, false)
+      && verifier.VerifyField(tablePos, 32 /*DATA_STATUS_CODE*/, 1 /*dataAvailability*/, 1, false)
       && verifier.VerifyString(tablePos, 34 /*ORBIT_CENTER*/, false)
-      && verifier.VerifyField(tablePos, 36 /*ORBIT_TYPE*/, 1 /*orbitType*/, 1, false)
+      && verifier.VerifyField(tablePos, 36 /*ORBIT_TYPE*/, 1 /*orbitRegime*/, 1, false)
       && verifier.VerifyString(tablePos, 38 /*DEPLOYMENT_DATE*/, false)
       && verifier.VerifyField(tablePos, 40 /*MANEUVERABLE*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 42 /*SIZE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 44 /*MASS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 46 /*MASS_TYPE*/, 1 /*massType*/, 1, false)
+      && verifier.VerifyField(tablePos, 46 /*MASS_TYPE*/, 1 /*massCategory*/, 1, false)
       && verifier.VerifyVectorOfTables(tablePos, 48 /*PAYLOADS*/, PLDVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }

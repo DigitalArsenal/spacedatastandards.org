@@ -24,7 +24,7 @@ public struct propagatorConfig : IFlatbufferObject
   public ArraySegment<byte>? GetPROPAGATOR_NAMEBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetPROPAGATOR_NAMEArray() { return __p.__vector_as_array<byte>(4); }
-  public propagatorType PROPAGATOR_TYPE { get { int o = __p.__offset(6); return o != 0 ? (propagatorType)__p.bb.GetSbyte(o + __p.bb_pos) : propagatorType.NONE; } }
+  public propagatorFamily PROPAGATOR_TYPE { get { int o = __p.__offset(6); return o != 0 ? (propagatorFamily)__p.bb.GetSbyte(o + __p.bb_pos) : propagatorFamily.NONE; } }
   public string FORCE_MODELS(int j) { int o = __p.__offset(8); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int FORCE_MODELSLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
   public string EPOCH { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
@@ -46,7 +46,7 @@ public struct propagatorConfig : IFlatbufferObject
 
   public static Offset<propagatorConfig> CreatepropagatorConfig(FlatBufferBuilder builder,
       StringOffset PROPAGATOR_NAMEOffset = default(StringOffset),
-      propagatorType PROPAGATOR_TYPE = propagatorType.NONE,
+      propagatorFamily PROPAGATOR_TYPE = propagatorFamily.NONE,
       VectorOffset FORCE_MODELSOffset = default(VectorOffset),
       StringOffset EPOCHOffset = default(StringOffset),
       double TIME_STEP = 0.0,
@@ -63,7 +63,7 @@ public struct propagatorConfig : IFlatbufferObject
 
   public static void StartpropagatorConfig(FlatBufferBuilder builder) { builder.StartTable(6); }
   public static void AddPROPAGATOR_NAME(FlatBufferBuilder builder, StringOffset PROPAGATOR_NAMEOffset) { builder.AddOffset(0, PROPAGATOR_NAMEOffset.Value, 0); }
-  public static void AddPROPAGATOR_TYPE(FlatBufferBuilder builder, propagatorType PROPAGATOR_TYPE) { builder.AddSbyte(1, (sbyte)PROPAGATOR_TYPE, 0); }
+  public static void AddPROPAGATOR_TYPE(FlatBufferBuilder builder, propagatorFamily PROPAGATOR_TYPE) { builder.AddSbyte(1, (sbyte)PROPAGATOR_TYPE, 0); }
   public static void AddFORCE_MODELS(FlatBufferBuilder builder, VectorOffset FORCE_MODELSOffset) { builder.AddOffset(2, FORCE_MODELSOffset.Value, 0); }
   public static VectorOffset CreateFORCE_MODELSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateFORCE_MODELSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -126,7 +126,7 @@ public struct propagatorConfig : IFlatbufferObject
 public class propagatorConfigT
 {
   public string PROPAGATOR_NAME { get; set; }
-  public propagatorType PROPAGATOR_TYPE { get; set; }
+  public propagatorFamily PROPAGATOR_TYPE { get; set; }
   public List<string> FORCE_MODELS { get; set; }
   public string EPOCH { get; set; }
   public double TIME_STEP { get; set; }
@@ -134,7 +134,7 @@ public class propagatorConfigT
 
   public propagatorConfigT() {
     this.PROPAGATOR_NAME = null;
-    this.PROPAGATOR_TYPE = propagatorType.NONE;
+    this.PROPAGATOR_TYPE = propagatorFamily.NONE;
     this.FORCE_MODELS = null;
     this.EPOCH = null;
     this.TIME_STEP = 0.0;
@@ -149,7 +149,7 @@ static public class propagatorConfigVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*PROPAGATOR_NAME*/, false)
-      && verifier.VerifyField(tablePos, 6 /*PROPAGATOR_TYPE*/, 1 /*propagatorType*/, 1, false)
+      && verifier.VerifyField(tablePos, 6 /*PROPAGATOR_TYPE*/, 1 /*propagatorFamily*/, 1, false)
       && verifier.VerifyVectorOfStrings(tablePos, 8 /*FORCE_MODELS*/, false)
       && verifier.VerifyString(tablePos, 10 /*EPOCH*/, false)
       && verifier.VerifyField(tablePos, 12 /*TIME_STEP*/, 8 /*double*/, 8, false)

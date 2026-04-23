@@ -105,46 +105,46 @@ func (rcv *CAT) MutateNoradCatId(n uint32) bool {
 }
 
 /// Object type (Payload, Rocket body, Debris, Unknown)
-func (rcv *CAT) OBJECT_TYPE() objectType {
+func (rcv *CAT) OBJECT_TYPE() spaceObjectClass {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		return objectType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return spaceObjectClass(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 3
 }
 
-func (rcv *CAT) ObjectType() objectType {
+func (rcv *CAT) ObjectType() spaceObjectClass {
 	return rcv.OBJECT_TYPE()
 }
 
 /// Object type (Payload, Rocket body, Debris, Unknown)
-func (rcv *CAT) MutateOBJECT_TYPE(n objectType) bool {
+func (rcv *CAT) MutateOBJECT_TYPE(n spaceObjectClass) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
 }
 
-func (rcv *CAT) MutateObjectType(n objectType) bool {
+func (rcv *CAT) MutateObjectType(n spaceObjectClass) bool {
 	return rcv.MutateOBJECT_TYPE(n)
 }
 
 /// Operational Status Code
-func (rcv *CAT) OPS_STATUS_CODE() opsStatusCode {
+func (rcv *CAT) OPS_STATUS_CODE() operationalState {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return opsStatusCode(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return operationalState(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 7
 }
 
-func (rcv *CAT) OpsStatusCode() opsStatusCode {
+func (rcv *CAT) OpsStatusCode() operationalState {
 	return rcv.OPS_STATUS_CODE()
 }
 
 /// Operational Status Code
-func (rcv *CAT) MutateOPS_STATUS_CODE(n opsStatusCode) bool {
+func (rcv *CAT) MutateOPS_STATUS_CODE(n operationalState) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
 }
 
-func (rcv *CAT) MutateOpsStatusCode(n opsStatusCode) bool {
+func (rcv *CAT) MutateOpsStatusCode(n operationalState) bool {
 	return rcv.MutateOPS_STATUS_CODE(n)
 }
 
@@ -323,24 +323,24 @@ func (rcv *CAT) MutateRcs(n float64) bool {
 }
 
 /// Data status code; blank otherwise
-func (rcv *CAT) DATA_STATUS_CODE() dataStatusCode {
+func (rcv *CAT) DATA_STATUS_CODE() dataAvailability {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
-		return dataStatusCode(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return dataAvailability(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *CAT) DataStatusCode() dataStatusCode {
+func (rcv *CAT) DataStatusCode() dataAvailability {
 	return rcv.DATA_STATUS_CODE()
 }
 
 /// Data status code; blank otherwise
-func (rcv *CAT) MutateDATA_STATUS_CODE(n dataStatusCode) bool {
+func (rcv *CAT) MutateDATA_STATUS_CODE(n dataAvailability) bool {
 	return rcv._tab.MutateInt8Slot(32, int8(n))
 }
 
-func (rcv *CAT) MutateDataStatusCode(n dataStatusCode) bool {
+func (rcv *CAT) MutateDataStatusCode(n dataAvailability) bool {
 	return rcv.MutateDATA_STATUS_CODE(n)
 }
 
@@ -359,24 +359,24 @@ func (rcv *CAT) OrbitCenter() []byte {
 
 /// Orbit center
 /// Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
-func (rcv *CAT) ORBIT_TYPE() orbitType {
+func (rcv *CAT) ORBIT_TYPE() orbitRegime {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
-		return orbitType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return orbitRegime(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *CAT) OrbitType() orbitType {
+func (rcv *CAT) OrbitType() orbitRegime {
 	return rcv.ORBIT_TYPE()
 }
 
 /// Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
-func (rcv *CAT) MutateORBIT_TYPE(n orbitType) bool {
+func (rcv *CAT) MutateORBIT_TYPE(n orbitRegime) bool {
 	return rcv._tab.MutateInt8Slot(36, int8(n))
 }
 
-func (rcv *CAT) MutateOrbitType(n orbitType) bool {
+func (rcv *CAT) MutateOrbitType(n orbitRegime) bool {
 	return rcv.MutateORBIT_TYPE(n)
 }
 
@@ -461,24 +461,24 @@ func (rcv *CAT) MutateMass(n float64) bool {
 }
 
 /// Mass type (Dry, Wet)
-func (rcv *CAT) MASS_TYPE() massType {
+func (rcv *CAT) MASS_TYPE() massCategory {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
-		return massType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return massCategory(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *CAT) MassType() massType {
+func (rcv *CAT) MassType() massCategory {
 	return rcv.MASS_TYPE()
 }
 
 /// Mass type (Dry, Wet)
-func (rcv *CAT) MutateMASS_TYPE(n massType) bool {
+func (rcv *CAT) MutateMASS_TYPE(n massCategory) bool {
 	return rcv._tab.MutateInt8Slot(46, int8(n))
 }
 
-func (rcv *CAT) MutateMassType(n massType) bool {
+func (rcv *CAT) MutateMassType(n massCategory) bool {
 	return rcv.MutateMASS_TYPE(n)
 }
 
@@ -536,16 +536,16 @@ func CATAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
 func CATAddNoradCatId(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
 	CATAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
 }
-func CATAddOBJECT_TYPE(builder *flatbuffers.Builder, OBJECT_TYPE objectType) {
+func CATAddOBJECT_TYPE(builder *flatbuffers.Builder, OBJECT_TYPE spaceObjectClass) {
 	builder.PrependInt8Slot(3, int8(OBJECT_TYPE), 3)
 }
-func CATAddObjectType(builder *flatbuffers.Builder, OBJECT_TYPE objectType) {
+func CATAddObjectType(builder *flatbuffers.Builder, OBJECT_TYPE spaceObjectClass) {
 	CATAddOBJECT_TYPE(builder, OBJECT_TYPE)
 }
-func CATAddOPS_STATUS_CODE(builder *flatbuffers.Builder, OPS_STATUS_CODE opsStatusCode) {
+func CATAddOPS_STATUS_CODE(builder *flatbuffers.Builder, OPS_STATUS_CODE operationalState) {
 	builder.PrependInt8Slot(4, int8(OPS_STATUS_CODE), 7)
 }
-func CATAddOpsStatusCode(builder *flatbuffers.Builder, OPS_STATUS_CODE opsStatusCode) {
+func CATAddOpsStatusCode(builder *flatbuffers.Builder, OPS_STATUS_CODE operationalState) {
 	CATAddOPS_STATUS_CODE(builder, OPS_STATUS_CODE)
 }
 func CATAddOWNER(builder *flatbuffers.Builder, OWNER legacyCountryCode) {
@@ -602,10 +602,10 @@ func CATAddRCS(builder *flatbuffers.Builder, RCS float64) {
 func CATAddRcs(builder *flatbuffers.Builder, RCS float64) {
 	CATAddRCS(builder, RCS)
 }
-func CATAddDATA_STATUS_CODE(builder *flatbuffers.Builder, DATA_STATUS_CODE dataStatusCode) {
+func CATAddDATA_STATUS_CODE(builder *flatbuffers.Builder, DATA_STATUS_CODE dataAvailability) {
 	builder.PrependInt8Slot(14, int8(DATA_STATUS_CODE), 0)
 }
-func CATAddDataStatusCode(builder *flatbuffers.Builder, DATA_STATUS_CODE dataStatusCode) {
+func CATAddDataStatusCode(builder *flatbuffers.Builder, DATA_STATUS_CODE dataAvailability) {
 	CATAddDATA_STATUS_CODE(builder, DATA_STATUS_CODE)
 }
 func CATAddORBIT_CENTER(builder *flatbuffers.Builder, ORBIT_CENTER flatbuffers.UOffsetT) {
@@ -614,10 +614,10 @@ func CATAddORBIT_CENTER(builder *flatbuffers.Builder, ORBIT_CENTER flatbuffers.U
 func CATAddOrbitCenter(builder *flatbuffers.Builder, ORBIT_CENTER flatbuffers.UOffsetT) {
 	CATAddORBIT_CENTER(builder, ORBIT_CENTER)
 }
-func CATAddORBIT_TYPE(builder *flatbuffers.Builder, ORBIT_TYPE orbitType) {
+func CATAddORBIT_TYPE(builder *flatbuffers.Builder, ORBIT_TYPE orbitRegime) {
 	builder.PrependInt8Slot(16, int8(ORBIT_TYPE), 0)
 }
-func CATAddOrbitType(builder *flatbuffers.Builder, ORBIT_TYPE orbitType) {
+func CATAddOrbitType(builder *flatbuffers.Builder, ORBIT_TYPE orbitRegime) {
 	CATAddORBIT_TYPE(builder, ORBIT_TYPE)
 }
 func CATAddDEPLOYMENT_DATE(builder *flatbuffers.Builder, DEPLOYMENT_DATE flatbuffers.UOffsetT) {
@@ -644,10 +644,10 @@ func CATAddMASS(builder *flatbuffers.Builder, MASS float64) {
 func CATAddMass(builder *flatbuffers.Builder, MASS float64) {
 	CATAddMASS(builder, MASS)
 }
-func CATAddMASS_TYPE(builder *flatbuffers.Builder, MASS_TYPE massType) {
+func CATAddMASS_TYPE(builder *flatbuffers.Builder, MASS_TYPE massCategory) {
 	builder.PrependInt8Slot(21, int8(MASS_TYPE), 0)
 }
-func CATAddMassType(builder *flatbuffers.Builder, MASS_TYPE massType) {
+func CATAddMassType(builder *flatbuffers.Builder, MASS_TYPE massCategory) {
 	CATAddMASS_TYPE(builder, MASS_TYPE)
 }
 func CATAddPAYLOADS(builder *flatbuffers.Builder, PAYLOADS flatbuffers.UOffsetT) {

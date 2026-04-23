@@ -8,7 +8,7 @@ import Common
 
 import FlatBuffers
 
-public enum sarMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum sarMission: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -21,8 +21,8 @@ public enum sarMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   case maritime = 6
   case unknown = 7
 
-  public static var max: sarMode { return .unknown }
-  public static var min: sarMode { return .stripmap }
+  public static var max: sarMission { return .unknown }
+  public static var min: sarMission { return .stripmap }
 }
 
 
@@ -167,7 +167,7 @@ public struct SAR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var ORBIT_STATE: String? { let o = _accessor.offset(VTOFFSET.ORBIT_STATE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORBIT_STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORBIT_STATE.v) }
   ///  SAR imaging mode
-  public var SAR_MODE: sarMode { let o = _accessor.offset(VTOFFSET.SAR_MODE.v); return o == 0 ? .stripmap : sarMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .stripmap }
+  public var SAR_MODE: sarMission { let o = _accessor.offset(VTOFFSET.SAR_MODE.v); return o == 0 ? .stripmap : sarMission(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .stripmap }
   ///  Operating RF band (e.g., X, C, L, S, P)
   public var OPERATING_BAND: String? { let o = _accessor.offset(VTOFFSET.OPERATING_BAND.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OPERATING_BANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPERATING_BAND.v) }
@@ -274,7 +274,7 @@ public struct SAR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(DETECTION_END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DETECTION_END, at: VTOFFSET.DETECTION_END.p) }
   public static func add(DWELL_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DWELL_TIME, def: 0.0, at: VTOFFSET.DWELL_TIME.p) }
   public static func add(ORBIT_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_STATE, at: VTOFFSET.ORBIT_STATE.p) }
-  public static func add(SAR_MODE: sarMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAR_MODE.rawValue, def: 0, at: VTOFFSET.SAR_MODE.p) }
+  public static func add(SAR_MODE: sarMission, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAR_MODE.rawValue, def: 0, at: VTOFFSET.SAR_MODE.p) }
   public static func add(OPERATING_BAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATING_BAND, at: VTOFFSET.OPERATING_BAND.p) }
   public static func add(OPERATING_FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATING_FREQ, def: 0.0, at: VTOFFSET.OPERATING_FREQ.p) }
   public static func add(SNR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SNR, def: 0.0, at: VTOFFSET.SNR.p) }
@@ -335,7 +335,7 @@ public struct SAR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     DETECTION_ENDOffset DETECTION_END: Offset = Offset(),
     DWELL_TIME: Double = 0.0,
     ORBIT_STATEOffset ORBIT_STATE: Offset = Offset(),
-    SAR_MODE: sarMode = .stripmap,
+    SAR_MODE: sarMission = .stripmap,
     OPERATING_BANDOffset OPERATING_BAND: Offset = Offset(),
     OPERATING_FREQ: Double = 0.0,
     SNR: Double = 0.0,
@@ -458,7 +458,7 @@ public struct SAR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.DETECTION_END.p, fieldName: "DETECTION_END", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.DWELL_TIME.p, fieldName: "DWELL_TIME", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.ORBIT_STATE.p, fieldName: "ORBIT_STATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAR_MODE.p, fieldName: "SAR_MODE", required: false, type: sarMode.self)
+    try _v.visit(field: VTOFFSET.SAR_MODE.p, fieldName: "SAR_MODE", required: false, type: sarMission.self)
     try _v.visit(field: VTOFFSET.OPERATING_BAND.p, fieldName: "OPERATING_BAND", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OPERATING_FREQ.p, fieldName: "OPERATING_FREQ", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SNR.p, fieldName: "SNR", required: false, type: Double.self)

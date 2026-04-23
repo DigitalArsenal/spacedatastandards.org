@@ -135,7 +135,7 @@ class MPE extends Table
     public function getMEAN_ELEMENT_THEORY()
     {
         $o = $this->__offset(22);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \meanElementTheory::SGP4;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \meanElementSource::SGP4;
     }
 
     /**

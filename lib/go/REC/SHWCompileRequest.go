@@ -58,46 +58,46 @@ func (rcv *SHWCompileRequest) ShaderName() []byte {
 
 /// Logical shader name (used in logs and uniform prefixing).
 /// Target GLSL stage.
-func (rcv *SHWCompileRequest) SHADER_STAGE() shaderStage {
+func (rcv *SHWCompileRequest) SHADER_STAGE() glslStage {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return shaderStage(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return glslStage(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *SHWCompileRequest) ShaderStage() shaderStage {
+func (rcv *SHWCompileRequest) ShaderStage() glslStage {
 	return rcv.SHADER_STAGE()
 }
 
 /// Target GLSL stage.
-func (rcv *SHWCompileRequest) MutateSHADER_STAGE(n shaderStage) bool {
+func (rcv *SHWCompileRequest) MutateSHADER_STAGE(n glslStage) bool {
 	return rcv._tab.MutateByteSlot(6, byte(n))
 }
 
-func (rcv *SHWCompileRequest) MutateShaderStage(n shaderStage) bool {
+func (rcv *SHWCompileRequest) MutateShaderStage(n glslStage) bool {
 	return rcv.MutateSHADER_STAGE(n)
 }
 
 /// Intended injection point in the host pipeline.
-func (rcv *SHWCompileRequest) SHADER_INJECTION_POINT() shaderInjectionPoint {
+func (rcv *SHWCompileRequest) SHADER_INJECTION_POINT() shaderHookPoint {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
-		return shaderInjectionPoint(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return shaderHookPoint(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *SHWCompileRequest) ShaderInjectionPoint() shaderInjectionPoint {
+func (rcv *SHWCompileRequest) ShaderInjectionPoint() shaderHookPoint {
 	return rcv.SHADER_INJECTION_POINT()
 }
 
 /// Intended injection point in the host pipeline.
-func (rcv *SHWCompileRequest) MutateSHADER_INJECTION_POINT(n shaderInjectionPoint) bool {
+func (rcv *SHWCompileRequest) MutateSHADER_INJECTION_POINT(n shaderHookPoint) bool {
 	return rcv._tab.MutateByteSlot(8, byte(n))
 }
 
-func (rcv *SHWCompileRequest) MutateShaderInjectionPoint(n shaderInjectionPoint) bool {
+func (rcv *SHWCompileRequest) MutateShaderInjectionPoint(n shaderHookPoint) bool {
 	return rcv.MutateSHADER_INJECTION_POINT(n)
 }
 
@@ -171,16 +171,16 @@ func SHWCompileRequestAddSHADER_NAME(builder *flatbuffers.Builder, SHADER_NAME f
 func SHWCompileRequestAddShaderName(builder *flatbuffers.Builder, SHADER_NAME flatbuffers.UOffsetT) {
 	SHWCompileRequestAddSHADER_NAME(builder, SHADER_NAME)
 }
-func SHWCompileRequestAddSHADER_STAGE(builder *flatbuffers.Builder, SHADER_STAGE shaderStage) {
+func SHWCompileRequestAddSHADER_STAGE(builder *flatbuffers.Builder, SHADER_STAGE glslStage) {
 	builder.PrependByteSlot(1, byte(SHADER_STAGE), 0)
 }
-func SHWCompileRequestAddShaderStage(builder *flatbuffers.Builder, SHADER_STAGE shaderStage) {
+func SHWCompileRequestAddShaderStage(builder *flatbuffers.Builder, SHADER_STAGE glslStage) {
 	SHWCompileRequestAddSHADER_STAGE(builder, SHADER_STAGE)
 }
-func SHWCompileRequestAddSHADER_INJECTION_POINT(builder *flatbuffers.Builder, SHADER_INJECTION_POINT shaderInjectionPoint) {
+func SHWCompileRequestAddSHADER_INJECTION_POINT(builder *flatbuffers.Builder, SHADER_INJECTION_POINT shaderHookPoint) {
 	builder.PrependByteSlot(2, byte(SHADER_INJECTION_POINT), 0)
 }
-func SHWCompileRequestAddShaderInjectionPoint(builder *flatbuffers.Builder, SHADER_INJECTION_POINT shaderInjectionPoint) {
+func SHWCompileRequestAddShaderInjectionPoint(builder *flatbuffers.Builder, SHADER_INJECTION_POINT shaderHookPoint) {
 	SHWCompileRequestAddSHADER_INJECTION_POINT(builder, SHADER_INJECTION_POINT)
 }
 func SHWCompileRequestAddSHADER_SOURCE(builder *flatbuffers.Builder, SHADER_SOURCE flatbuffers.UOffsetT) {

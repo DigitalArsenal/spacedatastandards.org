@@ -58,7 +58,7 @@ class SPP extends Table
     public function getPACKET_TYPE()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \packetType::TM;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \packetKind::TM;
     }
 
     /// Secondary header flag

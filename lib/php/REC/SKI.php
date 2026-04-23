@@ -193,7 +193,7 @@ class SKI extends Table
     public function getIMAGE_TYPE()
     {
         $o = $this->__offset(32);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \imageType::VISIBLE;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \imageCategory::VISIBLE;
     }
 
     /// Exposure start time (ISO 8601)

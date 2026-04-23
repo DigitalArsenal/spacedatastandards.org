@@ -142,23 +142,23 @@ func (rcv *keplerianElements) MutateArgOfPericenter(n float64) bool {
 	return rcv.MutateARG_OF_PERICENTER(n)
 }
 
-func (rcv *keplerianElements) ANOMALY_TYPE() anomalyType {
+func (rcv *keplerianElements) ANOMALY_TYPE() anomalyConvention {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return anomalyType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return anomalyConvention(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *keplerianElements) AnomalyType() anomalyType {
+func (rcv *keplerianElements) AnomalyType() anomalyConvention {
 	return rcv.ANOMALY_TYPE()
 }
 
-func (rcv *keplerianElements) MutateANOMALY_TYPE(n anomalyType) bool {
+func (rcv *keplerianElements) MutateANOMALY_TYPE(n anomalyConvention) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
 }
 
-func (rcv *keplerianElements) MutateAnomalyType(n anomalyType) bool {
+func (rcv *keplerianElements) MutateAnomalyType(n anomalyConvention) bool {
 	return rcv.MutateANOMALY_TYPE(n)
 }
 
@@ -215,10 +215,10 @@ func keplerianElementsAddARG_OF_PERICENTER(builder *flatbuffers.Builder, ARG_OF_
 func keplerianElementsAddArgOfPericenter(builder *flatbuffers.Builder, ARG_OF_PERICENTER float64) {
 	keplerianElementsAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
 }
-func keplerianElementsAddANOMALY_TYPE(builder *flatbuffers.Builder, ANOMALY_TYPE anomalyType) {
+func keplerianElementsAddANOMALY_TYPE(builder *flatbuffers.Builder, ANOMALY_TYPE anomalyConvention) {
 	builder.PrependInt8Slot(5, int8(ANOMALY_TYPE), 0)
 }
-func keplerianElementsAddAnomalyType(builder *flatbuffers.Builder, ANOMALY_TYPE anomalyType) {
+func keplerianElementsAddAnomalyType(builder *flatbuffers.Builder, ANOMALY_TYPE anomalyConvention) {
 	keplerianElementsAddANOMALY_TYPE(builder, ANOMALY_TYPE)
 }
 func keplerianElementsAddANOMALY(builder *flatbuffers.Builder, ANOMALY float64) {

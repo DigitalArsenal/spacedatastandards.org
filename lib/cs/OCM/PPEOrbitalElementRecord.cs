@@ -42,7 +42,7 @@ public struct PPEOrbitalElementRecord : IFlatbufferObject
   /// Polynomial basis type for interpreting the coefficient arrays.
   public polynomialBasisType BASIS_TYPE { get { int o = __p.__offset(10); return o != 0 ? (polynomialBasisType)__p.bb.GetSbyte(o + __p.bb_pos) : polynomialBasisType.CHEBYSHEV; } }
   /// Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
-  public sizeShapeType SIZE_SHAPE_TYPE { get { int o = __p.__offset(12); return o != 0 ? (sizeShapeType)__p.bb.GetSbyte(o + __p.bb_pos) : sizeShapeType.SMA; } }
+  public sizeShapeProfile SIZE_SHAPE_TYPE { get { int o = __p.__offset(12); return o != 0 ? (sizeShapeProfile)__p.bb.GetSbyte(o + __p.bb_pos) : sizeShapeProfile.SMA; } }
   /// Anomaly type for the sixth orbital element.
   public ppeAnomalyType ANOMALY_TYPE { get { int o = __p.__offset(14); return o != 0 ? (ppeAnomalyType)__p.bb.GetSbyte(o + __p.bb_pos) : ppeAnomalyType.TRUE_ANOMALY; } }
   /// Coefficients for SMA or radius of periapsis (km).
@@ -116,7 +116,7 @@ public struct PPEOrbitalElementRecord : IFlatbufferObject
       double EPOCH_HALF_SPAN = 0.0,
       ushort NUM_COEFFICIENTS = 0,
       polynomialBasisType BASIS_TYPE = polynomialBasisType.CHEBYSHEV,
-      sizeShapeType SIZE_SHAPE_TYPE = sizeShapeType.SMA,
+      sizeShapeProfile SIZE_SHAPE_TYPE = sizeShapeProfile.SMA,
       ppeAnomalyType ANOMALY_TYPE = ppeAnomalyType.TRUE_ANOMALY,
       VectorOffset COEFF_SIZE_SHAPEOffset = default(VectorOffset),
       VectorOffset COEFF_ECCENTRICITYOffset = default(VectorOffset),
@@ -149,7 +149,7 @@ public struct PPEOrbitalElementRecord : IFlatbufferObject
   public static void AddEPOCH_HALF_SPAN(FlatBufferBuilder builder, double EPOCH_HALF_SPAN) { builder.AddDouble(1, EPOCH_HALF_SPAN, 0.0); }
   public static void AddNUM_COEFFICIENTS(FlatBufferBuilder builder, ushort NUM_COEFFICIENTS) { builder.AddUshort(2, NUM_COEFFICIENTS, 0); }
   public static void AddBASIS_TYPE(FlatBufferBuilder builder, polynomialBasisType BASIS_TYPE) { builder.AddSbyte(3, (sbyte)BASIS_TYPE, 0); }
-  public static void AddSIZE_SHAPE_TYPE(FlatBufferBuilder builder, sizeShapeType SIZE_SHAPE_TYPE) { builder.AddSbyte(4, (sbyte)SIZE_SHAPE_TYPE, 0); }
+  public static void AddSIZE_SHAPE_TYPE(FlatBufferBuilder builder, sizeShapeProfile SIZE_SHAPE_TYPE) { builder.AddSbyte(4, (sbyte)SIZE_SHAPE_TYPE, 0); }
   public static void AddANOMALY_TYPE(FlatBufferBuilder builder, ppeAnomalyType ANOMALY_TYPE) { builder.AddSbyte(5, (sbyte)ANOMALY_TYPE, 0); }
   public static void AddCOEFF_SIZE_SHAPE(FlatBufferBuilder builder, VectorOffset COEFF_SIZE_SHAPEOffset) { builder.AddOffset(6, COEFF_SIZE_SHAPEOffset.Value, 0); }
   public static VectorOffset CreateCOEFF_SIZE_SHAPEVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
@@ -285,7 +285,7 @@ public class PPEOrbitalElementRecordT
   public double EPOCH_HALF_SPAN { get; set; }
   public ushort NUM_COEFFICIENTS { get; set; }
   public polynomialBasisType BASIS_TYPE { get; set; }
-  public sizeShapeType SIZE_SHAPE_TYPE { get; set; }
+  public sizeShapeProfile SIZE_SHAPE_TYPE { get; set; }
   public ppeAnomalyType ANOMALY_TYPE { get; set; }
   public List<double> COEFF_SIZE_SHAPE { get; set; }
   public List<double> COEFF_ECCENTRICITY { get; set; }
@@ -301,7 +301,7 @@ public class PPEOrbitalElementRecordT
     this.EPOCH_HALF_SPAN = 0.0;
     this.NUM_COEFFICIENTS = 0;
     this.BASIS_TYPE = polynomialBasisType.CHEBYSHEV;
-    this.SIZE_SHAPE_TYPE = sizeShapeType.SMA;
+    this.SIZE_SHAPE_TYPE = sizeShapeProfile.SMA;
     this.ANOMALY_TYPE = ppeAnomalyType.TRUE_ANOMALY;
     this.COEFF_SIZE_SHAPE = null;
     this.COEFF_ECCENTRICITY = null;
@@ -324,7 +324,7 @@ static public class PPEOrbitalElementRecordVerify
       && verifier.VerifyField(tablePos, 6 /*EPOCH_HALF_SPAN*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 8 /*NUM_COEFFICIENTS*/, 2 /*ushort*/, 2, false)
       && verifier.VerifyField(tablePos, 10 /*BASIS_TYPE*/, 1 /*polynomialBasisType*/, 1, false)
-      && verifier.VerifyField(tablePos, 12 /*SIZE_SHAPE_TYPE*/, 1 /*sizeShapeType*/, 1, false)
+      && verifier.VerifyField(tablePos, 12 /*SIZE_SHAPE_TYPE*/, 1 /*sizeShapeProfile*/, 1, false)
       && verifier.VerifyField(tablePos, 14 /*ANOMALY_TYPE*/, 1 /*ppeAnomalyType*/, 1, false)
       && verifier.VerifyVectorOfData(tablePos, 16 /*COEFF_SIZE_SHAPE*/, 8 /*double*/, true)
       && verifier.VerifyVectorOfData(tablePos, 18 /*COEFF_ECCENTRICITY*/, 8 /*double*/, true)

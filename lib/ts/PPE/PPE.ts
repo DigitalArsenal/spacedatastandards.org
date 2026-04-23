@@ -9,7 +9,7 @@ import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalE
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { RFM, RFMT } from './RFM.js';
 import { polynomialBasisType } from './polynomialBasisType.js';
-import { timeSystem } from './timeSystem.js';
+import { timingStandard } from './timingStandard.js';
 
 
 /**
@@ -86,9 +86,9 @@ REFERENCE_FRAME(obj?:RFM):RFM|null {
 /**
  * Time system used for all epochs in this message.
  */
-TIME_SYSTEM():timeSystem {
+TIME_SYSTEM():timingStandard {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : timeSystem.GMST;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : timingStandard.GMST;
 }
 
 /**
@@ -208,8 +208,8 @@ static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAMEOffset:flat
   builder.addFieldOffset(3, REFERENCE_FRAMEOffset, 0);
 }
 
-static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEM:timeSystem) {
-  builder.addFieldInt8(4, TIME_SYSTEM, timeSystem.GMST);
+static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEM:timingStandard) {
+  builder.addFieldInt8(4, TIME_SYSTEM, timingStandard.GMST);
 }
 
 static addStartTime(builder:flatbuffers.Builder, START_TIMEOffset:flatbuffers.Offset) {
@@ -324,7 +324,7 @@ constructor(
   public OBJECT: CATT|null = null,
   public CENTER_NAME: string|Uint8Array|null = null,
   public REFERENCE_FRAME: RFMT|null = null,
-  public TIME_SYSTEM: timeSystem = timeSystem.GMST,
+  public TIME_SYSTEM: timingStandard = timingStandard.GMST,
   public START_TIME: string|Uint8Array|null = null,
   public STOP_TIME: string|Uint8Array|null = null,
   public DEFAULT_BASIS_TYPE: polynomialBasisType = polynomialBasisType.CHEBYSHEV,

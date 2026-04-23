@@ -16,54 +16,54 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct TIM;
 struct TIMBuilder;
 
-enum timeSystem : int8_t {
+enum timingStandard : int8_t {
   /// Greenwich Mean Sidereal Time
-  timeSystem_GMST = 0,
+  timingStandard_GMST = 0,
   /// Global Positioning System
-  timeSystem_GPS = 1,
+  timingStandard_GPS = 1,
   /// Mission Elapsed Time
-  timeSystem_MET = 2,
+  timingStandard_MET = 2,
   /// Mission Relative Time
-  timeSystem_MRT = 3,
+  timingStandard_MRT = 3,
   /// Spacecraft Clock (receiver) (requires rules for interpretation in ICD)
-  timeSystem_SCLK = 4,
+  timingStandard_SCLK = 4,
   /// International Atomic Time
-  timeSystem_TAI = 5,
+  timingStandard_TAI = 5,
   /// Barycentric Coordinate Time
-  timeSystem_TCB = 6,
+  timingStandard_TCB = 6,
   /// Barycentric Dynamical Time
-  timeSystem_TDB = 7,
+  timingStandard_TDB = 7,
   /// Geocentric Coordinate Time
-  timeSystem_TCG = 8,
+  timingStandard_TCG = 8,
   /// Terrestrial Time
-  timeSystem_TT = 9,
+  timingStandard_TT = 9,
   /// Universal Time
-  timeSystem_UT1 = 10,
+  timingStandard_UT1 = 10,
   /// Coordinated Universal Time
-  timeSystem_UTC = 11,
-  timeSystem_MIN = timeSystem_GMST,
-  timeSystem_MAX = timeSystem_UTC
+  timingStandard_UTC = 11,
+  timingStandard_MIN = timingStandard_GMST,
+  timingStandard_MAX = timingStandard_UTC
 };
 
-inline const timeSystem (&EnumValuestimeSystem())[12] {
-  static const timeSystem values[] = {
-    timeSystem_GMST,
-    timeSystem_GPS,
-    timeSystem_MET,
-    timeSystem_MRT,
-    timeSystem_SCLK,
-    timeSystem_TAI,
-    timeSystem_TCB,
-    timeSystem_TDB,
-    timeSystem_TCG,
-    timeSystem_TT,
-    timeSystem_UT1,
-    timeSystem_UTC
+inline const timingStandard (&EnumValuestimingStandard())[12] {
+  static const timingStandard values[] = {
+    timingStandard_GMST,
+    timingStandard_GPS,
+    timingStandard_MET,
+    timingStandard_MRT,
+    timingStandard_SCLK,
+    timingStandard_TAI,
+    timingStandard_TCB,
+    timingStandard_TDB,
+    timingStandard_TCG,
+    timingStandard_TT,
+    timingStandard_UT1,
+    timingStandard_UTC
   };
   return values;
 }
 
-inline const char * const *EnumNamestimeSystem() {
+inline const char * const *EnumNamestimingStandard() {
   static const char * const names[13] = {
     "GMST",
     "GPS",
@@ -82,10 +82,10 @@ inline const char * const *EnumNamestimeSystem() {
   return names;
 }
 
-inline const char *EnumNametimeSystem(timeSystem e) {
-  if (::flatbuffers::IsOutRange(e, timeSystem_GMST, timeSystem_UTC)) return "";
+inline const char *EnumNametimingStandard(timingStandard e) {
+  if (::flatbuffers::IsOutRange(e, timingStandard_GMST, timingStandard_UTC)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamestimeSystem()[index];
+  return EnumNamestimingStandard()[index];
 }
 
 /// Time System
@@ -94,8 +94,8 @@ struct TIM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_TIME_SYSTEM = 4
   };
-  timeSystem TIME_SYSTEM() const {
-    return static_cast<timeSystem>(GetField<int8_t>(VT_TIME_SYSTEM, 0));
+  timingStandard TIME_SYSTEM() const {
+    return static_cast<timingStandard>(GetField<int8_t>(VT_TIME_SYSTEM, 0));
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -109,7 +109,7 @@ struct TIMBuilder {
   typedef TIM Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_TIME_SYSTEM(timeSystem TIME_SYSTEM) {
+  void add_TIME_SYSTEM(timingStandard TIME_SYSTEM) {
     fbb_.AddElement<int8_t>(TIM::VT_TIME_SYSTEM, static_cast<int8_t>(TIME_SYSTEM), 0);
   }
   explicit TIMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
@@ -125,7 +125,7 @@ struct TIMBuilder {
 
 inline ::flatbuffers::Offset<TIM> CreateTIM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    timeSystem TIME_SYSTEM = timeSystem_GMST) {
+    timingStandard TIME_SYSTEM = timingStandard_GMST) {
   TIMBuilder builder_(_fbb);
   builder_.add_TIME_SYSTEM(TIME_SYSTEM);
   return builder_.Finish();

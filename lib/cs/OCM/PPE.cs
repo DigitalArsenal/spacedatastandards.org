@@ -40,7 +40,7 @@ public struct PPE : IFlatbufferObject
   /// Reference frame for position/velocity coefficients.
   public RFM? REFERENCE_FRAME { get { int o = __p.__offset(10); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Time system used for all epochs in this message.
-  public timeSystem TIME_SYSTEM { get { int o = __p.__offset(12); return o != 0 ? (timeSystem)__p.bb.GetSbyte(o + __p.bb_pos) : timeSystem.GMST; } }
+  public timingStandard TIME_SYSTEM { get { int o = __p.__offset(12); return o != 0 ? (timingStandard)__p.bb.GetSbyte(o + __p.bb_pos) : timingStandard.GMST; } }
   /// Start of the total time span covered by this ephemeris (ISO 8601).
   public string START_TIME { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -88,7 +88,7 @@ public struct PPE : IFlatbufferObject
       Offset<CAT> OBJECTOffset = default(Offset<CAT>),
       StringOffset CENTER_NAMEOffset = default(StringOffset),
       Offset<RFM> REFERENCE_FRAMEOffset = default(Offset<RFM>),
-      timeSystem TIME_SYSTEM = timeSystem.GMST,
+      timingStandard TIME_SYSTEM = timingStandard.GMST,
       StringOffset START_TIMEOffset = default(StringOffset),
       StringOffset STOP_TIMEOffset = default(StringOffset),
       polynomialBasisType DEFAULT_BASIS_TYPE = polynomialBasisType.CHEBYSHEV,
@@ -124,7 +124,7 @@ public struct PPE : IFlatbufferObject
   public static void AddOBJECT(FlatBufferBuilder builder, Offset<CAT> OBJECTOffset) { builder.AddOffset(1, OBJECTOffset.Value, 0); }
   public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(2, CENTER_NAMEOffset.Value, 0); }
   public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> REFERENCE_FRAMEOffset) { builder.AddOffset(3, REFERENCE_FRAMEOffset.Value, 0); }
-  public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timeSystem TIME_SYSTEM) { builder.AddSbyte(4, (sbyte)TIME_SYSTEM, 0); }
+  public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timingStandard TIME_SYSTEM) { builder.AddSbyte(4, (sbyte)TIME_SYSTEM, 0); }
   public static void AddSTART_TIME(FlatBufferBuilder builder, StringOffset START_TIMEOffset) { builder.AddOffset(5, START_TIMEOffset.Value, 0); }
   public static void AddSTOP_TIME(FlatBufferBuilder builder, StringOffset STOP_TIMEOffset) { builder.AddOffset(6, STOP_TIMEOffset.Value, 0); }
   public static void AddDEFAULT_BASIS_TYPE(FlatBufferBuilder builder, polynomialBasisType DEFAULT_BASIS_TYPE) { builder.AddSbyte(7, (sbyte)DEFAULT_BASIS_TYPE, 0); }
@@ -222,7 +222,7 @@ public class PPET
   public CATT OBJECT { get; set; }
   public string CENTER_NAME { get; set; }
   public RFMT REFERENCE_FRAME { get; set; }
-  public timeSystem TIME_SYSTEM { get; set; }
+  public timingStandard TIME_SYSTEM { get; set; }
   public string START_TIME { get; set; }
   public string STOP_TIME { get; set; }
   public polynomialBasisType DEFAULT_BASIS_TYPE { get; set; }
@@ -237,7 +237,7 @@ public class PPET
     this.OBJECT = null;
     this.CENTER_NAME = null;
     this.REFERENCE_FRAME = null;
-    this.TIME_SYSTEM = timeSystem.GMST;
+    this.TIME_SYSTEM = timingStandard.GMST;
     this.START_TIME = null;
     this.STOP_TIME = null;
     this.DEFAULT_BASIS_TYPE = polynomialBasisType.CHEBYSHEV;
@@ -267,7 +267,7 @@ static public class PPEVerify
       && verifier.VerifyTable(tablePos, 6 /*OBJECT*/, CATVerify.Verify, false)
       && verifier.VerifyString(tablePos, 8 /*CENTER_NAME*/, false)
       && verifier.VerifyTable(tablePos, 10 /*REFERENCE_FRAME*/, RFMVerify.Verify, false)
-      && verifier.VerifyField(tablePos, 12 /*TIME_SYSTEM*/, 1 /*timeSystem*/, 1, false)
+      && verifier.VerifyField(tablePos, 12 /*TIME_SYSTEM*/, 1 /*timingStandard*/, 1, false)
       && verifier.VerifyString(tablePos, 14 /*START_TIME*/, false)
       && verifier.VerifyString(tablePos, 16 /*STOP_TIME*/, false)
       && verifier.VerifyField(tablePos, 18 /*DEFAULT_BASIS_TYPE*/, 1 /*polynomialBasisType*/, 1, false)

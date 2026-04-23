@@ -58,7 +58,7 @@ class CFP extends Table
     public function getPDU_TYPE()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \pduType::FILE_DIRECTIVE;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \pduKind::FILE_DIRECTIVE;
     }
 
     /// Direction (toward receiver or sender)
@@ -78,7 +78,7 @@ class CFP extends Table
     public function getTRANSMISSION_MODE()
     {
         $o = $this->__offset(10);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \transmissionMode::ACKNOWLEDGED;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \transmissionClass::ACKNOWLEDGED;
     }
 
     /// CRC present flag

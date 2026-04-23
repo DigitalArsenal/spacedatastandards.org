@@ -73,7 +73,7 @@ public struct STF : IFlatbufferObject
 #endif
   public byte[] GetSAMPLE_CIDArray() { return __p.__vector_as_array<byte>(18); }
   /// Type of access offered
-  public accessType ACCESS_TYPE { get { int o = __p.__offset(20); return o != 0 ? (accessType)__p.bb.GetSbyte(o + __p.bb_pos) : accessType.OneTime; } }
+  public accessCategory ACCESS_TYPE { get { int o = __p.__offset(20); return o != 0 ? (accessCategory)__p.bb.GetSbyte(o + __p.bb_pos) : accessCategory.OneTime; } }
   /// Whether encryption is required for data delivery
   public bool ENCRYPTION_REQUIRED { get { int o = __p.__offset(22); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Available pricing tiers
@@ -113,7 +113,7 @@ public struct STF : IFlatbufferObject
       VectorOffset DATA_TYPESOffset = default(VectorOffset),
       Offset<DataCoverage> COVERAGEOffset = default(Offset<DataCoverage>),
       StringOffset SAMPLE_CIDOffset = default(StringOffset),
-      accessType ACCESS_TYPE = accessType.OneTime,
+      accessCategory ACCESS_TYPE = accessCategory.OneTime,
       bool ENCRYPTION_REQUIRED = false,
       VectorOffset PRICINGOffset = default(VectorOffset),
       VectorOffset ACCEPTED_PAYMENTSOffset = default(VectorOffset),
@@ -155,7 +155,7 @@ public struct STF : IFlatbufferObject
   public static void StartDATA_TYPESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddCOVERAGE(FlatBufferBuilder builder, Offset<DataCoverage> COVERAGEOffset) { builder.AddOffset(6, COVERAGEOffset.Value, 0); }
   public static void AddSAMPLE_CID(FlatBufferBuilder builder, StringOffset SAMPLE_CIDOffset) { builder.AddOffset(7, SAMPLE_CIDOffset.Value, 0); }
-  public static void AddACCESS_TYPE(FlatBufferBuilder builder, accessType ACCESS_TYPE) { builder.AddSbyte(8, (sbyte)ACCESS_TYPE, 0); }
+  public static void AddACCESS_TYPE(FlatBufferBuilder builder, accessCategory ACCESS_TYPE) { builder.AddSbyte(8, (sbyte)ACCESS_TYPE, 0); }
   public static void AddENCRYPTION_REQUIRED(FlatBufferBuilder builder, bool ENCRYPTION_REQUIRED) { builder.AddBool(9, ENCRYPTION_REQUIRED, false); }
   public static void AddPRICING(FlatBufferBuilder builder, VectorOffset PRICINGOffset) { builder.AddOffset(10, PRICINGOffset.Value, 0); }
   public static VectorOffset CreatePRICINGVector(FlatBufferBuilder builder, Offset<PricingTier>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -276,7 +276,7 @@ public class STFT
   public List<string> DATA_TYPES { get; set; }
   public DataCoverageT COVERAGE { get; set; }
   public string SAMPLE_CID { get; set; }
-  public accessType ACCESS_TYPE { get; set; }
+  public accessCategory ACCESS_TYPE { get; set; }
   public bool ENCRYPTION_REQUIRED { get; set; }
   public List<PricingTierT> PRICING { get; set; }
   public List<paymentMethod> ACCEPTED_PAYMENTS { get; set; }
@@ -294,7 +294,7 @@ public class STFT
     this.DATA_TYPES = null;
     this.COVERAGE = null;
     this.SAMPLE_CID = null;
-    this.ACCESS_TYPE = accessType.OneTime;
+    this.ACCESS_TYPE = accessCategory.OneTime;
     this.ENCRYPTION_REQUIRED = false;
     this.PRICING = null;
     this.ACCEPTED_PAYMENTS = null;
@@ -327,7 +327,7 @@ static public class STFVerify
       && verifier.VerifyVectorOfStrings(tablePos, 14 /*DATA_TYPES*/, false)
       && verifier.VerifyTable(tablePos, 16 /*COVERAGE*/, DataCoverageVerify.Verify, false)
       && verifier.VerifyString(tablePos, 18 /*SAMPLE_CID*/, false)
-      && verifier.VerifyField(tablePos, 20 /*ACCESS_TYPE*/, 1 /*accessType*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*ACCESS_TYPE*/, 1 /*accessCategory*/, 1, false)
       && verifier.VerifyField(tablePos, 22 /*ENCRYPTION_REQUIRED*/, 1 /*bool*/, 1, false)
       && verifier.VerifyVectorOfTables(tablePos, 24 /*PRICING*/, PricingTierVerify.Verify, false)
       && verifier.VerifyVectorOfData(tablePos, 26 /*ACCEPTED_PAYMENTS*/, 1 /*paymentMethod*/, false)

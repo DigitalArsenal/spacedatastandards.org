@@ -16,30 +16,30 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct MET;
 struct METBuilder;
 
-enum meanElementTheory : int8_t {
+enum meanElementSource : int8_t {
   /// Simplified General Perturbation Model 4
-  meanElementTheory_SGP4 = 0,
+  meanElementSource_SGP4 = 0,
   /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
-  meanElementTheory_SGP4XP = 1,
+  meanElementSource_SGP4XP = 1,
   /// Draper Semi-analytical Satellite Theory
-  meanElementTheory_DSST = 2,
+  meanElementSource_DSST = 2,
   /// Universal Semianalytical Method
-  meanElementTheory_USM = 3,
-  meanElementTheory_MIN = meanElementTheory_SGP4,
-  meanElementTheory_MAX = meanElementTheory_USM
+  meanElementSource_USM = 3,
+  meanElementSource_MIN = meanElementSource_SGP4,
+  meanElementSource_MAX = meanElementSource_USM
 };
 
-inline const meanElementTheory (&EnumValuesmeanElementTheory())[4] {
-  static const meanElementTheory values[] = {
-    meanElementTheory_SGP4,
-    meanElementTheory_SGP4XP,
-    meanElementTheory_DSST,
-    meanElementTheory_USM
+inline const meanElementSource (&EnumValuesmeanElementSource())[4] {
+  static const meanElementSource values[] = {
+    meanElementSource_SGP4,
+    meanElementSource_SGP4XP,
+    meanElementSource_DSST,
+    meanElementSource_USM
   };
   return values;
 }
 
-inline const char * const *EnumNamesmeanElementTheory() {
+inline const char * const *EnumNamesmeanElementSource() {
   static const char * const names[5] = {
     "SGP4",
     "SGP4XP",
@@ -50,10 +50,10 @@ inline const char * const *EnumNamesmeanElementTheory() {
   return names;
 }
 
-inline const char *EnumNamemeanElementTheory(meanElementTheory e) {
-  if (::flatbuffers::IsOutRange(e, meanElementTheory_SGP4, meanElementTheory_USM)) return "";
+inline const char *EnumNamemeanElementSource(meanElementSource e) {
+  if (::flatbuffers::IsOutRange(e, meanElementSource_SGP4, meanElementSource_USM)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesmeanElementTheory()[index];
+  return EnumNamesmeanElementSource()[index];
 }
 
 /// Mean Element Theory
@@ -62,8 +62,8 @@ struct MET FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_MEAN_ELEMENT_THEORY = 4
   };
-  meanElementTheory MEAN_ELEMENT_THEORY() const {
-    return static_cast<meanElementTheory>(GetField<int8_t>(VT_MEAN_ELEMENT_THEORY, 0));
+  meanElementSource MEAN_ELEMENT_THEORY() const {
+    return static_cast<meanElementSource>(GetField<int8_t>(VT_MEAN_ELEMENT_THEORY, 0));
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -77,7 +77,7 @@ struct METBuilder {
   typedef MET Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_MEAN_ELEMENT_THEORY(meanElementTheory MEAN_ELEMENT_THEORY) {
+  void add_MEAN_ELEMENT_THEORY(meanElementSource MEAN_ELEMENT_THEORY) {
     fbb_.AddElement<int8_t>(MET::VT_MEAN_ELEMENT_THEORY, static_cast<int8_t>(MEAN_ELEMENT_THEORY), 0);
   }
   explicit METBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
@@ -93,7 +93,7 @@ struct METBuilder {
 
 inline ::flatbuffers::Offset<MET> CreateMET(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    meanElementTheory MEAN_ELEMENT_THEORY = meanElementTheory_SGP4) {
+    meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_SGP4) {
   METBuilder builder_(_fbb);
   builder_.add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY);
   return builder_.Finish();

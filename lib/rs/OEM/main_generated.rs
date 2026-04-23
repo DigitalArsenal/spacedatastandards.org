@@ -209,22 +209,22 @@ impl<'a> ::flatbuffers::Verifiable for ppeAnomalyType {
 
 impl ::flatbuffers::SimpleToVerifyInSlice for ppeAnomalyType {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_SIZE_SHAPE_TYPE: i8 = 0;
+pub const ENUM_MIN_SIZE_SHAPE_PROFILE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SIZE_SHAPE_TYPE: i8 = 1;
+pub const ENUM_MAX_SIZE_SHAPE_PROFILE: i8 = 1;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SIZE_SHAPE_TYPE: [sizeShapeType; 2] = [
-  sizeShapeType::SMA,
-  sizeShapeType::R_PERIAPSIS,
+pub const ENUM_VALUES_SIZE_SHAPE_PROFILE: [sizeShapeProfile; 2] = [
+  sizeShapeProfile::SMA,
+  sizeShapeProfile::R_PERIAPSIS,
 ];
 
 /// Orbital element parameterization for the first element (size/shape).
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct sizeShapeType(pub i8);
+pub struct sizeShapeProfile(pub i8);
 #[allow(non_upper_case_globals)]
-impl sizeShapeType {
+impl sizeShapeProfile {
   /// Semi-major axis (km). Standard for elliptical orbits.
   pub const SMA: Self = Self(0);
   /// Radius of periapsis (km). Preferred for hyperbolic orbits.
@@ -245,7 +245,7 @@ impl sizeShapeType {
     }
   }
 }
-impl ::core::fmt::Debug for sizeShapeType {
+impl ::core::fmt::Debug for sizeShapeProfile {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -254,7 +254,7 @@ impl ::core::fmt::Debug for sizeShapeType {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for sizeShapeType {
+impl<'a> ::flatbuffers::Follow<'a> for sizeShapeProfile {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -263,15 +263,15 @@ impl<'a> ::flatbuffers::Follow<'a> for sizeShapeType {
   }
 }
 
-impl ::flatbuffers::Push for sizeShapeType {
-    type Output = sizeShapeType;
+impl ::flatbuffers::Push for sizeShapeProfile {
+    type Output = sizeShapeProfile;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for sizeShapeType {
+impl ::flatbuffers::EndianScalar for sizeShapeProfile {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -285,7 +285,7 @@ impl ::flatbuffers::EndianScalar for sizeShapeType {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for sizeShapeType {
+impl<'a> ::flatbuffers::Verifiable for sizeShapeProfile {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -294,7 +294,7 @@ impl<'a> ::flatbuffers::Verifiable for sizeShapeType {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for sizeShapeType {}
+impl ::flatbuffers::SimpleToVerifyInSlice for sizeShapeProfile {}
 pub enum PPEPositionRecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -928,11 +928,11 @@ impl<'a> PPEOrbitalElementRecord<'a> {
   }
   /// Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
   #[inline]
-  pub fn SIZE_SHAPE_TYPE(&self) -> sizeShapeType {
+  pub fn SIZE_SHAPE_TYPE(&self) -> sizeShapeProfile {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<sizeShapeType>(PPEOrbitalElementRecord::VT_SIZE_SHAPE_TYPE, Some(sizeShapeType::SMA)).unwrap()}
+    unsafe { self._tab.get::<sizeShapeProfile>(PPEOrbitalElementRecord::VT_SIZE_SHAPE_TYPE, Some(sizeShapeProfile::SMA)).unwrap()}
   }
   /// Anomaly type for the sixth orbital element.
   #[inline]
@@ -1025,7 +1025,7 @@ impl ::flatbuffers::Verifiable for PPEOrbitalElementRecord<'_> {
      .visit_field::<f64>("EPOCH_HALF_SPAN", Self::VT_EPOCH_HALF_SPAN, false)?
      .visit_field::<u16>("NUM_COEFFICIENTS", Self::VT_NUM_COEFFICIENTS, false)?
      .visit_field::<polynomialBasisType>("BASIS_TYPE", Self::VT_BASIS_TYPE, false)?
-     .visit_field::<sizeShapeType>("SIZE_SHAPE_TYPE", Self::VT_SIZE_SHAPE_TYPE, false)?
+     .visit_field::<sizeShapeProfile>("SIZE_SHAPE_TYPE", Self::VT_SIZE_SHAPE_TYPE, false)?
      .visit_field::<ppeAnomalyType>("ANOMALY_TYPE", Self::VT_ANOMALY_TYPE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_SIZE_SHAPE", Self::VT_COEFF_SIZE_SHAPE, true)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_ECCENTRICITY", Self::VT_COEFF_ECCENTRICITY, true)?
@@ -1044,7 +1044,7 @@ pub struct PPEOrbitalElementRecordArgs<'a> {
     pub EPOCH_HALF_SPAN: f64,
     pub NUM_COEFFICIENTS: u16,
     pub BASIS_TYPE: polynomialBasisType,
-    pub SIZE_SHAPE_TYPE: sizeShapeType,
+    pub SIZE_SHAPE_TYPE: sizeShapeProfile,
     pub ANOMALY_TYPE: ppeAnomalyType,
     pub COEFF_SIZE_SHAPE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub COEFF_ECCENTRICITY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
@@ -1063,7 +1063,7 @@ impl<'a> Default for PPEOrbitalElementRecordArgs<'a> {
       EPOCH_HALF_SPAN: 0.0,
       NUM_COEFFICIENTS: 0,
       BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
-      SIZE_SHAPE_TYPE: sizeShapeType::SMA,
+      SIZE_SHAPE_TYPE: sizeShapeProfile::SMA,
       ANOMALY_TYPE: ppeAnomalyType::TRUE_ANOMALY,
       COEFF_SIZE_SHAPE: None, // required field
       COEFF_ECCENTRICITY: None, // required field
@@ -1099,8 +1099,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PPEOrbitalElementRecordBuilde
     self.fbb_.push_slot::<polynomialBasisType>(PPEOrbitalElementRecord::VT_BASIS_TYPE, BASIS_TYPE, polynomialBasisType::CHEBYSHEV);
   }
   #[inline]
-  pub fn add_SIZE_SHAPE_TYPE(&mut self, SIZE_SHAPE_TYPE: sizeShapeType) {
-    self.fbb_.push_slot::<sizeShapeType>(PPEOrbitalElementRecord::VT_SIZE_SHAPE_TYPE, SIZE_SHAPE_TYPE, sizeShapeType::SMA);
+  pub fn add_SIZE_SHAPE_TYPE(&mut self, SIZE_SHAPE_TYPE: sizeShapeProfile) {
+    self.fbb_.push_slot::<sizeShapeProfile>(PPEOrbitalElementRecord::VT_SIZE_SHAPE_TYPE, SIZE_SHAPE_TYPE, sizeShapeProfile::SMA);
   }
   #[inline]
   pub fn add_ANOMALY_TYPE(&mut self, ANOMALY_TYPE: ppeAnomalyType) {
@@ -1187,7 +1187,7 @@ pub struct PPEOrbitalElementRecordT {
   pub EPOCH_HALF_SPAN: f64,
   pub NUM_COEFFICIENTS: u16,
   pub BASIS_TYPE: polynomialBasisType,
-  pub SIZE_SHAPE_TYPE: sizeShapeType,
+  pub SIZE_SHAPE_TYPE: sizeShapeProfile,
   pub ANOMALY_TYPE: ppeAnomalyType,
   pub COEFF_SIZE_SHAPE: alloc::vec::Vec<f64>,
   pub COEFF_ECCENTRICITY: alloc::vec::Vec<f64>,
@@ -1205,7 +1205,7 @@ impl Default for PPEOrbitalElementRecordT {
       EPOCH_HALF_SPAN: 0.0,
       NUM_COEFFICIENTS: 0,
       BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
-      SIZE_SHAPE_TYPE: sizeShapeType::SMA,
+      SIZE_SHAPE_TYPE: sizeShapeProfile::SMA,
       ANOMALY_TYPE: ppeAnomalyType::TRUE_ANOMALY,
       COEFF_SIZE_SHAPE: Default::default(),
       COEFF_ECCENTRICITY: Default::default(),
@@ -1421,11 +1421,11 @@ impl<'a> PPE<'a> {
   }
   /// Time system used for all epochs in this message.
   #[inline]
-  pub fn TIME_SYSTEM(&self) -> timeSystem {
+  pub fn TIME_SYSTEM(&self) -> timingStandard {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<timeSystem>(PPE::VT_TIME_SYSTEM, Some(timeSystem::GMST)).unwrap()}
+    unsafe { self._tab.get::<timingStandard>(PPE::VT_TIME_SYSTEM, Some(timingStandard::GMST)).unwrap()}
   }
   /// Start of the total time span covered by this ephemeris (ISO 8601).
   #[inline]
@@ -1508,7 +1508,7 @@ impl ::flatbuffers::Verifiable for PPE<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<CAT>>("OBJECT", Self::VT_OBJECT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
-     .visit_field::<timeSystem>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
+     .visit_field::<timingStandard>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STOP_TIME", Self::VT_STOP_TIME, false)?
      .visit_field::<polynomialBasisType>("DEFAULT_BASIS_TYPE", Self::VT_DEFAULT_BASIS_TYPE, false)?
@@ -1526,7 +1526,7 @@ pub struct PPEArgs<'a> {
     pub OBJECT: Option<::flatbuffers::WIPOffset<CAT<'a>>>,
     pub CENTER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
-    pub TIME_SYSTEM: timeSystem,
+    pub TIME_SYSTEM: timingStandard,
     pub START_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub STOP_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub DEFAULT_BASIS_TYPE: polynomialBasisType,
@@ -1544,7 +1544,7 @@ impl<'a> Default for PPEArgs<'a> {
       OBJECT: None,
       CENTER_NAME: None,
       REFERENCE_FRAME: None,
-      TIME_SYSTEM: timeSystem::GMST,
+      TIME_SYSTEM: timingStandard::GMST,
       START_TIME: None,
       STOP_TIME: None,
       DEFAULT_BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
@@ -1579,8 +1579,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PPEBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(PPE::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
   #[inline]
-  pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timeSystem) {
-    self.fbb_.push_slot::<timeSystem>(PPE::VT_TIME_SYSTEM, TIME_SYSTEM, timeSystem::GMST);
+  pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timingStandard) {
+    self.fbb_.push_slot::<timingStandard>(PPE::VT_TIME_SYSTEM, TIME_SYSTEM, timingStandard::GMST);
   }
   #[inline]
   pub fn add_START_TIME(&mut self, START_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
@@ -1655,7 +1655,7 @@ pub struct PPET {
   pub OBJECT: Option<alloc::boxed::Box<CATT>>,
   pub CENTER_NAME: Option<alloc::string::String>,
   pub REFERENCE_FRAME: Option<alloc::boxed::Box<RFMT>>,
-  pub TIME_SYSTEM: timeSystem,
+  pub TIME_SYSTEM: timingStandard,
   pub START_TIME: Option<alloc::string::String>,
   pub STOP_TIME: Option<alloc::string::String>,
   pub DEFAULT_BASIS_TYPE: polynomialBasisType,
@@ -1672,7 +1672,7 @@ impl Default for PPET {
       OBJECT: None,
       CENTER_NAME: None,
       REFERENCE_FRAME: None,
-      TIME_SYSTEM: timeSystem::GMST,
+      TIME_SYSTEM: timingStandard::GMST,
       START_TIME: None,
       STOP_TIME: None,
       DEFAULT_BASIS_TYPE: polynomialBasisType::CHEBYSHEV,

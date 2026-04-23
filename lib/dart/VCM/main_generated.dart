@@ -6,42 +6,42 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-enum meanElementTheory {
+enum meanElementSource {
   SGP4(0),
   SGP4XP(1),
   DSST(2),
   USM(3);
 
   final int value;
-  const meanElementTheory(this.value);
+  const meanElementSource(this.value);
 
-  factory meanElementTheory.fromValue(int value) {
+  factory meanElementSource.fromValue(int value) {
     switch (value) {
-      case 0: return meanElementTheory.SGP4;
-      case 1: return meanElementTheory.SGP4XP;
-      case 2: return meanElementTheory.DSST;
-      case 3: return meanElementTheory.USM;
+      case 0: return meanElementSource.SGP4;
+      case 1: return meanElementSource.SGP4XP;
+      case 2: return meanElementSource.DSST;
+      case 3: return meanElementSource.USM;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static meanElementTheory? _createOrNull(int? value) =>
-      value == null ? null : meanElementTheory.fromValue(value);
+  static meanElementSource? _createOrNull(int? value) =>
+      value == null ? null : meanElementSource.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 3;
-  static const fb.Reader<meanElementTheory> reader = _meanElementTheoryReader();
+  static const fb.Reader<meanElementSource> reader = _meanElementSourceReader();
 }
 
-class _meanElementTheoryReader extends fb.Reader<meanElementTheory> {
-  const _meanElementTheoryReader();
+class _meanElementSourceReader extends fb.Reader<meanElementSource> {
+  const _meanElementSourceReader();
 
   @override
   int get size => 1;
 
   @override
-  meanElementTheory read(fb.BufferContext bc, int offset) =>
-      meanElementTheory.fromValue(const fb.Int8Reader().read(bc, offset));
+  meanElementSource read(fb.BufferContext bc, int offset) =>
+      meanElementSource.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Mean Element Theory
@@ -57,8 +57,8 @@ class MET {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  meanElementTheory get MEAN_ELEMENT_THEORY => meanElementTheory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  meanElementTheory get meanElementTheory => MEAN_ELEMENT_THEORY;
+  meanElementSource get MEAN_ELEMENT_THEORY => meanElementSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  meanElementSource get meanElementTheory => MEAN_ELEMENT_THEORY;
 
   @override
   String toString() {
@@ -83,7 +83,7 @@ class METBuilder {
     fbBuilder.startTable(1);
   }
 
-  int addMeanElementTheory(meanElementTheory? MEAN_ELEMENT_THEORY) {
+  int addMeanElementTheory(meanElementSource? MEAN_ELEMENT_THEORY) {
     fbBuilder.addInt8(0, MEAN_ELEMENT_THEORY?.value);
     return fbBuilder.offset;
   }
@@ -94,11 +94,11 @@ class METBuilder {
 }
 
 class METObjectBuilder extends fb.ObjectBuilder {
-  final meanElementTheory? _MEAN_ELEMENT_THEORY;
+  final meanElementSource? _MEAN_ELEMENT_THEORY;
 
   METObjectBuilder({
-    meanElementTheory? MEAN_ELEMENT_THEORY,
-    meanElementTheory? meanElementTheory,
+    meanElementSource? MEAN_ELEMENT_THEORY,
+    meanElementSource? meanElementTheory,
   })
       : _MEAN_ELEMENT_THEORY = meanElementTheory ?? MEAN_ELEMENT_THEORY;
 

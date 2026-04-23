@@ -8,27 +8,27 @@ import Common
 
 import FlatBuffers
 
-public enum pduType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum pduKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
   case fileDirective = 0
   case fileData = 1
 
-  public static var max: pduType { return .fileData }
-  public static var min: pduType { return .fileDirective }
+  public static var max: pduKind { return .fileData }
+  public static var min: pduKind { return .fileDirective }
 }
 
 
-public enum transmissionMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum transmissionClass: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
   case acknowledged = 0
   case unacknowledged = 1
 
-  public static var max: transmissionMode { return .unacknowledged }
-  public static var min: transmissionMode { return .acknowledged }
+  public static var max: transmissionClass { return .unacknowledged }
+  public static var min: transmissionClass { return .acknowledged }
 }
 
 
@@ -67,11 +67,11 @@ public struct CFP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  PDU version
   public var VERSION: UInt8 { let o = _accessor.offset(VTOFFSET.VERSION.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  PDU type
-  public var PDU_TYPE: pduType { let o = _accessor.offset(VTOFFSET.PDU_TYPE.v); return o == 0 ? .fileDirective : pduType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .fileDirective }
+  public var PDU_TYPE: pduKind { let o = _accessor.offset(VTOFFSET.PDU_TYPE.v); return o == 0 ? .fileDirective : pduKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .fileDirective }
   ///  Direction (toward receiver or sender)
   public var DIRECTION: UInt8 { let o = _accessor.offset(VTOFFSET.DIRECTION.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Transmission mode
-  public var TRANSMISSION_MODE: transmissionMode { let o = _accessor.offset(VTOFFSET.TRANSMISSION_MODE.v); return o == 0 ? .acknowledged : transmissionMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .acknowledged }
+  public var TRANSMISSION_MODE: transmissionClass { let o = _accessor.offset(VTOFFSET.TRANSMISSION_MODE.v); return o == 0 ? .acknowledged : transmissionClass(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .acknowledged }
   ///  CRC present flag
   public var CRC_FLAG: Bool { let o = _accessor.offset(VTOFFSET.CRC_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Large file flag
@@ -99,9 +99,9 @@ public struct CFP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DATA.v, body: body) }
   public static func startCFP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
   public static func add(VERSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VTOFFSET.VERSION.p) }
-  public static func add(PDU_TYPE: pduType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PDU_TYPE.rawValue, def: 0, at: VTOFFSET.PDU_TYPE.p) }
+  public static func add(PDU_TYPE: pduKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PDU_TYPE.rawValue, def: 0, at: VTOFFSET.PDU_TYPE.p) }
   public static func add(DIRECTION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION, def: 0, at: VTOFFSET.DIRECTION.p) }
-  public static func add(TRANSMISSION_MODE: transmissionMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSMISSION_MODE.rawValue, def: 0, at: VTOFFSET.TRANSMISSION_MODE.p) }
+  public static func add(TRANSMISSION_MODE: transmissionClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSMISSION_MODE.rawValue, def: 0, at: VTOFFSET.TRANSMISSION_MODE.p) }
   public static func add(CRC_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CRC_FLAG, def: false,
    at: VTOFFSET.CRC_FLAG.p) }
   public static func add(LARGE_FILE_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LARGE_FILE_FLAG, def: false,
@@ -119,9 +119,9 @@ public struct CFP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func createCFP(
     _ fbb: inout FlatBufferBuilder,
     VERSION: UInt8 = 0,
-    PDU_TYPE: pduType = .fileDirective,
+    PDU_TYPE: pduKind = .fileDirective,
     DIRECTION: UInt8 = 0,
-    TRANSMISSION_MODE: transmissionMode = .acknowledged,
+    TRANSMISSION_MODE: transmissionClass = .acknowledged,
     CRC_FLAG: Bool = false,
     LARGE_FILE_FLAG: Bool = false,
     DATA_FIELD_LENGTH: UInt16 = 0,
@@ -156,9 +156,9 @@ public struct CFP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.PDU_TYPE.p, fieldName: "PDU_TYPE", required: false, type: pduType.self)
+    try _v.visit(field: VTOFFSET.PDU_TYPE.p, fieldName: "PDU_TYPE", required: false, type: pduKind.self)
     try _v.visit(field: VTOFFSET.DIRECTION.p, fieldName: "DIRECTION", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.TRANSMISSION_MODE.p, fieldName: "TRANSMISSION_MODE", required: false, type: transmissionMode.self)
+    try _v.visit(field: VTOFFSET.TRANSMISSION_MODE.p, fieldName: "TRANSMISSION_MODE", required: false, type: transmissionClass.self)
     try _v.visit(field: VTOFFSET.CRC_FLAG.p, fieldName: "CRC_FLAG", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.LARGE_FILE_FLAG.p, fieldName: "LARGE_FILE_FLAG", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.DATA_FIELD_LENGTH.p, fieldName: "DATA_FIELD_LENGTH", required: false, type: UInt16.self)

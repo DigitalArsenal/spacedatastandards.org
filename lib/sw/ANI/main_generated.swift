@@ -8,7 +8,7 @@ import Common
 
 import FlatBuffers
 
-public enum analyticType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum analyticProfile: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -22,8 +22,8 @@ public enum analyticType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
   case classification = 7
   case fusion = 8
 
-  public static var max: analyticType { return .fusion }
-  public static var min: analyticType { return .spectral }
+  public static var max: analyticProfile { return .fusion }
+  public static var min: analyticProfile { return .spectral }
 }
 
 
@@ -75,7 +75,7 @@ public struct ANI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var SOURCE_TYPE: String? { let o = _accessor.offset(VTOFFSET.SOURCE_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOURCE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCE_TYPE.v) }
   ///  Analytic product type
-  public var ANALYTIC_TYPE: analyticType { let o = _accessor.offset(VTOFFSET.ANALYTIC_TYPE.v); return o == 0 ? .spectral : analyticType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .spectral }
+  public var ANALYTIC_TYPE: analyticProfile { let o = _accessor.offset(VTOFFSET.ANALYTIC_TYPE.v); return o == 0 ? .spectral : analyticProfile(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .spectral }
   ///  Processing algorithm or pipeline name
   public var ALGORITHM: String? { let o = _accessor.offset(VTOFFSET.ALGORITHM.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALGORITHM.v) }
@@ -122,7 +122,7 @@ public struct ANI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(SOURCE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_ID, at: VTOFFSET.SOURCE_ID.p) }
   public static func add(SOURCE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_TYPE, at: VTOFFSET.SOURCE_TYPE.p) }
-  public static func add(ANALYTIC_TYPE: analyticType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANALYTIC_TYPE.rawValue, def: 0, at: VTOFFSET.ANALYTIC_TYPE.p) }
+  public static func add(ANALYTIC_TYPE: analyticProfile, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANALYTIC_TYPE.rawValue, def: 0, at: VTOFFSET.ANALYTIC_TYPE.p) }
   public static func add(ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM, at: VTOFFSET.ALGORITHM.p) }
   public static func add(ALGORITHM_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM_VERSION, at: VTOFFSET.ALGORITHM_VERSION.p) }
   public static func add(PROCESSING_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROCESSING_TIME, at: VTOFFSET.PROCESSING_TIME.p) }
@@ -146,7 +146,7 @@ public struct ANI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     IDOffset ID: Offset = Offset(),
     SOURCE_IDOffset SOURCE_ID: Offset = Offset(),
     SOURCE_TYPEOffset SOURCE_TYPE: Offset = Offset(),
-    ANALYTIC_TYPE: analyticType = .spectral,
+    ANALYTIC_TYPE: analyticProfile = .spectral,
     ALGORITHMOffset ALGORITHM: Offset = Offset(),
     ALGORITHM_VERSIONOffset ALGORITHM_VERSION: Offset = Offset(),
     PROCESSING_TIMEOffset PROCESSING_TIME: Offset = Offset(),
@@ -195,7 +195,7 @@ public struct ANI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.SOURCE_ID.p, fieldName: "SOURCE_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.SOURCE_TYPE.p, fieldName: "SOURCE_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ANALYTIC_TYPE.p, fieldName: "ANALYTIC_TYPE", required: false, type: analyticType.self)
+    try _v.visit(field: VTOFFSET.ANALYTIC_TYPE.p, fieldName: "ANALYTIC_TYPE", required: false, type: analyticProfile.self)
     try _v.visit(field: VTOFFSET.ALGORITHM.p, fieldName: "ALGORITHM", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ALGORITHM_VERSION.p, fieldName: "ALGORITHM_VERSION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PROCESSING_TIME.p, fieldName: "PROCESSING_TIME", required: false, type: ForwardOffset<String>.self)

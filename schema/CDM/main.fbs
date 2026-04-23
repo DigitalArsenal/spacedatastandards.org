@@ -1,5 +1,5 @@
-// Hash: dc0df88021ffae26723fc9f74db6af59116b380e2e01a020bfaecb78c70624ac
-// Version: 2.0.1
+// Hash: 144be2a09eaf7c053f4ea7f1296037961050e94a44041326089128b0e40ecb8f
+// Version: 2.0.2
 // -----------------------------------END_HEADER
 include "../PNM/main.fbs";
 include "../CAT/main.fbs";
@@ -11,7 +11,7 @@ enum screeningVolumeShape : byte {
   BOX
 }
 
-enum covarianceMethod : byte {
+enum covarianceAlgorithm : byte {
   CALCULATED,
   DEFAULT
 }
@@ -30,7 +30,7 @@ table CDMObject {
   /// Ephemeris name
   EPHEMERIS_NAME:string;
   /// Covariance method
-  COVARIANCE_METHOD:covarianceMethod;
+  COVARIANCE_METHOD:covarianceAlgorithm;
   /// Reference Frame in which the object position is defined
   REFERENCE_FRAME:RFM;
   /// Gravity model

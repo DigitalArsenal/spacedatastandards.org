@@ -2,15 +2,15 @@
 import flatbuffers
 
 /// Access type for data listings
-enum accessType:
+enum accessCategory:
     /// One-time purchase
-    accessType_OneTime = 0
+    accessCategory_OneTime = 0
     /// Recurring subscription
-    accessType_Subscription = 1
+    accessCategory_Subscription = 1
     /// Real-time streaming access
-    accessType_Streaming = 2
+    accessCategory_Streaming = 2
     /// Query-based access
-    accessType_Query = 3
+    accessCategory_Query = 3
 
 /// Payment method accepted
 enum paymentMethod:
@@ -238,8 +238,8 @@ class STF : flatbuffers.handle
     def SAMPLE_CID() -> string:
         return flatbuffers.field_string(buf_, pos_, 18)
     /// Type of access offered
-    def ACCESS_TYPE() -> accessType:
-        return accessType(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    def ACCESS_TYPE() -> accessCategory:
+        return accessCategory(flatbuffers.field_int8(buf_, pos_, 20, 0))
     /// Whether encryption is required for data delivery
     def ENCRYPTION_REQUIRED() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 22, 0))
@@ -299,7 +299,7 @@ struct STFBuilder:
     def add_SAMPLE_CID(SAMPLE_CID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(7, SAMPLE_CID)
         return this
-    def add_ACCESS_TYPE(ACCESS_TYPE:accessType):
+    def add_ACCESS_TYPE(ACCESS_TYPE:accessCategory):
         b_.PrependInt8Slot(8, ACCESS_TYPE, 0)
         return this
     def add_ENCRYPTION_REQUIRED(ENCRYPTION_REQUIRED:bool):

@@ -22,11 +22,11 @@ public struct CFP : IFlatbufferObject
   /// PDU version
   public byte VERSION { get { int o = __p.__offset(4); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   /// PDU type
-  public pduType PDU_TYPE { get { int o = __p.__offset(6); return o != 0 ? (pduType)__p.bb.GetSbyte(o + __p.bb_pos) : pduType.FILE_DIRECTIVE; } }
+  public pduKind PDU_TYPE { get { int o = __p.__offset(6); return o != 0 ? (pduKind)__p.bb.GetSbyte(o + __p.bb_pos) : pduKind.FILE_DIRECTIVE; } }
   /// Direction (toward receiver or sender)
   public byte DIRECTION { get { int o = __p.__offset(8); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   /// Transmission mode
-  public transmissionMode TRANSMISSION_MODE { get { int o = __p.__offset(10); return o != 0 ? (transmissionMode)__p.bb.GetSbyte(o + __p.bb_pos) : transmissionMode.ACKNOWLEDGED; } }
+  public transmissionClass TRANSMISSION_MODE { get { int o = __p.__offset(10); return o != 0 ? (transmissionClass)__p.bb.GetSbyte(o + __p.bb_pos) : transmissionClass.ACKNOWLEDGED; } }
   /// CRC present flag
   public bool CRC_FLAG { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Large file flag
@@ -71,9 +71,9 @@ public struct CFP : IFlatbufferObject
 
   public static Offset<CFP> CreateCFP(FlatBufferBuilder builder,
       byte VERSION = 0,
-      pduType PDU_TYPE = pduType.FILE_DIRECTIVE,
+      pduKind PDU_TYPE = pduKind.FILE_DIRECTIVE,
       byte DIRECTION = 0,
-      transmissionMode TRANSMISSION_MODE = transmissionMode.ACKNOWLEDGED,
+      transmissionClass TRANSMISSION_MODE = transmissionClass.ACKNOWLEDGED,
       bool CRC_FLAG = false,
       bool LARGE_FILE_FLAG = false,
       ushort DATA_FIELD_LENGTH = 0,
@@ -106,9 +106,9 @@ public struct CFP : IFlatbufferObject
 
   public static void StartCFP(FlatBufferBuilder builder) { builder.StartTable(15); }
   public static void AddVERSION(FlatBufferBuilder builder, byte VERSION) { builder.AddByte(0, VERSION, 0); }
-  public static void AddPDU_TYPE(FlatBufferBuilder builder, pduType PDU_TYPE) { builder.AddSbyte(1, (sbyte)PDU_TYPE, 0); }
+  public static void AddPDU_TYPE(FlatBufferBuilder builder, pduKind PDU_TYPE) { builder.AddSbyte(1, (sbyte)PDU_TYPE, 0); }
   public static void AddDIRECTION(FlatBufferBuilder builder, byte DIRECTION) { builder.AddByte(2, DIRECTION, 0); }
-  public static void AddTRANSMISSION_MODE(FlatBufferBuilder builder, transmissionMode TRANSMISSION_MODE) { builder.AddSbyte(3, (sbyte)TRANSMISSION_MODE, 0); }
+  public static void AddTRANSMISSION_MODE(FlatBufferBuilder builder, transmissionClass TRANSMISSION_MODE) { builder.AddSbyte(3, (sbyte)TRANSMISSION_MODE, 0); }
   public static void AddCRC_FLAG(FlatBufferBuilder builder, bool CRC_FLAG) { builder.AddBool(4, CRC_FLAG, false); }
   public static void AddLARGE_FILE_FLAG(FlatBufferBuilder builder, bool LARGE_FILE_FLAG) { builder.AddBool(5, LARGE_FILE_FLAG, false); }
   public static void AddDATA_FIELD_LENGTH(FlatBufferBuilder builder, ushort DATA_FIELD_LENGTH) { builder.AddUshort(6, DATA_FIELD_LENGTH, 0); }
@@ -186,9 +186,9 @@ public struct CFP : IFlatbufferObject
 public class CFPT
 {
   public byte VERSION { get; set; }
-  public pduType PDU_TYPE { get; set; }
+  public pduKind PDU_TYPE { get; set; }
   public byte DIRECTION { get; set; }
-  public transmissionMode TRANSMISSION_MODE { get; set; }
+  public transmissionClass TRANSMISSION_MODE { get; set; }
   public bool CRC_FLAG { get; set; }
   public bool LARGE_FILE_FLAG { get; set; }
   public ushort DATA_FIELD_LENGTH { get; set; }
@@ -203,9 +203,9 @@ public class CFPT
 
   public CFPT() {
     this.VERSION = 0;
-    this.PDU_TYPE = pduType.FILE_DIRECTIVE;
+    this.PDU_TYPE = pduKind.FILE_DIRECTIVE;
     this.DIRECTION = 0;
-    this.TRANSMISSION_MODE = transmissionMode.ACKNOWLEDGED;
+    this.TRANSMISSION_MODE = transmissionClass.ACKNOWLEDGED;
     this.CRC_FLAG = false;
     this.LARGE_FILE_FLAG = false;
     this.DATA_FIELD_LENGTH = 0;
@@ -235,9 +235,9 @@ static public class CFPVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*VERSION*/, 1 /*byte*/, 1, false)
-      && verifier.VerifyField(tablePos, 6 /*PDU_TYPE*/, 1 /*pduType*/, 1, false)
+      && verifier.VerifyField(tablePos, 6 /*PDU_TYPE*/, 1 /*pduKind*/, 1, false)
       && verifier.VerifyField(tablePos, 8 /*DIRECTION*/, 1 /*byte*/, 1, false)
-      && verifier.VerifyField(tablePos, 10 /*TRANSMISSION_MODE*/, 1 /*transmissionMode*/, 1, false)
+      && verifier.VerifyField(tablePos, 10 /*TRANSMISSION_MODE*/, 1 /*transmissionClass*/, 1, false)
       && verifier.VerifyField(tablePos, 12 /*CRC_FLAG*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 14 /*LARGE_FILE_FLAG*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 16 /*DATA_FIELD_LENGTH*/, 2 /*ushort*/, 2, false)

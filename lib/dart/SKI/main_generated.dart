@@ -6,7 +6,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-enum imageType {
+enum imageCategory {
   VISIBLE(0),
   INFRARED(1),
   MULTISPECTRAL(2),
@@ -15,37 +15,37 @@ enum imageType {
   BROADBAND(5);
 
   final int value;
-  const imageType(this.value);
+  const imageCategory(this.value);
 
-  factory imageType.fromValue(int value) {
+  factory imageCategory.fromValue(int value) {
     switch (value) {
-      case 0: return imageType.VISIBLE;
-      case 1: return imageType.INFRARED;
-      case 2: return imageType.MULTISPECTRAL;
-      case 3: return imageType.HYPERSPECTRAL;
-      case 4: return imageType.UV;
-      case 5: return imageType.BROADBAND;
+      case 0: return imageCategory.VISIBLE;
+      case 1: return imageCategory.INFRARED;
+      case 2: return imageCategory.MULTISPECTRAL;
+      case 3: return imageCategory.HYPERSPECTRAL;
+      case 4: return imageCategory.UV;
+      case 5: return imageCategory.BROADBAND;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static imageType? _createOrNull(int? value) =>
-      value == null ? null : imageType.fromValue(value);
+  static imageCategory? _createOrNull(int? value) =>
+      value == null ? null : imageCategory.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 5;
-  static const fb.Reader<imageType> reader = _imageTypeReader();
+  static const fb.Reader<imageCategory> reader = _imageCategoryReader();
 }
 
-class _imageTypeReader extends fb.Reader<imageType> {
-  const _imageTypeReader();
+class _imageCategoryReader extends fb.Reader<imageCategory> {
+  const _imageCategoryReader();
 
   @override
   int get size => 1;
 
   @override
-  imageType read(fb.BufferContext bc, int offset) =>
-      imageType.fromValue(const fb.Int8Reader().read(bc, offset));
+  imageCategory read(fb.BufferContext bc, int offset) =>
+      imageCategory.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Sky Imagery
@@ -97,8 +97,8 @@ class SKI {
   List<double>? get SEN_QUAT_DOT => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 30);
   List<double>? get senQuatDot => SEN_QUAT_DOT;
   ///  Image type
-  imageType get IMAGE_TYPE => imageType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 32, 0));
-  imageType get imageType => IMAGE_TYPE;
+  imageCategory get IMAGE_TYPE => imageCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 32, 0));
+  imageCategory get imageType => IMAGE_TYPE;
   ///  Exposure start time (ISO 8601)
   String? get EXP_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
   String? get expStartTime => EXP_START_TIME;
@@ -253,7 +253,7 @@ class SKIBuilder {
     fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
-  int addImageType(imageType? IMAGE_TYPE) {
+  int addImageType(imageCategory? IMAGE_TYPE) {
     fbBuilder.addInt8(14, IMAGE_TYPE?.value);
     return fbBuilder.offset;
   }
@@ -382,7 +382,7 @@ class SKIObjectBuilder extends fb.ObjectBuilder {
   final double? _SENZ;
   final List<double>? _SEN_QUAT;
   final List<double>? _SEN_QUAT_DOT;
-  final imageType? _IMAGE_TYPE;
+  final imageCategory? _IMAGE_TYPE;
   final String? _EXP_START_TIME;
   final String? _EXP_END_TIME;
   final String? _IMAGE_SOURCE_INFO;
@@ -432,8 +432,8 @@ class SKIObjectBuilder extends fb.ObjectBuilder {
     List<double>? senQuat,
     List<double>? SEN_QUAT_DOT,
     List<double>? senQuatDot,
-    imageType? IMAGE_TYPE,
-    imageType? imageType,
+    imageCategory? IMAGE_TYPE,
+    imageCategory? imageType,
     String? EXP_START_TIME,
     String? expStartTime,
     String? EXP_END_TIME,

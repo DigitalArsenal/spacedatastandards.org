@@ -4,28 +4,28 @@ extern crate alloc;
 
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_ANALYTIC_TYPE: i8 = 0;
+pub const ENUM_MIN_ANALYTIC_PROFILE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_ANALYTIC_TYPE: i8 = 8;
+pub const ENUM_MAX_ANALYTIC_PROFILE: i8 = 8;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_ANALYTIC_TYPE: [analyticType; 9] = [
-  analyticType::SPECTRAL,
-  analyticType::PHOTOMETRIC,
-  analyticType::ASTROMETRIC,
-  analyticType::RADIOMETRIC,
-  analyticType::SIGNATURE,
-  analyticType::FEATURE_EXTRACTION,
-  analyticType::CHANGE_DETECTION,
-  analyticType::CLASSIFICATION,
-  analyticType::FUSION,
+pub const ENUM_VALUES_ANALYTIC_PROFILE: [analyticProfile; 9] = [
+  analyticProfile::SPECTRAL,
+  analyticProfile::PHOTOMETRIC,
+  analyticProfile::ASTROMETRIC,
+  analyticProfile::RADIOMETRIC,
+  analyticProfile::SIGNATURE,
+  analyticProfile::FEATURE_EXTRACTION,
+  analyticProfile::CHANGE_DETECTION,
+  analyticProfile::CLASSIFICATION,
+  analyticProfile::FUSION,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct analyticType(pub i8);
+pub struct analyticProfile(pub i8);
 #[allow(non_upper_case_globals)]
-impl analyticType {
+impl analyticProfile {
   pub const SPECTRAL: Self = Self(0);
   pub const PHOTOMETRIC: Self = Self(1);
   pub const ASTROMETRIC: Self = Self(2);
@@ -65,7 +65,7 @@ impl analyticType {
     }
   }
 }
-impl ::core::fmt::Debug for analyticType {
+impl ::core::fmt::Debug for analyticProfile {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -74,7 +74,7 @@ impl ::core::fmt::Debug for analyticType {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for analyticType {
+impl<'a> ::flatbuffers::Follow<'a> for analyticProfile {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -83,15 +83,15 @@ impl<'a> ::flatbuffers::Follow<'a> for analyticType {
   }
 }
 
-impl ::flatbuffers::Push for analyticType {
-    type Output = analyticType;
+impl ::flatbuffers::Push for analyticProfile {
+    type Output = analyticProfile;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for analyticType {
+impl ::flatbuffers::EndianScalar for analyticProfile {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -105,7 +105,7 @@ impl ::flatbuffers::EndianScalar for analyticType {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for analyticType {
+impl<'a> ::flatbuffers::Verifiable for analyticProfile {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -114,7 +114,7 @@ impl<'a> ::flatbuffers::Verifiable for analyticType {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for analyticType {}
+impl ::flatbuffers::SimpleToVerifyInSlice for analyticProfile {}
 pub enum ANIOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -285,11 +285,11 @@ impl<'a> ANI<'a> {
   }
   /// Analytic product type
   #[inline]
-  pub fn ANALYTIC_TYPE(&self) -> analyticType {
+  pub fn ANALYTIC_TYPE(&self) -> analyticProfile {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<analyticType>(ANI::VT_ANALYTIC_TYPE, Some(analyticType::SPECTRAL)).unwrap()}
+    unsafe { self._tab.get::<analyticProfile>(ANI::VT_ANALYTIC_TYPE, Some(analyticProfile::SPECTRAL)).unwrap()}
   }
   /// Processing algorithm or pipeline name
   #[inline]
@@ -438,7 +438,7 @@ impl ::flatbuffers::Verifiable for ANI<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_ID", Self::VT_SOURCE_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_TYPE", Self::VT_SOURCE_TYPE, false)?
-     .visit_field::<analyticType>("ANALYTIC_TYPE", Self::VT_ANALYTIC_TYPE, false)?
+     .visit_field::<analyticProfile>("ANALYTIC_TYPE", Self::VT_ANALYTIC_TYPE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ALGORITHM", Self::VT_ALGORITHM, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ALGORITHM_VERSION", Self::VT_ALGORITHM_VERSION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROCESSING_TIME", Self::VT_PROCESSING_TIME, false)?
@@ -464,7 +464,7 @@ pub struct ANIArgs<'a> {
     pub ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SOURCE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SOURCE_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub ANALYTIC_TYPE: analyticType,
+    pub ANALYTIC_TYPE: analyticProfile,
     pub ALGORITHM: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ALGORITHM_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PROCESSING_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
@@ -490,7 +490,7 @@ impl<'a> Default for ANIArgs<'a> {
       ID: None,
       SOURCE_ID: None,
       SOURCE_TYPE: None,
-      ANALYTIC_TYPE: analyticType::SPECTRAL,
+      ANALYTIC_TYPE: analyticProfile::SPECTRAL,
       ALGORITHM: None,
       ALGORITHM_VERSION: None,
       PROCESSING_TIME: None,
@@ -530,8 +530,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ANIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ANI::VT_SOURCE_TYPE, SOURCE_TYPE);
   }
   #[inline]
-  pub fn add_ANALYTIC_TYPE(&mut self, ANALYTIC_TYPE: analyticType) {
-    self.fbb_.push_slot::<analyticType>(ANI::VT_ANALYTIC_TYPE, ANALYTIC_TYPE, analyticType::SPECTRAL);
+  pub fn add_ANALYTIC_TYPE(&mut self, ANALYTIC_TYPE: analyticProfile) {
+    self.fbb_.push_slot::<analyticProfile>(ANI::VT_ANALYTIC_TYPE, ANALYTIC_TYPE, analyticProfile::SPECTRAL);
   }
   #[inline]
   pub fn add_ALGORITHM(&mut self, ALGORITHM: ::flatbuffers::WIPOffset<&'b  str>) {
@@ -649,7 +649,7 @@ pub struct ANIT {
   pub ID: Option<alloc::string::String>,
   pub SOURCE_ID: Option<alloc::string::String>,
   pub SOURCE_TYPE: Option<alloc::string::String>,
-  pub ANALYTIC_TYPE: analyticType,
+  pub ANALYTIC_TYPE: analyticProfile,
   pub ALGORITHM: Option<alloc::string::String>,
   pub ALGORITHM_VERSION: Option<alloc::string::String>,
   pub PROCESSING_TIME: Option<alloc::string::String>,
@@ -674,7 +674,7 @@ impl Default for ANIT {
       ID: None,
       SOURCE_ID: None,
       SOURCE_TYPE: None,
-      ANALYTIC_TYPE: analyticType::SPECTRAL,
+      ANALYTIC_TYPE: analyticProfile::SPECTRAL,
       ALGORITHM: None,
       ALGORITHM_VERSION: None,
       PROCESSING_TIME: None,

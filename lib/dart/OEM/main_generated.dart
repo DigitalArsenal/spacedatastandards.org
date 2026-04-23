@@ -87,38 +87,38 @@ class _ppeAnomalyTypeReader extends fb.Reader<ppeAnomalyType> {
 }
 
 ///  Orbital element parameterization for the first element (size/shape).
-enum sizeShapeType {
+enum sizeShapeProfile {
   SMA(0),
   R_PERIAPSIS(1);
 
   final int value;
-  const sizeShapeType(this.value);
+  const sizeShapeProfile(this.value);
 
-  factory sizeShapeType.fromValue(int value) {
+  factory sizeShapeProfile.fromValue(int value) {
     switch (value) {
-      case 0: return sizeShapeType.SMA;
-      case 1: return sizeShapeType.R_PERIAPSIS;
+      case 0: return sizeShapeProfile.SMA;
+      case 1: return sizeShapeProfile.R_PERIAPSIS;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static sizeShapeType? _createOrNull(int? value) =>
-      value == null ? null : sizeShapeType.fromValue(value);
+  static sizeShapeProfile? _createOrNull(int? value) =>
+      value == null ? null : sizeShapeProfile.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 1;
-  static const fb.Reader<sizeShapeType> reader = _sizeShapeTypeReader();
+  static const fb.Reader<sizeShapeProfile> reader = _sizeShapeProfileReader();
 }
 
-class _sizeShapeTypeReader extends fb.Reader<sizeShapeType> {
-  const _sizeShapeTypeReader();
+class _sizeShapeProfileReader extends fb.Reader<sizeShapeProfile> {
+  const _sizeShapeProfileReader();
 
   @override
   int get size => 1;
 
   @override
-  sizeShapeType read(fb.BufferContext bc, int offset) =>
-      sizeShapeType.fromValue(const fb.Int8Reader().read(bc, offset));
+  sizeShapeProfile read(fb.BufferContext bc, int offset) =>
+      sizeShapeProfile.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  A single time-segment record of polynomial coefficients for Cartesian position
@@ -411,8 +411,8 @@ class PPEOrbitalElementRecord {
   polynomialBasisType get BASIS_TYPE => polynomialBasisType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
   polynomialBasisType get basisType => BASIS_TYPE;
   ///  Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
-  sizeShapeType get SIZE_SHAPE_TYPE => sizeShapeType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  sizeShapeType get sizeShapeType => SIZE_SHAPE_TYPE;
+  sizeShapeProfile get SIZE_SHAPE_TYPE => sizeShapeProfile.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  sizeShapeProfile get sizeShapeType => SIZE_SHAPE_TYPE;
   ///  Anomaly type for the sixth orbital element.
   ppeAnomalyType get ANOMALY_TYPE => ppeAnomalyType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
   ppeAnomalyType get anomalyType => ANOMALY_TYPE;
@@ -487,7 +487,7 @@ class PPEOrbitalElementRecordBuilder {
     fbBuilder.addInt8(3, BASIS_TYPE?.value);
     return fbBuilder.offset;
   }
-  int addSizeShapeType(sizeShapeType? SIZE_SHAPE_TYPE) {
+  int addSizeShapeType(sizeShapeProfile? SIZE_SHAPE_TYPE) {
     fbBuilder.addInt8(4, SIZE_SHAPE_TYPE?.value);
     return fbBuilder.offset;
   }
@@ -538,7 +538,7 @@ class PPEOrbitalElementRecordObjectBuilder extends fb.ObjectBuilder {
   final double? _EPOCH_HALF_SPAN;
   final int? _NUM_COEFFICIENTS;
   final polynomialBasisType? _BASIS_TYPE;
-  final sizeShapeType? _SIZE_SHAPE_TYPE;
+  final sizeShapeProfile? _SIZE_SHAPE_TYPE;
   final ppeAnomalyType? _ANOMALY_TYPE;
   final List<double>? _COEFF_SIZE_SHAPE;
   final List<double>? _COEFF_ECCENTRICITY;
@@ -558,8 +558,8 @@ class PPEOrbitalElementRecordObjectBuilder extends fb.ObjectBuilder {
     int? numCoefficients,
     polynomialBasisType? BASIS_TYPE,
     polynomialBasisType? basisType,
-    sizeShapeType? SIZE_SHAPE_TYPE,
-    sizeShapeType? sizeShapeType,
+    sizeShapeProfile? SIZE_SHAPE_TYPE,
+    sizeShapeProfile? sizeShapeType,
     ppeAnomalyType? ANOMALY_TYPE,
     ppeAnomalyType? anomalyType,
     List<double>? COEFF_SIZE_SHAPE,
@@ -666,8 +666,8 @@ class PPE {
   RFM? get REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 10);
   RFM? get referenceFrame => REFERENCE_FRAME;
   ///  Time system used for all epochs in this message.
-  timeSystem get TIME_SYSTEM => timeSystem.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  timeSystem get timeSystem => TIME_SYSTEM;
+  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  timingStandard get timeSystem => TIME_SYSTEM;
   ///  Start of the total time span covered by this ephemeris (ISO 8601).
   String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   String? get startTime => START_TIME;
@@ -737,7 +737,7 @@ class PPEBuilder {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addTimeSystem(timeSystem? TIME_SYSTEM) {
+  int addTimeSystem(timingStandard? TIME_SYSTEM) {
     fbBuilder.addInt8(4, TIME_SYSTEM?.value);
     return fbBuilder.offset;
   }
@@ -784,7 +784,7 @@ class PPEObjectBuilder extends fb.ObjectBuilder {
   final CATObjectBuilder? _OBJECT;
   final String? _CENTER_NAME;
   final RFMObjectBuilder? _REFERENCE_FRAME;
-  final timeSystem? _TIME_SYSTEM;
+  final timingStandard? _TIME_SYSTEM;
   final String? _START_TIME;
   final String? _STOP_TIME;
   final polynomialBasisType? _DEFAULT_BASIS_TYPE;
@@ -801,8 +801,8 @@ class PPEObjectBuilder extends fb.ObjectBuilder {
     String? centerName,
     RFMObjectBuilder? REFERENCE_FRAME,
     RFMObjectBuilder? referenceFrame,
-    timeSystem? TIME_SYSTEM,
-    timeSystem? timeSystem,
+    timingStandard? TIME_SYSTEM,
+    timingStandard? timeSystem,
     String? START_TIME,
     String? startTime,
     String? STOP_TIME,

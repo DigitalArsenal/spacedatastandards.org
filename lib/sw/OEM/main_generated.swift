@@ -52,7 +52,7 @@ public enum ppeAnomalyType: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  Orbital element parameterization for the first element (size/shape).
-public enum sizeShapeType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum sizeShapeProfile: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -61,8 +61,8 @@ public enum sizeShapeType: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
   ///  Radius of periapsis (km). Preferred for hyperbolic orbits.
   case rPeriapsis = 1
 
-  public static var max: sizeShapeType { return .rPeriapsis }
-  public static var min: sizeShapeType { return .sma }
+  public static var max: sizeShapeProfile { return .rPeriapsis }
+  public static var min: sizeShapeProfile { return .sma }
 }
 
 
@@ -269,7 +269,7 @@ public struct PPEOrbitalElementRecord: FlatBufferTable, FlatbuffersVectorInitial
   ///  Polynomial basis type for interpreting the coefficient arrays.
   public var BASIS_TYPE: polynomialBasisType { let o = _accessor.offset(VTOFFSET.BASIS_TYPE.v); return o == 0 ? .chebyshev : polynomialBasisType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .chebyshev }
   ///  Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
-  public var SIZE_SHAPE_TYPE: sizeShapeType { let o = _accessor.offset(VTOFFSET.SIZE_SHAPE_TYPE.v); return o == 0 ? .sma : sizeShapeType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sma }
+  public var SIZE_SHAPE_TYPE: sizeShapeProfile { let o = _accessor.offset(VTOFFSET.SIZE_SHAPE_TYPE.v); return o == 0 ? .sma : sizeShapeProfile(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sma }
   ///  Anomaly type for the sixth orbital element.
   public var ANOMALY_TYPE: ppeAnomalyType { let o = _accessor.offset(VTOFFSET.ANOMALY_TYPE.v); return o == 0 ? .trueAnomaly : ppeAnomalyType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .trueAnomaly }
   ///  Coefficients for SMA or radius of periapsis (km).
@@ -306,7 +306,7 @@ public struct PPEOrbitalElementRecord: FlatBufferTable, FlatbuffersVectorInitial
   public static func add(EPOCH_HALF_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_HALF_SPAN, def: 0.0, at: VTOFFSET.EPOCH_HALF_SPAN.p) }
   public static func add(NUM_COEFFICIENTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_COEFFICIENTS, def: 0, at: VTOFFSET.NUM_COEFFICIENTS.p) }
   public static func add(BASIS_TYPE: polynomialBasisType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BASIS_TYPE.rawValue, def: 0, at: VTOFFSET.BASIS_TYPE.p) }
-  public static func add(SIZE_SHAPE_TYPE: sizeShapeType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_SHAPE_TYPE.rawValue, def: 0, at: VTOFFSET.SIZE_SHAPE_TYPE.p) }
+  public static func add(SIZE_SHAPE_TYPE: sizeShapeProfile, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_SHAPE_TYPE.rawValue, def: 0, at: VTOFFSET.SIZE_SHAPE_TYPE.p) }
   public static func add(ANOMALY_TYPE: ppeAnomalyType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANOMALY_TYPE.rawValue, def: 0, at: VTOFFSET.ANOMALY_TYPE.p) }
   public static func addVectorOf(COEFF_SIZE_SHAPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_SIZE_SHAPE, at: VTOFFSET.COEFF_SIZE_SHAPE.p) }
   public static func addVectorOf(COEFF_ECCENTRICITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_ECCENTRICITY, at: VTOFFSET.COEFF_ECCENTRICITY.p) }
@@ -323,7 +323,7 @@ public struct PPEOrbitalElementRecord: FlatBufferTable, FlatbuffersVectorInitial
     EPOCH_HALF_SPAN: Double = 0.0,
     NUM_COEFFICIENTS: UInt16 = 0,
     BASIS_TYPE: polynomialBasisType = .chebyshev,
-    SIZE_SHAPE_TYPE: sizeShapeType = .sma,
+    SIZE_SHAPE_TYPE: sizeShapeProfile = .sma,
     ANOMALY_TYPE: ppeAnomalyType = .trueAnomaly,
     COEFF_SIZE_SHAPEVectorOffset COEFF_SIZE_SHAPE: Offset,
     COEFF_ECCENTRICITYVectorOffset COEFF_ECCENTRICITY: Offset,
@@ -358,7 +358,7 @@ public struct PPEOrbitalElementRecord: FlatBufferTable, FlatbuffersVectorInitial
     try _v.visit(field: VTOFFSET.EPOCH_HALF_SPAN.p, fieldName: "EPOCH_HALF_SPAN", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.NUM_COEFFICIENTS.p, fieldName: "NUM_COEFFICIENTS", required: false, type: UInt16.self)
     try _v.visit(field: VTOFFSET.BASIS_TYPE.p, fieldName: "BASIS_TYPE", required: false, type: polynomialBasisType.self)
-    try _v.visit(field: VTOFFSET.SIZE_SHAPE_TYPE.p, fieldName: "SIZE_SHAPE_TYPE", required: false, type: sizeShapeType.self)
+    try _v.visit(field: VTOFFSET.SIZE_SHAPE_TYPE.p, fieldName: "SIZE_SHAPE_TYPE", required: false, type: sizeShapeProfile.self)
     try _v.visit(field: VTOFFSET.ANOMALY_TYPE.p, fieldName: "ANOMALY_TYPE", required: false, type: ppeAnomalyType.self)
     try _v.visit(field: VTOFFSET.COEFF_SIZE_SHAPE.p, fieldName: "COEFF_SIZE_SHAPE", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VTOFFSET.COEFF_ECCENTRICITY.p, fieldName: "COEFF_ECCENTRICITY", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
@@ -417,7 +417,7 @@ public struct PPE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Reference frame for position/velocity coefficients.
   public var REFERENCE_FRAME: RFM? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Time system used for all epochs in this message.
-  public var TIME_SYSTEM: timeSystem { let o = _accessor.offset(VTOFFSET.TIME_SYSTEM.v); return o == 0 ? .gmst : timeSystem(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
+  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VTOFFSET.TIME_SYSTEM.v); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
   ///  Start of the total time span covered by this ephemeris (ISO 8601).
   public var START_TIME: String? { let o = _accessor.offset(VTOFFSET.START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START_TIME.v) }
@@ -447,7 +447,7 @@ public struct PPE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(OBJECT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT, at: VTOFFSET.OBJECT.p) }
   public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VTOFFSET.CENTER_NAME.p) }
   public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VTOFFSET.REFERENCE_FRAME.p) }
-  public static func add(TIME_SYSTEM: timeSystem, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VTOFFSET.TIME_SYSTEM.p) }
+  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VTOFFSET.TIME_SYSTEM.p) }
   public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VTOFFSET.START_TIME.p) }
   public static func add(STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_TIME, at: VTOFFSET.STOP_TIME.p) }
   public static func add(DEFAULT_BASIS_TYPE: polynomialBasisType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEFAULT_BASIS_TYPE.rawValue, def: 0, at: VTOFFSET.DEFAULT_BASIS_TYPE.p) }
@@ -463,7 +463,7 @@ public struct PPE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     OBJECTOffset OBJECT: Offset = Offset(),
     CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
     REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
-    TIME_SYSTEM: timeSystem = .gmst,
+    TIME_SYSTEM: timingStandard = .gmst,
     START_TIMEOffset START_TIME: Offset = Offset(),
     STOP_TIMEOffset STOP_TIME: Offset = Offset(),
     DEFAULT_BASIS_TYPE: polynomialBasisType = .chebyshev,
@@ -496,7 +496,7 @@ public struct PPE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.OBJECT.p, fieldName: "OBJECT", required: false, type: ForwardOffset<CAT>.self)
     try _v.visit(field: VTOFFSET.CENTER_NAME.p, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
-    try _v.visit(field: VTOFFSET.TIME_SYSTEM.p, fieldName: "TIME_SYSTEM", required: false, type: timeSystem.self)
+    try _v.visit(field: VTOFFSET.TIME_SYSTEM.p, fieldName: "TIME_SYSTEM", required: false, type: timingStandard.self)
     try _v.visit(field: VTOFFSET.START_TIME.p, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.STOP_TIME.p, fieldName: "STOP_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.DEFAULT_BASIS_TYPE.p, fieldName: "DEFAULT_BASIS_TYPE", required: false, type: polynomialBasisType.self)

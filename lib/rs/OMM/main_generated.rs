@@ -4,23 +4,23 @@ extern crate alloc;
 
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_MEAN_ELEMENT_THEORY: i8 = 0;
+pub const ENUM_MIN_MEAN_ELEMENT_SOURCE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_MEAN_ELEMENT_THEORY: i8 = 3;
+pub const ENUM_MAX_MEAN_ELEMENT_SOURCE: i8 = 3;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_MEAN_ELEMENT_THEORY: [meanElementTheory; 4] = [
-  meanElementTheory::SGP4,
-  meanElementTheory::SGP4XP,
-  meanElementTheory::DSST,
-  meanElementTheory::USM,
+pub const ENUM_VALUES_MEAN_ELEMENT_SOURCE: [meanElementSource; 4] = [
+  meanElementSource::SGP4,
+  meanElementSource::SGP4XP,
+  meanElementSource::DSST,
+  meanElementSource::USM,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct meanElementTheory(pub i8);
+pub struct meanElementSource(pub i8);
 #[allow(non_upper_case_globals)]
-impl meanElementTheory {
+impl meanElementSource {
   /// Simplified General Perturbation Model 4
   pub const SGP4: Self = Self(0);
   /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
@@ -49,7 +49,7 @@ impl meanElementTheory {
     }
   }
 }
-impl ::core::fmt::Debug for meanElementTheory {
+impl ::core::fmt::Debug for meanElementSource {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -58,7 +58,7 @@ impl ::core::fmt::Debug for meanElementTheory {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for meanElementTheory {
+impl<'a> ::flatbuffers::Follow<'a> for meanElementSource {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -67,15 +67,15 @@ impl<'a> ::flatbuffers::Follow<'a> for meanElementTheory {
   }
 }
 
-impl ::flatbuffers::Push for meanElementTheory {
-    type Output = meanElementTheory;
+impl ::flatbuffers::Push for meanElementSource {
+    type Output = meanElementSource;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for meanElementTheory {
+impl ::flatbuffers::EndianScalar for meanElementSource {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -89,7 +89,7 @@ impl ::flatbuffers::EndianScalar for meanElementTheory {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for meanElementTheory {
+impl<'a> ::flatbuffers::Verifiable for meanElementSource {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -98,7 +98,7 @@ impl<'a> ::flatbuffers::Verifiable for meanElementTheory {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for meanElementTheory {}
+impl ::flatbuffers::SimpleToVerifyInSlice for meanElementSource {}
 pub enum METOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -140,11 +140,11 @@ impl<'a> MET<'a> {
   }
 
   #[inline]
-  pub fn MEAN_ELEMENT_THEORY(&self) -> meanElementTheory {
+  pub fn MEAN_ELEMENT_THEORY(&self) -> meanElementSource {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<meanElementTheory>(MET::VT_MEAN_ELEMENT_THEORY, Some(meanElementTheory::SGP4)).unwrap()}
+    unsafe { self._tab.get::<meanElementSource>(MET::VT_MEAN_ELEMENT_THEORY, Some(meanElementSource::SGP4)).unwrap()}
   }
 }
 
@@ -154,19 +154,19 @@ impl ::flatbuffers::Verifiable for MET<'_> {
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<meanElementTheory>("MEAN_ELEMENT_THEORY", Self::VT_MEAN_ELEMENT_THEORY, false)?
+     .visit_field::<meanElementSource>("MEAN_ELEMENT_THEORY", Self::VT_MEAN_ELEMENT_THEORY, false)?
      .finish();
     Ok(())
   }
 }
 pub struct METArgs {
-    pub MEAN_ELEMENT_THEORY: meanElementTheory,
+    pub MEAN_ELEMENT_THEORY: meanElementSource,
 }
 impl<'a> Default for METArgs {
   #[inline]
   fn default() -> Self {
     METArgs {
-      MEAN_ELEMENT_THEORY: meanElementTheory::SGP4,
+      MEAN_ELEMENT_THEORY: meanElementSource::SGP4,
     }
   }
 }
@@ -177,8 +177,8 @@ pub struct METBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
 }
 impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> METBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_MEAN_ELEMENT_THEORY(&mut self, MEAN_ELEMENT_THEORY: meanElementTheory) {
-    self.fbb_.push_slot::<meanElementTheory>(MET::VT_MEAN_ELEMENT_THEORY, MEAN_ELEMENT_THEORY, meanElementTheory::SGP4);
+  pub fn add_MEAN_ELEMENT_THEORY(&mut self, MEAN_ELEMENT_THEORY: meanElementSource) {
+    self.fbb_.push_slot::<meanElementSource>(MET::VT_MEAN_ELEMENT_THEORY, MEAN_ELEMENT_THEORY, meanElementSource::SGP4);
   }
   #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> METBuilder<'a, 'b, A> {
@@ -205,12 +205,12 @@ impl ::core::fmt::Debug for MET<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct METT {
-  pub MEAN_ELEMENT_THEORY: meanElementTheory,
+  pub MEAN_ELEMENT_THEORY: meanElementSource,
 }
 impl Default for METT {
   fn default() -> Self {
     Self {
-      MEAN_ELEMENT_THEORY: meanElementTheory::SGP4,
+      MEAN_ELEMENT_THEORY: meanElementSource::SGP4,
     }
   }
 }

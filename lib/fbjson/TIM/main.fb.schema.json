@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "timeSystem": {
+    "timingStandard": {
       "type": "string",
       "enum": [
         "GMST",
@@ -75,7 +75,7 @@
       "description": "Time System",
       "properties": {
         "TIME_SYSTEM": {
-          "$ref": "#/definitions/timeSystem",
+          "$ref": "#/definitions/timingStandard",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {

@@ -1,12 +1,12 @@
-// Hash: 5bae876830108ca1bbc7b2496865c81b86cd1687717a5151b88c9ce3af8f7f39
-// Version: 0.0.2
+// Hash: ae73baca67815938bc50ef02c17abdb29eb9691abd538e39a987d5abeb8968f6
+// Version: 0.0.3
 // -----------------------------------END_HEADER
-enum pduType : byte {
+enum pduKind : byte {
   FILE_DIRECTIVE,
   FILE_DATA
 }
 
-enum transmissionMode : byte {
+enum transmissionClass : byte {
   ACKNOWLEDGED,
   UNACKNOWLEDGED
 }
@@ -16,11 +16,11 @@ table CFP {
   /// PDU version
   VERSION:ubyte;
   /// PDU type
-  PDU_TYPE:pduType;
+  PDU_TYPE:pduKind;
   /// Direction (toward receiver or sender)
   DIRECTION:ubyte;
   /// Transmission mode
-  TRANSMISSION_MODE:transmissionMode;
+  TRANSMISSION_MODE:transmissionClass;
   /// CRC present flag
   CRC_FLAG:bool;
   /// Large file flag

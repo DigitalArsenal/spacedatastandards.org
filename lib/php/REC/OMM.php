@@ -109,7 +109,7 @@ class OMM extends Table
     public function getTIME_SYSTEM()
     {
         $o = $this->__offset(20);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \timeSystem::UTC;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \timingStandard::UTC;
     }
 
     /// Mean Element Theory
@@ -119,7 +119,7 @@ class OMM extends Table
     public function getMEAN_ELEMENT_THEORY()
     {
         $o = $this->__offset(22);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \meanElementTheory::SGP4;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \meanElementSource::SGP4;
     }
 
     /// COMMENT (O)
@@ -274,7 +274,7 @@ class OMM extends Table
     public function getEPHEMERIS_TYPE()
     {
         $o = $this->__offset(54);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \ephemerisType::SGP4;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \ephemerisFormat::SGP4;
     }
 
     /// CLASSIFICATION_TYPE Default=U

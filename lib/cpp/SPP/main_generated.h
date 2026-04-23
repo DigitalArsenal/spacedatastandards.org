@@ -16,22 +16,22 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct SPP;
 struct SPPBuilder;
 
-enum packetType : int8_t {
-  packetType_TM = 0,
-  packetType_TC = 1,
-  packetType_MIN = packetType_TM,
-  packetType_MAX = packetType_TC
+enum packetKind : int8_t {
+  packetKind_TM = 0,
+  packetKind_TC = 1,
+  packetKind_MIN = packetKind_TM,
+  packetKind_MAX = packetKind_TC
 };
 
-inline const packetType (&EnumValuespacketType())[2] {
-  static const packetType values[] = {
-    packetType_TM,
-    packetType_TC
+inline const packetKind (&EnumValuespacketKind())[2] {
+  static const packetKind values[] = {
+    packetKind_TM,
+    packetKind_TC
   };
   return values;
 }
 
-inline const char * const *EnumNamespacketType() {
+inline const char * const *EnumNamespacketKind() {
   static const char * const names[3] = {
     "TM",
     "TC",
@@ -40,10 +40,10 @@ inline const char * const *EnumNamespacketType() {
   return names;
 }
 
-inline const char *EnumNamepacketType(packetType e) {
-  if (::flatbuffers::IsOutRange(e, packetType_TM, packetType_TC)) return "";
+inline const char *EnumNamepacketKind(packetKind e) {
+  if (::flatbuffers::IsOutRange(e, packetKind_TM, packetKind_TC)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamespacketType()[index];
+  return EnumNamespacketKind()[index];
 }
 
 /// Space Packet Protocol (CCSDS 133.0-B-1)
@@ -64,8 +64,8 @@ struct SPP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetField<uint8_t>(VT_VERSION, 0);
   }
   /// Packet type (TM or TC)
-  packetType PACKET_TYPE() const {
-    return static_cast<packetType>(GetField<int8_t>(VT_PACKET_TYPE, 0));
+  packetKind PACKET_TYPE() const {
+    return static_cast<packetKind>(GetField<int8_t>(VT_PACKET_TYPE, 0));
   }
   /// Secondary header flag
   bool SEC_HDR_FLAG() const {
@@ -114,7 +114,7 @@ struct SPPBuilder {
   void add_VERSION(uint8_t VERSION) {
     fbb_.AddElement<uint8_t>(SPP::VT_VERSION, VERSION, 0);
   }
-  void add_PACKET_TYPE(packetType PACKET_TYPE) {
+  void add_PACKET_TYPE(packetKind PACKET_TYPE) {
     fbb_.AddElement<int8_t>(SPP::VT_PACKET_TYPE, static_cast<int8_t>(PACKET_TYPE), 0);
   }
   void add_SEC_HDR_FLAG(bool SEC_HDR_FLAG) {
@@ -149,7 +149,7 @@ struct SPPBuilder {
 inline ::flatbuffers::Offset<SPP> CreateSPP(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     uint8_t VERSION = 0,
-    packetType PACKET_TYPE = packetType_TM,
+    packetKind PACKET_TYPE = packetKind_TM,
     bool SEC_HDR_FLAG = false,
     uint16_t APID = 0,
     uint8_t SEQUENCE_FLAGS = 0,
@@ -171,7 +171,7 @@ inline ::flatbuffers::Offset<SPP> CreateSPP(
 inline ::flatbuffers::Offset<SPP> CreateSPPDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     uint8_t VERSION = 0,
-    packetType PACKET_TYPE = packetType_TM,
+    packetKind PACKET_TYPE = packetKind_TM,
     bool SEC_HDR_FLAG = false,
     uint16_t APID = 0,
     uint8_t SEQUENCE_FLAGS = 0,

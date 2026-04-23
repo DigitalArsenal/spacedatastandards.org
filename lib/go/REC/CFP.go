@@ -77,24 +77,24 @@ func (rcv *CFP) MutateVersion(n byte) bool {
 }
 
 /// PDU type
-func (rcv *CFP) PDU_TYPE() pduType {
+func (rcv *CFP) PDU_TYPE() pduKind {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return pduType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return pduKind(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *CFP) PduType() pduType {
+func (rcv *CFP) PduType() pduKind {
 	return rcv.PDU_TYPE()
 }
 
 /// PDU type
-func (rcv *CFP) MutatePDU_TYPE(n pduType) bool {
+func (rcv *CFP) MutatePDU_TYPE(n pduKind) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
 }
 
-func (rcv *CFP) MutatePduType(n pduType) bool {
+func (rcv *CFP) MutatePduType(n pduKind) bool {
 	return rcv.MutatePDU_TYPE(n)
 }
 
@@ -121,24 +121,24 @@ func (rcv *CFP) MutateDirection(n byte) bool {
 }
 
 /// Transmission mode
-func (rcv *CFP) TRANSMISSION_MODE() transmissionMode {
+func (rcv *CFP) TRANSMISSION_MODE() transmissionClass {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		return transmissionMode(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return transmissionClass(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *CFP) TransmissionMode() transmissionMode {
+func (rcv *CFP) TransmissionMode() transmissionClass {
 	return rcv.TRANSMISSION_MODE()
 }
 
 /// Transmission mode
-func (rcv *CFP) MutateTRANSMISSION_MODE(n transmissionMode) bool {
+func (rcv *CFP) MutateTRANSMISSION_MODE(n transmissionClass) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
 }
 
-func (rcv *CFP) MutateTransmissionMode(n transmissionMode) bool {
+func (rcv *CFP) MutateTransmissionMode(n transmissionClass) bool {
 	return rcv.MutateTRANSMISSION_MODE(n)
 }
 
@@ -407,10 +407,10 @@ func CFPAddVERSION(builder *flatbuffers.Builder, VERSION byte) {
 func CFPAddVersion(builder *flatbuffers.Builder, VERSION byte) {
 	CFPAddVERSION(builder, VERSION)
 }
-func CFPAddPDU_TYPE(builder *flatbuffers.Builder, PDU_TYPE pduType) {
+func CFPAddPDU_TYPE(builder *flatbuffers.Builder, PDU_TYPE pduKind) {
 	builder.PrependInt8Slot(1, int8(PDU_TYPE), 0)
 }
-func CFPAddPduType(builder *flatbuffers.Builder, PDU_TYPE pduType) {
+func CFPAddPduType(builder *flatbuffers.Builder, PDU_TYPE pduKind) {
 	CFPAddPDU_TYPE(builder, PDU_TYPE)
 }
 func CFPAddDIRECTION(builder *flatbuffers.Builder, DIRECTION byte) {
@@ -419,10 +419,10 @@ func CFPAddDIRECTION(builder *flatbuffers.Builder, DIRECTION byte) {
 func CFPAddDirection(builder *flatbuffers.Builder, DIRECTION byte) {
 	CFPAddDIRECTION(builder, DIRECTION)
 }
-func CFPAddTRANSMISSION_MODE(builder *flatbuffers.Builder, TRANSMISSION_MODE transmissionMode) {
+func CFPAddTRANSMISSION_MODE(builder *flatbuffers.Builder, TRANSMISSION_MODE transmissionClass) {
 	builder.PrependInt8Slot(3, int8(TRANSMISSION_MODE), 0)
 }
-func CFPAddTransmissionMode(builder *flatbuffers.Builder, TRANSMISSION_MODE transmissionMode) {
+func CFPAddTransmissionMode(builder *flatbuffers.Builder, TRANSMISSION_MODE transmissionClass) {
 	CFPAddTRANSMISSION_MODE(builder, TRANSMISSION_MODE)
 }
 func CFPAddCRC_FLAG(builder *flatbuffers.Builder, CRC_FLAG bool) {

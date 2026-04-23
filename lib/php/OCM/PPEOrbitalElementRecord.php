@@ -95,7 +95,7 @@ class PPEOrbitalElementRecord extends Table
     public function getSIZE_SHAPE_TYPE()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \sizeShapeType::SMA;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \sizeShapeProfile::SMA;
     }
 
     /// Anomaly type for the sixth orbital element.

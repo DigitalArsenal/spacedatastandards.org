@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { propagatorType } from './propagatorType.js';
+import { propagatorFamily } from './propagatorFamily.js';
 import { zonalHarmonic } from './zonalHarmonic.js';
 
 
@@ -36,9 +36,9 @@ PROPAGATOR_NAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-PROPAGATOR_TYPE():propagatorType {
+PROPAGATOR_TYPE():propagatorFamily {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : propagatorType.NONE;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : propagatorFamily.NONE;
 }
 
 FORCE_MODELS(index: number):string
@@ -88,8 +88,8 @@ static addPropagatorName(builder:flatbuffers.Builder, PROPAGATOR_NAMEOffset:flat
   builder.addFieldOffset(0, PROPAGATOR_NAMEOffset, 0);
 }
 
-static addPropagatorType(builder:flatbuffers.Builder, PROPAGATOR_TYPE:propagatorType) {
-  builder.addFieldInt8(1, PROPAGATOR_TYPE, propagatorType.NONE);
+static addPropagatorType(builder:flatbuffers.Builder, PROPAGATOR_TYPE:propagatorFamily) {
+  builder.addFieldInt8(1, PROPAGATOR_TYPE, propagatorFamily.NONE);
 }
 
 static addForceModels(builder:flatbuffers.Builder, FORCE_MODELSOffset:flatbuffers.Offset) {
@@ -137,7 +137,7 @@ static endpropagatorConfig(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createpropagatorConfig(builder:flatbuffers.Builder, PROPAGATOR_NAMEOffset:flatbuffers.Offset, PROPAGATOR_TYPE:propagatorType, FORCE_MODELSOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, TIME_STEP:number, ZONAL_HARMONIC_TERMSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createpropagatorConfig(builder:flatbuffers.Builder, PROPAGATOR_NAMEOffset:flatbuffers.Offset, PROPAGATOR_TYPE:propagatorFamily, FORCE_MODELSOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, TIME_STEP:number, ZONAL_HARMONIC_TERMSOffset:flatbuffers.Offset):flatbuffers.Offset {
   propagatorConfig.startpropagatorConfig(builder);
   propagatorConfig.addPropagatorName(builder, PROPAGATOR_NAMEOffset);
   propagatorConfig.addPropagatorType(builder, PROPAGATOR_TYPE);
@@ -173,7 +173,7 @@ unpackTo(_o: propagatorConfigT): void {
 export class propagatorConfigT implements flatbuffers.IGeneratedObject {
 constructor(
   public PROPAGATOR_NAME: string|Uint8Array|null = null,
-  public PROPAGATOR_TYPE: propagatorType = propagatorType.NONE,
+  public PROPAGATOR_TYPE: propagatorFamily = propagatorFamily.NONE,
   public FORCE_MODELS: (string)[] = [],
   public EPOCH: string|Uint8Array|null = null,
   public TIME_STEP: number = 0.0,

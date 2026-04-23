@@ -2,19 +2,19 @@
 import flatbuffers
 
 /// License type for plugin access
-enum licenseType:
+enum licenseCategory:
     /// Evaluation/trial license
-    licenseType_Trial = 0
+    licenseCategory_Trial = 0
     /// Standard commercial license
-    licenseType_Commercial = 1
+    licenseCategory_Commercial = 1
     /// Enterprise site license
-    licenseType_Enterprise = 2
+    licenseCategory_Enterprise = 2
     /// Educational/academic license
-    licenseType_Educational = 3
+    licenseCategory_Educational = 3
     /// Open source project license
-    licenseType_OpenSource = 4
+    licenseCategory_OpenSource = 4
     /// Internal OrbPro default plugins
-    licenseType_Internal = 5
+    licenseCategory_Internal = 5
 
 class PLK
 
@@ -62,8 +62,8 @@ class PLK : flatbuffers.handle
     def ALLOWED_TLDS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 22)
     /// Type of license
-    def LICENSE_TYPE() -> licenseType:
-        return licenseType(flatbuffers.field_int8(buf_, pos_, 24, 0))
+    def LICENSE_TYPE() -> licenseCategory:
+        return licenseCategory(flatbuffers.field_int8(buf_, pos_, 24, 0))
     /// Maximum concurrent activations (0 = unlimited)
     def MAX_ACTIVATIONS() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 26, 0)
@@ -122,7 +122,7 @@ struct PLKBuilder:
     def add_ALLOWED_TLDS(ALLOWED_TLDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, ALLOWED_TLDS)
         return this
-    def add_LICENSE_TYPE(LICENSE_TYPE:licenseType):
+    def add_LICENSE_TYPE(LICENSE_TYPE:licenseCategory):
         b_.PrependInt8Slot(10, LICENSE_TYPE, 0)
         return this
     def add_MAX_ACTIVATIONS(MAX_ACTIVATIONS:int):

@@ -77,24 +77,24 @@ func (rcv *SPP) MutateVersion(n byte) bool {
 }
 
 /// Packet type (TM or TC)
-func (rcv *SPP) PACKET_TYPE() packetType {
+func (rcv *SPP) PACKET_TYPE() packetKind {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return packetType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return packetKind(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *SPP) PacketType() packetType {
+func (rcv *SPP) PacketType() packetKind {
 	return rcv.PACKET_TYPE()
 }
 
 /// Packet type (TM or TC)
-func (rcv *SPP) MutatePACKET_TYPE(n packetType) bool {
+func (rcv *SPP) MutatePACKET_TYPE(n packetKind) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
 }
 
-func (rcv *SPP) MutatePacketType(n packetType) bool {
+func (rcv *SPP) MutatePacketType(n packetKind) bool {
 	return rcv.MutatePACKET_TYPE(n)
 }
 
@@ -269,10 +269,10 @@ func SPPAddVERSION(builder *flatbuffers.Builder, VERSION byte) {
 func SPPAddVersion(builder *flatbuffers.Builder, VERSION byte) {
 	SPPAddVERSION(builder, VERSION)
 }
-func SPPAddPACKET_TYPE(builder *flatbuffers.Builder, PACKET_TYPE packetType) {
+func SPPAddPACKET_TYPE(builder *flatbuffers.Builder, PACKET_TYPE packetKind) {
 	builder.PrependInt8Slot(1, int8(PACKET_TYPE), 0)
 }
-func SPPAddPacketType(builder *flatbuffers.Builder, PACKET_TYPE packetType) {
+func SPPAddPacketType(builder *flatbuffers.Builder, PACKET_TYPE packetKind) {
 	SPPAddPACKET_TYPE(builder, PACKET_TYPE)
 }
 func SPPAddSEC_HDR_FLAG(builder *flatbuffers.Builder, SEC_HDR_FLAG bool) {

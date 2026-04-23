@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "packetType" : {
+    "packetKind" : {
       "type" : "string",
       "enum": ["TM", "TC"]
     },
@@ -14,7 +14,7 @@
                 "description" : "Packet version number"
               },
         "PACKET_TYPE" : {
-                "$ref" : "#/definitions/packetType",
+                "$ref" : "#/definitions/packetKind",
                 "description" : "Packet type (TM or TC)"
               },
         "SEC_HDR_FLAG" : {

@@ -16,36 +16,36 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct ANI;
 struct ANIBuilder;
 
-enum analyticType : int8_t {
-  analyticType_SPECTRAL = 0,
-  analyticType_PHOTOMETRIC = 1,
-  analyticType_ASTROMETRIC = 2,
-  analyticType_RADIOMETRIC = 3,
-  analyticType_SIGNATURE = 4,
-  analyticType_FEATURE_EXTRACTION = 5,
-  analyticType_CHANGE_DETECTION = 6,
-  analyticType_CLASSIFICATION = 7,
-  analyticType_FUSION = 8,
-  analyticType_MIN = analyticType_SPECTRAL,
-  analyticType_MAX = analyticType_FUSION
+enum analyticProfile : int8_t {
+  analyticProfile_SPECTRAL = 0,
+  analyticProfile_PHOTOMETRIC = 1,
+  analyticProfile_ASTROMETRIC = 2,
+  analyticProfile_RADIOMETRIC = 3,
+  analyticProfile_SIGNATURE = 4,
+  analyticProfile_FEATURE_EXTRACTION = 5,
+  analyticProfile_CHANGE_DETECTION = 6,
+  analyticProfile_CLASSIFICATION = 7,
+  analyticProfile_FUSION = 8,
+  analyticProfile_MIN = analyticProfile_SPECTRAL,
+  analyticProfile_MAX = analyticProfile_FUSION
 };
 
-inline const analyticType (&EnumValuesanalyticType())[9] {
-  static const analyticType values[] = {
-    analyticType_SPECTRAL,
-    analyticType_PHOTOMETRIC,
-    analyticType_ASTROMETRIC,
-    analyticType_RADIOMETRIC,
-    analyticType_SIGNATURE,
-    analyticType_FEATURE_EXTRACTION,
-    analyticType_CHANGE_DETECTION,
-    analyticType_CLASSIFICATION,
-    analyticType_FUSION
+inline const analyticProfile (&EnumValuesanalyticProfile())[9] {
+  static const analyticProfile values[] = {
+    analyticProfile_SPECTRAL,
+    analyticProfile_PHOTOMETRIC,
+    analyticProfile_ASTROMETRIC,
+    analyticProfile_RADIOMETRIC,
+    analyticProfile_SIGNATURE,
+    analyticProfile_FEATURE_EXTRACTION,
+    analyticProfile_CHANGE_DETECTION,
+    analyticProfile_CLASSIFICATION,
+    analyticProfile_FUSION
   };
   return values;
 }
 
-inline const char * const *EnumNamesanalyticType() {
+inline const char * const *EnumNamesanalyticProfile() {
   static const char * const names[10] = {
     "SPECTRAL",
     "PHOTOMETRIC",
@@ -61,10 +61,10 @@ inline const char * const *EnumNamesanalyticType() {
   return names;
 }
 
-inline const char *EnumNameanalyticType(analyticType e) {
-  if (::flatbuffers::IsOutRange(e, analyticType_SPECTRAL, analyticType_FUSION)) return "";
+inline const char *EnumNameanalyticProfile(analyticProfile e) {
+  if (::flatbuffers::IsOutRange(e, analyticProfile_SPECTRAL, analyticProfile_FUSION)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesanalyticType()[index];
+  return EnumNamesanalyticProfile()[index];
 }
 
 /// Analytic Imagery Product
@@ -106,8 +106,8 @@ struct ANI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_TYPE);
   }
   /// Analytic product type
-  analyticType ANALYTIC_TYPE() const {
-    return static_cast<analyticType>(GetField<int8_t>(VT_ANALYTIC_TYPE, 0));
+  analyticProfile ANALYTIC_TYPE() const {
+    return static_cast<analyticProfile>(GetField<int8_t>(VT_ANALYTIC_TYPE, 0));
   }
   /// Processing algorithm or pipeline name
   const ::flatbuffers::String *ALGORITHM() const {
@@ -231,7 +231,7 @@ struct ANIBuilder {
   void add_SOURCE_TYPE(::flatbuffers::Offset<::flatbuffers::String> SOURCE_TYPE) {
     fbb_.AddOffset(ANI::VT_SOURCE_TYPE, SOURCE_TYPE);
   }
-  void add_ANALYTIC_TYPE(analyticType ANALYTIC_TYPE) {
+  void add_ANALYTIC_TYPE(analyticProfile ANALYTIC_TYPE) {
     fbb_.AddElement<int8_t>(ANI::VT_ANALYTIC_TYPE, static_cast<int8_t>(ANALYTIC_TYPE), 0);
   }
   void add_ALGORITHM(::flatbuffers::Offset<::flatbuffers::String> ALGORITHM) {
@@ -301,7 +301,7 @@ inline ::flatbuffers::Offset<ANI> CreateANI(
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SOURCE_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SOURCE_TYPE = 0,
-    analyticType ANALYTIC_TYPE = analyticType_SPECTRAL,
+    analyticProfile ANALYTIC_TYPE = analyticProfile_SPECTRAL,
     ::flatbuffers::Offset<::flatbuffers::String> ALGORITHM = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ALGORITHM_VERSION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PROCESSING_TIME = 0,
@@ -349,7 +349,7 @@ inline ::flatbuffers::Offset<ANI> CreateANIDirect(
     const char *ID = nullptr,
     const char *SOURCE_ID = nullptr,
     const char *SOURCE_TYPE = nullptr,
-    analyticType ANALYTIC_TYPE = analyticType_SPECTRAL,
+    analyticProfile ANALYTIC_TYPE = analyticProfile_SPECTRAL,
     const char *ALGORITHM = nullptr,
     const char *ALGORITHM_VERSION = nullptr,
     const char *PROCESSING_TIME = nullptr,

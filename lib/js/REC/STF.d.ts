@@ -1,7 +1,7 @@
 import * as flatbuffers from 'flatbuffers';
 import { DataCoverage, DataCoverageT } from './DataCoverage.js';
 import { PricingTier, PricingTierT } from './PricingTier.js';
-import { accessType } from './accessType.js';
+import { accessCategory } from './accessCategory.js';
 import { paymentMethod } from './paymentMethod.js';
 /**
  * Storefront Listing - Data marketplace listing
@@ -56,7 +56,7 @@ export declare class STF implements flatbuffers.IUnpackableObject<STFT> {
     /**
      * Type of access offered
      */
-    ACCESS_TYPE(): accessType;
+    ACCESS_TYPE(): accessCategory;
     /**
      * Whether encryption is required for data delivery
      */
@@ -101,7 +101,7 @@ export declare class STF implements flatbuffers.IUnpackableObject<STFT> {
     static startDataTypesVector(builder: flatbuffers.Builder, numElems: number): void;
     static addCoverage(builder: flatbuffers.Builder, COVERAGEOffset: flatbuffers.Offset): void;
     static addSampleCid(builder: flatbuffers.Builder, SAMPLE_CIDOffset: flatbuffers.Offset): void;
-    static addAccessType(builder: flatbuffers.Builder, ACCESS_TYPE: accessType): void;
+    static addAccessType(builder: flatbuffers.Builder, ACCESS_TYPE: accessCategory): void;
     static addEncryptionRequired(builder: flatbuffers.Builder, ENCRYPTION_REQUIRED: boolean): void;
     static addPricing(builder: flatbuffers.Builder, PRICINGOffset: flatbuffers.Offset): void;
     static createPricingVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
@@ -130,7 +130,7 @@ export declare class STFT implements flatbuffers.IGeneratedObject {
     DATA_TYPES: (string)[];
     COVERAGE: DataCoverageT | null;
     SAMPLE_CID: string | Uint8Array | null;
-    ACCESS_TYPE: accessType;
+    ACCESS_TYPE: accessCategory;
     ENCRYPTION_REQUIRED: boolean;
     PRICING: (PricingTierT)[];
     ACCEPTED_PAYMENTS: (paymentMethod)[];
@@ -138,7 +138,7 @@ export declare class STFT implements flatbuffers.IGeneratedObject {
     UPDATED_AT: bigint;
     ACTIVE: boolean;
     SIGNATURE: (number)[];
-    constructor(LISTING_ID?: string | Uint8Array | null, PROVIDER_PEER_ID?: string | Uint8Array | null, PROVIDER_EPM_CID?: string | Uint8Array | null, TITLE?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, DATA_TYPES?: (string)[], COVERAGE?: DataCoverageT | null, SAMPLE_CID?: string | Uint8Array | null, ACCESS_TYPE?: accessType, ENCRYPTION_REQUIRED?: boolean, PRICING?: (PricingTierT)[], ACCEPTED_PAYMENTS?: (paymentMethod)[], CREATED_AT?: bigint, UPDATED_AT?: bigint, ACTIVE?: boolean, SIGNATURE?: (number)[]);
+    constructor(LISTING_ID?: string | Uint8Array | null, PROVIDER_PEER_ID?: string | Uint8Array | null, PROVIDER_EPM_CID?: string | Uint8Array | null, TITLE?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, DATA_TYPES?: (string)[], COVERAGE?: DataCoverageT | null, SAMPLE_CID?: string | Uint8Array | null, ACCESS_TYPE?: accessCategory, ENCRYPTION_REQUIRED?: boolean, PRICING?: (PricingTierT)[], ACCEPTED_PAYMENTS?: (paymentMethod)[], CREATED_AT?: bigint, UPDATED_AT?: bigint, ACTIVE?: boolean, SIGNATURE?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=STF.d.ts.map

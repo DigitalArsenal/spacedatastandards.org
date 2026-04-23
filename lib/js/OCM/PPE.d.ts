@@ -4,7 +4,7 @@ import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalE
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { RFM, RFMT } from './RFM.js';
 import { polynomialBasisType } from './polynomialBasisType.js';
-import { timeSystem } from './timeSystem.js';
+import { timingStandard } from './timingStandard.js';
 /**
  * Polynomial Ephemeris — top-level message containing metadata and
  * one or more polynomial coefficient records for a single space object.
@@ -42,7 +42,7 @@ export declare class PPE implements flatbuffers.IUnpackableObject<PPET> {
     /**
      * Time system used for all epochs in this message.
      */
-    TIME_SYSTEM(): timeSystem;
+    TIME_SYSTEM(): timingStandard;
     /**
      * Start of the total time span covered by this ephemeris (ISO 8601).
      */
@@ -92,7 +92,7 @@ export declare class PPE implements flatbuffers.IUnpackableObject<PPET> {
     static addObject(builder: flatbuffers.Builder, OBJECTOffset: flatbuffers.Offset): void;
     static addCenterName(builder: flatbuffers.Builder, CENTER_NAMEOffset: flatbuffers.Offset): void;
     static addReferenceFrame(builder: flatbuffers.Builder, REFERENCE_FRAMEOffset: flatbuffers.Offset): void;
-    static addTimeSystem(builder: flatbuffers.Builder, TIME_SYSTEM: timeSystem): void;
+    static addTimeSystem(builder: flatbuffers.Builder, TIME_SYSTEM: timingStandard): void;
     static addStartTime(builder: flatbuffers.Builder, START_TIMEOffset: flatbuffers.Offset): void;
     static addStopTime(builder: flatbuffers.Builder, STOP_TIMEOffset: flatbuffers.Offset): void;
     static addDefaultBasisType(builder: flatbuffers.Builder, DEFAULT_BASIS_TYPE: polynomialBasisType): void;
@@ -116,7 +116,7 @@ export declare class PPET implements flatbuffers.IGeneratedObject {
     OBJECT: CATT | null;
     CENTER_NAME: string | Uint8Array | null;
     REFERENCE_FRAME: RFMT | null;
-    TIME_SYSTEM: timeSystem;
+    TIME_SYSTEM: timingStandard;
     START_TIME: string | Uint8Array | null;
     STOP_TIME: string | Uint8Array | null;
     DEFAULT_BASIS_TYPE: polynomialBasisType;
@@ -125,7 +125,7 @@ export declare class PPET implements flatbuffers.IGeneratedObject {
     EPHEMERIS_SOURCE: string | Uint8Array | null;
     NOMINAL_SEGMENT_SPAN: number;
     NOMINAL_NUM_COEFFICIENTS: number;
-    constructor(COMMENT?: (string)[], OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timeSystem, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, DEFAULT_BASIS_TYPE?: polynomialBasisType, POSITION_RECORDS?: (PPEPositionRecordT)[], ORBITAL_ELEMENT_RECORDS?: (PPEOrbitalElementRecordT)[], EPHEMERIS_SOURCE?: string | Uint8Array | null, NOMINAL_SEGMENT_SPAN?: number, NOMINAL_NUM_COEFFICIENTS?: number);
+    constructor(COMMENT?: (string)[], OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timingStandard, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, DEFAULT_BASIS_TYPE?: polynomialBasisType, POSITION_RECORDS?: (PPEPositionRecordT)[], ORBITAL_ELEMENT_RECORDS?: (PPEOrbitalElementRecordT)[], EPHEMERIS_SOURCE?: string | Uint8Array | null, NOMINAL_SEGMENT_SPAN?: number, NOMINAL_NUM_COEFFICIENTS?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PPE.d.ts.map

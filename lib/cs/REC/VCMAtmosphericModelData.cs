@@ -17,24 +17,24 @@ public struct VCMAtmosphericModelData : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public VCMAtmosphericModelData __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public atmosphericModel ATMOSPHERIC_MODEL { get { int o = __p.__offset(4); return o != 0 ? (atmosphericModel)__p.bb.GetSbyte(o + __p.bb_pos) : atmosphericModel.NONE; } }
-  public geopotentialModel GEOPOTENTIAL_MODEL { get { int o = __p.__offset(6); return o != 0 ? (geopotentialModel)__p.bb.GetSbyte(o + __p.bb_pos) : geopotentialModel.NONE; } }
+  public atmosphericSource ATMOSPHERIC_MODEL { get { int o = __p.__offset(4); return o != 0 ? (atmosphericSource)__p.bb.GetSbyte(o + __p.bb_pos) : atmosphericSource.NONE; } }
+  public geopotentialSource GEOPOTENTIAL_MODEL { get { int o = __p.__offset(6); return o != 0 ? (geopotentialSource)__p.bb.GetSbyte(o + __p.bb_pos) : geopotentialSource.NONE; } }
   public perturbationStatus LUNAR_SOLAR_PERTURBATION { get { int o = __p.__offset(8); return o != 0 ? (perturbationStatus)__p.bb.GetSbyte(o + __p.bb_pos) : perturbationStatus.OFF; } }
-  public lunarPerturbationModel LUNAR_PERTURBATION_MODEL { get { int o = __p.__offset(10); return o != 0 ? (lunarPerturbationModel)__p.bb.GetSbyte(o + __p.bb_pos) : lunarPerturbationModel.NONE; } }
-  public solarPerturbationModel SOLAR_PERTURBATION_MODEL { get { int o = __p.__offset(12); return o != 0 ? (solarPerturbationModel)__p.bb.GetSbyte(o + __p.bb_pos) : solarPerturbationModel.NONE; } }
+  public lunarPerturbationSource LUNAR_PERTURBATION_MODEL { get { int o = __p.__offset(10); return o != 0 ? (lunarPerturbationSource)__p.bb.GetSbyte(o + __p.bb_pos) : lunarPerturbationSource.NONE; } }
+  public solarPerturbationSource SOLAR_PERTURBATION_MODEL { get { int o = __p.__offset(12); return o != 0 ? (solarPerturbationSource)__p.bb.GetSbyte(o + __p.bb_pos) : solarPerturbationSource.NONE; } }
   public perturbationStatus SOLAR_RADIATION_PRESSURE { get { int o = __p.__offset(14); return o != 0 ? (perturbationStatus)__p.bb.GetSbyte(o + __p.bb_pos) : perturbationStatus.OFF; } }
   public solarRadiationPressureModel SRP_MODEL { get { int o = __p.__offset(16); return o != 0 ? (solarRadiationPressureModel)__p.bb.GetSbyte(o + __p.bb_pos) : solarRadiationPressureModel.NONE; } }
-  public resonanceModel RESONANCE_MODEL { get { int o = __p.__offset(18); return o != 0 ? (resonanceModel)__p.bb.GetSbyte(o + __p.bb_pos) : resonanceModel.NONE; } }
+  public resonanceSource RESONANCE_MODEL { get { int o = __p.__offset(18); return o != 0 ? (resonanceSource)__p.bb.GetSbyte(o + __p.bb_pos) : resonanceSource.NONE; } }
 
   public static Offset<VCMAtmosphericModelData> CreateVCMAtmosphericModelData(FlatBufferBuilder builder,
-      atmosphericModel ATMOSPHERIC_MODEL = atmosphericModel.NONE,
-      geopotentialModel GEOPOTENTIAL_MODEL = geopotentialModel.NONE,
+      atmosphericSource ATMOSPHERIC_MODEL = atmosphericSource.NONE,
+      geopotentialSource GEOPOTENTIAL_MODEL = geopotentialSource.NONE,
       perturbationStatus LUNAR_SOLAR_PERTURBATION = perturbationStatus.OFF,
-      lunarPerturbationModel LUNAR_PERTURBATION_MODEL = lunarPerturbationModel.NONE,
-      solarPerturbationModel SOLAR_PERTURBATION_MODEL = solarPerturbationModel.NONE,
+      lunarPerturbationSource LUNAR_PERTURBATION_MODEL = lunarPerturbationSource.NONE,
+      solarPerturbationSource SOLAR_PERTURBATION_MODEL = solarPerturbationSource.NONE,
       perturbationStatus SOLAR_RADIATION_PRESSURE = perturbationStatus.OFF,
       solarRadiationPressureModel SRP_MODEL = solarRadiationPressureModel.NONE,
-      resonanceModel RESONANCE_MODEL = resonanceModel.NONE) {
+      resonanceSource RESONANCE_MODEL = resonanceSource.NONE) {
     builder.StartTable(8);
     VCMAtmosphericModelData.AddRESONANCE_MODEL(builder, RESONANCE_MODEL);
     VCMAtmosphericModelData.AddSRP_MODEL(builder, SRP_MODEL);
@@ -48,14 +48,14 @@ public struct VCMAtmosphericModelData : IFlatbufferObject
   }
 
   public static void StartVCMAtmosphericModelData(FlatBufferBuilder builder) { builder.StartTable(8); }
-  public static void AddATMOSPHERIC_MODEL(FlatBufferBuilder builder, atmosphericModel ATMOSPHERIC_MODEL) { builder.AddSbyte(0, (sbyte)ATMOSPHERIC_MODEL, 0); }
-  public static void AddGEOPOTENTIAL_MODEL(FlatBufferBuilder builder, geopotentialModel GEOPOTENTIAL_MODEL) { builder.AddSbyte(1, (sbyte)GEOPOTENTIAL_MODEL, 0); }
+  public static void AddATMOSPHERIC_MODEL(FlatBufferBuilder builder, atmosphericSource ATMOSPHERIC_MODEL) { builder.AddSbyte(0, (sbyte)ATMOSPHERIC_MODEL, 0); }
+  public static void AddGEOPOTENTIAL_MODEL(FlatBufferBuilder builder, geopotentialSource GEOPOTENTIAL_MODEL) { builder.AddSbyte(1, (sbyte)GEOPOTENTIAL_MODEL, 0); }
   public static void AddLUNAR_SOLAR_PERTURBATION(FlatBufferBuilder builder, perturbationStatus LUNAR_SOLAR_PERTURBATION) { builder.AddSbyte(2, (sbyte)LUNAR_SOLAR_PERTURBATION, 0); }
-  public static void AddLUNAR_PERTURBATION_MODEL(FlatBufferBuilder builder, lunarPerturbationModel LUNAR_PERTURBATION_MODEL) { builder.AddSbyte(3, (sbyte)LUNAR_PERTURBATION_MODEL, 0); }
-  public static void AddSOLAR_PERTURBATION_MODEL(FlatBufferBuilder builder, solarPerturbationModel SOLAR_PERTURBATION_MODEL) { builder.AddSbyte(4, (sbyte)SOLAR_PERTURBATION_MODEL, 0); }
+  public static void AddLUNAR_PERTURBATION_MODEL(FlatBufferBuilder builder, lunarPerturbationSource LUNAR_PERTURBATION_MODEL) { builder.AddSbyte(3, (sbyte)LUNAR_PERTURBATION_MODEL, 0); }
+  public static void AddSOLAR_PERTURBATION_MODEL(FlatBufferBuilder builder, solarPerturbationSource SOLAR_PERTURBATION_MODEL) { builder.AddSbyte(4, (sbyte)SOLAR_PERTURBATION_MODEL, 0); }
   public static void AddSOLAR_RADIATION_PRESSURE(FlatBufferBuilder builder, perturbationStatus SOLAR_RADIATION_PRESSURE) { builder.AddSbyte(5, (sbyte)SOLAR_RADIATION_PRESSURE, 0); }
   public static void AddSRP_MODEL(FlatBufferBuilder builder, solarRadiationPressureModel SRP_MODEL) { builder.AddSbyte(6, (sbyte)SRP_MODEL, 0); }
-  public static void AddRESONANCE_MODEL(FlatBufferBuilder builder, resonanceModel RESONANCE_MODEL) { builder.AddSbyte(7, (sbyte)RESONANCE_MODEL, 0); }
+  public static void AddRESONANCE_MODEL(FlatBufferBuilder builder, resonanceSource RESONANCE_MODEL) { builder.AddSbyte(7, (sbyte)RESONANCE_MODEL, 0); }
   public static Offset<VCMAtmosphericModelData> EndVCMAtmosphericModelData(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<VCMAtmosphericModelData>(o);
@@ -92,24 +92,24 @@ public struct VCMAtmosphericModelData : IFlatbufferObject
 
 public class VCMAtmosphericModelDataT
 {
-  public atmosphericModel ATMOSPHERIC_MODEL { get; set; }
-  public geopotentialModel GEOPOTENTIAL_MODEL { get; set; }
+  public atmosphericSource ATMOSPHERIC_MODEL { get; set; }
+  public geopotentialSource GEOPOTENTIAL_MODEL { get; set; }
   public perturbationStatus LUNAR_SOLAR_PERTURBATION { get; set; }
-  public lunarPerturbationModel LUNAR_PERTURBATION_MODEL { get; set; }
-  public solarPerturbationModel SOLAR_PERTURBATION_MODEL { get; set; }
+  public lunarPerturbationSource LUNAR_PERTURBATION_MODEL { get; set; }
+  public solarPerturbationSource SOLAR_PERTURBATION_MODEL { get; set; }
   public perturbationStatus SOLAR_RADIATION_PRESSURE { get; set; }
   public solarRadiationPressureModel SRP_MODEL { get; set; }
-  public resonanceModel RESONANCE_MODEL { get; set; }
+  public resonanceSource RESONANCE_MODEL { get; set; }
 
   public VCMAtmosphericModelDataT() {
-    this.ATMOSPHERIC_MODEL = atmosphericModel.NONE;
-    this.GEOPOTENTIAL_MODEL = geopotentialModel.NONE;
+    this.ATMOSPHERIC_MODEL = atmosphericSource.NONE;
+    this.GEOPOTENTIAL_MODEL = geopotentialSource.NONE;
     this.LUNAR_SOLAR_PERTURBATION = perturbationStatus.OFF;
-    this.LUNAR_PERTURBATION_MODEL = lunarPerturbationModel.NONE;
-    this.SOLAR_PERTURBATION_MODEL = solarPerturbationModel.NONE;
+    this.LUNAR_PERTURBATION_MODEL = lunarPerturbationSource.NONE;
+    this.SOLAR_PERTURBATION_MODEL = solarPerturbationSource.NONE;
     this.SOLAR_RADIATION_PRESSURE = perturbationStatus.OFF;
     this.SRP_MODEL = solarRadiationPressureModel.NONE;
-    this.RESONANCE_MODEL = resonanceModel.NONE;
+    this.RESONANCE_MODEL = resonanceSource.NONE;
   }
 }
 
@@ -119,14 +119,14 @@ static public class VCMAtmosphericModelDataVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*ATMOSPHERIC_MODEL*/, 1 /*atmosphericModel*/, 1, false)
-      && verifier.VerifyField(tablePos, 6 /*GEOPOTENTIAL_MODEL*/, 1 /*geopotentialModel*/, 1, false)
+      && verifier.VerifyField(tablePos, 4 /*ATMOSPHERIC_MODEL*/, 1 /*atmosphericSource*/, 1, false)
+      && verifier.VerifyField(tablePos, 6 /*GEOPOTENTIAL_MODEL*/, 1 /*geopotentialSource*/, 1, false)
       && verifier.VerifyField(tablePos, 8 /*LUNAR_SOLAR_PERTURBATION*/, 1 /*perturbationStatus*/, 1, false)
-      && verifier.VerifyField(tablePos, 10 /*LUNAR_PERTURBATION_MODEL*/, 1 /*lunarPerturbationModel*/, 1, false)
-      && verifier.VerifyField(tablePos, 12 /*SOLAR_PERTURBATION_MODEL*/, 1 /*solarPerturbationModel*/, 1, false)
+      && verifier.VerifyField(tablePos, 10 /*LUNAR_PERTURBATION_MODEL*/, 1 /*lunarPerturbationSource*/, 1, false)
+      && verifier.VerifyField(tablePos, 12 /*SOLAR_PERTURBATION_MODEL*/, 1 /*solarPerturbationSource*/, 1, false)
       && verifier.VerifyField(tablePos, 14 /*SOLAR_RADIATION_PRESSURE*/, 1 /*perturbationStatus*/, 1, false)
       && verifier.VerifyField(tablePos, 16 /*SRP_MODEL*/, 1 /*solarRadiationPressureModel*/, 1, false)
-      && verifier.VerifyField(tablePos, 18 /*RESONANCE_MODEL*/, 1 /*resonanceModel*/, 1, false)
+      && verifier.VerifyField(tablePos, 18 /*RESONANCE_MODEL*/, 1 /*resonanceSource*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

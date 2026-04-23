@@ -69,7 +69,7 @@ class ANI extends Table
     public function getANALYTIC_TYPE()
     {
         $o = $this->__offset(10);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \analyticType::SPECTRAL;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \analyticProfile::SPECTRAL;
     }
 
     /// Processing algorithm or pipeline name

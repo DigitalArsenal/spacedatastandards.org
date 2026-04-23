@@ -1,5 +1,5 @@
-export * from './shaderInjectionPoint.js';
-export * from './shaderStage.js';
+export * from './glslStage.js';
+export * from './shaderHookPoint.js';
 export * from './shaderUniformType.js';
 export * from './SHW.js';
 export * from './SHWCompileRequest.js';

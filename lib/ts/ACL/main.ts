@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export * from './accessType.js';
+export * from './accessCategory.js';
 export * from './ACL.js';
 export * from './DataCoverage.js';
 export * from './paymentMethod.js';

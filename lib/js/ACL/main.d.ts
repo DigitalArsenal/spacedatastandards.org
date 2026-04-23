@@ -1,4 +1,4 @@
-export * from './accessType.js';
+export * from './accessCategory.js';
 export * from './ACL.js';
 export * from './DataCoverage.js';
 export * from './paymentMethod.js';

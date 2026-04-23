@@ -142,24 +142,24 @@ func (rcv *ephemerisDataBlock) CovReferenceFrame(obj *RFM) *RFM {
 
 /// Reference frame for the covariance matrix
 /// Time system used for the orbit state and covariance matrix. (UTC)
-func (rcv *ephemerisDataBlock) TIME_SYSTEM() timeSystem {
+func (rcv *ephemerisDataBlock) TIME_SYSTEM() timingStandard {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		return timeSystem(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return timingStandard(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *ephemerisDataBlock) TimeSystem() timeSystem {
+func (rcv *ephemerisDataBlock) TimeSystem() timingStandard {
 	return rcv.TIME_SYSTEM()
 }
 
 /// Time system used for the orbit state and covariance matrix. (UTC)
-func (rcv *ephemerisDataBlock) MutateTIME_SYSTEM(n timeSystem) bool {
+func (rcv *ephemerisDataBlock) MutateTIME_SYSTEM(n timingStandard) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
 }
 
-func (rcv *ephemerisDataBlock) MutateTimeSystem(n timeSystem) bool {
+func (rcv *ephemerisDataBlock) MutateTimeSystem(n timingStandard) bool {
 	return rcv.MutateTIME_SYSTEM(n)
 }
 
@@ -515,10 +515,10 @@ func ephemerisDataBlockAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_
 func ephemerisDataBlockAddCovReferenceFrame(builder *flatbuffers.Builder, COV_REFERENCE_FRAME flatbuffers.UOffsetT) {
 	ephemerisDataBlockAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
 }
-func ephemerisDataBlockAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
+func ephemerisDataBlockAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timingStandard) {
 	builder.PrependInt8Slot(6, int8(TIME_SYSTEM), 0)
 }
-func ephemerisDataBlockAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
+func ephemerisDataBlockAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM timingStandard) {
 	ephemerisDataBlockAddTIME_SYSTEM(builder, TIME_SYSTEM)
 }
 func ephemerisDataBlockAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {

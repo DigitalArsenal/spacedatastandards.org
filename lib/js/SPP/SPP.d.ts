@@ -1,5 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
-import { packetType } from './packetType.js';
+import { packetKind } from './packetKind.js';
 /**
  * Space Packet Protocol (CCSDS 133.0-B-1)
  */
@@ -17,7 +17,7 @@ export declare class SPP implements flatbuffers.IUnpackableObject<SPPT> {
     /**
      * Packet type (TM or TC)
      */
-    PACKET_TYPE(): packetType;
+    PACKET_TYPE(): packetKind;
     /**
      * Secondary header flag
      */
@@ -46,7 +46,7 @@ export declare class SPP implements flatbuffers.IUnpackableObject<SPPT> {
     dataArray(): Uint8Array | null;
     static startSPP(builder: flatbuffers.Builder): void;
     static addVersion(builder: flatbuffers.Builder, VERSION: number): void;
-    static addPacketType(builder: flatbuffers.Builder, PACKET_TYPE: packetType): void;
+    static addPacketType(builder: flatbuffers.Builder, PACKET_TYPE: packetKind): void;
     static addSecHdrFlag(builder: flatbuffers.Builder, SEC_HDR_FLAG: boolean): void;
     static addApid(builder: flatbuffers.Builder, APID: number): void;
     static addSequenceFlags(builder: flatbuffers.Builder, SEQUENCE_FLAGS: number): void;
@@ -58,20 +58,20 @@ export declare class SPP implements flatbuffers.IUnpackableObject<SPPT> {
     static endSPP(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishSPPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedSPPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createSPP(builder: flatbuffers.Builder, VERSION: number, PACKET_TYPE: packetType, SEC_HDR_FLAG: boolean, APID: number, SEQUENCE_FLAGS: number, SEQUENCE_COUNT: number, DATA_LENGTH: number, DATAOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createSPP(builder: flatbuffers.Builder, VERSION: number, PACKET_TYPE: packetKind, SEC_HDR_FLAG: boolean, APID: number, SEQUENCE_FLAGS: number, SEQUENCE_COUNT: number, DATA_LENGTH: number, DATAOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): SPPT;
     unpackTo(_o: SPPT): void;
 }
 export declare class SPPT implements flatbuffers.IGeneratedObject {
     VERSION: number;
-    PACKET_TYPE: packetType;
+    PACKET_TYPE: packetKind;
     SEC_HDR_FLAG: boolean;
     APID: number;
     SEQUENCE_FLAGS: number;
     SEQUENCE_COUNT: number;
     DATA_LENGTH: number;
     DATA: (number)[];
-    constructor(VERSION?: number, PACKET_TYPE?: packetType, SEC_HDR_FLAG?: boolean, APID?: number, SEQUENCE_FLAGS?: number, SEQUENCE_COUNT?: number, DATA_LENGTH?: number, DATA?: (number)[]);
+    constructor(VERSION?: number, PACKET_TYPE?: packetKind, SEC_HDR_FLAG?: boolean, APID?: number, SEQUENCE_FLAGS?: number, SEQUENCE_COUNT?: number, DATA_LENGTH?: number, DATA?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SPP.d.ts.map

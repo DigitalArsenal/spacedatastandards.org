@@ -44,7 +44,7 @@ public struct ANI : IFlatbufferObject
 #endif
   public byte[] GetSOURCE_TYPEArray() { return __p.__vector_as_array<byte>(8); }
   /// Analytic product type
-  public analyticType ANALYTIC_TYPE { get { int o = __p.__offset(10); return o != 0 ? (analyticType)__p.bb.GetSbyte(o + __p.bb_pos) : analyticType.SPECTRAL; } }
+  public analyticProfile ANALYTIC_TYPE { get { int o = __p.__offset(10); return o != 0 ? (analyticProfile)__p.bb.GetSbyte(o + __p.bb_pos) : analyticProfile.SPECTRAL; } }
   /// Processing algorithm or pipeline name
   public string ALGORITHM { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -135,7 +135,7 @@ public struct ANI : IFlatbufferObject
       StringOffset IDOffset = default(StringOffset),
       StringOffset SOURCE_IDOffset = default(StringOffset),
       StringOffset SOURCE_TYPEOffset = default(StringOffset),
-      analyticType ANALYTIC_TYPE = analyticType.SPECTRAL,
+      analyticProfile ANALYTIC_TYPE = analyticProfile.SPECTRAL,
       StringOffset ALGORITHMOffset = default(StringOffset),
       StringOffset ALGORITHM_VERSIONOffset = default(StringOffset),
       StringOffset PROCESSING_TIMEOffset = default(StringOffset),
@@ -182,7 +182,7 @@ public struct ANI : IFlatbufferObject
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddSOURCE_ID(FlatBufferBuilder builder, StringOffset SOURCE_IDOffset) { builder.AddOffset(1, SOURCE_IDOffset.Value, 0); }
   public static void AddSOURCE_TYPE(FlatBufferBuilder builder, StringOffset SOURCE_TYPEOffset) { builder.AddOffset(2, SOURCE_TYPEOffset.Value, 0); }
-  public static void AddANALYTIC_TYPE(FlatBufferBuilder builder, analyticType ANALYTIC_TYPE) { builder.AddSbyte(3, (sbyte)ANALYTIC_TYPE, 0); }
+  public static void AddANALYTIC_TYPE(FlatBufferBuilder builder, analyticProfile ANALYTIC_TYPE) { builder.AddSbyte(3, (sbyte)ANALYTIC_TYPE, 0); }
   public static void AddALGORITHM(FlatBufferBuilder builder, StringOffset ALGORITHMOffset) { builder.AddOffset(4, ALGORITHMOffset.Value, 0); }
   public static void AddALGORITHM_VERSION(FlatBufferBuilder builder, StringOffset ALGORITHM_VERSIONOffset) { builder.AddOffset(5, ALGORITHM_VERSIONOffset.Value, 0); }
   public static void AddPROCESSING_TIME(FlatBufferBuilder builder, StringOffset PROCESSING_TIMEOffset) { builder.AddOffset(6, PROCESSING_TIMEOffset.Value, 0); }
@@ -310,7 +310,7 @@ public class ANIT
   public string ID { get; set; }
   public string SOURCE_ID { get; set; }
   public string SOURCE_TYPE { get; set; }
-  public analyticType ANALYTIC_TYPE { get; set; }
+  public analyticProfile ANALYTIC_TYPE { get; set; }
   public string ALGORITHM { get; set; }
   public string ALGORITHM_VERSION { get; set; }
   public string PROCESSING_TIME { get; set; }
@@ -333,7 +333,7 @@ public class ANIT
     this.ID = null;
     this.SOURCE_ID = null;
     this.SOURCE_TYPE = null;
-    this.ANALYTIC_TYPE = analyticType.SPECTRAL;
+    this.ANALYTIC_TYPE = analyticProfile.SPECTRAL;
     this.ALGORITHM = null;
     this.ALGORITHM_VERSION = null;
     this.PROCESSING_TIME = null;
@@ -371,7 +371,7 @@ static public class ANIVerify
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*SOURCE_ID*/, false)
       && verifier.VerifyString(tablePos, 8 /*SOURCE_TYPE*/, false)
-      && verifier.VerifyField(tablePos, 10 /*ANALYTIC_TYPE*/, 1 /*analyticType*/, 1, false)
+      && verifier.VerifyField(tablePos, 10 /*ANALYTIC_TYPE*/, 1 /*analyticProfile*/, 1, false)
       && verifier.VerifyString(tablePos, 12 /*ALGORITHM*/, false)
       && verifier.VerifyString(tablePos, 14 /*ALGORITHM_VERSION*/, false)
       && verifier.VerifyString(tablePos, 16 /*PROCESSING_TIME*/, false)

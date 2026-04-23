@@ -1,5 +1,5 @@
-// Hash: 2a5425c3cce49d6bc1b1124445ec542ce9e46155d35a1823e5136b9209237a16
-// Version: 2.0.1
+// Hash: bda7e14b94fca95d472bffd6a6a9e11bbb4c5085a11831c23a78d624f35e3e04
+// Version: 2.0.2
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -29,13 +29,13 @@ enum elementType : byte {
   MEAN = 1
 }
 
-enum anomalyType : byte {
+enum anomalyConvention : byte {
   TRUE_ANOMALY = 0,
   MEAN_ANOMALY = 1
 }
 
 /// Enum to represent common atmospheric models
-enum atmosphericModel : byte {
+enum atmosphericSource : byte {
   NONE = 0,
   JACCHIA_70 = 1,
   JB2008 = 2,
@@ -46,7 +46,7 @@ enum atmosphericModel : byte {
 }
 
 /// Enum to represent common geopotential models
-enum geopotentialModel : byte {
+enum geopotentialSource : byte {
   NONE = 0,
   EGM96 = 1,
   WGS84 = 2,
@@ -79,7 +79,7 @@ enum solarRadiationPressureModel : byte {
 }
 
 /// Enum to represent common lunar perturbation models
-enum lunarPerturbationModel : byte {
+enum lunarPerturbationSource : byte {
   NONE = 0,
   DE430 = 1,
   DE431 = 2,
@@ -87,14 +87,14 @@ enum lunarPerturbationModel : byte {
 }
 
 /// Enum to represent various solar perturbation models
-enum solarPerturbationModel : byte {
+enum solarPerturbationSource : byte {
   NONE = 0,
   DE430 = 1,
   DE431 = 2
 }
 
 /// Enum to represent resonance models
-enum resonanceModel : byte {
+enum resonanceSource : byte {
   NONE = 0,
   HIGH_ALTITUDE_RESONANCE = 1,
   LOW_ALTITUDE_RESONANCE = 2,
@@ -109,7 +109,7 @@ enum perturbationStatus : byte {
 }
 
 /// Enum to represent propagator types
-enum propagatorType : byte {
+enum propagatorFamily : byte {
   NONE = 0,
   SEMI_ANALYTICAL = 1,
   VINTI = 2,
@@ -128,7 +128,7 @@ enum propagatorType : byte {
 /// Propagator configuration structure to describe propagation settings
 table propagatorConfig {
   PROPAGATOR_NAME: string;
-  PROPAGATOR_TYPE: propagatorType;
+  PROPAGATOR_TYPE: propagatorFamily;
   FORCE_MODELS: [string];
   EPOCH: string;
   TIME_STEP: double;
@@ -153,7 +153,7 @@ table keplerianElements {
   INCLINATION: double;     // degrees
   RA_OF_ASC_NODE: double;  // degrees
   ARG_OF_PERICENTER: double; // degrees
-  ANOMALY_TYPE: anomalyType;
+  ANOMALY_TYPE: anomalyConvention;
   ANOMALY: double;         // degrees
 }
 
@@ -179,14 +179,14 @@ table uvwSigmas {
 
 /// VCM Atmospheric and Perturbation Model Data
 table VCMAtmosphericModelData {
-  ATMOSPHERIC_MODEL: atmosphericModel;
-  GEOPOTENTIAL_MODEL: geopotentialModel;
+  ATMOSPHERIC_MODEL: atmosphericSource;
+  GEOPOTENTIAL_MODEL: geopotentialSource;
   LUNAR_SOLAR_PERTURBATION: perturbationStatus;
-  LUNAR_PERTURBATION_MODEL: lunarPerturbationModel;
-  SOLAR_PERTURBATION_MODEL: solarPerturbationModel;
+  LUNAR_PERTURBATION_MODEL: lunarPerturbationSource;
+  SOLAR_PERTURBATION_MODEL: solarPerturbationSource;
   SOLAR_RADIATION_PRESSURE: perturbationStatus;
   SRP_MODEL: solarRadiationPressureModel;
-  RESONANCE_MODEL: resonanceModel;
+  RESONANCE_MODEL: resonanceSource;
 }
 
 /// Vector Covariance Message

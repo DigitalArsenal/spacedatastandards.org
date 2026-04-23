@@ -19,17 +19,17 @@ public struct MET : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public MET __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public meanElementTheory MEAN_ELEMENT_THEORY { get { int o = __p.__offset(4); return o != 0 ? (meanElementTheory)__p.bb.GetSbyte(o + __p.bb_pos) : meanElementTheory.SGP4; } }
+  public meanElementSource MEAN_ELEMENT_THEORY { get { int o = __p.__offset(4); return o != 0 ? (meanElementSource)__p.bb.GetSbyte(o + __p.bb_pos) : meanElementSource.SGP4; } }
 
   public static Offset<MET> CreateMET(FlatBufferBuilder builder,
-      meanElementTheory MEAN_ELEMENT_THEORY = meanElementTheory.SGP4) {
+      meanElementSource MEAN_ELEMENT_THEORY = meanElementSource.SGP4) {
     builder.StartTable(1);
     MET.AddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY);
     return MET.EndMET(builder);
   }
 
   public static void StartMET(FlatBufferBuilder builder) { builder.StartTable(1); }
-  public static void AddMEAN_ELEMENT_THEORY(FlatBufferBuilder builder, meanElementTheory MEAN_ELEMENT_THEORY) { builder.AddSbyte(0, (sbyte)MEAN_ELEMENT_THEORY, 0); }
+  public static void AddMEAN_ELEMENT_THEORY(FlatBufferBuilder builder, meanElementSource MEAN_ELEMENT_THEORY) { builder.AddSbyte(0, (sbyte)MEAN_ELEMENT_THEORY, 0); }
   public static Offset<MET> EndMET(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<MET>(o);
@@ -54,10 +54,10 @@ public struct MET : IFlatbufferObject
 
 public class METT
 {
-  public meanElementTheory MEAN_ELEMENT_THEORY { get; set; }
+  public meanElementSource MEAN_ELEMENT_THEORY { get; set; }
 
   public METT() {
-    this.MEAN_ELEMENT_THEORY = meanElementTheory.SGP4;
+    this.MEAN_ELEMENT_THEORY = meanElementSource.SGP4;
   }
   public static METT DeserializeFromBinary(byte[] fbBuffer) {
     return MET.GetRootAsMET(new ByteBuffer(fbBuffer)).UnPack();
@@ -75,7 +75,7 @@ static public class METVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*MEAN_ELEMENT_THEORY*/, 1 /*meanElementTheory*/, 1, false)
+      && verifier.VerifyField(tablePos, 4 /*MEAN_ELEMENT_THEORY*/, 1 /*meanElementSource*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

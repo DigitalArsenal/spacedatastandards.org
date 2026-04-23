@@ -6,38 +6,38 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-enum packetType {
+enum packetKind {
   TM(0),
   TC(1);
 
   final int value;
-  const packetType(this.value);
+  const packetKind(this.value);
 
-  factory packetType.fromValue(int value) {
+  factory packetKind.fromValue(int value) {
     switch (value) {
-      case 0: return packetType.TM;
-      case 1: return packetType.TC;
+      case 0: return packetKind.TM;
+      case 1: return packetKind.TC;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static packetType? _createOrNull(int? value) =>
-      value == null ? null : packetType.fromValue(value);
+  static packetKind? _createOrNull(int? value) =>
+      value == null ? null : packetKind.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 1;
-  static const fb.Reader<packetType> reader = _packetTypeReader();
+  static const fb.Reader<packetKind> reader = _packetKindReader();
 }
 
-class _packetTypeReader extends fb.Reader<packetType> {
-  const _packetTypeReader();
+class _packetKindReader extends fb.Reader<packetKind> {
+  const _packetKindReader();
 
   @override
   int get size => 1;
 
   @override
-  packetType read(fb.BufferContext bc, int offset) =>
-      packetType.fromValue(const fb.Int8Reader().read(bc, offset));
+  packetKind read(fb.BufferContext bc, int offset) =>
+      packetKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Space Packet Protocol (CCSDS 133.0-B-1)
@@ -56,8 +56,8 @@ class SPP {
   ///  Packet version number
   int get VERSION => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0);
   ///  Packet type (TM or TC)
-  packetType get PACKET_TYPE => packetType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  packetType get packetType => PACKET_TYPE;
+  packetKind get PACKET_TYPE => packetKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  packetKind get packetType => PACKET_TYPE;
   ///  Secondary header flag
   bool get SEC_HDR_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
   bool get secHdrFlag => SEC_HDR_FLAG;
@@ -102,7 +102,7 @@ class SPPBuilder {
     fbBuilder.addUint8(0, VERSION);
     return fbBuilder.offset;
   }
-  int addPacketType(packetType? PACKET_TYPE) {
+  int addPacketType(packetKind? PACKET_TYPE) {
     fbBuilder.addInt8(1, PACKET_TYPE?.value);
     return fbBuilder.offset;
   }
@@ -138,7 +138,7 @@ class SPPBuilder {
 
 class SPPObjectBuilder extends fb.ObjectBuilder {
   final int? _VERSION;
-  final packetType? _PACKET_TYPE;
+  final packetKind? _PACKET_TYPE;
   final bool? _SEC_HDR_FLAG;
   final int? _APID;
   final int? _SEQUENCE_FLAGS;
@@ -148,8 +148,8 @@ class SPPObjectBuilder extends fb.ObjectBuilder {
 
   SPPObjectBuilder({
     int? VERSION,
-    packetType? PACKET_TYPE,
-    packetType? packetType,
+    packetKind? PACKET_TYPE,
+    packetKind? packetType,
     bool? SEC_HDR_FLAG,
     bool? secHdrFlag,
     int? APID,

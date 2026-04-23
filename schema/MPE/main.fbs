@@ -1,5 +1,5 @@
-// Hash: 564dd96a264924dd1c243dfbc822b7a3915dd7104ecbed63eb02e64c86f39424
-// Version: 1.0.3
+// Hash: 8df3848cd1d2df58d18f37e40ffce5decaebaaa1beebbe8862067df3cf67cced
+// Version: 1.0.4
 // -----------------------------------END_HEADER
 include "../MET/main.fbs";
 
@@ -30,7 +30,7 @@ table MPE {
   /// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
   BSTAR: double;
   /// Description of the Mean Element Theory (SGP4, DSST, USM)
-  MEAN_ELEMENT_THEORY:meanElementTheory = SGP4;
+  MEAN_ELEMENT_THEORY:meanElementSource = SGP4;
 }
 
 root_type MPE;

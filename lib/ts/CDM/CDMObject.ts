@@ -7,7 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 import { CAT, CATT } from './CAT.js';
 import { EPM, EPMT } from './EPM.js';
 import { RFM, RFMT } from './RFM.js';
-import { covarianceMethod } from './covarianceMethod.js';
+import { covarianceAlgorithm } from './covarianceAlgorithm.js';
 
 
 export class CDMObject implements flatbuffers.IUnpackableObject<CDMObjectT> {
@@ -84,9 +84,9 @@ EPHEMERIS_NAME(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Covariance method
  */
-COVARIANCE_METHOD():covarianceMethod {
+COVARIANCE_METHOD():covarianceAlgorithm {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : covarianceMethod.CALCULATED;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : covarianceAlgorithm.CALCULATED;
 }
 
 /**
@@ -383,8 +383,8 @@ static addEphemerisName(builder:flatbuffers.Builder, EPHEMERIS_NAMEOffset:flatbu
   builder.addFieldOffset(5, EPHEMERIS_NAMEOffset, 0);
 }
 
-static addCovarianceMethod(builder:flatbuffers.Builder, COVARIANCE_METHOD:covarianceMethod) {
-  builder.addFieldInt8(6, COVARIANCE_METHOD, covarianceMethod.CALCULATED);
+static addCovarianceMethod(builder:flatbuffers.Builder, COVARIANCE_METHOD:covarianceAlgorithm) {
+  builder.addFieldInt8(6, COVARIANCE_METHOD, covarianceAlgorithm.CALCULATED);
 }
 
 static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAMEOffset:flatbuffers.Offset) {
@@ -622,7 +622,7 @@ constructor(
   public OPERATOR_CONTACT_POSITION: string|Uint8Array|null = null,
   public OPERATOR_ORGANIZATION: string|Uint8Array|null = null,
   public EPHEMERIS_NAME: string|Uint8Array|null = null,
-  public COVARIANCE_METHOD: covarianceMethod = covarianceMethod.CALCULATED,
+  public COVARIANCE_METHOD: covarianceAlgorithm = covarianceAlgorithm.CALCULATED,
   public REFERENCE_FRAME: RFMT|null = null,
   public GRAVITY_MODEL: string|Uint8Array|null = null,
   public ATMOSPHERIC_MODEL: string|Uint8Array|null = null,

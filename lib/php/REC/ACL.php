@@ -97,7 +97,7 @@ class ACL extends Table
     public function getACCESS_TYPE()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \accessType::OneTime;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \accessCategory::OneTime;
     }
 
     /// Name of the pricing tier purchased

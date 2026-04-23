@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "shaderStage" : {
+    "glslStage" : {
       "type" : "string",
       "enum": ["VERTEX", "FRAGMENT", "COMPUTE", "GEOMETRY", "TESS_CONTROL", "TESS_EVALUATION"]
     },
-    "shaderInjectionPoint" : {
+    "shaderHookPoint" : {
       "type" : "string",
       "enum": ["NONE", "VERTEX_PRE_TRANSFORM", "VERTEX_POST_TRANSFORM", "FRAGMENT_PRE_SHADE", "FRAGMENT_POST_SHADE", "FRAGMENT_FINAL_COLOR", "POSTPROCESS"]
     },
@@ -43,11 +43,11 @@
                 "description" : "Logical shader name (used in logs and uniform prefixing)."
               },
         "SHADER_STAGE" : {
-                "$ref" : "#/definitions/shaderStage",
+                "$ref" : "#/definitions/glslStage",
                 "description" : "Target GLSL stage."
               },
         "SHADER_INJECTION_POINT" : {
-                "$ref" : "#/definitions/shaderInjectionPoint",
+                "$ref" : "#/definitions/shaderHookPoint",
                 "description" : "Intended injection point in the host pipeline."
               },
         "SHADER_SOURCE" : {

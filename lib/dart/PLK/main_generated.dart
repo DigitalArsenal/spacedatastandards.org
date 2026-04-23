@@ -7,7 +7,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 ///  License type for plugin access
-enum licenseType {
+enum licenseCategory {
   Trial(0),
   Commercial(1),
   Enterprise(2),
@@ -16,37 +16,37 @@ enum licenseType {
   Internal(5);
 
   final int value;
-  const licenseType(this.value);
+  const licenseCategory(this.value);
 
-  factory licenseType.fromValue(int value) {
+  factory licenseCategory.fromValue(int value) {
     switch (value) {
-      case 0: return licenseType.Trial;
-      case 1: return licenseType.Commercial;
-      case 2: return licenseType.Enterprise;
-      case 3: return licenseType.Educational;
-      case 4: return licenseType.OpenSource;
-      case 5: return licenseType.Internal;
+      case 0: return licenseCategory.Trial;
+      case 1: return licenseCategory.Commercial;
+      case 2: return licenseCategory.Enterprise;
+      case 3: return licenseCategory.Educational;
+      case 4: return licenseCategory.OpenSource;
+      case 5: return licenseCategory.Internal;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static licenseType? _createOrNull(int? value) =>
-      value == null ? null : licenseType.fromValue(value);
+  static licenseCategory? _createOrNull(int? value) =>
+      value == null ? null : licenseCategory.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 5;
-  static const fb.Reader<licenseType> reader = _licenseTypeReader();
+  static const fb.Reader<licenseCategory> reader = _licenseCategoryReader();
 }
 
-class _licenseTypeReader extends fb.Reader<licenseType> {
-  const _licenseTypeReader();
+class _licenseCategoryReader extends fb.Reader<licenseCategory> {
+  const _licenseCategoryReader();
 
   @override
   int get size => 1;
 
   @override
-  licenseType read(fb.BufferContext bc, int offset) =>
-      licenseType.fromValue(const fb.Int8Reader().read(bc, offset));
+  licenseCategory read(fb.BufferContext bc, int offset) =>
+      licenseCategory.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Plugin License Key - Issued license for plugin access
@@ -96,8 +96,8 @@ class PLK {
   List<String>? get ALLOWED_TLDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 22);
   List<String>? get allowedTlds => ALLOWED_TLDS;
   ///  Type of license
-  licenseType get LICENSE_TYPE => licenseType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 24, 0));
-  licenseType get licenseType => LICENSE_TYPE;
+  licenseCategory get LICENSE_TYPE => licenseCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 24, 0));
+  licenseCategory get licenseType => LICENSE_TYPE;
   ///  Maximum concurrent activations (0 = unlimited)
   int get MAX_ACTIVATIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 26, 0);
   int get maxActivations => MAX_ACTIVATIONS;
@@ -179,7 +179,7 @@ class PLKBuilder {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addLicenseType(licenseType? LICENSE_TYPE) {
+  int addLicenseType(licenseCategory? LICENSE_TYPE) {
     fbBuilder.addInt8(10, LICENSE_TYPE?.value);
     return fbBuilder.offset;
   }
@@ -224,7 +224,7 @@ class PLKObjectBuilder extends fb.ObjectBuilder {
   final List<int>? _ISSUER_PUBKEY;
   final List<String>? _ALLOWED_DOMAINS;
   final List<String>? _ALLOWED_TLDS;
-  final licenseType? _LICENSE_TYPE;
+  final licenseCategory? _LICENSE_TYPE;
   final int? _MAX_ACTIVATIONS;
   final int? _ISSUED_AT;
   final int? _VALID_FROM;
@@ -253,8 +253,8 @@ class PLKObjectBuilder extends fb.ObjectBuilder {
     List<String>? allowedDomains,
     List<String>? ALLOWED_TLDS,
     List<String>? allowedTlds,
-    licenseType? LICENSE_TYPE,
-    licenseType? licenseType,
+    licenseCategory? LICENSE_TYPE,
+    licenseCategory? licenseType,
     int? MAX_ACTIVATIONS,
     int? maxActivations,
     int? ISSUED_AT,

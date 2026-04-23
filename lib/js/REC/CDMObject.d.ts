@@ -2,7 +2,7 @@ import * as flatbuffers from 'flatbuffers';
 import { CAT, CATT } from './CAT.js';
 import { EPM, EPMT } from './EPM.js';
 import { RFM, RFMT } from './RFM.js';
-import { covarianceMethod } from './covarianceMethod.js';
+import { covarianceAlgorithm } from './covarianceAlgorithm.js';
 export declare class CDMObject implements flatbuffers.IUnpackableObject<CDMObjectT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;
@@ -37,7 +37,7 @@ export declare class CDMObject implements flatbuffers.IUnpackableObject<CDMObjec
     /**
      * Covariance method
      */
-    COVARIANCE_METHOD(): covarianceMethod;
+    COVARIANCE_METHOD(): covarianceAlgorithm;
     /**
      * Reference Frame in which the object position is defined
      */
@@ -178,7 +178,7 @@ export declare class CDMObject implements flatbuffers.IUnpackableObject<CDMObjec
     static addOperatorContactPosition(builder: flatbuffers.Builder, OPERATOR_CONTACT_POSITIONOffset: flatbuffers.Offset): void;
     static addOperatorOrganization(builder: flatbuffers.Builder, OPERATOR_ORGANIZATIONOffset: flatbuffers.Offset): void;
     static addEphemerisName(builder: flatbuffers.Builder, EPHEMERIS_NAMEOffset: flatbuffers.Offset): void;
-    static addCovarianceMethod(builder: flatbuffers.Builder, COVARIANCE_METHOD: covarianceMethod): void;
+    static addCovarianceMethod(builder: flatbuffers.Builder, COVARIANCE_METHOD: covarianceAlgorithm): void;
     static addReferenceFrame(builder: flatbuffers.Builder, REFERENCE_FRAMEOffset: flatbuffers.Offset): void;
     static addGravityModel(builder: flatbuffers.Builder, GRAVITY_MODELOffset: flatbuffers.Offset): void;
     static addAtmosphericModel(builder: flatbuffers.Builder, ATMOSPHERIC_MODELOffset: flatbuffers.Offset): void;
@@ -226,7 +226,7 @@ export declare class CDMObjectT implements flatbuffers.IGeneratedObject {
     OPERATOR_CONTACT_POSITION: string | Uint8Array | null;
     OPERATOR_ORGANIZATION: string | Uint8Array | null;
     EPHEMERIS_NAME: string | Uint8Array | null;
-    COVARIANCE_METHOD: covarianceMethod;
+    COVARIANCE_METHOD: covarianceAlgorithm;
     REFERENCE_FRAME: RFMT | null;
     GRAVITY_MODEL: string | Uint8Array | null;
     ATMOSPHERIC_MODEL: string | Uint8Array | null;
@@ -257,7 +257,7 @@ export declare class CDMObjectT implements flatbuffers.IGeneratedObject {
     Y_DOT: number;
     Z_DOT: number;
     COVARIANCE: (number)[];
-    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, POC?: EPMT | null, OPERATOR_CONTACT_POSITION?: string | Uint8Array | null, OPERATOR_ORGANIZATION?: string | Uint8Array | null, EPHEMERIS_NAME?: string | Uint8Array | null, COVARIANCE_METHOD?: covarianceMethod, REFERENCE_FRAME?: RFMT | null, GRAVITY_MODEL?: string | Uint8Array | null, ATMOSPHERIC_MODEL?: string | Uint8Array | null, N_BODY_PERTURBATIONS?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: boolean, EARTH_TIDES?: boolean, INTRACK_THRUST?: boolean, TIME_LASTOB_START?: string | Uint8Array | null, TIME_LASTOB_END?: string | Uint8Array | null, RECOMMENDED_OD_SPAN?: number, ACTUAL_OD_SPAN?: number, OBS_AVAILABLE?: number, OBS_USED?: number, TRACKS_AVAILABLE?: number, TRACKS_USED?: number, RESIDUALS_ACCEPTED?: number, WEIGHTED_RMS?: number, AREA_PC?: number, AREA_DRG?: number, AREA_SRP?: number, CR_AREA_OVER_MASS?: number, THRUST_ACCELERATION?: number, SEDR?: number, X?: number, Y?: number, Z?: number, X_DOT?: number, Y_DOT?: number, Z_DOT?: number, COVARIANCE?: (number)[]);
+    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, POC?: EPMT | null, OPERATOR_CONTACT_POSITION?: string | Uint8Array | null, OPERATOR_ORGANIZATION?: string | Uint8Array | null, EPHEMERIS_NAME?: string | Uint8Array | null, COVARIANCE_METHOD?: covarianceAlgorithm, REFERENCE_FRAME?: RFMT | null, GRAVITY_MODEL?: string | Uint8Array | null, ATMOSPHERIC_MODEL?: string | Uint8Array | null, N_BODY_PERTURBATIONS?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: boolean, EARTH_TIDES?: boolean, INTRACK_THRUST?: boolean, TIME_LASTOB_START?: string | Uint8Array | null, TIME_LASTOB_END?: string | Uint8Array | null, RECOMMENDED_OD_SPAN?: number, ACTUAL_OD_SPAN?: number, OBS_AVAILABLE?: number, OBS_USED?: number, TRACKS_AVAILABLE?: number, TRACKS_USED?: number, RESIDUALS_ACCEPTED?: number, WEIGHTED_RMS?: number, AREA_PC?: number, AREA_DRG?: number, AREA_SRP?: number, CR_AREA_OVER_MASS?: number, THRUST_ACCELERATION?: number, SEDR?: number, X?: number, Y?: number, Z?: number, X_DOT?: number, Y_DOT?: number, Z_DOT?: number, COVARIANCE?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CDMObject.d.ts.map

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "shaderStage": {
+    "glslStage": {
       "type": "string",
       "enum": [
         "VERTEX",
@@ -34,7 +34,7 @@
         }
       }
     },
-    "shaderInjectionPoint": {
+    "shaderHookPoint": {
       "type": "string",
       "enum": [
         "NONE",
@@ -277,7 +277,7 @@
           "x-flatbuffer-type": "string"
         },
         "SHADER_STAGE": {
-          "$ref": "#/definitions/shaderStage",
+          "$ref": "#/definitions/glslStage",
           "description": "Target GLSL stage.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -303,7 +303,7 @@
           }
         },
         "SHADER_INJECTION_POINT": {
-          "$ref": "#/definitions/shaderInjectionPoint",
+          "$ref": "#/definitions/shaderHookPoint",
           "description": "Intended injection point in the host pipeline.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",

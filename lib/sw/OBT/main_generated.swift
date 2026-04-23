@@ -23,7 +23,7 @@ public enum orbitObjectType: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 }
 
 
-public enum aouType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum aouCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -32,8 +32,8 @@ public enum aouType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   case rectangular = 2
   case none_ = 3
 
-  public static var max: aouType { return .none_ }
-  public static var min: aouType { return .circular }
+  public static var max: aouCategory { return .none_ }
+  public static var min: aouCategory { return .circular }
 }
 
 
@@ -146,7 +146,7 @@ public struct OBT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var CHARLIE_LINE: String? { let o = _accessor.offset(VTOFFSET.CHARLIE_LINE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CHARLIE_LINESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CHARLIE_LINE.v) }
   ///  Area of uncertainty type
-  public var AOU_TYPE: aouType { let o = _accessor.offset(VTOFFSET.AOU_TYPE.v); return o == 0 ? .circular : aouType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .circular }
+  public var AOU_TYPE: aouCategory { let o = _accessor.offset(VTOFFSET.AOU_TYPE.v); return o == 0 ? .circular : aouCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .circular }
   ///  Area of uncertainty data
   public var AOU_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.AOU_DATA.v, byteSize: 8) }
   public func withUnsafePointerToAouData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.AOU_DATA.v, body: body) }
@@ -205,7 +205,7 @@ public struct OBT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(COUNTRY_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COUNTRY_CODE, at: VTOFFSET.COUNTRY_CODE.p) }
   public static func add(DECAY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DECAY, def: 0.0, at: VTOFFSET.DECAY.p) }
   public static func add(CHARLIE_LINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHARLIE_LINE, at: VTOFFSET.CHARLIE_LINE.p) }
-  public static func add(AOU_TYPE: aouType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AOU_TYPE.rawValue, def: 0, at: VTOFFSET.AOU_TYPE.p) }
+  public static func add(AOU_TYPE: aouCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AOU_TYPE.rawValue, def: 0, at: VTOFFSET.AOU_TYPE.p) }
   public static func addVectorOf(AOU_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AOU_DATA, at: VTOFFSET.AOU_DATA.p) }
   public static func add(CNTNMNT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CNTNMNT, def: 0.0, at: VTOFFSET.CNTNMNT.p) }
   public static func add(XREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XREF, at: VTOFFSET.XREF.p) }
@@ -252,7 +252,7 @@ public struct OBT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     COUNTRY_CODEOffset COUNTRY_CODE: Offset = Offset(),
     DECAY: Double = 0.0,
     CHARLIE_LINEOffset CHARLIE_LINE: Offset = Offset(),
-    AOU_TYPE: aouType = .circular,
+    AOU_TYPE: aouCategory = .circular,
     AOU_DATAVectorOffset AOU_DATA: Offset = Offset(),
     CNTNMNT: Double = 0.0,
     XREFOffset XREF: Offset = Offset(),
@@ -333,7 +333,7 @@ public struct OBT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.COUNTRY_CODE.p, fieldName: "COUNTRY_CODE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.DECAY.p, fieldName: "DECAY", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.CHARLIE_LINE.p, fieldName: "CHARLIE_LINE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.AOU_TYPE.p, fieldName: "AOU_TYPE", required: false, type: aouType.self)
+    try _v.visit(field: VTOFFSET.AOU_TYPE.p, fieldName: "AOU_TYPE", required: false, type: aouCategory.self)
     try _v.visit(field: VTOFFSET.AOU_DATA.p, fieldName: "AOU_DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VTOFFSET.CNTNMNT.p, fieldName: "CNTNMNT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.XREF.p, fieldName: "XREF", required: false, type: ForwardOffset<String>.self)

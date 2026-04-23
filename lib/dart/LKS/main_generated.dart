@@ -6,7 +6,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-enum linkType {
+enum linkCategory {
   UPLINK(0),
   DOWNLINK(1),
   CROSSLINK(2),
@@ -15,40 +15,40 @@ enum linkType {
   RELAY(5);
 
   final int value;
-  const linkType(this.value);
+  const linkCategory(this.value);
 
-  factory linkType.fromValue(int value) {
+  factory linkCategory.fromValue(int value) {
     switch (value) {
-      case 0: return linkType.UPLINK;
-      case 1: return linkType.DOWNLINK;
-      case 2: return linkType.CROSSLINK;
-      case 3: return linkType.INTER_SATELLITE;
-      case 4: return linkType.GROUND_TO_GROUND;
-      case 5: return linkType.RELAY;
+      case 0: return linkCategory.UPLINK;
+      case 1: return linkCategory.DOWNLINK;
+      case 2: return linkCategory.CROSSLINK;
+      case 3: return linkCategory.INTER_SATELLITE;
+      case 4: return linkCategory.GROUND_TO_GROUND;
+      case 5: return linkCategory.RELAY;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static linkType? _createOrNull(int? value) =>
-      value == null ? null : linkType.fromValue(value);
+  static linkCategory? _createOrNull(int? value) =>
+      value == null ? null : linkCategory.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 5;
-  static const fb.Reader<linkType> reader = _linkTypeReader();
+  static const fb.Reader<linkCategory> reader = _linkCategoryReader();
 }
 
-class _linkTypeReader extends fb.Reader<linkType> {
-  const _linkTypeReader();
+class _linkCategoryReader extends fb.Reader<linkCategory> {
+  const _linkCategoryReader();
 
   @override
   int get size => 1;
 
   @override
-  linkType read(fb.BufferContext bc, int offset) =>
-      linkType.fromValue(const fb.Int8Reader().read(bc, offset));
+  linkCategory read(fb.BufferContext bc, int offset) =>
+      linkCategory.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum linkState {
+enum linkCondition {
   ESTABLISHED(0),
   DEGRADED(1),
   INTERRUPTED(2),
@@ -57,37 +57,37 @@ enum linkState {
   UNKNOWN(5);
 
   final int value;
-  const linkState(this.value);
+  const linkCondition(this.value);
 
-  factory linkState.fromValue(int value) {
+  factory linkCondition.fromValue(int value) {
     switch (value) {
-      case 0: return linkState.ESTABLISHED;
-      case 1: return linkState.DEGRADED;
-      case 2: return linkState.INTERRUPTED;
-      case 3: return linkState.PLANNED;
-      case 4: return linkState.TERMINATED;
-      case 5: return linkState.UNKNOWN;
+      case 0: return linkCondition.ESTABLISHED;
+      case 1: return linkCondition.DEGRADED;
+      case 2: return linkCondition.INTERRUPTED;
+      case 3: return linkCondition.PLANNED;
+      case 4: return linkCondition.TERMINATED;
+      case 5: return linkCondition.UNKNOWN;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static linkState? _createOrNull(int? value) =>
-      value == null ? null : linkState.fromValue(value);
+  static linkCondition? _createOrNull(int? value) =>
+      value == null ? null : linkCondition.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 5;
-  static const fb.Reader<linkState> reader = _linkStateReader();
+  static const fb.Reader<linkCondition> reader = _linkConditionReader();
 }
 
-class _linkStateReader extends fb.Reader<linkState> {
-  const _linkStateReader();
+class _linkConditionReader extends fb.Reader<linkCondition> {
+  const _linkConditionReader();
 
   @override
   int get size => 1;
 
   @override
-  linkState read(fb.BufferContext bc, int offset) =>
-      linkState.fromValue(const fb.Int8Reader().read(bc, offset));
+  linkCondition read(fb.BufferContext bc, int offset) =>
+      linkCondition.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Link Status
@@ -123,11 +123,11 @@ class LKS {
   String? get LINK_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
   String? get linkName => LINK_NAME;
   ///  Link type
-  linkType get LINK_TYPE => linkType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
-  linkType get linkType => LINK_TYPE;
+  linkCategory get LINK_TYPE => linkCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  linkCategory get linkType => LINK_TYPE;
   ///  Link state
-  linkState get LINK_STATE => linkState.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
-  linkState get linkState => LINK_STATE;
+  linkCondition get LINK_STATE => linkCondition.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  linkCondition get linkState => LINK_STATE;
   ///  RF band
   String? get BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   ///  Link start time (ISO 8601)
@@ -224,11 +224,11 @@ class LKSBuilder {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addLinkType(linkType? LINK_TYPE) {
+  int addLinkType(linkCategory? LINK_TYPE) {
     fbBuilder.addInt8(7, LINK_TYPE?.value);
     return fbBuilder.offset;
   }
-  int addLinkState(linkState? LINK_STATE) {
+  int addLinkState(linkCondition? LINK_STATE) {
     fbBuilder.addInt8(8, LINK_STATE?.value);
     return fbBuilder.offset;
   }
@@ -306,8 +306,8 @@ class LKSObjectBuilder extends fb.ObjectBuilder {
   final int? _SAT_NO2;
   final String? _CONSTELLATION;
   final String? _LINK_NAME;
-  final linkType? _LINK_TYPE;
-  final linkState? _LINK_STATE;
+  final linkCategory? _LINK_TYPE;
+  final linkCondition? _LINK_STATE;
   final String? _BAND;
   final String? _LINK_START_TIME;
   final String? _LINK_STOP_TIME;
@@ -337,10 +337,10 @@ class LKSObjectBuilder extends fb.ObjectBuilder {
     String? CONSTELLATION,
     String? LINK_NAME,
     String? linkName,
-    linkType? LINK_TYPE,
-    linkType? linkType,
-    linkState? LINK_STATE,
-    linkState? linkState,
+    linkCategory? LINK_TYPE,
+    linkCategory? linkType,
+    linkCondition? LINK_STATE,
+    linkCondition? linkState,
     String? BAND,
     String? LINK_START_TIME,
     String? linkStartTime,

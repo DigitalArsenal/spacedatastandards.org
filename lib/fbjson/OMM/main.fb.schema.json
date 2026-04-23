@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "meanElementTheory": {
+    "meanElementSource": {
       "type": "string",
       "enum": [
         "SGP4",
@@ -35,7 +35,7 @@
       "description": "Mean Element Theory",
       "properties": {
         "MEAN_ELEMENT_THEORY": {
-          "$ref": "#/definitions/meanElementTheory",
+          "$ref": "#/definitions/meanElementSource",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {

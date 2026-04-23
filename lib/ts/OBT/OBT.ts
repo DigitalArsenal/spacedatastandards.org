@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { aouType } from './aouType.js';
+import { aouCategory } from './aouCategory.js';
 import { orbitObjectType } from './orbitObjectType.js';
 
 
@@ -228,9 +228,9 @@ CHARLIE_LINE(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Area of uncertainty type
  */
-AOU_TYPE():aouType {
+AOU_TYPE():aouCategory {
   const offset = this.bb!.__offset(this.bb_pos, 46);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : aouType.CIRCULAR;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : aouCategory.CIRCULAR;
 }
 
 /**
@@ -468,8 +468,8 @@ static addCharlieLine(builder:flatbuffers.Builder, CHARLIE_LINEOffset:flatbuffer
   builder.addFieldOffset(20, CHARLIE_LINEOffset, 0);
 }
 
-static addAouType(builder:flatbuffers.Builder, AOU_TYPE:aouType) {
-  builder.addFieldInt8(21, AOU_TYPE, aouType.CIRCULAR);
+static addAouType(builder:flatbuffers.Builder, AOU_TYPE:aouCategory) {
+  builder.addFieldInt8(21, AOU_TYPE, aouCategory.CIRCULAR);
 }
 
 static addAouData(builder:flatbuffers.Builder, AOU_DATAOffset:flatbuffers.Offset) {
@@ -574,7 +574,7 @@ static finishSizePrefixedOBTBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$OBT', true);
 }
 
-static createOBT(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, LAT:number, LON:number, ALT:number, SPD:number, ANG_ELEV:number, RDF_RF:number, CALL_SIGNOffset:flatbuffers.Offset, RPT_NUMOffset:flatbuffers.Offset, TRK_IDOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, IDENT_AMPOffset:flatbuffers.Offset, SAT_STATUSOffset:flatbuffers.Offset, OBJ_TYPE:orbitObjectType, COUNTRY_CODEOffset:flatbuffers.Offset, DECAY:number, CHARLIE_LINEOffset:flatbuffers.Offset, AOU_TYPE:aouType, AOU_DATAOffset:flatbuffers.Offset, CNTNMNT:number, XREFOffset:flatbuffers.Offset, CH_XREFOffset:flatbuffers.Offset, AMPLIFICATIONOffset:flatbuffers.Offset, IFFOffset:flatbuffers.Offset, VEH_TYPEOffset:flatbuffers.Offset, REINFORCED:boolean, REDUCED:boolean, HQ:boolean, DUMMY:boolean, TASK_FORCE:boolean, FEINT:boolean, INSTALLATION:boolean, TRACK_SENSORSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createOBT(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, LAT:number, LON:number, ALT:number, SPD:number, ANG_ELEV:number, RDF_RF:number, CALL_SIGNOffset:flatbuffers.Offset, RPT_NUMOffset:flatbuffers.Offset, TRK_IDOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, IDENT_AMPOffset:flatbuffers.Offset, SAT_STATUSOffset:flatbuffers.Offset, OBJ_TYPE:orbitObjectType, COUNTRY_CODEOffset:flatbuffers.Offset, DECAY:number, CHARLIE_LINEOffset:flatbuffers.Offset, AOU_TYPE:aouCategory, AOU_DATAOffset:flatbuffers.Offset, CNTNMNT:number, XREFOffset:flatbuffers.Offset, CH_XREFOffset:flatbuffers.Offset, AMPLIFICATIONOffset:flatbuffers.Offset, IFFOffset:flatbuffers.Offset, VEH_TYPEOffset:flatbuffers.Offset, REINFORCED:boolean, REDUCED:boolean, HQ:boolean, DUMMY:boolean, TASK_FORCE:boolean, FEINT:boolean, INSTALLATION:boolean, TRACK_SENSORSOffset:flatbuffers.Offset):flatbuffers.Offset {
   OBT.startOBT(builder);
   OBT.addId(builder, IDOffset);
   OBT.addSatNo(builder, SAT_NO);
@@ -723,7 +723,7 @@ constructor(
   public COUNTRY_CODE: string|Uint8Array|null = null,
   public DECAY: number = 0.0,
   public CHARLIE_LINE: string|Uint8Array|null = null,
-  public AOU_TYPE: aouType = aouType.CIRCULAR,
+  public AOU_TYPE: aouCategory = aouCategory.CIRCULAR,
   public AOU_DATA: (number)[] = [],
   public CNTNMNT: number = 0.0,
   public XREF: string|Uint8Array|null = null,

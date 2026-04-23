@@ -8,11 +8,11 @@ enum orbitObjectType:
     orbitObjectType_TBA = 3
     orbitObjectType_UNKNOWN = 4
 
-enum aouType:
-    aouType_CIRCULAR = 0
-    aouType_ELLIPTICAL = 1
-    aouType_RECTANGULAR = 2
-    aouType_NONE = 3
+enum aouCategory:
+    aouCategory_CIRCULAR = 0
+    aouCategory_ELLIPTICAL = 1
+    aouCategory_RECTANGULAR = 2
+    aouCategory_NONE = 3
 
 class OBT
 
@@ -82,8 +82,8 @@ class OBT : flatbuffers.handle
     def CHARLIE_LINE() -> string:
         return flatbuffers.field_string(buf_, pos_, 44)
     /// Area of uncertainty type
-    def AOU_TYPE() -> aouType:
-        return aouType(flatbuffers.field_int8(buf_, pos_, 46, 0))
+    def AOU_TYPE() -> aouCategory:
+        return aouCategory(flatbuffers.field_int8(buf_, pos_, 46, 0))
     /// Area of uncertainty data
     def AOU_DATA(i:int) -> float:
         return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 48) + i * 8)
@@ -204,7 +204,7 @@ struct OBTBuilder:
     def add_CHARLIE_LINE(CHARLIE_LINE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(20, CHARLIE_LINE)
         return this
-    def add_AOU_TYPE(AOU_TYPE:aouType):
+    def add_AOU_TYPE(AOU_TYPE:aouCategory):
         b_.PrependInt8Slot(21, AOU_TYPE, 0)
         return this
     def add_AOU_DATA(AOU_DATA:flatbuffers.offset):
