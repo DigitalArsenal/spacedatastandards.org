@@ -61,3 +61,38 @@ and enum-type are unambiguously different tokens at every casing.
 - Root type is the 3-letter table.
 - Version + SHA-256 hash headers at the top are managed by
   `scripts/generateVersion.py` — do not hand-edit them.
+
+### Dual-accept wire-format rule (PIV / TAB / PLG)
+
+Plugin invoke frames carry `TAB.WIRE_FORMAT` which selects FLATBUFFER or
+ALIGNED_BINARY per-frame. Per SDK contract:
+
+- An input or output port that advertises `ALIGNED_BINARY` in
+  `PLG.PLGPortManifest.ACCEPTED_TYPE_SETS[].ALLOWED_WIRE_FORMATS` MUST
+  also advertise `FLATBUFFER` for the same schema and file identifier
+  in the same set.
+- Callers can send either format; the plugin MUST accept both.
+- This keeps aligned-binary as an invoke-ABI optimization, not a
+  replacement for the canonical FlatBuffer schema.
+
+### Plugin invoke surface lives in SDS
+
+Host↔plugin invoke is the `PIV` standard, not an SDK-local wire:
+- `PIVRequest` { METHOD_ID, INPUTS:[TAB], PAYLOAD_ARENA, TRACE_ID, OUTPUT_STREAM_CAP }
+- `PIVResponse` { STATUS_CODE, STATUS:pivStatus, YIELDED, BACKLOG_REMAINING,
+                  OUTPUTS:[TAB], PAYLOAD_ARENA, ERROR_CODE, ERROR_MESSAGE, TRACE_ID }
+- Envelope `PIV` carries either REQUEST or RESPONSE.
+
+The SDK SHOULD NOT author its own plugin-invoke schemas (no PluginInvokeRequest /
+PluginInvokeResponse vendored in `space-data-module-sdk/schemas/`). If a new
+invoke-layer primitive is needed, add it to SDS.
+
+### Plugin manifest lives in SDS
+
+`PLG` carries the full plugin manifest: identity (PLUGIN_ID, NAME, VERSION,
+PLUGIN_TYPE), storefront metadata (PUBLISHER_*, TAGS, FEATURES, SCREENSHOT_URLS,
+PAYMENT_MODEL, LISTING_STATUS), protected-delivery fields (WASM_HASH, WASM_CID,
+ENCRYPTED_WASM_HASH), capability declarations, and — as of 1.90.0 — the full
+invoke-surface detail (INVOKE_SURFACES, METHODS with PLGPortManifest +
+PLGAcceptedTypeSet, HOST_CAPABILITIES, TIMERS, PROTOCOLS, BUILD_ARTIFACTS,
+RUNTIME_TARGETS). The SDK should not author a parallel PluginManifest schema.
