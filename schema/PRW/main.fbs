@@ -1,5 +1,5 @@
-// Hash: 9f193a8ef4100709509c92fdf0ead4be0a4fdb63f63a9c4c7f57742fdaa918e2
-// Version: 0.0.1
+// Hash: 486144ff54a4992e7e03803b3382f82a6b434835373fd39fcb48e4650fc80915
+// Version: 0.0.2
 // -----------------------------------END_HEADER
 /// Propagator Runtime Wire — arena-addressed init / batch request / batch
 /// response envelopes for orbital propagators that produce state vectors

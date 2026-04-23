@@ -1,15 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "pluginType" : {
+    "pluginCategory" : {
       "type" : "string",
       "enum": ["Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics", "Shader"]
     },
-    "paymentModel" : {
+    "purchaseTier" : {
       "type" : "string",
       "enum": ["Free", "OneTime", "Subscription"]
     },
-    "listingStatus" : {
+    "publicationState" : {
       "type" : "string",
       "enum": ["Public", "Unlisted", "Retired"]
     },
@@ -100,7 +100,7 @@
                 "description" : "Short marketing summary shown in storefront listings"
               },
         "PLUGIN_TYPE" : {
-                "$ref" : "#/definitions/pluginType",
+                "$ref" : "#/definitions/pluginCategory",
                 "description" : "Type/category of the plugin"
               },
         "PUBLISHER_NAME" : {
@@ -232,7 +232,7 @@
                 "description" : "License identifier (SPDX format)"
               },
         "PAYMENT_MODEL" : {
-                "$ref" : "#/definitions/paymentModel",
+                "$ref" : "#/definitions/purchaseTier",
                 "description" : "Commercial model used for storefront purchase flows"
               },
         "PRICE_USD_CENTS" : {
@@ -248,7 +248,7 @@
                 "description" : "Accepted payment methods, e.g. \"stripe\", \"sol\", \"usdc\""
               },
         "LISTING_STATUS" : {
-                "$ref" : "#/definitions/listingStatus",
+                "$ref" : "#/definitions/publicationState",
                 "description" : "Storefront publication state for this manifest version"
               },
         "SIGNATURE" : {

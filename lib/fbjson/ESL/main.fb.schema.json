@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ESL": {
+      "type": "object",
+      "description": "Entity / Standards Link \u2014 join-table row connecting a host-local entity\nmetadata record to a standards record index row, enabling cascade-safe\nmutation and cross-plugin query ownership.",
+      "properties": {
+        "LINK_KEY": {
+          "type": "string",
+          "description": "Stable local link key for one entity / record association.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTITY_ID": {
+          "type": "string",
+          "description": "Stable host-local entity id on the entity side of the association.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTITY_RECORD_KEY": {
+          "type": "string",
+          "description": "Stable local entity metadata record key (for example `ENTITY:<id>`).",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTITY_ROWID": {
+          "type": "number",
+          "description": "FlatSQL row id for the linked entity metadata row when known.",
+          "x-flatbuffer-type": "double"
+        },
+        "RECORD_KEY": {
+          "type": "string",
+          "description": "Stable local standards record key on the record side of the association.",
+          "x-flatbuffer-type": "string"
+        },
+        "SCHEMA_NAME": {
+          "type": "string",
+          "description": "SDS schema family for the linked record (`OMM`, `CAT`, `OEM`, `CDM`, etc.).",
+          "x-flatbuffer-type": "string"
+        },
+        "RECORD_ROWID": {
+          "type": "number",
+          "description": "FlatSQL row id for the linked standards record row when known.",
+          "x-flatbuffer-type": "double"
+        },
+        "CASCADE_DELETE": {
+          "type": "boolean",
+          "description": "Whether entity deletion should cascade to the linked standards record.",
+          "x-flatbuffer-type": "bool"
+        },
+        "UPDATED_AT_MS": {
+          "type": "number",
+          "description": "Milliseconds since epoch when the association was last refreshed.",
+          "x-flatbuffer-type": "double"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Reserved for forward-compatible growth.",
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ESL",
+  "x-flatbuffer-root-type": "ESL",
+  "x-flatbuffer-file-identifier": "$ESL"
+}

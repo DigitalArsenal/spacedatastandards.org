@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "shaderStage" : {
+      "type" : "string",
+      "enum": ["VERTEX", "FRAGMENT", "COMPUTE", "GEOMETRY", "TESS_CONTROL", "TESS_EVALUATION"]
+    },
+    "shaderInjectionPoint" : {
+      "type" : "string",
+      "enum": ["NONE", "VERTEX_PRE_TRANSFORM", "VERTEX_POST_TRANSFORM", "FRAGMENT_PRE_SHADE", "FRAGMENT_POST_SHADE", "FRAGMENT_FINAL_COLOR", "POSTPROCESS"]
+    },
+    "shaderUniformType" : {
+      "type" : "string",
+      "enum": ["FLOAT", "VEC2", "VEC3", "VEC4", "INT", "IVEC2", "IVEC3", "IVEC4", "UINT", "UVEC2", "UVEC3", "UVEC4", "BOOL", "BVEC2", "BVEC3", "BVEC4", "MAT2", "MAT3", "MAT4", "SAMPLER_2D", "SAMPLER_CUBE", "SAMPLER_2D_ARRAY"]
+    },
+    "SHWUniform" : {
+      "type" : "object",
+      "description" : "Uniform descriptor — name + type + optional default value.",
+      "properties" : {
+        "UNIFORM_NAME" : {
+                "type" : "string"
+              },
+        "UNIFORM_TYPE" : {
+                "$ref" : "#/definitions/shaderUniformType"
+              },
+        "UNIFORM_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Optional human-readable description."
+              },
+        "UNIFORM_DEFAULT_VALUE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional default value encoded as bytes in the native type layout."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SHWCompileRequest" : {
+      "type" : "object",
+      "description" : "Compile request — one shader source (typically a fragment of a\nlarger stage) plus metadata for the host splice.",
+      "properties" : {
+        "SHADER_NAME" : {
+                "type" : "string",
+                "description" : "Logical shader name (used in logs and uniform prefixing)."
+              },
+        "SHADER_STAGE" : {
+                "$ref" : "#/definitions/shaderStage",
+                "description" : "Target GLSL stage."
+              },
+        "SHADER_INJECTION_POINT" : {
+                "$ref" : "#/definitions/shaderInjectionPoint",
+                "description" : "Intended injection point in the host pipeline."
+              },
+        "SHADER_SOURCE" : {
+                "type" : "string",
+                "description" : "GLSL source (or preprocessed chunk)."
+              },
+        "GLSL_VERSION" : {
+                "type" : "string",
+                "description" : "GLSL version string (for example `300 es`)."
+              },
+        "SHADER_UNIFORMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SHWUniform"},
+                "description" : "Expected uniforms declared by the source."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SHWCompileResponse" : {
+      "type" : "object",
+      "description" : "Compile response — whether the shader compiled, with diagnostics.",
+      "properties" : {
+        "SHADER_NAME" : {
+                "type" : "string"
+              },
+        "COMPILE_SUCCESS" : {
+                "type" : "boolean",
+                "description" : "Whether compilation succeeded."
+              },
+        "INFO_LOG" : {
+                "type" : "string",
+                "description" : "Optional GLSL info log."
+              },
+        "COMPILED_BINARY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional compiled binary (if the compiler emits one)."
+              },
+        "LINKED_UNIFORMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SHWUniform"},
+                "description" : "Echo of the uniforms the compiler actually linked."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SHW" : {
+      "type" : "object",
+      "description" : "Shader Wire envelope — carries either a compile request or a compile\nresponse across the runtime boundary.",
+      "properties" : {
+        "COMPILE_REQUEST" : {
+                "$ref" : "#/definitions/SHWCompileRequest"
+              },
+        "COMPILE_RESPONSE" : {
+                "$ref" : "#/definitions/SHWCompileResponse"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SHW"
+}

@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "shortestPathAlgorithm" : {
+      "type" : "string",
+      "enum": ["AUTO", "FRONTIER", "DIJKSTRA"]
+    },
+    "weightedEdge" : {
+      "type" : "object",
+      "description" : "Weighted directed edge (16 bytes, 8-byte aligned for zero-copy ingestion).",
+      "properties" : {
+        "SRC" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "DST" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "WEIGHT" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FPCGraphDefinition" : {
+      "type" : "object",
+      "description" : "Graph creation / reset request.",
+      "properties" : {
+        "VERTEX_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of vertices in the graph."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FPCWeightedEdgeList" : {
+      "type" : "object",
+      "description" : "Bulk weighted-edge ingestion request.",
+      "properties" : {
+        "VERTEX_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Optional vertex capacity for implicit graph creation."
+              },
+        "EDGES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/weightedEdge"},
+                "description" : "Weighted directed edge records."
+              },
+        "BUILD_GRAPH" : {
+                "type" : "boolean",
+                "description" : "Build a CSR representation after ingest."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FPCCSRGraph" : {
+      "type" : "object",
+      "description" : "Pre-built CSR graph ingestion request.",
+      "properties" : {
+        "VERTEX_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of vertices in the graph."
+              },
+        "OFFSETS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "CSR row offsets (V + 1 entries)."
+              },
+        "DESTINATIONS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "CSR destination indices."
+              },
+        "WEIGHTS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "CSR edge weights."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FPCShortestPathRequest" : {
+      "type" : "object",
+      "description" : "Single-source shortest-path request.",
+      "properties" : {
+        "SOURCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Source vertex index."
+              },
+        "ALGORITHM" : {
+                "$ref" : "#/definitions/shortestPathAlgorithm",
+                "description" : "Algorithm selection hint."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FPCShortestPathResult" : {
+      "type" : "object",
+      "description" : "Single-source shortest-path result.",
+      "properties" : {
+        "SOURCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Source vertex index."
+              },
+        "VERTEX_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of vertices in the solved graph."
+              },
+        "REACHABLE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of reachable vertices (finite distances)."
+              },
+        "DISTANCES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Distance array (length == VERTEX_COUNT)."
+              },
+        "PREDECESSORS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Predecessor array (length == VERTEX_COUNT; UINT32_MAX means none / source)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FPCPathRequest" : {
+      "type" : "object",
+      "description" : "Path reconstruction request.",
+      "properties" : {
+        "TARGET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Target vertex index."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FPCPathResult" : {
+      "type" : "object",
+      "description" : "Path reconstruction result.",
+      "properties" : {
+        "SOURCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Source vertex index from the latest SSSP solve."
+              },
+        "TARGET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Requested target vertex index."
+              },
+        "REACHABLE" : {
+                "type" : "boolean",
+                "description" : "Whether a path exists from SOURCE to TARGET."
+              },
+        "DISTANCE" : {
+                "type" : "number",
+                "description" : "Total distance from SOURCE to TARGET (Infinity if unreachable)."
+              },
+        "PATH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Vertex sequence from SOURCE to TARGET."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FPC" : {
+      "type" : "object",
+      "description" : "Fastest Path Compute — envelope message for weighted graph ingestion and\nsingle-source shortest path execution.",
+      "properties" : {
+        "GRAPH_DEFINITION" : {
+                "$ref" : "#/definitions/FPCGraphDefinition"
+              },
+        "EDGES" : {
+                "$ref" : "#/definitions/FPCWeightedEdgeList"
+              },
+        "CSR" : {
+                "$ref" : "#/definitions/FPCCSRGraph"
+              },
+        "SHORTEST_PATH_REQUEST" : {
+                "$ref" : "#/definitions/FPCShortestPathRequest"
+              },
+        "SHORTEST_PATH_RESULT" : {
+                "$ref" : "#/definitions/FPCShortestPathResult"
+              },
+        "PATH_REQUEST" : {
+                "$ref" : "#/definitions/FPCPathRequest"
+              },
+        "PATH_RESULT" : {
+                "$ref" : "#/definitions/FPCPathResult"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FPC"
+}

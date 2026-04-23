@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "sdfPrimitive" : {
+      "type" : "string",
+      "enum": ["CONE", "RECTANGULAR", "SPHERE", "CYLINDER", "CUSTOM"]
+    },
+    "sdfOperation" : {
+      "type" : "string",
+      "enum": ["NONE", "UNION", "INTERSECTION", "SUBTRACTION", "SMOOTH_UNION"]
+    },
+    "sdfResult" : {
+      "type" : "object",
+      "description" : "Result of a single SDF point-in-volume query (24 bytes, 8-byte aligned).",
+      "properties" : {
+        "ENTITY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Entity identifier."
+              },
+        "DETECTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Detection flag (1 == inside, 0 == outside)."
+              },
+        "SIGNED_DISTANCE" : {
+                "type" : "number",
+                "description" : "Signed distance (negative inside, zero on boundary, positive outside)."
+              },
+        "CLOSEST_DISTANCE" : {
+                "type" : "number",
+                "description" : "Distance to the closest boundary point (always positive)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "sdfTimeRangeResult" : {
+      "type" : "object",
+      "description" : "Result of a time-range SDF query (40 bytes, 8-byte aligned).",
+      "properties" : {
+        "ENTITY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Entity identifier."
+              },
+        "FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Flags (reserved)."
+              },
+        "ENTRY_TIME" : {
+                "type" : "number",
+                "description" : "Julian date when the entity entered the volume (0 == never entered)."
+              },
+        "EXIT_TIME" : {
+                "type" : "number",
+                "description" : "Julian date when the entity exited the volume (0 == still inside)."
+              },
+        "MIN_DISTANCE" : {
+                "type" : "number",
+                "description" : "Most negative signed distance (closest approach to center)."
+              },
+        "DWELL_TIME" : {
+                "type" : "number",
+                "description" : "Total time inside volume (seconds)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SDFConical" : {
+      "type" : "object",
+      "description" : "Conical SDF parameters.",
+      "properties" : {
+        "HALF_ANGLE" : {
+                "type" : "number"
+              },
+        "INNER_HALF_ANGLE" : {
+                "type" : "number",
+                "description" : "Inner half-angle for hollow cones (0 == solid)."
+              },
+        "MIN_RANGE" : {
+                "type" : "number",
+                "description" : "Minimum range (inner cap distance)."
+              },
+        "MAX_RANGE" : {
+                "type" : "number",
+                "description" : "Maximum range (outer cap distance)."
+              },
+        "FLAT_CAP" : {
+                "type" : "boolean",
+                "description" : "Use a flat cap (true) or a spherical cap (false)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SDFRectangular" : {
+      "type" : "object",
+      "description" : "Rectangular (pyramidal) SDF parameters.",
+      "properties" : {
+        "X_HALF_ANGLE" : {
+                "type" : "number"
+              },
+        "Y_HALF_ANGLE" : {
+                "type" : "number"
+              },
+        "MIN_RANGE" : {
+                "type" : "number"
+              },
+        "MAX_RANGE" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SDFSpherical" : {
+      "type" : "object",
+      "description" : "Spherical SDF parameters.",
+      "properties" : {
+        "RADIUS" : {
+                "type" : "number"
+              },
+        "INNER_RADIUS" : {
+                "type" : "number",
+                "description" : "Inner radius for hollow sphere (0 == solid)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SDFCylindrical" : {
+      "type" : "object",
+      "description" : "Cylindrical SDF parameters.",
+      "properties" : {
+        "RADIUS" : {
+                "type" : "number"
+              },
+        "HALF_HEIGHT" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SDFCustom" : {
+      "type" : "object",
+      "description" : "Custom SDF defined by a set of unit boundary-direction vectors.",
+      "properties" : {
+        "DIRECTIONS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Unit vectors defining the boundary packed as [x0, y0, z0, x1, y1, z1, ...]."
+              },
+        "MAX_RANGE" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SDFComposition" : {
+      "type" : "object",
+      "description" : "Constructive composition of two SDFs.",
+      "properties" : {
+        "OPERATION" : {
+                "$ref" : "#/definitions/sdfOperation"
+              },
+        "OPERAND_A" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "First operand (index into SDF.COMPONENTS[])."
+              },
+        "OPERAND_B" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Second operand (index into SDF.COMPONENTS[])."
+              },
+        "BLEND_RADIUS" : {
+                "type" : "number",
+                "description" : "Blend radius for smooth operations."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SDFComponent" : {
+      "type" : "object",
+      "description" : "Single component in a composed SDF.",
+      "properties" : {
+        "PRIMITIVE" : {
+                "$ref" : "#/definitions/sdfPrimitive"
+              },
+        "CONE" : {
+                "$ref" : "#/definitions/SDFConical"
+              },
+        "RECTANGULAR" : {
+                "$ref" : "#/definitions/SDFRectangular"
+              },
+        "SPHERICAL" : {
+                "$ref" : "#/definitions/SDFSpherical"
+              },
+        "CYLINDRICAL" : {
+                "$ref" : "#/definitions/SDFCylindrical"
+              },
+        "CUSTOM" : {
+                "$ref" : "#/definitions/SDFCustom"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SDFConfig" : {
+      "type" : "object",
+      "description" : "Complete SDF configuration.",
+      "properties" : {
+        "PRIMITIVE" : {
+                "$ref" : "#/definitions/sdfPrimitive",
+                "description" : "Root primitive type (useful when COMPONENTS[] is empty)."
+              },
+        "COMPONENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SDFComponent"},
+                "description" : "One or more components that may be combined via COMPOSITIONS[]."
+              },
+        "COMPOSITIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SDFComposition"},
+                "description" : "Composition tree over COMPONENTS[]."
+              },
+        "INVERSE_TRANSFORM" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "World-to-local transform (4x4 column-major, 16 doubles)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SDFBatchRequest" : {
+      "type" : "object",
+      "description" : "Batch SDF evaluation request (arena-addressed, zero-copy).",
+      "properties" : {
+        "INPUT_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Input buffer offset (arena bytes) where the Vec3[] of world points begins."
+              },
+        "POINT_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of points to evaluate."
+              },
+        "ENTITY_IDS_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Entity-ids buffer offset corresponding to each point (optional)."
+              },
+        "OUTPUT_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Output buffer offset where sdfResult[] is written."
+              },
+        "INVERSE_TRANSFORM_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Inverse-transform buffer offset (4x4 matrix, 128 bytes)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SDFBatchResponse" : {
+      "type" : "object",
+      "description" : "Batch SDF evaluation response header.",
+      "properties" : {
+        "COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of results written."
+              },
+        "INSIDE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of points inside the volume."
+              },
+        "OUTPUT_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Output offset where sdfResult[] starts."
+              },
+        "ERROR_CODE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Error code (0 == success)."
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string",
+                "description" : "Optional error message when ERROR_CODE != 0."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SDF" : {
+      "type" : "object",
+      "description" : "Signed Distance Field envelope message — carries a configuration, a batch\nrequest, a batch response, or single / time-range result records.",
+      "properties" : {
+        "CONFIG" : {
+                "$ref" : "#/definitions/SDFConfig"
+              },
+        "BATCH_REQUEST" : {
+                "$ref" : "#/definitions/SDFBatchRequest"
+              },
+        "BATCH_RESPONSE" : {
+                "$ref" : "#/definitions/SDFBatchResponse"
+              },
+        "RESULTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/sdfResult"}
+              },
+        "TIME_RANGE_RESULTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/sdfTimeRangeResult"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SDF"
+}

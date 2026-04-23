@@ -18,6 +18,7 @@ import { BEM, BEMT } from './BEM.js';
 import { BMC, BMCT } from './BMC.js';
 import { BOV, BOVT } from './BOV.js';
 import { BUS, BUST } from './BUS.js';
+import { CAQ, CAQT } from './CAQ.js';
 import { CAT, CATT } from './CAT.js';
 import { CDM, CDMT } from './CDM.js';
 import { CFP, CFPT } from './CFP.js';
@@ -40,8 +41,11 @@ import { ENV, ENVT } from './ENV.js';
 import { EOO, EOOT } from './EOO.js';
 import { EOP, EOPT } from './EOP.js';
 import { EPM, EPMT } from './EPM.js';
+import { ESL, ESLT } from './ESL.js';
+import { ETM, ETMT } from './ETM.js';
 import { EWR, EWRT } from './EWR.js';
 import { FCS, FCST } from './FCS.js';
+import { FPC, FPCT } from './FPC.js';
 import { GDI, GDIT } from './GDI.js';
 import { GEO, GEOT } from './GEO.js';
 import { GJN, GJNT } from './GJN.js';
@@ -102,6 +106,7 @@ import { PLK, PLKT } from './PLK.js';
 import { PNM, PNMT } from './PNM.js';
 import { PPE, PPET } from './PPE.js';
 import { PRG, PRGT } from './PRG.js';
+import { PRW, PRWT } from './PRW.js';
 import { PUR, PURT } from './PUR.js';
 import { RAF, RAFT } from './RAF.js';
 import { RCF, RCFT } from './RCF.js';
@@ -115,21 +120,27 @@ import { RFO, RFOT } from './RFO.js';
 import { ROC, ROCT } from './ROC.js';
 import { SAR, SART } from './SAR.js';
 import { SCM, SCMT } from './SCM.js';
+import { SDF, SDFT } from './SDF.js';
 import { SDL, SDLT } from './SDL.js';
+import { SDR, SDRT } from './SDR.js';
 import { SEN, SENT } from './SEN.js';
 import { SEO, SEOT } from './SEO.js';
 import { SEV, SEVT } from './SEV.js';
+import { SHW, SHWT } from './SHW.js';
 import { SIT, SITT } from './SIT.js';
 import { SKI, SKIT } from './SKI.js';
 import { SNR, SNRT } from './SNR.js';
+import { SNW, SNWT } from './SNW.js';
 import { SOI, SOIT } from './SOI.js';
 import { SON, SONT } from './SON.js';
 import { SPP, SPPT } from './SPP.js';
 import { SPW, SPWT } from './SPW.js';
+import { SRI, SRIT } from './SRI.js';
 import { STF, STFT } from './STF.js';
 import { STR, STRT } from './STR.js';
 import { STV, STVT } from './STV.js';
 import { SWR, SWRT } from './SWR.js';
+import { TAB, TABT } from './TAB.js';
 import { TCF, TCFT } from './TCF.js';
 import { TDM, TDMT } from './TDM.js';
 import { TIM, TIMT } from './TIM.js';
@@ -163,137 +174,148 @@ export enum RecordType {
   BMC = 14,
   BOV = 15,
   BUS = 16,
-  CAT = 17,
-  CDM = 18,
-  CFP = 19,
-  CHN = 20,
-  CLT = 21,
-  CMS = 22,
-  COM = 23,
-  COT = 24,
-  CRD = 25,
-  CRM = 26,
-  CSM = 27,
-  CTR = 28,
-  CZM = 29,
-  DFH = 30,
-  DMG = 31,
-  DOA = 32,
-  EME = 33,
-  ENC = 34,
-  ENV = 35,
-  EOO = 36,
-  EOP = 37,
-  EPM = 38,
-  EWR = 39,
-  FCS = 40,
-  GDI = 41,
-  GEO = 42,
-  GJN = 43,
-  GNO = 44,
-  GPX = 45,
-  GRV = 46,
-  GVH = 47,
-  HEL = 48,
-  HYP = 49,
-  IDM = 50,
-  ION = 51,
-  IRO = 52,
-  KMF = 53,
-  KML = 54,
-  KRF = 55,
-  LCC = 56,
-  LCF = 57,
-  LCH = 58,
-  LDM = 59,
-  LGR = 60,
-  LKS = 61,
-  LMR = 62,
-  LND = 63,
-  LNE = 64,
-  LPF = 65,
-  LWK = 66,
-  MBL = 67,
-  MET = 68,
-  MFE = 69,
-  MNF = 70,
-  MNV = 71,
-  MPE = 72,
-  MSL = 73,
-  MST = 74,
-  MTI = 75,
-  NAV = 76,
-  OBD = 77,
-  OBT = 78,
-  OCM = 79,
-  OEM = 80,
-  OMM = 81,
-  OOA = 82,
-  OOB = 83,
-  OOD = 84,
-  OOE = 85,
-  OOI = 86,
-  OOL = 87,
-  OON = 88,
-  OOS = 89,
-  OOT = 90,
-  OPM = 91,
-  OSM = 92,
-  PCF = 93,
-  PHY = 94,
-  PLD = 95,
-  PLG = 96,
-  PLK = 97,
-  PNM = 98,
-  PPE = 99,
-  PRG = 100,
-  PUR = 101,
-  RAF = 102,
-  RCF = 103,
-  RDM = 104,
-  RDO = 105,
-  REV = 106,
-  RFB = 107,
-  RFE = 108,
-  RFM = 109,
-  RFO = 110,
-  ROC = 111,
-  SAR = 112,
-  SCM = 113,
-  SDL = 114,
-  SEN = 115,
-  SEO = 116,
-  SEV = 117,
-  SIT = 118,
-  SKI = 119,
-  SNR = 120,
-  SOI = 121,
-  SON = 122,
-  SPP = 123,
-  SPW = 124,
-  STF = 125,
-  STR = 126,
-  STV = 127,
-  SWR = 128,
-  TCF = 129,
-  TDM = 130,
-  TIM = 131,
-  TKG = 132,
-  TME = 133,
-  TMF = 134,
-  TPN = 135,
-  TRK = 136,
-  TRN = 137,
-  VCM = 138,
-  WPN = 139,
-  WTH = 140,
-  XTC = 141
+  CAQ = 17,
+  CAT = 18,
+  CDM = 19,
+  CFP = 20,
+  CHN = 21,
+  CLT = 22,
+  CMS = 23,
+  COM = 24,
+  COT = 25,
+  CRD = 26,
+  CRM = 27,
+  CSM = 28,
+  CTR = 29,
+  CZM = 30,
+  DFH = 31,
+  DMG = 32,
+  DOA = 33,
+  EME = 34,
+  ENC = 35,
+  ENV = 36,
+  EOO = 37,
+  EOP = 38,
+  EPM = 39,
+  ESL = 40,
+  ETM = 41,
+  EWR = 42,
+  FCS = 43,
+  FPC = 44,
+  GDI = 45,
+  GEO = 46,
+  GJN = 47,
+  GNO = 48,
+  GPX = 49,
+  GRV = 50,
+  GVH = 51,
+  HEL = 52,
+  HYP = 53,
+  IDM = 54,
+  ION = 55,
+  IRO = 56,
+  KMF = 57,
+  KML = 58,
+  KRF = 59,
+  LCC = 60,
+  LCF = 61,
+  LCH = 62,
+  LDM = 63,
+  LGR = 64,
+  LKS = 65,
+  LMR = 66,
+  LND = 67,
+  LNE = 68,
+  LPF = 69,
+  LWK = 70,
+  MBL = 71,
+  MET = 72,
+  MFE = 73,
+  MNF = 74,
+  MNV = 75,
+  MPE = 76,
+  MSL = 77,
+  MST = 78,
+  MTI = 79,
+  NAV = 80,
+  OBD = 81,
+  OBT = 82,
+  OCM = 83,
+  OEM = 84,
+  OMM = 85,
+  OOA = 86,
+  OOB = 87,
+  OOD = 88,
+  OOE = 89,
+  OOI = 90,
+  OOL = 91,
+  OON = 92,
+  OOS = 93,
+  OOT = 94,
+  OPM = 95,
+  OSM = 96,
+  PCF = 97,
+  PHY = 98,
+  PLD = 99,
+  PLG = 100,
+  PLK = 101,
+  PNM = 102,
+  PPE = 103,
+  PRG = 104,
+  PRW = 105,
+  PUR = 106,
+  RAF = 107,
+  RCF = 108,
+  RDM = 109,
+  RDO = 110,
+  REV = 111,
+  RFB = 112,
+  RFE = 113,
+  RFM = 114,
+  RFO = 115,
+  ROC = 116,
+  SAR = 117,
+  SCM = 118,
+  SDF = 119,
+  SDL = 120,
+  SDR = 121,
+  SEN = 122,
+  SEO = 123,
+  SEV = 124,
+  SHW = 125,
+  SIT = 126,
+  SKI = 127,
+  SNR = 128,
+  SNW = 129,
+  SOI = 130,
+  SON = 131,
+  SPP = 132,
+  SPW = 133,
+  SRI = 134,
+  STF = 135,
+  STR = 136,
+  STV = 137,
+  SWR = 138,
+  TAB = 139,
+  TCF = 140,
+  TDM = 141,
+  TIM = 142,
+  TKG = 143,
+  TME = 144,
+  TMF = 145,
+  TPN = 146,
+  TRK = 147,
+  TRN = 148,
+  VCM = 149,
+  WPN = 150,
+  WTH = 151,
+  XTC = 152
 }
 
 export function unionToRecordType(
   type: RecordType,
-  accessor: (obj:ACL|ACM|ACR|AEM|ANI|AOF|APM|ARM|AST|ATD|ATM|BAL|BEM|BMC|BOV|BUS|CAT|CDM|CFP|CHN|CLT|CMS|COM|COT|CRD|CRM|CSM|CTR|CZM|DFH|DMG|DOA|EME|ENC|ENV|EOO|EOP|EPM|EWR|FCS|GDI|GEO|GJN|GNO|GPX|GRV|GVH|HEL|HYP|IDM|ION|IRO|KMF|KML|KRF|LCC|LCF|LCH|LDM|LGR|LKS|LMR|LND|LNE|LPF|LWK|MBL|MET|MFE|MNF|MNV|MPE|MSL|MST|MTI|NAV|OBD|OBT|OCM|OEM|OMM|OOA|OOB|OOD|OOE|OOI|OOL|OON|OOS|OOT|OPM|OSM|PCF|PHY|PLD|PLG|PLK|PNM|PPE|PRG|PUR|RAF|RCF|RDM|RDO|REV|RFB|RFE|RFM|RFO|ROC|SAR|SCM|SDL|SEN|SEO|SEV|SIT|SKI|SNR|SOI|SON|SPP|SPW|STF|STR|STV|SWR|TCF|TDM|TIM|TKG|TME|TMF|TPN|TRK|TRN|VCM|WPN|WTH|XTC) => ACL|ACM|ACR|AEM|ANI|AOF|APM|ARM|AST|ATD|ATM|BAL|BEM|BMC|BOV|BUS|CAT|CDM|CFP|CHN|CLT|CMS|COM|COT|CRD|CRM|CSM|CTR|CZM|DFH|DMG|DOA|EME|ENC|ENV|EOO|EOP|EPM|EWR|FCS|GDI|GEO|GJN|GNO|GPX|GRV|GVH|HEL|HYP|IDM|ION|IRO|KMF|KML|KRF|LCC|LCF|LCH|LDM|LGR|LKS|LMR|LND|LNE|LPF|LWK|MBL|MET|MFE|MNF|MNV|MPE|MSL|MST|MTI|NAV|OBD|OBT|OCM|OEM|OMM|OOA|OOB|OOD|OOE|OOI|OOL|OON|OOS|OOT|OPM|OSM|PCF|PHY|PLD|PLG|PLK|PNM|PPE|PRG|PUR|RAF|RCF|RDM|RDO|REV|RFB|RFE|RFM|RFO|ROC|SAR|SCM|SDL|SEN|SEO|SEV|SIT|SKI|SNR|SOI|SON|SPP|SPW|STF|STR|STV|SWR|TCF|TDM|TIM|TKG|TME|TMF|TPN|TRK|TRN|VCM|WPN|WTH|XTC|null
-): ACL|ACM|ACR|AEM|ANI|AOF|APM|ARM|AST|ATD|ATM|BAL|BEM|BMC|BOV|BUS|CAT|CDM|CFP|CHN|CLT|CMS|COM|COT|CRD|CRM|CSM|CTR|CZM|DFH|DMG|DOA|EME|ENC|ENV|EOO|EOP|EPM|EWR|FCS|GDI|GEO|GJN|GNO|GPX|GRV|GVH|HEL|HYP|IDM|ION|IRO|KMF|KML|KRF|LCC|LCF|LCH|LDM|LGR|LKS|LMR|LND|LNE|LPF|LWK|MBL|MET|MFE|MNF|MNV|MPE|MSL|MST|MTI|NAV|OBD|OBT|OCM|OEM|OMM|OOA|OOB|OOD|OOE|OOI|OOL|OON|OOS|OOT|OPM|OSM|PCF|PHY|PLD|PLG|PLK|PNM|PPE|PRG|PUR|RAF|RCF|RDM|RDO|REV|RFB|RFE|RFM|RFO|ROC|SAR|SCM|SDL|SEN|SEO|SEV|SIT|SKI|SNR|SOI|SON|SPP|SPW|STF|STR|STV|SWR|TCF|TDM|TIM|TKG|TME|TMF|TPN|TRK|TRN|VCM|WPN|WTH|XTC|null {
+  accessor: (obj:ACL|ACM|ACR|AEM|ANI|AOF|APM|ARM|AST|ATD|ATM|BAL|BEM|BMC|BOV|BUS|CAQ|CAT|CDM|CFP|CHN|CLT|CMS|COM|COT|CRD|CRM|CSM|CTR|CZM|DFH|DMG|DOA|EME|ENC|ENV|EOO|EOP|EPM|ESL|ETM|EWR|FCS|FPC|GDI|GEO|GJN|GNO|GPX|GRV|GVH|HEL|HYP|IDM|ION|IRO|KMF|KML|KRF|LCC|LCF|LCH|LDM|LGR|LKS|LMR|LND|LNE|LPF|LWK|MBL|MET|MFE|MNF|MNV|MPE|MSL|MST|MTI|NAV|OBD|OBT|OCM|OEM|OMM|OOA|OOB|OOD|OOE|OOI|OOL|OON|OOS|OOT|OPM|OSM|PCF|PHY|PLD|PLG|PLK|PNM|PPE|PRG|PRW|PUR|RAF|RCF|RDM|RDO|REV|RFB|RFE|RFM|RFO|ROC|SAR|SCM|SDF|SDL|SDR|SEN|SEO|SEV|SHW|SIT|SKI|SNR|SNW|SOI|SON|SPP|SPW|SRI|STF|STR|STV|SWR|TAB|TCF|TDM|TIM|TKG|TME|TMF|TPN|TRK|TRN|VCM|WPN|WTH|XTC) => ACL|ACM|ACR|AEM|ANI|AOF|APM|ARM|AST|ATD|ATM|BAL|BEM|BMC|BOV|BUS|CAQ|CAT|CDM|CFP|CHN|CLT|CMS|COM|COT|CRD|CRM|CSM|CTR|CZM|DFH|DMG|DOA|EME|ENC|ENV|EOO|EOP|EPM|ESL|ETM|EWR|FCS|FPC|GDI|GEO|GJN|GNO|GPX|GRV|GVH|HEL|HYP|IDM|ION|IRO|KMF|KML|KRF|LCC|LCF|LCH|LDM|LGR|LKS|LMR|LND|LNE|LPF|LWK|MBL|MET|MFE|MNF|MNV|MPE|MSL|MST|MTI|NAV|OBD|OBT|OCM|OEM|OMM|OOA|OOB|OOD|OOE|OOI|OOL|OON|OOS|OOT|OPM|OSM|PCF|PHY|PLD|PLG|PLK|PNM|PPE|PRG|PRW|PUR|RAF|RCF|RDM|RDO|REV|RFB|RFE|RFM|RFO|ROC|SAR|SCM|SDF|SDL|SDR|SEN|SEO|SEV|SHW|SIT|SKI|SNR|SNW|SOI|SON|SPP|SPW|SRI|STF|STR|STV|SWR|TAB|TCF|TDM|TIM|TKG|TME|TMF|TPN|TRK|TRN|VCM|WPN|WTH|XTC|null
+): ACL|ACM|ACR|AEM|ANI|AOF|APM|ARM|AST|ATD|ATM|BAL|BEM|BMC|BOV|BUS|CAQ|CAT|CDM|CFP|CHN|CLT|CMS|COM|COT|CRD|CRM|CSM|CTR|CZM|DFH|DMG|DOA|EME|ENC|ENV|EOO|EOP|EPM|ESL|ETM|EWR|FCS|FPC|GDI|GEO|GJN|GNO|GPX|GRV|GVH|HEL|HYP|IDM|ION|IRO|KMF|KML|KRF|LCC|LCF|LCH|LDM|LGR|LKS|LMR|LND|LNE|LPF|LWK|MBL|MET|MFE|MNF|MNV|MPE|MSL|MST|MTI|NAV|OBD|OBT|OCM|OEM|OMM|OOA|OOB|OOD|OOE|OOI|OOL|OON|OOS|OOT|OPM|OSM|PCF|PHY|PLD|PLG|PLK|PNM|PPE|PRG|PRW|PUR|RAF|RCF|RDM|RDO|REV|RFB|RFE|RFM|RFO|ROC|SAR|SCM|SDF|SDL|SDR|SEN|SEO|SEV|SHW|SIT|SKI|SNR|SNW|SOI|SON|SPP|SPW|SRI|STF|STR|STV|SWR|TAB|TCF|TDM|TIM|TKG|TME|TMF|TPN|TRK|TRN|VCM|WPN|WTH|XTC|null {
   switch(RecordType[type]) {
     case 'NONE': return null; 
     case 'ACL': return accessor(new ACL())! as ACL;
@@ -312,6 +334,7 @@ export function unionToRecordType(
     case 'BMC': return accessor(new BMC())! as BMC;
     case 'BOV': return accessor(new BOV())! as BOV;
     case 'BUS': return accessor(new BUS())! as BUS;
+    case 'CAQ': return accessor(new CAQ())! as CAQ;
     case 'CAT': return accessor(new CAT())! as CAT;
     case 'CDM': return accessor(new CDM())! as CDM;
     case 'CFP': return accessor(new CFP())! as CFP;
@@ -334,8 +357,11 @@ export function unionToRecordType(
     case 'EOO': return accessor(new EOO())! as EOO;
     case 'EOP': return accessor(new EOP())! as EOP;
     case 'EPM': return accessor(new EPM())! as EPM;
+    case 'ESL': return accessor(new ESL())! as ESL;
+    case 'ETM': return accessor(new ETM())! as ETM;
     case 'EWR': return accessor(new EWR())! as EWR;
     case 'FCS': return accessor(new FCS())! as FCS;
+    case 'FPC': return accessor(new FPC())! as FPC;
     case 'GDI': return accessor(new GDI())! as GDI;
     case 'GEO': return accessor(new GEO())! as GEO;
     case 'GJN': return accessor(new GJN())! as GJN;
@@ -396,6 +422,7 @@ export function unionToRecordType(
     case 'PNM': return accessor(new PNM())! as PNM;
     case 'PPE': return accessor(new PPE())! as PPE;
     case 'PRG': return accessor(new PRG())! as PRG;
+    case 'PRW': return accessor(new PRW())! as PRW;
     case 'PUR': return accessor(new PUR())! as PUR;
     case 'RAF': return accessor(new RAF())! as RAF;
     case 'RCF': return accessor(new RCF())! as RCF;
@@ -409,21 +436,27 @@ export function unionToRecordType(
     case 'ROC': return accessor(new ROC())! as ROC;
     case 'SAR': return accessor(new SAR())! as SAR;
     case 'SCM': return accessor(new SCM())! as SCM;
+    case 'SDF': return accessor(new SDF())! as SDF;
     case 'SDL': return accessor(new SDL())! as SDL;
+    case 'SDR': return accessor(new SDR())! as SDR;
     case 'SEN': return accessor(new SEN())! as SEN;
     case 'SEO': return accessor(new SEO())! as SEO;
     case 'SEV': return accessor(new SEV())! as SEV;
+    case 'SHW': return accessor(new SHW())! as SHW;
     case 'SIT': return accessor(new SIT())! as SIT;
     case 'SKI': return accessor(new SKI())! as SKI;
     case 'SNR': return accessor(new SNR())! as SNR;
+    case 'SNW': return accessor(new SNW())! as SNW;
     case 'SOI': return accessor(new SOI())! as SOI;
     case 'SON': return accessor(new SON())! as SON;
     case 'SPP': return accessor(new SPP())! as SPP;
     case 'SPW': return accessor(new SPW())! as SPW;
+    case 'SRI': return accessor(new SRI())! as SRI;
     case 'STF': return accessor(new STF())! as STF;
     case 'STR': return accessor(new STR())! as STR;
     case 'STV': return accessor(new STV())! as STV;
     case 'SWR': return accessor(new SWR())! as SWR;
+    case 'TAB': return accessor(new TAB())! as TAB;
     case 'TCF': return accessor(new TCF())! as TCF;
     case 'TDM': return accessor(new TDM())! as TDM;
     case 'TIM': return accessor(new TIM())! as TIM;
@@ -442,10 +475,10 @@ export function unionToRecordType(
 }
 
 export function unionListToRecordType(
-  type: RecordType,
-  accessor: (index: number, obj:ACL|ACM|ACR|AEM|ANI|AOF|APM|ARM|AST|ATD|ATM|BAL|BEM|BMC|BOV|BUS|CAT|CDM|CFP|CHN|CLT|CMS|COM|COT|CRD|CRM|CSM|CTR|CZM|DFH|DMG|DOA|EME|ENC|ENV|EOO|EOP|EPM|EWR|FCS|GDI|GEO|GJN|GNO|GPX|GRV|GVH|HEL|HYP|IDM|ION|IRO|KMF|KML|KRF|LCC|LCF|LCH|LDM|LGR|LKS|LMR|LND|LNE|LPF|LWK|MBL|MET|MFE|MNF|MNV|MPE|MSL|MST|MTI|NAV|OBD|OBT|OCM|OEM|OMM|OOA|OOB|OOD|OOE|OOI|OOL|OON|OOS|OOT|OPM|OSM|PCF|PHY|PLD|PLG|PLK|PNM|PPE|PRG|PUR|RAF|RCF|RDM|RDO|REV|RFB|RFE|RFM|RFO|ROC|SAR|SCM|SDL|SEN|SEO|SEV|SIT|SKI|SNR|SOI|SON|SPP|SPW|STF|STR|STV|SWR|TCF|TDM|TIM|TKG|TME|TMF|TPN|TRK|TRN|VCM|WPN|WTH|XTC) => ACL|ACM|ACR|AEM|ANI|AOF|APM|ARM|AST|ATD|ATM|BAL|BEM|BMC|BOV|BUS|CAT|CDM|CFP|CHN|CLT|CMS|COM|COT|CRD|CRM|CSM|CTR|CZM|DFH|DMG|DOA|EME|ENC|ENV|EOO|EOP|EPM|EWR|FCS|GDI|GEO|GJN|GNO|GPX|GRV|GVH|HEL|HYP|IDM|ION|IRO|KMF|KML|KRF|LCC|LCF|LCH|LDM|LGR|LKS|LMR|LND|LNE|LPF|LWK|MBL|MET|MFE|MNF|MNV|MPE|MSL|MST|MTI|NAV|OBD|OBT|OCM|OEM|OMM|OOA|OOB|OOD|OOE|OOI|OOL|OON|OOS|OOT|OPM|OSM|PCF|PHY|PLD|PLG|PLK|PNM|PPE|PRG|PUR|RAF|RCF|RDM|RDO|REV|RFB|RFE|RFM|RFO|ROC|SAR|SCM|SDL|SEN|SEO|SEV|SIT|SKI|SNR|SOI|SON|SPP|SPW|STF|STR|STV|SWR|TCF|TDM|TIM|TKG|TME|TMF|TPN|TRK|TRN|VCM|WPN|WTH|XTC|null,
+  type: RecordType, 
+  accessor: (index: number, obj:ACL|ACM|ACR|AEM|ANI|AOF|APM|ARM|AST|ATD|ATM|BAL|BEM|BMC|BOV|BUS|CAQ|CAT|CDM|CFP|CHN|CLT|CMS|COM|COT|CRD|CRM|CSM|CTR|CZM|DFH|DMG|DOA|EME|ENC|ENV|EOO|EOP|EPM|ESL|ETM|EWR|FCS|FPC|GDI|GEO|GJN|GNO|GPX|GRV|GVH|HEL|HYP|IDM|ION|IRO|KMF|KML|KRF|LCC|LCF|LCH|LDM|LGR|LKS|LMR|LND|LNE|LPF|LWK|MBL|MET|MFE|MNF|MNV|MPE|MSL|MST|MTI|NAV|OBD|OBT|OCM|OEM|OMM|OOA|OOB|OOD|OOE|OOI|OOL|OON|OOS|OOT|OPM|OSM|PCF|PHY|PLD|PLG|PLK|PNM|PPE|PRG|PRW|PUR|RAF|RCF|RDM|RDO|REV|RFB|RFE|RFM|RFO|ROC|SAR|SCM|SDF|SDL|SDR|SEN|SEO|SEV|SHW|SIT|SKI|SNR|SNW|SOI|SON|SPP|SPW|SRI|STF|STR|STV|SWR|TAB|TCF|TDM|TIM|TKG|TME|TMF|TPN|TRK|TRN|VCM|WPN|WTH|XTC) => ACL|ACM|ACR|AEM|ANI|AOF|APM|ARM|AST|ATD|ATM|BAL|BEM|BMC|BOV|BUS|CAQ|CAT|CDM|CFP|CHN|CLT|CMS|COM|COT|CRD|CRM|CSM|CTR|CZM|DFH|DMG|DOA|EME|ENC|ENV|EOO|EOP|EPM|ESL|ETM|EWR|FCS|FPC|GDI|GEO|GJN|GNO|GPX|GRV|GVH|HEL|HYP|IDM|ION|IRO|KMF|KML|KRF|LCC|LCF|LCH|LDM|LGR|LKS|LMR|LND|LNE|LPF|LWK|MBL|MET|MFE|MNF|MNV|MPE|MSL|MST|MTI|NAV|OBD|OBT|OCM|OEM|OMM|OOA|OOB|OOD|OOE|OOI|OOL|OON|OOS|OOT|OPM|OSM|PCF|PHY|PLD|PLG|PLK|PNM|PPE|PRG|PRW|PUR|RAF|RCF|RDM|RDO|REV|RFB|RFE|RFM|RFO|ROC|SAR|SCM|SDF|SDL|SDR|SEN|SEO|SEV|SHW|SIT|SKI|SNR|SNW|SOI|SON|SPP|SPW|SRI|STF|STR|STV|SWR|TAB|TCF|TDM|TIM|TKG|TME|TMF|TPN|TRK|TRN|VCM|WPN|WTH|XTC|null, 
   index: number
-): ACL|ACM|ACR|AEM|ANI|AOF|APM|ARM|AST|ATD|ATM|BAL|BEM|BMC|BOV|BUS|CAT|CDM|CFP|CHN|CLT|CMS|COM|COT|CRD|CRM|CSM|CTR|CZM|DFH|DMG|DOA|EME|ENC|ENV|EOO|EOP|EPM|EWR|FCS|GDI|GEO|GJN|GNO|GPX|GRV|GVH|HEL|HYP|IDM|ION|IRO|KMF|KML|KRF|LCC|LCF|LCH|LDM|LGR|LKS|LMR|LND|LNE|LPF|LWK|MBL|MET|MFE|MNF|MNV|MPE|MSL|MST|MTI|NAV|OBD|OBT|OCM|OEM|OMM|OOA|OOB|OOD|OOE|OOI|OOL|OON|OOS|OOT|OPM|OSM|PCF|PHY|PLD|PLG|PLK|PNM|PPE|PRG|PUR|RAF|RCF|RDM|RDO|REV|RFB|RFE|RFM|RFO|ROC|SAR|SCM|SDL|SEN|SEO|SEV|SIT|SKI|SNR|SOI|SON|SPP|SPW|STF|STR|STV|SWR|TCF|TDM|TIM|TKG|TME|TMF|TPN|TRK|TRN|VCM|WPN|WTH|XTC|null {
+): ACL|ACM|ACR|AEM|ANI|AOF|APM|ARM|AST|ATD|ATM|BAL|BEM|BMC|BOV|BUS|CAQ|CAT|CDM|CFP|CHN|CLT|CMS|COM|COT|CRD|CRM|CSM|CTR|CZM|DFH|DMG|DOA|EME|ENC|ENV|EOO|EOP|EPM|ESL|ETM|EWR|FCS|FPC|GDI|GEO|GJN|GNO|GPX|GRV|GVH|HEL|HYP|IDM|ION|IRO|KMF|KML|KRF|LCC|LCF|LCH|LDM|LGR|LKS|LMR|LND|LNE|LPF|LWK|MBL|MET|MFE|MNF|MNV|MPE|MSL|MST|MTI|NAV|OBD|OBT|OCM|OEM|OMM|OOA|OOB|OOD|OOE|OOI|OOL|OON|OOS|OOT|OPM|OSM|PCF|PHY|PLD|PLG|PLK|PNM|PPE|PRG|PRW|PUR|RAF|RCF|RDM|RDO|REV|RFB|RFE|RFM|RFO|ROC|SAR|SCM|SDF|SDL|SDR|SEN|SEO|SEV|SHW|SIT|SKI|SNR|SNW|SOI|SON|SPP|SPW|SRI|STF|STR|STV|SWR|TAB|TCF|TDM|TIM|TKG|TME|TMF|TPN|TRK|TRN|VCM|WPN|WTH|XTC|null {
   switch(RecordType[type]) {
     case 'NONE': return null; 
     case 'ACL': return accessor(index, new ACL())! as ACL;
@@ -464,6 +497,7 @@ export function unionListToRecordType(
     case 'BMC': return accessor(index, new BMC())! as BMC;
     case 'BOV': return accessor(index, new BOV())! as BOV;
     case 'BUS': return accessor(index, new BUS())! as BUS;
+    case 'CAQ': return accessor(index, new CAQ())! as CAQ;
     case 'CAT': return accessor(index, new CAT())! as CAT;
     case 'CDM': return accessor(index, new CDM())! as CDM;
     case 'CFP': return accessor(index, new CFP())! as CFP;
@@ -486,8 +520,11 @@ export function unionListToRecordType(
     case 'EOO': return accessor(index, new EOO())! as EOO;
     case 'EOP': return accessor(index, new EOP())! as EOP;
     case 'EPM': return accessor(index, new EPM())! as EPM;
+    case 'ESL': return accessor(index, new ESL())! as ESL;
+    case 'ETM': return accessor(index, new ETM())! as ETM;
     case 'EWR': return accessor(index, new EWR())! as EWR;
     case 'FCS': return accessor(index, new FCS())! as FCS;
+    case 'FPC': return accessor(index, new FPC())! as FPC;
     case 'GDI': return accessor(index, new GDI())! as GDI;
     case 'GEO': return accessor(index, new GEO())! as GEO;
     case 'GJN': return accessor(index, new GJN())! as GJN;
@@ -548,6 +585,7 @@ export function unionListToRecordType(
     case 'PNM': return accessor(index, new PNM())! as PNM;
     case 'PPE': return accessor(index, new PPE())! as PPE;
     case 'PRG': return accessor(index, new PRG())! as PRG;
+    case 'PRW': return accessor(index, new PRW())! as PRW;
     case 'PUR': return accessor(index, new PUR())! as PUR;
     case 'RAF': return accessor(index, new RAF())! as RAF;
     case 'RCF': return accessor(index, new RCF())! as RCF;
@@ -561,21 +599,27 @@ export function unionListToRecordType(
     case 'ROC': return accessor(index, new ROC())! as ROC;
     case 'SAR': return accessor(index, new SAR())! as SAR;
     case 'SCM': return accessor(index, new SCM())! as SCM;
+    case 'SDF': return accessor(index, new SDF())! as SDF;
     case 'SDL': return accessor(index, new SDL())! as SDL;
+    case 'SDR': return accessor(index, new SDR())! as SDR;
     case 'SEN': return accessor(index, new SEN())! as SEN;
     case 'SEO': return accessor(index, new SEO())! as SEO;
     case 'SEV': return accessor(index, new SEV())! as SEV;
+    case 'SHW': return accessor(index, new SHW())! as SHW;
     case 'SIT': return accessor(index, new SIT())! as SIT;
     case 'SKI': return accessor(index, new SKI())! as SKI;
     case 'SNR': return accessor(index, new SNR())! as SNR;
+    case 'SNW': return accessor(index, new SNW())! as SNW;
     case 'SOI': return accessor(index, new SOI())! as SOI;
     case 'SON': return accessor(index, new SON())! as SON;
     case 'SPP': return accessor(index, new SPP())! as SPP;
     case 'SPW': return accessor(index, new SPW())! as SPW;
+    case 'SRI': return accessor(index, new SRI())! as SRI;
     case 'STF': return accessor(index, new STF())! as STF;
     case 'STR': return accessor(index, new STR())! as STR;
     case 'STV': return accessor(index, new STV())! as STV;
     case 'SWR': return accessor(index, new SWR())! as SWR;
+    case 'TAB': return accessor(index, new TAB())! as TAB;
     case 'TCF': return accessor(index, new TCF())! as TCF;
     case 'TDM': return accessor(index, new TDM())! as TDM;
     case 'TIM': return accessor(index, new TIM())! as TIM;

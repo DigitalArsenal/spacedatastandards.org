@@ -1,0 +1,399 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "propagatorStateFlags": {
+      "type": "string",
+      "enum": [
+        "VALID",
+        "IN_ECLIPSE",
+        "DECAYED",
+        "EXTRAPOLATED",
+        "RESERVED_4",
+        "RESERVED_5",
+        "RESERVED_6",
+        "RESERVED_7"
+      ]
+    },
+    "propagatorErrorCode": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "UNKNOWN",
+        "UNKNOWN_ENTITY",
+        "INVALID_EPOCH",
+        "OUTPUT_BUFFER_OVERFLOW",
+        "NOT_INITIALIZED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "int",
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "No error."
+        },
+        "UNKNOWN": {
+          "value": 1,
+          "description": "Unknown / unspecified error."
+        },
+        "UNKNOWN_ENTITY": {
+          "value": 2,
+          "description": "One or more entity handles not found."
+        },
+        "INVALID_EPOCH": {
+          "value": 3,
+          "description": "Invalid epoch (NaN, out of range, before earliest init epoch, etc.)."
+        },
+        "OUTPUT_BUFFER_OVERFLOW": {
+          "value": 4,
+          "description": "Output buffer too small for the requested count."
+        },
+        "NOT_INITIALIZED": {
+          "value": 5,
+          "description": "Propagator not initialized."
+        }
+      }
+    },
+    "prwSourceKind": {
+      "type": "string",
+      "enum": [
+        "OMM",
+        "TLE",
+        "OCM",
+        "OEM",
+        "PPE",
+        "KEPLERIAN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "OMM": {
+          "value": 0,
+          "description": "Source is an OMM (CCSDS mean elements) FlatBuffer."
+        },
+        "TLE": {
+          "value": 1,
+          "description": "Source is a raw TLE line pair (3LE supported via NAME)."
+        },
+        "OCM": {
+          "value": 2,
+          "description": "Source is an OCM FlatBuffer."
+        },
+        "OEM": {
+          "value": 3,
+          "description": "Source is an OEM FlatBuffer."
+        },
+        "PPE": {
+          "value": 4,
+          "description": "Source is a PPE (polynomial ephemeris) FlatBuffer."
+        },
+        "KEPLERIAN": {
+          "value": 5,
+          "description": "Source is a single classical Keplerian element set."
+        }
+      }
+    },
+    "PRWInit": {
+      "type": "object",
+      "description": "Propagator initialization request \u2014 assigns TLE / OMM / Keplerian /\npolynomial inputs to entity handles.\n\nThe actual per-entity source record is carried inline as raw bytes\ntagged with SOURCE_KIND and, where useful, a SDS file_identifier.\nCallers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the\nbytes verbatim; the propagator uses SOURCE_KIND to decide how to\nconsume them.",
+      "properties": {
+        "ENTITY_HANDLES": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "Entity handles to assign results to (same order as SOURCES[]).",
+          "x-flatbuffer-type": "[uint]"
+        },
+        "SOURCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PRWInitSource"
+          },
+          "description": "Per-entity source records, encoded as SDS FlatBuffers.",
+          "x-flatbuffer-type": "[PRWInitSource]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PRWKeplerianElements": {
+      "type": "object",
+      "properties": {
+        "MU": {
+          "type": "number",
+          "description": "Gravitational parameter of the central body (km^3 / s^2).",
+          "x-flatbuffer-type": "double"
+        },
+        "SEMI_MAJOR_AXIS": {
+          "type": "number",
+          "description": "Semi-major axis (km).",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "description": "Eccentricity (0 = circular, <1 = ellipse).",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "description": "Inclination (radians).",
+          "x-flatbuffer-type": "double"
+        },
+        "RAAN": {
+          "type": "number",
+          "description": "Right ascension of the ascending node (radians).",
+          "x-flatbuffer-type": "double"
+        },
+        "ARG_PERIAPSIS": {
+          "type": "number",
+          "description": "Argument of periapsis (radians).",
+          "x-flatbuffer-type": "double"
+        },
+        "TRUE_ANOMALY": {
+          "type": "number",
+          "description": "True anomaly (radians).",
+          "x-flatbuffer-type": "double"
+        },
+        "EPOCH": {
+          "type": "number",
+          "description": "Epoch as Julian date.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PRWTleLines": {
+      "type": "object",
+      "properties": {
+        "LINE1": {
+          "type": "string",
+          "description": "TLE line 1 (69 characters).",
+          "x-flatbuffer-type": "string"
+        },
+        "LINE2": {
+          "type": "string",
+          "description": "TLE line 2 (69 characters).",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Satellite name (optional, line 0 of 3LE).",
+          "x-flatbuffer-type": "string"
+        },
+        "NORAD_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "NORAD catalog number parsed from the TLE.",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PRWInitSource": {
+      "type": "object",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/prwSourceKind",
+          "description": "Wire kind identifier for BYTES.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "OMM": {
+              "value": 0,
+              "description": "Source is an OMM (CCSDS mean elements) FlatBuffer."
+            },
+            "TLE": {
+              "value": 1,
+              "description": "Source is a raw TLE line pair (3LE supported via NAME)."
+            },
+            "OCM": {
+              "value": 2,
+              "description": "Source is an OCM FlatBuffer."
+            },
+            "OEM": {
+              "value": 3,
+              "description": "Source is an OEM FlatBuffer."
+            },
+            "PPE": {
+              "value": 4,
+              "description": "Source is a PPE (polynomial ephemeris) FlatBuffer."
+            },
+            "KEPLERIAN": {
+              "value": 5,
+              "description": "Source is a single classical Keplerian element set."
+            }
+          }
+        },
+        "FILE_IDENTIFIER": {
+          "type": "string",
+          "description": "Optional SDS file_identifier for BYTES (`$OMM`, `$OCM`, `$OEM`, `$PPE`).",
+          "x-flatbuffer-type": "string"
+        },
+        "BYTES": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Encoded source record as a FlatBuffer (consumed per KIND).",
+          "x-flatbuffer-type": "[uint8]"
+        },
+        "KEPLERIAN": {
+          "$ref": "#/definitions/PRWKeplerianElements",
+          "description": "Convenience inline form when KIND == KEPLERIAN.",
+          "x-flatbuffer-type": "PRWKeplerianElements"
+        },
+        "TLE": {
+          "$ref": "#/definitions/PRWTleLines",
+          "description": "Convenience inline form when KIND == TLE.",
+          "x-flatbuffer-type": "PRWTleLines"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PRWBatchRequest": {
+      "type": "object",
+      "description": "Batch propagation request \u2014 propagate every entity in ENTITY_HANDLES[] to\nEPOCH and write the result StateVector stream to OUTPUT_OFFSET in the\nshared arena.",
+      "properties": {
+        "EPOCH": {
+          "type": "number",
+          "description": "Target epoch as a Julian date (TIME_SYSTEM is configured on the host).",
+          "x-flatbuffer-type": "double"
+        },
+        "ENTITY_HANDLES": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "Entity handles to propagate (empty = all initialized entities).",
+          "x-flatbuffer-type": "[uint]"
+        },
+        "OUTPUT_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Output buffer offset in the arena where the StateVector stream begins.",
+          "x-flatbuffer-type": "uint"
+        },
+        "MAX_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Maximum entities to process in this call (0 = unbounded).",
+          "x-flatbuffer-type": "uint"
+        },
+        "TARGET_FRAME": {
+          "type": "string",
+          "description": "Target reference frame for the output state stream. Matches enum\nvalues in SDS `RFM`. If zero, the propagator chooses its native frame.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PRWBatchResponse": {
+      "type": "object",
+      "description": "Batch propagation response header \u2014 describes the stream written to\nOUTPUT_OFFSET and reports errors. The stream itself is\n`STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.",
+      "properties": {
+        "COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of state vectors written.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OUTPUT_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Offset in the arena where the state-vector stream begins.",
+          "x-flatbuffer-type": "uint"
+        },
+        "STATE_VECTOR_SIZE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Components per state vector (6 = PV, 9 = PVA). Mirrors OCM.STATE_VECTOR_SIZE.",
+          "x-flatbuffer-type": "uint8"
+        },
+        "REFERENCE_FRAME": {
+          "type": "string",
+          "description": "Reference frame for the stream (SDS `RFM`-compatible string tag).",
+          "x-flatbuffer-type": "string"
+        },
+        "FLAGS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/propagatorStateFlags"
+          },
+          "description": "Per-entity status flags (same cardinality as COUNT).",
+          "x-flatbuffer-type": "[propagatorStateFlags]"
+        },
+        "ERROR_CODE": {
+          "$ref": "#/definitions/propagatorErrorCode",
+          "description": "Error code (0 == OK).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "int",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "No error."
+            },
+            "UNKNOWN": {
+              "value": 1,
+              "description": "Unknown / unspecified error."
+            },
+            "UNKNOWN_ENTITY": {
+              "value": 2,
+              "description": "One or more entity handles not found."
+            },
+            "INVALID_EPOCH": {
+              "value": 3,
+              "description": "Invalid epoch (NaN, out of range, before earliest init epoch, etc.)."
+            },
+            "OUTPUT_BUFFER_OVERFLOW": {
+              "value": 4,
+              "description": "Output buffer too small for the requested count."
+            },
+            "NOT_INITIALIZED": {
+              "value": 5,
+              "description": "Propagator not initialized."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Optional error message when ERROR_CODE != OK.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PRW": {
+      "type": "object",
+      "description": "Propagator Runtime Wire \u2014 envelope that carries either an init request,\na batch request, or a batch response across a runtime boundary.",
+      "properties": {
+        "INIT": {
+          "$ref": "#/definitions/PRWInit",
+          "x-flatbuffer-type": "PRWInit"
+        },
+        "BATCH_REQUEST": {
+          "$ref": "#/definitions/PRWBatchRequest",
+          "x-flatbuffer-type": "PRWBatchRequest"
+        },
+        "BATCH_RESPONSE": {
+          "$ref": "#/definitions/PRWBatchResponse",
+          "x-flatbuffer-type": "PRWBatchResponse"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/PRW",
+  "x-flatbuffer-root-type": "PRW",
+  "x-flatbuffer-file-identifier": "$PRW"
+}

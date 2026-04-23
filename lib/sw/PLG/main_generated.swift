@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Plugin type category
-public enum pluginType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum pluginCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -32,13 +32,13 @@ public enum pluginType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   ///  GLSL shader plugins for custom visualization
   case shader = 8
 
-  public static var max: pluginType { return .shader }
-  public static var min: pluginType { return .sensor }
+  public static var max: pluginCategory { return .shader }
+  public static var min: pluginCategory { return .sensor }
 }
 
 
 ///  Storefront payment model for the plugin listing
-public enum paymentModel: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum purchaseTier: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -49,13 +49,13 @@ public enum paymentModel: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
   ///  Recurring subscription purchase
   case subscription = 2
 
-  public static var max: paymentModel { return .subscription }
-  public static var min: paymentModel { return .free }
+  public static var max: purchaseTier { return .subscription }
+  public static var min: purchaseTier { return .free }
 }
 
 
 ///  Publication visibility for the plugin listing
-public enum listingStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum publicationState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -66,8 +66,8 @@ public enum listingStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
   ///  No longer offered for new installs or purchases
   case retired = 2
 
-  public static var max: listingStatus { return .retired }
-  public static var min: listingStatus { return .public_ }
+  public static var max: publicationState { return .retired }
+  public static var min: publicationState { return .public_ }
 }
 
 
@@ -323,7 +323,7 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var TAGLINE: String? { let o = _accessor.offset(VTOFFSET.TAGLINE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TAGLINESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TAGLINE.v) }
   ///  Type/category of the plugin
-  public var PLUGIN_TYPE: pluginType { let o = _accessor.offset(VTOFFSET.PLUGIN_TYPE.v); return o == 0 ? .sensor : pluginType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sensor }
+  public var PLUGIN_TYPE: pluginCategory { let o = _accessor.offset(VTOFFSET.PLUGIN_TYPE.v); return o == 0 ? .sensor : pluginCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sensor }
   ///  Human-readable publisher or organization name
   public var PUBLISHER_NAME: String? { let o = _accessor.offset(VTOFFSET.PUBLISHER_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PUBLISHER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PUBLISHER_NAME.v) }
@@ -405,7 +405,7 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var LICENSE: String? { let o = _accessor.offset(VTOFFSET.LICENSE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LICENSE.v) }
   ///  Commercial model used for storefront purchase flows
-  public var PAYMENT_MODEL: paymentModel { let o = _accessor.offset(VTOFFSET.PAYMENT_MODEL.v); return o == 0 ? .free : paymentModel(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .free }
+  public var PAYMENT_MODEL: purchaseTier { let o = _accessor.offset(VTOFFSET.PAYMENT_MODEL.v); return o == 0 ? .free : purchaseTier(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .free }
   ///  Price in USD cents for one-time purchase or subscription period
   public var PRICE_USD_CENTS: UInt32 { let o = _accessor.offset(VTOFFSET.PRICE_USD_CENTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Subscription billing period length in days
@@ -413,7 +413,7 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Accepted payment methods, e.g. "stripe", "sol", "usdc"
   public var ACCEPTED_PAYMENT_METHODS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ACCEPTED_PAYMENT_METHODS.v, byteSize: 4) }
   ///  Storefront publication state for this manifest version
-  public var LISTING_STATUS: listingStatus { let o = _accessor.offset(VTOFFSET.LISTING_STATUS.v); return o == 0 ? .public_ : listingStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .public_ }
+  public var LISTING_STATUS: publicationState { let o = _accessor.offset(VTOFFSET.LISTING_STATUS.v); return o == 0 ? .public_ : publicationState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .public_ }
   ///  Ed25519 signature from provider over manifest
   public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.SIGNATURE.v, byteSize: 1) }
   public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SIGNATURE.v, body: body) }
@@ -423,7 +423,7 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VTOFFSET.VERSION.p) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
   public static func add(TAGLINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGLINE, at: VTOFFSET.TAGLINE.p) }
-  public static func add(PLUGIN_TYPE: pluginType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLUGIN_TYPE.rawValue, def: 0, at: VTOFFSET.PLUGIN_TYPE.p) }
+  public static func add(PLUGIN_TYPE: pluginCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLUGIN_TYPE.rawValue, def: 0, at: VTOFFSET.PLUGIN_TYPE.p) }
   public static func add(PUBLISHER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISHER_NAME, at: VTOFFSET.PUBLISHER_NAME.p) }
   public static func add(PUBLISHER_HANDLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISHER_HANDLE, at: VTOFFSET.PUBLISHER_HANDLE.p) }
   public static func add(PUBLISHER_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISHER_URL, at: VTOFFSET.PUBLISHER_URL.p) }
@@ -457,11 +457,11 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(CHANGELOG_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANGELOG_URL, at: VTOFFSET.CHANGELOG_URL.p) }
   public static func add(ICON_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_URL, at: VTOFFSET.ICON_URL.p) }
   public static func add(LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE, at: VTOFFSET.LICENSE.p) }
-  public static func add(PAYMENT_MODEL: paymentModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYMENT_MODEL.rawValue, def: 0, at: VTOFFSET.PAYMENT_MODEL.p) }
+  public static func add(PAYMENT_MODEL: purchaseTier, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYMENT_MODEL.rawValue, def: 0, at: VTOFFSET.PAYMENT_MODEL.p) }
   public static func add(PRICE_USD_CENTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRICE_USD_CENTS, def: 0, at: VTOFFSET.PRICE_USD_CENTS.p) }
   public static func add(SUBSCRIPTION_PERIOD_DAYS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUBSCRIPTION_PERIOD_DAYS, def: 0, at: VTOFFSET.SUBSCRIPTION_PERIOD_DAYS.p) }
   public static func addVectorOf(ACCEPTED_PAYMENT_METHODS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCEPTED_PAYMENT_METHODS, at: VTOFFSET.ACCEPTED_PAYMENT_METHODS.p) }
-  public static func add(LISTING_STATUS: listingStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LISTING_STATUS.rawValue, def: 0, at: VTOFFSET.LISTING_STATUS.p) }
+  public static func add(LISTING_STATUS: publicationState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LISTING_STATUS.rawValue, def: 0, at: VTOFFSET.LISTING_STATUS.p) }
   public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VTOFFSET.SIGNATURE.p) }
   public static func endPLG(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8]); return end }
   public static func createPLG(
@@ -471,7 +471,7 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     VERSIONOffset VERSION: Offset,
     DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
     TAGLINEOffset TAGLINE: Offset = Offset(),
-    PLUGIN_TYPE: pluginType = .sensor,
+    PLUGIN_TYPE: pluginCategory = .sensor,
     PUBLISHER_NAMEOffset PUBLISHER_NAME: Offset = Offset(),
     PUBLISHER_HANDLEOffset PUBLISHER_HANDLE: Offset = Offset(),
     PUBLISHER_URLOffset PUBLISHER_URL: Offset = Offset(),
@@ -504,11 +504,11 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     CHANGELOG_URLOffset CHANGELOG_URL: Offset = Offset(),
     ICON_URLOffset ICON_URL: Offset = Offset(),
     LICENSEOffset LICENSE: Offset = Offset(),
-    PAYMENT_MODEL: paymentModel = .free,
+    PAYMENT_MODEL: purchaseTier = .free,
     PRICE_USD_CENTS: UInt32 = 0,
     SUBSCRIPTION_PERIOD_DAYS: UInt32 = 0,
     ACCEPTED_PAYMENT_METHODSVectorOffset ACCEPTED_PAYMENT_METHODS: Offset = Offset(),
-    LISTING_STATUS: listingStatus = .public_,
+    LISTING_STATUS: publicationState = .public_,
     SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
   ) -> Offset {
     let __start = PLG.startPLG(&fbb)
@@ -566,7 +566,7 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TAGLINE.p, fieldName: "TAGLINE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PLUGIN_TYPE.p, fieldName: "PLUGIN_TYPE", required: false, type: pluginType.self)
+    try _v.visit(field: VTOFFSET.PLUGIN_TYPE.p, fieldName: "PLUGIN_TYPE", required: false, type: pluginCategory.self)
     try _v.visit(field: VTOFFSET.PUBLISHER_NAME.p, fieldName: "PUBLISHER_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PUBLISHER_HANDLE.p, fieldName: "PUBLISHER_HANDLE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PUBLISHER_URL.p, fieldName: "PUBLISHER_URL", required: false, type: ForwardOffset<String>.self)
@@ -599,11 +599,11 @@ public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.CHANGELOG_URL.p, fieldName: "CHANGELOG_URL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ICON_URL.p, fieldName: "ICON_URL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LICENSE.p, fieldName: "LICENSE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PAYMENT_MODEL.p, fieldName: "PAYMENT_MODEL", required: false, type: paymentModel.self)
+    try _v.visit(field: VTOFFSET.PAYMENT_MODEL.p, fieldName: "PAYMENT_MODEL", required: false, type: purchaseTier.self)
     try _v.visit(field: VTOFFSET.PRICE_USD_CENTS.p, fieldName: "PRICE_USD_CENTS", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.SUBSCRIPTION_PERIOD_DAYS.p, fieldName: "SUBSCRIPTION_PERIOD_DAYS", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.ACCEPTED_PAYMENT_METHODS.p, fieldName: "ACCEPTED_PAYMENT_METHODS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.LISTING_STATUS.p, fieldName: "LISTING_STATUS", required: false, type: listingStatus.self)
+    try _v.visit(field: VTOFFSET.LISTING_STATUS.p, fieldName: "LISTING_STATUS", required: false, type: publicationState.self)
     try _v.visit(field: VTOFFSET.SIGNATURE.p, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }

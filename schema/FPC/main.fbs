@@ -1,5 +1,5 @@
-// Hash: ed9122b34cd7dd561b012919a09a249413c0e244df8640eb7f5dae86cf968a84
-// Version: 0.0.1
+// Hash: aee4bad30736b17959d77c93875084a5e59410997228b601306b418b1e2c5d49
+// Version: 0.0.2
 // -----------------------------------END_HEADER
 /// Algorithm selection hint for single-source shortest-path solves.
 enum shortestPathAlgorithm : ubyte {

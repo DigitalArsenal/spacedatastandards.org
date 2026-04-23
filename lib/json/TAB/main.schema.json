@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "payloadWireFormat" : {
+      "type" : "string",
+      "enum": ["FLATBUFFER", "ALIGNED_BINARY"]
+    },
+    "bufferMutability" : {
+      "type" : "string",
+      "enum": ["IMMUTABLE", "SINGLE_WRITER_MUTABLE", "APPEND_ONLY"]
+    },
+    "bufferOwnership" : {
+      "type" : "string",
+      "enum": ["HOST_OWNED", "PLUGIN_OWNED", "TRANSFERRED"]
+    },
+    "FlatBufferTypeRef" : {
+      "type" : "object",
+      "description" : "Payload-schema identity for a stream frame or an accepted port type.",
+      "properties" : {
+        "SCHEMA_NAME" : {
+                "type" : "string",
+                "description" : "Logical schema name (for example `OMM.fbs` or `OCM.fbs`)."
+              },
+        "FILE_IDENTIFIER" : {
+                "type" : "string",
+                "description" : "Optional 4-byte FlatBuffer file identifier."
+              },
+        "SCHEMA_VERSION" : {
+                "type" : "string",
+                "description" : "Optional semver or schema revision string."
+              },
+        "ROOT_TYPE" : {
+                "type" : "string",
+                "description" : "Optional root type name within the schema."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TAB" : {
+      "type" : "object",
+      "description" : "Typed Arena Buffer — one descriptor for a payload slot in a shared arena.",
+      "properties" : {
+        "OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Byte offset of the payload body within the arena."
+              },
+        "SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Byte length of the payload body."
+              },
+        "ALIGNMENT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Required start alignment of the payload body (in bytes)."
+              },
+        "WIRE_FORMAT" : {
+                "$ref" : "#/definitions/payloadWireFormat",
+                "description" : "Wire format for the body."
+              },
+        "TYPE_REF" : {
+                "$ref" : "#/definitions/FlatBufferTypeRef",
+                "description" : "Optional payload schema identity."
+              },
+        "MUTABILITY" : {
+                "$ref" : "#/definitions/bufferMutability",
+                "description" : "Mutability contract for the slot."
+              },
+        "OWNERSHIP" : {
+                "$ref" : "#/definitions/bufferOwnership",
+                "description" : "Ownership contract for the slot."
+              },
+        "FRAME_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Optional opaque frame identifier for stream bookkeeping."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/TAB"
+}

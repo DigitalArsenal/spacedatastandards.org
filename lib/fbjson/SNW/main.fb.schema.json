@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "snwErrorCode": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "UNKNOWN",
+        "UNKNOWN_SENSOR",
+        "INVALID_EPOCH",
+        "OUTPUT_BUFFER_OVERFLOW",
+        "NOT_INITIALIZED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "int",
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0
+        },
+        "UNKNOWN": {
+          "value": 1
+        },
+        "UNKNOWN_SENSOR": {
+          "value": 2
+        },
+        "INVALID_EPOCH": {
+          "value": 3
+        },
+        "OUTPUT_BUFFER_OVERFLOW": {
+          "value": 4
+        },
+        "NOT_INITIALIZED": {
+          "value": 5
+        }
+      }
+    },
+    "SNWBatchRequest": {
+      "type": "object",
+      "description": "Batch target detection request.\n\nSensor position and orientation are passed inline (not via an arena\noffset) because they are small and uniform across a batch. The target\nstream lives at INPUT_OFFSET as a tightly packed array of `targetState`\nstructs from SDR; the output detection stream is written to\nOUTPUT_OFFSET as a tightly packed array of SDR `detectionResult` structs.",
+      "properties": {
+        "SENSOR_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Sensor-configuration identifier assigned during sensor registration.",
+          "x-flatbuffer-type": "uint"
+        },
+        "SENSOR_POS_X": {
+          "type": "number",
+          "description": "Sensor position in ECEF (meters).",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_POS_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_POS_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_ORIENT_W": {
+          "type": "number",
+          "description": "Sensor orientation as a unit quaternion (W, X, Y, Z).",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_ORIENT_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_ORIENT_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_ORIENT_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INPUT_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Byte offset in the arena where the targetState[] input stream begins.",
+          "x-flatbuffer-type": "uint"
+        },
+        "INPUT_ALIGNMENT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Required start alignment for INPUT_OFFSET (bytes).",
+          "x-flatbuffer-type": "uint"
+        },
+        "TARGET_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of target records at INPUT_OFFSET.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OUTPUT_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Byte offset in the arena where the detectionResult[] output stream\nwill be written.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OUTPUT_ALIGNMENT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Required start alignment for OUTPUT_OFFSET (bytes).",
+          "x-flatbuffer-type": "uint"
+        },
+        "EPOCH": {
+          "type": "number",
+          "description": "Current time as a Julian date.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SNWBatchResponse": {
+      "type": "object",
+      "description": "Batch target detection response header.",
+      "properties": {
+        "COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of detection records written to OUTPUT_OFFSET.",
+          "x-flatbuffer-type": "uint"
+        },
+        "DETECTED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of targets whose SNR met the detection threshold.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OUTPUT_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Byte offset where the detectionResult[] stream starts.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ERROR_CODE": {
+          "$ref": "#/definitions/snwErrorCode",
+          "description": "Error code (0 == OK).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "int",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0
+            },
+            "UNKNOWN": {
+              "value": 1
+            },
+            "UNKNOWN_SENSOR": {
+              "value": 2
+            },
+            "INVALID_EPOCH": {
+              "value": 3
+            },
+            "OUTPUT_BUFFER_OVERFLOW": {
+              "value": 4
+            },
+            "NOT_INITIALIZED": {
+              "value": 5
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Optional error message when ERROR_CODE != OK.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SNW": {
+      "type": "object",
+      "description": "Sensor Runtime Wire envelope \u2014 carries either a batch request or a batch\nresponse across the runtime boundary.",
+      "properties": {
+        "BATCH_REQUEST": {
+          "$ref": "#/definitions/SNWBatchRequest",
+          "x-flatbuffer-type": "SNWBatchRequest"
+        },
+        "BATCH_RESPONSE": {
+          "$ref": "#/definitions/SNWBatchResponse",
+          "x-flatbuffer-type": "SNWBatchResponse"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SNW",
+  "x-flatbuffer-root-type": "SNW",
+  "x-flatbuffer-file-identifier": "$SNW"
+}

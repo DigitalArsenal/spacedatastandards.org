@@ -1,5 +1,5 @@
-// Hash: 86e8508b45d0d87d397824cd537e4b1c4a0943eca3e00afe4009546598108142
-// Version: 0.0.1
+// Hash: 75da6975561f73e9b968483e08a03fc4c314bc32a31499fb947f0c03ec799b1c
+// Version: 0.0.2
 // -----------------------------------END_HEADER
 /// Entity category for shared entity metadata index rows.
 enum entityKind : byte {

@@ -1,0 +1,523 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "sdfPrimitive": {
+      "type": "string",
+      "enum": [
+        "CONE",
+        "RECTANGULAR",
+        "SPHERE",
+        "CYLINDER",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "CONE": {
+          "value": 0,
+          "description": "Cone with apex at origin, +Z boresight."
+        },
+        "RECTANGULAR": {
+          "value": 1,
+          "description": "Rectangular pyramid (four planes + range cap)."
+        },
+        "SPHERE": {
+          "value": 2,
+          "description": "Sphere centered at origin."
+        },
+        "CYLINDER": {
+          "value": 3,
+          "description": "Cylinder along Z axis."
+        },
+        "CUSTOM": {
+          "value": 255,
+          "description": "Plugin-defined custom SDF."
+        }
+      }
+    },
+    "sdfOperation": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "UNION",
+        "INTERSECTION",
+        "SUBTRACTION",
+        "SMOOTH_UNION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0,
+          "description": "No composition (primitive only)."
+        },
+        "UNION": {
+          "value": 1,
+          "description": "Union (min of SDFs) \u2014 inside either."
+        },
+        "INTERSECTION": {
+          "value": 2,
+          "description": "Intersection (max of SDFs) \u2014 inside both."
+        },
+        "SUBTRACTION": {
+          "value": 3,
+          "description": "Subtraction (A - B) \u2014 inside A but not B."
+        },
+        "SMOOTH_UNION": {
+          "value": 4,
+          "description": "Smooth union with a blend radius."
+        }
+      }
+    },
+    "sdfResult": {
+      "type": "object",
+      "description": "Result of a single SDF point-in-volume query (24 bytes, 8-byte aligned).",
+      "properties": {
+        "ENTITY_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Entity identifier."
+        },
+        "DETECTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Detection flag (1 == inside, 0 == outside)."
+        },
+        "SIGNED_DISTANCE": {
+          "type": "number",
+          "description": "Signed distance (negative inside, zero on boundary, positive outside)."
+        },
+        "CLOSEST_DISTANCE": {
+          "type": "number",
+          "description": "Distance to the closest boundary point (always positive)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "sdfTimeRangeResult": {
+      "type": "object",
+      "description": "Result of a time-range SDF query (40 bytes, 8-byte aligned).",
+      "properties": {
+        "ENTITY_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Entity identifier."
+        },
+        "FLAGS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Flags (reserved)."
+        },
+        "ENTRY_TIME": {
+          "type": "number",
+          "description": "Julian date when the entity entered the volume (0 == never entered)."
+        },
+        "EXIT_TIME": {
+          "type": "number",
+          "description": "Julian date when the entity exited the volume (0 == still inside)."
+        },
+        "MIN_DISTANCE": {
+          "type": "number",
+          "description": "Most negative signed distance (closest approach to center)."
+        },
+        "DWELL_TIME": {
+          "type": "number",
+          "description": "Total time inside volume (seconds)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDFConical": {
+      "type": "object",
+      "description": "Conical SDF parameters.",
+      "properties": {
+        "HALF_ANGLE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INNER_HALF_ANGLE": {
+          "type": "number",
+          "description": "Inner half-angle for hollow cones (0 == solid).",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_RANGE": {
+          "type": "number",
+          "description": "Minimum range (inner cap distance).",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RANGE": {
+          "type": "number",
+          "description": "Maximum range (outer cap distance).",
+          "x-flatbuffer-type": "double"
+        },
+        "FLAT_CAP": {
+          "type": "boolean",
+          "description": "Use a flat cap (true) or a spherical cap (false).",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDFRectangular": {
+      "type": "object",
+      "description": "Rectangular (pyramidal) SDF parameters.",
+      "properties": {
+        "X_HALF_ANGLE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_HALF_ANGLE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_RANGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RANGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDFSpherical": {
+      "type": "object",
+      "description": "Spherical SDF parameters.",
+      "properties": {
+        "RADIUS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INNER_RADIUS": {
+          "type": "number",
+          "description": "Inner radius for hollow sphere (0 == solid).",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDFCylindrical": {
+      "type": "object",
+      "description": "Cylindrical SDF parameters.",
+      "properties": {
+        "RADIUS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "HALF_HEIGHT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDFCustom": {
+      "type": "object",
+      "description": "Custom SDF defined by a set of unit boundary-direction vectors.",
+      "properties": {
+        "DIRECTIONS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Unit vectors defining the boundary packed as [x0, y0, z0, x1, y1, z1, ...].",
+          "x-flatbuffer-type": "[double]"
+        },
+        "MAX_RANGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDFComposition": {
+      "type": "object",
+      "description": "Constructive composition of two SDFs.",
+      "properties": {
+        "OPERATION": {
+          "$ref": "#/definitions/sdfOperation",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0,
+              "description": "No composition (primitive only)."
+            },
+            "UNION": {
+              "value": 1,
+              "description": "Union (min of SDFs) \u2014 inside either."
+            },
+            "INTERSECTION": {
+              "value": 2,
+              "description": "Intersection (max of SDFs) \u2014 inside both."
+            },
+            "SUBTRACTION": {
+              "value": 3,
+              "description": "Subtraction (A - B) \u2014 inside A but not B."
+            },
+            "SMOOTH_UNION": {
+              "value": 4,
+              "description": "Smooth union with a blend radius."
+            }
+          }
+        },
+        "OPERAND_A": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "First operand (index into SDF.COMPONENTS[]).",
+          "x-flatbuffer-type": "uint"
+        },
+        "OPERAND_B": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Second operand (index into SDF.COMPONENTS[]).",
+          "x-flatbuffer-type": "uint"
+        },
+        "BLEND_RADIUS": {
+          "type": "number",
+          "description": "Blend radius for smooth operations.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDFComponent": {
+      "type": "object",
+      "description": "Single component in a composed SDF.",
+      "properties": {
+        "PRIMITIVE": {
+          "$ref": "#/definitions/sdfPrimitive",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "CONE": {
+              "value": 0,
+              "description": "Cone with apex at origin, +Z boresight."
+            },
+            "RECTANGULAR": {
+              "value": 1,
+              "description": "Rectangular pyramid (four planes + range cap)."
+            },
+            "SPHERE": {
+              "value": 2,
+              "description": "Sphere centered at origin."
+            },
+            "CYLINDER": {
+              "value": 3,
+              "description": "Cylinder along Z axis."
+            },
+            "CUSTOM": {
+              "value": 255,
+              "description": "Plugin-defined custom SDF."
+            }
+          }
+        },
+        "CONE": {
+          "$ref": "#/definitions/SDFConical",
+          "x-flatbuffer-type": "SDFConical"
+        },
+        "RECTANGULAR": {
+          "$ref": "#/definitions/SDFRectangular",
+          "x-flatbuffer-type": "SDFRectangular"
+        },
+        "SPHERICAL": {
+          "$ref": "#/definitions/SDFSpherical",
+          "x-flatbuffer-type": "SDFSpherical"
+        },
+        "CYLINDRICAL": {
+          "$ref": "#/definitions/SDFCylindrical",
+          "x-flatbuffer-type": "SDFCylindrical"
+        },
+        "CUSTOM": {
+          "$ref": "#/definitions/SDFCustom",
+          "x-flatbuffer-type": "SDFCustom"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDFConfig": {
+      "type": "object",
+      "description": "Complete SDF configuration.",
+      "properties": {
+        "PRIMITIVE": {
+          "$ref": "#/definitions/sdfPrimitive",
+          "description": "Root primitive type (useful when COMPONENTS[] is empty).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "CONE": {
+              "value": 0,
+              "description": "Cone with apex at origin, +Z boresight."
+            },
+            "RECTANGULAR": {
+              "value": 1,
+              "description": "Rectangular pyramid (four planes + range cap)."
+            },
+            "SPHERE": {
+              "value": 2,
+              "description": "Sphere centered at origin."
+            },
+            "CYLINDER": {
+              "value": 3,
+              "description": "Cylinder along Z axis."
+            },
+            "CUSTOM": {
+              "value": 255,
+              "description": "Plugin-defined custom SDF."
+            }
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SDFComponent"
+          },
+          "description": "One or more components that may be combined via COMPOSITIONS[].",
+          "x-flatbuffer-type": "[SDFComponent]"
+        },
+        "COMPOSITIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SDFComposition"
+          },
+          "description": "Composition tree over COMPONENTS[].",
+          "x-flatbuffer-type": "[SDFComposition]"
+        },
+        "INVERSE_TRANSFORM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "World-to-local transform (4x4 column-major, 16 doubles).",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDFBatchRequest": {
+      "type": "object",
+      "description": "Batch SDF evaluation request (arena-addressed, zero-copy).",
+      "properties": {
+        "INPUT_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Input buffer offset (arena bytes) where the Vec3[] of world points begins.",
+          "x-flatbuffer-type": "uint"
+        },
+        "POINT_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of points to evaluate.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ENTITY_IDS_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Entity-ids buffer offset corresponding to each point (optional).",
+          "x-flatbuffer-type": "uint"
+        },
+        "OUTPUT_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Output buffer offset where sdfResult[] is written.",
+          "x-flatbuffer-type": "uint"
+        },
+        "INVERSE_TRANSFORM_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Inverse-transform buffer offset (4x4 matrix, 128 bytes).",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDFBatchResponse": {
+      "type": "object",
+      "description": "Batch SDF evaluation response header.",
+      "properties": {
+        "COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of results written.",
+          "x-flatbuffer-type": "uint"
+        },
+        "INSIDE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of points inside the volume.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OUTPUT_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Output offset where sdfResult[] starts.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ERROR_CODE": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Error code (0 == success).",
+          "x-flatbuffer-type": "int"
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Optional error message when ERROR_CODE != 0.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDF": {
+      "type": "object",
+      "description": "Signed Distance Field envelope message \u2014 carries a configuration, a batch\nrequest, a batch response, or single / time-range result records.",
+      "properties": {
+        "CONFIG": {
+          "$ref": "#/definitions/SDFConfig",
+          "x-flatbuffer-type": "SDFConfig"
+        },
+        "BATCH_REQUEST": {
+          "$ref": "#/definitions/SDFBatchRequest",
+          "x-flatbuffer-type": "SDFBatchRequest"
+        },
+        "BATCH_RESPONSE": {
+          "$ref": "#/definitions/SDFBatchResponse",
+          "x-flatbuffer-type": "SDFBatchResponse"
+        },
+        "RESULTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sdfResult"
+          },
+          "x-flatbuffer-type": "[sdfResult]"
+        },
+        "TIME_RANGE_RESULTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sdfTimeRangeResult"
+          },
+          "x-flatbuffer-type": "[sdfTimeRangeResult]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SDF",
+  "x-flatbuffer-root-type": "SDF",
+  "x-flatbuffer-file-identifier": "$SDF"
+}

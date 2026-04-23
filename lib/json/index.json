@@ -3439,6 +3439,64 @@
             },
             "$ref": "#/definitions/BEM"
         },
+        "ESL": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "ESL": {
+                    "type": "object",
+                    "description": "Entity / Standards Link \u2014 join-table row connecting a host-local entity\nmetadata record to a standards record index row, enabling cascade-safe\nmutation and cross-plugin query ownership.",
+                    "properties": {
+                        "LINK_KEY": {
+                            "type": "string",
+                            "description": "Stable local link key for one entity / record association."
+                        },
+                        "ENTITY_ID": {
+                            "type": "string",
+                            "description": "Stable host-local entity id on the entity side of the association."
+                        },
+                        "ENTITY_RECORD_KEY": {
+                            "type": "string",
+                            "description": "Stable local entity metadata record key (for example `ENTITY:<id>`)."
+                        },
+                        "ENTITY_ROWID": {
+                            "type": "number",
+                            "description": "FlatSQL row id for the linked entity metadata row when known."
+                        },
+                        "RECORD_KEY": {
+                            "type": "string",
+                            "description": "Stable local standards record key on the record side of the association."
+                        },
+                        "SCHEMA_NAME": {
+                            "type": "string",
+                            "description": "SDS schema family for the linked record (`OMM`, `CAT`, `OEM`, `CDM`, etc.)."
+                        },
+                        "RECORD_ROWID": {
+                            "type": "number",
+                            "description": "FlatSQL row id for the linked standards record row when known."
+                        },
+                        "CASCADE_DELETE": {
+                            "type": "boolean",
+                            "description": "Whether entity deletion should cascade to the linked standards record."
+                        },
+                        "UPDATED_AT_MS": {
+                            "type": "number",
+                            "description": "Milliseconds since epoch when the association was last refreshed."
+                        },
+                        "RESERVED": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Reserved for forward-compatible growth."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/ESL"
+        },
         "OPM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -3747,6 +3805,366 @@
             },
             "$ref": "#/definitions/EPM"
         },
+        "SDF": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "sdfPrimitive": {
+                    "type": "string",
+                    "enum": [
+                        "CONE",
+                        "RECTANGULAR",
+                        "SPHERE",
+                        "CYLINDER",
+                        "CUSTOM"
+                    ]
+                },
+                "sdfOperation": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "UNION",
+                        "INTERSECTION",
+                        "SUBTRACTION",
+                        "SMOOTH_UNION"
+                    ]
+                },
+                "sdfResult": {
+                    "type": "object",
+                    "description": "Result of a single SDF point-in-volume query (24 bytes, 8-byte aligned).",
+                    "properties": {
+                        "ENTITY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Entity identifier."
+                        },
+                        "DETECTED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Detection flag (1 == inside, 0 == outside)."
+                        },
+                        "SIGNED_DISTANCE": {
+                            "type": "number",
+                            "description": "Signed distance (negative inside, zero on boundary, positive outside)."
+                        },
+                        "CLOSEST_DISTANCE": {
+                            "type": "number",
+                            "description": "Distance to the closest boundary point (always positive)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "sdfTimeRangeResult": {
+                    "type": "object",
+                    "description": "Result of a time-range SDF query (40 bytes, 8-byte aligned).",
+                    "properties": {
+                        "ENTITY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Entity identifier."
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Flags (reserved)."
+                        },
+                        "ENTRY_TIME": {
+                            "type": "number",
+                            "description": "Julian date when the entity entered the volume (0 == never entered)."
+                        },
+                        "EXIT_TIME": {
+                            "type": "number",
+                            "description": "Julian date when the entity exited the volume (0 == still inside)."
+                        },
+                        "MIN_DISTANCE": {
+                            "type": "number",
+                            "description": "Most negative signed distance (closest approach to center)."
+                        },
+                        "DWELL_TIME": {
+                            "type": "number",
+                            "description": "Total time inside volume (seconds)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFConical": {
+                    "type": "object",
+                    "description": "Conical SDF parameters.",
+                    "properties": {
+                        "HALF_ANGLE": {
+                            "type": "number"
+                        },
+                        "INNER_HALF_ANGLE": {
+                            "type": "number",
+                            "description": "Inner half-angle for hollow cones (0 == solid)."
+                        },
+                        "MIN_RANGE": {
+                            "type": "number",
+                            "description": "Minimum range (inner cap distance)."
+                        },
+                        "MAX_RANGE": {
+                            "type": "number",
+                            "description": "Maximum range (outer cap distance)."
+                        },
+                        "FLAT_CAP": {
+                            "type": "boolean",
+                            "description": "Use a flat cap (true) or a spherical cap (false)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFRectangular": {
+                    "type": "object",
+                    "description": "Rectangular (pyramidal) SDF parameters.",
+                    "properties": {
+                        "X_HALF_ANGLE": {
+                            "type": "number"
+                        },
+                        "Y_HALF_ANGLE": {
+                            "type": "number"
+                        },
+                        "MIN_RANGE": {
+                            "type": "number"
+                        },
+                        "MAX_RANGE": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFSpherical": {
+                    "type": "object",
+                    "description": "Spherical SDF parameters.",
+                    "properties": {
+                        "RADIUS": {
+                            "type": "number"
+                        },
+                        "INNER_RADIUS": {
+                            "type": "number",
+                            "description": "Inner radius for hollow sphere (0 == solid)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFCylindrical": {
+                    "type": "object",
+                    "description": "Cylindrical SDF parameters.",
+                    "properties": {
+                        "RADIUS": {
+                            "type": "number"
+                        },
+                        "HALF_HEIGHT": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFCustom": {
+                    "type": "object",
+                    "description": "Custom SDF defined by a set of unit boundary-direction vectors.",
+                    "properties": {
+                        "DIRECTIONS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Unit vectors defining the boundary packed as [x0, y0, z0, x1, y1, z1, ...]."
+                        },
+                        "MAX_RANGE": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFComposition": {
+                    "type": "object",
+                    "description": "Constructive composition of two SDFs.",
+                    "properties": {
+                        "OPERATION": {
+                            "$ref": "#/definitions/sdfOperation"
+                        },
+                        "OPERAND_A": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "First operand (index into SDF.COMPONENTS[])."
+                        },
+                        "OPERAND_B": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Second operand (index into SDF.COMPONENTS[])."
+                        },
+                        "BLEND_RADIUS": {
+                            "type": "number",
+                            "description": "Blend radius for smooth operations."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFComponent": {
+                    "type": "object",
+                    "description": "Single component in a composed SDF.",
+                    "properties": {
+                        "PRIMITIVE": {
+                            "$ref": "#/definitions/sdfPrimitive"
+                        },
+                        "CONE": {
+                            "$ref": "#/definitions/SDFConical"
+                        },
+                        "RECTANGULAR": {
+                            "$ref": "#/definitions/SDFRectangular"
+                        },
+                        "SPHERICAL": {
+                            "$ref": "#/definitions/SDFSpherical"
+                        },
+                        "CYLINDRICAL": {
+                            "$ref": "#/definitions/SDFCylindrical"
+                        },
+                        "CUSTOM": {
+                            "$ref": "#/definitions/SDFCustom"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFConfig": {
+                    "type": "object",
+                    "description": "Complete SDF configuration.",
+                    "properties": {
+                        "PRIMITIVE": {
+                            "$ref": "#/definitions/sdfPrimitive",
+                            "description": "Root primitive type (useful when COMPONENTS[] is empty)."
+                        },
+                        "COMPONENTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SDFComponent"
+                            },
+                            "description": "One or more components that may be combined via COMPOSITIONS[]."
+                        },
+                        "COMPOSITIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SDFComposition"
+                            },
+                            "description": "Composition tree over COMPONENTS[]."
+                        },
+                        "INVERSE_TRANSFORM": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "World-to-local transform (4x4 column-major, 16 doubles)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFBatchRequest": {
+                    "type": "object",
+                    "description": "Batch SDF evaluation request (arena-addressed, zero-copy).",
+                    "properties": {
+                        "INPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Input buffer offset (arena bytes) where the Vec3[] of world points begins."
+                        },
+                        "POINT_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of points to evaluate."
+                        },
+                        "ENTITY_IDS_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Entity-ids buffer offset corresponding to each point (optional)."
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output buffer offset where sdfResult[] is written."
+                        },
+                        "INVERSE_TRANSFORM_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Inverse-transform buffer offset (4x4 matrix, 128 bytes)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFBatchResponse": {
+                    "type": "object",
+                    "description": "Batch SDF evaluation response header.",
+                    "properties": {
+                        "COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of results written."
+                        },
+                        "INSIDE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of points inside the volume."
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output offset where sdfResult[] starts."
+                        },
+                        "ERROR_CODE": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Error code (0 == success)."
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Optional error message when ERROR_CODE != 0."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDF": {
+                    "type": "object",
+                    "description": "Signed Distance Field envelope message \u2014 carries a configuration, a batch\nrequest, a batch response, or single / time-range result records.",
+                    "properties": {
+                        "CONFIG": {
+                            "$ref": "#/definitions/SDFConfig"
+                        },
+                        "BATCH_REQUEST": {
+                            "$ref": "#/definitions/SDFBatchRequest"
+                        },
+                        "BATCH_RESPONSE": {
+                            "$ref": "#/definitions/SDFBatchResponse"
+                        },
+                        "RESULTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/sdfResult"
+                            }
+                        },
+                        "TIME_RANGE_RESULTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/sdfTimeRangeResult"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SDF"
+        },
         "APM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -3867,6 +4285,169 @@
                 }
             },
             "$ref": "#/definitions/KRF"
+        },
+        "SHW": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "shaderStage": {
+                    "type": "string",
+                    "enum": [
+                        "VERTEX",
+                        "FRAGMENT",
+                        "COMPUTE",
+                        "GEOMETRY",
+                        "TESS_CONTROL",
+                        "TESS_EVALUATION"
+                    ]
+                },
+                "shaderInjectionPoint": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "VERTEX_PRE_TRANSFORM",
+                        "VERTEX_POST_TRANSFORM",
+                        "FRAGMENT_PRE_SHADE",
+                        "FRAGMENT_POST_SHADE",
+                        "FRAGMENT_FINAL_COLOR",
+                        "POSTPROCESS"
+                    ]
+                },
+                "shaderUniformType": {
+                    "type": "string",
+                    "enum": [
+                        "FLOAT",
+                        "VEC2",
+                        "VEC3",
+                        "VEC4",
+                        "INT",
+                        "IVEC2",
+                        "IVEC3",
+                        "IVEC4",
+                        "UINT",
+                        "UVEC2",
+                        "UVEC3",
+                        "UVEC4",
+                        "BOOL",
+                        "BVEC2",
+                        "BVEC3",
+                        "BVEC4",
+                        "MAT2",
+                        "MAT3",
+                        "MAT4",
+                        "SAMPLER_2D",
+                        "SAMPLER_CUBE",
+                        "SAMPLER_2D_ARRAY"
+                    ]
+                },
+                "SHWUniform": {
+                    "type": "object",
+                    "description": "Uniform descriptor \u2014 name + type + optional default value.",
+                    "properties": {
+                        "UNIFORM_NAME": {
+                            "type": "string"
+                        },
+                        "UNIFORM_TYPE": {
+                            "$ref": "#/definitions/shaderUniformType"
+                        },
+                        "UNIFORM_DESCRIPTION": {
+                            "type": "string",
+                            "description": "Optional human-readable description."
+                        },
+                        "UNIFORM_DEFAULT_VALUE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional default value encoded as bytes in the native type layout."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SHWCompileRequest": {
+                    "type": "object",
+                    "description": "Compile request \u2014 one shader source (typically a fragment of a\nlarger stage) plus metadata for the host splice.",
+                    "properties": {
+                        "SHADER_NAME": {
+                            "type": "string",
+                            "description": "Logical shader name (used in logs and uniform prefixing)."
+                        },
+                        "SHADER_STAGE": {
+                            "$ref": "#/definitions/shaderStage",
+                            "description": "Target GLSL stage."
+                        },
+                        "SHADER_INJECTION_POINT": {
+                            "$ref": "#/definitions/shaderInjectionPoint",
+                            "description": "Intended injection point in the host pipeline."
+                        },
+                        "SHADER_SOURCE": {
+                            "type": "string",
+                            "description": "GLSL source (or preprocessed chunk)."
+                        },
+                        "GLSL_VERSION": {
+                            "type": "string",
+                            "description": "GLSL version string (for example `300 es`)."
+                        },
+                        "SHADER_UNIFORMS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SHWUniform"
+                            },
+                            "description": "Expected uniforms declared by the source."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SHWCompileResponse": {
+                    "type": "object",
+                    "description": "Compile response \u2014 whether the shader compiled, with diagnostics.",
+                    "properties": {
+                        "SHADER_NAME": {
+                            "type": "string"
+                        },
+                        "COMPILE_SUCCESS": {
+                            "type": "boolean",
+                            "description": "Whether compilation succeeded."
+                        },
+                        "INFO_LOG": {
+                            "type": "string",
+                            "description": "Optional GLSL info log."
+                        },
+                        "COMPILED_BINARY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional compiled binary (if the compiler emits one)."
+                        },
+                        "LINKED_UNIFORMS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SHWUniform"
+                            },
+                            "description": "Echo of the uniforms the compiler actually linked."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SHW": {
+                    "type": "object",
+                    "description": "Shader Wire envelope \u2014 carries either a compile request or a compile\nresponse across the runtime boundary.",
+                    "properties": {
+                        "COMPILE_REQUEST": {
+                            "$ref": "#/definitions/SHWCompileRequest"
+                        },
+                        "COMPILE_RESPONSE": {
+                            "$ref": "#/definitions/SHWCompileResponse"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SHW"
         },
         "HEL": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -4083,6 +4664,419 @@
                 }
             },
             "$ref": "#/definitions/LCH"
+        },
+        "SDR": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "sensorCategory": {
+                    "type": "string",
+                    "enum": [
+                        "RADAR",
+                        "ELECTRO_OPTICAL",
+                        "INFRARED",
+                        "ACOUSTIC",
+                        "RF",
+                        "LIDAR",
+                        "CUSTOM"
+                    ]
+                },
+                "sensorOperationalFlags": {
+                    "type": "string",
+                    "enum": [
+                        "ACTIVE",
+                        "TRACK_MODE",
+                        "SEARCH_MODE",
+                        "JAMMED",
+                        "SLEWING",
+                        "CALIBRATING"
+                    ]
+                },
+                "detectionResultFlags": {
+                    "type": "string",
+                    "enum": [
+                        "VALID",
+                        "TRACKED",
+                        "MARGINAL",
+                        "IN_CLUTTER",
+                        "JAMMED",
+                        "SIDELOBE",
+                        "MERGED"
+                    ]
+                },
+                "targetState": {
+                    "type": "object",
+                    "description": "Target state input (40 bytes, 8-byte aligned).",
+                    "properties": {
+                        "POS_X": {
+                            "type": "number",
+                            "description": "Target position X in ECEF (meters)."
+                        },
+                        "POS_Y": {
+                            "type": "number",
+                            "description": "Target position Y in ECEF (meters)."
+                        },
+                        "POS_Z": {
+                            "type": "number",
+                            "description": "Target position Z in ECEF (meters)."
+                        },
+                        "RCS": {
+                            "type": "number",
+                            "description": "Radar cross section (m^2)."
+                        },
+                        "TARGET_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Unique target identifier."
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Target flags (reserved)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "detectionResult": {
+                    "type": "object",
+                    "description": "Detection result output (48 bytes, 8-byte aligned).",
+                    "properties": {
+                        "TARGET_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index of target in input array."
+                        },
+                        "DETECTED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Detection flag (1 == detected, 0 == not detected)."
+                        },
+                        "RANGE": {
+                            "type": "number",
+                            "description": "Range to target (meters)."
+                        },
+                        "SNR": {
+                            "type": "number",
+                            "description": "Signal-to-noise ratio (dB)."
+                        },
+                        "DOPPLER": {
+                            "type": "number",
+                            "description": "Doppler shift (Hz)."
+                        },
+                        "PROBABILITY": {
+                            "type": "number",
+                            "description": "Probability of detection (0.0 \u2013 1.0)."
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Detection flags (detectionResultFlags bitfield)."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Reserved for future use."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDRRadarConfig": {
+                    "type": "object",
+                    "description": "Radar sensor configuration.",
+                    "properties": {
+                        "FREQUENCY": {
+                            "type": "number",
+                            "description": "Operating frequency (Hz)."
+                        },
+                        "POWER": {
+                            "type": "number",
+                            "description": "Transmit power (W)."
+                        },
+                        "GAIN": {
+                            "type": "number",
+                            "description": "Antenna gain (dB)."
+                        },
+                        "BANDWIDTH": {
+                            "type": "number",
+                            "description": "Receiver bandwidth (Hz)."
+                        },
+                        "NOISE_FIGURE": {
+                            "type": "number",
+                            "description": "Noise figure (dB)."
+                        },
+                        "SYSTEM_LOSS": {
+                            "type": "number",
+                            "description": "System losses (dB)."
+                        },
+                        "PRF": {
+                            "type": "number",
+                            "description": "Pulse repetition frequency (Hz)."
+                        },
+                        "PULSE_WIDTH": {
+                            "type": "number",
+                            "description": "Pulse width (seconds)."
+                        },
+                        "DETECTION_THRESHOLD": {
+                            "type": "number",
+                            "description": "Detection threshold SNR (dB)."
+                        },
+                        "MIN_RANGE": {
+                            "type": "number",
+                            "description": "Minimum detection range (meters)."
+                        },
+                        "MAX_RANGE": {
+                            "type": "number",
+                            "description": "Maximum detection range (meters)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDRSensorConfig": {
+                    "type": "object",
+                    "description": "Generic sensor configuration.",
+                    "properties": {
+                        "CATEGORY": {
+                            "$ref": "#/definitions/sensorCategory"
+                        },
+                        "POS_X": {
+                            "type": "number",
+                            "description": "Sensor position in ECEF (meters) \u2014 X."
+                        },
+                        "POS_Y": {
+                            "type": "number",
+                            "description": "Sensor position in ECEF (meters) \u2014 Y."
+                        },
+                        "POS_Z": {
+                            "type": "number",
+                            "description": "Sensor position in ECEF (meters) \u2014 Z."
+                        },
+                        "ORIENT_W": {
+                            "type": "number",
+                            "description": "Sensor orientation as quaternion (W, X, Y, Z)."
+                        },
+                        "ORIENT_X": {
+                            "type": "number"
+                        },
+                        "ORIENT_Y": {
+                            "type": "number"
+                        },
+                        "ORIENT_Z": {
+                            "type": "number"
+                        },
+                        "RADAR": {
+                            "$ref": "#/definitions/SDRRadarConfig",
+                            "description": "Radar-specific config when CATEGORY == RADAR."
+                        },
+                        "FLAGS": {
+                            "$ref": "#/definitions/sensorOperationalFlags",
+                            "description": "Operational flags."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDRBatchRequest": {
+                    "type": "object",
+                    "description": "Batch detection request (arena-addressed, zero-copy).",
+                    "properties": {
+                        "SENSOR_POS_X": {
+                            "type": "number",
+                            "description": "Sensor position in ECEF (meters) \u2014 X."
+                        },
+                        "SENSOR_POS_Y": {
+                            "type": "number"
+                        },
+                        "SENSOR_POS_Z": {
+                            "type": "number"
+                        },
+                        "SENSOR_ORIENT_W": {
+                            "type": "number",
+                            "description": "Sensor orientation as quaternion (W, X, Y, Z)."
+                        },
+                        "SENSOR_ORIENT_X": {
+                            "type": "number"
+                        },
+                        "SENSOR_ORIENT_Y": {
+                            "type": "number"
+                        },
+                        "SENSOR_ORIENT_Z": {
+                            "type": "number"
+                        },
+                        "INPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Input buffer offset where targetState[] starts."
+                        },
+                        "TARGET_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of targets in the input buffer."
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output buffer offset where detectionResult[] is written."
+                        },
+                        "EPOCH": {
+                            "type": "number",
+                            "description": "Current time as a Julian date."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDRBatchResponse": {
+                    "type": "object",
+                    "description": "Batch detection response header.",
+                    "properties": {
+                        "COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of detection results written."
+                        },
+                        "DETECTED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of targets detected (SNR >= threshold)."
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Offset in arena where detectionResult[] starts."
+                        },
+                        "ERROR_CODE": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Error code (0 == success)."
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Error message when ERROR_CODE != 0."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDRSingleInput": {
+                    "type": "object",
+                    "description": "Compact single-frame detection input used by pluggable sensor models that\ndo not drive arena-backed batches.",
+                    "properties": {
+                        "TARGET_POS_X": {
+                            "type": "number",
+                            "description": "Target position in ECEF (meters) \u2014 X."
+                        },
+                        "TARGET_POS_Y": {
+                            "type": "number"
+                        },
+                        "TARGET_POS_Z": {
+                            "type": "number"
+                        },
+                        "SENSOR_POS_X": {
+                            "type": "number",
+                            "description": "Sensor position in ECEF (meters) \u2014 X."
+                        },
+                        "SENSOR_POS_Y": {
+                            "type": "number"
+                        },
+                        "SENSOR_POS_Z": {
+                            "type": "number"
+                        },
+                        "RCS": {
+                            "type": "number",
+                            "description": "Radar cross section (m^2)."
+                        },
+                        "FREQUENCY": {
+                            "type": "number",
+                            "description": "Sensor operating frequency (Hz)."
+                        },
+                        "TX_POWER": {
+                            "type": "number",
+                            "description": "Transmit power (W)."
+                        },
+                        "TIMESTAMP_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp (milliseconds since epoch)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDRSingleResult": {
+                    "type": "object",
+                    "description": "Compact single-frame detection result.",
+                    "properties": {
+                        "DETECTED": {
+                            "type": "boolean"
+                        },
+                        "RANGE": {
+                            "type": "number",
+                            "description": "Range to target (meters)."
+                        },
+                        "SNR": {
+                            "type": "number",
+                            "description": "Signal-to-noise ratio (dB)."
+                        },
+                        "AZIMUTH": {
+                            "type": "number",
+                            "description": "Azimuth angle to target (radians)."
+                        },
+                        "ELEVATION": {
+                            "type": "number",
+                            "description": "Elevation angle to target (radians)."
+                        },
+                        "RANGE_RATE": {
+                            "type": "number",
+                            "description": "Range rate / Doppler velocity (m/s)."
+                        },
+                        "TIMESTAMP_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Detection timestamp (milliseconds since epoch)."
+                        },
+                        "TRACK_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Track identifier (0 if not tracking)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDR": {
+                    "type": "object",
+                    "description": "Sensor Detection Report envelope message.",
+                    "properties": {
+                        "CONFIG": {
+                            "$ref": "#/definitions/SDRSensorConfig"
+                        },
+                        "BATCH_REQUEST": {
+                            "$ref": "#/definitions/SDRBatchRequest"
+                        },
+                        "BATCH_RESPONSE": {
+                            "$ref": "#/definitions/SDRBatchResponse"
+                        },
+                        "SINGLE_INPUT": {
+                            "$ref": "#/definitions/SDRSingleInput"
+                        },
+                        "SINGLE_RESULT": {
+                            "$ref": "#/definitions/SDRSingleResult"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SDR"
         },
         "DFH": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -5864,6 +6858,150 @@
             },
             "$ref": "#/definitions/MTI"
         },
+        "ETM": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "entityKind": {
+                    "type": "string",
+                    "enum": [
+                        "ENTITY",
+                        "SPACE",
+                        "GROUND",
+                        "AIRCRAFT",
+                        "MISSILE",
+                        "SHIP",
+                        "VEHICLE",
+                        "SENSOR",
+                        "OTHER"
+                    ]
+                },
+                "ETM": {
+                    "type": "object",
+                    "description": "Entity Metadata \u2014 generic queryable metadata for a host-local entity.\nParticipates in shared FlatSQL/WASM runtimes where multiple plugins\ncross-query the same entity collection.",
+                    "properties": {
+                        "ENTITY_ID": {
+                            "type": "string",
+                            "description": "Stable host-local entity identifier."
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "Human-readable entity name used for shared query/search surfaces."
+                        },
+                        "KIND": {
+                            "$ref": "#/definitions/entityKind",
+                            "description": "Broad entity category."
+                        },
+                        "SUBTYPE": {
+                            "type": "string",
+                            "description": "More specific runtime subtype or class name."
+                        },
+                        "PARENT_ENTITY_ID": {
+                            "type": "string",
+                            "description": "Optional parent entity id for hierarchy / linkage queries."
+                        },
+                        "WASM_HANDLE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Collection-scoped WASM handle used for batch visibility application."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional NORAD catalog id for standards-backed entities."
+                        },
+                        "OBJECT_NAME": {
+                            "type": "string",
+                            "description": "Primary object name surfaced by attached standards metadata."
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "Primary international / object designator surfaced by attached standards metadata."
+                        },
+                        "CAT_OBJECT_NAME": {
+                            "type": "string",
+                            "description": "Secondary CAT object name when different from the primary object name."
+                        },
+                        "CAT_OBJECT_ID": {
+                            "type": "string",
+                            "description": "Secondary CAT object id when different from the primary object id."
+                        },
+                        "FACILITY_TYPE": {
+                            "type": "string",
+                            "description": "Ground / facility subtype metadata for non-space entity search."
+                        },
+                        "SEARCH_TEXT": {
+                            "type": "string",
+                            "description": "Pre-normalized phrase-search text for collection-wide shared queries."
+                        },
+                        "OWNER": {
+                            "type": "string",
+                            "description": "CAT owner country code."
+                        },
+                        "STATUS_CODE": {
+                            "type": "string",
+                            "description": "CAT operational status code."
+                        },
+                        "LAUNCH_DATE": {
+                            "type": "string",
+                            "description": "CAT launch date."
+                        },
+                        "LAUNCH_YEAR": {
+                            "type": "string",
+                            "description": "Launch year derived from launch date."
+                        },
+                        "ORBIT_REGIME": {
+                            "type": "string",
+                            "description": "Derived orbit regime classification."
+                        },
+                        "PERIOD": {
+                            "type": "number",
+                            "description": "Orbital period in minutes."
+                        },
+                        "INCLINATION": {
+                            "type": "number",
+                            "description": "Inclination in degrees."
+                        },
+                        "APOGEE": {
+                            "type": "number",
+                            "description": "Apogee altitude in kilometers."
+                        },
+                        "PERIGEE": {
+                            "type": "number",
+                            "description": "Perigee altitude in kilometers."
+                        },
+                        "MEAN_MOTION": {
+                            "type": "number",
+                            "description": "Mean motion in revolutions per day."
+                        },
+                        "ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Orbital eccentricity."
+                        },
+                        "BSTAR": {
+                            "type": "number",
+                            "description": "B* drag term from OMM."
+                        },
+                        "HAS_GP": {
+                            "type": "boolean",
+                            "description": "Whether GP / OMM state is present for the entity."
+                        },
+                        "RESERVED": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Reserved for forward-compatible growth."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/ETM"
+        },
         "CRD": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -6387,6 +7525,250 @@
                 }
             },
             "$ref": "#/definitions/ENC"
+        },
+        "FPC": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "shortestPathAlgorithm": {
+                    "type": "string",
+                    "enum": [
+                        "AUTO",
+                        "FRONTIER",
+                        "DIJKSTRA"
+                    ]
+                },
+                "weightedEdge": {
+                    "type": "object",
+                    "description": "Weighted directed edge (16 bytes, 8-byte aligned for zero-copy ingestion).",
+                    "properties": {
+                        "SRC": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "DST": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WEIGHT": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCGraphDefinition": {
+                    "type": "object",
+                    "description": "Graph creation / reset request.",
+                    "properties": {
+                        "VERTEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of vertices in the graph."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCWeightedEdgeList": {
+                    "type": "object",
+                    "description": "Bulk weighted-edge ingestion request.",
+                    "properties": {
+                        "VERTEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional vertex capacity for implicit graph creation."
+                        },
+                        "EDGES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/weightedEdge"
+                            },
+                            "description": "Weighted directed edge records."
+                        },
+                        "BUILD_GRAPH": {
+                            "type": "boolean",
+                            "description": "Build a CSR representation after ingest."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCCSRGraph": {
+                    "type": "object",
+                    "description": "Pre-built CSR graph ingestion request.",
+                    "properties": {
+                        "VERTEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of vertices in the graph."
+                        },
+                        "OFFSETS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "CSR row offsets (V + 1 entries)."
+                        },
+                        "DESTINATIONS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "CSR destination indices."
+                        },
+                        "WEIGHTS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "CSR edge weights."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCShortestPathRequest": {
+                    "type": "object",
+                    "description": "Single-source shortest-path request.",
+                    "properties": {
+                        "SOURCE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Source vertex index."
+                        },
+                        "ALGORITHM": {
+                            "$ref": "#/definitions/shortestPathAlgorithm",
+                            "description": "Algorithm selection hint."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCShortestPathResult": {
+                    "type": "object",
+                    "description": "Single-source shortest-path result.",
+                    "properties": {
+                        "SOURCE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Source vertex index."
+                        },
+                        "VERTEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of vertices in the solved graph."
+                        },
+                        "REACHABLE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of reachable vertices (finite distances)."
+                        },
+                        "DISTANCES": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Distance array (length == VERTEX_COUNT)."
+                        },
+                        "PREDECESSORS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Predecessor array (length == VERTEX_COUNT; UINT32_MAX means none / source)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCPathRequest": {
+                    "type": "object",
+                    "description": "Path reconstruction request.",
+                    "properties": {
+                        "TARGET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Target vertex index."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCPathResult": {
+                    "type": "object",
+                    "description": "Path reconstruction result.",
+                    "properties": {
+                        "SOURCE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Source vertex index from the latest SSSP solve."
+                        },
+                        "TARGET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Requested target vertex index."
+                        },
+                        "REACHABLE": {
+                            "type": "boolean",
+                            "description": "Whether a path exists from SOURCE to TARGET."
+                        },
+                        "DISTANCE": {
+                            "type": "number",
+                            "description": "Total distance from SOURCE to TARGET (Infinity if unreachable)."
+                        },
+                        "PATH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Vertex sequence from SOURCE to TARGET."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPC": {
+                    "type": "object",
+                    "description": "Fastest Path Compute \u2014 envelope message for weighted graph ingestion and\nsingle-source shortest path execution.",
+                    "properties": {
+                        "GRAPH_DEFINITION": {
+                            "$ref": "#/definitions/FPCGraphDefinition"
+                        },
+                        "EDGES": {
+                            "$ref": "#/definitions/FPCWeightedEdgeList"
+                        },
+                        "CSR": {
+                            "$ref": "#/definitions/FPCCSRGraph"
+                        },
+                        "SHORTEST_PATH_REQUEST": {
+                            "$ref": "#/definitions/FPCShortestPathRequest"
+                        },
+                        "SHORTEST_PATH_RESULT": {
+                            "$ref": "#/definitions/FPCShortestPathResult"
+                        },
+                        "PATH_REQUEST": {
+                            "$ref": "#/definitions/FPCPathRequest"
+                        },
+                        "PATH_RESULT": {
+                            "$ref": "#/definitions/FPCPathResult"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/FPC"
         },
         "ION": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -7902,6 +9284,52 @@
             },
             "$ref": "#/definitions/RDM"
         },
+        "SRI": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "SRI": {
+                    "type": "object",
+                    "description": "Standards Record Index \u2014 local wrapper for a standards payload's identity\nand mutation metadata, participating in shared FlatSQL query and cascade\npaths across plugins that read the same record universe.",
+                    "properties": {
+                        "RECORD_KEY": {
+                            "type": "string",
+                            "description": "Stable host-local record key for one standards payload."
+                        },
+                        "SCHEMA_NAME": {
+                            "type": "string",
+                            "description": "SDS schema family for the record (`OMM`, `CAT`, `OEM`, `CDM`, etc.)."
+                        },
+                        "ROLE": {
+                            "type": "string",
+                            "description": "Attachment role when one standards message produces multiple entity records."
+                        },
+                        "ATTACHED_VIA": {
+                            "type": "string",
+                            "description": "Ingest path that registered this record (`stream-*`, `manual-api`, etc.)."
+                        },
+                        "PAYLOAD_KIND": {
+                            "type": "string",
+                            "description": "High-level payload representation retained by the mutation registry."
+                        },
+                        "UPDATED_AT_MS": {
+                            "type": "number",
+                            "description": "Milliseconds since epoch when the local mutation record was last refreshed."
+                        },
+                        "RESERVED": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Reserved for forward-compatible growth."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SRI"
+        },
         "OEM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -8965,6 +10393,105 @@
                 }
             },
             "$ref": "#/definitions/PPE"
+        },
+        "TAB": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "payloadWireFormat": {
+                    "type": "string",
+                    "enum": [
+                        "FLATBUFFER",
+                        "ALIGNED_BINARY"
+                    ]
+                },
+                "bufferMutability": {
+                    "type": "string",
+                    "enum": [
+                        "IMMUTABLE",
+                        "SINGLE_WRITER_MUTABLE",
+                        "APPEND_ONLY"
+                    ]
+                },
+                "bufferOwnership": {
+                    "type": "string",
+                    "enum": [
+                        "HOST_OWNED",
+                        "PLUGIN_OWNED",
+                        "TRANSFERRED"
+                    ]
+                },
+                "FlatBufferTypeRef": {
+                    "type": "object",
+                    "description": "Payload-schema identity for a stream frame or an accepted port type.",
+                    "properties": {
+                        "SCHEMA_NAME": {
+                            "type": "string",
+                            "description": "Logical schema name (for example `OMM.fbs` or `OCM.fbs`)."
+                        },
+                        "FILE_IDENTIFIER": {
+                            "type": "string",
+                            "description": "Optional 4-byte FlatBuffer file identifier."
+                        },
+                        "SCHEMA_VERSION": {
+                            "type": "string",
+                            "description": "Optional semver or schema revision string."
+                        },
+                        "ROOT_TYPE": {
+                            "type": "string",
+                            "description": "Optional root type name within the schema."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TAB": {
+                    "type": "object",
+                    "description": "Typed Arena Buffer \u2014 one descriptor for a payload slot in a shared arena.",
+                    "properties": {
+                        "OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Byte offset of the payload body within the arena."
+                        },
+                        "SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Byte length of the payload body."
+                        },
+                        "ALIGNMENT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Required start alignment of the payload body (in bytes)."
+                        },
+                        "WIRE_FORMAT": {
+                            "$ref": "#/definitions/payloadWireFormat",
+                            "description": "Wire format for the body."
+                        },
+                        "TYPE_REF": {
+                            "$ref": "#/definitions/FlatBufferTypeRef",
+                            "description": "Optional payload schema identity."
+                        },
+                        "MUTABILITY": {
+                            "$ref": "#/definitions/bufferMutability",
+                            "description": "Mutability contract for the slot."
+                        },
+                        "OWNERSHIP": {
+                            "$ref": "#/definitions/bufferOwnership",
+                            "description": "Ownership contract for the slot."
+                        },
+                        "FRAME_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Optional opaque frame identifier for stream bookkeeping."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/TAB"
         },
         "COT": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -16168,10 +17695,154 @@
             },
             "$ref": "#/definitions/MNF"
         },
+        "CAQ": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "entityKind": {
+                    "type": "string",
+                    "enum": [
+                        "ENTITY",
+                        "SPACE",
+                        "GROUND",
+                        "AIRCRAFT",
+                        "MISSILE",
+                        "SHIP",
+                        "VEHICLE",
+                        "SENSOR",
+                        "OTHER"
+                    ]
+                },
+                "ETM": {
+                    "type": "object",
+                    "description": "Entity Metadata \u2014 generic queryable metadata for a host-local entity.\nParticipates in shared FlatSQL/WASM runtimes where multiple plugins\ncross-query the same entity collection.",
+                    "properties": {
+                        "ENTITY_ID": {
+                            "type": "string",
+                            "description": "Stable host-local entity identifier."
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "Human-readable entity name used for shared query/search surfaces."
+                        },
+                        "KIND": {
+                            "$ref": "#/definitions/entityKind",
+                            "description": "Broad entity category."
+                        },
+                        "SUBTYPE": {
+                            "type": "string",
+                            "description": "More specific runtime subtype or class name."
+                        },
+                        "PARENT_ENTITY_ID": {
+                            "type": "string",
+                            "description": "Optional parent entity id for hierarchy / linkage queries."
+                        },
+                        "WASM_HANDLE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Collection-scoped WASM handle used for batch visibility application."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional NORAD catalog id for standards-backed entities."
+                        },
+                        "OBJECT_NAME": {
+                            "type": "string",
+                            "description": "Primary object name surfaced by attached standards metadata."
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "Primary international / object designator surfaced by attached standards metadata."
+                        },
+                        "CAT_OBJECT_NAME": {
+                            "type": "string",
+                            "description": "Secondary CAT object name when different from the primary object name."
+                        },
+                        "CAT_OBJECT_ID": {
+                            "type": "string",
+                            "description": "Secondary CAT object id when different from the primary object id."
+                        },
+                        "FACILITY_TYPE": {
+                            "type": "string",
+                            "description": "Ground / facility subtype metadata for non-space entity search."
+                        },
+                        "SEARCH_TEXT": {
+                            "type": "string",
+                            "description": "Pre-normalized phrase-search text for collection-wide shared queries."
+                        },
+                        "OWNER": {
+                            "type": "string",
+                            "description": "CAT owner country code."
+                        },
+                        "STATUS_CODE": {
+                            "type": "string",
+                            "description": "CAT operational status code."
+                        },
+                        "LAUNCH_DATE": {
+                            "type": "string",
+                            "description": "CAT launch date."
+                        },
+                        "LAUNCH_YEAR": {
+                            "type": "string",
+                            "description": "Launch year derived from launch date."
+                        },
+                        "ORBIT_REGIME": {
+                            "type": "string",
+                            "description": "Derived orbit regime classification."
+                        },
+                        "PERIOD": {
+                            "type": "number",
+                            "description": "Orbital period in minutes."
+                        },
+                        "INCLINATION": {
+                            "type": "number",
+                            "description": "Inclination in degrees."
+                        },
+                        "APOGEE": {
+                            "type": "number",
+                            "description": "Apogee altitude in kilometers."
+                        },
+                        "PERIGEE": {
+                            "type": "number",
+                            "description": "Perigee altitude in kilometers."
+                        },
+                        "MEAN_MOTION": {
+                            "type": "number",
+                            "description": "Mean motion in revolutions per day."
+                        },
+                        "ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Orbital eccentricity."
+                        },
+                        "BSTAR": {
+                            "type": "number",
+                            "description": "B* drag term from OMM."
+                        },
+                        "HAS_GP": {
+                            "type": "boolean",
+                            "description": "Whether GP / OMM state is present for the entity."
+                        },
+                        "RESERVED": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Reserved for forward-compatible growth."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/ETM"
+        },
         "PLG": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "pluginType": {
+                "pluginCategory": {
                     "type": "string",
                     "enum": [
                         "Sensor",
@@ -16185,7 +17856,7 @@
                         "Shader"
                     ]
                 },
-                "paymentModel": {
+                "purchaseTier": {
                     "type": "string",
                     "enum": [
                         "Free",
@@ -16193,7 +17864,7 @@
                         "Subscription"
                     ]
                 },
-                "listingStatus": {
+                "publicationState": {
                     "type": "string",
                     "enum": [
                         "Public",
@@ -16293,7 +17964,7 @@
                             "description": "Short marketing summary shown in storefront listings"
                         },
                         "PLUGIN_TYPE": {
-                            "$ref": "#/definitions/pluginType",
+                            "$ref": "#/definitions/pluginCategory",
                             "description": "Type/category of the plugin"
                         },
                         "PUBLISHER_NAME": {
@@ -16474,7 +18145,7 @@
                             "description": "License identifier (SPDX format)"
                         },
                         "PAYMENT_MODEL": {
-                            "$ref": "#/definitions/paymentModel",
+                            "$ref": "#/definitions/purchaseTier",
                             "description": "Commercial model used for storefront purchase flows"
                         },
                         "PRICE_USD_CENTS": {
@@ -16497,7 +18168,7 @@
                             "description": "Accepted payment methods, e.g. \"stripe\", \"sol\", \"usdc\""
                         },
                         "LISTING_STATUS": {
-                            "$ref": "#/definitions/listingStatus",
+                            "$ref": "#/definitions/publicationState",
                             "description": "Storefront publication state for this manifest version"
                         },
                         "SIGNATURE": {
@@ -16994,6 +18665,139 @@
                 }
             },
             "$ref": "#/definitions/MSL"
+        },
+        "SNW": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "snwErrorCode": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "UNKNOWN",
+                        "UNKNOWN_SENSOR",
+                        "INVALID_EPOCH",
+                        "OUTPUT_BUFFER_OVERFLOW",
+                        "NOT_INITIALIZED"
+                    ]
+                },
+                "SNWBatchRequest": {
+                    "type": "object",
+                    "description": "Batch target detection request.\n\nSensor position and orientation are passed inline (not via an arena\noffset) because they are small and uniform across a batch. The target\nstream lives at INPUT_OFFSET as a tightly packed array of `targetState`\nstructs from SDR; the output detection stream is written to\nOUTPUT_OFFSET as a tightly packed array of SDR `detectionResult` structs.",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Sensor-configuration identifier assigned during sensor registration."
+                        },
+                        "SENSOR_POS_X": {
+                            "type": "number",
+                            "description": "Sensor position in ECEF (meters)."
+                        },
+                        "SENSOR_POS_Y": {
+                            "type": "number"
+                        },
+                        "SENSOR_POS_Z": {
+                            "type": "number"
+                        },
+                        "SENSOR_ORIENT_W": {
+                            "type": "number",
+                            "description": "Sensor orientation as a unit quaternion (W, X, Y, Z)."
+                        },
+                        "SENSOR_ORIENT_X": {
+                            "type": "number"
+                        },
+                        "SENSOR_ORIENT_Y": {
+                            "type": "number"
+                        },
+                        "SENSOR_ORIENT_Z": {
+                            "type": "number"
+                        },
+                        "INPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Byte offset in the arena where the targetState[] input stream begins."
+                        },
+                        "INPUT_ALIGNMENT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Required start alignment for INPUT_OFFSET (bytes)."
+                        },
+                        "TARGET_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of target records at INPUT_OFFSET."
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Byte offset in the arena where the detectionResult[] output stream\nwill be written."
+                        },
+                        "OUTPUT_ALIGNMENT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Required start alignment for OUTPUT_OFFSET (bytes)."
+                        },
+                        "EPOCH": {
+                            "type": "number",
+                            "description": "Current time as a Julian date."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SNWBatchResponse": {
+                    "type": "object",
+                    "description": "Batch target detection response header.",
+                    "properties": {
+                        "COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of detection records written to OUTPUT_OFFSET."
+                        },
+                        "DETECTED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of targets whose SNR met the detection threshold."
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Byte offset where the detectionResult[] stream starts."
+                        },
+                        "ERROR_CODE": {
+                            "$ref": "#/definitions/snwErrorCode",
+                            "description": "Error code (0 == OK)."
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Optional error message when ERROR_CODE != OK."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SNW": {
+                    "type": "object",
+                    "description": "Sensor Runtime Wire envelope \u2014 carries either a batch request or a batch\nresponse across the runtime boundary.",
+                    "properties": {
+                        "BATCH_REQUEST": {
+                            "$ref": "#/definitions/SNWBatchRequest"
+                        },
+                        "BATCH_RESPONSE": {
+                            "$ref": "#/definitions/SNWBatchResponse"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SNW"
         },
         "GVH": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -19654,6 +21458,259 @@
                 }
             },
             "$ref": "#/definitions/XTC"
+        },
+        "PRW": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "propagatorStateFlags": {
+                    "type": "string",
+                    "enum": [
+                        "VALID",
+                        "IN_ECLIPSE",
+                        "DECAYED",
+                        "EXTRAPOLATED",
+                        "RESERVED_4",
+                        "RESERVED_5",
+                        "RESERVED_6",
+                        "RESERVED_7"
+                    ]
+                },
+                "propagatorErrorCode": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "UNKNOWN",
+                        "UNKNOWN_ENTITY",
+                        "INVALID_EPOCH",
+                        "OUTPUT_BUFFER_OVERFLOW",
+                        "NOT_INITIALIZED"
+                    ]
+                },
+                "prwSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "OMM",
+                        "TLE",
+                        "OCM",
+                        "OEM",
+                        "PPE",
+                        "KEPLERIAN"
+                    ]
+                },
+                "PRWInit": {
+                    "type": "object",
+                    "description": "Propagator initialization request \u2014 assigns TLE / OMM / Keplerian /\npolynomial inputs to entity handles.\n\nThe actual per-entity source record is carried inline as raw bytes\ntagged with SOURCE_KIND and, where useful, a SDS file_identifier.\nCallers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the\nbytes verbatim; the propagator uses SOURCE_KIND to decide how to\nconsume them.",
+                    "properties": {
+                        "ENTITY_HANDLES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Entity handles to assign results to (same order as SOURCES[])."
+                        },
+                        "SOURCES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PRWInitSource"
+                            },
+                            "description": "Per-entity source records, encoded as SDS FlatBuffers."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PRWKeplerianElements": {
+                    "type": "object",
+                    "properties": {
+                        "MU": {
+                            "type": "number",
+                            "description": "Gravitational parameter of the central body (km^3 / s^2)."
+                        },
+                        "SEMI_MAJOR_AXIS": {
+                            "type": "number",
+                            "description": "Semi-major axis (km)."
+                        },
+                        "ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Eccentricity (0 = circular, <1 = ellipse)."
+                        },
+                        "INCLINATION": {
+                            "type": "number",
+                            "description": "Inclination (radians)."
+                        },
+                        "RAAN": {
+                            "type": "number",
+                            "description": "Right ascension of the ascending node (radians)."
+                        },
+                        "ARG_PERIAPSIS": {
+                            "type": "number",
+                            "description": "Argument of periapsis (radians)."
+                        },
+                        "TRUE_ANOMALY": {
+                            "type": "number",
+                            "description": "True anomaly (radians)."
+                        },
+                        "EPOCH": {
+                            "type": "number",
+                            "description": "Epoch as Julian date."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PRWTleLines": {
+                    "type": "object",
+                    "properties": {
+                        "LINE1": {
+                            "type": "string",
+                            "description": "TLE line 1 (69 characters)."
+                        },
+                        "LINE2": {
+                            "type": "string",
+                            "description": "TLE line 2 (69 characters)."
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "Satellite name (optional, line 0 of 3LE)."
+                        },
+                        "NORAD_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "NORAD catalog number parsed from the TLE."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PRWInitSource": {
+                    "type": "object",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/prwSourceKind",
+                            "description": "Wire kind identifier for BYTES."
+                        },
+                        "FILE_IDENTIFIER": {
+                            "type": "string",
+                            "description": "Optional SDS file_identifier for BYTES (`$OMM`, `$OCM`, `$OEM`, `$PPE`)."
+                        },
+                        "BYTES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Encoded source record as a FlatBuffer (consumed per KIND)."
+                        },
+                        "KEPLERIAN": {
+                            "$ref": "#/definitions/PRWKeplerianElements",
+                            "description": "Convenience inline form when KIND == KEPLERIAN."
+                        },
+                        "TLE": {
+                            "$ref": "#/definitions/PRWTleLines",
+                            "description": "Convenience inline form when KIND == TLE."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PRWBatchRequest": {
+                    "type": "object",
+                    "description": "Batch propagation request \u2014 propagate every entity in ENTITY_HANDLES[] to\nEPOCH and write the result StateVector stream to OUTPUT_OFFSET in the\nshared arena.",
+                    "properties": {
+                        "EPOCH": {
+                            "type": "number",
+                            "description": "Target epoch as a Julian date (TIME_SYSTEM is configured on the host)."
+                        },
+                        "ENTITY_HANDLES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Entity handles to propagate (empty = all initialized entities)."
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output buffer offset in the arena where the StateVector stream begins."
+                        },
+                        "MAX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Maximum entities to process in this call (0 = unbounded)."
+                        },
+                        "TARGET_FRAME": {
+                            "type": "string",
+                            "description": "Target reference frame for the output state stream. Matches enum\nvalues in SDS `RFM`. If zero, the propagator chooses its native frame."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PRWBatchResponse": {
+                    "type": "object",
+                    "description": "Batch propagation response header \u2014 describes the stream written to\nOUTPUT_OFFSET and reports errors. The stream itself is\n`STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.",
+                    "properties": {
+                        "COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of state vectors written."
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Offset in the arena where the state-vector stream begins."
+                        },
+                        "STATE_VECTOR_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Components per state vector (6 = PV, 9 = PVA). Mirrors OCM.STATE_VECTOR_SIZE."
+                        },
+                        "REFERENCE_FRAME": {
+                            "type": "string",
+                            "description": "Reference frame for the stream (SDS `RFM`-compatible string tag)."
+                        },
+                        "FLAGS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/propagatorStateFlags"
+                            },
+                            "description": "Per-entity status flags (same cardinality as COUNT)."
+                        },
+                        "ERROR_CODE": {
+                            "$ref": "#/definitions/propagatorErrorCode",
+                            "description": "Error code (0 == OK)."
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Optional error message when ERROR_CODE != OK."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PRW": {
+                    "type": "object",
+                    "description": "Propagator Runtime Wire \u2014 envelope that carries either an init request,\na batch request, or a batch response across a runtime boundary.",
+                    "properties": {
+                        "INIT": {
+                            "$ref": "#/definitions/PRWInit"
+                        },
+                        "BATCH_REQUEST": {
+                            "$ref": "#/definitions/PRWBatchRequest"
+                        },
+                        "BATCH_RESPONSE": {
+                            "$ref": "#/definitions/PRWBatchResponse"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/PRW"
         },
         "CSM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",

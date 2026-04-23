@@ -1,5 +1,5 @@
-// Hash: a01502f5249472d83d3ae0c9ce257f8fd12601e21e6e29c059d20f6f589329e4
-// Version: 0.0.1
+// Hash: 34a8f4ac3b5b7043add8ee49977baa17bfb63c1cd3a53b2ae64490e7743eb88b
+// Version: 0.0.2
 // -----------------------------------END_HEADER
 /// Sensor Detection Report — runtime I/O contract for sensor detection
 /// plugins. Distinct from SNR (sensor hardware catalog) and SEN (sensor

@@ -26,45 +26,45 @@ struct PLG;
 struct PLGBuilder;
 
 /// Plugin type category
-enum pluginType : int8_t {
+enum pluginCategory : int8_t {
   /// Sensor simulation and analysis
-  pluginType_Sensor = 0,
+  pluginCategory_Sensor = 0,
   /// Orbital propagation algorithms
-  pluginType_Propagator = 1,
+  pluginCategory_Propagator = 1,
   /// Custom rendering/visualization
-  pluginType_Renderer = 2,
+  pluginCategory_Renderer = 2,
   /// Data analysis and processing
-  pluginType_Analysis = 3,
+  pluginCategory_Analysis = 3,
   /// External data source integration
-  pluginType_DataSource = 4,
+  pluginCategory_DataSource = 4,
   /// Electronic warfare simulation
-  pluginType_EW = 5,
+  pluginCategory_EW = 5,
   /// Communications modeling
-  pluginType_Comms = 6,
+  pluginCategory_Comms = 6,
   /// Physics simulation
-  pluginType_Physics = 7,
+  pluginCategory_Physics = 7,
   /// GLSL shader plugins for custom visualization
-  pluginType_Shader = 8,
-  pluginType_MIN = pluginType_Sensor,
-  pluginType_MAX = pluginType_Shader
+  pluginCategory_Shader = 8,
+  pluginCategory_MIN = pluginCategory_Sensor,
+  pluginCategory_MAX = pluginCategory_Shader
 };
 
-inline const pluginType (&EnumValuespluginType())[9] {
-  static const pluginType values[] = {
-    pluginType_Sensor,
-    pluginType_Propagator,
-    pluginType_Renderer,
-    pluginType_Analysis,
-    pluginType_DataSource,
-    pluginType_EW,
-    pluginType_Comms,
-    pluginType_Physics,
-    pluginType_Shader
+inline const pluginCategory (&EnumValuespluginCategory())[9] {
+  static const pluginCategory values[] = {
+    pluginCategory_Sensor,
+    pluginCategory_Propagator,
+    pluginCategory_Renderer,
+    pluginCategory_Analysis,
+    pluginCategory_DataSource,
+    pluginCategory_EW,
+    pluginCategory_Comms,
+    pluginCategory_Physics,
+    pluginCategory_Shader
   };
   return values;
 }
 
-inline const char * const *EnumNamespluginType() {
+inline const char * const *EnumNamespluginCategory() {
   static const char * const names[10] = {
     "Sensor",
     "Propagator",
@@ -80,34 +80,34 @@ inline const char * const *EnumNamespluginType() {
   return names;
 }
 
-inline const char *EnumNamepluginType(pluginType e) {
-  if (::flatbuffers::IsOutRange(e, pluginType_Sensor, pluginType_Shader)) return "";
+inline const char *EnumNamepluginCategory(pluginCategory e) {
+  if (::flatbuffers::IsOutRange(e, pluginCategory_Sensor, pluginCategory_Shader)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamespluginType()[index];
+  return EnumNamespluginCategory()[index];
 }
 
 /// Storefront payment model for the plugin listing
-enum paymentModel : int8_t {
+enum purchaseTier : int8_t {
   /// No payment required
-  paymentModel_Free = 0,
+  purchaseTier_Free = 0,
   /// Single one-time purchase
-  paymentModel_OneTime = 1,
+  purchaseTier_OneTime = 1,
   /// Recurring subscription purchase
-  paymentModel_Subscription = 2,
-  paymentModel_MIN = paymentModel_Free,
-  paymentModel_MAX = paymentModel_Subscription
+  purchaseTier_Subscription = 2,
+  purchaseTier_MIN = purchaseTier_Free,
+  purchaseTier_MAX = purchaseTier_Subscription
 };
 
-inline const paymentModel (&EnumValuespaymentModel())[3] {
-  static const paymentModel values[] = {
-    paymentModel_Free,
-    paymentModel_OneTime,
-    paymentModel_Subscription
+inline const purchaseTier (&EnumValuespurchaseTier())[3] {
+  static const purchaseTier values[] = {
+    purchaseTier_Free,
+    purchaseTier_OneTime,
+    purchaseTier_Subscription
   };
   return values;
 }
 
-inline const char * const *EnumNamespaymentModel() {
+inline const char * const *EnumNamespurchaseTier() {
   static const char * const names[4] = {
     "Free",
     "OneTime",
@@ -117,34 +117,34 @@ inline const char * const *EnumNamespaymentModel() {
   return names;
 }
 
-inline const char *EnumNamepaymentModel(paymentModel e) {
-  if (::flatbuffers::IsOutRange(e, paymentModel_Free, paymentModel_Subscription)) return "";
+inline const char *EnumNamepurchaseTier(purchaseTier e) {
+  if (::flatbuffers::IsOutRange(e, purchaseTier_Free, purchaseTier_Subscription)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamespaymentModel()[index];
+  return EnumNamespurchaseTier()[index];
 }
 
 /// Publication visibility for the plugin listing
-enum listingStatus : int8_t {
+enum publicationState : int8_t {
   /// Discoverable in public storefront listings
-  listingStatus_Public = 0,
+  publicationState_Public = 0,
   /// Addressable directly but hidden from public browse surfaces
-  listingStatus_Unlisted = 1,
+  publicationState_Unlisted = 1,
   /// No longer offered for new installs or purchases
-  listingStatus_Retired = 2,
-  listingStatus_MIN = listingStatus_Public,
-  listingStatus_MAX = listingStatus_Retired
+  publicationState_Retired = 2,
+  publicationState_MIN = publicationState_Public,
+  publicationState_MAX = publicationState_Retired
 };
 
-inline const listingStatus (&EnumValueslistingStatus())[3] {
-  static const listingStatus values[] = {
-    listingStatus_Public,
-    listingStatus_Unlisted,
-    listingStatus_Retired
+inline const publicationState (&EnumValuespublicationState())[3] {
+  static const publicationState values[] = {
+    publicationState_Public,
+    publicationState_Unlisted,
+    publicationState_Retired
   };
   return values;
 }
 
-inline const char * const *EnumNameslistingStatus() {
+inline const char * const *EnumNamespublicationState() {
   static const char * const names[4] = {
     "Public",
     "Unlisted",
@@ -154,10 +154,10 @@ inline const char * const *EnumNameslistingStatus() {
   return names;
 }
 
-inline const char *EnumNamelistingStatus(listingStatus e) {
-  if (::flatbuffers::IsOutRange(e, listingStatus_Public, listingStatus_Retired)) return "";
+inline const char *EnumNamepublicationState(publicationState e) {
+  if (::flatbuffers::IsOutRange(e, publicationState_Public, publicationState_Retired)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNameslistingStatus()[index];
+  return EnumNamespublicationState()[index];
 }
 
 /// Plugin capability declaration
@@ -497,8 +497,8 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_TAGLINE);
   }
   /// Type/category of the plugin
-  pluginType PLUGIN_TYPE() const {
-    return static_cast<pluginType>(GetField<int8_t>(VT_PLUGIN_TYPE, 0));
+  pluginCategory PLUGIN_TYPE() const {
+    return static_cast<pluginCategory>(GetField<int8_t>(VT_PLUGIN_TYPE, 0));
   }
   /// Human-readable publisher or organization name
   const ::flatbuffers::String *PUBLISHER_NAME() const {
@@ -629,8 +629,8 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_LICENSE);
   }
   /// Commercial model used for storefront purchase flows
-  paymentModel PAYMENT_MODEL() const {
-    return static_cast<paymentModel>(GetField<int8_t>(VT_PAYMENT_MODEL, 0));
+  purchaseTier PAYMENT_MODEL() const {
+    return static_cast<purchaseTier>(GetField<int8_t>(VT_PAYMENT_MODEL, 0));
   }
   /// Price in USD cents for one-time purchase or subscription period
   uint32_t PRICE_USD_CENTS() const {
@@ -645,8 +645,8 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ACCEPTED_PAYMENT_METHODS);
   }
   /// Storefront publication state for this manifest version
-  listingStatus LISTING_STATUS() const {
-    return static_cast<listingStatus>(GetField<int8_t>(VT_LISTING_STATUS, 0));
+  publicationState LISTING_STATUS() const {
+    return static_cast<publicationState>(GetField<int8_t>(VT_LISTING_STATUS, 0));
   }
   /// Ed25519 signature from provider over manifest
   const ::flatbuffers::Vector<uint8_t> *SIGNATURE() const {
@@ -764,7 +764,7 @@ struct PLGBuilder {
   void add_TAGLINE(::flatbuffers::Offset<::flatbuffers::String> TAGLINE) {
     fbb_.AddOffset(PLG::VT_TAGLINE, TAGLINE);
   }
-  void add_PLUGIN_TYPE(pluginType PLUGIN_TYPE) {
+  void add_PLUGIN_TYPE(pluginCategory PLUGIN_TYPE) {
     fbb_.AddElement<int8_t>(PLG::VT_PLUGIN_TYPE, static_cast<int8_t>(PLUGIN_TYPE), 0);
   }
   void add_PUBLISHER_NAME(::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_NAME) {
@@ -863,7 +863,7 @@ struct PLGBuilder {
   void add_LICENSE(::flatbuffers::Offset<::flatbuffers::String> LICENSE) {
     fbb_.AddOffset(PLG::VT_LICENSE, LICENSE);
   }
-  void add_PAYMENT_MODEL(paymentModel PAYMENT_MODEL) {
+  void add_PAYMENT_MODEL(purchaseTier PAYMENT_MODEL) {
     fbb_.AddElement<int8_t>(PLG::VT_PAYMENT_MODEL, static_cast<int8_t>(PAYMENT_MODEL), 0);
   }
   void add_PRICE_USD_CENTS(uint32_t PRICE_USD_CENTS) {
@@ -875,7 +875,7 @@ struct PLGBuilder {
   void add_ACCEPTED_PAYMENT_METHODS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ACCEPTED_PAYMENT_METHODS) {
     fbb_.AddOffset(PLG::VT_ACCEPTED_PAYMENT_METHODS, ACCEPTED_PAYMENT_METHODS);
   }
-  void add_LISTING_STATUS(listingStatus LISTING_STATUS) {
+  void add_LISTING_STATUS(publicationState LISTING_STATUS) {
     fbb_.AddElement<int8_t>(PLG::VT_LISTING_STATUS, static_cast<int8_t>(LISTING_STATUS), 0);
   }
   void add_SIGNATURE(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE) {
@@ -902,7 +902,7 @@ inline ::flatbuffers::Offset<PLG> CreatePLG(
     ::flatbuffers::Offset<::flatbuffers::String> VERSION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TAGLINE = 0,
-    pluginType PLUGIN_TYPE = pluginType_Sensor,
+    pluginCategory PLUGIN_TYPE = pluginCategory_Sensor,
     ::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_HANDLE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_URL = 0,
@@ -935,11 +935,11 @@ inline ::flatbuffers::Offset<PLG> CreatePLG(
     ::flatbuffers::Offset<::flatbuffers::String> CHANGELOG_URL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ICON_URL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LICENSE = 0,
-    paymentModel PAYMENT_MODEL = paymentModel_Free,
+    purchaseTier PAYMENT_MODEL = purchaseTier_Free,
     uint32_t PRICE_USD_CENTS = 0,
     uint32_t SUBSCRIPTION_PERIOD_DAYS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ACCEPTED_PAYMENT_METHODS = 0,
-    listingStatus LISTING_STATUS = listingStatus_Public,
+    publicationState LISTING_STATUS = publicationState_Public,
     ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE = 0) {
   PLGBuilder builder_(_fbb);
   builder_.add_UPDATED_AT(UPDATED_AT);
@@ -996,7 +996,7 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
     const char *VERSION = nullptr,
     const char *DESCRIPTION = nullptr,
     const char *TAGLINE = nullptr,
-    pluginType PLUGIN_TYPE = pluginType_Sensor,
+    pluginCategory PLUGIN_TYPE = pluginCategory_Sensor,
     const char *PUBLISHER_NAME = nullptr,
     const char *PUBLISHER_HANDLE = nullptr,
     const char *PUBLISHER_URL = nullptr,
@@ -1029,11 +1029,11 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
     const char *CHANGELOG_URL = nullptr,
     const char *ICON_URL = nullptr,
     const char *LICENSE = nullptr,
-    paymentModel PAYMENT_MODEL = paymentModel_Free,
+    purchaseTier PAYMENT_MODEL = purchaseTier_Free,
     uint32_t PRICE_USD_CENTS = 0,
     uint32_t SUBSCRIPTION_PERIOD_DAYS = 0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ACCEPTED_PAYMENT_METHODS = nullptr,
-    listingStatus LISTING_STATUS = listingStatus_Public,
+    publicationState LISTING_STATUS = publicationState_Public,
     const std::vector<uint8_t> *SIGNATURE = nullptr) {
   auto PLUGIN_ID__ = PLUGIN_ID ? _fbb.CreateString(PLUGIN_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;

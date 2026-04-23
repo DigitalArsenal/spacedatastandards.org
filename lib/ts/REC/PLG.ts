@@ -7,9 +7,9 @@ import * as flatbuffers from 'flatbuffers';
 import { EntryFunction, EntryFunctionT } from './EntryFunction.js';
 import { PluginCapability, PluginCapabilityT } from './PluginCapability.js';
 import { PluginDependency, PluginDependencyT } from './PluginDependency.js';
-import { listingStatus } from './listingStatus.js';
-import { paymentModel } from './paymentModel.js';
-import { pluginType } from './pluginType.js';
+import { pluginCategory } from './pluginCategory.js';
+import { publicationState } from './publicationState.js';
+import { purchaseTier } from './purchaseTier.js';
 
 
 /**
@@ -90,9 +90,9 @@ TAGLINE(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Type/category of the plugin
  */
-PLUGIN_TYPE():pluginType {
+PLUGIN_TYPE():pluginCategory {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : pluginType.Sensor;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : pluginCategory.Sensor;
 }
 
 /**
@@ -459,9 +459,9 @@ LICENSE(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Commercial model used for storefront purchase flows
  */
-PAYMENT_MODEL():paymentModel {
+PAYMENT_MODEL():purchaseTier {
   const offset = this.bb!.__offset(this.bb_pos, 80);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : paymentModel.Free;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : purchaseTier.Free;
 }
 
 /**
@@ -498,9 +498,9 @@ acceptedPaymentMethodsLength():number {
 /**
  * Storefront publication state for this manifest version
  */
-LISTING_STATUS():listingStatus {
+LISTING_STATUS():publicationState {
   const offset = this.bb!.__offset(this.bb_pos, 88);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : listingStatus.Public;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : publicationState.Public;
 }
 
 /**
@@ -545,8 +545,8 @@ static addTagline(builder:flatbuffers.Builder, TAGLINEOffset:flatbuffers.Offset)
   builder.addFieldOffset(4, TAGLINEOffset, 0);
 }
 
-static addPluginType(builder:flatbuffers.Builder, PLUGIN_TYPE:pluginType) {
-  builder.addFieldInt8(5, PLUGIN_TYPE, pluginType.Sensor);
+static addPluginType(builder:flatbuffers.Builder, PLUGIN_TYPE:pluginCategory) {
+  builder.addFieldInt8(5, PLUGIN_TYPE, pluginCategory.Sensor);
 }
 
 static addPublisherName(builder:flatbuffers.Builder, PUBLISHER_NAMEOffset:flatbuffers.Offset) {
@@ -809,8 +809,8 @@ static addLicense(builder:flatbuffers.Builder, LICENSEOffset:flatbuffers.Offset)
   builder.addFieldOffset(37, LICENSEOffset, 0);
 }
 
-static addPaymentModel(builder:flatbuffers.Builder, PAYMENT_MODEL:paymentModel) {
-  builder.addFieldInt8(38, PAYMENT_MODEL, paymentModel.Free);
+static addPaymentModel(builder:flatbuffers.Builder, PAYMENT_MODEL:purchaseTier) {
+  builder.addFieldInt8(38, PAYMENT_MODEL, purchaseTier.Free);
 }
 
 static addPriceUsdCents(builder:flatbuffers.Builder, PRICE_USD_CENTS:number) {
@@ -837,8 +837,8 @@ static startAcceptedPaymentMethodsVector(builder:flatbuffers.Builder, numElems:n
   builder.startVector(4, numElems, 4);
 }
 
-static addListingStatus(builder:flatbuffers.Builder, LISTING_STATUS:listingStatus) {
-  builder.addFieldInt8(42, LISTING_STATUS, listingStatus.Public);
+static addListingStatus(builder:flatbuffers.Builder, LISTING_STATUS:publicationState) {
+  builder.addFieldInt8(42, LISTING_STATUS, publicationState.Public);
 }
 
 static addSignature(builder:flatbuffers.Builder, SIGNATUREOffset:flatbuffers.Offset) {
@@ -873,7 +873,7 @@ static finishSizePrefixedPLGBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$PLG', true);
 }
 
-static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, TAGLINEOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginType, PUBLISHER_NAMEOffset:flatbuffers.Offset, PUBLISHER_HANDLEOffset:flatbuffers.Offset, PUBLISHER_URLOffset:flatbuffers.Offset, SUPPORT_URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, SCREENSHOT_URLSOffset:flatbuffers.Offset, BANNER_URLOffset:flatbuffers.Offset, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, ALLOWED_DOMAINSOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, CHANGELOG_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, PAYMENT_MODEL:paymentModel, PRICE_USD_CENTS:number, SUBSCRIPTION_PERIOD_DAYS:number, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset, LISTING_STATUS:listingStatus, SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, TAGLINEOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory, PUBLISHER_NAMEOffset:flatbuffers.Offset, PUBLISHER_HANDLEOffset:flatbuffers.Offset, PUBLISHER_URLOffset:flatbuffers.Offset, SUPPORT_URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, SCREENSHOT_URLSOffset:flatbuffers.Offset, BANNER_URLOffset:flatbuffers.Offset, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, ALLOWED_DOMAINSOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, CHANGELOG_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, PAYMENT_MODEL:purchaseTier, PRICE_USD_CENTS:number, SUBSCRIPTION_PERIOD_DAYS:number, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset, LISTING_STATUS:publicationState, SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
   PLG.startPLG(builder);
   PLG.addPluginId(builder, PLUGIN_IDOffset);
   PLG.addName(builder, NAMEOffset);
@@ -1027,7 +1027,7 @@ constructor(
   public VERSION: string|Uint8Array|null = null,
   public DESCRIPTION: string|Uint8Array|null = null,
   public TAGLINE: string|Uint8Array|null = null,
-  public PLUGIN_TYPE: pluginType = pluginType.Sensor,
+  public PLUGIN_TYPE: pluginCategory = pluginCategory.Sensor,
   public PUBLISHER_NAME: string|Uint8Array|null = null,
   public PUBLISHER_HANDLE: string|Uint8Array|null = null,
   public PUBLISHER_URL: string|Uint8Array|null = null,
@@ -1060,11 +1060,11 @@ constructor(
   public CHANGELOG_URL: string|Uint8Array|null = null,
   public ICON_URL: string|Uint8Array|null = null,
   public LICENSE: string|Uint8Array|null = null,
-  public PAYMENT_MODEL: paymentModel = paymentModel.Free,
+  public PAYMENT_MODEL: purchaseTier = purchaseTier.Free,
   public PRICE_USD_CENTS: number = 0,
   public SUBSCRIPTION_PERIOD_DAYS: number = 0,
   public ACCEPTED_PAYMENT_METHODS: (string)[] = [],
-  public LISTING_STATUS: listingStatus = listingStatus.Public,
+  public LISTING_STATUS: publicationState = publicationState.Public,
   public SIGNATURE: (number)[] = []
 ){}
 

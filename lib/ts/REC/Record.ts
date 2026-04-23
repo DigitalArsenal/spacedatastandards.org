@@ -20,6 +20,7 @@ import { BEM, BEMT } from './BEM.js';
 import { BMC, BMCT } from './BMC.js';
 import { BOV, BOVT } from './BOV.js';
 import { BUS, BUST } from './BUS.js';
+import { CAQ, CAQT } from './CAQ.js';
 import { CAT, CATT } from './CAT.js';
 import { CDM, CDMT } from './CDM.js';
 import { CFP, CFPT } from './CFP.js';
@@ -42,8 +43,11 @@ import { ENV, ENVT } from './ENV.js';
 import { EOO, EOOT } from './EOO.js';
 import { EOP, EOPT } from './EOP.js';
 import { EPM, EPMT } from './EPM.js';
+import { ESL, ESLT } from './ESL.js';
+import { ETM, ETMT } from './ETM.js';
 import { EWR, EWRT } from './EWR.js';
 import { FCS, FCST } from './FCS.js';
+import { FPC, FPCT } from './FPC.js';
 import { GDI, GDIT } from './GDI.js';
 import { GEO, GEOT } from './GEO.js';
 import { GJN, GJNT } from './GJN.js';
@@ -104,6 +108,7 @@ import { PLK, PLKT } from './PLK.js';
 import { PNM, PNMT } from './PNM.js';
 import { PPE, PPET } from './PPE.js';
 import { PRG, PRGT } from './PRG.js';
+import { PRW, PRWT } from './PRW.js';
 import { PUR, PURT } from './PUR.js';
 import { RAF, RAFT } from './RAF.js';
 import { RCF, RCFT } from './RCF.js';
@@ -118,21 +123,27 @@ import { ROC, ROCT } from './ROC.js';
 import { RecordType, unionToRecordType, unionListToRecordType } from './RecordType.js';
 import { SAR, SART } from './SAR.js';
 import { SCM, SCMT } from './SCM.js';
+import { SDF, SDFT } from './SDF.js';
 import { SDL, SDLT } from './SDL.js';
+import { SDR, SDRT } from './SDR.js';
 import { SEN, SENT } from './SEN.js';
 import { SEO, SEOT } from './SEO.js';
 import { SEV, SEVT } from './SEV.js';
+import { SHW, SHWT } from './SHW.js';
 import { SIT, SITT } from './SIT.js';
 import { SKI, SKIT } from './SKI.js';
 import { SNR, SNRT } from './SNR.js';
+import { SNW, SNWT } from './SNW.js';
 import { SOI, SOIT } from './SOI.js';
 import { SON, SONT } from './SON.js';
 import { SPP, SPPT } from './SPP.js';
 import { SPW, SPWT } from './SPW.js';
+import { SRI, SRIT } from './SRI.js';
 import { STF, STFT } from './STF.js';
 import { STR, STRT } from './STR.js';
 import { STV, STVT } from './STV.js';
 import { SWR, SWRT } from './SWR.js';
+import { TAB, TABT } from './TAB.js';
 import { TCF, TCFT } from './TCF.js';
 import { TDM, TDMT } from './TDM.js';
 import { TIM, TIMT } from './TIM.js';
@@ -248,7 +259,7 @@ unpackTo(_o: RecordT): void {
 export class RecordT implements flatbuffers.IGeneratedObject {
 constructor(
   public value_type: RecordType = RecordType.NONE,
-  public value: ACLT|ACMT|ACRT|AEMT|ANIT|AOFT|APMT|ARMT|ASTT|ATDT|ATMT|BALT|BEMT|BMCT|BOVT|BUST|CATT|CDMT|CFPT|CHNT|CLTT|CMST|COMT|COTT|CRDT|CRMT|CSMT|CTRT|CZMT|DFHT|DMGT|DOAT|EMET|ENCT|ENVT|EOOT|EOPT|EPMT|EWRT|FCST|GDIT|GEOT|GJNT|GNOT|GPXT|GRVT|GVHT|HELT|HYPT|IDMT|IONT|IROT|KMFT|KMLT|KRFT|LCCT|LCFT|LCHT|LDMT|LGRT|LKST|LMRT|LNDT|LNET|LPFT|LWKT|MBLT|METT|MFET|MNFT|MNVT|MPET|MSLT|MSTT|MTIT|NAVT|OBDT|OBTT|OCMT|OEMT|OMMT|OOAT|OOBT|OODT|OOET|OOIT|OOLT|OONT|OOST|OOTT|OPMT|OSMT|PCFT|PHYT|PLDT|PLGT|PLKT|PNMT|PPET|PRGT|PURT|RAFT|RCFT|RDMT|RDOT|REVT|RFBT|RFET|RFMT|RFOT|ROCT|SART|SCMT|SDLT|SENT|SEOT|SEVT|SITT|SKIT|SNRT|SOIT|SONT|SPPT|SPWT|STFT|STRT|STVT|SWRT|TCFT|TDMT|TIMT|TKGT|TMET|TMFT|TPNT|TRKT|TRNT|VCMT|WPNT|WTHT|XTCT|null = null,
+  public value: ACLT|ACMT|ACRT|AEMT|ANIT|AOFT|APMT|ARMT|ASTT|ATDT|ATMT|BALT|BEMT|BMCT|BOVT|BUST|CAQT|CATT|CDMT|CFPT|CHNT|CLTT|CMST|COMT|COTT|CRDT|CRMT|CSMT|CTRT|CZMT|DFHT|DMGT|DOAT|EMET|ENCT|ENVT|EOOT|EOPT|EPMT|ESLT|ETMT|EWRT|FCST|FPCT|GDIT|GEOT|GJNT|GNOT|GPXT|GRVT|GVHT|HELT|HYPT|IDMT|IONT|IROT|KMFT|KMLT|KRFT|LCCT|LCFT|LCHT|LDMT|LGRT|LKST|LMRT|LNDT|LNET|LPFT|LWKT|MBLT|METT|MFET|MNFT|MNVT|MPET|MSLT|MSTT|MTIT|NAVT|OBDT|OBTT|OCMT|OEMT|OMMT|OOAT|OOBT|OODT|OOET|OOIT|OOLT|OONT|OOST|OOTT|OPMT|OSMT|PCFT|PHYT|PLDT|PLGT|PLKT|PNMT|PPET|PRGT|PRWT|PURT|RAFT|RCFT|RDMT|RDOT|REVT|RFBT|RFET|RFMT|RFOT|ROCT|SART|SCMT|SDFT|SDLT|SDRT|SENT|SEOT|SEVT|SHWT|SITT|SKIT|SNRT|SNWT|SOIT|SONT|SPPT|SPWT|SRIT|STFT|STRT|STVT|SWRT|TABT|TCFT|TDMT|TIMT|TKGT|TMET|TMFT|TPNT|TRKT|TRNT|VCMT|WPNT|WTHT|XTCT|null = null,
   public standard: string|Uint8Array|null = null
 ){}
 

@@ -4,29 +4,29 @@ extern crate alloc;
 
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_PLUGIN_TYPE: i8 = 0;
+pub const ENUM_MIN_PLUGIN_CATEGORY: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PLUGIN_TYPE: i8 = 8;
+pub const ENUM_MAX_PLUGIN_CATEGORY: i8 = 8;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PLUGIN_TYPE: [pluginType; 9] = [
-  pluginType::Sensor,
-  pluginType::Propagator,
-  pluginType::Renderer,
-  pluginType::Analysis,
-  pluginType::DataSource,
-  pluginType::EW,
-  pluginType::Comms,
-  pluginType::Physics,
-  pluginType::Shader,
+pub const ENUM_VALUES_PLUGIN_CATEGORY: [pluginCategory; 9] = [
+  pluginCategory::Sensor,
+  pluginCategory::Propagator,
+  pluginCategory::Renderer,
+  pluginCategory::Analysis,
+  pluginCategory::DataSource,
+  pluginCategory::EW,
+  pluginCategory::Comms,
+  pluginCategory::Physics,
+  pluginCategory::Shader,
 ];
 
 /// Plugin type category
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct pluginType(pub i8);
+pub struct pluginCategory(pub i8);
 #[allow(non_upper_case_globals)]
-impl pluginType {
+impl pluginCategory {
   /// Sensor simulation and analysis
   pub const Sensor: Self = Self(0);
   /// Orbital propagation algorithms
@@ -75,7 +75,7 @@ impl pluginType {
     }
   }
 }
-impl ::core::fmt::Debug for pluginType {
+impl ::core::fmt::Debug for pluginCategory {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -84,7 +84,7 @@ impl ::core::fmt::Debug for pluginType {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for pluginType {
+impl<'a> ::flatbuffers::Follow<'a> for pluginCategory {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -93,15 +93,15 @@ impl<'a> ::flatbuffers::Follow<'a> for pluginType {
   }
 }
 
-impl ::flatbuffers::Push for pluginType {
-    type Output = pluginType;
+impl ::flatbuffers::Push for pluginCategory {
+    type Output = pluginCategory;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for pluginType {
+impl ::flatbuffers::EndianScalar for pluginCategory {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -115,7 +115,7 @@ impl ::flatbuffers::EndianScalar for pluginType {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for pluginType {
+impl<'a> ::flatbuffers::Verifiable for pluginCategory {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -124,25 +124,25 @@ impl<'a> ::flatbuffers::Verifiable for pluginType {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for pluginType {}
+impl ::flatbuffers::SimpleToVerifyInSlice for pluginCategory {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_PAYMENT_MODEL: i8 = 0;
+pub const ENUM_MIN_PURCHASE_TIER: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PAYMENT_MODEL: i8 = 2;
+pub const ENUM_MAX_PURCHASE_TIER: i8 = 2;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PAYMENT_MODEL: [paymentModel; 3] = [
-  paymentModel::Free,
-  paymentModel::OneTime,
-  paymentModel::Subscription,
+pub const ENUM_VALUES_PURCHASE_TIER: [purchaseTier; 3] = [
+  purchaseTier::Free,
+  purchaseTier::OneTime,
+  purchaseTier::Subscription,
 ];
 
 /// Storefront payment model for the plugin listing
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct paymentModel(pub i8);
+pub struct purchaseTier(pub i8);
 #[allow(non_upper_case_globals)]
-impl paymentModel {
+impl purchaseTier {
   /// No payment required
   pub const Free: Self = Self(0);
   /// Single one-time purchase
@@ -167,7 +167,7 @@ impl paymentModel {
     }
   }
 }
-impl ::core::fmt::Debug for paymentModel {
+impl ::core::fmt::Debug for purchaseTier {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -176,7 +176,7 @@ impl ::core::fmt::Debug for paymentModel {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for paymentModel {
+impl<'a> ::flatbuffers::Follow<'a> for purchaseTier {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -185,15 +185,15 @@ impl<'a> ::flatbuffers::Follow<'a> for paymentModel {
   }
 }
 
-impl ::flatbuffers::Push for paymentModel {
-    type Output = paymentModel;
+impl ::flatbuffers::Push for purchaseTier {
+    type Output = purchaseTier;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for paymentModel {
+impl ::flatbuffers::EndianScalar for purchaseTier {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -207,7 +207,7 @@ impl ::flatbuffers::EndianScalar for paymentModel {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for paymentModel {
+impl<'a> ::flatbuffers::Verifiable for purchaseTier {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -216,25 +216,25 @@ impl<'a> ::flatbuffers::Verifiable for paymentModel {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for paymentModel {}
+impl ::flatbuffers::SimpleToVerifyInSlice for purchaseTier {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_LISTING_STATUS: i8 = 0;
+pub const ENUM_MIN_PUBLICATION_STATE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_LISTING_STATUS: i8 = 2;
+pub const ENUM_MAX_PUBLICATION_STATE: i8 = 2;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_LISTING_STATUS: [listingStatus; 3] = [
-  listingStatus::Public,
-  listingStatus::Unlisted,
-  listingStatus::Retired,
+pub const ENUM_VALUES_PUBLICATION_STATE: [publicationState; 3] = [
+  publicationState::Public,
+  publicationState::Unlisted,
+  publicationState::Retired,
 ];
 
 /// Publication visibility for the plugin listing
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct listingStatus(pub i8);
+pub struct publicationState(pub i8);
 #[allow(non_upper_case_globals)]
-impl listingStatus {
+impl publicationState {
   /// Discoverable in public storefront listings
   pub const Public: Self = Self(0);
   /// Addressable directly but hidden from public browse surfaces
@@ -259,7 +259,7 @@ impl listingStatus {
     }
   }
 }
-impl ::core::fmt::Debug for listingStatus {
+impl ::core::fmt::Debug for publicationState {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -268,7 +268,7 @@ impl ::core::fmt::Debug for listingStatus {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for listingStatus {
+impl<'a> ::flatbuffers::Follow<'a> for publicationState {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -277,15 +277,15 @@ impl<'a> ::flatbuffers::Follow<'a> for listingStatus {
   }
 }
 
-impl ::flatbuffers::Push for listingStatus {
-    type Output = listingStatus;
+impl ::flatbuffers::Push for publicationState {
+    type Output = publicationState;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for listingStatus {
+impl ::flatbuffers::EndianScalar for publicationState {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -299,7 +299,7 @@ impl ::flatbuffers::EndianScalar for listingStatus {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for listingStatus {
+impl<'a> ::flatbuffers::Verifiable for publicationState {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -308,7 +308,7 @@ impl<'a> ::flatbuffers::Verifiable for listingStatus {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for listingStatus {}
+impl ::flatbuffers::SimpleToVerifyInSlice for publicationState {}
 pub enum PluginCapabilityOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1218,11 +1218,11 @@ impl<'a> PLG<'a> {
   }
   /// Type/category of the plugin
   #[inline]
-  pub fn PLUGIN_TYPE(&self) -> pluginType {
+  pub fn PLUGIN_TYPE(&self) -> pluginCategory {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<pluginType>(PLG::VT_PLUGIN_TYPE, Some(pluginType::Sensor)).unwrap()}
+    unsafe { self._tab.get::<pluginCategory>(PLG::VT_PLUGIN_TYPE, Some(pluginCategory::Sensor)).unwrap()}
   }
   /// Human-readable publisher or organization name
   #[inline]
@@ -1482,11 +1482,11 @@ impl<'a> PLG<'a> {
   }
   /// Commercial model used for storefront purchase flows
   #[inline]
-  pub fn PAYMENT_MODEL(&self) -> paymentModel {
+  pub fn PAYMENT_MODEL(&self) -> purchaseTier {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<paymentModel>(PLG::VT_PAYMENT_MODEL, Some(paymentModel::Free)).unwrap()}
+    unsafe { self._tab.get::<purchaseTier>(PLG::VT_PAYMENT_MODEL, Some(purchaseTier::Free)).unwrap()}
   }
   /// Price in USD cents for one-time purchase or subscription period
   #[inline]
@@ -1514,11 +1514,11 @@ impl<'a> PLG<'a> {
   }
   /// Storefront publication state for this manifest version
   #[inline]
-  pub fn LISTING_STATUS(&self) -> listingStatus {
+  pub fn LISTING_STATUS(&self) -> publicationState {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<listingStatus>(PLG::VT_LISTING_STATUS, Some(listingStatus::Public)).unwrap()}
+    unsafe { self._tab.get::<publicationState>(PLG::VT_LISTING_STATUS, Some(publicationState::Public)).unwrap()}
   }
   /// Ed25519 signature from provider over manifest
   #[inline]
@@ -1541,7 +1541,7 @@ impl ::flatbuffers::Verifiable for PLG<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VERSION", Self::VT_VERSION, true)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TAGLINE", Self::VT_TAGLINE, false)?
-     .visit_field::<pluginType>("PLUGIN_TYPE", Self::VT_PLUGIN_TYPE, false)?
+     .visit_field::<pluginCategory>("PLUGIN_TYPE", Self::VT_PLUGIN_TYPE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PUBLISHER_NAME", Self::VT_PUBLISHER_NAME, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PUBLISHER_HANDLE", Self::VT_PUBLISHER_HANDLE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PUBLISHER_URL", Self::VT_PUBLISHER_URL, false)?
@@ -1574,11 +1574,11 @@ impl ::flatbuffers::Verifiable for PLG<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CHANGELOG_URL", Self::VT_CHANGELOG_URL, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ICON_URL", Self::VT_ICON_URL, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LICENSE", Self::VT_LICENSE, false)?
-     .visit_field::<paymentModel>("PAYMENT_MODEL", Self::VT_PAYMENT_MODEL, false)?
+     .visit_field::<purchaseTier>("PAYMENT_MODEL", Self::VT_PAYMENT_MODEL, false)?
      .visit_field::<u32>("PRICE_USD_CENTS", Self::VT_PRICE_USD_CENTS, false)?
      .visit_field::<u32>("SUBSCRIPTION_PERIOD_DAYS", Self::VT_SUBSCRIPTION_PERIOD_DAYS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ACCEPTED_PAYMENT_METHODS", Self::VT_ACCEPTED_PAYMENT_METHODS, false)?
-     .visit_field::<listingStatus>("LISTING_STATUS", Self::VT_LISTING_STATUS, false)?
+     .visit_field::<publicationState>("LISTING_STATUS", Self::VT_LISTING_STATUS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, false)?
      .finish();
     Ok(())
@@ -1590,7 +1590,7 @@ pub struct PLGArgs<'a> {
     pub VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub TAGLINE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub PLUGIN_TYPE: pluginType,
+    pub PLUGIN_TYPE: pluginCategory,
     pub PUBLISHER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PUBLISHER_HANDLE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PUBLISHER_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
@@ -1623,11 +1623,11 @@ pub struct PLGArgs<'a> {
     pub CHANGELOG_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ICON_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub LICENSE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub PAYMENT_MODEL: paymentModel,
+    pub PAYMENT_MODEL: purchaseTier,
     pub PRICE_USD_CENTS: u32,
     pub SUBSCRIPTION_PERIOD_DAYS: u32,
     pub ACCEPTED_PAYMENT_METHODS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub LISTING_STATUS: listingStatus,
+    pub LISTING_STATUS: publicationState,
     pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
 }
 impl<'a> Default for PLGArgs<'a> {
@@ -1639,7 +1639,7 @@ impl<'a> Default for PLGArgs<'a> {
       VERSION: None, // required field
       DESCRIPTION: None,
       TAGLINE: None,
-      PLUGIN_TYPE: pluginType::Sensor,
+      PLUGIN_TYPE: pluginCategory::Sensor,
       PUBLISHER_NAME: None,
       PUBLISHER_HANDLE: None,
       PUBLISHER_URL: None,
@@ -1672,11 +1672,11 @@ impl<'a> Default for PLGArgs<'a> {
       CHANGELOG_URL: None,
       ICON_URL: None,
       LICENSE: None,
-      PAYMENT_MODEL: paymentModel::Free,
+      PAYMENT_MODEL: purchaseTier::Free,
       PRICE_USD_CENTS: 0,
       SUBSCRIPTION_PERIOD_DAYS: 0,
       ACCEPTED_PAYMENT_METHODS: None,
-      LISTING_STATUS: listingStatus::Public,
+      LISTING_STATUS: publicationState::Public,
       SIGNATURE: None,
     }
   }
@@ -1708,8 +1708,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_TAGLINE, TAGLINE);
   }
   #[inline]
-  pub fn add_PLUGIN_TYPE(&mut self, PLUGIN_TYPE: pluginType) {
-    self.fbb_.push_slot::<pluginType>(PLG::VT_PLUGIN_TYPE, PLUGIN_TYPE, pluginType::Sensor);
+  pub fn add_PLUGIN_TYPE(&mut self, PLUGIN_TYPE: pluginCategory) {
+    self.fbb_.push_slot::<pluginCategory>(PLG::VT_PLUGIN_TYPE, PLUGIN_TYPE, pluginCategory::Sensor);
   }
   #[inline]
   pub fn add_PUBLISHER_NAME(&mut self, PUBLISHER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
@@ -1840,8 +1840,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_LICENSE, LICENSE);
   }
   #[inline]
-  pub fn add_PAYMENT_MODEL(&mut self, PAYMENT_MODEL: paymentModel) {
-    self.fbb_.push_slot::<paymentModel>(PLG::VT_PAYMENT_MODEL, PAYMENT_MODEL, paymentModel::Free);
+  pub fn add_PAYMENT_MODEL(&mut self, PAYMENT_MODEL: purchaseTier) {
+    self.fbb_.push_slot::<purchaseTier>(PLG::VT_PAYMENT_MODEL, PAYMENT_MODEL, purchaseTier::Free);
   }
   #[inline]
   pub fn add_PRICE_USD_CENTS(&mut self, PRICE_USD_CENTS: u32) {
@@ -1856,8 +1856,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ACCEPTED_PAYMENT_METHODS, ACCEPTED_PAYMENT_METHODS);
   }
   #[inline]
-  pub fn add_LISTING_STATUS(&mut self, LISTING_STATUS: listingStatus) {
-    self.fbb_.push_slot::<listingStatus>(PLG::VT_LISTING_STATUS, LISTING_STATUS, listingStatus::Public);
+  pub fn add_LISTING_STATUS(&mut self, LISTING_STATUS: publicationState) {
+    self.fbb_.push_slot::<publicationState>(PLG::VT_LISTING_STATUS, LISTING_STATUS, publicationState::Public);
   }
   #[inline]
   pub fn add_SIGNATURE(&mut self, SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
@@ -1939,7 +1939,7 @@ pub struct PLGT {
   pub VERSION: alloc::string::String,
   pub DESCRIPTION: Option<alloc::string::String>,
   pub TAGLINE: Option<alloc::string::String>,
-  pub PLUGIN_TYPE: pluginType,
+  pub PLUGIN_TYPE: pluginCategory,
   pub PUBLISHER_NAME: Option<alloc::string::String>,
   pub PUBLISHER_HANDLE: Option<alloc::string::String>,
   pub PUBLISHER_URL: Option<alloc::string::String>,
@@ -1972,11 +1972,11 @@ pub struct PLGT {
   pub CHANGELOG_URL: Option<alloc::string::String>,
   pub ICON_URL: Option<alloc::string::String>,
   pub LICENSE: Option<alloc::string::String>,
-  pub PAYMENT_MODEL: paymentModel,
+  pub PAYMENT_MODEL: purchaseTier,
   pub PRICE_USD_CENTS: u32,
   pub SUBSCRIPTION_PERIOD_DAYS: u32,
   pub ACCEPTED_PAYMENT_METHODS: Option<alloc::vec::Vec<alloc::string::String>>,
-  pub LISTING_STATUS: listingStatus,
+  pub LISTING_STATUS: publicationState,
   pub SIGNATURE: Option<alloc::vec::Vec<u8>>,
 }
 impl Default for PLGT {
@@ -1987,7 +1987,7 @@ impl Default for PLGT {
       VERSION: alloc::string::ToString::to_string(""),
       DESCRIPTION: None,
       TAGLINE: None,
-      PLUGIN_TYPE: pluginType::Sensor,
+      PLUGIN_TYPE: pluginCategory::Sensor,
       PUBLISHER_NAME: None,
       PUBLISHER_HANDLE: None,
       PUBLISHER_URL: None,
@@ -2020,11 +2020,11 @@ impl Default for PLGT {
       CHANGELOG_URL: None,
       ICON_URL: None,
       LICENSE: None,
-      PAYMENT_MODEL: paymentModel::Free,
+      PAYMENT_MODEL: purchaseTier::Free,
       PRICE_USD_CENTS: 0,
       SUBSCRIPTION_PERIOD_DAYS: 0,
       ACCEPTED_PAYMENT_METHODS: None,
-      LISTING_STATUS: listingStatus::Public,
+      LISTING_STATUS: publicationState::Public,
       SIGNATURE: None,
     }
   }

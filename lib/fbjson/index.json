@@ -7668,6 +7668,76 @@
             "x-flatbuffer-root-type": "BEM",
             "x-flatbuffer-file-identifier": "$BEM"
         },
+        "ESL": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "ESL": {
+                    "type": "object",
+                    "description": "Entity / Standards Link \u2014 join-table row connecting a host-local entity\nmetadata record to a standards record index row, enabling cascade-safe\nmutation and cross-plugin query ownership.",
+                    "properties": {
+                        "LINK_KEY": {
+                            "type": "string",
+                            "description": "Stable local link key for one entity / record association.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ENTITY_ID": {
+                            "type": "string",
+                            "description": "Stable host-local entity id on the entity side of the association.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ENTITY_RECORD_KEY": {
+                            "type": "string",
+                            "description": "Stable local entity metadata record key (for example `ENTITY:<id>`).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ENTITY_ROWID": {
+                            "type": "number",
+                            "description": "FlatSQL row id for the linked entity metadata row when known.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RECORD_KEY": {
+                            "type": "string",
+                            "description": "Stable local standards record key on the record side of the association.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SCHEMA_NAME": {
+                            "type": "string",
+                            "description": "SDS schema family for the linked record (`OMM`, `CAT`, `OEM`, `CDM`, etc.).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "RECORD_ROWID": {
+                            "type": "number",
+                            "description": "FlatSQL row id for the linked standards record row when known.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "CASCADE_DELETE": {
+                            "type": "boolean",
+                            "description": "Whether entity deletion should cascade to the linked standards record.",
+                            "x-flatbuffer-type": "bool"
+                        },
+                        "UPDATED_AT_MS": {
+                            "type": "number",
+                            "description": "Milliseconds since epoch when the association was last refreshed.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RESERVED": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Reserved for forward-compatible growth.",
+                            "x-flatbuffer-type": "[uint8]"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/ESL",
+            "x-flatbuffer-root-type": "ESL",
+            "x-flatbuffer-file-identifier": "$ESL"
+        },
         "OPM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -8066,6 +8136,529 @@
             "x-flatbuffer-root-type": "EPM",
             "x-flatbuffer-file-identifier": "$EPM"
         },
+        "SDF": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "sdfPrimitive": {
+                    "type": "string",
+                    "enum": [
+                        "CONE",
+                        "RECTANGULAR",
+                        "SPHERE",
+                        "CYLINDER",
+                        "CUSTOM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "CONE": {
+                            "value": 0,
+                            "description": "Cone with apex at origin, +Z boresight."
+                        },
+                        "RECTANGULAR": {
+                            "value": 1,
+                            "description": "Rectangular pyramid (four planes + range cap)."
+                        },
+                        "SPHERE": {
+                            "value": 2,
+                            "description": "Sphere centered at origin."
+                        },
+                        "CYLINDER": {
+                            "value": 3,
+                            "description": "Cylinder along Z axis."
+                        },
+                        "CUSTOM": {
+                            "value": 255,
+                            "description": "Plugin-defined custom SDF."
+                        }
+                    }
+                },
+                "sdfOperation": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "UNION",
+                        "INTERSECTION",
+                        "SUBTRACTION",
+                        "SMOOTH_UNION"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "NONE": {
+                            "value": 0,
+                            "description": "No composition (primitive only)."
+                        },
+                        "UNION": {
+                            "value": 1,
+                            "description": "Union (min of SDFs) \u2014 inside either."
+                        },
+                        "INTERSECTION": {
+                            "value": 2,
+                            "description": "Intersection (max of SDFs) \u2014 inside both."
+                        },
+                        "SUBTRACTION": {
+                            "value": 3,
+                            "description": "Subtraction (A - B) \u2014 inside A but not B."
+                        },
+                        "SMOOTH_UNION": {
+                            "value": 4,
+                            "description": "Smooth union with a blend radius."
+                        }
+                    }
+                },
+                "sdfResult": {
+                    "type": "object",
+                    "description": "Result of a single SDF point-in-volume query (24 bytes, 8-byte aligned).",
+                    "properties": {
+                        "ENTITY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Entity identifier."
+                        },
+                        "DETECTED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Detection flag (1 == inside, 0 == outside)."
+                        },
+                        "SIGNED_DISTANCE": {
+                            "type": "number",
+                            "description": "Signed distance (negative inside, zero on boundary, positive outside)."
+                        },
+                        "CLOSEST_DISTANCE": {
+                            "type": "number",
+                            "description": "Distance to the closest boundary point (always positive)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "sdfTimeRangeResult": {
+                    "type": "object",
+                    "description": "Result of a time-range SDF query (40 bytes, 8-byte aligned).",
+                    "properties": {
+                        "ENTITY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Entity identifier."
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Flags (reserved)."
+                        },
+                        "ENTRY_TIME": {
+                            "type": "number",
+                            "description": "Julian date when the entity entered the volume (0 == never entered)."
+                        },
+                        "EXIT_TIME": {
+                            "type": "number",
+                            "description": "Julian date when the entity exited the volume (0 == still inside)."
+                        },
+                        "MIN_DISTANCE": {
+                            "type": "number",
+                            "description": "Most negative signed distance (closest approach to center)."
+                        },
+                        "DWELL_TIME": {
+                            "type": "number",
+                            "description": "Total time inside volume (seconds)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFConical": {
+                    "type": "object",
+                    "description": "Conical SDF parameters.",
+                    "properties": {
+                        "HALF_ANGLE": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "INNER_HALF_ANGLE": {
+                            "type": "number",
+                            "description": "Inner half-angle for hollow cones (0 == solid).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MIN_RANGE": {
+                            "type": "number",
+                            "description": "Minimum range (inner cap distance).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MAX_RANGE": {
+                            "type": "number",
+                            "description": "Maximum range (outer cap distance).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "FLAT_CAP": {
+                            "type": "boolean",
+                            "description": "Use a flat cap (true) or a spherical cap (false).",
+                            "x-flatbuffer-type": "bool"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFRectangular": {
+                    "type": "object",
+                    "description": "Rectangular (pyramidal) SDF parameters.",
+                    "properties": {
+                        "X_HALF_ANGLE": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "Y_HALF_ANGLE": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MIN_RANGE": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MAX_RANGE": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFSpherical": {
+                    "type": "object",
+                    "description": "Spherical SDF parameters.",
+                    "properties": {
+                        "RADIUS": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "INNER_RADIUS": {
+                            "type": "number",
+                            "description": "Inner radius for hollow sphere (0 == solid).",
+                            "x-flatbuffer-type": "double"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFCylindrical": {
+                    "type": "object",
+                    "description": "Cylindrical SDF parameters.",
+                    "properties": {
+                        "RADIUS": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "HALF_HEIGHT": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFCustom": {
+                    "type": "object",
+                    "description": "Custom SDF defined by a set of unit boundary-direction vectors.",
+                    "properties": {
+                        "DIRECTIONS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Unit vectors defining the boundary packed as [x0, y0, z0, x1, y1, z1, ...].",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "MAX_RANGE": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFComposition": {
+                    "type": "object",
+                    "description": "Constructive composition of two SDFs.",
+                    "properties": {
+                        "OPERATION": {
+                            "$ref": "#/definitions/sdfOperation",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "NONE": {
+                                    "value": 0,
+                                    "description": "No composition (primitive only)."
+                                },
+                                "UNION": {
+                                    "value": 1,
+                                    "description": "Union (min of SDFs) \u2014 inside either."
+                                },
+                                "INTERSECTION": {
+                                    "value": 2,
+                                    "description": "Intersection (max of SDFs) \u2014 inside both."
+                                },
+                                "SUBTRACTION": {
+                                    "value": 3,
+                                    "description": "Subtraction (A - B) \u2014 inside A but not B."
+                                },
+                                "SMOOTH_UNION": {
+                                    "value": 4,
+                                    "description": "Smooth union with a blend radius."
+                                }
+                            }
+                        },
+                        "OPERAND_A": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "First operand (index into SDF.COMPONENTS[]).",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "OPERAND_B": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Second operand (index into SDF.COMPONENTS[]).",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "BLEND_RADIUS": {
+                            "type": "number",
+                            "description": "Blend radius for smooth operations.",
+                            "x-flatbuffer-type": "double"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFComponent": {
+                    "type": "object",
+                    "description": "Single component in a composed SDF.",
+                    "properties": {
+                        "PRIMITIVE": {
+                            "$ref": "#/definitions/sdfPrimitive",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "CONE": {
+                                    "value": 0,
+                                    "description": "Cone with apex at origin, +Z boresight."
+                                },
+                                "RECTANGULAR": {
+                                    "value": 1,
+                                    "description": "Rectangular pyramid (four planes + range cap)."
+                                },
+                                "SPHERE": {
+                                    "value": 2,
+                                    "description": "Sphere centered at origin."
+                                },
+                                "CYLINDER": {
+                                    "value": 3,
+                                    "description": "Cylinder along Z axis."
+                                },
+                                "CUSTOM": {
+                                    "value": 255,
+                                    "description": "Plugin-defined custom SDF."
+                                }
+                            }
+                        },
+                        "CONE": {
+                            "$ref": "#/definitions/SDFConical",
+                            "x-flatbuffer-type": "SDFConical"
+                        },
+                        "RECTANGULAR": {
+                            "$ref": "#/definitions/SDFRectangular",
+                            "x-flatbuffer-type": "SDFRectangular"
+                        },
+                        "SPHERICAL": {
+                            "$ref": "#/definitions/SDFSpherical",
+                            "x-flatbuffer-type": "SDFSpherical"
+                        },
+                        "CYLINDRICAL": {
+                            "$ref": "#/definitions/SDFCylindrical",
+                            "x-flatbuffer-type": "SDFCylindrical"
+                        },
+                        "CUSTOM": {
+                            "$ref": "#/definitions/SDFCustom",
+                            "x-flatbuffer-type": "SDFCustom"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFConfig": {
+                    "type": "object",
+                    "description": "Complete SDF configuration.",
+                    "properties": {
+                        "PRIMITIVE": {
+                            "$ref": "#/definitions/sdfPrimitive",
+                            "description": "Root primitive type (useful when COMPONENTS[] is empty).",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "CONE": {
+                                    "value": 0,
+                                    "description": "Cone with apex at origin, +Z boresight."
+                                },
+                                "RECTANGULAR": {
+                                    "value": 1,
+                                    "description": "Rectangular pyramid (four planes + range cap)."
+                                },
+                                "SPHERE": {
+                                    "value": 2,
+                                    "description": "Sphere centered at origin."
+                                },
+                                "CYLINDER": {
+                                    "value": 3,
+                                    "description": "Cylinder along Z axis."
+                                },
+                                "CUSTOM": {
+                                    "value": 255,
+                                    "description": "Plugin-defined custom SDF."
+                                }
+                            }
+                        },
+                        "COMPONENTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SDFComponent"
+                            },
+                            "description": "One or more components that may be combined via COMPOSITIONS[].",
+                            "x-flatbuffer-type": "[SDFComponent]"
+                        },
+                        "COMPOSITIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SDFComposition"
+                            },
+                            "description": "Composition tree over COMPONENTS[].",
+                            "x-flatbuffer-type": "[SDFComposition]"
+                        },
+                        "INVERSE_TRANSFORM": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "World-to-local transform (4x4 column-major, 16 doubles).",
+                            "x-flatbuffer-type": "[double]"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFBatchRequest": {
+                    "type": "object",
+                    "description": "Batch SDF evaluation request (arena-addressed, zero-copy).",
+                    "properties": {
+                        "INPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Input buffer offset (arena bytes) where the Vec3[] of world points begins.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "POINT_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of points to evaluate.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "ENTITY_IDS_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Entity-ids buffer offset corresponding to each point (optional).",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output buffer offset where sdfResult[] is written.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "INVERSE_TRANSFORM_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Inverse-transform buffer offset (4x4 matrix, 128 bytes).",
+                            "x-flatbuffer-type": "uint"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDFBatchResponse": {
+                    "type": "object",
+                    "description": "Batch SDF evaluation response header.",
+                    "properties": {
+                        "COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of results written.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "INSIDE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of points inside the volume.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output offset where sdfResult[] starts.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "ERROR_CODE": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Error code (0 == success).",
+                            "x-flatbuffer-type": "int"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Optional error message when ERROR_CODE != 0.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDF": {
+                    "type": "object",
+                    "description": "Signed Distance Field envelope message \u2014 carries a configuration, a batch\nrequest, a batch response, or single / time-range result records.",
+                    "properties": {
+                        "CONFIG": {
+                            "$ref": "#/definitions/SDFConfig",
+                            "x-flatbuffer-type": "SDFConfig"
+                        },
+                        "BATCH_REQUEST": {
+                            "$ref": "#/definitions/SDFBatchRequest",
+                            "x-flatbuffer-type": "SDFBatchRequest"
+                        },
+                        "BATCH_RESPONSE": {
+                            "$ref": "#/definitions/SDFBatchResponse",
+                            "x-flatbuffer-type": "SDFBatchResponse"
+                        },
+                        "RESULTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/sdfResult"
+                            },
+                            "x-flatbuffer-type": "[sdfResult]"
+                        },
+                        "TIME_RANGE_RESULTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/sdfTimeRangeResult"
+                            },
+                            "x-flatbuffer-type": "[sdfTimeRangeResult]"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SDF",
+            "x-flatbuffer-root-type": "SDF",
+            "x-flatbuffer-file-identifier": "$SDF"
+        },
         "APM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -8306,6 +8899,419 @@
             "$ref": "#/definitions/KRF",
             "x-flatbuffer-root-type": "LCF",
             "x-flatbuffer-file-identifier": "$LCF"
+        },
+        "SHW": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "shaderStage": {
+                    "type": "string",
+                    "enum": [
+                        "VERTEX",
+                        "FRAGMENT",
+                        "COMPUTE",
+                        "GEOMETRY",
+                        "TESS_CONTROL",
+                        "TESS_EVALUATION"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "VERTEX": {
+                            "value": 0
+                        },
+                        "FRAGMENT": {
+                            "value": 1
+                        },
+                        "COMPUTE": {
+                            "value": 2
+                        },
+                        "GEOMETRY": {
+                            "value": 3
+                        },
+                        "TESS_CONTROL": {
+                            "value": 4
+                        },
+                        "TESS_EVALUATION": {
+                            "value": 5
+                        }
+                    }
+                },
+                "shaderInjectionPoint": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "VERTEX_PRE_TRANSFORM",
+                        "VERTEX_POST_TRANSFORM",
+                        "FRAGMENT_PRE_SHADE",
+                        "FRAGMENT_POST_SHADE",
+                        "FRAGMENT_FINAL_COLOR",
+                        "POSTPROCESS"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "NONE": {
+                            "value": 0
+                        },
+                        "VERTEX_PRE_TRANSFORM": {
+                            "value": 1
+                        },
+                        "VERTEX_POST_TRANSFORM": {
+                            "value": 2
+                        },
+                        "FRAGMENT_PRE_SHADE": {
+                            "value": 3
+                        },
+                        "FRAGMENT_POST_SHADE": {
+                            "value": 4
+                        },
+                        "FRAGMENT_FINAL_COLOR": {
+                            "value": 5
+                        },
+                        "POSTPROCESS": {
+                            "value": 6
+                        }
+                    }
+                },
+                "shaderUniformType": {
+                    "type": "string",
+                    "enum": [
+                        "FLOAT",
+                        "VEC2",
+                        "VEC3",
+                        "VEC4",
+                        "INT",
+                        "IVEC2",
+                        "IVEC3",
+                        "IVEC4",
+                        "UINT",
+                        "UVEC2",
+                        "UVEC3",
+                        "UVEC4",
+                        "BOOL",
+                        "BVEC2",
+                        "BVEC3",
+                        "BVEC4",
+                        "MAT2",
+                        "MAT3",
+                        "MAT4",
+                        "SAMPLER_2D",
+                        "SAMPLER_CUBE",
+                        "SAMPLER_2D_ARRAY"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "FLOAT": {
+                            "value": 0
+                        },
+                        "VEC2": {
+                            "value": 1
+                        },
+                        "VEC3": {
+                            "value": 2
+                        },
+                        "VEC4": {
+                            "value": 3
+                        },
+                        "INT": {
+                            "value": 4
+                        },
+                        "IVEC2": {
+                            "value": 5
+                        },
+                        "IVEC3": {
+                            "value": 6
+                        },
+                        "IVEC4": {
+                            "value": 7
+                        },
+                        "UINT": {
+                            "value": 8
+                        },
+                        "UVEC2": {
+                            "value": 9
+                        },
+                        "UVEC3": {
+                            "value": 10
+                        },
+                        "UVEC4": {
+                            "value": 11
+                        },
+                        "BOOL": {
+                            "value": 12
+                        },
+                        "BVEC2": {
+                            "value": 13
+                        },
+                        "BVEC3": {
+                            "value": 14
+                        },
+                        "BVEC4": {
+                            "value": 15
+                        },
+                        "MAT2": {
+                            "value": 16
+                        },
+                        "MAT3": {
+                            "value": 17
+                        },
+                        "MAT4": {
+                            "value": 18
+                        },
+                        "SAMPLER_2D": {
+                            "value": 19
+                        },
+                        "SAMPLER_CUBE": {
+                            "value": 20
+                        },
+                        "SAMPLER_2D_ARRAY": {
+                            "value": 21
+                        }
+                    }
+                },
+                "SHWUniform": {
+                    "type": "object",
+                    "description": "Uniform descriptor \u2014 name + type + optional default value.",
+                    "properties": {
+                        "UNIFORM_NAME": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "UNIFORM_TYPE": {
+                            "$ref": "#/definitions/shaderUniformType",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "FLOAT": {
+                                    "value": 0
+                                },
+                                "VEC2": {
+                                    "value": 1
+                                },
+                                "VEC3": {
+                                    "value": 2
+                                },
+                                "VEC4": {
+                                    "value": 3
+                                },
+                                "INT": {
+                                    "value": 4
+                                },
+                                "IVEC2": {
+                                    "value": 5
+                                },
+                                "IVEC3": {
+                                    "value": 6
+                                },
+                                "IVEC4": {
+                                    "value": 7
+                                },
+                                "UINT": {
+                                    "value": 8
+                                },
+                                "UVEC2": {
+                                    "value": 9
+                                },
+                                "UVEC3": {
+                                    "value": 10
+                                },
+                                "UVEC4": {
+                                    "value": 11
+                                },
+                                "BOOL": {
+                                    "value": 12
+                                },
+                                "BVEC2": {
+                                    "value": 13
+                                },
+                                "BVEC3": {
+                                    "value": 14
+                                },
+                                "BVEC4": {
+                                    "value": 15
+                                },
+                                "MAT2": {
+                                    "value": 16
+                                },
+                                "MAT3": {
+                                    "value": 17
+                                },
+                                "MAT4": {
+                                    "value": 18
+                                },
+                                "SAMPLER_2D": {
+                                    "value": 19
+                                },
+                                "SAMPLER_CUBE": {
+                                    "value": 20
+                                },
+                                "SAMPLER_2D_ARRAY": {
+                                    "value": 21
+                                }
+                            }
+                        },
+                        "UNIFORM_DESCRIPTION": {
+                            "type": "string",
+                            "description": "Optional human-readable description.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "UNIFORM_DEFAULT_VALUE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional default value encoded as bytes in the native type layout.",
+                            "x-flatbuffer-type": "[uint8]"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SHWCompileRequest": {
+                    "type": "object",
+                    "description": "Compile request \u2014 one shader source (typically a fragment of a\nlarger stage) plus metadata for the host splice.",
+                    "properties": {
+                        "SHADER_NAME": {
+                            "type": "string",
+                            "description": "Logical shader name (used in logs and uniform prefixing).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SHADER_STAGE": {
+                            "$ref": "#/definitions/shaderStage",
+                            "description": "Target GLSL stage.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "VERTEX": {
+                                    "value": 0
+                                },
+                                "FRAGMENT": {
+                                    "value": 1
+                                },
+                                "COMPUTE": {
+                                    "value": 2
+                                },
+                                "GEOMETRY": {
+                                    "value": 3
+                                },
+                                "TESS_CONTROL": {
+                                    "value": 4
+                                },
+                                "TESS_EVALUATION": {
+                                    "value": 5
+                                }
+                            }
+                        },
+                        "SHADER_INJECTION_POINT": {
+                            "$ref": "#/definitions/shaderInjectionPoint",
+                            "description": "Intended injection point in the host pipeline.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "NONE": {
+                                    "value": 0
+                                },
+                                "VERTEX_PRE_TRANSFORM": {
+                                    "value": 1
+                                },
+                                "VERTEX_POST_TRANSFORM": {
+                                    "value": 2
+                                },
+                                "FRAGMENT_PRE_SHADE": {
+                                    "value": 3
+                                },
+                                "FRAGMENT_POST_SHADE": {
+                                    "value": 4
+                                },
+                                "FRAGMENT_FINAL_COLOR": {
+                                    "value": 5
+                                },
+                                "POSTPROCESS": {
+                                    "value": 6
+                                }
+                            }
+                        },
+                        "SHADER_SOURCE": {
+                            "type": "string",
+                            "description": "GLSL source (or preprocessed chunk).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "GLSL_VERSION": {
+                            "type": "string",
+                            "description": "GLSL version string (for example `300 es`).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SHADER_UNIFORMS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SHWUniform"
+                            },
+                            "description": "Expected uniforms declared by the source.",
+                            "x-flatbuffer-type": "[SHWUniform]"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SHWCompileResponse": {
+                    "type": "object",
+                    "description": "Compile response \u2014 whether the shader compiled, with diagnostics.",
+                    "properties": {
+                        "SHADER_NAME": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "COMPILE_SUCCESS": {
+                            "type": "boolean",
+                            "description": "Whether compilation succeeded.",
+                            "x-flatbuffer-type": "bool"
+                        },
+                        "INFO_LOG": {
+                            "type": "string",
+                            "description": "Optional GLSL info log.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "COMPILED_BINARY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional compiled binary (if the compiler emits one).",
+                            "x-flatbuffer-type": "[uint8]"
+                        },
+                        "LINKED_UNIFORMS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SHWUniform"
+                            },
+                            "description": "Echo of the uniforms the compiler actually linked.",
+                            "x-flatbuffer-type": "[SHWUniform]"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SHW": {
+                    "type": "object",
+                    "description": "Shader Wire envelope \u2014 carries either a compile request or a compile\nresponse across the runtime boundary.",
+                    "properties": {
+                        "COMPILE_REQUEST": {
+                            "$ref": "#/definitions/SHWCompileRequest",
+                            "x-flatbuffer-type": "SHWCompileRequest"
+                        },
+                        "COMPILE_RESPONSE": {
+                            "$ref": "#/definitions/SHWCompileResponse",
+                            "x-flatbuffer-type": "SHWCompileResponse"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SHW",
+            "x-flatbuffer-root-type": "SHW",
+            "x-flatbuffer-file-identifier": "$SHW"
         },
         "HEL": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -8655,6 +9661,530 @@
             "$ref": "#/definitions/LCH",
             "x-flatbuffer-root-type": "LCH",
             "x-flatbuffer-file-identifier": "$LCH"
+        },
+        "SDR": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "sensorCategory": {
+                    "type": "string",
+                    "enum": [
+                        "RADAR",
+                        "ELECTRO_OPTICAL",
+                        "INFRARED",
+                        "ACOUSTIC",
+                        "RF",
+                        "LIDAR",
+                        "CUSTOM"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "RADAR": {
+                            "value": 0
+                        },
+                        "ELECTRO_OPTICAL": {
+                            "value": 1
+                        },
+                        "INFRARED": {
+                            "value": 2
+                        },
+                        "ACOUSTIC": {
+                            "value": 3
+                        },
+                        "RF": {
+                            "value": 4
+                        },
+                        "LIDAR": {
+                            "value": 5
+                        },
+                        "CUSTOM": {
+                            "value": 255
+                        }
+                    }
+                },
+                "sensorOperationalFlags": {
+                    "type": "string",
+                    "enum": [
+                        "ACTIVE",
+                        "TRACK_MODE",
+                        "SEARCH_MODE",
+                        "JAMMED",
+                        "SLEWING",
+                        "CALIBRATING"
+                    ]
+                },
+                "detectionResultFlags": {
+                    "type": "string",
+                    "enum": [
+                        "VALID",
+                        "TRACKED",
+                        "MARGINAL",
+                        "IN_CLUTTER",
+                        "JAMMED",
+                        "SIDELOBE",
+                        "MERGED"
+                    ]
+                },
+                "targetState": {
+                    "type": "object",
+                    "description": "Target state input (40 bytes, 8-byte aligned).",
+                    "properties": {
+                        "POS_X": {
+                            "type": "number",
+                            "description": "Target position X in ECEF (meters)."
+                        },
+                        "POS_Y": {
+                            "type": "number",
+                            "description": "Target position Y in ECEF (meters)."
+                        },
+                        "POS_Z": {
+                            "type": "number",
+                            "description": "Target position Z in ECEF (meters)."
+                        },
+                        "RCS": {
+                            "type": "number",
+                            "description": "Radar cross section (m^2)."
+                        },
+                        "TARGET_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Unique target identifier."
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Target flags (reserved)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "detectionResult": {
+                    "type": "object",
+                    "description": "Detection result output (48 bytes, 8-byte aligned).",
+                    "properties": {
+                        "TARGET_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index of target in input array."
+                        },
+                        "DETECTED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Detection flag (1 == detected, 0 == not detected)."
+                        },
+                        "RANGE": {
+                            "type": "number",
+                            "description": "Range to target (meters)."
+                        },
+                        "SNR": {
+                            "type": "number",
+                            "description": "Signal-to-noise ratio (dB)."
+                        },
+                        "DOPPLER": {
+                            "type": "number",
+                            "description": "Doppler shift (Hz)."
+                        },
+                        "PROBABILITY": {
+                            "type": "number",
+                            "description": "Probability of detection (0.0 \u2013 1.0)."
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Detection flags (detectionResultFlags bitfield)."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Reserved for future use."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDRRadarConfig": {
+                    "type": "object",
+                    "description": "Radar sensor configuration.",
+                    "properties": {
+                        "FREQUENCY": {
+                            "type": "number",
+                            "description": "Operating frequency (Hz).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "POWER": {
+                            "type": "number",
+                            "description": "Transmit power (W).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "GAIN": {
+                            "type": "number",
+                            "description": "Antenna gain (dB).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "BANDWIDTH": {
+                            "type": "number",
+                            "description": "Receiver bandwidth (Hz).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "NOISE_FIGURE": {
+                            "type": "number",
+                            "description": "Noise figure (dB).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SYSTEM_LOSS": {
+                            "type": "number",
+                            "description": "System losses (dB).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "PRF": {
+                            "type": "number",
+                            "description": "Pulse repetition frequency (Hz).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "PULSE_WIDTH": {
+                            "type": "number",
+                            "description": "Pulse width (seconds).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "DETECTION_THRESHOLD": {
+                            "type": "number",
+                            "description": "Detection threshold SNR (dB).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MIN_RANGE": {
+                            "type": "number",
+                            "description": "Minimum detection range (meters).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MAX_RANGE": {
+                            "type": "number",
+                            "description": "Maximum detection range (meters).",
+                            "x-flatbuffer-type": "double"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDRSensorConfig": {
+                    "type": "object",
+                    "description": "Generic sensor configuration.",
+                    "properties": {
+                        "CATEGORY": {
+                            "$ref": "#/definitions/sensorCategory",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "RADAR": {
+                                    "value": 0
+                                },
+                                "ELECTRO_OPTICAL": {
+                                    "value": 1
+                                },
+                                "INFRARED": {
+                                    "value": 2
+                                },
+                                "ACOUSTIC": {
+                                    "value": 3
+                                },
+                                "RF": {
+                                    "value": 4
+                                },
+                                "LIDAR": {
+                                    "value": 5
+                                },
+                                "CUSTOM": {
+                                    "value": 255
+                                }
+                            }
+                        },
+                        "POS_X": {
+                            "type": "number",
+                            "description": "Sensor position in ECEF (meters) \u2014 X.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "POS_Y": {
+                            "type": "number",
+                            "description": "Sensor position in ECEF (meters) \u2014 Y.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "POS_Z": {
+                            "type": "number",
+                            "description": "Sensor position in ECEF (meters) \u2014 Z.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ORIENT_W": {
+                            "type": "number",
+                            "description": "Sensor orientation as quaternion (W, X, Y, Z).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ORIENT_X": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ORIENT_Y": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ORIENT_Z": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RADAR": {
+                            "$ref": "#/definitions/SDRRadarConfig",
+                            "description": "Radar-specific config when CATEGORY == RADAR.",
+                            "x-flatbuffer-type": "SDRRadarConfig"
+                        },
+                        "FLAGS": {
+                            "$ref": "#/definitions/sensorOperationalFlags",
+                            "description": "Operational flags.",
+                            "x-flatbuffer-type": "sensorOperationalFlags"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDRBatchRequest": {
+                    "type": "object",
+                    "description": "Batch detection request (arena-addressed, zero-copy).",
+                    "properties": {
+                        "SENSOR_POS_X": {
+                            "type": "number",
+                            "description": "Sensor position in ECEF (meters) \u2014 X.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_POS_Y": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_POS_Z": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_ORIENT_W": {
+                            "type": "number",
+                            "description": "Sensor orientation as quaternion (W, X, Y, Z).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_ORIENT_X": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_ORIENT_Y": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_ORIENT_Z": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "INPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Input buffer offset where targetState[] starts.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "TARGET_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of targets in the input buffer.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output buffer offset where detectionResult[] is written.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "EPOCH": {
+                            "type": "number",
+                            "description": "Current time as a Julian date.",
+                            "x-flatbuffer-type": "double"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDRBatchResponse": {
+                    "type": "object",
+                    "description": "Batch detection response header.",
+                    "properties": {
+                        "COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of detection results written.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "DETECTED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of targets detected (SNR >= threshold).",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Offset in arena where detectionResult[] starts.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "ERROR_CODE": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Error code (0 == success).",
+                            "x-flatbuffer-type": "int"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Error message when ERROR_CODE != 0.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDRSingleInput": {
+                    "type": "object",
+                    "description": "Compact single-frame detection input used by pluggable sensor models that\ndo not drive arena-backed batches.",
+                    "properties": {
+                        "TARGET_POS_X": {
+                            "type": "number",
+                            "description": "Target position in ECEF (meters) \u2014 X.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TARGET_POS_Y": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TARGET_POS_Z": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_POS_X": {
+                            "type": "number",
+                            "description": "Sensor position in ECEF (meters) \u2014 X.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_POS_Y": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_POS_Z": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RCS": {
+                            "type": "number",
+                            "description": "Radar cross section (m^2).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "FREQUENCY": {
+                            "type": "number",
+                            "description": "Sensor operating frequency (Hz).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TX_POWER": {
+                            "type": "number",
+                            "description": "Transmit power (W).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TIMESTAMP_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp (milliseconds since epoch).",
+                            "x-flatbuffer-type": "ulong"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDRSingleResult": {
+                    "type": "object",
+                    "description": "Compact single-frame detection result.",
+                    "properties": {
+                        "DETECTED": {
+                            "type": "boolean",
+                            "x-flatbuffer-type": "bool"
+                        },
+                        "RANGE": {
+                            "type": "number",
+                            "description": "Range to target (meters).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SNR": {
+                            "type": "number",
+                            "description": "Signal-to-noise ratio (dB).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "AZIMUTH": {
+                            "type": "number",
+                            "description": "Azimuth angle to target (radians).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ELEVATION": {
+                            "type": "number",
+                            "description": "Elevation angle to target (radians).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RANGE_RATE": {
+                            "type": "number",
+                            "description": "Range rate / Doppler velocity (m/s).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TIMESTAMP_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Detection timestamp (milliseconds since epoch).",
+                            "x-flatbuffer-type": "ulong"
+                        },
+                        "TRACK_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Track identifier (0 if not tracking).",
+                            "x-flatbuffer-type": "uint"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SDR": {
+                    "type": "object",
+                    "description": "Sensor Detection Report envelope message.",
+                    "properties": {
+                        "CONFIG": {
+                            "$ref": "#/definitions/SDRSensorConfig",
+                            "x-flatbuffer-type": "SDRSensorConfig"
+                        },
+                        "BATCH_REQUEST": {
+                            "$ref": "#/definitions/SDRBatchRequest",
+                            "x-flatbuffer-type": "SDRBatchRequest"
+                        },
+                        "BATCH_RESPONSE": {
+                            "$ref": "#/definitions/SDRBatchResponse",
+                            "x-flatbuffer-type": "SDRBatchResponse"
+                        },
+                        "SINGLE_INPUT": {
+                            "$ref": "#/definitions/SDRSingleInput",
+                            "x-flatbuffer-type": "SDRSingleInput"
+                        },
+                        "SINGLE_RESULT": {
+                            "$ref": "#/definitions/SDRSingleResult",
+                            "x-flatbuffer-type": "SDRSingleResult"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SDR",
+            "x-flatbuffer-root-type": "SDR",
+            "x-flatbuffer-file-identifier": "$SDR"
         },
         "DFH": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -13103,6 +14633,240 @@
             "x-flatbuffer-root-type": "MTI",
             "x-flatbuffer-file-identifier": "$MTI"
         },
+        "ETM": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "entityKind": {
+                    "type": "string",
+                    "enum": [
+                        "ENTITY",
+                        "SPACE",
+                        "GROUND",
+                        "AIRCRAFT",
+                        "MISSILE",
+                        "SHIP",
+                        "VEHICLE",
+                        "SENSOR",
+                        "OTHER"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "ENTITY": {
+                            "value": 0
+                        },
+                        "SPACE": {
+                            "value": 1
+                        },
+                        "GROUND": {
+                            "value": 2
+                        },
+                        "AIRCRAFT": {
+                            "value": 3
+                        },
+                        "MISSILE": {
+                            "value": 4
+                        },
+                        "SHIP": {
+                            "value": 5
+                        },
+                        "VEHICLE": {
+                            "value": 6
+                        },
+                        "SENSOR": {
+                            "value": 7
+                        },
+                        "OTHER": {
+                            "value": 127
+                        }
+                    }
+                },
+                "ETM": {
+                    "type": "object",
+                    "description": "Entity Metadata \u2014 generic queryable metadata for a host-local entity.\nParticipates in shared FlatSQL/WASM runtimes where multiple plugins\ncross-query the same entity collection.",
+                    "properties": {
+                        "ENTITY_ID": {
+                            "type": "string",
+                            "description": "Stable host-local entity identifier.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "Human-readable entity name used for shared query/search surfaces.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "KIND": {
+                            "$ref": "#/definitions/entityKind",
+                            "description": "Broad entity category.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "ENTITY": {
+                                    "value": 0
+                                },
+                                "SPACE": {
+                                    "value": 1
+                                },
+                                "GROUND": {
+                                    "value": 2
+                                },
+                                "AIRCRAFT": {
+                                    "value": 3
+                                },
+                                "MISSILE": {
+                                    "value": 4
+                                },
+                                "SHIP": {
+                                    "value": 5
+                                },
+                                "VEHICLE": {
+                                    "value": 6
+                                },
+                                "SENSOR": {
+                                    "value": 7
+                                },
+                                "OTHER": {
+                                    "value": 127
+                                }
+                            }
+                        },
+                        "SUBTYPE": {
+                            "type": "string",
+                            "description": "More specific runtime subtype or class name.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PARENT_ENTITY_ID": {
+                            "type": "string",
+                            "description": "Optional parent entity id for hierarchy / linkage queries.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "WASM_HANDLE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Collection-scoped WASM handle used for batch visibility application.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional NORAD catalog id for standards-backed entities.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "OBJECT_NAME": {
+                            "type": "string",
+                            "description": "Primary object name surfaced by attached standards metadata.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "Primary international / object designator surfaced by attached standards metadata.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "CAT_OBJECT_NAME": {
+                            "type": "string",
+                            "description": "Secondary CAT object name when different from the primary object name.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "CAT_OBJECT_ID": {
+                            "type": "string",
+                            "description": "Secondary CAT object id when different from the primary object id.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "FACILITY_TYPE": {
+                            "type": "string",
+                            "description": "Ground / facility subtype metadata for non-space entity search.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SEARCH_TEXT": {
+                            "type": "string",
+                            "description": "Pre-normalized phrase-search text for collection-wide shared queries.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "OWNER": {
+                            "type": "string",
+                            "description": "CAT owner country code.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "STATUS_CODE": {
+                            "type": "string",
+                            "description": "CAT operational status code.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LAUNCH_DATE": {
+                            "type": "string",
+                            "description": "CAT launch date.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LAUNCH_YEAR": {
+                            "type": "string",
+                            "description": "Launch year derived from launch date.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ORBIT_REGIME": {
+                            "type": "string",
+                            "description": "Derived orbit regime classification.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PERIOD": {
+                            "type": "number",
+                            "description": "Orbital period in minutes.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "INCLINATION": {
+                            "type": "number",
+                            "description": "Inclination in degrees.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "APOGEE": {
+                            "type": "number",
+                            "description": "Apogee altitude in kilometers.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "PERIGEE": {
+                            "type": "number",
+                            "description": "Perigee altitude in kilometers.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MEAN_MOTION": {
+                            "type": "number",
+                            "description": "Mean motion in revolutions per day.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Orbital eccentricity.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "BSTAR": {
+                            "type": "number",
+                            "description": "B* drag term from OMM.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "HAS_GP": {
+                            "type": "boolean",
+                            "description": "Whether GP / OMM state is present for the entity.",
+                            "x-flatbuffer-type": "bool"
+                        },
+                        "RESERVED": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Reserved for forward-compatible growth.",
+                            "x-flatbuffer-type": "[uint8]"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/ETM",
+            "x-flatbuffer-root-type": "ETM",
+            "x-flatbuffer-file-identifier": "$ETM"
+        },
         "CRD": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -13840,6 +15604,311 @@
             "$ref": "#/definitions/ENC",
             "x-flatbuffer-root-type": "LGR",
             "x-flatbuffer-file-identifier": "$LGR"
+        },
+        "FPC": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "shortestPathAlgorithm": {
+                    "type": "string",
+                    "enum": [
+                        "AUTO",
+                        "FRONTIER",
+                        "DIJKSTRA"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "AUTO": {
+                            "value": 0,
+                            "description": "Let the runtime choose."
+                        },
+                        "FRONTIER": {
+                            "value": 1,
+                            "description": "Frontier-shrinking solver."
+                        },
+                        "DIJKSTRA": {
+                            "value": 2,
+                            "description": "Dijkstra's algorithm."
+                        }
+                    }
+                },
+                "weightedEdge": {
+                    "type": "object",
+                    "description": "Weighted directed edge (16 bytes, 8-byte aligned for zero-copy ingestion).",
+                    "properties": {
+                        "SRC": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "DST": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WEIGHT": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCGraphDefinition": {
+                    "type": "object",
+                    "description": "Graph creation / reset request.",
+                    "properties": {
+                        "VERTEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of vertices in the graph.",
+                            "x-flatbuffer-type": "uint"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCWeightedEdgeList": {
+                    "type": "object",
+                    "description": "Bulk weighted-edge ingestion request.",
+                    "properties": {
+                        "VERTEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional vertex capacity for implicit graph creation.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "EDGES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/weightedEdge"
+                            },
+                            "description": "Weighted directed edge records.",
+                            "x-flatbuffer-type": "[weightedEdge]"
+                        },
+                        "BUILD_GRAPH": {
+                            "type": "boolean",
+                            "description": "Build a CSR representation after ingest.",
+                            "x-flatbuffer-type": "bool"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCCSRGraph": {
+                    "type": "object",
+                    "description": "Pre-built CSR graph ingestion request.",
+                    "properties": {
+                        "VERTEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of vertices in the graph.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "OFFSETS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "CSR row offsets (V + 1 entries).",
+                            "x-flatbuffer-type": "[uint]"
+                        },
+                        "DESTINATIONS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "CSR destination indices.",
+                            "x-flatbuffer-type": "[uint]"
+                        },
+                        "WEIGHTS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "CSR edge weights.",
+                            "x-flatbuffer-type": "[double]"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCShortestPathRequest": {
+                    "type": "object",
+                    "description": "Single-source shortest-path request.",
+                    "properties": {
+                        "SOURCE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Source vertex index.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "ALGORITHM": {
+                            "$ref": "#/definitions/shortestPathAlgorithm",
+                            "description": "Algorithm selection hint.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "AUTO": {
+                                    "value": 0,
+                                    "description": "Let the runtime choose."
+                                },
+                                "FRONTIER": {
+                                    "value": 1,
+                                    "description": "Frontier-shrinking solver."
+                                },
+                                "DIJKSTRA": {
+                                    "value": 2,
+                                    "description": "Dijkstra's algorithm."
+                                }
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCShortestPathResult": {
+                    "type": "object",
+                    "description": "Single-source shortest-path result.",
+                    "properties": {
+                        "SOURCE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Source vertex index.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "VERTEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of vertices in the solved graph.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "REACHABLE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of reachable vertices (finite distances).",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "DISTANCES": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Distance array (length == VERTEX_COUNT).",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "PREDECESSORS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Predecessor array (length == VERTEX_COUNT; UINT32_MAX means none / source).",
+                            "x-flatbuffer-type": "[uint]"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCPathRequest": {
+                    "type": "object",
+                    "description": "Path reconstruction request.",
+                    "properties": {
+                        "TARGET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Target vertex index.",
+                            "x-flatbuffer-type": "uint"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPCPathResult": {
+                    "type": "object",
+                    "description": "Path reconstruction result.",
+                    "properties": {
+                        "SOURCE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Source vertex index from the latest SSSP solve.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "TARGET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Requested target vertex index.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "REACHABLE": {
+                            "type": "boolean",
+                            "description": "Whether a path exists from SOURCE to TARGET.",
+                            "x-flatbuffer-type": "bool"
+                        },
+                        "DISTANCE": {
+                            "type": "number",
+                            "description": "Total distance from SOURCE to TARGET (Infinity if unreachable).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "PATH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Vertex sequence from SOURCE to TARGET.",
+                            "x-flatbuffer-type": "[uint]"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FPC": {
+                    "type": "object",
+                    "description": "Fastest Path Compute \u2014 envelope message for weighted graph ingestion and\nsingle-source shortest path execution.",
+                    "properties": {
+                        "GRAPH_DEFINITION": {
+                            "$ref": "#/definitions/FPCGraphDefinition",
+                            "x-flatbuffer-type": "FPCGraphDefinition"
+                        },
+                        "EDGES": {
+                            "$ref": "#/definitions/FPCWeightedEdgeList",
+                            "x-flatbuffer-type": "FPCWeightedEdgeList"
+                        },
+                        "CSR": {
+                            "$ref": "#/definitions/FPCCSRGraph",
+                            "x-flatbuffer-type": "FPCCSRGraph"
+                        },
+                        "SHORTEST_PATH_REQUEST": {
+                            "$ref": "#/definitions/FPCShortestPathRequest",
+                            "x-flatbuffer-type": "FPCShortestPathRequest"
+                        },
+                        "SHORTEST_PATH_RESULT": {
+                            "$ref": "#/definitions/FPCShortestPathResult",
+                            "x-flatbuffer-type": "FPCShortestPathResult"
+                        },
+                        "PATH_REQUEST": {
+                            "$ref": "#/definitions/FPCPathRequest",
+                            "x-flatbuffer-type": "FPCPathRequest"
+                        },
+                        "PATH_RESULT": {
+                            "$ref": "#/definitions/FPCPathResult",
+                            "x-flatbuffer-type": "FPCPathResult"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/FPC",
+            "x-flatbuffer-root-type": "FPC",
+            "x-flatbuffer-file-identifier": "$FPC"
         },
         "ION": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -16340,6 +18409,61 @@
             "$ref": "#/definitions/RDM",
             "x-flatbuffer-root-type": "RDM",
             "x-flatbuffer-file-identifier": "$RDM"
+        },
+        "SRI": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "SRI": {
+                    "type": "object",
+                    "description": "Standards Record Index \u2014 local wrapper for a standards payload's identity\nand mutation metadata, participating in shared FlatSQL query and cascade\npaths across plugins that read the same record universe.",
+                    "properties": {
+                        "RECORD_KEY": {
+                            "type": "string",
+                            "description": "Stable host-local record key for one standards payload.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SCHEMA_NAME": {
+                            "type": "string",
+                            "description": "SDS schema family for the record (`OMM`, `CAT`, `OEM`, `CDM`, etc.).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ROLE": {
+                            "type": "string",
+                            "description": "Attachment role when one standards message produces multiple entity records.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ATTACHED_VIA": {
+                            "type": "string",
+                            "description": "Ingest path that registered this record (`stream-*`, `manual-api`, etc.).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PAYLOAD_KIND": {
+                            "type": "string",
+                            "description": "High-level payload representation retained by the mutation registry.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "UPDATED_AT_MS": {
+                            "type": "number",
+                            "description": "Milliseconds since epoch when the local mutation record was last refreshed.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RESERVED": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Reserved for forward-compatible growth.",
+                            "x-flatbuffer-type": "[uint8]"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SRI",
+            "x-flatbuffer-root-type": "SRI",
+            "x-flatbuffer-file-identifier": "$SRI"
         },
         "OEM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -20687,6 +22811,204 @@
             "$ref": "#/definitions/PPE",
             "x-flatbuffer-root-type": "OEM",
             "x-flatbuffer-file-identifier": "$OEM"
+        },
+        "TAB": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "payloadWireFormat": {
+                    "type": "string",
+                    "enum": [
+                        "FLATBUFFER",
+                        "ALIGNED_BINARY"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "FLATBUFFER": {
+                            "value": 0,
+                            "description": "Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF."
+                        },
+                        "ALIGNED_BINARY": {
+                            "value": 1,
+                            "description": "Body is a raw aligned binary chunk (for example zero-copy structs)."
+                        }
+                    }
+                },
+                "bufferMutability": {
+                    "type": "string",
+                    "enum": [
+                        "IMMUTABLE",
+                        "SINGLE_WRITER_MUTABLE",
+                        "APPEND_ONLY"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "IMMUTABLE": {
+                            "value": 0,
+                            "description": "Buffer is immutable after produce."
+                        },
+                        "SINGLE_WRITER_MUTABLE": {
+                            "value": 1,
+                            "description": "Buffer may be written in place by the owner (single writer)."
+                        },
+                        "APPEND_ONLY": {
+                            "value": 2,
+                            "description": "Buffer is append-only (rings / logs)."
+                        }
+                    }
+                },
+                "bufferOwnership": {
+                    "type": "string",
+                    "enum": [
+                        "HOST_OWNED",
+                        "PLUGIN_OWNED",
+                        "TRANSFERRED"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "HOST_OWNED": {
+                            "value": 0,
+                            "description": "Arena / host owns the backing bytes; receiver must not free."
+                        },
+                        "PLUGIN_OWNED": {
+                            "value": 1,
+                            "description": "Plugin owns the backing bytes; host must not free."
+                        },
+                        "TRANSFERRED": {
+                            "value": 2,
+                            "description": "Ownership transfers with the frame (hand-off semantics)."
+                        }
+                    }
+                },
+                "FlatBufferTypeRef": {
+                    "type": "object",
+                    "description": "Payload-schema identity for a stream frame or an accepted port type.",
+                    "properties": {
+                        "SCHEMA_NAME": {
+                            "type": "string",
+                            "description": "Logical schema name (for example `OMM.fbs` or `OCM.fbs`).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "FILE_IDENTIFIER": {
+                            "type": "string",
+                            "description": "Optional 4-byte FlatBuffer file identifier.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SCHEMA_VERSION": {
+                            "type": "string",
+                            "description": "Optional semver or schema revision string.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ROOT_TYPE": {
+                            "type": "string",
+                            "description": "Optional root type name within the schema.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TAB": {
+                    "type": "object",
+                    "description": "Typed Arena Buffer \u2014 one descriptor for a payload slot in a shared arena.",
+                    "properties": {
+                        "OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Byte offset of the payload body within the arena.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Byte length of the payload body.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "ALIGNMENT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Required start alignment of the payload body (in bytes).",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "WIRE_FORMAT": {
+                            "$ref": "#/definitions/payloadWireFormat",
+                            "description": "Wire format for the body.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "FLATBUFFER": {
+                                    "value": 0,
+                                    "description": "Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF."
+                                },
+                                "ALIGNED_BINARY": {
+                                    "value": 1,
+                                    "description": "Body is a raw aligned binary chunk (for example zero-copy structs)."
+                                }
+                            }
+                        },
+                        "TYPE_REF": {
+                            "$ref": "#/definitions/FlatBufferTypeRef",
+                            "description": "Optional payload schema identity.",
+                            "x-flatbuffer-type": "FlatBufferTypeRef"
+                        },
+                        "MUTABILITY": {
+                            "$ref": "#/definitions/bufferMutability",
+                            "description": "Mutability contract for the slot.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "IMMUTABLE": {
+                                    "value": 0,
+                                    "description": "Buffer is immutable after produce."
+                                },
+                                "SINGLE_WRITER_MUTABLE": {
+                                    "value": 1,
+                                    "description": "Buffer may be written in place by the owner (single writer)."
+                                },
+                                "APPEND_ONLY": {
+                                    "value": 2,
+                                    "description": "Buffer is append-only (rings / logs)."
+                                }
+                            }
+                        },
+                        "OWNERSHIP": {
+                            "$ref": "#/definitions/bufferOwnership",
+                            "description": "Ownership contract for the slot.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "HOST_OWNED": {
+                                    "value": 0,
+                                    "description": "Arena / host owns the backing bytes; receiver must not free."
+                                },
+                                "PLUGIN_OWNED": {
+                                    "value": 1,
+                                    "description": "Plugin owns the backing bytes; host must not free."
+                                },
+                                "TRANSFERRED": {
+                                    "value": 2,
+                                    "description": "Ownership transfers with the frame (hand-off semantics)."
+                                }
+                            }
+                        },
+                        "FRAME_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Optional opaque frame identifier for stream bookkeeping.",
+                            "x-flatbuffer-type": "ulong"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/TAB",
+            "x-flatbuffer-root-type": "TAB",
+            "x-flatbuffer-file-identifier": "$TAB"
         },
         "COT": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -32632,10 +34954,244 @@
             "x-flatbuffer-root-type": "MNF",
             "x-flatbuffer-file-identifier": "$MNF"
         },
+        "CAQ": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "entityKind": {
+                    "type": "string",
+                    "enum": [
+                        "ENTITY",
+                        "SPACE",
+                        "GROUND",
+                        "AIRCRAFT",
+                        "MISSILE",
+                        "SHIP",
+                        "VEHICLE",
+                        "SENSOR",
+                        "OTHER"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "ENTITY": {
+                            "value": 0
+                        },
+                        "SPACE": {
+                            "value": 1
+                        },
+                        "GROUND": {
+                            "value": 2
+                        },
+                        "AIRCRAFT": {
+                            "value": 3
+                        },
+                        "MISSILE": {
+                            "value": 4
+                        },
+                        "SHIP": {
+                            "value": 5
+                        },
+                        "VEHICLE": {
+                            "value": 6
+                        },
+                        "SENSOR": {
+                            "value": 7
+                        },
+                        "OTHER": {
+                            "value": 127
+                        }
+                    }
+                },
+                "ETM": {
+                    "type": "object",
+                    "description": "Entity Metadata \u2014 generic queryable metadata for a host-local entity.\nParticipates in shared FlatSQL/WASM runtimes where multiple plugins\ncross-query the same entity collection.",
+                    "properties": {
+                        "ENTITY_ID": {
+                            "type": "string",
+                            "description": "Stable host-local entity identifier.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "Human-readable entity name used for shared query/search surfaces.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "KIND": {
+                            "$ref": "#/definitions/entityKind",
+                            "description": "Broad entity category.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "ENTITY": {
+                                    "value": 0
+                                },
+                                "SPACE": {
+                                    "value": 1
+                                },
+                                "GROUND": {
+                                    "value": 2
+                                },
+                                "AIRCRAFT": {
+                                    "value": 3
+                                },
+                                "MISSILE": {
+                                    "value": 4
+                                },
+                                "SHIP": {
+                                    "value": 5
+                                },
+                                "VEHICLE": {
+                                    "value": 6
+                                },
+                                "SENSOR": {
+                                    "value": 7
+                                },
+                                "OTHER": {
+                                    "value": 127
+                                }
+                            }
+                        },
+                        "SUBTYPE": {
+                            "type": "string",
+                            "description": "More specific runtime subtype or class name.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PARENT_ENTITY_ID": {
+                            "type": "string",
+                            "description": "Optional parent entity id for hierarchy / linkage queries.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "WASM_HANDLE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Collection-scoped WASM handle used for batch visibility application.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional NORAD catalog id for standards-backed entities.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "OBJECT_NAME": {
+                            "type": "string",
+                            "description": "Primary object name surfaced by attached standards metadata.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "Primary international / object designator surfaced by attached standards metadata.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "CAT_OBJECT_NAME": {
+                            "type": "string",
+                            "description": "Secondary CAT object name when different from the primary object name.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "CAT_OBJECT_ID": {
+                            "type": "string",
+                            "description": "Secondary CAT object id when different from the primary object id.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "FACILITY_TYPE": {
+                            "type": "string",
+                            "description": "Ground / facility subtype metadata for non-space entity search.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SEARCH_TEXT": {
+                            "type": "string",
+                            "description": "Pre-normalized phrase-search text for collection-wide shared queries.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "OWNER": {
+                            "type": "string",
+                            "description": "CAT owner country code.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "STATUS_CODE": {
+                            "type": "string",
+                            "description": "CAT operational status code.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LAUNCH_DATE": {
+                            "type": "string",
+                            "description": "CAT launch date.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LAUNCH_YEAR": {
+                            "type": "string",
+                            "description": "Launch year derived from launch date.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "ORBIT_REGIME": {
+                            "type": "string",
+                            "description": "Derived orbit regime classification.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PERIOD": {
+                            "type": "number",
+                            "description": "Orbital period in minutes.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "INCLINATION": {
+                            "type": "number",
+                            "description": "Inclination in degrees.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "APOGEE": {
+                            "type": "number",
+                            "description": "Apogee altitude in kilometers.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "PERIGEE": {
+                            "type": "number",
+                            "description": "Perigee altitude in kilometers.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "MEAN_MOTION": {
+                            "type": "number",
+                            "description": "Mean motion in revolutions per day.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Orbital eccentricity.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "BSTAR": {
+                            "type": "number",
+                            "description": "B* drag term from OMM.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "HAS_GP": {
+                            "type": "boolean",
+                            "description": "Whether GP / OMM state is present for the entity.",
+                            "x-flatbuffer-type": "bool"
+                        },
+                        "RESERVED": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Reserved for forward-compatible growth.",
+                            "x-flatbuffer-type": "[uint8]"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/ETM",
+            "x-flatbuffer-root-type": "CAQ",
+            "x-flatbuffer-file-identifier": "$CAQ"
+        },
         "PLG": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "pluginType": {
+                "pluginCategory": {
                     "type": "string",
                     "enum": [
                         "Sensor",
@@ -32689,7 +35245,7 @@
                         }
                     }
                 },
-                "paymentModel": {
+                "purchaseTier": {
                     "type": "string",
                     "enum": [
                         "Free",
@@ -32713,7 +35269,7 @@
                         }
                     }
                 },
-                "listingStatus": {
+                "publicationState": {
                     "type": "string",
                     "enum": [
                         "Public",
@@ -32848,7 +35404,7 @@
                             "x-flatbuffer-type": "string"
                         },
                         "PLUGIN_TYPE": {
-                            "$ref": "#/definitions/pluginType",
+                            "$ref": "#/definitions/pluginCategory",
                             "description": "Type/category of the plugin",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -33101,7 +35657,7 @@
                             "x-flatbuffer-type": "string"
                         },
                         "PAYMENT_MODEL": {
-                            "$ref": "#/definitions/paymentModel",
+                            "$ref": "#/definitions/purchaseTier",
                             "description": "Commercial model used for storefront purchase flows",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -33143,7 +35699,7 @@
                             "x-flatbuffer-type": "[string]"
                         },
                         "LISTING_STATUS": {
-                            "$ref": "#/definitions/listingStatus",
+                            "$ref": "#/definitions/publicationState",
                             "description": "Storefront publication state for this manifest version",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
@@ -34016,6 +36572,205 @@
             "$ref": "#/definitions/MSL",
             "x-flatbuffer-root-type": "MSL",
             "x-flatbuffer-file-identifier": "$MSL"
+        },
+        "SNW": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "snwErrorCode": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "UNKNOWN",
+                        "UNKNOWN_SENSOR",
+                        "INVALID_EPOCH",
+                        "OUTPUT_BUFFER_OVERFLOW",
+                        "NOT_INITIALIZED"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "int",
+                    "x-flatbuffer-enum-values": {
+                        "OK": {
+                            "value": 0
+                        },
+                        "UNKNOWN": {
+                            "value": 1
+                        },
+                        "UNKNOWN_SENSOR": {
+                            "value": 2
+                        },
+                        "INVALID_EPOCH": {
+                            "value": 3
+                        },
+                        "OUTPUT_BUFFER_OVERFLOW": {
+                            "value": 4
+                        },
+                        "NOT_INITIALIZED": {
+                            "value": 5
+                        }
+                    }
+                },
+                "SNWBatchRequest": {
+                    "type": "object",
+                    "description": "Batch target detection request.\n\nSensor position and orientation are passed inline (not via an arena\noffset) because they are small and uniform across a batch. The target\nstream lives at INPUT_OFFSET as a tightly packed array of `targetState`\nstructs from SDR; the output detection stream is written to\nOUTPUT_OFFSET as a tightly packed array of SDR `detectionResult` structs.",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Sensor-configuration identifier assigned during sensor registration.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "SENSOR_POS_X": {
+                            "type": "number",
+                            "description": "Sensor position in ECEF (meters).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_POS_Y": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_POS_Z": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_ORIENT_W": {
+                            "type": "number",
+                            "description": "Sensor orientation as a unit quaternion (W, X, Y, Z).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_ORIENT_X": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_ORIENT_Y": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SENSOR_ORIENT_Z": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "INPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Byte offset in the arena where the targetState[] input stream begins.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "INPUT_ALIGNMENT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Required start alignment for INPUT_OFFSET (bytes).",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "TARGET_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of target records at INPUT_OFFSET.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Byte offset in the arena where the detectionResult[] output stream\nwill be written.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "OUTPUT_ALIGNMENT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Required start alignment for OUTPUT_OFFSET (bytes).",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "EPOCH": {
+                            "type": "number",
+                            "description": "Current time as a Julian date.",
+                            "x-flatbuffer-type": "double"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SNWBatchResponse": {
+                    "type": "object",
+                    "description": "Batch target detection response header.",
+                    "properties": {
+                        "COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of detection records written to OUTPUT_OFFSET.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "DETECTED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of targets whose SNR met the detection threshold.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Byte offset where the detectionResult[] stream starts.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "ERROR_CODE": {
+                            "$ref": "#/definitions/snwErrorCode",
+                            "description": "Error code (0 == OK).",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "int",
+                            "x-flatbuffer-enum-values": {
+                                "OK": {
+                                    "value": 0
+                                },
+                                "UNKNOWN": {
+                                    "value": 1
+                                },
+                                "UNKNOWN_SENSOR": {
+                                    "value": 2
+                                },
+                                "INVALID_EPOCH": {
+                                    "value": 3
+                                },
+                                "OUTPUT_BUFFER_OVERFLOW": {
+                                    "value": 4
+                                },
+                                "NOT_INITIALIZED": {
+                                    "value": 5
+                                }
+                            }
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Optional error message when ERROR_CODE != OK.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SNW": {
+                    "type": "object",
+                    "description": "Sensor Runtime Wire envelope \u2014 carries either a batch request or a batch\nresponse across the runtime boundary.",
+                    "properties": {
+                        "BATCH_REQUEST": {
+                            "$ref": "#/definitions/SNWBatchRequest",
+                            "x-flatbuffer-type": "SNWBatchRequest"
+                        },
+                        "BATCH_RESPONSE": {
+                            "$ref": "#/definitions/SNWBatchResponse",
+                            "x-flatbuffer-type": "SNWBatchResponse"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SNW",
+            "x-flatbuffer-root-type": "SNW",
+            "x-flatbuffer-file-identifier": "$SNW"
         },
         "GVH": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -37909,6 +40664,405 @@
             "$ref": "#/definitions/XTC",
             "x-flatbuffer-root-type": "XTC",
             "x-flatbuffer-file-identifier": "$XTC"
+        },
+        "PRW": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "propagatorStateFlags": {
+                    "type": "string",
+                    "enum": [
+                        "VALID",
+                        "IN_ECLIPSE",
+                        "DECAYED",
+                        "EXTRAPOLATED",
+                        "RESERVED_4",
+                        "RESERVED_5",
+                        "RESERVED_6",
+                        "RESERVED_7"
+                    ]
+                },
+                "propagatorErrorCode": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "UNKNOWN",
+                        "UNKNOWN_ENTITY",
+                        "INVALID_EPOCH",
+                        "OUTPUT_BUFFER_OVERFLOW",
+                        "NOT_INITIALIZED"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "int",
+                    "x-flatbuffer-enum-values": {
+                        "OK": {
+                            "value": 0,
+                            "description": "No error."
+                        },
+                        "UNKNOWN": {
+                            "value": 1,
+                            "description": "Unknown / unspecified error."
+                        },
+                        "UNKNOWN_ENTITY": {
+                            "value": 2,
+                            "description": "One or more entity handles not found."
+                        },
+                        "INVALID_EPOCH": {
+                            "value": 3,
+                            "description": "Invalid epoch (NaN, out of range, before earliest init epoch, etc.)."
+                        },
+                        "OUTPUT_BUFFER_OVERFLOW": {
+                            "value": 4,
+                            "description": "Output buffer too small for the requested count."
+                        },
+                        "NOT_INITIALIZED": {
+                            "value": 5,
+                            "description": "Propagator not initialized."
+                        }
+                    }
+                },
+                "prwSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "OMM",
+                        "TLE",
+                        "OCM",
+                        "OEM",
+                        "PPE",
+                        "KEPLERIAN"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "OMM": {
+                            "value": 0,
+                            "description": "Source is an OMM (CCSDS mean elements) FlatBuffer."
+                        },
+                        "TLE": {
+                            "value": 1,
+                            "description": "Source is a raw TLE line pair (3LE supported via NAME)."
+                        },
+                        "OCM": {
+                            "value": 2,
+                            "description": "Source is an OCM FlatBuffer."
+                        },
+                        "OEM": {
+                            "value": 3,
+                            "description": "Source is an OEM FlatBuffer."
+                        },
+                        "PPE": {
+                            "value": 4,
+                            "description": "Source is a PPE (polynomial ephemeris) FlatBuffer."
+                        },
+                        "KEPLERIAN": {
+                            "value": 5,
+                            "description": "Source is a single classical Keplerian element set."
+                        }
+                    }
+                },
+                "PRWInit": {
+                    "type": "object",
+                    "description": "Propagator initialization request \u2014 assigns TLE / OMM / Keplerian /\npolynomial inputs to entity handles.\n\nThe actual per-entity source record is carried inline as raw bytes\ntagged with SOURCE_KIND and, where useful, a SDS file_identifier.\nCallers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the\nbytes verbatim; the propagator uses SOURCE_KIND to decide how to\nconsume them.",
+                    "properties": {
+                        "ENTITY_HANDLES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Entity handles to assign results to (same order as SOURCES[]).",
+                            "x-flatbuffer-type": "[uint]"
+                        },
+                        "SOURCES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PRWInitSource"
+                            },
+                            "description": "Per-entity source records, encoded as SDS FlatBuffers.",
+                            "x-flatbuffer-type": "[PRWInitSource]"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PRWKeplerianElements": {
+                    "type": "object",
+                    "properties": {
+                        "MU": {
+                            "type": "number",
+                            "description": "Gravitational parameter of the central body (km^3 / s^2).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "SEMI_MAJOR_AXIS": {
+                            "type": "number",
+                            "description": "Semi-major axis (km).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Eccentricity (0 = circular, <1 = ellipse).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "INCLINATION": {
+                            "type": "number",
+                            "description": "Inclination (radians).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RAAN": {
+                            "type": "number",
+                            "description": "Right ascension of the ascending node (radians).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ARG_PERIAPSIS": {
+                            "type": "number",
+                            "description": "Argument of periapsis (radians).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TRUE_ANOMALY": {
+                            "type": "number",
+                            "description": "True anomaly (radians).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "EPOCH": {
+                            "type": "number",
+                            "description": "Epoch as Julian date.",
+                            "x-flatbuffer-type": "double"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PRWTleLines": {
+                    "type": "object",
+                    "properties": {
+                        "LINE1": {
+                            "type": "string",
+                            "description": "TLE line 1 (69 characters).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LINE2": {
+                            "type": "string",
+                            "description": "TLE line 2 (69 characters).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "Satellite name (optional, line 0 of 3LE).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "NORAD_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "NORAD catalog number parsed from the TLE.",
+                            "x-flatbuffer-type": "uint"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PRWInitSource": {
+                    "type": "object",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/prwSourceKind",
+                            "description": "Wire kind identifier for BYTES.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "OMM": {
+                                    "value": 0,
+                                    "description": "Source is an OMM (CCSDS mean elements) FlatBuffer."
+                                },
+                                "TLE": {
+                                    "value": 1,
+                                    "description": "Source is a raw TLE line pair (3LE supported via NAME)."
+                                },
+                                "OCM": {
+                                    "value": 2,
+                                    "description": "Source is an OCM FlatBuffer."
+                                },
+                                "OEM": {
+                                    "value": 3,
+                                    "description": "Source is an OEM FlatBuffer."
+                                },
+                                "PPE": {
+                                    "value": 4,
+                                    "description": "Source is a PPE (polynomial ephemeris) FlatBuffer."
+                                },
+                                "KEPLERIAN": {
+                                    "value": 5,
+                                    "description": "Source is a single classical Keplerian element set."
+                                }
+                            }
+                        },
+                        "FILE_IDENTIFIER": {
+                            "type": "string",
+                            "description": "Optional SDS file_identifier for BYTES (`$OMM`, `$OCM`, `$OEM`, `$PPE`).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "BYTES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Encoded source record as a FlatBuffer (consumed per KIND).",
+                            "x-flatbuffer-type": "[uint8]"
+                        },
+                        "KEPLERIAN": {
+                            "$ref": "#/definitions/PRWKeplerianElements",
+                            "description": "Convenience inline form when KIND == KEPLERIAN.",
+                            "x-flatbuffer-type": "PRWKeplerianElements"
+                        },
+                        "TLE": {
+                            "$ref": "#/definitions/PRWTleLines",
+                            "description": "Convenience inline form when KIND == TLE.",
+                            "x-flatbuffer-type": "PRWTleLines"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PRWBatchRequest": {
+                    "type": "object",
+                    "description": "Batch propagation request \u2014 propagate every entity in ENTITY_HANDLES[] to\nEPOCH and write the result StateVector stream to OUTPUT_OFFSET in the\nshared arena.",
+                    "properties": {
+                        "EPOCH": {
+                            "type": "number",
+                            "description": "Target epoch as a Julian date (TIME_SYSTEM is configured on the host).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ENTITY_HANDLES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Entity handles to propagate (empty = all initialized entities).",
+                            "x-flatbuffer-type": "[uint]"
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Output buffer offset in the arena where the StateVector stream begins.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "MAX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Maximum entities to process in this call (0 = unbounded).",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "TARGET_FRAME": {
+                            "type": "string",
+                            "description": "Target reference frame for the output state stream. Matches enum\nvalues in SDS `RFM`. If zero, the propagator chooses its native frame.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PRWBatchResponse": {
+                    "type": "object",
+                    "description": "Batch propagation response header \u2014 describes the stream written to\nOUTPUT_OFFSET and reports errors. The stream itself is\n`STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.",
+                    "properties": {
+                        "COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of state vectors written.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "OUTPUT_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Offset in the arena where the state-vector stream begins.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "STATE_VECTOR_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Components per state vector (6 = PV, 9 = PVA). Mirrors OCM.STATE_VECTOR_SIZE.",
+                            "x-flatbuffer-type": "uint8"
+                        },
+                        "REFERENCE_FRAME": {
+                            "type": "string",
+                            "description": "Reference frame for the stream (SDS `RFM`-compatible string tag).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "FLAGS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/propagatorStateFlags"
+                            },
+                            "description": "Per-entity status flags (same cardinality as COUNT).",
+                            "x-flatbuffer-type": "[propagatorStateFlags]"
+                        },
+                        "ERROR_CODE": {
+                            "$ref": "#/definitions/propagatorErrorCode",
+                            "description": "Error code (0 == OK).",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "int",
+                            "x-flatbuffer-enum-values": {
+                                "OK": {
+                                    "value": 0,
+                                    "description": "No error."
+                                },
+                                "UNKNOWN": {
+                                    "value": 1,
+                                    "description": "Unknown / unspecified error."
+                                },
+                                "UNKNOWN_ENTITY": {
+                                    "value": 2,
+                                    "description": "One or more entity handles not found."
+                                },
+                                "INVALID_EPOCH": {
+                                    "value": 3,
+                                    "description": "Invalid epoch (NaN, out of range, before earliest init epoch, etc.)."
+                                },
+                                "OUTPUT_BUFFER_OVERFLOW": {
+                                    "value": 4,
+                                    "description": "Output buffer too small for the requested count."
+                                },
+                                "NOT_INITIALIZED": {
+                                    "value": 5,
+                                    "description": "Propagator not initialized."
+                                }
+                            }
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Optional error message when ERROR_CODE != OK.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PRW": {
+                    "type": "object",
+                    "description": "Propagator Runtime Wire \u2014 envelope that carries either an init request,\na batch request, or a batch response across a runtime boundary.",
+                    "properties": {
+                        "INIT": {
+                            "$ref": "#/definitions/PRWInit",
+                            "x-flatbuffer-type": "PRWInit"
+                        },
+                        "BATCH_REQUEST": {
+                            "$ref": "#/definitions/PRWBatchRequest",
+                            "x-flatbuffer-type": "PRWBatchRequest"
+                        },
+                        "BATCH_RESPONSE": {
+                            "$ref": "#/definitions/PRWBatchResponse",
+                            "x-flatbuffer-type": "PRWBatchResponse"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/PRW",
+            "x-flatbuffer-root-type": "PRW",
+            "x-flatbuffer-file-identifier": "$PRW"
         },
         "CSM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",

@@ -1,5 +1,5 @@
-// Hash: 8b14cf57cbc2d7bdb1b9ae0f4ebfc0d0f3db89f4d1e22c0fd99916059e66f6d5
-// Version: 0.0.1
+// Hash: df91b9deb622ff7f1f357063e3a9215a7ae703e7ec246f5a1ac193df27e278d8
+// Version: 0.0.2
 // -----------------------------------END_HEADER
 /// Entity / Standards Link — join-table row connecting a host-local entity
 /// metadata record to a standards record index row, enabling cascade-safe

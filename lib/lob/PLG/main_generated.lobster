@@ -2,43 +2,43 @@
 import flatbuffers
 
 /// Plugin type category
-enum pluginType:
+enum pluginCategory:
     /// Sensor simulation and analysis
-    pluginType_Sensor = 0
+    pluginCategory_Sensor = 0
     /// Orbital propagation algorithms
-    pluginType_Propagator = 1
+    pluginCategory_Propagator = 1
     /// Custom rendering/visualization
-    pluginType_Renderer = 2
+    pluginCategory_Renderer = 2
     /// Data analysis and processing
-    pluginType_Analysis = 3
+    pluginCategory_Analysis = 3
     /// External data source integration
-    pluginType_DataSource = 4
+    pluginCategory_DataSource = 4
     /// Electronic warfare simulation
-    pluginType_EW = 5
+    pluginCategory_EW = 5
     /// Communications modeling
-    pluginType_Comms = 6
+    pluginCategory_Comms = 6
     /// Physics simulation
-    pluginType_Physics = 7
+    pluginCategory_Physics = 7
     /// GLSL shader plugins for custom visualization
-    pluginType_Shader = 8
+    pluginCategory_Shader = 8
 
 /// Storefront payment model for the plugin listing
-enum paymentModel:
+enum purchaseTier:
     /// No payment required
-    paymentModel_Free = 0
+    purchaseTier_Free = 0
     /// Single one-time purchase
-    paymentModel_OneTime = 1
+    purchaseTier_OneTime = 1
     /// Recurring subscription purchase
-    paymentModel_Subscription = 2
+    purchaseTier_Subscription = 2
 
 /// Publication visibility for the plugin listing
-enum listingStatus:
+enum publicationState:
     /// Discoverable in public storefront listings
-    listingStatus_Public = 0
+    publicationState_Public = 0
     /// Addressable directly but hidden from public browse surfaces
-    listingStatus_Unlisted = 1
+    publicationState_Unlisted = 1
     /// No longer offered for new installs or purchases
-    listingStatus_Retired = 2
+    publicationState_Retired = 2
 
 class PluginCapability
 
@@ -174,8 +174,8 @@ class PLG : flatbuffers.handle
     def TAGLINE() -> string:
         return flatbuffers.field_string(buf_, pos_, 12)
     /// Type/category of the plugin
-    def PLUGIN_TYPE() -> pluginType:
-        return pluginType(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    def PLUGIN_TYPE() -> pluginCategory:
+        return pluginCategory(flatbuffers.field_int8(buf_, pos_, 14, 0))
     /// Human-readable publisher or organization name
     def PUBLISHER_NAME() -> string:
         return flatbuffers.field_string(buf_, pos_, 16)
@@ -295,8 +295,8 @@ class PLG : flatbuffers.handle
     def LICENSE() -> string:
         return flatbuffers.field_string(buf_, pos_, 78)
     /// Commercial model used for storefront purchase flows
-    def PAYMENT_MODEL() -> paymentModel:
-        return paymentModel(flatbuffers.field_int8(buf_, pos_, 80, 0))
+    def PAYMENT_MODEL() -> purchaseTier:
+        return purchaseTier(flatbuffers.field_int8(buf_, pos_, 80, 0))
     /// Price in USD cents for one-time purchase or subscription period
     def PRICE_USD_CENTS() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 82, 0)
@@ -309,8 +309,8 @@ class PLG : flatbuffers.handle
     def ACCEPTED_PAYMENT_METHODS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 86)
     /// Storefront publication state for this manifest version
-    def LISTING_STATUS() -> listingStatus:
-        return listingStatus(flatbuffers.field_int8(buf_, pos_, 88, 0))
+    def LISTING_STATUS() -> publicationState:
+        return publicationState(flatbuffers.field_int8(buf_, pos_, 88, 0))
     /// Ed25519 signature from provider over manifest
     def SIGNATURE(i:int) -> int:
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 90) + i * 1)
@@ -339,7 +339,7 @@ struct PLGBuilder:
     def add_TAGLINE(TAGLINE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, TAGLINE)
         return this
-    def add_PLUGIN_TYPE(PLUGIN_TYPE:pluginType):
+    def add_PLUGIN_TYPE(PLUGIN_TYPE:pluginCategory):
         b_.PrependInt8Slot(5, PLUGIN_TYPE, 0)
         return this
     def add_PUBLISHER_NAME(PUBLISHER_NAME:flatbuffers.offset):
@@ -438,7 +438,7 @@ struct PLGBuilder:
     def add_LICENSE(LICENSE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(37, LICENSE)
         return this
-    def add_PAYMENT_MODEL(PAYMENT_MODEL:paymentModel):
+    def add_PAYMENT_MODEL(PAYMENT_MODEL:purchaseTier):
         b_.PrependInt8Slot(38, PAYMENT_MODEL, 0)
         return this
     def add_PRICE_USD_CENTS(PRICE_USD_CENTS:int):
@@ -450,7 +450,7 @@ struct PLGBuilder:
     def add_ACCEPTED_PAYMENT_METHODS(ACCEPTED_PAYMENT_METHODS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(41, ACCEPTED_PAYMENT_METHODS)
         return this
-    def add_LISTING_STATUS(LISTING_STATUS:listingStatus):
+    def add_LISTING_STATUS(LISTING_STATUS:publicationState):
         b_.PrependInt8Slot(42, LISTING_STATUS, 0)
         return this
     def add_SIGNATURE(SIGNATURE:flatbuffers.offset):

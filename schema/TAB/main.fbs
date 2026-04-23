@@ -1,5 +1,5 @@
-// Hash: e420ff873ca0f79e60260a2280bba2f00eb0a91cc10c714a01666c3c4a238cf8
-// Version: 0.0.1
+// Hash: b8c2e366b6043b9965378116012c26a823220b486ee53e9f7bfb26bc25c364cd
+// Version: 0.0.2
 // -----------------------------------END_HEADER
 /// Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
 /// through an arena-backed plugin stream. Carries enough identity for a

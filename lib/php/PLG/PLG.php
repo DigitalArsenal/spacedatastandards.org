@@ -83,7 +83,7 @@ class PLG extends Table
     public function getPLUGIN_TYPE()
     {
         $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \pluginType::Sensor;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \pluginCategory::Sensor;
     }
 
     /// Human-readable publisher or organization name
@@ -497,7 +497,7 @@ class PLG extends Table
     public function getPAYMENT_MODEL()
     {
         $o = $this->__offset(80);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \paymentModel::Free;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \purchaseTier::Free;
     }
 
     /// Price in USD cents for one-time purchase or subscription period
@@ -547,7 +547,7 @@ class PLG extends Table
     public function getLISTING_STATUS()
     {
         $o = $this->__offset(88);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \listingStatus::Public;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \publicationState::Public;
     }
 
     /// Ed25519 signature from provider over manifest

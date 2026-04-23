@@ -1,5 +1,5 @@
-// Hash: 79df1363c6e26d9a44b691c918685abe43ddacc338fe4536b5d2b428c06d8283
-// Version: 0.0.1
+// Hash: 64a4b40a956fe0549149119d4aa09bbe8e675855098adcfd9c3329a31c68732b
+// Version: 0.0.2
 // -----------------------------------END_HEADER
 /// Shader Wire — wire contract for GLSL / WebGL shader plugins that compile
 /// and expose parameterized fragments that a host injects into its own

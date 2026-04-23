@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "entityKind": {
+      "type": "string",
+      "enum": [
+        "ENTITY",
+        "SPACE",
+        "GROUND",
+        "AIRCRAFT",
+        "MISSILE",
+        "SHIP",
+        "VEHICLE",
+        "SENSOR",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ENTITY": {
+          "value": 0
+        },
+        "SPACE": {
+          "value": 1
+        },
+        "GROUND": {
+          "value": 2
+        },
+        "AIRCRAFT": {
+          "value": 3
+        },
+        "MISSILE": {
+          "value": 4
+        },
+        "SHIP": {
+          "value": 5
+        },
+        "VEHICLE": {
+          "value": 6
+        },
+        "SENSOR": {
+          "value": 7
+        },
+        "OTHER": {
+          "value": 127
+        }
+      }
+    },
+    "ETM": {
+      "type": "object",
+      "description": "Entity Metadata \u2014 generic queryable metadata for a host-local entity.\nParticipates in shared FlatSQL/WASM runtimes where multiple plugins\ncross-query the same entity collection.",
+      "properties": {
+        "ENTITY_ID": {
+          "type": "string",
+          "description": "Stable host-local entity identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable entity name used for shared query/search surfaces.",
+          "x-flatbuffer-type": "string"
+        },
+        "KIND": {
+          "$ref": "#/definitions/entityKind",
+          "description": "Broad entity category.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ENTITY": {
+              "value": 0
+            },
+            "SPACE": {
+              "value": 1
+            },
+            "GROUND": {
+              "value": 2
+            },
+            "AIRCRAFT": {
+              "value": 3
+            },
+            "MISSILE": {
+              "value": 4
+            },
+            "SHIP": {
+              "value": 5
+            },
+            "VEHICLE": {
+              "value": 6
+            },
+            "SENSOR": {
+              "value": 7
+            },
+            "OTHER": {
+              "value": 127
+            }
+          }
+        },
+        "SUBTYPE": {
+          "type": "string",
+          "description": "More specific runtime subtype or class name.",
+          "x-flatbuffer-type": "string"
+        },
+        "PARENT_ENTITY_ID": {
+          "type": "string",
+          "description": "Optional parent entity id for hierarchy / linkage queries.",
+          "x-flatbuffer-type": "string"
+        },
+        "WASM_HANDLE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Collection-scoped WASM handle used for batch visibility application.",
+          "x-flatbuffer-type": "uint"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Optional NORAD catalog id for standards-backed entities.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBJECT_NAME": {
+          "type": "string",
+          "description": "Primary object name surfaced by attached standards metadata.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "Primary international / object designator surfaced by attached standards metadata.",
+          "x-flatbuffer-type": "string"
+        },
+        "CAT_OBJECT_NAME": {
+          "type": "string",
+          "description": "Secondary CAT object name when different from the primary object name.",
+          "x-flatbuffer-type": "string"
+        },
+        "CAT_OBJECT_ID": {
+          "type": "string",
+          "description": "Secondary CAT object id when different from the primary object id.",
+          "x-flatbuffer-type": "string"
+        },
+        "FACILITY_TYPE": {
+          "type": "string",
+          "description": "Ground / facility subtype metadata for non-space entity search.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEARCH_TEXT": {
+          "type": "string",
+          "description": "Pre-normalized phrase-search text for collection-wide shared queries.",
+          "x-flatbuffer-type": "string"
+        },
+        "OWNER": {
+          "type": "string",
+          "description": "CAT owner country code.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS_CODE": {
+          "type": "string",
+          "description": "CAT operational status code.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_DATE": {
+          "type": "string",
+          "description": "CAT launch date.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_YEAR": {
+          "type": "string",
+          "description": "Launch year derived from launch date.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORBIT_REGIME": {
+          "type": "string",
+          "description": "Derived orbit regime classification.",
+          "x-flatbuffer-type": "string"
+        },
+        "PERIOD": {
+          "type": "number",
+          "description": "Orbital period in minutes.",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "description": "Inclination in degrees.",
+          "x-flatbuffer-type": "double"
+        },
+        "APOGEE": {
+          "type": "number",
+          "description": "Apogee altitude in kilometers.",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIGEE": {
+          "type": "number",
+          "description": "Perigee altitude in kilometers.",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_MOTION": {
+          "type": "number",
+          "description": "Mean motion in revolutions per day.",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "description": "Orbital eccentricity.",
+          "x-flatbuffer-type": "double"
+        },
+        "BSTAR": {
+          "type": "number",
+          "description": "B* drag term from OMM.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_GP": {
+          "type": "boolean",
+          "description": "Whether GP / OMM state is present for the entity.",
+          "x-flatbuffer-type": "bool"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Reserved for forward-compatible growth.",
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ETM",
+  "x-flatbuffer-root-type": "CAQ",
+  "x-flatbuffer-file-identifier": "$CAQ"
+}

@@ -20,131 +20,142 @@ class RecordType(object):
     BMC = 14
     BOV = 15
     BUS = 16
-    CAT = 17
-    CDM = 18
-    CFP = 19
-    CHN = 20
-    CLT = 21
-    CMS = 22
-    COM = 23
-    COT = 24
-    CRD = 25
-    CRM = 26
-    CSM = 27
-    CTR = 28
-    CZM = 29
-    DFH = 30
-    DMG = 31
-    DOA = 32
-    EME = 33
-    ENC = 34
-    ENV = 35
-    EOO = 36
-    EOP = 37
-    EPM = 38
-    EWR = 39
-    FCS = 40
-    GDI = 41
-    GEO = 42
-    GJN = 43
-    GNO = 44
-    GPX = 45
-    GRV = 46
-    GVH = 47
-    HEL = 48
-    HYP = 49
-    IDM = 50
-    ION = 51
-    IRO = 52
-    KMF = 53
-    KML = 54
-    KRF = 55
-    LCC = 56
-    LCF = 57
-    LCH = 58
-    LDM = 59
-    LGR = 60
-    LKS = 61
-    LMR = 62
-    LND = 63
-    LNE = 64
-    LPF = 65
-    LWK = 66
-    MBL = 67
-    MET = 68
-    MFE = 69
-    MNF = 70
-    MNV = 71
-    MPE = 72
-    MSL = 73
-    MST = 74
-    MTI = 75
-    NAV = 76
-    OBD = 77
-    OBT = 78
-    OCM = 79
-    OEM = 80
-    OMM = 81
-    OOA = 82
-    OOB = 83
-    OOD = 84
-    OOE = 85
-    OOI = 86
-    OOL = 87
-    OON = 88
-    OOS = 89
-    OOT = 90
-    OPM = 91
-    OSM = 92
-    PCF = 93
-    PHY = 94
-    PLD = 95
-    PLG = 96
-    PLK = 97
-    PNM = 98
-    PPE = 99
-    PRG = 100
-    PUR = 101
-    RAF = 102
-    RCF = 103
-    RDM = 104
-    RDO = 105
-    REV = 106
-    RFB = 107
-    RFE = 108
-    RFM = 109
-    RFO = 110
-    ROC = 111
-    SAR = 112
-    SCM = 113
-    SDL = 114
-    SEN = 115
-    SEO = 116
-    SEV = 117
-    SIT = 118
-    SKI = 119
-    SNR = 120
-    SOI = 121
-    SON = 122
-    SPP = 123
-    SPW = 124
-    STF = 125
-    STR = 126
-    STV = 127
-    SWR = 128
-    TCF = 129
-    TDM = 130
-    TIM = 131
-    TKG = 132
-    TME = 133
-    TMF = 134
-    TPN = 135
-    TRK = 136
-    TRN = 137
-    VCM = 138
-    WPN = 139
-    WTH = 140
-    XTC = 141
+    CAQ = 17
+    CAT = 18
+    CDM = 19
+    CFP = 20
+    CHN = 21
+    CLT = 22
+    CMS = 23
+    COM = 24
+    COT = 25
+    CRD = 26
+    CRM = 27
+    CSM = 28
+    CTR = 29
+    CZM = 30
+    DFH = 31
+    DMG = 32
+    DOA = 33
+    EME = 34
+    ENC = 35
+    ENV = 36
+    EOO = 37
+    EOP = 38
+    EPM = 39
+    ESL = 40
+    ETM = 41
+    EWR = 42
+    FCS = 43
+    FPC = 44
+    GDI = 45
+    GEO = 46
+    GJN = 47
+    GNO = 48
+    GPX = 49
+    GRV = 50
+    GVH = 51
+    HEL = 52
+    HYP = 53
+    IDM = 54
+    ION = 55
+    IRO = 56
+    KMF = 57
+    KML = 58
+    KRF = 59
+    LCC = 60
+    LCF = 61
+    LCH = 62
+    LDM = 63
+    LGR = 64
+    LKS = 65
+    LMR = 66
+    LND = 67
+    LNE = 68
+    LPF = 69
+    LWK = 70
+    MBL = 71
+    MET = 72
+    MFE = 73
+    MNF = 74
+    MNV = 75
+    MPE = 76
+    MSL = 77
+    MST = 78
+    MTI = 79
+    NAV = 80
+    OBD = 81
+    OBT = 82
+    OCM = 83
+    OEM = 84
+    OMM = 85
+    OOA = 86
+    OOB = 87
+    OOD = 88
+    OOE = 89
+    OOI = 90
+    OOL = 91
+    OON = 92
+    OOS = 93
+    OOT = 94
+    OPM = 95
+    OSM = 96
+    PCF = 97
+    PHY = 98
+    PLD = 99
+    PLG = 100
+    PLK = 101
+    PNM = 102
+    PPE = 103
+    PRG = 104
+    PRW = 105
+    PUR = 106
+    RAF = 107
+    RCF = 108
+    RDM = 109
+    RDO = 110
+    REV = 111
+    RFB = 112
+    RFE = 113
+    RFM = 114
+    RFO = 115
+    ROC = 116
+    SAR = 117
+    SCM = 118
+    SDF = 119
+    SDL = 120
+    SDR = 121
+    SEN = 122
+    SEO = 123
+    SEV = 124
+    SHW = 125
+    SIT = 126
+    SKI = 127
+    SNR = 128
+    SNW = 129
+    SOI = 130
+    SON = 131
+    SPP = 132
+    SPW = 133
+    SRI = 134
+    STF = 135
+    STR = 136
+    STV = 137
+    SWR = 138
+    TAB = 139
+    TCF = 140
+    TDM = 141
+    TIM = 142
+    TKG = 143
+    TME = 144
+    TMF = 145
+    TPN = 146
+    TRK = 147
+    TRN = 148
+    VCM = 149
+    WPN = 150
+    WTH = 151
+    XTC = 152
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -198,6 +209,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.BUS:
         import BUS
         return BUS.BUST.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CAQ:
+        import CAQ
+        return CAQ.CAQT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.CAT:
         import CAT
         return CAT.CATT.InitFromBuf(table.Bytes, table.Pos)
@@ -264,12 +278,21 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.EPM:
         import EPM
         return EPM.EPMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.ESL:
+        import ESL
+        return ESL.ESLT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.ETM:
+        import ETM
+        return ETM.ETMT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.EWR:
         import EWR
         return EWR.EWRT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.FCS:
         import FCS
         return FCS.FCST.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.FPC:
+        import FPC
+        return FPC.FPCT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.GDI:
         import GDI
         return GDI.GDIT.InitFromBuf(table.Bytes, table.Pos)
@@ -450,6 +473,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.PRG:
         import PRG
         return PRG.PRGT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.PRW:
+        import PRW
+        return PRW.PRWT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.PUR:
         import PUR
         return PUR.PURT.InitFromBuf(table.Bytes, table.Pos)
@@ -489,9 +515,15 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.SCM:
         import SCM
         return SCM.SCMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SDF:
+        import SDF
+        return SDF.SDFT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.SDL:
         import SDL
         return SDL.SDLT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SDR:
+        import SDR
+        return SDR.SDRT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.SEN:
         import SEN
         return SEN.SENT.InitFromBuf(table.Bytes, table.Pos)
@@ -501,6 +533,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.SEV:
         import SEV
         return SEV.SEVT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SHW:
+        import SHW
+        return SHW.SHWT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.SIT:
         import SIT
         return SIT.SITT.InitFromBuf(table.Bytes, table.Pos)
@@ -510,6 +545,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.SNR:
         import SNR
         return SNR.SNRT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SNW:
+        import SNW
+        return SNW.SNWT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.SOI:
         import SOI
         return SOI.SOIT.InitFromBuf(table.Bytes, table.Pos)
@@ -522,6 +560,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.SPW:
         import SPW
         return SPW.SPWT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SRI:
+        import SRI
+        return SRI.SRIT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.STF:
         import STF
         return STF.STFT.InitFromBuf(table.Bytes, table.Pos)
@@ -534,6 +575,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.SWR:
         import SWR
         return SWR.SWRT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.TAB:
+        import TAB
+        return TAB.TABT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.TCF:
         import TCF
         return TCF.TCFT.InitFromBuf(table.Bytes, table.Pos)

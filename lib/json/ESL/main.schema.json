@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ESL" : {
+      "type" : "object",
+      "description" : "Entity / Standards Link — join-table row connecting a host-local entity\nmetadata record to a standards record index row, enabling cascade-safe\nmutation and cross-plugin query ownership.",
+      "properties" : {
+        "LINK_KEY" : {
+                "type" : "string",
+                "description" : "Stable local link key for one entity / record association."
+              },
+        "ENTITY_ID" : {
+                "type" : "string",
+                "description" : "Stable host-local entity id on the entity side of the association."
+              },
+        "ENTITY_RECORD_KEY" : {
+                "type" : "string",
+                "description" : "Stable local entity metadata record key (for example `ENTITY:<id>`)."
+              },
+        "ENTITY_ROWID" : {
+                "type" : "number",
+                "description" : "FlatSQL row id for the linked entity metadata row when known."
+              },
+        "RECORD_KEY" : {
+                "type" : "string",
+                "description" : "Stable local standards record key on the record side of the association."
+              },
+        "SCHEMA_NAME" : {
+                "type" : "string",
+                "description" : "SDS schema family for the linked record (`OMM`, `CAT`, `OEM`, `CDM`, etc.)."
+              },
+        "RECORD_ROWID" : {
+                "type" : "number",
+                "description" : "FlatSQL row id for the linked standards record row when known."
+              },
+        "CASCADE_DELETE" : {
+                "type" : "boolean",
+                "description" : "Whether entity deletion should cascade to the linked standards record."
+              },
+        "UPDATED_AT_MS" : {
+                "type" : "number",
+                "description" : "Milliseconds since epoch when the association was last refreshed."
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Reserved for forward-compatible growth."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ESL"
+}

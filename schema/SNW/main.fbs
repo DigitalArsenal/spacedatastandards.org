@@ -1,5 +1,5 @@
-// Hash: 39dbb6c295aee3bf1ad6a26e9661336e136ac9ba1cf728e8e802285a361476e2
-// Version: 0.0.1
+// Hash: 47db78e20924ce2c1683a34ef2f3725c758e0e914c752dfed460e5246f7ceab0
+// Version: 0.0.2
 // -----------------------------------END_HEADER
 /// Sensor Runtime Wire — arena-addressed batch request / response envelopes
 /// for sensor detection plugins. Complements the already-published `SDR`

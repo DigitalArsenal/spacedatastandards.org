@@ -101,6 +101,7 @@ import BEM
 import BMC
 import BOV
 import BUS
+import CAQ
 import CAT
 import CDM
 import CFP
@@ -123,8 +124,11 @@ import ENV
 import EOO
 import EOP
 import EPM
+import ESL
+import ETM
 import EWR
 import FCS
+import FPC
 import GDI
 import GEO
 import GJN
@@ -185,6 +189,7 @@ import PLK
 import PNM
 import PPE
 import PRG
+import PRW
 import PUR
 import RAF
 import RCF
@@ -199,21 +204,27 @@ import ROC
 import RecordType
 import SAR
 import SCM
+import SDF
 import SDL
+import SDR
 import SEN
 import SEO
 import SEV
+import SHW
 import SIT
 import SKI
 import SNR
+import SNW
 import SOI
 import SON
 import SPP
 import SPW
+import SRI
 import STF
 import STR
 import STV
 import SWR
+import TAB
 import TCF
 import TDM
 import TIM
@@ -242,7 +253,7 @@ class RecordT(object):
         standard = None,
     ):
         self.value_type = value_type  # type: int
-        self.value = value  # type: Union[None, 'ACL.ACLT', 'ACM.ACMT', 'ACR.ACRT', 'AEM.AEMT', 'ANI.ANIT', 'AOF.AOFT', 'APM.APMT', 'ARM.ARMT', 'AST.ASTT', 'ATD.ATDT', 'ATM.ATMT', 'BAL.BALT', 'BEM.BEMT', 'BMC.BMCT', 'BOV.BOVT', 'BUS.BUST', 'CAT.CATT', 'CDM.CDMT', 'CFP.CFPT', 'CHN.CHNT', 'CLT.CLTT', 'CMS.CMST', 'COM.COMT', 'COT.COTT', 'CRD.CRDT', 'CRM.CRMT', 'CSM.CSMT', 'CTR.CTRT', 'CZM.CZMT', 'DFH.DFHT', 'DMG.DMGT', 'DOA.DOAT', 'EME.EMET', 'ENC.ENCT', 'ENV.ENVT', 'EOO.EOOT', 'EOP.EOPT', 'EPM.EPMT', 'EWR.EWRT', 'FCS.FCST', 'GDI.GDIT', 'GEO.GEOT', 'GJN.GJNT', 'GNO.GNOT', 'GPX.GPXT', 'GRV.GRVT', 'GVH.GVHT', 'HEL.HELT', 'HYP.HYPT', 'IDM.IDMT', 'ION.IONT', 'IRO.IROT', 'KMF.KMFT', 'KML.KMLT', 'KRF.KRFT', 'LCC.LCCT', 'LCF.LCFT', 'LCH.LCHT', 'LDM.LDMT', 'LGR.LGRT', 'LKS.LKST', 'LMR.LMRT', 'LND.LNDT', 'LNE.LNET', 'LPF.LPFT', 'LWK.LWKT', 'MBL.MBLT', 'MET.METT', 'MFE.MFET', 'MNF.MNFT', 'MNV.MNVT', 'MPE.MPET', 'MSL.MSLT', 'MST.MSTT', 'MTI.MTIT', 'NAV.NAVT', 'OBD.OBDT', 'OBT.OBTT', 'OCM.OCMT', 'OEM.OEMT', 'OMM.OMMT', 'OOA.OOAT', 'OOB.OOBT', 'OOD.OODT', 'OOE.OOET', 'OOI.OOIT', 'OOL.OOLT', 'OON.OONT', 'OOS.OOST', 'OOT.OOTT', 'OPM.OPMT', 'OSM.OSMT', 'PCF.PCFT', 'PHY.PHYT', 'PLD.PLDT', 'PLG.PLGT', 'PLK.PLKT', 'PNM.PNMT', 'PPE.PPET', 'PRG.PRGT', 'PUR.PURT', 'RAF.RAFT', 'RCF.RCFT', 'RDM.RDMT', 'RDO.RDOT', 'REV.REVT', 'RFB.RFBT', 'RFE.RFET', 'RFM.RFMT', 'RFO.RFOT', 'ROC.ROCT', 'SAR.SART', 'SCM.SCMT', 'SDL.SDLT', 'SEN.SENT', 'SEO.SEOT', 'SEV.SEVT', 'SIT.SITT', 'SKI.SKIT', 'SNR.SNRT', 'SOI.SOIT', 'SON.SONT', 'SPP.SPPT', 'SPW.SPWT', 'STF.STFT', 'STR.STRT', 'STV.STVT', 'SWR.SWRT', 'TCF.TCFT', 'TDM.TDMT', 'TIM.TIMT', 'TKG.TKGT', 'TME.TMET', 'TMF.TMFT', 'TPN.TPNT', 'TRK.TRKT', 'TRN.TRNT', 'VCM.VCMT', 'WPN.WPNT', 'WTH.WTHT', 'XTC.XTCT']
+        self.value = value  # type: Union[None, 'ACL.ACLT', 'ACM.ACMT', 'ACR.ACRT', 'AEM.AEMT', 'ANI.ANIT', 'AOF.AOFT', 'APM.APMT', 'ARM.ARMT', 'AST.ASTT', 'ATD.ATDT', 'ATM.ATMT', 'BAL.BALT', 'BEM.BEMT', 'BMC.BMCT', 'BOV.BOVT', 'BUS.BUST', 'CAQ.CAQT', 'CAT.CATT', 'CDM.CDMT', 'CFP.CFPT', 'CHN.CHNT', 'CLT.CLTT', 'CMS.CMST', 'COM.COMT', 'COT.COTT', 'CRD.CRDT', 'CRM.CRMT', 'CSM.CSMT', 'CTR.CTRT', 'CZM.CZMT', 'DFH.DFHT', 'DMG.DMGT', 'DOA.DOAT', 'EME.EMET', 'ENC.ENCT', 'ENV.ENVT', 'EOO.EOOT', 'EOP.EOPT', 'EPM.EPMT', 'ESL.ESLT', 'ETM.ETMT', 'EWR.EWRT', 'FCS.FCST', 'FPC.FPCT', 'GDI.GDIT', 'GEO.GEOT', 'GJN.GJNT', 'GNO.GNOT', 'GPX.GPXT', 'GRV.GRVT', 'GVH.GVHT', 'HEL.HELT', 'HYP.HYPT', 'IDM.IDMT', 'ION.IONT', 'IRO.IROT', 'KMF.KMFT', 'KML.KMLT', 'KRF.KRFT', 'LCC.LCCT', 'LCF.LCFT', 'LCH.LCHT', 'LDM.LDMT', 'LGR.LGRT', 'LKS.LKST', 'LMR.LMRT', 'LND.LNDT', 'LNE.LNET', 'LPF.LPFT', 'LWK.LWKT', 'MBL.MBLT', 'MET.METT', 'MFE.MFET', 'MNF.MNFT', 'MNV.MNVT', 'MPE.MPET', 'MSL.MSLT', 'MST.MSTT', 'MTI.MTIT', 'NAV.NAVT', 'OBD.OBDT', 'OBT.OBTT', 'OCM.OCMT', 'OEM.OEMT', 'OMM.OMMT', 'OOA.OOAT', 'OOB.OOBT', 'OOD.OODT', 'OOE.OOET', 'OOI.OOIT', 'OOL.OOLT', 'OON.OONT', 'OOS.OOST', 'OOT.OOTT', 'OPM.OPMT', 'OSM.OSMT', 'PCF.PCFT', 'PHY.PHYT', 'PLD.PLDT', 'PLG.PLGT', 'PLK.PLKT', 'PNM.PNMT', 'PPE.PPET', 'PRG.PRGT', 'PRW.PRWT', 'PUR.PURT', 'RAF.RAFT', 'RCF.RCFT', 'RDM.RDMT', 'RDO.RDOT', 'REV.REVT', 'RFB.RFBT', 'RFE.RFET', 'RFM.RFMT', 'RFO.RFOT', 'ROC.ROCT', 'SAR.SART', 'SCM.SCMT', 'SDF.SDFT', 'SDL.SDLT', 'SDR.SDRT', 'SEN.SENT', 'SEO.SEOT', 'SEV.SEVT', 'SHW.SHWT', 'SIT.SITT', 'SKI.SKIT', 'SNR.SNRT', 'SNW.SNWT', 'SOI.SOIT', 'SON.SONT', 'SPP.SPPT', 'SPW.SPWT', 'SRI.SRIT', 'STF.STFT', 'STR.STRT', 'STV.STVT', 'SWR.SWRT', 'TAB.TABT', 'TCF.TCFT', 'TDM.TDMT', 'TIM.TIMT', 'TKG.TKGT', 'TME.TMET', 'TMF.TMFT', 'TPN.TPNT', 'TRK.TRKT', 'TRN.TRNT', 'VCM.VCMT', 'WPN.WPNT', 'WTH.WTHT', 'XTC.XTCT']
         self.standard = standard  # type: Optional[str]
 
     @classmethod

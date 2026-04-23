@@ -1,5 +1,5 @@
-// Hash: d1ced00476c94d9858dcf17fd740ae35541913e4cd13148032fd7d8e8a50231c
-// Version: 0.0.1
+// Hash: 43f0735df8f25c2eb18d514bc7cecab1a65b3437572668675664d326eb9095ba
+// Version: 0.0.2
 // -----------------------------------END_HEADER
 /// Standards Record Index — local wrapper for a standards payload's identity
 /// and mutation metadata, participating in shared FlatSQL query and cascade

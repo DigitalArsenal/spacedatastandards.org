@@ -60,7 +60,7 @@ public struct PLG : IFlatbufferObject
 #endif
   public byte[] GetTAGLINEArray() { return __p.__vector_as_array<byte>(12); }
   /// Type/category of the plugin
-  public pluginType PLUGIN_TYPE { get { int o = __p.__offset(14); return o != 0 ? (pluginType)__p.bb.GetSbyte(o + __p.bb_pos) : pluginType.Sensor; } }
+  public pluginCategory PLUGIN_TYPE { get { int o = __p.__offset(14); return o != 0 ? (pluginCategory)__p.bb.GetSbyte(o + __p.bb_pos) : pluginCategory.Sensor; } }
   /// Human-readable publisher or organization name
   public string PUBLISHER_NAME { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -233,7 +233,7 @@ public struct PLG : IFlatbufferObject
 #endif
   public byte[] GetLICENSEArray() { return __p.__vector_as_array<byte>(78); }
   /// Commercial model used for storefront purchase flows
-  public paymentModel PAYMENT_MODEL { get { int o = __p.__offset(80); return o != 0 ? (paymentModel)__p.bb.GetSbyte(o + __p.bb_pos) : paymentModel.Free; } }
+  public purchaseTier PAYMENT_MODEL { get { int o = __p.__offset(80); return o != 0 ? (purchaseTier)__p.bb.GetSbyte(o + __p.bb_pos) : purchaseTier.Free; } }
   /// Price in USD cents for one-time purchase or subscription period
   public uint PRICE_USD_CENTS { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Subscription billing period length in days
@@ -242,7 +242,7 @@ public struct PLG : IFlatbufferObject
   public string ACCEPTED_PAYMENT_METHODS(int j) { int o = __p.__offset(86); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int ACCEPTED_PAYMENT_METHODSLength { get { int o = __p.__offset(86); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Storefront publication state for this manifest version
-  public listingStatus LISTING_STATUS { get { int o = __p.__offset(88); return o != 0 ? (listingStatus)__p.bb.GetSbyte(o + __p.bb_pos) : listingStatus.Public; } }
+  public publicationState LISTING_STATUS { get { int o = __p.__offset(88); return o != 0 ? (publicationState)__p.bb.GetSbyte(o + __p.bb_pos) : publicationState.Public; } }
   /// Ed25519 signature from provider over manifest
   public byte SIGNATURE(int j) { int o = __p.__offset(90); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
   public int SIGNATURELength { get { int o = __p.__offset(90); return o != 0 ? __p.__vector_len(o) : 0; } }
@@ -259,7 +259,7 @@ public struct PLG : IFlatbufferObject
       StringOffset VERSIONOffset = default(StringOffset),
       StringOffset DESCRIPTIONOffset = default(StringOffset),
       StringOffset TAGLINEOffset = default(StringOffset),
-      pluginType PLUGIN_TYPE = pluginType.Sensor,
+      pluginCategory PLUGIN_TYPE = pluginCategory.Sensor,
       StringOffset PUBLISHER_NAMEOffset = default(StringOffset),
       StringOffset PUBLISHER_HANDLEOffset = default(StringOffset),
       StringOffset PUBLISHER_URLOffset = default(StringOffset),
@@ -292,11 +292,11 @@ public struct PLG : IFlatbufferObject
       StringOffset CHANGELOG_URLOffset = default(StringOffset),
       StringOffset ICON_URLOffset = default(StringOffset),
       StringOffset LICENSEOffset = default(StringOffset),
-      paymentModel PAYMENT_MODEL = paymentModel.Free,
+      purchaseTier PAYMENT_MODEL = purchaseTier.Free,
       uint PRICE_USD_CENTS = 0,
       uint SUBSCRIPTION_PERIOD_DAYS = 0,
       VectorOffset ACCEPTED_PAYMENT_METHODSOffset = default(VectorOffset),
-      listingStatus LISTING_STATUS = listingStatus.Public,
+      publicationState LISTING_STATUS = publicationState.Public,
       VectorOffset SIGNATUREOffset = default(VectorOffset)) {
     builder.StartTable(44);
     PLG.AddUPDATED_AT(builder, UPDATED_AT);
@@ -352,7 +352,7 @@ public struct PLG : IFlatbufferObject
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(2, VERSIONOffset.Value, 0); }
   public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(3, DESCRIPTIONOffset.Value, 0); }
   public static void AddTAGLINE(FlatBufferBuilder builder, StringOffset TAGLINEOffset) { builder.AddOffset(4, TAGLINEOffset.Value, 0); }
-  public static void AddPLUGIN_TYPE(FlatBufferBuilder builder, pluginType PLUGIN_TYPE) { builder.AddSbyte(5, (sbyte)PLUGIN_TYPE, 0); }
+  public static void AddPLUGIN_TYPE(FlatBufferBuilder builder, pluginCategory PLUGIN_TYPE) { builder.AddSbyte(5, (sbyte)PLUGIN_TYPE, 0); }
   public static void AddPUBLISHER_NAME(FlatBufferBuilder builder, StringOffset PUBLISHER_NAMEOffset) { builder.AddOffset(6, PUBLISHER_NAMEOffset.Value, 0); }
   public static void AddPUBLISHER_HANDLE(FlatBufferBuilder builder, StringOffset PUBLISHER_HANDLEOffset) { builder.AddOffset(7, PUBLISHER_HANDLEOffset.Value, 0); }
   public static void AddPUBLISHER_URL(FlatBufferBuilder builder, StringOffset PUBLISHER_URLOffset) { builder.AddOffset(8, PUBLISHER_URLOffset.Value, 0); }
@@ -440,7 +440,7 @@ public struct PLG : IFlatbufferObject
   public static void AddCHANGELOG_URL(FlatBufferBuilder builder, StringOffset CHANGELOG_URLOffset) { builder.AddOffset(35, CHANGELOG_URLOffset.Value, 0); }
   public static void AddICON_URL(FlatBufferBuilder builder, StringOffset ICON_URLOffset) { builder.AddOffset(36, ICON_URLOffset.Value, 0); }
   public static void AddLICENSE(FlatBufferBuilder builder, StringOffset LICENSEOffset) { builder.AddOffset(37, LICENSEOffset.Value, 0); }
-  public static void AddPAYMENT_MODEL(FlatBufferBuilder builder, paymentModel PAYMENT_MODEL) { builder.AddSbyte(38, (sbyte)PAYMENT_MODEL, 0); }
+  public static void AddPAYMENT_MODEL(FlatBufferBuilder builder, purchaseTier PAYMENT_MODEL) { builder.AddSbyte(38, (sbyte)PAYMENT_MODEL, 0); }
   public static void AddPRICE_USD_CENTS(FlatBufferBuilder builder, uint PRICE_USD_CENTS) { builder.AddUint(39, PRICE_USD_CENTS, 0); }
   public static void AddSUBSCRIPTION_PERIOD_DAYS(FlatBufferBuilder builder, uint SUBSCRIPTION_PERIOD_DAYS) { builder.AddUint(40, SUBSCRIPTION_PERIOD_DAYS, 0); }
   public static void AddACCEPTED_PAYMENT_METHODS(FlatBufferBuilder builder, VectorOffset ACCEPTED_PAYMENT_METHODSOffset) { builder.AddOffset(41, ACCEPTED_PAYMENT_METHODSOffset.Value, 0); }
@@ -449,7 +449,7 @@ public struct PLG : IFlatbufferObject
   public static VectorOffset CreateACCEPTED_PAYMENT_METHODSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateACCEPTED_PAYMENT_METHODSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartACCEPTED_PAYMENT_METHODSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddLISTING_STATUS(FlatBufferBuilder builder, listingStatus LISTING_STATUS) { builder.AddSbyte(42, (sbyte)LISTING_STATUS, 0); }
+  public static void AddLISTING_STATUS(FlatBufferBuilder builder, publicationState LISTING_STATUS) { builder.AddSbyte(42, (sbyte)LISTING_STATUS, 0); }
   public static void AddSIGNATURE(FlatBufferBuilder builder, VectorOffset SIGNATUREOffset) { builder.AddOffset(43, SIGNATUREOffset.Value, 0); }
   public static VectorOffset CreateSIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
@@ -681,7 +681,7 @@ public class PLGT
   public string VERSION { get; set; }
   public string DESCRIPTION { get; set; }
   public string TAGLINE { get; set; }
-  public pluginType PLUGIN_TYPE { get; set; }
+  public pluginCategory PLUGIN_TYPE { get; set; }
   public string PUBLISHER_NAME { get; set; }
   public string PUBLISHER_HANDLE { get; set; }
   public string PUBLISHER_URL { get; set; }
@@ -714,11 +714,11 @@ public class PLGT
   public string CHANGELOG_URL { get; set; }
   public string ICON_URL { get; set; }
   public string LICENSE { get; set; }
-  public paymentModel PAYMENT_MODEL { get; set; }
+  public purchaseTier PAYMENT_MODEL { get; set; }
   public uint PRICE_USD_CENTS { get; set; }
   public uint SUBSCRIPTION_PERIOD_DAYS { get; set; }
   public List<string> ACCEPTED_PAYMENT_METHODS { get; set; }
-  public listingStatus LISTING_STATUS { get; set; }
+  public publicationState LISTING_STATUS { get; set; }
   public List<byte> SIGNATURE { get; set; }
 
   public PLGT() {
@@ -727,7 +727,7 @@ public class PLGT
     this.VERSION = null;
     this.DESCRIPTION = null;
     this.TAGLINE = null;
-    this.PLUGIN_TYPE = pluginType.Sensor;
+    this.PLUGIN_TYPE = pluginCategory.Sensor;
     this.PUBLISHER_NAME = null;
     this.PUBLISHER_HANDLE = null;
     this.PUBLISHER_URL = null;
@@ -760,11 +760,11 @@ public class PLGT
     this.CHANGELOG_URL = null;
     this.ICON_URL = null;
     this.LICENSE = null;
-    this.PAYMENT_MODEL = paymentModel.Free;
+    this.PAYMENT_MODEL = purchaseTier.Free;
     this.PRICE_USD_CENTS = 0;
     this.SUBSCRIPTION_PERIOD_DAYS = 0;
     this.ACCEPTED_PAYMENT_METHODS = null;
-    this.LISTING_STATUS = listingStatus.Public;
+    this.LISTING_STATUS = publicationState.Public;
     this.SIGNATURE = null;
   }
   public static PLGT DeserializeFromBinary(byte[] fbBuffer) {
@@ -788,7 +788,7 @@ static public class PLGVerify
       && verifier.VerifyString(tablePos, 8 /*VERSION*/, true)
       && verifier.VerifyString(tablePos, 10 /*DESCRIPTION*/, false)
       && verifier.VerifyString(tablePos, 12 /*TAGLINE*/, false)
-      && verifier.VerifyField(tablePos, 14 /*PLUGIN_TYPE*/, 1 /*pluginType*/, 1, false)
+      && verifier.VerifyField(tablePos, 14 /*PLUGIN_TYPE*/, 1 /*pluginCategory*/, 1, false)
       && verifier.VerifyString(tablePos, 16 /*PUBLISHER_NAME*/, false)
       && verifier.VerifyString(tablePos, 18 /*PUBLISHER_HANDLE*/, false)
       && verifier.VerifyString(tablePos, 20 /*PUBLISHER_URL*/, false)
@@ -821,11 +821,11 @@ static public class PLGVerify
       && verifier.VerifyString(tablePos, 74 /*CHANGELOG_URL*/, false)
       && verifier.VerifyString(tablePos, 76 /*ICON_URL*/, false)
       && verifier.VerifyString(tablePos, 78 /*LICENSE*/, false)
-      && verifier.VerifyField(tablePos, 80 /*PAYMENT_MODEL*/, 1 /*paymentModel*/, 1, false)
+      && verifier.VerifyField(tablePos, 80 /*PAYMENT_MODEL*/, 1 /*purchaseTier*/, 1, false)
       && verifier.VerifyField(tablePos, 82 /*PRICE_USD_CENTS*/, 4 /*uint*/, 4, false)
       && verifier.VerifyField(tablePos, 84 /*SUBSCRIPTION_PERIOD_DAYS*/, 4 /*uint*/, 4, false)
       && verifier.VerifyVectorOfStrings(tablePos, 86 /*ACCEPTED_PAYMENT_METHODS*/, false)
-      && verifier.VerifyField(tablePos, 88 /*LISTING_STATUS*/, 1 /*listingStatus*/, 1, false)
+      && verifier.VerifyField(tablePos, 88 /*LISTING_STATUS*/, 1 /*publicationState*/, 1, false)
       && verifier.VerifyVectorOfData(tablePos, 90 /*SIGNATURE*/, 1 /*byte*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }

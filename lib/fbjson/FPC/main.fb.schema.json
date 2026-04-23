@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "shortestPathAlgorithm": {
+      "type": "string",
+      "enum": [
+        "AUTO",
+        "FRONTIER",
+        "DIJKSTRA"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "AUTO": {
+          "value": 0,
+          "description": "Let the runtime choose."
+        },
+        "FRONTIER": {
+          "value": 1,
+          "description": "Frontier-shrinking solver."
+        },
+        "DIJKSTRA": {
+          "value": 2,
+          "description": "Dijkstra's algorithm."
+        }
+      }
+    },
+    "weightedEdge": {
+      "type": "object",
+      "description": "Weighted directed edge (16 bytes, 8-byte aligned for zero-copy ingestion).",
+      "properties": {
+        "SRC": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "DST": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "WEIGHT": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FPCGraphDefinition": {
+      "type": "object",
+      "description": "Graph creation / reset request.",
+      "properties": {
+        "VERTEX_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of vertices in the graph.",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FPCWeightedEdgeList": {
+      "type": "object",
+      "description": "Bulk weighted-edge ingestion request.",
+      "properties": {
+        "VERTEX_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Optional vertex capacity for implicit graph creation.",
+          "x-flatbuffer-type": "uint"
+        },
+        "EDGES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/weightedEdge"
+          },
+          "description": "Weighted directed edge records.",
+          "x-flatbuffer-type": "[weightedEdge]"
+        },
+        "BUILD_GRAPH": {
+          "type": "boolean",
+          "description": "Build a CSR representation after ingest.",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FPCCSRGraph": {
+      "type": "object",
+      "description": "Pre-built CSR graph ingestion request.",
+      "properties": {
+        "VERTEX_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of vertices in the graph.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OFFSETS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "CSR row offsets (V + 1 entries).",
+          "x-flatbuffer-type": "[uint]"
+        },
+        "DESTINATIONS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "CSR destination indices.",
+          "x-flatbuffer-type": "[uint]"
+        },
+        "WEIGHTS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "CSR edge weights.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FPCShortestPathRequest": {
+      "type": "object",
+      "description": "Single-source shortest-path request.",
+      "properties": {
+        "SOURCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Source vertex index.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ALGORITHM": {
+          "$ref": "#/definitions/shortestPathAlgorithm",
+          "description": "Algorithm selection hint.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "AUTO": {
+              "value": 0,
+              "description": "Let the runtime choose."
+            },
+            "FRONTIER": {
+              "value": 1,
+              "description": "Frontier-shrinking solver."
+            },
+            "DIJKSTRA": {
+              "value": 2,
+              "description": "Dijkstra's algorithm."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "FPCShortestPathResult": {
+      "type": "object",
+      "description": "Single-source shortest-path result.",
+      "properties": {
+        "SOURCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Source vertex index.",
+          "x-flatbuffer-type": "uint"
+        },
+        "VERTEX_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of vertices in the solved graph.",
+          "x-flatbuffer-type": "uint"
+        },
+        "REACHABLE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of reachable vertices (finite distances).",
+          "x-flatbuffer-type": "uint"
+        },
+        "DISTANCES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Distance array (length == VERTEX_COUNT).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PREDECESSORS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "Predecessor array (length == VERTEX_COUNT; UINT32_MAX means none / source).",
+          "x-flatbuffer-type": "[uint]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FPCPathRequest": {
+      "type": "object",
+      "description": "Path reconstruction request.",
+      "properties": {
+        "TARGET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Target vertex index.",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FPCPathResult": {
+      "type": "object",
+      "description": "Path reconstruction result.",
+      "properties": {
+        "SOURCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Source vertex index from the latest SSSP solve.",
+          "x-flatbuffer-type": "uint"
+        },
+        "TARGET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Requested target vertex index.",
+          "x-flatbuffer-type": "uint"
+        },
+        "REACHABLE": {
+          "type": "boolean",
+          "description": "Whether a path exists from SOURCE to TARGET.",
+          "x-flatbuffer-type": "bool"
+        },
+        "DISTANCE": {
+          "type": "number",
+          "description": "Total distance from SOURCE to TARGET (Infinity if unreachable).",
+          "x-flatbuffer-type": "double"
+        },
+        "PATH": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "Vertex sequence from SOURCE to TARGET.",
+          "x-flatbuffer-type": "[uint]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FPC": {
+      "type": "object",
+      "description": "Fastest Path Compute \u2014 envelope message for weighted graph ingestion and\nsingle-source shortest path execution.",
+      "properties": {
+        "GRAPH_DEFINITION": {
+          "$ref": "#/definitions/FPCGraphDefinition",
+          "x-flatbuffer-type": "FPCGraphDefinition"
+        },
+        "EDGES": {
+          "$ref": "#/definitions/FPCWeightedEdgeList",
+          "x-flatbuffer-type": "FPCWeightedEdgeList"
+        },
+        "CSR": {
+          "$ref": "#/definitions/FPCCSRGraph",
+          "x-flatbuffer-type": "FPCCSRGraph"
+        },
+        "SHORTEST_PATH_REQUEST": {
+          "$ref": "#/definitions/FPCShortestPathRequest",
+          "x-flatbuffer-type": "FPCShortestPathRequest"
+        },
+        "SHORTEST_PATH_RESULT": {
+          "$ref": "#/definitions/FPCShortestPathResult",
+          "x-flatbuffer-type": "FPCShortestPathResult"
+        },
+        "PATH_REQUEST": {
+          "$ref": "#/definitions/FPCPathRequest",
+          "x-flatbuffer-type": "FPCPathRequest"
+        },
+        "PATH_RESULT": {
+          "$ref": "#/definitions/FPCPathResult",
+          "x-flatbuffer-type": "FPCPathResult"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/FPC",
+  "x-flatbuffer-root-type": "FPC",
+  "x-flatbuffer-file-identifier": "$FPC"
+}

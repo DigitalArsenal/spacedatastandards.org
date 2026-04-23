@@ -1,8 +1,8 @@
-// Hash: 6e871dedcfec3f3338be13dadcbef6d6e2488f5fc9e80890b034bd28221ba1d4
-// Version: 1.0.5
+// Hash: 2c9ca90ec923b2476832517dee715559c45dd198d3bdd4b5b3dfe0a4d05c4882
+// Version: 1.0.6
 // -----------------------------------END_HEADER
 /// Plugin type category
-enum pluginType : byte {
+enum pluginCategory : byte {
   /// Sensor simulation and analysis
   Sensor,
   /// Orbital propagation algorithms
@@ -24,7 +24,7 @@ enum pluginType : byte {
 }
 
 /// Storefront payment model for the plugin listing
-enum paymentModel : byte {
+enum purchaseTier : byte {
   /// No payment required
   Free,
   /// Single one-time purchase
@@ -34,7 +34,7 @@ enum paymentModel : byte {
 }
 
 /// Publication visibility for the plugin listing
-enum listingStatus : byte {
+enum publicationState : byte {
   /// Discoverable in public storefront listings
   Public,
   /// Addressable directly but hidden from public browse surfaces
@@ -88,7 +88,7 @@ table PLG {
   /// Short marketing summary shown in storefront listings
   TAGLINE: string;
   /// Type/category of the plugin
-  PLUGIN_TYPE: pluginType;
+  PLUGIN_TYPE: pluginCategory;
   /// Human-readable publisher or organization name
   PUBLISHER_NAME: string;
   /// Publisher handle or username
@@ -160,7 +160,7 @@ table PLG {
   /// License identifier (SPDX format)
   LICENSE: string;
   /// Commercial model used for storefront purchase flows
-  PAYMENT_MODEL: paymentModel = Free;
+  PAYMENT_MODEL: purchaseTier = Free;
   /// Price in USD cents for one-time purchase or subscription period
   PRICE_USD_CENTS: uint32;
   /// Subscription billing period length in days
@@ -168,7 +168,7 @@ table PLG {
   /// Accepted payment methods, e.g. "stripe", "sol", "usdc"
   ACCEPTED_PAYMENT_METHODS: [string];
   /// Storefront publication state for this manifest version
-  LISTING_STATUS: listingStatus = Public;
+  LISTING_STATUS: publicationState = Public;
 
   /// Ed25519 signature from provider over manifest
   SIGNATURE: [ubyte];

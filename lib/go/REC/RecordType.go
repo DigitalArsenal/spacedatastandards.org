@@ -24,131 +24,142 @@ const (
 	RecordTypeBMC  RecordType = 14
 	RecordTypeBOV  RecordType = 15
 	RecordTypeBUS  RecordType = 16
-	RecordTypeCAT  RecordType = 17
-	RecordTypeCDM  RecordType = 18
-	RecordTypeCFP  RecordType = 19
-	RecordTypeCHN  RecordType = 20
-	RecordTypeCLT  RecordType = 21
-	RecordTypeCMS  RecordType = 22
-	RecordTypeCOM  RecordType = 23
-	RecordTypeCOT  RecordType = 24
-	RecordTypeCRD  RecordType = 25
-	RecordTypeCRM  RecordType = 26
-	RecordTypeCSM  RecordType = 27
-	RecordTypeCTR  RecordType = 28
-	RecordTypeCZM  RecordType = 29
-	RecordTypeDFH  RecordType = 30
-	RecordTypeDMG  RecordType = 31
-	RecordTypeDOA  RecordType = 32
-	RecordTypeEME  RecordType = 33
-	RecordTypeENC  RecordType = 34
-	RecordTypeENV  RecordType = 35
-	RecordTypeEOO  RecordType = 36
-	RecordTypeEOP  RecordType = 37
-	RecordTypeEPM  RecordType = 38
-	RecordTypeEWR  RecordType = 39
-	RecordTypeFCS  RecordType = 40
-	RecordTypeGDI  RecordType = 41
-	RecordTypeGEO  RecordType = 42
-	RecordTypeGJN  RecordType = 43
-	RecordTypeGNO  RecordType = 44
-	RecordTypeGPX  RecordType = 45
-	RecordTypeGRV  RecordType = 46
-	RecordTypeGVH  RecordType = 47
-	RecordTypeHEL  RecordType = 48
-	RecordTypeHYP  RecordType = 49
-	RecordTypeIDM  RecordType = 50
-	RecordTypeION  RecordType = 51
-	RecordTypeIRO  RecordType = 52
-	RecordTypeKMF  RecordType = 53
-	RecordTypeKML  RecordType = 54
-	RecordTypeKRF  RecordType = 55
-	RecordTypeLCC  RecordType = 56
-	RecordTypeLCF  RecordType = 57
-	RecordTypeLCH  RecordType = 58
-	RecordTypeLDM  RecordType = 59
-	RecordTypeLGR  RecordType = 60
-	RecordTypeLKS  RecordType = 61
-	RecordTypeLMR  RecordType = 62
-	RecordTypeLND  RecordType = 63
-	RecordTypeLNE  RecordType = 64
-	RecordTypeLPF  RecordType = 65
-	RecordTypeLWK  RecordType = 66
-	RecordTypeMBL  RecordType = 67
-	RecordTypeMET  RecordType = 68
-	RecordTypeMFE  RecordType = 69
-	RecordTypeMNF  RecordType = 70
-	RecordTypeMNV  RecordType = 71
-	RecordTypeMPE  RecordType = 72
-	RecordTypeMSL  RecordType = 73
-	RecordTypeMST  RecordType = 74
-	RecordTypeMTI  RecordType = 75
-	RecordTypeNAV  RecordType = 76
-	RecordTypeOBD  RecordType = 77
-	RecordTypeOBT  RecordType = 78
-	RecordTypeOCM  RecordType = 79
-	RecordTypeOEM  RecordType = 80
-	RecordTypeOMM  RecordType = 81
-	RecordTypeOOA  RecordType = 82
-	RecordTypeOOB  RecordType = 83
-	RecordTypeOOD  RecordType = 84
-	RecordTypeOOE  RecordType = 85
-	RecordTypeOOI  RecordType = 86
-	RecordTypeOOL  RecordType = 87
-	RecordTypeOON  RecordType = 88
-	RecordTypeOOS  RecordType = 89
-	RecordTypeOOT  RecordType = 90
-	RecordTypeOPM  RecordType = 91
-	RecordTypeOSM  RecordType = 92
-	RecordTypePCF  RecordType = 93
-	RecordTypePHY  RecordType = 94
-	RecordTypePLD  RecordType = 95
-	RecordTypePLG  RecordType = 96
-	RecordTypePLK  RecordType = 97
-	RecordTypePNM  RecordType = 98
-	RecordTypePPE  RecordType = 99
-	RecordTypePRG  RecordType = 100
-	RecordTypePUR  RecordType = 101
-	RecordTypeRAF  RecordType = 102
-	RecordTypeRCF  RecordType = 103
-	RecordTypeRDM  RecordType = 104
-	RecordTypeRDO  RecordType = 105
-	RecordTypeREV  RecordType = 106
-	RecordTypeRFB  RecordType = 107
-	RecordTypeRFE  RecordType = 108
-	RecordTypeRFM  RecordType = 109
-	RecordTypeRFO  RecordType = 110
-	RecordTypeROC  RecordType = 111
-	RecordTypeSAR  RecordType = 112
-	RecordTypeSCM  RecordType = 113
-	RecordTypeSDL  RecordType = 114
-	RecordTypeSEN  RecordType = 115
-	RecordTypeSEO  RecordType = 116
-	RecordTypeSEV  RecordType = 117
-	RecordTypeSIT  RecordType = 118
-	RecordTypeSKI  RecordType = 119
-	RecordTypeSNR  RecordType = 120
-	RecordTypeSOI  RecordType = 121
-	RecordTypeSON  RecordType = 122
-	RecordTypeSPP  RecordType = 123
-	RecordTypeSPW  RecordType = 124
-	RecordTypeSTF  RecordType = 125
-	RecordTypeSTR  RecordType = 126
-	RecordTypeSTV  RecordType = 127
-	RecordTypeSWR  RecordType = 128
-	RecordTypeTCF  RecordType = 129
-	RecordTypeTDM  RecordType = 130
-	RecordTypeTIM  RecordType = 131
-	RecordTypeTKG  RecordType = 132
-	RecordTypeTME  RecordType = 133
-	RecordTypeTMF  RecordType = 134
-	RecordTypeTPN  RecordType = 135
-	RecordTypeTRK  RecordType = 136
-	RecordTypeTRN  RecordType = 137
-	RecordTypeVCM  RecordType = 138
-	RecordTypeWPN  RecordType = 139
-	RecordTypeWTH  RecordType = 140
-	RecordTypeXTC  RecordType = 141
+	RecordTypeCAQ  RecordType = 17
+	RecordTypeCAT  RecordType = 18
+	RecordTypeCDM  RecordType = 19
+	RecordTypeCFP  RecordType = 20
+	RecordTypeCHN  RecordType = 21
+	RecordTypeCLT  RecordType = 22
+	RecordTypeCMS  RecordType = 23
+	RecordTypeCOM  RecordType = 24
+	RecordTypeCOT  RecordType = 25
+	RecordTypeCRD  RecordType = 26
+	RecordTypeCRM  RecordType = 27
+	RecordTypeCSM  RecordType = 28
+	RecordTypeCTR  RecordType = 29
+	RecordTypeCZM  RecordType = 30
+	RecordTypeDFH  RecordType = 31
+	RecordTypeDMG  RecordType = 32
+	RecordTypeDOA  RecordType = 33
+	RecordTypeEME  RecordType = 34
+	RecordTypeENC  RecordType = 35
+	RecordTypeENV  RecordType = 36
+	RecordTypeEOO  RecordType = 37
+	RecordTypeEOP  RecordType = 38
+	RecordTypeEPM  RecordType = 39
+	RecordTypeESL  RecordType = 40
+	RecordTypeETM  RecordType = 41
+	RecordTypeEWR  RecordType = 42
+	RecordTypeFCS  RecordType = 43
+	RecordTypeFPC  RecordType = 44
+	RecordTypeGDI  RecordType = 45
+	RecordTypeGEO  RecordType = 46
+	RecordTypeGJN  RecordType = 47
+	RecordTypeGNO  RecordType = 48
+	RecordTypeGPX  RecordType = 49
+	RecordTypeGRV  RecordType = 50
+	RecordTypeGVH  RecordType = 51
+	RecordTypeHEL  RecordType = 52
+	RecordTypeHYP  RecordType = 53
+	RecordTypeIDM  RecordType = 54
+	RecordTypeION  RecordType = 55
+	RecordTypeIRO  RecordType = 56
+	RecordTypeKMF  RecordType = 57
+	RecordTypeKML  RecordType = 58
+	RecordTypeKRF  RecordType = 59
+	RecordTypeLCC  RecordType = 60
+	RecordTypeLCF  RecordType = 61
+	RecordTypeLCH  RecordType = 62
+	RecordTypeLDM  RecordType = 63
+	RecordTypeLGR  RecordType = 64
+	RecordTypeLKS  RecordType = 65
+	RecordTypeLMR  RecordType = 66
+	RecordTypeLND  RecordType = 67
+	RecordTypeLNE  RecordType = 68
+	RecordTypeLPF  RecordType = 69
+	RecordTypeLWK  RecordType = 70
+	RecordTypeMBL  RecordType = 71
+	RecordTypeMET  RecordType = 72
+	RecordTypeMFE  RecordType = 73
+	RecordTypeMNF  RecordType = 74
+	RecordTypeMNV  RecordType = 75
+	RecordTypeMPE  RecordType = 76
+	RecordTypeMSL  RecordType = 77
+	RecordTypeMST  RecordType = 78
+	RecordTypeMTI  RecordType = 79
+	RecordTypeNAV  RecordType = 80
+	RecordTypeOBD  RecordType = 81
+	RecordTypeOBT  RecordType = 82
+	RecordTypeOCM  RecordType = 83
+	RecordTypeOEM  RecordType = 84
+	RecordTypeOMM  RecordType = 85
+	RecordTypeOOA  RecordType = 86
+	RecordTypeOOB  RecordType = 87
+	RecordTypeOOD  RecordType = 88
+	RecordTypeOOE  RecordType = 89
+	RecordTypeOOI  RecordType = 90
+	RecordTypeOOL  RecordType = 91
+	RecordTypeOON  RecordType = 92
+	RecordTypeOOS  RecordType = 93
+	RecordTypeOOT  RecordType = 94
+	RecordTypeOPM  RecordType = 95
+	RecordTypeOSM  RecordType = 96
+	RecordTypePCF  RecordType = 97
+	RecordTypePHY  RecordType = 98
+	RecordTypePLD  RecordType = 99
+	RecordTypePLG  RecordType = 100
+	RecordTypePLK  RecordType = 101
+	RecordTypePNM  RecordType = 102
+	RecordTypePPE  RecordType = 103
+	RecordTypePRG  RecordType = 104
+	RecordTypePRW  RecordType = 105
+	RecordTypePUR  RecordType = 106
+	RecordTypeRAF  RecordType = 107
+	RecordTypeRCF  RecordType = 108
+	RecordTypeRDM  RecordType = 109
+	RecordTypeRDO  RecordType = 110
+	RecordTypeREV  RecordType = 111
+	RecordTypeRFB  RecordType = 112
+	RecordTypeRFE  RecordType = 113
+	RecordTypeRFM  RecordType = 114
+	RecordTypeRFO  RecordType = 115
+	RecordTypeROC  RecordType = 116
+	RecordTypeSAR  RecordType = 117
+	RecordTypeSCM  RecordType = 118
+	RecordTypeSDF  RecordType = 119
+	RecordTypeSDL  RecordType = 120
+	RecordTypeSDR  RecordType = 121
+	RecordTypeSEN  RecordType = 122
+	RecordTypeSEO  RecordType = 123
+	RecordTypeSEV  RecordType = 124
+	RecordTypeSHW  RecordType = 125
+	RecordTypeSIT  RecordType = 126
+	RecordTypeSKI  RecordType = 127
+	RecordTypeSNR  RecordType = 128
+	RecordTypeSNW  RecordType = 129
+	RecordTypeSOI  RecordType = 130
+	RecordTypeSON  RecordType = 131
+	RecordTypeSPP  RecordType = 132
+	RecordTypeSPW  RecordType = 133
+	RecordTypeSRI  RecordType = 134
+	RecordTypeSTF  RecordType = 135
+	RecordTypeSTR  RecordType = 136
+	RecordTypeSTV  RecordType = 137
+	RecordTypeSWR  RecordType = 138
+	RecordTypeTAB  RecordType = 139
+	RecordTypeTCF  RecordType = 140
+	RecordTypeTDM  RecordType = 141
+	RecordTypeTIM  RecordType = 142
+	RecordTypeTKG  RecordType = 143
+	RecordTypeTME  RecordType = 144
+	RecordTypeTMF  RecordType = 145
+	RecordTypeTPN  RecordType = 146
+	RecordTypeTRK  RecordType = 147
+	RecordTypeTRN  RecordType = 148
+	RecordTypeVCM  RecordType = 149
+	RecordTypeWPN  RecordType = 150
+	RecordTypeWTH  RecordType = 151
+	RecordTypeXTC  RecordType = 152
 )
 
 var EnumNamesRecordType = map[RecordType]string{
@@ -169,6 +180,7 @@ var EnumNamesRecordType = map[RecordType]string{
 	RecordTypeBMC:  "BMC",
 	RecordTypeBOV:  "BOV",
 	RecordTypeBUS:  "BUS",
+	RecordTypeCAQ:  "CAQ",
 	RecordTypeCAT:  "CAT",
 	RecordTypeCDM:  "CDM",
 	RecordTypeCFP:  "CFP",
@@ -191,8 +203,11 @@ var EnumNamesRecordType = map[RecordType]string{
 	RecordTypeEOO:  "EOO",
 	RecordTypeEOP:  "EOP",
 	RecordTypeEPM:  "EPM",
+	RecordTypeESL:  "ESL",
+	RecordTypeETM:  "ETM",
 	RecordTypeEWR:  "EWR",
 	RecordTypeFCS:  "FCS",
+	RecordTypeFPC:  "FPC",
 	RecordTypeGDI:  "GDI",
 	RecordTypeGEO:  "GEO",
 	RecordTypeGJN:  "GJN",
@@ -253,6 +268,7 @@ var EnumNamesRecordType = map[RecordType]string{
 	RecordTypePNM:  "PNM",
 	RecordTypePPE:  "PPE",
 	RecordTypePRG:  "PRG",
+	RecordTypePRW:  "PRW",
 	RecordTypePUR:  "PUR",
 	RecordTypeRAF:  "RAF",
 	RecordTypeRCF:  "RCF",
@@ -266,21 +282,27 @@ var EnumNamesRecordType = map[RecordType]string{
 	RecordTypeROC:  "ROC",
 	RecordTypeSAR:  "SAR",
 	RecordTypeSCM:  "SCM",
+	RecordTypeSDF:  "SDF",
 	RecordTypeSDL:  "SDL",
+	RecordTypeSDR:  "SDR",
 	RecordTypeSEN:  "SEN",
 	RecordTypeSEO:  "SEO",
 	RecordTypeSEV:  "SEV",
+	RecordTypeSHW:  "SHW",
 	RecordTypeSIT:  "SIT",
 	RecordTypeSKI:  "SKI",
 	RecordTypeSNR:  "SNR",
+	RecordTypeSNW:  "SNW",
 	RecordTypeSOI:  "SOI",
 	RecordTypeSON:  "SON",
 	RecordTypeSPP:  "SPP",
 	RecordTypeSPW:  "SPW",
+	RecordTypeSRI:  "SRI",
 	RecordTypeSTF:  "STF",
 	RecordTypeSTR:  "STR",
 	RecordTypeSTV:  "STV",
 	RecordTypeSWR:  "SWR",
+	RecordTypeTAB:  "TAB",
 	RecordTypeTCF:  "TCF",
 	RecordTypeTDM:  "TDM",
 	RecordTypeTIM:  "TIM",
@@ -314,6 +336,7 @@ var EnumValuesRecordType = map[string]RecordType{
 	"BMC":  RecordTypeBMC,
 	"BOV":  RecordTypeBOV,
 	"BUS":  RecordTypeBUS,
+	"CAQ":  RecordTypeCAQ,
 	"CAT":  RecordTypeCAT,
 	"CDM":  RecordTypeCDM,
 	"CFP":  RecordTypeCFP,
@@ -336,8 +359,11 @@ var EnumValuesRecordType = map[string]RecordType{
 	"EOO":  RecordTypeEOO,
 	"EOP":  RecordTypeEOP,
 	"EPM":  RecordTypeEPM,
+	"ESL":  RecordTypeESL,
+	"ETM":  RecordTypeETM,
 	"EWR":  RecordTypeEWR,
 	"FCS":  RecordTypeFCS,
+	"FPC":  RecordTypeFPC,
 	"GDI":  RecordTypeGDI,
 	"GEO":  RecordTypeGEO,
 	"GJN":  RecordTypeGJN,
@@ -398,6 +424,7 @@ var EnumValuesRecordType = map[string]RecordType{
 	"PNM":  RecordTypePNM,
 	"PPE":  RecordTypePPE,
 	"PRG":  RecordTypePRG,
+	"PRW":  RecordTypePRW,
 	"PUR":  RecordTypePUR,
 	"RAF":  RecordTypeRAF,
 	"RCF":  RecordTypeRCF,
@@ -411,21 +438,27 @@ var EnumValuesRecordType = map[string]RecordType{
 	"ROC":  RecordTypeROC,
 	"SAR":  RecordTypeSAR,
 	"SCM":  RecordTypeSCM,
+	"SDF":  RecordTypeSDF,
 	"SDL":  RecordTypeSDL,
+	"SDR":  RecordTypeSDR,
 	"SEN":  RecordTypeSEN,
 	"SEO":  RecordTypeSEO,
 	"SEV":  RecordTypeSEV,
+	"SHW":  RecordTypeSHW,
 	"SIT":  RecordTypeSIT,
 	"SKI":  RecordTypeSKI,
 	"SNR":  RecordTypeSNR,
+	"SNW":  RecordTypeSNW,
 	"SOI":  RecordTypeSOI,
 	"SON":  RecordTypeSON,
 	"SPP":  RecordTypeSPP,
 	"SPW":  RecordTypeSPW,
+	"SRI":  RecordTypeSRI,
 	"STF":  RecordTypeSTF,
 	"STR":  RecordTypeSTR,
 	"STV":  RecordTypeSTV,
 	"SWR":  RecordTypeSWR,
+	"TAB":  RecordTypeTAB,
 	"TCF":  RecordTypeTCF,
 	"TDM":  RecordTypeTDM,
 	"TIM":  RecordTypeTIM,

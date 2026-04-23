@@ -1,0 +1,30 @@
+/**
+ * Error codes surfaced by runtime propagation calls.
+ */
+export declare enum propagatorErrorCode {
+    /**
+     * No error.
+     */
+    OK = 0,
+    /**
+     * Unknown / unspecified error.
+     */
+    UNKNOWN = 1,
+    /**
+     * One or more entity handles not found.
+     */
+    UNKNOWN_ENTITY = 2,
+    /**
+     * Invalid epoch (NaN, out of range, before earliest init epoch, etc.).
+     */
+    INVALID_EPOCH = 3,
+    /**
+     * Output buffer too small for the requested count.
+     */
+    OUTPUT_BUFFER_OVERFLOW = 4,
+    /**
+     * Propagator not initialized.
+     */
+    NOT_INITIALIZED = 5
+}
+//# sourceMappingURL=propagatorErrorCode.d.ts.map

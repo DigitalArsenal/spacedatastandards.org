@@ -129,13 +129,13 @@ describe('Licensing module delivery schemas', () => {
             assert.match(generatedGo, new RegExp(`\\b${field}\\b`), `PLG Go bindings missing ${field}`);
         }
 
-        for (const enumName of ['paymentModel', 'listingStatus']) {
+        for (const enumName of ['purchaseTier', 'publicationState']) {
             assert.match(source, new RegExp(`enum\\s+${enumName}\\s*:`), `PLG missing enum ${enumName}`);
         }
 
-        await fs.access(path.join(repoRoot, 'lib', 'ts', 'PLG', 'paymentModel.ts'));
-        await fs.access(path.join(repoRoot, 'lib', 'ts', 'PLG', 'listingStatus.ts'));
-        await fs.access(path.join(repoRoot, 'lib', 'go', 'PLG', 'paymentModel.go'));
-        await fs.access(path.join(repoRoot, 'lib', 'go', 'PLG', 'listingStatus.go'));
+        await fs.access(path.join(repoRoot, 'lib', 'ts', 'PLG', 'purchaseTier.ts'));
+        await fs.access(path.join(repoRoot, 'lib', 'ts', 'PLG', 'publicationState.ts'));
+        await fs.access(path.join(repoRoot, 'lib', 'go', 'PLG', 'purchaseTier.go'));
+        await fs.access(path.join(repoRoot, 'lib', 'go', 'PLG', 'publicationState.go'));
     });
 });

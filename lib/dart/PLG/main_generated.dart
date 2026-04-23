@@ -7,7 +7,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 ///  Plugin type category
-enum pluginType {
+enum pluginCategory {
   Sensor(0),
   Propagator(1),
   Renderer(2),
@@ -19,114 +19,114 @@ enum pluginType {
   Shader(8);
 
   final int value;
-  const pluginType(this.value);
+  const pluginCategory(this.value);
 
-  factory pluginType.fromValue(int value) {
+  factory pluginCategory.fromValue(int value) {
     switch (value) {
-      case 0: return pluginType.Sensor;
-      case 1: return pluginType.Propagator;
-      case 2: return pluginType.Renderer;
-      case 3: return pluginType.Analysis;
-      case 4: return pluginType.DataSource;
-      case 5: return pluginType.EW;
-      case 6: return pluginType.Comms;
-      case 7: return pluginType.Physics;
-      case 8: return pluginType.Shader;
+      case 0: return pluginCategory.Sensor;
+      case 1: return pluginCategory.Propagator;
+      case 2: return pluginCategory.Renderer;
+      case 3: return pluginCategory.Analysis;
+      case 4: return pluginCategory.DataSource;
+      case 5: return pluginCategory.EW;
+      case 6: return pluginCategory.Comms;
+      case 7: return pluginCategory.Physics;
+      case 8: return pluginCategory.Shader;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static pluginType? _createOrNull(int? value) =>
-      value == null ? null : pluginType.fromValue(value);
+  static pluginCategory? _createOrNull(int? value) =>
+      value == null ? null : pluginCategory.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 8;
-  static const fb.Reader<pluginType> reader = _pluginTypeReader();
+  static const fb.Reader<pluginCategory> reader = _pluginCategoryReader();
 }
 
-class _pluginTypeReader extends fb.Reader<pluginType> {
-  const _pluginTypeReader();
+class _pluginCategoryReader extends fb.Reader<pluginCategory> {
+  const _pluginCategoryReader();
 
   @override
   int get size => 1;
 
   @override
-  pluginType read(fb.BufferContext bc, int offset) =>
-      pluginType.fromValue(const fb.Int8Reader().read(bc, offset));
+  pluginCategory read(fb.BufferContext bc, int offset) =>
+      pluginCategory.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Storefront payment model for the plugin listing
-enum paymentModel {
+enum purchaseTier {
   Free(0),
   OneTime(1),
   Subscription(2);
 
   final int value;
-  const paymentModel(this.value);
+  const purchaseTier(this.value);
 
-  factory paymentModel.fromValue(int value) {
+  factory purchaseTier.fromValue(int value) {
     switch (value) {
-      case 0: return paymentModel.Free;
-      case 1: return paymentModel.OneTime;
-      case 2: return paymentModel.Subscription;
+      case 0: return purchaseTier.Free;
+      case 1: return purchaseTier.OneTime;
+      case 2: return purchaseTier.Subscription;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static paymentModel? _createOrNull(int? value) =>
-      value == null ? null : paymentModel.fromValue(value);
+  static purchaseTier? _createOrNull(int? value) =>
+      value == null ? null : purchaseTier.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 2;
-  static const fb.Reader<paymentModel> reader = _paymentModelReader();
+  static const fb.Reader<purchaseTier> reader = _purchaseTierReader();
 }
 
-class _paymentModelReader extends fb.Reader<paymentModel> {
-  const _paymentModelReader();
+class _purchaseTierReader extends fb.Reader<purchaseTier> {
+  const _purchaseTierReader();
 
   @override
   int get size => 1;
 
   @override
-  paymentModel read(fb.BufferContext bc, int offset) =>
-      paymentModel.fromValue(const fb.Int8Reader().read(bc, offset));
+  purchaseTier read(fb.BufferContext bc, int offset) =>
+      purchaseTier.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Publication visibility for the plugin listing
-enum listingStatus {
+enum publicationState {
   Public(0),
   Unlisted(1),
   Retired(2);
 
   final int value;
-  const listingStatus(this.value);
+  const publicationState(this.value);
 
-  factory listingStatus.fromValue(int value) {
+  factory publicationState.fromValue(int value) {
     switch (value) {
-      case 0: return listingStatus.Public;
-      case 1: return listingStatus.Unlisted;
-      case 2: return listingStatus.Retired;
+      case 0: return publicationState.Public;
+      case 1: return publicationState.Unlisted;
+      case 2: return publicationState.Retired;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static listingStatus? _createOrNull(int? value) =>
-      value == null ? null : listingStatus.fromValue(value);
+  static publicationState? _createOrNull(int? value) =>
+      value == null ? null : publicationState.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 2;
-  static const fb.Reader<listingStatus> reader = _listingStatusReader();
+  static const fb.Reader<publicationState> reader = _publicationStateReader();
 }
 
-class _listingStatusReader extends fb.Reader<listingStatus> {
-  const _listingStatusReader();
+class _publicationStateReader extends fb.Reader<publicationState> {
+  const _publicationStateReader();
 
   @override
   int get size => 1;
 
   @override
-  listingStatus read(fb.BufferContext bc, int offset) =>
-      listingStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+  publicationState read(fb.BufferContext bc, int offset) =>
+      publicationState.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Plugin capability declaration
@@ -471,8 +471,8 @@ class PLG {
   ///  Short marketing summary shown in storefront listings
   String? get TAGLINE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Type/category of the plugin
-  pluginType get PLUGIN_TYPE => pluginType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
-  pluginType get pluginType => PLUGIN_TYPE;
+  pluginCategory get PLUGIN_TYPE => pluginCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  pluginCategory get pluginType => PLUGIN_TYPE;
   ///  Human-readable publisher or organization name
   String? get PUBLISHER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
   String? get publisherName => PUBLISHER_NAME;
@@ -564,8 +564,8 @@ class PLG {
   ///  License identifier (SPDX format)
   String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
   ///  Commercial model used for storefront purchase flows
-  paymentModel get PAYMENT_MODEL => paymentModel.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 80, 0));
-  paymentModel get paymentModel => PAYMENT_MODEL;
+  purchaseTier get PAYMENT_MODEL => purchaseTier.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 80, 0));
+  purchaseTier get paymentModel => PAYMENT_MODEL;
   ///  Price in USD cents for one-time purchase or subscription period
   int get PRICE_USD_CENTS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 82, 0);
   int get priceUsdCents => PRICE_USD_CENTS;
@@ -576,8 +576,8 @@ class PLG {
   List<String>? get ACCEPTED_PAYMENT_METHODS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 86);
   List<String>? get acceptedPaymentMethods => ACCEPTED_PAYMENT_METHODS;
   ///  Storefront publication state for this manifest version
-  listingStatus get LISTING_STATUS => listingStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 88, 0));
-  listingStatus get listingStatus => LISTING_STATUS;
+  publicationState get LISTING_STATUS => publicationState.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 88, 0));
+  publicationState get listingStatus => LISTING_STATUS;
   ///  Ed25519 signature from provider over manifest
   List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 90);
 
@@ -624,7 +624,7 @@ class PLGBuilder {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addPluginType(pluginType? PLUGIN_TYPE) {
+  int addPluginType(pluginCategory? PLUGIN_TYPE) {
     fbBuilder.addInt8(5, PLUGIN_TYPE?.value);
     return fbBuilder.offset;
   }
@@ -756,7 +756,7 @@ class PLGBuilder {
     fbBuilder.addOffset(37, offset);
     return fbBuilder.offset;
   }
-  int addPaymentModel(paymentModel? PAYMENT_MODEL) {
+  int addPaymentModel(purchaseTier? PAYMENT_MODEL) {
     fbBuilder.addInt8(38, PAYMENT_MODEL?.value);
     return fbBuilder.offset;
   }
@@ -772,7 +772,7 @@ class PLGBuilder {
     fbBuilder.addOffset(41, offset);
     return fbBuilder.offset;
   }
-  int addListingStatus(listingStatus? LISTING_STATUS) {
+  int addListingStatus(publicationState? LISTING_STATUS) {
     fbBuilder.addInt8(42, LISTING_STATUS?.value);
     return fbBuilder.offset;
   }
@@ -792,7 +792,7 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
   final String? _VERSION;
   final String? _DESCRIPTION;
   final String? _TAGLINE;
-  final pluginType? _PLUGIN_TYPE;
+  final pluginCategory? _PLUGIN_TYPE;
   final String? _PUBLISHER_NAME;
   final String? _PUBLISHER_HANDLE;
   final String? _PUBLISHER_URL;
@@ -825,11 +825,11 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
   final String? _CHANGELOG_URL;
   final String? _ICON_URL;
   final String? _LICENSE;
-  final paymentModel? _PAYMENT_MODEL;
+  final purchaseTier? _PAYMENT_MODEL;
   final int? _PRICE_USD_CENTS;
   final int? _SUBSCRIPTION_PERIOD_DAYS;
   final List<String>? _ACCEPTED_PAYMENT_METHODS;
-  final listingStatus? _LISTING_STATUS;
+  final publicationState? _LISTING_STATUS;
   final List<int>? _SIGNATURE;
 
   PLGObjectBuilder({
@@ -839,8 +839,8 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
     String? VERSION,
     String? DESCRIPTION,
     String? TAGLINE,
-    pluginType? PLUGIN_TYPE,
-    pluginType? pluginType,
+    pluginCategory? PLUGIN_TYPE,
+    pluginCategory? pluginType,
     String? PUBLISHER_NAME,
     String? publisherName,
     String? PUBLISHER_HANDLE,
@@ -899,16 +899,16 @@ class PLGObjectBuilder extends fb.ObjectBuilder {
     String? ICON_URL,
     String? iconUrl,
     String? LICENSE,
-    paymentModel? PAYMENT_MODEL,
-    paymentModel? paymentModel,
+    purchaseTier? PAYMENT_MODEL,
+    purchaseTier? paymentModel,
     int? PRICE_USD_CENTS,
     int? priceUsdCents,
     int? SUBSCRIPTION_PERIOD_DAYS,
     int? subscriptionPeriodDays,
     List<String>? ACCEPTED_PAYMENT_METHODS,
     List<String>? acceptedPaymentMethods,
-    listingStatus? LISTING_STATUS,
-    listingStatus? listingStatus,
+    publicationState? LISTING_STATUS,
+    publicationState? listingStatus,
     List<int>? SIGNATURE,
   })
       : _PLUGIN_ID = pluginId ?? PLUGIN_ID,

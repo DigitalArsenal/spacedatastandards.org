@@ -125,24 +125,24 @@ func (rcv *PLG) Tagline() []byte {
 
 /// Short marketing summary shown in storefront listings
 /// Type/category of the plugin
-func (rcv *PLG) PLUGIN_TYPE() pluginType {
+func (rcv *PLG) PLUGIN_TYPE() pluginCategory {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return pluginType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return pluginCategory(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *PLG) PluginType() pluginType {
+func (rcv *PLG) PluginType() pluginCategory {
 	return rcv.PLUGIN_TYPE()
 }
 
 /// Type/category of the plugin
-func (rcv *PLG) MutatePLUGIN_TYPE(n pluginType) bool {
+func (rcv *PLG) MutatePLUGIN_TYPE(n pluginCategory) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
 }
 
-func (rcv *PLG) MutatePluginType(n pluginType) bool {
+func (rcv *PLG) MutatePluginType(n pluginCategory) bool {
 	return rcv.MutatePLUGIN_TYPE(n)
 }
 
@@ -862,24 +862,24 @@ func (rcv *PLG) License() []byte {
 
 /// License identifier (SPDX format)
 /// Commercial model used for storefront purchase flows
-func (rcv *PLG) PAYMENT_MODEL() paymentModel {
+func (rcv *PLG) PAYMENT_MODEL() purchaseTier {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
-		return paymentModel(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return purchaseTier(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *PLG) PaymentModel() paymentModel {
+func (rcv *PLG) PaymentModel() purchaseTier {
 	return rcv.PAYMENT_MODEL()
 }
 
 /// Commercial model used for storefront purchase flows
-func (rcv *PLG) MutatePAYMENT_MODEL(n paymentModel) bool {
+func (rcv *PLG) MutatePAYMENT_MODEL(n purchaseTier) bool {
 	return rcv._tab.MutateInt8Slot(80, int8(n))
 }
 
-func (rcv *PLG) MutatePaymentModel(n paymentModel) bool {
+func (rcv *PLG) MutatePaymentModel(n purchaseTier) bool {
 	return rcv.MutatePAYMENT_MODEL(n)
 }
 
@@ -955,24 +955,24 @@ func (rcv *PLG) AcceptedPaymentMethodsLength() int {
 
 /// Accepted payment methods, e.g. "stripe", "sol", "usdc"
 /// Storefront publication state for this manifest version
-func (rcv *PLG) LISTING_STATUS() listingStatus {
+func (rcv *PLG) LISTING_STATUS() publicationState {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
-		return listingStatus(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return publicationState(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *PLG) ListingStatus() listingStatus {
+func (rcv *PLG) ListingStatus() publicationState {
 	return rcv.LISTING_STATUS()
 }
 
 /// Storefront publication state for this manifest version
-func (rcv *PLG) MutateLISTING_STATUS(n listingStatus) bool {
+func (rcv *PLG) MutateLISTING_STATUS(n publicationState) bool {
 	return rcv._tab.MutateInt8Slot(88, int8(n))
 }
 
-func (rcv *PLG) MutateListingStatus(n listingStatus) bool {
+func (rcv *PLG) MutateListingStatus(n publicationState) bool {
 	return rcv.MutateLISTING_STATUS(n)
 }
 
@@ -1061,10 +1061,10 @@ func PLGAddTAGLINE(builder *flatbuffers.Builder, TAGLINE flatbuffers.UOffsetT) {
 func PLGAddTagline(builder *flatbuffers.Builder, TAGLINE flatbuffers.UOffsetT) {
 	PLGAddTAGLINE(builder, TAGLINE)
 }
-func PLGAddPLUGIN_TYPE(builder *flatbuffers.Builder, PLUGIN_TYPE pluginType) {
+func PLGAddPLUGIN_TYPE(builder *flatbuffers.Builder, PLUGIN_TYPE pluginCategory) {
 	builder.PrependInt8Slot(5, int8(PLUGIN_TYPE), 0)
 }
-func PLGAddPluginType(builder *flatbuffers.Builder, PLUGIN_TYPE pluginType) {
+func PLGAddPluginType(builder *flatbuffers.Builder, PLUGIN_TYPE pluginCategory) {
 	PLGAddPLUGIN_TYPE(builder, PLUGIN_TYPE)
 }
 func PLGAddPUBLISHER_NAME(builder *flatbuffers.Builder, PUBLISHER_NAME flatbuffers.UOffsetT) {
@@ -1325,10 +1325,10 @@ func PLGAddLICENSE(builder *flatbuffers.Builder, LICENSE flatbuffers.UOffsetT) {
 func PLGAddLicense(builder *flatbuffers.Builder, LICENSE flatbuffers.UOffsetT) {
 	PLGAddLICENSE(builder, LICENSE)
 }
-func PLGAddPAYMENT_MODEL(builder *flatbuffers.Builder, PAYMENT_MODEL paymentModel) {
+func PLGAddPAYMENT_MODEL(builder *flatbuffers.Builder, PAYMENT_MODEL purchaseTier) {
 	builder.PrependInt8Slot(38, int8(PAYMENT_MODEL), 0)
 }
-func PLGAddPaymentModel(builder *flatbuffers.Builder, PAYMENT_MODEL paymentModel) {
+func PLGAddPaymentModel(builder *flatbuffers.Builder, PAYMENT_MODEL purchaseTier) {
 	PLGAddPAYMENT_MODEL(builder, PAYMENT_MODEL)
 }
 func PLGAddPRICE_USD_CENTS(builder *flatbuffers.Builder, PRICE_USD_CENTS uint32) {
@@ -1355,10 +1355,10 @@ func PLGStartACCEPTED_PAYMENT_METHODSVector(builder *flatbuffers.Builder, numEle
 func PLGStartAcceptedPaymentMethodsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PLGStartACCEPTED_PAYMENT_METHODSVector(builder, numElems)
 }
-func PLGAddLISTING_STATUS(builder *flatbuffers.Builder, LISTING_STATUS listingStatus) {
+func PLGAddLISTING_STATUS(builder *flatbuffers.Builder, LISTING_STATUS publicationState) {
 	builder.PrependInt8Slot(42, int8(LISTING_STATUS), 0)
 }
-func PLGAddListingStatus(builder *flatbuffers.Builder, LISTING_STATUS listingStatus) {
+func PLGAddListingStatus(builder *flatbuffers.Builder, LISTING_STATUS publicationState) {
 	PLGAddLISTING_STATUS(builder, LISTING_STATUS)
 }
 func PLGAddSIGNATURE(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {

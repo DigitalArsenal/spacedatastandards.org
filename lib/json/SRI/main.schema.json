@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SRI" : {
+      "type" : "object",
+      "description" : "Standards Record Index — local wrapper for a standards payload's identity\nand mutation metadata, participating in shared FlatSQL query and cascade\npaths across plugins that read the same record universe.",
+      "properties" : {
+        "RECORD_KEY" : {
+                "type" : "string",
+                "description" : "Stable host-local record key for one standards payload."
+              },
+        "SCHEMA_NAME" : {
+                "type" : "string",
+                "description" : "SDS schema family for the record (`OMM`, `CAT`, `OEM`, `CDM`, etc.)."
+              },
+        "ROLE" : {
+                "type" : "string",
+                "description" : "Attachment role when one standards message produces multiple entity records."
+              },
+        "ATTACHED_VIA" : {
+                "type" : "string",
+                "description" : "Ingest path that registered this record (`stream-*`, `manual-api`, etc.)."
+              },
+        "PAYLOAD_KIND" : {
+                "type" : "string",
+                "description" : "High-level payload representation retained by the mutation registry."
+              },
+        "UPDATED_AT_MS" : {
+                "type" : "number",
+                "description" : "Milliseconds since epoch when the local mutation record was last refreshed."
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Reserved for forward-compatible growth."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SRI"
+}

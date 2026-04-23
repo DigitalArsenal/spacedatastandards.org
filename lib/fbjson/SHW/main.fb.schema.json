@@ -1,0 +1,413 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "shaderStage": {
+      "type": "string",
+      "enum": [
+        "VERTEX",
+        "FRAGMENT",
+        "COMPUTE",
+        "GEOMETRY",
+        "TESS_CONTROL",
+        "TESS_EVALUATION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "VERTEX": {
+          "value": 0
+        },
+        "FRAGMENT": {
+          "value": 1
+        },
+        "COMPUTE": {
+          "value": 2
+        },
+        "GEOMETRY": {
+          "value": 3
+        },
+        "TESS_CONTROL": {
+          "value": 4
+        },
+        "TESS_EVALUATION": {
+          "value": 5
+        }
+      }
+    },
+    "shaderInjectionPoint": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "VERTEX_PRE_TRANSFORM",
+        "VERTEX_POST_TRANSFORM",
+        "FRAGMENT_PRE_SHADE",
+        "FRAGMENT_POST_SHADE",
+        "FRAGMENT_FINAL_COLOR",
+        "POSTPROCESS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "VERTEX_PRE_TRANSFORM": {
+          "value": 1
+        },
+        "VERTEX_POST_TRANSFORM": {
+          "value": 2
+        },
+        "FRAGMENT_PRE_SHADE": {
+          "value": 3
+        },
+        "FRAGMENT_POST_SHADE": {
+          "value": 4
+        },
+        "FRAGMENT_FINAL_COLOR": {
+          "value": 5
+        },
+        "POSTPROCESS": {
+          "value": 6
+        }
+      }
+    },
+    "shaderUniformType": {
+      "type": "string",
+      "enum": [
+        "FLOAT",
+        "VEC2",
+        "VEC3",
+        "VEC4",
+        "INT",
+        "IVEC2",
+        "IVEC3",
+        "IVEC4",
+        "UINT",
+        "UVEC2",
+        "UVEC3",
+        "UVEC4",
+        "BOOL",
+        "BVEC2",
+        "BVEC3",
+        "BVEC4",
+        "MAT2",
+        "MAT3",
+        "MAT4",
+        "SAMPLER_2D",
+        "SAMPLER_CUBE",
+        "SAMPLER_2D_ARRAY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "FLOAT": {
+          "value": 0
+        },
+        "VEC2": {
+          "value": 1
+        },
+        "VEC3": {
+          "value": 2
+        },
+        "VEC4": {
+          "value": 3
+        },
+        "INT": {
+          "value": 4
+        },
+        "IVEC2": {
+          "value": 5
+        },
+        "IVEC3": {
+          "value": 6
+        },
+        "IVEC4": {
+          "value": 7
+        },
+        "UINT": {
+          "value": 8
+        },
+        "UVEC2": {
+          "value": 9
+        },
+        "UVEC3": {
+          "value": 10
+        },
+        "UVEC4": {
+          "value": 11
+        },
+        "BOOL": {
+          "value": 12
+        },
+        "BVEC2": {
+          "value": 13
+        },
+        "BVEC3": {
+          "value": 14
+        },
+        "BVEC4": {
+          "value": 15
+        },
+        "MAT2": {
+          "value": 16
+        },
+        "MAT3": {
+          "value": 17
+        },
+        "MAT4": {
+          "value": 18
+        },
+        "SAMPLER_2D": {
+          "value": 19
+        },
+        "SAMPLER_CUBE": {
+          "value": 20
+        },
+        "SAMPLER_2D_ARRAY": {
+          "value": 21
+        }
+      }
+    },
+    "SHWUniform": {
+      "type": "object",
+      "description": "Uniform descriptor \u2014 name + type + optional default value.",
+      "properties": {
+        "UNIFORM_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "UNIFORM_TYPE": {
+          "$ref": "#/definitions/shaderUniformType",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "FLOAT": {
+              "value": 0
+            },
+            "VEC2": {
+              "value": 1
+            },
+            "VEC3": {
+              "value": 2
+            },
+            "VEC4": {
+              "value": 3
+            },
+            "INT": {
+              "value": 4
+            },
+            "IVEC2": {
+              "value": 5
+            },
+            "IVEC3": {
+              "value": 6
+            },
+            "IVEC4": {
+              "value": 7
+            },
+            "UINT": {
+              "value": 8
+            },
+            "UVEC2": {
+              "value": 9
+            },
+            "UVEC3": {
+              "value": 10
+            },
+            "UVEC4": {
+              "value": 11
+            },
+            "BOOL": {
+              "value": 12
+            },
+            "BVEC2": {
+              "value": 13
+            },
+            "BVEC3": {
+              "value": 14
+            },
+            "BVEC4": {
+              "value": 15
+            },
+            "MAT2": {
+              "value": 16
+            },
+            "MAT3": {
+              "value": 17
+            },
+            "MAT4": {
+              "value": 18
+            },
+            "SAMPLER_2D": {
+              "value": 19
+            },
+            "SAMPLER_CUBE": {
+              "value": 20
+            },
+            "SAMPLER_2D_ARRAY": {
+              "value": 21
+            }
+          }
+        },
+        "UNIFORM_DESCRIPTION": {
+          "type": "string",
+          "description": "Optional human-readable description.",
+          "x-flatbuffer-type": "string"
+        },
+        "UNIFORM_DEFAULT_VALUE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Optional default value encoded as bytes in the native type layout.",
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SHWCompileRequest": {
+      "type": "object",
+      "description": "Compile request \u2014 one shader source (typically a fragment of a\nlarger stage) plus metadata for the host splice.",
+      "properties": {
+        "SHADER_NAME": {
+          "type": "string",
+          "description": "Logical shader name (used in logs and uniform prefixing).",
+          "x-flatbuffer-type": "string"
+        },
+        "SHADER_STAGE": {
+          "$ref": "#/definitions/shaderStage",
+          "description": "Target GLSL stage.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "VERTEX": {
+              "value": 0
+            },
+            "FRAGMENT": {
+              "value": 1
+            },
+            "COMPUTE": {
+              "value": 2
+            },
+            "GEOMETRY": {
+              "value": 3
+            },
+            "TESS_CONTROL": {
+              "value": 4
+            },
+            "TESS_EVALUATION": {
+              "value": 5
+            }
+          }
+        },
+        "SHADER_INJECTION_POINT": {
+          "$ref": "#/definitions/shaderInjectionPoint",
+          "description": "Intended injection point in the host pipeline.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "VERTEX_PRE_TRANSFORM": {
+              "value": 1
+            },
+            "VERTEX_POST_TRANSFORM": {
+              "value": 2
+            },
+            "FRAGMENT_PRE_SHADE": {
+              "value": 3
+            },
+            "FRAGMENT_POST_SHADE": {
+              "value": 4
+            },
+            "FRAGMENT_FINAL_COLOR": {
+              "value": 5
+            },
+            "POSTPROCESS": {
+              "value": 6
+            }
+          }
+        },
+        "SHADER_SOURCE": {
+          "type": "string",
+          "description": "GLSL source (or preprocessed chunk).",
+          "x-flatbuffer-type": "string"
+        },
+        "GLSL_VERSION": {
+          "type": "string",
+          "description": "GLSL version string (for example `300 es`).",
+          "x-flatbuffer-type": "string"
+        },
+        "SHADER_UNIFORMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SHWUniform"
+          },
+          "description": "Expected uniforms declared by the source.",
+          "x-flatbuffer-type": "[SHWUniform]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SHWCompileResponse": {
+      "type": "object",
+      "description": "Compile response \u2014 whether the shader compiled, with diagnostics.",
+      "properties": {
+        "SHADER_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COMPILE_SUCCESS": {
+          "type": "boolean",
+          "description": "Whether compilation succeeded.",
+          "x-flatbuffer-type": "bool"
+        },
+        "INFO_LOG": {
+          "type": "string",
+          "description": "Optional GLSL info log.",
+          "x-flatbuffer-type": "string"
+        },
+        "COMPILED_BINARY": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Optional compiled binary (if the compiler emits one).",
+          "x-flatbuffer-type": "[uint8]"
+        },
+        "LINKED_UNIFORMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SHWUniform"
+          },
+          "description": "Echo of the uniforms the compiler actually linked.",
+          "x-flatbuffer-type": "[SHWUniform]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SHW": {
+      "type": "object",
+      "description": "Shader Wire envelope \u2014 carries either a compile request or a compile\nresponse across the runtime boundary.",
+      "properties": {
+        "COMPILE_REQUEST": {
+          "$ref": "#/definitions/SHWCompileRequest",
+          "x-flatbuffer-type": "SHWCompileRequest"
+        },
+        "COMPILE_RESPONSE": {
+          "$ref": "#/definitions/SHWCompileResponse",
+          "x-flatbuffer-type": "SHWCompileResponse"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SHW",
+  "x-flatbuffer-root-type": "SHW",
+  "x-flatbuffer-file-identifier": "$SHW"
+}

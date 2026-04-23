@@ -1,0 +1,524 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "sensorCategory": {
+      "type": "string",
+      "enum": [
+        "RADAR",
+        "ELECTRO_OPTICAL",
+        "INFRARED",
+        "ACOUSTIC",
+        "RF",
+        "LIDAR",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "RADAR": {
+          "value": 0
+        },
+        "ELECTRO_OPTICAL": {
+          "value": 1
+        },
+        "INFRARED": {
+          "value": 2
+        },
+        "ACOUSTIC": {
+          "value": 3
+        },
+        "RF": {
+          "value": 4
+        },
+        "LIDAR": {
+          "value": 5
+        },
+        "CUSTOM": {
+          "value": 255
+        }
+      }
+    },
+    "sensorOperationalFlags": {
+      "type": "string",
+      "enum": [
+        "ACTIVE",
+        "TRACK_MODE",
+        "SEARCH_MODE",
+        "JAMMED",
+        "SLEWING",
+        "CALIBRATING"
+      ]
+    },
+    "detectionResultFlags": {
+      "type": "string",
+      "enum": [
+        "VALID",
+        "TRACKED",
+        "MARGINAL",
+        "IN_CLUTTER",
+        "JAMMED",
+        "SIDELOBE",
+        "MERGED"
+      ]
+    },
+    "targetState": {
+      "type": "object",
+      "description": "Target state input (40 bytes, 8-byte aligned).",
+      "properties": {
+        "POS_X": {
+          "type": "number",
+          "description": "Target position X in ECEF (meters)."
+        },
+        "POS_Y": {
+          "type": "number",
+          "description": "Target position Y in ECEF (meters)."
+        },
+        "POS_Z": {
+          "type": "number",
+          "description": "Target position Z in ECEF (meters)."
+        },
+        "RCS": {
+          "type": "number",
+          "description": "Radar cross section (m^2)."
+        },
+        "TARGET_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Unique target identifier."
+        },
+        "FLAGS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Target flags (reserved)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "detectionResult": {
+      "type": "object",
+      "description": "Detection result output (48 bytes, 8-byte aligned).",
+      "properties": {
+        "TARGET_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Index of target in input array."
+        },
+        "DETECTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Detection flag (1 == detected, 0 == not detected)."
+        },
+        "RANGE": {
+          "type": "number",
+          "description": "Range to target (meters)."
+        },
+        "SNR": {
+          "type": "number",
+          "description": "Signal-to-noise ratio (dB)."
+        },
+        "DOPPLER": {
+          "type": "number",
+          "description": "Doppler shift (Hz)."
+        },
+        "PROBABILITY": {
+          "type": "number",
+          "description": "Probability of detection (0.0 \u2013 1.0)."
+        },
+        "FLAGS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Detection flags (detectionResultFlags bitfield)."
+        },
+        "RESERVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Reserved for future use."
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDRRadarConfig": {
+      "type": "object",
+      "description": "Radar sensor configuration.",
+      "properties": {
+        "FREQUENCY": {
+          "type": "number",
+          "description": "Operating frequency (Hz).",
+          "x-flatbuffer-type": "double"
+        },
+        "POWER": {
+          "type": "number",
+          "description": "Transmit power (W).",
+          "x-flatbuffer-type": "double"
+        },
+        "GAIN": {
+          "type": "number",
+          "description": "Antenna gain (dB).",
+          "x-flatbuffer-type": "double"
+        },
+        "BANDWIDTH": {
+          "type": "number",
+          "description": "Receiver bandwidth (Hz).",
+          "x-flatbuffer-type": "double"
+        },
+        "NOISE_FIGURE": {
+          "type": "number",
+          "description": "Noise figure (dB).",
+          "x-flatbuffer-type": "double"
+        },
+        "SYSTEM_LOSS": {
+          "type": "number",
+          "description": "System losses (dB).",
+          "x-flatbuffer-type": "double"
+        },
+        "PRF": {
+          "type": "number",
+          "description": "Pulse repetition frequency (Hz).",
+          "x-flatbuffer-type": "double"
+        },
+        "PULSE_WIDTH": {
+          "type": "number",
+          "description": "Pulse width (seconds).",
+          "x-flatbuffer-type": "double"
+        },
+        "DETECTION_THRESHOLD": {
+          "type": "number",
+          "description": "Detection threshold SNR (dB).",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_RANGE": {
+          "type": "number",
+          "description": "Minimum detection range (meters).",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RANGE": {
+          "type": "number",
+          "description": "Maximum detection range (meters).",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDRSensorConfig": {
+      "type": "object",
+      "description": "Generic sensor configuration.",
+      "properties": {
+        "CATEGORY": {
+          "$ref": "#/definitions/sensorCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "RADAR": {
+              "value": 0
+            },
+            "ELECTRO_OPTICAL": {
+              "value": 1
+            },
+            "INFRARED": {
+              "value": 2
+            },
+            "ACOUSTIC": {
+              "value": 3
+            },
+            "RF": {
+              "value": 4
+            },
+            "LIDAR": {
+              "value": 5
+            },
+            "CUSTOM": {
+              "value": 255
+            }
+          }
+        },
+        "POS_X": {
+          "type": "number",
+          "description": "Sensor position in ECEF (meters) \u2014 X.",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_Y": {
+          "type": "number",
+          "description": "Sensor position in ECEF (meters) \u2014 Y.",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_Z": {
+          "type": "number",
+          "description": "Sensor position in ECEF (meters) \u2014 Z.",
+          "x-flatbuffer-type": "double"
+        },
+        "ORIENT_W": {
+          "type": "number",
+          "description": "Sensor orientation as quaternion (W, X, Y, Z).",
+          "x-flatbuffer-type": "double"
+        },
+        "ORIENT_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ORIENT_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ORIENT_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RADAR": {
+          "$ref": "#/definitions/SDRRadarConfig",
+          "description": "Radar-specific config when CATEGORY == RADAR.",
+          "x-flatbuffer-type": "SDRRadarConfig"
+        },
+        "FLAGS": {
+          "$ref": "#/definitions/sensorOperationalFlags",
+          "description": "Operational flags.",
+          "x-flatbuffer-type": "sensorOperationalFlags"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDRBatchRequest": {
+      "type": "object",
+      "description": "Batch detection request (arena-addressed, zero-copy).",
+      "properties": {
+        "SENSOR_POS_X": {
+          "type": "number",
+          "description": "Sensor position in ECEF (meters) \u2014 X.",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_POS_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_POS_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_ORIENT_W": {
+          "type": "number",
+          "description": "Sensor orientation as quaternion (W, X, Y, Z).",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_ORIENT_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_ORIENT_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_ORIENT_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INPUT_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Input buffer offset where targetState[] starts.",
+          "x-flatbuffer-type": "uint"
+        },
+        "TARGET_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of targets in the input buffer.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OUTPUT_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Output buffer offset where detectionResult[] is written.",
+          "x-flatbuffer-type": "uint"
+        },
+        "EPOCH": {
+          "type": "number",
+          "description": "Current time as a Julian date.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDRBatchResponse": {
+      "type": "object",
+      "description": "Batch detection response header.",
+      "properties": {
+        "COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of detection results written.",
+          "x-flatbuffer-type": "uint"
+        },
+        "DETECTED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of targets detected (SNR >= threshold).",
+          "x-flatbuffer-type": "uint"
+        },
+        "OUTPUT_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Offset in arena where detectionResult[] starts.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ERROR_CODE": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Error code (0 == success).",
+          "x-flatbuffer-type": "int"
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Error message when ERROR_CODE != 0.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDRSingleInput": {
+      "type": "object",
+      "description": "Compact single-frame detection input used by pluggable sensor models that\ndo not drive arena-backed batches.",
+      "properties": {
+        "TARGET_POS_X": {
+          "type": "number",
+          "description": "Target position in ECEF (meters) \u2014 X.",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_POS_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_POS_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_POS_X": {
+          "type": "number",
+          "description": "Sensor position in ECEF (meters) \u2014 X.",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_POS_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_POS_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RCS": {
+          "type": "number",
+          "description": "Radar cross section (m^2).",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQUENCY": {
+          "type": "number",
+          "description": "Sensor operating frequency (Hz).",
+          "x-flatbuffer-type": "double"
+        },
+        "TX_POWER": {
+          "type": "number",
+          "description": "Transmit power (W).",
+          "x-flatbuffer-type": "double"
+        },
+        "TIMESTAMP_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp (milliseconds since epoch).",
+          "x-flatbuffer-type": "ulong"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDRSingleResult": {
+      "type": "object",
+      "description": "Compact single-frame detection result.",
+      "properties": {
+        "DETECTED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "RANGE": {
+          "type": "number",
+          "description": "Range to target (meters).",
+          "x-flatbuffer-type": "double"
+        },
+        "SNR": {
+          "type": "number",
+          "description": "Signal-to-noise ratio (dB).",
+          "x-flatbuffer-type": "double"
+        },
+        "AZIMUTH": {
+          "type": "number",
+          "description": "Azimuth angle to target (radians).",
+          "x-flatbuffer-type": "double"
+        },
+        "ELEVATION": {
+          "type": "number",
+          "description": "Elevation angle to target (radians).",
+          "x-flatbuffer-type": "double"
+        },
+        "RANGE_RATE": {
+          "type": "number",
+          "description": "Range rate / Doppler velocity (m/s).",
+          "x-flatbuffer-type": "double"
+        },
+        "TIMESTAMP_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Detection timestamp (milliseconds since epoch).",
+          "x-flatbuffer-type": "ulong"
+        },
+        "TRACK_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Track identifier (0 if not tracking).",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SDR": {
+      "type": "object",
+      "description": "Sensor Detection Report envelope message.",
+      "properties": {
+        "CONFIG": {
+          "$ref": "#/definitions/SDRSensorConfig",
+          "x-flatbuffer-type": "SDRSensorConfig"
+        },
+        "BATCH_REQUEST": {
+          "$ref": "#/definitions/SDRBatchRequest",
+          "x-flatbuffer-type": "SDRBatchRequest"
+        },
+        "BATCH_RESPONSE": {
+          "$ref": "#/definitions/SDRBatchResponse",
+          "x-flatbuffer-type": "SDRBatchResponse"
+        },
+        "SINGLE_INPUT": {
+          "$ref": "#/definitions/SDRSingleInput",
+          "x-flatbuffer-type": "SDRSingleInput"
+        },
+        "SINGLE_RESULT": {
+          "$ref": "#/definitions/SDRSingleResult",
+          "x-flatbuffer-type": "SDRSingleResult"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SDR",
+  "x-flatbuffer-root-type": "SDR",
+  "x-flatbuffer-file-identifier": "$SDR"
+}
