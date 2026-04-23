@@ -239,7 +239,8 @@ struct TAB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_TYPE_REF = 12,
     VT_MUTABILITY = 14,
     VT_OWNERSHIP = 16,
-    VT_FRAME_ID = 18
+    VT_FRAME_ID = 18,
+    VT_PORT_ID = 20
   };
   /// Byte offset of the payload body within the arena.
   uint32_t OFFSET() const {
@@ -273,6 +274,13 @@ struct TAB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint64_t FRAME_ID() const {
     return GetField<uint64_t>(VT_FRAME_ID, 0);
   }
+  /// Optional port identifier for frames that route to/from a named
+  /// input or output port on a method (maps to
+  /// `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+  /// no port routing hint.
+  const ::flatbuffers::String *PORT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PORT_ID);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -285,6 +293,8 @@ struct TAB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_MUTABILITY, 1) &&
            VerifyField<uint8_t>(verifier, VT_OWNERSHIP, 1) &&
            VerifyField<uint64_t>(verifier, VT_FRAME_ID, 8) &&
+           VerifyOffset(verifier, VT_PORT_ID) &&
+           verifier.VerifyString(PORT_ID()) &&
            verifier.EndTable();
   }
 };
@@ -317,6 +327,9 @@ struct TABBuilder {
   void add_FRAME_ID(uint64_t FRAME_ID) {
     fbb_.AddElement<uint64_t>(TAB::VT_FRAME_ID, FRAME_ID, 0);
   }
+  void add_PORT_ID(::flatbuffers::Offset<::flatbuffers::String> PORT_ID) {
+    fbb_.AddOffset(TAB::VT_PORT_ID, PORT_ID);
+  }
   explicit TABBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -337,9 +350,11 @@ inline ::flatbuffers::Offset<TAB> CreateTAB(
     ::flatbuffers::Offset<FlatBufferTypeRef> TYPE_REF = 0,
     bufferMutability MUTABILITY = bufferMutability_IMMUTABLE,
     bufferOwnership OWNERSHIP = bufferOwnership_HOST_OWNED,
-    uint64_t FRAME_ID = 0) {
+    uint64_t FRAME_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PORT_ID = 0) {
   TABBuilder builder_(_fbb);
   builder_.add_FRAME_ID(FRAME_ID);
+  builder_.add_PORT_ID(PORT_ID);
   builder_.add_TYPE_REF(TYPE_REF);
   builder_.add_ALIGNMENT(ALIGNMENT);
   builder_.add_SIZE(SIZE);
@@ -348,6 +363,31 @@ inline ::flatbuffers::Offset<TAB> CreateTAB(
   builder_.add_MUTABILITY(MUTABILITY);
   builder_.add_WIRE_FORMAT(WIRE_FORMAT);
   return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<TAB> CreateTABDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t OFFSET = 0,
+    uint32_t SIZE = 0,
+    uint32_t ALIGNMENT = 0,
+    payloadWireFormat WIRE_FORMAT = payloadWireFormat_FLATBUFFER,
+    ::flatbuffers::Offset<FlatBufferTypeRef> TYPE_REF = 0,
+    bufferMutability MUTABILITY = bufferMutability_IMMUTABLE,
+    bufferOwnership OWNERSHIP = bufferOwnership_HOST_OWNED,
+    uint64_t FRAME_ID = 0,
+    const char *PORT_ID = nullptr) {
+  auto PORT_ID__ = PORT_ID ? _fbb.CreateString(PORT_ID) : 0;
+  return CreateTAB(
+      _fbb,
+      OFFSET,
+      SIZE,
+      ALIGNMENT,
+      WIRE_FORMAT,
+      TYPE_REF,
+      MUTABILITY,
+      OWNERSHIP,
+      FRAME_ID,
+      PORT_ID__);
 }
 
 inline const TAB *GetTAB(const void *buf) {

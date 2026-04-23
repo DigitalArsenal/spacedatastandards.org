@@ -517,6 +517,7 @@ impl<'a> TAB<'a> {
   pub const VT_MUTABILITY: ::flatbuffers::VOffsetT = 14;
   pub const VT_OWNERSHIP: ::flatbuffers::VOffsetT = 16;
   pub const VT_FRAME_ID: ::flatbuffers::VOffsetT = 18;
+  pub const VT_PORT_ID: ::flatbuffers::VOffsetT = 20;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -529,6 +530,7 @@ impl<'a> TAB<'a> {
   ) -> ::flatbuffers::WIPOffset<TAB<'bldr>> {
     let mut builder = TABBuilder::new(_fbb);
     builder.add_FRAME_ID(args.FRAME_ID);
+    if let Some(x) = args.PORT_ID { builder.add_PORT_ID(x); }
     if let Some(x) = args.TYPE_REF { builder.add_TYPE_REF(x); }
     builder.add_ALIGNMENT(args.ALIGNMENT);
     builder.add_SIZE(args.SIZE);
@@ -550,6 +552,9 @@ impl<'a> TAB<'a> {
     let MUTABILITY = self.MUTABILITY();
     let OWNERSHIP = self.OWNERSHIP();
     let FRAME_ID = self.FRAME_ID();
+    let PORT_ID = self.PORT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     TABT {
       OFFSET,
       SIZE,
@@ -559,6 +564,7 @@ impl<'a> TAB<'a> {
       MUTABILITY,
       OWNERSHIP,
       FRAME_ID,
+      PORT_ID,
     }
   }
 
@@ -626,6 +632,17 @@ impl<'a> TAB<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<u64>(TAB::VT_FRAME_ID, Some(0)).unwrap()}
   }
+  /// Optional port identifier for frames that route to/from a named
+  /// input or output port on a method (maps to
+  /// `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+  /// no port routing hint.
+  #[inline]
+  pub fn PORT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TAB::VT_PORT_ID, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for TAB<'_> {
@@ -642,6 +659,7 @@ impl ::flatbuffers::Verifiable for TAB<'_> {
      .visit_field::<bufferMutability>("MUTABILITY", Self::VT_MUTABILITY, false)?
      .visit_field::<bufferOwnership>("OWNERSHIP", Self::VT_OWNERSHIP, false)?
      .visit_field::<u64>("FRAME_ID", Self::VT_FRAME_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PORT_ID", Self::VT_PORT_ID, false)?
      .finish();
     Ok(())
   }
@@ -655,6 +673,7 @@ pub struct TABArgs<'a> {
     pub MUTABILITY: bufferMutability,
     pub OWNERSHIP: bufferOwnership,
     pub FRAME_ID: u64,
+    pub PORT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for TABArgs<'a> {
   #[inline]
@@ -668,6 +687,7 @@ impl<'a> Default for TABArgs<'a> {
       MUTABILITY: bufferMutability::IMMUTABLE,
       OWNERSHIP: bufferOwnership::HOST_OWNED,
       FRAME_ID: 0,
+      PORT_ID: None,
     }
   }
 }
@@ -710,6 +730,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TABBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<u64>(TAB::VT_FRAME_ID, FRAME_ID, 0);
   }
   #[inline]
+  pub fn add_PORT_ID(&mut self, PORT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TAB::VT_PORT_ID, PORT_ID);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TABBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     TABBuilder {
@@ -735,6 +759,7 @@ impl ::core::fmt::Debug for TAB<'_> {
       ds.field("MUTABILITY", &self.MUTABILITY());
       ds.field("OWNERSHIP", &self.OWNERSHIP());
       ds.field("FRAME_ID", &self.FRAME_ID());
+      ds.field("PORT_ID", &self.PORT_ID());
       ds.finish()
   }
 }
@@ -749,6 +774,7 @@ pub struct TABT {
   pub MUTABILITY: bufferMutability,
   pub OWNERSHIP: bufferOwnership,
   pub FRAME_ID: u64,
+  pub PORT_ID: Option<alloc::string::String>,
 }
 impl Default for TABT {
   fn default() -> Self {
@@ -761,6 +787,7 @@ impl Default for TABT {
       MUTABILITY: bufferMutability::IMMUTABLE,
       OWNERSHIP: bufferOwnership::HOST_OWNED,
       FRAME_ID: 0,
+      PORT_ID: None,
     }
   }
 }
@@ -779,6 +806,9 @@ impl TABT {
     let MUTABILITY = self.MUTABILITY;
     let OWNERSHIP = self.OWNERSHIP;
     let FRAME_ID = self.FRAME_ID;
+    let PORT_ID = self.PORT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     TAB::create(_fbb, &TABArgs{
       OFFSET,
       SIZE,
@@ -788,6 +818,7 @@ impl TABT {
       MUTABILITY,
       OWNERSHIP,
       FRAME_ID,
+      PORT_ID,
     })
   }
 }

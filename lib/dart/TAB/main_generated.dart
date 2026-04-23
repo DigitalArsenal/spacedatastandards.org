@@ -269,10 +269,16 @@ class TAB {
   ///  Optional opaque frame identifier for stream bookkeeping.
   int get FRAME_ID => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
   int get frameId => FRAME_ID;
+  ///  Optional port identifier for frames that route to/from a named
+  ///  input or output port on a method (maps to
+  ///  `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+  ///  no port routing hint.
+  String? get PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get portId => PORT_ID;
 
   @override
   String toString() {
-    return 'TAB{OFFSET: ${OFFSET}, SIZE: ${SIZE}, ALIGNMENT: ${ALIGNMENT}, wireFormat: ${wireFormat}, typeRef: ${typeRef}, MUTABILITY: ${MUTABILITY}, OWNERSHIP: ${OWNERSHIP}, frameId: ${frameId}}';
+    return 'TAB{OFFSET: ${OFFSET}, SIZE: ${SIZE}, ALIGNMENT: ${ALIGNMENT}, wireFormat: ${wireFormat}, typeRef: ${typeRef}, MUTABILITY: ${MUTABILITY}, OWNERSHIP: ${OWNERSHIP}, frameId: ${frameId}, portId: ${portId}}';
   }
 }
 
@@ -290,7 +296,7 @@ class TABBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(9);
   }
 
   int addOffset(int? OFFSET) {
@@ -325,6 +331,10 @@ class TABBuilder {
     fbBuilder.addUint64(7, FRAME_ID);
     return fbBuilder.offset;
   }
+  int addPortIdOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -340,6 +350,7 @@ class TABObjectBuilder extends fb.ObjectBuilder {
   final bufferMutability? _MUTABILITY;
   final bufferOwnership? _OWNERSHIP;
   final int? _FRAME_ID;
+  final String? _PORT_ID;
 
   TABObjectBuilder({
     int? OFFSET,
@@ -353,6 +364,8 @@ class TABObjectBuilder extends fb.ObjectBuilder {
     bufferOwnership? OWNERSHIP,
     int? FRAME_ID,
     int? frameId,
+    String? PORT_ID,
+    String? portId,
   })
       : _OFFSET = OFFSET,
         _SIZE = SIZE,
@@ -361,13 +374,16 @@ class TABObjectBuilder extends fb.ObjectBuilder {
         _TYPE_REF = typeRef ?? TYPE_REF,
         _MUTABILITY = MUTABILITY,
         _OWNERSHIP = OWNERSHIP,
-        _FRAME_ID = frameId ?? FRAME_ID;
+        _FRAME_ID = frameId ?? FRAME_ID,
+        _PORT_ID = portId ?? PORT_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? TYPE_REFOffset = _TYPE_REF?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(8);
+    final int? PORT_IDOffset = _PORT_ID == null ? null
+        : fbBuilder.writeString(_PORT_ID!);
+    fbBuilder.startTable(9);
     fbBuilder.addUint32(0, _OFFSET);
     fbBuilder.addUint32(1, _SIZE);
     fbBuilder.addUint32(2, _ALIGNMENT);
@@ -376,6 +392,7 @@ class TABObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint8(5, _MUTABILITY?.value);
     fbBuilder.addUint8(6, _OWNERSHIP?.value);
     fbBuilder.addUint64(7, _FRAME_ID);
+    fbBuilder.addOffset(8, PORT_IDOffset);
     return fbBuilder.endTable();
   }
 

@@ -97,8 +97,19 @@ class TAB(object):
             return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
 
+    # Optional port identifier for frames that route to/from a named
+    # input or output port on a method (maps to
+    # `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+    # no port routing hint.
+    # TAB
+    def PORT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def TABStart(builder):
-    builder.StartObject(8)
+    builder.StartObject(9)
 
 def Start(builder):
     TABStart(builder)
@@ -151,6 +162,12 @@ def TABAddFRAME_ID(builder, FRAME_ID):
 def AddFRAME_ID(builder, FRAME_ID):
     TABAddFRAME_ID(builder, FRAME_ID)
 
+def TABAddPORT_ID(builder, PORT_ID):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(PORT_ID), 0)
+
+def AddPORT_ID(builder, PORT_ID):
+    TABAddPORT_ID(builder, PORT_ID)
+
 def TABEnd(builder):
     return builder.EndObject()
 
@@ -176,6 +193,7 @@ class TABT(object):
         MUTABILITY = 0,
         OWNERSHIP = 0,
         FRAME_ID = 0,
+        PORT_ID = None,
     ):
         self.OFFSET = OFFSET  # type: int
         self.SIZE = SIZE  # type: int
@@ -185,6 +203,7 @@ class TABT(object):
         self.MUTABILITY = MUTABILITY  # type: int
         self.OWNERSHIP = OWNERSHIP  # type: int
         self.FRAME_ID = FRAME_ID  # type: int
+        self.PORT_ID = PORT_ID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -216,11 +235,14 @@ class TABT(object):
         self.MUTABILITY = TAB.MUTABILITY()
         self.OWNERSHIP = TAB.OWNERSHIP()
         self.FRAME_ID = TAB.FRAME_ID()
+        self.PORT_ID = TAB.PORT_ID()
 
     # TABT
     def Pack(self, builder):
         if self.TYPE_REF is not None:
             TYPE_REF = self.TYPE_REF.Pack(builder)
+        if self.PORT_ID is not None:
+            PORT_ID = builder.CreateString(self.PORT_ID)
         TABStart(builder)
         TABAddOFFSET(builder, self.OFFSET)
         TABAddSIZE(builder, self.SIZE)
@@ -231,5 +253,7 @@ class TABT(object):
         TABAddMUTABILITY(builder, self.MUTABILITY)
         TABAddOWNERSHIP(builder, self.OWNERSHIP)
         TABAddFRAME_ID(builder, self.FRAME_ID)
+        if self.PORT_ID is not None:
+            TABAddPORT_ID(builder, PORT_ID)
         TAB = TABEnd(builder)
         return TAB

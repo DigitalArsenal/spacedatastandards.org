@@ -227,8 +227,28 @@ func (rcv *TAB) MutateFrameId(n uint64) bool {
 	return rcv.MutateFRAME_ID(n)
 }
 
+/// Optional port identifier for frames that route to/from a named
+/// input or output port on a method (maps to
+/// `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+/// no port routing hint.
+func (rcv *TAB) PORT_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TAB) PortId() []byte {
+	return rcv.PORT_ID()
+}
+
+/// Optional port identifier for frames that route to/from a named
+/// input or output port on a method (maps to
+/// `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+/// no port routing hint.
 func TABStart(builder *flatbuffers.Builder) {
-	builder.StartObject(8)
+	builder.StartObject(9)
 }
 func TABAddOFFSET(builder *flatbuffers.Builder, OFFSET uint32) {
 	builder.PrependUint32Slot(0, OFFSET, 0)
@@ -277,6 +297,12 @@ func TABAddFRAME_ID(builder *flatbuffers.Builder, FRAME_ID uint64) {
 }
 func TABAddFrameId(builder *flatbuffers.Builder, FRAME_ID uint64) {
 	TABAddFRAME_ID(builder, FRAME_ID)
+}
+func TABAddPORT_ID(builder *flatbuffers.Builder, PORT_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(PORT_ID), 0)
+}
+func TABAddPortId(builder *flatbuffers.Builder, PORT_ID flatbuffers.UOffsetT) {
+	TABAddPORT_ID(builder, PORT_ID)
 }
 func TABEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -145,6 +145,7 @@ public struct TAB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     case MUTABILITY = 14
     case OWNERSHIP = 16
     case FRAME_ID = 18
+    case PORT_ID = 20
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -165,7 +166,13 @@ public struct TAB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var OWNERSHIP: bufferOwnership { let o = _accessor.offset(VTOFFSET.OWNERSHIP.v); return o == 0 ? .hostOwned : bufferOwnership(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .hostOwned }
   ///  Optional opaque frame identifier for stream bookkeeping.
   public var FRAME_ID: UInt64 { let o = _accessor.offset(VTOFFSET.FRAME_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public static func startTAB(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  ///  Optional port identifier for frames that route to/from a named
+  ///  input or output port on a method (maps to
+  ///  `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+  ///  no port routing hint.
+  public var PORT_ID: String? { let o = _accessor.offset(VTOFFSET.PORT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PORT_ID.v) }
+  public static func startTAB(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
   public static func add(OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET, def: 0, at: VTOFFSET.OFFSET.p) }
   public static func add(SIZE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE, def: 0, at: VTOFFSET.SIZE.p) }
   public static func add(ALIGNMENT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALIGNMENT, def: 0, at: VTOFFSET.ALIGNMENT.p) }
@@ -174,6 +181,7 @@ public struct TAB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(MUTABILITY: bufferMutability, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MUTABILITY.rawValue, def: 0, at: VTOFFSET.MUTABILITY.p) }
   public static func add(OWNERSHIP: bufferOwnership, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNERSHIP.rawValue, def: 0, at: VTOFFSET.OWNERSHIP.p) }
   public static func add(FRAME_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_ID, def: 0, at: VTOFFSET.FRAME_ID.p) }
+  public static func add(PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PORT_ID, at: VTOFFSET.PORT_ID.p) }
   public static func endTAB(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTAB(
     _ fbb: inout FlatBufferBuilder,
@@ -184,7 +192,8 @@ public struct TAB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     TYPE_REFOffset TYPE_REF: Offset = Offset(),
     MUTABILITY: bufferMutability = .immutable,
     OWNERSHIP: bufferOwnership = .hostOwned,
-    FRAME_ID: UInt64 = 0
+    FRAME_ID: UInt64 = 0,
+    PORT_IDOffset PORT_ID: Offset = Offset()
   ) -> Offset {
     let __start = TAB.startTAB(&fbb)
     TAB.add(OFFSET: OFFSET, &fbb)
@@ -195,6 +204,7 @@ public struct TAB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     TAB.add(MUTABILITY: MUTABILITY, &fbb)
     TAB.add(OWNERSHIP: OWNERSHIP, &fbb)
     TAB.add(FRAME_ID: FRAME_ID, &fbb)
+    TAB.add(PORT_ID: PORT_ID, &fbb)
     return TAB.endTAB(&fbb, start: __start)
   }
 
@@ -208,6 +218,7 @@ public struct TAB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.MUTABILITY.p, fieldName: "MUTABILITY", required: false, type: bufferMutability.self)
     try _v.visit(field: VTOFFSET.OWNERSHIP.p, fieldName: "OWNERSHIP", required: false, type: bufferOwnership.self)
     try _v.visit(field: VTOFFSET.FRAME_ID.p, fieldName: "FRAME_ID", required: false, type: UInt64.self)
+    try _v.visit(field: VTOFFSET.PORT_ID.p, fieldName: "PORT_ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

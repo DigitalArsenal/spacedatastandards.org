@@ -187,6 +187,11 @@
           "maximum": 18446744073709551615,
           "description": "Optional opaque frame identifier for stream bookkeeping.",
           "x-flatbuffer-type": "ulong"
+        },
+        "PORT_ID": {
+          "type": "string",
+          "description": "Optional port identifier for frames that route to/from a named\ninput or output port on a method (maps to\n`PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry\nno port routing hint.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

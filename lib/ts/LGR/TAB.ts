@@ -99,8 +99,21 @@ FRAME_ID():bigint {
   return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
+/**
+ * Optional port identifier for frames that route to/from a named
+ * input or output port on a method (maps to
+ * `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+ * no port routing hint.
+ */
+PORT_ID():string|null
+PORT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PORT_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startTAB(builder:flatbuffers.Builder) {
-  builder.startObject(8);
+  builder.startObject(9);
 }
 
 static addOffset(builder:flatbuffers.Builder, OFFSET:number) {
@@ -135,6 +148,10 @@ static addFrameId(builder:flatbuffers.Builder, FRAME_ID:bigint) {
   builder.addFieldInt64(7, FRAME_ID, BigInt('0'));
 }
 
+static addPortId(builder:flatbuffers.Builder, PORT_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, PORT_IDOffset, 0);
+}
+
 static endTAB(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -158,7 +175,8 @@ unpack(): TABT {
     (this.TYPE_REF() !== null ? this.TYPE_REF()!.unpack() : null),
     this.MUTABILITY(),
     this.OWNERSHIP(),
-    this.FRAME_ID()
+    this.FRAME_ID(),
+    this.PORT_ID()
   );
 }
 
@@ -172,6 +190,7 @@ unpackTo(_o: TABT): void {
   _o.MUTABILITY = this.MUTABILITY();
   _o.OWNERSHIP = this.OWNERSHIP();
   _o.FRAME_ID = this.FRAME_ID();
+  _o.PORT_ID = this.PORT_ID();
 }
 }
 
@@ -184,12 +203,14 @@ constructor(
   public TYPE_REF: FlatBufferTypeRefT|null = null,
   public MUTABILITY: bufferMutability = bufferMutability.IMMUTABLE,
   public OWNERSHIP: bufferOwnership = bufferOwnership.HOST_OWNED,
-  public FRAME_ID: bigint = BigInt('0')
+  public FRAME_ID: bigint = BigInt('0'),
+  public PORT_ID: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TYPE_REF = (this.TYPE_REF !== null ? this.TYPE_REF!.pack(builder) : 0);
+  const PORT_ID = (this.PORT_ID !== null ? builder.createString(this.PORT_ID!) : 0);
 
   TAB.startTAB(builder);
   TAB.addOffset(builder, this.OFFSET);
@@ -200,6 +221,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   TAB.addMutability(builder, this.MUTABILITY);
   TAB.addOwnership(builder, this.OWNERSHIP);
   TAB.addFrameId(builder, this.FRAME_ID);
+  TAB.addPortId(builder, PORT_ID);
 
   return TAB.endTAB(builder);
 }

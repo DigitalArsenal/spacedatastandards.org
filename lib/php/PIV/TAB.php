@@ -119,22 +119,32 @@ class TAB extends Table
         return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
+    /// Optional port identifier for frames that route to/from a named
+    /// input or output port on a method (maps to
+    /// `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+    /// no port routing hint.
+    public function getPORT_ID()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startTAB(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(8);
+        $builder->StartObject(9);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return TAB
      */
-    public static function createTAB(FlatBufferBuilder $builder, $OFFSET, $SIZE, $ALIGNMENT, $WIRE_FORMAT, $TYPE_REF, $MUTABILITY, $OWNERSHIP, $FRAME_ID)
+    public static function createTAB(FlatBufferBuilder $builder, $OFFSET, $SIZE, $ALIGNMENT, $WIRE_FORMAT, $TYPE_REF, $MUTABILITY, $OWNERSHIP, $FRAME_ID, $PORT_ID)
     {
-        $builder->startObject(8);
+        $builder->startObject(9);
         self::addOFFSET($builder, $OFFSET);
         self::addSIZE($builder, $SIZE);
         self::addALIGNMENT($builder, $ALIGNMENT);
@@ -143,6 +153,7 @@ class TAB extends Table
         self::addMUTABILITY($builder, $MUTABILITY);
         self::addOWNERSHIP($builder, $OWNERSHIP);
         self::addFRAME_ID($builder, $FRAME_ID);
+        self::addPORT_ID($builder, $PORT_ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -225,6 +236,16 @@ class TAB extends Table
     public static function addFRAME_ID(FlatBufferBuilder $builder, $FRAME_ID)
     {
         $builder->addUlongX(7, $FRAME_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPORT_ID(FlatBufferBuilder $builder, $PORT_ID)
+    {
+        $builder->addOffsetX(8, $PORT_ID, 0);
     }
 
     /**

@@ -45,6 +45,14 @@ export declare class TAB implements flatbuffers.IUnpackableObject<TABT> {
      * Optional opaque frame identifier for stream bookkeeping.
      */
     FRAME_ID(): bigint;
+    /**
+     * Optional port identifier for frames that route to/from a named
+     * input or output port on a method (maps to
+     * `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+     * no port routing hint.
+     */
+    PORT_ID(): string | null;
+    PORT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startTAB(builder: flatbuffers.Builder): void;
     static addOffset(builder: flatbuffers.Builder, OFFSET: number): void;
     static addSize(builder: flatbuffers.Builder, SIZE: number): void;
@@ -54,6 +62,7 @@ export declare class TAB implements flatbuffers.IUnpackableObject<TABT> {
     static addMutability(builder: flatbuffers.Builder, MUTABILITY: bufferMutability): void;
     static addOwnership(builder: flatbuffers.Builder, OWNERSHIP: bufferOwnership): void;
     static addFrameId(builder: flatbuffers.Builder, FRAME_ID: bigint): void;
+    static addPortId(builder: flatbuffers.Builder, PORT_IDOffset: flatbuffers.Offset): void;
     static endTAB(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishTABBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedTABBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -69,7 +78,8 @@ export declare class TABT implements flatbuffers.IGeneratedObject {
     MUTABILITY: bufferMutability;
     OWNERSHIP: bufferOwnership;
     FRAME_ID: bigint;
-    constructor(OFFSET?: number, SIZE?: number, ALIGNMENT?: number, WIRE_FORMAT?: payloadWireFormat, TYPE_REF?: FlatBufferTypeRefT | null, MUTABILITY?: bufferMutability, OWNERSHIP?: bufferOwnership, FRAME_ID?: bigint);
+    PORT_ID: string | Uint8Array | null;
+    constructor(OFFSET?: number, SIZE?: number, ALIGNMENT?: number, WIRE_FORMAT?: payloadWireFormat, TYPE_REF?: FlatBufferTypeRefT | null, MUTABILITY?: bufferMutability, OWNERSHIP?: bufferOwnership, FRAME_ID?: bigint, PORT_ID?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=TAB.d.ts.map

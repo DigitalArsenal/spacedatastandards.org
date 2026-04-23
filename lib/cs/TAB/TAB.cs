@@ -35,6 +35,17 @@ public struct TAB : IFlatbufferObject
   public bufferOwnership OWNERSHIP { get { int o = __p.__offset(16); return o != 0 ? (bufferOwnership)__p.bb.Get(o + __p.bb_pos) : bufferOwnership.HOST_OWNED; } }
   /// Optional opaque frame identifier for stream bookkeeping.
   public ulong FRAME_ID { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Optional port identifier for frames that route to/from a named
+  /// input or output port on a method (maps to
+  /// `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+  /// no port routing hint.
+  public string PORT_ID { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPORT_IDBytes() { return __p.__vector_as_span<byte>(20, 1); }
+#else
+  public ArraySegment<byte>? GetPORT_IDBytes() { return __p.__vector_as_arraysegment(20); }
+#endif
+  public byte[] GetPORT_IDArray() { return __p.__vector_as_array<byte>(20); }
 
   public static Offset<TAB> CreateTAB(FlatBufferBuilder builder,
       uint OFFSET = 0,
@@ -44,9 +55,11 @@ public struct TAB : IFlatbufferObject
       Offset<FlatBufferTypeRef> TYPE_REFOffset = default(Offset<FlatBufferTypeRef>),
       bufferMutability MUTABILITY = bufferMutability.IMMUTABLE,
       bufferOwnership OWNERSHIP = bufferOwnership.HOST_OWNED,
-      ulong FRAME_ID = 0) {
-    builder.StartTable(8);
+      ulong FRAME_ID = 0,
+      StringOffset PORT_IDOffset = default(StringOffset)) {
+    builder.StartTable(9);
     TAB.AddFRAME_ID(builder, FRAME_ID);
+    TAB.AddPORT_ID(builder, PORT_IDOffset);
     TAB.AddTYPE_REF(builder, TYPE_REFOffset);
     TAB.AddALIGNMENT(builder, ALIGNMENT);
     TAB.AddSIZE(builder, SIZE);
@@ -57,7 +70,7 @@ public struct TAB : IFlatbufferObject
     return TAB.EndTAB(builder);
   }
 
-  public static void StartTAB(FlatBufferBuilder builder) { builder.StartTable(8); }
+  public static void StartTAB(FlatBufferBuilder builder) { builder.StartTable(9); }
   public static void AddOFFSET(FlatBufferBuilder builder, uint OFFSET) { builder.AddUint(0, OFFSET, 0); }
   public static void AddSIZE(FlatBufferBuilder builder, uint SIZE) { builder.AddUint(1, SIZE, 0); }
   public static void AddALIGNMENT(FlatBufferBuilder builder, uint ALIGNMENT) { builder.AddUint(2, ALIGNMENT, 0); }
@@ -66,6 +79,7 @@ public struct TAB : IFlatbufferObject
   public static void AddMUTABILITY(FlatBufferBuilder builder, bufferMutability MUTABILITY) { builder.AddByte(5, (byte)MUTABILITY, 0); }
   public static void AddOWNERSHIP(FlatBufferBuilder builder, bufferOwnership OWNERSHIP) { builder.AddByte(6, (byte)OWNERSHIP, 0); }
   public static void AddFRAME_ID(FlatBufferBuilder builder, ulong FRAME_ID) { builder.AddUlong(7, FRAME_ID, 0); }
+  public static void AddPORT_ID(FlatBufferBuilder builder, StringOffset PORT_IDOffset) { builder.AddOffset(8, PORT_IDOffset.Value, 0); }
   public static Offset<TAB> EndTAB(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<TAB>(o);
@@ -86,10 +100,12 @@ public struct TAB : IFlatbufferObject
     _o.MUTABILITY = this.MUTABILITY;
     _o.OWNERSHIP = this.OWNERSHIP;
     _o.FRAME_ID = this.FRAME_ID;
+    _o.PORT_ID = this.PORT_ID;
   }
   public static Offset<TAB> Pack(FlatBufferBuilder builder, TABT _o) {
     if (_o == null) return default(Offset<TAB>);
     var _TYPE_REF = _o.TYPE_REF == null ? default(Offset<FlatBufferTypeRef>) : FlatBufferTypeRef.Pack(builder, _o.TYPE_REF);
+    var _PORT_ID = _o.PORT_ID == null ? default(StringOffset) : builder.CreateString(_o.PORT_ID);
     return CreateTAB(
       builder,
       _o.OFFSET,
@@ -99,7 +115,8 @@ public struct TAB : IFlatbufferObject
       _TYPE_REF,
       _o.MUTABILITY,
       _o.OWNERSHIP,
-      _o.FRAME_ID);
+      _o.FRAME_ID,
+      _PORT_ID);
   }
 }
 
@@ -113,6 +130,7 @@ public class TABT
   public bufferMutability MUTABILITY { get; set; }
   public bufferOwnership OWNERSHIP { get; set; }
   public ulong FRAME_ID { get; set; }
+  public string PORT_ID { get; set; }
 
   public TABT() {
     this.OFFSET = 0;
@@ -123,6 +141,7 @@ public class TABT
     this.MUTABILITY = bufferMutability.IMMUTABLE;
     this.OWNERSHIP = bufferOwnership.HOST_OWNED;
     this.FRAME_ID = 0;
+    this.PORT_ID = null;
   }
   public static TABT DeserializeFromBinary(byte[] fbBuffer) {
     return TAB.GetRootAsTAB(new ByteBuffer(fbBuffer)).UnPack();
@@ -148,6 +167,7 @@ static public class TABVerify
       && verifier.VerifyField(tablePos, 14 /*MUTABILITY*/, 1 /*bufferMutability*/, 1, false)
       && verifier.VerifyField(tablePos, 16 /*OWNERSHIP*/, 1 /*bufferOwnership*/, 1, false)
       && verifier.VerifyField(tablePos, 18 /*FRAME_ID*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 20 /*PORT_ID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

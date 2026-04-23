@@ -1,5 +1,5 @@
-// Hash: b8c2e366b6043b9965378116012c26a823220b486ee53e9f7bfb26bc25c364cd
-// Version: 0.0.2
+// Hash: c4bb7e216c40e11c61223dd2e230cc75635f5efb0e389b3064e8d336d3858592
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 /// Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
 /// through an arena-backed plugin stream. Carries enough identity for a
@@ -63,6 +63,11 @@ table TAB {
   OWNERSHIP:bufferOwnership;
   /// Optional opaque frame identifier for stream bookkeeping.
   FRAME_ID:ulong;
+  /// Optional port identifier for frames that route to/from a named
+  /// input or output port on a method (maps to
+  /// `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+  /// no port routing hint.
+  PORT_ID:string;
 }
 
 root_type TAB;

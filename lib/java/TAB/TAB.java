@@ -61,6 +61,15 @@ public final class TAB extends com.google.flatbuffers.Table {
    * Optional opaque frame identifier for stream bookkeeping.
    */
   public long FRAME_ID() { int o = __offset(18); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Optional port identifier for frames that route to/from a named
+   * input or output port on a method (maps to
+   * `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+   * no port routing hint.
+   */
+  public String PORT_ID() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PORT_IDAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer PORT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
 
   public static int createTAB(FlatBufferBuilder builder,
       long OFFSET,
@@ -70,9 +79,11 @@ public final class TAB extends com.google.flatbuffers.Table {
       int TYPE_REFOffset,
       int MUTABILITY,
       int OWNERSHIP,
-      long FRAME_ID) {
-    builder.startTable(8);
+      long FRAME_ID,
+      int PORT_IDOffset) {
+    builder.startTable(9);
     TAB.addFrameId(builder, FRAME_ID);
+    TAB.addPortId(builder, PORT_IDOffset);
     TAB.addTypeRef(builder, TYPE_REFOffset);
     TAB.addAlignment(builder, ALIGNMENT);
     TAB.addSize(builder, SIZE);
@@ -83,7 +94,7 @@ public final class TAB extends com.google.flatbuffers.Table {
     return TAB.endTAB(builder);
   }
 
-  public static void startTAB(FlatBufferBuilder builder) { builder.startTable(8); }
+  public static void startTAB(FlatBufferBuilder builder) { builder.startTable(9); }
   public static void addOffset(FlatBufferBuilder builder, long OFFSET) { builder.addInt(0, (int) OFFSET, (int) 0L); }
   public static void addSize(FlatBufferBuilder builder, long SIZE) { builder.addInt(1, (int) SIZE, (int) 0L); }
   public static void addAlignment(FlatBufferBuilder builder, long ALIGNMENT) { builder.addInt(2, (int) ALIGNMENT, (int) 0L); }
@@ -92,6 +103,7 @@ public final class TAB extends com.google.flatbuffers.Table {
   public static void addMutability(FlatBufferBuilder builder, int MUTABILITY) { builder.addByte(5, (byte) MUTABILITY, (byte) 0); }
   public static void addOwnership(FlatBufferBuilder builder, int OWNERSHIP) { builder.addByte(6, (byte) OWNERSHIP, (byte) 0); }
   public static void addFrameId(FlatBufferBuilder builder, long FRAME_ID) { builder.addLong(7, FRAME_ID, 0L); }
+  public static void addPortId(FlatBufferBuilder builder, int PORT_IDOffset) { builder.addOffset(8, PORT_IDOffset, 0); }
   public static int endTAB(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

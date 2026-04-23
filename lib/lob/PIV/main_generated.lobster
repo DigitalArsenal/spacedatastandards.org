@@ -97,13 +97,19 @@ class TAB : flatbuffers.handle
     /// Optional opaque frame identifier for stream bookkeeping.
     def FRAME_ID() -> int:
         return flatbuffers.field_uint64(buf_, pos_, 18, 0)
+    /// Optional port identifier for frames that route to/from a named
+    /// input or output port on a method (maps to
+    /// `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+    /// no port routing hint.
+    def PORT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
 
 def GetRootAsTAB(buf:string): return TAB { buf, flatbuffers.indirect(buf, 0) }
 
 struct TABBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(8)
+        b_.StartObject(9)
         return this
     def add_OFFSET(OFFSET:int):
         b_.PrependUint32Slot(0, OFFSET, 0)
@@ -128,6 +134,9 @@ struct TABBuilder:
         return this
     def add_FRAME_ID(FRAME_ID:int):
         b_.PrependUint64Slot(7, FRAME_ID, 0)
+        return this
+    def add_PORT_ID(PORT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, PORT_ID)
         return this
     def end():
         return b_.EndObject()

@@ -97,6 +97,23 @@ class TAB : Table() {
             val o = __offset(18)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
+    /**
+     * Optional port identifier for frames that route to/from a named
+     * input or output port on a method (maps to
+     * `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+     * no port routing hint.
+     */
+    val portId : String?
+        get() {
+            val o = __offset(20)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val portIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun portIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTAB(_bb: ByteBuffer): TAB = getRootAsTAB(_bb, TAB())
@@ -105,9 +122,10 @@ class TAB : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TABBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TAB")
-        fun createTAB(builder: FlatBufferBuilder, offset: UInt, size: UInt, alignment: UInt, wireFormat: UByte, typeRefOffset: Int, mutability: UByte, ownership: UByte, frameId: ULong) : Int {
-            builder.startTable(8)
+        fun createTAB(builder: FlatBufferBuilder, offset: UInt, size: UInt, alignment: UInt, wireFormat: UByte, typeRefOffset: Int, mutability: UByte, ownership: UByte, frameId: ULong, portIdOffset: Int) : Int {
+            builder.startTable(9)
             addFRAMEID(builder, frameId)
+            addPORTID(builder, portIdOffset)
             addTYPEREF(builder, typeRefOffset)
             addALIGNMENT(builder, alignment)
             addSIZE(builder, size)
@@ -117,7 +135,7 @@ class TAB : Table() {
             addWIREFORMAT(builder, wireFormat)
             return endTAB(builder)
         }
-        fun startTAB(builder: FlatBufferBuilder) = builder.startTable(8)
+        fun startTAB(builder: FlatBufferBuilder) = builder.startTable(9)
         fun addOFFSET(builder: FlatBufferBuilder, offset: UInt) = builder.addInt(0, offset.toInt(), 0)
         fun addSIZE(builder: FlatBufferBuilder, size: UInt) = builder.addInt(1, size.toInt(), 0)
         fun addALIGNMENT(builder: FlatBufferBuilder, alignment: UInt) = builder.addInt(2, alignment.toInt(), 0)
@@ -126,6 +144,7 @@ class TAB : Table() {
         fun addMUTABILITY(builder: FlatBufferBuilder, mutability: UByte) = builder.addByte(5, mutability.toByte(), 0)
         fun addOWNERSHIP(builder: FlatBufferBuilder, ownership: UByte) = builder.addByte(6, ownership.toByte(), 0)
         fun addFRAMEID(builder: FlatBufferBuilder, frameId: ULong) = builder.addLong(7, frameId.toLong(), 0)
+        fun addPORTID(builder: FlatBufferBuilder, portId: Int) = builder.addOffset(8, portId, 0)
         fun endTAB(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o
