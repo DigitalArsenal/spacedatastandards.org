@@ -1,0 +1,17 @@
+/**
+ * Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
+ * through an arena-backed plugin stream. Carries enough identity for a
+ * receiver to dispatch on schema without inspecting the payload bytes.
+ * Logical payload wire format for a stream frame or an accepted port type.
+ */
+export declare enum payloadWireFormat {
+    /**
+     * Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF.
+     */
+    FLATBUFFER = 0,
+    /**
+     * Body is a raw aligned binary chunk (for example zero-copy structs).
+     */
+    ALIGNED_BINARY = 1
+}
+//# sourceMappingURL=payloadWireFormat.d.ts.map

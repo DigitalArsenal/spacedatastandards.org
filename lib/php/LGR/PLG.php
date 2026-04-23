@@ -578,22 +578,195 @@ class PLG extends Table
         return $this->__vector_as_bytes(90);
     }
 
+    /// Canonical invoke surfaces this artifact exposes. A single plugin
+    /// MAY list both DIRECT and COMMAND when it supports both.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getINVOKE_SURFACES($j)
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : \invokeSurfaceKind::DIRECT;
+    }
+
+    /**
+     * @return int
+     */
+    public function getINVOKE_SURFACESLength()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getINVOKE_SURFACESBytes()
+    {
+        return $this->__vector_as_bytes(92);
+    }
+
+    /// Rich per-method invoke manifests (port shape, drain semantics,
+    /// accepted wire formats). ENTRY_FUNCTIONS retains the slim
+    /// name+input_schemas+output_schema summary; METHODS carries the full
+    /// invoke-surface detail including aligned-binary advertisement.
+    /**
+     * @returnVectorOffset
+     */
+    public function getMETHODS($j)
+    {
+        $o = $this->__offset(94);
+        $obj = new PLGMethodManifest();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMETHODSLength()
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Enum-typed host capability dependencies (richer than CAPABILITIES,
+    /// which is string-tagged metadata).
+    /**
+     * @returnVectorOffset
+     */
+    public function getHOST_CAPABILITIES($j)
+    {
+        $o = $this->__offset(96);
+        $obj = new PLGHostCapability();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHOST_CAPABILITIESLength()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Timer declarations for scheduled invocations.
+    /**
+     * @returnVectorOffset
+     */
+    public function getTIMERS($j)
+    {
+        $o = $this->__offset(98);
+        $obj = new PLGTimerSpec();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTIMERSLength()
+    {
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Protocol handler declarations.
+    /**
+     * @returnVectorOffset
+     */
+    public function getPROTOCOLS($j)
+    {
+        $o = $this->__offset(100);
+        $obj = new PLGProtocolSpec();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPROTOCOLSLength()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// FlatBuffer schemas this plugin depends on at the invoke surface.
+    /**
+     * @returnVectorOffset
+     */
+    public function getSCHEMAS_USED($j)
+    {
+        $o = $this->__offset(102);
+        $obj = new FlatBufferTypeRef();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSCHEMAS_USEDLength()
+    {
+        $o = $this->__offset(102);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+    /**
+     * @returnVectorOffset
+     */
+    public function getBUILD_ARTIFACTS($j)
+    {
+        $o = $this->__offset(104);
+        $obj = new PLGBuildArtifact();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBUILD_ARTIFACTSLength()
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getRUNTIME_TARGETS($j)
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRUNTIME_TARGETSLength()
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPLG(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(44);
+        $builder->StartObject(52);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PLG
      */
-    public static function createPLG(FlatBufferBuilder $builder, $PLUGIN_ID, $NAME, $VERSION, $DESCRIPTION, $TAGLINE, $PLUGIN_TYPE, $PUBLISHER_NAME, $PUBLISHER_HANDLE, $PUBLISHER_URL, $SUPPORT_URL, $TAGS, $FEATURES, $SCREENSHOT_URLS, $BANNER_URL, $ABI_VERSION, $WASM_HASH, $WASM_SIZE, $WASM_CID, $ENCRYPTED_WASM_HASH, $ENCRYPTED_WASM_SIZE, $ENTRY_FUNCTIONS, $REQUIRED_SCHEMAS, $DEPENDENCIES, $CAPABILITIES, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $ENCRYPTED, $REQUIRED_SCOPE, $KEY_ID, $ALLOWED_DOMAINS, $MAX_GRANT_TIMEOUT_MS, $MIN_PERMISSIONS, $CREATED_AT, $UPDATED_AT, $DOCUMENTATION_URL, $CHANGELOG_URL, $ICON_URL, $LICENSE, $PAYMENT_MODEL, $PRICE_USD_CENTS, $SUBSCRIPTION_PERIOD_DAYS, $ACCEPTED_PAYMENT_METHODS, $LISTING_STATUS, $SIGNATURE)
+    public static function createPLG(FlatBufferBuilder $builder, $PLUGIN_ID, $NAME, $VERSION, $DESCRIPTION, $TAGLINE, $PLUGIN_TYPE, $PUBLISHER_NAME, $PUBLISHER_HANDLE, $PUBLISHER_URL, $SUPPORT_URL, $TAGS, $FEATURES, $SCREENSHOT_URLS, $BANNER_URL, $ABI_VERSION, $WASM_HASH, $WASM_SIZE, $WASM_CID, $ENCRYPTED_WASM_HASH, $ENCRYPTED_WASM_SIZE, $ENTRY_FUNCTIONS, $REQUIRED_SCHEMAS, $DEPENDENCIES, $CAPABILITIES, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $ENCRYPTED, $REQUIRED_SCOPE, $KEY_ID, $ALLOWED_DOMAINS, $MAX_GRANT_TIMEOUT_MS, $MIN_PERMISSIONS, $CREATED_AT, $UPDATED_AT, $DOCUMENTATION_URL, $CHANGELOG_URL, $ICON_URL, $LICENSE, $PAYMENT_MODEL, $PRICE_USD_CENTS, $SUBSCRIPTION_PERIOD_DAYS, $ACCEPTED_PAYMENT_METHODS, $LISTING_STATUS, $SIGNATURE, $INVOKE_SURFACES, $METHODS, $HOST_CAPABILITIES, $TIMERS, $PROTOCOLS, $SCHEMAS_USED, $BUILD_ARTIFACTS, $RUNTIME_TARGETS)
     {
-        $builder->startObject(44);
+        $builder->startObject(52);
         self::addPLUGIN_ID($builder, $PLUGIN_ID);
         self::addNAME($builder, $NAME);
         self::addVERSION($builder, $VERSION);
@@ -638,6 +811,14 @@ class PLG extends Table
         self::addACCEPTED_PAYMENT_METHODS($builder, $ACCEPTED_PAYMENT_METHODS);
         self::addLISTING_STATUS($builder, $LISTING_STATUS);
         self::addSIGNATURE($builder, $SIGNATURE);
+        self::addINVOKE_SURFACES($builder, $INVOKE_SURFACES);
+        self::addMETHODS($builder, $METHODS);
+        self::addHOST_CAPABILITIES($builder, $HOST_CAPABILITIES);
+        self::addTIMERS($builder, $TIMERS);
+        self::addPROTOCOLS($builder, $PROTOCOLS);
+        self::addSCHEMAS_USED($builder, $SCHEMAS_USED);
+        self::addBUILD_ARTIFACTS($builder, $BUILD_ARTIFACTS);
+        self::addRUNTIME_TARGETS($builder, $RUNTIME_TARGETS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // PLUGIN_ID
         $builder->required($o, 6);  // NAME
@@ -1395,6 +1576,278 @@ class PLG extends Table
     public static function startSIGNATUREVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addINVOKE_SURFACES(FlatBufferBuilder $builder, $INVOKE_SURFACES)
+    {
+        $builder->addOffsetX(44, $INVOKE_SURFACES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createINVOKE_SURFACESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startINVOKE_SURFACESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMETHODS(FlatBufferBuilder $builder, $METHODS)
+    {
+        $builder->addOffsetX(45, $METHODS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createMETHODSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startMETHODSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addHOST_CAPABILITIES(FlatBufferBuilder $builder, $HOST_CAPABILITIES)
+    {
+        $builder->addOffsetX(46, $HOST_CAPABILITIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createHOST_CAPABILITIESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startHOST_CAPABILITIESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTIMERS(FlatBufferBuilder $builder, $TIMERS)
+    {
+        $builder->addOffsetX(47, $TIMERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createTIMERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startTIMERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROTOCOLS(FlatBufferBuilder $builder, $PROTOCOLS)
+    {
+        $builder->addOffsetX(48, $PROTOCOLS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPROTOCOLSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPROTOCOLSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSCHEMAS_USED(FlatBufferBuilder $builder, $SCHEMAS_USED)
+    {
+        $builder->addOffsetX(49, $SCHEMAS_USED, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSCHEMAS_USEDVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSCHEMAS_USEDVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addBUILD_ARTIFACTS(FlatBufferBuilder $builder, $BUILD_ARTIFACTS)
+    {
+        $builder->addOffsetX(50, $BUILD_ARTIFACTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createBUILD_ARTIFACTSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startBUILD_ARTIFACTSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRUNTIME_TARGETS(FlatBufferBuilder $builder, $RUNTIME_TARGETS)
+    {
+        $builder->addOffsetX(51, $RUNTIME_TARGETS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createRUNTIME_TARGETSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startRUNTIME_TARGETSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

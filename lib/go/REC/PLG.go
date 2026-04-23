@@ -1028,8 +1028,295 @@ func (rcv *PLG) MutateSignature(j int, n byte) bool {
 	return rcv.MutateSIGNATURE(j, n)
 }
 
+/// Canonical invoke surfaces this artifact exposes. A single plugin
+/// MAY list both DIRECT and COMMAND when it supports both.
+func (rcv *PLG) INVOKE_SURFACES(j int) invokeSurfaceKind {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return invokeSurfaceKind(rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1)))
+	}
+	return 0
+}
+
+func (rcv *PLG) InvokeSurfaces(j int) invokeSurfaceKind {
+	return rcv.INVOKE_SURFACES(j)
+}
+
+func (rcv *PLG) INVOKE_SURFACESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) InvokeSurfacesLength() int {
+	return rcv.INVOKE_SURFACESLength()
+}
+
+func (rcv *PLG) INVOKE_SURFACESBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PLG) InvokeSurfacesBytes() []byte {
+	return rcv.INVOKE_SURFACESBytes()
+}
+
+/// Canonical invoke surfaces this artifact exposes. A single plugin
+/// MAY list both DIRECT and COMMAND when it supports both.
+func (rcv *PLG) MutateINVOKE_SURFACES(j int, n invokeSurfaceKind) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), byte(n))
+	}
+	return false
+}
+
+func (rcv *PLG) MutateInvokeSurfaces(j int, n invokeSurfaceKind) bool {
+	return rcv.MutateINVOKE_SURFACES(j, n)
+}
+
+/// Rich per-method invoke manifests (port shape, drain semantics,
+/// accepted wire formats). ENTRY_FUNCTIONS retains the slim
+/// name+input_schemas+output_schema summary; METHODS carries the full
+/// invoke-surface detail including aligned-binary advertisement.
+func (rcv *PLG) METHODS(obj *PLGMethodManifest, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PLGMethodManifest)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *PLG) Methods(obj *PLGMethodManifest, j int) bool {
+	return rcv.METHODS(obj, j)
+}
+
+func (rcv *PLG) METHODSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) MethodsLength() int {
+	return rcv.METHODSLength()
+}
+
+/// Rich per-method invoke manifests (port shape, drain semantics,
+/// accepted wire formats). ENTRY_FUNCTIONS retains the slim
+/// name+input_schemas+output_schema summary; METHODS carries the full
+/// invoke-surface detail including aligned-binary advertisement.
+/// Enum-typed host capability dependencies (richer than CAPABILITIES,
+/// which is string-tagged metadata).
+func (rcv *PLG) HOST_CAPABILITIES(obj *PLGHostCapability, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PLGHostCapability)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *PLG) HostCapabilities(obj *PLGHostCapability, j int) bool {
+	return rcv.HOST_CAPABILITIES(obj, j)
+}
+
+func (rcv *PLG) HOST_CAPABILITIESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) HostCapabilitiesLength() int {
+	return rcv.HOST_CAPABILITIESLength()
+}
+
+/// Enum-typed host capability dependencies (richer than CAPABILITIES,
+/// which is string-tagged metadata).
+/// Timer declarations for scheduled invocations.
+func (rcv *PLG) TIMERS(obj *PLGTimerSpec, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PLGTimerSpec)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *PLG) Timers(obj *PLGTimerSpec, j int) bool {
+	return rcv.TIMERS(obj, j)
+}
+
+func (rcv *PLG) TIMERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) TimersLength() int {
+	return rcv.TIMERSLength()
+}
+
+/// Timer declarations for scheduled invocations.
+/// Protocol handler declarations.
+func (rcv *PLG) PROTOCOLS(obj *PLGProtocolSpec, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PLGProtocolSpec)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *PLG) Protocols(obj *PLGProtocolSpec, j int) bool {
+	return rcv.PROTOCOLS(obj, j)
+}
+
+func (rcv *PLG) PROTOCOLSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) ProtocolsLength() int {
+	return rcv.PROTOCOLSLength()
+}
+
+/// Protocol handler declarations.
+/// FlatBuffer schemas this plugin depends on at the invoke surface.
+func (rcv *PLG) SCHEMAS_USED(obj *FlatBufferTypeRef, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(FlatBufferTypeRef)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *PLG) SchemasUsed(obj *FlatBufferTypeRef, j int) bool {
+	return rcv.SCHEMAS_USED(obj, j)
+}
+
+func (rcv *PLG) SCHEMAS_USEDLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) SchemasUsedLength() int {
+	return rcv.SCHEMAS_USEDLength()
+}
+
+/// FlatBuffer schemas this plugin depends on at the invoke surface.
+/// Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+func (rcv *PLG) BUILD_ARTIFACTS(obj *PLGBuildArtifact, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PLGBuildArtifact)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *PLG) BuildArtifacts(obj *PLGBuildArtifact, j int) bool {
+	return rcv.BUILD_ARTIFACTS(obj, j)
+}
+
+func (rcv *PLG) BUILD_ARTIFACTSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) BuildArtifactsLength() int {
+	return rcv.BUILD_ARTIFACTSLength()
+}
+
+/// Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+/// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+func (rcv *PLG) RUNTIME_TARGETS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *PLG) RuntimeTargets(j int) []byte {
+	return rcv.RUNTIME_TARGETS(j)
+}
+
+func (rcv *PLG) RUNTIME_TARGETSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) RuntimeTargetsLength() int {
+	return rcv.RUNTIME_TARGETSLength()
+}
+
+/// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
 func PLGStart(builder *flatbuffers.Builder) {
-	builder.StartObject(44)
+	builder.StartObject(52)
 }
 func PLGAddPLUGIN_ID(builder *flatbuffers.Builder, PLUGIN_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PLUGIN_ID), 0)
@@ -1372,6 +1659,102 @@ func PLGStartSIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuf
 }
 func PLGStartSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PLGStartSIGNATUREVector(builder, numElems)
+}
+func PLGAddINVOKE_SURFACES(builder *flatbuffers.Builder, INVOKE_SURFACES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(INVOKE_SURFACES), 0)
+}
+func PLGAddInvokeSurfaces(builder *flatbuffers.Builder, INVOKE_SURFACES flatbuffers.UOffsetT) {
+	PLGAddINVOKE_SURFACES(builder, INVOKE_SURFACES)
+}
+func PLGStartINVOKE_SURFACESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func PLGStartInvokeSurfacesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartINVOKE_SURFACESVector(builder, numElems)
+}
+func PLGAddMETHODS(builder *flatbuffers.Builder, METHODS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(METHODS), 0)
+}
+func PLGAddMethods(builder *flatbuffers.Builder, METHODS flatbuffers.UOffsetT) {
+	PLGAddMETHODS(builder, METHODS)
+}
+func PLGStartMETHODSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PLGStartMethodsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartMETHODSVector(builder, numElems)
+}
+func PLGAddHOST_CAPABILITIES(builder *flatbuffers.Builder, HOST_CAPABILITIES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(46, flatbuffers.UOffsetT(HOST_CAPABILITIES), 0)
+}
+func PLGAddHostCapabilities(builder *flatbuffers.Builder, HOST_CAPABILITIES flatbuffers.UOffsetT) {
+	PLGAddHOST_CAPABILITIES(builder, HOST_CAPABILITIES)
+}
+func PLGStartHOST_CAPABILITIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PLGStartHostCapabilitiesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartHOST_CAPABILITIESVector(builder, numElems)
+}
+func PLGAddTIMERS(builder *flatbuffers.Builder, TIMERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(TIMERS), 0)
+}
+func PLGAddTimers(builder *flatbuffers.Builder, TIMERS flatbuffers.UOffsetT) {
+	PLGAddTIMERS(builder, TIMERS)
+}
+func PLGStartTIMERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PLGStartTimersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartTIMERSVector(builder, numElems)
+}
+func PLGAddPROTOCOLS(builder *flatbuffers.Builder, PROTOCOLS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(48, flatbuffers.UOffsetT(PROTOCOLS), 0)
+}
+func PLGAddProtocols(builder *flatbuffers.Builder, PROTOCOLS flatbuffers.UOffsetT) {
+	PLGAddPROTOCOLS(builder, PROTOCOLS)
+}
+func PLGStartPROTOCOLSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PLGStartProtocolsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartPROTOCOLSVector(builder, numElems)
+}
+func PLGAddSCHEMAS_USED(builder *flatbuffers.Builder, SCHEMAS_USED flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(49, flatbuffers.UOffsetT(SCHEMAS_USED), 0)
+}
+func PLGAddSchemasUsed(builder *flatbuffers.Builder, SCHEMAS_USED flatbuffers.UOffsetT) {
+	PLGAddSCHEMAS_USED(builder, SCHEMAS_USED)
+}
+func PLGStartSCHEMAS_USEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PLGStartSchemasUsedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartSCHEMAS_USEDVector(builder, numElems)
+}
+func PLGAddBUILD_ARTIFACTS(builder *flatbuffers.Builder, BUILD_ARTIFACTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(50, flatbuffers.UOffsetT(BUILD_ARTIFACTS), 0)
+}
+func PLGAddBuildArtifacts(builder *flatbuffers.Builder, BUILD_ARTIFACTS flatbuffers.UOffsetT) {
+	PLGAddBUILD_ARTIFACTS(builder, BUILD_ARTIFACTS)
+}
+func PLGStartBUILD_ARTIFACTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PLGStartBuildArtifactsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartBUILD_ARTIFACTSVector(builder, numElems)
+}
+func PLGAddRUNTIME_TARGETS(builder *flatbuffers.Builder, RUNTIME_TARGETS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(51, flatbuffers.UOffsetT(RUNTIME_TARGETS), 0)
+}
+func PLGAddRuntimeTargets(builder *flatbuffers.Builder, RUNTIME_TARGETS flatbuffers.UOffsetT) {
+	PLGAddRUNTIME_TARGETS(builder, RUNTIME_TARGETS)
+}
+func PLGStartRUNTIME_TARGETSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PLGStartRuntimeTargetsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartRUNTIME_TARGETSVector(builder, numElems)
 }
 func PLGEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

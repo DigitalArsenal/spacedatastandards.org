@@ -1,0 +1,44 @@
+/**
+ * Host capability classes a plugin may request. Extends the simpler
+ * `PluginCapability` (which is name+version metadata) with the richer
+ * enum-based surface that runtime hosts gate on.
+ */
+export declare enum hostCapabilityKind {
+    CLOCK = 0,
+    RANDOM = 1,
+    LOGGING = 2,
+    TIMERS = 3,
+    PUBSUB = 4,
+    PROTOCOL_DIAL = 5,
+    PROTOCOL_HANDLE = 6,
+    STORAGE_QUERY = 7,
+    SCENE_ACCESS = 8,
+    ENTITY_ACCESS = 9,
+    RENDER_HOOKS = 10,
+    HTTP = 11,
+    FILESYSTEM = 12,
+    PIPE = 13,
+    NETWORK = 14,
+    DATABASE = 15,
+    STORAGE_ADAPTER = 16,
+    STORAGE_WRITE = 17,
+    WALLET_SIGN = 18,
+    IPFS = 19,
+    TLS = 20,
+    MQTT = 21,
+    WEBSOCKET = 22,
+    TCP = 23,
+    UDP = 24,
+    PROCESS_EXEC = 25,
+    CONTEXT_READ = 26,
+    CONTEXT_WRITE = 27,
+    CRYPTO_HASH = 28,
+    CRYPTO_SIGN = 29,
+    CRYPTO_VERIFY = 30,
+    CRYPTO_ENCRYPT = 31,
+    CRYPTO_DECRYPT = 32,
+    CRYPTO_KEY_AGREEMENT = 33,
+    CRYPTO_KDF = 34,
+    SCHEDULE_CRON = 35
+}
+//# sourceMappingURL=hostCapabilityKind.d.ts.map

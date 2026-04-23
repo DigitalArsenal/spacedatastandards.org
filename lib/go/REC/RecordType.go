@@ -106,60 +106,61 @@ const (
 	RecordTypeOSM  RecordType = 96
 	RecordTypePCF  RecordType = 97
 	RecordTypePHY  RecordType = 98
-	RecordTypePLD  RecordType = 99
-	RecordTypePLG  RecordType = 100
-	RecordTypePLK  RecordType = 101
-	RecordTypePNM  RecordType = 102
-	RecordTypePPE  RecordType = 103
-	RecordTypePRG  RecordType = 104
-	RecordTypePRW  RecordType = 105
-	RecordTypePUR  RecordType = 106
-	RecordTypeRAF  RecordType = 107
-	RecordTypeRCF  RecordType = 108
-	RecordTypeRDM  RecordType = 109
-	RecordTypeRDO  RecordType = 110
-	RecordTypeREV  RecordType = 111
-	RecordTypeRFB  RecordType = 112
-	RecordTypeRFE  RecordType = 113
-	RecordTypeRFM  RecordType = 114
-	RecordTypeRFO  RecordType = 115
-	RecordTypeROC  RecordType = 116
-	RecordTypeSAR  RecordType = 117
-	RecordTypeSCM  RecordType = 118
-	RecordTypeSDF  RecordType = 119
-	RecordTypeSDL  RecordType = 120
-	RecordTypeSDR  RecordType = 121
-	RecordTypeSEN  RecordType = 122
-	RecordTypeSEO  RecordType = 123
-	RecordTypeSEV  RecordType = 124
-	RecordTypeSHW  RecordType = 125
-	RecordTypeSIT  RecordType = 126
-	RecordTypeSKI  RecordType = 127
-	RecordTypeSNR  RecordType = 128
-	RecordTypeSNW  RecordType = 129
-	RecordTypeSOI  RecordType = 130
-	RecordTypeSON  RecordType = 131
-	RecordTypeSPP  RecordType = 132
-	RecordTypeSPW  RecordType = 133
-	RecordTypeSRI  RecordType = 134
-	RecordTypeSTF  RecordType = 135
-	RecordTypeSTR  RecordType = 136
-	RecordTypeSTV  RecordType = 137
-	RecordTypeSWR  RecordType = 138
-	RecordTypeTAB  RecordType = 139
-	RecordTypeTCF  RecordType = 140
-	RecordTypeTDM  RecordType = 141
-	RecordTypeTIM  RecordType = 142
-	RecordTypeTKG  RecordType = 143
-	RecordTypeTME  RecordType = 144
-	RecordTypeTMF  RecordType = 145
-	RecordTypeTPN  RecordType = 146
-	RecordTypeTRK  RecordType = 147
-	RecordTypeTRN  RecordType = 148
-	RecordTypeVCM  RecordType = 149
-	RecordTypeWPN  RecordType = 150
-	RecordTypeWTH  RecordType = 151
-	RecordTypeXTC  RecordType = 152
+	RecordTypePIV  RecordType = 99
+	RecordTypePLD  RecordType = 100
+	RecordTypePLG  RecordType = 101
+	RecordTypePLK  RecordType = 102
+	RecordTypePNM  RecordType = 103
+	RecordTypePPE  RecordType = 104
+	RecordTypePRG  RecordType = 105
+	RecordTypePRW  RecordType = 106
+	RecordTypePUR  RecordType = 107
+	RecordTypeRAF  RecordType = 108
+	RecordTypeRCF  RecordType = 109
+	RecordTypeRDM  RecordType = 110
+	RecordTypeRDO  RecordType = 111
+	RecordTypeREV  RecordType = 112
+	RecordTypeRFB  RecordType = 113
+	RecordTypeRFE  RecordType = 114
+	RecordTypeRFM  RecordType = 115
+	RecordTypeRFO  RecordType = 116
+	RecordTypeROC  RecordType = 117
+	RecordTypeSAR  RecordType = 118
+	RecordTypeSCM  RecordType = 119
+	RecordTypeSDF  RecordType = 120
+	RecordTypeSDL  RecordType = 121
+	RecordTypeSDR  RecordType = 122
+	RecordTypeSEN  RecordType = 123
+	RecordTypeSEO  RecordType = 124
+	RecordTypeSEV  RecordType = 125
+	RecordTypeSHW  RecordType = 126
+	RecordTypeSIT  RecordType = 127
+	RecordTypeSKI  RecordType = 128
+	RecordTypeSNR  RecordType = 129
+	RecordTypeSNW  RecordType = 130
+	RecordTypeSOI  RecordType = 131
+	RecordTypeSON  RecordType = 132
+	RecordTypeSPP  RecordType = 133
+	RecordTypeSPW  RecordType = 134
+	RecordTypeSRI  RecordType = 135
+	RecordTypeSTF  RecordType = 136
+	RecordTypeSTR  RecordType = 137
+	RecordTypeSTV  RecordType = 138
+	RecordTypeSWR  RecordType = 139
+	RecordTypeTAB  RecordType = 140
+	RecordTypeTCF  RecordType = 141
+	RecordTypeTDM  RecordType = 142
+	RecordTypeTIM  RecordType = 143
+	RecordTypeTKG  RecordType = 144
+	RecordTypeTME  RecordType = 145
+	RecordTypeTMF  RecordType = 146
+	RecordTypeTPN  RecordType = 147
+	RecordTypeTRK  RecordType = 148
+	RecordTypeTRN  RecordType = 149
+	RecordTypeVCM  RecordType = 150
+	RecordTypeWPN  RecordType = 151
+	RecordTypeWTH  RecordType = 152
+	RecordTypeXTC  RecordType = 153
 )
 
 var EnumNamesRecordType = map[RecordType]string{
@@ -262,6 +263,7 @@ var EnumNamesRecordType = map[RecordType]string{
 	RecordTypeOSM:  "OSM",
 	RecordTypePCF:  "PCF",
 	RecordTypePHY:  "PHY",
+	RecordTypePIV:  "PIV",
 	RecordTypePLD:  "PLD",
 	RecordTypePLG:  "PLG",
 	RecordTypePLK:  "PLK",
@@ -418,6 +420,7 @@ var EnumValuesRecordType = map[string]RecordType{
 	"OSM":  RecordTypeOSM,
 	"PCF":  RecordTypePCF,
 	"PHY":  RecordTypePHY,
+	"PIV":  RecordTypePIV,
 	"PLD":  RecordTypePLD,
 	"PLG":  RecordTypePLG,
 	"PLK":  RecordTypePLK,

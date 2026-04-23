@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "payloadWireFormat": {
+      "type": "string",
+      "enum": [
+        "FLATBUFFER",
+        "ALIGNED_BINARY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "FLATBUFFER": {
+          "value": 0,
+          "description": "Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF."
+        },
+        "ALIGNED_BINARY": {
+          "value": 1,
+          "description": "Body is a raw aligned binary chunk (for example zero-copy structs)."
+        }
+      }
+    },
+    "bufferMutability": {
+      "type": "string",
+      "enum": [
+        "IMMUTABLE",
+        "SINGLE_WRITER_MUTABLE",
+        "APPEND_ONLY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "IMMUTABLE": {
+          "value": 0,
+          "description": "Buffer is immutable after produce."
+        },
+        "SINGLE_WRITER_MUTABLE": {
+          "value": 1,
+          "description": "Buffer may be written in place by the owner (single writer)."
+        },
+        "APPEND_ONLY": {
+          "value": 2,
+          "description": "Buffer is append-only (rings / logs)."
+        }
+      }
+    },
+    "bufferOwnership": {
+      "type": "string",
+      "enum": [
+        "HOST_OWNED",
+        "PLUGIN_OWNED",
+        "TRANSFERRED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "HOST_OWNED": {
+          "value": 0,
+          "description": "Arena / host owns the backing bytes; receiver must not free."
+        },
+        "PLUGIN_OWNED": {
+          "value": 1,
+          "description": "Plugin owns the backing bytes; host must not free."
+        },
+        "TRANSFERRED": {
+          "value": 2,
+          "description": "Ownership transfers with the frame (hand-off semantics)."
+        }
+      }
+    },
+    "FlatBufferTypeRef": {
+      "type": "object",
+      "description": "Payload-schema identity for a stream frame or an accepted port type.",
+      "properties": {
+        "SCHEMA_NAME": {
+          "type": "string",
+          "description": "Logical schema name (for example `OMM.fbs` or `OCM.fbs`).",
+          "x-flatbuffer-type": "string"
+        },
+        "FILE_IDENTIFIER": {
+          "type": "string",
+          "description": "Optional 4-byte FlatBuffer file identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "SCHEMA_VERSION": {
+          "type": "string",
+          "description": "Optional semver or schema revision string.",
+          "x-flatbuffer-type": "string"
+        },
+        "ROOT_TYPE": {
+          "type": "string",
+          "description": "Optional root type name within the schema.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TAB": {
+      "type": "object",
+      "description": "Typed Arena Buffer \u2014 one descriptor for a payload slot in a shared arena.",
+      "properties": {
+        "OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Byte offset of the payload body within the arena.",
+          "x-flatbuffer-type": "uint"
+        },
+        "SIZE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Byte length of the payload body.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ALIGNMENT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Required start alignment of the payload body (in bytes).",
+          "x-flatbuffer-type": "uint"
+        },
+        "WIRE_FORMAT": {
+          "$ref": "#/definitions/payloadWireFormat",
+          "description": "Wire format for the body.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "FLATBUFFER": {
+              "value": 0,
+              "description": "Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF."
+            },
+            "ALIGNED_BINARY": {
+              "value": 1,
+              "description": "Body is a raw aligned binary chunk (for example zero-copy structs)."
+            }
+          }
+        },
+        "TYPE_REF": {
+          "$ref": "#/definitions/FlatBufferTypeRef",
+          "description": "Optional payload schema identity.",
+          "x-flatbuffer-type": "FlatBufferTypeRef"
+        },
+        "MUTABILITY": {
+          "$ref": "#/definitions/bufferMutability",
+          "description": "Mutability contract for the slot.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "IMMUTABLE": {
+              "value": 0,
+              "description": "Buffer is immutable after produce."
+            },
+            "SINGLE_WRITER_MUTABLE": {
+              "value": 1,
+              "description": "Buffer may be written in place by the owner (single writer)."
+            },
+            "APPEND_ONLY": {
+              "value": 2,
+              "description": "Buffer is append-only (rings / logs)."
+            }
+          }
+        },
+        "OWNERSHIP": {
+          "$ref": "#/definitions/bufferOwnership",
+          "description": "Ownership contract for the slot.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "HOST_OWNED": {
+              "value": 0,
+              "description": "Arena / host owns the backing bytes; receiver must not free."
+            },
+            "PLUGIN_OWNED": {
+              "value": 1,
+              "description": "Plugin owns the backing bytes; host must not free."
+            },
+            "TRANSFERRED": {
+              "value": 2,
+              "description": "Ownership transfers with the frame (hand-off semantics)."
+            }
+          }
+        },
+        "FRAME_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Optional opaque frame identifier for stream bookkeeping.",
+          "x-flatbuffer-type": "ulong"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/TAB",
+  "x-flatbuffer-root-type": "PIV",
+  "x-flatbuffer-file-identifier": "$PIV"
+}

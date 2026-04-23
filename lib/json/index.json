@@ -17839,357 +17839,203 @@
             },
             "$ref": "#/definitions/ETM"
         },
-        "PLG": {
+        "PIV": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "pluginCategory": {
+                "payloadWireFormat": {
                     "type": "string",
                     "enum": [
-                        "Sensor",
-                        "Propagator",
-                        "Renderer",
-                        "Analysis",
-                        "DataSource",
-                        "EW",
-                        "Comms",
-                        "Physics",
-                        "Shader"
+                        "FLATBUFFER",
+                        "ALIGNED_BINARY"
                     ]
                 },
-                "purchaseTier": {
+                "bufferMutability": {
                     "type": "string",
                     "enum": [
-                        "Free",
-                        "OneTime",
-                        "Subscription"
+                        "IMMUTABLE",
+                        "SINGLE_WRITER_MUTABLE",
+                        "APPEND_ONLY"
                     ]
                 },
-                "publicationState": {
+                "bufferOwnership": {
                     "type": "string",
                     "enum": [
-                        "Public",
-                        "Unlisted",
-                        "Retired"
+                        "HOST_OWNED",
+                        "PLUGIN_OWNED",
+                        "TRANSFERRED"
                     ]
                 },
-                "PluginCapability": {
+                "FlatBufferTypeRef": {
                     "type": "object",
-                    "description": "Plugin capability declaration",
+                    "description": "Payload-schema identity for a stream frame or an accepted port type.",
                     "properties": {
-                        "NAME": {
+                        "SCHEMA_NAME": {
                             "type": "string",
-                            "description": "Capability name, e.g., \"gpu_compute\", \"wasm_simd\""
+                            "description": "Logical schema name (for example `OMM.fbs` or `OCM.fbs`)."
                         },
-                        "VERSION": {
+                        "FILE_IDENTIFIER": {
                             "type": "string",
-                            "description": "Capability version"
+                            "description": "Optional 4-byte FlatBuffer file identifier."
                         },
-                        "REQUIRED": {
-                            "type": "boolean",
-                            "description": "Whether this capability is required"
+                        "SCHEMA_VERSION": {
+                            "type": "string",
+                            "description": "Optional semver or schema revision string."
+                        },
+                        "ROOT_TYPE": {
+                            "type": "string",
+                            "description": "Optional root type name within the schema."
                         }
                     },
                     "additionalProperties": false
                 },
-                "PluginDependency": {
+                "TAB": {
                     "type": "object",
-                    "description": "Plugin dependency on another plugin",
+                    "description": "Typed Arena Buffer \u2014 one descriptor for a payload slot in a shared arena.",
                     "properties": {
-                        "PLUGIN_ID": {
-                            "type": "string",
-                            "description": "Plugin ID of the dependency"
-                        },
-                        "MIN_VERSION": {
-                            "type": "string",
-                            "description": "Minimum version required (semver)"
-                        },
-                        "MAX_VERSION": {
-                            "type": "string",
-                            "description": "Maximum version allowed (optional)"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "EntryFunction": {
-                    "type": "object",
-                    "description": "Plugin entry point function definition",
-                    "properties": {
-                        "NAME": {
-                            "type": "string",
-                            "description": "Function name as exported from WASM"
-                        },
-                        "DESCRIPTION": {
-                            "type": "string",
-                            "description": "Human-readable description"
-                        },
-                        "INPUT_SCHEMAS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "description": "Input parameter types (FlatBuffer schema names)"
-                        },
-                        "OUTPUT_SCHEMA": {
-                            "type": "string",
-                            "description": "Output type (FlatBuffer schema name)"
-                        }
-                    },
-                    "required": [
-                        "NAME"
-                    ],
-                    "additionalProperties": false
-                },
-                "PLG": {
-                    "type": "object",
-                    "description": "Plugin Manifest - canonical signed storefront and WASM distribution record",
-                    "properties": {
-                        "PLUGIN_ID": {
-                            "type": "string",
-                            "description": "Unique identifier for the plugin"
-                        },
-                        "NAME": {
-                            "type": "string",
-                            "description": "Human-readable plugin name"
-                        },
-                        "VERSION": {
-                            "type": "string",
-                            "description": "Plugin version (semver format)"
-                        },
-                        "DESCRIPTION": {
-                            "type": "string",
-                            "description": "Detailed description of plugin functionality"
-                        },
-                        "TAGLINE": {
-                            "type": "string",
-                            "description": "Short marketing summary shown in storefront listings"
-                        },
-                        "PLUGIN_TYPE": {
-                            "$ref": "#/definitions/pluginCategory",
-                            "description": "Type/category of the plugin"
-                        },
-                        "PUBLISHER_NAME": {
-                            "type": "string",
-                            "description": "Human-readable publisher or organization name"
-                        },
-                        "PUBLISHER_HANDLE": {
-                            "type": "string",
-                            "description": "Publisher handle or username"
-                        },
-                        "PUBLISHER_URL": {
-                            "type": "string",
-                            "description": "Canonical publisher website"
-                        },
-                        "SUPPORT_URL": {
-                            "type": "string",
-                            "description": "Support or helpdesk URL for this plugin"
-                        },
-                        "TAGS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "description": "Search and categorization tags for discovery"
-                        },
-                        "FEATURES": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "description": "Short feature bullets highlighted in storefront listings"
-                        },
-                        "SCREENSHOT_URLS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "description": "Screenshot URLs showing the plugin in use"
-                        },
-                        "BANNER_URL": {
-                            "type": "string",
-                            "description": "Optional hero/banner image URL for the listing"
-                        },
-                        "ABI_VERSION": {
+                        "OFFSET": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 4294967295,
-                            "description": "ABI version for compatibility checking"
+                            "description": "Byte offset of the payload body within the arena."
                         },
-                        "WASM_HASH": {
-                            "type": "array",
-                            "items": {
-                                "type": "integer",
-                                "minimum": 0,
-                                "maximum": 255
-                            },
-                            "description": "SHA256 hash of the decrypted WASM binary"
-                        },
-                        "WASM_SIZE": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 18446744073709551615,
-                            "description": "Size of decrypted WASM binary in bytes"
-                        },
-                        "WASM_CID": {
-                            "type": "string",
-                            "description": "IPFS CID of the encrypted WASM binary"
-                        },
-                        "ENCRYPTED_WASM_HASH": {
-                            "type": "array",
-                            "items": {
-                                "type": "integer",
-                                "minimum": 0,
-                                "maximum": 255
-                            },
-                            "description": "SHA256 hash of the encrypted delivery artifact bytes"
-                        },
-                        "ENCRYPTED_WASM_SIZE": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 18446744073709551615,
-                            "description": "Size of the encrypted delivery artifact in bytes"
-                        },
-                        "ENTRY_FUNCTIONS": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/EntryFunction"
-                            },
-                            "description": "Entry point functions exported by the plugin"
-                        },
-                        "REQUIRED_SCHEMAS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "description": "FlatBuffer schemas required by this plugin"
-                        },
-                        "DEPENDENCIES": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/PluginDependency"
-                            },
-                            "description": "Other plugins this depends on"
-                        },
-                        "CAPABILITIES": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/PluginCapability"
-                            },
-                            "description": "Capabilities provided by this plugin"
-                        },
-                        "PROVIDER_PEER_ID": {
-                            "type": "string",
-                            "description": "Peer ID of the plugin provider"
-                        },
-                        "PROVIDER_EPM_CID": {
-                            "type": "string",
-                            "description": "IPFS CID of provider's EPM (Entity Profile Message)"
-                        },
-                        "ENCRYPTED": {
-                            "type": "boolean",
-                            "description": "Whether the WASM binary is encrypted"
-                        },
-                        "REQUIRED_SCOPE": {
-                            "type": "string",
-                            "description": "Canonical required scope for grant issuance"
-                        },
-                        "KEY_ID": {
-                            "type": "string",
-                            "description": "Provider-local identifier for the module content key"
-                        },
-                        "ALLOWED_DOMAINS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "description": "Allowed requester domains for module grants"
-                        },
-                        "MAX_GRANT_TIMEOUT_MS": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 18446744073709551615,
-                            "description": "Maximum grant timeout allowed for this module publication"
-                        },
-                        "MIN_PERMISSIONS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "description": "Minimum permissions required to run"
-                        },
-                        "CREATED_AT": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 18446744073709551615,
-                            "description": "Unix timestamp when plugin was created"
-                        },
-                        "UPDATED_AT": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 18446744073709551615,
-                            "description": "Unix timestamp when plugin was last updated"
-                        },
-                        "DOCUMENTATION_URL": {
-                            "type": "string",
-                            "description": "URL to plugin documentation"
-                        },
-                        "CHANGELOG_URL": {
-                            "type": "string",
-                            "description": "URL to plugin changelog or release notes"
-                        },
-                        "ICON_URL": {
-                            "type": "string",
-                            "description": "URL to plugin icon/logo"
-                        },
-                        "LICENSE": {
-                            "type": "string",
-                            "description": "License identifier (SPDX format)"
-                        },
-                        "PAYMENT_MODEL": {
-                            "$ref": "#/definitions/purchaseTier",
-                            "description": "Commercial model used for storefront purchase flows"
-                        },
-                        "PRICE_USD_CENTS": {
+                        "SIZE": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 4294967295,
-                            "description": "Price in USD cents for one-time purchase or subscription period"
+                            "description": "Byte length of the payload body."
                         },
-                        "SUBSCRIPTION_PERIOD_DAYS": {
+                        "ALIGNMENT": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 4294967295,
-                            "description": "Subscription billing period length in days"
+                            "description": "Required start alignment of the payload body (in bytes)."
                         },
-                        "ACCEPTED_PAYMENT_METHODS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "description": "Accepted payment methods, e.g. \"stripe\", \"sol\", \"usdc\""
+                        "WIRE_FORMAT": {
+                            "$ref": "#/definitions/payloadWireFormat",
+                            "description": "Wire format for the body."
                         },
-                        "LISTING_STATUS": {
-                            "$ref": "#/definitions/publicationState",
-                            "description": "Storefront publication state for this manifest version"
+                        "TYPE_REF": {
+                            "$ref": "#/definitions/FlatBufferTypeRef",
+                            "description": "Optional payload schema identity."
                         },
-                        "SIGNATURE": {
-                            "type": "array",
-                            "items": {
-                                "type": "integer",
-                                "minimum": 0,
-                                "maximum": 255
-                            },
-                            "description": "Ed25519 signature from provider over manifest"
+                        "MUTABILITY": {
+                            "$ref": "#/definitions/bufferMutability",
+                            "description": "Mutability contract for the slot."
+                        },
+                        "OWNERSHIP": {
+                            "$ref": "#/definitions/bufferOwnership",
+                            "description": "Ownership contract for the slot."
+                        },
+                        "FRAME_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Optional opaque frame identifier for stream bookkeeping."
                         }
                     },
-                    "required": [
-                        "PLUGIN_ID",
-                        "NAME",
-                        "VERSION"
-                    ],
                     "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/PLG"
+            "$ref": "#/definitions/TAB"
+        },
+        "PLG": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "payloadWireFormat": {
+                    "type": "string",
+                    "enum": [
+                        "FLATBUFFER",
+                        "ALIGNED_BINARY"
+                    ]
+                },
+                "bufferMutability": {
+                    "type": "string",
+                    "enum": [
+                        "IMMUTABLE",
+                        "SINGLE_WRITER_MUTABLE",
+                        "APPEND_ONLY"
+                    ]
+                },
+                "bufferOwnership": {
+                    "type": "string",
+                    "enum": [
+                        "HOST_OWNED",
+                        "PLUGIN_OWNED",
+                        "TRANSFERRED"
+                    ]
+                },
+                "FlatBufferTypeRef": {
+                    "type": "object",
+                    "description": "Payload-schema identity for a stream frame or an accepted port type.",
+                    "properties": {
+                        "SCHEMA_NAME": {
+                            "type": "string",
+                            "description": "Logical schema name (for example `OMM.fbs` or `OCM.fbs`)."
+                        },
+                        "FILE_IDENTIFIER": {
+                            "type": "string",
+                            "description": "Optional 4-byte FlatBuffer file identifier."
+                        },
+                        "SCHEMA_VERSION": {
+                            "type": "string",
+                            "description": "Optional semver or schema revision string."
+                        },
+                        "ROOT_TYPE": {
+                            "type": "string",
+                            "description": "Optional root type name within the schema."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TAB": {
+                    "type": "object",
+                    "description": "Typed Arena Buffer \u2014 one descriptor for a payload slot in a shared arena.",
+                    "properties": {
+                        "OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Byte offset of the payload body within the arena."
+                        },
+                        "SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Byte length of the payload body."
+                        },
+                        "ALIGNMENT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Required start alignment of the payload body (in bytes)."
+                        },
+                        "WIRE_FORMAT": {
+                            "$ref": "#/definitions/payloadWireFormat",
+                            "description": "Wire format for the body."
+                        },
+                        "TYPE_REF": {
+                            "$ref": "#/definitions/FlatBufferTypeRef",
+                            "description": "Optional payload schema identity."
+                        },
+                        "MUTABILITY": {
+                            "$ref": "#/definitions/bufferMutability",
+                            "description": "Mutability contract for the slot."
+                        },
+                        "OWNERSHIP": {
+                            "$ref": "#/definitions/bufferOwnership",
+                            "description": "Ownership contract for the slot."
+                        },
+                        "FRAME_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Optional opaque frame identifier for stream bookkeeping."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/TAB"
         },
         "GNO": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",

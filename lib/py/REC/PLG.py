@@ -586,8 +586,218 @@ class PLG(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
         return o == 0
 
+    # Canonical invoke surfaces this artifact exposes. A single plugin
+    # MAY list both DIRECT and COMMAND when it supports both.
+    # PLG
+    def INVOKE_SURFACES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # PLG
+    def INVOKE_SURFACESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # PLG
+    def INVOKE_SURFACESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def INVOKE_SURFACESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        return o == 0
+
+    # Rich per-method invoke manifests (port shape, drain semantics,
+    # accepted wire formats). ENTRY_FUNCTIONS retains the slim
+    # name+input_schemas+output_schema summary; METHODS carries the full
+    # invoke-surface detail including aligned-binary advertisement.
+    # PLG
+    def METHODS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PLGMethodManifest import PLGMethodManifest
+            obj = PLGMethodManifest()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PLG
+    def METHODSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def METHODSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        return o == 0
+
+    # Enum-typed host capability dependencies (richer than CAPABILITIES,
+    # which is string-tagged metadata).
+    # PLG
+    def HOST_CAPABILITIES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PLGHostCapability import PLGHostCapability
+            obj = PLGHostCapability()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PLG
+    def HOST_CAPABILITIESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def HOST_CAPABILITIESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        return o == 0
+
+    # Timer declarations for scheduled invocations.
+    # PLG
+    def TIMERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PLGTimerSpec import PLGTimerSpec
+            obj = PLGTimerSpec()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PLG
+    def TIMERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def TIMERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        return o == 0
+
+    # Protocol handler declarations.
+    # PLG
+    def PROTOCOLS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PLGProtocolSpec import PLGProtocolSpec
+            obj = PLGProtocolSpec()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PLG
+    def PROTOCOLSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def PROTOCOLSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        return o == 0
+
+    # FlatBuffer schemas this plugin depends on at the invoke surface.
+    # PLG
+    def SCHEMAS_USED(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from FlatBufferTypeRef import FlatBufferTypeRef
+            obj = FlatBufferTypeRef()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PLG
+    def SCHEMAS_USEDLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def SCHEMAS_USEDIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        return o == 0
+
+    # Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+    # PLG
+    def BUILD_ARTIFACTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PLGBuildArtifact import PLGBuildArtifact
+            obj = PLGBuildArtifact()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PLG
+    def BUILD_ARTIFACTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def BUILD_ARTIFACTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        return o == 0
+
+    # Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+    # PLG
+    def RUNTIME_TARGETS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # PLG
+    def RUNTIME_TARGETSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def RUNTIME_TARGETSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        return o == 0
+
 def PLGStart(builder):
-    builder.StartObject(44)
+    builder.StartObject(52)
 
 def Start(builder):
     PLGStart(builder)
@@ -1024,6 +1234,154 @@ def PLGCreateSIGNATUREVector(builder, data):
 def CreateSIGNATUREVector(builder, data):
     PLGCreateSIGNATUREVector(builder, data)
 
+def PLGAddINVOKE_SURFACES(builder, INVOKE_SURFACES):
+    builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(INVOKE_SURFACES), 0)
+
+def AddINVOKE_SURFACES(builder, INVOKE_SURFACES):
+    PLGAddINVOKE_SURFACES(builder, INVOKE_SURFACES)
+
+def PLGStartINVOKE_SURFACESVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartINVOKE_SURFACESVector(builder, numElems):
+    return PLGStartINVOKE_SURFACESVector(builder, numElems)
+
+def PLGCreateINVOKE_SURFACESVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateINVOKE_SURFACESVector(builder, data):
+    PLGCreateINVOKE_SURFACESVector(builder, data)
+
+def PLGAddMETHODS(builder, METHODS):
+    builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(METHODS), 0)
+
+def AddMETHODS(builder, METHODS):
+    PLGAddMETHODS(builder, METHODS)
+
+def PLGStartMETHODSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartMETHODSVector(builder, numElems):
+    return PLGStartMETHODSVector(builder, numElems)
+
+def PLGCreateMETHODSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMETHODSVector(builder, data):
+    PLGCreateMETHODSVector(builder, data)
+
+def PLGAddHOST_CAPABILITIES(builder, HOST_CAPABILITIES):
+    builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(HOST_CAPABILITIES), 0)
+
+def AddHOST_CAPABILITIES(builder, HOST_CAPABILITIES):
+    PLGAddHOST_CAPABILITIES(builder, HOST_CAPABILITIES)
+
+def PLGStartHOST_CAPABILITIESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartHOST_CAPABILITIESVector(builder, numElems):
+    return PLGStartHOST_CAPABILITIESVector(builder, numElems)
+
+def PLGCreateHOST_CAPABILITIESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateHOST_CAPABILITIESVector(builder, data):
+    PLGCreateHOST_CAPABILITIESVector(builder, data)
+
+def PLGAddTIMERS(builder, TIMERS):
+    builder.PrependUOffsetTRelativeSlot(47, flatbuffers.number_types.UOffsetTFlags.py_type(TIMERS), 0)
+
+def AddTIMERS(builder, TIMERS):
+    PLGAddTIMERS(builder, TIMERS)
+
+def PLGStartTIMERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartTIMERSVector(builder, numElems):
+    return PLGStartTIMERSVector(builder, numElems)
+
+def PLGCreateTIMERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTIMERSVector(builder, data):
+    PLGCreateTIMERSVector(builder, data)
+
+def PLGAddPROTOCOLS(builder, PROTOCOLS):
+    builder.PrependUOffsetTRelativeSlot(48, flatbuffers.number_types.UOffsetTFlags.py_type(PROTOCOLS), 0)
+
+def AddPROTOCOLS(builder, PROTOCOLS):
+    PLGAddPROTOCOLS(builder, PROTOCOLS)
+
+def PLGStartPROTOCOLSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPROTOCOLSVector(builder, numElems):
+    return PLGStartPROTOCOLSVector(builder, numElems)
+
+def PLGCreatePROTOCOLSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePROTOCOLSVector(builder, data):
+    PLGCreatePROTOCOLSVector(builder, data)
+
+def PLGAddSCHEMAS_USED(builder, SCHEMAS_USED):
+    builder.PrependUOffsetTRelativeSlot(49, flatbuffers.number_types.UOffsetTFlags.py_type(SCHEMAS_USED), 0)
+
+def AddSCHEMAS_USED(builder, SCHEMAS_USED):
+    PLGAddSCHEMAS_USED(builder, SCHEMAS_USED)
+
+def PLGStartSCHEMAS_USEDVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSCHEMAS_USEDVector(builder, numElems):
+    return PLGStartSCHEMAS_USEDVector(builder, numElems)
+
+def PLGCreateSCHEMAS_USEDVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSCHEMAS_USEDVector(builder, data):
+    PLGCreateSCHEMAS_USEDVector(builder, data)
+
+def PLGAddBUILD_ARTIFACTS(builder, BUILD_ARTIFACTS):
+    builder.PrependUOffsetTRelativeSlot(50, flatbuffers.number_types.UOffsetTFlags.py_type(BUILD_ARTIFACTS), 0)
+
+def AddBUILD_ARTIFACTS(builder, BUILD_ARTIFACTS):
+    PLGAddBUILD_ARTIFACTS(builder, BUILD_ARTIFACTS)
+
+def PLGStartBUILD_ARTIFACTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartBUILD_ARTIFACTSVector(builder, numElems):
+    return PLGStartBUILD_ARTIFACTSVector(builder, numElems)
+
+def PLGCreateBUILD_ARTIFACTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateBUILD_ARTIFACTSVector(builder, data):
+    PLGCreateBUILD_ARTIFACTSVector(builder, data)
+
+def PLGAddRUNTIME_TARGETS(builder, RUNTIME_TARGETS):
+    builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(RUNTIME_TARGETS), 0)
+
+def AddRUNTIME_TARGETS(builder, RUNTIME_TARGETS):
+    PLGAddRUNTIME_TARGETS(builder, RUNTIME_TARGETS)
+
+def PLGStartRUNTIME_TARGETSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartRUNTIME_TARGETSVector(builder, numElems):
+    return PLGStartRUNTIME_TARGETSVector(builder, numElems)
+
+def PLGCreateRUNTIME_TARGETSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRUNTIME_TARGETSVector(builder, data):
+    PLGCreateRUNTIME_TARGETSVector(builder, data)
+
 def PLGEnd(builder):
     return builder.EndObject()
 
@@ -1031,6 +1389,12 @@ def End(builder):
     return PLGEnd(builder)
 
 import EntryFunction
+import FlatBufferTypeRef
+import PLGBuildArtifact
+import PLGHostCapability
+import PLGMethodManifest
+import PLGProtocolSpec
+import PLGTimerSpec
 import PluginCapability
 import PluginDependency
 try:
@@ -1087,6 +1451,14 @@ class PLGT(object):
         ACCEPTED_PAYMENT_METHODS = None,
         LISTING_STATUS = 0,
         SIGNATURE = None,
+        INVOKE_SURFACES = None,
+        METHODS = None,
+        HOST_CAPABILITIES = None,
+        TIMERS = None,
+        PROTOCOLS = None,
+        SCHEMAS_USED = None,
+        BUILD_ARTIFACTS = None,
+        RUNTIME_TARGETS = None,
     ):
         self.PLUGIN_ID = PLUGIN_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -1132,6 +1504,14 @@ class PLGT(object):
         self.ACCEPTED_PAYMENT_METHODS = ACCEPTED_PAYMENT_METHODS  # type: Optional[List[Optional[str]]]
         self.LISTING_STATUS = LISTING_STATUS  # type: int
         self.SIGNATURE = SIGNATURE  # type: Optional[List[int]]
+        self.INVOKE_SURFACES = INVOKE_SURFACES  # type: Optional[List[int]]
+        self.METHODS = METHODS  # type: Optional[List[PLGMethodManifest.PLGMethodManifestT]]
+        self.HOST_CAPABILITIES = HOST_CAPABILITIES  # type: Optional[List[PLGHostCapability.PLGHostCapabilityT]]
+        self.TIMERS = TIMERS  # type: Optional[List[PLGTimerSpec.PLGTimerSpecT]]
+        self.PROTOCOLS = PROTOCOLS  # type: Optional[List[PLGProtocolSpec.PLGProtocolSpecT]]
+        self.SCHEMAS_USED = SCHEMAS_USED  # type: Optional[List[FlatBufferTypeRef.FlatBufferTypeRefT]]
+        self.BUILD_ARTIFACTS = BUILD_ARTIFACTS  # type: Optional[List[PLGBuildArtifact.PLGBuildArtifactT]]
+        self.RUNTIME_TARGETS = RUNTIME_TARGETS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1258,6 +1638,65 @@ class PLGT(object):
                     self.SIGNATURE.append(PLG.SIGNATURE(i))
             else:
                 self.SIGNATURE = PLG.SIGNATUREAsNumpy()
+        if not PLG.INVOKE_SURFACESIsNone():
+            if np is None:
+                self.INVOKE_SURFACES = []
+                for i in range(PLG.INVOKE_SURFACESLength()):
+                    self.INVOKE_SURFACES.append(PLG.INVOKE_SURFACES(i))
+            else:
+                self.INVOKE_SURFACES = PLG.INVOKE_SURFACESAsNumpy()
+        if not PLG.METHODSIsNone():
+            self.METHODS = []
+            for i in range(PLG.METHODSLength()):
+                if PLG.METHODS(i) is None:
+                    self.METHODS.append(None)
+                else:
+                    pLGMethodManifest_ = PLGMethodManifest.PLGMethodManifestT.InitFromObj(PLG.METHODS(i))
+                    self.METHODS.append(pLGMethodManifest_)
+        if not PLG.HOST_CAPABILITIESIsNone():
+            self.HOST_CAPABILITIES = []
+            for i in range(PLG.HOST_CAPABILITIESLength()):
+                if PLG.HOST_CAPABILITIES(i) is None:
+                    self.HOST_CAPABILITIES.append(None)
+                else:
+                    pLGHostCapability_ = PLGHostCapability.PLGHostCapabilityT.InitFromObj(PLG.HOST_CAPABILITIES(i))
+                    self.HOST_CAPABILITIES.append(pLGHostCapability_)
+        if not PLG.TIMERSIsNone():
+            self.TIMERS = []
+            for i in range(PLG.TIMERSLength()):
+                if PLG.TIMERS(i) is None:
+                    self.TIMERS.append(None)
+                else:
+                    pLGTimerSpec_ = PLGTimerSpec.PLGTimerSpecT.InitFromObj(PLG.TIMERS(i))
+                    self.TIMERS.append(pLGTimerSpec_)
+        if not PLG.PROTOCOLSIsNone():
+            self.PROTOCOLS = []
+            for i in range(PLG.PROTOCOLSLength()):
+                if PLG.PROTOCOLS(i) is None:
+                    self.PROTOCOLS.append(None)
+                else:
+                    pLGProtocolSpec_ = PLGProtocolSpec.PLGProtocolSpecT.InitFromObj(PLG.PROTOCOLS(i))
+                    self.PROTOCOLS.append(pLGProtocolSpec_)
+        if not PLG.SCHEMAS_USEDIsNone():
+            self.SCHEMAS_USED = []
+            for i in range(PLG.SCHEMAS_USEDLength()):
+                if PLG.SCHEMAS_USED(i) is None:
+                    self.SCHEMAS_USED.append(None)
+                else:
+                    flatBufferTypeRef_ = FlatBufferTypeRef.FlatBufferTypeRefT.InitFromObj(PLG.SCHEMAS_USED(i))
+                    self.SCHEMAS_USED.append(flatBufferTypeRef_)
+        if not PLG.BUILD_ARTIFACTSIsNone():
+            self.BUILD_ARTIFACTS = []
+            for i in range(PLG.BUILD_ARTIFACTSLength()):
+                if PLG.BUILD_ARTIFACTS(i) is None:
+                    self.BUILD_ARTIFACTS.append(None)
+                else:
+                    pLGBuildArtifact_ = PLGBuildArtifact.PLGBuildArtifactT.InitFromObj(PLG.BUILD_ARTIFACTS(i))
+                    self.BUILD_ARTIFACTS.append(pLGBuildArtifact_)
+        if not PLG.RUNTIME_TARGETSIsNone():
+            self.RUNTIME_TARGETS = []
+            for i in range(PLG.RUNTIME_TARGETSLength()):
+                self.RUNTIME_TARGETS.append(PLG.RUNTIME_TARGETS(i))
 
     # PLGT
     def Pack(self, builder):
@@ -1403,6 +1842,70 @@ class PLGT(object):
                 for i in reversed(range(len(self.SIGNATURE))):
                     builder.PrependUint8(self.SIGNATURE[i])
                 SIGNATURE = builder.EndVector()
+        if self.INVOKE_SURFACES is not None:
+            if np is not None and type(self.INVOKE_SURFACES) is np.ndarray:
+                INVOKE_SURFACES = builder.CreateNumpyVector(self.INVOKE_SURFACES)
+            else:
+                PLGStartINVOKE_SURFACESVector(builder, len(self.INVOKE_SURFACES))
+                for i in reversed(range(len(self.INVOKE_SURFACES))):
+                    builder.PrependUint8(self.INVOKE_SURFACES[i])
+                INVOKE_SURFACES = builder.EndVector()
+        if self.METHODS is not None:
+            METHODSlist = []
+            for i in range(len(self.METHODS)):
+                METHODSlist.append(self.METHODS[i].Pack(builder))
+            PLGStartMETHODSVector(builder, len(self.METHODS))
+            for i in reversed(range(len(self.METHODS))):
+                builder.PrependUOffsetTRelative(METHODSlist[i])
+            METHODS = builder.EndVector()
+        if self.HOST_CAPABILITIES is not None:
+            HOST_CAPABILITIESlist = []
+            for i in range(len(self.HOST_CAPABILITIES)):
+                HOST_CAPABILITIESlist.append(self.HOST_CAPABILITIES[i].Pack(builder))
+            PLGStartHOST_CAPABILITIESVector(builder, len(self.HOST_CAPABILITIES))
+            for i in reversed(range(len(self.HOST_CAPABILITIES))):
+                builder.PrependUOffsetTRelative(HOST_CAPABILITIESlist[i])
+            HOST_CAPABILITIES = builder.EndVector()
+        if self.TIMERS is not None:
+            TIMERSlist = []
+            for i in range(len(self.TIMERS)):
+                TIMERSlist.append(self.TIMERS[i].Pack(builder))
+            PLGStartTIMERSVector(builder, len(self.TIMERS))
+            for i in reversed(range(len(self.TIMERS))):
+                builder.PrependUOffsetTRelative(TIMERSlist[i])
+            TIMERS = builder.EndVector()
+        if self.PROTOCOLS is not None:
+            PROTOCOLSlist = []
+            for i in range(len(self.PROTOCOLS)):
+                PROTOCOLSlist.append(self.PROTOCOLS[i].Pack(builder))
+            PLGStartPROTOCOLSVector(builder, len(self.PROTOCOLS))
+            for i in reversed(range(len(self.PROTOCOLS))):
+                builder.PrependUOffsetTRelative(PROTOCOLSlist[i])
+            PROTOCOLS = builder.EndVector()
+        if self.SCHEMAS_USED is not None:
+            SCHEMAS_USEDlist = []
+            for i in range(len(self.SCHEMAS_USED)):
+                SCHEMAS_USEDlist.append(self.SCHEMAS_USED[i].Pack(builder))
+            PLGStartSCHEMAS_USEDVector(builder, len(self.SCHEMAS_USED))
+            for i in reversed(range(len(self.SCHEMAS_USED))):
+                builder.PrependUOffsetTRelative(SCHEMAS_USEDlist[i])
+            SCHEMAS_USED = builder.EndVector()
+        if self.BUILD_ARTIFACTS is not None:
+            BUILD_ARTIFACTSlist = []
+            for i in range(len(self.BUILD_ARTIFACTS)):
+                BUILD_ARTIFACTSlist.append(self.BUILD_ARTIFACTS[i].Pack(builder))
+            PLGStartBUILD_ARTIFACTSVector(builder, len(self.BUILD_ARTIFACTS))
+            for i in reversed(range(len(self.BUILD_ARTIFACTS))):
+                builder.PrependUOffsetTRelative(BUILD_ARTIFACTSlist[i])
+            BUILD_ARTIFACTS = builder.EndVector()
+        if self.RUNTIME_TARGETS is not None:
+            RUNTIME_TARGETSlist = []
+            for i in range(len(self.RUNTIME_TARGETS)):
+                RUNTIME_TARGETSlist.append(builder.CreateString(self.RUNTIME_TARGETS[i]))
+            PLGStartRUNTIME_TARGETSVector(builder, len(self.RUNTIME_TARGETS))
+            for i in reversed(range(len(self.RUNTIME_TARGETS))):
+                builder.PrependUOffsetTRelative(RUNTIME_TARGETSlist[i])
+            RUNTIME_TARGETS = builder.EndVector()
         PLGStart(builder)
         if self.PLUGIN_ID is not None:
             PLGAddPLUGIN_ID(builder, PLUGIN_ID)
@@ -1480,5 +1983,21 @@ class PLGT(object):
         PLGAddLISTING_STATUS(builder, self.LISTING_STATUS)
         if self.SIGNATURE is not None:
             PLGAddSIGNATURE(builder, SIGNATURE)
+        if self.INVOKE_SURFACES is not None:
+            PLGAddINVOKE_SURFACES(builder, INVOKE_SURFACES)
+        if self.METHODS is not None:
+            PLGAddMETHODS(builder, METHODS)
+        if self.HOST_CAPABILITIES is not None:
+            PLGAddHOST_CAPABILITIES(builder, HOST_CAPABILITIES)
+        if self.TIMERS is not None:
+            PLGAddTIMERS(builder, TIMERS)
+        if self.PROTOCOLS is not None:
+            PLGAddPROTOCOLS(builder, PROTOCOLS)
+        if self.SCHEMAS_USED is not None:
+            PLGAddSCHEMAS_USED(builder, SCHEMAS_USED)
+        if self.BUILD_ARTIFACTS is not None:
+            PLGAddBUILD_ARTIFACTS(builder, BUILD_ARTIFACTS)
+        if self.RUNTIME_TARGETS is not None:
+            PLGAddRUNTIME_TARGETS(builder, RUNTIME_TARGETS)
         PLG = PLGEnd(builder)
         return PLG

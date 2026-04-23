@@ -252,6 +252,41 @@ public struct PLG : IFlatbufferObject
   public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(90); }
 #endif
   public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(90); }
+  /// Canonical invoke surfaces this artifact exposes. A single plugin
+  /// MAY list both DIRECT and COMMAND when it supports both.
+  public invokeSurfaceKind INVOKE_SURFACES(int j) { int o = __p.__offset(92); return o != 0 ? (invokeSurfaceKind)__p.bb.Get(__p.__vector(o) + j * 1) : (invokeSurfaceKind)0; }
+  public int INVOKE_SURFACESLength { get { int o = __p.__offset(92); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<invokeSurfaceKind> GetINVOKE_SURFACESBytes() { return __p.__vector_as_span<invokeSurfaceKind>(92, 1); }
+#else
+  public ArraySegment<byte>? GetINVOKE_SURFACESBytes() { return __p.__vector_as_arraysegment(92); }
+#endif
+  public invokeSurfaceKind[] GetINVOKE_SURFACESArray() { int o = __p.__offset(92); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); invokeSurfaceKind[] a = new invokeSurfaceKind[l]; for (int i = 0; i < l; i++) { a[i] = (invokeSurfaceKind)__p.bb.Get(p + i * 1); } return a; }
+  /// Rich per-method invoke manifests (port shape, drain semantics,
+  /// accepted wire formats). ENTRY_FUNCTIONS retains the slim
+  /// name+input_schemas+output_schema summary; METHODS carries the full
+  /// invoke-surface detail including aligned-binary advertisement.
+  public PLGMethodManifest? METHODS(int j) { int o = __p.__offset(94); return o != 0 ? (PLGMethodManifest?)(new PLGMethodManifest()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int METHODSLength { get { int o = __p.__offset(94); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Enum-typed host capability dependencies (richer than CAPABILITIES,
+  /// which is string-tagged metadata).
+  public PLGHostCapability? HOST_CAPABILITIES(int j) { int o = __p.__offset(96); return o != 0 ? (PLGHostCapability?)(new PLGHostCapability()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int HOST_CAPABILITIESLength { get { int o = __p.__offset(96); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Timer declarations for scheduled invocations.
+  public PLGTimerSpec? TIMERS(int j) { int o = __p.__offset(98); return o != 0 ? (PLGTimerSpec?)(new PLGTimerSpec()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int TIMERSLength { get { int o = __p.__offset(98); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Protocol handler declarations.
+  public PLGProtocolSpec? PROTOCOLS(int j) { int o = __p.__offset(100); return o != 0 ? (PLGProtocolSpec?)(new PLGProtocolSpec()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int PROTOCOLSLength { get { int o = __p.__offset(100); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// FlatBuffer schemas this plugin depends on at the invoke surface.
+  public FlatBufferTypeRef? SCHEMAS_USED(int j) { int o = __p.__offset(102); return o != 0 ? (FlatBufferTypeRef?)(new FlatBufferTypeRef()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SCHEMAS_USEDLength { get { int o = __p.__offset(102); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+  public PLGBuildArtifact? BUILD_ARTIFACTS(int j) { int o = __p.__offset(104); return o != 0 ? (PLGBuildArtifact?)(new PLGBuildArtifact()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int BUILD_ARTIFACTSLength { get { int o = __p.__offset(104); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+  public string RUNTIME_TARGETS(int j) { int o = __p.__offset(106); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int RUNTIME_TARGETSLength { get { int o = __p.__offset(106); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<PLG> CreatePLG(FlatBufferBuilder builder,
       StringOffset PLUGIN_IDOffset = default(StringOffset),
@@ -297,13 +332,29 @@ public struct PLG : IFlatbufferObject
       uint SUBSCRIPTION_PERIOD_DAYS = 0,
       VectorOffset ACCEPTED_PAYMENT_METHODSOffset = default(VectorOffset),
       publicationState LISTING_STATUS = publicationState.Public,
-      VectorOffset SIGNATUREOffset = default(VectorOffset)) {
-    builder.StartTable(44);
+      VectorOffset SIGNATUREOffset = default(VectorOffset),
+      VectorOffset INVOKE_SURFACESOffset = default(VectorOffset),
+      VectorOffset METHODSOffset = default(VectorOffset),
+      VectorOffset HOST_CAPABILITIESOffset = default(VectorOffset),
+      VectorOffset TIMERSOffset = default(VectorOffset),
+      VectorOffset PROTOCOLSOffset = default(VectorOffset),
+      VectorOffset SCHEMAS_USEDOffset = default(VectorOffset),
+      VectorOffset BUILD_ARTIFACTSOffset = default(VectorOffset),
+      VectorOffset RUNTIME_TARGETSOffset = default(VectorOffset)) {
+    builder.StartTable(52);
     PLG.AddUPDATED_AT(builder, UPDATED_AT);
     PLG.AddCREATED_AT(builder, CREATED_AT);
     PLG.AddMAX_GRANT_TIMEOUT_MS(builder, MAX_GRANT_TIMEOUT_MS);
     PLG.AddENCRYPTED_WASM_SIZE(builder, ENCRYPTED_WASM_SIZE);
     PLG.AddWASM_SIZE(builder, WASM_SIZE);
+    PLG.AddRUNTIME_TARGETS(builder, RUNTIME_TARGETSOffset);
+    PLG.AddBUILD_ARTIFACTS(builder, BUILD_ARTIFACTSOffset);
+    PLG.AddSCHEMAS_USED(builder, SCHEMAS_USEDOffset);
+    PLG.AddPROTOCOLS(builder, PROTOCOLSOffset);
+    PLG.AddTIMERS(builder, TIMERSOffset);
+    PLG.AddHOST_CAPABILITIES(builder, HOST_CAPABILITIESOffset);
+    PLG.AddMETHODS(builder, METHODSOffset);
+    PLG.AddINVOKE_SURFACES(builder, INVOKE_SURFACESOffset);
     PLG.AddSIGNATURE(builder, SIGNATUREOffset);
     PLG.AddACCEPTED_PAYMENT_METHODS(builder, ACCEPTED_PAYMENT_METHODSOffset);
     PLG.AddSUBSCRIPTION_PERIOD_DAYS(builder, SUBSCRIPTION_PERIOD_DAYS);
@@ -346,7 +397,7 @@ public struct PLG : IFlatbufferObject
     return PLG.EndPLG(builder);
   }
 
-  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(44); }
+  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(52); }
   public static void AddPLUGIN_ID(FlatBufferBuilder builder, StringOffset PLUGIN_IDOffset) { builder.AddOffset(0, PLUGIN_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(2, VERSIONOffset.Value, 0); }
@@ -456,6 +507,54 @@ public struct PLG : IFlatbufferObject
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddINVOKE_SURFACES(FlatBufferBuilder builder, VectorOffset INVOKE_SURFACESOffset) { builder.AddOffset(44, INVOKE_SURFACESOffset.Value, 0); }
+  public static VectorOffset CreateINVOKE_SURFACESVector(FlatBufferBuilder builder, invokeSurfaceKind[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte((byte)data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateINVOKE_SURFACESVectorBlock(FlatBufferBuilder builder, invokeSurfaceKind[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINVOKE_SURFACESVectorBlock(FlatBufferBuilder builder, ArraySegment<invokeSurfaceKind> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINVOKE_SURFACESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<invokeSurfaceKind>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartINVOKE_SURFACESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddMETHODS(FlatBufferBuilder builder, VectorOffset METHODSOffset) { builder.AddOffset(45, METHODSOffset.Value, 0); }
+  public static VectorOffset CreateMETHODSVector(FlatBufferBuilder builder, Offset<PLGMethodManifest>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateMETHODSVectorBlock(FlatBufferBuilder builder, Offset<PLGMethodManifest>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMETHODSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGMethodManifest>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMETHODSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGMethodManifest>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartMETHODSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddHOST_CAPABILITIES(FlatBufferBuilder builder, VectorOffset HOST_CAPABILITIESOffset) { builder.AddOffset(46, HOST_CAPABILITIESOffset.Value, 0); }
+  public static VectorOffset CreateHOST_CAPABILITIESVector(FlatBufferBuilder builder, Offset<PLGHostCapability>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateHOST_CAPABILITIESVectorBlock(FlatBufferBuilder builder, Offset<PLGHostCapability>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateHOST_CAPABILITIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGHostCapability>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateHOST_CAPABILITIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGHostCapability>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartHOST_CAPABILITIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddTIMERS(FlatBufferBuilder builder, VectorOffset TIMERSOffset) { builder.AddOffset(47, TIMERSOffset.Value, 0); }
+  public static VectorOffset CreateTIMERSVector(FlatBufferBuilder builder, Offset<PLGTimerSpec>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateTIMERSVectorBlock(FlatBufferBuilder builder, Offset<PLGTimerSpec>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTIMERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGTimerSpec>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTIMERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGTimerSpec>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartTIMERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPROTOCOLS(FlatBufferBuilder builder, VectorOffset PROTOCOLSOffset) { builder.AddOffset(48, PROTOCOLSOffset.Value, 0); }
+  public static VectorOffset CreatePROTOCOLSVector(FlatBufferBuilder builder, Offset<PLGProtocolSpec>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreatePROTOCOLSVectorBlock(FlatBufferBuilder builder, Offset<PLGProtocolSpec>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePROTOCOLSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGProtocolSpec>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePROTOCOLSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGProtocolSpec>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartPROTOCOLSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSCHEMAS_USED(FlatBufferBuilder builder, VectorOffset SCHEMAS_USEDOffset) { builder.AddOffset(49, SCHEMAS_USEDOffset.Value, 0); }
+  public static VectorOffset CreateSCHEMAS_USEDVector(FlatBufferBuilder builder, Offset<FlatBufferTypeRef>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSCHEMAS_USEDVectorBlock(FlatBufferBuilder builder, Offset<FlatBufferTypeRef>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSCHEMAS_USEDVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<FlatBufferTypeRef>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSCHEMAS_USEDVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<FlatBufferTypeRef>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSCHEMAS_USEDVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddBUILD_ARTIFACTS(FlatBufferBuilder builder, VectorOffset BUILD_ARTIFACTSOffset) { builder.AddOffset(50, BUILD_ARTIFACTSOffset.Value, 0); }
+  public static VectorOffset CreateBUILD_ARTIFACTSVector(FlatBufferBuilder builder, Offset<PLGBuildArtifact>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateBUILD_ARTIFACTSVectorBlock(FlatBufferBuilder builder, Offset<PLGBuildArtifact>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateBUILD_ARTIFACTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGBuildArtifact>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateBUILD_ARTIFACTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGBuildArtifact>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartBUILD_ARTIFACTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddRUNTIME_TARGETS(FlatBufferBuilder builder, VectorOffset RUNTIME_TARGETSOffset) { builder.AddOffset(51, RUNTIME_TARGETSOffset.Value, 0); }
+  public static VectorOffset CreateRUNTIME_TARGETSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateRUNTIME_TARGETSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateRUNTIME_TARGETSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateRUNTIME_TARGETSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartRUNTIME_TARGETSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<PLG> EndPLG(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // PLUGIN_ID
@@ -528,6 +627,22 @@ public struct PLG : IFlatbufferObject
     _o.LISTING_STATUS = this.LISTING_STATUS;
     _o.SIGNATURE = new List<byte>();
     for (var _j = 0; _j < this.SIGNATURELength; ++_j) {_o.SIGNATURE.Add(this.SIGNATURE(_j));}
+    _o.INVOKE_SURFACES = new List<invokeSurfaceKind>();
+    for (var _j = 0; _j < this.INVOKE_SURFACESLength; ++_j) {_o.INVOKE_SURFACES.Add(this.INVOKE_SURFACES(_j));}
+    _o.METHODS = new List<PLGMethodManifestT>();
+    for (var _j = 0; _j < this.METHODSLength; ++_j) {_o.METHODS.Add(this.METHODS(_j).HasValue ? this.METHODS(_j).Value.UnPack() : null);}
+    _o.HOST_CAPABILITIES = new List<PLGHostCapabilityT>();
+    for (var _j = 0; _j < this.HOST_CAPABILITIESLength; ++_j) {_o.HOST_CAPABILITIES.Add(this.HOST_CAPABILITIES(_j).HasValue ? this.HOST_CAPABILITIES(_j).Value.UnPack() : null);}
+    _o.TIMERS = new List<PLGTimerSpecT>();
+    for (var _j = 0; _j < this.TIMERSLength; ++_j) {_o.TIMERS.Add(this.TIMERS(_j).HasValue ? this.TIMERS(_j).Value.UnPack() : null);}
+    _o.PROTOCOLS = new List<PLGProtocolSpecT>();
+    for (var _j = 0; _j < this.PROTOCOLSLength; ++_j) {_o.PROTOCOLS.Add(this.PROTOCOLS(_j).HasValue ? this.PROTOCOLS(_j).Value.UnPack() : null);}
+    _o.SCHEMAS_USED = new List<FlatBufferTypeRefT>();
+    for (var _j = 0; _j < this.SCHEMAS_USEDLength; ++_j) {_o.SCHEMAS_USED.Add(this.SCHEMAS_USED(_j).HasValue ? this.SCHEMAS_USED(_j).Value.UnPack() : null);}
+    _o.BUILD_ARTIFACTS = new List<PLGBuildArtifactT>();
+    for (var _j = 0; _j < this.BUILD_ARTIFACTSLength; ++_j) {_o.BUILD_ARTIFACTS.Add(this.BUILD_ARTIFACTS(_j).HasValue ? this.BUILD_ARTIFACTS(_j).Value.UnPack() : null);}
+    _o.RUNTIME_TARGETS = new List<string>();
+    for (var _j = 0; _j < this.RUNTIME_TARGETSLength; ++_j) {_o.RUNTIME_TARGETS.Add(this.RUNTIME_TARGETS(_j));}
   }
   public static Offset<PLG> Pack(FlatBufferBuilder builder, PLGT _o) {
     if (_o == null) return default(Offset<PLG>);
@@ -625,6 +740,53 @@ public struct PLG : IFlatbufferObject
       var __SIGNATURE = _o.SIGNATURE.ToArray();
       _SIGNATURE = CreateSIGNATUREVector(builder, __SIGNATURE);
     }
+    var _INVOKE_SURFACES = default(VectorOffset);
+    if (_o.INVOKE_SURFACES != null) {
+      var __INVOKE_SURFACES = _o.INVOKE_SURFACES.ToArray();
+      _INVOKE_SURFACES = CreateINVOKE_SURFACESVector(builder, __INVOKE_SURFACES);
+    }
+    var _METHODS = default(VectorOffset);
+    if (_o.METHODS != null) {
+      var __METHODS = new Offset<PLGMethodManifest>[_o.METHODS.Count];
+      for (var _j = 0; _j < __METHODS.Length; ++_j) { __METHODS[_j] = PLGMethodManifest.Pack(builder, _o.METHODS[_j]); }
+      _METHODS = CreateMETHODSVector(builder, __METHODS);
+    }
+    var _HOST_CAPABILITIES = default(VectorOffset);
+    if (_o.HOST_CAPABILITIES != null) {
+      var __HOST_CAPABILITIES = new Offset<PLGHostCapability>[_o.HOST_CAPABILITIES.Count];
+      for (var _j = 0; _j < __HOST_CAPABILITIES.Length; ++_j) { __HOST_CAPABILITIES[_j] = PLGHostCapability.Pack(builder, _o.HOST_CAPABILITIES[_j]); }
+      _HOST_CAPABILITIES = CreateHOST_CAPABILITIESVector(builder, __HOST_CAPABILITIES);
+    }
+    var _TIMERS = default(VectorOffset);
+    if (_o.TIMERS != null) {
+      var __TIMERS = new Offset<PLGTimerSpec>[_o.TIMERS.Count];
+      for (var _j = 0; _j < __TIMERS.Length; ++_j) { __TIMERS[_j] = PLGTimerSpec.Pack(builder, _o.TIMERS[_j]); }
+      _TIMERS = CreateTIMERSVector(builder, __TIMERS);
+    }
+    var _PROTOCOLS = default(VectorOffset);
+    if (_o.PROTOCOLS != null) {
+      var __PROTOCOLS = new Offset<PLGProtocolSpec>[_o.PROTOCOLS.Count];
+      for (var _j = 0; _j < __PROTOCOLS.Length; ++_j) { __PROTOCOLS[_j] = PLGProtocolSpec.Pack(builder, _o.PROTOCOLS[_j]); }
+      _PROTOCOLS = CreatePROTOCOLSVector(builder, __PROTOCOLS);
+    }
+    var _SCHEMAS_USED = default(VectorOffset);
+    if (_o.SCHEMAS_USED != null) {
+      var __SCHEMAS_USED = new Offset<FlatBufferTypeRef>[_o.SCHEMAS_USED.Count];
+      for (var _j = 0; _j < __SCHEMAS_USED.Length; ++_j) { __SCHEMAS_USED[_j] = FlatBufferTypeRef.Pack(builder, _o.SCHEMAS_USED[_j]); }
+      _SCHEMAS_USED = CreateSCHEMAS_USEDVector(builder, __SCHEMAS_USED);
+    }
+    var _BUILD_ARTIFACTS = default(VectorOffset);
+    if (_o.BUILD_ARTIFACTS != null) {
+      var __BUILD_ARTIFACTS = new Offset<PLGBuildArtifact>[_o.BUILD_ARTIFACTS.Count];
+      for (var _j = 0; _j < __BUILD_ARTIFACTS.Length; ++_j) { __BUILD_ARTIFACTS[_j] = PLGBuildArtifact.Pack(builder, _o.BUILD_ARTIFACTS[_j]); }
+      _BUILD_ARTIFACTS = CreateBUILD_ARTIFACTSVector(builder, __BUILD_ARTIFACTS);
+    }
+    var _RUNTIME_TARGETS = default(VectorOffset);
+    if (_o.RUNTIME_TARGETS != null) {
+      var __RUNTIME_TARGETS = new StringOffset[_o.RUNTIME_TARGETS.Count];
+      for (var _j = 0; _j < __RUNTIME_TARGETS.Length; ++_j) { __RUNTIME_TARGETS[_j] = builder.CreateString(_o.RUNTIME_TARGETS[_j]); }
+      _RUNTIME_TARGETS = CreateRUNTIME_TARGETSVector(builder, __RUNTIME_TARGETS);
+    }
     return CreatePLG(
       builder,
       _PLUGIN_ID,
@@ -670,7 +832,15 @@ public struct PLG : IFlatbufferObject
       _o.SUBSCRIPTION_PERIOD_DAYS,
       _ACCEPTED_PAYMENT_METHODS,
       _o.LISTING_STATUS,
-      _SIGNATURE);
+      _SIGNATURE,
+      _INVOKE_SURFACES,
+      _METHODS,
+      _HOST_CAPABILITIES,
+      _TIMERS,
+      _PROTOCOLS,
+      _SCHEMAS_USED,
+      _BUILD_ARTIFACTS,
+      _RUNTIME_TARGETS);
   }
 }
 
@@ -720,6 +890,14 @@ public class PLGT
   public List<string> ACCEPTED_PAYMENT_METHODS { get; set; }
   public publicationState LISTING_STATUS { get; set; }
   public List<byte> SIGNATURE { get; set; }
+  public List<invokeSurfaceKind> INVOKE_SURFACES { get; set; }
+  public List<PLGMethodManifestT> METHODS { get; set; }
+  public List<PLGHostCapabilityT> HOST_CAPABILITIES { get; set; }
+  public List<PLGTimerSpecT> TIMERS { get; set; }
+  public List<PLGProtocolSpecT> PROTOCOLS { get; set; }
+  public List<FlatBufferTypeRefT> SCHEMAS_USED { get; set; }
+  public List<PLGBuildArtifactT> BUILD_ARTIFACTS { get; set; }
+  public List<string> RUNTIME_TARGETS { get; set; }
 
   public PLGT() {
     this.PLUGIN_ID = null;
@@ -766,6 +944,14 @@ public class PLGT
     this.ACCEPTED_PAYMENT_METHODS = null;
     this.LISTING_STATUS = publicationState.Public;
     this.SIGNATURE = null;
+    this.INVOKE_SURFACES = null;
+    this.METHODS = null;
+    this.HOST_CAPABILITIES = null;
+    this.TIMERS = null;
+    this.PROTOCOLS = null;
+    this.SCHEMAS_USED = null;
+    this.BUILD_ARTIFACTS = null;
+    this.RUNTIME_TARGETS = null;
   }
   public static PLGT DeserializeFromBinary(byte[] fbBuffer) {
     return PLG.GetRootAsPLG(new ByteBuffer(fbBuffer)).UnPack();
@@ -827,6 +1013,14 @@ static public class PLGVerify
       && verifier.VerifyVectorOfStrings(tablePos, 86 /*ACCEPTED_PAYMENT_METHODS*/, false)
       && verifier.VerifyField(tablePos, 88 /*LISTING_STATUS*/, 1 /*publicationState*/, 1, false)
       && verifier.VerifyVectorOfData(tablePos, 90 /*SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 92 /*INVOKE_SURFACES*/, 1 /*invokeSurfaceKind*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 94 /*METHODS*/, PLGMethodManifestVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 96 /*HOST_CAPABILITIES*/, PLGHostCapabilityVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 98 /*TIMERS*/, PLGTimerSpecVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 100 /*PROTOCOLS*/, PLGProtocolSpecVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 102 /*SCHEMAS_USED*/, FlatBufferTypeRefVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 104 /*BUILD_ARTIFACTS*/, PLGBuildArtifactVerify.Verify, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 106 /*RUNTIME_TARGETS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

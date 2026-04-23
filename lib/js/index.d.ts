@@ -96,6 +96,7 @@ export * as OPM from './OPM/main.js';
 export * as OSM from './OSM/main.js';
 export * as PCF from './PCF/main.js';
 export * as PHY from './PHY/main.js';
+export * as PIV from './PIV/main.js';
 export * as PLD from './PLD/main.js';
 export * as PLG from './PLG/main.js';
 export * as PLK from './PLK/main.js';

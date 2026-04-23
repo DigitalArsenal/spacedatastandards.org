@@ -1,6 +1,8 @@
-// Hash: 2c9ca90ec923b2476832517dee715559c45dd198d3bdd4b5b3dfe0a4d05c4882
-// Version: 1.0.6
+// Hash: f7066df27455ff5888770c68a80c18ab9495d1bbfc25f8c2ec4181407ef5cf29
+// Version: 1.0.7
 // -----------------------------------END_HEADER
+include "../TAB/main.fbs";
+
 /// Plugin type category
 enum pluginCategory : byte {
   /// Sensor simulation and analysis
@@ -51,6 +53,161 @@ table PluginCapability {
   VERSION: string;
   /// Whether this capability is required
   REQUIRED: bool;
+}
+
+/// Canonical invoke surfaces a plugin artifact can expose. A single
+/// artifact can support multiple.
+enum invokeSurfaceKind : ubyte {
+  /// Direct ABI — host calls `plugin_invoke_stream` in-process.
+  DIRECT,
+  /// Command surface — envelope is queued by a runtime host.
+  COMMAND
+}
+
+/// Drain semantics for a method that operates over queued stream frames.
+/// Enum name is deliberately distinct from any camelCase field name
+/// (`DRAIN_POLICY` would collide otherwise).
+enum drainBehavior : ubyte {
+  /// One invocation consumes exactly one input frame.
+  SINGLE_SHOT,
+  /// Invocation drains queued work until it voluntarily yields.
+  DRAIN_UNTIL_YIELD,
+  /// Invocation drains to empty before returning.
+  DRAIN_TO_EMPTY
+}
+
+/// Host capability classes a plugin may request. Extends the simpler
+/// `PluginCapability` (which is name+version metadata) with the richer
+/// enum-based surface that runtime hosts gate on.
+enum hostCapabilityKind : ushort {
+  CLOCK,
+  RANDOM,
+  LOGGING,
+  TIMERS,
+  PUBSUB,
+  PROTOCOL_DIAL,
+  PROTOCOL_HANDLE,
+  STORAGE_QUERY,
+  SCENE_ACCESS,
+  ENTITY_ACCESS,
+  RENDER_HOOKS,
+  HTTP,
+  FILESYSTEM,
+  PIPE,
+  NETWORK,
+  DATABASE,
+  STORAGE_ADAPTER,
+  STORAGE_WRITE,
+  WALLET_SIGN,
+  IPFS,
+  TLS,
+  MQTT,
+  WEBSOCKET,
+  TCP,
+  UDP,
+  PROCESS_EXEC,
+  CONTEXT_READ,
+  CONTEXT_WRITE,
+  CRYPTO_HASH,
+  CRYPTO_SIGN,
+  CRYPTO_VERIFY,
+  CRYPTO_ENCRYPT,
+  CRYPTO_DECRYPT,
+  CRYPTO_KEY_AGREEMENT,
+  CRYPTO_KDF,
+  SCHEDULE_CRON
+}
+
+/// Accepted schema family for a port. When a port accepts multiple wire
+/// formats (canonical FlatBuffer + aligned-binary), each ALLOWED_TYPE
+/// entry carries its own TAB.FlatBufferTypeRef with the schema identity,
+/// and the enclosing PLGPortManifest advertises both wire formats via
+/// ALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises
+/// aligned-binary MUST also advertise the canonical flatbuffer fallback
+/// for the same schema and file identifier in the same set.
+table PLGAcceptedTypeSet {
+  /// Stable type-set identifier within the port.
+  SET_ID: string (required);
+  /// Specific FlatBuffer types accepted by the set.
+  ALLOWED_TYPES: [FlatBufferTypeRef];
+  /// Wire formats this set accepts. If ALIGNED_BINARY is present,
+  /// FLATBUFFER MUST also be present for the same schemas.
+  ALLOWED_WIRE_FORMATS: [payloadWireFormat];
+  /// Human-readable explanation of the accepted schema family.
+  DESCRIPTION: string;
+}
+
+/// One input or output port on a method.
+table PLGPortManifest {
+  /// Stable port identifier within the method.
+  PORT_ID: string (required);
+  /// Human-readable name for UIs.
+  DISPLAY_NAME: string;
+  /// Type sets accepted on this port.
+  ACCEPTED_TYPE_SETS: [PLGAcceptedTypeSet];
+  /// Minimum number of streams that must be connected.
+  MIN_STREAMS: uint16 = 1;
+  /// Maximum number of streams that may be connected.
+  MAX_STREAMS: uint16 = 1;
+  /// Whether the port must be connected for invocation.
+  REQUIRED: bool = true;
+  /// Optional human-readable description.
+  DESCRIPTION: string;
+}
+
+/// One host capability dependency (richer form of PluginCapability).
+table PLGHostCapability {
+  CAPABILITY: hostCapabilityKind;
+  SCOPE: string;
+  REQUIRED: bool = true;
+  DESCRIPTION: string;
+}
+
+/// Timer entry declared by a plugin.
+table PLGTimerSpec {
+  TIMER_ID: string (required);
+  METHOD_ID: string (required);
+  INPUT_PORT_ID: string;
+  DEFAULT_INTERVAL_MS: uint64;
+  DESCRIPTION: string;
+}
+
+/// Protocol handler declared by a plugin.
+table PLGProtocolSpec {
+  PROTOCOL_ID: string (required);
+  METHOD_ID: string (required);
+  INPUT_PORT_ID: string;
+  OUTPUT_PORT_ID: string;
+  DESCRIPTION: string;
+  WIRE_ID: string;
+  TRANSPORT_KIND: string;
+  ROLE: string;
+  SPEC_URI: string;
+  AUTO_INSTALL: bool = true;
+  ADVERTISE: bool = false;
+  DISCOVERY_KEY: string;
+  DEFAULT_PORT: uint16;
+  REQUIRE_SECURE_TRANSPORT: bool = false;
+}
+
+/// Build artifact emitted by the plugin toolchain.
+table PLGBuildArtifact {
+  ARTIFACT_ID: string (required);
+  KIND: string;
+  PATH: string (required);
+  TARGET: string;
+  ENTRY_SYMBOL: string;
+}
+
+/// Canonical method declaration.
+table PLGMethodManifest {
+  METHOD_ID: string (required);
+  DISPLAY_NAME: string;
+  INPUT_PORTS: [PLGPortManifest];
+  OUTPUT_PORTS: [PLGPortManifest];
+  MAX_BATCH: uint32 = 1;
+  DRAIN_POLICY: drainBehavior = DRAIN_UNTIL_YIELD;
+  DESCRIPTION: string;
 }
 
 /// Plugin dependency on another plugin
@@ -172,6 +329,28 @@ table PLG {
 
   /// Ed25519 signature from provider over manifest
   SIGNATURE: [ubyte];
+
+  /// Canonical invoke surfaces this artifact exposes. A single plugin
+  /// MAY list both DIRECT and COMMAND when it supports both.
+  INVOKE_SURFACES: [invokeSurfaceKind];
+  /// Rich per-method invoke manifests (port shape, drain semantics,
+  /// accepted wire formats). ENTRY_FUNCTIONS retains the slim
+  /// name+input_schemas+output_schema summary; METHODS carries the full
+  /// invoke-surface detail including aligned-binary advertisement.
+  METHODS: [PLGMethodManifest];
+  /// Enum-typed host capability dependencies (richer than CAPABILITIES,
+  /// which is string-tagged metadata).
+  HOST_CAPABILITIES: [PLGHostCapability];
+  /// Timer declarations for scheduled invocations.
+  TIMERS: [PLGTimerSpec];
+  /// Protocol handler declarations.
+  PROTOCOLS: [PLGProtocolSpec];
+  /// FlatBuffer schemas this plugin depends on at the invoke surface.
+  SCHEMAS_USED: [FlatBufferTypeRef];
+  /// Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+  BUILD_ARTIFACTS: [PLGBuildArtifact];
+  /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+  RUNTIME_TARGETS: [string];
 }
 
 root_type PLG;

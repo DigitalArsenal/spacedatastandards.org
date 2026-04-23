@@ -118,6 +118,7 @@ public struct Record : IFlatbufferObject
   public OSM valueAsOSM() { return value<OSM>().Value; }
   public PCF valueAsPCF() { return value<PCF>().Value; }
   public PHY valueAsPHY() { return value<PHY>().Value; }
+  public PIV valueAsPIV() { return value<PIV>().Value; }
   public PLD valueAsPLD() { return value<PLD>().Value; }
   public PLG valueAsPLG() { return value<PLG>().Value; }
   public PLK valueAsPLK() { return value<PLK>().Value; }
@@ -503,6 +504,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.PHY:
         _o.value.Value = this.value<PHY>().HasValue ? this.value<PHY>().Value.UnPack() : null;
+        break;
+      case RecordType.PIV:
+        _o.value.Value = this.value<PIV>().HasValue ? this.value<PIV>().Value.UnPack() : null;
         break;
       case RecordType.PLD:
         _o.value.Value = this.value<PLD>().HasValue ? this.value<PLD>().Value.UnPack() : null;

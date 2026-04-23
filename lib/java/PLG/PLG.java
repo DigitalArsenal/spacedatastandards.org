@@ -290,6 +290,75 @@ public final class PLG extends com.google.flatbuffers.Table {
   public ByteVector signatureVector(ByteVector obj) { int o = __offset(90); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(90, 1); }
   public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 90, 1); }
+  /**
+   * Canonical invoke surfaces this artifact exposes. A single plugin
+   * MAY list both DIRECT and COMMAND when it supports both.
+   */
+  public int INVOKE_SURFACES(int j) { int o = __offset(92); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int INVOKE_SURFACESLength() { int o = __offset(92); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector invokeSurfacesVector() { return invokeSurfacesVector(new ByteVector()); }
+  public ByteVector invokeSurfacesVector(ByteVector obj) { int o = __offset(92); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer INVOKE_SURFACESAsByteBuffer() { return __vector_as_bytebuffer(92, 1); }
+  public ByteBuffer INVOKE_SURFACESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 92, 1); }
+  /**
+   * Rich per-method invoke manifests (port shape, drain semantics,
+   * accepted wire formats). ENTRY_FUNCTIONS retains the slim
+   * name+input_schemas+output_schema summary; METHODS carries the full
+   * invoke-surface detail including aligned-binary advertisement.
+   */
+  public PLGMethodManifest METHODS(int j) { return METHODS(new PLGMethodManifest(), j); }
+  public PLGMethodManifest METHODS(PLGMethodManifest obj, int j) { int o = __offset(94); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int METHODSLength() { int o = __offset(94); return o != 0 ? __vector_len(o) : 0; }
+  public PLGMethodManifest.Vector methodsVector() { return methodsVector(new PLGMethodManifest.Vector()); }
+  public PLGMethodManifest.Vector methodsVector(PLGMethodManifest.Vector obj) { int o = __offset(94); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Enum-typed host capability dependencies (richer than CAPABILITIES,
+   * which is string-tagged metadata).
+   */
+  public PLGHostCapability HOST_CAPABILITIES(int j) { return HOST_CAPABILITIES(new PLGHostCapability(), j); }
+  public PLGHostCapability HOST_CAPABILITIES(PLGHostCapability obj, int j) { int o = __offset(96); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int HOST_CAPABILITIESLength() { int o = __offset(96); return o != 0 ? __vector_len(o) : 0; }
+  public PLGHostCapability.Vector hostCapabilitiesVector() { return hostCapabilitiesVector(new PLGHostCapability.Vector()); }
+  public PLGHostCapability.Vector hostCapabilitiesVector(PLGHostCapability.Vector obj) { int o = __offset(96); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Timer declarations for scheduled invocations.
+   */
+  public PLGTimerSpec TIMERS(int j) { return TIMERS(new PLGTimerSpec(), j); }
+  public PLGTimerSpec TIMERS(PLGTimerSpec obj, int j) { int o = __offset(98); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int TIMERSLength() { int o = __offset(98); return o != 0 ? __vector_len(o) : 0; }
+  public PLGTimerSpec.Vector timersVector() { return timersVector(new PLGTimerSpec.Vector()); }
+  public PLGTimerSpec.Vector timersVector(PLGTimerSpec.Vector obj) { int o = __offset(98); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Protocol handler declarations.
+   */
+  public PLGProtocolSpec PROTOCOLS(int j) { return PROTOCOLS(new PLGProtocolSpec(), j); }
+  public PLGProtocolSpec PROTOCOLS(PLGProtocolSpec obj, int j) { int o = __offset(100); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int PROTOCOLSLength() { int o = __offset(100); return o != 0 ? __vector_len(o) : 0; }
+  public PLGProtocolSpec.Vector protocolsVector() { return protocolsVector(new PLGProtocolSpec.Vector()); }
+  public PLGProtocolSpec.Vector protocolsVector(PLGProtocolSpec.Vector obj) { int o = __offset(100); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * FlatBuffer schemas this plugin depends on at the invoke surface.
+   */
+  public FlatBufferTypeRef SCHEMAS_USED(int j) { return SCHEMAS_USED(new FlatBufferTypeRef(), j); }
+  public FlatBufferTypeRef SCHEMAS_USED(FlatBufferTypeRef obj, int j) { int o = __offset(102); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SCHEMAS_USEDLength() { int o = __offset(102); return o != 0 ? __vector_len(o) : 0; }
+  public FlatBufferTypeRef.Vector schemasUsedVector() { return schemasUsedVector(new FlatBufferTypeRef.Vector()); }
+  public FlatBufferTypeRef.Vector schemasUsedVector(FlatBufferTypeRef.Vector obj) { int o = __offset(102); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+   */
+  public PLGBuildArtifact BUILD_ARTIFACTS(int j) { return BUILD_ARTIFACTS(new PLGBuildArtifact(), j); }
+  public PLGBuildArtifact BUILD_ARTIFACTS(PLGBuildArtifact obj, int j) { int o = __offset(104); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int BUILD_ARTIFACTSLength() { int o = __offset(104); return o != 0 ? __vector_len(o) : 0; }
+  public PLGBuildArtifact.Vector buildArtifactsVector() { return buildArtifactsVector(new PLGBuildArtifact.Vector()); }
+  public PLGBuildArtifact.Vector buildArtifactsVector(PLGBuildArtifact.Vector obj) { int o = __offset(104); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+   */
+  public String RUNTIME_TARGETS(int j) { int o = __offset(106); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int RUNTIME_TARGETSLength() { int o = __offset(106); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector runtimeTargetsVector() { return runtimeTargetsVector(new StringVector()); }
+  public StringVector runtimeTargetsVector(StringVector obj) { int o = __offset(106); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createPLG(FlatBufferBuilder builder,
       int PLUGIN_IDOffset,
@@ -335,13 +404,29 @@ public final class PLG extends com.google.flatbuffers.Table {
       long SUBSCRIPTION_PERIOD_DAYS,
       int ACCEPTED_PAYMENT_METHODSOffset,
       byte LISTING_STATUS,
-      int SIGNATUREOffset) {
-    builder.startTable(44);
+      int SIGNATUREOffset,
+      int INVOKE_SURFACESOffset,
+      int METHODSOffset,
+      int HOST_CAPABILITIESOffset,
+      int TIMERSOffset,
+      int PROTOCOLSOffset,
+      int SCHEMAS_USEDOffset,
+      int BUILD_ARTIFACTSOffset,
+      int RUNTIME_TARGETSOffset) {
+    builder.startTable(52);
     PLG.addUpdatedAt(builder, UPDATED_AT);
     PLG.addCreatedAt(builder, CREATED_AT);
     PLG.addMaxGrantTimeoutMs(builder, MAX_GRANT_TIMEOUT_MS);
     PLG.addEncryptedWasmSize(builder, ENCRYPTED_WASM_SIZE);
     PLG.addWasmSize(builder, WASM_SIZE);
+    PLG.addRuntimeTargets(builder, RUNTIME_TARGETSOffset);
+    PLG.addBuildArtifacts(builder, BUILD_ARTIFACTSOffset);
+    PLG.addSchemasUsed(builder, SCHEMAS_USEDOffset);
+    PLG.addProtocols(builder, PROTOCOLSOffset);
+    PLG.addTimers(builder, TIMERSOffset);
+    PLG.addHostCapabilities(builder, HOST_CAPABILITIESOffset);
+    PLG.addMethods(builder, METHODSOffset);
+    PLG.addInvokeSurfaces(builder, INVOKE_SURFACESOffset);
     PLG.addSignature(builder, SIGNATUREOffset);
     PLG.addAcceptedPaymentMethods(builder, ACCEPTED_PAYMENT_METHODSOffset);
     PLG.addSubscriptionPeriodDays(builder, SUBSCRIPTION_PERIOD_DAYS);
@@ -384,7 +469,7 @@ public final class PLG extends com.google.flatbuffers.Table {
     return PLG.endPLG(builder);
   }
 
-  public static void startPLG(FlatBufferBuilder builder) { builder.startTable(44); }
+  public static void startPLG(FlatBufferBuilder builder) { builder.startTable(52); }
   public static void addPluginId(FlatBufferBuilder builder, int PLUGIN_IDOffset) { builder.addOffset(0, PLUGIN_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addVersion(FlatBufferBuilder builder, int VERSIONOffset) { builder.addOffset(2, VERSIONOffset, 0); }
@@ -458,6 +543,31 @@ public final class PLG extends com.google.flatbuffers.Table {
   public static int createSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addInvokeSurfaces(FlatBufferBuilder builder, int INVOKE_SURFACESOffset) { builder.addOffset(44, INVOKE_SURFACESOffset, 0); }
+  public static int createInvokeSurfacesVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createInvokeSurfacesVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startInvokeSurfacesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addMethods(FlatBufferBuilder builder, int METHODSOffset) { builder.addOffset(45, METHODSOffset, 0); }
+  public static int createMethodsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startMethodsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addHostCapabilities(FlatBufferBuilder builder, int HOST_CAPABILITIESOffset) { builder.addOffset(46, HOST_CAPABILITIESOffset, 0); }
+  public static int createHostCapabilitiesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startHostCapabilitiesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addTimers(FlatBufferBuilder builder, int TIMERSOffset) { builder.addOffset(47, TIMERSOffset, 0); }
+  public static int createTimersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startTimersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addProtocols(FlatBufferBuilder builder, int PROTOCOLSOffset) { builder.addOffset(48, PROTOCOLSOffset, 0); }
+  public static int createProtocolsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startProtocolsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSchemasUsed(FlatBufferBuilder builder, int SCHEMAS_USEDOffset) { builder.addOffset(49, SCHEMAS_USEDOffset, 0); }
+  public static int createSchemasUsedVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSchemasUsedVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addBuildArtifacts(FlatBufferBuilder builder, int BUILD_ARTIFACTSOffset) { builder.addOffset(50, BUILD_ARTIFACTSOffset, 0); }
+  public static int createBuildArtifactsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startBuildArtifactsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addRuntimeTargets(FlatBufferBuilder builder, int RUNTIME_TARGETSOffset) { builder.addOffset(51, RUNTIME_TARGETSOffset, 0); }
+  public static int createRuntimeTargetsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startRuntimeTargetsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endPLG(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // PLUGIN_ID

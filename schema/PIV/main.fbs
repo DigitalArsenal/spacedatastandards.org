@@ -1,0 +1,89 @@
+// Hash: 014494bfcbc22801fcbf120169d8b7b86bda9c28d7c4d97f1eb75409c216b26c
+// Version: 1.88.0
+// -----------------------------------END_HEADER
+/// Plugin Invoke — request / response envelopes for calling into a
+/// Space Data Module plugin over its `plugin_invoke_stream` entrypoint.
+///
+/// Every invoke frame (input or output) is a `TAB` descriptor referencing
+/// an offset inside PAYLOAD_ARENA. Each `TAB.WIRE_FORMAT` selects
+/// FLATBUFFER or ALIGNED_BINARY for its body; a method accepts either as
+/// long as the paired `PLG` method manifest advertises both. This mirrors
+/// the SDK's documented contract — "aligned-binary payloads are a
+/// separate invoke-ABI optimization; they do not replace the canonical
+/// FlatBuffer schema, and a port advertising one must also advertise the
+/// other."
+///
+/// PAYLOAD_ARENA is a single backing byte buffer shared by all frames in
+/// the envelope. TAB.OFFSET is arena-relative. Host runtimes that manage
+/// their own arena may set PAYLOAD_ARENA to an empty vector and treat
+/// TAB.OFFSET as an absolute pointer into the shared WASM linear memory.
+include "../TAB/main.fbs";
+
+/// Coarse envelope status for an invoke response. Per-method numeric
+/// return codes travel in STATUS_CODE; STATUS categorizes the outcome
+/// for host routing (retry, yield-and-resume, fail-closed) without the
+/// host having to decode method-specific numbers.
+enum pivStatus : int {
+  /// Invocation completed; STATUS_CODE carries the method-specific value.
+  OK,
+  /// Method id not registered on the target plugin.
+  NOT_FOUND,
+  /// Invocation succeeded but yielded before draining queued work.
+  /// Caller should inspect BACKLOG_REMAINING and re-invoke to continue.
+  YIELDED,
+  /// Invocation failed; ERROR_CODE + ERROR_MESSAGE describe the failure.
+  FAILED
+}
+
+/// Request envelope carried by `plugin_invoke_stream`.
+table PIVRequest {
+  /// Stable method identifier from PLG.METHODS[].METHOD_ID.
+  METHOD_ID:string (required);
+  /// Input frames. Each TAB.TYPE_REF names the payload schema and each
+  /// TAB.WIRE_FORMAT selects FLATBUFFER or ALIGNED_BINARY. TAB.OFFSET
+  /// is arena-relative into PAYLOAD_ARENA (or an absolute pointer when
+  /// PAYLOAD_ARENA is empty).
+  INPUTS:[TAB];
+  /// Optional arena backing the INPUTS payload bodies. Empty means the
+  /// caller manages arena state out-of-band.
+  PAYLOAD_ARENA:[uint8];
+  /// Optional trace identifier for request correlation.
+  TRACE_ID:uint64;
+  /// Optional yield-budget hint. Plugins MAY pause queued work after
+  /// draining this many output frames and return YIELDED for the caller
+  /// to resume. 0 = no hint.
+  OUTPUT_STREAM_CAP:uint32;
+}
+
+/// Response envelope emitted by `plugin_invoke_stream`.
+table PIVResponse {
+  /// Method-specific status code. Zero conventionally indicates success.
+  STATUS_CODE:int;
+  /// Coarse envelope status.
+  STATUS:pivStatus;
+  /// True when the method yielded before fully draining queued work.
+  YIELDED:bool;
+  /// Outstanding frame count remaining after this response. Non-zero
+  /// only when STATUS == YIELDED.
+  BACKLOG_REMAINING:uint32;
+  /// Output frames. Each TAB carries schema identity and wire format.
+  OUTPUTS:[TAB];
+  /// Optional arena backing OUTPUTS payload bodies.
+  PAYLOAD_ARENA:[uint8];
+  /// Stable machine-readable error code when STATUS == FAILED.
+  ERROR_CODE:string;
+  /// Human-readable diagnostic when STATUS == FAILED.
+  ERROR_MESSAGE:string;
+  /// Echo of the request's TRACE_ID for correlation.
+  TRACE_ID:uint64;
+}
+
+/// Envelope — carries either a request or a response. Either REQUEST or
+/// RESPONSE is populated per message; both populated is undefined.
+table PIV {
+  REQUEST:PIVRequest;
+  RESPONSE:PIVResponse;
+}
+
+root_type PIV;
+file_identifier "$PIV";

@@ -102,60 +102,61 @@ class RecordType(object):
     OSM = 96
     PCF = 97
     PHY = 98
-    PLD = 99
-    PLG = 100
-    PLK = 101
-    PNM = 102
-    PPE = 103
-    PRG = 104
-    PRW = 105
-    PUR = 106
-    RAF = 107
-    RCF = 108
-    RDM = 109
-    RDO = 110
-    REV = 111
-    RFB = 112
-    RFE = 113
-    RFM = 114
-    RFO = 115
-    ROC = 116
-    SAR = 117
-    SCM = 118
-    SDF = 119
-    SDL = 120
-    SDR = 121
-    SEN = 122
-    SEO = 123
-    SEV = 124
-    SHW = 125
-    SIT = 126
-    SKI = 127
-    SNR = 128
-    SNW = 129
-    SOI = 130
-    SON = 131
-    SPP = 132
-    SPW = 133
-    SRI = 134
-    STF = 135
-    STR = 136
-    STV = 137
-    SWR = 138
-    TAB = 139
-    TCF = 140
-    TDM = 141
-    TIM = 142
-    TKG = 143
-    TME = 144
-    TMF = 145
-    TPN = 146
-    TRK = 147
-    TRN = 148
-    VCM = 149
-    WPN = 150
-    WTH = 151
-    XTC = 152
+    PIV = 99
+    PLD = 100
+    PLG = 101
+    PLK = 102
+    PNM = 103
+    PPE = 104
+    PRG = 105
+    PRW = 106
+    PUR = 107
+    RAF = 108
+    RCF = 109
+    RDM = 110
+    RDO = 111
+    REV = 112
+    RFB = 113
+    RFE = 114
+    RFM = 115
+    RFO = 116
+    ROC = 117
+    SAR = 118
+    SCM = 119
+    SDF = 120
+    SDL = 121
+    SDR = 122
+    SEN = 123
+    SEO = 124
+    SEV = 125
+    SHW = 126
+    SIT = 127
+    SKI = 128
+    SNR = 129
+    SNW = 130
+    SOI = 131
+    SON = 132
+    SPP = 133
+    SPW = 134
+    SRI = 135
+    STF = 136
+    STR = 137
+    STV = 138
+    SWR = 139
+    TAB = 140
+    TCF = 141
+    TDM = 142
+    TIM = 143
+    TKG = 144
+    TME = 145
+    TMF = 146
+    TPN = 147
+    TRK = 148
+    TRN = 149
+    VCM = 150
+    WPN = 151
+    WTH = 152
+    XTC = 153
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -455,6 +456,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.PHY:
         import PHY
         return PHY.PHYT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.PIV:
+        import PIV
+        return PIV.PIVT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.PLD:
         import PLD
         return PLD.PLDT.InitFromBuf(table.Bytes, table.Pos)

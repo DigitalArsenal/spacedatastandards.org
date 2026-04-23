@@ -5,8 +5,15 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { EntryFunction, EntryFunctionT } from './EntryFunction.js';
+import { FlatBufferTypeRef, FlatBufferTypeRefT } from './FlatBufferTypeRef.js';
+import { PLGBuildArtifact, PLGBuildArtifactT } from './PLGBuildArtifact.js';
+import { PLGHostCapability, PLGHostCapabilityT } from './PLGHostCapability.js';
+import { PLGMethodManifest, PLGMethodManifestT } from './PLGMethodManifest.js';
+import { PLGProtocolSpec, PLGProtocolSpecT } from './PLGProtocolSpec.js';
+import { PLGTimerSpec, PLGTimerSpecT } from './PLGTimerSpec.js';
 import { PluginCapability, PluginCapabilityT } from './PluginCapability.js';
 import { PluginDependency, PluginDependencyT } from './PluginDependency.js';
+import { invokeSurfaceKind } from './invokeSurfaceKind.js';
 import { pluginCategory } from './pluginCategory.js';
 import { publicationState } from './publicationState.js';
 import { purchaseTier } from './purchaseTier.js';
@@ -521,8 +528,124 @@ signatureArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Canonical invoke surfaces this artifact exposes. A single plugin
+ * MAY list both DIRECT and COMMAND when it supports both.
+ */
+INVOKE_SURFACES(index: number):invokeSurfaceKind|null {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : null;
+}
+
+invokeSurfacesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+invokeSurfacesArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Rich per-method invoke manifests (port shape, drain semantics,
+ * accepted wire formats). ENTRY_FUNCTIONS retains the slim
+ * name+input_schemas+output_schema summary; METHODS carries the full
+ * invoke-surface detail including aligned-binary advertisement.
+ */
+METHODS(index: number, obj?:PLGMethodManifest):PLGMethodManifest|null {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? (obj || new PLGMethodManifest()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+methodsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Enum-typed host capability dependencies (richer than CAPABILITIES,
+ * which is string-tagged metadata).
+ */
+HOST_CAPABILITIES(index: number, obj?:PLGHostCapability):PLGHostCapability|null {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? (obj || new PLGHostCapability()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+hostCapabilitiesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Timer declarations for scheduled invocations.
+ */
+TIMERS(index: number, obj?:PLGTimerSpec):PLGTimerSpec|null {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? (obj || new PLGTimerSpec()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+timersLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Protocol handler declarations.
+ */
+PROTOCOLS(index: number, obj?:PLGProtocolSpec):PLGProtocolSpec|null {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? (obj || new PLGProtocolSpec()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+protocolsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * FlatBuffer schemas this plugin depends on at the invoke surface.
+ */
+SCHEMAS_USED(index: number, obj?:FlatBufferTypeRef):FlatBufferTypeRef|null {
+  const offset = this.bb!.__offset(this.bb_pos, 102);
+  return offset ? (obj || new FlatBufferTypeRef()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+schemasUsedLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 102);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+ */
+BUILD_ARTIFACTS(index: number, obj?:PLGBuildArtifact):PLGBuildArtifact|null {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? (obj || new PLGBuildArtifact()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+buildArtifactsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+ */
+RUNTIME_TARGETS(index: number):string
+RUNTIME_TARGETS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+RUNTIME_TARGETS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+runtimeTargetsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startPLG(builder:flatbuffers.Builder) {
-  builder.startObject(44);
+  builder.startObject(52);
 }
 
 static addPluginId(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset) {
@@ -857,6 +980,134 @@ static startSignatureVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(1, numElems, 1);
 }
 
+static addInvokeSurfaces(builder:flatbuffers.Builder, INVOKE_SURFACESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(44, INVOKE_SURFACESOffset, 0);
+}
+
+static createInvokeSurfacesVector(builder:flatbuffers.Builder, data:invokeSurfaceKind[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startInvokeSurfacesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
+static addMethods(builder:flatbuffers.Builder, METHODSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(45, METHODSOffset, 0);
+}
+
+static createMethodsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startMethodsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addHostCapabilities(builder:flatbuffers.Builder, HOST_CAPABILITIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(46, HOST_CAPABILITIESOffset, 0);
+}
+
+static createHostCapabilitiesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startHostCapabilitiesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addTimers(builder:flatbuffers.Builder, TIMERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(47, TIMERSOffset, 0);
+}
+
+static createTimersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startTimersVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addProtocols(builder:flatbuffers.Builder, PROTOCOLSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(48, PROTOCOLSOffset, 0);
+}
+
+static createProtocolsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startProtocolsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addSchemasUsed(builder:flatbuffers.Builder, SCHEMAS_USEDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(49, SCHEMAS_USEDOffset, 0);
+}
+
+static createSchemasUsedVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSchemasUsedVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addBuildArtifacts(builder:flatbuffers.Builder, BUILD_ARTIFACTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(50, BUILD_ARTIFACTSOffset, 0);
+}
+
+static createBuildArtifactsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startBuildArtifactsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addRuntimeTargets(builder:flatbuffers.Builder, RUNTIME_TARGETSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(51, RUNTIME_TARGETSOffset, 0);
+}
+
+static createRuntimeTargetsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startRuntimeTargetsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endPLG(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // PLUGIN_ID
@@ -873,7 +1124,7 @@ static finishSizePrefixedPLGBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$PLG', true);
 }
 
-static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, TAGLINEOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory, PUBLISHER_NAMEOffset:flatbuffers.Offset, PUBLISHER_HANDLEOffset:flatbuffers.Offset, PUBLISHER_URLOffset:flatbuffers.Offset, SUPPORT_URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, SCREENSHOT_URLSOffset:flatbuffers.Offset, BANNER_URLOffset:flatbuffers.Offset, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, ALLOWED_DOMAINSOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, CHANGELOG_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, PAYMENT_MODEL:purchaseTier, PRICE_USD_CENTS:number, SUBSCRIPTION_PERIOD_DAYS:number, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset, LISTING_STATUS:publicationState, SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, TAGLINEOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory, PUBLISHER_NAMEOffset:flatbuffers.Offset, PUBLISHER_HANDLEOffset:flatbuffers.Offset, PUBLISHER_URLOffset:flatbuffers.Offset, SUPPORT_URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, SCREENSHOT_URLSOffset:flatbuffers.Offset, BANNER_URLOffset:flatbuffers.Offset, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, ALLOWED_DOMAINSOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, CHANGELOG_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, PAYMENT_MODEL:purchaseTier, PRICE_USD_CENTS:number, SUBSCRIPTION_PERIOD_DAYS:number, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset, LISTING_STATUS:publicationState, SIGNATUREOffset:flatbuffers.Offset, INVOKE_SURFACESOffset:flatbuffers.Offset, METHODSOffset:flatbuffers.Offset, HOST_CAPABILITIESOffset:flatbuffers.Offset, TIMERSOffset:flatbuffers.Offset, PROTOCOLSOffset:flatbuffers.Offset, SCHEMAS_USEDOffset:flatbuffers.Offset, BUILD_ARTIFACTSOffset:flatbuffers.Offset, RUNTIME_TARGETSOffset:flatbuffers.Offset):flatbuffers.Offset {
   PLG.startPLG(builder);
   PLG.addPluginId(builder, PLUGIN_IDOffset);
   PLG.addName(builder, NAMEOffset);
@@ -919,6 +1170,14 @@ static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset
   PLG.addAcceptedPaymentMethods(builder, ACCEPTED_PAYMENT_METHODSOffset);
   PLG.addListingStatus(builder, LISTING_STATUS);
   PLG.addSignature(builder, SIGNATUREOffset);
+  PLG.addInvokeSurfaces(builder, INVOKE_SURFACESOffset);
+  PLG.addMethods(builder, METHODSOffset);
+  PLG.addHostCapabilities(builder, HOST_CAPABILITIESOffset);
+  PLG.addTimers(builder, TIMERSOffset);
+  PLG.addProtocols(builder, PROTOCOLSOffset);
+  PLG.addSchemasUsed(builder, SCHEMAS_USEDOffset);
+  PLG.addBuildArtifacts(builder, BUILD_ARTIFACTSOffset);
+  PLG.addRuntimeTargets(builder, RUNTIME_TARGETSOffset);
   return PLG.endPLG(builder);
 }
 
@@ -967,7 +1226,15 @@ unpack(): PLGT {
     this.SUBSCRIPTION_PERIOD_DAYS(),
     this.bb!.createScalarList<string>(this.ACCEPTED_PAYMENT_METHODS.bind(this), this.acceptedPaymentMethodsLength()),
     this.LISTING_STATUS(),
-    this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength())
+    this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength()),
+    this.bb!.createScalarList<invokeSurfaceKind>(this.INVOKE_SURFACES.bind(this), this.invokeSurfacesLength()),
+    this.bb!.createObjList<PLGMethodManifest, PLGMethodManifestT>(this.METHODS.bind(this), this.methodsLength()),
+    this.bb!.createObjList<PLGHostCapability, PLGHostCapabilityT>(this.HOST_CAPABILITIES.bind(this), this.hostCapabilitiesLength()),
+    this.bb!.createObjList<PLGTimerSpec, PLGTimerSpecT>(this.TIMERS.bind(this), this.timersLength()),
+    this.bb!.createObjList<PLGProtocolSpec, PLGProtocolSpecT>(this.PROTOCOLS.bind(this), this.protocolsLength()),
+    this.bb!.createObjList<FlatBufferTypeRef, FlatBufferTypeRefT>(this.SCHEMAS_USED.bind(this), this.schemasUsedLength()),
+    this.bb!.createObjList<PLGBuildArtifact, PLGBuildArtifactT>(this.BUILD_ARTIFACTS.bind(this), this.buildArtifactsLength()),
+    this.bb!.createScalarList<string>(this.RUNTIME_TARGETS.bind(this), this.runtimeTargetsLength())
   );
 }
 
@@ -1017,6 +1284,14 @@ unpackTo(_o: PLGT): void {
   _o.ACCEPTED_PAYMENT_METHODS = this.bb!.createScalarList<string>(this.ACCEPTED_PAYMENT_METHODS.bind(this), this.acceptedPaymentMethodsLength());
   _o.LISTING_STATUS = this.LISTING_STATUS();
   _o.SIGNATURE = this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength());
+  _o.INVOKE_SURFACES = this.bb!.createScalarList<invokeSurfaceKind>(this.INVOKE_SURFACES.bind(this), this.invokeSurfacesLength());
+  _o.METHODS = this.bb!.createObjList<PLGMethodManifest, PLGMethodManifestT>(this.METHODS.bind(this), this.methodsLength());
+  _o.HOST_CAPABILITIES = this.bb!.createObjList<PLGHostCapability, PLGHostCapabilityT>(this.HOST_CAPABILITIES.bind(this), this.hostCapabilitiesLength());
+  _o.TIMERS = this.bb!.createObjList<PLGTimerSpec, PLGTimerSpecT>(this.TIMERS.bind(this), this.timersLength());
+  _o.PROTOCOLS = this.bb!.createObjList<PLGProtocolSpec, PLGProtocolSpecT>(this.PROTOCOLS.bind(this), this.protocolsLength());
+  _o.SCHEMAS_USED = this.bb!.createObjList<FlatBufferTypeRef, FlatBufferTypeRefT>(this.SCHEMAS_USED.bind(this), this.schemasUsedLength());
+  _o.BUILD_ARTIFACTS = this.bb!.createObjList<PLGBuildArtifact, PLGBuildArtifactT>(this.BUILD_ARTIFACTS.bind(this), this.buildArtifactsLength());
+  _o.RUNTIME_TARGETS = this.bb!.createScalarList<string>(this.RUNTIME_TARGETS.bind(this), this.runtimeTargetsLength());
 }
 }
 
@@ -1065,7 +1340,15 @@ constructor(
   public SUBSCRIPTION_PERIOD_DAYS: number = 0,
   public ACCEPTED_PAYMENT_METHODS: (string)[] = [],
   public LISTING_STATUS: publicationState = publicationState.Public,
-  public SIGNATURE: (number)[] = []
+  public SIGNATURE: (number)[] = [],
+  public INVOKE_SURFACES: (invokeSurfaceKind)[] = [],
+  public METHODS: (PLGMethodManifestT)[] = [],
+  public HOST_CAPABILITIES: (PLGHostCapabilityT)[] = [],
+  public TIMERS: (PLGTimerSpecT)[] = [],
+  public PROTOCOLS: (PLGProtocolSpecT)[] = [],
+  public SCHEMAS_USED: (FlatBufferTypeRefT)[] = [],
+  public BUILD_ARTIFACTS: (PLGBuildArtifactT)[] = [],
+  public RUNTIME_TARGETS: (string)[] = []
 ){}
 
 
@@ -1102,6 +1385,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const LICENSE = (this.LICENSE !== null ? builder.createString(this.LICENSE!) : 0);
   const ACCEPTED_PAYMENT_METHODS = PLG.createAcceptedPaymentMethodsVector(builder, builder.createObjectOffsetList(this.ACCEPTED_PAYMENT_METHODS));
   const SIGNATURE = PLG.createSignatureVector(builder, this.SIGNATURE);
+  const INVOKE_SURFACES = PLG.createInvokeSurfacesVector(builder, this.INVOKE_SURFACES);
+  const METHODS = PLG.createMethodsVector(builder, builder.createObjectOffsetList(this.METHODS));
+  const HOST_CAPABILITIES = PLG.createHostCapabilitiesVector(builder, builder.createObjectOffsetList(this.HOST_CAPABILITIES));
+  const TIMERS = PLG.createTimersVector(builder, builder.createObjectOffsetList(this.TIMERS));
+  const PROTOCOLS = PLG.createProtocolsVector(builder, builder.createObjectOffsetList(this.PROTOCOLS));
+  const SCHEMAS_USED = PLG.createSchemasUsedVector(builder, builder.createObjectOffsetList(this.SCHEMAS_USED));
+  const BUILD_ARTIFACTS = PLG.createBuildArtifactsVector(builder, builder.createObjectOffsetList(this.BUILD_ARTIFACTS));
+  const RUNTIME_TARGETS = PLG.createRuntimeTargetsVector(builder, builder.createObjectOffsetList(this.RUNTIME_TARGETS));
 
   return PLG.createPLG(builder,
     PLUGIN_ID,
@@ -1147,7 +1438,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.SUBSCRIPTION_PERIOD_DAYS,
     ACCEPTED_PAYMENT_METHODS,
     this.LISTING_STATUS,
-    SIGNATURE
+    SIGNATURE,
+    INVOKE_SURFACES,
+    METHODS,
+    HOST_CAPABILITIES,
+    TIMERS,
+    PROTOCOLS,
+    SCHEMAS_USED,
+    BUILD_ARTIFACTS,
+    RUNTIME_TARGETS
   );
 }
 }

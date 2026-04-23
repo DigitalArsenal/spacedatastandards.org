@@ -595,6 +595,139 @@ class PLG : Table() {
         }
     val signatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(90, 1)
     fun signatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 90, 1)
+    /**
+     * Canonical invoke surfaces this artifact exposes. A single plugin
+     * MAY list both DIRECT and COMMAND when it supports both.
+     */
+    fun invokeSurfaces(j: Int) : UByte {
+        val o = __offset(92)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val invokeSurfacesLength : Int
+        get() {
+            val o = __offset(92); return if (o != 0) __vector_len(o) else 0
+        }
+    val invokeSurfacesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(92, 1)
+    fun invokeSurfacesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 92, 1)
+    /**
+     * Rich per-method invoke manifests (port shape, drain semantics,
+     * accepted wire formats). ENTRY_FUNCTIONS retains the slim
+     * name+input_schemas+output_schema summary; METHODS carries the full
+     * invoke-surface detail including aligned-binary advertisement.
+     */
+    fun methods(j: Int) : PLGMethodManifest? = methods(PLGMethodManifest(), j)
+    fun methods(obj: PLGMethodManifest, j: Int) : PLGMethodManifest? {
+        val o = __offset(94)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val methodsLength : Int
+        get() {
+            val o = __offset(94); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Enum-typed host capability dependencies (richer than CAPABILITIES,
+     * which is string-tagged metadata).
+     */
+    fun hostCapabilities(j: Int) : PLGHostCapability? = hostCapabilities(PLGHostCapability(), j)
+    fun hostCapabilities(obj: PLGHostCapability, j: Int) : PLGHostCapability? {
+        val o = __offset(96)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val hostCapabilitiesLength : Int
+        get() {
+            val o = __offset(96); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Timer declarations for scheduled invocations.
+     */
+    fun timers(j: Int) : PLGTimerSpec? = timers(PLGTimerSpec(), j)
+    fun timers(obj: PLGTimerSpec, j: Int) : PLGTimerSpec? {
+        val o = __offset(98)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val timersLength : Int
+        get() {
+            val o = __offset(98); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Protocol handler declarations.
+     */
+    fun protocols(j: Int) : PLGProtocolSpec? = protocols(PLGProtocolSpec(), j)
+    fun protocols(obj: PLGProtocolSpec, j: Int) : PLGProtocolSpec? {
+        val o = __offset(100)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val protocolsLength : Int
+        get() {
+            val o = __offset(100); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * FlatBuffer schemas this plugin depends on at the invoke surface.
+     */
+    fun schemasUsed(j: Int) : FlatBufferTypeRef? = schemasUsed(FlatBufferTypeRef(), j)
+    fun schemasUsed(obj: FlatBufferTypeRef, j: Int) : FlatBufferTypeRef? {
+        val o = __offset(102)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val schemasUsedLength : Int
+        get() {
+            val o = __offset(102); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+     */
+    fun buildArtifacts(j: Int) : PLGBuildArtifact? = buildArtifacts(PLGBuildArtifact(), j)
+    fun buildArtifacts(obj: PLGBuildArtifact, j: Int) : PLGBuildArtifact? {
+        val o = __offset(104)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val buildArtifactsLength : Int
+        get() {
+            val o = __offset(104); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+     */
+    fun runtimeTargets(j: Int) : String? {
+        val o = __offset(106)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val runtimeTargetsLength : Int
+        get() {
+            val o = __offset(106); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPLG(_bb: ByteBuffer): PLG = getRootAsPLG(_bb, PLG())
@@ -603,13 +736,21 @@ class PLG : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PLGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PLG")
-        fun createPLG(builder: FlatBufferBuilder, pluginIdOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, taglineOffset: Int, pluginType: Byte, publisherNameOffset: Int, publisherHandleOffset: Int, publisherUrlOffset: Int, supportUrlOffset: Int, tagsOffset: Int, featuresOffset: Int, screenshotUrlsOffset: Int, bannerUrlOffset: Int, abiVersion: UInt, wasmHashOffset: Int, wasmSize: ULong, wasmCidOffset: Int, encryptedWasmHashOffset: Int, encryptedWasmSize: ULong, entryFunctionsOffset: Int, requiredSchemasOffset: Int, dependenciesOffset: Int, capabilitiesOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, encrypted: Boolean, requiredScopeOffset: Int, keyIdOffset: Int, allowedDomainsOffset: Int, maxGrantTimeoutMs: ULong, minPermissionsOffset: Int, createdAt: ULong, updatedAt: ULong, documentationUrlOffset: Int, changelogUrlOffset: Int, iconUrlOffset: Int, licenseOffset: Int, paymentModel: Byte, priceUsdCents: UInt, subscriptionPeriodDays: UInt, acceptedPaymentMethodsOffset: Int, listingStatus: Byte, signatureOffset: Int) : Int {
-            builder.startTable(44)
+        fun createPLG(builder: FlatBufferBuilder, pluginIdOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, taglineOffset: Int, pluginType: Byte, publisherNameOffset: Int, publisherHandleOffset: Int, publisherUrlOffset: Int, supportUrlOffset: Int, tagsOffset: Int, featuresOffset: Int, screenshotUrlsOffset: Int, bannerUrlOffset: Int, abiVersion: UInt, wasmHashOffset: Int, wasmSize: ULong, wasmCidOffset: Int, encryptedWasmHashOffset: Int, encryptedWasmSize: ULong, entryFunctionsOffset: Int, requiredSchemasOffset: Int, dependenciesOffset: Int, capabilitiesOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, encrypted: Boolean, requiredScopeOffset: Int, keyIdOffset: Int, allowedDomainsOffset: Int, maxGrantTimeoutMs: ULong, minPermissionsOffset: Int, createdAt: ULong, updatedAt: ULong, documentationUrlOffset: Int, changelogUrlOffset: Int, iconUrlOffset: Int, licenseOffset: Int, paymentModel: Byte, priceUsdCents: UInt, subscriptionPeriodDays: UInt, acceptedPaymentMethodsOffset: Int, listingStatus: Byte, signatureOffset: Int, invokeSurfacesOffset: Int, methodsOffset: Int, hostCapabilitiesOffset: Int, timersOffset: Int, protocolsOffset: Int, schemasUsedOffset: Int, buildArtifactsOffset: Int, runtimeTargetsOffset: Int) : Int {
+            builder.startTable(52)
             addUPDATEDAT(builder, updatedAt)
             addCREATEDAT(builder, createdAt)
             addMAXGRANTTIMEOUTMS(builder, maxGrantTimeoutMs)
             addENCRYPTEDWASMSIZE(builder, encryptedWasmSize)
             addWASMSIZE(builder, wasmSize)
+            addRUNTIMETARGETS(builder, runtimeTargetsOffset)
+            addBUILDARTIFACTS(builder, buildArtifactsOffset)
+            addSCHEMASUSED(builder, schemasUsedOffset)
+            addPROTOCOLS(builder, protocolsOffset)
+            addTIMERS(builder, timersOffset)
+            addHOSTCAPABILITIES(builder, hostCapabilitiesOffset)
+            addMETHODS(builder, methodsOffset)
+            addINVOKESURFACES(builder, invokeSurfacesOffset)
             addSIGNATURE(builder, signatureOffset)
             addACCEPTEDPAYMENTMETHODS(builder, acceptedPaymentMethodsOffset)
             addSUBSCRIPTIONPERIODDAYS(builder, subscriptionPeriodDays)
@@ -651,7 +792,7 @@ class PLG : Table() {
             addPLUGINTYPE(builder, pluginType)
             return endPLG(builder)
         }
-        fun startPLG(builder: FlatBufferBuilder) = builder.startTable(44)
+        fun startPLG(builder: FlatBufferBuilder) = builder.startTable(52)
         fun addPLUGINID(builder: FlatBufferBuilder, pluginId: Int) = builder.addOffset(0, pluginId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(2, version, 0)
@@ -803,6 +944,79 @@ class PLG : Table() {
             return builder.endVector()
         }
         fun startSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addINVOKESURFACES(builder: FlatBufferBuilder, invokeSurfaces: Int) = builder.addOffset(44, invokeSurfaces, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createInvokeSurfacesVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startInvokeSurfacesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addMETHODS(builder: FlatBufferBuilder, methods: Int) = builder.addOffset(45, methods, 0)
+        fun createMethodsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startMethodsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addHOSTCAPABILITIES(builder: FlatBufferBuilder, hostCapabilities: Int) = builder.addOffset(46, hostCapabilities, 0)
+        fun createHostCapabilitiesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startHostCapabilitiesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addTIMERS(builder: FlatBufferBuilder, timers: Int) = builder.addOffset(47, timers, 0)
+        fun createTimersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startTimersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPROTOCOLS(builder: FlatBufferBuilder, protocols: Int) = builder.addOffset(48, protocols, 0)
+        fun createProtocolsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startProtocolsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSCHEMASUSED(builder: FlatBufferBuilder, schemasUsed: Int) = builder.addOffset(49, schemasUsed, 0)
+        fun createSchemasUsedVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSchemasUsedVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addBUILDARTIFACTS(builder: FlatBufferBuilder, buildArtifacts: Int) = builder.addOffset(50, buildArtifacts, 0)
+        fun createBuildArtifactsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startBuildArtifactsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addRUNTIMETARGETS(builder: FlatBufferBuilder, runtimeTargets: Int) = builder.addOffset(51, runtimeTargets, 0)
+        fun createRuntimeTargetsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startRuntimeTargetsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endPLG(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

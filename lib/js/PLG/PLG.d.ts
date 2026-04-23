@@ -1,7 +1,14 @@
 import * as flatbuffers from 'flatbuffers';
 import { EntryFunction, EntryFunctionT } from './EntryFunction.js';
+import { FlatBufferTypeRef, FlatBufferTypeRefT } from './FlatBufferTypeRef.js';
+import { PLGBuildArtifact, PLGBuildArtifactT } from './PLGBuildArtifact.js';
+import { PLGHostCapability, PLGHostCapabilityT } from './PLGHostCapability.js';
+import { PLGMethodManifest, PLGMethodManifestT } from './PLGMethodManifest.js';
+import { PLGProtocolSpec, PLGProtocolSpecT } from './PLGProtocolSpec.js';
+import { PLGTimerSpec, PLGTimerSpecT } from './PLGTimerSpec.js';
 import { PluginCapability, PluginCapabilityT } from './PluginCapability.js';
 import { PluginDependency, PluginDependencyT } from './PluginDependency.js';
+import { invokeSurfaceKind } from './invokeSurfaceKind.js';
 import { pluginCategory } from './pluginCategory.js';
 import { publicationState } from './publicationState.js';
 import { purchaseTier } from './purchaseTier.js';
@@ -233,6 +240,53 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
     SIGNATURE(index: number): number | null;
     signatureLength(): number;
     signatureArray(): Uint8Array | null;
+    /**
+     * Canonical invoke surfaces this artifact exposes. A single plugin
+     * MAY list both DIRECT and COMMAND when it supports both.
+     */
+    INVOKE_SURFACES(index: number): invokeSurfaceKind | null;
+    invokeSurfacesLength(): number;
+    invokeSurfacesArray(): Uint8Array | null;
+    /**
+     * Rich per-method invoke manifests (port shape, drain semantics,
+     * accepted wire formats). ENTRY_FUNCTIONS retains the slim
+     * name+input_schemas+output_schema summary; METHODS carries the full
+     * invoke-surface detail including aligned-binary advertisement.
+     */
+    METHODS(index: number, obj?: PLGMethodManifest): PLGMethodManifest | null;
+    methodsLength(): number;
+    /**
+     * Enum-typed host capability dependencies (richer than CAPABILITIES,
+     * which is string-tagged metadata).
+     */
+    HOST_CAPABILITIES(index: number, obj?: PLGHostCapability): PLGHostCapability | null;
+    hostCapabilitiesLength(): number;
+    /**
+     * Timer declarations for scheduled invocations.
+     */
+    TIMERS(index: number, obj?: PLGTimerSpec): PLGTimerSpec | null;
+    timersLength(): number;
+    /**
+     * Protocol handler declarations.
+     */
+    PROTOCOLS(index: number, obj?: PLGProtocolSpec): PLGProtocolSpec | null;
+    protocolsLength(): number;
+    /**
+     * FlatBuffer schemas this plugin depends on at the invoke surface.
+     */
+    SCHEMAS_USED(index: number, obj?: FlatBufferTypeRef): FlatBufferTypeRef | null;
+    schemasUsedLength(): number;
+    /**
+     * Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+     */
+    BUILD_ARTIFACTS(index: number, obj?: PLGBuildArtifact): PLGBuildArtifact | null;
+    buildArtifactsLength(): number;
+    /**
+     * Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+     */
+    RUNTIME_TARGETS(index: number): string;
+    RUNTIME_TARGETS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    runtimeTargetsLength(): number;
     static startPLG(builder: flatbuffers.Builder): void;
     static addPluginId(builder: flatbuffers.Builder, PLUGIN_IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -304,10 +358,34 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
     static addSignature(builder: flatbuffers.Builder, SIGNATUREOffset: flatbuffers.Offset): void;
     static createSignatureVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startSignatureVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addInvokeSurfaces(builder: flatbuffers.Builder, INVOKE_SURFACESOffset: flatbuffers.Offset): void;
+    static createInvokeSurfacesVector(builder: flatbuffers.Builder, data: invokeSurfaceKind[]): flatbuffers.Offset;
+    static startInvokeSurfacesVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addMethods(builder: flatbuffers.Builder, METHODSOffset: flatbuffers.Offset): void;
+    static createMethodsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startMethodsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addHostCapabilities(builder: flatbuffers.Builder, HOST_CAPABILITIESOffset: flatbuffers.Offset): void;
+    static createHostCapabilitiesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startHostCapabilitiesVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addTimers(builder: flatbuffers.Builder, TIMERSOffset: flatbuffers.Offset): void;
+    static createTimersVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startTimersVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addProtocols(builder: flatbuffers.Builder, PROTOCOLSOffset: flatbuffers.Offset): void;
+    static createProtocolsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startProtocolsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addSchemasUsed(builder: flatbuffers.Builder, SCHEMAS_USEDOffset: flatbuffers.Offset): void;
+    static createSchemasUsedVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startSchemasUsedVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addBuildArtifacts(builder: flatbuffers.Builder, BUILD_ARTIFACTSOffset: flatbuffers.Offset): void;
+    static createBuildArtifactsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startBuildArtifactsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addRuntimeTargets(builder: flatbuffers.Builder, RUNTIME_TARGETSOffset: flatbuffers.Offset): void;
+    static createRuntimeTargetsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startRuntimeTargetsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endPLG(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishPLGBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedPLGBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createPLG(builder: flatbuffers.Builder, PLUGIN_IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, TAGLINEOffset: flatbuffers.Offset, PLUGIN_TYPE: pluginCategory, PUBLISHER_NAMEOffset: flatbuffers.Offset, PUBLISHER_HANDLEOffset: flatbuffers.Offset, PUBLISHER_URLOffset: flatbuffers.Offset, SUPPORT_URLOffset: flatbuffers.Offset, TAGSOffset: flatbuffers.Offset, FEATURESOffset: flatbuffers.Offset, SCREENSHOT_URLSOffset: flatbuffers.Offset, BANNER_URLOffset: flatbuffers.Offset, ABI_VERSION: number, WASM_HASHOffset: flatbuffers.Offset, WASM_SIZE: bigint, WASM_CIDOffset: flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset: flatbuffers.Offset, ENCRYPTED_WASM_SIZE: bigint, ENTRY_FUNCTIONSOffset: flatbuffers.Offset, REQUIRED_SCHEMASOffset: flatbuffers.Offset, DEPENDENCIESOffset: flatbuffers.Offset, CAPABILITIESOffset: flatbuffers.Offset, PROVIDER_PEER_IDOffset: flatbuffers.Offset, PROVIDER_EPM_CIDOffset: flatbuffers.Offset, ENCRYPTED: boolean, REQUIRED_SCOPEOffset: flatbuffers.Offset, KEY_IDOffset: flatbuffers.Offset, ALLOWED_DOMAINSOffset: flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS: bigint, MIN_PERMISSIONSOffset: flatbuffers.Offset, CREATED_AT: bigint, UPDATED_AT: bigint, DOCUMENTATION_URLOffset: flatbuffers.Offset, CHANGELOG_URLOffset: flatbuffers.Offset, ICON_URLOffset: flatbuffers.Offset, LICENSEOffset: flatbuffers.Offset, PAYMENT_MODEL: purchaseTier, PRICE_USD_CENTS: number, SUBSCRIPTION_PERIOD_DAYS: number, ACCEPTED_PAYMENT_METHODSOffset: flatbuffers.Offset, LISTING_STATUS: publicationState, SIGNATUREOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createPLG(builder: flatbuffers.Builder, PLUGIN_IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, TAGLINEOffset: flatbuffers.Offset, PLUGIN_TYPE: pluginCategory, PUBLISHER_NAMEOffset: flatbuffers.Offset, PUBLISHER_HANDLEOffset: flatbuffers.Offset, PUBLISHER_URLOffset: flatbuffers.Offset, SUPPORT_URLOffset: flatbuffers.Offset, TAGSOffset: flatbuffers.Offset, FEATURESOffset: flatbuffers.Offset, SCREENSHOT_URLSOffset: flatbuffers.Offset, BANNER_URLOffset: flatbuffers.Offset, ABI_VERSION: number, WASM_HASHOffset: flatbuffers.Offset, WASM_SIZE: bigint, WASM_CIDOffset: flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset: flatbuffers.Offset, ENCRYPTED_WASM_SIZE: bigint, ENTRY_FUNCTIONSOffset: flatbuffers.Offset, REQUIRED_SCHEMASOffset: flatbuffers.Offset, DEPENDENCIESOffset: flatbuffers.Offset, CAPABILITIESOffset: flatbuffers.Offset, PROVIDER_PEER_IDOffset: flatbuffers.Offset, PROVIDER_EPM_CIDOffset: flatbuffers.Offset, ENCRYPTED: boolean, REQUIRED_SCOPEOffset: flatbuffers.Offset, KEY_IDOffset: flatbuffers.Offset, ALLOWED_DOMAINSOffset: flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS: bigint, MIN_PERMISSIONSOffset: flatbuffers.Offset, CREATED_AT: bigint, UPDATED_AT: bigint, DOCUMENTATION_URLOffset: flatbuffers.Offset, CHANGELOG_URLOffset: flatbuffers.Offset, ICON_URLOffset: flatbuffers.Offset, LICENSEOffset: flatbuffers.Offset, PAYMENT_MODEL: purchaseTier, PRICE_USD_CENTS: number, SUBSCRIPTION_PERIOD_DAYS: number, ACCEPTED_PAYMENT_METHODSOffset: flatbuffers.Offset, LISTING_STATUS: publicationState, SIGNATUREOffset: flatbuffers.Offset, INVOKE_SURFACESOffset: flatbuffers.Offset, METHODSOffset: flatbuffers.Offset, HOST_CAPABILITIESOffset: flatbuffers.Offset, TIMERSOffset: flatbuffers.Offset, PROTOCOLSOffset: flatbuffers.Offset, SCHEMAS_USEDOffset: flatbuffers.Offset, BUILD_ARTIFACTSOffset: flatbuffers.Offset, RUNTIME_TARGETSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PLGT;
     unpackTo(_o: PLGT): void;
 }
@@ -356,7 +434,15 @@ export declare class PLGT implements flatbuffers.IGeneratedObject {
     ACCEPTED_PAYMENT_METHODS: (string)[];
     LISTING_STATUS: publicationState;
     SIGNATURE: (number)[];
-    constructor(PLUGIN_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, TAGLINE?: string | Uint8Array | null, PLUGIN_TYPE?: pluginCategory, PUBLISHER_NAME?: string | Uint8Array | null, PUBLISHER_HANDLE?: string | Uint8Array | null, PUBLISHER_URL?: string | Uint8Array | null, SUPPORT_URL?: string | Uint8Array | null, TAGS?: (string)[], FEATURES?: (string)[], SCREENSHOT_URLS?: (string)[], BANNER_URL?: string | Uint8Array | null, ABI_VERSION?: number, WASM_HASH?: (number)[], WASM_SIZE?: bigint, WASM_CID?: string | Uint8Array | null, ENCRYPTED_WASM_HASH?: (number)[], ENCRYPTED_WASM_SIZE?: bigint, ENTRY_FUNCTIONS?: (EntryFunctionT)[], REQUIRED_SCHEMAS?: (string)[], DEPENDENCIES?: (PluginDependencyT)[], CAPABILITIES?: (PluginCapabilityT)[], PROVIDER_PEER_ID?: string | Uint8Array | null, PROVIDER_EPM_CID?: string | Uint8Array | null, ENCRYPTED?: boolean, REQUIRED_SCOPE?: string | Uint8Array | null, KEY_ID?: string | Uint8Array | null, ALLOWED_DOMAINS?: (string)[], MAX_GRANT_TIMEOUT_MS?: bigint, MIN_PERMISSIONS?: (string)[], CREATED_AT?: bigint, UPDATED_AT?: bigint, DOCUMENTATION_URL?: string | Uint8Array | null, CHANGELOG_URL?: string | Uint8Array | null, ICON_URL?: string | Uint8Array | null, LICENSE?: string | Uint8Array | null, PAYMENT_MODEL?: purchaseTier, PRICE_USD_CENTS?: number, SUBSCRIPTION_PERIOD_DAYS?: number, ACCEPTED_PAYMENT_METHODS?: (string)[], LISTING_STATUS?: publicationState, SIGNATURE?: (number)[]);
+    INVOKE_SURFACES: (invokeSurfaceKind)[];
+    METHODS: (PLGMethodManifestT)[];
+    HOST_CAPABILITIES: (PLGHostCapabilityT)[];
+    TIMERS: (PLGTimerSpecT)[];
+    PROTOCOLS: (PLGProtocolSpecT)[];
+    SCHEMAS_USED: (FlatBufferTypeRefT)[];
+    BUILD_ARTIFACTS: (PLGBuildArtifactT)[];
+    RUNTIME_TARGETS: (string)[];
+    constructor(PLUGIN_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, TAGLINE?: string | Uint8Array | null, PLUGIN_TYPE?: pluginCategory, PUBLISHER_NAME?: string | Uint8Array | null, PUBLISHER_HANDLE?: string | Uint8Array | null, PUBLISHER_URL?: string | Uint8Array | null, SUPPORT_URL?: string | Uint8Array | null, TAGS?: (string)[], FEATURES?: (string)[], SCREENSHOT_URLS?: (string)[], BANNER_URL?: string | Uint8Array | null, ABI_VERSION?: number, WASM_HASH?: (number)[], WASM_SIZE?: bigint, WASM_CID?: string | Uint8Array | null, ENCRYPTED_WASM_HASH?: (number)[], ENCRYPTED_WASM_SIZE?: bigint, ENTRY_FUNCTIONS?: (EntryFunctionT)[], REQUIRED_SCHEMAS?: (string)[], DEPENDENCIES?: (PluginDependencyT)[], CAPABILITIES?: (PluginCapabilityT)[], PROVIDER_PEER_ID?: string | Uint8Array | null, PROVIDER_EPM_CID?: string | Uint8Array | null, ENCRYPTED?: boolean, REQUIRED_SCOPE?: string | Uint8Array | null, KEY_ID?: string | Uint8Array | null, ALLOWED_DOMAINS?: (string)[], MAX_GRANT_TIMEOUT_MS?: bigint, MIN_PERMISSIONS?: (string)[], CREATED_AT?: bigint, UPDATED_AT?: bigint, DOCUMENTATION_URL?: string | Uint8Array | null, CHANGELOG_URL?: string | Uint8Array | null, ICON_URL?: string | Uint8Array | null, LICENSE?: string | Uint8Array | null, PAYMENT_MODEL?: purchaseTier, PRICE_USD_CENTS?: number, SUBSCRIPTION_PERIOD_DAYS?: number, ACCEPTED_PAYMENT_METHODS?: (string)[], LISTING_STATUS?: publicationState, SIGNATURE?: (number)[], INVOKE_SURFACES?: (invokeSurfaceKind)[], METHODS?: (PLGMethodManifestT)[], HOST_CAPABILITIES?: (PLGHostCapabilityT)[], TIMERS?: (PLGTimerSpecT)[], PROTOCOLS?: (PLGProtocolSpecT)[], SCHEMAS_USED?: (FlatBufferTypeRefT)[], BUILD_ARTIFACTS?: (PLGBuildArtifactT)[], RUNTIME_TARGETS?: (string)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PLG.d.ts.map
