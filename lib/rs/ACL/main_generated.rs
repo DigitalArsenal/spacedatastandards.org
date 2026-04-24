@@ -2,1647 +2,492 @@
 // @generated
 extern crate alloc;
 
+use crate::main_generated::*;
 
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_ACCESS_CATEGORY: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_ACCESS_CATEGORY: i8 = 3;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_ACCESS_CATEGORY: [accessCategory; 4] = [
-  accessCategory::OneTime,
-  accessCategory::Subscription,
-  accessCategory::Streaming,
-  accessCategory::Query,
-];
-
-/// Access type for data listings
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct accessCategory(pub i8);
-#[allow(non_upper_case_globals)]
-impl accessCategory {
-  /// One-time purchase
-  pub const OneTime: Self = Self(0);
-  /// Recurring subscription
-  pub const Subscription: Self = Self(1);
-  /// Real-time streaming access
-  pub const Streaming: Self = Self(2);
-  /// Query-based access
-  pub const Query: Self = Self(3);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 3;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::OneTime,
-    Self::Subscription,
-    Self::Streaming,
-    Self::Query,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::OneTime => Some("OneTime"),
-      Self::Subscription => Some("Subscription"),
-      Self::Streaming => Some("Streaming"),
-      Self::Query => Some("Query"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for accessCategory {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for accessCategory {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for accessCategory {
-    type Output = accessCategory;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for accessCategory {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for accessCategory {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for accessCategory {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_PAYMENT_METHOD: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PAYMENT_METHOD: i8 = 5;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PAYMENT_METHOD: [paymentMethod; 6] = [
-  paymentMethod::Crypto_ETH,
-  paymentMethod::Crypto_SOL,
-  paymentMethod::Crypto_BTC,
-  paymentMethod::SDN_Credits,
-  paymentMethod::Fiat_Stripe,
-  paymentMethod::Free,
-];
-
-/// Payment method accepted
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct paymentMethod(pub i8);
-#[allow(non_upper_case_globals)]
-impl paymentMethod {
-  /// Ethereum cryptocurrency
-  pub const Crypto_ETH: Self = Self(0);
-  /// Solana cryptocurrency
-  pub const Crypto_SOL: Self = Self(1);
-  /// Bitcoin cryptocurrency
-  pub const Crypto_BTC: Self = Self(2);
-  /// Internal SDN credits system
-  pub const SDN_Credits: Self = Self(3);
-  /// Fiat payment via Stripe
-  pub const Fiat_Stripe: Self = Self(4);
-  /// Free/open data
-  pub const Free: Self = Self(5);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 5;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::Crypto_ETH,
-    Self::Crypto_SOL,
-    Self::Crypto_BTC,
-    Self::SDN_Credits,
-    Self::Fiat_Stripe,
-    Self::Free,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::Crypto_ETH => Some("Crypto_ETH"),
-      Self::Crypto_SOL => Some("Crypto_SOL"),
-      Self::Crypto_BTC => Some("Crypto_BTC"),
-      Self::SDN_Credits => Some("SDN_Credits"),
-      Self::Fiat_Stripe => Some("Fiat_Stripe"),
-      Self::Free => Some("Free"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for paymentMethod {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for paymentMethod {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for paymentMethod {
-    type Output = paymentMethod;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for paymentMethod {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for paymentMethod {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for paymentMethod {}
-pub enum SpatialCoverageOffset {}
+pub enum ACLOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Spatial coverage definition
-pub struct SpatialCoverage<'a> {
+/// Access Control Grant - Permission to access purchased data
+pub struct ACL<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for SpatialCoverage<'a> {
-  type Inner = SpatialCoverage<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for ACL<'a> {
+  type Inner = ACL<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> SpatialCoverage<'a> {
-  pub const VT_TYPE: ::flatbuffers::VOffsetT = 4;
-  pub const VT_REGIONS: ::flatbuffers::VOffsetT = 6;
-  pub const VT_OBJECT_IDS: ::flatbuffers::VOffsetT = 8;
+impl<'a> ACL<'a> {
+  pub const VT_GRANT_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_LISTING_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_BUYER_PEER_ID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_BUYER_ENCRYPTION_PUBKEY: ::flatbuffers::VOffsetT = 10;
+  pub const VT_ACCESS_TYPE: ::flatbuffers::VOffsetT = 12;
+  pub const VT_TIER_NAME: ::flatbuffers::VOffsetT = 14;
+  pub const VT_GRANTED_AT: ::flatbuffers::VOffsetT = 16;
+  pub const VT_EXPIRES_AT: ::flatbuffers::VOffsetT = 18;
+  pub const VT_PAYMENT_TX_HASH: ::flatbuffers::VOffsetT = 20;
+  pub const VT_PAYMENT_METHOD: ::flatbuffers::VOffsetT = 22;
+  pub const VT_PROVIDER_SIGNATURE: ::flatbuffers::VOffsetT = 24;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    SpatialCoverage { _tab: table }
+    ACL { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args SpatialCoverageArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<SpatialCoverage<'bldr>> {
-    let mut builder = SpatialCoverageBuilder::new(_fbb);
-    if let Some(x) = args.OBJECT_IDS { builder.add_OBJECT_IDS(x); }
-    if let Some(x) = args.REGIONS { builder.add_REGIONS(x); }
-    if let Some(x) = args.TYPE { builder.add_TYPE(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> SpatialCoverageT {
-    let TYPE = self.TYPE().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let REGIONS = self.REGIONS().map(|x| {
-      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
-    });
-    let OBJECT_IDS = self.OBJECT_IDS().map(|x| {
-      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
-    });
-    SpatialCoverageT {
-      TYPE,
-      REGIONS,
-      OBJECT_IDS,
-    }
-  }
-
-  /// Type of coverage: "global", "region", "object_list"
-  #[inline]
-  pub fn TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SpatialCoverage::VT_TYPE, None)}
-  }
-  /// Regions covered, e.g., ["LEO", "GEO", "MEO"]
-  #[inline]
-  pub fn REGIONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(SpatialCoverage::VT_REGIONS, None)}
-  }
-  /// Specific NORAD IDs or catalog numbers
-  #[inline]
-  pub fn OBJECT_IDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(SpatialCoverage::VT_OBJECT_IDS, None)}
-  }
-}
-
-impl ::flatbuffers::Verifiable for SpatialCoverage<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TYPE", Self::VT_TYPE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("REGIONS", Self::VT_REGIONS, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("OBJECT_IDS", Self::VT_OBJECT_IDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct SpatialCoverageArgs<'a> {
-    pub TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub REGIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub OBJECT_IDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
-}
-impl<'a> Default for SpatialCoverageArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    SpatialCoverageArgs {
-      TYPE: None,
-      REGIONS: None,
-      OBJECT_IDS: None,
-    }
-  }
-}
-
-pub struct SpatialCoverageBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SpatialCoverageBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_TYPE(&mut self, TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SpatialCoverage::VT_TYPE, TYPE);
-  }
-  #[inline]
-  pub fn add_REGIONS(&mut self, REGIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SpatialCoverage::VT_REGIONS, REGIONS);
-  }
-  #[inline]
-  pub fn add_OBJECT_IDS(&mut self, OBJECT_IDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SpatialCoverage::VT_OBJECT_IDS, OBJECT_IDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SpatialCoverageBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    SpatialCoverageBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<SpatialCoverage<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for SpatialCoverage<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("SpatialCoverage");
-      ds.field("TYPE", &self.TYPE());
-      ds.field("REGIONS", &self.REGIONS());
-      ds.field("OBJECT_IDS", &self.OBJECT_IDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct SpatialCoverageT {
-  pub TYPE: Option<alloc::string::String>,
-  pub REGIONS: Option<alloc::vec::Vec<alloc::string::String>>,
-  pub OBJECT_IDS: Option<alloc::vec::Vec<alloc::string::String>>,
-}
-impl Default for SpatialCoverageT {
-  fn default() -> Self {
-    Self {
-      TYPE: None,
-      REGIONS: None,
-      OBJECT_IDS: None,
-    }
-  }
-}
-impl SpatialCoverageT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<SpatialCoverage<'b>> {
-    let TYPE = self.TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let REGIONS = self.REGIONS.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let OBJECT_IDS = self.OBJECT_IDS.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    SpatialCoverage::create(_fbb, &SpatialCoverageArgs{
-      TYPE,
-      REGIONS,
-      OBJECT_IDS,
-    })
-  }
-}
-pub enum TemporalCoverageOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Temporal coverage definition
-pub struct TemporalCoverage<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for TemporalCoverage<'a> {
-  type Inner = TemporalCoverage<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> TemporalCoverage<'a> {
-  pub const VT_START_EPOCH: ::flatbuffers::VOffsetT = 4;
-  pub const VT_END_EPOCH: ::flatbuffers::VOffsetT = 6;
-  pub const VT_UPDATE_FREQUENCY: ::flatbuffers::VOffsetT = 8;
-  pub const VT_HISTORICAL_DEPTH: ::flatbuffers::VOffsetT = 10;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    TemporalCoverage { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args TemporalCoverageArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<TemporalCoverage<'bldr>> {
-    let mut builder = TemporalCoverageBuilder::new(_fbb);
-    builder.add_HISTORICAL_DEPTH(args.HISTORICAL_DEPTH);
-    if let Some(x) = args.UPDATE_FREQUENCY { builder.add_UPDATE_FREQUENCY(x); }
-    if let Some(x) = args.END_EPOCH { builder.add_END_EPOCH(x); }
-    if let Some(x) = args.START_EPOCH { builder.add_START_EPOCH(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> TemporalCoverageT {
-    let START_EPOCH = self.START_EPOCH().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let END_EPOCH = self.END_EPOCH().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let UPDATE_FREQUENCY = self.UPDATE_FREQUENCY().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let HISTORICAL_DEPTH = self.HISTORICAL_DEPTH();
-    TemporalCoverageT {
-      START_EPOCH,
-      END_EPOCH,
-      UPDATE_FREQUENCY,
-      HISTORICAL_DEPTH,
-    }
-  }
-
-  /// Start epoch in ISO 8601 format
-  #[inline]
-  pub fn START_EPOCH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TemporalCoverage::VT_START_EPOCH, None)}
-  }
-  /// End epoch in ISO 8601 format
-  #[inline]
-  pub fn END_EPOCH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TemporalCoverage::VT_END_EPOCH, None)}
-  }
-  /// Update frequency: "realtime", "hourly", "daily"
-  #[inline]
-  pub fn UPDATE_FREQUENCY(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TemporalCoverage::VT_UPDATE_FREQUENCY, None)}
-  }
-  /// Days of historical data available
-  #[inline]
-  pub fn HISTORICAL_DEPTH(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(TemporalCoverage::VT_HISTORICAL_DEPTH, Some(0)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for TemporalCoverage<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("START_EPOCH", Self::VT_START_EPOCH, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("END_EPOCH", Self::VT_END_EPOCH, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("UPDATE_FREQUENCY", Self::VT_UPDATE_FREQUENCY, false)?
-     .visit_field::<u32>("HISTORICAL_DEPTH", Self::VT_HISTORICAL_DEPTH, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct TemporalCoverageArgs<'a> {
-    pub START_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub END_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub UPDATE_FREQUENCY: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub HISTORICAL_DEPTH: u32,
-}
-impl<'a> Default for TemporalCoverageArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    TemporalCoverageArgs {
-      START_EPOCH: None,
-      END_EPOCH: None,
-      UPDATE_FREQUENCY: None,
-      HISTORICAL_DEPTH: 0,
-    }
-  }
-}
-
-pub struct TemporalCoverageBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TemporalCoverageBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_START_EPOCH(&mut self, START_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TemporalCoverage::VT_START_EPOCH, START_EPOCH);
-  }
-  #[inline]
-  pub fn add_END_EPOCH(&mut self, END_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TemporalCoverage::VT_END_EPOCH, END_EPOCH);
-  }
-  #[inline]
-  pub fn add_UPDATE_FREQUENCY(&mut self, UPDATE_FREQUENCY: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TemporalCoverage::VT_UPDATE_FREQUENCY, UPDATE_FREQUENCY);
-  }
-  #[inline]
-  pub fn add_HISTORICAL_DEPTH(&mut self, HISTORICAL_DEPTH: u32) {
-    self.fbb_.push_slot::<u32>(TemporalCoverage::VT_HISTORICAL_DEPTH, HISTORICAL_DEPTH, 0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TemporalCoverageBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    TemporalCoverageBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<TemporalCoverage<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for TemporalCoverage<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("TemporalCoverage");
-      ds.field("START_EPOCH", &self.START_EPOCH());
-      ds.field("END_EPOCH", &self.END_EPOCH());
-      ds.field("UPDATE_FREQUENCY", &self.UPDATE_FREQUENCY());
-      ds.field("HISTORICAL_DEPTH", &self.HISTORICAL_DEPTH());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct TemporalCoverageT {
-  pub START_EPOCH: Option<alloc::string::String>,
-  pub END_EPOCH: Option<alloc::string::String>,
-  pub UPDATE_FREQUENCY: Option<alloc::string::String>,
-  pub HISTORICAL_DEPTH: u32,
-}
-impl Default for TemporalCoverageT {
-  fn default() -> Self {
-    Self {
-      START_EPOCH: None,
-      END_EPOCH: None,
-      UPDATE_FREQUENCY: None,
-      HISTORICAL_DEPTH: 0,
-    }
-  }
-}
-impl TemporalCoverageT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<TemporalCoverage<'b>> {
-    let START_EPOCH = self.START_EPOCH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let END_EPOCH = self.END_EPOCH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let UPDATE_FREQUENCY = self.UPDATE_FREQUENCY.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let HISTORICAL_DEPTH = self.HISTORICAL_DEPTH;
-    TemporalCoverage::create(_fbb, &TemporalCoverageArgs{
-      START_EPOCH,
-      END_EPOCH,
-      UPDATE_FREQUENCY,
-      HISTORICAL_DEPTH,
-    })
-  }
-}
-pub enum DataCoverageOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Data coverage combining spatial and temporal
-pub struct DataCoverage<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for DataCoverage<'a> {
-  type Inner = DataCoverage<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> DataCoverage<'a> {
-  pub const VT_SPATIAL: ::flatbuffers::VOffsetT = 4;
-  pub const VT_TEMPORAL: ::flatbuffers::VOffsetT = 6;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    DataCoverage { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args DataCoverageArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<DataCoverage<'bldr>> {
-    let mut builder = DataCoverageBuilder::new(_fbb);
-    if let Some(x) = args.TEMPORAL { builder.add_TEMPORAL(x); }
-    if let Some(x) = args.SPATIAL { builder.add_SPATIAL(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> DataCoverageT {
-    let SPATIAL = self.SPATIAL().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
-    });
-    let TEMPORAL = self.TEMPORAL().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
-    });
-    DataCoverageT {
-      SPATIAL,
-      TEMPORAL,
-    }
-  }
-
-  /// Spatial coverage definition
-  #[inline]
-  pub fn SPATIAL(&self) -> Option<SpatialCoverage<'a>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SpatialCoverage>>(DataCoverage::VT_SPATIAL, None)}
-  }
-  /// Temporal coverage definition
-  #[inline]
-  pub fn TEMPORAL(&self) -> Option<TemporalCoverage<'a>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TemporalCoverage>>(DataCoverage::VT_TEMPORAL, None)}
-  }
-}
-
-impl ::flatbuffers::Verifiable for DataCoverage<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<SpatialCoverage>>("SPATIAL", Self::VT_SPATIAL, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<TemporalCoverage>>("TEMPORAL", Self::VT_TEMPORAL, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct DataCoverageArgs<'a> {
-    pub SPATIAL: Option<::flatbuffers::WIPOffset<SpatialCoverage<'a>>>,
-    pub TEMPORAL: Option<::flatbuffers::WIPOffset<TemporalCoverage<'a>>>,
-}
-impl<'a> Default for DataCoverageArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    DataCoverageArgs {
-      SPATIAL: None,
-      TEMPORAL: None,
-    }
-  }
-}
-
-pub struct DataCoverageBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DataCoverageBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_SPATIAL(&mut self, SPATIAL: ::flatbuffers::WIPOffset<SpatialCoverage<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SpatialCoverage>>(DataCoverage::VT_SPATIAL, SPATIAL);
-  }
-  #[inline]
-  pub fn add_TEMPORAL(&mut self, TEMPORAL: ::flatbuffers::WIPOffset<TemporalCoverage<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TemporalCoverage>>(DataCoverage::VT_TEMPORAL, TEMPORAL);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> DataCoverageBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    DataCoverageBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<DataCoverage<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for DataCoverage<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("DataCoverage");
-      ds.field("SPATIAL", &self.SPATIAL());
-      ds.field("TEMPORAL", &self.TEMPORAL());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct DataCoverageT {
-  pub SPATIAL: Option<alloc::boxed::Box<SpatialCoverageT>>,
-  pub TEMPORAL: Option<alloc::boxed::Box<TemporalCoverageT>>,
-}
-impl Default for DataCoverageT {
-  fn default() -> Self {
-    Self {
-      SPATIAL: None,
-      TEMPORAL: None,
-    }
-  }
-}
-impl DataCoverageT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<DataCoverage<'b>> {
-    let SPATIAL = self.SPATIAL.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    let TEMPORAL = self.TEMPORAL.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    DataCoverage::create(_fbb, &DataCoverageArgs{
-      SPATIAL,
-      TEMPORAL,
-    })
-  }
-}
-pub enum PricingTierOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Pricing tier for a listing
-pub struct PricingTier<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for PricingTier<'a> {
-  type Inner = PricingTier<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> PricingTier<'a> {
-  pub const VT_NAME: ::flatbuffers::VOffsetT = 4;
-  pub const VT_PRICE_AMOUNT: ::flatbuffers::VOffsetT = 6;
-  pub const VT_PRICE_CURRENCY: ::flatbuffers::VOffsetT = 8;
-  pub const VT_DURATION_DAYS: ::flatbuffers::VOffsetT = 10;
-  pub const VT_RATE_LIMIT: ::flatbuffers::VOffsetT = 12;
-  pub const VT_FEATURES: ::flatbuffers::VOffsetT = 14;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    PricingTier { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args PricingTierArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<PricingTier<'bldr>> {
-    let mut builder = PricingTierBuilder::new(_fbb);
-    builder.add_PRICE_AMOUNT(args.PRICE_AMOUNT);
-    if let Some(x) = args.FEATURES { builder.add_FEATURES(x); }
-    builder.add_RATE_LIMIT(args.RATE_LIMIT);
-    builder.add_DURATION_DAYS(args.DURATION_DAYS);
-    if let Some(x) = args.PRICE_CURRENCY { builder.add_PRICE_CURRENCY(x); }
-    if let Some(x) = args.NAME { builder.add_NAME(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> PricingTierT {
-    let NAME = self.NAME().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let PRICE_AMOUNT = self.PRICE_AMOUNT();
-    let PRICE_CURRENCY = self.PRICE_CURRENCY().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let DURATION_DAYS = self.DURATION_DAYS();
-    let RATE_LIMIT = self.RATE_LIMIT();
-    let FEATURES = self.FEATURES().map(|x| {
-      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
-    });
-    PricingTierT {
-      NAME,
-      PRICE_AMOUNT,
-      PRICE_CURRENCY,
-      DURATION_DAYS,
-      RATE_LIMIT,
-      FEATURES,
-    }
-  }
-
-  /// Tier name, e.g., "Basic", "Pro", "Enterprise"
-  #[inline]
-  pub fn NAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PricingTier::VT_NAME, None)}
-  }
-  /// Price in smallest unit (cents, satoshis, etc.)
-  #[inline]
-  pub fn PRICE_AMOUNT(&self) -> u64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u64>(PricingTier::VT_PRICE_AMOUNT, Some(0)).unwrap()}
-  }
-  /// Currency code: "USD", "ETH", "SOL", "SDN_CREDITS"
-  #[inline]
-  pub fn PRICE_CURRENCY(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PricingTier::VT_PRICE_CURRENCY, None)}
-  }
-  /// Duration in days (0 = one-time purchase)
-  #[inline]
-  pub fn DURATION_DAYS(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(PricingTier::VT_DURATION_DAYS, Some(0)).unwrap()}
-  }
-  /// Rate limit in requests per hour
-  #[inline]
-  pub fn RATE_LIMIT(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(PricingTier::VT_RATE_LIMIT, Some(0)).unwrap()}
-  }
-  /// List of features included in this tier
-  #[inline]
-  pub fn FEATURES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PricingTier::VT_FEATURES, None)}
-  }
-}
-
-impl ::flatbuffers::Verifiable for PricingTier<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-     .visit_field::<u64>("PRICE_AMOUNT", Self::VT_PRICE_AMOUNT, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRICE_CURRENCY", Self::VT_PRICE_CURRENCY, false)?
-     .visit_field::<u32>("DURATION_DAYS", Self::VT_DURATION_DAYS, false)?
-     .visit_field::<u32>("RATE_LIMIT", Self::VT_RATE_LIMIT, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("FEATURES", Self::VT_FEATURES, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct PricingTierArgs<'a> {
-    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub PRICE_AMOUNT: u64,
-    pub PRICE_CURRENCY: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub DURATION_DAYS: u32,
-    pub RATE_LIMIT: u32,
-    pub FEATURES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
-}
-impl<'a> Default for PricingTierArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    PricingTierArgs {
-      NAME: None,
-      PRICE_AMOUNT: 0,
-      PRICE_CURRENCY: None,
-      DURATION_DAYS: 0,
-      RATE_LIMIT: 0,
-      FEATURES: None,
-    }
-  }
-}
-
-pub struct PricingTierBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PricingTierBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PricingTier::VT_NAME, NAME);
-  }
-  #[inline]
-  pub fn add_PRICE_AMOUNT(&mut self, PRICE_AMOUNT: u64) {
-    self.fbb_.push_slot::<u64>(PricingTier::VT_PRICE_AMOUNT, PRICE_AMOUNT, 0);
-  }
-  #[inline]
-  pub fn add_PRICE_CURRENCY(&mut self, PRICE_CURRENCY: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PricingTier::VT_PRICE_CURRENCY, PRICE_CURRENCY);
-  }
-  #[inline]
-  pub fn add_DURATION_DAYS(&mut self, DURATION_DAYS: u32) {
-    self.fbb_.push_slot::<u32>(PricingTier::VT_DURATION_DAYS, DURATION_DAYS, 0);
-  }
-  #[inline]
-  pub fn add_RATE_LIMIT(&mut self, RATE_LIMIT: u32) {
-    self.fbb_.push_slot::<u32>(PricingTier::VT_RATE_LIMIT, RATE_LIMIT, 0);
-  }
-  #[inline]
-  pub fn add_FEATURES(&mut self, FEATURES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PricingTier::VT_FEATURES, FEATURES);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PricingTierBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    PricingTierBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<PricingTier<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for PricingTier<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("PricingTier");
-      ds.field("NAME", &self.NAME());
-      ds.field("PRICE_AMOUNT", &self.PRICE_AMOUNT());
-      ds.field("PRICE_CURRENCY", &self.PRICE_CURRENCY());
-      ds.field("DURATION_DAYS", &self.DURATION_DAYS());
-      ds.field("RATE_LIMIT", &self.RATE_LIMIT());
-      ds.field("FEATURES", &self.FEATURES());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct PricingTierT {
-  pub NAME: Option<alloc::string::String>,
-  pub PRICE_AMOUNT: u64,
-  pub PRICE_CURRENCY: Option<alloc::string::String>,
-  pub DURATION_DAYS: u32,
-  pub RATE_LIMIT: u32,
-  pub FEATURES: Option<alloc::vec::Vec<alloc::string::String>>,
-}
-impl Default for PricingTierT {
-  fn default() -> Self {
-    Self {
-      NAME: None,
-      PRICE_AMOUNT: 0,
-      PRICE_CURRENCY: None,
-      DURATION_DAYS: 0,
-      RATE_LIMIT: 0,
-      FEATURES: None,
-    }
-  }
-}
-impl PricingTierT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<PricingTier<'b>> {
-    let NAME = self.NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let PRICE_AMOUNT = self.PRICE_AMOUNT;
-    let PRICE_CURRENCY = self.PRICE_CURRENCY.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let DURATION_DAYS = self.DURATION_DAYS;
-    let RATE_LIMIT = self.RATE_LIMIT;
-    let FEATURES = self.FEATURES.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    PricingTier::create(_fbb, &PricingTierArgs{
-      NAME,
-      PRICE_AMOUNT,
-      PRICE_CURRENCY,
-      DURATION_DAYS,
-      RATE_LIMIT,
-      FEATURES,
-    })
-  }
-}
-pub enum STFOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Storefront Listing - Data marketplace listing
-pub struct STF<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for STF<'a> {
-  type Inner = STF<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> STF<'a> {
-  pub const VT_LISTING_ID: ::flatbuffers::VOffsetT = 4;
-  pub const VT_PROVIDER_PEER_ID: ::flatbuffers::VOffsetT = 6;
-  pub const VT_PROVIDER_EPM_CID: ::flatbuffers::VOffsetT = 8;
-  pub const VT_TITLE: ::flatbuffers::VOffsetT = 10;
-  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 12;
-  pub const VT_DATA_TYPES: ::flatbuffers::VOffsetT = 14;
-  pub const VT_COVERAGE: ::flatbuffers::VOffsetT = 16;
-  pub const VT_SAMPLE_CID: ::flatbuffers::VOffsetT = 18;
-  pub const VT_ACCESS_TYPE: ::flatbuffers::VOffsetT = 20;
-  pub const VT_ENCRYPTION_REQUIRED: ::flatbuffers::VOffsetT = 22;
-  pub const VT_PRICING: ::flatbuffers::VOffsetT = 24;
-  pub const VT_ACCEPTED_PAYMENTS: ::flatbuffers::VOffsetT = 26;
-  pub const VT_CREATED_AT: ::flatbuffers::VOffsetT = 28;
-  pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 30;
-  pub const VT_ACTIVE: ::flatbuffers::VOffsetT = 32;
-  pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 34;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    STF { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args STFArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<STF<'bldr>> {
-    let mut builder = STFBuilder::new(_fbb);
-    builder.add_UPDATED_AT(args.UPDATED_AT);
-    builder.add_CREATED_AT(args.CREATED_AT);
-    if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
-    if let Some(x) = args.ACCEPTED_PAYMENTS { builder.add_ACCEPTED_PAYMENTS(x); }
-    if let Some(x) = args.PRICING { builder.add_PRICING(x); }
-    if let Some(x) = args.SAMPLE_CID { builder.add_SAMPLE_CID(x); }
-    if let Some(x) = args.COVERAGE { builder.add_COVERAGE(x); }
-    if let Some(x) = args.DATA_TYPES { builder.add_DATA_TYPES(x); }
-    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
-    if let Some(x) = args.TITLE { builder.add_TITLE(x); }
-    if let Some(x) = args.PROVIDER_EPM_CID { builder.add_PROVIDER_EPM_CID(x); }
-    if let Some(x) = args.PROVIDER_PEER_ID { builder.add_PROVIDER_PEER_ID(x); }
+    args: &'args ACLArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<ACL<'bldr>> {
+    let mut builder = ACLBuilder::new(_fbb);
+    builder.add_EXPIRES_AT(args.EXPIRES_AT);
+    builder.add_GRANTED_AT(args.GRANTED_AT);
+    if let Some(x) = args.PROVIDER_SIGNATURE { builder.add_PROVIDER_SIGNATURE(x); }
+    if let Some(x) = args.PAYMENT_TX_HASH { builder.add_PAYMENT_TX_HASH(x); }
+    if let Some(x) = args.TIER_NAME { builder.add_TIER_NAME(x); }
+    if let Some(x) = args.BUYER_ENCRYPTION_PUBKEY { builder.add_BUYER_ENCRYPTION_PUBKEY(x); }
+    if let Some(x) = args.BUYER_PEER_ID { builder.add_BUYER_PEER_ID(x); }
     if let Some(x) = args.LISTING_ID { builder.add_LISTING_ID(x); }
-    builder.add_ACTIVE(args.ACTIVE);
-    builder.add_ENCRYPTION_REQUIRED(args.ENCRYPTION_REQUIRED);
+    if let Some(x) = args.GRANT_ID { builder.add_GRANT_ID(x); }
+    builder.add_PAYMENT_METHOD(args.PAYMENT_METHOD);
     builder.add_ACCESS_TYPE(args.ACCESS_TYPE);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> STFT {
+  pub fn unpack(&self) -> ACLT {
+    let GRANT_ID = {
+      let x = self.GRANT_ID();
+      alloc::string::ToString::to_string(x)
+    };
     let LISTING_ID = {
       let x = self.LISTING_ID();
       alloc::string::ToString::to_string(x)
     };
-    let PROVIDER_PEER_ID = {
-      let x = self.PROVIDER_PEER_ID();
+    let BUYER_PEER_ID = {
+      let x = self.BUYER_PEER_ID();
       alloc::string::ToString::to_string(x)
     };
-    let PROVIDER_EPM_CID = self.PROVIDER_EPM_CID().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let TITLE = {
-      let x = self.TITLE();
-      alloc::string::ToString::to_string(x)
-    };
-    let DESCRIPTION = self.DESCRIPTION().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let DATA_TYPES = self.DATA_TYPES().map(|x| {
-      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
-    });
-    let COVERAGE = self.COVERAGE().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
-    });
-    let SAMPLE_CID = self.SAMPLE_CID().map(|x| {
-      alloc::string::ToString::to_string(x)
+    let BUYER_ENCRYPTION_PUBKEY = self.BUYER_ENCRYPTION_PUBKEY().map(|x| {
+      x.into_iter().collect()
     });
     let ACCESS_TYPE = self.ACCESS_TYPE();
-    let ENCRYPTION_REQUIRED = self.ENCRYPTION_REQUIRED();
-    let PRICING = self.PRICING().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
+    let TIER_NAME = self.TIER_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
     });
-    let ACCEPTED_PAYMENTS = self.ACCEPTED_PAYMENTS().map(|x| {
+    let GRANTED_AT = self.GRANTED_AT();
+    let EXPIRES_AT = self.EXPIRES_AT();
+    let PAYMENT_TX_HASH = self.PAYMENT_TX_HASH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PAYMENT_METHOD = self.PAYMENT_METHOD();
+    let PROVIDER_SIGNATURE = self.PROVIDER_SIGNATURE().map(|x| {
       x.into_iter().collect()
     });
-    let CREATED_AT = self.CREATED_AT();
-    let UPDATED_AT = self.UPDATED_AT();
-    let ACTIVE = self.ACTIVE();
-    let SIGNATURE = self.SIGNATURE().map(|x| {
-      x.into_iter().collect()
-    });
-    STFT {
+    ACLT {
+      GRANT_ID,
       LISTING_ID,
-      PROVIDER_PEER_ID,
-      PROVIDER_EPM_CID,
-      TITLE,
-      DESCRIPTION,
-      DATA_TYPES,
-      COVERAGE,
-      SAMPLE_CID,
+      BUYER_PEER_ID,
+      BUYER_ENCRYPTION_PUBKEY,
       ACCESS_TYPE,
-      ENCRYPTION_REQUIRED,
-      PRICING,
-      ACCEPTED_PAYMENTS,
-      CREATED_AT,
-      UPDATED_AT,
-      ACTIVE,
-      SIGNATURE,
+      TIER_NAME,
+      GRANTED_AT,
+      EXPIRES_AT,
+      PAYMENT_TX_HASH,
+      PAYMENT_METHOD,
+      PROVIDER_SIGNATURE,
     }
   }
 
-  /// Unique identifier for the listing
+  /// Unique identifier for this grant
+  #[inline]
+  pub fn GRANT_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACL::VT_GRANT_ID, None).unwrap()}
+  }
+  /// ID of the listing this grant applies to
   #[inline]
   pub fn LISTING_ID(&self) -> &'a str {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(STF::VT_LISTING_ID, None).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACL::VT_LISTING_ID, None).unwrap()}
   }
-  /// Peer ID of the data provider
+  /// Peer ID of the buyer/grantee
   #[inline]
-  pub fn PROVIDER_PEER_ID(&self) -> &'a str {
+  pub fn BUYER_PEER_ID(&self) -> &'a str {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(STF::VT_PROVIDER_PEER_ID, None).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACL::VT_BUYER_PEER_ID, None).unwrap()}
   }
-  /// IPFS CID of provider's EPM (Entity Profile Message)
+  /// Buyer's encryption public key for encrypted delivery
   #[inline]
-  pub fn PROVIDER_EPM_CID(&self) -> Option<&'a str> {
+  pub fn BUYER_ENCRYPTION_PUBKEY(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(STF::VT_PROVIDER_EPM_CID, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ACL::VT_BUYER_ENCRYPTION_PUBKEY, None)}
   }
-  /// Title of the data listing
-  #[inline]
-  pub fn TITLE(&self) -> &'a str {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(STF::VT_TITLE, None).unwrap()}
-  }
-  /// Detailed description of the data offering
-  #[inline]
-  pub fn DESCRIPTION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(STF::VT_DESCRIPTION, None)}
-  }
-  /// SDS data types offered, e.g., ["OMM", "CDM", "TLE"]
-  #[inline]
-  pub fn DATA_TYPES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(STF::VT_DATA_TYPES, None)}
-  }
-  /// Coverage information (spatial and temporal)
-  #[inline]
-  pub fn COVERAGE(&self) -> Option<DataCoverage<'a>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<DataCoverage>>(STF::VT_COVERAGE, None)}
-  }
-  /// IPFS CID of sample data
-  #[inline]
-  pub fn SAMPLE_CID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(STF::VT_SAMPLE_CID, None)}
-  }
-  /// Type of access offered
+  /// Type of access granted
   #[inline]
   pub fn ACCESS_TYPE(&self) -> accessCategory {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<accessCategory>(STF::VT_ACCESS_TYPE, Some(accessCategory::OneTime)).unwrap()}
+    unsafe { self._tab.get::<accessCategory>(ACL::VT_ACCESS_TYPE, Some(accessCategory::OneTime)).unwrap()}
   }
-  /// Whether encryption is required for data delivery
+  /// Name of the pricing tier purchased
   #[inline]
-  pub fn ENCRYPTION_REQUIRED(&self) -> bool {
+  pub fn TIER_NAME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(STF::VT_ENCRYPTION_REQUIRED, Some(false)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACL::VT_TIER_NAME, None)}
   }
-  /// Available pricing tiers
+  /// Unix timestamp when access was granted
   #[inline]
-  pub fn PRICING(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PricingTier<'a>>>> {
+  pub fn GRANTED_AT(&self) -> u64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PricingTier>>>>(STF::VT_PRICING, None)}
+    unsafe { self._tab.get::<u64>(ACL::VT_GRANTED_AT, Some(0)).unwrap()}
   }
-  /// Payment methods accepted
+  /// Unix timestamp when access expires (0 = never expires)
   #[inline]
-  pub fn ACCEPTED_PAYMENTS(&self) -> Option<::flatbuffers::Vector<'a, paymentMethod>> {
+  pub fn EXPIRES_AT(&self) -> u64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, paymentMethod>>>(STF::VT_ACCEPTED_PAYMENTS, None)}
+    unsafe { self._tab.get::<u64>(ACL::VT_EXPIRES_AT, Some(0)).unwrap()}
   }
-  /// Unix timestamp when listing was created
+  /// Transaction hash or reference proving payment
   #[inline]
-  pub fn CREATED_AT(&self) -> u64 {
+  pub fn PAYMENT_TX_HASH(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u64>(STF::VT_CREATED_AT, Some(0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACL::VT_PAYMENT_TX_HASH, None)}
   }
-  /// Unix timestamp when listing was last updated
+  /// Payment method used
   #[inline]
-  pub fn UPDATED_AT(&self) -> u64 {
+  pub fn PAYMENT_METHOD(&self) -> paymentMethod {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u64>(STF::VT_UPDATED_AT, Some(0)).unwrap()}
-  }
-  /// Whether the listing is currently active
-  #[inline]
-  pub fn ACTIVE(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(STF::VT_ACTIVE, Some(false)).unwrap()}
+    unsafe { self._tab.get::<paymentMethod>(ACL::VT_PAYMENT_METHOD, Some(paymentMethod::Crypto_ETH)).unwrap()}
   }
   /// Ed25519 signature from provider
   #[inline]
-  pub fn SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+  pub fn PROVIDER_SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(STF::VT_SIGNATURE, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ACL::VT_PROVIDER_SIGNATURE, None)}
   }
 }
 
-impl ::flatbuffers::Verifiable for STF<'_> {
+impl ::flatbuffers::Verifiable for ACL<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GRANT_ID", Self::VT_GRANT_ID, true)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LISTING_ID", Self::VT_LISTING_ID, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_PEER_ID", Self::VT_PROVIDER_PEER_ID, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_EPM_CID", Self::VT_PROVIDER_EPM_CID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TITLE", Self::VT_TITLE, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("DATA_TYPES", Self::VT_DATA_TYPES, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<DataCoverage>>("COVERAGE", Self::VT_COVERAGE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SAMPLE_CID", Self::VT_SAMPLE_CID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BUYER_PEER_ID", Self::VT_BUYER_PEER_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("BUYER_ENCRYPTION_PUBKEY", Self::VT_BUYER_ENCRYPTION_PUBKEY, false)?
      .visit_field::<accessCategory>("ACCESS_TYPE", Self::VT_ACCESS_TYPE, false)?
-     .visit_field::<bool>("ENCRYPTION_REQUIRED", Self::VT_ENCRYPTION_REQUIRED, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PricingTier>>>>("PRICING", Self::VT_PRICING, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, paymentMethod>>>("ACCEPTED_PAYMENTS", Self::VT_ACCEPTED_PAYMENTS, false)?
-     .visit_field::<u64>("CREATED_AT", Self::VT_CREATED_AT, false)?
-     .visit_field::<u64>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
-     .visit_field::<bool>("ACTIVE", Self::VT_ACTIVE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TIER_NAME", Self::VT_TIER_NAME, false)?
+     .visit_field::<u64>("GRANTED_AT", Self::VT_GRANTED_AT, false)?
+     .visit_field::<u64>("EXPIRES_AT", Self::VT_EXPIRES_AT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PAYMENT_TX_HASH", Self::VT_PAYMENT_TX_HASH, false)?
+     .visit_field::<paymentMethod>("PAYMENT_METHOD", Self::VT_PAYMENT_METHOD, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("PROVIDER_SIGNATURE", Self::VT_PROVIDER_SIGNATURE, false)?
      .finish();
     Ok(())
   }
 }
-pub struct STFArgs<'a> {
+pub struct ACLArgs<'a> {
+    pub GRANT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub LISTING_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub PROVIDER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub PROVIDER_EPM_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub TITLE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub DATA_TYPES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub COVERAGE: Option<::flatbuffers::WIPOffset<DataCoverage<'a>>>,
-    pub SAMPLE_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub BUYER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub BUYER_ENCRYPTION_PUBKEY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
     pub ACCESS_TYPE: accessCategory,
-    pub ENCRYPTION_REQUIRED: bool,
-    pub PRICING: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PricingTier<'a>>>>>,
-    pub ACCEPTED_PAYMENTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, paymentMethod>>>,
-    pub CREATED_AT: u64,
-    pub UPDATED_AT: u64,
-    pub ACTIVE: bool,
-    pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub TIER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub GRANTED_AT: u64,
+    pub EXPIRES_AT: u64,
+    pub PAYMENT_TX_HASH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PAYMENT_METHOD: paymentMethod,
+    pub PROVIDER_SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
 }
-impl<'a> Default for STFArgs<'a> {
+impl<'a> Default for ACLArgs<'a> {
   #[inline]
   fn default() -> Self {
-    STFArgs {
+    ACLArgs {
+      GRANT_ID: None, // required field
       LISTING_ID: None, // required field
-      PROVIDER_PEER_ID: None, // required field
-      PROVIDER_EPM_CID: None,
-      TITLE: None, // required field
-      DESCRIPTION: None,
-      DATA_TYPES: None,
-      COVERAGE: None,
-      SAMPLE_CID: None,
+      BUYER_PEER_ID: None, // required field
+      BUYER_ENCRYPTION_PUBKEY: None,
       ACCESS_TYPE: accessCategory::OneTime,
-      ENCRYPTION_REQUIRED: false,
-      PRICING: None,
-      ACCEPTED_PAYMENTS: None,
-      CREATED_AT: 0,
-      UPDATED_AT: 0,
-      ACTIVE: false,
-      SIGNATURE: None,
+      TIER_NAME: None,
+      GRANTED_AT: 0,
+      EXPIRES_AT: 0,
+      PAYMENT_TX_HASH: None,
+      PAYMENT_METHOD: paymentMethod::Crypto_ETH,
+      PROVIDER_SIGNATURE: None,
     }
   }
 }
 
-pub struct STFBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct ACLBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> STFBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACLBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_GRANT_ID(&mut self, GRANT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_GRANT_ID, GRANT_ID);
+  }
   #[inline]
   pub fn add_LISTING_ID(&mut self, LISTING_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_LISTING_ID, LISTING_ID);
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_LISTING_ID, LISTING_ID);
   }
   #[inline]
-  pub fn add_PROVIDER_PEER_ID(&mut self, PROVIDER_PEER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_PROVIDER_PEER_ID, PROVIDER_PEER_ID);
+  pub fn add_BUYER_PEER_ID(&mut self, BUYER_PEER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_BUYER_PEER_ID, BUYER_PEER_ID);
   }
   #[inline]
-  pub fn add_PROVIDER_EPM_CID(&mut self, PROVIDER_EPM_CID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_PROVIDER_EPM_CID, PROVIDER_EPM_CID);
-  }
-  #[inline]
-  pub fn add_TITLE(&mut self, TITLE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_TITLE, TITLE);
-  }
-  #[inline]
-  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_DESCRIPTION, DESCRIPTION);
-  }
-  #[inline]
-  pub fn add_DATA_TYPES(&mut self, DATA_TYPES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_DATA_TYPES, DATA_TYPES);
-  }
-  #[inline]
-  pub fn add_COVERAGE(&mut self, COVERAGE: ::flatbuffers::WIPOffset<DataCoverage<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<DataCoverage>>(STF::VT_COVERAGE, COVERAGE);
-  }
-  #[inline]
-  pub fn add_SAMPLE_CID(&mut self, SAMPLE_CID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_SAMPLE_CID, SAMPLE_CID);
+  pub fn add_BUYER_ENCRYPTION_PUBKEY(&mut self, BUYER_ENCRYPTION_PUBKEY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_BUYER_ENCRYPTION_PUBKEY, BUYER_ENCRYPTION_PUBKEY);
   }
   #[inline]
   pub fn add_ACCESS_TYPE(&mut self, ACCESS_TYPE: accessCategory) {
-    self.fbb_.push_slot::<accessCategory>(STF::VT_ACCESS_TYPE, ACCESS_TYPE, accessCategory::OneTime);
+    self.fbb_.push_slot::<accessCategory>(ACL::VT_ACCESS_TYPE, ACCESS_TYPE, accessCategory::OneTime);
   }
   #[inline]
-  pub fn add_ENCRYPTION_REQUIRED(&mut self, ENCRYPTION_REQUIRED: bool) {
-    self.fbb_.push_slot::<bool>(STF::VT_ENCRYPTION_REQUIRED, ENCRYPTION_REQUIRED, false);
+  pub fn add_TIER_NAME(&mut self, TIER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_TIER_NAME, TIER_NAME);
   }
   #[inline]
-  pub fn add_PRICING(&mut self, PRICING: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PricingTier<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_PRICING, PRICING);
+  pub fn add_GRANTED_AT(&mut self, GRANTED_AT: u64) {
+    self.fbb_.push_slot::<u64>(ACL::VT_GRANTED_AT, GRANTED_AT, 0);
   }
   #[inline]
-  pub fn add_ACCEPTED_PAYMENTS(&mut self, ACCEPTED_PAYMENTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , paymentMethod>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_ACCEPTED_PAYMENTS, ACCEPTED_PAYMENTS);
+  pub fn add_EXPIRES_AT(&mut self, EXPIRES_AT: u64) {
+    self.fbb_.push_slot::<u64>(ACL::VT_EXPIRES_AT, EXPIRES_AT, 0);
   }
   #[inline]
-  pub fn add_CREATED_AT(&mut self, CREATED_AT: u64) {
-    self.fbb_.push_slot::<u64>(STF::VT_CREATED_AT, CREATED_AT, 0);
+  pub fn add_PAYMENT_TX_HASH(&mut self, PAYMENT_TX_HASH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_PAYMENT_TX_HASH, PAYMENT_TX_HASH);
   }
   #[inline]
-  pub fn add_UPDATED_AT(&mut self, UPDATED_AT: u64) {
-    self.fbb_.push_slot::<u64>(STF::VT_UPDATED_AT, UPDATED_AT, 0);
+  pub fn add_PAYMENT_METHOD(&mut self, PAYMENT_METHOD: paymentMethod) {
+    self.fbb_.push_slot::<paymentMethod>(ACL::VT_PAYMENT_METHOD, PAYMENT_METHOD, paymentMethod::Crypto_ETH);
   }
   #[inline]
-  pub fn add_ACTIVE(&mut self, ACTIVE: bool) {
-    self.fbb_.push_slot::<bool>(STF::VT_ACTIVE, ACTIVE, false);
+  pub fn add_PROVIDER_SIGNATURE(&mut self, PROVIDER_SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_PROVIDER_SIGNATURE, PROVIDER_SIGNATURE);
   }
   #[inline]
-  pub fn add_SIGNATURE(&mut self, SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_SIGNATURE, SIGNATURE);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> STFBuilder<'a, 'b, A> {
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACLBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    STFBuilder {
+    ACLBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<STF<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<ACL<'a>> {
     let o = self.fbb_.end_table(self.start_);
-    self.fbb_.required(o, STF::VT_LISTING_ID,"LISTING_ID");
-    self.fbb_.required(o, STF::VT_PROVIDER_PEER_ID,"PROVIDER_PEER_ID");
-    self.fbb_.required(o, STF::VT_TITLE,"TITLE");
+    self.fbb_.required(o, ACL::VT_GRANT_ID,"GRANT_ID");
+    self.fbb_.required(o, ACL::VT_LISTING_ID,"LISTING_ID");
+    self.fbb_.required(o, ACL::VT_BUYER_PEER_ID,"BUYER_PEER_ID");
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for STF<'_> {
+impl ::core::fmt::Debug for ACL<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("STF");
+    let mut ds = f.debug_struct("ACL");
+      ds.field("GRANT_ID", &self.GRANT_ID());
       ds.field("LISTING_ID", &self.LISTING_ID());
-      ds.field("PROVIDER_PEER_ID", &self.PROVIDER_PEER_ID());
-      ds.field("PROVIDER_EPM_CID", &self.PROVIDER_EPM_CID());
-      ds.field("TITLE", &self.TITLE());
-      ds.field("DESCRIPTION", &self.DESCRIPTION());
-      ds.field("DATA_TYPES", &self.DATA_TYPES());
-      ds.field("COVERAGE", &self.COVERAGE());
-      ds.field("SAMPLE_CID", &self.SAMPLE_CID());
+      ds.field("BUYER_PEER_ID", &self.BUYER_PEER_ID());
+      ds.field("BUYER_ENCRYPTION_PUBKEY", &self.BUYER_ENCRYPTION_PUBKEY());
       ds.field("ACCESS_TYPE", &self.ACCESS_TYPE());
-      ds.field("ENCRYPTION_REQUIRED", &self.ENCRYPTION_REQUIRED());
-      ds.field("PRICING", &self.PRICING());
-      ds.field("ACCEPTED_PAYMENTS", &self.ACCEPTED_PAYMENTS());
-      ds.field("CREATED_AT", &self.CREATED_AT());
-      ds.field("UPDATED_AT", &self.UPDATED_AT());
-      ds.field("ACTIVE", &self.ACTIVE());
-      ds.field("SIGNATURE", &self.SIGNATURE());
+      ds.field("TIER_NAME", &self.TIER_NAME());
+      ds.field("GRANTED_AT", &self.GRANTED_AT());
+      ds.field("EXPIRES_AT", &self.EXPIRES_AT());
+      ds.field("PAYMENT_TX_HASH", &self.PAYMENT_TX_HASH());
+      ds.field("PAYMENT_METHOD", &self.PAYMENT_METHOD());
+      ds.field("PROVIDER_SIGNATURE", &self.PROVIDER_SIGNATURE());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct STFT {
+pub struct ACLT {
+  pub GRANT_ID: alloc::string::String,
   pub LISTING_ID: alloc::string::String,
-  pub PROVIDER_PEER_ID: alloc::string::String,
-  pub PROVIDER_EPM_CID: Option<alloc::string::String>,
-  pub TITLE: alloc::string::String,
-  pub DESCRIPTION: Option<alloc::string::String>,
-  pub DATA_TYPES: Option<alloc::vec::Vec<alloc::string::String>>,
-  pub COVERAGE: Option<alloc::boxed::Box<DataCoverageT>>,
-  pub SAMPLE_CID: Option<alloc::string::String>,
+  pub BUYER_PEER_ID: alloc::string::String,
+  pub BUYER_ENCRYPTION_PUBKEY: Option<alloc::vec::Vec<u8>>,
   pub ACCESS_TYPE: accessCategory,
-  pub ENCRYPTION_REQUIRED: bool,
-  pub PRICING: Option<alloc::vec::Vec<PricingTierT>>,
-  pub ACCEPTED_PAYMENTS: Option<alloc::vec::Vec<paymentMethod>>,
-  pub CREATED_AT: u64,
-  pub UPDATED_AT: u64,
-  pub ACTIVE: bool,
-  pub SIGNATURE: Option<alloc::vec::Vec<u8>>,
+  pub TIER_NAME: Option<alloc::string::String>,
+  pub GRANTED_AT: u64,
+  pub EXPIRES_AT: u64,
+  pub PAYMENT_TX_HASH: Option<alloc::string::String>,
+  pub PAYMENT_METHOD: paymentMethod,
+  pub PROVIDER_SIGNATURE: Option<alloc::vec::Vec<u8>>,
 }
-impl Default for STFT {
+impl Default for ACLT {
   fn default() -> Self {
     Self {
+      GRANT_ID: alloc::string::ToString::to_string(""),
       LISTING_ID: alloc::string::ToString::to_string(""),
-      PROVIDER_PEER_ID: alloc::string::ToString::to_string(""),
-      PROVIDER_EPM_CID: None,
-      TITLE: alloc::string::ToString::to_string(""),
-      DESCRIPTION: None,
-      DATA_TYPES: None,
-      COVERAGE: None,
-      SAMPLE_CID: None,
+      BUYER_PEER_ID: alloc::string::ToString::to_string(""),
+      BUYER_ENCRYPTION_PUBKEY: None,
       ACCESS_TYPE: accessCategory::OneTime,
-      ENCRYPTION_REQUIRED: false,
-      PRICING: None,
-      ACCEPTED_PAYMENTS: None,
-      CREATED_AT: 0,
-      UPDATED_AT: 0,
-      ACTIVE: false,
-      SIGNATURE: None,
+      TIER_NAME: None,
+      GRANTED_AT: 0,
+      EXPIRES_AT: 0,
+      PAYMENT_TX_HASH: None,
+      PAYMENT_METHOD: paymentMethod::Crypto_ETH,
+      PROVIDER_SIGNATURE: None,
     }
   }
 }
-impl STFT {
+impl ACLT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<STF<'b>> {
+  ) -> ::flatbuffers::WIPOffset<ACL<'b>> {
+    let GRANT_ID = Some({
+      let x = &self.GRANT_ID;
+      _fbb.create_string(x)
+    });
     let LISTING_ID = Some({
       let x = &self.LISTING_ID;
       _fbb.create_string(x)
     });
-    let PROVIDER_PEER_ID = Some({
-      let x = &self.PROVIDER_PEER_ID;
+    let BUYER_PEER_ID = Some({
+      let x = &self.BUYER_PEER_ID;
       _fbb.create_string(x)
     });
-    let PROVIDER_EPM_CID = self.PROVIDER_EPM_CID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let TITLE = Some({
-      let x = &self.TITLE;
-      _fbb.create_string(x)
-    });
-    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let DATA_TYPES = self.DATA_TYPES.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let COVERAGE = self.COVERAGE.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    let SAMPLE_CID = self.SAMPLE_CID.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let BUYER_ENCRYPTION_PUBKEY = self.BUYER_ENCRYPTION_PUBKEY.as_ref().map(|x|{
+      _fbb.create_vector(x)
     });
     let ACCESS_TYPE = self.ACCESS_TYPE;
-    let ENCRYPTION_REQUIRED = self.ENCRYPTION_REQUIRED;
-    let PRICING = self.PRICING.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    let TIER_NAME = self.TIER_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
     });
-    let ACCEPTED_PAYMENTS = self.ACCEPTED_PAYMENTS.as_ref().map(|x|{
+    let GRANTED_AT = self.GRANTED_AT;
+    let EXPIRES_AT = self.EXPIRES_AT;
+    let PAYMENT_TX_HASH = self.PAYMENT_TX_HASH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PAYMENT_METHOD = self.PAYMENT_METHOD;
+    let PROVIDER_SIGNATURE = self.PROVIDER_SIGNATURE.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
-    let CREATED_AT = self.CREATED_AT;
-    let UPDATED_AT = self.UPDATED_AT;
-    let ACTIVE = self.ACTIVE;
-    let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
-      _fbb.create_vector(x)
-    });
-    STF::create(_fbb, &STFArgs{
+    ACL::create(_fbb, &ACLArgs{
+      GRANT_ID,
       LISTING_ID,
-      PROVIDER_PEER_ID,
-      PROVIDER_EPM_CID,
-      TITLE,
-      DESCRIPTION,
-      DATA_TYPES,
-      COVERAGE,
-      SAMPLE_CID,
+      BUYER_PEER_ID,
+      BUYER_ENCRYPTION_PUBKEY,
       ACCESS_TYPE,
-      ENCRYPTION_REQUIRED,
-      PRICING,
-      ACCEPTED_PAYMENTS,
-      CREATED_AT,
-      UPDATED_AT,
-      ACTIVE,
-      SIGNATURE,
+      TIER_NAME,
+      GRANTED_AT,
+      EXPIRES_AT,
+      PAYMENT_TX_HASH,
+      PAYMENT_METHOD,
+      PROVIDER_SIGNATURE,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `STF`
+/// Verifies that a buffer of bytes contains a `ACL`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_stf_unchecked`.
-pub fn root_as_stf(buf: &[u8]) -> Result<STF<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<STF>(buf)
+/// `root_as_acl_unchecked`.
+pub fn root_as_acl(buf: &[u8]) -> Result<ACL<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<ACL>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `STF` and returns it.
+/// `ACL` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_stf_unchecked`.
-pub fn size_prefixed_root_as_stf(buf: &[u8]) -> Result<STF<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<STF>(buf)
+/// `size_prefixed_root_as_acl_unchecked`.
+pub fn size_prefixed_root_as_acl(buf: &[u8]) -> Result<ACL<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<ACL>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `STF` and returns it.
+/// contains a `ACL` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_stf_unchecked`.
-pub fn root_as_stf_with_opts<'b, 'o>(
+/// `root_as_acl_unchecked`.
+pub fn root_as_acl_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<STF<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<STF<'b>>(opts, buf)
+) -> Result<ACL<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<ACL<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `STF` and returns
+/// bytes contains a size prefixed `ACL` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_stf_unchecked`.
-pub fn size_prefixed_root_as_stf_with_opts<'b, 'o>(
+/// `root_as_acl_unchecked`.
+pub fn size_prefixed_root_as_acl_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<STF<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<STF<'b>>(opts, buf)
+) -> Result<ACL<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<ACL<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a STF and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a ACL and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `STF`.
-pub unsafe fn root_as_stf_unchecked(buf: &[u8]) -> STF<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<STF>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `ACL`.
+pub unsafe fn root_as_acl_unchecked(buf: &[u8]) -> ACL<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<ACL>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed STF and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed ACL and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `STF`.
-pub unsafe fn size_prefixed_root_as_stf_unchecked(buf: &[u8]) -> STF<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<STF>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `ACL`.
+pub unsafe fn size_prefixed_root_as_acl_unchecked(buf: &[u8]) -> ACL<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<ACL>(buf) }
 }
-pub const STF_IDENTIFIER: &str = "$STF";
+pub const ACL_IDENTIFIER: &str = "$ACL";
 
 #[inline]
-pub fn stf_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, STF_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn stf_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, STF_IDENTIFIER, true)
+pub fn acl_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, ACL_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_stf_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn acl_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, ACL_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_acl_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<STF<'a>>) {
-  fbb.finish(root, Some(STF_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<ACL<'a>>) {
+  fbb.finish(root, Some(ACL_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_stf_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<STF<'a>>) {
-  fbb.finish_size_prefixed(root, Some(STF_IDENTIFIER));
+pub fn finish_size_prefixed_acl_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<ACL<'a>>) {
+  fbb.finish_size_prefixed(root, Some(ACL_IDENTIFIER));
 }

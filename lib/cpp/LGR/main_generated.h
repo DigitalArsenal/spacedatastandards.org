@@ -13,340 +13,423 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-struct ENC;
-struct ENCBuilder;
+#include "main_generated.h"
+#include "main_generated.h"
 
-/// Encryption Header for FlatBuffers field-level encryption
-/// Key exchange algorithm used to derive the shared secret
-enum KeyExchange : int8_t {
-  KeyExchange_X25519 = 0,
-  KeyExchange_Secp256k1 = 1,
-  KeyExchange_P256 = 2,
-  KeyExchange_MIN = KeyExchange_X25519,
-  KeyExchange_MAX = KeyExchange_P256
+struct LGR;
+struct LGRBuilder;
+
+/// Licensing grant message type
+enum licensingGrantMessageType : int8_t {
+  licensingGrantMessageType_Request = 0,
+  licensingGrantMessageType_Granted = 1,
+  licensingGrantMessageType_Denied = 2,
+  licensingGrantMessageType_MIN = licensingGrantMessageType_Request,
+  licensingGrantMessageType_MAX = licensingGrantMessageType_Denied
 };
 
-inline const KeyExchange (&EnumValuesKeyExchange())[3] {
-  static const KeyExchange values[] = {
-    KeyExchange_X25519,
-    KeyExchange_Secp256k1,
-    KeyExchange_P256
+inline const licensingGrantMessageType (&EnumValueslicensingGrantMessageType())[3] {
+  static const licensingGrantMessageType values[] = {
+    licensingGrantMessageType_Request,
+    licensingGrantMessageType_Granted,
+    licensingGrantMessageType_Denied
   };
   return values;
 }
 
-inline const char * const *EnumNamesKeyExchange() {
+inline const char * const *EnumNameslicensingGrantMessageType() {
   static const char * const names[4] = {
-    "X25519",
-    "Secp256k1",
-    "P256",
+    "Request",
+    "Granted",
+    "Denied",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNameKeyExchange(KeyExchange e) {
-  if (::flatbuffers::IsOutRange(e, KeyExchange_X25519, KeyExchange_P256)) return "";
+inline const char *EnumNamelicensingGrantMessageType(licensingGrantMessageType e) {
+  if (::flatbuffers::IsOutRange(e, licensingGrantMessageType_Request, licensingGrantMessageType_Denied)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesKeyExchange()[index];
+  return EnumNameslicensingGrantMessageType()[index];
 }
 
-/// Symmetric encryption algorithm
-enum SymmetricAlgo : int8_t {
-  SymmetricAlgo_AES_256_CTR = 0,
-  SymmetricAlgo_MIN = SymmetricAlgo_AES_256_CTR,
-  SymmetricAlgo_MAX = SymmetricAlgo_AES_256_CTR
-};
-
-inline const SymmetricAlgo (&EnumValuesSymmetricAlgo())[1] {
-  static const SymmetricAlgo values[] = {
-    SymmetricAlgo_AES_256_CTR
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesSymmetricAlgo() {
-  static const char * const names[2] = {
-    "AES_256_CTR",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameSymmetricAlgo(SymmetricAlgo e) {
-  if (::flatbuffers::IsOutRange(e, SymmetricAlgo_AES_256_CTR, SymmetricAlgo_AES_256_CTR)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesSymmetricAlgo()[index];
-}
-
-/// Key derivation function
-enum KDF : int8_t {
-  KDF_HKDF_SHA256 = 0,
-  KDF_MIN = KDF_HKDF_SHA256,
-  KDF_MAX = KDF_HKDF_SHA256
-};
-
-inline const KDF (&EnumValuesKDF())[1] {
-  static const KDF values[] = {
-    KDF_HKDF_SHA256
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesKDF() {
-  static const char * const names[2] = {
-    "HKDF_SHA256",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameKDF(KDF e) {
-  if (::flatbuffers::IsOutRange(e, KDF_HKDF_SHA256, KDF_HKDF_SHA256)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesKDF()[index];
-}
-
-/// Encryption Header containing all parameters needed for decryption
-struct ENC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef ENCBuilder Builder;
+/// Licensing grant message
+struct LGR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef LGRBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_VERSION = 4,
-    VT_KEY_EXCHANGE = 6,
-    VT_SYMMETRIC = 8,
-    VT_KEY_DERIVATION = 10,
-    VT_EPHEMERAL_PUBLIC_KEY = 12,
-    VT_NONCE_START = 14,
-    VT_RECIPIENT_KEY_ID = 16,
-    VT_CONTEXT = 18,
-    VT_SCHEMA_HASH = 20,
-    VT_ROOT_TYPE = 22,
-    VT_TIMESTAMP = 24
+    VT_MESSAGE_TYPE = 4,
+    VT_REQUEST_ID = 6,
+    VT_MODULE_ID = 8,
+    VT_MODULE_VERSION = 10,
+    VT_REQUESTER_PEER_ID = 12,
+    VT_REQUESTER_XPUB = 14,
+    VT_REQUESTED_DOMAIN = 16,
+    VT_REQUESTED_TIMEOUT_MS = 18,
+    VT_GRANTED_DOMAIN = 20,
+    VT_GRANTED_TIMEOUT_MS = 22,
+    VT_EXPIRES_AT = 24,
+    VT_REQUIRED_SCOPE = 26,
+    VT_GRANT_STATUS = 28,
+    VT_DENIAL_REASON = 30,
+    VT_CAPABILITY_TOKEN = 32,
+    VT_MODULE_DESCRIPTOR = 34,
+    VT_WRAPPED_CONTENT_KEY_HEADER = 36,
+    VT_WRAPPED_CONTENT_KEY_PAYLOAD = 38,
+    VT_GRANT_VERIFIER_PUBKEY = 40,
+    VT_PROVIDER_SIGNATURE = 42
   };
-  /// Schema version for forward compatibility
-  uint8_t VERSION() const {
-    return GetField<uint8_t>(VT_VERSION, 1);
+  /// Message type
+  licensingGrantMessageType MESSAGE_TYPE() const {
+    return static_cast<licensingGrantMessageType>(GetField<int8_t>(VT_MESSAGE_TYPE, 0));
   }
-  /// Key exchange algorithm used
-  KeyExchange KEY_EXCHANGE() const {
-    return static_cast<KeyExchange>(GetField<int8_t>(VT_KEY_EXCHANGE, 0));
+  /// Unique request identifier
+  const ::flatbuffers::String *REQUEST_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REQUEST_ID);
   }
-  /// Symmetric encryption algorithm used
-  SymmetricAlgo SYMMETRIC() const {
-    return static_cast<SymmetricAlgo>(GetField<int8_t>(VT_SYMMETRIC, 0));
+  /// Canonical module identifier
+  const ::flatbuffers::String *MODULE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODULE_ID);
   }
-  /// Key derivation function used
-  KDF KEY_DERIVATION() const {
-    return static_cast<KDF>(GetField<int8_t>(VT_KEY_DERIVATION, 0));
+  /// Optional module version
+  const ::flatbuffers::String *MODULE_VERSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODULE_VERSION);
   }
-  /// Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
-  const ::flatbuffers::Vector<uint8_t> *EPHEMERAL_PUBLIC_KEY() const {
-    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_EPHEMERAL_PUBLIC_KEY);
+  /// Requester peer identifier
+  const ::flatbuffers::String *REQUESTER_PEER_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REQUESTER_PEER_ID);
   }
-  /// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
-  const ::flatbuffers::Vector<uint8_t> *NONCE_START() const {
-    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_NONCE_START);
+  /// Requester account identity or wallet xpub
+  const ::flatbuffers::String *REQUESTER_XPUB() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REQUESTER_XPUB);
   }
-  /// Optional identifier for the recipient's public key (up to 32 bytes)
-  const ::flatbuffers::Vector<uint8_t> *RECIPIENT_KEY_ID() const {
-    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_RECIPIENT_KEY_ID);
+  /// Requested domain
+  const ::flatbuffers::String *REQUESTED_DOMAIN() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REQUESTED_DOMAIN);
   }
-  /// Optional domain separation context string
-  const ::flatbuffers::String *CONTEXT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CONTEXT);
+  /// Requested timeout in milliseconds
+  uint64_t REQUESTED_TIMEOUT_MS() const {
+    return GetField<uint64_t>(VT_REQUESTED_TIMEOUT_MS, 0);
   }
-  /// Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
-  const ::flatbuffers::Vector<uint8_t> *SCHEMA_HASH() const {
-    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_SCHEMA_HASH);
+  /// Granted domain
+  const ::flatbuffers::String *GRANTED_DOMAIN() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_GRANTED_DOMAIN);
   }
-  /// Optional root type name from the schema
-  const ::flatbuffers::String *ROOT_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ROOT_TYPE);
+  /// Granted timeout in milliseconds
+  uint64_t GRANTED_TIMEOUT_MS() const {
+    return GetField<uint64_t>(VT_GRANTED_TIMEOUT_MS, 0);
   }
-  /// Optional Unix timestamp (milliseconds) when encryption was performed
-  uint64_t TIMESTAMP() const {
-    return GetField<uint64_t>(VT_TIMESTAMP, 0);
+  /// Grant expiration time in milliseconds since epoch
+  uint64_t EXPIRES_AT() const {
+    return GetField<uint64_t>(VT_EXPIRES_AT, 0);
+  }
+  /// Required scope for the publication
+  const ::flatbuffers::String *REQUIRED_SCOPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REQUIRED_SCOPE);
+  }
+  /// Grant status string
+  const ::flatbuffers::String *GRANT_STATUS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_GRANT_STATUS);
+  }
+  /// Structured denial reason
+  const ::flatbuffers::String *DENIAL_REASON() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DENIAL_REASON);
+  }
+  /// Issued capability token bytes
+  const ::flatbuffers::Vector<uint8_t> *CAPABILITY_TOKEN() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_CAPABILITY_TOKEN);
+  }
+  /// Published module descriptor
+  const PLG *MODULE_DESCRIPTOR() const {
+    return GetPointer<const PLG *>(VT_MODULE_DESCRIPTOR);
+  }
+  /// Encryption header for the recipient-specific wrapped content-key payload.
+  const ENC *WRAPPED_CONTENT_KEY_HEADER() const {
+    return GetPointer<const ENC *>(VT_WRAPPED_CONTENT_KEY_HEADER);
+  }
+  /// Encrypted FlatBuffer payload containing the recipient-specific content key
+  /// material. The payload currently uses `$KMF` semantics and is decrypted
+  /// using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+  const ::flatbuffers::Vector<uint8_t> *WRAPPED_CONTENT_KEY_PAYLOAD() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_WRAPPED_CONTENT_KEY_PAYLOAD);
+  }
+  /// Provider public key used to verify the grant signature
+  const ::flatbuffers::Vector<uint8_t> *GRANT_VERIFIER_PUBKEY() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_GRANT_VERIFIER_PUBKEY);
+  }
+  /// Provider signature over the grant
+  const ::flatbuffers::Vector<uint8_t> *PROVIDER_SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_PROVIDER_SIGNATURE);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<uint8_t>(verifier, VT_VERSION, 1) &&
-           VerifyField<int8_t>(verifier, VT_KEY_EXCHANGE, 1) &&
-           VerifyField<int8_t>(verifier, VT_SYMMETRIC, 1) &&
-           VerifyField<int8_t>(verifier, VT_KEY_DERIVATION, 1) &&
-           VerifyOffsetRequired(verifier, VT_EPHEMERAL_PUBLIC_KEY) &&
-           verifier.VerifyVector(EPHEMERAL_PUBLIC_KEY()) &&
-           VerifyOffsetRequired(verifier, VT_NONCE_START) &&
-           verifier.VerifyVector(NONCE_START()) &&
-           VerifyOffset(verifier, VT_RECIPIENT_KEY_ID) &&
-           verifier.VerifyVector(RECIPIENT_KEY_ID()) &&
-           VerifyOffset(verifier, VT_CONTEXT) &&
-           verifier.VerifyString(CONTEXT()) &&
-           VerifyOffset(verifier, VT_SCHEMA_HASH) &&
-           verifier.VerifyVector(SCHEMA_HASH()) &&
-           VerifyOffset(verifier, VT_ROOT_TYPE) &&
-           verifier.VerifyString(ROOT_TYPE()) &&
-           VerifyField<uint64_t>(verifier, VT_TIMESTAMP, 8) &&
+           VerifyField<int8_t>(verifier, VT_MESSAGE_TYPE, 1) &&
+           VerifyOffsetRequired(verifier, VT_REQUEST_ID) &&
+           verifier.VerifyString(REQUEST_ID()) &&
+           VerifyOffsetRequired(verifier, VT_MODULE_ID) &&
+           verifier.VerifyString(MODULE_ID()) &&
+           VerifyOffset(verifier, VT_MODULE_VERSION) &&
+           verifier.VerifyString(MODULE_VERSION()) &&
+           VerifyOffset(verifier, VT_REQUESTER_PEER_ID) &&
+           verifier.VerifyString(REQUESTER_PEER_ID()) &&
+           VerifyOffset(verifier, VT_REQUESTER_XPUB) &&
+           verifier.VerifyString(REQUESTER_XPUB()) &&
+           VerifyOffset(verifier, VT_REQUESTED_DOMAIN) &&
+           verifier.VerifyString(REQUESTED_DOMAIN()) &&
+           VerifyField<uint64_t>(verifier, VT_REQUESTED_TIMEOUT_MS, 8) &&
+           VerifyOffset(verifier, VT_GRANTED_DOMAIN) &&
+           verifier.VerifyString(GRANTED_DOMAIN()) &&
+           VerifyField<uint64_t>(verifier, VT_GRANTED_TIMEOUT_MS, 8) &&
+           VerifyField<uint64_t>(verifier, VT_EXPIRES_AT, 8) &&
+           VerifyOffset(verifier, VT_REQUIRED_SCOPE) &&
+           verifier.VerifyString(REQUIRED_SCOPE()) &&
+           VerifyOffset(verifier, VT_GRANT_STATUS) &&
+           verifier.VerifyString(GRANT_STATUS()) &&
+           VerifyOffset(verifier, VT_DENIAL_REASON) &&
+           verifier.VerifyString(DENIAL_REASON()) &&
+           VerifyOffset(verifier, VT_CAPABILITY_TOKEN) &&
+           verifier.VerifyVector(CAPABILITY_TOKEN()) &&
+           VerifyOffset(verifier, VT_MODULE_DESCRIPTOR) &&
+           verifier.VerifyTable(MODULE_DESCRIPTOR()) &&
+           VerifyOffset(verifier, VT_WRAPPED_CONTENT_KEY_HEADER) &&
+           verifier.VerifyTable(WRAPPED_CONTENT_KEY_HEADER()) &&
+           VerifyOffset(verifier, VT_WRAPPED_CONTENT_KEY_PAYLOAD) &&
+           verifier.VerifyVector(WRAPPED_CONTENT_KEY_PAYLOAD()) &&
+           VerifyOffset(verifier, VT_GRANT_VERIFIER_PUBKEY) &&
+           verifier.VerifyVector(GRANT_VERIFIER_PUBKEY()) &&
+           VerifyOffset(verifier, VT_PROVIDER_SIGNATURE) &&
+           verifier.VerifyVector(PROVIDER_SIGNATURE()) &&
            verifier.EndTable();
   }
 };
 
-struct ENCBuilder {
-  typedef ENC Table;
+struct LGRBuilder {
+  typedef LGR Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_VERSION(uint8_t VERSION) {
-    fbb_.AddElement<uint8_t>(ENC::VT_VERSION, VERSION, 1);
+  void add_MESSAGE_TYPE(licensingGrantMessageType MESSAGE_TYPE) {
+    fbb_.AddElement<int8_t>(LGR::VT_MESSAGE_TYPE, static_cast<int8_t>(MESSAGE_TYPE), 0);
   }
-  void add_KEY_EXCHANGE(KeyExchange KEY_EXCHANGE) {
-    fbb_.AddElement<int8_t>(ENC::VT_KEY_EXCHANGE, static_cast<int8_t>(KEY_EXCHANGE), 0);
+  void add_REQUEST_ID(::flatbuffers::Offset<::flatbuffers::String> REQUEST_ID) {
+    fbb_.AddOffset(LGR::VT_REQUEST_ID, REQUEST_ID);
   }
-  void add_SYMMETRIC(SymmetricAlgo SYMMETRIC) {
-    fbb_.AddElement<int8_t>(ENC::VT_SYMMETRIC, static_cast<int8_t>(SYMMETRIC), 0);
+  void add_MODULE_ID(::flatbuffers::Offset<::flatbuffers::String> MODULE_ID) {
+    fbb_.AddOffset(LGR::VT_MODULE_ID, MODULE_ID);
   }
-  void add_KEY_DERIVATION(KDF KEY_DERIVATION) {
-    fbb_.AddElement<int8_t>(ENC::VT_KEY_DERIVATION, static_cast<int8_t>(KEY_DERIVATION), 0);
+  void add_MODULE_VERSION(::flatbuffers::Offset<::flatbuffers::String> MODULE_VERSION) {
+    fbb_.AddOffset(LGR::VT_MODULE_VERSION, MODULE_VERSION);
   }
-  void add_EPHEMERAL_PUBLIC_KEY(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> EPHEMERAL_PUBLIC_KEY) {
-    fbb_.AddOffset(ENC::VT_EPHEMERAL_PUBLIC_KEY, EPHEMERAL_PUBLIC_KEY);
+  void add_REQUESTER_PEER_ID(::flatbuffers::Offset<::flatbuffers::String> REQUESTER_PEER_ID) {
+    fbb_.AddOffset(LGR::VT_REQUESTER_PEER_ID, REQUESTER_PEER_ID);
   }
-  void add_NONCE_START(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> NONCE_START) {
-    fbb_.AddOffset(ENC::VT_NONCE_START, NONCE_START);
+  void add_REQUESTER_XPUB(::flatbuffers::Offset<::flatbuffers::String> REQUESTER_XPUB) {
+    fbb_.AddOffset(LGR::VT_REQUESTER_XPUB, REQUESTER_XPUB);
   }
-  void add_RECIPIENT_KEY_ID(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> RECIPIENT_KEY_ID) {
-    fbb_.AddOffset(ENC::VT_RECIPIENT_KEY_ID, RECIPIENT_KEY_ID);
+  void add_REQUESTED_DOMAIN(::flatbuffers::Offset<::flatbuffers::String> REQUESTED_DOMAIN) {
+    fbb_.AddOffset(LGR::VT_REQUESTED_DOMAIN, REQUESTED_DOMAIN);
   }
-  void add_CONTEXT(::flatbuffers::Offset<::flatbuffers::String> CONTEXT) {
-    fbb_.AddOffset(ENC::VT_CONTEXT, CONTEXT);
+  void add_REQUESTED_TIMEOUT_MS(uint64_t REQUESTED_TIMEOUT_MS) {
+    fbb_.AddElement<uint64_t>(LGR::VT_REQUESTED_TIMEOUT_MS, REQUESTED_TIMEOUT_MS, 0);
   }
-  void add_SCHEMA_HASH(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SCHEMA_HASH) {
-    fbb_.AddOffset(ENC::VT_SCHEMA_HASH, SCHEMA_HASH);
+  void add_GRANTED_DOMAIN(::flatbuffers::Offset<::flatbuffers::String> GRANTED_DOMAIN) {
+    fbb_.AddOffset(LGR::VT_GRANTED_DOMAIN, GRANTED_DOMAIN);
   }
-  void add_ROOT_TYPE(::flatbuffers::Offset<::flatbuffers::String> ROOT_TYPE) {
-    fbb_.AddOffset(ENC::VT_ROOT_TYPE, ROOT_TYPE);
+  void add_GRANTED_TIMEOUT_MS(uint64_t GRANTED_TIMEOUT_MS) {
+    fbb_.AddElement<uint64_t>(LGR::VT_GRANTED_TIMEOUT_MS, GRANTED_TIMEOUT_MS, 0);
   }
-  void add_TIMESTAMP(uint64_t TIMESTAMP) {
-    fbb_.AddElement<uint64_t>(ENC::VT_TIMESTAMP, TIMESTAMP, 0);
+  void add_EXPIRES_AT(uint64_t EXPIRES_AT) {
+    fbb_.AddElement<uint64_t>(LGR::VT_EXPIRES_AT, EXPIRES_AT, 0);
   }
-  explicit ENCBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_REQUIRED_SCOPE(::flatbuffers::Offset<::flatbuffers::String> REQUIRED_SCOPE) {
+    fbb_.AddOffset(LGR::VT_REQUIRED_SCOPE, REQUIRED_SCOPE);
+  }
+  void add_GRANT_STATUS(::flatbuffers::Offset<::flatbuffers::String> GRANT_STATUS) {
+    fbb_.AddOffset(LGR::VT_GRANT_STATUS, GRANT_STATUS);
+  }
+  void add_DENIAL_REASON(::flatbuffers::Offset<::flatbuffers::String> DENIAL_REASON) {
+    fbb_.AddOffset(LGR::VT_DENIAL_REASON, DENIAL_REASON);
+  }
+  void add_CAPABILITY_TOKEN(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CAPABILITY_TOKEN) {
+    fbb_.AddOffset(LGR::VT_CAPABILITY_TOKEN, CAPABILITY_TOKEN);
+  }
+  void add_MODULE_DESCRIPTOR(::flatbuffers::Offset<PLG> MODULE_DESCRIPTOR) {
+    fbb_.AddOffset(LGR::VT_MODULE_DESCRIPTOR, MODULE_DESCRIPTOR);
+  }
+  void add_WRAPPED_CONTENT_KEY_HEADER(::flatbuffers::Offset<ENC> WRAPPED_CONTENT_KEY_HEADER) {
+    fbb_.AddOffset(LGR::VT_WRAPPED_CONTENT_KEY_HEADER, WRAPPED_CONTENT_KEY_HEADER);
+  }
+  void add_WRAPPED_CONTENT_KEY_PAYLOAD(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> WRAPPED_CONTENT_KEY_PAYLOAD) {
+    fbb_.AddOffset(LGR::VT_WRAPPED_CONTENT_KEY_PAYLOAD, WRAPPED_CONTENT_KEY_PAYLOAD);
+  }
+  void add_GRANT_VERIFIER_PUBKEY(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> GRANT_VERIFIER_PUBKEY) {
+    fbb_.AddOffset(LGR::VT_GRANT_VERIFIER_PUBKEY, GRANT_VERIFIER_PUBKEY);
+  }
+  void add_PROVIDER_SIGNATURE(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PROVIDER_SIGNATURE) {
+    fbb_.AddOffset(LGR::VT_PROVIDER_SIGNATURE, PROVIDER_SIGNATURE);
+  }
+  explicit LGRBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<ENC> Finish() {
+  ::flatbuffers::Offset<LGR> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<ENC>(end);
-    fbb_.Required(o, ENC::VT_EPHEMERAL_PUBLIC_KEY);
-    fbb_.Required(o, ENC::VT_NONCE_START);
+    auto o = ::flatbuffers::Offset<LGR>(end);
+    fbb_.Required(o, LGR::VT_REQUEST_ID);
+    fbb_.Required(o, LGR::VT_MODULE_ID);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<ENC> CreateENC(
+inline ::flatbuffers::Offset<LGR> CreateLGR(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    uint8_t VERSION = 1,
-    KeyExchange KEY_EXCHANGE = KeyExchange_X25519,
-    SymmetricAlgo SYMMETRIC = SymmetricAlgo_AES_256_CTR,
-    KDF KEY_DERIVATION = KDF_HKDF_SHA256,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> EPHEMERAL_PUBLIC_KEY = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> NONCE_START = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> RECIPIENT_KEY_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CONTEXT = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SCHEMA_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ROOT_TYPE = 0,
-    uint64_t TIMESTAMP = 0) {
-  ENCBuilder builder_(_fbb);
-  builder_.add_TIMESTAMP(TIMESTAMP);
-  builder_.add_ROOT_TYPE(ROOT_TYPE);
-  builder_.add_SCHEMA_HASH(SCHEMA_HASH);
-  builder_.add_CONTEXT(CONTEXT);
-  builder_.add_RECIPIENT_KEY_ID(RECIPIENT_KEY_ID);
-  builder_.add_NONCE_START(NONCE_START);
-  builder_.add_EPHEMERAL_PUBLIC_KEY(EPHEMERAL_PUBLIC_KEY);
-  builder_.add_KEY_DERIVATION(KEY_DERIVATION);
-  builder_.add_SYMMETRIC(SYMMETRIC);
-  builder_.add_KEY_EXCHANGE(KEY_EXCHANGE);
-  builder_.add_VERSION(VERSION);
+    licensingGrantMessageType MESSAGE_TYPE = licensingGrantMessageType_Request,
+    ::flatbuffers::Offset<::flatbuffers::String> REQUEST_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MODULE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MODULE_VERSION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REQUESTER_PEER_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REQUESTER_XPUB = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REQUESTED_DOMAIN = 0,
+    uint64_t REQUESTED_TIMEOUT_MS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> GRANTED_DOMAIN = 0,
+    uint64_t GRANTED_TIMEOUT_MS = 0,
+    uint64_t EXPIRES_AT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REQUIRED_SCOPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> GRANT_STATUS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DENIAL_REASON = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CAPABILITY_TOKEN = 0,
+    ::flatbuffers::Offset<PLG> MODULE_DESCRIPTOR = 0,
+    ::flatbuffers::Offset<ENC> WRAPPED_CONTENT_KEY_HEADER = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> WRAPPED_CONTENT_KEY_PAYLOAD = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> GRANT_VERIFIER_PUBKEY = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PROVIDER_SIGNATURE = 0) {
+  LGRBuilder builder_(_fbb);
+  builder_.add_EXPIRES_AT(EXPIRES_AT);
+  builder_.add_GRANTED_TIMEOUT_MS(GRANTED_TIMEOUT_MS);
+  builder_.add_REQUESTED_TIMEOUT_MS(REQUESTED_TIMEOUT_MS);
+  builder_.add_PROVIDER_SIGNATURE(PROVIDER_SIGNATURE);
+  builder_.add_GRANT_VERIFIER_PUBKEY(GRANT_VERIFIER_PUBKEY);
+  builder_.add_WRAPPED_CONTENT_KEY_PAYLOAD(WRAPPED_CONTENT_KEY_PAYLOAD);
+  builder_.add_WRAPPED_CONTENT_KEY_HEADER(WRAPPED_CONTENT_KEY_HEADER);
+  builder_.add_MODULE_DESCRIPTOR(MODULE_DESCRIPTOR);
+  builder_.add_CAPABILITY_TOKEN(CAPABILITY_TOKEN);
+  builder_.add_DENIAL_REASON(DENIAL_REASON);
+  builder_.add_GRANT_STATUS(GRANT_STATUS);
+  builder_.add_REQUIRED_SCOPE(REQUIRED_SCOPE);
+  builder_.add_GRANTED_DOMAIN(GRANTED_DOMAIN);
+  builder_.add_REQUESTED_DOMAIN(REQUESTED_DOMAIN);
+  builder_.add_REQUESTER_XPUB(REQUESTER_XPUB);
+  builder_.add_REQUESTER_PEER_ID(REQUESTER_PEER_ID);
+  builder_.add_MODULE_VERSION(MODULE_VERSION);
+  builder_.add_MODULE_ID(MODULE_ID);
+  builder_.add_REQUEST_ID(REQUEST_ID);
+  builder_.add_MESSAGE_TYPE(MESSAGE_TYPE);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<ENC> CreateENCDirect(
+inline ::flatbuffers::Offset<LGR> CreateLGRDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    uint8_t VERSION = 1,
-    KeyExchange KEY_EXCHANGE = KeyExchange_X25519,
-    SymmetricAlgo SYMMETRIC = SymmetricAlgo_AES_256_CTR,
-    KDF KEY_DERIVATION = KDF_HKDF_SHA256,
-    const std::vector<uint8_t> *EPHEMERAL_PUBLIC_KEY = nullptr,
-    const std::vector<uint8_t> *NONCE_START = nullptr,
-    const std::vector<uint8_t> *RECIPIENT_KEY_ID = nullptr,
-    const char *CONTEXT = nullptr,
-    const std::vector<uint8_t> *SCHEMA_HASH = nullptr,
-    const char *ROOT_TYPE = nullptr,
-    uint64_t TIMESTAMP = 0) {
-  auto EPHEMERAL_PUBLIC_KEY__ = EPHEMERAL_PUBLIC_KEY ? _fbb.CreateVector<uint8_t>(*EPHEMERAL_PUBLIC_KEY) : 0;
-  auto NONCE_START__ = NONCE_START ? _fbb.CreateVector<uint8_t>(*NONCE_START) : 0;
-  auto RECIPIENT_KEY_ID__ = RECIPIENT_KEY_ID ? _fbb.CreateVector<uint8_t>(*RECIPIENT_KEY_ID) : 0;
-  auto CONTEXT__ = CONTEXT ? _fbb.CreateString(CONTEXT) : 0;
-  auto SCHEMA_HASH__ = SCHEMA_HASH ? _fbb.CreateVector<uint8_t>(*SCHEMA_HASH) : 0;
-  auto ROOT_TYPE__ = ROOT_TYPE ? _fbb.CreateString(ROOT_TYPE) : 0;
-  return CreateENC(
+    licensingGrantMessageType MESSAGE_TYPE = licensingGrantMessageType_Request,
+    const char *REQUEST_ID = nullptr,
+    const char *MODULE_ID = nullptr,
+    const char *MODULE_VERSION = nullptr,
+    const char *REQUESTER_PEER_ID = nullptr,
+    const char *REQUESTER_XPUB = nullptr,
+    const char *REQUESTED_DOMAIN = nullptr,
+    uint64_t REQUESTED_TIMEOUT_MS = 0,
+    const char *GRANTED_DOMAIN = nullptr,
+    uint64_t GRANTED_TIMEOUT_MS = 0,
+    uint64_t EXPIRES_AT = 0,
+    const char *REQUIRED_SCOPE = nullptr,
+    const char *GRANT_STATUS = nullptr,
+    const char *DENIAL_REASON = nullptr,
+    const std::vector<uint8_t> *CAPABILITY_TOKEN = nullptr,
+    ::flatbuffers::Offset<PLG> MODULE_DESCRIPTOR = 0,
+    ::flatbuffers::Offset<ENC> WRAPPED_CONTENT_KEY_HEADER = 0,
+    const std::vector<uint8_t> *WRAPPED_CONTENT_KEY_PAYLOAD = nullptr,
+    const std::vector<uint8_t> *GRANT_VERIFIER_PUBKEY = nullptr,
+    const std::vector<uint8_t> *PROVIDER_SIGNATURE = nullptr) {
+  auto REQUEST_ID__ = REQUEST_ID ? _fbb.CreateString(REQUEST_ID) : 0;
+  auto MODULE_ID__ = MODULE_ID ? _fbb.CreateString(MODULE_ID) : 0;
+  auto MODULE_VERSION__ = MODULE_VERSION ? _fbb.CreateString(MODULE_VERSION) : 0;
+  auto REQUESTER_PEER_ID__ = REQUESTER_PEER_ID ? _fbb.CreateString(REQUESTER_PEER_ID) : 0;
+  auto REQUESTER_XPUB__ = REQUESTER_XPUB ? _fbb.CreateString(REQUESTER_XPUB) : 0;
+  auto REQUESTED_DOMAIN__ = REQUESTED_DOMAIN ? _fbb.CreateString(REQUESTED_DOMAIN) : 0;
+  auto GRANTED_DOMAIN__ = GRANTED_DOMAIN ? _fbb.CreateString(GRANTED_DOMAIN) : 0;
+  auto REQUIRED_SCOPE__ = REQUIRED_SCOPE ? _fbb.CreateString(REQUIRED_SCOPE) : 0;
+  auto GRANT_STATUS__ = GRANT_STATUS ? _fbb.CreateString(GRANT_STATUS) : 0;
+  auto DENIAL_REASON__ = DENIAL_REASON ? _fbb.CreateString(DENIAL_REASON) : 0;
+  auto CAPABILITY_TOKEN__ = CAPABILITY_TOKEN ? _fbb.CreateVector<uint8_t>(*CAPABILITY_TOKEN) : 0;
+  auto WRAPPED_CONTENT_KEY_PAYLOAD__ = WRAPPED_CONTENT_KEY_PAYLOAD ? _fbb.CreateVector<uint8_t>(*WRAPPED_CONTENT_KEY_PAYLOAD) : 0;
+  auto GRANT_VERIFIER_PUBKEY__ = GRANT_VERIFIER_PUBKEY ? _fbb.CreateVector<uint8_t>(*GRANT_VERIFIER_PUBKEY) : 0;
+  auto PROVIDER_SIGNATURE__ = PROVIDER_SIGNATURE ? _fbb.CreateVector<uint8_t>(*PROVIDER_SIGNATURE) : 0;
+  return CreateLGR(
       _fbb,
-      VERSION,
-      KEY_EXCHANGE,
-      SYMMETRIC,
-      KEY_DERIVATION,
-      EPHEMERAL_PUBLIC_KEY__,
-      NONCE_START__,
-      RECIPIENT_KEY_ID__,
-      CONTEXT__,
-      SCHEMA_HASH__,
-      ROOT_TYPE__,
-      TIMESTAMP);
+      MESSAGE_TYPE,
+      REQUEST_ID__,
+      MODULE_ID__,
+      MODULE_VERSION__,
+      REQUESTER_PEER_ID__,
+      REQUESTER_XPUB__,
+      REQUESTED_DOMAIN__,
+      REQUESTED_TIMEOUT_MS,
+      GRANTED_DOMAIN__,
+      GRANTED_TIMEOUT_MS,
+      EXPIRES_AT,
+      REQUIRED_SCOPE__,
+      GRANT_STATUS__,
+      DENIAL_REASON__,
+      CAPABILITY_TOKEN__,
+      MODULE_DESCRIPTOR,
+      WRAPPED_CONTENT_KEY_HEADER,
+      WRAPPED_CONTENT_KEY_PAYLOAD__,
+      GRANT_VERIFIER_PUBKEY__,
+      PROVIDER_SIGNATURE__);
 }
 
-inline const ENC *GetENC(const void *buf) {
-  return ::flatbuffers::GetRoot<ENC>(buf);
+inline const LGR *GetLGR(const void *buf) {
+  return ::flatbuffers::GetRoot<LGR>(buf);
 }
 
-inline const ENC *GetSizePrefixedENC(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<ENC>(buf);
+inline const LGR *GetSizePrefixedLGR(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<LGR>(buf);
 }
 
-inline const char *ENCIdentifier() {
-  return "$ENC";
+inline const char *LGRIdentifier() {
+  return "$LGR";
 }
 
-inline bool ENCBufferHasIdentifier(const void *buf) {
+inline bool LGRBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, ENCIdentifier());
+      buf, LGRIdentifier());
 }
 
-inline bool SizePrefixedENCBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedLGRBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, ENCIdentifier(), true);
+      buf, LGRIdentifier(), true);
 }
 
 template <bool B = false>
-inline bool VerifyENCBuffer(
+inline bool VerifyLGRBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<ENC>(ENCIdentifier());
+  return verifier.template VerifyBuffer<LGR>(LGRIdentifier());
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedENCBuffer(
+inline bool VerifySizePrefixedLGRBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<ENC>(ENCIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<LGR>(LGRIdentifier());
 }
 
-inline void FinishENCBuffer(
+inline void FinishLGRBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<ENC> root) {
-  fbb.Finish(root, ENCIdentifier());
+    ::flatbuffers::Offset<LGR> root) {
+  fbb.Finish(root, LGRIdentifier());
 }
 
-inline void FinishSizePrefixedENCBuffer(
+inline void FinishSizePrefixedLGRBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<ENC> root) {
-  fbb.FinishSizePrefixed(root, ENCIdentifier());
+    ::flatbuffers::Offset<LGR> root) {
+  fbb.FinishSizePrefixed(root, LGRIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

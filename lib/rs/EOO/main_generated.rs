@@ -2,51 +2,53 @@
 // @generated
 extern crate alloc;
 
+use crate::main_generated::*;
+use crate::main_generated::*;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_POLARIZATION_TYPE: i8 = 0;
+pub const ENUM_MIN_COLLECT_METHOD: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_POLARIZATION_TYPE: i8 = 3;
+pub const ENUM_MAX_COLLECT_METHOD: i8 = 3;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_POLARIZATION_TYPE: [PolarizationType; 4] = [
-  PolarizationType::linear,
-  PolarizationType::circular,
-  PolarizationType::elliptical,
-  PolarizationType::unpolarized,
+pub const ENUM_VALUES_COLLECT_METHOD: [CollectMethod; 4] = [
+  CollectMethod::SIDEREAL,
+  CollectMethod::RATE_TRACK,
+  CollectMethod::FIXED_STARE,
+  CollectMethod::OTHER,
 ];
 
-/// Different types of polarization in EMT
+/// Enumeration for data collection methods
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct PolarizationType(pub i8);
+pub struct CollectMethod(pub i8);
 #[allow(non_upper_case_globals)]
-impl PolarizationType {
-  pub const linear: Self = Self(0);
-  pub const circular: Self = Self(1);
-  pub const elliptical: Self = Self(2);
-  pub const unpolarized: Self = Self(3);
+impl CollectMethod {
+  pub const SIDEREAL: Self = Self(0);
+  pub const RATE_TRACK: Self = Self(1);
+  pub const FIXED_STARE: Self = Self(2);
+  pub const OTHER: Self = Self(3);
 
   pub const ENUM_MIN: i8 = 0;
   pub const ENUM_MAX: i8 = 3;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::linear,
-    Self::circular,
-    Self::elliptical,
-    Self::unpolarized,
+    Self::SIDEREAL,
+    Self::RATE_TRACK,
+    Self::FIXED_STARE,
+    Self::OTHER,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::linear => Some("linear"),
-      Self::circular => Some("circular"),
-      Self::elliptical => Some("elliptical"),
-      Self::unpolarized => Some("unpolarized"),
+      Self::SIDEREAL => Some("SIDEREAL"),
+      Self::RATE_TRACK => Some("RATE_TRACK"),
+      Self::FIXED_STARE => Some("FIXED_STARE"),
+      Self::OTHER => Some("OTHER"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for PolarizationType {
+impl ::core::fmt::Debug for CollectMethod {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -55,7 +57,7 @@ impl ::core::fmt::Debug for PolarizationType {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for PolarizationType {
+impl<'a> ::flatbuffers::Follow<'a> for CollectMethod {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -64,15 +66,15 @@ impl<'a> ::flatbuffers::Follow<'a> for PolarizationType {
   }
 }
 
-impl ::flatbuffers::Push for PolarizationType {
-    type Output = PolarizationType;
+impl ::flatbuffers::Push for CollectMethod {
+    type Output = CollectMethod;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for PolarizationType {
+impl ::flatbuffers::EndianScalar for CollectMethod {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -86,7 +88,7 @@ impl ::flatbuffers::EndianScalar for PolarizationType {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for PolarizationType {
+impl<'a> ::flatbuffers::Verifiable for CollectMethod {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -95,453 +97,54 @@ impl<'a> ::flatbuffers::Verifiable for PolarizationType {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for PolarizationType {}
+impl ::flatbuffers::SimpleToVerifyInSlice for CollectMethod {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_SIMPLE_POLARIZATION: i8 = 0;
+pub const ENUM_MIN_OBSERVATION_POSITION: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SIMPLE_POLARIZATION: i8 = 3;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SIMPLE_POLARIZATION: [SimplePolarization; 4] = [
-  SimplePolarization::vertical,
-  SimplePolarization::horizontal,
-  SimplePolarization::leftHandCircular,
-  SimplePolarization::rightHandCircular,
-];
-
-/// Simple polarization types
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct SimplePolarization(pub i8);
-#[allow(non_upper_case_globals)]
-impl SimplePolarization {
-  pub const vertical: Self = Self(0);
-  pub const horizontal: Self = Self(1);
-  pub const leftHandCircular: Self = Self(2);
-  pub const rightHandCircular: Self = Self(3);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 3;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::vertical,
-    Self::horizontal,
-    Self::leftHandCircular,
-    Self::rightHandCircular,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::vertical => Some("vertical"),
-      Self::horizontal => Some("horizontal"),
-      Self::leftHandCircular => Some("leftHandCircular"),
-      Self::rightHandCircular => Some("rightHandCircular"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for SimplePolarization {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for SimplePolarization {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for SimplePolarization {
-    type Output = SimplePolarization;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for SimplePolarization {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for SimplePolarization {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for SimplePolarization {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_DATA_MODE: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_DATA_MODE: i8 = 3;
+pub const ENUM_MAX_OBSERVATION_POSITION: i8 = 4;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_DATA_MODE: [DataMode; 4] = [
-  DataMode::EXERCISE,
-  DataMode::REAL,
-  DataMode::SIMULATED,
-  DataMode::TEST,
-];
-
-/// Enum for the mode of data (real, simulated, synthetic)
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct DataMode(pub i8);
-#[allow(non_upper_case_globals)]
-impl DataMode {
-  /// Data collected during an exercise scenario.
-  pub const EXERCISE: Self = Self(0);
-  /// Data collected from real-world observations.
-  pub const REAL: Self = Self(1);
-  /// Data generated through simulation.
-  pub const SIMULATED: Self = Self(2);
-  /// Data collected for testing purposes.
-  pub const TEST: Self = Self(3);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 3;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::EXERCISE,
-    Self::REAL,
-    Self::SIMULATED,
-    Self::TEST,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::EXERCISE => Some("EXERCISE"),
-      Self::REAL => Some("REAL"),
-      Self::SIMULATED => Some("SIMULATED"),
-      Self::TEST => Some("TEST"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for DataMode {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for DataMode {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for DataMode {
-    type Output = DataMode;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for DataMode {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for DataMode {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for DataMode {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_DEVICE_TYPE: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_DEVICE_TYPE: i8 = 45;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_DEVICE_TYPE: [DeviceType; 46] = [
-  DeviceType::UNKNOWN,
-  DeviceType::OPTICAL,
-  DeviceType::INFRARED_SENSOR,
-  DeviceType::ULTRAVIOLET_SENSOR,
-  DeviceType::X_RAY_SENSOR,
-  DeviceType::GAMMA_RAY_SENSOR,
-  DeviceType::RADAR,
-  DeviceType::PHASED_ARRAY_RADAR,
-  DeviceType::SYNTHETIC_APERTURE_RADAR,
-  DeviceType::BISTATIC_RADIO_TELESCOPE,
-  DeviceType::RADIO_TELESCOPE,
-  DeviceType::ATMOSPHERIC_SENSOR,
-  DeviceType::SPACE_WEATHER_SENSOR,
-  DeviceType::ENVIRONMENTAL_SENSOR,
-  DeviceType::SEISMIC_SENSOR,
-  DeviceType::GRAVIMETRIC_SENSOR,
-  DeviceType::MAGNETIC_SENSOR,
-  DeviceType::ELECTROMAGNETIC_SENSOR,
-  DeviceType::THERMAL_SENSOR,
-  DeviceType::CHEMICAL_SENSOR,
-  DeviceType::BIOLOGICAL_SENSOR,
-  DeviceType::RADIATION_SENSOR,
-  DeviceType::PARTICLE_DETECTOR,
-  DeviceType::LIDAR,
-  DeviceType::SONAR,
-  DeviceType::TELESCOPE,
-  DeviceType::SPECTROSCOPIC_SENSOR,
-  DeviceType::PHOTOMETRIC_SENSOR,
-  DeviceType::POLARIMETRIC_SENSOR,
-  DeviceType::INTERFEROMETRIC_SENSOR,
-  DeviceType::MULTISPECTRAL_SENSOR,
-  DeviceType::HYPERSPECTRAL_SENSOR,
-  DeviceType::GPS_RECEIVER,
-  DeviceType::RADIO_COMMUNICATIONS,
-  DeviceType::LASER_COMMUNICATIONS,
-  DeviceType::SATELLITE_COMMUNICATIONS,
-  DeviceType::LASER_INSTRUMENT,
-  DeviceType::RF_ANALYZER,
-  DeviceType::IONOSPHERIC_SENSOR,
-  DeviceType::LASER_IMAGING,
-  DeviceType::OPTICAL_TELESCOPE,
-  DeviceType::HIGH_RESOLUTION_OPTICAL,
-  DeviceType::RADIO,
-  DeviceType::MICROWAVE_TRANSMITTER,
-  DeviceType::RF_MONITOR,
-  DeviceType::HF_RADIO_COMMUNICATIONS,
+pub const ENUM_VALUES_OBSERVATION_POSITION: [ObservationPosition; 5] = [
+  ObservationPosition::FENCE,
+  ObservationPosition::FIRST,
+  ObservationPosition::IN,
+  ObservationPosition::LAST,
+  ObservationPosition::SINGLE,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct DeviceType(pub i8);
+pub struct ObservationPosition(pub i8);
 #[allow(non_upper_case_globals)]
-impl DeviceType {
-  /// Basic or undefined sensor type
-  pub const UNKNOWN: Self = Self(0);
-  /// General optical sensors
-  pub const OPTICAL: Self = Self(1);
-  /// Detects infrared radiation
-  pub const INFRARED_SENSOR: Self = Self(2);
-  /// Sensitive to ultraviolet light
-  pub const ULTRAVIOLET_SENSOR: Self = Self(3);
-  /// For X-ray detection
-  pub const X_RAY_SENSOR: Self = Self(4);
-  /// For gamma-ray detection
-  pub const GAMMA_RAY_SENSOR: Self = Self(5);
-  /// Basic radar systems
-  pub const RADAR: Self = Self(6);
-  /// Advanced radar with phased array technology
-  pub const PHASED_ARRAY_RADAR: Self = Self(7);
-  /// For high-resolution imaging
-  pub const SYNTHETIC_APERTURE_RADAR: Self = Self(8);
-  /// For astronomical observations using bistatic setup
-  pub const BISTATIC_RADIO_TELESCOPE: Self = Self(9);
-  /// For radio astronomy
-  pub const RADIO_TELESCOPE: Self = Self(10);
-  /// For atmospheric studies
-  pub const ATMOSPHERIC_SENSOR: Self = Self(11);
-  /// For observing space weather phenomena
-  pub const SPACE_WEATHER_SENSOR: Self = Self(12);
-  /// General environmental monitoring
-  pub const ENVIRONMENTAL_SENSOR: Self = Self(13);
-  /// For measuring seismic activities
-  pub const SEISMIC_SENSOR: Self = Self(14);
-  /// For gravity measurements
-  pub const GRAVIMETRIC_SENSOR: Self = Self(15);
-  /// For magnetic field detection
-  pub const MAGNETIC_SENSOR: Self = Self(16);
-  /// For electromagnetic field analysis
-  pub const ELECTROMAGNETIC_SENSOR: Self = Self(17);
-  /// For temperature and heat detection
-  pub const THERMAL_SENSOR: Self = Self(18);
-  /// For detecting chemicals and substances
-  pub const CHEMICAL_SENSOR: Self = Self(19);
-  /// For biological research and detection
-  pub const BIOLOGICAL_SENSOR: Self = Self(20);
-  /// For detecting ionizing radiation
-  pub const RADIATION_SENSOR: Self = Self(21);
-  /// For detecting subatomic particles
-  pub const PARTICLE_DETECTOR: Self = Self(22);
-  /// Light Detection and Ranging
-  pub const LIDAR: Self = Self(23);
-  /// Sound Navigation and Ranging
-  pub const SONAR: Self = Self(24);
-  /// General telescopes for astronomical observations
-  pub const TELESCOPE: Self = Self(25);
-  /// For spectral analysis
-  pub const SPECTROSCOPIC_SENSOR: Self = Self(26);
-  /// For measuring light intensity
-  pub const PHOTOMETRIC_SENSOR: Self = Self(27);
-  /// For analyzing polarization of light
-  pub const POLARIMETRIC_SENSOR: Self = Self(28);
-  /// For detailed imaging using interference
-  pub const INTERFEROMETRIC_SENSOR: Self = Self(29);
-  /// Capturing image data at multiple wavelengths
-  pub const MULTISPECTRAL_SENSOR: Self = Self(30);
-  /// Advanced imaging across many spectral bands
-  pub const HYPERSPECTRAL_SENSOR: Self = Self(31);
-  /// For Global Positioning System reception
-  pub const GPS_RECEIVER: Self = Self(32);
-  /// Standard radio communication device
-  pub const RADIO_COMMUNICATIONS: Self = Self(33);
-  /// Advanced laser communication system
-  pub const LASER_COMMUNICATIONS: Self = Self(34);
-  /// Satellite communication system
-  pub const SATELLITE_COMMUNICATIONS: Self = Self(35);
-  /// Device for laser-based experiments and measurements
-  pub const LASER_INSTRUMENT: Self = Self(36);
-  /// Radio frequency analysis and measurement device
-  pub const RF_ANALYZER: Self = Self(37);
-  /// Device for ionospheric research
-  pub const IONOSPHERIC_SENSOR: Self = Self(38);
-  /// Device for laser-based imaging
-  pub const LASER_IMAGING: Self = Self(39);
-  /// Advanced optical telescope
-  pub const OPTICAL_TELESCOPE: Self = Self(40);
-  /// Device for high-resolution optical observations
-  pub const HIGH_RESOLUTION_OPTICAL: Self = Self(41);
-  pub const RADIO: Self = Self(42);
-  /// Microwave communication device
-  pub const MICROWAVE_TRANSMITTER: Self = Self(43);
-  /// Device for radio frequency monitoring
-  pub const RF_MONITOR: Self = Self(44);
-  /// High-frequency radio communication device
-  pub const HF_RADIO_COMMUNICATIONS: Self = Self(45);
+impl ObservationPosition {
+  pub const FENCE: Self = Self(0);
+  pub const FIRST: Self = Self(1);
+  pub const IN: Self = Self(2);
+  pub const LAST: Self = Self(3);
+  pub const SINGLE: Self = Self(4);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 45;
+  pub const ENUM_MAX: i8 = 4;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::UNKNOWN,
-    Self::OPTICAL,
-    Self::INFRARED_SENSOR,
-    Self::ULTRAVIOLET_SENSOR,
-    Self::X_RAY_SENSOR,
-    Self::GAMMA_RAY_SENSOR,
-    Self::RADAR,
-    Self::PHASED_ARRAY_RADAR,
-    Self::SYNTHETIC_APERTURE_RADAR,
-    Self::BISTATIC_RADIO_TELESCOPE,
-    Self::RADIO_TELESCOPE,
-    Self::ATMOSPHERIC_SENSOR,
-    Self::SPACE_WEATHER_SENSOR,
-    Self::ENVIRONMENTAL_SENSOR,
-    Self::SEISMIC_SENSOR,
-    Self::GRAVIMETRIC_SENSOR,
-    Self::MAGNETIC_SENSOR,
-    Self::ELECTROMAGNETIC_SENSOR,
-    Self::THERMAL_SENSOR,
-    Self::CHEMICAL_SENSOR,
-    Self::BIOLOGICAL_SENSOR,
-    Self::RADIATION_SENSOR,
-    Self::PARTICLE_DETECTOR,
-    Self::LIDAR,
-    Self::SONAR,
-    Self::TELESCOPE,
-    Self::SPECTROSCOPIC_SENSOR,
-    Self::PHOTOMETRIC_SENSOR,
-    Self::POLARIMETRIC_SENSOR,
-    Self::INTERFEROMETRIC_SENSOR,
-    Self::MULTISPECTRAL_SENSOR,
-    Self::HYPERSPECTRAL_SENSOR,
-    Self::GPS_RECEIVER,
-    Self::RADIO_COMMUNICATIONS,
-    Self::LASER_COMMUNICATIONS,
-    Self::SATELLITE_COMMUNICATIONS,
-    Self::LASER_INSTRUMENT,
-    Self::RF_ANALYZER,
-    Self::IONOSPHERIC_SENSOR,
-    Self::LASER_IMAGING,
-    Self::OPTICAL_TELESCOPE,
-    Self::HIGH_RESOLUTION_OPTICAL,
-    Self::RADIO,
-    Self::MICROWAVE_TRANSMITTER,
-    Self::RF_MONITOR,
-    Self::HF_RADIO_COMMUNICATIONS,
+    Self::FENCE,
+    Self::FIRST,
+    Self::IN,
+    Self::LAST,
+    Self::SINGLE,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::UNKNOWN => Some("UNKNOWN"),
-      Self::OPTICAL => Some("OPTICAL"),
-      Self::INFRARED_SENSOR => Some("INFRARED_SENSOR"),
-      Self::ULTRAVIOLET_SENSOR => Some("ULTRAVIOLET_SENSOR"),
-      Self::X_RAY_SENSOR => Some("X_RAY_SENSOR"),
-      Self::GAMMA_RAY_SENSOR => Some("GAMMA_RAY_SENSOR"),
-      Self::RADAR => Some("RADAR"),
-      Self::PHASED_ARRAY_RADAR => Some("PHASED_ARRAY_RADAR"),
-      Self::SYNTHETIC_APERTURE_RADAR => Some("SYNTHETIC_APERTURE_RADAR"),
-      Self::BISTATIC_RADIO_TELESCOPE => Some("BISTATIC_RADIO_TELESCOPE"),
-      Self::RADIO_TELESCOPE => Some("RADIO_TELESCOPE"),
-      Self::ATMOSPHERIC_SENSOR => Some("ATMOSPHERIC_SENSOR"),
-      Self::SPACE_WEATHER_SENSOR => Some("SPACE_WEATHER_SENSOR"),
-      Self::ENVIRONMENTAL_SENSOR => Some("ENVIRONMENTAL_SENSOR"),
-      Self::SEISMIC_SENSOR => Some("SEISMIC_SENSOR"),
-      Self::GRAVIMETRIC_SENSOR => Some("GRAVIMETRIC_SENSOR"),
-      Self::MAGNETIC_SENSOR => Some("MAGNETIC_SENSOR"),
-      Self::ELECTROMAGNETIC_SENSOR => Some("ELECTROMAGNETIC_SENSOR"),
-      Self::THERMAL_SENSOR => Some("THERMAL_SENSOR"),
-      Self::CHEMICAL_SENSOR => Some("CHEMICAL_SENSOR"),
-      Self::BIOLOGICAL_SENSOR => Some("BIOLOGICAL_SENSOR"),
-      Self::RADIATION_SENSOR => Some("RADIATION_SENSOR"),
-      Self::PARTICLE_DETECTOR => Some("PARTICLE_DETECTOR"),
-      Self::LIDAR => Some("LIDAR"),
-      Self::SONAR => Some("SONAR"),
-      Self::TELESCOPE => Some("TELESCOPE"),
-      Self::SPECTROSCOPIC_SENSOR => Some("SPECTROSCOPIC_SENSOR"),
-      Self::PHOTOMETRIC_SENSOR => Some("PHOTOMETRIC_SENSOR"),
-      Self::POLARIMETRIC_SENSOR => Some("POLARIMETRIC_SENSOR"),
-      Self::INTERFEROMETRIC_SENSOR => Some("INTERFEROMETRIC_SENSOR"),
-      Self::MULTISPECTRAL_SENSOR => Some("MULTISPECTRAL_SENSOR"),
-      Self::HYPERSPECTRAL_SENSOR => Some("HYPERSPECTRAL_SENSOR"),
-      Self::GPS_RECEIVER => Some("GPS_RECEIVER"),
-      Self::RADIO_COMMUNICATIONS => Some("RADIO_COMMUNICATIONS"),
-      Self::LASER_COMMUNICATIONS => Some("LASER_COMMUNICATIONS"),
-      Self::SATELLITE_COMMUNICATIONS => Some("SATELLITE_COMMUNICATIONS"),
-      Self::LASER_INSTRUMENT => Some("LASER_INSTRUMENT"),
-      Self::RF_ANALYZER => Some("RF_ANALYZER"),
-      Self::IONOSPHERIC_SENSOR => Some("IONOSPHERIC_SENSOR"),
-      Self::LASER_IMAGING => Some("LASER_IMAGING"),
-      Self::OPTICAL_TELESCOPE => Some("OPTICAL_TELESCOPE"),
-      Self::HIGH_RESOLUTION_OPTICAL => Some("HIGH_RESOLUTION_OPTICAL"),
-      Self::RADIO => Some("RADIO"),
-      Self::MICROWAVE_TRANSMITTER => Some("MICROWAVE_TRANSMITTER"),
-      Self::RF_MONITOR => Some("RF_MONITOR"),
-      Self::HF_RADIO_COMMUNICATIONS => Some("HF_RADIO_COMMUNICATIONS"),
+      Self::FENCE => Some("FENCE"),
+      Self::FIRST => Some("FIRST"),
+      Self::IN => Some("IN"),
+      Self::LAST => Some("LAST"),
+      Self::SINGLE => Some("SINGLE"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for DeviceType {
+impl ::core::fmt::Debug for ObservationPosition {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -550,7 +153,7 @@ impl ::core::fmt::Debug for DeviceType {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for DeviceType {
+impl<'a> ::flatbuffers::Follow<'a> for ObservationPosition {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -559,15 +162,15 @@ impl<'a> ::flatbuffers::Follow<'a> for DeviceType {
   }
 }
 
-impl ::flatbuffers::Push for DeviceType {
-    type Output = DeviceType;
+impl ::flatbuffers::Push for ObservationPosition {
+    type Output = ObservationPosition;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for DeviceType {
+impl ::flatbuffers::EndianScalar for ObservationPosition {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -581,7 +184,7 @@ impl ::flatbuffers::EndianScalar for DeviceType {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for DeviceType {
+impl<'a> ::flatbuffers::Verifiable for ObservationPosition {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -590,1435 +193,3510 @@ impl<'a> ::flatbuffers::Verifiable for DeviceType {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for DeviceType {}
-pub enum FrequencyRangeOffset {}
+impl ::flatbuffers::SimpleToVerifyInSlice for ObservationPosition {}
+pub enum EOOOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Frequency range with lower and upper limits
-pub struct FrequencyRange<'a> {
+/// Electro-Optical Observation
+pub struct EOO<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for FrequencyRange<'a> {
-  type Inner = FrequencyRange<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for EOO<'a> {
+  type Inner = EOO<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> FrequencyRange<'a> {
-  pub const VT_LOWER: ::flatbuffers::VOffsetT = 4;
-  pub const VT_UPPER: ::flatbuffers::VOffsetT = 6;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    FrequencyRange { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args FrequencyRangeArgs
-  ) -> ::flatbuffers::WIPOffset<FrequencyRange<'bldr>> {
-    let mut builder = FrequencyRangeBuilder::new(_fbb);
-    builder.add_UPPER(args.UPPER);
-    builder.add_LOWER(args.LOWER);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> FrequencyRangeT {
-    let LOWER = self.LOWER();
-    let UPPER = self.UPPER();
-    FrequencyRangeT {
-      LOWER,
-      UPPER,
-    }
-  }
-
-  /// Lower frequency in MHz
-  #[inline]
-  pub fn LOWER(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(FrequencyRange::VT_LOWER, Some(0.0)).unwrap()}
-  }
-  /// Upper frequency in MHz
-  #[inline]
-  pub fn UPPER(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(FrequencyRange::VT_UPPER, Some(0.0)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for FrequencyRange<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<f64>("LOWER", Self::VT_LOWER, false)?
-     .visit_field::<f64>("UPPER", Self::VT_UPPER, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct FrequencyRangeArgs {
-    pub LOWER: f64,
-    pub UPPER: f64,
-}
-impl<'a> Default for FrequencyRangeArgs {
-  #[inline]
-  fn default() -> Self {
-    FrequencyRangeArgs {
-      LOWER: 0.0,
-      UPPER: 0.0,
-    }
-  }
-}
-
-pub struct FrequencyRangeBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> FrequencyRangeBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_LOWER(&mut self, LOWER: f64) {
-    self.fbb_.push_slot::<f64>(FrequencyRange::VT_LOWER, LOWER, 0.0);
-  }
-  #[inline]
-  pub fn add_UPPER(&mut self, UPPER: f64) {
-    self.fbb_.push_slot::<f64>(FrequencyRange::VT_UPPER, UPPER, 0.0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> FrequencyRangeBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    FrequencyRangeBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<FrequencyRange<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for FrequencyRange<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("FrequencyRange");
-      ds.field("LOWER", &self.LOWER());
-      ds.field("UPPER", &self.UPPER());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct FrequencyRangeT {
-  pub LOWER: f64,
-  pub UPPER: f64,
-}
-impl Default for FrequencyRangeT {
-  fn default() -> Self {
-    Self {
-      LOWER: 0.0,
-      UPPER: 0.0,
-    }
-  }
-}
-impl FrequencyRangeT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<FrequencyRange<'b>> {
-    let LOWER = self.LOWER;
-    let UPPER = self.UPPER;
-    FrequencyRange::create(_fbb, &FrequencyRangeArgs{
-      LOWER,
-      UPPER,
-    })
-  }
-}
-pub enum StokesParametersOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Stokes parameters, representing different aspects of polarization
-pub struct StokesParameters<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for StokesParameters<'a> {
-  type Inner = StokesParameters<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> StokesParameters<'a> {
-  pub const VT_I: ::flatbuffers::VOffsetT = 4;
-  pub const VT_Q: ::flatbuffers::VOffsetT = 6;
-  pub const VT_U: ::flatbuffers::VOffsetT = 8;
-  pub const VT_V: ::flatbuffers::VOffsetT = 10;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    StokesParameters { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args StokesParametersArgs
-  ) -> ::flatbuffers::WIPOffset<StokesParameters<'bldr>> {
-    let mut builder = StokesParametersBuilder::new(_fbb);
-    builder.add_V(args.V);
-    builder.add_U(args.U);
-    builder.add_Q(args.Q);
-    builder.add_I(args.I);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> StokesParametersT {
-    let I = self.I();
-    let Q = self.Q();
-    let U = self.U();
-    let V = self.V();
-    StokesParametersT {
-      I,
-      Q,
-      U,
-      V,
-    }
-  }
-
-  /// Intensity
-  #[inline]
-  pub fn I(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(StokesParameters::VT_I, Some(0.0)).unwrap()}
-  }
-  /// Linear polarization
-  #[inline]
-  pub fn Q(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(StokesParameters::VT_Q, Some(0.0)).unwrap()}
-  }
-  /// Another linear polarization, orthogonal to Q
-  #[inline]
-  pub fn U(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(StokesParameters::VT_U, Some(0.0)).unwrap()}
-  }
-  /// Circular polarization
-  #[inline]
-  pub fn V(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(StokesParameters::VT_V, Some(0.0)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for StokesParameters<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<f64>("I", Self::VT_I, false)?
-     .visit_field::<f64>("Q", Self::VT_Q, false)?
-     .visit_field::<f64>("U", Self::VT_U, false)?
-     .visit_field::<f64>("V", Self::VT_V, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct StokesParametersArgs {
-    pub I: f64,
-    pub Q: f64,
-    pub U: f64,
-    pub V: f64,
-}
-impl<'a> Default for StokesParametersArgs {
-  #[inline]
-  fn default() -> Self {
-    StokesParametersArgs {
-      I: 0.0,
-      Q: 0.0,
-      U: 0.0,
-      V: 0.0,
-    }
-  }
-}
-
-pub struct StokesParametersBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> StokesParametersBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_I(&mut self, I: f64) {
-    self.fbb_.push_slot::<f64>(StokesParameters::VT_I, I, 0.0);
-  }
-  #[inline]
-  pub fn add_Q(&mut self, Q: f64) {
-    self.fbb_.push_slot::<f64>(StokesParameters::VT_Q, Q, 0.0);
-  }
-  #[inline]
-  pub fn add_U(&mut self, U: f64) {
-    self.fbb_.push_slot::<f64>(StokesParameters::VT_U, U, 0.0);
-  }
-  #[inline]
-  pub fn add_V(&mut self, V: f64) {
-    self.fbb_.push_slot::<f64>(StokesParameters::VT_V, V, 0.0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> StokesParametersBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    StokesParametersBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<StokesParameters<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for StokesParameters<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("StokesParameters");
-      ds.field("I", &self.I());
-      ds.field("Q", &self.Q());
-      ds.field("U", &self.U());
-      ds.field("V", &self.V());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct StokesParametersT {
-  pub I: f64,
-  pub Q: f64,
-  pub U: f64,
-  pub V: f64,
-}
-impl Default for StokesParametersT {
-  fn default() -> Self {
-    Self {
-      I: 0.0,
-      Q: 0.0,
-      U: 0.0,
-      V: 0.0,
-    }
-  }
-}
-impl StokesParametersT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<StokesParameters<'b>> {
-    let I = self.I;
-    let Q = self.Q;
-    let U = self.U;
-    let V = self.V;
-    StokesParameters::create(_fbb, &StokesParametersArgs{
-      I,
-      Q,
-      U,
-      V,
-    })
-  }
-}
-pub enum BandOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Table representing a frequency band with a name and frequency range
-pub struct Band<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for Band<'a> {
-  type Inner = Band<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> Band<'a> {
-  pub const VT_NAME: ::flatbuffers::VOffsetT = 4;
-  pub const VT_FREQUENCY_RANGE: ::flatbuffers::VOffsetT = 6;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    Band { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args BandArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<Band<'bldr>> {
-    let mut builder = BandBuilder::new(_fbb);
-    if let Some(x) = args.FREQUENCY_RANGE { builder.add_FREQUENCY_RANGE(x); }
-    if let Some(x) = args.NAME { builder.add_NAME(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> BandT {
-    let NAME = self.NAME().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let FREQUENCY_RANGE = self.FREQUENCY_RANGE().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
-    });
-    BandT {
-      NAME,
-      FREQUENCY_RANGE,
-    }
-  }
-
-  /// Name of the band
-  #[inline]
-  pub fn NAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Band::VT_NAME, None)}
-  }
-  /// Frequency range of the band
-  #[inline]
-  pub fn FREQUENCY_RANGE(&self) -> Option<FrequencyRange<'a>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FrequencyRange>>(Band::VT_FREQUENCY_RANGE, None)}
-  }
-}
-
-impl ::flatbuffers::Verifiable for Band<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<FrequencyRange>>("FREQUENCY_RANGE", Self::VT_FREQUENCY_RANGE, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct BandArgs<'a> {
-    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub FREQUENCY_RANGE: Option<::flatbuffers::WIPOffset<FrequencyRange<'a>>>,
-}
-impl<'a> Default for BandArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    BandArgs {
-      NAME: None,
-      FREQUENCY_RANGE: None,
-    }
-  }
-}
-
-pub struct BandBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> BandBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Band::VT_NAME, NAME);
-  }
-  #[inline]
-  pub fn add_FREQUENCY_RANGE(&mut self, FREQUENCY_RANGE: ::flatbuffers::WIPOffset<FrequencyRange<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FrequencyRange>>(Band::VT_FREQUENCY_RANGE, FREQUENCY_RANGE);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> BandBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    BandBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<Band<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for Band<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("Band");
-      ds.field("NAME", &self.NAME());
-      ds.field("FREQUENCY_RANGE", &self.FREQUENCY_RANGE());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct BandT {
-  pub NAME: Option<alloc::string::String>,
-  pub FREQUENCY_RANGE: Option<alloc::boxed::Box<FrequencyRangeT>>,
-}
-impl Default for BandT {
-  fn default() -> Self {
-    Self {
-      NAME: None,
-      FREQUENCY_RANGE: None,
-    }
-  }
-}
-impl BandT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<Band<'b>> {
-    let NAME = self.NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let FREQUENCY_RANGE = self.FREQUENCY_RANGE.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    Band::create(_fbb, &BandArgs{
-      NAME,
-      FREQUENCY_RANGE,
-    })
-  }
-}
-pub enum IDMOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Integrated Device Message
-pub struct IDM<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for IDM<'a> {
-  type Inner = IDM<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> IDM<'a> {
+impl<'a> EOO<'a> {
   pub const VT_ID: ::flatbuffers::VOffsetT = 4;
-  pub const VT_NAME: ::flatbuffers::VOffsetT = 6;
-  pub const VT_DATA_MODE: ::flatbuffers::VOffsetT = 8;
-  pub const VT_UPLINK: ::flatbuffers::VOffsetT = 10;
-  pub const VT_DOWNLINK: ::flatbuffers::VOffsetT = 12;
-  pub const VT_BEACON: ::flatbuffers::VOffsetT = 14;
-  pub const VT_BAND: ::flatbuffers::VOffsetT = 16;
-  pub const VT_POLARIZATION_TYPE: ::flatbuffers::VOffsetT = 18;
-  pub const VT_SIMPLE_POLARIZATION: ::flatbuffers::VOffsetT = 20;
-  pub const VT_STOKES_PARAMETERS: ::flatbuffers::VOffsetT = 22;
-  pub const VT_POWER_REQUIRED: ::flatbuffers::VOffsetT = 24;
-  pub const VT_POWER_TYPE: ::flatbuffers::VOffsetT = 26;
-  pub const VT_TRANSMIT: ::flatbuffers::VOffsetT = 28;
-  pub const VT_RECEIVE: ::flatbuffers::VOffsetT = 30;
-  pub const VT_SENSOR_TYPE: ::flatbuffers::VOffsetT = 32;
-  pub const VT_SOURCE: ::flatbuffers::VOffsetT = 34;
-  pub const VT_LAST_OB_TIME: ::flatbuffers::VOffsetT = 36;
-  pub const VT_LOWER_LEFT_ELEVATION_LIMIT: ::flatbuffers::VOffsetT = 38;
-  pub const VT_UPPER_LEFT_AZIMUTH_LIMIT: ::flatbuffers::VOffsetT = 40;
-  pub const VT_LOWER_RIGHT_ELEVATION_LIMIT: ::flatbuffers::VOffsetT = 42;
-  pub const VT_LOWER_LEFT_AZIMUTH_LIMIT: ::flatbuffers::VOffsetT = 44;
-  pub const VT_UPPER_RIGHT_ELEVATION_LIMIT: ::flatbuffers::VOffsetT = 46;
-  pub const VT_UPPER_RIGHT_AZIMUTH_LIMIT: ::flatbuffers::VOffsetT = 48;
-  pub const VT_LOWER_RIGHT_AZIMUTH_LIMIT: ::flatbuffers::VOffsetT = 50;
-  pub const VT_UPPER_LEFT_ELEVATION_LIMIT: ::flatbuffers::VOffsetT = 52;
-  pub const VT_RIGHT_GEO_BELT_LIMIT: ::flatbuffers::VOffsetT = 54;
-  pub const VT_LEFT_GEO_BELT_LIMIT: ::flatbuffers::VOffsetT = 56;
-  pub const VT_MAGNITUDE_LIMIT: ::flatbuffers::VOffsetT = 58;
-  pub const VT_TASKABLE: ::flatbuffers::VOffsetT = 60;
+  pub const VT_CLASSIFICATION: ::flatbuffers::VOffsetT = 6;
+  pub const VT_OB_TIME: ::flatbuffers::VOffsetT = 8;
+  pub const VT_CORR_QUALITY: ::flatbuffers::VOffsetT = 10;
+  pub const VT_ID_ON_ORBIT: ::flatbuffers::VOffsetT = 12;
+  pub const VT_SENSOR_ID: ::flatbuffers::VOffsetT = 14;
+  pub const VT_COLLECT_METHOD: ::flatbuffers::VOffsetT = 16;
+  pub const VT_NORAD_CAT_ID: ::flatbuffers::VOffsetT = 18;
+  pub const VT_TASK_ID: ::flatbuffers::VOffsetT = 20;
+  pub const VT_TRANSACTION_ID: ::flatbuffers::VOffsetT = 22;
+  pub const VT_IMAGE_SET_ID: ::flatbuffers::VOffsetT = 24;
+  pub const VT_IMAGE_SET_LENGTH: ::flatbuffers::VOffsetT = 26;
+  pub const VT_SEQUENCE_ID: ::flatbuffers::VOffsetT = 28;
+  pub const VT_OB_POSITION: ::flatbuffers::VOffsetT = 30;
+  pub const VT_ORIG_OBJECT_ID: ::flatbuffers::VOffsetT = 32;
+  pub const VT_ORIG_SENSOR_ID: ::flatbuffers::VOffsetT = 34;
+  pub const VT_UCT: ::flatbuffers::VOffsetT = 36;
+  pub const VT_AZIMUTH: ::flatbuffers::VOffsetT = 38;
+  pub const VT_AZIMUTH_UNC: ::flatbuffers::VOffsetT = 40;
+  pub const VT_AZIMUTH_BIAS: ::flatbuffers::VOffsetT = 42;
+  pub const VT_AZIMUTH_RATE: ::flatbuffers::VOffsetT = 44;
+  pub const VT_ELEVATION: ::flatbuffers::VOffsetT = 46;
+  pub const VT_ELEVATION_UNC: ::flatbuffers::VOffsetT = 48;
+  pub const VT_ELEVATION_BIAS: ::flatbuffers::VOffsetT = 50;
+  pub const VT_ELEVATION_RATE: ::flatbuffers::VOffsetT = 52;
+  pub const VT_RANGE: ::flatbuffers::VOffsetT = 54;
+  pub const VT_RANGE_UNC: ::flatbuffers::VOffsetT = 56;
+  pub const VT_RANGE_BIAS: ::flatbuffers::VOffsetT = 58;
+  pub const VT_RANGE_RATE: ::flatbuffers::VOffsetT = 60;
+  pub const VT_RANGE_RATE_UNC: ::flatbuffers::VOffsetT = 62;
+  pub const VT_RA: ::flatbuffers::VOffsetT = 64;
+  pub const VT_RA_RATE: ::flatbuffers::VOffsetT = 66;
+  pub const VT_RA_UNC: ::flatbuffers::VOffsetT = 68;
+  pub const VT_RA_BIAS: ::flatbuffers::VOffsetT = 70;
+  pub const VT_DECLINATION: ::flatbuffers::VOffsetT = 72;
+  pub const VT_DECLINATION_RATE: ::flatbuffers::VOffsetT = 74;
+  pub const VT_DECLINATION_UNC: ::flatbuffers::VOffsetT = 76;
+  pub const VT_DECLINATION_BIAS: ::flatbuffers::VOffsetT = 78;
+  pub const VT_LOSX: ::flatbuffers::VOffsetT = 80;
+  pub const VT_LOSY: ::flatbuffers::VOffsetT = 82;
+  pub const VT_LOSZ: ::flatbuffers::VOffsetT = 84;
+  pub const VT_LOS_UNC: ::flatbuffers::VOffsetT = 86;
+  pub const VT_LOSXVEL: ::flatbuffers::VOffsetT = 88;
+  pub const VT_LOSYVEL: ::flatbuffers::VOffsetT = 90;
+  pub const VT_LOSZVEL: ::flatbuffers::VOffsetT = 92;
+  pub const VT_SENLAT: ::flatbuffers::VOffsetT = 94;
+  pub const VT_SENLON: ::flatbuffers::VOffsetT = 96;
+  pub const VT_SENALT: ::flatbuffers::VOffsetT = 98;
+  pub const VT_SENX: ::flatbuffers::VOffsetT = 100;
+  pub const VT_SENY: ::flatbuffers::VOffsetT = 102;
+  pub const VT_SENZ: ::flatbuffers::VOffsetT = 104;
+  pub const VT_FOV_COUNT: ::flatbuffers::VOffsetT = 106;
+  pub const VT_FOV_COUNT_UCTS: ::flatbuffers::VOffsetT = 108;
+  pub const VT_EXP_DURATION: ::flatbuffers::VOffsetT = 110;
+  pub const VT_ZEROPTD: ::flatbuffers::VOffsetT = 112;
+  pub const VT_NET_OBJ_SIG: ::flatbuffers::VOffsetT = 114;
+  pub const VT_NET_OBJ_SIG_UNC: ::flatbuffers::VOffsetT = 116;
+  pub const VT_MAG: ::flatbuffers::VOffsetT = 118;
+  pub const VT_MAG_UNC: ::flatbuffers::VOffsetT = 120;
+  pub const VT_MAG_NORM_RANGE: ::flatbuffers::VOffsetT = 122;
+  pub const VT_GEOLAT: ::flatbuffers::VOffsetT = 124;
+  pub const VT_GEOLON: ::flatbuffers::VOffsetT = 126;
+  pub const VT_GEOALT: ::flatbuffers::VOffsetT = 128;
+  pub const VT_GEORANGE: ::flatbuffers::VOffsetT = 130;
+  pub const VT_SKY_BKGRND: ::flatbuffers::VOffsetT = 132;
+  pub const VT_PRIMARY_EXTINCTION: ::flatbuffers::VOffsetT = 134;
+  pub const VT_PRIMARY_EXTINCTION_UNC: ::flatbuffers::VOffsetT = 136;
+  pub const VT_SOLAR_PHASE_ANGLE: ::flatbuffers::VOffsetT = 138;
+  pub const VT_SOLAR_EQ_PHASE_ANGLE: ::flatbuffers::VOffsetT = 140;
+  pub const VT_SOLAR_DEC_ANGLE: ::flatbuffers::VOffsetT = 142;
+  pub const VT_SHUTTER_DELAY: ::flatbuffers::VOffsetT = 144;
+  pub const VT_TIMING_BIAS: ::flatbuffers::VOffsetT = 146;
+  pub const VT_RAW_FILE_URI: ::flatbuffers::VOffsetT = 148;
+  pub const VT_INTENSITY: ::flatbuffers::VOffsetT = 150;
+  pub const VT_BG_INTENSITY: ::flatbuffers::VOffsetT = 152;
+  pub const VT_DESCRIPTOR: ::flatbuffers::VOffsetT = 154;
+  pub const VT_SOURCE: ::flatbuffers::VOffsetT = 156;
+  pub const VT_ORIGIN: ::flatbuffers::VOffsetT = 158;
+  pub const VT_DATA_MODE: ::flatbuffers::VOffsetT = 160;
+  pub const VT_CREATED_AT: ::flatbuffers::VOffsetT = 162;
+  pub const VT_CREATED_BY: ::flatbuffers::VOffsetT = 164;
+  pub const VT_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 166;
+  pub const VT_SEN_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 168;
+  pub const VT_UMBRA: ::flatbuffers::VOffsetT = 170;
+  pub const VT_PENUMBRA: ::flatbuffers::VOffsetT = 172;
+  pub const VT_ORIG_NETWORK: ::flatbuffers::VOffsetT = 174;
+  pub const VT_SOURCE_DL: ::flatbuffers::VOffsetT = 176;
+  pub const VT_TYPE: ::flatbuffers::VOffsetT = 178;
+  pub const VT_AZIMUTH_MEASURED: ::flatbuffers::VOffsetT = 180;
+  pub const VT_ELEVATION_MEASURED: ::flatbuffers::VOffsetT = 182;
+  pub const VT_RANGE_MEASURED: ::flatbuffers::VOffsetT = 184;
+  pub const VT_RANGERATE_MEASURED: ::flatbuffers::VOffsetT = 186;
+  pub const VT_RA_MEASURED: ::flatbuffers::VOffsetT = 188;
+  pub const VT_DECLINATION_MEASURED: ::flatbuffers::VOffsetT = 190;
+  pub const VT_NIIRS: ::flatbuffers::VOffsetT = 192;
+  pub const VT_METERS_PER_PIXEL: ::flatbuffers::VOffsetT = 194;
+  pub const VT_IMAGE_SNR: ::flatbuffers::VOffsetT = 196;
+  pub const VT_IMAGE_BIT_DEPTH: ::flatbuffers::VOffsetT = 198;
+  pub const VT_IMAGE_WIDTH: ::flatbuffers::VOffsetT = 200;
+  pub const VT_IMAGE_HEIGHT: ::flatbuffers::VOffsetT = 202;
+  pub const VT_IMAGE_COMPRESSION: ::flatbuffers::VOffsetT = 204;
+  pub const VT_IMAGE_COMPRESSION_RATIO: ::flatbuffers::VOffsetT = 206;
+  pub const VT_PROCESSED_IMAGE_URI: ::flatbuffers::VOffsetT = 208;
+  pub const VT_IMAGE_AUTO_ENHANCED: ::flatbuffers::VOffsetT = 210;
+  pub const VT_MULTI_FRAME_STACKED: ::flatbuffers::VOffsetT = 212;
+  pub const VT_SYNTHETIC_TRACKING_USED: ::flatbuffers::VOffsetT = 214;
+  pub const VT_IMAGE_SHARPNESS: ::flatbuffers::VOffsetT = 216;
+  pub const VT_IMAGE_NOISE_STDDEV: ::flatbuffers::VOffsetT = 218;
+  pub const VT_IMAGE_CONTRAST: ::flatbuffers::VOffsetT = 220;
+  pub const VT_IMAGE_DYNAMIC_RANGE: ::flatbuffers::VOffsetT = 222;
+  pub const VT_IMAGE_ENTROPY: ::flatbuffers::VOffsetT = 224;
+  pub const VT_BACKGROUND_UNIFORMITY: ::flatbuffers::VOffsetT = 226;
+  pub const VT_BACKGROUND_MEAN_LEVEL: ::flatbuffers::VOffsetT = 228;
+  pub const VT_SATURATED_PIXEL_PERCENT: ::flatbuffers::VOffsetT = 230;
+  pub const VT_DEAD_PIXEL_PERCENT: ::flatbuffers::VOffsetT = 232;
+  pub const VT_PSF_FWHM: ::flatbuffers::VOffsetT = 234;
+  pub const VT_CLOUD_COVER_PERCENT: ::flatbuffers::VOffsetT = 236;
+  pub const VT_CLOUD_DETECTION_CONFIDENCE: ::flatbuffers::VOffsetT = 238;
+  pub const VT_HAZE_PERCENT: ::flatbuffers::VOffsetT = 240;
+  pub const VT_AEROSOL_OPTICAL_THICKNESS: ::flatbuffers::VOffsetT = 242;
+  pub const VT_WATER_VAPOR_CONTENT: ::flatbuffers::VOffsetT = 244;
+  pub const VT_SUN_ELEVATION: ::flatbuffers::VOffsetT = 246;
+  pub const VT_SUN_AZIMUTH: ::flatbuffers::VOffsetT = 248;
+  pub const VT_VIEW_ZENITH_ANGLE: ::flatbuffers::VOffsetT = 250;
+  pub const VT_VIEW_AZIMUTH_ANGLE: ::flatbuffers::VOffsetT = 252;
+  pub const VT_OFF_NADIR_ANGLE: ::flatbuffers::VOffsetT = 254;
+  pub const VT_SWATH_WIDTH_KM: ::flatbuffers::VOffsetT = 256;
+  pub const VT_MEAN_TERRAIN_ELEVATION: ::flatbuffers::VOffsetT = 258;
+  pub const VT_TERRAIN_ELEVATION_STDDEV: ::flatbuffers::VOffsetT = 260;
+  pub const VT_SHADOW_COVER_PERCENT: ::flatbuffers::VOffsetT = 262;
+  pub const VT_SUNGLINT_PRESENT: ::flatbuffers::VOffsetT = 264;
+  pub const VT_SUNGLINT_PERCENT: ::flatbuffers::VOffsetT = 266;
+  pub const VT_SNOW_ICE_COVER_PERCENT: ::flatbuffers::VOffsetT = 268;
+  pub const VT_VALID_DATA_AREA_KM2: ::flatbuffers::VOffsetT = 270;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    IDM { _tab: table }
+    EOO { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args IDMArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<IDM<'bldr>> {
-    let mut builder = IDMBuilder::new(_fbb);
-    builder.add_MAGNITUDE_LIMIT(args.MAGNITUDE_LIMIT);
-    builder.add_LEFT_GEO_BELT_LIMIT(args.LEFT_GEO_BELT_LIMIT);
-    builder.add_RIGHT_GEO_BELT_LIMIT(args.RIGHT_GEO_BELT_LIMIT);
-    builder.add_UPPER_LEFT_ELEVATION_LIMIT(args.UPPER_LEFT_ELEVATION_LIMIT);
-    builder.add_LOWER_RIGHT_AZIMUTH_LIMIT(args.LOWER_RIGHT_AZIMUTH_LIMIT);
-    builder.add_UPPER_RIGHT_AZIMUTH_LIMIT(args.UPPER_RIGHT_AZIMUTH_LIMIT);
-    builder.add_UPPER_RIGHT_ELEVATION_LIMIT(args.UPPER_RIGHT_ELEVATION_LIMIT);
-    builder.add_LOWER_LEFT_AZIMUTH_LIMIT(args.LOWER_LEFT_AZIMUTH_LIMIT);
-    builder.add_LOWER_RIGHT_ELEVATION_LIMIT(args.LOWER_RIGHT_ELEVATION_LIMIT);
-    builder.add_UPPER_LEFT_AZIMUTH_LIMIT(args.UPPER_LEFT_AZIMUTH_LIMIT);
-    builder.add_LOWER_LEFT_ELEVATION_LIMIT(args.LOWER_LEFT_ELEVATION_LIMIT);
-    builder.add_POWER_REQUIRED(args.POWER_REQUIRED);
-    if let Some(x) = args.LAST_OB_TIME { builder.add_LAST_OB_TIME(x); }
+    args: &'args EOOArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<EOO<'bldr>> {
+    let mut builder = EOOBuilder::new(_fbb);
+    builder.add_VALID_DATA_AREA_KM2(args.VALID_DATA_AREA_KM2);
+    builder.add_SNOW_ICE_COVER_PERCENT(args.SNOW_ICE_COVER_PERCENT);
+    builder.add_SUNGLINT_PERCENT(args.SUNGLINT_PERCENT);
+    builder.add_SHADOW_COVER_PERCENT(args.SHADOW_COVER_PERCENT);
+    builder.add_TERRAIN_ELEVATION_STDDEV(args.TERRAIN_ELEVATION_STDDEV);
+    builder.add_MEAN_TERRAIN_ELEVATION(args.MEAN_TERRAIN_ELEVATION);
+    builder.add_SWATH_WIDTH_KM(args.SWATH_WIDTH_KM);
+    builder.add_OFF_NADIR_ANGLE(args.OFF_NADIR_ANGLE);
+    builder.add_VIEW_AZIMUTH_ANGLE(args.VIEW_AZIMUTH_ANGLE);
+    builder.add_VIEW_ZENITH_ANGLE(args.VIEW_ZENITH_ANGLE);
+    builder.add_SUN_AZIMUTH(args.SUN_AZIMUTH);
+    builder.add_SUN_ELEVATION(args.SUN_ELEVATION);
+    builder.add_WATER_VAPOR_CONTENT(args.WATER_VAPOR_CONTENT);
+    builder.add_AEROSOL_OPTICAL_THICKNESS(args.AEROSOL_OPTICAL_THICKNESS);
+    builder.add_HAZE_PERCENT(args.HAZE_PERCENT);
+    builder.add_CLOUD_DETECTION_CONFIDENCE(args.CLOUD_DETECTION_CONFIDENCE);
+    builder.add_CLOUD_COVER_PERCENT(args.CLOUD_COVER_PERCENT);
+    builder.add_PSF_FWHM(args.PSF_FWHM);
+    builder.add_DEAD_PIXEL_PERCENT(args.DEAD_PIXEL_PERCENT);
+    builder.add_SATURATED_PIXEL_PERCENT(args.SATURATED_PIXEL_PERCENT);
+    builder.add_BACKGROUND_MEAN_LEVEL(args.BACKGROUND_MEAN_LEVEL);
+    builder.add_BACKGROUND_UNIFORMITY(args.BACKGROUND_UNIFORMITY);
+    builder.add_IMAGE_ENTROPY(args.IMAGE_ENTROPY);
+    builder.add_IMAGE_DYNAMIC_RANGE(args.IMAGE_DYNAMIC_RANGE);
+    builder.add_IMAGE_CONTRAST(args.IMAGE_CONTRAST);
+    builder.add_IMAGE_NOISE_STDDEV(args.IMAGE_NOISE_STDDEV);
+    builder.add_IMAGE_SHARPNESS(args.IMAGE_SHARPNESS);
+    if let Some(x) = args.PROCESSED_IMAGE_URI { builder.add_PROCESSED_IMAGE_URI(x); }
+    builder.add_IMAGE_COMPRESSION_RATIO(args.IMAGE_COMPRESSION_RATIO);
+    if let Some(x) = args.IMAGE_COMPRESSION { builder.add_IMAGE_COMPRESSION(x); }
+    builder.add_IMAGE_HEIGHT(args.IMAGE_HEIGHT);
+    builder.add_IMAGE_WIDTH(args.IMAGE_WIDTH);
+    builder.add_IMAGE_BIT_DEPTH(args.IMAGE_BIT_DEPTH);
+    builder.add_IMAGE_SNR(args.IMAGE_SNR);
+    builder.add_METERS_PER_PIXEL(args.METERS_PER_PIXEL);
+    builder.add_NIIRS(args.NIIRS);
+    if let Some(x) = args.SOURCE_DL { builder.add_SOURCE_DL(x); }
+    if let Some(x) = args.ORIG_NETWORK { builder.add_ORIG_NETWORK(x); }
+    if let Some(x) = args.SEN_REFERENCE_FRAME { builder.add_SEN_REFERENCE_FRAME(x); }
+    if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
+    if let Some(x) = args.CREATED_BY { builder.add_CREATED_BY(x); }
+    if let Some(x) = args.CREATED_AT { builder.add_CREATED_AT(x); }
+    if let Some(x) = args.ORIGIN { builder.add_ORIGIN(x); }
     if let Some(x) = args.SOURCE { builder.add_SOURCE(x); }
-    if let Some(x) = args.POWER_TYPE { builder.add_POWER_TYPE(x); }
-    if let Some(x) = args.STOKES_PARAMETERS { builder.add_STOKES_PARAMETERS(x); }
-    if let Some(x) = args.BAND { builder.add_BAND(x); }
-    if let Some(x) = args.BEACON { builder.add_BEACON(x); }
-    if let Some(x) = args.DOWNLINK { builder.add_DOWNLINK(x); }
-    if let Some(x) = args.UPLINK { builder.add_UPLINK(x); }
-    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    if let Some(x) = args.DESCRIPTOR { builder.add_DESCRIPTOR(x); }
+    builder.add_BG_INTENSITY(args.BG_INTENSITY);
+    builder.add_INTENSITY(args.INTENSITY);
+    if let Some(x) = args.RAW_FILE_URI { builder.add_RAW_FILE_URI(x); }
+    builder.add_TIMING_BIAS(args.TIMING_BIAS);
+    builder.add_SHUTTER_DELAY(args.SHUTTER_DELAY);
+    builder.add_SOLAR_DEC_ANGLE(args.SOLAR_DEC_ANGLE);
+    builder.add_SOLAR_EQ_PHASE_ANGLE(args.SOLAR_EQ_PHASE_ANGLE);
+    builder.add_SOLAR_PHASE_ANGLE(args.SOLAR_PHASE_ANGLE);
+    builder.add_PRIMARY_EXTINCTION_UNC(args.PRIMARY_EXTINCTION_UNC);
+    builder.add_PRIMARY_EXTINCTION(args.PRIMARY_EXTINCTION);
+    builder.add_SKY_BKGRND(args.SKY_BKGRND);
+    builder.add_GEORANGE(args.GEORANGE);
+    builder.add_GEOALT(args.GEOALT);
+    builder.add_GEOLON(args.GEOLON);
+    builder.add_GEOLAT(args.GEOLAT);
+    builder.add_MAG_NORM_RANGE(args.MAG_NORM_RANGE);
+    builder.add_MAG_UNC(args.MAG_UNC);
+    builder.add_MAG(args.MAG);
+    builder.add_NET_OBJ_SIG_UNC(args.NET_OBJ_SIG_UNC);
+    builder.add_NET_OBJ_SIG(args.NET_OBJ_SIG);
+    builder.add_ZEROPTD(args.ZEROPTD);
+    builder.add_EXP_DURATION(args.EXP_DURATION);
+    builder.add_FOV_COUNT_UCTS(args.FOV_COUNT_UCTS);
+    builder.add_FOV_COUNT(args.FOV_COUNT);
+    builder.add_SENZ(args.SENZ);
+    builder.add_SENY(args.SENY);
+    builder.add_SENX(args.SENX);
+    builder.add_SENALT(args.SENALT);
+    builder.add_SENLON(args.SENLON);
+    builder.add_SENLAT(args.SENLAT);
+    builder.add_LOSZVEL(args.LOSZVEL);
+    builder.add_LOSYVEL(args.LOSYVEL);
+    builder.add_LOSXVEL(args.LOSXVEL);
+    builder.add_LOS_UNC(args.LOS_UNC);
+    builder.add_LOSZ(args.LOSZ);
+    builder.add_LOSY(args.LOSY);
+    builder.add_LOSX(args.LOSX);
+    builder.add_DECLINATION_BIAS(args.DECLINATION_BIAS);
+    builder.add_DECLINATION_UNC(args.DECLINATION_UNC);
+    builder.add_DECLINATION_RATE(args.DECLINATION_RATE);
+    builder.add_DECLINATION(args.DECLINATION);
+    builder.add_RA_BIAS(args.RA_BIAS);
+    builder.add_RA_UNC(args.RA_UNC);
+    builder.add_RA_RATE(args.RA_RATE);
+    builder.add_RA(args.RA);
+    builder.add_RANGE_RATE_UNC(args.RANGE_RATE_UNC);
+    builder.add_RANGE_RATE(args.RANGE_RATE);
+    builder.add_RANGE_BIAS(args.RANGE_BIAS);
+    builder.add_RANGE_UNC(args.RANGE_UNC);
+    builder.add_RANGE(args.RANGE);
+    builder.add_ELEVATION_RATE(args.ELEVATION_RATE);
+    builder.add_ELEVATION_BIAS(args.ELEVATION_BIAS);
+    builder.add_ELEVATION_UNC(args.ELEVATION_UNC);
+    builder.add_ELEVATION(args.ELEVATION);
+    builder.add_AZIMUTH_RATE(args.AZIMUTH_RATE);
+    builder.add_AZIMUTH_BIAS(args.AZIMUTH_BIAS);
+    builder.add_AZIMUTH_UNC(args.AZIMUTH_UNC);
+    builder.add_AZIMUTH(args.AZIMUTH);
+    if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
+    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
+    builder.add_SEQUENCE_ID(args.SEQUENCE_ID);
+    builder.add_IMAGE_SET_LENGTH(args.IMAGE_SET_LENGTH);
+    if let Some(x) = args.IMAGE_SET_ID { builder.add_IMAGE_SET_ID(x); }
+    if let Some(x) = args.TRANSACTION_ID { builder.add_TRANSACTION_ID(x); }
+    if let Some(x) = args.TASK_ID { builder.add_TASK_ID(x); }
+    builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
+    if let Some(x) = args.SENSOR_ID { builder.add_SENSOR_ID(x); }
+    if let Some(x) = args.ID_ON_ORBIT { builder.add_ID_ON_ORBIT(x); }
+    builder.add_CORR_QUALITY(args.CORR_QUALITY);
+    if let Some(x) = args.OB_TIME { builder.add_OB_TIME(x); }
+    if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
-    builder.add_TASKABLE(args.TASKABLE);
-    builder.add_SENSOR_TYPE(args.SENSOR_TYPE);
-    builder.add_RECEIVE(args.RECEIVE);
-    builder.add_TRANSMIT(args.TRANSMIT);
-    builder.add_SIMPLE_POLARIZATION(args.SIMPLE_POLARIZATION);
-    builder.add_POLARIZATION_TYPE(args.POLARIZATION_TYPE);
+    builder.add_SUNGLINT_PRESENT(args.SUNGLINT_PRESENT);
+    builder.add_SYNTHETIC_TRACKING_USED(args.SYNTHETIC_TRACKING_USED);
+    builder.add_MULTI_FRAME_STACKED(args.MULTI_FRAME_STACKED);
+    builder.add_IMAGE_AUTO_ENHANCED(args.IMAGE_AUTO_ENHANCED);
+    builder.add_DECLINATION_MEASURED(args.DECLINATION_MEASURED);
+    builder.add_RA_MEASURED(args.RA_MEASURED);
+    builder.add_RANGERATE_MEASURED(args.RANGERATE_MEASURED);
+    builder.add_RANGE_MEASURED(args.RANGE_MEASURED);
+    builder.add_ELEVATION_MEASURED(args.ELEVATION_MEASURED);
+    builder.add_AZIMUTH_MEASURED(args.AZIMUTH_MEASURED);
+    builder.add_TYPE(args.TYPE);
+    builder.add_PENUMBRA(args.PENUMBRA);
+    builder.add_UMBRA(args.UMBRA);
     builder.add_DATA_MODE(args.DATA_MODE);
+    builder.add_UCT(args.UCT);
+    builder.add_OB_POSITION(args.OB_POSITION);
+    builder.add_COLLECT_METHOD(args.COLLECT_METHOD);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> IDMT {
+  pub fn unpack(&self) -> EOOT {
     let ID = self.ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let NAME = self.NAME().map(|x| {
+    let CLASSIFICATION = self.CLASSIFICATION().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let DATA_MODE = self.DATA_MODE();
-    let UPLINK = self.UPLINK().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
-    });
-    let DOWNLINK = self.DOWNLINK().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
-    });
-    let BEACON = self.BEACON().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
-    });
-    let BAND = self.BAND().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    let POLARIZATION_TYPE = self.POLARIZATION_TYPE();
-    let SIMPLE_POLARIZATION = self.SIMPLE_POLARIZATION();
-    let STOKES_PARAMETERS = self.STOKES_PARAMETERS().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
-    });
-    let POWER_REQUIRED = self.POWER_REQUIRED();
-    let POWER_TYPE = self.POWER_TYPE().map(|x| {
+    let OB_TIME = self.OB_TIME().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let TRANSMIT = self.TRANSMIT();
-    let RECEIVE = self.RECEIVE();
-    let SENSOR_TYPE = self.SENSOR_TYPE();
+    let CORR_QUALITY = self.CORR_QUALITY();
+    let ID_ON_ORBIT = self.ID_ON_ORBIT().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SENSOR_ID = self.SENSOR_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let COLLECT_METHOD = self.COLLECT_METHOD();
+    let NORAD_CAT_ID = self.NORAD_CAT_ID();
+    let TASK_ID = self.TASK_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TRANSACTION_ID = self.TRANSACTION_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let IMAGE_SET_ID = self.IMAGE_SET_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let IMAGE_SET_LENGTH = self.IMAGE_SET_LENGTH();
+    let SEQUENCE_ID = self.SEQUENCE_ID();
+    let OB_POSITION = self.OB_POSITION();
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let UCT = self.UCT();
+    let AZIMUTH = self.AZIMUTH();
+    let AZIMUTH_UNC = self.AZIMUTH_UNC();
+    let AZIMUTH_BIAS = self.AZIMUTH_BIAS();
+    let AZIMUTH_RATE = self.AZIMUTH_RATE();
+    let ELEVATION = self.ELEVATION();
+    let ELEVATION_UNC = self.ELEVATION_UNC();
+    let ELEVATION_BIAS = self.ELEVATION_BIAS();
+    let ELEVATION_RATE = self.ELEVATION_RATE();
+    let RANGE = self.RANGE();
+    let RANGE_UNC = self.RANGE_UNC();
+    let RANGE_BIAS = self.RANGE_BIAS();
+    let RANGE_RATE = self.RANGE_RATE();
+    let RANGE_RATE_UNC = self.RANGE_RATE_UNC();
+    let RA = self.RA();
+    let RA_RATE = self.RA_RATE();
+    let RA_UNC = self.RA_UNC();
+    let RA_BIAS = self.RA_BIAS();
+    let DECLINATION = self.DECLINATION();
+    let DECLINATION_RATE = self.DECLINATION_RATE();
+    let DECLINATION_UNC = self.DECLINATION_UNC();
+    let DECLINATION_BIAS = self.DECLINATION_BIAS();
+    let LOSX = self.LOSX();
+    let LOSY = self.LOSY();
+    let LOSZ = self.LOSZ();
+    let LOS_UNC = self.LOS_UNC();
+    let LOSXVEL = self.LOSXVEL();
+    let LOSYVEL = self.LOSYVEL();
+    let LOSZVEL = self.LOSZVEL();
+    let SENLAT = self.SENLAT();
+    let SENLON = self.SENLON();
+    let SENALT = self.SENALT();
+    let SENX = self.SENX();
+    let SENY = self.SENY();
+    let SENZ = self.SENZ();
+    let FOV_COUNT = self.FOV_COUNT();
+    let FOV_COUNT_UCTS = self.FOV_COUNT_UCTS();
+    let EXP_DURATION = self.EXP_DURATION();
+    let ZEROPTD = self.ZEROPTD();
+    let NET_OBJ_SIG = self.NET_OBJ_SIG();
+    let NET_OBJ_SIG_UNC = self.NET_OBJ_SIG_UNC();
+    let MAG = self.MAG();
+    let MAG_UNC = self.MAG_UNC();
+    let MAG_NORM_RANGE = self.MAG_NORM_RANGE();
+    let GEOLAT = self.GEOLAT();
+    let GEOLON = self.GEOLON();
+    let GEOALT = self.GEOALT();
+    let GEORANGE = self.GEORANGE();
+    let SKY_BKGRND = self.SKY_BKGRND();
+    let PRIMARY_EXTINCTION = self.PRIMARY_EXTINCTION();
+    let PRIMARY_EXTINCTION_UNC = self.PRIMARY_EXTINCTION_UNC();
+    let SOLAR_PHASE_ANGLE = self.SOLAR_PHASE_ANGLE();
+    let SOLAR_EQ_PHASE_ANGLE = self.SOLAR_EQ_PHASE_ANGLE();
+    let SOLAR_DEC_ANGLE = self.SOLAR_DEC_ANGLE();
+    let SHUTTER_DELAY = self.SHUTTER_DELAY();
+    let TIMING_BIAS = self.TIMING_BIAS();
+    let RAW_FILE_URI = self.RAW_FILE_URI().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INTENSITY = self.INTENSITY();
+    let BG_INTENSITY = self.BG_INTENSITY();
+    let DESCRIPTOR = self.DESCRIPTOR().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     let SOURCE = self.SOURCE().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let LAST_OB_TIME = self.LAST_OB_TIME().map(|x| {
+    let ORIGIN = self.ORIGIN().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let LOWER_LEFT_ELEVATION_LIMIT = self.LOWER_LEFT_ELEVATION_LIMIT();
-    let UPPER_LEFT_AZIMUTH_LIMIT = self.UPPER_LEFT_AZIMUTH_LIMIT();
-    let LOWER_RIGHT_ELEVATION_LIMIT = self.LOWER_RIGHT_ELEVATION_LIMIT();
-    let LOWER_LEFT_AZIMUTH_LIMIT = self.LOWER_LEFT_AZIMUTH_LIMIT();
-    let UPPER_RIGHT_ELEVATION_LIMIT = self.UPPER_RIGHT_ELEVATION_LIMIT();
-    let UPPER_RIGHT_AZIMUTH_LIMIT = self.UPPER_RIGHT_AZIMUTH_LIMIT();
-    let LOWER_RIGHT_AZIMUTH_LIMIT = self.LOWER_RIGHT_AZIMUTH_LIMIT();
-    let UPPER_LEFT_ELEVATION_LIMIT = self.UPPER_LEFT_ELEVATION_LIMIT();
-    let RIGHT_GEO_BELT_LIMIT = self.RIGHT_GEO_BELT_LIMIT();
-    let LEFT_GEO_BELT_LIMIT = self.LEFT_GEO_BELT_LIMIT();
-    let MAGNITUDE_LIMIT = self.MAGNITUDE_LIMIT();
-    let TASKABLE = self.TASKABLE();
-    IDMT {
+    let DATA_MODE = self.DATA_MODE();
+    let CREATED_AT = self.CREATED_AT().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CREATED_BY = self.CREATED_BY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let UMBRA = self.UMBRA();
+    let PENUMBRA = self.PENUMBRA();
+    let ORIG_NETWORK = self.ORIG_NETWORK().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SOURCE_DL = self.SOURCE_DL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TYPE = self.TYPE();
+    let AZIMUTH_MEASURED = self.AZIMUTH_MEASURED();
+    let ELEVATION_MEASURED = self.ELEVATION_MEASURED();
+    let RANGE_MEASURED = self.RANGE_MEASURED();
+    let RANGERATE_MEASURED = self.RANGERATE_MEASURED();
+    let RA_MEASURED = self.RA_MEASURED();
+    let DECLINATION_MEASURED = self.DECLINATION_MEASURED();
+    let NIIRS = self.NIIRS();
+    let METERS_PER_PIXEL = self.METERS_PER_PIXEL();
+    let IMAGE_SNR = self.IMAGE_SNR();
+    let IMAGE_BIT_DEPTH = self.IMAGE_BIT_DEPTH();
+    let IMAGE_WIDTH = self.IMAGE_WIDTH();
+    let IMAGE_HEIGHT = self.IMAGE_HEIGHT();
+    let IMAGE_COMPRESSION = self.IMAGE_COMPRESSION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let IMAGE_COMPRESSION_RATIO = self.IMAGE_COMPRESSION_RATIO();
+    let PROCESSED_IMAGE_URI = self.PROCESSED_IMAGE_URI().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let IMAGE_AUTO_ENHANCED = self.IMAGE_AUTO_ENHANCED();
+    let MULTI_FRAME_STACKED = self.MULTI_FRAME_STACKED();
+    let SYNTHETIC_TRACKING_USED = self.SYNTHETIC_TRACKING_USED();
+    let IMAGE_SHARPNESS = self.IMAGE_SHARPNESS();
+    let IMAGE_NOISE_STDDEV = self.IMAGE_NOISE_STDDEV();
+    let IMAGE_CONTRAST = self.IMAGE_CONTRAST();
+    let IMAGE_DYNAMIC_RANGE = self.IMAGE_DYNAMIC_RANGE();
+    let IMAGE_ENTROPY = self.IMAGE_ENTROPY();
+    let BACKGROUND_UNIFORMITY = self.BACKGROUND_UNIFORMITY();
+    let BACKGROUND_MEAN_LEVEL = self.BACKGROUND_MEAN_LEVEL();
+    let SATURATED_PIXEL_PERCENT = self.SATURATED_PIXEL_PERCENT();
+    let DEAD_PIXEL_PERCENT = self.DEAD_PIXEL_PERCENT();
+    let PSF_FWHM = self.PSF_FWHM();
+    let CLOUD_COVER_PERCENT = self.CLOUD_COVER_PERCENT();
+    let CLOUD_DETECTION_CONFIDENCE = self.CLOUD_DETECTION_CONFIDENCE();
+    let HAZE_PERCENT = self.HAZE_PERCENT();
+    let AEROSOL_OPTICAL_THICKNESS = self.AEROSOL_OPTICAL_THICKNESS();
+    let WATER_VAPOR_CONTENT = self.WATER_VAPOR_CONTENT();
+    let SUN_ELEVATION = self.SUN_ELEVATION();
+    let SUN_AZIMUTH = self.SUN_AZIMUTH();
+    let VIEW_ZENITH_ANGLE = self.VIEW_ZENITH_ANGLE();
+    let VIEW_AZIMUTH_ANGLE = self.VIEW_AZIMUTH_ANGLE();
+    let OFF_NADIR_ANGLE = self.OFF_NADIR_ANGLE();
+    let SWATH_WIDTH_KM = self.SWATH_WIDTH_KM();
+    let MEAN_TERRAIN_ELEVATION = self.MEAN_TERRAIN_ELEVATION();
+    let TERRAIN_ELEVATION_STDDEV = self.TERRAIN_ELEVATION_STDDEV();
+    let SHADOW_COVER_PERCENT = self.SHADOW_COVER_PERCENT();
+    let SUNGLINT_PRESENT = self.SUNGLINT_PRESENT();
+    let SUNGLINT_PERCENT = self.SUNGLINT_PERCENT();
+    let SNOW_ICE_COVER_PERCENT = self.SNOW_ICE_COVER_PERCENT();
+    let VALID_DATA_AREA_KM2 = self.VALID_DATA_AREA_KM2();
+    EOOT {
       ID,
-      NAME,
-      DATA_MODE,
-      UPLINK,
-      DOWNLINK,
-      BEACON,
-      BAND,
-      POLARIZATION_TYPE,
-      SIMPLE_POLARIZATION,
-      STOKES_PARAMETERS,
-      POWER_REQUIRED,
-      POWER_TYPE,
-      TRANSMIT,
-      RECEIVE,
-      SENSOR_TYPE,
+      CLASSIFICATION,
+      OB_TIME,
+      CORR_QUALITY,
+      ID_ON_ORBIT,
+      SENSOR_ID,
+      COLLECT_METHOD,
+      NORAD_CAT_ID,
+      TASK_ID,
+      TRANSACTION_ID,
+      IMAGE_SET_ID,
+      IMAGE_SET_LENGTH,
+      SEQUENCE_ID,
+      OB_POSITION,
+      ORIG_OBJECT_ID,
+      ORIG_SENSOR_ID,
+      UCT,
+      AZIMUTH,
+      AZIMUTH_UNC,
+      AZIMUTH_BIAS,
+      AZIMUTH_RATE,
+      ELEVATION,
+      ELEVATION_UNC,
+      ELEVATION_BIAS,
+      ELEVATION_RATE,
+      RANGE,
+      RANGE_UNC,
+      RANGE_BIAS,
+      RANGE_RATE,
+      RANGE_RATE_UNC,
+      RA,
+      RA_RATE,
+      RA_UNC,
+      RA_BIAS,
+      DECLINATION,
+      DECLINATION_RATE,
+      DECLINATION_UNC,
+      DECLINATION_BIAS,
+      LOSX,
+      LOSY,
+      LOSZ,
+      LOS_UNC,
+      LOSXVEL,
+      LOSYVEL,
+      LOSZVEL,
+      SENLAT,
+      SENLON,
+      SENALT,
+      SENX,
+      SENY,
+      SENZ,
+      FOV_COUNT,
+      FOV_COUNT_UCTS,
+      EXP_DURATION,
+      ZEROPTD,
+      NET_OBJ_SIG,
+      NET_OBJ_SIG_UNC,
+      MAG,
+      MAG_UNC,
+      MAG_NORM_RANGE,
+      GEOLAT,
+      GEOLON,
+      GEOALT,
+      GEORANGE,
+      SKY_BKGRND,
+      PRIMARY_EXTINCTION,
+      PRIMARY_EXTINCTION_UNC,
+      SOLAR_PHASE_ANGLE,
+      SOLAR_EQ_PHASE_ANGLE,
+      SOLAR_DEC_ANGLE,
+      SHUTTER_DELAY,
+      TIMING_BIAS,
+      RAW_FILE_URI,
+      INTENSITY,
+      BG_INTENSITY,
+      DESCRIPTOR,
       SOURCE,
-      LAST_OB_TIME,
-      LOWER_LEFT_ELEVATION_LIMIT,
-      UPPER_LEFT_AZIMUTH_LIMIT,
-      LOWER_RIGHT_ELEVATION_LIMIT,
-      LOWER_LEFT_AZIMUTH_LIMIT,
-      UPPER_RIGHT_ELEVATION_LIMIT,
-      UPPER_RIGHT_AZIMUTH_LIMIT,
-      LOWER_RIGHT_AZIMUTH_LIMIT,
-      UPPER_LEFT_ELEVATION_LIMIT,
-      RIGHT_GEO_BELT_LIMIT,
-      LEFT_GEO_BELT_LIMIT,
-      MAGNITUDE_LIMIT,
-      TASKABLE,
+      ORIGIN,
+      DATA_MODE,
+      CREATED_AT,
+      CREATED_BY,
+      REFERENCE_FRAME,
+      SEN_REFERENCE_FRAME,
+      UMBRA,
+      PENUMBRA,
+      ORIG_NETWORK,
+      SOURCE_DL,
+      TYPE,
+      AZIMUTH_MEASURED,
+      ELEVATION_MEASURED,
+      RANGE_MEASURED,
+      RANGERATE_MEASURED,
+      RA_MEASURED,
+      DECLINATION_MEASURED,
+      NIIRS,
+      METERS_PER_PIXEL,
+      IMAGE_SNR,
+      IMAGE_BIT_DEPTH,
+      IMAGE_WIDTH,
+      IMAGE_HEIGHT,
+      IMAGE_COMPRESSION,
+      IMAGE_COMPRESSION_RATIO,
+      PROCESSED_IMAGE_URI,
+      IMAGE_AUTO_ENHANCED,
+      MULTI_FRAME_STACKED,
+      SYNTHETIC_TRACKING_USED,
+      IMAGE_SHARPNESS,
+      IMAGE_NOISE_STDDEV,
+      IMAGE_CONTRAST,
+      IMAGE_DYNAMIC_RANGE,
+      IMAGE_ENTROPY,
+      BACKGROUND_UNIFORMITY,
+      BACKGROUND_MEAN_LEVEL,
+      SATURATED_PIXEL_PERCENT,
+      DEAD_PIXEL_PERCENT,
+      PSF_FWHM,
+      CLOUD_COVER_PERCENT,
+      CLOUD_DETECTION_CONFIDENCE,
+      HAZE_PERCENT,
+      AEROSOL_OPTICAL_THICKNESS,
+      WATER_VAPOR_CONTENT,
+      SUN_ELEVATION,
+      SUN_AZIMUTH,
+      VIEW_ZENITH_ANGLE,
+      VIEW_AZIMUTH_ANGLE,
+      OFF_NADIR_ANGLE,
+      SWATH_WIDTH_KM,
+      MEAN_TERRAIN_ELEVATION,
+      TERRAIN_ELEVATION_STDDEV,
+      SHADOW_COVER_PERCENT,
+      SUNGLINT_PRESENT,
+      SUNGLINT_PERCENT,
+      SNOW_ICE_COVER_PERCENT,
+      VALID_DATA_AREA_KM2,
     }
   }
 
-  /// Unique identifier for the EMT
+  /// Unique identifier of the record.
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(IDM::VT_ID, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_ID, None)}
   }
-  /// Name of the EMT
+  /// Classification marking of the data in IC/CAPCO Portion-marked format.
   #[inline]
-  pub fn NAME(&self) -> Option<&'a str> {
+  pub fn CLASSIFICATION(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(IDM::VT_NAME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_CLASSIFICATION, None)}
   }
-  /// Mode of the data (real, simulated, synthetic)
+  /// Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
   #[inline]
-  pub fn DATA_MODE(&self) -> DataMode {
+  pub fn OB_TIME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<DataMode>(IDM::VT_DATA_MODE, Some(DataMode::EXERCISE)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_OB_TIME, None)}
   }
-  /// Uplink frequency range
+  /// Correlation score of the observation when compared to a known orbit state.
   #[inline]
-  pub fn UPLINK(&self) -> Option<FrequencyRange<'a>> {
+  pub fn CORR_QUALITY(&self) -> f32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FrequencyRange>>(IDM::VT_UPLINK, None)}
+    unsafe { self._tab.get::<f32>(EOO::VT_CORR_QUALITY, Some(0.0)).unwrap()}
   }
-  /// Downlink frequency range
+  /// Server will auto-populate with SAT_NO if available.
   #[inline]
-  pub fn DOWNLINK(&self) -> Option<FrequencyRange<'a>> {
+  pub fn ID_ON_ORBIT(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FrequencyRange>>(IDM::VT_DOWNLINK, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_ID_ON_ORBIT, None)}
   }
-  /// Beacon frequency range
+  /// Unique ID of the sensor. Must have a corresponding sensor record on the server.
   #[inline]
-  pub fn BEACON(&self) -> Option<FrequencyRange<'a>> {
+  pub fn SENSOR_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FrequencyRange>>(IDM::VT_BEACON, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_SENSOR_ID, None)}
   }
-  /// Bands associated with the EMT
+  /// Accepted Collection Method
   #[inline]
-  pub fn BAND(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<Band<'a>>>> {
+  pub fn COLLECT_METHOD(&self) -> CollectMethod {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<Band>>>>(IDM::VT_BAND, None)}
+    unsafe { self._tab.get::<CollectMethod>(EOO::VT_COLLECT_METHOD, Some(CollectMethod::SIDEREAL)).unwrap()}
   }
-  /// Type of polarization used
+  /// 18SDS satellite number. Only list if correlated against the 18SDS catalog.
   #[inline]
-  pub fn POLARIZATION_TYPE(&self) -> PolarizationType {
+  pub fn NORAD_CAT_ID(&self) -> i32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<PolarizationType>(IDM::VT_POLARIZATION_TYPE, Some(PolarizationType::linear)).unwrap()}
+    unsafe { self._tab.get::<i32>(EOO::VT_NORAD_CAT_ID, Some(0)).unwrap()}
   }
-  /// Simple polarization configuration
+  /// Identifier for the collectRequest message if the collection was in response to tasking.
   #[inline]
-  pub fn SIMPLE_POLARIZATION(&self) -> SimplePolarization {
+  pub fn TASK_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<SimplePolarization>(IDM::VT_SIMPLE_POLARIZATION, Some(SimplePolarization::vertical)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_TASK_ID, None)}
   }
-  /// Stokes parameters for polarization characterization
+  /// Optional identifier to track a transaction.
   #[inline]
-  pub fn STOKES_PARAMETERS(&self) -> Option<StokesParameters<'a>> {
+  pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<StokesParameters>>(IDM::VT_STOKES_PARAMETERS, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_TRANSACTION_ID, None)}
   }
-  /// Power required in Watts
+  /// The user-defined set ID of a sequence of images.
   #[inline]
-  pub fn POWER_REQUIRED(&self) -> f64 {
+  pub fn IMAGE_SET_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_POWER_REQUIRED, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_IMAGE_SET_ID, None)}
   }
-  /// Type of power (eg. AC or DC)
+  /// The number of images in an image set.
   #[inline]
-  pub fn POWER_TYPE(&self) -> Option<&'a str> {
+  pub fn IMAGE_SET_LENGTH(&self) -> i32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(IDM::VT_POWER_TYPE, None)}
+    unsafe { self._tab.get::<i32>(EOO::VT_IMAGE_SET_LENGTH, Some(0)).unwrap()}
   }
-  /// Indicates if the EMT can transmit
+  /// The sequence ID of an image within an image set.
   #[inline]
-  pub fn TRANSMIT(&self) -> bool {
+  pub fn SEQUENCE_ID(&self) -> i32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(IDM::VT_TRANSMIT, Some(false)).unwrap()}
+    unsafe { self._tab.get::<i32>(EOO::VT_SEQUENCE_ID, Some(0)).unwrap()}
   }
-  /// Indicates if the EMT can receive
+  /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
   #[inline]
-  pub fn RECEIVE(&self) -> bool {
+  pub fn OB_POSITION(&self) -> ObservationPosition {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(IDM::VT_RECEIVE, Some(false)).unwrap()}
+    unsafe { self._tab.get::<ObservationPosition>(EOO::VT_OB_POSITION, Some(ObservationPosition::FENCE)).unwrap()}
   }
-  /// Type of the sensor
+  /// Provider maintained ID. May not be consistent with 18SDS SAT_NO.
   #[inline]
-  pub fn SENSOR_TYPE(&self) -> DeviceType {
+  pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<DeviceType>(IDM::VT_SENSOR_TYPE, Some(DeviceType::UNKNOWN)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_ORIG_OBJECT_ID, None)}
   }
-  /// Source of the data
+  /// Sensor ID.
+  #[inline]
+  pub fn ORIG_SENSOR_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_ORIG_SENSOR_ID, None)}
+  }
+  /// Required if correlation is attempted. Indicates whether correlation succeeded.
+  #[inline]
+  pub fn UCT(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_UCT, Some(false)).unwrap()}
+  }
+  /// Line of sight azimuth angle in degrees and topocentric frame.
+  #[inline]
+  pub fn AZIMUTH(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_AZIMUTH, Some(0.0)).unwrap()}
+  }
+  /// One sigma uncertainty in the line of sight azimuth angle, in degrees.
+  #[inline]
+  pub fn AZIMUTH_UNC(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_AZIMUTH_UNC, Some(0.0)).unwrap()}
+  }
+  /// Sensor line of sight azimuth angle bias in degrees.
+  #[inline]
+  pub fn AZIMUTH_BIAS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_AZIMUTH_BIAS, Some(0.0)).unwrap()}
+  }
+  /// Rate of change of the line of sight azimuth in degrees per second.
+  #[inline]
+  pub fn AZIMUTH_RATE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_AZIMUTH_RATE, Some(0.0)).unwrap()}
+  }
+  /// Line of sight elevation in degrees and topocentric frame.
+  #[inline]
+  pub fn ELEVATION(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_ELEVATION, Some(0.0)).unwrap()}
+  }
+  /// One sigma uncertainty in the line of sight elevation angle, in degrees.
+  #[inline]
+  pub fn ELEVATION_UNC(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_ELEVATION_UNC, Some(0.0)).unwrap()}
+  }
+  /// Sensor line of sight elevation bias in degrees.
+  #[inline]
+  pub fn ELEVATION_BIAS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_ELEVATION_BIAS, Some(0.0)).unwrap()}
+  }
+  /// Rate of change of the line of sight elevation in degrees per second.
+  #[inline]
+  pub fn ELEVATION_RATE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_ELEVATION_RATE, Some(0.0)).unwrap()}
+  }
+  /// Line of sight range in km. Reported value should include all applicable corrections.
+  #[inline]
+  pub fn RANGE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_RANGE, Some(0.0)).unwrap()}
+  }
+  /// One sigma uncertainty in the line of sight range, in km.
+  #[inline]
+  pub fn RANGE_UNC(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_RANGE_UNC, Some(0.0)).unwrap()}
+  }
+  /// Sensor line of sight range bias in km.
+  #[inline]
+  pub fn RANGE_BIAS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_RANGE_BIAS, Some(0.0)).unwrap()}
+  }
+  /// Range rate in km/s. Reported value should include all applicable corrections.
+  #[inline]
+  pub fn RANGE_RATE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_RANGE_RATE, Some(0.0)).unwrap()}
+  }
+  /// One sigma uncertainty in the line of sight range rate, in km/sec.
+  #[inline]
+  pub fn RANGE_RATE_UNC(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_RANGE_RATE_UNC, Some(0.0)).unwrap()}
+  }
+  /// Right ascension in degrees. Required metric reporting field for EO observations.
+  #[inline]
+  pub fn RA(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_RA, Some(0.0)).unwrap()}
+  }
+  /// Line of sight right ascension rate of change, in degrees/sec.
+  #[inline]
+  pub fn RA_RATE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_RA_RATE, Some(0.0)).unwrap()}
+  }
+  /// One sigma uncertainty in the line of sight right ascension angle, in degrees.
+  #[inline]
+  pub fn RA_UNC(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_RA_UNC, Some(0.0)).unwrap()}
+  }
+  /// Sensor line of sight right ascension bias in degrees.
+  #[inline]
+  pub fn RA_BIAS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_RA_BIAS, Some(0.0)).unwrap()}
+  }
+  /// Declination in degrees. Required metric reporting field for EO observations.
+  #[inline]
+  pub fn DECLINATION(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_DECLINATION, Some(0.0)).unwrap()}
+  }
+  /// Line of sight declination rate of change, in degrees/sec.
+  #[inline]
+  pub fn DECLINATION_RATE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_DECLINATION_RATE, Some(0.0)).unwrap()}
+  }
+  /// One sigma uncertainty in the line of sight declination angle, in degrees.
+  #[inline]
+  pub fn DECLINATION_UNC(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_DECLINATION_UNC, Some(0.0)).unwrap()}
+  }
+  /// Sensor line of sight declination angle bias in degrees.
+  #[inline]
+  pub fn DECLINATION_BIAS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_DECLINATION_BIAS, Some(0.0)).unwrap()}
+  }
+  /// X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
+  #[inline]
+  pub fn LOSX(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_LOSX, Some(0.0)).unwrap()}
+  }
+  /// Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
+  #[inline]
+  pub fn LOSY(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_LOSY, Some(0.0)).unwrap()}
+  }
+  /// Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
+  #[inline]
+  pub fn LOSZ(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_LOSZ, Some(0.0)).unwrap()}
+  }
+  /// One sigma uncertainty in the line-of-sight direction vector components.
+  #[inline]
+  pub fn LOS_UNC(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_LOS_UNC, Some(0.0)).unwrap()}
+  }
+  /// X-component of the velocity vector along the line of sight, in km/s.
+  #[inline]
+  pub fn LOSXVEL(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_LOSXVEL, Some(0.0)).unwrap()}
+  }
+  /// Y-component of the velocity vector along the line of sight, in km/s.
+  #[inline]
+  pub fn LOSYVEL(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_LOSYVEL, Some(0.0)).unwrap()}
+  }
+  /// Z-component of the velocity vector along the line of sight, in km/s.
+  #[inline]
+  pub fn LOSZVEL(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_LOSZVEL, Some(0.0)).unwrap()}
+  }
+  /// WGS-84 latitude in decimal degrees at the time of the observation.
+  #[inline]
+  pub fn SENLAT(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SENLAT, Some(0.0)).unwrap()}
+  }
+  /// WGS-84 longitude in decimal degrees at the time of the observation.
+  #[inline]
+  pub fn SENLON(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SENLON, Some(0.0)).unwrap()}
+  }
+  /// Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
+  #[inline]
+  pub fn SENALT(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SENALT, Some(0.0)).unwrap()}
+  }
+  /// Cartesian X position in km at the time of the observation.
+  #[inline]
+  pub fn SENX(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SENX, Some(0.0)).unwrap()}
+  }
+  /// Cartesian Y position in km at the time of the observation.
+  #[inline]
+  pub fn SENY(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SENY, Some(0.0)).unwrap()}
+  }
+  /// Cartesian Z position in km at the time of the observation.
+  #[inline]
+  pub fn SENZ(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SENZ, Some(0.0)).unwrap()}
+  }
+  /// Total number of satellites in the field of view.
+  #[inline]
+  pub fn FOV_COUNT(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(EOO::VT_FOV_COUNT, Some(0)).unwrap()}
+  }
+  /// Number of uncorrelated satellites in the field of view (JCO).
+  #[inline]
+  pub fn FOV_COUNT_UCTS(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(EOO::VT_FOV_COUNT_UCTS, Some(0)).unwrap()}
+  }
+  /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+  /// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+  /// observations are going to be used for photometric processing.
+  #[inline]
+  pub fn EXP_DURATION(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_EXP_DURATION, Some(0.0)).unwrap()}
+  }
+  /// Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
+  #[inline]
+  pub fn ZEROPTD(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_ZEROPTD, Some(0.0)).unwrap()}
+  }
+  /// Net object signature = counts / EXP_DURATION.
+  #[inline]
+  pub fn NET_OBJ_SIG(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_NET_OBJ_SIG, Some(0.0)).unwrap()}
+  }
+  /// Net object signature uncertainty = counts uncertainty / EXP_DURATION.
+  #[inline]
+  pub fn NET_OBJ_SIG_UNC(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_NET_OBJ_SIG_UNC, Some(0.0)).unwrap()}
+  }
+  /// Measure of observed brightness calibrated against the Gaia G-band.
+  #[inline]
+  pub fn MAG(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_MAG, Some(0.0)).unwrap()}
+  }
+  /// Uncertainty of the observed brightness.
+  #[inline]
+  pub fn MAG_UNC(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_MAG_UNC, Some(0.0)).unwrap()}
+  }
+  /// [Definition needed].
+  #[inline]
+  pub fn MAG_NORM_RANGE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_MAG_NORM_RANGE, Some(0.0)).unwrap()}
+  }
+  /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+  /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
+  #[inline]
+  pub fn GEOLAT(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_GEOLAT, Some(0.0)).unwrap()}
+  }
+  /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+  /// and viewing geometry. It must NOT be computed from the orbit state.
+  #[inline]
+  pub fn GEOLON(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_GEOLON, Some(0.0)).unwrap()}
+  }
+  /// Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
+  #[inline]
+  pub fn GEOALT(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_GEOALT, Some(0.0)).unwrap()}
+  }
+  /// Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
+  #[inline]
+  pub fn GEORANGE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_GEORANGE, Some(0.0)).unwrap()}
+  }
+  /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+  /// empty part of the night sky.
+  #[inline]
+  pub fn SKY_BKGRND(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SKY_BKGRND, Some(0.0)).unwrap()}
+  }
+  /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+  /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+  /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+  /// object and the observer.
+  #[inline]
+  pub fn PRIMARY_EXTINCTION(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_PRIMARY_EXTINCTION, Some(0.0)).unwrap()}
+  }
+  /// Primary Extinction Coefficient Uncertainty, in Magnitudes.
+  #[inline]
+  pub fn PRIMARY_EXTINCTION_UNC(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_PRIMARY_EXTINCTION_UNC, Some(0.0)).unwrap()}
+  }
+  /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+  /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
+  #[inline]
+  pub fn SOLAR_PHASE_ANGLE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SOLAR_PHASE_ANGLE, Some(0.0)).unwrap()}
+  }
+  /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+  /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+  /// and positive when opening (after the opposition).
+  #[inline]
+  pub fn SOLAR_EQ_PHASE_ANGLE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SOLAR_EQ_PHASE_ANGLE, Some(0.0)).unwrap()}
+  }
+  /// Angle from the sun to the equatorial plane.
+  #[inline]
+  pub fn SOLAR_DEC_ANGLE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SOLAR_DEC_ANGLE, Some(0.0)).unwrap()}
+  }
+  /// Shutter delay in seconds.
+  #[inline]
+  pub fn SHUTTER_DELAY(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SHUTTER_DELAY, Some(0.0)).unwrap()}
+  }
+  /// Sensor timing bias in seconds.
+  #[inline]
+  pub fn TIMING_BIAS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_TIMING_BIAS, Some(0.0)).unwrap()}
+  }
+  /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
+  #[inline]
+  pub fn RAW_FILE_URI(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_RAW_FILE_URI, None)}
+  }
+  /// Intensity of the target for IR observations, in kw/sr/em.
+  #[inline]
+  pub fn INTENSITY(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_INTENSITY, Some(0.0)).unwrap()}
+  }
+  /// Background intensity for IR observations, in kw/sr/um.
+  #[inline]
+  pub fn BG_INTENSITY(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_BG_INTENSITY, Some(0.0)).unwrap()}
+  }
+  /// Optional source-provided and searchable metadata or descriptor of the data.
+  #[inline]
+  pub fn DESCRIPTOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_DESCRIPTOR, None)}
+  }
+  /// Source of the data.
   #[inline]
   pub fn SOURCE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(IDM::VT_SOURCE, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_SOURCE, None)}
   }
-  /// Timestamp of the last observation
+  /// Originating system or organization which produced the data, if different from the source.
+  /// The origin may be different than the source if the source was a mediating system which forwarded 
+  /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
   #[inline]
-  pub fn LAST_OB_TIME(&self) -> Option<&'a str> {
+  pub fn ORIGIN(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(IDM::VT_LAST_OB_TIME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_ORIGIN, None)}
   }
-  /// Lower left elevation limit
+  /// Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
   #[inline]
-  pub fn LOWER_LEFT_ELEVATION_LIMIT(&self) -> f64 {
+  pub fn DATA_MODE(&self) -> DataMode {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_LOWER_LEFT_ELEVATION_LIMIT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<DataMode>(EOO::VT_DATA_MODE, Some(DataMode::EXERCISE)).unwrap()}
   }
-  /// Upper left azimuth limit
+  /// Time the row was created in the database, auto-populated by the system.
   #[inline]
-  pub fn UPPER_LEFT_AZIMUTH_LIMIT(&self) -> f64 {
+  pub fn CREATED_AT(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_UPPER_LEFT_AZIMUTH_LIMIT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_CREATED_AT, None)}
   }
-  /// Lower right elevation limit
+  /// Application user who created the row in the database, auto-populated by the system.
   #[inline]
-  pub fn LOWER_RIGHT_ELEVATION_LIMIT(&self) -> f64 {
+  pub fn CREATED_BY(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_LOWER_RIGHT_ELEVATION_LIMIT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_CREATED_BY, None)}
   }
-  /// Lower left azimuth limit
+  /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
   #[inline]
-  pub fn LOWER_LEFT_AZIMUTH_LIMIT(&self) -> f64 {
+  pub fn REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_LOWER_LEFT_AZIMUTH_LIMIT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(EOO::VT_REFERENCE_FRAME, None)}
   }
-  /// Upper right elevation limit
+  /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+  /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+  /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
   #[inline]
-  pub fn UPPER_RIGHT_ELEVATION_LIMIT(&self) -> f64 {
+  pub fn SEN_REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_UPPER_RIGHT_ELEVATION_LIMIT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(EOO::VT_SEN_REFERENCE_FRAME, None)}
   }
-  /// Upper right azimuth limit
+  /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
   #[inline]
-  pub fn UPPER_RIGHT_AZIMUTH_LIMIT(&self) -> f64 {
+  pub fn UMBRA(&self) -> bool {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_UPPER_RIGHT_AZIMUTH_LIMIT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<bool>(EOO::VT_UMBRA, Some(false)).unwrap()}
   }
-  /// Lower right azimuth limit
+  /// Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+  /// This field is highly recommended if the observations will be used for photometric processing.
   #[inline]
-  pub fn LOWER_RIGHT_AZIMUTH_LIMIT(&self) -> f64 {
+  pub fn PENUMBRA(&self) -> bool {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_LOWER_RIGHT_AZIMUTH_LIMIT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<bool>(EOO::VT_PENUMBRA, Some(false)).unwrap()}
   }
-  /// Upper left elevation limit
+  /// The originating source network on which this record was created, auto-populated by the system.
   #[inline]
-  pub fn UPPER_LEFT_ELEVATION_LIMIT(&self) -> f64 {
+  pub fn ORIG_NETWORK(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_UPPER_LEFT_ELEVATION_LIMIT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_ORIG_NETWORK, None)}
   }
-  /// Right geostationary belt limit
+  /// The source from which this record was received.
   #[inline]
-  pub fn RIGHT_GEO_BELT_LIMIT(&self) -> f64 {
+  pub fn SOURCE_DL(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_RIGHT_GEO_BELT_LIMIT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_SOURCE_DL, None)}
   }
-  /// Left geostationary belt limit
+  /// Device Type
   #[inline]
-  pub fn LEFT_GEO_BELT_LIMIT(&self) -> f64 {
+  pub fn TYPE(&self) -> DeviceType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_LEFT_GEO_BELT_LIMIT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<DeviceType>(EOO::VT_TYPE, Some(DeviceType::UNKNOWN)).unwrap()}
   }
-  /// Magnitude limit of the sensor
+  /// True if measured, false if computed. Required if azimuth is reported.
   #[inline]
-  pub fn MAGNITUDE_LIMIT(&self) -> f64 {
+  pub fn AZIMUTH_MEASURED(&self) -> bool {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_MAGNITUDE_LIMIT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<bool>(EOO::VT_AZIMUTH_MEASURED, Some(false)).unwrap()}
   }
-  /// Indicates if the site is taskable
+  /// True if measured, false if computed. Required if elevation is reported.
   #[inline]
-  pub fn TASKABLE(&self) -> bool {
+  pub fn ELEVATION_MEASURED(&self) -> bool {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(IDM::VT_TASKABLE, Some(false)).unwrap()}
+    unsafe { self._tab.get::<bool>(EOO::VT_ELEVATION_MEASURED, Some(false)).unwrap()}
+  }
+  /// True if measured, false if computed. Required if range is reported.
+  #[inline]
+  pub fn RANGE_MEASURED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_RANGE_MEASURED, Some(false)).unwrap()}
+  }
+  /// True if measured, false if computed. Required if range-rate is reported.
+  #[inline]
+  pub fn RANGERATE_MEASURED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_RANGERATE_MEASURED, Some(false)).unwrap()}
+  }
+  /// True if measured, false if computed. Required if right ascension is reported.
+  #[inline]
+  pub fn RA_MEASURED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_RA_MEASURED, Some(false)).unwrap()}
+  }
+  /// True if measured, false if computed. Required if declination is reported.
+  #[inline]
+  pub fn DECLINATION_MEASURED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_DECLINATION_MEASURED, Some(false)).unwrap()}
+  }
+  /// National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+  #[inline]
+  pub fn NIIRS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_NIIRS, Some(0.0)).unwrap()}
+  }
+  /// Ground sample distance in meters per pixel.
+  #[inline]
+  pub fn METERS_PER_PIXEL(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_METERS_PER_PIXEL, Some(0.0)).unwrap()}
+  }
+  /// Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+  #[inline]
+  pub fn IMAGE_SNR(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_IMAGE_SNR, Some(0.0)).unwrap()}
+  }
+  /// Bit depth of the image (e.g., 8, 12, 16).
+  #[inline]
+  pub fn IMAGE_BIT_DEPTH(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(EOO::VT_IMAGE_BIT_DEPTH, Some(0)).unwrap()}
+  }
+  /// Width of the image in pixels.
+  #[inline]
+  pub fn IMAGE_WIDTH(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(EOO::VT_IMAGE_WIDTH, Some(0)).unwrap()}
+  }
+  /// Height of the image in pixels.
+  #[inline]
+  pub fn IMAGE_HEIGHT(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(EOO::VT_IMAGE_HEIGHT, Some(0)).unwrap()}
+  }
+  /// Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+  #[inline]
+  pub fn IMAGE_COMPRESSION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_IMAGE_COMPRESSION, None)}
+  }
+  /// Compression ratio used (original size / compressed size), if applicable.
+  #[inline]
+  pub fn IMAGE_COMPRESSION_RATIO(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_IMAGE_COMPRESSION_RATIO, Some(0.0)).unwrap()}
+  }
+  /// URI to the processed image used for this observation.
+  #[inline]
+  pub fn PROCESSED_IMAGE_URI(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_PROCESSED_IMAGE_URI, None)}
+  }
+  /// Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+  #[inline]
+  pub fn IMAGE_AUTO_ENHANCED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_IMAGE_AUTO_ENHANCED, Some(false)).unwrap()}
+  }
+  /// True if the observation was taken with multiple frames stacked into one image.
+  #[inline]
+  pub fn MULTI_FRAME_STACKED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_MULTI_FRAME_STACKED, Some(false)).unwrap()}
+  }
+  /// True if synthetic tracking was used to create the image.
+  #[inline]
+  pub fn SYNTHETIC_TRACKING_USED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_SYNTHETIC_TRACKING_USED, Some(false)).unwrap()}
+  }
+  /// Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+  #[inline]
+  pub fn IMAGE_SHARPNESS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_IMAGE_SHARPNESS, Some(0.0)).unwrap()}
+  }
+  /// Noise level of the image, estimated via pixel intensity variance in background regions.
+  #[inline]
+  pub fn IMAGE_NOISE_STDDEV(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_IMAGE_NOISE_STDDEV, Some(0.0)).unwrap()}
+  }
+  /// Contrast metric of the image, such as Michelson contrast or RMS contrast.
+  #[inline]
+  pub fn IMAGE_CONTRAST(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_IMAGE_CONTRAST, Some(0.0)).unwrap()}
+  }
+  /// Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+  #[inline]
+  pub fn IMAGE_DYNAMIC_RANGE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_IMAGE_DYNAMIC_RANGE, Some(0.0)).unwrap()}
+  }
+  /// Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+  #[inline]
+  pub fn IMAGE_ENTROPY(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_IMAGE_ENTROPY, Some(0.0)).unwrap()}
+  }
+  /// Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+  #[inline]
+  pub fn BACKGROUND_UNIFORMITY(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_BACKGROUND_UNIFORMITY, Some(0.0)).unwrap()}
+  }
+  /// Mean background level, computed from non-object regions in pixel units.
+  #[inline]
+  pub fn BACKGROUND_MEAN_LEVEL(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_BACKGROUND_MEAN_LEVEL, Some(0.0)).unwrap()}
+  }
+  /// Percentage of saturated pixels in the image. Indicates overexposure when high.
+  #[inline]
+  pub fn SATURATED_PIXEL_PERCENT(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SATURATED_PIXEL_PERCENT, Some(0.0)).unwrap()}
+  }
+  /// Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+  #[inline]
+  pub fn DEAD_PIXEL_PERCENT(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_DEAD_PIXEL_PERCENT, Some(0.0)).unwrap()}
+  }
+  /// Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+  #[inline]
+  pub fn PSF_FWHM(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_PSF_FWHM, Some(0.0)).unwrap()}
+  }
+  /// Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+  #[inline]
+  pub fn CLOUD_COVER_PERCENT(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_CLOUD_COVER_PERCENT, Some(0.0)).unwrap()}
+  }
+  /// Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+  #[inline]
+  pub fn CLOUD_DETECTION_CONFIDENCE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_CLOUD_DETECTION_CONFIDENCE, Some(0.0)).unwrap()}
+  }
+  /// Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+  #[inline]
+  pub fn HAZE_PERCENT(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_HAZE_PERCENT, Some(0.0)).unwrap()}
+  }
+  /// Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+  #[inline]
+  pub fn AEROSOL_OPTICAL_THICKNESS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_AEROSOL_OPTICAL_THICKNESS, Some(0.0)).unwrap()}
+  }
+  /// Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+  #[inline]
+  pub fn WATER_VAPOR_CONTENT(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_WATER_VAPOR_CONTENT, Some(0.0)).unwrap()}
+  }
+  /// Sun elevation angle at the time of image capture, in degrees above the horizon.
+  #[inline]
+  pub fn SUN_ELEVATION(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SUN_ELEVATION, Some(0.0)).unwrap()}
+  }
+  /// Sun azimuth angle at the time of image capture, in degrees from true north.
+  #[inline]
+  pub fn SUN_AZIMUTH(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SUN_AZIMUTH, Some(0.0)).unwrap()}
+  }
+  /// View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+  #[inline]
+  pub fn VIEW_ZENITH_ANGLE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_VIEW_ZENITH_ANGLE, Some(0.0)).unwrap()}
+  }
+  /// View azimuth angle (direction of sensor relative to north), in degrees.
+  #[inline]
+  pub fn VIEW_AZIMUTH_ANGLE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_VIEW_AZIMUTH_ANGLE, Some(0.0)).unwrap()}
+  }
+  /// Off-nadir angle of the sensor at the time of image capture, in degrees.
+  #[inline]
+  pub fn OFF_NADIR_ANGLE(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_OFF_NADIR_ANGLE, Some(0.0)).unwrap()}
+  }
+  /// Ground coverage width of the image swath in kilometers.
+  #[inline]
+  pub fn SWATH_WIDTH_KM(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SWATH_WIDTH_KM, Some(0.0)).unwrap()}
+  }
+  /// Mean terrain elevation in the image footprint, in meters above sea level.
+  #[inline]
+  pub fn MEAN_TERRAIN_ELEVATION(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_MEAN_TERRAIN_ELEVATION, Some(0.0)).unwrap()}
+  }
+  /// Standard deviation of terrain elevation in the image footprint, in meters.
+  #[inline]
+  pub fn TERRAIN_ELEVATION_STDDEV(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_TERRAIN_ELEVATION_STDDEV, Some(0.0)).unwrap()}
+  }
+  /// Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+  #[inline]
+  pub fn SHADOW_COVER_PERCENT(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SHADOW_COVER_PERCENT, Some(0.0)).unwrap()}
+  }
+  /// Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+  #[inline]
+  pub fn SUNGLINT_PRESENT(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(EOO::VT_SUNGLINT_PRESENT, Some(false)).unwrap()}
+  }
+  /// Percentage of image affected by sunglint.
+  #[inline]
+  pub fn SUNGLINT_PERCENT(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SUNGLINT_PERCENT, Some(0.0)).unwrap()}
+  }
+  /// Estimated percentage of snow or ice coverage in the image footprint.
+  #[inline]
+  pub fn SNOW_ICE_COVER_PERCENT(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_SNOW_ICE_COVER_PERCENT, Some(0.0)).unwrap()}
+  }
+  /// Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+  #[inline]
+  pub fn VALID_DATA_AREA_KM2(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOO::VT_VALID_DATA_AREA_KM2, Some(0.0)).unwrap()}
   }
 }
 
-impl ::flatbuffers::Verifiable for IDM<'_> {
+impl ::flatbuffers::Verifiable for EOO<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-     .visit_field::<DataMode>("DATA_MODE", Self::VT_DATA_MODE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<FrequencyRange>>("UPLINK", Self::VT_UPLINK, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<FrequencyRange>>("DOWNLINK", Self::VT_DOWNLINK, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<FrequencyRange>>("BEACON", Self::VT_BEACON, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<Band>>>>("BAND", Self::VT_BAND, false)?
-     .visit_field::<PolarizationType>("POLARIZATION_TYPE", Self::VT_POLARIZATION_TYPE, false)?
-     .visit_field::<SimplePolarization>("SIMPLE_POLARIZATION", Self::VT_SIMPLE_POLARIZATION, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<StokesParameters>>("STOKES_PARAMETERS", Self::VT_STOKES_PARAMETERS, false)?
-     .visit_field::<f64>("POWER_REQUIRED", Self::VT_POWER_REQUIRED, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("POWER_TYPE", Self::VT_POWER_TYPE, false)?
-     .visit_field::<bool>("TRANSMIT", Self::VT_TRANSMIT, false)?
-     .visit_field::<bool>("RECEIVE", Self::VT_RECEIVE, false)?
-     .visit_field::<DeviceType>("SENSOR_TYPE", Self::VT_SENSOR_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION", Self::VT_CLASSIFICATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OB_TIME", Self::VT_OB_TIME, false)?
+     .visit_field::<f32>("CORR_QUALITY", Self::VT_CORR_QUALITY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ID_ON_ORBIT", Self::VT_ID_ON_ORBIT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SENSOR_ID", Self::VT_SENSOR_ID, false)?
+     .visit_field::<CollectMethod>("COLLECT_METHOD", Self::VT_COLLECT_METHOD, false)?
+     .visit_field::<i32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TASK_ID", Self::VT_TASK_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRANSACTION_ID", Self::VT_TRANSACTION_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("IMAGE_SET_ID", Self::VT_IMAGE_SET_ID, false)?
+     .visit_field::<i32>("IMAGE_SET_LENGTH", Self::VT_IMAGE_SET_LENGTH, false)?
+     .visit_field::<i32>("SEQUENCE_ID", Self::VT_SEQUENCE_ID, false)?
+     .visit_field::<ObservationPosition>("OB_POSITION", Self::VT_OB_POSITION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
+     .visit_field::<bool>("UCT", Self::VT_UCT, false)?
+     .visit_field::<f32>("AZIMUTH", Self::VT_AZIMUTH, false)?
+     .visit_field::<f32>("AZIMUTH_UNC", Self::VT_AZIMUTH_UNC, false)?
+     .visit_field::<f32>("AZIMUTH_BIAS", Self::VT_AZIMUTH_BIAS, false)?
+     .visit_field::<f32>("AZIMUTH_RATE", Self::VT_AZIMUTH_RATE, false)?
+     .visit_field::<f32>("ELEVATION", Self::VT_ELEVATION, false)?
+     .visit_field::<f32>("ELEVATION_UNC", Self::VT_ELEVATION_UNC, false)?
+     .visit_field::<f32>("ELEVATION_BIAS", Self::VT_ELEVATION_BIAS, false)?
+     .visit_field::<f32>("ELEVATION_RATE", Self::VT_ELEVATION_RATE, false)?
+     .visit_field::<f32>("RANGE", Self::VT_RANGE, false)?
+     .visit_field::<f32>("RANGE_UNC", Self::VT_RANGE_UNC, false)?
+     .visit_field::<f32>("RANGE_BIAS", Self::VT_RANGE_BIAS, false)?
+     .visit_field::<f32>("RANGE_RATE", Self::VT_RANGE_RATE, false)?
+     .visit_field::<f32>("RANGE_RATE_UNC", Self::VT_RANGE_RATE_UNC, false)?
+     .visit_field::<f32>("RA", Self::VT_RA, false)?
+     .visit_field::<f32>("RA_RATE", Self::VT_RA_RATE, false)?
+     .visit_field::<f32>("RA_UNC", Self::VT_RA_UNC, false)?
+     .visit_field::<f32>("RA_BIAS", Self::VT_RA_BIAS, false)?
+     .visit_field::<f32>("DECLINATION", Self::VT_DECLINATION, false)?
+     .visit_field::<f32>("DECLINATION_RATE", Self::VT_DECLINATION_RATE, false)?
+     .visit_field::<f32>("DECLINATION_UNC", Self::VT_DECLINATION_UNC, false)?
+     .visit_field::<f32>("DECLINATION_BIAS", Self::VT_DECLINATION_BIAS, false)?
+     .visit_field::<f32>("LOSX", Self::VT_LOSX, false)?
+     .visit_field::<f32>("LOSY", Self::VT_LOSY, false)?
+     .visit_field::<f32>("LOSZ", Self::VT_LOSZ, false)?
+     .visit_field::<f32>("LOS_UNC", Self::VT_LOS_UNC, false)?
+     .visit_field::<f32>("LOSXVEL", Self::VT_LOSXVEL, false)?
+     .visit_field::<f32>("LOSYVEL", Self::VT_LOSYVEL, false)?
+     .visit_field::<f32>("LOSZVEL", Self::VT_LOSZVEL, false)?
+     .visit_field::<f32>("SENLAT", Self::VT_SENLAT, false)?
+     .visit_field::<f32>("SENLON", Self::VT_SENLON, false)?
+     .visit_field::<f32>("SENALT", Self::VT_SENALT, false)?
+     .visit_field::<f32>("SENX", Self::VT_SENX, false)?
+     .visit_field::<f32>("SENY", Self::VT_SENY, false)?
+     .visit_field::<f32>("SENZ", Self::VT_SENZ, false)?
+     .visit_field::<i32>("FOV_COUNT", Self::VT_FOV_COUNT, false)?
+     .visit_field::<i32>("FOV_COUNT_UCTS", Self::VT_FOV_COUNT_UCTS, false)?
+     .visit_field::<f32>("EXP_DURATION", Self::VT_EXP_DURATION, false)?
+     .visit_field::<f32>("ZEROPTD", Self::VT_ZEROPTD, false)?
+     .visit_field::<f32>("NET_OBJ_SIG", Self::VT_NET_OBJ_SIG, false)?
+     .visit_field::<f32>("NET_OBJ_SIG_UNC", Self::VT_NET_OBJ_SIG_UNC, false)?
+     .visit_field::<f32>("MAG", Self::VT_MAG, false)?
+     .visit_field::<f32>("MAG_UNC", Self::VT_MAG_UNC, false)?
+     .visit_field::<f32>("MAG_NORM_RANGE", Self::VT_MAG_NORM_RANGE, false)?
+     .visit_field::<f32>("GEOLAT", Self::VT_GEOLAT, false)?
+     .visit_field::<f32>("GEOLON", Self::VT_GEOLON, false)?
+     .visit_field::<f32>("GEOALT", Self::VT_GEOALT, false)?
+     .visit_field::<f32>("GEORANGE", Self::VT_GEORANGE, false)?
+     .visit_field::<f32>("SKY_BKGRND", Self::VT_SKY_BKGRND, false)?
+     .visit_field::<f32>("PRIMARY_EXTINCTION", Self::VT_PRIMARY_EXTINCTION, false)?
+     .visit_field::<f32>("PRIMARY_EXTINCTION_UNC", Self::VT_PRIMARY_EXTINCTION_UNC, false)?
+     .visit_field::<f32>("SOLAR_PHASE_ANGLE", Self::VT_SOLAR_PHASE_ANGLE, false)?
+     .visit_field::<f32>("SOLAR_EQ_PHASE_ANGLE", Self::VT_SOLAR_EQ_PHASE_ANGLE, false)?
+     .visit_field::<f32>("SOLAR_DEC_ANGLE", Self::VT_SOLAR_DEC_ANGLE, false)?
+     .visit_field::<f32>("SHUTTER_DELAY", Self::VT_SHUTTER_DELAY, false)?
+     .visit_field::<f32>("TIMING_BIAS", Self::VT_TIMING_BIAS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RAW_FILE_URI", Self::VT_RAW_FILE_URI, false)?
+     .visit_field::<f32>("INTENSITY", Self::VT_INTENSITY, false)?
+     .visit_field::<f32>("BG_INTENSITY", Self::VT_BG_INTENSITY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTOR", Self::VT_DESCRIPTOR, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE", Self::VT_SOURCE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAST_OB_TIME", Self::VT_LAST_OB_TIME, false)?
-     .visit_field::<f64>("LOWER_LEFT_ELEVATION_LIMIT", Self::VT_LOWER_LEFT_ELEVATION_LIMIT, false)?
-     .visit_field::<f64>("UPPER_LEFT_AZIMUTH_LIMIT", Self::VT_UPPER_LEFT_AZIMUTH_LIMIT, false)?
-     .visit_field::<f64>("LOWER_RIGHT_ELEVATION_LIMIT", Self::VT_LOWER_RIGHT_ELEVATION_LIMIT, false)?
-     .visit_field::<f64>("LOWER_LEFT_AZIMUTH_LIMIT", Self::VT_LOWER_LEFT_AZIMUTH_LIMIT, false)?
-     .visit_field::<f64>("UPPER_RIGHT_ELEVATION_LIMIT", Self::VT_UPPER_RIGHT_ELEVATION_LIMIT, false)?
-     .visit_field::<f64>("UPPER_RIGHT_AZIMUTH_LIMIT", Self::VT_UPPER_RIGHT_AZIMUTH_LIMIT, false)?
-     .visit_field::<f64>("LOWER_RIGHT_AZIMUTH_LIMIT", Self::VT_LOWER_RIGHT_AZIMUTH_LIMIT, false)?
-     .visit_field::<f64>("UPPER_LEFT_ELEVATION_LIMIT", Self::VT_UPPER_LEFT_ELEVATION_LIMIT, false)?
-     .visit_field::<f64>("RIGHT_GEO_BELT_LIMIT", Self::VT_RIGHT_GEO_BELT_LIMIT, false)?
-     .visit_field::<f64>("LEFT_GEO_BELT_LIMIT", Self::VT_LEFT_GEO_BELT_LIMIT, false)?
-     .visit_field::<f64>("MAGNITUDE_LIMIT", Self::VT_MAGNITUDE_LIMIT, false)?
-     .visit_field::<bool>("TASKABLE", Self::VT_TASKABLE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGIN", Self::VT_ORIGIN, false)?
+     .visit_field::<DataMode>("DATA_MODE", Self::VT_DATA_MODE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATED_AT", Self::VT_CREATED_AT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATED_BY", Self::VT_CREATED_BY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("SEN_REFERENCE_FRAME", Self::VT_SEN_REFERENCE_FRAME, false)?
+     .visit_field::<bool>("UMBRA", Self::VT_UMBRA, false)?
+     .visit_field::<bool>("PENUMBRA", Self::VT_PENUMBRA, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIG_NETWORK", Self::VT_ORIG_NETWORK, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_DL", Self::VT_SOURCE_DL, false)?
+     .visit_field::<DeviceType>("TYPE", Self::VT_TYPE, false)?
+     .visit_field::<bool>("AZIMUTH_MEASURED", Self::VT_AZIMUTH_MEASURED, false)?
+     .visit_field::<bool>("ELEVATION_MEASURED", Self::VT_ELEVATION_MEASURED, false)?
+     .visit_field::<bool>("RANGE_MEASURED", Self::VT_RANGE_MEASURED, false)?
+     .visit_field::<bool>("RANGERATE_MEASURED", Self::VT_RANGERATE_MEASURED, false)?
+     .visit_field::<bool>("RA_MEASURED", Self::VT_RA_MEASURED, false)?
+     .visit_field::<bool>("DECLINATION_MEASURED", Self::VT_DECLINATION_MEASURED, false)?
+     .visit_field::<f32>("NIIRS", Self::VT_NIIRS, false)?
+     .visit_field::<f32>("METERS_PER_PIXEL", Self::VT_METERS_PER_PIXEL, false)?
+     .visit_field::<f32>("IMAGE_SNR", Self::VT_IMAGE_SNR, false)?
+     .visit_field::<i32>("IMAGE_BIT_DEPTH", Self::VT_IMAGE_BIT_DEPTH, false)?
+     .visit_field::<i32>("IMAGE_WIDTH", Self::VT_IMAGE_WIDTH, false)?
+     .visit_field::<i32>("IMAGE_HEIGHT", Self::VT_IMAGE_HEIGHT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("IMAGE_COMPRESSION", Self::VT_IMAGE_COMPRESSION, false)?
+     .visit_field::<f32>("IMAGE_COMPRESSION_RATIO", Self::VT_IMAGE_COMPRESSION_RATIO, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROCESSED_IMAGE_URI", Self::VT_PROCESSED_IMAGE_URI, false)?
+     .visit_field::<bool>("IMAGE_AUTO_ENHANCED", Self::VT_IMAGE_AUTO_ENHANCED, false)?
+     .visit_field::<bool>("MULTI_FRAME_STACKED", Self::VT_MULTI_FRAME_STACKED, false)?
+     .visit_field::<bool>("SYNTHETIC_TRACKING_USED", Self::VT_SYNTHETIC_TRACKING_USED, false)?
+     .visit_field::<f32>("IMAGE_SHARPNESS", Self::VT_IMAGE_SHARPNESS, false)?
+     .visit_field::<f32>("IMAGE_NOISE_STDDEV", Self::VT_IMAGE_NOISE_STDDEV, false)?
+     .visit_field::<f32>("IMAGE_CONTRAST", Self::VT_IMAGE_CONTRAST, false)?
+     .visit_field::<f32>("IMAGE_DYNAMIC_RANGE", Self::VT_IMAGE_DYNAMIC_RANGE, false)?
+     .visit_field::<f32>("IMAGE_ENTROPY", Self::VT_IMAGE_ENTROPY, false)?
+     .visit_field::<f32>("BACKGROUND_UNIFORMITY", Self::VT_BACKGROUND_UNIFORMITY, false)?
+     .visit_field::<f32>("BACKGROUND_MEAN_LEVEL", Self::VT_BACKGROUND_MEAN_LEVEL, false)?
+     .visit_field::<f32>("SATURATED_PIXEL_PERCENT", Self::VT_SATURATED_PIXEL_PERCENT, false)?
+     .visit_field::<f32>("DEAD_PIXEL_PERCENT", Self::VT_DEAD_PIXEL_PERCENT, false)?
+     .visit_field::<f32>("PSF_FWHM", Self::VT_PSF_FWHM, false)?
+     .visit_field::<f32>("CLOUD_COVER_PERCENT", Self::VT_CLOUD_COVER_PERCENT, false)?
+     .visit_field::<f32>("CLOUD_DETECTION_CONFIDENCE", Self::VT_CLOUD_DETECTION_CONFIDENCE, false)?
+     .visit_field::<f32>("HAZE_PERCENT", Self::VT_HAZE_PERCENT, false)?
+     .visit_field::<f32>("AEROSOL_OPTICAL_THICKNESS", Self::VT_AEROSOL_OPTICAL_THICKNESS, false)?
+     .visit_field::<f32>("WATER_VAPOR_CONTENT", Self::VT_WATER_VAPOR_CONTENT, false)?
+     .visit_field::<f32>("SUN_ELEVATION", Self::VT_SUN_ELEVATION, false)?
+     .visit_field::<f32>("SUN_AZIMUTH", Self::VT_SUN_AZIMUTH, false)?
+     .visit_field::<f32>("VIEW_ZENITH_ANGLE", Self::VT_VIEW_ZENITH_ANGLE, false)?
+     .visit_field::<f32>("VIEW_AZIMUTH_ANGLE", Self::VT_VIEW_AZIMUTH_ANGLE, false)?
+     .visit_field::<f32>("OFF_NADIR_ANGLE", Self::VT_OFF_NADIR_ANGLE, false)?
+     .visit_field::<f32>("SWATH_WIDTH_KM", Self::VT_SWATH_WIDTH_KM, false)?
+     .visit_field::<f32>("MEAN_TERRAIN_ELEVATION", Self::VT_MEAN_TERRAIN_ELEVATION, false)?
+     .visit_field::<f32>("TERRAIN_ELEVATION_STDDEV", Self::VT_TERRAIN_ELEVATION_STDDEV, false)?
+     .visit_field::<f32>("SHADOW_COVER_PERCENT", Self::VT_SHADOW_COVER_PERCENT, false)?
+     .visit_field::<bool>("SUNGLINT_PRESENT", Self::VT_SUNGLINT_PRESENT, false)?
+     .visit_field::<f32>("SUNGLINT_PERCENT", Self::VT_SUNGLINT_PERCENT, false)?
+     .visit_field::<f32>("SNOW_ICE_COVER_PERCENT", Self::VT_SNOW_ICE_COVER_PERCENT, false)?
+     .visit_field::<f32>("VALID_DATA_AREA_KM2", Self::VT_VALID_DATA_AREA_KM2, false)?
      .finish();
     Ok(())
   }
 }
-pub struct IDMArgs<'a> {
+pub struct EOOArgs<'a> {
     pub ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub DATA_MODE: DataMode,
-    pub UPLINK: Option<::flatbuffers::WIPOffset<FrequencyRange<'a>>>,
-    pub DOWNLINK: Option<::flatbuffers::WIPOffset<FrequencyRange<'a>>>,
-    pub BEACON: Option<::flatbuffers::WIPOffset<FrequencyRange<'a>>>,
-    pub BAND: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<Band<'a>>>>>,
-    pub POLARIZATION_TYPE: PolarizationType,
-    pub SIMPLE_POLARIZATION: SimplePolarization,
-    pub STOKES_PARAMETERS: Option<::flatbuffers::WIPOffset<StokesParameters<'a>>>,
-    pub POWER_REQUIRED: f64,
-    pub POWER_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub TRANSMIT: bool,
-    pub RECEIVE: bool,
-    pub SENSOR_TYPE: DeviceType,
+    pub CLASSIFICATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OB_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CORR_QUALITY: f32,
+    pub ID_ON_ORBIT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SENSOR_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COLLECT_METHOD: CollectMethod,
+    pub NORAD_CAT_ID: i32,
+    pub TASK_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRANSACTION_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub IMAGE_SET_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub IMAGE_SET_LENGTH: i32,
+    pub SEQUENCE_ID: i32,
+    pub OB_POSITION: ObservationPosition,
+    pub ORIG_OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORIG_SENSOR_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub UCT: bool,
+    pub AZIMUTH: f32,
+    pub AZIMUTH_UNC: f32,
+    pub AZIMUTH_BIAS: f32,
+    pub AZIMUTH_RATE: f32,
+    pub ELEVATION: f32,
+    pub ELEVATION_UNC: f32,
+    pub ELEVATION_BIAS: f32,
+    pub ELEVATION_RATE: f32,
+    pub RANGE: f32,
+    pub RANGE_UNC: f32,
+    pub RANGE_BIAS: f32,
+    pub RANGE_RATE: f32,
+    pub RANGE_RATE_UNC: f32,
+    pub RA: f32,
+    pub RA_RATE: f32,
+    pub RA_UNC: f32,
+    pub RA_BIAS: f32,
+    pub DECLINATION: f32,
+    pub DECLINATION_RATE: f32,
+    pub DECLINATION_UNC: f32,
+    pub DECLINATION_BIAS: f32,
+    pub LOSX: f32,
+    pub LOSY: f32,
+    pub LOSZ: f32,
+    pub LOS_UNC: f32,
+    pub LOSXVEL: f32,
+    pub LOSYVEL: f32,
+    pub LOSZVEL: f32,
+    pub SENLAT: f32,
+    pub SENLON: f32,
+    pub SENALT: f32,
+    pub SENX: f32,
+    pub SENY: f32,
+    pub SENZ: f32,
+    pub FOV_COUNT: i32,
+    pub FOV_COUNT_UCTS: i32,
+    pub EXP_DURATION: f32,
+    pub ZEROPTD: f32,
+    pub NET_OBJ_SIG: f32,
+    pub NET_OBJ_SIG_UNC: f32,
+    pub MAG: f32,
+    pub MAG_UNC: f32,
+    pub MAG_NORM_RANGE: f32,
+    pub GEOLAT: f32,
+    pub GEOLON: f32,
+    pub GEOALT: f32,
+    pub GEORANGE: f32,
+    pub SKY_BKGRND: f32,
+    pub PRIMARY_EXTINCTION: f32,
+    pub PRIMARY_EXTINCTION_UNC: f32,
+    pub SOLAR_PHASE_ANGLE: f32,
+    pub SOLAR_EQ_PHASE_ANGLE: f32,
+    pub SOLAR_DEC_ANGLE: f32,
+    pub SHUTTER_DELAY: f32,
+    pub TIMING_BIAS: f32,
+    pub RAW_FILE_URI: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTENSITY: f32,
+    pub BG_INTENSITY: f32,
+    pub DESCRIPTOR: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub LAST_OB_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub LOWER_LEFT_ELEVATION_LIMIT: f64,
-    pub UPPER_LEFT_AZIMUTH_LIMIT: f64,
-    pub LOWER_RIGHT_ELEVATION_LIMIT: f64,
-    pub LOWER_LEFT_AZIMUTH_LIMIT: f64,
-    pub UPPER_RIGHT_ELEVATION_LIMIT: f64,
-    pub UPPER_RIGHT_AZIMUTH_LIMIT: f64,
-    pub LOWER_RIGHT_AZIMUTH_LIMIT: f64,
-    pub UPPER_LEFT_ELEVATION_LIMIT: f64,
-    pub RIGHT_GEO_BELT_LIMIT: f64,
-    pub LEFT_GEO_BELT_LIMIT: f64,
-    pub MAGNITUDE_LIMIT: f64,
-    pub TASKABLE: bool,
+    pub ORIGIN: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DATA_MODE: DataMode,
+    pub CREATED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CREATED_BY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
+    pub SEN_REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
+    pub UMBRA: bool,
+    pub PENUMBRA: bool,
+    pub ORIG_NETWORK: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE_DL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TYPE: DeviceType,
+    pub AZIMUTH_MEASURED: bool,
+    pub ELEVATION_MEASURED: bool,
+    pub RANGE_MEASURED: bool,
+    pub RANGERATE_MEASURED: bool,
+    pub RA_MEASURED: bool,
+    pub DECLINATION_MEASURED: bool,
+    pub NIIRS: f32,
+    pub METERS_PER_PIXEL: f32,
+    pub IMAGE_SNR: f32,
+    pub IMAGE_BIT_DEPTH: i32,
+    pub IMAGE_WIDTH: i32,
+    pub IMAGE_HEIGHT: i32,
+    pub IMAGE_COMPRESSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub IMAGE_COMPRESSION_RATIO: f32,
+    pub PROCESSED_IMAGE_URI: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub IMAGE_AUTO_ENHANCED: bool,
+    pub MULTI_FRAME_STACKED: bool,
+    pub SYNTHETIC_TRACKING_USED: bool,
+    pub IMAGE_SHARPNESS: f32,
+    pub IMAGE_NOISE_STDDEV: f32,
+    pub IMAGE_CONTRAST: f32,
+    pub IMAGE_DYNAMIC_RANGE: f32,
+    pub IMAGE_ENTROPY: f32,
+    pub BACKGROUND_UNIFORMITY: f32,
+    pub BACKGROUND_MEAN_LEVEL: f32,
+    pub SATURATED_PIXEL_PERCENT: f32,
+    pub DEAD_PIXEL_PERCENT: f32,
+    pub PSF_FWHM: f32,
+    pub CLOUD_COVER_PERCENT: f32,
+    pub CLOUD_DETECTION_CONFIDENCE: f32,
+    pub HAZE_PERCENT: f32,
+    pub AEROSOL_OPTICAL_THICKNESS: f32,
+    pub WATER_VAPOR_CONTENT: f32,
+    pub SUN_ELEVATION: f32,
+    pub SUN_AZIMUTH: f32,
+    pub VIEW_ZENITH_ANGLE: f32,
+    pub VIEW_AZIMUTH_ANGLE: f32,
+    pub OFF_NADIR_ANGLE: f32,
+    pub SWATH_WIDTH_KM: f32,
+    pub MEAN_TERRAIN_ELEVATION: f32,
+    pub TERRAIN_ELEVATION_STDDEV: f32,
+    pub SHADOW_COVER_PERCENT: f32,
+    pub SUNGLINT_PRESENT: bool,
+    pub SUNGLINT_PERCENT: f32,
+    pub SNOW_ICE_COVER_PERCENT: f32,
+    pub VALID_DATA_AREA_KM2: f32,
 }
-impl<'a> Default for IDMArgs<'a> {
+impl<'a> Default for EOOArgs<'a> {
   #[inline]
   fn default() -> Self {
-    IDMArgs {
+    EOOArgs {
       ID: None,
-      NAME: None,
-      DATA_MODE: DataMode::EXERCISE,
-      UPLINK: None,
-      DOWNLINK: None,
-      BEACON: None,
-      BAND: None,
-      POLARIZATION_TYPE: PolarizationType::linear,
-      SIMPLE_POLARIZATION: SimplePolarization::vertical,
-      STOKES_PARAMETERS: None,
-      POWER_REQUIRED: 0.0,
-      POWER_TYPE: None,
-      TRANSMIT: false,
-      RECEIVE: false,
-      SENSOR_TYPE: DeviceType::UNKNOWN,
+      CLASSIFICATION: None,
+      OB_TIME: None,
+      CORR_QUALITY: 0.0,
+      ID_ON_ORBIT: None,
+      SENSOR_ID: None,
+      COLLECT_METHOD: CollectMethod::SIDEREAL,
+      NORAD_CAT_ID: 0,
+      TASK_ID: None,
+      TRANSACTION_ID: None,
+      IMAGE_SET_ID: None,
+      IMAGE_SET_LENGTH: 0,
+      SEQUENCE_ID: 0,
+      OB_POSITION: ObservationPosition::FENCE,
+      ORIG_OBJECT_ID: None,
+      ORIG_SENSOR_ID: None,
+      UCT: false,
+      AZIMUTH: 0.0,
+      AZIMUTH_UNC: 0.0,
+      AZIMUTH_BIAS: 0.0,
+      AZIMUTH_RATE: 0.0,
+      ELEVATION: 0.0,
+      ELEVATION_UNC: 0.0,
+      ELEVATION_BIAS: 0.0,
+      ELEVATION_RATE: 0.0,
+      RANGE: 0.0,
+      RANGE_UNC: 0.0,
+      RANGE_BIAS: 0.0,
+      RANGE_RATE: 0.0,
+      RANGE_RATE_UNC: 0.0,
+      RA: 0.0,
+      RA_RATE: 0.0,
+      RA_UNC: 0.0,
+      RA_BIAS: 0.0,
+      DECLINATION: 0.0,
+      DECLINATION_RATE: 0.0,
+      DECLINATION_UNC: 0.0,
+      DECLINATION_BIAS: 0.0,
+      LOSX: 0.0,
+      LOSY: 0.0,
+      LOSZ: 0.0,
+      LOS_UNC: 0.0,
+      LOSXVEL: 0.0,
+      LOSYVEL: 0.0,
+      LOSZVEL: 0.0,
+      SENLAT: 0.0,
+      SENLON: 0.0,
+      SENALT: 0.0,
+      SENX: 0.0,
+      SENY: 0.0,
+      SENZ: 0.0,
+      FOV_COUNT: 0,
+      FOV_COUNT_UCTS: 0,
+      EXP_DURATION: 0.0,
+      ZEROPTD: 0.0,
+      NET_OBJ_SIG: 0.0,
+      NET_OBJ_SIG_UNC: 0.0,
+      MAG: 0.0,
+      MAG_UNC: 0.0,
+      MAG_NORM_RANGE: 0.0,
+      GEOLAT: 0.0,
+      GEOLON: 0.0,
+      GEOALT: 0.0,
+      GEORANGE: 0.0,
+      SKY_BKGRND: 0.0,
+      PRIMARY_EXTINCTION: 0.0,
+      PRIMARY_EXTINCTION_UNC: 0.0,
+      SOLAR_PHASE_ANGLE: 0.0,
+      SOLAR_EQ_PHASE_ANGLE: 0.0,
+      SOLAR_DEC_ANGLE: 0.0,
+      SHUTTER_DELAY: 0.0,
+      TIMING_BIAS: 0.0,
+      RAW_FILE_URI: None,
+      INTENSITY: 0.0,
+      BG_INTENSITY: 0.0,
+      DESCRIPTOR: None,
       SOURCE: None,
-      LAST_OB_TIME: None,
-      LOWER_LEFT_ELEVATION_LIMIT: 0.0,
-      UPPER_LEFT_AZIMUTH_LIMIT: 0.0,
-      LOWER_RIGHT_ELEVATION_LIMIT: 0.0,
-      LOWER_LEFT_AZIMUTH_LIMIT: 0.0,
-      UPPER_RIGHT_ELEVATION_LIMIT: 0.0,
-      UPPER_RIGHT_AZIMUTH_LIMIT: 0.0,
-      LOWER_RIGHT_AZIMUTH_LIMIT: 0.0,
-      UPPER_LEFT_ELEVATION_LIMIT: 0.0,
-      RIGHT_GEO_BELT_LIMIT: 0.0,
-      LEFT_GEO_BELT_LIMIT: 0.0,
-      MAGNITUDE_LIMIT: 0.0,
-      TASKABLE: false,
+      ORIGIN: None,
+      DATA_MODE: DataMode::EXERCISE,
+      CREATED_AT: None,
+      CREATED_BY: None,
+      REFERENCE_FRAME: None,
+      SEN_REFERENCE_FRAME: None,
+      UMBRA: false,
+      PENUMBRA: false,
+      ORIG_NETWORK: None,
+      SOURCE_DL: None,
+      TYPE: DeviceType::UNKNOWN,
+      AZIMUTH_MEASURED: false,
+      ELEVATION_MEASURED: false,
+      RANGE_MEASURED: false,
+      RANGERATE_MEASURED: false,
+      RA_MEASURED: false,
+      DECLINATION_MEASURED: false,
+      NIIRS: 0.0,
+      METERS_PER_PIXEL: 0.0,
+      IMAGE_SNR: 0.0,
+      IMAGE_BIT_DEPTH: 0,
+      IMAGE_WIDTH: 0,
+      IMAGE_HEIGHT: 0,
+      IMAGE_COMPRESSION: None,
+      IMAGE_COMPRESSION_RATIO: 0.0,
+      PROCESSED_IMAGE_URI: None,
+      IMAGE_AUTO_ENHANCED: false,
+      MULTI_FRAME_STACKED: false,
+      SYNTHETIC_TRACKING_USED: false,
+      IMAGE_SHARPNESS: 0.0,
+      IMAGE_NOISE_STDDEV: 0.0,
+      IMAGE_CONTRAST: 0.0,
+      IMAGE_DYNAMIC_RANGE: 0.0,
+      IMAGE_ENTROPY: 0.0,
+      BACKGROUND_UNIFORMITY: 0.0,
+      BACKGROUND_MEAN_LEVEL: 0.0,
+      SATURATED_PIXEL_PERCENT: 0.0,
+      DEAD_PIXEL_PERCENT: 0.0,
+      PSF_FWHM: 0.0,
+      CLOUD_COVER_PERCENT: 0.0,
+      CLOUD_DETECTION_CONFIDENCE: 0.0,
+      HAZE_PERCENT: 0.0,
+      AEROSOL_OPTICAL_THICKNESS: 0.0,
+      WATER_VAPOR_CONTENT: 0.0,
+      SUN_ELEVATION: 0.0,
+      SUN_AZIMUTH: 0.0,
+      VIEW_ZENITH_ANGLE: 0.0,
+      VIEW_AZIMUTH_ANGLE: 0.0,
+      OFF_NADIR_ANGLE: 0.0,
+      SWATH_WIDTH_KM: 0.0,
+      MEAN_TERRAIN_ELEVATION: 0.0,
+      TERRAIN_ELEVATION_STDDEV: 0.0,
+      SHADOW_COVER_PERCENT: 0.0,
+      SUNGLINT_PRESENT: false,
+      SUNGLINT_PERCENT: 0.0,
+      SNOW_ICE_COVER_PERCENT: 0.0,
+      VALID_DATA_AREA_KM2: 0.0,
     }
   }
 }
 
-pub struct IDMBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct EOOBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> IDMBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EOOBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ID(&mut self, ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(IDM::VT_ID, ID);
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_ID, ID);
   }
   #[inline]
-  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(IDM::VT_NAME, NAME);
+  pub fn add_CLASSIFICATION(&mut self, CLASSIFICATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_CLASSIFICATION, CLASSIFICATION);
   }
   #[inline]
-  pub fn add_DATA_MODE(&mut self, DATA_MODE: DataMode) {
-    self.fbb_.push_slot::<DataMode>(IDM::VT_DATA_MODE, DATA_MODE, DataMode::EXERCISE);
+  pub fn add_OB_TIME(&mut self, OB_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_OB_TIME, OB_TIME);
   }
   #[inline]
-  pub fn add_UPLINK(&mut self, UPLINK: ::flatbuffers::WIPOffset<FrequencyRange<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FrequencyRange>>(IDM::VT_UPLINK, UPLINK);
+  pub fn add_CORR_QUALITY(&mut self, CORR_QUALITY: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_CORR_QUALITY, CORR_QUALITY, 0.0);
   }
   #[inline]
-  pub fn add_DOWNLINK(&mut self, DOWNLINK: ::flatbuffers::WIPOffset<FrequencyRange<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FrequencyRange>>(IDM::VT_DOWNLINK, DOWNLINK);
+  pub fn add_ID_ON_ORBIT(&mut self, ID_ON_ORBIT: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_ID_ON_ORBIT, ID_ON_ORBIT);
   }
   #[inline]
-  pub fn add_BEACON(&mut self, BEACON: ::flatbuffers::WIPOffset<FrequencyRange<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FrequencyRange>>(IDM::VT_BEACON, BEACON);
+  pub fn add_SENSOR_ID(&mut self, SENSOR_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_SENSOR_ID, SENSOR_ID);
   }
   #[inline]
-  pub fn add_BAND(&mut self, BAND: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<Band<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(IDM::VT_BAND, BAND);
+  pub fn add_COLLECT_METHOD(&mut self, COLLECT_METHOD: CollectMethod) {
+    self.fbb_.push_slot::<CollectMethod>(EOO::VT_COLLECT_METHOD, COLLECT_METHOD, CollectMethod::SIDEREAL);
   }
   #[inline]
-  pub fn add_POLARIZATION_TYPE(&mut self, POLARIZATION_TYPE: PolarizationType) {
-    self.fbb_.push_slot::<PolarizationType>(IDM::VT_POLARIZATION_TYPE, POLARIZATION_TYPE, PolarizationType::linear);
+  pub fn add_NORAD_CAT_ID(&mut self, NORAD_CAT_ID: i32) {
+    self.fbb_.push_slot::<i32>(EOO::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
   }
   #[inline]
-  pub fn add_SIMPLE_POLARIZATION(&mut self, SIMPLE_POLARIZATION: SimplePolarization) {
-    self.fbb_.push_slot::<SimplePolarization>(IDM::VT_SIMPLE_POLARIZATION, SIMPLE_POLARIZATION, SimplePolarization::vertical);
+  pub fn add_TASK_ID(&mut self, TASK_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_TASK_ID, TASK_ID);
   }
   #[inline]
-  pub fn add_STOKES_PARAMETERS(&mut self, STOKES_PARAMETERS: ::flatbuffers::WIPOffset<StokesParameters<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<StokesParameters>>(IDM::VT_STOKES_PARAMETERS, STOKES_PARAMETERS);
+  pub fn add_TRANSACTION_ID(&mut self, TRANSACTION_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_TRANSACTION_ID, TRANSACTION_ID);
   }
   #[inline]
-  pub fn add_POWER_REQUIRED(&mut self, POWER_REQUIRED: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_POWER_REQUIRED, POWER_REQUIRED, 0.0);
+  pub fn add_IMAGE_SET_ID(&mut self, IMAGE_SET_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_IMAGE_SET_ID, IMAGE_SET_ID);
   }
   #[inline]
-  pub fn add_POWER_TYPE(&mut self, POWER_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(IDM::VT_POWER_TYPE, POWER_TYPE);
+  pub fn add_IMAGE_SET_LENGTH(&mut self, IMAGE_SET_LENGTH: i32) {
+    self.fbb_.push_slot::<i32>(EOO::VT_IMAGE_SET_LENGTH, IMAGE_SET_LENGTH, 0);
   }
   #[inline]
-  pub fn add_TRANSMIT(&mut self, TRANSMIT: bool) {
-    self.fbb_.push_slot::<bool>(IDM::VT_TRANSMIT, TRANSMIT, false);
+  pub fn add_SEQUENCE_ID(&mut self, SEQUENCE_ID: i32) {
+    self.fbb_.push_slot::<i32>(EOO::VT_SEQUENCE_ID, SEQUENCE_ID, 0);
   }
   #[inline]
-  pub fn add_RECEIVE(&mut self, RECEIVE: bool) {
-    self.fbb_.push_slot::<bool>(IDM::VT_RECEIVE, RECEIVE, false);
+  pub fn add_OB_POSITION(&mut self, OB_POSITION: ObservationPosition) {
+    self.fbb_.push_slot::<ObservationPosition>(EOO::VT_OB_POSITION, OB_POSITION, ObservationPosition::FENCE);
   }
   #[inline]
-  pub fn add_SENSOR_TYPE(&mut self, SENSOR_TYPE: DeviceType) {
-    self.fbb_.push_slot::<DeviceType>(IDM::VT_SENSOR_TYPE, SENSOR_TYPE, DeviceType::UNKNOWN);
+  pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_ORIG_SENSOR_ID(&mut self, ORIG_SENSOR_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
+  }
+  #[inline]
+  pub fn add_UCT(&mut self, UCT: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_UCT, UCT, false);
+  }
+  #[inline]
+  pub fn add_AZIMUTH(&mut self, AZIMUTH: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_AZIMUTH, AZIMUTH, 0.0);
+  }
+  #[inline]
+  pub fn add_AZIMUTH_UNC(&mut self, AZIMUTH_UNC: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_AZIMUTH_UNC, AZIMUTH_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_AZIMUTH_BIAS(&mut self, AZIMUTH_BIAS: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_AZIMUTH_BIAS, AZIMUTH_BIAS, 0.0);
+  }
+  #[inline]
+  pub fn add_AZIMUTH_RATE(&mut self, AZIMUTH_RATE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_AZIMUTH_RATE, AZIMUTH_RATE, 0.0);
+  }
+  #[inline]
+  pub fn add_ELEVATION(&mut self, ELEVATION: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_ELEVATION, ELEVATION, 0.0);
+  }
+  #[inline]
+  pub fn add_ELEVATION_UNC(&mut self, ELEVATION_UNC: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_ELEVATION_UNC, ELEVATION_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_ELEVATION_BIAS(&mut self, ELEVATION_BIAS: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_ELEVATION_BIAS, ELEVATION_BIAS, 0.0);
+  }
+  #[inline]
+  pub fn add_ELEVATION_RATE(&mut self, ELEVATION_RATE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_ELEVATION_RATE, ELEVATION_RATE, 0.0);
+  }
+  #[inline]
+  pub fn add_RANGE(&mut self, RANGE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_RANGE, RANGE, 0.0);
+  }
+  #[inline]
+  pub fn add_RANGE_UNC(&mut self, RANGE_UNC: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_RANGE_UNC, RANGE_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_RANGE_BIAS(&mut self, RANGE_BIAS: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_RANGE_BIAS, RANGE_BIAS, 0.0);
+  }
+  #[inline]
+  pub fn add_RANGE_RATE(&mut self, RANGE_RATE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_RANGE_RATE, RANGE_RATE, 0.0);
+  }
+  #[inline]
+  pub fn add_RANGE_RATE_UNC(&mut self, RANGE_RATE_UNC: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_RANGE_RATE_UNC, RANGE_RATE_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_RA(&mut self, RA: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_RA, RA, 0.0);
+  }
+  #[inline]
+  pub fn add_RA_RATE(&mut self, RA_RATE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_RA_RATE, RA_RATE, 0.0);
+  }
+  #[inline]
+  pub fn add_RA_UNC(&mut self, RA_UNC: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_RA_UNC, RA_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_RA_BIAS(&mut self, RA_BIAS: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_RA_BIAS, RA_BIAS, 0.0);
+  }
+  #[inline]
+  pub fn add_DECLINATION(&mut self, DECLINATION: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_DECLINATION, DECLINATION, 0.0);
+  }
+  #[inline]
+  pub fn add_DECLINATION_RATE(&mut self, DECLINATION_RATE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_DECLINATION_RATE, DECLINATION_RATE, 0.0);
+  }
+  #[inline]
+  pub fn add_DECLINATION_UNC(&mut self, DECLINATION_UNC: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_DECLINATION_UNC, DECLINATION_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_DECLINATION_BIAS(&mut self, DECLINATION_BIAS: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_DECLINATION_BIAS, DECLINATION_BIAS, 0.0);
+  }
+  #[inline]
+  pub fn add_LOSX(&mut self, LOSX: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_LOSX, LOSX, 0.0);
+  }
+  #[inline]
+  pub fn add_LOSY(&mut self, LOSY: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_LOSY, LOSY, 0.0);
+  }
+  #[inline]
+  pub fn add_LOSZ(&mut self, LOSZ: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_LOSZ, LOSZ, 0.0);
+  }
+  #[inline]
+  pub fn add_LOS_UNC(&mut self, LOS_UNC: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_LOS_UNC, LOS_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_LOSXVEL(&mut self, LOSXVEL: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_LOSXVEL, LOSXVEL, 0.0);
+  }
+  #[inline]
+  pub fn add_LOSYVEL(&mut self, LOSYVEL: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_LOSYVEL, LOSYVEL, 0.0);
+  }
+  #[inline]
+  pub fn add_LOSZVEL(&mut self, LOSZVEL: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_LOSZVEL, LOSZVEL, 0.0);
+  }
+  #[inline]
+  pub fn add_SENLAT(&mut self, SENLAT: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SENLAT, SENLAT, 0.0);
+  }
+  #[inline]
+  pub fn add_SENLON(&mut self, SENLON: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SENLON, SENLON, 0.0);
+  }
+  #[inline]
+  pub fn add_SENALT(&mut self, SENALT: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SENALT, SENALT, 0.0);
+  }
+  #[inline]
+  pub fn add_SENX(&mut self, SENX: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SENX, SENX, 0.0);
+  }
+  #[inline]
+  pub fn add_SENY(&mut self, SENY: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SENY, SENY, 0.0);
+  }
+  #[inline]
+  pub fn add_SENZ(&mut self, SENZ: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SENZ, SENZ, 0.0);
+  }
+  #[inline]
+  pub fn add_FOV_COUNT(&mut self, FOV_COUNT: i32) {
+    self.fbb_.push_slot::<i32>(EOO::VT_FOV_COUNT, FOV_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_FOV_COUNT_UCTS(&mut self, FOV_COUNT_UCTS: i32) {
+    self.fbb_.push_slot::<i32>(EOO::VT_FOV_COUNT_UCTS, FOV_COUNT_UCTS, 0);
+  }
+  #[inline]
+  pub fn add_EXP_DURATION(&mut self, EXP_DURATION: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_EXP_DURATION, EXP_DURATION, 0.0);
+  }
+  #[inline]
+  pub fn add_ZEROPTD(&mut self, ZEROPTD: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_ZEROPTD, ZEROPTD, 0.0);
+  }
+  #[inline]
+  pub fn add_NET_OBJ_SIG(&mut self, NET_OBJ_SIG: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_NET_OBJ_SIG, NET_OBJ_SIG, 0.0);
+  }
+  #[inline]
+  pub fn add_NET_OBJ_SIG_UNC(&mut self, NET_OBJ_SIG_UNC: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_NET_OBJ_SIG_UNC, NET_OBJ_SIG_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_MAG(&mut self, MAG: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_MAG, MAG, 0.0);
+  }
+  #[inline]
+  pub fn add_MAG_UNC(&mut self, MAG_UNC: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_MAG_UNC, MAG_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_MAG_NORM_RANGE(&mut self, MAG_NORM_RANGE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_MAG_NORM_RANGE, MAG_NORM_RANGE, 0.0);
+  }
+  #[inline]
+  pub fn add_GEOLAT(&mut self, GEOLAT: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_GEOLAT, GEOLAT, 0.0);
+  }
+  #[inline]
+  pub fn add_GEOLON(&mut self, GEOLON: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_GEOLON, GEOLON, 0.0);
+  }
+  #[inline]
+  pub fn add_GEOALT(&mut self, GEOALT: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_GEOALT, GEOALT, 0.0);
+  }
+  #[inline]
+  pub fn add_GEORANGE(&mut self, GEORANGE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_GEORANGE, GEORANGE, 0.0);
+  }
+  #[inline]
+  pub fn add_SKY_BKGRND(&mut self, SKY_BKGRND: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SKY_BKGRND, SKY_BKGRND, 0.0);
+  }
+  #[inline]
+  pub fn add_PRIMARY_EXTINCTION(&mut self, PRIMARY_EXTINCTION: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_PRIMARY_EXTINCTION, PRIMARY_EXTINCTION, 0.0);
+  }
+  #[inline]
+  pub fn add_PRIMARY_EXTINCTION_UNC(&mut self, PRIMARY_EXTINCTION_UNC: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_PRIMARY_EXTINCTION_UNC, PRIMARY_EXTINCTION_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_SOLAR_PHASE_ANGLE(&mut self, SOLAR_PHASE_ANGLE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SOLAR_PHASE_ANGLE, SOLAR_PHASE_ANGLE, 0.0);
+  }
+  #[inline]
+  pub fn add_SOLAR_EQ_PHASE_ANGLE(&mut self, SOLAR_EQ_PHASE_ANGLE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SOLAR_EQ_PHASE_ANGLE, SOLAR_EQ_PHASE_ANGLE, 0.0);
+  }
+  #[inline]
+  pub fn add_SOLAR_DEC_ANGLE(&mut self, SOLAR_DEC_ANGLE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SOLAR_DEC_ANGLE, SOLAR_DEC_ANGLE, 0.0);
+  }
+  #[inline]
+  pub fn add_SHUTTER_DELAY(&mut self, SHUTTER_DELAY: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SHUTTER_DELAY, SHUTTER_DELAY, 0.0);
+  }
+  #[inline]
+  pub fn add_TIMING_BIAS(&mut self, TIMING_BIAS: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_TIMING_BIAS, TIMING_BIAS, 0.0);
+  }
+  #[inline]
+  pub fn add_RAW_FILE_URI(&mut self, RAW_FILE_URI: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_RAW_FILE_URI, RAW_FILE_URI);
+  }
+  #[inline]
+  pub fn add_INTENSITY(&mut self, INTENSITY: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_INTENSITY, INTENSITY, 0.0);
+  }
+  #[inline]
+  pub fn add_BG_INTENSITY(&mut self, BG_INTENSITY: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_BG_INTENSITY, BG_INTENSITY, 0.0);
+  }
+  #[inline]
+  pub fn add_DESCRIPTOR(&mut self, DESCRIPTOR: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_DESCRIPTOR, DESCRIPTOR);
   }
   #[inline]
   pub fn add_SOURCE(&mut self, SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(IDM::VT_SOURCE, SOURCE);
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_SOURCE, SOURCE);
   }
   #[inline]
-  pub fn add_LAST_OB_TIME(&mut self, LAST_OB_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(IDM::VT_LAST_OB_TIME, LAST_OB_TIME);
+  pub fn add_ORIGIN(&mut self, ORIGIN: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_ORIGIN, ORIGIN);
   }
   #[inline]
-  pub fn add_LOWER_LEFT_ELEVATION_LIMIT(&mut self, LOWER_LEFT_ELEVATION_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_LOWER_LEFT_ELEVATION_LIMIT, LOWER_LEFT_ELEVATION_LIMIT, 0.0);
+  pub fn add_DATA_MODE(&mut self, DATA_MODE: DataMode) {
+    self.fbb_.push_slot::<DataMode>(EOO::VT_DATA_MODE, DATA_MODE, DataMode::EXERCISE);
   }
   #[inline]
-  pub fn add_UPPER_LEFT_AZIMUTH_LIMIT(&mut self, UPPER_LEFT_AZIMUTH_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_UPPER_LEFT_AZIMUTH_LIMIT, UPPER_LEFT_AZIMUTH_LIMIT, 0.0);
+  pub fn add_CREATED_AT(&mut self, CREATED_AT: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_CREATED_AT, CREATED_AT);
   }
   #[inline]
-  pub fn add_LOWER_RIGHT_ELEVATION_LIMIT(&mut self, LOWER_RIGHT_ELEVATION_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_LOWER_RIGHT_ELEVATION_LIMIT, LOWER_RIGHT_ELEVATION_LIMIT, 0.0);
+  pub fn add_CREATED_BY(&mut self, CREATED_BY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_CREATED_BY, CREATED_BY);
   }
   #[inline]
-  pub fn add_LOWER_LEFT_AZIMUTH_LIMIT(&mut self, LOWER_LEFT_AZIMUTH_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_LOWER_LEFT_AZIMUTH_LIMIT, LOWER_LEFT_AZIMUTH_LIMIT, 0.0);
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(EOO::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
   #[inline]
-  pub fn add_UPPER_RIGHT_ELEVATION_LIMIT(&mut self, UPPER_RIGHT_ELEVATION_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_UPPER_RIGHT_ELEVATION_LIMIT, UPPER_RIGHT_ELEVATION_LIMIT, 0.0);
+  pub fn add_SEN_REFERENCE_FRAME(&mut self, SEN_REFERENCE_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(EOO::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
   }
   #[inline]
-  pub fn add_UPPER_RIGHT_AZIMUTH_LIMIT(&mut self, UPPER_RIGHT_AZIMUTH_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_UPPER_RIGHT_AZIMUTH_LIMIT, UPPER_RIGHT_AZIMUTH_LIMIT, 0.0);
+  pub fn add_UMBRA(&mut self, UMBRA: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_UMBRA, UMBRA, false);
   }
   #[inline]
-  pub fn add_LOWER_RIGHT_AZIMUTH_LIMIT(&mut self, LOWER_RIGHT_AZIMUTH_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_LOWER_RIGHT_AZIMUTH_LIMIT, LOWER_RIGHT_AZIMUTH_LIMIT, 0.0);
+  pub fn add_PENUMBRA(&mut self, PENUMBRA: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_PENUMBRA, PENUMBRA, false);
   }
   #[inline]
-  pub fn add_UPPER_LEFT_ELEVATION_LIMIT(&mut self, UPPER_LEFT_ELEVATION_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_UPPER_LEFT_ELEVATION_LIMIT, UPPER_LEFT_ELEVATION_LIMIT, 0.0);
+  pub fn add_ORIG_NETWORK(&mut self, ORIG_NETWORK: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_ORIG_NETWORK, ORIG_NETWORK);
   }
   #[inline]
-  pub fn add_RIGHT_GEO_BELT_LIMIT(&mut self, RIGHT_GEO_BELT_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_RIGHT_GEO_BELT_LIMIT, RIGHT_GEO_BELT_LIMIT, 0.0);
+  pub fn add_SOURCE_DL(&mut self, SOURCE_DL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_SOURCE_DL, SOURCE_DL);
   }
   #[inline]
-  pub fn add_LEFT_GEO_BELT_LIMIT(&mut self, LEFT_GEO_BELT_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_LEFT_GEO_BELT_LIMIT, LEFT_GEO_BELT_LIMIT, 0.0);
+  pub fn add_TYPE(&mut self, TYPE: DeviceType) {
+    self.fbb_.push_slot::<DeviceType>(EOO::VT_TYPE, TYPE, DeviceType::UNKNOWN);
   }
   #[inline]
-  pub fn add_MAGNITUDE_LIMIT(&mut self, MAGNITUDE_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_MAGNITUDE_LIMIT, MAGNITUDE_LIMIT, 0.0);
+  pub fn add_AZIMUTH_MEASURED(&mut self, AZIMUTH_MEASURED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_AZIMUTH_MEASURED, AZIMUTH_MEASURED, false);
   }
   #[inline]
-  pub fn add_TASKABLE(&mut self, TASKABLE: bool) {
-    self.fbb_.push_slot::<bool>(IDM::VT_TASKABLE, TASKABLE, false);
+  pub fn add_ELEVATION_MEASURED(&mut self, ELEVATION_MEASURED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_ELEVATION_MEASURED, ELEVATION_MEASURED, false);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> IDMBuilder<'a, 'b, A> {
+  pub fn add_RANGE_MEASURED(&mut self, RANGE_MEASURED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_RANGE_MEASURED, RANGE_MEASURED, false);
+  }
+  #[inline]
+  pub fn add_RANGERATE_MEASURED(&mut self, RANGERATE_MEASURED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_RANGERATE_MEASURED, RANGERATE_MEASURED, false);
+  }
+  #[inline]
+  pub fn add_RA_MEASURED(&mut self, RA_MEASURED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_RA_MEASURED, RA_MEASURED, false);
+  }
+  #[inline]
+  pub fn add_DECLINATION_MEASURED(&mut self, DECLINATION_MEASURED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_DECLINATION_MEASURED, DECLINATION_MEASURED, false);
+  }
+  #[inline]
+  pub fn add_NIIRS(&mut self, NIIRS: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_NIIRS, NIIRS, 0.0);
+  }
+  #[inline]
+  pub fn add_METERS_PER_PIXEL(&mut self, METERS_PER_PIXEL: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_METERS_PER_PIXEL, METERS_PER_PIXEL, 0.0);
+  }
+  #[inline]
+  pub fn add_IMAGE_SNR(&mut self, IMAGE_SNR: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_IMAGE_SNR, IMAGE_SNR, 0.0);
+  }
+  #[inline]
+  pub fn add_IMAGE_BIT_DEPTH(&mut self, IMAGE_BIT_DEPTH: i32) {
+    self.fbb_.push_slot::<i32>(EOO::VT_IMAGE_BIT_DEPTH, IMAGE_BIT_DEPTH, 0);
+  }
+  #[inline]
+  pub fn add_IMAGE_WIDTH(&mut self, IMAGE_WIDTH: i32) {
+    self.fbb_.push_slot::<i32>(EOO::VT_IMAGE_WIDTH, IMAGE_WIDTH, 0);
+  }
+  #[inline]
+  pub fn add_IMAGE_HEIGHT(&mut self, IMAGE_HEIGHT: i32) {
+    self.fbb_.push_slot::<i32>(EOO::VT_IMAGE_HEIGHT, IMAGE_HEIGHT, 0);
+  }
+  #[inline]
+  pub fn add_IMAGE_COMPRESSION(&mut self, IMAGE_COMPRESSION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_IMAGE_COMPRESSION, IMAGE_COMPRESSION);
+  }
+  #[inline]
+  pub fn add_IMAGE_COMPRESSION_RATIO(&mut self, IMAGE_COMPRESSION_RATIO: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_IMAGE_COMPRESSION_RATIO, IMAGE_COMPRESSION_RATIO, 0.0);
+  }
+  #[inline]
+  pub fn add_PROCESSED_IMAGE_URI(&mut self, PROCESSED_IMAGE_URI: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EOO::VT_PROCESSED_IMAGE_URI, PROCESSED_IMAGE_URI);
+  }
+  #[inline]
+  pub fn add_IMAGE_AUTO_ENHANCED(&mut self, IMAGE_AUTO_ENHANCED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_IMAGE_AUTO_ENHANCED, IMAGE_AUTO_ENHANCED, false);
+  }
+  #[inline]
+  pub fn add_MULTI_FRAME_STACKED(&mut self, MULTI_FRAME_STACKED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_MULTI_FRAME_STACKED, MULTI_FRAME_STACKED, false);
+  }
+  #[inline]
+  pub fn add_SYNTHETIC_TRACKING_USED(&mut self, SYNTHETIC_TRACKING_USED: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_SYNTHETIC_TRACKING_USED, SYNTHETIC_TRACKING_USED, false);
+  }
+  #[inline]
+  pub fn add_IMAGE_SHARPNESS(&mut self, IMAGE_SHARPNESS: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_IMAGE_SHARPNESS, IMAGE_SHARPNESS, 0.0);
+  }
+  #[inline]
+  pub fn add_IMAGE_NOISE_STDDEV(&mut self, IMAGE_NOISE_STDDEV: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_IMAGE_NOISE_STDDEV, IMAGE_NOISE_STDDEV, 0.0);
+  }
+  #[inline]
+  pub fn add_IMAGE_CONTRAST(&mut self, IMAGE_CONTRAST: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_IMAGE_CONTRAST, IMAGE_CONTRAST, 0.0);
+  }
+  #[inline]
+  pub fn add_IMAGE_DYNAMIC_RANGE(&mut self, IMAGE_DYNAMIC_RANGE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_IMAGE_DYNAMIC_RANGE, IMAGE_DYNAMIC_RANGE, 0.0);
+  }
+  #[inline]
+  pub fn add_IMAGE_ENTROPY(&mut self, IMAGE_ENTROPY: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_IMAGE_ENTROPY, IMAGE_ENTROPY, 0.0);
+  }
+  #[inline]
+  pub fn add_BACKGROUND_UNIFORMITY(&mut self, BACKGROUND_UNIFORMITY: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_BACKGROUND_UNIFORMITY, BACKGROUND_UNIFORMITY, 0.0);
+  }
+  #[inline]
+  pub fn add_BACKGROUND_MEAN_LEVEL(&mut self, BACKGROUND_MEAN_LEVEL: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_BACKGROUND_MEAN_LEVEL, BACKGROUND_MEAN_LEVEL, 0.0);
+  }
+  #[inline]
+  pub fn add_SATURATED_PIXEL_PERCENT(&mut self, SATURATED_PIXEL_PERCENT: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SATURATED_PIXEL_PERCENT, SATURATED_PIXEL_PERCENT, 0.0);
+  }
+  #[inline]
+  pub fn add_DEAD_PIXEL_PERCENT(&mut self, DEAD_PIXEL_PERCENT: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_DEAD_PIXEL_PERCENT, DEAD_PIXEL_PERCENT, 0.0);
+  }
+  #[inline]
+  pub fn add_PSF_FWHM(&mut self, PSF_FWHM: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_PSF_FWHM, PSF_FWHM, 0.0);
+  }
+  #[inline]
+  pub fn add_CLOUD_COVER_PERCENT(&mut self, CLOUD_COVER_PERCENT: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_CLOUD_COVER_PERCENT, CLOUD_COVER_PERCENT, 0.0);
+  }
+  #[inline]
+  pub fn add_CLOUD_DETECTION_CONFIDENCE(&mut self, CLOUD_DETECTION_CONFIDENCE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_CLOUD_DETECTION_CONFIDENCE, CLOUD_DETECTION_CONFIDENCE, 0.0);
+  }
+  #[inline]
+  pub fn add_HAZE_PERCENT(&mut self, HAZE_PERCENT: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_HAZE_PERCENT, HAZE_PERCENT, 0.0);
+  }
+  #[inline]
+  pub fn add_AEROSOL_OPTICAL_THICKNESS(&mut self, AEROSOL_OPTICAL_THICKNESS: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_AEROSOL_OPTICAL_THICKNESS, AEROSOL_OPTICAL_THICKNESS, 0.0);
+  }
+  #[inline]
+  pub fn add_WATER_VAPOR_CONTENT(&mut self, WATER_VAPOR_CONTENT: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_WATER_VAPOR_CONTENT, WATER_VAPOR_CONTENT, 0.0);
+  }
+  #[inline]
+  pub fn add_SUN_ELEVATION(&mut self, SUN_ELEVATION: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SUN_ELEVATION, SUN_ELEVATION, 0.0);
+  }
+  #[inline]
+  pub fn add_SUN_AZIMUTH(&mut self, SUN_AZIMUTH: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SUN_AZIMUTH, SUN_AZIMUTH, 0.0);
+  }
+  #[inline]
+  pub fn add_VIEW_ZENITH_ANGLE(&mut self, VIEW_ZENITH_ANGLE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_VIEW_ZENITH_ANGLE, VIEW_ZENITH_ANGLE, 0.0);
+  }
+  #[inline]
+  pub fn add_VIEW_AZIMUTH_ANGLE(&mut self, VIEW_AZIMUTH_ANGLE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_VIEW_AZIMUTH_ANGLE, VIEW_AZIMUTH_ANGLE, 0.0);
+  }
+  #[inline]
+  pub fn add_OFF_NADIR_ANGLE(&mut self, OFF_NADIR_ANGLE: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_OFF_NADIR_ANGLE, OFF_NADIR_ANGLE, 0.0);
+  }
+  #[inline]
+  pub fn add_SWATH_WIDTH_KM(&mut self, SWATH_WIDTH_KM: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SWATH_WIDTH_KM, SWATH_WIDTH_KM, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_TERRAIN_ELEVATION(&mut self, MEAN_TERRAIN_ELEVATION: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_MEAN_TERRAIN_ELEVATION, MEAN_TERRAIN_ELEVATION, 0.0);
+  }
+  #[inline]
+  pub fn add_TERRAIN_ELEVATION_STDDEV(&mut self, TERRAIN_ELEVATION_STDDEV: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_TERRAIN_ELEVATION_STDDEV, TERRAIN_ELEVATION_STDDEV, 0.0);
+  }
+  #[inline]
+  pub fn add_SHADOW_COVER_PERCENT(&mut self, SHADOW_COVER_PERCENT: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SHADOW_COVER_PERCENT, SHADOW_COVER_PERCENT, 0.0);
+  }
+  #[inline]
+  pub fn add_SUNGLINT_PRESENT(&mut self, SUNGLINT_PRESENT: bool) {
+    self.fbb_.push_slot::<bool>(EOO::VT_SUNGLINT_PRESENT, SUNGLINT_PRESENT, false);
+  }
+  #[inline]
+  pub fn add_SUNGLINT_PERCENT(&mut self, SUNGLINT_PERCENT: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SUNGLINT_PERCENT, SUNGLINT_PERCENT, 0.0);
+  }
+  #[inline]
+  pub fn add_SNOW_ICE_COVER_PERCENT(&mut self, SNOW_ICE_COVER_PERCENT: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_SNOW_ICE_COVER_PERCENT, SNOW_ICE_COVER_PERCENT, 0.0);
+  }
+  #[inline]
+  pub fn add_VALID_DATA_AREA_KM2(&mut self, VALID_DATA_AREA_KM2: f32) {
+    self.fbb_.push_slot::<f32>(EOO::VT_VALID_DATA_AREA_KM2, VALID_DATA_AREA_KM2, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EOOBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    IDMBuilder {
+    EOOBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<IDM<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<EOO<'a>> {
     let o = self.fbb_.end_table(self.start_);
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for IDM<'_> {
+impl ::core::fmt::Debug for EOO<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("IDM");
+    let mut ds = f.debug_struct("EOO");
       ds.field("ID", &self.ID());
-      ds.field("NAME", &self.NAME());
-      ds.field("DATA_MODE", &self.DATA_MODE());
-      ds.field("UPLINK", &self.UPLINK());
-      ds.field("DOWNLINK", &self.DOWNLINK());
-      ds.field("BEACON", &self.BEACON());
-      ds.field("BAND", &self.BAND());
-      ds.field("POLARIZATION_TYPE", &self.POLARIZATION_TYPE());
-      ds.field("SIMPLE_POLARIZATION", &self.SIMPLE_POLARIZATION());
-      ds.field("STOKES_PARAMETERS", &self.STOKES_PARAMETERS());
-      ds.field("POWER_REQUIRED", &self.POWER_REQUIRED());
-      ds.field("POWER_TYPE", &self.POWER_TYPE());
-      ds.field("TRANSMIT", &self.TRANSMIT());
-      ds.field("RECEIVE", &self.RECEIVE());
-      ds.field("SENSOR_TYPE", &self.SENSOR_TYPE());
+      ds.field("CLASSIFICATION", &self.CLASSIFICATION());
+      ds.field("OB_TIME", &self.OB_TIME());
+      ds.field("CORR_QUALITY", &self.CORR_QUALITY());
+      ds.field("ID_ON_ORBIT", &self.ID_ON_ORBIT());
+      ds.field("SENSOR_ID", &self.SENSOR_ID());
+      ds.field("COLLECT_METHOD", &self.COLLECT_METHOD());
+      ds.field("NORAD_CAT_ID", &self.NORAD_CAT_ID());
+      ds.field("TASK_ID", &self.TASK_ID());
+      ds.field("TRANSACTION_ID", &self.TRANSACTION_ID());
+      ds.field("IMAGE_SET_ID", &self.IMAGE_SET_ID());
+      ds.field("IMAGE_SET_LENGTH", &self.IMAGE_SET_LENGTH());
+      ds.field("SEQUENCE_ID", &self.SEQUENCE_ID());
+      ds.field("OB_POSITION", &self.OB_POSITION());
+      ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
+      ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
+      ds.field("UCT", &self.UCT());
+      ds.field("AZIMUTH", &self.AZIMUTH());
+      ds.field("AZIMUTH_UNC", &self.AZIMUTH_UNC());
+      ds.field("AZIMUTH_BIAS", &self.AZIMUTH_BIAS());
+      ds.field("AZIMUTH_RATE", &self.AZIMUTH_RATE());
+      ds.field("ELEVATION", &self.ELEVATION());
+      ds.field("ELEVATION_UNC", &self.ELEVATION_UNC());
+      ds.field("ELEVATION_BIAS", &self.ELEVATION_BIAS());
+      ds.field("ELEVATION_RATE", &self.ELEVATION_RATE());
+      ds.field("RANGE", &self.RANGE());
+      ds.field("RANGE_UNC", &self.RANGE_UNC());
+      ds.field("RANGE_BIAS", &self.RANGE_BIAS());
+      ds.field("RANGE_RATE", &self.RANGE_RATE());
+      ds.field("RANGE_RATE_UNC", &self.RANGE_RATE_UNC());
+      ds.field("RA", &self.RA());
+      ds.field("RA_RATE", &self.RA_RATE());
+      ds.field("RA_UNC", &self.RA_UNC());
+      ds.field("RA_BIAS", &self.RA_BIAS());
+      ds.field("DECLINATION", &self.DECLINATION());
+      ds.field("DECLINATION_RATE", &self.DECLINATION_RATE());
+      ds.field("DECLINATION_UNC", &self.DECLINATION_UNC());
+      ds.field("DECLINATION_BIAS", &self.DECLINATION_BIAS());
+      ds.field("LOSX", &self.LOSX());
+      ds.field("LOSY", &self.LOSY());
+      ds.field("LOSZ", &self.LOSZ());
+      ds.field("LOS_UNC", &self.LOS_UNC());
+      ds.field("LOSXVEL", &self.LOSXVEL());
+      ds.field("LOSYVEL", &self.LOSYVEL());
+      ds.field("LOSZVEL", &self.LOSZVEL());
+      ds.field("SENLAT", &self.SENLAT());
+      ds.field("SENLON", &self.SENLON());
+      ds.field("SENALT", &self.SENALT());
+      ds.field("SENX", &self.SENX());
+      ds.field("SENY", &self.SENY());
+      ds.field("SENZ", &self.SENZ());
+      ds.field("FOV_COUNT", &self.FOV_COUNT());
+      ds.field("FOV_COUNT_UCTS", &self.FOV_COUNT_UCTS());
+      ds.field("EXP_DURATION", &self.EXP_DURATION());
+      ds.field("ZEROPTD", &self.ZEROPTD());
+      ds.field("NET_OBJ_SIG", &self.NET_OBJ_SIG());
+      ds.field("NET_OBJ_SIG_UNC", &self.NET_OBJ_SIG_UNC());
+      ds.field("MAG", &self.MAG());
+      ds.field("MAG_UNC", &self.MAG_UNC());
+      ds.field("MAG_NORM_RANGE", &self.MAG_NORM_RANGE());
+      ds.field("GEOLAT", &self.GEOLAT());
+      ds.field("GEOLON", &self.GEOLON());
+      ds.field("GEOALT", &self.GEOALT());
+      ds.field("GEORANGE", &self.GEORANGE());
+      ds.field("SKY_BKGRND", &self.SKY_BKGRND());
+      ds.field("PRIMARY_EXTINCTION", &self.PRIMARY_EXTINCTION());
+      ds.field("PRIMARY_EXTINCTION_UNC", &self.PRIMARY_EXTINCTION_UNC());
+      ds.field("SOLAR_PHASE_ANGLE", &self.SOLAR_PHASE_ANGLE());
+      ds.field("SOLAR_EQ_PHASE_ANGLE", &self.SOLAR_EQ_PHASE_ANGLE());
+      ds.field("SOLAR_DEC_ANGLE", &self.SOLAR_DEC_ANGLE());
+      ds.field("SHUTTER_DELAY", &self.SHUTTER_DELAY());
+      ds.field("TIMING_BIAS", &self.TIMING_BIAS());
+      ds.field("RAW_FILE_URI", &self.RAW_FILE_URI());
+      ds.field("INTENSITY", &self.INTENSITY());
+      ds.field("BG_INTENSITY", &self.BG_INTENSITY());
+      ds.field("DESCRIPTOR", &self.DESCRIPTOR());
       ds.field("SOURCE", &self.SOURCE());
-      ds.field("LAST_OB_TIME", &self.LAST_OB_TIME());
-      ds.field("LOWER_LEFT_ELEVATION_LIMIT", &self.LOWER_LEFT_ELEVATION_LIMIT());
-      ds.field("UPPER_LEFT_AZIMUTH_LIMIT", &self.UPPER_LEFT_AZIMUTH_LIMIT());
-      ds.field("LOWER_RIGHT_ELEVATION_LIMIT", &self.LOWER_RIGHT_ELEVATION_LIMIT());
-      ds.field("LOWER_LEFT_AZIMUTH_LIMIT", &self.LOWER_LEFT_AZIMUTH_LIMIT());
-      ds.field("UPPER_RIGHT_ELEVATION_LIMIT", &self.UPPER_RIGHT_ELEVATION_LIMIT());
-      ds.field("UPPER_RIGHT_AZIMUTH_LIMIT", &self.UPPER_RIGHT_AZIMUTH_LIMIT());
-      ds.field("LOWER_RIGHT_AZIMUTH_LIMIT", &self.LOWER_RIGHT_AZIMUTH_LIMIT());
-      ds.field("UPPER_LEFT_ELEVATION_LIMIT", &self.UPPER_LEFT_ELEVATION_LIMIT());
-      ds.field("RIGHT_GEO_BELT_LIMIT", &self.RIGHT_GEO_BELT_LIMIT());
-      ds.field("LEFT_GEO_BELT_LIMIT", &self.LEFT_GEO_BELT_LIMIT());
-      ds.field("MAGNITUDE_LIMIT", &self.MAGNITUDE_LIMIT());
-      ds.field("TASKABLE", &self.TASKABLE());
+      ds.field("ORIGIN", &self.ORIGIN());
+      ds.field("DATA_MODE", &self.DATA_MODE());
+      ds.field("CREATED_AT", &self.CREATED_AT());
+      ds.field("CREATED_BY", &self.CREATED_BY());
+      ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
+      ds.field("SEN_REFERENCE_FRAME", &self.SEN_REFERENCE_FRAME());
+      ds.field("UMBRA", &self.UMBRA());
+      ds.field("PENUMBRA", &self.PENUMBRA());
+      ds.field("ORIG_NETWORK", &self.ORIG_NETWORK());
+      ds.field("SOURCE_DL", &self.SOURCE_DL());
+      ds.field("TYPE", &self.TYPE());
+      ds.field("AZIMUTH_MEASURED", &self.AZIMUTH_MEASURED());
+      ds.field("ELEVATION_MEASURED", &self.ELEVATION_MEASURED());
+      ds.field("RANGE_MEASURED", &self.RANGE_MEASURED());
+      ds.field("RANGERATE_MEASURED", &self.RANGERATE_MEASURED());
+      ds.field("RA_MEASURED", &self.RA_MEASURED());
+      ds.field("DECLINATION_MEASURED", &self.DECLINATION_MEASURED());
+      ds.field("NIIRS", &self.NIIRS());
+      ds.field("METERS_PER_PIXEL", &self.METERS_PER_PIXEL());
+      ds.field("IMAGE_SNR", &self.IMAGE_SNR());
+      ds.field("IMAGE_BIT_DEPTH", &self.IMAGE_BIT_DEPTH());
+      ds.field("IMAGE_WIDTH", &self.IMAGE_WIDTH());
+      ds.field("IMAGE_HEIGHT", &self.IMAGE_HEIGHT());
+      ds.field("IMAGE_COMPRESSION", &self.IMAGE_COMPRESSION());
+      ds.field("IMAGE_COMPRESSION_RATIO", &self.IMAGE_COMPRESSION_RATIO());
+      ds.field("PROCESSED_IMAGE_URI", &self.PROCESSED_IMAGE_URI());
+      ds.field("IMAGE_AUTO_ENHANCED", &self.IMAGE_AUTO_ENHANCED());
+      ds.field("MULTI_FRAME_STACKED", &self.MULTI_FRAME_STACKED());
+      ds.field("SYNTHETIC_TRACKING_USED", &self.SYNTHETIC_TRACKING_USED());
+      ds.field("IMAGE_SHARPNESS", &self.IMAGE_SHARPNESS());
+      ds.field("IMAGE_NOISE_STDDEV", &self.IMAGE_NOISE_STDDEV());
+      ds.field("IMAGE_CONTRAST", &self.IMAGE_CONTRAST());
+      ds.field("IMAGE_DYNAMIC_RANGE", &self.IMAGE_DYNAMIC_RANGE());
+      ds.field("IMAGE_ENTROPY", &self.IMAGE_ENTROPY());
+      ds.field("BACKGROUND_UNIFORMITY", &self.BACKGROUND_UNIFORMITY());
+      ds.field("BACKGROUND_MEAN_LEVEL", &self.BACKGROUND_MEAN_LEVEL());
+      ds.field("SATURATED_PIXEL_PERCENT", &self.SATURATED_PIXEL_PERCENT());
+      ds.field("DEAD_PIXEL_PERCENT", &self.DEAD_PIXEL_PERCENT());
+      ds.field("PSF_FWHM", &self.PSF_FWHM());
+      ds.field("CLOUD_COVER_PERCENT", &self.CLOUD_COVER_PERCENT());
+      ds.field("CLOUD_DETECTION_CONFIDENCE", &self.CLOUD_DETECTION_CONFIDENCE());
+      ds.field("HAZE_PERCENT", &self.HAZE_PERCENT());
+      ds.field("AEROSOL_OPTICAL_THICKNESS", &self.AEROSOL_OPTICAL_THICKNESS());
+      ds.field("WATER_VAPOR_CONTENT", &self.WATER_VAPOR_CONTENT());
+      ds.field("SUN_ELEVATION", &self.SUN_ELEVATION());
+      ds.field("SUN_AZIMUTH", &self.SUN_AZIMUTH());
+      ds.field("VIEW_ZENITH_ANGLE", &self.VIEW_ZENITH_ANGLE());
+      ds.field("VIEW_AZIMUTH_ANGLE", &self.VIEW_AZIMUTH_ANGLE());
+      ds.field("OFF_NADIR_ANGLE", &self.OFF_NADIR_ANGLE());
+      ds.field("SWATH_WIDTH_KM", &self.SWATH_WIDTH_KM());
+      ds.field("MEAN_TERRAIN_ELEVATION", &self.MEAN_TERRAIN_ELEVATION());
+      ds.field("TERRAIN_ELEVATION_STDDEV", &self.TERRAIN_ELEVATION_STDDEV());
+      ds.field("SHADOW_COVER_PERCENT", &self.SHADOW_COVER_PERCENT());
+      ds.field("SUNGLINT_PRESENT", &self.SUNGLINT_PRESENT());
+      ds.field("SUNGLINT_PERCENT", &self.SUNGLINT_PERCENT());
+      ds.field("SNOW_ICE_COVER_PERCENT", &self.SNOW_ICE_COVER_PERCENT());
+      ds.field("VALID_DATA_AREA_KM2", &self.VALID_DATA_AREA_KM2());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct IDMT {
+pub struct EOOT {
   pub ID: Option<alloc::string::String>,
-  pub NAME: Option<alloc::string::String>,
-  pub DATA_MODE: DataMode,
-  pub UPLINK: Option<alloc::boxed::Box<FrequencyRangeT>>,
-  pub DOWNLINK: Option<alloc::boxed::Box<FrequencyRangeT>>,
-  pub BEACON: Option<alloc::boxed::Box<FrequencyRangeT>>,
-  pub BAND: Option<alloc::vec::Vec<BandT>>,
-  pub POLARIZATION_TYPE: PolarizationType,
-  pub SIMPLE_POLARIZATION: SimplePolarization,
-  pub STOKES_PARAMETERS: Option<alloc::boxed::Box<StokesParametersT>>,
-  pub POWER_REQUIRED: f64,
-  pub POWER_TYPE: Option<alloc::string::String>,
-  pub TRANSMIT: bool,
-  pub RECEIVE: bool,
-  pub SENSOR_TYPE: DeviceType,
+  pub CLASSIFICATION: Option<alloc::string::String>,
+  pub OB_TIME: Option<alloc::string::String>,
+  pub CORR_QUALITY: f32,
+  pub ID_ON_ORBIT: Option<alloc::string::String>,
+  pub SENSOR_ID: Option<alloc::string::String>,
+  pub COLLECT_METHOD: CollectMethod,
+  pub NORAD_CAT_ID: i32,
+  pub TASK_ID: Option<alloc::string::String>,
+  pub TRANSACTION_ID: Option<alloc::string::String>,
+  pub IMAGE_SET_ID: Option<alloc::string::String>,
+  pub IMAGE_SET_LENGTH: i32,
+  pub SEQUENCE_ID: i32,
+  pub OB_POSITION: ObservationPosition,
+  pub ORIG_OBJECT_ID: Option<alloc::string::String>,
+  pub ORIG_SENSOR_ID: Option<alloc::string::String>,
+  pub UCT: bool,
+  pub AZIMUTH: f32,
+  pub AZIMUTH_UNC: f32,
+  pub AZIMUTH_BIAS: f32,
+  pub AZIMUTH_RATE: f32,
+  pub ELEVATION: f32,
+  pub ELEVATION_UNC: f32,
+  pub ELEVATION_BIAS: f32,
+  pub ELEVATION_RATE: f32,
+  pub RANGE: f32,
+  pub RANGE_UNC: f32,
+  pub RANGE_BIAS: f32,
+  pub RANGE_RATE: f32,
+  pub RANGE_RATE_UNC: f32,
+  pub RA: f32,
+  pub RA_RATE: f32,
+  pub RA_UNC: f32,
+  pub RA_BIAS: f32,
+  pub DECLINATION: f32,
+  pub DECLINATION_RATE: f32,
+  pub DECLINATION_UNC: f32,
+  pub DECLINATION_BIAS: f32,
+  pub LOSX: f32,
+  pub LOSY: f32,
+  pub LOSZ: f32,
+  pub LOS_UNC: f32,
+  pub LOSXVEL: f32,
+  pub LOSYVEL: f32,
+  pub LOSZVEL: f32,
+  pub SENLAT: f32,
+  pub SENLON: f32,
+  pub SENALT: f32,
+  pub SENX: f32,
+  pub SENY: f32,
+  pub SENZ: f32,
+  pub FOV_COUNT: i32,
+  pub FOV_COUNT_UCTS: i32,
+  pub EXP_DURATION: f32,
+  pub ZEROPTD: f32,
+  pub NET_OBJ_SIG: f32,
+  pub NET_OBJ_SIG_UNC: f32,
+  pub MAG: f32,
+  pub MAG_UNC: f32,
+  pub MAG_NORM_RANGE: f32,
+  pub GEOLAT: f32,
+  pub GEOLON: f32,
+  pub GEOALT: f32,
+  pub GEORANGE: f32,
+  pub SKY_BKGRND: f32,
+  pub PRIMARY_EXTINCTION: f32,
+  pub PRIMARY_EXTINCTION_UNC: f32,
+  pub SOLAR_PHASE_ANGLE: f32,
+  pub SOLAR_EQ_PHASE_ANGLE: f32,
+  pub SOLAR_DEC_ANGLE: f32,
+  pub SHUTTER_DELAY: f32,
+  pub TIMING_BIAS: f32,
+  pub RAW_FILE_URI: Option<alloc::string::String>,
+  pub INTENSITY: f32,
+  pub BG_INTENSITY: f32,
+  pub DESCRIPTOR: Option<alloc::string::String>,
   pub SOURCE: Option<alloc::string::String>,
-  pub LAST_OB_TIME: Option<alloc::string::String>,
-  pub LOWER_LEFT_ELEVATION_LIMIT: f64,
-  pub UPPER_LEFT_AZIMUTH_LIMIT: f64,
-  pub LOWER_RIGHT_ELEVATION_LIMIT: f64,
-  pub LOWER_LEFT_AZIMUTH_LIMIT: f64,
-  pub UPPER_RIGHT_ELEVATION_LIMIT: f64,
-  pub UPPER_RIGHT_AZIMUTH_LIMIT: f64,
-  pub LOWER_RIGHT_AZIMUTH_LIMIT: f64,
-  pub UPPER_LEFT_ELEVATION_LIMIT: f64,
-  pub RIGHT_GEO_BELT_LIMIT: f64,
-  pub LEFT_GEO_BELT_LIMIT: f64,
-  pub MAGNITUDE_LIMIT: f64,
-  pub TASKABLE: bool,
+  pub ORIGIN: Option<alloc::string::String>,
+  pub DATA_MODE: DataMode,
+  pub CREATED_AT: Option<alloc::string::String>,
+  pub CREATED_BY: Option<alloc::string::String>,
+  pub REFERENCE_FRAME: Option<alloc::boxed::Box<RFMT>>,
+  pub SEN_REFERENCE_FRAME: Option<alloc::boxed::Box<RFMT>>,
+  pub UMBRA: bool,
+  pub PENUMBRA: bool,
+  pub ORIG_NETWORK: Option<alloc::string::String>,
+  pub SOURCE_DL: Option<alloc::string::String>,
+  pub TYPE: DeviceType,
+  pub AZIMUTH_MEASURED: bool,
+  pub ELEVATION_MEASURED: bool,
+  pub RANGE_MEASURED: bool,
+  pub RANGERATE_MEASURED: bool,
+  pub RA_MEASURED: bool,
+  pub DECLINATION_MEASURED: bool,
+  pub NIIRS: f32,
+  pub METERS_PER_PIXEL: f32,
+  pub IMAGE_SNR: f32,
+  pub IMAGE_BIT_DEPTH: i32,
+  pub IMAGE_WIDTH: i32,
+  pub IMAGE_HEIGHT: i32,
+  pub IMAGE_COMPRESSION: Option<alloc::string::String>,
+  pub IMAGE_COMPRESSION_RATIO: f32,
+  pub PROCESSED_IMAGE_URI: Option<alloc::string::String>,
+  pub IMAGE_AUTO_ENHANCED: bool,
+  pub MULTI_FRAME_STACKED: bool,
+  pub SYNTHETIC_TRACKING_USED: bool,
+  pub IMAGE_SHARPNESS: f32,
+  pub IMAGE_NOISE_STDDEV: f32,
+  pub IMAGE_CONTRAST: f32,
+  pub IMAGE_DYNAMIC_RANGE: f32,
+  pub IMAGE_ENTROPY: f32,
+  pub BACKGROUND_UNIFORMITY: f32,
+  pub BACKGROUND_MEAN_LEVEL: f32,
+  pub SATURATED_PIXEL_PERCENT: f32,
+  pub DEAD_PIXEL_PERCENT: f32,
+  pub PSF_FWHM: f32,
+  pub CLOUD_COVER_PERCENT: f32,
+  pub CLOUD_DETECTION_CONFIDENCE: f32,
+  pub HAZE_PERCENT: f32,
+  pub AEROSOL_OPTICAL_THICKNESS: f32,
+  pub WATER_VAPOR_CONTENT: f32,
+  pub SUN_ELEVATION: f32,
+  pub SUN_AZIMUTH: f32,
+  pub VIEW_ZENITH_ANGLE: f32,
+  pub VIEW_AZIMUTH_ANGLE: f32,
+  pub OFF_NADIR_ANGLE: f32,
+  pub SWATH_WIDTH_KM: f32,
+  pub MEAN_TERRAIN_ELEVATION: f32,
+  pub TERRAIN_ELEVATION_STDDEV: f32,
+  pub SHADOW_COVER_PERCENT: f32,
+  pub SUNGLINT_PRESENT: bool,
+  pub SUNGLINT_PERCENT: f32,
+  pub SNOW_ICE_COVER_PERCENT: f32,
+  pub VALID_DATA_AREA_KM2: f32,
 }
-impl Default for IDMT {
+impl Default for EOOT {
   fn default() -> Self {
     Self {
       ID: None,
-      NAME: None,
-      DATA_MODE: DataMode::EXERCISE,
-      UPLINK: None,
-      DOWNLINK: None,
-      BEACON: None,
-      BAND: None,
-      POLARIZATION_TYPE: PolarizationType::linear,
-      SIMPLE_POLARIZATION: SimplePolarization::vertical,
-      STOKES_PARAMETERS: None,
-      POWER_REQUIRED: 0.0,
-      POWER_TYPE: None,
-      TRANSMIT: false,
-      RECEIVE: false,
-      SENSOR_TYPE: DeviceType::UNKNOWN,
+      CLASSIFICATION: None,
+      OB_TIME: None,
+      CORR_QUALITY: 0.0,
+      ID_ON_ORBIT: None,
+      SENSOR_ID: None,
+      COLLECT_METHOD: CollectMethod::SIDEREAL,
+      NORAD_CAT_ID: 0,
+      TASK_ID: None,
+      TRANSACTION_ID: None,
+      IMAGE_SET_ID: None,
+      IMAGE_SET_LENGTH: 0,
+      SEQUENCE_ID: 0,
+      OB_POSITION: ObservationPosition::FENCE,
+      ORIG_OBJECT_ID: None,
+      ORIG_SENSOR_ID: None,
+      UCT: false,
+      AZIMUTH: 0.0,
+      AZIMUTH_UNC: 0.0,
+      AZIMUTH_BIAS: 0.0,
+      AZIMUTH_RATE: 0.0,
+      ELEVATION: 0.0,
+      ELEVATION_UNC: 0.0,
+      ELEVATION_BIAS: 0.0,
+      ELEVATION_RATE: 0.0,
+      RANGE: 0.0,
+      RANGE_UNC: 0.0,
+      RANGE_BIAS: 0.0,
+      RANGE_RATE: 0.0,
+      RANGE_RATE_UNC: 0.0,
+      RA: 0.0,
+      RA_RATE: 0.0,
+      RA_UNC: 0.0,
+      RA_BIAS: 0.0,
+      DECLINATION: 0.0,
+      DECLINATION_RATE: 0.0,
+      DECLINATION_UNC: 0.0,
+      DECLINATION_BIAS: 0.0,
+      LOSX: 0.0,
+      LOSY: 0.0,
+      LOSZ: 0.0,
+      LOS_UNC: 0.0,
+      LOSXVEL: 0.0,
+      LOSYVEL: 0.0,
+      LOSZVEL: 0.0,
+      SENLAT: 0.0,
+      SENLON: 0.0,
+      SENALT: 0.0,
+      SENX: 0.0,
+      SENY: 0.0,
+      SENZ: 0.0,
+      FOV_COUNT: 0,
+      FOV_COUNT_UCTS: 0,
+      EXP_DURATION: 0.0,
+      ZEROPTD: 0.0,
+      NET_OBJ_SIG: 0.0,
+      NET_OBJ_SIG_UNC: 0.0,
+      MAG: 0.0,
+      MAG_UNC: 0.0,
+      MAG_NORM_RANGE: 0.0,
+      GEOLAT: 0.0,
+      GEOLON: 0.0,
+      GEOALT: 0.0,
+      GEORANGE: 0.0,
+      SKY_BKGRND: 0.0,
+      PRIMARY_EXTINCTION: 0.0,
+      PRIMARY_EXTINCTION_UNC: 0.0,
+      SOLAR_PHASE_ANGLE: 0.0,
+      SOLAR_EQ_PHASE_ANGLE: 0.0,
+      SOLAR_DEC_ANGLE: 0.0,
+      SHUTTER_DELAY: 0.0,
+      TIMING_BIAS: 0.0,
+      RAW_FILE_URI: None,
+      INTENSITY: 0.0,
+      BG_INTENSITY: 0.0,
+      DESCRIPTOR: None,
       SOURCE: None,
-      LAST_OB_TIME: None,
-      LOWER_LEFT_ELEVATION_LIMIT: 0.0,
-      UPPER_LEFT_AZIMUTH_LIMIT: 0.0,
-      LOWER_RIGHT_ELEVATION_LIMIT: 0.0,
-      LOWER_LEFT_AZIMUTH_LIMIT: 0.0,
-      UPPER_RIGHT_ELEVATION_LIMIT: 0.0,
-      UPPER_RIGHT_AZIMUTH_LIMIT: 0.0,
-      LOWER_RIGHT_AZIMUTH_LIMIT: 0.0,
-      UPPER_LEFT_ELEVATION_LIMIT: 0.0,
-      RIGHT_GEO_BELT_LIMIT: 0.0,
-      LEFT_GEO_BELT_LIMIT: 0.0,
-      MAGNITUDE_LIMIT: 0.0,
-      TASKABLE: false,
+      ORIGIN: None,
+      DATA_MODE: DataMode::EXERCISE,
+      CREATED_AT: None,
+      CREATED_BY: None,
+      REFERENCE_FRAME: None,
+      SEN_REFERENCE_FRAME: None,
+      UMBRA: false,
+      PENUMBRA: false,
+      ORIG_NETWORK: None,
+      SOURCE_DL: None,
+      TYPE: DeviceType::UNKNOWN,
+      AZIMUTH_MEASURED: false,
+      ELEVATION_MEASURED: false,
+      RANGE_MEASURED: false,
+      RANGERATE_MEASURED: false,
+      RA_MEASURED: false,
+      DECLINATION_MEASURED: false,
+      NIIRS: 0.0,
+      METERS_PER_PIXEL: 0.0,
+      IMAGE_SNR: 0.0,
+      IMAGE_BIT_DEPTH: 0,
+      IMAGE_WIDTH: 0,
+      IMAGE_HEIGHT: 0,
+      IMAGE_COMPRESSION: None,
+      IMAGE_COMPRESSION_RATIO: 0.0,
+      PROCESSED_IMAGE_URI: None,
+      IMAGE_AUTO_ENHANCED: false,
+      MULTI_FRAME_STACKED: false,
+      SYNTHETIC_TRACKING_USED: false,
+      IMAGE_SHARPNESS: 0.0,
+      IMAGE_NOISE_STDDEV: 0.0,
+      IMAGE_CONTRAST: 0.0,
+      IMAGE_DYNAMIC_RANGE: 0.0,
+      IMAGE_ENTROPY: 0.0,
+      BACKGROUND_UNIFORMITY: 0.0,
+      BACKGROUND_MEAN_LEVEL: 0.0,
+      SATURATED_PIXEL_PERCENT: 0.0,
+      DEAD_PIXEL_PERCENT: 0.0,
+      PSF_FWHM: 0.0,
+      CLOUD_COVER_PERCENT: 0.0,
+      CLOUD_DETECTION_CONFIDENCE: 0.0,
+      HAZE_PERCENT: 0.0,
+      AEROSOL_OPTICAL_THICKNESS: 0.0,
+      WATER_VAPOR_CONTENT: 0.0,
+      SUN_ELEVATION: 0.0,
+      SUN_AZIMUTH: 0.0,
+      VIEW_ZENITH_ANGLE: 0.0,
+      VIEW_AZIMUTH_ANGLE: 0.0,
+      OFF_NADIR_ANGLE: 0.0,
+      SWATH_WIDTH_KM: 0.0,
+      MEAN_TERRAIN_ELEVATION: 0.0,
+      TERRAIN_ELEVATION_STDDEV: 0.0,
+      SHADOW_COVER_PERCENT: 0.0,
+      SUNGLINT_PRESENT: false,
+      SUNGLINT_PERCENT: 0.0,
+      SNOW_ICE_COVER_PERCENT: 0.0,
+      VALID_DATA_AREA_KM2: 0.0,
     }
   }
 }
-impl IDMT {
+impl EOOT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<IDM<'b>> {
+  ) -> ::flatbuffers::WIPOffset<EOO<'b>> {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let NAME = self.NAME.as_ref().map(|x|{
+    let CLASSIFICATION = self.CLASSIFICATION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let DATA_MODE = self.DATA_MODE;
-    let UPLINK = self.UPLINK.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    let DOWNLINK = self.DOWNLINK.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    let BEACON = self.BEACON.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    let BAND = self.BAND.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    let POLARIZATION_TYPE = self.POLARIZATION_TYPE;
-    let SIMPLE_POLARIZATION = self.SIMPLE_POLARIZATION;
-    let STOKES_PARAMETERS = self.STOKES_PARAMETERS.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    let POWER_REQUIRED = self.POWER_REQUIRED;
-    let POWER_TYPE = self.POWER_TYPE.as_ref().map(|x|{
+    let OB_TIME = self.OB_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TRANSMIT = self.TRANSMIT;
-    let RECEIVE = self.RECEIVE;
-    let SENSOR_TYPE = self.SENSOR_TYPE;
+    let CORR_QUALITY = self.CORR_QUALITY;
+    let ID_ON_ORBIT = self.ID_ON_ORBIT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SENSOR_ID = self.SENSOR_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COLLECT_METHOD = self.COLLECT_METHOD;
+    let NORAD_CAT_ID = self.NORAD_CAT_ID;
+    let TASK_ID = self.TASK_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRANSACTION_ID = self.TRANSACTION_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let IMAGE_SET_ID = self.IMAGE_SET_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let IMAGE_SET_LENGTH = self.IMAGE_SET_LENGTH;
+    let SEQUENCE_ID = self.SEQUENCE_ID;
+    let OB_POSITION = self.OB_POSITION;
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let UCT = self.UCT;
+    let AZIMUTH = self.AZIMUTH;
+    let AZIMUTH_UNC = self.AZIMUTH_UNC;
+    let AZIMUTH_BIAS = self.AZIMUTH_BIAS;
+    let AZIMUTH_RATE = self.AZIMUTH_RATE;
+    let ELEVATION = self.ELEVATION;
+    let ELEVATION_UNC = self.ELEVATION_UNC;
+    let ELEVATION_BIAS = self.ELEVATION_BIAS;
+    let ELEVATION_RATE = self.ELEVATION_RATE;
+    let RANGE = self.RANGE;
+    let RANGE_UNC = self.RANGE_UNC;
+    let RANGE_BIAS = self.RANGE_BIAS;
+    let RANGE_RATE = self.RANGE_RATE;
+    let RANGE_RATE_UNC = self.RANGE_RATE_UNC;
+    let RA = self.RA;
+    let RA_RATE = self.RA_RATE;
+    let RA_UNC = self.RA_UNC;
+    let RA_BIAS = self.RA_BIAS;
+    let DECLINATION = self.DECLINATION;
+    let DECLINATION_RATE = self.DECLINATION_RATE;
+    let DECLINATION_UNC = self.DECLINATION_UNC;
+    let DECLINATION_BIAS = self.DECLINATION_BIAS;
+    let LOSX = self.LOSX;
+    let LOSY = self.LOSY;
+    let LOSZ = self.LOSZ;
+    let LOS_UNC = self.LOS_UNC;
+    let LOSXVEL = self.LOSXVEL;
+    let LOSYVEL = self.LOSYVEL;
+    let LOSZVEL = self.LOSZVEL;
+    let SENLAT = self.SENLAT;
+    let SENLON = self.SENLON;
+    let SENALT = self.SENALT;
+    let SENX = self.SENX;
+    let SENY = self.SENY;
+    let SENZ = self.SENZ;
+    let FOV_COUNT = self.FOV_COUNT;
+    let FOV_COUNT_UCTS = self.FOV_COUNT_UCTS;
+    let EXP_DURATION = self.EXP_DURATION;
+    let ZEROPTD = self.ZEROPTD;
+    let NET_OBJ_SIG = self.NET_OBJ_SIG;
+    let NET_OBJ_SIG_UNC = self.NET_OBJ_SIG_UNC;
+    let MAG = self.MAG;
+    let MAG_UNC = self.MAG_UNC;
+    let MAG_NORM_RANGE = self.MAG_NORM_RANGE;
+    let GEOLAT = self.GEOLAT;
+    let GEOLON = self.GEOLON;
+    let GEOALT = self.GEOALT;
+    let GEORANGE = self.GEORANGE;
+    let SKY_BKGRND = self.SKY_BKGRND;
+    let PRIMARY_EXTINCTION = self.PRIMARY_EXTINCTION;
+    let PRIMARY_EXTINCTION_UNC = self.PRIMARY_EXTINCTION_UNC;
+    let SOLAR_PHASE_ANGLE = self.SOLAR_PHASE_ANGLE;
+    let SOLAR_EQ_PHASE_ANGLE = self.SOLAR_EQ_PHASE_ANGLE;
+    let SOLAR_DEC_ANGLE = self.SOLAR_DEC_ANGLE;
+    let SHUTTER_DELAY = self.SHUTTER_DELAY;
+    let TIMING_BIAS = self.TIMING_BIAS;
+    let RAW_FILE_URI = self.RAW_FILE_URI.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INTENSITY = self.INTENSITY;
+    let BG_INTENSITY = self.BG_INTENSITY;
+    let DESCRIPTOR = self.DESCRIPTOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let SOURCE = self.SOURCE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let LAST_OB_TIME = self.LAST_OB_TIME.as_ref().map(|x|{
+    let ORIGIN = self.ORIGIN.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let LOWER_LEFT_ELEVATION_LIMIT = self.LOWER_LEFT_ELEVATION_LIMIT;
-    let UPPER_LEFT_AZIMUTH_LIMIT = self.UPPER_LEFT_AZIMUTH_LIMIT;
-    let LOWER_RIGHT_ELEVATION_LIMIT = self.LOWER_RIGHT_ELEVATION_LIMIT;
-    let LOWER_LEFT_AZIMUTH_LIMIT = self.LOWER_LEFT_AZIMUTH_LIMIT;
-    let UPPER_RIGHT_ELEVATION_LIMIT = self.UPPER_RIGHT_ELEVATION_LIMIT;
-    let UPPER_RIGHT_AZIMUTH_LIMIT = self.UPPER_RIGHT_AZIMUTH_LIMIT;
-    let LOWER_RIGHT_AZIMUTH_LIMIT = self.LOWER_RIGHT_AZIMUTH_LIMIT;
-    let UPPER_LEFT_ELEVATION_LIMIT = self.UPPER_LEFT_ELEVATION_LIMIT;
-    let RIGHT_GEO_BELT_LIMIT = self.RIGHT_GEO_BELT_LIMIT;
-    let LEFT_GEO_BELT_LIMIT = self.LEFT_GEO_BELT_LIMIT;
-    let MAGNITUDE_LIMIT = self.MAGNITUDE_LIMIT;
-    let TASKABLE = self.TASKABLE;
-    IDM::create(_fbb, &IDMArgs{
+    let DATA_MODE = self.DATA_MODE;
+    let CREATED_AT = self.CREATED_AT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CREATED_BY = self.CREATED_BY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let UMBRA = self.UMBRA;
+    let PENUMBRA = self.PENUMBRA;
+    let ORIG_NETWORK = self.ORIG_NETWORK.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SOURCE_DL = self.SOURCE_DL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TYPE = self.TYPE;
+    let AZIMUTH_MEASURED = self.AZIMUTH_MEASURED;
+    let ELEVATION_MEASURED = self.ELEVATION_MEASURED;
+    let RANGE_MEASURED = self.RANGE_MEASURED;
+    let RANGERATE_MEASURED = self.RANGERATE_MEASURED;
+    let RA_MEASURED = self.RA_MEASURED;
+    let DECLINATION_MEASURED = self.DECLINATION_MEASURED;
+    let NIIRS = self.NIIRS;
+    let METERS_PER_PIXEL = self.METERS_PER_PIXEL;
+    let IMAGE_SNR = self.IMAGE_SNR;
+    let IMAGE_BIT_DEPTH = self.IMAGE_BIT_DEPTH;
+    let IMAGE_WIDTH = self.IMAGE_WIDTH;
+    let IMAGE_HEIGHT = self.IMAGE_HEIGHT;
+    let IMAGE_COMPRESSION = self.IMAGE_COMPRESSION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let IMAGE_COMPRESSION_RATIO = self.IMAGE_COMPRESSION_RATIO;
+    let PROCESSED_IMAGE_URI = self.PROCESSED_IMAGE_URI.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let IMAGE_AUTO_ENHANCED = self.IMAGE_AUTO_ENHANCED;
+    let MULTI_FRAME_STACKED = self.MULTI_FRAME_STACKED;
+    let SYNTHETIC_TRACKING_USED = self.SYNTHETIC_TRACKING_USED;
+    let IMAGE_SHARPNESS = self.IMAGE_SHARPNESS;
+    let IMAGE_NOISE_STDDEV = self.IMAGE_NOISE_STDDEV;
+    let IMAGE_CONTRAST = self.IMAGE_CONTRAST;
+    let IMAGE_DYNAMIC_RANGE = self.IMAGE_DYNAMIC_RANGE;
+    let IMAGE_ENTROPY = self.IMAGE_ENTROPY;
+    let BACKGROUND_UNIFORMITY = self.BACKGROUND_UNIFORMITY;
+    let BACKGROUND_MEAN_LEVEL = self.BACKGROUND_MEAN_LEVEL;
+    let SATURATED_PIXEL_PERCENT = self.SATURATED_PIXEL_PERCENT;
+    let DEAD_PIXEL_PERCENT = self.DEAD_PIXEL_PERCENT;
+    let PSF_FWHM = self.PSF_FWHM;
+    let CLOUD_COVER_PERCENT = self.CLOUD_COVER_PERCENT;
+    let CLOUD_DETECTION_CONFIDENCE = self.CLOUD_DETECTION_CONFIDENCE;
+    let HAZE_PERCENT = self.HAZE_PERCENT;
+    let AEROSOL_OPTICAL_THICKNESS = self.AEROSOL_OPTICAL_THICKNESS;
+    let WATER_VAPOR_CONTENT = self.WATER_VAPOR_CONTENT;
+    let SUN_ELEVATION = self.SUN_ELEVATION;
+    let SUN_AZIMUTH = self.SUN_AZIMUTH;
+    let VIEW_ZENITH_ANGLE = self.VIEW_ZENITH_ANGLE;
+    let VIEW_AZIMUTH_ANGLE = self.VIEW_AZIMUTH_ANGLE;
+    let OFF_NADIR_ANGLE = self.OFF_NADIR_ANGLE;
+    let SWATH_WIDTH_KM = self.SWATH_WIDTH_KM;
+    let MEAN_TERRAIN_ELEVATION = self.MEAN_TERRAIN_ELEVATION;
+    let TERRAIN_ELEVATION_STDDEV = self.TERRAIN_ELEVATION_STDDEV;
+    let SHADOW_COVER_PERCENT = self.SHADOW_COVER_PERCENT;
+    let SUNGLINT_PRESENT = self.SUNGLINT_PRESENT;
+    let SUNGLINT_PERCENT = self.SUNGLINT_PERCENT;
+    let SNOW_ICE_COVER_PERCENT = self.SNOW_ICE_COVER_PERCENT;
+    let VALID_DATA_AREA_KM2 = self.VALID_DATA_AREA_KM2;
+    EOO::create(_fbb, &EOOArgs{
       ID,
-      NAME,
-      DATA_MODE,
-      UPLINK,
-      DOWNLINK,
-      BEACON,
-      BAND,
-      POLARIZATION_TYPE,
-      SIMPLE_POLARIZATION,
-      STOKES_PARAMETERS,
-      POWER_REQUIRED,
-      POWER_TYPE,
-      TRANSMIT,
-      RECEIVE,
-      SENSOR_TYPE,
+      CLASSIFICATION,
+      OB_TIME,
+      CORR_QUALITY,
+      ID_ON_ORBIT,
+      SENSOR_ID,
+      COLLECT_METHOD,
+      NORAD_CAT_ID,
+      TASK_ID,
+      TRANSACTION_ID,
+      IMAGE_SET_ID,
+      IMAGE_SET_LENGTH,
+      SEQUENCE_ID,
+      OB_POSITION,
+      ORIG_OBJECT_ID,
+      ORIG_SENSOR_ID,
+      UCT,
+      AZIMUTH,
+      AZIMUTH_UNC,
+      AZIMUTH_BIAS,
+      AZIMUTH_RATE,
+      ELEVATION,
+      ELEVATION_UNC,
+      ELEVATION_BIAS,
+      ELEVATION_RATE,
+      RANGE,
+      RANGE_UNC,
+      RANGE_BIAS,
+      RANGE_RATE,
+      RANGE_RATE_UNC,
+      RA,
+      RA_RATE,
+      RA_UNC,
+      RA_BIAS,
+      DECLINATION,
+      DECLINATION_RATE,
+      DECLINATION_UNC,
+      DECLINATION_BIAS,
+      LOSX,
+      LOSY,
+      LOSZ,
+      LOS_UNC,
+      LOSXVEL,
+      LOSYVEL,
+      LOSZVEL,
+      SENLAT,
+      SENLON,
+      SENALT,
+      SENX,
+      SENY,
+      SENZ,
+      FOV_COUNT,
+      FOV_COUNT_UCTS,
+      EXP_DURATION,
+      ZEROPTD,
+      NET_OBJ_SIG,
+      NET_OBJ_SIG_UNC,
+      MAG,
+      MAG_UNC,
+      MAG_NORM_RANGE,
+      GEOLAT,
+      GEOLON,
+      GEOALT,
+      GEORANGE,
+      SKY_BKGRND,
+      PRIMARY_EXTINCTION,
+      PRIMARY_EXTINCTION_UNC,
+      SOLAR_PHASE_ANGLE,
+      SOLAR_EQ_PHASE_ANGLE,
+      SOLAR_DEC_ANGLE,
+      SHUTTER_DELAY,
+      TIMING_BIAS,
+      RAW_FILE_URI,
+      INTENSITY,
+      BG_INTENSITY,
+      DESCRIPTOR,
       SOURCE,
-      LAST_OB_TIME,
-      LOWER_LEFT_ELEVATION_LIMIT,
-      UPPER_LEFT_AZIMUTH_LIMIT,
-      LOWER_RIGHT_ELEVATION_LIMIT,
-      LOWER_LEFT_AZIMUTH_LIMIT,
-      UPPER_RIGHT_ELEVATION_LIMIT,
-      UPPER_RIGHT_AZIMUTH_LIMIT,
-      LOWER_RIGHT_AZIMUTH_LIMIT,
-      UPPER_LEFT_ELEVATION_LIMIT,
-      RIGHT_GEO_BELT_LIMIT,
-      LEFT_GEO_BELT_LIMIT,
-      MAGNITUDE_LIMIT,
-      TASKABLE,
+      ORIGIN,
+      DATA_MODE,
+      CREATED_AT,
+      CREATED_BY,
+      REFERENCE_FRAME,
+      SEN_REFERENCE_FRAME,
+      UMBRA,
+      PENUMBRA,
+      ORIG_NETWORK,
+      SOURCE_DL,
+      TYPE,
+      AZIMUTH_MEASURED,
+      ELEVATION_MEASURED,
+      RANGE_MEASURED,
+      RANGERATE_MEASURED,
+      RA_MEASURED,
+      DECLINATION_MEASURED,
+      NIIRS,
+      METERS_PER_PIXEL,
+      IMAGE_SNR,
+      IMAGE_BIT_DEPTH,
+      IMAGE_WIDTH,
+      IMAGE_HEIGHT,
+      IMAGE_COMPRESSION,
+      IMAGE_COMPRESSION_RATIO,
+      PROCESSED_IMAGE_URI,
+      IMAGE_AUTO_ENHANCED,
+      MULTI_FRAME_STACKED,
+      SYNTHETIC_TRACKING_USED,
+      IMAGE_SHARPNESS,
+      IMAGE_NOISE_STDDEV,
+      IMAGE_CONTRAST,
+      IMAGE_DYNAMIC_RANGE,
+      IMAGE_ENTROPY,
+      BACKGROUND_UNIFORMITY,
+      BACKGROUND_MEAN_LEVEL,
+      SATURATED_PIXEL_PERCENT,
+      DEAD_PIXEL_PERCENT,
+      PSF_FWHM,
+      CLOUD_COVER_PERCENT,
+      CLOUD_DETECTION_CONFIDENCE,
+      HAZE_PERCENT,
+      AEROSOL_OPTICAL_THICKNESS,
+      WATER_VAPOR_CONTENT,
+      SUN_ELEVATION,
+      SUN_AZIMUTH,
+      VIEW_ZENITH_ANGLE,
+      VIEW_AZIMUTH_ANGLE,
+      OFF_NADIR_ANGLE,
+      SWATH_WIDTH_KM,
+      MEAN_TERRAIN_ELEVATION,
+      TERRAIN_ELEVATION_STDDEV,
+      SHADOW_COVER_PERCENT,
+      SUNGLINT_PRESENT,
+      SUNGLINT_PERCENT,
+      SNOW_ICE_COVER_PERCENT,
+      VALID_DATA_AREA_KM2,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `IDM`
+/// Verifies that a buffer of bytes contains a `EOO`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_idm_unchecked`.
-pub fn root_as_idm(buf: &[u8]) -> Result<IDM<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<IDM>(buf)
+/// `root_as_eoo_unchecked`.
+pub fn root_as_eoo(buf: &[u8]) -> Result<EOO<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<EOO>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `IDM` and returns it.
+/// `EOO` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_idm_unchecked`.
-pub fn size_prefixed_root_as_idm(buf: &[u8]) -> Result<IDM<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<IDM>(buf)
+/// `size_prefixed_root_as_eoo_unchecked`.
+pub fn size_prefixed_root_as_eoo(buf: &[u8]) -> Result<EOO<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<EOO>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `IDM` and returns it.
+/// contains a `EOO` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_idm_unchecked`.
-pub fn root_as_idm_with_opts<'b, 'o>(
+/// `root_as_eoo_unchecked`.
+pub fn root_as_eoo_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<IDM<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<IDM<'b>>(opts, buf)
+) -> Result<EOO<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<EOO<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `IDM` and returns
+/// bytes contains a size prefixed `EOO` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_idm_unchecked`.
-pub fn size_prefixed_root_as_idm_with_opts<'b, 'o>(
+/// `root_as_eoo_unchecked`.
+pub fn size_prefixed_root_as_eoo_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<IDM<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<IDM<'b>>(opts, buf)
+) -> Result<EOO<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<EOO<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a IDM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a EOO and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `IDM`.
-pub unsafe fn root_as_idm_unchecked(buf: &[u8]) -> IDM<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<IDM>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `EOO`.
+pub unsafe fn root_as_eoo_unchecked(buf: &[u8]) -> EOO<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<EOO>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed IDM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed EOO and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `IDM`.
-pub unsafe fn size_prefixed_root_as_idm_unchecked(buf: &[u8]) -> IDM<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<IDM>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `EOO`.
+pub unsafe fn size_prefixed_root_as_eoo_unchecked(buf: &[u8]) -> EOO<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<EOO>(buf) }
 }
-pub const IDM_IDENTIFIER: &str = "$IDM";
+pub const EOO_IDENTIFIER: &str = "$EOO";
 
 #[inline]
-pub fn idm_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, IDM_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn idm_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, IDM_IDENTIFIER, true)
+pub fn eoo_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, EOO_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_idm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn eoo_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, EOO_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_eoo_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<IDM<'a>>) {
-  fbb.finish(root, Some(IDM_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<EOO<'a>>) {
+  fbb.finish(root, Some(EOO_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_idm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<IDM<'a>>) {
-  fbb.finish_size_prefixed(root, Some(IDM_IDENTIFIER));
+pub fn finish_size_prefixed_eoo_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<EOO<'a>>) {
+  fbb.finish_size_prefixed(root, Some(EOO_IDENTIFIER));
 }

@@ -2,664 +2,71 @@
 // @generated
 extern crate alloc;
 
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_LEGACY_COUNTRY_CODE: i8 = 0;
+pub const ENUM_MIN_POLYNOMIAL_BASIS_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_LEGACY_COUNTRY_CODE: i8 = 125;
+pub const ENUM_MAX_POLYNOMIAL_BASIS_TYPE: i8 = 4;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_LEGACY_COUNTRY_CODE: [legacyCountryCode; 126] = [
-  legacyCountryCode::AB,
-  legacyCountryCode::ABS,
-  legacyCountryCode::AC,
-  legacyCountryCode::ALG,
-  legacyCountryCode::ANG,
-  legacyCountryCode::ARGN,
-  legacyCountryCode::ARM,
-  legacyCountryCode::ASRA,
-  legacyCountryCode::AUS,
-  legacyCountryCode::AZER,
-  legacyCountryCode::BEL,
-  legacyCountryCode::BELA,
-  legacyCountryCode::BERM,
-  legacyCountryCode::BGD,
-  legacyCountryCode::BHUT,
-  legacyCountryCode::BOL,
-  legacyCountryCode::BRAZ,
-  legacyCountryCode::BUL,
-  legacyCountryCode::CA,
-  legacyCountryCode::CHBZ,
-  legacyCountryCode::CHTU,
-  legacyCountryCode::CHLE,
-  legacyCountryCode::CIS,
-  legacyCountryCode::COL,
-  legacyCountryCode::CRI,
-  legacyCountryCode::CZCH,
-  legacyCountryCode::DEN,
-  legacyCountryCode::DJI,
-  legacyCountryCode::ECU,
-  legacyCountryCode::EGYP,
-  legacyCountryCode::ESA,
-  legacyCountryCode::ESRO,
-  legacyCountryCode::EST,
-  legacyCountryCode::ETH,
-  legacyCountryCode::EUME,
-  legacyCountryCode::EUTE,
-  legacyCountryCode::FGER,
-  legacyCountryCode::FIN,
-  legacyCountryCode::FR,
-  legacyCountryCode::FRIT,
-  legacyCountryCode::GER,
-  legacyCountryCode::GHA,
-  legacyCountryCode::GLOB,
-  legacyCountryCode::GREC,
-  legacyCountryCode::GRSA,
-  legacyCountryCode::GUAT,
-  legacyCountryCode::HUN,
-  legacyCountryCode::IM,
-  legacyCountryCode::IND,
-  legacyCountryCode::INDO,
-  legacyCountryCode::IRAN,
-  legacyCountryCode::IRAQ,
-  legacyCountryCode::IRID,
-  legacyCountryCode::IRL,
-  legacyCountryCode::ISRA,
-  legacyCountryCode::ISRO,
-  legacyCountryCode::ISS,
-  legacyCountryCode::IT,
-  legacyCountryCode::ITSO,
-  legacyCountryCode::JPN,
-  legacyCountryCode::KAZ,
-  legacyCountryCode::KEN,
-  legacyCountryCode::LAOS,
-  legacyCountryCode::LKA,
-  legacyCountryCode::LTU,
-  legacyCountryCode::LUXE,
-  legacyCountryCode::MA,
-  legacyCountryCode::MALA,
-  legacyCountryCode::MCO,
-  legacyCountryCode::MDA,
-  legacyCountryCode::MEX,
-  legacyCountryCode::MMR,
-  legacyCountryCode::MNG,
-  legacyCountryCode::MUS,
-  legacyCountryCode::NATO,
-  legacyCountryCode::NETH,
-  legacyCountryCode::NICO,
-  legacyCountryCode::NIG,
-  legacyCountryCode::NKOR,
-  legacyCountryCode::NOR,
-  legacyCountryCode::NPL,
-  legacyCountryCode::NZ,
-  legacyCountryCode::O3B,
-  legacyCountryCode::ORB,
-  legacyCountryCode::PAKI,
-  legacyCountryCode::PERU,
-  legacyCountryCode::POL,
-  legacyCountryCode::POR,
-  legacyCountryCode::PRC,
-  legacyCountryCode::PRY,
-  legacyCountryCode::PRES,
-  legacyCountryCode::QAT,
-  legacyCountryCode::RASC,
-  legacyCountryCode::ROC,
-  legacyCountryCode::ROM,
-  legacyCountryCode::RP,
-  legacyCountryCode::RWA,
-  legacyCountryCode::SAFR,
-  legacyCountryCode::SAUD,
-  legacyCountryCode::SDN,
-  legacyCountryCode::SEAL,
-  legacyCountryCode::SES,
-  legacyCountryCode::SGJP,
-  legacyCountryCode::SING,
-  legacyCountryCode::SKOR,
-  legacyCountryCode::SPN,
-  legacyCountryCode::STCT,
-  legacyCountryCode::SVN,
-  legacyCountryCode::SWED,
-  legacyCountryCode::SWTZ,
-  legacyCountryCode::TBD,
-  legacyCountryCode::THAI,
-  legacyCountryCode::TMMC,
-  legacyCountryCode::TUN,
-  legacyCountryCode::TURK,
-  legacyCountryCode::UAE,
-  legacyCountryCode::UK,
-  legacyCountryCode::UKR,
-  legacyCountryCode::UNK,
-  legacyCountryCode::URY,
-  legacyCountryCode::US,
-  legacyCountryCode::USBZ,
-  legacyCountryCode::VAT,
-  legacyCountryCode::VENZ,
-  legacyCountryCode::VTNM,
-  legacyCountryCode::ZWE,
+pub const ENUM_VALUES_POLYNOMIAL_BASIS_TYPE: [polynomialBasisType; 5] = [
+  polynomialBasisType::CHEBYSHEV,
+  polynomialBasisType::LEGENDRE,
+  polynomialBasisType::HERMITE,
+  polynomialBasisType::LAGRANGE,
+  polynomialBasisType::POWER_SERIES,
 ];
 
+/// Polynomial basis type for coefficient interpretation.
+/// Determines how the coefficient arrays are evaluated.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct legacyCountryCode(pub i8);
+pub struct polynomialBasisType(pub i8);
 #[allow(non_upper_case_globals)]
-impl legacyCountryCode {
-  /// Arab Satellite Communications Organization
-  pub const AB: Self = Self(0);
-  /// Asia Broadcast Satellite
-  pub const ABS: Self = Self(1);
-  /// Asia Satellite Telecommunications Company (ASIASAT)
-  pub const AC: Self = Self(2);
-  /// Algeria
-  pub const ALG: Self = Self(3);
-  /// Angola
-  pub const ANG: Self = Self(4);
-  /// Argentina
-  pub const ARGN: Self = Self(5);
-  /// Republic of Armenia
-  pub const ARM: Self = Self(6);
-  /// Austria
-  pub const ASRA: Self = Self(7);
-  /// Australia
-  pub const AUS: Self = Self(8);
-  /// Azerbaijan
-  pub const AZER: Self = Self(9);
-  /// Belgium
-  pub const BEL: Self = Self(10);
-  /// Belarus
-  pub const BELA: Self = Self(11);
-  /// Bermuda
-  pub const BERM: Self = Self(12);
-  /// People's Republic of Bangladesh
-  pub const BGD: Self = Self(13);
-  /// Kingdom of Bhutan
-  pub const BHUT: Self = Self(14);
-  /// Bolivia
-  pub const BOL: Self = Self(15);
-  /// Brazil
-  pub const BRAZ: Self = Self(16);
-  /// Bulgaria
-  pub const BUL: Self = Self(17);
-  /// Canada
-  pub const CA: Self = Self(18);
-  /// China/Brazil
-  pub const CHBZ: Self = Self(19);
-  /// China/Turkey
-  pub const CHTU: Self = Self(20);
-  /// Chile
-  pub const CHLE: Self = Self(21);
-  /// Commonwealth of Independent States (former USSR)
-  pub const CIS: Self = Self(22);
-  /// Colombia
-  pub const COL: Self = Self(23);
-  /// Republic of Costa Rica
-  pub const CRI: Self = Self(24);
-  /// Czech Republic (former Czechoslovakia)
-  pub const CZCH: Self = Self(25);
-  /// Denmark
-  pub const DEN: Self = Self(26);
-  /// Republic of Djibouti
-  pub const DJI: Self = Self(27);
-  /// Ecuador
-  pub const ECU: Self = Self(28);
-  /// Egypt
-  pub const EGYP: Self = Self(29);
-  /// European Space Agency
-  pub const ESA: Self = Self(30);
-  /// European Space Research Organization
-  pub const ESRO: Self = Self(31);
-  /// Estonia
-  pub const EST: Self = Self(32);
-  /// Ethiopia
-  pub const ETH: Self = Self(33);
-  /// European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
-  pub const EUME: Self = Self(34);
-  /// European Telecommunications Satellite Organization (EUTELSAT)
-  pub const EUTE: Self = Self(35);
-  /// France/Germany
-  pub const FGER: Self = Self(36);
-  /// Finland
-  pub const FIN: Self = Self(37);
-  /// France
-  pub const FR: Self = Self(38);
-  /// France/Italy
-  pub const FRIT: Self = Self(39);
-  /// Germany
-  pub const GER: Self = Self(40);
-  /// Republic of Ghana
-  pub const GHA: Self = Self(41);
-  /// Globalstar
-  pub const GLOB: Self = Self(42);
-  /// Greece
-  pub const GREC: Self = Self(43);
-  /// Greece/Saudi Arabia
-  pub const GRSA: Self = Self(44);
-  /// Guatemala
-  pub const GUAT: Self = Self(45);
-  /// Hungary
-  pub const HUN: Self = Self(46);
-  /// International Mobile Satellite Organization (INMARSAT)
-  pub const IM: Self = Self(47);
-  /// India
-  pub const IND: Self = Self(48);
-  /// Indonesia
-  pub const INDO: Self = Self(49);
-  /// Iran
-  pub const IRAN: Self = Self(50);
-  /// Iraq
-  pub const IRAQ: Self = Self(51);
-  /// Iridium
-  pub const IRID: Self = Self(52);
-  /// Ireland
-  pub const IRL: Self = Self(53);
-  /// Israel
-  pub const ISRA: Self = Self(54);
-  /// Indian Space Research Organisation
-  pub const ISRO: Self = Self(55);
-  /// International Space Station
-  pub const ISS: Self = Self(56);
-  /// Italy
-  pub const IT: Self = Self(57);
-  /// International Telecommunications Satellite Organization (INTELSAT)
-  pub const ITSO: Self = Self(58);
-  /// Japan
-  pub const JPN: Self = Self(59);
-  /// Kazakhstan
-  pub const KAZ: Self = Self(60);
-  /// Republic of Kenya
-  pub const KEN: Self = Self(61);
-  /// Laos
-  pub const LAOS: Self = Self(62);
-  /// Democratic Socialist Republic of Sri Lanka
-  pub const LKA: Self = Self(63);
-  /// Lithuania
-  pub const LTU: Self = Self(64);
-  /// Luxembourg
-  pub const LUXE: Self = Self(65);
-  /// Morocco
-  pub const MA: Self = Self(66);
-  /// Malaysia
-  pub const MALA: Self = Self(67);
-  /// Principality of Monaco
-  pub const MCO: Self = Self(68);
-  /// Republic of Moldova
-  pub const MDA: Self = Self(69);
-  /// Mexico
-  pub const MEX: Self = Self(70);
-  /// Republic of the Union of Myanmar
-  pub const MMR: Self = Self(71);
-  /// Mongolia
-  pub const MNG: Self = Self(72);
-  /// Mauritius
-  pub const MUS: Self = Self(73);
-  /// North Atlantic Treaty Organization
-  pub const NATO: Self = Self(74);
-  /// Netherlands
-  pub const NETH: Self = Self(75);
-  /// New ICO
-  pub const NICO: Self = Self(76);
-  /// Nigeria
-  pub const NIG: Self = Self(77);
-  /// Democratic People's Republic of Korea
-  pub const NKOR: Self = Self(78);
-  /// Norway
-  pub const NOR: Self = Self(79);
-  /// Federal Democratic Republic of Nepal
-  pub const NPL: Self = Self(80);
-  /// New Zealand
-  pub const NZ: Self = Self(81);
-  /// O3b Networks
-  pub const O3B: Self = Self(82);
-  /// ORBCOMM
-  pub const ORB: Self = Self(83);
-  /// Pakistan
-  pub const PAKI: Self = Self(84);
-  /// Peru
-  pub const PERU: Self = Self(85);
-  /// Poland
-  pub const POL: Self = Self(86);
-  /// Portugal
-  pub const POR: Self = Self(87);
-  /// People's Republic of China
-  pub const PRC: Self = Self(88);
-  /// Republic of Paraguay
-  pub const PRY: Self = Self(89);
-  /// People's Republic of China/European Space Agency
-  pub const PRES: Self = Self(90);
-  /// State of Qatar
-  pub const QAT: Self = Self(91);
-  /// RascomStar-QAF
-  pub const RASC: Self = Self(92);
-  /// Taiwan (Republic of China)
-  pub const ROC: Self = Self(93);
-  /// Romania
-  pub const ROM: Self = Self(94);
-  /// Philippines (Republic of the Philippines)
-  pub const RP: Self = Self(95);
-  /// Republic of Rwanda
-  pub const RWA: Self = Self(96);
-  /// South Africa
-  pub const SAFR: Self = Self(97);
-  /// Saudi Arabia
-  pub const SAUD: Self = Self(98);
-  /// Republic of Sudan
-  pub const SDN: Self = Self(99);
-  /// Sea Launch
-  pub const SEAL: Self = Self(100);
-  /// SES
-  pub const SES: Self = Self(101);
-  /// Singapore/Japan
-  pub const SGJP: Self = Self(102);
-  /// Singapore
-  pub const SING: Self = Self(103);
-  /// Republic of Korea
-  pub const SKOR: Self = Self(104);
-  /// Spain
-  pub const SPN: Self = Self(105);
-  /// Singapore/Taiwan
-  pub const STCT: Self = Self(106);
-  /// Slovenia
-  pub const SVN: Self = Self(107);
-  /// Sweden
-  pub const SWED: Self = Self(108);
-  /// Switzerland
-  pub const SWTZ: Self = Self(109);
-  /// To Be Determined
-  pub const TBD: Self = Self(110);
-  /// Thailand
-  pub const THAI: Self = Self(111);
-  /// Turkmenistan/Monaco
-  pub const TMMC: Self = Self(112);
-  /// Republic of Tunisia
-  pub const TUN: Self = Self(113);
-  /// Turkey
-  pub const TURK: Self = Self(114);
-  /// United Arab Emirates
-  pub const UAE: Self = Self(115);
-  /// United Kingdom
-  pub const UK: Self = Self(116);
-  /// Ukraine
-  pub const UKR: Self = Self(117);
-  /// Unknown
-  pub const UNK: Self = Self(118);
-  /// Uruguay
-  pub const URY: Self = Self(119);
-  /// United States
-  pub const US: Self = Self(120);
-  /// United States/Brazil
-  pub const USBZ: Self = Self(121);
-  /// Vatican City State
-  pub const VAT: Self = Self(122);
-  /// Venezuela
-  pub const VENZ: Self = Self(123);
-  /// Vietnam
-  pub const VTNM: Self = Self(124);
-  /// Republic of Zimbabwe
-  pub const ZWE: Self = Self(125);
+impl polynomialBasisType {
+  /// Chebyshev polynomials of the first kind T_n(x).
+  /// Most common for ephemeris fitting due to minimax approximation properties.
+  pub const CHEBYSHEV: Self = Self(0);
+  /// Legendre polynomials P_n(x).
+  /// Orthogonal on [-1, 1] with unit weight function.
+  pub const LEGENDRE: Self = Self(1);
+  /// Hermite interpolating polynomials.
+  /// Matches both function values and derivatives at nodes.
+  pub const HERMITE: Self = Self(2);
+  /// Lagrange interpolating polynomials.
+  /// Exact interpolation through specified nodes.
+  pub const LAGRANGE: Self = Self(3);
+  /// Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ...
+  pub const POWER_SERIES: Self = Self(4);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 125;
+  pub const ENUM_MAX: i8 = 4;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::AB,
-    Self::ABS,
-    Self::AC,
-    Self::ALG,
-    Self::ANG,
-    Self::ARGN,
-    Self::ARM,
-    Self::ASRA,
-    Self::AUS,
-    Self::AZER,
-    Self::BEL,
-    Self::BELA,
-    Self::BERM,
-    Self::BGD,
-    Self::BHUT,
-    Self::BOL,
-    Self::BRAZ,
-    Self::BUL,
-    Self::CA,
-    Self::CHBZ,
-    Self::CHTU,
-    Self::CHLE,
-    Self::CIS,
-    Self::COL,
-    Self::CRI,
-    Self::CZCH,
-    Self::DEN,
-    Self::DJI,
-    Self::ECU,
-    Self::EGYP,
-    Self::ESA,
-    Self::ESRO,
-    Self::EST,
-    Self::ETH,
-    Self::EUME,
-    Self::EUTE,
-    Self::FGER,
-    Self::FIN,
-    Self::FR,
-    Self::FRIT,
-    Self::GER,
-    Self::GHA,
-    Self::GLOB,
-    Self::GREC,
-    Self::GRSA,
-    Self::GUAT,
-    Self::HUN,
-    Self::IM,
-    Self::IND,
-    Self::INDO,
-    Self::IRAN,
-    Self::IRAQ,
-    Self::IRID,
-    Self::IRL,
-    Self::ISRA,
-    Self::ISRO,
-    Self::ISS,
-    Self::IT,
-    Self::ITSO,
-    Self::JPN,
-    Self::KAZ,
-    Self::KEN,
-    Self::LAOS,
-    Self::LKA,
-    Self::LTU,
-    Self::LUXE,
-    Self::MA,
-    Self::MALA,
-    Self::MCO,
-    Self::MDA,
-    Self::MEX,
-    Self::MMR,
-    Self::MNG,
-    Self::MUS,
-    Self::NATO,
-    Self::NETH,
-    Self::NICO,
-    Self::NIG,
-    Self::NKOR,
-    Self::NOR,
-    Self::NPL,
-    Self::NZ,
-    Self::O3B,
-    Self::ORB,
-    Self::PAKI,
-    Self::PERU,
-    Self::POL,
-    Self::POR,
-    Self::PRC,
-    Self::PRY,
-    Self::PRES,
-    Self::QAT,
-    Self::RASC,
-    Self::ROC,
-    Self::ROM,
-    Self::RP,
-    Self::RWA,
-    Self::SAFR,
-    Self::SAUD,
-    Self::SDN,
-    Self::SEAL,
-    Self::SES,
-    Self::SGJP,
-    Self::SING,
-    Self::SKOR,
-    Self::SPN,
-    Self::STCT,
-    Self::SVN,
-    Self::SWED,
-    Self::SWTZ,
-    Self::TBD,
-    Self::THAI,
-    Self::TMMC,
-    Self::TUN,
-    Self::TURK,
-    Self::UAE,
-    Self::UK,
-    Self::UKR,
-    Self::UNK,
-    Self::URY,
-    Self::US,
-    Self::USBZ,
-    Self::VAT,
-    Self::VENZ,
-    Self::VTNM,
-    Self::ZWE,
+    Self::CHEBYSHEV,
+    Self::LEGENDRE,
+    Self::HERMITE,
+    Self::LAGRANGE,
+    Self::POWER_SERIES,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::AB => Some("AB"),
-      Self::ABS => Some("ABS"),
-      Self::AC => Some("AC"),
-      Self::ALG => Some("ALG"),
-      Self::ANG => Some("ANG"),
-      Self::ARGN => Some("ARGN"),
-      Self::ARM => Some("ARM"),
-      Self::ASRA => Some("ASRA"),
-      Self::AUS => Some("AUS"),
-      Self::AZER => Some("AZER"),
-      Self::BEL => Some("BEL"),
-      Self::BELA => Some("BELA"),
-      Self::BERM => Some("BERM"),
-      Self::BGD => Some("BGD"),
-      Self::BHUT => Some("BHUT"),
-      Self::BOL => Some("BOL"),
-      Self::BRAZ => Some("BRAZ"),
-      Self::BUL => Some("BUL"),
-      Self::CA => Some("CA"),
-      Self::CHBZ => Some("CHBZ"),
-      Self::CHTU => Some("CHTU"),
-      Self::CHLE => Some("CHLE"),
-      Self::CIS => Some("CIS"),
-      Self::COL => Some("COL"),
-      Self::CRI => Some("CRI"),
-      Self::CZCH => Some("CZCH"),
-      Self::DEN => Some("DEN"),
-      Self::DJI => Some("DJI"),
-      Self::ECU => Some("ECU"),
-      Self::EGYP => Some("EGYP"),
-      Self::ESA => Some("ESA"),
-      Self::ESRO => Some("ESRO"),
-      Self::EST => Some("EST"),
-      Self::ETH => Some("ETH"),
-      Self::EUME => Some("EUME"),
-      Self::EUTE => Some("EUTE"),
-      Self::FGER => Some("FGER"),
-      Self::FIN => Some("FIN"),
-      Self::FR => Some("FR"),
-      Self::FRIT => Some("FRIT"),
-      Self::GER => Some("GER"),
-      Self::GHA => Some("GHA"),
-      Self::GLOB => Some("GLOB"),
-      Self::GREC => Some("GREC"),
-      Self::GRSA => Some("GRSA"),
-      Self::GUAT => Some("GUAT"),
-      Self::HUN => Some("HUN"),
-      Self::IM => Some("IM"),
-      Self::IND => Some("IND"),
-      Self::INDO => Some("INDO"),
-      Self::IRAN => Some("IRAN"),
-      Self::IRAQ => Some("IRAQ"),
-      Self::IRID => Some("IRID"),
-      Self::IRL => Some("IRL"),
-      Self::ISRA => Some("ISRA"),
-      Self::ISRO => Some("ISRO"),
-      Self::ISS => Some("ISS"),
-      Self::IT => Some("IT"),
-      Self::ITSO => Some("ITSO"),
-      Self::JPN => Some("JPN"),
-      Self::KAZ => Some("KAZ"),
-      Self::KEN => Some("KEN"),
-      Self::LAOS => Some("LAOS"),
-      Self::LKA => Some("LKA"),
-      Self::LTU => Some("LTU"),
-      Self::LUXE => Some("LUXE"),
-      Self::MA => Some("MA"),
-      Self::MALA => Some("MALA"),
-      Self::MCO => Some("MCO"),
-      Self::MDA => Some("MDA"),
-      Self::MEX => Some("MEX"),
-      Self::MMR => Some("MMR"),
-      Self::MNG => Some("MNG"),
-      Self::MUS => Some("MUS"),
-      Self::NATO => Some("NATO"),
-      Self::NETH => Some("NETH"),
-      Self::NICO => Some("NICO"),
-      Self::NIG => Some("NIG"),
-      Self::NKOR => Some("NKOR"),
-      Self::NOR => Some("NOR"),
-      Self::NPL => Some("NPL"),
-      Self::NZ => Some("NZ"),
-      Self::O3B => Some("O3B"),
-      Self::ORB => Some("ORB"),
-      Self::PAKI => Some("PAKI"),
-      Self::PERU => Some("PERU"),
-      Self::POL => Some("POL"),
-      Self::POR => Some("POR"),
-      Self::PRC => Some("PRC"),
-      Self::PRY => Some("PRY"),
-      Self::PRES => Some("PRES"),
-      Self::QAT => Some("QAT"),
-      Self::RASC => Some("RASC"),
-      Self::ROC => Some("ROC"),
-      Self::ROM => Some("ROM"),
-      Self::RP => Some("RP"),
-      Self::RWA => Some("RWA"),
-      Self::SAFR => Some("SAFR"),
-      Self::SAUD => Some("SAUD"),
-      Self::SDN => Some("SDN"),
-      Self::SEAL => Some("SEAL"),
-      Self::SES => Some("SES"),
-      Self::SGJP => Some("SGJP"),
-      Self::SING => Some("SING"),
-      Self::SKOR => Some("SKOR"),
-      Self::SPN => Some("SPN"),
-      Self::STCT => Some("STCT"),
-      Self::SVN => Some("SVN"),
-      Self::SWED => Some("SWED"),
-      Self::SWTZ => Some("SWTZ"),
-      Self::TBD => Some("TBD"),
-      Self::THAI => Some("THAI"),
-      Self::TMMC => Some("TMMC"),
-      Self::TUN => Some("TUN"),
-      Self::TURK => Some("TURK"),
-      Self::UAE => Some("UAE"),
-      Self::UK => Some("UK"),
-      Self::UKR => Some("UKR"),
-      Self::UNK => Some("UNK"),
-      Self::URY => Some("URY"),
-      Self::US => Some("US"),
-      Self::USBZ => Some("USBZ"),
-      Self::VAT => Some("VAT"),
-      Self::VENZ => Some("VENZ"),
-      Self::VTNM => Some("VTNM"),
-      Self::ZWE => Some("ZWE"),
+      Self::CHEBYSHEV => Some("CHEBYSHEV"),
+      Self::LEGENDRE => Some("LEGENDRE"),
+      Self::HERMITE => Some("HERMITE"),
+      Self::LAGRANGE => Some("LAGRANGE"),
+      Self::POWER_SERIES => Some("POWER_SERIES"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for legacyCountryCode {
+impl ::core::fmt::Debug for polynomialBasisType {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -668,7 +75,7 @@ impl ::core::fmt::Debug for legacyCountryCode {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for legacyCountryCode {
+impl<'a> ::flatbuffers::Follow<'a> for polynomialBasisType {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -677,15 +84,15 @@ impl<'a> ::flatbuffers::Follow<'a> for legacyCountryCode {
   }
 }
 
-impl ::flatbuffers::Push for legacyCountryCode {
-    type Output = legacyCountryCode;
+impl ::flatbuffers::Push for polynomialBasisType {
+    type Output = polynomialBasisType;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for legacyCountryCode {
+impl ::flatbuffers::EndianScalar for polynomialBasisType {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -699,7 +106,7 @@ impl ::flatbuffers::EndianScalar for legacyCountryCode {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for legacyCountryCode {
+impl<'a> ::flatbuffers::Verifiable for polynomialBasisType {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -708,213 +115,1708 @@ impl<'a> ::flatbuffers::Verifiable for legacyCountryCode {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for legacyCountryCode {}
-pub enum LCCOffset {}
+impl ::flatbuffers::SimpleToVerifyInSlice for polynomialBasisType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PPE_ANOMALY_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PPE_ANOMALY_TYPE: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PPE_ANOMALY_TYPE: [ppeAnomalyType; 3] = [
+  ppeAnomalyType::TRUE_ANOMALY,
+  ppeAnomalyType::MEAN_ANOMALY,
+  ppeAnomalyType::ECCENTRIC_ANOMALY,
+];
+
+/// Anomaly type flag for orbital element records.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct ppeAnomalyType(pub i8);
+#[allow(non_upper_case_globals)]
+impl ppeAnomalyType {
+  /// True anomaly (geometric angle from periapsis).
+  pub const TRUE_ANOMALY: Self = Self(0);
+  /// Mean anomaly (linear in time for Keplerian motion).
+  pub const MEAN_ANOMALY: Self = Self(1);
+  /// Eccentric anomaly (auxiliary angle in the Kepler equation).
+  pub const ECCENTRIC_ANOMALY: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::TRUE_ANOMALY,
+    Self::MEAN_ANOMALY,
+    Self::ECCENTRIC_ANOMALY,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::TRUE_ANOMALY => Some("TRUE_ANOMALY"),
+      Self::MEAN_ANOMALY => Some("MEAN_ANOMALY"),
+      Self::ECCENTRIC_ANOMALY => Some("ECCENTRIC_ANOMALY"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for ppeAnomalyType {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for ppeAnomalyType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for ppeAnomalyType {
+    type Output = ppeAnomalyType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for ppeAnomalyType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for ppeAnomalyType {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for ppeAnomalyType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SIZE_SHAPE_PROFILE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SIZE_SHAPE_PROFILE: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SIZE_SHAPE_PROFILE: [sizeShapeProfile; 2] = [
+  sizeShapeProfile::SMA,
+  sizeShapeProfile::R_PERIAPSIS,
+];
+
+/// Orbital element parameterization for the first element (size/shape).
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct sizeShapeProfile(pub i8);
+#[allow(non_upper_case_globals)]
+impl sizeShapeProfile {
+  /// Semi-major axis (km). Standard for elliptical orbits.
+  pub const SMA: Self = Self(0);
+  /// Radius of periapsis (km). Preferred for hyperbolic orbits.
+  pub const R_PERIAPSIS: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::SMA,
+    Self::R_PERIAPSIS,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::SMA => Some("SMA"),
+      Self::R_PERIAPSIS => Some("R_PERIAPSIS"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for sizeShapeProfile {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for sizeShapeProfile {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for sizeShapeProfile {
+    type Output = sizeShapeProfile;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for sizeShapeProfile {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for sizeShapeProfile {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for sizeShapeProfile {}
+pub enum PPEPositionRecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Legacy Country Code
-pub struct LCC<'a> {
+/// A single time-segment record of polynomial coefficients for Cartesian position
+/// (and optionally velocity). Coefficients are stored per axis.
+///
+/// To evaluate position at time t within this record's validity window:
+///   1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN
+///      where tau is in [-1, +1].
+///   2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using
+///      the coefficients for each axis.
+///
+/// Velocity coefficients, if present, follow the same evaluation procedure.
+/// If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by
+/// analytically differentiating the position polynomial.
+pub struct PPEPositionRecord<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for LCC<'a> {
-  type Inner = LCC<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for PPEPositionRecord<'a> {
+  type Inner = PPEPositionRecord<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> LCC<'a> {
-  pub const VT_OWNER: ::flatbuffers::VOffsetT = 4;
+impl<'a> PPEPositionRecord<'a> {
+  pub const VT_EPOCH_MID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_EPOCH_HALF_SPAN: ::flatbuffers::VOffsetT = 6;
+  pub const VT_NUM_COEFFICIENTS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_BASIS_TYPE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_POS_COEFF_X: ::flatbuffers::VOffsetT = 12;
+  pub const VT_POS_COEFF_Y: ::flatbuffers::VOffsetT = 14;
+  pub const VT_POS_COEFF_Z: ::flatbuffers::VOffsetT = 16;
+  pub const VT_HAS_VELOCITY_COEFFICIENTS: ::flatbuffers::VOffsetT = 18;
+  pub const VT_VEL_COEFF_X: ::flatbuffers::VOffsetT = 20;
+  pub const VT_VEL_COEFF_Y: ::flatbuffers::VOffsetT = 22;
+  pub const VT_VEL_COEFF_Z: ::flatbuffers::VOffsetT = 24;
+  pub const VT_MAX_POSITION_RESIDUAL: ::flatbuffers::VOffsetT = 26;
+  pub const VT_RMS_POSITION_RESIDUAL: ::flatbuffers::VOffsetT = 28;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    LCC { _tab: table }
+    PPEPositionRecord { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args LCCArgs
-  ) -> ::flatbuffers::WIPOffset<LCC<'bldr>> {
-    let mut builder = LCCBuilder::new(_fbb);
-    builder.add_OWNER(args.OWNER);
+    args: &'args PPEPositionRecordArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PPEPositionRecord<'bldr>> {
+    let mut builder = PPEPositionRecordBuilder::new(_fbb);
+    builder.add_RMS_POSITION_RESIDUAL(args.RMS_POSITION_RESIDUAL);
+    builder.add_MAX_POSITION_RESIDUAL(args.MAX_POSITION_RESIDUAL);
+    builder.add_EPOCH_HALF_SPAN(args.EPOCH_HALF_SPAN);
+    if let Some(x) = args.VEL_COEFF_Z { builder.add_VEL_COEFF_Z(x); }
+    if let Some(x) = args.VEL_COEFF_Y { builder.add_VEL_COEFF_Y(x); }
+    if let Some(x) = args.VEL_COEFF_X { builder.add_VEL_COEFF_X(x); }
+    if let Some(x) = args.POS_COEFF_Z { builder.add_POS_COEFF_Z(x); }
+    if let Some(x) = args.POS_COEFF_Y { builder.add_POS_COEFF_Y(x); }
+    if let Some(x) = args.POS_COEFF_X { builder.add_POS_COEFF_X(x); }
+    if let Some(x) = args.EPOCH_MID { builder.add_EPOCH_MID(x); }
+    builder.add_NUM_COEFFICIENTS(args.NUM_COEFFICIENTS);
+    builder.add_HAS_VELOCITY_COEFFICIENTS(args.HAS_VELOCITY_COEFFICIENTS);
+    builder.add_BASIS_TYPE(args.BASIS_TYPE);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> LCCT {
-    let OWNER = self.OWNER();
-    LCCT {
-      OWNER,
+  pub fn unpack(&self) -> PPEPositionRecordT {
+    let EPOCH_MID = {
+      let x = self.EPOCH_MID();
+      alloc::string::ToString::to_string(x)
+    };
+    let EPOCH_HALF_SPAN = self.EPOCH_HALF_SPAN();
+    let NUM_COEFFICIENTS = self.NUM_COEFFICIENTS();
+    let BASIS_TYPE = self.BASIS_TYPE();
+    let POS_COEFF_X = {
+      let x = self.POS_COEFF_X();
+      x.into_iter().collect()
+    };
+    let POS_COEFF_Y = {
+      let x = self.POS_COEFF_Y();
+      x.into_iter().collect()
+    };
+    let POS_COEFF_Z = {
+      let x = self.POS_COEFF_Z();
+      x.into_iter().collect()
+    };
+    let HAS_VELOCITY_COEFFICIENTS = self.HAS_VELOCITY_COEFFICIENTS();
+    let VEL_COEFF_X = self.VEL_COEFF_X().map(|x| {
+      x.into_iter().collect()
+    });
+    let VEL_COEFF_Y = self.VEL_COEFF_Y().map(|x| {
+      x.into_iter().collect()
+    });
+    let VEL_COEFF_Z = self.VEL_COEFF_Z().map(|x| {
+      x.into_iter().collect()
+    });
+    let MAX_POSITION_RESIDUAL = self.MAX_POSITION_RESIDUAL();
+    let RMS_POSITION_RESIDUAL = self.RMS_POSITION_RESIDUAL();
+    PPEPositionRecordT {
+      EPOCH_MID,
+      EPOCH_HALF_SPAN,
+      NUM_COEFFICIENTS,
+      BASIS_TYPE,
+      POS_COEFF_X,
+      POS_COEFF_Y,
+      POS_COEFF_Z,
+      HAS_VELOCITY_COEFFICIENTS,
+      VEL_COEFF_X,
+      VEL_COEFF_Y,
+      VEL_COEFF_Z,
+      MAX_POSITION_RESIDUAL,
+      RMS_POSITION_RESIDUAL,
     }
   }
 
+  /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
+  /// Together with EPOCH_HALF_SPAN, defines the time interval:
+  ///   [EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]
   #[inline]
-  pub fn OWNER(&self) -> legacyCountryCode {
+  pub fn EPOCH_MID(&self) -> &'a str {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<legacyCountryCode>(LCC::VT_OWNER, Some(legacyCountryCode::AB)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPEPositionRecord::VT_EPOCH_MID, None).unwrap()}
+  }
+  /// Half-span of the validity window in seconds.
+  /// The full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID.
+  #[inline]
+  pub fn EPOCH_HALF_SPAN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PPEPositionRecord::VT_EPOCH_HALF_SPAN, Some(0.0)).unwrap()}
+  }
+  /// Number of polynomial coefficients per axis.
+  /// The polynomial degree is (NUM_COEFFICIENTS - 1).
+  /// Typical values: 8-32 for high-fidelity ephemeris fits.
+  #[inline]
+  pub fn NUM_COEFFICIENTS(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(PPEPositionRecord::VT_NUM_COEFFICIENTS, Some(0)).unwrap()}
+  }
+  /// Polynomial basis type for interpreting the coefficient arrays.
+  #[inline]
+  pub fn BASIS_TYPE(&self) -> polynomialBasisType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<polynomialBasisType>(PPEPositionRecord::VT_BASIS_TYPE, Some(polynomialBasisType::CHEBYSHEV)).unwrap()}
+  }
+  /// Position coefficients for X-axis (km).
+  /// Length must equal NUM_COEFFICIENTS. Ordered c0, c1, ..., c_{N-1}.
+  #[inline]
+  pub fn POS_COEFF_X(&self) -> ::flatbuffers::Vector<'a, f64> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEPositionRecord::VT_POS_COEFF_X, None).unwrap()}
+  }
+  /// Position coefficients for Y-axis (km).
+  /// Length must equal NUM_COEFFICIENTS.
+  #[inline]
+  pub fn POS_COEFF_Y(&self) -> ::flatbuffers::Vector<'a, f64> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEPositionRecord::VT_POS_COEFF_Y, None).unwrap()}
+  }
+  /// Position coefficients for Z-axis (km).
+  /// Length must equal NUM_COEFFICIENTS.
+  #[inline]
+  pub fn POS_COEFF_Z(&self) -> ::flatbuffers::Vector<'a, f64> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEPositionRecord::VT_POS_COEFF_Z, None).unwrap()}
+  }
+  /// Whether explicit velocity coefficients are provided.
+  /// If false, velocity should be derived by differentiating the position polynomial.
+  #[inline]
+  pub fn HAS_VELOCITY_COEFFICIENTS(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(PPEPositionRecord::VT_HAS_VELOCITY_COEFFICIENTS, Some(false)).unwrap()}
+  }
+  /// Velocity coefficients for X-axis (km/s). Optional.
+  /// Length must equal NUM_COEFFICIENTS if present.
+  #[inline]
+  pub fn VEL_COEFF_X(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEPositionRecord::VT_VEL_COEFF_X, None)}
+  }
+  /// Velocity coefficients for Y-axis (km/s). Optional.
+  #[inline]
+  pub fn VEL_COEFF_Y(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEPositionRecord::VT_VEL_COEFF_Y, None)}
+  }
+  /// Velocity coefficients for Z-axis (km/s). Optional.
+  #[inline]
+  pub fn VEL_COEFF_Z(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEPositionRecord::VT_VEL_COEFF_Z, None)}
+  }
+  /// Maximum position fit residual over this segment (km). Optional quality metric.
+  #[inline]
+  pub fn MAX_POSITION_RESIDUAL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PPEPositionRecord::VT_MAX_POSITION_RESIDUAL, Some(0.0)).unwrap()}
+  }
+  /// RMS position fit residual over this segment (km). Optional quality metric.
+  #[inline]
+  pub fn RMS_POSITION_RESIDUAL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PPEPositionRecord::VT_RMS_POSITION_RESIDUAL, Some(0.0)).unwrap()}
   }
 }
 
-impl ::flatbuffers::Verifiable for LCC<'_> {
+impl ::flatbuffers::Verifiable for PPEPositionRecord<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<legacyCountryCode>("OWNER", Self::VT_OWNER, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH_MID", Self::VT_EPOCH_MID, true)?
+     .visit_field::<f64>("EPOCH_HALF_SPAN", Self::VT_EPOCH_HALF_SPAN, false)?
+     .visit_field::<u16>("NUM_COEFFICIENTS", Self::VT_NUM_COEFFICIENTS, false)?
+     .visit_field::<polynomialBasisType>("BASIS_TYPE", Self::VT_BASIS_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("POS_COEFF_X", Self::VT_POS_COEFF_X, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("POS_COEFF_Y", Self::VT_POS_COEFF_Y, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("POS_COEFF_Z", Self::VT_POS_COEFF_Z, true)?
+     .visit_field::<bool>("HAS_VELOCITY_COEFFICIENTS", Self::VT_HAS_VELOCITY_COEFFICIENTS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("VEL_COEFF_X", Self::VT_VEL_COEFF_X, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("VEL_COEFF_Y", Self::VT_VEL_COEFF_Y, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("VEL_COEFF_Z", Self::VT_VEL_COEFF_Z, false)?
+     .visit_field::<f64>("MAX_POSITION_RESIDUAL", Self::VT_MAX_POSITION_RESIDUAL, false)?
+     .visit_field::<f64>("RMS_POSITION_RESIDUAL", Self::VT_RMS_POSITION_RESIDUAL, false)?
      .finish();
     Ok(())
   }
 }
-pub struct LCCArgs {
-    pub OWNER: legacyCountryCode,
+pub struct PPEPositionRecordArgs<'a> {
+    pub EPOCH_MID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH_HALF_SPAN: f64,
+    pub NUM_COEFFICIENTS: u16,
+    pub BASIS_TYPE: polynomialBasisType,
+    pub POS_COEFF_X: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub POS_COEFF_Y: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub POS_COEFF_Z: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub HAS_VELOCITY_COEFFICIENTS: bool,
+    pub VEL_COEFF_X: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub VEL_COEFF_Y: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub VEL_COEFF_Z: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub MAX_POSITION_RESIDUAL: f64,
+    pub RMS_POSITION_RESIDUAL: f64,
 }
-impl<'a> Default for LCCArgs {
+impl<'a> Default for PPEPositionRecordArgs<'a> {
   #[inline]
   fn default() -> Self {
-    LCCArgs {
-      OWNER: legacyCountryCode::AB,
+    PPEPositionRecordArgs {
+      EPOCH_MID: None, // required field
+      EPOCH_HALF_SPAN: 0.0,
+      NUM_COEFFICIENTS: 0,
+      BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
+      POS_COEFF_X: None, // required field
+      POS_COEFF_Y: None, // required field
+      POS_COEFF_Z: None, // required field
+      HAS_VELOCITY_COEFFICIENTS: false,
+      VEL_COEFF_X: None,
+      VEL_COEFF_Y: None,
+      VEL_COEFF_Z: None,
+      MAX_POSITION_RESIDUAL: 0.0,
+      RMS_POSITION_RESIDUAL: 0.0,
     }
   }
 }
 
-pub struct LCCBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct PPEPositionRecordBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> LCCBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PPEPositionRecordBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_OWNER(&mut self, OWNER: legacyCountryCode) {
-    self.fbb_.push_slot::<legacyCountryCode>(LCC::VT_OWNER, OWNER, legacyCountryCode::AB);
+  pub fn add_EPOCH_MID(&mut self, EPOCH_MID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_EPOCH_MID, EPOCH_MID);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> LCCBuilder<'a, 'b, A> {
+  pub fn add_EPOCH_HALF_SPAN(&mut self, EPOCH_HALF_SPAN: f64) {
+    self.fbb_.push_slot::<f64>(PPEPositionRecord::VT_EPOCH_HALF_SPAN, EPOCH_HALF_SPAN, 0.0);
+  }
+  #[inline]
+  pub fn add_NUM_COEFFICIENTS(&mut self, NUM_COEFFICIENTS: u16) {
+    self.fbb_.push_slot::<u16>(PPEPositionRecord::VT_NUM_COEFFICIENTS, NUM_COEFFICIENTS, 0);
+  }
+  #[inline]
+  pub fn add_BASIS_TYPE(&mut self, BASIS_TYPE: polynomialBasisType) {
+    self.fbb_.push_slot::<polynomialBasisType>(PPEPositionRecord::VT_BASIS_TYPE, BASIS_TYPE, polynomialBasisType::CHEBYSHEV);
+  }
+  #[inline]
+  pub fn add_POS_COEFF_X(&mut self, POS_COEFF_X: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_POS_COEFF_X, POS_COEFF_X);
+  }
+  #[inline]
+  pub fn add_POS_COEFF_Y(&mut self, POS_COEFF_Y: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_POS_COEFF_Y, POS_COEFF_Y);
+  }
+  #[inline]
+  pub fn add_POS_COEFF_Z(&mut self, POS_COEFF_Z: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_POS_COEFF_Z, POS_COEFF_Z);
+  }
+  #[inline]
+  pub fn add_HAS_VELOCITY_COEFFICIENTS(&mut self, HAS_VELOCITY_COEFFICIENTS: bool) {
+    self.fbb_.push_slot::<bool>(PPEPositionRecord::VT_HAS_VELOCITY_COEFFICIENTS, HAS_VELOCITY_COEFFICIENTS, false);
+  }
+  #[inline]
+  pub fn add_VEL_COEFF_X(&mut self, VEL_COEFF_X: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_VEL_COEFF_X, VEL_COEFF_X);
+  }
+  #[inline]
+  pub fn add_VEL_COEFF_Y(&mut self, VEL_COEFF_Y: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_VEL_COEFF_Y, VEL_COEFF_Y);
+  }
+  #[inline]
+  pub fn add_VEL_COEFF_Z(&mut self, VEL_COEFF_Z: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_VEL_COEFF_Z, VEL_COEFF_Z);
+  }
+  #[inline]
+  pub fn add_MAX_POSITION_RESIDUAL(&mut self, MAX_POSITION_RESIDUAL: f64) {
+    self.fbb_.push_slot::<f64>(PPEPositionRecord::VT_MAX_POSITION_RESIDUAL, MAX_POSITION_RESIDUAL, 0.0);
+  }
+  #[inline]
+  pub fn add_RMS_POSITION_RESIDUAL(&mut self, RMS_POSITION_RESIDUAL: f64) {
+    self.fbb_.push_slot::<f64>(PPEPositionRecord::VT_RMS_POSITION_RESIDUAL, RMS_POSITION_RESIDUAL, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PPEPositionRecordBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    LCCBuilder {
+    PPEPositionRecordBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<LCC<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PPEPositionRecord<'a>> {
     let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PPEPositionRecord::VT_EPOCH_MID,"EPOCH_MID");
+    self.fbb_.required(o, PPEPositionRecord::VT_POS_COEFF_X,"POS_COEFF_X");
+    self.fbb_.required(o, PPEPositionRecord::VT_POS_COEFF_Y,"POS_COEFF_Y");
+    self.fbb_.required(o, PPEPositionRecord::VT_POS_COEFF_Z,"POS_COEFF_Z");
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for LCC<'_> {
+impl ::core::fmt::Debug for PPEPositionRecord<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("LCC");
-      ds.field("OWNER", &self.OWNER());
+    let mut ds = f.debug_struct("PPEPositionRecord");
+      ds.field("EPOCH_MID", &self.EPOCH_MID());
+      ds.field("EPOCH_HALF_SPAN", &self.EPOCH_HALF_SPAN());
+      ds.field("NUM_COEFFICIENTS", &self.NUM_COEFFICIENTS());
+      ds.field("BASIS_TYPE", &self.BASIS_TYPE());
+      ds.field("POS_COEFF_X", &self.POS_COEFF_X());
+      ds.field("POS_COEFF_Y", &self.POS_COEFF_Y());
+      ds.field("POS_COEFF_Z", &self.POS_COEFF_Z());
+      ds.field("HAS_VELOCITY_COEFFICIENTS", &self.HAS_VELOCITY_COEFFICIENTS());
+      ds.field("VEL_COEFF_X", &self.VEL_COEFF_X());
+      ds.field("VEL_COEFF_Y", &self.VEL_COEFF_Y());
+      ds.field("VEL_COEFF_Z", &self.VEL_COEFF_Z());
+      ds.field("MAX_POSITION_RESIDUAL", &self.MAX_POSITION_RESIDUAL());
+      ds.field("RMS_POSITION_RESIDUAL", &self.RMS_POSITION_RESIDUAL());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct LCCT {
-  pub OWNER: legacyCountryCode,
+pub struct PPEPositionRecordT {
+  pub EPOCH_MID: alloc::string::String,
+  pub EPOCH_HALF_SPAN: f64,
+  pub NUM_COEFFICIENTS: u16,
+  pub BASIS_TYPE: polynomialBasisType,
+  pub POS_COEFF_X: alloc::vec::Vec<f64>,
+  pub POS_COEFF_Y: alloc::vec::Vec<f64>,
+  pub POS_COEFF_Z: alloc::vec::Vec<f64>,
+  pub HAS_VELOCITY_COEFFICIENTS: bool,
+  pub VEL_COEFF_X: Option<alloc::vec::Vec<f64>>,
+  pub VEL_COEFF_Y: Option<alloc::vec::Vec<f64>>,
+  pub VEL_COEFF_Z: Option<alloc::vec::Vec<f64>>,
+  pub MAX_POSITION_RESIDUAL: f64,
+  pub RMS_POSITION_RESIDUAL: f64,
 }
-impl Default for LCCT {
+impl Default for PPEPositionRecordT {
   fn default() -> Self {
     Self {
-      OWNER: legacyCountryCode::AB,
+      EPOCH_MID: alloc::string::ToString::to_string(""),
+      EPOCH_HALF_SPAN: 0.0,
+      NUM_COEFFICIENTS: 0,
+      BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
+      POS_COEFF_X: Default::default(),
+      POS_COEFF_Y: Default::default(),
+      POS_COEFF_Z: Default::default(),
+      HAS_VELOCITY_COEFFICIENTS: false,
+      VEL_COEFF_X: None,
+      VEL_COEFF_Y: None,
+      VEL_COEFF_Z: None,
+      MAX_POSITION_RESIDUAL: 0.0,
+      RMS_POSITION_RESIDUAL: 0.0,
     }
   }
 }
-impl LCCT {
+impl PPEPositionRecordT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<LCC<'b>> {
-    let OWNER = self.OWNER;
-    LCC::create(_fbb, &LCCArgs{
-      OWNER,
+  ) -> ::flatbuffers::WIPOffset<PPEPositionRecord<'b>> {
+    let EPOCH_MID = Some({
+      let x = &self.EPOCH_MID;
+      _fbb.create_string(x)
+    });
+    let EPOCH_HALF_SPAN = self.EPOCH_HALF_SPAN;
+    let NUM_COEFFICIENTS = self.NUM_COEFFICIENTS;
+    let BASIS_TYPE = self.BASIS_TYPE;
+    let POS_COEFF_X = Some({
+      let x = &self.POS_COEFF_X;
+      _fbb.create_vector(x)
+    });
+    let POS_COEFF_Y = Some({
+      let x = &self.POS_COEFF_Y;
+      _fbb.create_vector(x)
+    });
+    let POS_COEFF_Z = Some({
+      let x = &self.POS_COEFF_Z;
+      _fbb.create_vector(x)
+    });
+    let HAS_VELOCITY_COEFFICIENTS = self.HAS_VELOCITY_COEFFICIENTS;
+    let VEL_COEFF_X = self.VEL_COEFF_X.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let VEL_COEFF_Y = self.VEL_COEFF_Y.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let VEL_COEFF_Z = self.VEL_COEFF_Z.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let MAX_POSITION_RESIDUAL = self.MAX_POSITION_RESIDUAL;
+    let RMS_POSITION_RESIDUAL = self.RMS_POSITION_RESIDUAL;
+    PPEPositionRecord::create(_fbb, &PPEPositionRecordArgs{
+      EPOCH_MID,
+      EPOCH_HALF_SPAN,
+      NUM_COEFFICIENTS,
+      BASIS_TYPE,
+      POS_COEFF_X,
+      POS_COEFF_Y,
+      POS_COEFF_Z,
+      HAS_VELOCITY_COEFFICIENTS,
+      VEL_COEFF_X,
+      VEL_COEFF_Y,
+      VEL_COEFF_Z,
+      MAX_POSITION_RESIDUAL,
+      RMS_POSITION_RESIDUAL,
+    })
+  }
+}
+pub enum PPEOrbitalElementRecordOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// A single time-segment record of polynomial coefficients for classical orbital elements.
+///
+/// The six classical elements are:
+///   1. SMA or R_PERIAPSIS (size/shape) — see SIZE_SHAPE_TYPE
+///   2. Eccentricity (dimensionless)
+///   3. Inclination (degrees)
+///   4. Right Ascension of Ascending Node / RAAN (degrees)
+///   5. Argument of Periapsis (degrees)
+///   6. Anomaly (degrees) — see ANOMALY_TYPE
+///
+/// Evaluation follows the same normalized-time procedure as PPEPositionRecord.
+pub struct PPEOrbitalElementRecord<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PPEOrbitalElementRecord<'a> {
+  type Inner = PPEOrbitalElementRecord<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PPEOrbitalElementRecord<'a> {
+  pub const VT_EPOCH_MID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_EPOCH_HALF_SPAN: ::flatbuffers::VOffsetT = 6;
+  pub const VT_NUM_COEFFICIENTS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_BASIS_TYPE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_SIZE_SHAPE_TYPE: ::flatbuffers::VOffsetT = 12;
+  pub const VT_ANOMALY_TYPE: ::flatbuffers::VOffsetT = 14;
+  pub const VT_COEFF_SIZE_SHAPE: ::flatbuffers::VOffsetT = 16;
+  pub const VT_COEFF_ECCENTRICITY: ::flatbuffers::VOffsetT = 18;
+  pub const VT_COEFF_INCLINATION: ::flatbuffers::VOffsetT = 20;
+  pub const VT_COEFF_RAAN: ::flatbuffers::VOffsetT = 22;
+  pub const VT_COEFF_ARG_PERIAPSIS: ::flatbuffers::VOffsetT = 24;
+  pub const VT_COEFF_ANOMALY: ::flatbuffers::VOffsetT = 26;
+  pub const VT_MAX_ELEMENT_RESIDUAL: ::flatbuffers::VOffsetT = 28;
+  pub const VT_RMS_ELEMENT_RESIDUAL: ::flatbuffers::VOffsetT = 30;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PPEOrbitalElementRecord { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PPEOrbitalElementRecordArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PPEOrbitalElementRecord<'bldr>> {
+    let mut builder = PPEOrbitalElementRecordBuilder::new(_fbb);
+    builder.add_RMS_ELEMENT_RESIDUAL(args.RMS_ELEMENT_RESIDUAL);
+    builder.add_MAX_ELEMENT_RESIDUAL(args.MAX_ELEMENT_RESIDUAL);
+    builder.add_EPOCH_HALF_SPAN(args.EPOCH_HALF_SPAN);
+    if let Some(x) = args.COEFF_ANOMALY { builder.add_COEFF_ANOMALY(x); }
+    if let Some(x) = args.COEFF_ARG_PERIAPSIS { builder.add_COEFF_ARG_PERIAPSIS(x); }
+    if let Some(x) = args.COEFF_RAAN { builder.add_COEFF_RAAN(x); }
+    if let Some(x) = args.COEFF_INCLINATION { builder.add_COEFF_INCLINATION(x); }
+    if let Some(x) = args.COEFF_ECCENTRICITY { builder.add_COEFF_ECCENTRICITY(x); }
+    if let Some(x) = args.COEFF_SIZE_SHAPE { builder.add_COEFF_SIZE_SHAPE(x); }
+    if let Some(x) = args.EPOCH_MID { builder.add_EPOCH_MID(x); }
+    builder.add_NUM_COEFFICIENTS(args.NUM_COEFFICIENTS);
+    builder.add_ANOMALY_TYPE(args.ANOMALY_TYPE);
+    builder.add_SIZE_SHAPE_TYPE(args.SIZE_SHAPE_TYPE);
+    builder.add_BASIS_TYPE(args.BASIS_TYPE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PPEOrbitalElementRecordT {
+    let EPOCH_MID = {
+      let x = self.EPOCH_MID();
+      alloc::string::ToString::to_string(x)
+    };
+    let EPOCH_HALF_SPAN = self.EPOCH_HALF_SPAN();
+    let NUM_COEFFICIENTS = self.NUM_COEFFICIENTS();
+    let BASIS_TYPE = self.BASIS_TYPE();
+    let SIZE_SHAPE_TYPE = self.SIZE_SHAPE_TYPE();
+    let ANOMALY_TYPE = self.ANOMALY_TYPE();
+    let COEFF_SIZE_SHAPE = {
+      let x = self.COEFF_SIZE_SHAPE();
+      x.into_iter().collect()
+    };
+    let COEFF_ECCENTRICITY = {
+      let x = self.COEFF_ECCENTRICITY();
+      x.into_iter().collect()
+    };
+    let COEFF_INCLINATION = {
+      let x = self.COEFF_INCLINATION();
+      x.into_iter().collect()
+    };
+    let COEFF_RAAN = {
+      let x = self.COEFF_RAAN();
+      x.into_iter().collect()
+    };
+    let COEFF_ARG_PERIAPSIS = {
+      let x = self.COEFF_ARG_PERIAPSIS();
+      x.into_iter().collect()
+    };
+    let COEFF_ANOMALY = {
+      let x = self.COEFF_ANOMALY();
+      x.into_iter().collect()
+    };
+    let MAX_ELEMENT_RESIDUAL = self.MAX_ELEMENT_RESIDUAL();
+    let RMS_ELEMENT_RESIDUAL = self.RMS_ELEMENT_RESIDUAL();
+    PPEOrbitalElementRecordT {
+      EPOCH_MID,
+      EPOCH_HALF_SPAN,
+      NUM_COEFFICIENTS,
+      BASIS_TYPE,
+      SIZE_SHAPE_TYPE,
+      ANOMALY_TYPE,
+      COEFF_SIZE_SHAPE,
+      COEFF_ECCENTRICITY,
+      COEFF_INCLINATION,
+      COEFF_RAAN,
+      COEFF_ARG_PERIAPSIS,
+      COEFF_ANOMALY,
+      MAX_ELEMENT_RESIDUAL,
+      RMS_ELEMENT_RESIDUAL,
+    }
+  }
+
+  /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
+  #[inline]
+  pub fn EPOCH_MID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPEOrbitalElementRecord::VT_EPOCH_MID, None).unwrap()}
+  }
+  /// Half-span of the validity window in seconds.
+  #[inline]
+  pub fn EPOCH_HALF_SPAN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PPEOrbitalElementRecord::VT_EPOCH_HALF_SPAN, Some(0.0)).unwrap()}
+  }
+  /// Number of polynomial coefficients per element.
+  #[inline]
+  pub fn NUM_COEFFICIENTS(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(PPEOrbitalElementRecord::VT_NUM_COEFFICIENTS, Some(0)).unwrap()}
+  }
+  /// Polynomial basis type for interpreting the coefficient arrays.
+  #[inline]
+  pub fn BASIS_TYPE(&self) -> polynomialBasisType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<polynomialBasisType>(PPEOrbitalElementRecord::VT_BASIS_TYPE, Some(polynomialBasisType::CHEBYSHEV)).unwrap()}
+  }
+  /// Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
+  #[inline]
+  pub fn SIZE_SHAPE_TYPE(&self) -> sizeShapeProfile {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<sizeShapeProfile>(PPEOrbitalElementRecord::VT_SIZE_SHAPE_TYPE, Some(sizeShapeProfile::SMA)).unwrap()}
+  }
+  /// Anomaly type for the sixth orbital element.
+  #[inline]
+  pub fn ANOMALY_TYPE(&self) -> ppeAnomalyType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<ppeAnomalyType>(PPEOrbitalElementRecord::VT_ANOMALY_TYPE, Some(ppeAnomalyType::TRUE_ANOMALY)).unwrap()}
+  }
+  /// Coefficients for SMA or radius of periapsis (km).
+  /// Length must equal NUM_COEFFICIENTS.
+  #[inline]
+  pub fn COEFF_SIZE_SHAPE(&self) -> ::flatbuffers::Vector<'a, f64> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEOrbitalElementRecord::VT_COEFF_SIZE_SHAPE, None).unwrap()}
+  }
+  /// Coefficients for eccentricity (dimensionless).
+  /// Length must equal NUM_COEFFICIENTS.
+  #[inline]
+  pub fn COEFF_ECCENTRICITY(&self) -> ::flatbuffers::Vector<'a, f64> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEOrbitalElementRecord::VT_COEFF_ECCENTRICITY, None).unwrap()}
+  }
+  /// Coefficients for inclination (degrees).
+  /// Length must equal NUM_COEFFICIENTS.
+  #[inline]
+  pub fn COEFF_INCLINATION(&self) -> ::flatbuffers::Vector<'a, f64> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEOrbitalElementRecord::VT_COEFF_INCLINATION, None).unwrap()}
+  }
+  /// Coefficients for RAAN (degrees).
+  /// Length must equal NUM_COEFFICIENTS.
+  #[inline]
+  pub fn COEFF_RAAN(&self) -> ::flatbuffers::Vector<'a, f64> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEOrbitalElementRecord::VT_COEFF_RAAN, None).unwrap()}
+  }
+  /// Coefficients for argument of periapsis (degrees).
+  /// Length must equal NUM_COEFFICIENTS.
+  #[inline]
+  pub fn COEFF_ARG_PERIAPSIS(&self) -> ::flatbuffers::Vector<'a, f64> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEOrbitalElementRecord::VT_COEFF_ARG_PERIAPSIS, None).unwrap()}
+  }
+  /// Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.
+  /// Length must equal NUM_COEFFICIENTS.
+  #[inline]
+  pub fn COEFF_ANOMALY(&self) -> ::flatbuffers::Vector<'a, f64> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEOrbitalElementRecord::VT_COEFF_ANOMALY, None).unwrap()}
+  }
+  /// Maximum element fit residual over this segment. Optional quality metric.
+  /// Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).
+  #[inline]
+  pub fn MAX_ELEMENT_RESIDUAL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PPEOrbitalElementRecord::VT_MAX_ELEMENT_RESIDUAL, Some(0.0)).unwrap()}
+  }
+  /// RMS element fit residual over this segment. Optional quality metric.
+  #[inline]
+  pub fn RMS_ELEMENT_RESIDUAL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PPEOrbitalElementRecord::VT_RMS_ELEMENT_RESIDUAL, Some(0.0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PPEOrbitalElementRecord<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH_MID", Self::VT_EPOCH_MID, true)?
+     .visit_field::<f64>("EPOCH_HALF_SPAN", Self::VT_EPOCH_HALF_SPAN, false)?
+     .visit_field::<u16>("NUM_COEFFICIENTS", Self::VT_NUM_COEFFICIENTS, false)?
+     .visit_field::<polynomialBasisType>("BASIS_TYPE", Self::VT_BASIS_TYPE, false)?
+     .visit_field::<sizeShapeProfile>("SIZE_SHAPE_TYPE", Self::VT_SIZE_SHAPE_TYPE, false)?
+     .visit_field::<ppeAnomalyType>("ANOMALY_TYPE", Self::VT_ANOMALY_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_SIZE_SHAPE", Self::VT_COEFF_SIZE_SHAPE, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_ECCENTRICITY", Self::VT_COEFF_ECCENTRICITY, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_INCLINATION", Self::VT_COEFF_INCLINATION, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_RAAN", Self::VT_COEFF_RAAN, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_ARG_PERIAPSIS", Self::VT_COEFF_ARG_PERIAPSIS, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_ANOMALY", Self::VT_COEFF_ANOMALY, true)?
+     .visit_field::<f64>("MAX_ELEMENT_RESIDUAL", Self::VT_MAX_ELEMENT_RESIDUAL, false)?
+     .visit_field::<f64>("RMS_ELEMENT_RESIDUAL", Self::VT_RMS_ELEMENT_RESIDUAL, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PPEOrbitalElementRecordArgs<'a> {
+    pub EPOCH_MID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH_HALF_SPAN: f64,
+    pub NUM_COEFFICIENTS: u16,
+    pub BASIS_TYPE: polynomialBasisType,
+    pub SIZE_SHAPE_TYPE: sizeShapeProfile,
+    pub ANOMALY_TYPE: ppeAnomalyType,
+    pub COEFF_SIZE_SHAPE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub COEFF_ECCENTRICITY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub COEFF_INCLINATION: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub COEFF_RAAN: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub COEFF_ARG_PERIAPSIS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub COEFF_ANOMALY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub MAX_ELEMENT_RESIDUAL: f64,
+    pub RMS_ELEMENT_RESIDUAL: f64,
+}
+impl<'a> Default for PPEOrbitalElementRecordArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PPEOrbitalElementRecordArgs {
+      EPOCH_MID: None, // required field
+      EPOCH_HALF_SPAN: 0.0,
+      NUM_COEFFICIENTS: 0,
+      BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
+      SIZE_SHAPE_TYPE: sizeShapeProfile::SMA,
+      ANOMALY_TYPE: ppeAnomalyType::TRUE_ANOMALY,
+      COEFF_SIZE_SHAPE: None, // required field
+      COEFF_ECCENTRICITY: None, // required field
+      COEFF_INCLINATION: None, // required field
+      COEFF_RAAN: None, // required field
+      COEFF_ARG_PERIAPSIS: None, // required field
+      COEFF_ANOMALY: None, // required field
+      MAX_ELEMENT_RESIDUAL: 0.0,
+      RMS_ELEMENT_RESIDUAL: 0.0,
+    }
+  }
+}
+
+pub struct PPEOrbitalElementRecordBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PPEOrbitalElementRecordBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_EPOCH_MID(&mut self, EPOCH_MID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_EPOCH_MID, EPOCH_MID);
+  }
+  #[inline]
+  pub fn add_EPOCH_HALF_SPAN(&mut self, EPOCH_HALF_SPAN: f64) {
+    self.fbb_.push_slot::<f64>(PPEOrbitalElementRecord::VT_EPOCH_HALF_SPAN, EPOCH_HALF_SPAN, 0.0);
+  }
+  #[inline]
+  pub fn add_NUM_COEFFICIENTS(&mut self, NUM_COEFFICIENTS: u16) {
+    self.fbb_.push_slot::<u16>(PPEOrbitalElementRecord::VT_NUM_COEFFICIENTS, NUM_COEFFICIENTS, 0);
+  }
+  #[inline]
+  pub fn add_BASIS_TYPE(&mut self, BASIS_TYPE: polynomialBasisType) {
+    self.fbb_.push_slot::<polynomialBasisType>(PPEOrbitalElementRecord::VT_BASIS_TYPE, BASIS_TYPE, polynomialBasisType::CHEBYSHEV);
+  }
+  #[inline]
+  pub fn add_SIZE_SHAPE_TYPE(&mut self, SIZE_SHAPE_TYPE: sizeShapeProfile) {
+    self.fbb_.push_slot::<sizeShapeProfile>(PPEOrbitalElementRecord::VT_SIZE_SHAPE_TYPE, SIZE_SHAPE_TYPE, sizeShapeProfile::SMA);
+  }
+  #[inline]
+  pub fn add_ANOMALY_TYPE(&mut self, ANOMALY_TYPE: ppeAnomalyType) {
+    self.fbb_.push_slot::<ppeAnomalyType>(PPEOrbitalElementRecord::VT_ANOMALY_TYPE, ANOMALY_TYPE, ppeAnomalyType::TRUE_ANOMALY);
+  }
+  #[inline]
+  pub fn add_COEFF_SIZE_SHAPE(&mut self, COEFF_SIZE_SHAPE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_COEFF_SIZE_SHAPE, COEFF_SIZE_SHAPE);
+  }
+  #[inline]
+  pub fn add_COEFF_ECCENTRICITY(&mut self, COEFF_ECCENTRICITY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_COEFF_ECCENTRICITY, COEFF_ECCENTRICITY);
+  }
+  #[inline]
+  pub fn add_COEFF_INCLINATION(&mut self, COEFF_INCLINATION: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_COEFF_INCLINATION, COEFF_INCLINATION);
+  }
+  #[inline]
+  pub fn add_COEFF_RAAN(&mut self, COEFF_RAAN: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_COEFF_RAAN, COEFF_RAAN);
+  }
+  #[inline]
+  pub fn add_COEFF_ARG_PERIAPSIS(&mut self, COEFF_ARG_PERIAPSIS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_COEFF_ARG_PERIAPSIS, COEFF_ARG_PERIAPSIS);
+  }
+  #[inline]
+  pub fn add_COEFF_ANOMALY(&mut self, COEFF_ANOMALY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_COEFF_ANOMALY, COEFF_ANOMALY);
+  }
+  #[inline]
+  pub fn add_MAX_ELEMENT_RESIDUAL(&mut self, MAX_ELEMENT_RESIDUAL: f64) {
+    self.fbb_.push_slot::<f64>(PPEOrbitalElementRecord::VT_MAX_ELEMENT_RESIDUAL, MAX_ELEMENT_RESIDUAL, 0.0);
+  }
+  #[inline]
+  pub fn add_RMS_ELEMENT_RESIDUAL(&mut self, RMS_ELEMENT_RESIDUAL: f64) {
+    self.fbb_.push_slot::<f64>(PPEOrbitalElementRecord::VT_RMS_ELEMENT_RESIDUAL, RMS_ELEMENT_RESIDUAL, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PPEOrbitalElementRecordBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PPEOrbitalElementRecordBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PPEOrbitalElementRecord<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PPEOrbitalElementRecord::VT_EPOCH_MID,"EPOCH_MID");
+    self.fbb_.required(o, PPEOrbitalElementRecord::VT_COEFF_SIZE_SHAPE,"COEFF_SIZE_SHAPE");
+    self.fbb_.required(o, PPEOrbitalElementRecord::VT_COEFF_ECCENTRICITY,"COEFF_ECCENTRICITY");
+    self.fbb_.required(o, PPEOrbitalElementRecord::VT_COEFF_INCLINATION,"COEFF_INCLINATION");
+    self.fbb_.required(o, PPEOrbitalElementRecord::VT_COEFF_RAAN,"COEFF_RAAN");
+    self.fbb_.required(o, PPEOrbitalElementRecord::VT_COEFF_ARG_PERIAPSIS,"COEFF_ARG_PERIAPSIS");
+    self.fbb_.required(o, PPEOrbitalElementRecord::VT_COEFF_ANOMALY,"COEFF_ANOMALY");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PPEOrbitalElementRecord<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PPEOrbitalElementRecord");
+      ds.field("EPOCH_MID", &self.EPOCH_MID());
+      ds.field("EPOCH_HALF_SPAN", &self.EPOCH_HALF_SPAN());
+      ds.field("NUM_COEFFICIENTS", &self.NUM_COEFFICIENTS());
+      ds.field("BASIS_TYPE", &self.BASIS_TYPE());
+      ds.field("SIZE_SHAPE_TYPE", &self.SIZE_SHAPE_TYPE());
+      ds.field("ANOMALY_TYPE", &self.ANOMALY_TYPE());
+      ds.field("COEFF_SIZE_SHAPE", &self.COEFF_SIZE_SHAPE());
+      ds.field("COEFF_ECCENTRICITY", &self.COEFF_ECCENTRICITY());
+      ds.field("COEFF_INCLINATION", &self.COEFF_INCLINATION());
+      ds.field("COEFF_RAAN", &self.COEFF_RAAN());
+      ds.field("COEFF_ARG_PERIAPSIS", &self.COEFF_ARG_PERIAPSIS());
+      ds.field("COEFF_ANOMALY", &self.COEFF_ANOMALY());
+      ds.field("MAX_ELEMENT_RESIDUAL", &self.MAX_ELEMENT_RESIDUAL());
+      ds.field("RMS_ELEMENT_RESIDUAL", &self.RMS_ELEMENT_RESIDUAL());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PPEOrbitalElementRecordT {
+  pub EPOCH_MID: alloc::string::String,
+  pub EPOCH_HALF_SPAN: f64,
+  pub NUM_COEFFICIENTS: u16,
+  pub BASIS_TYPE: polynomialBasisType,
+  pub SIZE_SHAPE_TYPE: sizeShapeProfile,
+  pub ANOMALY_TYPE: ppeAnomalyType,
+  pub COEFF_SIZE_SHAPE: alloc::vec::Vec<f64>,
+  pub COEFF_ECCENTRICITY: alloc::vec::Vec<f64>,
+  pub COEFF_INCLINATION: alloc::vec::Vec<f64>,
+  pub COEFF_RAAN: alloc::vec::Vec<f64>,
+  pub COEFF_ARG_PERIAPSIS: alloc::vec::Vec<f64>,
+  pub COEFF_ANOMALY: alloc::vec::Vec<f64>,
+  pub MAX_ELEMENT_RESIDUAL: f64,
+  pub RMS_ELEMENT_RESIDUAL: f64,
+}
+impl Default for PPEOrbitalElementRecordT {
+  fn default() -> Self {
+    Self {
+      EPOCH_MID: alloc::string::ToString::to_string(""),
+      EPOCH_HALF_SPAN: 0.0,
+      NUM_COEFFICIENTS: 0,
+      BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
+      SIZE_SHAPE_TYPE: sizeShapeProfile::SMA,
+      ANOMALY_TYPE: ppeAnomalyType::TRUE_ANOMALY,
+      COEFF_SIZE_SHAPE: Default::default(),
+      COEFF_ECCENTRICITY: Default::default(),
+      COEFF_INCLINATION: Default::default(),
+      COEFF_RAAN: Default::default(),
+      COEFF_ARG_PERIAPSIS: Default::default(),
+      COEFF_ANOMALY: Default::default(),
+      MAX_ELEMENT_RESIDUAL: 0.0,
+      RMS_ELEMENT_RESIDUAL: 0.0,
+    }
+  }
+}
+impl PPEOrbitalElementRecordT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PPEOrbitalElementRecord<'b>> {
+    let EPOCH_MID = Some({
+      let x = &self.EPOCH_MID;
+      _fbb.create_string(x)
+    });
+    let EPOCH_HALF_SPAN = self.EPOCH_HALF_SPAN;
+    let NUM_COEFFICIENTS = self.NUM_COEFFICIENTS;
+    let BASIS_TYPE = self.BASIS_TYPE;
+    let SIZE_SHAPE_TYPE = self.SIZE_SHAPE_TYPE;
+    let ANOMALY_TYPE = self.ANOMALY_TYPE;
+    let COEFF_SIZE_SHAPE = Some({
+      let x = &self.COEFF_SIZE_SHAPE;
+      _fbb.create_vector(x)
+    });
+    let COEFF_ECCENTRICITY = Some({
+      let x = &self.COEFF_ECCENTRICITY;
+      _fbb.create_vector(x)
+    });
+    let COEFF_INCLINATION = Some({
+      let x = &self.COEFF_INCLINATION;
+      _fbb.create_vector(x)
+    });
+    let COEFF_RAAN = Some({
+      let x = &self.COEFF_RAAN;
+      _fbb.create_vector(x)
+    });
+    let COEFF_ARG_PERIAPSIS = Some({
+      let x = &self.COEFF_ARG_PERIAPSIS;
+      _fbb.create_vector(x)
+    });
+    let COEFF_ANOMALY = Some({
+      let x = &self.COEFF_ANOMALY;
+      _fbb.create_vector(x)
+    });
+    let MAX_ELEMENT_RESIDUAL = self.MAX_ELEMENT_RESIDUAL;
+    let RMS_ELEMENT_RESIDUAL = self.RMS_ELEMENT_RESIDUAL;
+    PPEOrbitalElementRecord::create(_fbb, &PPEOrbitalElementRecordArgs{
+      EPOCH_MID,
+      EPOCH_HALF_SPAN,
+      NUM_COEFFICIENTS,
+      BASIS_TYPE,
+      SIZE_SHAPE_TYPE,
+      ANOMALY_TYPE,
+      COEFF_SIZE_SHAPE,
+      COEFF_ECCENTRICITY,
+      COEFF_INCLINATION,
+      COEFF_RAAN,
+      COEFF_ARG_PERIAPSIS,
+      COEFF_ANOMALY,
+      MAX_ELEMENT_RESIDUAL,
+      RMS_ELEMENT_RESIDUAL,
+    })
+  }
+}
+pub enum PPEOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Polynomial Ephemeris — top-level message containing metadata and
+/// one or more polynomial coefficient records for a single space object.
+///
+/// A PPE message may contain position records, orbital element records, or both.
+/// Records should be ordered chronologically by EPOCH_MID and should collectively
+/// cover the time span [START_TIME, STOP_TIME] without gaps.
+pub struct PPE<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PPE<'a> {
+  type Inner = PPE<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PPE<'a> {
+  pub const VT_COMMENT: ::flatbuffers::VOffsetT = 4;
+  pub const VT_OBJECT: ::flatbuffers::VOffsetT = 6;
+  pub const VT_CENTER_NAME: ::flatbuffers::VOffsetT = 8;
+  pub const VT_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 10;
+  pub const VT_TIME_SYSTEM: ::flatbuffers::VOffsetT = 12;
+  pub const VT_START_TIME: ::flatbuffers::VOffsetT = 14;
+  pub const VT_STOP_TIME: ::flatbuffers::VOffsetT = 16;
+  pub const VT_DEFAULT_BASIS_TYPE: ::flatbuffers::VOffsetT = 18;
+  pub const VT_POSITION_RECORDS: ::flatbuffers::VOffsetT = 20;
+  pub const VT_ORBITAL_ELEMENT_RECORDS: ::flatbuffers::VOffsetT = 22;
+  pub const VT_EPHEMERIS_SOURCE: ::flatbuffers::VOffsetT = 24;
+  pub const VT_NOMINAL_SEGMENT_SPAN: ::flatbuffers::VOffsetT = 26;
+  pub const VT_NOMINAL_NUM_COEFFICIENTS: ::flatbuffers::VOffsetT = 28;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PPE { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PPEArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PPE<'bldr>> {
+    let mut builder = PPEBuilder::new(_fbb);
+    builder.add_NOMINAL_SEGMENT_SPAN(args.NOMINAL_SEGMENT_SPAN);
+    if let Some(x) = args.EPHEMERIS_SOURCE { builder.add_EPHEMERIS_SOURCE(x); }
+    if let Some(x) = args.ORBITAL_ELEMENT_RECORDS { builder.add_ORBITAL_ELEMENT_RECORDS(x); }
+    if let Some(x) = args.POSITION_RECORDS { builder.add_POSITION_RECORDS(x); }
+    if let Some(x) = args.STOP_TIME { builder.add_STOP_TIME(x); }
+    if let Some(x) = args.START_TIME { builder.add_START_TIME(x); }
+    if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
+    if let Some(x) = args.CENTER_NAME { builder.add_CENTER_NAME(x); }
+    if let Some(x) = args.OBJECT { builder.add_OBJECT(x); }
+    if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+    builder.add_NOMINAL_NUM_COEFFICIENTS(args.NOMINAL_NUM_COEFFICIENTS);
+    builder.add_DEFAULT_BASIS_TYPE(args.DEFAULT_BASIS_TYPE);
+    builder.add_TIME_SYSTEM(args.TIME_SYSTEM);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PPET {
+    let COMMENT = self.COMMENT().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let OBJECT = self.OBJECT().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let CENTER_NAME = self.CENTER_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let TIME_SYSTEM = self.TIME_SYSTEM();
+    let START_TIME = self.START_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let STOP_TIME = self.STOP_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DEFAULT_BASIS_TYPE = self.DEFAULT_BASIS_TYPE();
+    let POSITION_RECORDS = self.POSITION_RECORDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let ORBITAL_ELEMENT_RECORDS = self.ORBITAL_ELEMENT_RECORDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let EPHEMERIS_SOURCE = self.EPHEMERIS_SOURCE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let NOMINAL_SEGMENT_SPAN = self.NOMINAL_SEGMENT_SPAN();
+    let NOMINAL_NUM_COEFFICIENTS = self.NOMINAL_NUM_COEFFICIENTS();
+    PPET {
+      COMMENT,
+      OBJECT,
+      CENTER_NAME,
+      REFERENCE_FRAME,
+      TIME_SYSTEM,
+      START_TIME,
+      STOP_TIME,
+      DEFAULT_BASIS_TYPE,
+      POSITION_RECORDS,
+      ORBITAL_ELEMENT_RECORDS,
+      EPHEMERIS_SOURCE,
+      NOMINAL_SEGMENT_SPAN,
+      NOMINAL_NUM_COEFFICIENTS,
+    }
+  }
+
+  /// Plain-text comments.
+  #[inline]
+  pub fn COMMENT(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PPE::VT_COMMENT, None)}
+  }
+  /// Space object identification.
+  #[inline]
+  pub fn OBJECT(&self) -> Option<CAT<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CAT>>(PPE::VT_OBJECT, None)}
+  }
+  /// Origin of the reference frame (e.g., EARTH, MOON, MARS).
+  #[inline]
+  pub fn CENTER_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPE::VT_CENTER_NAME, None)}
+  }
+  /// Reference frame for position/velocity coefficients.
+  #[inline]
+  pub fn REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(PPE::VT_REFERENCE_FRAME, None)}
+  }
+  /// Time system used for all epochs in this message.
+  #[inline]
+  pub fn TIME_SYSTEM(&self) -> timingStandard {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<timingStandard>(PPE::VT_TIME_SYSTEM, Some(timingStandard::GMST)).unwrap()}
+  }
+  /// Start of the total time span covered by this ephemeris (ISO 8601).
+  #[inline]
+  pub fn START_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPE::VT_START_TIME, None)}
+  }
+  /// End of the total time span covered by this ephemeris (ISO 8601).
+  #[inline]
+  pub fn STOP_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPE::VT_STOP_TIME, None)}
+  }
+  /// Default polynomial basis type for all records in this message.
+  /// Individual records may override this with their own BASIS_TYPE field.
+  #[inline]
+  pub fn DEFAULT_BASIS_TYPE(&self) -> polynomialBasisType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<polynomialBasisType>(PPE::VT_DEFAULT_BASIS_TYPE, Some(polynomialBasisType::CHEBYSHEV)).unwrap()}
+  }
+  /// Array of position polynomial records.
+  /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
+  #[inline]
+  pub fn POSITION_RECORDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord>>>>(PPE::VT_POSITION_RECORDS, None)}
+  }
+  /// Array of orbital element polynomial records.
+  /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
+  #[inline]
+  pub fn ORBITAL_ELEMENT_RECORDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord>>>>(PPE::VT_ORBITAL_ELEMENT_RECORDS, None)}
+  }
+  /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+  #[inline]
+  pub fn EPHEMERIS_SOURCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPE::VT_EPHEMERIS_SOURCE, None)}
+  }
+  /// Fit span in seconds used to generate each polynomial segment.
+  /// Informational; actual spans are in individual records.
+  #[inline]
+  pub fn NOMINAL_SEGMENT_SPAN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PPE::VT_NOMINAL_SEGMENT_SPAN, Some(0.0)).unwrap()}
+  }
+  /// Nominal number of coefficients per segment.
+  /// Informational; actual counts are in individual records.
+  #[inline]
+  pub fn NOMINAL_NUM_COEFFICIENTS(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(PPE::VT_NOMINAL_NUM_COEFFICIENTS, Some(0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PPE<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<CAT>>("OBJECT", Self::VT_OBJECT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<timingStandard>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STOP_TIME", Self::VT_STOP_TIME, false)?
+     .visit_field::<polynomialBasisType>("DEFAULT_BASIS_TYPE", Self::VT_DEFAULT_BASIS_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PPEPositionRecord>>>>("POSITION_RECORDS", Self::VT_POSITION_RECORDS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord>>>>("ORBITAL_ELEMENT_RECORDS", Self::VT_ORBITAL_ELEMENT_RECORDS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_SOURCE", Self::VT_EPHEMERIS_SOURCE, false)?
+     .visit_field::<f64>("NOMINAL_SEGMENT_SPAN", Self::VT_NOMINAL_SEGMENT_SPAN, false)?
+     .visit_field::<u16>("NOMINAL_NUM_COEFFICIENTS", Self::VT_NOMINAL_NUM_COEFFICIENTS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PPEArgs<'a> {
+    pub COMMENT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub OBJECT: Option<::flatbuffers::WIPOffset<CAT<'a>>>,
+    pub CENTER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
+    pub TIME_SYSTEM: timingStandard,
+    pub START_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub STOP_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DEFAULT_BASIS_TYPE: polynomialBasisType,
+    pub POSITION_RECORDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'a>>>>>,
+    pub ORBITAL_ELEMENT_RECORDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord<'a>>>>>,
+    pub EPHEMERIS_SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NOMINAL_SEGMENT_SPAN: f64,
+    pub NOMINAL_NUM_COEFFICIENTS: u16,
+}
+impl<'a> Default for PPEArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PPEArgs {
+      COMMENT: None,
+      OBJECT: None,
+      CENTER_NAME: None,
+      REFERENCE_FRAME: None,
+      TIME_SYSTEM: timingStandard::GMST,
+      START_TIME: None,
+      STOP_TIME: None,
+      DEFAULT_BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
+      POSITION_RECORDS: None,
+      ORBITAL_ELEMENT_RECORDS: None,
+      EPHEMERIS_SOURCE: None,
+      NOMINAL_SEGMENT_SPAN: 0.0,
+      NOMINAL_NUM_COEFFICIENTS: 0,
+    }
+  }
+}
+
+pub struct PPEBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PPEBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_COMMENT, COMMENT);
+  }
+  #[inline]
+  pub fn add_OBJECT(&mut self, OBJECT: ::flatbuffers::WIPOffset<CAT<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CAT>>(PPE::VT_OBJECT, OBJECT);
+  }
+  #[inline]
+  pub fn add_CENTER_NAME(&mut self, CENTER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_CENTER_NAME, CENTER_NAME);
+  }
+  #[inline]
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(PPE::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  #[inline]
+  pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timingStandard) {
+    self.fbb_.push_slot::<timingStandard>(PPE::VT_TIME_SYSTEM, TIME_SYSTEM, timingStandard::GMST);
+  }
+  #[inline]
+  pub fn add_START_TIME(&mut self, START_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_START_TIME, START_TIME);
+  }
+  #[inline]
+  pub fn add_STOP_TIME(&mut self, STOP_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_STOP_TIME, STOP_TIME);
+  }
+  #[inline]
+  pub fn add_DEFAULT_BASIS_TYPE(&mut self, DEFAULT_BASIS_TYPE: polynomialBasisType) {
+    self.fbb_.push_slot::<polynomialBasisType>(PPE::VT_DEFAULT_BASIS_TYPE, DEFAULT_BASIS_TYPE, polynomialBasisType::CHEBYSHEV);
+  }
+  #[inline]
+  pub fn add_POSITION_RECORDS(&mut self, POSITION_RECORDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_POSITION_RECORDS, POSITION_RECORDS);
+  }
+  #[inline]
+  pub fn add_ORBITAL_ELEMENT_RECORDS(&mut self, ORBITAL_ELEMENT_RECORDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_ORBITAL_ELEMENT_RECORDS, ORBITAL_ELEMENT_RECORDS);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_SOURCE(&mut self, EPHEMERIS_SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_EPHEMERIS_SOURCE, EPHEMERIS_SOURCE);
+  }
+  #[inline]
+  pub fn add_NOMINAL_SEGMENT_SPAN(&mut self, NOMINAL_SEGMENT_SPAN: f64) {
+    self.fbb_.push_slot::<f64>(PPE::VT_NOMINAL_SEGMENT_SPAN, NOMINAL_SEGMENT_SPAN, 0.0);
+  }
+  #[inline]
+  pub fn add_NOMINAL_NUM_COEFFICIENTS(&mut self, NOMINAL_NUM_COEFFICIENTS: u16) {
+    self.fbb_.push_slot::<u16>(PPE::VT_NOMINAL_NUM_COEFFICIENTS, NOMINAL_NUM_COEFFICIENTS, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PPEBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PPEBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PPE<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PPE<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PPE");
+      ds.field("COMMENT", &self.COMMENT());
+      ds.field("OBJECT", &self.OBJECT());
+      ds.field("CENTER_NAME", &self.CENTER_NAME());
+      ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
+      ds.field("TIME_SYSTEM", &self.TIME_SYSTEM());
+      ds.field("START_TIME", &self.START_TIME());
+      ds.field("STOP_TIME", &self.STOP_TIME());
+      ds.field("DEFAULT_BASIS_TYPE", &self.DEFAULT_BASIS_TYPE());
+      ds.field("POSITION_RECORDS", &self.POSITION_RECORDS());
+      ds.field("ORBITAL_ELEMENT_RECORDS", &self.ORBITAL_ELEMENT_RECORDS());
+      ds.field("EPHEMERIS_SOURCE", &self.EPHEMERIS_SOURCE());
+      ds.field("NOMINAL_SEGMENT_SPAN", &self.NOMINAL_SEGMENT_SPAN());
+      ds.field("NOMINAL_NUM_COEFFICIENTS", &self.NOMINAL_NUM_COEFFICIENTS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PPET {
+  pub COMMENT: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub OBJECT: Option<alloc::boxed::Box<CATT>>,
+  pub CENTER_NAME: Option<alloc::string::String>,
+  pub REFERENCE_FRAME: Option<alloc::boxed::Box<RFMT>>,
+  pub TIME_SYSTEM: timingStandard,
+  pub START_TIME: Option<alloc::string::String>,
+  pub STOP_TIME: Option<alloc::string::String>,
+  pub DEFAULT_BASIS_TYPE: polynomialBasisType,
+  pub POSITION_RECORDS: Option<alloc::vec::Vec<PPEPositionRecordT>>,
+  pub ORBITAL_ELEMENT_RECORDS: Option<alloc::vec::Vec<PPEOrbitalElementRecordT>>,
+  pub EPHEMERIS_SOURCE: Option<alloc::string::String>,
+  pub NOMINAL_SEGMENT_SPAN: f64,
+  pub NOMINAL_NUM_COEFFICIENTS: u16,
+}
+impl Default for PPET {
+  fn default() -> Self {
+    Self {
+      COMMENT: None,
+      OBJECT: None,
+      CENTER_NAME: None,
+      REFERENCE_FRAME: None,
+      TIME_SYSTEM: timingStandard::GMST,
+      START_TIME: None,
+      STOP_TIME: None,
+      DEFAULT_BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
+      POSITION_RECORDS: None,
+      ORBITAL_ELEMENT_RECORDS: None,
+      EPHEMERIS_SOURCE: None,
+      NOMINAL_SEGMENT_SPAN: 0.0,
+      NOMINAL_NUM_COEFFICIENTS: 0,
+    }
+  }
+}
+impl PPET {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PPE<'b>> {
+    let COMMENT = self.COMMENT.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let OBJECT = self.OBJECT.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CENTER_NAME = self.CENTER_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let TIME_SYSTEM = self.TIME_SYSTEM;
+    let START_TIME = self.START_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let STOP_TIME = self.STOP_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DEFAULT_BASIS_TYPE = self.DEFAULT_BASIS_TYPE;
+    let POSITION_RECORDS = self.POSITION_RECORDS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let ORBITAL_ELEMENT_RECORDS = self.ORBITAL_ELEMENT_RECORDS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let EPHEMERIS_SOURCE = self.EPHEMERIS_SOURCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NOMINAL_SEGMENT_SPAN = self.NOMINAL_SEGMENT_SPAN;
+    let NOMINAL_NUM_COEFFICIENTS = self.NOMINAL_NUM_COEFFICIENTS;
+    PPE::create(_fbb, &PPEArgs{
+      COMMENT,
+      OBJECT,
+      CENTER_NAME,
+      REFERENCE_FRAME,
+      TIME_SYSTEM,
+      START_TIME,
+      STOP_TIME,
+      DEFAULT_BASIS_TYPE,
+      POSITION_RECORDS,
+      ORBITAL_ELEMENT_RECORDS,
+      EPHEMERIS_SOURCE,
+      NOMINAL_SEGMENT_SPAN,
+      NOMINAL_NUM_COEFFICIENTS,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `LCC`
+/// Verifies that a buffer of bytes contains a `PPE`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_lcc_unchecked`.
-pub fn root_as_lcc(buf: &[u8]) -> Result<LCC<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<LCC>(buf)
+/// `root_as_ppe_unchecked`.
+pub fn root_as_ppe(buf: &[u8]) -> Result<PPE<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<PPE>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `LCC` and returns it.
+/// `PPE` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_lcc_unchecked`.
-pub fn size_prefixed_root_as_lcc(buf: &[u8]) -> Result<LCC<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<LCC>(buf)
+/// `size_prefixed_root_as_ppe_unchecked`.
+pub fn size_prefixed_root_as_ppe(buf: &[u8]) -> Result<PPE<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<PPE>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `LCC` and returns it.
+/// contains a `PPE` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_lcc_unchecked`.
-pub fn root_as_lcc_with_opts<'b, 'o>(
+/// `root_as_ppe_unchecked`.
+pub fn root_as_ppe_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<LCC<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<LCC<'b>>(opts, buf)
+) -> Result<PPE<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<PPE<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `LCC` and returns
+/// bytes contains a size prefixed `PPE` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_lcc_unchecked`.
-pub fn size_prefixed_root_as_lcc_with_opts<'b, 'o>(
+/// `root_as_ppe_unchecked`.
+pub fn size_prefixed_root_as_ppe_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<LCC<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<LCC<'b>>(opts, buf)
+) -> Result<PPE<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<PPE<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a LCC and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a PPE and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `LCC`.
-pub unsafe fn root_as_lcc_unchecked(buf: &[u8]) -> LCC<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<LCC>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `PPE`.
+pub unsafe fn root_as_ppe_unchecked(buf: &[u8]) -> PPE<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<PPE>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed LCC and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed PPE and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `LCC`.
-pub unsafe fn size_prefixed_root_as_lcc_unchecked(buf: &[u8]) -> LCC<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<LCC>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `PPE`.
+pub unsafe fn size_prefixed_root_as_ppe_unchecked(buf: &[u8]) -> PPE<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<PPE>(buf) }
 }
-pub const LCC_IDENTIFIER: &str = "$LCC";
+pub const PPE_IDENTIFIER: &str = "$PPE";
 
 #[inline]
-pub fn lcc_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, LCC_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn lcc_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, LCC_IDENTIFIER, true)
+pub fn ppe_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, PPE_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_lcc_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn ppe_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, PPE_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_ppe_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<LCC<'a>>) {
-  fbb.finish(root, Some(LCC_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<PPE<'a>>) {
+  fbb.finish(root, Some(PPE_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_lcc_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<LCC<'a>>) {
-  fbb.finish_size_prefixed(root, Some(LCC_IDENTIFIER));
+pub fn finish_size_prefixed_ppe_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<PPE<'a>>) {
+  fbb.finish_size_prefixed(root, Some(PPE_IDENTIFIER));
 }

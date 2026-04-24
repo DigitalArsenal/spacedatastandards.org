@@ -13,624 +13,189 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-struct LCC;
-struct LCCBuilder;
+#include "main_generated.h"
 
-enum legacyCountryCode : int8_t {
-  /// Arab Satellite Communications Organization
-  legacyCountryCode_AB = 0,
-  /// Asia Broadcast Satellite
-  legacyCountryCode_ABS = 1,
-  /// Asia Satellite Telecommunications Company (ASIASAT)
-  legacyCountryCode_AC = 2,
-  /// Algeria
-  legacyCountryCode_ALG = 3,
-  /// Angola
-  legacyCountryCode_ANG = 4,
-  /// Argentina
-  legacyCountryCode_ARGN = 5,
-  /// Republic of Armenia
-  legacyCountryCode_ARM = 6,
-  /// Austria
-  legacyCountryCode_ASRA = 7,
-  /// Australia
-  legacyCountryCode_AUS = 8,
-  /// Azerbaijan
-  legacyCountryCode_AZER = 9,
-  /// Belgium
-  legacyCountryCode_BEL = 10,
-  /// Belarus
-  legacyCountryCode_BELA = 11,
-  /// Bermuda
-  legacyCountryCode_BERM = 12,
-  /// People's Republic of Bangladesh
-  legacyCountryCode_BGD = 13,
-  /// Kingdom of Bhutan
-  legacyCountryCode_BHUT = 14,
-  /// Bolivia
-  legacyCountryCode_BOL = 15,
-  /// Brazil
-  legacyCountryCode_BRAZ = 16,
-  /// Bulgaria
-  legacyCountryCode_BUL = 17,
-  /// Canada
-  legacyCountryCode_CA = 18,
-  /// China/Brazil
-  legacyCountryCode_CHBZ = 19,
-  /// China/Turkey
-  legacyCountryCode_CHTU = 20,
-  /// Chile
-  legacyCountryCode_CHLE = 21,
-  /// Commonwealth of Independent States (former USSR)
-  legacyCountryCode_CIS = 22,
-  /// Colombia
-  legacyCountryCode_COL = 23,
-  /// Republic of Costa Rica
-  legacyCountryCode_CRI = 24,
-  /// Czech Republic (former Czechoslovakia)
-  legacyCountryCode_CZCH = 25,
-  /// Denmark
-  legacyCountryCode_DEN = 26,
-  /// Republic of Djibouti
-  legacyCountryCode_DJI = 27,
-  /// Ecuador
-  legacyCountryCode_ECU = 28,
-  /// Egypt
-  legacyCountryCode_EGYP = 29,
-  /// European Space Agency
-  legacyCountryCode_ESA = 30,
-  /// European Space Research Organization
-  legacyCountryCode_ESRO = 31,
-  /// Estonia
-  legacyCountryCode_EST = 32,
-  /// Ethiopia
-  legacyCountryCode_ETH = 33,
-  /// European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
-  legacyCountryCode_EUME = 34,
-  /// European Telecommunications Satellite Organization (EUTELSAT)
-  legacyCountryCode_EUTE = 35,
-  /// France/Germany
-  legacyCountryCode_FGER = 36,
-  /// Finland
-  legacyCountryCode_FIN = 37,
-  /// France
-  legacyCountryCode_FR = 38,
-  /// France/Italy
-  legacyCountryCode_FRIT = 39,
-  /// Germany
-  legacyCountryCode_GER = 40,
-  /// Republic of Ghana
-  legacyCountryCode_GHA = 41,
-  /// Globalstar
-  legacyCountryCode_GLOB = 42,
-  /// Greece
-  legacyCountryCode_GREC = 43,
-  /// Greece/Saudi Arabia
-  legacyCountryCode_GRSA = 44,
-  /// Guatemala
-  legacyCountryCode_GUAT = 45,
-  /// Hungary
-  legacyCountryCode_HUN = 46,
-  /// International Mobile Satellite Organization (INMARSAT)
-  legacyCountryCode_IM = 47,
-  /// India
-  legacyCountryCode_IND = 48,
-  /// Indonesia
-  legacyCountryCode_INDO = 49,
-  /// Iran
-  legacyCountryCode_IRAN = 50,
-  /// Iraq
-  legacyCountryCode_IRAQ = 51,
-  /// Iridium
-  legacyCountryCode_IRID = 52,
-  /// Ireland
-  legacyCountryCode_IRL = 53,
-  /// Israel
-  legacyCountryCode_ISRA = 54,
-  /// Indian Space Research Organisation
-  legacyCountryCode_ISRO = 55,
-  /// International Space Station
-  legacyCountryCode_ISS = 56,
-  /// Italy
-  legacyCountryCode_IT = 57,
-  /// International Telecommunications Satellite Organization (INTELSAT)
-  legacyCountryCode_ITSO = 58,
-  /// Japan
-  legacyCountryCode_JPN = 59,
-  /// Kazakhstan
-  legacyCountryCode_KAZ = 60,
-  /// Republic of Kenya
-  legacyCountryCode_KEN = 61,
-  /// Laos
-  legacyCountryCode_LAOS = 62,
-  /// Democratic Socialist Republic of Sri Lanka
-  legacyCountryCode_LKA = 63,
-  /// Lithuania
-  legacyCountryCode_LTU = 64,
-  /// Luxembourg
-  legacyCountryCode_LUXE = 65,
-  /// Morocco
-  legacyCountryCode_MA = 66,
-  /// Malaysia
-  legacyCountryCode_MALA = 67,
-  /// Principality of Monaco
-  legacyCountryCode_MCO = 68,
-  /// Republic of Moldova
-  legacyCountryCode_MDA = 69,
-  /// Mexico
-  legacyCountryCode_MEX = 70,
-  /// Republic of the Union of Myanmar
-  legacyCountryCode_MMR = 71,
-  /// Mongolia
-  legacyCountryCode_MNG = 72,
-  /// Mauritius
-  legacyCountryCode_MUS = 73,
-  /// North Atlantic Treaty Organization
-  legacyCountryCode_NATO = 74,
-  /// Netherlands
-  legacyCountryCode_NETH = 75,
-  /// New ICO
-  legacyCountryCode_NICO = 76,
-  /// Nigeria
-  legacyCountryCode_NIG = 77,
-  /// Democratic People's Republic of Korea
-  legacyCountryCode_NKOR = 78,
-  /// Norway
-  legacyCountryCode_NOR = 79,
-  /// Federal Democratic Republic of Nepal
-  legacyCountryCode_NPL = 80,
-  /// New Zealand
-  legacyCountryCode_NZ = 81,
-  /// O3b Networks
-  legacyCountryCode_O3B = 82,
-  /// ORBCOMM
-  legacyCountryCode_ORB = 83,
-  /// Pakistan
-  legacyCountryCode_PAKI = 84,
-  /// Peru
-  legacyCountryCode_PERU = 85,
-  /// Poland
-  legacyCountryCode_POL = 86,
-  /// Portugal
-  legacyCountryCode_POR = 87,
-  /// People's Republic of China
-  legacyCountryCode_PRC = 88,
-  /// Republic of Paraguay
-  legacyCountryCode_PRY = 89,
-  /// People's Republic of China/European Space Agency
-  legacyCountryCode_PRES = 90,
-  /// State of Qatar
-  legacyCountryCode_QAT = 91,
-  /// RascomStar-QAF
-  legacyCountryCode_RASC = 92,
-  /// Taiwan (Republic of China)
-  legacyCountryCode_ROC = 93,
-  /// Romania
-  legacyCountryCode_ROM = 94,
-  /// Philippines (Republic of the Philippines)
-  legacyCountryCode_RP = 95,
-  /// Republic of Rwanda
-  legacyCountryCode_RWA = 96,
-  /// South Africa
-  legacyCountryCode_SAFR = 97,
-  /// Saudi Arabia
-  legacyCountryCode_SAUD = 98,
-  /// Republic of Sudan
-  legacyCountryCode_SDN = 99,
-  /// Sea Launch
-  legacyCountryCode_SEAL = 100,
-  /// SES
-  legacyCountryCode_SES = 101,
-  /// Singapore/Japan
-  legacyCountryCode_SGJP = 102,
-  /// Singapore
-  legacyCountryCode_SING = 103,
-  /// Republic of Korea
-  legacyCountryCode_SKOR = 104,
-  /// Spain
-  legacyCountryCode_SPN = 105,
-  /// Singapore/Taiwan
-  legacyCountryCode_STCT = 106,
-  /// Slovenia
-  legacyCountryCode_SVN = 107,
-  /// Sweden
-  legacyCountryCode_SWED = 108,
-  /// Switzerland
-  legacyCountryCode_SWTZ = 109,
-  /// To Be Determined
-  legacyCountryCode_TBD = 110,
-  /// Thailand
-  legacyCountryCode_THAI = 111,
-  /// Turkmenistan/Monaco
-  legacyCountryCode_TMMC = 112,
-  /// Republic of Tunisia
-  legacyCountryCode_TUN = 113,
-  /// Turkey
-  legacyCountryCode_TURK = 114,
-  /// United Arab Emirates
-  legacyCountryCode_UAE = 115,
-  /// United Kingdom
-  legacyCountryCode_UK = 116,
-  /// Ukraine
-  legacyCountryCode_UKR = 117,
-  /// Unknown
-  legacyCountryCode_UNK = 118,
-  /// Uruguay
-  legacyCountryCode_URY = 119,
-  /// United States
-  legacyCountryCode_US = 120,
-  /// United States/Brazil
-  legacyCountryCode_USBZ = 121,
-  /// Vatican City State
-  legacyCountryCode_VAT = 122,
-  /// Venezuela
-  legacyCountryCode_VENZ = 123,
-  /// Vietnam
-  legacyCountryCode_VTNM = 124,
-  /// Republic of Zimbabwe
-  legacyCountryCode_ZWE = 125,
-  legacyCountryCode_MIN = legacyCountryCode_AB,
-  legacyCountryCode_MAX = legacyCountryCode_ZWE
-};
+struct CSM;
+struct CSMBuilder;
 
-inline const legacyCountryCode (&EnumValueslegacyCountryCode())[126] {
-  static const legacyCountryCode values[] = {
-    legacyCountryCode_AB,
-    legacyCountryCode_ABS,
-    legacyCountryCode_AC,
-    legacyCountryCode_ALG,
-    legacyCountryCode_ANG,
-    legacyCountryCode_ARGN,
-    legacyCountryCode_ARM,
-    legacyCountryCode_ASRA,
-    legacyCountryCode_AUS,
-    legacyCountryCode_AZER,
-    legacyCountryCode_BEL,
-    legacyCountryCode_BELA,
-    legacyCountryCode_BERM,
-    legacyCountryCode_BGD,
-    legacyCountryCode_BHUT,
-    legacyCountryCode_BOL,
-    legacyCountryCode_BRAZ,
-    legacyCountryCode_BUL,
-    legacyCountryCode_CA,
-    legacyCountryCode_CHBZ,
-    legacyCountryCode_CHTU,
-    legacyCountryCode_CHLE,
-    legacyCountryCode_CIS,
-    legacyCountryCode_COL,
-    legacyCountryCode_CRI,
-    legacyCountryCode_CZCH,
-    legacyCountryCode_DEN,
-    legacyCountryCode_DJI,
-    legacyCountryCode_ECU,
-    legacyCountryCode_EGYP,
-    legacyCountryCode_ESA,
-    legacyCountryCode_ESRO,
-    legacyCountryCode_EST,
-    legacyCountryCode_ETH,
-    legacyCountryCode_EUME,
-    legacyCountryCode_EUTE,
-    legacyCountryCode_FGER,
-    legacyCountryCode_FIN,
-    legacyCountryCode_FR,
-    legacyCountryCode_FRIT,
-    legacyCountryCode_GER,
-    legacyCountryCode_GHA,
-    legacyCountryCode_GLOB,
-    legacyCountryCode_GREC,
-    legacyCountryCode_GRSA,
-    legacyCountryCode_GUAT,
-    legacyCountryCode_HUN,
-    legacyCountryCode_IM,
-    legacyCountryCode_IND,
-    legacyCountryCode_INDO,
-    legacyCountryCode_IRAN,
-    legacyCountryCode_IRAQ,
-    legacyCountryCode_IRID,
-    legacyCountryCode_IRL,
-    legacyCountryCode_ISRA,
-    legacyCountryCode_ISRO,
-    legacyCountryCode_ISS,
-    legacyCountryCode_IT,
-    legacyCountryCode_ITSO,
-    legacyCountryCode_JPN,
-    legacyCountryCode_KAZ,
-    legacyCountryCode_KEN,
-    legacyCountryCode_LAOS,
-    legacyCountryCode_LKA,
-    legacyCountryCode_LTU,
-    legacyCountryCode_LUXE,
-    legacyCountryCode_MA,
-    legacyCountryCode_MALA,
-    legacyCountryCode_MCO,
-    legacyCountryCode_MDA,
-    legacyCountryCode_MEX,
-    legacyCountryCode_MMR,
-    legacyCountryCode_MNG,
-    legacyCountryCode_MUS,
-    legacyCountryCode_NATO,
-    legacyCountryCode_NETH,
-    legacyCountryCode_NICO,
-    legacyCountryCode_NIG,
-    legacyCountryCode_NKOR,
-    legacyCountryCode_NOR,
-    legacyCountryCode_NPL,
-    legacyCountryCode_NZ,
-    legacyCountryCode_O3B,
-    legacyCountryCode_ORB,
-    legacyCountryCode_PAKI,
-    legacyCountryCode_PERU,
-    legacyCountryCode_POL,
-    legacyCountryCode_POR,
-    legacyCountryCode_PRC,
-    legacyCountryCode_PRY,
-    legacyCountryCode_PRES,
-    legacyCountryCode_QAT,
-    legacyCountryCode_RASC,
-    legacyCountryCode_ROC,
-    legacyCountryCode_ROM,
-    legacyCountryCode_RP,
-    legacyCountryCode_RWA,
-    legacyCountryCode_SAFR,
-    legacyCountryCode_SAUD,
-    legacyCountryCode_SDN,
-    legacyCountryCode_SEAL,
-    legacyCountryCode_SES,
-    legacyCountryCode_SGJP,
-    legacyCountryCode_SING,
-    legacyCountryCode_SKOR,
-    legacyCountryCode_SPN,
-    legacyCountryCode_STCT,
-    legacyCountryCode_SVN,
-    legacyCountryCode_SWED,
-    legacyCountryCode_SWTZ,
-    legacyCountryCode_TBD,
-    legacyCountryCode_THAI,
-    legacyCountryCode_TMMC,
-    legacyCountryCode_TUN,
-    legacyCountryCode_TURK,
-    legacyCountryCode_UAE,
-    legacyCountryCode_UK,
-    legacyCountryCode_UKR,
-    legacyCountryCode_UNK,
-    legacyCountryCode_URY,
-    legacyCountryCode_US,
-    legacyCountryCode_USBZ,
-    legacyCountryCode_VAT,
-    legacyCountryCode_VENZ,
-    legacyCountryCode_VTNM,
-    legacyCountryCode_ZWE
-  };
-  return values;
-}
-
-inline const char * const *EnumNameslegacyCountryCode() {
-  static const char * const names[127] = {
-    "AB",
-    "ABS",
-    "AC",
-    "ALG",
-    "ANG",
-    "ARGN",
-    "ARM",
-    "ASRA",
-    "AUS",
-    "AZER",
-    "BEL",
-    "BELA",
-    "BERM",
-    "BGD",
-    "BHUT",
-    "BOL",
-    "BRAZ",
-    "BUL",
-    "CA",
-    "CHBZ",
-    "CHTU",
-    "CHLE",
-    "CIS",
-    "COL",
-    "CRI",
-    "CZCH",
-    "DEN",
-    "DJI",
-    "ECU",
-    "EGYP",
-    "ESA",
-    "ESRO",
-    "EST",
-    "ETH",
-    "EUME",
-    "EUTE",
-    "FGER",
-    "FIN",
-    "FR",
-    "FRIT",
-    "GER",
-    "GHA",
-    "GLOB",
-    "GREC",
-    "GRSA",
-    "GUAT",
-    "HUN",
-    "IM",
-    "IND",
-    "INDO",
-    "IRAN",
-    "IRAQ",
-    "IRID",
-    "IRL",
-    "ISRA",
-    "ISRO",
-    "ISS",
-    "IT",
-    "ITSO",
-    "JPN",
-    "KAZ",
-    "KEN",
-    "LAOS",
-    "LKA",
-    "LTU",
-    "LUXE",
-    "MA",
-    "MALA",
-    "MCO",
-    "MDA",
-    "MEX",
-    "MMR",
-    "MNG",
-    "MUS",
-    "NATO",
-    "NETH",
-    "NICO",
-    "NIG",
-    "NKOR",
-    "NOR",
-    "NPL",
-    "NZ",
-    "O3B",
-    "ORB",
-    "PAKI",
-    "PERU",
-    "POL",
-    "POR",
-    "PRC",
-    "PRY",
-    "PRES",
-    "QAT",
-    "RASC",
-    "ROC",
-    "ROM",
-    "RP",
-    "RWA",
-    "SAFR",
-    "SAUD",
-    "SDN",
-    "SEAL",
-    "SES",
-    "SGJP",
-    "SING",
-    "SKOR",
-    "SPN",
-    "STCT",
-    "SVN",
-    "SWED",
-    "SWTZ",
-    "TBD",
-    "THAI",
-    "TMMC",
-    "TUN",
-    "TURK",
-    "UAE",
-    "UK",
-    "UKR",
-    "UNK",
-    "URY",
-    "US",
-    "USBZ",
-    "VAT",
-    "VENZ",
-    "VTNM",
-    "ZWE",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNamelegacyCountryCode(legacyCountryCode e) {
-  if (::flatbuffers::IsOutRange(e, legacyCountryCode_AB, legacyCountryCode_ZWE)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNameslegacyCountryCode()[index];
-}
-
-/// Legacy Country Code
-struct LCC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef LCCBuilder Builder;
+/// Conjunction Summary Message
+struct CSM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CSMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_OWNER = 4
+    VT_OBJECT_1 = 4,
+    VT_DSE_1 = 6,
+    VT_OBJECT_2 = 8,
+    VT_DSE_2 = 10,
+    VT_TCA = 12,
+    VT_TCA_RANGE = 14,
+    VT_TCA_RELATIVE_SPEED = 16,
+    VT_MAX_PROB = 18,
+    VT_DILUTION = 20
   };
-  legacyCountryCode OWNER() const {
-    return static_cast<legacyCountryCode>(GetField<int8_t>(VT_OWNER, 0));
+  /// Satellite name for the first object
+  const CAT *OBJECT_1() const {
+    return GetPointer<const CAT *>(VT_OBJECT_1);
+  }
+  /// Days since epoch for the first object
+  double DSE_1() const {
+    return GetField<double>(VT_DSE_1, 0.0);
+  }
+  /// Satellite name for the second object
+  const CAT *OBJECT_2() const {
+    return GetPointer<const CAT *>(VT_OBJECT_2);
+  }
+  /// Days since epoch for the second object
+  double DSE_2() const {
+    return GetField<double>(VT_DSE_2, 0.0);
+  }
+  /// Time of closest approach as a Unix timestamp
+  double TCA() const {
+    return GetField<double>(VT_TCA, 0.0);
+  }
+  /// The distance or range between the two objects at TCA
+  double TCA_RANGE() const {
+    return GetField<double>(VT_TCA_RANGE, 0.0);
+  }
+  /// The magnitude of the relative velocity at TCA
+  double TCA_RELATIVE_SPEED() const {
+    return GetField<double>(VT_TCA_RELATIVE_SPEED, 0.0);
+  }
+  /// Maximum probability
+  double MAX_PROB() const {
+    return GetField<double>(VT_MAX_PROB, 0.0);
+  }
+  /// Standard deviation that produces the maximum probability
+  double DILUTION() const {
+    return GetField<double>(VT_DILUTION, 0.0);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<int8_t>(verifier, VT_OWNER, 1) &&
+           VerifyOffset(verifier, VT_OBJECT_1) &&
+           verifier.VerifyTable(OBJECT_1()) &&
+           VerifyField<double>(verifier, VT_DSE_1, 8) &&
+           VerifyOffset(verifier, VT_OBJECT_2) &&
+           verifier.VerifyTable(OBJECT_2()) &&
+           VerifyField<double>(verifier, VT_DSE_2, 8) &&
+           VerifyField<double>(verifier, VT_TCA, 8) &&
+           VerifyField<double>(verifier, VT_TCA_RANGE, 8) &&
+           VerifyField<double>(verifier, VT_TCA_RELATIVE_SPEED, 8) &&
+           VerifyField<double>(verifier, VT_MAX_PROB, 8) &&
+           VerifyField<double>(verifier, VT_DILUTION, 8) &&
            verifier.EndTable();
   }
 };
 
-struct LCCBuilder {
-  typedef LCC Table;
+struct CSMBuilder {
+  typedef CSM Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_OWNER(legacyCountryCode OWNER) {
-    fbb_.AddElement<int8_t>(LCC::VT_OWNER, static_cast<int8_t>(OWNER), 0);
+  void add_OBJECT_1(::flatbuffers::Offset<CAT> OBJECT_1) {
+    fbb_.AddOffset(CSM::VT_OBJECT_1, OBJECT_1);
   }
-  explicit LCCBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_DSE_1(double DSE_1) {
+    fbb_.AddElement<double>(CSM::VT_DSE_1, DSE_1, 0.0);
+  }
+  void add_OBJECT_2(::flatbuffers::Offset<CAT> OBJECT_2) {
+    fbb_.AddOffset(CSM::VT_OBJECT_2, OBJECT_2);
+  }
+  void add_DSE_2(double DSE_2) {
+    fbb_.AddElement<double>(CSM::VT_DSE_2, DSE_2, 0.0);
+  }
+  void add_TCA(double TCA) {
+    fbb_.AddElement<double>(CSM::VT_TCA, TCA, 0.0);
+  }
+  void add_TCA_RANGE(double TCA_RANGE) {
+    fbb_.AddElement<double>(CSM::VT_TCA_RANGE, TCA_RANGE, 0.0);
+  }
+  void add_TCA_RELATIVE_SPEED(double TCA_RELATIVE_SPEED) {
+    fbb_.AddElement<double>(CSM::VT_TCA_RELATIVE_SPEED, TCA_RELATIVE_SPEED, 0.0);
+  }
+  void add_MAX_PROB(double MAX_PROB) {
+    fbb_.AddElement<double>(CSM::VT_MAX_PROB, MAX_PROB, 0.0);
+  }
+  void add_DILUTION(double DILUTION) {
+    fbb_.AddElement<double>(CSM::VT_DILUTION, DILUTION, 0.0);
+  }
+  explicit CSMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<LCC> Finish() {
+  ::flatbuffers::Offset<CSM> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<LCC>(end);
+    auto o = ::flatbuffers::Offset<CSM>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<LCC> CreateLCC(
+inline ::flatbuffers::Offset<CSM> CreateCSM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    legacyCountryCode OWNER = legacyCountryCode_AB) {
-  LCCBuilder builder_(_fbb);
-  builder_.add_OWNER(OWNER);
+    ::flatbuffers::Offset<CAT> OBJECT_1 = 0,
+    double DSE_1 = 0.0,
+    ::flatbuffers::Offset<CAT> OBJECT_2 = 0,
+    double DSE_2 = 0.0,
+    double TCA = 0.0,
+    double TCA_RANGE = 0.0,
+    double TCA_RELATIVE_SPEED = 0.0,
+    double MAX_PROB = 0.0,
+    double DILUTION = 0.0) {
+  CSMBuilder builder_(_fbb);
+  builder_.add_DILUTION(DILUTION);
+  builder_.add_MAX_PROB(MAX_PROB);
+  builder_.add_TCA_RELATIVE_SPEED(TCA_RELATIVE_SPEED);
+  builder_.add_TCA_RANGE(TCA_RANGE);
+  builder_.add_TCA(TCA);
+  builder_.add_DSE_2(DSE_2);
+  builder_.add_DSE_1(DSE_1);
+  builder_.add_OBJECT_2(OBJECT_2);
+  builder_.add_OBJECT_1(OBJECT_1);
   return builder_.Finish();
 }
 
-inline const LCC *GetLCC(const void *buf) {
-  return ::flatbuffers::GetRoot<LCC>(buf);
+inline const CSM *GetCSM(const void *buf) {
+  return ::flatbuffers::GetRoot<CSM>(buf);
 }
 
-inline const LCC *GetSizePrefixedLCC(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<LCC>(buf);
+inline const CSM *GetSizePrefixedCSM(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<CSM>(buf);
 }
 
-inline const char *LCCIdentifier() {
-  return "$LCC";
+inline const char *CSMIdentifier() {
+  return "$CSM";
 }
 
-inline bool LCCBufferHasIdentifier(const void *buf) {
+inline bool CSMBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, LCCIdentifier());
+      buf, CSMIdentifier());
 }
 
-inline bool SizePrefixedLCCBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedCSMBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, LCCIdentifier(), true);
+      buf, CSMIdentifier(), true);
 }
 
 template <bool B = false>
-inline bool VerifyLCCBuffer(
+inline bool VerifyCSMBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<LCC>(LCCIdentifier());
+  return verifier.template VerifyBuffer<CSM>(CSMIdentifier());
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedLCCBuffer(
+inline bool VerifySizePrefixedCSMBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<LCC>(LCCIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<CSM>(CSMIdentifier());
 }
 
-inline void FinishLCCBuffer(
+inline void FinishCSMBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<LCC> root) {
-  fbb.Finish(root, LCCIdentifier());
+    ::flatbuffers::Offset<CSM> root) {
+  fbb.Finish(root, CSMIdentifier());
 }
 
-inline void FinishSizePrefixedLCCBuffer(
+inline void FinishSizePrefixedCSMBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<LCC> root) {
-  fbb.FinishSizePrefixed(root, LCCIdentifier());
+    ::flatbuffers::Offset<CSM> root) {
+  fbb.FinishSizePrefixed(root, CSMIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

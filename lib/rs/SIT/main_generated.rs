@@ -2,51 +2,108 @@
 // @generated
 extern crate alloc;
 
+use crate::main_generated::*;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_POLARIZATION_TYPE: i8 = 0;
+pub const ENUM_MIN_SITE_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_POLARIZATION_TYPE: i8 = 3;
+pub const ENUM_MAX_SITE_TYPE: i8 = 17;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_POLARIZATION_TYPE: [PolarizationType; 4] = [
-  PolarizationType::linear,
-  PolarizationType::circular,
-  PolarizationType::elliptical,
-  PolarizationType::unpolarized,
+pub const ENUM_VALUES_SITE_TYPE: [SiteType; 18] = [
+  SiteType::LAUNCH_SITE,
+  SiteType::OBSERVATION_STATION,
+  SiteType::HOBBYIST_OBSERVER,
+  SiteType::RESEARCH_FACILITY,
+  SiteType::SATELLITE_GROUND_STATION,
+  SiteType::SPACEPORT,
+  SiteType::MILITARY_BASE,
+  SiteType::WEATHER_STATION,
+  SiteType::ASTRONOMICAL_OBSERVATORY,
+  SiteType::EDUCATIONAL_INSTITUTE,
+  SiteType::COMMUNICATION_HUB,
+  SiteType::POWER_PLANT,
+  SiteType::INDUSTRIAL_COMPLEX,
+  SiteType::TRANSPORTATION_HUB,
+  SiteType::URBAN_AREA,
+  SiteType::NATIONAL_PARK,
+  SiteType::HISTORICAL_SITE,
+  SiteType::OTHER,
 ];
 
-/// Different types of polarization in EMT
+/// Enum for the type of site
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct PolarizationType(pub i8);
+pub struct SiteType(pub i8);
 #[allow(non_upper_case_globals)]
-impl PolarizationType {
-  pub const linear: Self = Self(0);
-  pub const circular: Self = Self(1);
-  pub const elliptical: Self = Self(2);
-  pub const unpolarized: Self = Self(3);
+impl SiteType {
+  pub const LAUNCH_SITE: Self = Self(0);
+  pub const OBSERVATION_STATION: Self = Self(1);
+  pub const HOBBYIST_OBSERVER: Self = Self(2);
+  pub const RESEARCH_FACILITY: Self = Self(3);
+  pub const SATELLITE_GROUND_STATION: Self = Self(4);
+  pub const SPACEPORT: Self = Self(5);
+  pub const MILITARY_BASE: Self = Self(6);
+  pub const WEATHER_STATION: Self = Self(7);
+  pub const ASTRONOMICAL_OBSERVATORY: Self = Self(8);
+  pub const EDUCATIONAL_INSTITUTE: Self = Self(9);
+  pub const COMMUNICATION_HUB: Self = Self(10);
+  pub const POWER_PLANT: Self = Self(11);
+  pub const INDUSTRIAL_COMPLEX: Self = Self(12);
+  pub const TRANSPORTATION_HUB: Self = Self(13);
+  pub const URBAN_AREA: Self = Self(14);
+  pub const NATIONAL_PARK: Self = Self(15);
+  pub const HISTORICAL_SITE: Self = Self(16);
+  pub const OTHER: Self = Self(17);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_MAX: i8 = 17;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::linear,
-    Self::circular,
-    Self::elliptical,
-    Self::unpolarized,
+    Self::LAUNCH_SITE,
+    Self::OBSERVATION_STATION,
+    Self::HOBBYIST_OBSERVER,
+    Self::RESEARCH_FACILITY,
+    Self::SATELLITE_GROUND_STATION,
+    Self::SPACEPORT,
+    Self::MILITARY_BASE,
+    Self::WEATHER_STATION,
+    Self::ASTRONOMICAL_OBSERVATORY,
+    Self::EDUCATIONAL_INSTITUTE,
+    Self::COMMUNICATION_HUB,
+    Self::POWER_PLANT,
+    Self::INDUSTRIAL_COMPLEX,
+    Self::TRANSPORTATION_HUB,
+    Self::URBAN_AREA,
+    Self::NATIONAL_PARK,
+    Self::HISTORICAL_SITE,
+    Self::OTHER,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::linear => Some("linear"),
-      Self::circular => Some("circular"),
-      Self::elliptical => Some("elliptical"),
-      Self::unpolarized => Some("unpolarized"),
+      Self::LAUNCH_SITE => Some("LAUNCH_SITE"),
+      Self::OBSERVATION_STATION => Some("OBSERVATION_STATION"),
+      Self::HOBBYIST_OBSERVER => Some("HOBBYIST_OBSERVER"),
+      Self::RESEARCH_FACILITY => Some("RESEARCH_FACILITY"),
+      Self::SATELLITE_GROUND_STATION => Some("SATELLITE_GROUND_STATION"),
+      Self::SPACEPORT => Some("SPACEPORT"),
+      Self::MILITARY_BASE => Some("MILITARY_BASE"),
+      Self::WEATHER_STATION => Some("WEATHER_STATION"),
+      Self::ASTRONOMICAL_OBSERVATORY => Some("ASTRONOMICAL_OBSERVATORY"),
+      Self::EDUCATIONAL_INSTITUTE => Some("EDUCATIONAL_INSTITUTE"),
+      Self::COMMUNICATION_HUB => Some("COMMUNICATION_HUB"),
+      Self::POWER_PLANT => Some("POWER_PLANT"),
+      Self::INDUSTRIAL_COMPLEX => Some("INDUSTRIAL_COMPLEX"),
+      Self::TRANSPORTATION_HUB => Some("TRANSPORTATION_HUB"),
+      Self::URBAN_AREA => Some("URBAN_AREA"),
+      Self::NATIONAL_PARK => Some("NATIONAL_PARK"),
+      Self::HISTORICAL_SITE => Some("HISTORICAL_SITE"),
+      Self::OTHER => Some("OTHER"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for PolarizationType {
+impl ::core::fmt::Debug for SiteType {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -55,7 +112,7 @@ impl ::core::fmt::Debug for PolarizationType {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for PolarizationType {
+impl<'a> ::flatbuffers::Follow<'a> for SiteType {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -64,15 +121,15 @@ impl<'a> ::flatbuffers::Follow<'a> for PolarizationType {
   }
 }
 
-impl ::flatbuffers::Push for PolarizationType {
-    type Output = PolarizationType;
+impl ::flatbuffers::Push for SiteType {
+    type Output = SiteType;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for PolarizationType {
+impl ::flatbuffers::EndianScalar for SiteType {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -86,7 +143,7 @@ impl ::flatbuffers::EndianScalar for PolarizationType {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for PolarizationType {
+impl<'a> ::flatbuffers::Verifiable for SiteType {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -95,1406 +152,471 @@ impl<'a> ::flatbuffers::Verifiable for PolarizationType {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for PolarizationType {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_SIMPLE_POLARIZATION: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SIMPLE_POLARIZATION: i8 = 3;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SIMPLE_POLARIZATION: [SimplePolarization; 4] = [
-  SimplePolarization::vertical,
-  SimplePolarization::horizontal,
-  SimplePolarization::leftHandCircular,
-  SimplePolarization::rightHandCircular,
-];
-
-/// Simple polarization types
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct SimplePolarization(pub i8);
-#[allow(non_upper_case_globals)]
-impl SimplePolarization {
-  pub const vertical: Self = Self(0);
-  pub const horizontal: Self = Self(1);
-  pub const leftHandCircular: Self = Self(2);
-  pub const rightHandCircular: Self = Self(3);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 3;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::vertical,
-    Self::horizontal,
-    Self::leftHandCircular,
-    Self::rightHandCircular,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::vertical => Some("vertical"),
-      Self::horizontal => Some("horizontal"),
-      Self::leftHandCircular => Some("leftHandCircular"),
-      Self::rightHandCircular => Some("rightHandCircular"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for SimplePolarization {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for SimplePolarization {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for SimplePolarization {
-    type Output = SimplePolarization;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for SimplePolarization {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for SimplePolarization {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for SimplePolarization {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_DATA_MODE: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_DATA_MODE: i8 = 3;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_DATA_MODE: [DataMode; 4] = [
-  DataMode::EXERCISE,
-  DataMode::REAL,
-  DataMode::SIMULATED,
-  DataMode::TEST,
-];
-
-/// Enum for the mode of data (real, simulated, synthetic)
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct DataMode(pub i8);
-#[allow(non_upper_case_globals)]
-impl DataMode {
-  /// Data collected during an exercise scenario.
-  pub const EXERCISE: Self = Self(0);
-  /// Data collected from real-world observations.
-  pub const REAL: Self = Self(1);
-  /// Data generated through simulation.
-  pub const SIMULATED: Self = Self(2);
-  /// Data collected for testing purposes.
-  pub const TEST: Self = Self(3);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 3;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::EXERCISE,
-    Self::REAL,
-    Self::SIMULATED,
-    Self::TEST,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::EXERCISE => Some("EXERCISE"),
-      Self::REAL => Some("REAL"),
-      Self::SIMULATED => Some("SIMULATED"),
-      Self::TEST => Some("TEST"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for DataMode {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for DataMode {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for DataMode {
-    type Output = DataMode;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for DataMode {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for DataMode {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for DataMode {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_DEVICE_TYPE: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_DEVICE_TYPE: i8 = 45;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_DEVICE_TYPE: [DeviceType; 46] = [
-  DeviceType::UNKNOWN,
-  DeviceType::OPTICAL,
-  DeviceType::INFRARED_SENSOR,
-  DeviceType::ULTRAVIOLET_SENSOR,
-  DeviceType::X_RAY_SENSOR,
-  DeviceType::GAMMA_RAY_SENSOR,
-  DeviceType::RADAR,
-  DeviceType::PHASED_ARRAY_RADAR,
-  DeviceType::SYNTHETIC_APERTURE_RADAR,
-  DeviceType::BISTATIC_RADIO_TELESCOPE,
-  DeviceType::RADIO_TELESCOPE,
-  DeviceType::ATMOSPHERIC_SENSOR,
-  DeviceType::SPACE_WEATHER_SENSOR,
-  DeviceType::ENVIRONMENTAL_SENSOR,
-  DeviceType::SEISMIC_SENSOR,
-  DeviceType::GRAVIMETRIC_SENSOR,
-  DeviceType::MAGNETIC_SENSOR,
-  DeviceType::ELECTROMAGNETIC_SENSOR,
-  DeviceType::THERMAL_SENSOR,
-  DeviceType::CHEMICAL_SENSOR,
-  DeviceType::BIOLOGICAL_SENSOR,
-  DeviceType::RADIATION_SENSOR,
-  DeviceType::PARTICLE_DETECTOR,
-  DeviceType::LIDAR,
-  DeviceType::SONAR,
-  DeviceType::TELESCOPE,
-  DeviceType::SPECTROSCOPIC_SENSOR,
-  DeviceType::PHOTOMETRIC_SENSOR,
-  DeviceType::POLARIMETRIC_SENSOR,
-  DeviceType::INTERFEROMETRIC_SENSOR,
-  DeviceType::MULTISPECTRAL_SENSOR,
-  DeviceType::HYPERSPECTRAL_SENSOR,
-  DeviceType::GPS_RECEIVER,
-  DeviceType::RADIO_COMMUNICATIONS,
-  DeviceType::LASER_COMMUNICATIONS,
-  DeviceType::SATELLITE_COMMUNICATIONS,
-  DeviceType::LASER_INSTRUMENT,
-  DeviceType::RF_ANALYZER,
-  DeviceType::IONOSPHERIC_SENSOR,
-  DeviceType::LASER_IMAGING,
-  DeviceType::OPTICAL_TELESCOPE,
-  DeviceType::HIGH_RESOLUTION_OPTICAL,
-  DeviceType::RADIO,
-  DeviceType::MICROWAVE_TRANSMITTER,
-  DeviceType::RF_MONITOR,
-  DeviceType::HF_RADIO_COMMUNICATIONS,
-];
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct DeviceType(pub i8);
-#[allow(non_upper_case_globals)]
-impl DeviceType {
-  /// Basic or undefined sensor type
-  pub const UNKNOWN: Self = Self(0);
-  /// General optical sensors
-  pub const OPTICAL: Self = Self(1);
-  /// Detects infrared radiation
-  pub const INFRARED_SENSOR: Self = Self(2);
-  /// Sensitive to ultraviolet light
-  pub const ULTRAVIOLET_SENSOR: Self = Self(3);
-  /// For X-ray detection
-  pub const X_RAY_SENSOR: Self = Self(4);
-  /// For gamma-ray detection
-  pub const GAMMA_RAY_SENSOR: Self = Self(5);
-  /// Basic radar systems
-  pub const RADAR: Self = Self(6);
-  /// Advanced radar with phased array technology
-  pub const PHASED_ARRAY_RADAR: Self = Self(7);
-  /// For high-resolution imaging
-  pub const SYNTHETIC_APERTURE_RADAR: Self = Self(8);
-  /// For astronomical observations using bistatic setup
-  pub const BISTATIC_RADIO_TELESCOPE: Self = Self(9);
-  /// For radio astronomy
-  pub const RADIO_TELESCOPE: Self = Self(10);
-  /// For atmospheric studies
-  pub const ATMOSPHERIC_SENSOR: Self = Self(11);
-  /// For observing space weather phenomena
-  pub const SPACE_WEATHER_SENSOR: Self = Self(12);
-  /// General environmental monitoring
-  pub const ENVIRONMENTAL_SENSOR: Self = Self(13);
-  /// For measuring seismic activities
-  pub const SEISMIC_SENSOR: Self = Self(14);
-  /// For gravity measurements
-  pub const GRAVIMETRIC_SENSOR: Self = Self(15);
-  /// For magnetic field detection
-  pub const MAGNETIC_SENSOR: Self = Self(16);
-  /// For electromagnetic field analysis
-  pub const ELECTROMAGNETIC_SENSOR: Self = Self(17);
-  /// For temperature and heat detection
-  pub const THERMAL_SENSOR: Self = Self(18);
-  /// For detecting chemicals and substances
-  pub const CHEMICAL_SENSOR: Self = Self(19);
-  /// For biological research and detection
-  pub const BIOLOGICAL_SENSOR: Self = Self(20);
-  /// For detecting ionizing radiation
-  pub const RADIATION_SENSOR: Self = Self(21);
-  /// For detecting subatomic particles
-  pub const PARTICLE_DETECTOR: Self = Self(22);
-  /// Light Detection and Ranging
-  pub const LIDAR: Self = Self(23);
-  /// Sound Navigation and Ranging
-  pub const SONAR: Self = Self(24);
-  /// General telescopes for astronomical observations
-  pub const TELESCOPE: Self = Self(25);
-  /// For spectral analysis
-  pub const SPECTROSCOPIC_SENSOR: Self = Self(26);
-  /// For measuring light intensity
-  pub const PHOTOMETRIC_SENSOR: Self = Self(27);
-  /// For analyzing polarization of light
-  pub const POLARIMETRIC_SENSOR: Self = Self(28);
-  /// For detailed imaging using interference
-  pub const INTERFEROMETRIC_SENSOR: Self = Self(29);
-  /// Capturing image data at multiple wavelengths
-  pub const MULTISPECTRAL_SENSOR: Self = Self(30);
-  /// Advanced imaging across many spectral bands
-  pub const HYPERSPECTRAL_SENSOR: Self = Self(31);
-  /// For Global Positioning System reception
-  pub const GPS_RECEIVER: Self = Self(32);
-  /// Standard radio communication device
-  pub const RADIO_COMMUNICATIONS: Self = Self(33);
-  /// Advanced laser communication system
-  pub const LASER_COMMUNICATIONS: Self = Self(34);
-  /// Satellite communication system
-  pub const SATELLITE_COMMUNICATIONS: Self = Self(35);
-  /// Device for laser-based experiments and measurements
-  pub const LASER_INSTRUMENT: Self = Self(36);
-  /// Radio frequency analysis and measurement device
-  pub const RF_ANALYZER: Self = Self(37);
-  /// Device for ionospheric research
-  pub const IONOSPHERIC_SENSOR: Self = Self(38);
-  /// Device for laser-based imaging
-  pub const LASER_IMAGING: Self = Self(39);
-  /// Advanced optical telescope
-  pub const OPTICAL_TELESCOPE: Self = Self(40);
-  /// Device for high-resolution optical observations
-  pub const HIGH_RESOLUTION_OPTICAL: Self = Self(41);
-  pub const RADIO: Self = Self(42);
-  /// Microwave communication device
-  pub const MICROWAVE_TRANSMITTER: Self = Self(43);
-  /// Device for radio frequency monitoring
-  pub const RF_MONITOR: Self = Self(44);
-  /// High-frequency radio communication device
-  pub const HF_RADIO_COMMUNICATIONS: Self = Self(45);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 45;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::UNKNOWN,
-    Self::OPTICAL,
-    Self::INFRARED_SENSOR,
-    Self::ULTRAVIOLET_SENSOR,
-    Self::X_RAY_SENSOR,
-    Self::GAMMA_RAY_SENSOR,
-    Self::RADAR,
-    Self::PHASED_ARRAY_RADAR,
-    Self::SYNTHETIC_APERTURE_RADAR,
-    Self::BISTATIC_RADIO_TELESCOPE,
-    Self::RADIO_TELESCOPE,
-    Self::ATMOSPHERIC_SENSOR,
-    Self::SPACE_WEATHER_SENSOR,
-    Self::ENVIRONMENTAL_SENSOR,
-    Self::SEISMIC_SENSOR,
-    Self::GRAVIMETRIC_SENSOR,
-    Self::MAGNETIC_SENSOR,
-    Self::ELECTROMAGNETIC_SENSOR,
-    Self::THERMAL_SENSOR,
-    Self::CHEMICAL_SENSOR,
-    Self::BIOLOGICAL_SENSOR,
-    Self::RADIATION_SENSOR,
-    Self::PARTICLE_DETECTOR,
-    Self::LIDAR,
-    Self::SONAR,
-    Self::TELESCOPE,
-    Self::SPECTROSCOPIC_SENSOR,
-    Self::PHOTOMETRIC_SENSOR,
-    Self::POLARIMETRIC_SENSOR,
-    Self::INTERFEROMETRIC_SENSOR,
-    Self::MULTISPECTRAL_SENSOR,
-    Self::HYPERSPECTRAL_SENSOR,
-    Self::GPS_RECEIVER,
-    Self::RADIO_COMMUNICATIONS,
-    Self::LASER_COMMUNICATIONS,
-    Self::SATELLITE_COMMUNICATIONS,
-    Self::LASER_INSTRUMENT,
-    Self::RF_ANALYZER,
-    Self::IONOSPHERIC_SENSOR,
-    Self::LASER_IMAGING,
-    Self::OPTICAL_TELESCOPE,
-    Self::HIGH_RESOLUTION_OPTICAL,
-    Self::RADIO,
-    Self::MICROWAVE_TRANSMITTER,
-    Self::RF_MONITOR,
-    Self::HF_RADIO_COMMUNICATIONS,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::UNKNOWN => Some("UNKNOWN"),
-      Self::OPTICAL => Some("OPTICAL"),
-      Self::INFRARED_SENSOR => Some("INFRARED_SENSOR"),
-      Self::ULTRAVIOLET_SENSOR => Some("ULTRAVIOLET_SENSOR"),
-      Self::X_RAY_SENSOR => Some("X_RAY_SENSOR"),
-      Self::GAMMA_RAY_SENSOR => Some("GAMMA_RAY_SENSOR"),
-      Self::RADAR => Some("RADAR"),
-      Self::PHASED_ARRAY_RADAR => Some("PHASED_ARRAY_RADAR"),
-      Self::SYNTHETIC_APERTURE_RADAR => Some("SYNTHETIC_APERTURE_RADAR"),
-      Self::BISTATIC_RADIO_TELESCOPE => Some("BISTATIC_RADIO_TELESCOPE"),
-      Self::RADIO_TELESCOPE => Some("RADIO_TELESCOPE"),
-      Self::ATMOSPHERIC_SENSOR => Some("ATMOSPHERIC_SENSOR"),
-      Self::SPACE_WEATHER_SENSOR => Some("SPACE_WEATHER_SENSOR"),
-      Self::ENVIRONMENTAL_SENSOR => Some("ENVIRONMENTAL_SENSOR"),
-      Self::SEISMIC_SENSOR => Some("SEISMIC_SENSOR"),
-      Self::GRAVIMETRIC_SENSOR => Some("GRAVIMETRIC_SENSOR"),
-      Self::MAGNETIC_SENSOR => Some("MAGNETIC_SENSOR"),
-      Self::ELECTROMAGNETIC_SENSOR => Some("ELECTROMAGNETIC_SENSOR"),
-      Self::THERMAL_SENSOR => Some("THERMAL_SENSOR"),
-      Self::CHEMICAL_SENSOR => Some("CHEMICAL_SENSOR"),
-      Self::BIOLOGICAL_SENSOR => Some("BIOLOGICAL_SENSOR"),
-      Self::RADIATION_SENSOR => Some("RADIATION_SENSOR"),
-      Self::PARTICLE_DETECTOR => Some("PARTICLE_DETECTOR"),
-      Self::LIDAR => Some("LIDAR"),
-      Self::SONAR => Some("SONAR"),
-      Self::TELESCOPE => Some("TELESCOPE"),
-      Self::SPECTROSCOPIC_SENSOR => Some("SPECTROSCOPIC_SENSOR"),
-      Self::PHOTOMETRIC_SENSOR => Some("PHOTOMETRIC_SENSOR"),
-      Self::POLARIMETRIC_SENSOR => Some("POLARIMETRIC_SENSOR"),
-      Self::INTERFEROMETRIC_SENSOR => Some("INTERFEROMETRIC_SENSOR"),
-      Self::MULTISPECTRAL_SENSOR => Some("MULTISPECTRAL_SENSOR"),
-      Self::HYPERSPECTRAL_SENSOR => Some("HYPERSPECTRAL_SENSOR"),
-      Self::GPS_RECEIVER => Some("GPS_RECEIVER"),
-      Self::RADIO_COMMUNICATIONS => Some("RADIO_COMMUNICATIONS"),
-      Self::LASER_COMMUNICATIONS => Some("LASER_COMMUNICATIONS"),
-      Self::SATELLITE_COMMUNICATIONS => Some("SATELLITE_COMMUNICATIONS"),
-      Self::LASER_INSTRUMENT => Some("LASER_INSTRUMENT"),
-      Self::RF_ANALYZER => Some("RF_ANALYZER"),
-      Self::IONOSPHERIC_SENSOR => Some("IONOSPHERIC_SENSOR"),
-      Self::LASER_IMAGING => Some("LASER_IMAGING"),
-      Self::OPTICAL_TELESCOPE => Some("OPTICAL_TELESCOPE"),
-      Self::HIGH_RESOLUTION_OPTICAL => Some("HIGH_RESOLUTION_OPTICAL"),
-      Self::RADIO => Some("RADIO"),
-      Self::MICROWAVE_TRANSMITTER => Some("MICROWAVE_TRANSMITTER"),
-      Self::RF_MONITOR => Some("RF_MONITOR"),
-      Self::HF_RADIO_COMMUNICATIONS => Some("HF_RADIO_COMMUNICATIONS"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for DeviceType {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for DeviceType {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for DeviceType {
-    type Output = DeviceType;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for DeviceType {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for DeviceType {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for DeviceType {}
-pub enum FrequencyRangeOffset {}
+impl ::flatbuffers::SimpleToVerifyInSlice for SiteType {}
+pub enum GeometryOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Frequency range with lower and upper limits
-pub struct FrequencyRange<'a> {
+/// Geometry table with information about geometric properties
+pub struct Geometry<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for FrequencyRange<'a> {
-  type Inner = FrequencyRange<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for Geometry<'a> {
+  type Inner = Geometry<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> FrequencyRange<'a> {
-  pub const VT_LOWER: ::flatbuffers::VOffsetT = 4;
-  pub const VT_UPPER: ::flatbuffers::VOffsetT = 6;
+impl<'a> Geometry<'a> {
+  pub const VT_GEOMETRY_TYPE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_COORDINATES: ::flatbuffers::VOffsetT = 6;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    FrequencyRange { _tab: table }
+    Geometry { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args FrequencyRangeArgs
-  ) -> ::flatbuffers::WIPOffset<FrequencyRange<'bldr>> {
-    let mut builder = FrequencyRangeBuilder::new(_fbb);
-    builder.add_UPPER(args.UPPER);
-    builder.add_LOWER(args.LOWER);
+    args: &'args GeometryArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<Geometry<'bldr>> {
+    let mut builder = GeometryBuilder::new(_fbb);
+    if let Some(x) = args.COORDINATES { builder.add_COORDINATES(x); }
+    if let Some(x) = args.GEOMETRY_TYPE { builder.add_GEOMETRY_TYPE(x); }
     builder.finish()
   }
 
-  pub fn unpack(&self) -> FrequencyRangeT {
-    let LOWER = self.LOWER();
-    let UPPER = self.UPPER();
-    FrequencyRangeT {
-      LOWER,
-      UPPER,
-    }
-  }
-
-  /// Lower frequency in MHz
-  #[inline]
-  pub fn LOWER(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(FrequencyRange::VT_LOWER, Some(0.0)).unwrap()}
-  }
-  /// Upper frequency in MHz
-  #[inline]
-  pub fn UPPER(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(FrequencyRange::VT_UPPER, Some(0.0)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for FrequencyRange<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<f64>("LOWER", Self::VT_LOWER, false)?
-     .visit_field::<f64>("UPPER", Self::VT_UPPER, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct FrequencyRangeArgs {
-    pub LOWER: f64,
-    pub UPPER: f64,
-}
-impl<'a> Default for FrequencyRangeArgs {
-  #[inline]
-  fn default() -> Self {
-    FrequencyRangeArgs {
-      LOWER: 0.0,
-      UPPER: 0.0,
-    }
-  }
-}
-
-pub struct FrequencyRangeBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> FrequencyRangeBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_LOWER(&mut self, LOWER: f64) {
-    self.fbb_.push_slot::<f64>(FrequencyRange::VT_LOWER, LOWER, 0.0);
-  }
-  #[inline]
-  pub fn add_UPPER(&mut self, UPPER: f64) {
-    self.fbb_.push_slot::<f64>(FrequencyRange::VT_UPPER, UPPER, 0.0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> FrequencyRangeBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    FrequencyRangeBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<FrequencyRange<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for FrequencyRange<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("FrequencyRange");
-      ds.field("LOWER", &self.LOWER());
-      ds.field("UPPER", &self.UPPER());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct FrequencyRangeT {
-  pub LOWER: f64,
-  pub UPPER: f64,
-}
-impl Default for FrequencyRangeT {
-  fn default() -> Self {
-    Self {
-      LOWER: 0.0,
-      UPPER: 0.0,
-    }
-  }
-}
-impl FrequencyRangeT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<FrequencyRange<'b>> {
-    let LOWER = self.LOWER;
-    let UPPER = self.UPPER;
-    FrequencyRange::create(_fbb, &FrequencyRangeArgs{
-      LOWER,
-      UPPER,
-    })
-  }
-}
-pub enum StokesParametersOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Stokes parameters, representing different aspects of polarization
-pub struct StokesParameters<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for StokesParameters<'a> {
-  type Inner = StokesParameters<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> StokesParameters<'a> {
-  pub const VT_I: ::flatbuffers::VOffsetT = 4;
-  pub const VT_Q: ::flatbuffers::VOffsetT = 6;
-  pub const VT_U: ::flatbuffers::VOffsetT = 8;
-  pub const VT_V: ::flatbuffers::VOffsetT = 10;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    StokesParameters { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args StokesParametersArgs
-  ) -> ::flatbuffers::WIPOffset<StokesParameters<'bldr>> {
-    let mut builder = StokesParametersBuilder::new(_fbb);
-    builder.add_V(args.V);
-    builder.add_U(args.U);
-    builder.add_Q(args.Q);
-    builder.add_I(args.I);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> StokesParametersT {
-    let I = self.I();
-    let Q = self.Q();
-    let U = self.U();
-    let V = self.V();
-    StokesParametersT {
-      I,
-      Q,
-      U,
-      V,
-    }
-  }
-
-  /// Intensity
-  #[inline]
-  pub fn I(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(StokesParameters::VT_I, Some(0.0)).unwrap()}
-  }
-  /// Linear polarization
-  #[inline]
-  pub fn Q(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(StokesParameters::VT_Q, Some(0.0)).unwrap()}
-  }
-  /// Another linear polarization, orthogonal to Q
-  #[inline]
-  pub fn U(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(StokesParameters::VT_U, Some(0.0)).unwrap()}
-  }
-  /// Circular polarization
-  #[inline]
-  pub fn V(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(StokesParameters::VT_V, Some(0.0)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for StokesParameters<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<f64>("I", Self::VT_I, false)?
-     .visit_field::<f64>("Q", Self::VT_Q, false)?
-     .visit_field::<f64>("U", Self::VT_U, false)?
-     .visit_field::<f64>("V", Self::VT_V, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct StokesParametersArgs {
-    pub I: f64,
-    pub Q: f64,
-    pub U: f64,
-    pub V: f64,
-}
-impl<'a> Default for StokesParametersArgs {
-  #[inline]
-  fn default() -> Self {
-    StokesParametersArgs {
-      I: 0.0,
-      Q: 0.0,
-      U: 0.0,
-      V: 0.0,
-    }
-  }
-}
-
-pub struct StokesParametersBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> StokesParametersBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_I(&mut self, I: f64) {
-    self.fbb_.push_slot::<f64>(StokesParameters::VT_I, I, 0.0);
-  }
-  #[inline]
-  pub fn add_Q(&mut self, Q: f64) {
-    self.fbb_.push_slot::<f64>(StokesParameters::VT_Q, Q, 0.0);
-  }
-  #[inline]
-  pub fn add_U(&mut self, U: f64) {
-    self.fbb_.push_slot::<f64>(StokesParameters::VT_U, U, 0.0);
-  }
-  #[inline]
-  pub fn add_V(&mut self, V: f64) {
-    self.fbb_.push_slot::<f64>(StokesParameters::VT_V, V, 0.0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> StokesParametersBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    StokesParametersBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<StokesParameters<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for StokesParameters<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("StokesParameters");
-      ds.field("I", &self.I());
-      ds.field("Q", &self.Q());
-      ds.field("U", &self.U());
-      ds.field("V", &self.V());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct StokesParametersT {
-  pub I: f64,
-  pub Q: f64,
-  pub U: f64,
-  pub V: f64,
-}
-impl Default for StokesParametersT {
-  fn default() -> Self {
-    Self {
-      I: 0.0,
-      Q: 0.0,
-      U: 0.0,
-      V: 0.0,
-    }
-  }
-}
-impl StokesParametersT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<StokesParameters<'b>> {
-    let I = self.I;
-    let Q = self.Q;
-    let U = self.U;
-    let V = self.V;
-    StokesParameters::create(_fbb, &StokesParametersArgs{
-      I,
-      Q,
-      U,
-      V,
-    })
-  }
-}
-pub enum BandOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Table representing a frequency band with a name and frequency range
-pub struct Band<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for Band<'a> {
-  type Inner = Band<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> Band<'a> {
-  pub const VT_NAME: ::flatbuffers::VOffsetT = 4;
-  pub const VT_FREQUENCY_RANGE: ::flatbuffers::VOffsetT = 6;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    Band { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args BandArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<Band<'bldr>> {
-    let mut builder = BandBuilder::new(_fbb);
-    if let Some(x) = args.FREQUENCY_RANGE { builder.add_FREQUENCY_RANGE(x); }
-    if let Some(x) = args.NAME { builder.add_NAME(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> BandT {
-    let NAME = self.NAME().map(|x| {
+  pub fn unpack(&self) -> GeometryT {
+    let GEOMETRY_TYPE = self.GEOMETRY_TYPE().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let FREQUENCY_RANGE = self.FREQUENCY_RANGE().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
+    let COORDINATES = self.COORDINATES().map(|x| {
+      x.into_iter().collect()
     });
-    BandT {
-      NAME,
-      FREQUENCY_RANGE,
+    GeometryT {
+      GEOMETRY_TYPE,
+      COORDINATES,
     }
   }
 
-  /// Name of the band
+  /// Type of geometry
   #[inline]
-  pub fn NAME(&self) -> Option<&'a str> {
+  pub fn GEOMETRY_TYPE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Band::VT_NAME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Geometry::VT_GEOMETRY_TYPE, None)}
   }
-  /// Frequency range of the band
+  /// Coordinates of the geometry
   #[inline]
-  pub fn FREQUENCY_RANGE(&self) -> Option<FrequencyRange<'a>> {
+  pub fn COORDINATES(&self) -> Option<::flatbuffers::Vector<'a, f32>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FrequencyRange>>(Band::VT_FREQUENCY_RANGE, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f32>>>(Geometry::VT_COORDINATES, None)}
   }
 }
 
-impl ::flatbuffers::Verifiable for Band<'_> {
+impl ::flatbuffers::Verifiable for Geometry<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<FrequencyRange>>("FREQUENCY_RANGE", Self::VT_FREQUENCY_RANGE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GEOMETRY_TYPE", Self::VT_GEOMETRY_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f32>>>("COORDINATES", Self::VT_COORDINATES, false)?
      .finish();
     Ok(())
   }
 }
-pub struct BandArgs<'a> {
-    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub FREQUENCY_RANGE: Option<::flatbuffers::WIPOffset<FrequencyRange<'a>>>,
+pub struct GeometryArgs<'a> {
+    pub GEOMETRY_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COORDINATES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f32>>>,
 }
-impl<'a> Default for BandArgs<'a> {
+impl<'a> Default for GeometryArgs<'a> {
   #[inline]
   fn default() -> Self {
-    BandArgs {
-      NAME: None,
-      FREQUENCY_RANGE: None,
+    GeometryArgs {
+      GEOMETRY_TYPE: None,
+      COORDINATES: None,
     }
   }
 }
 
-pub struct BandBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct GeometryBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> BandBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> GeometryBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Band::VT_NAME, NAME);
+  pub fn add_GEOMETRY_TYPE(&mut self, GEOMETRY_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Geometry::VT_GEOMETRY_TYPE, GEOMETRY_TYPE);
   }
   #[inline]
-  pub fn add_FREQUENCY_RANGE(&mut self, FREQUENCY_RANGE: ::flatbuffers::WIPOffset<FrequencyRange<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FrequencyRange>>(Band::VT_FREQUENCY_RANGE, FREQUENCY_RANGE);
+  pub fn add_COORDINATES(&mut self, COORDINATES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f32>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Geometry::VT_COORDINATES, COORDINATES);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> BandBuilder<'a, 'b, A> {
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> GeometryBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    BandBuilder {
+    GeometryBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<Band<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<Geometry<'a>> {
     let o = self.fbb_.end_table(self.start_);
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for Band<'_> {
+impl ::core::fmt::Debug for Geometry<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("Band");
-      ds.field("NAME", &self.NAME());
-      ds.field("FREQUENCY_RANGE", &self.FREQUENCY_RANGE());
+    let mut ds = f.debug_struct("Geometry");
+      ds.field("GEOMETRY_TYPE", &self.GEOMETRY_TYPE());
+      ds.field("COORDINATES", &self.COORDINATES());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct BandT {
-  pub NAME: Option<alloc::string::String>,
-  pub FREQUENCY_RANGE: Option<alloc::boxed::Box<FrequencyRangeT>>,
+pub struct GeometryT {
+  pub GEOMETRY_TYPE: Option<alloc::string::String>,
+  pub COORDINATES: Option<alloc::vec::Vec<f32>>,
 }
-impl Default for BandT {
+impl Default for GeometryT {
   fn default() -> Self {
     Self {
-      NAME: None,
-      FREQUENCY_RANGE: None,
+      GEOMETRY_TYPE: None,
+      COORDINATES: None,
     }
   }
 }
-impl BandT {
+impl GeometryT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<Band<'b>> {
-    let NAME = self.NAME.as_ref().map(|x|{
+  ) -> ::flatbuffers::WIPOffset<Geometry<'b>> {
+    let GEOMETRY_TYPE = self.GEOMETRY_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let FREQUENCY_RANGE = self.FREQUENCY_RANGE.as_ref().map(|x|{
-      x.pack(_fbb)
+    let COORDINATES = self.COORDINATES.as_ref().map(|x|{
+      _fbb.create_vector(x)
     });
-    Band::create(_fbb, &BandArgs{
-      NAME,
-      FREQUENCY_RANGE,
+    Geometry::create(_fbb, &GeometryArgs{
+      GEOMETRY_TYPE,
+      COORDINATES,
     })
   }
 }
-pub enum IDMOffset {}
+pub enum SITOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Integrated Device Message
-pub struct IDM<'a> {
+/// Site Information Message
+pub struct SIT<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for IDM<'a> {
-  type Inner = IDM<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for SIT<'a> {
+  type Inner = SIT<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> IDM<'a> {
+impl<'a> SIT<'a> {
   pub const VT_ID: ::flatbuffers::VOffsetT = 4;
   pub const VT_NAME: ::flatbuffers::VOffsetT = 6;
-  pub const VT_DATA_MODE: ::flatbuffers::VOffsetT = 8;
-  pub const VT_UPLINK: ::flatbuffers::VOffsetT = 10;
-  pub const VT_DOWNLINK: ::flatbuffers::VOffsetT = 12;
-  pub const VT_BEACON: ::flatbuffers::VOffsetT = 14;
-  pub const VT_BAND: ::flatbuffers::VOffsetT = 16;
-  pub const VT_POLARIZATION_TYPE: ::flatbuffers::VOffsetT = 18;
-  pub const VT_SIMPLE_POLARIZATION: ::flatbuffers::VOffsetT = 20;
-  pub const VT_STOKES_PARAMETERS: ::flatbuffers::VOffsetT = 22;
-  pub const VT_POWER_REQUIRED: ::flatbuffers::VOffsetT = 24;
-  pub const VT_POWER_TYPE: ::flatbuffers::VOffsetT = 26;
-  pub const VT_TRANSMIT: ::flatbuffers::VOffsetT = 28;
-  pub const VT_RECEIVE: ::flatbuffers::VOffsetT = 30;
-  pub const VT_SENSOR_TYPE: ::flatbuffers::VOffsetT = 32;
-  pub const VT_SOURCE: ::flatbuffers::VOffsetT = 34;
-  pub const VT_LAST_OB_TIME: ::flatbuffers::VOffsetT = 36;
-  pub const VT_LOWER_LEFT_ELEVATION_LIMIT: ::flatbuffers::VOffsetT = 38;
-  pub const VT_UPPER_LEFT_AZIMUTH_LIMIT: ::flatbuffers::VOffsetT = 40;
-  pub const VT_LOWER_RIGHT_ELEVATION_LIMIT: ::flatbuffers::VOffsetT = 42;
-  pub const VT_LOWER_LEFT_AZIMUTH_LIMIT: ::flatbuffers::VOffsetT = 44;
-  pub const VT_UPPER_RIGHT_ELEVATION_LIMIT: ::flatbuffers::VOffsetT = 46;
-  pub const VT_UPPER_RIGHT_AZIMUTH_LIMIT: ::flatbuffers::VOffsetT = 48;
-  pub const VT_LOWER_RIGHT_AZIMUTH_LIMIT: ::flatbuffers::VOffsetT = 50;
-  pub const VT_UPPER_LEFT_ELEVATION_LIMIT: ::flatbuffers::VOffsetT = 52;
-  pub const VT_RIGHT_GEO_BELT_LIMIT: ::flatbuffers::VOffsetT = 54;
-  pub const VT_LEFT_GEO_BELT_LIMIT: ::flatbuffers::VOffsetT = 56;
-  pub const VT_MAGNITUDE_LIMIT: ::flatbuffers::VOffsetT = 58;
-  pub const VT_TASKABLE: ::flatbuffers::VOffsetT = 60;
+  pub const VT_ABBREVIATION: ::flatbuffers::VOffsetT = 8;
+  pub const VT_SITE_TYPE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_CATCODE: ::flatbuffers::VOffsetT = 12;
+  pub const VT_NETWORK: ::flatbuffers::VOffsetT = 14;
+  pub const VT_LATITUDE: ::flatbuffers::VOffsetT = 16;
+  pub const VT_LONGITUDE: ::flatbuffers::VOffsetT = 18;
+  pub const VT_ALTITUDE: ::flatbuffers::VOffsetT = 20;
+  pub const VT_GEOMETRY: ::flatbuffers::VOffsetT = 22;
+  pub const VT_CENTER_POINT_GEOMETRY: ::flatbuffers::VOffsetT = 24;
+  pub const VT_CLASSIFICATION: ::flatbuffers::VOffsetT = 26;
+  pub const VT_CTR_ID: ::flatbuffers::VOffsetT = 28;
+  pub const VT_CREATED_BY: ::flatbuffers::VOffsetT = 30;
+  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 32;
+  pub const VT_MODEL_URL: ::flatbuffers::VOffsetT = 34;
+  pub const VT_SOURCE: ::flatbuffers::VOffsetT = 36;
+  pub const VT_TASKABLE: ::flatbuffers::VOffsetT = 38;
+  pub const VT_OPERATIONAL_STATUS: ::flatbuffers::VOffsetT = 40;
+  pub const VT_ESTABLISHMENT_DATE: ::flatbuffers::VOffsetT = 42;
+  pub const VT_CONTACT_INFO: ::flatbuffers::VOffsetT = 44;
+  pub const VT_ENVIRONMENTAL_IMPACT: ::flatbuffers::VOffsetT = 46;
+  pub const VT_ACCESSIBILITY_INFRA: ::flatbuffers::VOffsetT = 48;
+  pub const VT_INTEGRATED_DEVICES: ::flatbuffers::VOffsetT = 50;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    IDM { _tab: table }
+    SIT { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args IDMArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<IDM<'bldr>> {
-    let mut builder = IDMBuilder::new(_fbb);
-    builder.add_MAGNITUDE_LIMIT(args.MAGNITUDE_LIMIT);
-    builder.add_LEFT_GEO_BELT_LIMIT(args.LEFT_GEO_BELT_LIMIT);
-    builder.add_RIGHT_GEO_BELT_LIMIT(args.RIGHT_GEO_BELT_LIMIT);
-    builder.add_UPPER_LEFT_ELEVATION_LIMIT(args.UPPER_LEFT_ELEVATION_LIMIT);
-    builder.add_LOWER_RIGHT_AZIMUTH_LIMIT(args.LOWER_RIGHT_AZIMUTH_LIMIT);
-    builder.add_UPPER_RIGHT_AZIMUTH_LIMIT(args.UPPER_RIGHT_AZIMUTH_LIMIT);
-    builder.add_UPPER_RIGHT_ELEVATION_LIMIT(args.UPPER_RIGHT_ELEVATION_LIMIT);
-    builder.add_LOWER_LEFT_AZIMUTH_LIMIT(args.LOWER_LEFT_AZIMUTH_LIMIT);
-    builder.add_LOWER_RIGHT_ELEVATION_LIMIT(args.LOWER_RIGHT_ELEVATION_LIMIT);
-    builder.add_UPPER_LEFT_AZIMUTH_LIMIT(args.UPPER_LEFT_AZIMUTH_LIMIT);
-    builder.add_LOWER_LEFT_ELEVATION_LIMIT(args.LOWER_LEFT_ELEVATION_LIMIT);
-    builder.add_POWER_REQUIRED(args.POWER_REQUIRED);
-    if let Some(x) = args.LAST_OB_TIME { builder.add_LAST_OB_TIME(x); }
+    args: &'args SITArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<SIT<'bldr>> {
+    let mut builder = SITBuilder::new(_fbb);
+    if let Some(x) = args.INTEGRATED_DEVICES { builder.add_INTEGRATED_DEVICES(x); }
+    if let Some(x) = args.ACCESSIBILITY_INFRA { builder.add_ACCESSIBILITY_INFRA(x); }
+    if let Some(x) = args.ENVIRONMENTAL_IMPACT { builder.add_ENVIRONMENTAL_IMPACT(x); }
+    if let Some(x) = args.CONTACT_INFO { builder.add_CONTACT_INFO(x); }
+    if let Some(x) = args.ESTABLISHMENT_DATE { builder.add_ESTABLISHMENT_DATE(x); }
+    if let Some(x) = args.OPERATIONAL_STATUS { builder.add_OPERATIONAL_STATUS(x); }
     if let Some(x) = args.SOURCE { builder.add_SOURCE(x); }
-    if let Some(x) = args.POWER_TYPE { builder.add_POWER_TYPE(x); }
-    if let Some(x) = args.STOKES_PARAMETERS { builder.add_STOKES_PARAMETERS(x); }
-    if let Some(x) = args.BAND { builder.add_BAND(x); }
-    if let Some(x) = args.BEACON { builder.add_BEACON(x); }
-    if let Some(x) = args.DOWNLINK { builder.add_DOWNLINK(x); }
-    if let Some(x) = args.UPLINK { builder.add_UPLINK(x); }
+    if let Some(x) = args.MODEL_URL { builder.add_MODEL_URL(x); }
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.CREATED_BY { builder.add_CREATED_BY(x); }
+    if let Some(x) = args.CTR_ID { builder.add_CTR_ID(x); }
+    if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
+    if let Some(x) = args.CENTER_POINT_GEOMETRY { builder.add_CENTER_POINT_GEOMETRY(x); }
+    if let Some(x) = args.GEOMETRY { builder.add_GEOMETRY(x); }
+    builder.add_ALTITUDE(args.ALTITUDE);
+    builder.add_LONGITUDE(args.LONGITUDE);
+    builder.add_LATITUDE(args.LATITUDE);
+    if let Some(x) = args.NETWORK { builder.add_NETWORK(x); }
+    if let Some(x) = args.CATCODE { builder.add_CATCODE(x); }
+    if let Some(x) = args.ABBREVIATION { builder.add_ABBREVIATION(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
     builder.add_TASKABLE(args.TASKABLE);
-    builder.add_SENSOR_TYPE(args.SENSOR_TYPE);
-    builder.add_RECEIVE(args.RECEIVE);
-    builder.add_TRANSMIT(args.TRANSMIT);
-    builder.add_SIMPLE_POLARIZATION(args.SIMPLE_POLARIZATION);
-    builder.add_POLARIZATION_TYPE(args.POLARIZATION_TYPE);
-    builder.add_DATA_MODE(args.DATA_MODE);
+    builder.add_SITE_TYPE(args.SITE_TYPE);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> IDMT {
+  pub fn unpack(&self) -> SITT {
     let ID = self.ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
     let NAME = self.NAME().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let DATA_MODE = self.DATA_MODE();
-    let UPLINK = self.UPLINK().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
-    });
-    let DOWNLINK = self.DOWNLINK().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
-    });
-    let BEACON = self.BEACON().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
-    });
-    let BAND = self.BAND().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    let POLARIZATION_TYPE = self.POLARIZATION_TYPE();
-    let SIMPLE_POLARIZATION = self.SIMPLE_POLARIZATION();
-    let STOKES_PARAMETERS = self.STOKES_PARAMETERS().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
-    });
-    let POWER_REQUIRED = self.POWER_REQUIRED();
-    let POWER_TYPE = self.POWER_TYPE().map(|x| {
+    let ABBREVIATION = self.ABBREVIATION().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let TRANSMIT = self.TRANSMIT();
-    let RECEIVE = self.RECEIVE();
-    let SENSOR_TYPE = self.SENSOR_TYPE();
+    let SITE_TYPE = self.SITE_TYPE();
+    let CATCODE = self.CATCODE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let NETWORK = self.NETWORK().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LATITUDE = self.LATITUDE();
+    let LONGITUDE = self.LONGITUDE();
+    let ALTITUDE = self.ALTITUDE();
+    let GEOMETRY = self.GEOMETRY().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let CENTER_POINT_GEOMETRY = self.CENTER_POINT_GEOMETRY().map(|x| {
+      x.into_iter().collect()
+    });
+    let CLASSIFICATION = self.CLASSIFICATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CTR_ID = self.CTR_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CREATED_BY = self.CREATED_BY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODEL_URL = self.MODEL_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     let SOURCE = self.SOURCE().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let LAST_OB_TIME = self.LAST_OB_TIME().map(|x| {
+    let TASKABLE = self.TASKABLE();
+    let OPERATIONAL_STATUS = self.OPERATIONAL_STATUS().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let LOWER_LEFT_ELEVATION_LIMIT = self.LOWER_LEFT_ELEVATION_LIMIT();
-    let UPPER_LEFT_AZIMUTH_LIMIT = self.UPPER_LEFT_AZIMUTH_LIMIT();
-    let LOWER_RIGHT_ELEVATION_LIMIT = self.LOWER_RIGHT_ELEVATION_LIMIT();
-    let LOWER_LEFT_AZIMUTH_LIMIT = self.LOWER_LEFT_AZIMUTH_LIMIT();
-    let UPPER_RIGHT_ELEVATION_LIMIT = self.UPPER_RIGHT_ELEVATION_LIMIT();
-    let UPPER_RIGHT_AZIMUTH_LIMIT = self.UPPER_RIGHT_AZIMUTH_LIMIT();
-    let LOWER_RIGHT_AZIMUTH_LIMIT = self.LOWER_RIGHT_AZIMUTH_LIMIT();
-    let UPPER_LEFT_ELEVATION_LIMIT = self.UPPER_LEFT_ELEVATION_LIMIT();
-    let RIGHT_GEO_BELT_LIMIT = self.RIGHT_GEO_BELT_LIMIT();
-    let LEFT_GEO_BELT_LIMIT = self.LEFT_GEO_BELT_LIMIT();
-    let MAGNITUDE_LIMIT = self.MAGNITUDE_LIMIT();
-    let TASKABLE = self.TASKABLE();
-    IDMT {
+    let ESTABLISHMENT_DATE = self.ESTABLISHMENT_DATE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CONTACT_INFO = self.CONTACT_INFO().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ENVIRONMENTAL_IMPACT = self.ENVIRONMENTAL_IMPACT().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ACCESSIBILITY_INFRA = self.ACCESSIBILITY_INFRA().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INTEGRATED_DEVICES = self.INTEGRATED_DEVICES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    SITT {
       ID,
       NAME,
-      DATA_MODE,
-      UPLINK,
-      DOWNLINK,
-      BEACON,
-      BAND,
-      POLARIZATION_TYPE,
-      SIMPLE_POLARIZATION,
-      STOKES_PARAMETERS,
-      POWER_REQUIRED,
-      POWER_TYPE,
-      TRANSMIT,
-      RECEIVE,
-      SENSOR_TYPE,
+      ABBREVIATION,
+      SITE_TYPE,
+      CATCODE,
+      NETWORK,
+      LATITUDE,
+      LONGITUDE,
+      ALTITUDE,
+      GEOMETRY,
+      CENTER_POINT_GEOMETRY,
+      CLASSIFICATION,
+      CTR_ID,
+      CREATED_BY,
+      DESCRIPTION,
+      MODEL_URL,
       SOURCE,
-      LAST_OB_TIME,
-      LOWER_LEFT_ELEVATION_LIMIT,
-      UPPER_LEFT_AZIMUTH_LIMIT,
-      LOWER_RIGHT_ELEVATION_LIMIT,
-      LOWER_LEFT_AZIMUTH_LIMIT,
-      UPPER_RIGHT_ELEVATION_LIMIT,
-      UPPER_RIGHT_AZIMUTH_LIMIT,
-      LOWER_RIGHT_AZIMUTH_LIMIT,
-      UPPER_LEFT_ELEVATION_LIMIT,
-      RIGHT_GEO_BELT_LIMIT,
-      LEFT_GEO_BELT_LIMIT,
-      MAGNITUDE_LIMIT,
       TASKABLE,
+      OPERATIONAL_STATUS,
+      ESTABLISHMENT_DATE,
+      CONTACT_INFO,
+      ENVIRONMENTAL_IMPACT,
+      ACCESSIBILITY_INFRA,
+      INTEGRATED_DEVICES,
     }
   }
 
-  /// Unique identifier for the EMT
+  /// Unique identifier for the site, BE_NUMBER
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(IDM::VT_ID, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_ID, None)}
   }
-  /// Name of the EMT
+  /// Name of the site
   #[inline]
   pub fn NAME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(IDM::VT_NAME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_NAME, None)}
   }
-  /// Mode of the data (real, simulated, synthetic)
+  /// Abbreviation
   #[inline]
-  pub fn DATA_MODE(&self) -> DataMode {
+  pub fn ABBREVIATION(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<DataMode>(IDM::VT_DATA_MODE, Some(DataMode::EXERCISE)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_ABBREVIATION, None)}
   }
-  /// Uplink frequency range
+  /// Site type as defined in SiteType enum
   #[inline]
-  pub fn UPLINK(&self) -> Option<FrequencyRange<'a>> {
+  pub fn SITE_TYPE(&self) -> SiteType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FrequencyRange>>(IDM::VT_UPLINK, None)}
+    unsafe { self._tab.get::<SiteType>(SIT::VT_SITE_TYPE, Some(SiteType::LAUNCH_SITE)).unwrap()}
   }
-  /// Downlink frequency range
+  /// Site type CATCODE
   #[inline]
-  pub fn DOWNLINK(&self) -> Option<FrequencyRange<'a>> {
+  pub fn CATCODE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FrequencyRange>>(IDM::VT_DOWNLINK, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_CATCODE, None)}
   }
-  /// Beacon frequency range
+  /// Network identifier
   #[inline]
-  pub fn BEACON(&self) -> Option<FrequencyRange<'a>> {
+  pub fn NETWORK(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FrequencyRange>>(IDM::VT_BEACON, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_NETWORK, None)}
   }
-  /// Bands associated with the EMT
+  /// Latitude of the site
   #[inline]
-  pub fn BAND(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<Band<'a>>>> {
+  pub fn LATITUDE(&self) -> f32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<Band>>>>(IDM::VT_BAND, None)}
+    unsafe { self._tab.get::<f32>(SIT::VT_LATITUDE, Some(0.0)).unwrap()}
   }
-  /// Type of polarization used
+  /// Longitude of the site
   #[inline]
-  pub fn POLARIZATION_TYPE(&self) -> PolarizationType {
+  pub fn LONGITUDE(&self) -> f32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<PolarizationType>(IDM::VT_POLARIZATION_TYPE, Some(PolarizationType::linear)).unwrap()}
+    unsafe { self._tab.get::<f32>(SIT::VT_LONGITUDE, Some(0.0)).unwrap()}
   }
-  /// Simple polarization configuration
+  /// Altitude of the site
   #[inline]
-  pub fn SIMPLE_POLARIZATION(&self) -> SimplePolarization {
+  pub fn ALTITUDE(&self) -> f32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<SimplePolarization>(IDM::VT_SIMPLE_POLARIZATION, Some(SimplePolarization::vertical)).unwrap()}
+    unsafe { self._tab.get::<f32>(SIT::VT_ALTITUDE, Some(0.0)).unwrap()}
   }
-  /// Stokes parameters for polarization characterization
+  /// Geometry of the site
   #[inline]
-  pub fn STOKES_PARAMETERS(&self) -> Option<StokesParameters<'a>> {
+  pub fn GEOMETRY(&self) -> Option<Geometry<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<StokesParameters>>(IDM::VT_STOKES_PARAMETERS, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<Geometry>>(SIT::VT_GEOMETRY, None)}
   }
-  /// Power required in Watts
+  /// Center point geometry coordinates
   #[inline]
-  pub fn POWER_REQUIRED(&self) -> f64 {
+  pub fn CENTER_POINT_GEOMETRY(&self) -> Option<::flatbuffers::Vector<'a, f32>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_POWER_REQUIRED, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f32>>>(SIT::VT_CENTER_POINT_GEOMETRY, None)}
   }
-  /// Type of power (eg. AC or DC)
+  /// Classification marking of the site
   #[inline]
-  pub fn POWER_TYPE(&self) -> Option<&'a str> {
+  pub fn CLASSIFICATION(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(IDM::VT_POWER_TYPE, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_CLASSIFICATION, None)}
   }
-  /// Indicates if the EMT can transmit
+  /// CTR ISO 3166 Numeric code as string
   #[inline]
-  pub fn TRANSMIT(&self) -> bool {
+  pub fn CTR_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(IDM::VT_TRANSMIT, Some(false)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_CTR_ID, None)}
   }
-  /// Indicates if the EMT can receive
+  /// Identifier of the user who created the site data
   #[inline]
-  pub fn RECEIVE(&self) -> bool {
+  pub fn CREATED_BY(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(IDM::VT_RECEIVE, Some(false)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_CREATED_BY, None)}
   }
-  /// Type of the sensor
+  /// Description of the site
   #[inline]
-  pub fn SENSOR_TYPE(&self) -> DeviceType {
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<DeviceType>(IDM::VT_SENSOR_TYPE, Some(DeviceType::UNKNOWN)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_DESCRIPTION, None)}
   }
-  /// Source of the data
+  /// URL for the 3D model of the site
+  #[inline]
+  pub fn MODEL_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_MODEL_URL, None)}
+  }
+  /// Source of the site data
   #[inline]
   pub fn SOURCE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(IDM::VT_SOURCE, None)}
-  }
-  /// Timestamp of the last observation
-  #[inline]
-  pub fn LAST_OB_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(IDM::VT_LAST_OB_TIME, None)}
-  }
-  /// Lower left elevation limit
-  #[inline]
-  pub fn LOWER_LEFT_ELEVATION_LIMIT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_LOWER_LEFT_ELEVATION_LIMIT, Some(0.0)).unwrap()}
-  }
-  /// Upper left azimuth limit
-  #[inline]
-  pub fn UPPER_LEFT_AZIMUTH_LIMIT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_UPPER_LEFT_AZIMUTH_LIMIT, Some(0.0)).unwrap()}
-  }
-  /// Lower right elevation limit
-  #[inline]
-  pub fn LOWER_RIGHT_ELEVATION_LIMIT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_LOWER_RIGHT_ELEVATION_LIMIT, Some(0.0)).unwrap()}
-  }
-  /// Lower left azimuth limit
-  #[inline]
-  pub fn LOWER_LEFT_AZIMUTH_LIMIT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_LOWER_LEFT_AZIMUTH_LIMIT, Some(0.0)).unwrap()}
-  }
-  /// Upper right elevation limit
-  #[inline]
-  pub fn UPPER_RIGHT_ELEVATION_LIMIT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_UPPER_RIGHT_ELEVATION_LIMIT, Some(0.0)).unwrap()}
-  }
-  /// Upper right azimuth limit
-  #[inline]
-  pub fn UPPER_RIGHT_AZIMUTH_LIMIT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_UPPER_RIGHT_AZIMUTH_LIMIT, Some(0.0)).unwrap()}
-  }
-  /// Lower right azimuth limit
-  #[inline]
-  pub fn LOWER_RIGHT_AZIMUTH_LIMIT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_LOWER_RIGHT_AZIMUTH_LIMIT, Some(0.0)).unwrap()}
-  }
-  /// Upper left elevation limit
-  #[inline]
-  pub fn UPPER_LEFT_ELEVATION_LIMIT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_UPPER_LEFT_ELEVATION_LIMIT, Some(0.0)).unwrap()}
-  }
-  /// Right geostationary belt limit
-  #[inline]
-  pub fn RIGHT_GEO_BELT_LIMIT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_RIGHT_GEO_BELT_LIMIT, Some(0.0)).unwrap()}
-  }
-  /// Left geostationary belt limit
-  #[inline]
-  pub fn LEFT_GEO_BELT_LIMIT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_LEFT_GEO_BELT_LIMIT, Some(0.0)).unwrap()}
-  }
-  /// Magnitude limit of the sensor
-  #[inline]
-  pub fn MAGNITUDE_LIMIT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(IDM::VT_MAGNITUDE_LIMIT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_SOURCE, None)}
   }
   /// Indicates if the site is taskable
   #[inline]
@@ -1502,11 +624,59 @@ impl<'a> IDM<'a> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(IDM::VT_TASKABLE, Some(false)).unwrap()}
+    unsafe { self._tab.get::<bool>(SIT::VT_TASKABLE, Some(false)).unwrap()}
+  }
+  /// Operational status of the site (e.g., active, inactive, under construction)
+  #[inline]
+  pub fn OPERATIONAL_STATUS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_OPERATIONAL_STATUS, None)}
+  }
+  /// Date of establishment
+  #[inline]
+  pub fn ESTABLISHMENT_DATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_ESTABLISHMENT_DATE, None)}
+  }
+  /// Contact information for the site
+  #[inline]
+  pub fn CONTACT_INFO(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_CONTACT_INFO, None)}
+  }
+  /// Environmental impact or considerations
+  #[inline]
+  pub fn ENVIRONMENTAL_IMPACT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_ENVIRONMENTAL_IMPACT, None)}
+  }
+  /// Accessibility and infrastructure details
+  #[inline]
+  pub fn ACCESSIBILITY_INFRA(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_ACCESSIBILITY_INFRA, None)}
+  }
+  /// Vector of Integrated Devices (IDM)
+  #[inline]
+  pub fn INTEGRATED_DEVICES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<IDM<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<IDM>>>>(SIT::VT_INTEGRATED_DEVICES, None)}
   }
 }
 
-impl ::flatbuffers::Verifiable for IDM<'_> {
+impl ::flatbuffers::Verifiable for SIT<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -1514,511 +684,469 @@ impl ::flatbuffers::Verifiable for IDM<'_> {
     v.visit_table(pos)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-     .visit_field::<DataMode>("DATA_MODE", Self::VT_DATA_MODE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<FrequencyRange>>("UPLINK", Self::VT_UPLINK, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<FrequencyRange>>("DOWNLINK", Self::VT_DOWNLINK, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<FrequencyRange>>("BEACON", Self::VT_BEACON, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<Band>>>>("BAND", Self::VT_BAND, false)?
-     .visit_field::<PolarizationType>("POLARIZATION_TYPE", Self::VT_POLARIZATION_TYPE, false)?
-     .visit_field::<SimplePolarization>("SIMPLE_POLARIZATION", Self::VT_SIMPLE_POLARIZATION, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<StokesParameters>>("STOKES_PARAMETERS", Self::VT_STOKES_PARAMETERS, false)?
-     .visit_field::<f64>("POWER_REQUIRED", Self::VT_POWER_REQUIRED, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("POWER_TYPE", Self::VT_POWER_TYPE, false)?
-     .visit_field::<bool>("TRANSMIT", Self::VT_TRANSMIT, false)?
-     .visit_field::<bool>("RECEIVE", Self::VT_RECEIVE, false)?
-     .visit_field::<DeviceType>("SENSOR_TYPE", Self::VT_SENSOR_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ABBREVIATION", Self::VT_ABBREVIATION, false)?
+     .visit_field::<SiteType>("SITE_TYPE", Self::VT_SITE_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CATCODE", Self::VT_CATCODE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NETWORK", Self::VT_NETWORK, false)?
+     .visit_field::<f32>("LATITUDE", Self::VT_LATITUDE, false)?
+     .visit_field::<f32>("LONGITUDE", Self::VT_LONGITUDE, false)?
+     .visit_field::<f32>("ALTITUDE", Self::VT_ALTITUDE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<Geometry>>("GEOMETRY", Self::VT_GEOMETRY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f32>>>("CENTER_POINT_GEOMETRY", Self::VT_CENTER_POINT_GEOMETRY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION", Self::VT_CLASSIFICATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CTR_ID", Self::VT_CTR_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATED_BY", Self::VT_CREATED_BY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODEL_URL", Self::VT_MODEL_URL, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE", Self::VT_SOURCE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAST_OB_TIME", Self::VT_LAST_OB_TIME, false)?
-     .visit_field::<f64>("LOWER_LEFT_ELEVATION_LIMIT", Self::VT_LOWER_LEFT_ELEVATION_LIMIT, false)?
-     .visit_field::<f64>("UPPER_LEFT_AZIMUTH_LIMIT", Self::VT_UPPER_LEFT_AZIMUTH_LIMIT, false)?
-     .visit_field::<f64>("LOWER_RIGHT_ELEVATION_LIMIT", Self::VT_LOWER_RIGHT_ELEVATION_LIMIT, false)?
-     .visit_field::<f64>("LOWER_LEFT_AZIMUTH_LIMIT", Self::VT_LOWER_LEFT_AZIMUTH_LIMIT, false)?
-     .visit_field::<f64>("UPPER_RIGHT_ELEVATION_LIMIT", Self::VT_UPPER_RIGHT_ELEVATION_LIMIT, false)?
-     .visit_field::<f64>("UPPER_RIGHT_AZIMUTH_LIMIT", Self::VT_UPPER_RIGHT_AZIMUTH_LIMIT, false)?
-     .visit_field::<f64>("LOWER_RIGHT_AZIMUTH_LIMIT", Self::VT_LOWER_RIGHT_AZIMUTH_LIMIT, false)?
-     .visit_field::<f64>("UPPER_LEFT_ELEVATION_LIMIT", Self::VT_UPPER_LEFT_ELEVATION_LIMIT, false)?
-     .visit_field::<f64>("RIGHT_GEO_BELT_LIMIT", Self::VT_RIGHT_GEO_BELT_LIMIT, false)?
-     .visit_field::<f64>("LEFT_GEO_BELT_LIMIT", Self::VT_LEFT_GEO_BELT_LIMIT, false)?
-     .visit_field::<f64>("MAGNITUDE_LIMIT", Self::VT_MAGNITUDE_LIMIT, false)?
      .visit_field::<bool>("TASKABLE", Self::VT_TASKABLE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OPERATIONAL_STATUS", Self::VT_OPERATIONAL_STATUS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ESTABLISHMENT_DATE", Self::VT_ESTABLISHMENT_DATE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONTACT_INFO", Self::VT_CONTACT_INFO, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ENVIRONMENTAL_IMPACT", Self::VT_ENVIRONMENTAL_IMPACT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ACCESSIBILITY_INFRA", Self::VT_ACCESSIBILITY_INFRA, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<IDM>>>>("INTEGRATED_DEVICES", Self::VT_INTEGRATED_DEVICES, false)?
      .finish();
     Ok(())
   }
 }
-pub struct IDMArgs<'a> {
+pub struct SITArgs<'a> {
     pub ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub DATA_MODE: DataMode,
-    pub UPLINK: Option<::flatbuffers::WIPOffset<FrequencyRange<'a>>>,
-    pub DOWNLINK: Option<::flatbuffers::WIPOffset<FrequencyRange<'a>>>,
-    pub BEACON: Option<::flatbuffers::WIPOffset<FrequencyRange<'a>>>,
-    pub BAND: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<Band<'a>>>>>,
-    pub POLARIZATION_TYPE: PolarizationType,
-    pub SIMPLE_POLARIZATION: SimplePolarization,
-    pub STOKES_PARAMETERS: Option<::flatbuffers::WIPOffset<StokesParameters<'a>>>,
-    pub POWER_REQUIRED: f64,
-    pub POWER_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub TRANSMIT: bool,
-    pub RECEIVE: bool,
-    pub SENSOR_TYPE: DeviceType,
+    pub ABBREVIATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SITE_TYPE: SiteType,
+    pub CATCODE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NETWORK: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LATITUDE: f32,
+    pub LONGITUDE: f32,
+    pub ALTITUDE: f32,
+    pub GEOMETRY: Option<::flatbuffers::WIPOffset<Geometry<'a>>>,
+    pub CENTER_POINT_GEOMETRY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f32>>>,
+    pub CLASSIFICATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CTR_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CREATED_BY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODEL_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub LAST_OB_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub LOWER_LEFT_ELEVATION_LIMIT: f64,
-    pub UPPER_LEFT_AZIMUTH_LIMIT: f64,
-    pub LOWER_RIGHT_ELEVATION_LIMIT: f64,
-    pub LOWER_LEFT_AZIMUTH_LIMIT: f64,
-    pub UPPER_RIGHT_ELEVATION_LIMIT: f64,
-    pub UPPER_RIGHT_AZIMUTH_LIMIT: f64,
-    pub LOWER_RIGHT_AZIMUTH_LIMIT: f64,
-    pub UPPER_LEFT_ELEVATION_LIMIT: f64,
-    pub RIGHT_GEO_BELT_LIMIT: f64,
-    pub LEFT_GEO_BELT_LIMIT: f64,
-    pub MAGNITUDE_LIMIT: f64,
     pub TASKABLE: bool,
+    pub OPERATIONAL_STATUS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ESTABLISHMENT_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CONTACT_INFO: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ENVIRONMENTAL_IMPACT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ACCESSIBILITY_INFRA: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTEGRATED_DEVICES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<IDM<'a>>>>>,
 }
-impl<'a> Default for IDMArgs<'a> {
+impl<'a> Default for SITArgs<'a> {
   #[inline]
   fn default() -> Self {
-    IDMArgs {
+    SITArgs {
       ID: None,
       NAME: None,
-      DATA_MODE: DataMode::EXERCISE,
-      UPLINK: None,
-      DOWNLINK: None,
-      BEACON: None,
-      BAND: None,
-      POLARIZATION_TYPE: PolarizationType::linear,
-      SIMPLE_POLARIZATION: SimplePolarization::vertical,
-      STOKES_PARAMETERS: None,
-      POWER_REQUIRED: 0.0,
-      POWER_TYPE: None,
-      TRANSMIT: false,
-      RECEIVE: false,
-      SENSOR_TYPE: DeviceType::UNKNOWN,
+      ABBREVIATION: None,
+      SITE_TYPE: SiteType::LAUNCH_SITE,
+      CATCODE: None,
+      NETWORK: None,
+      LATITUDE: 0.0,
+      LONGITUDE: 0.0,
+      ALTITUDE: 0.0,
+      GEOMETRY: None,
+      CENTER_POINT_GEOMETRY: None,
+      CLASSIFICATION: None,
+      CTR_ID: None,
+      CREATED_BY: None,
+      DESCRIPTION: None,
+      MODEL_URL: None,
       SOURCE: None,
-      LAST_OB_TIME: None,
-      LOWER_LEFT_ELEVATION_LIMIT: 0.0,
-      UPPER_LEFT_AZIMUTH_LIMIT: 0.0,
-      LOWER_RIGHT_ELEVATION_LIMIT: 0.0,
-      LOWER_LEFT_AZIMUTH_LIMIT: 0.0,
-      UPPER_RIGHT_ELEVATION_LIMIT: 0.0,
-      UPPER_RIGHT_AZIMUTH_LIMIT: 0.0,
-      LOWER_RIGHT_AZIMUTH_LIMIT: 0.0,
-      UPPER_LEFT_ELEVATION_LIMIT: 0.0,
-      RIGHT_GEO_BELT_LIMIT: 0.0,
-      LEFT_GEO_BELT_LIMIT: 0.0,
-      MAGNITUDE_LIMIT: 0.0,
       TASKABLE: false,
+      OPERATIONAL_STATUS: None,
+      ESTABLISHMENT_DATE: None,
+      CONTACT_INFO: None,
+      ENVIRONMENTAL_IMPACT: None,
+      ACCESSIBILITY_INFRA: None,
+      INTEGRATED_DEVICES: None,
     }
   }
 }
 
-pub struct IDMBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct SITBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> IDMBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SITBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ID(&mut self, ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(IDM::VT_ID, ID);
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_ID, ID);
   }
   #[inline]
   pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(IDM::VT_NAME, NAME);
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_NAME, NAME);
   }
   #[inline]
-  pub fn add_DATA_MODE(&mut self, DATA_MODE: DataMode) {
-    self.fbb_.push_slot::<DataMode>(IDM::VT_DATA_MODE, DATA_MODE, DataMode::EXERCISE);
+  pub fn add_ABBREVIATION(&mut self, ABBREVIATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_ABBREVIATION, ABBREVIATION);
   }
   #[inline]
-  pub fn add_UPLINK(&mut self, UPLINK: ::flatbuffers::WIPOffset<FrequencyRange<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FrequencyRange>>(IDM::VT_UPLINK, UPLINK);
+  pub fn add_SITE_TYPE(&mut self, SITE_TYPE: SiteType) {
+    self.fbb_.push_slot::<SiteType>(SIT::VT_SITE_TYPE, SITE_TYPE, SiteType::LAUNCH_SITE);
   }
   #[inline]
-  pub fn add_DOWNLINK(&mut self, DOWNLINK: ::flatbuffers::WIPOffset<FrequencyRange<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FrequencyRange>>(IDM::VT_DOWNLINK, DOWNLINK);
+  pub fn add_CATCODE(&mut self, CATCODE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_CATCODE, CATCODE);
   }
   #[inline]
-  pub fn add_BEACON(&mut self, BEACON: ::flatbuffers::WIPOffset<FrequencyRange<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FrequencyRange>>(IDM::VT_BEACON, BEACON);
+  pub fn add_NETWORK(&mut self, NETWORK: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_NETWORK, NETWORK);
   }
   #[inline]
-  pub fn add_BAND(&mut self, BAND: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<Band<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(IDM::VT_BAND, BAND);
+  pub fn add_LATITUDE(&mut self, LATITUDE: f32) {
+    self.fbb_.push_slot::<f32>(SIT::VT_LATITUDE, LATITUDE, 0.0);
   }
   #[inline]
-  pub fn add_POLARIZATION_TYPE(&mut self, POLARIZATION_TYPE: PolarizationType) {
-    self.fbb_.push_slot::<PolarizationType>(IDM::VT_POLARIZATION_TYPE, POLARIZATION_TYPE, PolarizationType::linear);
+  pub fn add_LONGITUDE(&mut self, LONGITUDE: f32) {
+    self.fbb_.push_slot::<f32>(SIT::VT_LONGITUDE, LONGITUDE, 0.0);
   }
   #[inline]
-  pub fn add_SIMPLE_POLARIZATION(&mut self, SIMPLE_POLARIZATION: SimplePolarization) {
-    self.fbb_.push_slot::<SimplePolarization>(IDM::VT_SIMPLE_POLARIZATION, SIMPLE_POLARIZATION, SimplePolarization::vertical);
+  pub fn add_ALTITUDE(&mut self, ALTITUDE: f32) {
+    self.fbb_.push_slot::<f32>(SIT::VT_ALTITUDE, ALTITUDE, 0.0);
   }
   #[inline]
-  pub fn add_STOKES_PARAMETERS(&mut self, STOKES_PARAMETERS: ::flatbuffers::WIPOffset<StokesParameters<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<StokesParameters>>(IDM::VT_STOKES_PARAMETERS, STOKES_PARAMETERS);
+  pub fn add_GEOMETRY(&mut self, GEOMETRY: ::flatbuffers::WIPOffset<Geometry<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<Geometry>>(SIT::VT_GEOMETRY, GEOMETRY);
   }
   #[inline]
-  pub fn add_POWER_REQUIRED(&mut self, POWER_REQUIRED: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_POWER_REQUIRED, POWER_REQUIRED, 0.0);
+  pub fn add_CENTER_POINT_GEOMETRY(&mut self, CENTER_POINT_GEOMETRY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f32>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_CENTER_POINT_GEOMETRY, CENTER_POINT_GEOMETRY);
   }
   #[inline]
-  pub fn add_POWER_TYPE(&mut self, POWER_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(IDM::VT_POWER_TYPE, POWER_TYPE);
+  pub fn add_CLASSIFICATION(&mut self, CLASSIFICATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_CLASSIFICATION, CLASSIFICATION);
   }
   #[inline]
-  pub fn add_TRANSMIT(&mut self, TRANSMIT: bool) {
-    self.fbb_.push_slot::<bool>(IDM::VT_TRANSMIT, TRANSMIT, false);
+  pub fn add_CTR_ID(&mut self, CTR_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_CTR_ID, CTR_ID);
   }
   #[inline]
-  pub fn add_RECEIVE(&mut self, RECEIVE: bool) {
-    self.fbb_.push_slot::<bool>(IDM::VT_RECEIVE, RECEIVE, false);
+  pub fn add_CREATED_BY(&mut self, CREATED_BY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_CREATED_BY, CREATED_BY);
   }
   #[inline]
-  pub fn add_SENSOR_TYPE(&mut self, SENSOR_TYPE: DeviceType) {
-    self.fbb_.push_slot::<DeviceType>(IDM::VT_SENSOR_TYPE, SENSOR_TYPE, DeviceType::UNKNOWN);
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn add_MODEL_URL(&mut self, MODEL_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_MODEL_URL, MODEL_URL);
   }
   #[inline]
   pub fn add_SOURCE(&mut self, SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(IDM::VT_SOURCE, SOURCE);
-  }
-  #[inline]
-  pub fn add_LAST_OB_TIME(&mut self, LAST_OB_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(IDM::VT_LAST_OB_TIME, LAST_OB_TIME);
-  }
-  #[inline]
-  pub fn add_LOWER_LEFT_ELEVATION_LIMIT(&mut self, LOWER_LEFT_ELEVATION_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_LOWER_LEFT_ELEVATION_LIMIT, LOWER_LEFT_ELEVATION_LIMIT, 0.0);
-  }
-  #[inline]
-  pub fn add_UPPER_LEFT_AZIMUTH_LIMIT(&mut self, UPPER_LEFT_AZIMUTH_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_UPPER_LEFT_AZIMUTH_LIMIT, UPPER_LEFT_AZIMUTH_LIMIT, 0.0);
-  }
-  #[inline]
-  pub fn add_LOWER_RIGHT_ELEVATION_LIMIT(&mut self, LOWER_RIGHT_ELEVATION_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_LOWER_RIGHT_ELEVATION_LIMIT, LOWER_RIGHT_ELEVATION_LIMIT, 0.0);
-  }
-  #[inline]
-  pub fn add_LOWER_LEFT_AZIMUTH_LIMIT(&mut self, LOWER_LEFT_AZIMUTH_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_LOWER_LEFT_AZIMUTH_LIMIT, LOWER_LEFT_AZIMUTH_LIMIT, 0.0);
-  }
-  #[inline]
-  pub fn add_UPPER_RIGHT_ELEVATION_LIMIT(&mut self, UPPER_RIGHT_ELEVATION_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_UPPER_RIGHT_ELEVATION_LIMIT, UPPER_RIGHT_ELEVATION_LIMIT, 0.0);
-  }
-  #[inline]
-  pub fn add_UPPER_RIGHT_AZIMUTH_LIMIT(&mut self, UPPER_RIGHT_AZIMUTH_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_UPPER_RIGHT_AZIMUTH_LIMIT, UPPER_RIGHT_AZIMUTH_LIMIT, 0.0);
-  }
-  #[inline]
-  pub fn add_LOWER_RIGHT_AZIMUTH_LIMIT(&mut self, LOWER_RIGHT_AZIMUTH_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_LOWER_RIGHT_AZIMUTH_LIMIT, LOWER_RIGHT_AZIMUTH_LIMIT, 0.0);
-  }
-  #[inline]
-  pub fn add_UPPER_LEFT_ELEVATION_LIMIT(&mut self, UPPER_LEFT_ELEVATION_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_UPPER_LEFT_ELEVATION_LIMIT, UPPER_LEFT_ELEVATION_LIMIT, 0.0);
-  }
-  #[inline]
-  pub fn add_RIGHT_GEO_BELT_LIMIT(&mut self, RIGHT_GEO_BELT_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_RIGHT_GEO_BELT_LIMIT, RIGHT_GEO_BELT_LIMIT, 0.0);
-  }
-  #[inline]
-  pub fn add_LEFT_GEO_BELT_LIMIT(&mut self, LEFT_GEO_BELT_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_LEFT_GEO_BELT_LIMIT, LEFT_GEO_BELT_LIMIT, 0.0);
-  }
-  #[inline]
-  pub fn add_MAGNITUDE_LIMIT(&mut self, MAGNITUDE_LIMIT: f64) {
-    self.fbb_.push_slot::<f64>(IDM::VT_MAGNITUDE_LIMIT, MAGNITUDE_LIMIT, 0.0);
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_SOURCE, SOURCE);
   }
   #[inline]
   pub fn add_TASKABLE(&mut self, TASKABLE: bool) {
-    self.fbb_.push_slot::<bool>(IDM::VT_TASKABLE, TASKABLE, false);
+    self.fbb_.push_slot::<bool>(SIT::VT_TASKABLE, TASKABLE, false);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> IDMBuilder<'a, 'b, A> {
+  pub fn add_OPERATIONAL_STATUS(&mut self, OPERATIONAL_STATUS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_OPERATIONAL_STATUS, OPERATIONAL_STATUS);
+  }
+  #[inline]
+  pub fn add_ESTABLISHMENT_DATE(&mut self, ESTABLISHMENT_DATE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_ESTABLISHMENT_DATE, ESTABLISHMENT_DATE);
+  }
+  #[inline]
+  pub fn add_CONTACT_INFO(&mut self, CONTACT_INFO: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_CONTACT_INFO, CONTACT_INFO);
+  }
+  #[inline]
+  pub fn add_ENVIRONMENTAL_IMPACT(&mut self, ENVIRONMENTAL_IMPACT: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_ENVIRONMENTAL_IMPACT, ENVIRONMENTAL_IMPACT);
+  }
+  #[inline]
+  pub fn add_ACCESSIBILITY_INFRA(&mut self, ACCESSIBILITY_INFRA: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_ACCESSIBILITY_INFRA, ACCESSIBILITY_INFRA);
+  }
+  #[inline]
+  pub fn add_INTEGRATED_DEVICES(&mut self, INTEGRATED_DEVICES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<IDM<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_INTEGRATED_DEVICES, INTEGRATED_DEVICES);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SITBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    IDMBuilder {
+    SITBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<IDM<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<SIT<'a>> {
     let o = self.fbb_.end_table(self.start_);
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for IDM<'_> {
+impl ::core::fmt::Debug for SIT<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("IDM");
+    let mut ds = f.debug_struct("SIT");
       ds.field("ID", &self.ID());
       ds.field("NAME", &self.NAME());
-      ds.field("DATA_MODE", &self.DATA_MODE());
-      ds.field("UPLINK", &self.UPLINK());
-      ds.field("DOWNLINK", &self.DOWNLINK());
-      ds.field("BEACON", &self.BEACON());
-      ds.field("BAND", &self.BAND());
-      ds.field("POLARIZATION_TYPE", &self.POLARIZATION_TYPE());
-      ds.field("SIMPLE_POLARIZATION", &self.SIMPLE_POLARIZATION());
-      ds.field("STOKES_PARAMETERS", &self.STOKES_PARAMETERS());
-      ds.field("POWER_REQUIRED", &self.POWER_REQUIRED());
-      ds.field("POWER_TYPE", &self.POWER_TYPE());
-      ds.field("TRANSMIT", &self.TRANSMIT());
-      ds.field("RECEIVE", &self.RECEIVE());
-      ds.field("SENSOR_TYPE", &self.SENSOR_TYPE());
+      ds.field("ABBREVIATION", &self.ABBREVIATION());
+      ds.field("SITE_TYPE", &self.SITE_TYPE());
+      ds.field("CATCODE", &self.CATCODE());
+      ds.field("NETWORK", &self.NETWORK());
+      ds.field("LATITUDE", &self.LATITUDE());
+      ds.field("LONGITUDE", &self.LONGITUDE());
+      ds.field("ALTITUDE", &self.ALTITUDE());
+      ds.field("GEOMETRY", &self.GEOMETRY());
+      ds.field("CENTER_POINT_GEOMETRY", &self.CENTER_POINT_GEOMETRY());
+      ds.field("CLASSIFICATION", &self.CLASSIFICATION());
+      ds.field("CTR_ID", &self.CTR_ID());
+      ds.field("CREATED_BY", &self.CREATED_BY());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.field("MODEL_URL", &self.MODEL_URL());
       ds.field("SOURCE", &self.SOURCE());
-      ds.field("LAST_OB_TIME", &self.LAST_OB_TIME());
-      ds.field("LOWER_LEFT_ELEVATION_LIMIT", &self.LOWER_LEFT_ELEVATION_LIMIT());
-      ds.field("UPPER_LEFT_AZIMUTH_LIMIT", &self.UPPER_LEFT_AZIMUTH_LIMIT());
-      ds.field("LOWER_RIGHT_ELEVATION_LIMIT", &self.LOWER_RIGHT_ELEVATION_LIMIT());
-      ds.field("LOWER_LEFT_AZIMUTH_LIMIT", &self.LOWER_LEFT_AZIMUTH_LIMIT());
-      ds.field("UPPER_RIGHT_ELEVATION_LIMIT", &self.UPPER_RIGHT_ELEVATION_LIMIT());
-      ds.field("UPPER_RIGHT_AZIMUTH_LIMIT", &self.UPPER_RIGHT_AZIMUTH_LIMIT());
-      ds.field("LOWER_RIGHT_AZIMUTH_LIMIT", &self.LOWER_RIGHT_AZIMUTH_LIMIT());
-      ds.field("UPPER_LEFT_ELEVATION_LIMIT", &self.UPPER_LEFT_ELEVATION_LIMIT());
-      ds.field("RIGHT_GEO_BELT_LIMIT", &self.RIGHT_GEO_BELT_LIMIT());
-      ds.field("LEFT_GEO_BELT_LIMIT", &self.LEFT_GEO_BELT_LIMIT());
-      ds.field("MAGNITUDE_LIMIT", &self.MAGNITUDE_LIMIT());
       ds.field("TASKABLE", &self.TASKABLE());
+      ds.field("OPERATIONAL_STATUS", &self.OPERATIONAL_STATUS());
+      ds.field("ESTABLISHMENT_DATE", &self.ESTABLISHMENT_DATE());
+      ds.field("CONTACT_INFO", &self.CONTACT_INFO());
+      ds.field("ENVIRONMENTAL_IMPACT", &self.ENVIRONMENTAL_IMPACT());
+      ds.field("ACCESSIBILITY_INFRA", &self.ACCESSIBILITY_INFRA());
+      ds.field("INTEGRATED_DEVICES", &self.INTEGRATED_DEVICES());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct IDMT {
+pub struct SITT {
   pub ID: Option<alloc::string::String>,
   pub NAME: Option<alloc::string::String>,
-  pub DATA_MODE: DataMode,
-  pub UPLINK: Option<alloc::boxed::Box<FrequencyRangeT>>,
-  pub DOWNLINK: Option<alloc::boxed::Box<FrequencyRangeT>>,
-  pub BEACON: Option<alloc::boxed::Box<FrequencyRangeT>>,
-  pub BAND: Option<alloc::vec::Vec<BandT>>,
-  pub POLARIZATION_TYPE: PolarizationType,
-  pub SIMPLE_POLARIZATION: SimplePolarization,
-  pub STOKES_PARAMETERS: Option<alloc::boxed::Box<StokesParametersT>>,
-  pub POWER_REQUIRED: f64,
-  pub POWER_TYPE: Option<alloc::string::String>,
-  pub TRANSMIT: bool,
-  pub RECEIVE: bool,
-  pub SENSOR_TYPE: DeviceType,
+  pub ABBREVIATION: Option<alloc::string::String>,
+  pub SITE_TYPE: SiteType,
+  pub CATCODE: Option<alloc::string::String>,
+  pub NETWORK: Option<alloc::string::String>,
+  pub LATITUDE: f32,
+  pub LONGITUDE: f32,
+  pub ALTITUDE: f32,
+  pub GEOMETRY: Option<alloc::boxed::Box<GeometryT>>,
+  pub CENTER_POINT_GEOMETRY: Option<alloc::vec::Vec<f32>>,
+  pub CLASSIFICATION: Option<alloc::string::String>,
+  pub CTR_ID: Option<alloc::string::String>,
+  pub CREATED_BY: Option<alloc::string::String>,
+  pub DESCRIPTION: Option<alloc::string::String>,
+  pub MODEL_URL: Option<alloc::string::String>,
   pub SOURCE: Option<alloc::string::String>,
-  pub LAST_OB_TIME: Option<alloc::string::String>,
-  pub LOWER_LEFT_ELEVATION_LIMIT: f64,
-  pub UPPER_LEFT_AZIMUTH_LIMIT: f64,
-  pub LOWER_RIGHT_ELEVATION_LIMIT: f64,
-  pub LOWER_LEFT_AZIMUTH_LIMIT: f64,
-  pub UPPER_RIGHT_ELEVATION_LIMIT: f64,
-  pub UPPER_RIGHT_AZIMUTH_LIMIT: f64,
-  pub LOWER_RIGHT_AZIMUTH_LIMIT: f64,
-  pub UPPER_LEFT_ELEVATION_LIMIT: f64,
-  pub RIGHT_GEO_BELT_LIMIT: f64,
-  pub LEFT_GEO_BELT_LIMIT: f64,
-  pub MAGNITUDE_LIMIT: f64,
   pub TASKABLE: bool,
+  pub OPERATIONAL_STATUS: Option<alloc::string::String>,
+  pub ESTABLISHMENT_DATE: Option<alloc::string::String>,
+  pub CONTACT_INFO: Option<alloc::string::String>,
+  pub ENVIRONMENTAL_IMPACT: Option<alloc::string::String>,
+  pub ACCESSIBILITY_INFRA: Option<alloc::string::String>,
+  pub INTEGRATED_DEVICES: Option<alloc::vec::Vec<IDMT>>,
 }
-impl Default for IDMT {
+impl Default for SITT {
   fn default() -> Self {
     Self {
       ID: None,
       NAME: None,
-      DATA_MODE: DataMode::EXERCISE,
-      UPLINK: None,
-      DOWNLINK: None,
-      BEACON: None,
-      BAND: None,
-      POLARIZATION_TYPE: PolarizationType::linear,
-      SIMPLE_POLARIZATION: SimplePolarization::vertical,
-      STOKES_PARAMETERS: None,
-      POWER_REQUIRED: 0.0,
-      POWER_TYPE: None,
-      TRANSMIT: false,
-      RECEIVE: false,
-      SENSOR_TYPE: DeviceType::UNKNOWN,
+      ABBREVIATION: None,
+      SITE_TYPE: SiteType::LAUNCH_SITE,
+      CATCODE: None,
+      NETWORK: None,
+      LATITUDE: 0.0,
+      LONGITUDE: 0.0,
+      ALTITUDE: 0.0,
+      GEOMETRY: None,
+      CENTER_POINT_GEOMETRY: None,
+      CLASSIFICATION: None,
+      CTR_ID: None,
+      CREATED_BY: None,
+      DESCRIPTION: None,
+      MODEL_URL: None,
       SOURCE: None,
-      LAST_OB_TIME: None,
-      LOWER_LEFT_ELEVATION_LIMIT: 0.0,
-      UPPER_LEFT_AZIMUTH_LIMIT: 0.0,
-      LOWER_RIGHT_ELEVATION_LIMIT: 0.0,
-      LOWER_LEFT_AZIMUTH_LIMIT: 0.0,
-      UPPER_RIGHT_ELEVATION_LIMIT: 0.0,
-      UPPER_RIGHT_AZIMUTH_LIMIT: 0.0,
-      LOWER_RIGHT_AZIMUTH_LIMIT: 0.0,
-      UPPER_LEFT_ELEVATION_LIMIT: 0.0,
-      RIGHT_GEO_BELT_LIMIT: 0.0,
-      LEFT_GEO_BELT_LIMIT: 0.0,
-      MAGNITUDE_LIMIT: 0.0,
       TASKABLE: false,
+      OPERATIONAL_STATUS: None,
+      ESTABLISHMENT_DATE: None,
+      CONTACT_INFO: None,
+      ENVIRONMENTAL_IMPACT: None,
+      ACCESSIBILITY_INFRA: None,
+      INTEGRATED_DEVICES: None,
     }
   }
 }
-impl IDMT {
+impl SITT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<IDM<'b>> {
+  ) -> ::flatbuffers::WIPOffset<SIT<'b>> {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let DATA_MODE = self.DATA_MODE;
-    let UPLINK = self.UPLINK.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    let DOWNLINK = self.DOWNLINK.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    let BEACON = self.BEACON.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    let BAND = self.BAND.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    let POLARIZATION_TYPE = self.POLARIZATION_TYPE;
-    let SIMPLE_POLARIZATION = self.SIMPLE_POLARIZATION;
-    let STOKES_PARAMETERS = self.STOKES_PARAMETERS.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    let POWER_REQUIRED = self.POWER_REQUIRED;
-    let POWER_TYPE = self.POWER_TYPE.as_ref().map(|x|{
+    let ABBREVIATION = self.ABBREVIATION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TRANSMIT = self.TRANSMIT;
-    let RECEIVE = self.RECEIVE;
-    let SENSOR_TYPE = self.SENSOR_TYPE;
+    let SITE_TYPE = self.SITE_TYPE;
+    let CATCODE = self.CATCODE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NETWORK = self.NETWORK.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LATITUDE = self.LATITUDE;
+    let LONGITUDE = self.LONGITUDE;
+    let ALTITUDE = self.ALTITUDE;
+    let GEOMETRY = self.GEOMETRY.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CENTER_POINT_GEOMETRY = self.CENTER_POINT_GEOMETRY.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let CLASSIFICATION = self.CLASSIFICATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CTR_ID = self.CTR_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CREATED_BY = self.CREATED_BY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODEL_URL = self.MODEL_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let SOURCE = self.SOURCE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let LAST_OB_TIME = self.LAST_OB_TIME.as_ref().map(|x|{
+    let TASKABLE = self.TASKABLE;
+    let OPERATIONAL_STATUS = self.OPERATIONAL_STATUS.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let LOWER_LEFT_ELEVATION_LIMIT = self.LOWER_LEFT_ELEVATION_LIMIT;
-    let UPPER_LEFT_AZIMUTH_LIMIT = self.UPPER_LEFT_AZIMUTH_LIMIT;
-    let LOWER_RIGHT_ELEVATION_LIMIT = self.LOWER_RIGHT_ELEVATION_LIMIT;
-    let LOWER_LEFT_AZIMUTH_LIMIT = self.LOWER_LEFT_AZIMUTH_LIMIT;
-    let UPPER_RIGHT_ELEVATION_LIMIT = self.UPPER_RIGHT_ELEVATION_LIMIT;
-    let UPPER_RIGHT_AZIMUTH_LIMIT = self.UPPER_RIGHT_AZIMUTH_LIMIT;
-    let LOWER_RIGHT_AZIMUTH_LIMIT = self.LOWER_RIGHT_AZIMUTH_LIMIT;
-    let UPPER_LEFT_ELEVATION_LIMIT = self.UPPER_LEFT_ELEVATION_LIMIT;
-    let RIGHT_GEO_BELT_LIMIT = self.RIGHT_GEO_BELT_LIMIT;
-    let LEFT_GEO_BELT_LIMIT = self.LEFT_GEO_BELT_LIMIT;
-    let MAGNITUDE_LIMIT = self.MAGNITUDE_LIMIT;
-    let TASKABLE = self.TASKABLE;
-    IDM::create(_fbb, &IDMArgs{
+    let ESTABLISHMENT_DATE = self.ESTABLISHMENT_DATE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CONTACT_INFO = self.CONTACT_INFO.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ENVIRONMENTAL_IMPACT = self.ENVIRONMENTAL_IMPACT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ACCESSIBILITY_INFRA = self.ACCESSIBILITY_INFRA.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INTEGRATED_DEVICES = self.INTEGRATED_DEVICES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    SIT::create(_fbb, &SITArgs{
       ID,
       NAME,
-      DATA_MODE,
-      UPLINK,
-      DOWNLINK,
-      BEACON,
-      BAND,
-      POLARIZATION_TYPE,
-      SIMPLE_POLARIZATION,
-      STOKES_PARAMETERS,
-      POWER_REQUIRED,
-      POWER_TYPE,
-      TRANSMIT,
-      RECEIVE,
-      SENSOR_TYPE,
+      ABBREVIATION,
+      SITE_TYPE,
+      CATCODE,
+      NETWORK,
+      LATITUDE,
+      LONGITUDE,
+      ALTITUDE,
+      GEOMETRY,
+      CENTER_POINT_GEOMETRY,
+      CLASSIFICATION,
+      CTR_ID,
+      CREATED_BY,
+      DESCRIPTION,
+      MODEL_URL,
       SOURCE,
-      LAST_OB_TIME,
-      LOWER_LEFT_ELEVATION_LIMIT,
-      UPPER_LEFT_AZIMUTH_LIMIT,
-      LOWER_RIGHT_ELEVATION_LIMIT,
-      LOWER_LEFT_AZIMUTH_LIMIT,
-      UPPER_RIGHT_ELEVATION_LIMIT,
-      UPPER_RIGHT_AZIMUTH_LIMIT,
-      LOWER_RIGHT_AZIMUTH_LIMIT,
-      UPPER_LEFT_ELEVATION_LIMIT,
-      RIGHT_GEO_BELT_LIMIT,
-      LEFT_GEO_BELT_LIMIT,
-      MAGNITUDE_LIMIT,
       TASKABLE,
+      OPERATIONAL_STATUS,
+      ESTABLISHMENT_DATE,
+      CONTACT_INFO,
+      ENVIRONMENTAL_IMPACT,
+      ACCESSIBILITY_INFRA,
+      INTEGRATED_DEVICES,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `IDM`
+/// Verifies that a buffer of bytes contains a `SIT`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_idm_unchecked`.
-pub fn root_as_idm(buf: &[u8]) -> Result<IDM<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<IDM>(buf)
+/// `root_as_sit_unchecked`.
+pub fn root_as_sit(buf: &[u8]) -> Result<SIT<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<SIT>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `IDM` and returns it.
+/// `SIT` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_idm_unchecked`.
-pub fn size_prefixed_root_as_idm(buf: &[u8]) -> Result<IDM<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<IDM>(buf)
+/// `size_prefixed_root_as_sit_unchecked`.
+pub fn size_prefixed_root_as_sit(buf: &[u8]) -> Result<SIT<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<SIT>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `IDM` and returns it.
+/// contains a `SIT` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_idm_unchecked`.
-pub fn root_as_idm_with_opts<'b, 'o>(
+/// `root_as_sit_unchecked`.
+pub fn root_as_sit_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<IDM<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<IDM<'b>>(opts, buf)
+) -> Result<SIT<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<SIT<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `IDM` and returns
+/// bytes contains a size prefixed `SIT` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_idm_unchecked`.
-pub fn size_prefixed_root_as_idm_with_opts<'b, 'o>(
+/// `root_as_sit_unchecked`.
+pub fn size_prefixed_root_as_sit_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<IDM<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<IDM<'b>>(opts, buf)
+) -> Result<SIT<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<SIT<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a IDM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a SIT and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `IDM`.
-pub unsafe fn root_as_idm_unchecked(buf: &[u8]) -> IDM<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<IDM>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `SIT`.
+pub unsafe fn root_as_sit_unchecked(buf: &[u8]) -> SIT<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<SIT>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed IDM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed SIT and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `IDM`.
-pub unsafe fn size_prefixed_root_as_idm_unchecked(buf: &[u8]) -> IDM<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<IDM>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `SIT`.
+pub unsafe fn size_prefixed_root_as_sit_unchecked(buf: &[u8]) -> SIT<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<SIT>(buf) }
 }
-pub const IDM_IDENTIFIER: &str = "$IDM";
+pub const SIT_IDENTIFIER: &str = "$SIT";
 
 #[inline]
-pub fn idm_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, IDM_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn idm_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, IDM_IDENTIFIER, true)
+pub fn sit_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, SIT_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_idm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn sit_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, SIT_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_sit_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<IDM<'a>>) {
-  fbb.finish(root, Some(IDM_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<SIT<'a>>) {
+  fbb.finish(root, Some(SIT_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_idm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<IDM<'a>>) {
-  fbb.finish_size_prefixed(root, Some(IDM_IDENTIFIER));
+pub fn finish_size_prefixed_sit_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<SIT<'a>>) {
+  fbb.finish_size_prefixed(root, Some(SIT_IDENTIFIER));
 }

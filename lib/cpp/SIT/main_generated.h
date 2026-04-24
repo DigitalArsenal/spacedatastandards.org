@@ -13,689 +13,286 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-struct FrequencyRange;
-struct FrequencyRangeBuilder;
+#include "main_generated.h"
 
-struct StokesParameters;
-struct StokesParametersBuilder;
+struct Geometry;
+struct GeometryBuilder;
 
-struct Band;
-struct BandBuilder;
+struct SIT;
+struct SITBuilder;
 
-struct IDM;
-struct IDMBuilder;
-
-/// Different types of polarization in EMT
-enum PolarizationType : int8_t {
-  PolarizationType_linear = 0,
-  PolarizationType_circular = 1,
-  PolarizationType_elliptical = 2,
-  PolarizationType_unpolarized = 3,
-  PolarizationType_MIN = PolarizationType_linear,
-  PolarizationType_MAX = PolarizationType_unpolarized
+/// Enum for the type of site
+enum SiteType : int8_t {
+  SiteType_LAUNCH_SITE = 0,
+  SiteType_OBSERVATION_STATION = 1,
+  SiteType_HOBBYIST_OBSERVER = 2,
+  SiteType_RESEARCH_FACILITY = 3,
+  SiteType_SATELLITE_GROUND_STATION = 4,
+  SiteType_SPACEPORT = 5,
+  SiteType_MILITARY_BASE = 6,
+  SiteType_WEATHER_STATION = 7,
+  SiteType_ASTRONOMICAL_OBSERVATORY = 8,
+  SiteType_EDUCATIONAL_INSTITUTE = 9,
+  SiteType_COMMUNICATION_HUB = 10,
+  SiteType_POWER_PLANT = 11,
+  SiteType_INDUSTRIAL_COMPLEX = 12,
+  SiteType_TRANSPORTATION_HUB = 13,
+  SiteType_URBAN_AREA = 14,
+  SiteType_NATIONAL_PARK = 15,
+  SiteType_HISTORICAL_SITE = 16,
+  SiteType_OTHER = 17,
+  SiteType_MIN = SiteType_LAUNCH_SITE,
+  SiteType_MAX = SiteType_OTHER
 };
 
-inline const PolarizationType (&EnumValuesPolarizationType())[4] {
-  static const PolarizationType values[] = {
-    PolarizationType_linear,
-    PolarizationType_circular,
-    PolarizationType_elliptical,
-    PolarizationType_unpolarized
+inline const SiteType (&EnumValuesSiteType())[18] {
+  static const SiteType values[] = {
+    SiteType_LAUNCH_SITE,
+    SiteType_OBSERVATION_STATION,
+    SiteType_HOBBYIST_OBSERVER,
+    SiteType_RESEARCH_FACILITY,
+    SiteType_SATELLITE_GROUND_STATION,
+    SiteType_SPACEPORT,
+    SiteType_MILITARY_BASE,
+    SiteType_WEATHER_STATION,
+    SiteType_ASTRONOMICAL_OBSERVATORY,
+    SiteType_EDUCATIONAL_INSTITUTE,
+    SiteType_COMMUNICATION_HUB,
+    SiteType_POWER_PLANT,
+    SiteType_INDUSTRIAL_COMPLEX,
+    SiteType_TRANSPORTATION_HUB,
+    SiteType_URBAN_AREA,
+    SiteType_NATIONAL_PARK,
+    SiteType_HISTORICAL_SITE,
+    SiteType_OTHER
   };
   return values;
 }
 
-inline const char * const *EnumNamesPolarizationType() {
-  static const char * const names[5] = {
-    "linear",
-    "circular",
-    "elliptical",
-    "unpolarized",
+inline const char * const *EnumNamesSiteType() {
+  static const char * const names[19] = {
+    "LAUNCH_SITE",
+    "OBSERVATION_STATION",
+    "HOBBYIST_OBSERVER",
+    "RESEARCH_FACILITY",
+    "SATELLITE_GROUND_STATION",
+    "SPACEPORT",
+    "MILITARY_BASE",
+    "WEATHER_STATION",
+    "ASTRONOMICAL_OBSERVATORY",
+    "EDUCATIONAL_INSTITUTE",
+    "COMMUNICATION_HUB",
+    "POWER_PLANT",
+    "INDUSTRIAL_COMPLEX",
+    "TRANSPORTATION_HUB",
+    "URBAN_AREA",
+    "NATIONAL_PARK",
+    "HISTORICAL_SITE",
+    "OTHER",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNamePolarizationType(PolarizationType e) {
-  if (::flatbuffers::IsOutRange(e, PolarizationType_linear, PolarizationType_unpolarized)) return "";
+inline const char *EnumNameSiteType(SiteType e) {
+  if (::flatbuffers::IsOutRange(e, SiteType_LAUNCH_SITE, SiteType_OTHER)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesPolarizationType()[index];
+  return EnumNamesSiteType()[index];
 }
 
-/// Simple polarization types
-enum SimplePolarization : int8_t {
-  SimplePolarization_vertical = 0,
-  SimplePolarization_horizontal = 1,
-  SimplePolarization_leftHandCircular = 2,
-  SimplePolarization_rightHandCircular = 3,
-  SimplePolarization_MIN = SimplePolarization_vertical,
-  SimplePolarization_MAX = SimplePolarization_rightHandCircular
-};
-
-inline const SimplePolarization (&EnumValuesSimplePolarization())[4] {
-  static const SimplePolarization values[] = {
-    SimplePolarization_vertical,
-    SimplePolarization_horizontal,
-    SimplePolarization_leftHandCircular,
-    SimplePolarization_rightHandCircular
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesSimplePolarization() {
-  static const char * const names[5] = {
-    "vertical",
-    "horizontal",
-    "leftHandCircular",
-    "rightHandCircular",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameSimplePolarization(SimplePolarization e) {
-  if (::flatbuffers::IsOutRange(e, SimplePolarization_vertical, SimplePolarization_rightHandCircular)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesSimplePolarization()[index];
-}
-
-/// Enum for the mode of data (real, simulated, synthetic)
-enum DataMode : int8_t {
-  /// Data collected during an exercise scenario.
-  DataMode_EXERCISE = 0,
-  /// Data collected from real-world observations.
-  DataMode_REAL = 1,
-  /// Data generated through simulation.
-  DataMode_SIMULATED = 2,
-  /// Data collected for testing purposes.
-  DataMode_TEST = 3,
-  DataMode_MIN = DataMode_EXERCISE,
-  DataMode_MAX = DataMode_TEST
-};
-
-inline const DataMode (&EnumValuesDataMode())[4] {
-  static const DataMode values[] = {
-    DataMode_EXERCISE,
-    DataMode_REAL,
-    DataMode_SIMULATED,
-    DataMode_TEST
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesDataMode() {
-  static const char * const names[5] = {
-    "EXERCISE",
-    "REAL",
-    "SIMULATED",
-    "TEST",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameDataMode(DataMode e) {
-  if (::flatbuffers::IsOutRange(e, DataMode_EXERCISE, DataMode_TEST)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesDataMode()[index];
-}
-
-enum DeviceType : int8_t {
-  /// Basic or undefined sensor type
-  DeviceType_UNKNOWN = 0,
-  /// General optical sensors
-  DeviceType_OPTICAL = 1,
-  /// Detects infrared radiation
-  DeviceType_INFRARED_SENSOR = 2,
-  /// Sensitive to ultraviolet light
-  DeviceType_ULTRAVIOLET_SENSOR = 3,
-  /// For X-ray detection
-  DeviceType_X_RAY_SENSOR = 4,
-  /// For gamma-ray detection
-  DeviceType_GAMMA_RAY_SENSOR = 5,
-  /// Basic radar systems
-  DeviceType_RADAR = 6,
-  /// Advanced radar with phased array technology
-  DeviceType_PHASED_ARRAY_RADAR = 7,
-  /// For high-resolution imaging
-  DeviceType_SYNTHETIC_APERTURE_RADAR = 8,
-  /// For astronomical observations using bistatic setup
-  DeviceType_BISTATIC_RADIO_TELESCOPE = 9,
-  /// For radio astronomy
-  DeviceType_RADIO_TELESCOPE = 10,
-  /// For atmospheric studies
-  DeviceType_ATMOSPHERIC_SENSOR = 11,
-  /// For observing space weather phenomena
-  DeviceType_SPACE_WEATHER_SENSOR = 12,
-  /// General environmental monitoring
-  DeviceType_ENVIRONMENTAL_SENSOR = 13,
-  /// For measuring seismic activities
-  DeviceType_SEISMIC_SENSOR = 14,
-  /// For gravity measurements
-  DeviceType_GRAVIMETRIC_SENSOR = 15,
-  /// For magnetic field detection
-  DeviceType_MAGNETIC_SENSOR = 16,
-  /// For electromagnetic field analysis
-  DeviceType_ELECTROMAGNETIC_SENSOR = 17,
-  /// For temperature and heat detection
-  DeviceType_THERMAL_SENSOR = 18,
-  /// For detecting chemicals and substances
-  DeviceType_CHEMICAL_SENSOR = 19,
-  /// For biological research and detection
-  DeviceType_BIOLOGICAL_SENSOR = 20,
-  /// For detecting ionizing radiation
-  DeviceType_RADIATION_SENSOR = 21,
-  /// For detecting subatomic particles
-  DeviceType_PARTICLE_DETECTOR = 22,
-  /// Light Detection and Ranging
-  DeviceType_LIDAR = 23,
-  /// Sound Navigation and Ranging
-  DeviceType_SONAR = 24,
-  /// General telescopes for astronomical observations
-  DeviceType_TELESCOPE = 25,
-  /// For spectral analysis
-  DeviceType_SPECTROSCOPIC_SENSOR = 26,
-  /// For measuring light intensity
-  DeviceType_PHOTOMETRIC_SENSOR = 27,
-  /// For analyzing polarization of light
-  DeviceType_POLARIMETRIC_SENSOR = 28,
-  /// For detailed imaging using interference
-  DeviceType_INTERFEROMETRIC_SENSOR = 29,
-  /// Capturing image data at multiple wavelengths
-  DeviceType_MULTISPECTRAL_SENSOR = 30,
-  /// Advanced imaging across many spectral bands
-  DeviceType_HYPERSPECTRAL_SENSOR = 31,
-  /// For Global Positioning System reception
-  DeviceType_GPS_RECEIVER = 32,
-  /// Standard radio communication device
-  DeviceType_RADIO_COMMUNICATIONS = 33,
-  /// Advanced laser communication system
-  DeviceType_LASER_COMMUNICATIONS = 34,
-  /// Satellite communication system
-  DeviceType_SATELLITE_COMMUNICATIONS = 35,
-  /// Device for laser-based experiments and measurements
-  DeviceType_LASER_INSTRUMENT = 36,
-  /// Radio frequency analysis and measurement device
-  DeviceType_RF_ANALYZER = 37,
-  /// Device for ionospheric research
-  DeviceType_IONOSPHERIC_SENSOR = 38,
-  /// Device for laser-based imaging
-  DeviceType_LASER_IMAGING = 39,
-  /// Advanced optical telescope
-  DeviceType_OPTICAL_TELESCOPE = 40,
-  /// Device for high-resolution optical observations
-  DeviceType_HIGH_RESOLUTION_OPTICAL = 41,
-  DeviceType_RADIO = 42,
-  /// Microwave communication device
-  DeviceType_MICROWAVE_TRANSMITTER = 43,
-  /// Device for radio frequency monitoring
-  DeviceType_RF_MONITOR = 44,
-  /// High-frequency radio communication device
-  DeviceType_HF_RADIO_COMMUNICATIONS = 45,
-  DeviceType_MIN = DeviceType_UNKNOWN,
-  DeviceType_MAX = DeviceType_HF_RADIO_COMMUNICATIONS
-};
-
-inline const DeviceType (&EnumValuesDeviceType())[46] {
-  static const DeviceType values[] = {
-    DeviceType_UNKNOWN,
-    DeviceType_OPTICAL,
-    DeviceType_INFRARED_SENSOR,
-    DeviceType_ULTRAVIOLET_SENSOR,
-    DeviceType_X_RAY_SENSOR,
-    DeviceType_GAMMA_RAY_SENSOR,
-    DeviceType_RADAR,
-    DeviceType_PHASED_ARRAY_RADAR,
-    DeviceType_SYNTHETIC_APERTURE_RADAR,
-    DeviceType_BISTATIC_RADIO_TELESCOPE,
-    DeviceType_RADIO_TELESCOPE,
-    DeviceType_ATMOSPHERIC_SENSOR,
-    DeviceType_SPACE_WEATHER_SENSOR,
-    DeviceType_ENVIRONMENTAL_SENSOR,
-    DeviceType_SEISMIC_SENSOR,
-    DeviceType_GRAVIMETRIC_SENSOR,
-    DeviceType_MAGNETIC_SENSOR,
-    DeviceType_ELECTROMAGNETIC_SENSOR,
-    DeviceType_THERMAL_SENSOR,
-    DeviceType_CHEMICAL_SENSOR,
-    DeviceType_BIOLOGICAL_SENSOR,
-    DeviceType_RADIATION_SENSOR,
-    DeviceType_PARTICLE_DETECTOR,
-    DeviceType_LIDAR,
-    DeviceType_SONAR,
-    DeviceType_TELESCOPE,
-    DeviceType_SPECTROSCOPIC_SENSOR,
-    DeviceType_PHOTOMETRIC_SENSOR,
-    DeviceType_POLARIMETRIC_SENSOR,
-    DeviceType_INTERFEROMETRIC_SENSOR,
-    DeviceType_MULTISPECTRAL_SENSOR,
-    DeviceType_HYPERSPECTRAL_SENSOR,
-    DeviceType_GPS_RECEIVER,
-    DeviceType_RADIO_COMMUNICATIONS,
-    DeviceType_LASER_COMMUNICATIONS,
-    DeviceType_SATELLITE_COMMUNICATIONS,
-    DeviceType_LASER_INSTRUMENT,
-    DeviceType_RF_ANALYZER,
-    DeviceType_IONOSPHERIC_SENSOR,
-    DeviceType_LASER_IMAGING,
-    DeviceType_OPTICAL_TELESCOPE,
-    DeviceType_HIGH_RESOLUTION_OPTICAL,
-    DeviceType_RADIO,
-    DeviceType_MICROWAVE_TRANSMITTER,
-    DeviceType_RF_MONITOR,
-    DeviceType_HF_RADIO_COMMUNICATIONS
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesDeviceType() {
-  static const char * const names[47] = {
-    "UNKNOWN",
-    "OPTICAL",
-    "INFRARED_SENSOR",
-    "ULTRAVIOLET_SENSOR",
-    "X_RAY_SENSOR",
-    "GAMMA_RAY_SENSOR",
-    "RADAR",
-    "PHASED_ARRAY_RADAR",
-    "SYNTHETIC_APERTURE_RADAR",
-    "BISTATIC_RADIO_TELESCOPE",
-    "RADIO_TELESCOPE",
-    "ATMOSPHERIC_SENSOR",
-    "SPACE_WEATHER_SENSOR",
-    "ENVIRONMENTAL_SENSOR",
-    "SEISMIC_SENSOR",
-    "GRAVIMETRIC_SENSOR",
-    "MAGNETIC_SENSOR",
-    "ELECTROMAGNETIC_SENSOR",
-    "THERMAL_SENSOR",
-    "CHEMICAL_SENSOR",
-    "BIOLOGICAL_SENSOR",
-    "RADIATION_SENSOR",
-    "PARTICLE_DETECTOR",
-    "LIDAR",
-    "SONAR",
-    "TELESCOPE",
-    "SPECTROSCOPIC_SENSOR",
-    "PHOTOMETRIC_SENSOR",
-    "POLARIMETRIC_SENSOR",
-    "INTERFEROMETRIC_SENSOR",
-    "MULTISPECTRAL_SENSOR",
-    "HYPERSPECTRAL_SENSOR",
-    "GPS_RECEIVER",
-    "RADIO_COMMUNICATIONS",
-    "LASER_COMMUNICATIONS",
-    "SATELLITE_COMMUNICATIONS",
-    "LASER_INSTRUMENT",
-    "RF_ANALYZER",
-    "IONOSPHERIC_SENSOR",
-    "LASER_IMAGING",
-    "OPTICAL_TELESCOPE",
-    "HIGH_RESOLUTION_OPTICAL",
-    "RADIO",
-    "MICROWAVE_TRANSMITTER",
-    "RF_MONITOR",
-    "HF_RADIO_COMMUNICATIONS",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameDeviceType(DeviceType e) {
-  if (::flatbuffers::IsOutRange(e, DeviceType_UNKNOWN, DeviceType_HF_RADIO_COMMUNICATIONS)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesDeviceType()[index];
-}
-
-/// Frequency range with lower and upper limits
-struct FrequencyRange FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef FrequencyRangeBuilder Builder;
+/// Geometry table with information about geometric properties
+struct Geometry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef GeometryBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_LOWER = 4,
-    VT_UPPER = 6
+    VT_GEOMETRY_TYPE = 4,
+    VT_COORDINATES = 6
   };
-  /// Lower frequency in MHz
-  double LOWER() const {
-    return GetField<double>(VT_LOWER, 0.0);
+  /// Type of geometry
+  const ::flatbuffers::String *GEOMETRY_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_GEOMETRY_TYPE);
   }
-  /// Upper frequency in MHz
-  double UPPER() const {
-    return GetField<double>(VT_UPPER, 0.0);
+  /// Coordinates of the geometry
+  const ::flatbuffers::Vector<float> *COORDINATES() const {
+    return GetPointer<const ::flatbuffers::Vector<float> *>(VT_COORDINATES);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<double>(verifier, VT_LOWER, 8) &&
-           VerifyField<double>(verifier, VT_UPPER, 8) &&
+           VerifyOffset(verifier, VT_GEOMETRY_TYPE) &&
+           verifier.VerifyString(GEOMETRY_TYPE()) &&
+           VerifyOffset(verifier, VT_COORDINATES) &&
+           verifier.VerifyVector(COORDINATES()) &&
            verifier.EndTable();
   }
 };
 
-struct FrequencyRangeBuilder {
-  typedef FrequencyRange Table;
+struct GeometryBuilder {
+  typedef Geometry Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_LOWER(double LOWER) {
-    fbb_.AddElement<double>(FrequencyRange::VT_LOWER, LOWER, 0.0);
+  void add_GEOMETRY_TYPE(::flatbuffers::Offset<::flatbuffers::String> GEOMETRY_TYPE) {
+    fbb_.AddOffset(Geometry::VT_GEOMETRY_TYPE, GEOMETRY_TYPE);
   }
-  void add_UPPER(double UPPER) {
-    fbb_.AddElement<double>(FrequencyRange::VT_UPPER, UPPER, 0.0);
+  void add_COORDINATES(::flatbuffers::Offset<::flatbuffers::Vector<float>> COORDINATES) {
+    fbb_.AddOffset(Geometry::VT_COORDINATES, COORDINATES);
   }
-  explicit FrequencyRangeBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit GeometryBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<FrequencyRange> Finish() {
+  ::flatbuffers::Offset<Geometry> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<FrequencyRange>(end);
+    auto o = ::flatbuffers::Offset<Geometry>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<FrequencyRange> CreateFrequencyRange(
+inline ::flatbuffers::Offset<Geometry> CreateGeometry(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    double LOWER = 0.0,
-    double UPPER = 0.0) {
-  FrequencyRangeBuilder builder_(_fbb);
-  builder_.add_UPPER(UPPER);
-  builder_.add_LOWER(LOWER);
+    ::flatbuffers::Offset<::flatbuffers::String> GEOMETRY_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<float>> COORDINATES = 0) {
+  GeometryBuilder builder_(_fbb);
+  builder_.add_COORDINATES(COORDINATES);
+  builder_.add_GEOMETRY_TYPE(GEOMETRY_TYPE);
   return builder_.Finish();
 }
 
-/// Stokes parameters, representing different aspects of polarization
-struct StokesParameters FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef StokesParametersBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_I = 4,
-    VT_Q = 6,
-    VT_U = 8,
-    VT_V = 10
-  };
-  /// Intensity
-  double I() const {
-    return GetField<double>(VT_I, 0.0);
-  }
-  /// Linear polarization
-  double Q() const {
-    return GetField<double>(VT_Q, 0.0);
-  }
-  /// Another linear polarization, orthogonal to Q
-  double U() const {
-    return GetField<double>(VT_U, 0.0);
-  }
-  /// Circular polarization
-  double V() const {
-    return GetField<double>(VT_V, 0.0);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<double>(verifier, VT_I, 8) &&
-           VerifyField<double>(verifier, VT_Q, 8) &&
-           VerifyField<double>(verifier, VT_U, 8) &&
-           VerifyField<double>(verifier, VT_V, 8) &&
-           verifier.EndTable();
-  }
-};
-
-struct StokesParametersBuilder {
-  typedef StokesParameters Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_I(double I) {
-    fbb_.AddElement<double>(StokesParameters::VT_I, I, 0.0);
-  }
-  void add_Q(double Q) {
-    fbb_.AddElement<double>(StokesParameters::VT_Q, Q, 0.0);
-  }
-  void add_U(double U) {
-    fbb_.AddElement<double>(StokesParameters::VT_U, U, 0.0);
-  }
-  void add_V(double V) {
-    fbb_.AddElement<double>(StokesParameters::VT_V, V, 0.0);
-  }
-  explicit StokesParametersBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<StokesParameters> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<StokesParameters>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<StokesParameters> CreateStokesParameters(
+inline ::flatbuffers::Offset<Geometry> CreateGeometryDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    double I = 0.0,
-    double Q = 0.0,
-    double U = 0.0,
-    double V = 0.0) {
-  StokesParametersBuilder builder_(_fbb);
-  builder_.add_V(V);
-  builder_.add_U(U);
-  builder_.add_Q(Q);
-  builder_.add_I(I);
-  return builder_.Finish();
-}
-
-/// Table representing a frequency band with a name and frequency range
-struct Band FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef BandBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_NAME = 4,
-    VT_FREQUENCY_RANGE = 6
-  };
-  /// Name of the band
-  const ::flatbuffers::String *NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
-  }
-  /// Frequency range of the band
-  const FrequencyRange *FREQUENCY_RANGE() const {
-    return GetPointer<const FrequencyRange *>(VT_FREQUENCY_RANGE);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_NAME) &&
-           verifier.VerifyString(NAME()) &&
-           VerifyOffset(verifier, VT_FREQUENCY_RANGE) &&
-           verifier.VerifyTable(FREQUENCY_RANGE()) &&
-           verifier.EndTable();
-  }
-};
-
-struct BandBuilder {
-  typedef Band Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
-    fbb_.AddOffset(Band::VT_NAME, NAME);
-  }
-  void add_FREQUENCY_RANGE(::flatbuffers::Offset<FrequencyRange> FREQUENCY_RANGE) {
-    fbb_.AddOffset(Band::VT_FREQUENCY_RANGE, FREQUENCY_RANGE);
-  }
-  explicit BandBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<Band> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Band>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<Band> CreateBand(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
-    ::flatbuffers::Offset<FrequencyRange> FREQUENCY_RANGE = 0) {
-  BandBuilder builder_(_fbb);
-  builder_.add_FREQUENCY_RANGE(FREQUENCY_RANGE);
-  builder_.add_NAME(NAME);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<Band> CreateBandDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *NAME = nullptr,
-    ::flatbuffers::Offset<FrequencyRange> FREQUENCY_RANGE = 0) {
-  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
-  return CreateBand(
+    const char *GEOMETRY_TYPE = nullptr,
+    const std::vector<float> *COORDINATES = nullptr) {
+  auto GEOMETRY_TYPE__ = GEOMETRY_TYPE ? _fbb.CreateString(GEOMETRY_TYPE) : 0;
+  auto COORDINATES__ = COORDINATES ? _fbb.CreateVector<float>(*COORDINATES) : 0;
+  return CreateGeometry(
       _fbb,
-      NAME__,
-      FREQUENCY_RANGE);
+      GEOMETRY_TYPE__,
+      COORDINATES__);
 }
 
-/// Integrated Device Message
-struct IDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef IDMBuilder Builder;
+/// Site Information Message
+struct SIT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SITBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_NAME = 6,
-    VT_DATA_MODE = 8,
-    VT_UPLINK = 10,
-    VT_DOWNLINK = 12,
-    VT_BEACON = 14,
-    VT_BAND = 16,
-    VT_POLARIZATION_TYPE = 18,
-    VT_SIMPLE_POLARIZATION = 20,
-    VT_STOKES_PARAMETERS = 22,
-    VT_POWER_REQUIRED = 24,
-    VT_POWER_TYPE = 26,
-    VT_TRANSMIT = 28,
-    VT_RECEIVE = 30,
-    VT_SENSOR_TYPE = 32,
-    VT_SOURCE = 34,
-    VT_LAST_OB_TIME = 36,
-    VT_LOWER_LEFT_ELEVATION_LIMIT = 38,
-    VT_UPPER_LEFT_AZIMUTH_LIMIT = 40,
-    VT_LOWER_RIGHT_ELEVATION_LIMIT = 42,
-    VT_LOWER_LEFT_AZIMUTH_LIMIT = 44,
-    VT_UPPER_RIGHT_ELEVATION_LIMIT = 46,
-    VT_UPPER_RIGHT_AZIMUTH_LIMIT = 48,
-    VT_LOWER_RIGHT_AZIMUTH_LIMIT = 50,
-    VT_UPPER_LEFT_ELEVATION_LIMIT = 52,
-    VT_RIGHT_GEO_BELT_LIMIT = 54,
-    VT_LEFT_GEO_BELT_LIMIT = 56,
-    VT_MAGNITUDE_LIMIT = 58,
-    VT_TASKABLE = 60
+    VT_ABBREVIATION = 8,
+    VT_SITE_TYPE = 10,
+    VT_CATCODE = 12,
+    VT_NETWORK = 14,
+    VT_LATITUDE = 16,
+    VT_LONGITUDE = 18,
+    VT_ALTITUDE = 20,
+    VT_GEOMETRY = 22,
+    VT_CENTER_POINT_GEOMETRY = 24,
+    VT_CLASSIFICATION = 26,
+    VT_CTR_ID = 28,
+    VT_CREATED_BY = 30,
+    VT_DESCRIPTION = 32,
+    VT_MODEL_URL = 34,
+    VT_SOURCE = 36,
+    VT_TASKABLE = 38,
+    VT_OPERATIONAL_STATUS = 40,
+    VT_ESTABLISHMENT_DATE = 42,
+    VT_CONTACT_INFO = 44,
+    VT_ENVIRONMENTAL_IMPACT = 46,
+    VT_ACCESSIBILITY_INFRA = 48,
+    VT_INTEGRATED_DEVICES = 50
   };
-  /// Unique identifier for the EMT
+  /// Unique identifier for the site, BE_NUMBER
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
-  /// Name of the EMT
+  /// Name of the site
   const ::flatbuffers::String *NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
-  /// Mode of the data (real, simulated, synthetic)
-  DataMode DATA_MODE() const {
-    return static_cast<DataMode>(GetField<int8_t>(VT_DATA_MODE, 0));
+  /// Abbreviation
+  const ::flatbuffers::String *ABBREVIATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ABBREVIATION);
   }
-  /// Uplink frequency range
-  const FrequencyRange *UPLINK() const {
-    return GetPointer<const FrequencyRange *>(VT_UPLINK);
+  /// Site type as defined in SiteType enum
+  SiteType SITE_TYPE() const {
+    return static_cast<SiteType>(GetField<int8_t>(VT_SITE_TYPE, 0));
   }
-  /// Downlink frequency range
-  const FrequencyRange *DOWNLINK() const {
-    return GetPointer<const FrequencyRange *>(VT_DOWNLINK);
+  /// Site type CATCODE
+  const ::flatbuffers::String *CATCODE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CATCODE);
   }
-  /// Beacon frequency range
-  const FrequencyRange *BEACON() const {
-    return GetPointer<const FrequencyRange *>(VT_BEACON);
+  /// Network identifier
+  const ::flatbuffers::String *NETWORK() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NETWORK);
   }
-  /// Bands associated with the EMT
-  const ::flatbuffers::Vector<::flatbuffers::Offset<Band>> *BAND() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<Band>> *>(VT_BAND);
+  /// Latitude of the site
+  float LATITUDE() const {
+    return GetField<float>(VT_LATITUDE, 0.0f);
   }
-  /// Type of polarization used
-  PolarizationType POLARIZATION_TYPE() const {
-    return static_cast<PolarizationType>(GetField<int8_t>(VT_POLARIZATION_TYPE, 0));
+  /// Longitude of the site
+  float LONGITUDE() const {
+    return GetField<float>(VT_LONGITUDE, 0.0f);
   }
-  /// Simple polarization configuration
-  SimplePolarization SIMPLE_POLARIZATION() const {
-    return static_cast<SimplePolarization>(GetField<int8_t>(VT_SIMPLE_POLARIZATION, 0));
+  /// Altitude of the site
+  float ALTITUDE() const {
+    return GetField<float>(VT_ALTITUDE, 0.0f);
   }
-  /// Stokes parameters for polarization characterization
-  const StokesParameters *STOKES_PARAMETERS() const {
-    return GetPointer<const StokesParameters *>(VT_STOKES_PARAMETERS);
+  /// Geometry of the site
+  const Geometry *GEOMETRY() const {
+    return GetPointer<const Geometry *>(VT_GEOMETRY);
   }
-  /// Power required in Watts
-  double POWER_REQUIRED() const {
-    return GetField<double>(VT_POWER_REQUIRED, 0.0);
+  /// Center point geometry coordinates
+  const ::flatbuffers::Vector<float> *CENTER_POINT_GEOMETRY() const {
+    return GetPointer<const ::flatbuffers::Vector<float> *>(VT_CENTER_POINT_GEOMETRY);
   }
-  /// Type of power (eg. AC or DC)
-  const ::flatbuffers::String *POWER_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_POWER_TYPE);
+  /// Classification marking of the site
+  const ::flatbuffers::String *CLASSIFICATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION);
   }
-  /// Indicates if the EMT can transmit
-  bool TRANSMIT() const {
-    return GetField<uint8_t>(VT_TRANSMIT, 0) != 0;
+  /// CTR ISO 3166 Numeric code as string
+  const ::flatbuffers::String *CTR_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CTR_ID);
   }
-  /// Indicates if the EMT can receive
-  bool RECEIVE() const {
-    return GetField<uint8_t>(VT_RECEIVE, 0) != 0;
+  /// Identifier of the user who created the site data
+  const ::flatbuffers::String *CREATED_BY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CREATED_BY);
   }
-  /// Type of the sensor
-  DeviceType SENSOR_TYPE() const {
-    return static_cast<DeviceType>(GetField<int8_t>(VT_SENSOR_TYPE, 0));
+  /// Description of the site
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
   }
-  /// Source of the data
+  /// URL for the 3D model of the site
+  const ::flatbuffers::String *MODEL_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODEL_URL);
+  }
+  /// Source of the site data
   const ::flatbuffers::String *SOURCE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE);
-  }
-  /// Timestamp of the last observation
-  const ::flatbuffers::String *LAST_OB_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LAST_OB_TIME);
-  }
-  /// Lower left elevation limit
-  double LOWER_LEFT_ELEVATION_LIMIT() const {
-    return GetField<double>(VT_LOWER_LEFT_ELEVATION_LIMIT, 0.0);
-  }
-  /// Upper left azimuth limit
-  double UPPER_LEFT_AZIMUTH_LIMIT() const {
-    return GetField<double>(VT_UPPER_LEFT_AZIMUTH_LIMIT, 0.0);
-  }
-  /// Lower right elevation limit
-  double LOWER_RIGHT_ELEVATION_LIMIT() const {
-    return GetField<double>(VT_LOWER_RIGHT_ELEVATION_LIMIT, 0.0);
-  }
-  /// Lower left azimuth limit
-  double LOWER_LEFT_AZIMUTH_LIMIT() const {
-    return GetField<double>(VT_LOWER_LEFT_AZIMUTH_LIMIT, 0.0);
-  }
-  /// Upper right elevation limit
-  double UPPER_RIGHT_ELEVATION_LIMIT() const {
-    return GetField<double>(VT_UPPER_RIGHT_ELEVATION_LIMIT, 0.0);
-  }
-  /// Upper right azimuth limit
-  double UPPER_RIGHT_AZIMUTH_LIMIT() const {
-    return GetField<double>(VT_UPPER_RIGHT_AZIMUTH_LIMIT, 0.0);
-  }
-  /// Lower right azimuth limit
-  double LOWER_RIGHT_AZIMUTH_LIMIT() const {
-    return GetField<double>(VT_LOWER_RIGHT_AZIMUTH_LIMIT, 0.0);
-  }
-  /// Upper left elevation limit
-  double UPPER_LEFT_ELEVATION_LIMIT() const {
-    return GetField<double>(VT_UPPER_LEFT_ELEVATION_LIMIT, 0.0);
-  }
-  /// Right geostationary belt limit
-  double RIGHT_GEO_BELT_LIMIT() const {
-    return GetField<double>(VT_RIGHT_GEO_BELT_LIMIT, 0.0);
-  }
-  /// Left geostationary belt limit
-  double LEFT_GEO_BELT_LIMIT() const {
-    return GetField<double>(VT_LEFT_GEO_BELT_LIMIT, 0.0);
-  }
-  /// Magnitude limit of the sensor
-  double MAGNITUDE_LIMIT() const {
-    return GetField<double>(VT_MAGNITUDE_LIMIT, 0.0);
   }
   /// Indicates if the site is taskable
   bool TASKABLE() const {
     return GetField<uint8_t>(VT_TASKABLE, 0) != 0;
+  }
+  /// Operational status of the site (e.g., active, inactive, under construction)
+  const ::flatbuffers::String *OPERATIONAL_STATUS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OPERATIONAL_STATUS);
+  }
+  /// Date of establishment
+  const ::flatbuffers::String *ESTABLISHMENT_DATE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ESTABLISHMENT_DATE);
+  }
+  /// Contact information for the site
+  const ::flatbuffers::String *CONTACT_INFO() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CONTACT_INFO);
+  }
+  /// Environmental impact or considerations
+  const ::flatbuffers::String *ENVIRONMENTAL_IMPACT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ENVIRONMENTAL_IMPACT);
+  }
+  /// Accessibility and infrastructure details
+  const ::flatbuffers::String *ACCESSIBILITY_INFRA() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ACCESSIBILITY_INFRA);
+  }
+  /// Vector of Integrated Devices (IDM)
+  const ::flatbuffers::Vector<::flatbuffers::Offset<IDM>> *INTEGRATED_DEVICES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<IDM>> *>(VT_INTEGRATED_DEVICES);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -704,326 +301,307 @@ struct IDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ID()) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
-           VerifyField<int8_t>(verifier, VT_DATA_MODE, 1) &&
-           VerifyOffset(verifier, VT_UPLINK) &&
-           verifier.VerifyTable(UPLINK()) &&
-           VerifyOffset(verifier, VT_DOWNLINK) &&
-           verifier.VerifyTable(DOWNLINK()) &&
-           VerifyOffset(verifier, VT_BEACON) &&
-           verifier.VerifyTable(BEACON()) &&
-           VerifyOffset(verifier, VT_BAND) &&
-           verifier.VerifyVector(BAND()) &&
-           verifier.VerifyVectorOfTables(BAND()) &&
-           VerifyField<int8_t>(verifier, VT_POLARIZATION_TYPE, 1) &&
-           VerifyField<int8_t>(verifier, VT_SIMPLE_POLARIZATION, 1) &&
-           VerifyOffset(verifier, VT_STOKES_PARAMETERS) &&
-           verifier.VerifyTable(STOKES_PARAMETERS()) &&
-           VerifyField<double>(verifier, VT_POWER_REQUIRED, 8) &&
-           VerifyOffset(verifier, VT_POWER_TYPE) &&
-           verifier.VerifyString(POWER_TYPE()) &&
-           VerifyField<uint8_t>(verifier, VT_TRANSMIT, 1) &&
-           VerifyField<uint8_t>(verifier, VT_RECEIVE, 1) &&
-           VerifyField<int8_t>(verifier, VT_SENSOR_TYPE, 1) &&
+           VerifyOffset(verifier, VT_ABBREVIATION) &&
+           verifier.VerifyString(ABBREVIATION()) &&
+           VerifyField<int8_t>(verifier, VT_SITE_TYPE, 1) &&
+           VerifyOffset(verifier, VT_CATCODE) &&
+           verifier.VerifyString(CATCODE()) &&
+           VerifyOffset(verifier, VT_NETWORK) &&
+           verifier.VerifyString(NETWORK()) &&
+           VerifyField<float>(verifier, VT_LATITUDE, 4) &&
+           VerifyField<float>(verifier, VT_LONGITUDE, 4) &&
+           VerifyField<float>(verifier, VT_ALTITUDE, 4) &&
+           VerifyOffset(verifier, VT_GEOMETRY) &&
+           verifier.VerifyTable(GEOMETRY()) &&
+           VerifyOffset(verifier, VT_CENTER_POINT_GEOMETRY) &&
+           verifier.VerifyVector(CENTER_POINT_GEOMETRY()) &&
+           VerifyOffset(verifier, VT_CLASSIFICATION) &&
+           verifier.VerifyString(CLASSIFICATION()) &&
+           VerifyOffset(verifier, VT_CTR_ID) &&
+           verifier.VerifyString(CTR_ID()) &&
+           VerifyOffset(verifier, VT_CREATED_BY) &&
+           verifier.VerifyString(CREATED_BY()) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           VerifyOffset(verifier, VT_MODEL_URL) &&
+           verifier.VerifyString(MODEL_URL()) &&
            VerifyOffset(verifier, VT_SOURCE) &&
            verifier.VerifyString(SOURCE()) &&
-           VerifyOffset(verifier, VT_LAST_OB_TIME) &&
-           verifier.VerifyString(LAST_OB_TIME()) &&
-           VerifyField<double>(verifier, VT_LOWER_LEFT_ELEVATION_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_UPPER_LEFT_AZIMUTH_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_LOWER_RIGHT_ELEVATION_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_LOWER_LEFT_AZIMUTH_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_UPPER_RIGHT_ELEVATION_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_UPPER_RIGHT_AZIMUTH_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_LOWER_RIGHT_AZIMUTH_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_UPPER_LEFT_ELEVATION_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_RIGHT_GEO_BELT_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_LEFT_GEO_BELT_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_MAGNITUDE_LIMIT, 8) &&
            VerifyField<uint8_t>(verifier, VT_TASKABLE, 1) &&
+           VerifyOffset(verifier, VT_OPERATIONAL_STATUS) &&
+           verifier.VerifyString(OPERATIONAL_STATUS()) &&
+           VerifyOffset(verifier, VT_ESTABLISHMENT_DATE) &&
+           verifier.VerifyString(ESTABLISHMENT_DATE()) &&
+           VerifyOffset(verifier, VT_CONTACT_INFO) &&
+           verifier.VerifyString(CONTACT_INFO()) &&
+           VerifyOffset(verifier, VT_ENVIRONMENTAL_IMPACT) &&
+           verifier.VerifyString(ENVIRONMENTAL_IMPACT()) &&
+           VerifyOffset(verifier, VT_ACCESSIBILITY_INFRA) &&
+           verifier.VerifyString(ACCESSIBILITY_INFRA()) &&
+           VerifyOffset(verifier, VT_INTEGRATED_DEVICES) &&
+           verifier.VerifyVector(INTEGRATED_DEVICES()) &&
+           verifier.VerifyVectorOfTables(INTEGRATED_DEVICES()) &&
            verifier.EndTable();
   }
 };
 
-struct IDMBuilder {
-  typedef IDM Table;
+struct SITBuilder {
+  typedef SIT Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
-    fbb_.AddOffset(IDM::VT_ID, ID);
+    fbb_.AddOffset(SIT::VT_ID, ID);
   }
   void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
-    fbb_.AddOffset(IDM::VT_NAME, NAME);
+    fbb_.AddOffset(SIT::VT_NAME, NAME);
   }
-  void add_DATA_MODE(DataMode DATA_MODE) {
-    fbb_.AddElement<int8_t>(IDM::VT_DATA_MODE, static_cast<int8_t>(DATA_MODE), 0);
+  void add_ABBREVIATION(::flatbuffers::Offset<::flatbuffers::String> ABBREVIATION) {
+    fbb_.AddOffset(SIT::VT_ABBREVIATION, ABBREVIATION);
   }
-  void add_UPLINK(::flatbuffers::Offset<FrequencyRange> UPLINK) {
-    fbb_.AddOffset(IDM::VT_UPLINK, UPLINK);
+  void add_SITE_TYPE(SiteType SITE_TYPE) {
+    fbb_.AddElement<int8_t>(SIT::VT_SITE_TYPE, static_cast<int8_t>(SITE_TYPE), 0);
   }
-  void add_DOWNLINK(::flatbuffers::Offset<FrequencyRange> DOWNLINK) {
-    fbb_.AddOffset(IDM::VT_DOWNLINK, DOWNLINK);
+  void add_CATCODE(::flatbuffers::Offset<::flatbuffers::String> CATCODE) {
+    fbb_.AddOffset(SIT::VT_CATCODE, CATCODE);
   }
-  void add_BEACON(::flatbuffers::Offset<FrequencyRange> BEACON) {
-    fbb_.AddOffset(IDM::VT_BEACON, BEACON);
+  void add_NETWORK(::flatbuffers::Offset<::flatbuffers::String> NETWORK) {
+    fbb_.AddOffset(SIT::VT_NETWORK, NETWORK);
   }
-  void add_BAND(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<Band>>> BAND) {
-    fbb_.AddOffset(IDM::VT_BAND, BAND);
+  void add_LATITUDE(float LATITUDE) {
+    fbb_.AddElement<float>(SIT::VT_LATITUDE, LATITUDE, 0.0f);
   }
-  void add_POLARIZATION_TYPE(PolarizationType POLARIZATION_TYPE) {
-    fbb_.AddElement<int8_t>(IDM::VT_POLARIZATION_TYPE, static_cast<int8_t>(POLARIZATION_TYPE), 0);
+  void add_LONGITUDE(float LONGITUDE) {
+    fbb_.AddElement<float>(SIT::VT_LONGITUDE, LONGITUDE, 0.0f);
   }
-  void add_SIMPLE_POLARIZATION(SimplePolarization SIMPLE_POLARIZATION) {
-    fbb_.AddElement<int8_t>(IDM::VT_SIMPLE_POLARIZATION, static_cast<int8_t>(SIMPLE_POLARIZATION), 0);
+  void add_ALTITUDE(float ALTITUDE) {
+    fbb_.AddElement<float>(SIT::VT_ALTITUDE, ALTITUDE, 0.0f);
   }
-  void add_STOKES_PARAMETERS(::flatbuffers::Offset<StokesParameters> STOKES_PARAMETERS) {
-    fbb_.AddOffset(IDM::VT_STOKES_PARAMETERS, STOKES_PARAMETERS);
+  void add_GEOMETRY(::flatbuffers::Offset<Geometry> GEOMETRY) {
+    fbb_.AddOffset(SIT::VT_GEOMETRY, GEOMETRY);
   }
-  void add_POWER_REQUIRED(double POWER_REQUIRED) {
-    fbb_.AddElement<double>(IDM::VT_POWER_REQUIRED, POWER_REQUIRED, 0.0);
+  void add_CENTER_POINT_GEOMETRY(::flatbuffers::Offset<::flatbuffers::Vector<float>> CENTER_POINT_GEOMETRY) {
+    fbb_.AddOffset(SIT::VT_CENTER_POINT_GEOMETRY, CENTER_POINT_GEOMETRY);
   }
-  void add_POWER_TYPE(::flatbuffers::Offset<::flatbuffers::String> POWER_TYPE) {
-    fbb_.AddOffset(IDM::VT_POWER_TYPE, POWER_TYPE);
+  void add_CLASSIFICATION(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION) {
+    fbb_.AddOffset(SIT::VT_CLASSIFICATION, CLASSIFICATION);
   }
-  void add_TRANSMIT(bool TRANSMIT) {
-    fbb_.AddElement<uint8_t>(IDM::VT_TRANSMIT, static_cast<uint8_t>(TRANSMIT), 0);
+  void add_CTR_ID(::flatbuffers::Offset<::flatbuffers::String> CTR_ID) {
+    fbb_.AddOffset(SIT::VT_CTR_ID, CTR_ID);
   }
-  void add_RECEIVE(bool RECEIVE) {
-    fbb_.AddElement<uint8_t>(IDM::VT_RECEIVE, static_cast<uint8_t>(RECEIVE), 0);
+  void add_CREATED_BY(::flatbuffers::Offset<::flatbuffers::String> CREATED_BY) {
+    fbb_.AddOffset(SIT::VT_CREATED_BY, CREATED_BY);
   }
-  void add_SENSOR_TYPE(DeviceType SENSOR_TYPE) {
-    fbb_.AddElement<int8_t>(IDM::VT_SENSOR_TYPE, static_cast<int8_t>(SENSOR_TYPE), 0);
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(SIT::VT_DESCRIPTION, DESCRIPTION);
+  }
+  void add_MODEL_URL(::flatbuffers::Offset<::flatbuffers::String> MODEL_URL) {
+    fbb_.AddOffset(SIT::VT_MODEL_URL, MODEL_URL);
   }
   void add_SOURCE(::flatbuffers::Offset<::flatbuffers::String> SOURCE) {
-    fbb_.AddOffset(IDM::VT_SOURCE, SOURCE);
-  }
-  void add_LAST_OB_TIME(::flatbuffers::Offset<::flatbuffers::String> LAST_OB_TIME) {
-    fbb_.AddOffset(IDM::VT_LAST_OB_TIME, LAST_OB_TIME);
-  }
-  void add_LOWER_LEFT_ELEVATION_LIMIT(double LOWER_LEFT_ELEVATION_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_LOWER_LEFT_ELEVATION_LIMIT, LOWER_LEFT_ELEVATION_LIMIT, 0.0);
-  }
-  void add_UPPER_LEFT_AZIMUTH_LIMIT(double UPPER_LEFT_AZIMUTH_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_UPPER_LEFT_AZIMUTH_LIMIT, UPPER_LEFT_AZIMUTH_LIMIT, 0.0);
-  }
-  void add_LOWER_RIGHT_ELEVATION_LIMIT(double LOWER_RIGHT_ELEVATION_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_LOWER_RIGHT_ELEVATION_LIMIT, LOWER_RIGHT_ELEVATION_LIMIT, 0.0);
-  }
-  void add_LOWER_LEFT_AZIMUTH_LIMIT(double LOWER_LEFT_AZIMUTH_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_LOWER_LEFT_AZIMUTH_LIMIT, LOWER_LEFT_AZIMUTH_LIMIT, 0.0);
-  }
-  void add_UPPER_RIGHT_ELEVATION_LIMIT(double UPPER_RIGHT_ELEVATION_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_UPPER_RIGHT_ELEVATION_LIMIT, UPPER_RIGHT_ELEVATION_LIMIT, 0.0);
-  }
-  void add_UPPER_RIGHT_AZIMUTH_LIMIT(double UPPER_RIGHT_AZIMUTH_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_UPPER_RIGHT_AZIMUTH_LIMIT, UPPER_RIGHT_AZIMUTH_LIMIT, 0.0);
-  }
-  void add_LOWER_RIGHT_AZIMUTH_LIMIT(double LOWER_RIGHT_AZIMUTH_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_LOWER_RIGHT_AZIMUTH_LIMIT, LOWER_RIGHT_AZIMUTH_LIMIT, 0.0);
-  }
-  void add_UPPER_LEFT_ELEVATION_LIMIT(double UPPER_LEFT_ELEVATION_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_UPPER_LEFT_ELEVATION_LIMIT, UPPER_LEFT_ELEVATION_LIMIT, 0.0);
-  }
-  void add_RIGHT_GEO_BELT_LIMIT(double RIGHT_GEO_BELT_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_RIGHT_GEO_BELT_LIMIT, RIGHT_GEO_BELT_LIMIT, 0.0);
-  }
-  void add_LEFT_GEO_BELT_LIMIT(double LEFT_GEO_BELT_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_LEFT_GEO_BELT_LIMIT, LEFT_GEO_BELT_LIMIT, 0.0);
-  }
-  void add_MAGNITUDE_LIMIT(double MAGNITUDE_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_MAGNITUDE_LIMIT, MAGNITUDE_LIMIT, 0.0);
+    fbb_.AddOffset(SIT::VT_SOURCE, SOURCE);
   }
   void add_TASKABLE(bool TASKABLE) {
-    fbb_.AddElement<uint8_t>(IDM::VT_TASKABLE, static_cast<uint8_t>(TASKABLE), 0);
+    fbb_.AddElement<uint8_t>(SIT::VT_TASKABLE, static_cast<uint8_t>(TASKABLE), 0);
   }
-  explicit IDMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_OPERATIONAL_STATUS(::flatbuffers::Offset<::flatbuffers::String> OPERATIONAL_STATUS) {
+    fbb_.AddOffset(SIT::VT_OPERATIONAL_STATUS, OPERATIONAL_STATUS);
+  }
+  void add_ESTABLISHMENT_DATE(::flatbuffers::Offset<::flatbuffers::String> ESTABLISHMENT_DATE) {
+    fbb_.AddOffset(SIT::VT_ESTABLISHMENT_DATE, ESTABLISHMENT_DATE);
+  }
+  void add_CONTACT_INFO(::flatbuffers::Offset<::flatbuffers::String> CONTACT_INFO) {
+    fbb_.AddOffset(SIT::VT_CONTACT_INFO, CONTACT_INFO);
+  }
+  void add_ENVIRONMENTAL_IMPACT(::flatbuffers::Offset<::flatbuffers::String> ENVIRONMENTAL_IMPACT) {
+    fbb_.AddOffset(SIT::VT_ENVIRONMENTAL_IMPACT, ENVIRONMENTAL_IMPACT);
+  }
+  void add_ACCESSIBILITY_INFRA(::flatbuffers::Offset<::flatbuffers::String> ACCESSIBILITY_INFRA) {
+    fbb_.AddOffset(SIT::VT_ACCESSIBILITY_INFRA, ACCESSIBILITY_INFRA);
+  }
+  void add_INTEGRATED_DEVICES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<IDM>>> INTEGRATED_DEVICES) {
+    fbb_.AddOffset(SIT::VT_INTEGRATED_DEVICES, INTEGRATED_DEVICES);
+  }
+  explicit SITBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<IDM> Finish() {
+  ::flatbuffers::Offset<SIT> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<IDM>(end);
+    auto o = ::flatbuffers::Offset<SIT>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<IDM> CreateIDM(
+inline ::flatbuffers::Offset<SIT> CreateSIT(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
-    DataMode DATA_MODE = DataMode_EXERCISE,
-    ::flatbuffers::Offset<FrequencyRange> UPLINK = 0,
-    ::flatbuffers::Offset<FrequencyRange> DOWNLINK = 0,
-    ::flatbuffers::Offset<FrequencyRange> BEACON = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<Band>>> BAND = 0,
-    PolarizationType POLARIZATION_TYPE = PolarizationType_linear,
-    SimplePolarization SIMPLE_POLARIZATION = SimplePolarization_vertical,
-    ::flatbuffers::Offset<StokesParameters> STOKES_PARAMETERS = 0,
-    double POWER_REQUIRED = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> POWER_TYPE = 0,
-    bool TRANSMIT = false,
-    bool RECEIVE = false,
-    DeviceType SENSOR_TYPE = DeviceType_UNKNOWN,
+    ::flatbuffers::Offset<::flatbuffers::String> ABBREVIATION = 0,
+    SiteType SITE_TYPE = SiteType_LAUNCH_SITE,
+    ::flatbuffers::Offset<::flatbuffers::String> CATCODE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NETWORK = 0,
+    float LATITUDE = 0.0f,
+    float LONGITUDE = 0.0f,
+    float ALTITUDE = 0.0f,
+    ::flatbuffers::Offset<Geometry> GEOMETRY = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<float>> CENTER_POINT_GEOMETRY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CTR_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CREATED_BY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MODEL_URL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SOURCE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LAST_OB_TIME = 0,
-    double LOWER_LEFT_ELEVATION_LIMIT = 0.0,
-    double UPPER_LEFT_AZIMUTH_LIMIT = 0.0,
-    double LOWER_RIGHT_ELEVATION_LIMIT = 0.0,
-    double LOWER_LEFT_AZIMUTH_LIMIT = 0.0,
-    double UPPER_RIGHT_ELEVATION_LIMIT = 0.0,
-    double UPPER_RIGHT_AZIMUTH_LIMIT = 0.0,
-    double LOWER_RIGHT_AZIMUTH_LIMIT = 0.0,
-    double UPPER_LEFT_ELEVATION_LIMIT = 0.0,
-    double RIGHT_GEO_BELT_LIMIT = 0.0,
-    double LEFT_GEO_BELT_LIMIT = 0.0,
-    double MAGNITUDE_LIMIT = 0.0,
-    bool TASKABLE = false) {
-  IDMBuilder builder_(_fbb);
-  builder_.add_MAGNITUDE_LIMIT(MAGNITUDE_LIMIT);
-  builder_.add_LEFT_GEO_BELT_LIMIT(LEFT_GEO_BELT_LIMIT);
-  builder_.add_RIGHT_GEO_BELT_LIMIT(RIGHT_GEO_BELT_LIMIT);
-  builder_.add_UPPER_LEFT_ELEVATION_LIMIT(UPPER_LEFT_ELEVATION_LIMIT);
-  builder_.add_LOWER_RIGHT_AZIMUTH_LIMIT(LOWER_RIGHT_AZIMUTH_LIMIT);
-  builder_.add_UPPER_RIGHT_AZIMUTH_LIMIT(UPPER_RIGHT_AZIMUTH_LIMIT);
-  builder_.add_UPPER_RIGHT_ELEVATION_LIMIT(UPPER_RIGHT_ELEVATION_LIMIT);
-  builder_.add_LOWER_LEFT_AZIMUTH_LIMIT(LOWER_LEFT_AZIMUTH_LIMIT);
-  builder_.add_LOWER_RIGHT_ELEVATION_LIMIT(LOWER_RIGHT_ELEVATION_LIMIT);
-  builder_.add_UPPER_LEFT_AZIMUTH_LIMIT(UPPER_LEFT_AZIMUTH_LIMIT);
-  builder_.add_LOWER_LEFT_ELEVATION_LIMIT(LOWER_LEFT_ELEVATION_LIMIT);
-  builder_.add_POWER_REQUIRED(POWER_REQUIRED);
-  builder_.add_LAST_OB_TIME(LAST_OB_TIME);
+    bool TASKABLE = false,
+    ::flatbuffers::Offset<::flatbuffers::String> OPERATIONAL_STATUS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ESTABLISHMENT_DATE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CONTACT_INFO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ENVIRONMENTAL_IMPACT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ACCESSIBILITY_INFRA = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<IDM>>> INTEGRATED_DEVICES = 0) {
+  SITBuilder builder_(_fbb);
+  builder_.add_INTEGRATED_DEVICES(INTEGRATED_DEVICES);
+  builder_.add_ACCESSIBILITY_INFRA(ACCESSIBILITY_INFRA);
+  builder_.add_ENVIRONMENTAL_IMPACT(ENVIRONMENTAL_IMPACT);
+  builder_.add_CONTACT_INFO(CONTACT_INFO);
+  builder_.add_ESTABLISHMENT_DATE(ESTABLISHMENT_DATE);
+  builder_.add_OPERATIONAL_STATUS(OPERATIONAL_STATUS);
   builder_.add_SOURCE(SOURCE);
-  builder_.add_POWER_TYPE(POWER_TYPE);
-  builder_.add_STOKES_PARAMETERS(STOKES_PARAMETERS);
-  builder_.add_BAND(BAND);
-  builder_.add_BEACON(BEACON);
-  builder_.add_DOWNLINK(DOWNLINK);
-  builder_.add_UPLINK(UPLINK);
+  builder_.add_MODEL_URL(MODEL_URL);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_CREATED_BY(CREATED_BY);
+  builder_.add_CTR_ID(CTR_ID);
+  builder_.add_CLASSIFICATION(CLASSIFICATION);
+  builder_.add_CENTER_POINT_GEOMETRY(CENTER_POINT_GEOMETRY);
+  builder_.add_GEOMETRY(GEOMETRY);
+  builder_.add_ALTITUDE(ALTITUDE);
+  builder_.add_LONGITUDE(LONGITUDE);
+  builder_.add_LATITUDE(LATITUDE);
+  builder_.add_NETWORK(NETWORK);
+  builder_.add_CATCODE(CATCODE);
+  builder_.add_ABBREVIATION(ABBREVIATION);
   builder_.add_NAME(NAME);
   builder_.add_ID(ID);
   builder_.add_TASKABLE(TASKABLE);
-  builder_.add_SENSOR_TYPE(SENSOR_TYPE);
-  builder_.add_RECEIVE(RECEIVE);
-  builder_.add_TRANSMIT(TRANSMIT);
-  builder_.add_SIMPLE_POLARIZATION(SIMPLE_POLARIZATION);
-  builder_.add_POLARIZATION_TYPE(POLARIZATION_TYPE);
-  builder_.add_DATA_MODE(DATA_MODE);
+  builder_.add_SITE_TYPE(SITE_TYPE);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<IDM> CreateIDMDirect(
+inline ::flatbuffers::Offset<SIT> CreateSITDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
     const char *NAME = nullptr,
-    DataMode DATA_MODE = DataMode_EXERCISE,
-    ::flatbuffers::Offset<FrequencyRange> UPLINK = 0,
-    ::flatbuffers::Offset<FrequencyRange> DOWNLINK = 0,
-    ::flatbuffers::Offset<FrequencyRange> BEACON = 0,
-    const std::vector<::flatbuffers::Offset<Band>> *BAND = nullptr,
-    PolarizationType POLARIZATION_TYPE = PolarizationType_linear,
-    SimplePolarization SIMPLE_POLARIZATION = SimplePolarization_vertical,
-    ::flatbuffers::Offset<StokesParameters> STOKES_PARAMETERS = 0,
-    double POWER_REQUIRED = 0.0,
-    const char *POWER_TYPE = nullptr,
-    bool TRANSMIT = false,
-    bool RECEIVE = false,
-    DeviceType SENSOR_TYPE = DeviceType_UNKNOWN,
+    const char *ABBREVIATION = nullptr,
+    SiteType SITE_TYPE = SiteType_LAUNCH_SITE,
+    const char *CATCODE = nullptr,
+    const char *NETWORK = nullptr,
+    float LATITUDE = 0.0f,
+    float LONGITUDE = 0.0f,
+    float ALTITUDE = 0.0f,
+    ::flatbuffers::Offset<Geometry> GEOMETRY = 0,
+    const std::vector<float> *CENTER_POINT_GEOMETRY = nullptr,
+    const char *CLASSIFICATION = nullptr,
+    const char *CTR_ID = nullptr,
+    const char *CREATED_BY = nullptr,
+    const char *DESCRIPTION = nullptr,
+    const char *MODEL_URL = nullptr,
     const char *SOURCE = nullptr,
-    const char *LAST_OB_TIME = nullptr,
-    double LOWER_LEFT_ELEVATION_LIMIT = 0.0,
-    double UPPER_LEFT_AZIMUTH_LIMIT = 0.0,
-    double LOWER_RIGHT_ELEVATION_LIMIT = 0.0,
-    double LOWER_LEFT_AZIMUTH_LIMIT = 0.0,
-    double UPPER_RIGHT_ELEVATION_LIMIT = 0.0,
-    double UPPER_RIGHT_AZIMUTH_LIMIT = 0.0,
-    double LOWER_RIGHT_AZIMUTH_LIMIT = 0.0,
-    double UPPER_LEFT_ELEVATION_LIMIT = 0.0,
-    double RIGHT_GEO_BELT_LIMIT = 0.0,
-    double LEFT_GEO_BELT_LIMIT = 0.0,
-    double MAGNITUDE_LIMIT = 0.0,
-    bool TASKABLE = false) {
+    bool TASKABLE = false,
+    const char *OPERATIONAL_STATUS = nullptr,
+    const char *ESTABLISHMENT_DATE = nullptr,
+    const char *CONTACT_INFO = nullptr,
+    const char *ENVIRONMENTAL_IMPACT = nullptr,
+    const char *ACCESSIBILITY_INFRA = nullptr,
+    const std::vector<::flatbuffers::Offset<IDM>> *INTEGRATED_DEVICES = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
-  auto BAND__ = BAND ? _fbb.CreateVector<::flatbuffers::Offset<Band>>(*BAND) : 0;
-  auto POWER_TYPE__ = POWER_TYPE ? _fbb.CreateString(POWER_TYPE) : 0;
+  auto ABBREVIATION__ = ABBREVIATION ? _fbb.CreateString(ABBREVIATION) : 0;
+  auto CATCODE__ = CATCODE ? _fbb.CreateString(CATCODE) : 0;
+  auto NETWORK__ = NETWORK ? _fbb.CreateString(NETWORK) : 0;
+  auto CENTER_POINT_GEOMETRY__ = CENTER_POINT_GEOMETRY ? _fbb.CreateVector<float>(*CENTER_POINT_GEOMETRY) : 0;
+  auto CLASSIFICATION__ = CLASSIFICATION ? _fbb.CreateString(CLASSIFICATION) : 0;
+  auto CTR_ID__ = CTR_ID ? _fbb.CreateString(CTR_ID) : 0;
+  auto CREATED_BY__ = CREATED_BY ? _fbb.CreateString(CREATED_BY) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  auto MODEL_URL__ = MODEL_URL ? _fbb.CreateString(MODEL_URL) : 0;
   auto SOURCE__ = SOURCE ? _fbb.CreateString(SOURCE) : 0;
-  auto LAST_OB_TIME__ = LAST_OB_TIME ? _fbb.CreateString(LAST_OB_TIME) : 0;
-  return CreateIDM(
+  auto OPERATIONAL_STATUS__ = OPERATIONAL_STATUS ? _fbb.CreateString(OPERATIONAL_STATUS) : 0;
+  auto ESTABLISHMENT_DATE__ = ESTABLISHMENT_DATE ? _fbb.CreateString(ESTABLISHMENT_DATE) : 0;
+  auto CONTACT_INFO__ = CONTACT_INFO ? _fbb.CreateString(CONTACT_INFO) : 0;
+  auto ENVIRONMENTAL_IMPACT__ = ENVIRONMENTAL_IMPACT ? _fbb.CreateString(ENVIRONMENTAL_IMPACT) : 0;
+  auto ACCESSIBILITY_INFRA__ = ACCESSIBILITY_INFRA ? _fbb.CreateString(ACCESSIBILITY_INFRA) : 0;
+  auto INTEGRATED_DEVICES__ = INTEGRATED_DEVICES ? _fbb.CreateVector<::flatbuffers::Offset<IDM>>(*INTEGRATED_DEVICES) : 0;
+  return CreateSIT(
       _fbb,
       ID__,
       NAME__,
-      DATA_MODE,
-      UPLINK,
-      DOWNLINK,
-      BEACON,
-      BAND__,
-      POLARIZATION_TYPE,
-      SIMPLE_POLARIZATION,
-      STOKES_PARAMETERS,
-      POWER_REQUIRED,
-      POWER_TYPE__,
-      TRANSMIT,
-      RECEIVE,
-      SENSOR_TYPE,
+      ABBREVIATION__,
+      SITE_TYPE,
+      CATCODE__,
+      NETWORK__,
+      LATITUDE,
+      LONGITUDE,
+      ALTITUDE,
+      GEOMETRY,
+      CENTER_POINT_GEOMETRY__,
+      CLASSIFICATION__,
+      CTR_ID__,
+      CREATED_BY__,
+      DESCRIPTION__,
+      MODEL_URL__,
       SOURCE__,
-      LAST_OB_TIME__,
-      LOWER_LEFT_ELEVATION_LIMIT,
-      UPPER_LEFT_AZIMUTH_LIMIT,
-      LOWER_RIGHT_ELEVATION_LIMIT,
-      LOWER_LEFT_AZIMUTH_LIMIT,
-      UPPER_RIGHT_ELEVATION_LIMIT,
-      UPPER_RIGHT_AZIMUTH_LIMIT,
-      LOWER_RIGHT_AZIMUTH_LIMIT,
-      UPPER_LEFT_ELEVATION_LIMIT,
-      RIGHT_GEO_BELT_LIMIT,
-      LEFT_GEO_BELT_LIMIT,
-      MAGNITUDE_LIMIT,
-      TASKABLE);
+      TASKABLE,
+      OPERATIONAL_STATUS__,
+      ESTABLISHMENT_DATE__,
+      CONTACT_INFO__,
+      ENVIRONMENTAL_IMPACT__,
+      ACCESSIBILITY_INFRA__,
+      INTEGRATED_DEVICES__);
 }
 
-inline const IDM *GetIDM(const void *buf) {
-  return ::flatbuffers::GetRoot<IDM>(buf);
+inline const SIT *GetSIT(const void *buf) {
+  return ::flatbuffers::GetRoot<SIT>(buf);
 }
 
-inline const IDM *GetSizePrefixedIDM(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<IDM>(buf);
+inline const SIT *GetSizePrefixedSIT(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<SIT>(buf);
 }
 
-inline const char *IDMIdentifier() {
-  return "$IDM";
+inline const char *SITIdentifier() {
+  return "$SIT";
 }
 
-inline bool IDMBufferHasIdentifier(const void *buf) {
+inline bool SITBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, IDMIdentifier());
+      buf, SITIdentifier());
 }
 
-inline bool SizePrefixedIDMBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedSITBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, IDMIdentifier(), true);
+      buf, SITIdentifier(), true);
 }
 
 template <bool B = false>
-inline bool VerifyIDMBuffer(
+inline bool VerifySITBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<IDM>(IDMIdentifier());
+  return verifier.template VerifyBuffer<SIT>(SITIdentifier());
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedIDMBuffer(
+inline bool VerifySizePrefixedSITBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<IDM>(IDMIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<SIT>(SITIdentifier());
 }
 
-inline void FinishIDMBuffer(
+inline void FinishSITBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<IDM> root) {
-  fbb.Finish(root, IDMIdentifier());
+    ::flatbuffers::Offset<SIT> root) {
+  fbb.Finish(root, SITIdentifier());
 }
 
-inline void FinishSizePrefixedIDMBuffer(
+inline void FinishSizePrefixedSITBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<IDM> root) {
-  fbb.FinishSizePrefixed(root, IDMIdentifier());
+    ::flatbuffers::Offset<SIT> root) {
+  fbb.FinishSizePrefixed(root, SITIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

@@ -13,427 +13,446 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-struct FlatBufferTypeRef;
-struct FlatBufferTypeRefBuilder;
+#include "main_generated.h"
 
-struct TAB;
-struct TABBuilder;
+struct PIVRequest;
+struct PIVRequestBuilder;
 
-/// Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
-/// through an arena-backed plugin stream. Carries enough identity for a
-/// receiver to dispatch on schema without inspecting the payload bytes.
-/// Logical payload wire format for a stream frame or an accepted port type.
-enum payloadWireFormat : uint8_t {
-  /// Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF.
-  payloadWireFormat_FLATBUFFER = 0,
-  /// Body is a raw aligned binary chunk (for example zero-copy structs).
-  payloadWireFormat_ALIGNED_BINARY = 1,
-  payloadWireFormat_MIN = payloadWireFormat_FLATBUFFER,
-  payloadWireFormat_MAX = payloadWireFormat_ALIGNED_BINARY
+struct PIVResponse;
+struct PIVResponseBuilder;
+
+struct PIV;
+struct PIVBuilder;
+
+/// Coarse envelope status for an invoke response. Per-method numeric
+/// return codes travel in STATUS_CODE; STATUS categorizes the outcome
+/// for host routing (retry, yield-and-resume, fail-closed) without the
+/// host having to decode method-specific numbers.
+enum pivStatus : int32_t {
+  /// Invocation completed; STATUS_CODE carries the method-specific value.
+  pivStatus_OK = 0,
+  /// Method id not registered on the target plugin.
+  pivStatus_NOT_FOUND = 1,
+  /// Invocation succeeded but yielded before draining queued work.
+  /// Caller should inspect BACKLOG_REMAINING and re-invoke to continue.
+  pivStatus_YIELDED = 2,
+  /// Invocation failed; ERROR_CODE + ERROR_MESSAGE describe the failure.
+  pivStatus_FAILED = 3,
+  pivStatus_MIN = pivStatus_OK,
+  pivStatus_MAX = pivStatus_FAILED
 };
 
-inline const payloadWireFormat (&EnumValuespayloadWireFormat())[2] {
-  static const payloadWireFormat values[] = {
-    payloadWireFormat_FLATBUFFER,
-    payloadWireFormat_ALIGNED_BINARY
+inline const pivStatus (&EnumValuespivStatus())[4] {
+  static const pivStatus values[] = {
+    pivStatus_OK,
+    pivStatus_NOT_FOUND,
+    pivStatus_YIELDED,
+    pivStatus_FAILED
   };
   return values;
 }
 
-inline const char * const *EnumNamespayloadWireFormat() {
-  static const char * const names[3] = {
-    "FLATBUFFER",
-    "ALIGNED_BINARY",
+inline const char * const *EnumNamespivStatus() {
+  static const char * const names[5] = {
+    "OK",
+    "NOT_FOUND",
+    "YIELDED",
+    "FAILED",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNamepayloadWireFormat(payloadWireFormat e) {
-  if (::flatbuffers::IsOutRange(e, payloadWireFormat_FLATBUFFER, payloadWireFormat_ALIGNED_BINARY)) return "";
+inline const char *EnumNamepivStatus(pivStatus e) {
+  if (::flatbuffers::IsOutRange(e, pivStatus_OK, pivStatus_FAILED)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamespayloadWireFormat()[index];
+  return EnumNamespivStatus()[index];
 }
 
-/// Buffer mutability contract advertised by a stream port.
-enum bufferMutability : uint8_t {
-  /// Buffer is immutable after produce.
-  bufferMutability_IMMUTABLE = 0,
-  /// Buffer may be written in place by the owner (single writer).
-  bufferMutability_SINGLE_WRITER_MUTABLE = 1,
-  /// Buffer is append-only (rings / logs).
-  bufferMutability_APPEND_ONLY = 2,
-  bufferMutability_MIN = bufferMutability_IMMUTABLE,
-  bufferMutability_MAX = bufferMutability_APPEND_ONLY
-};
-
-inline const bufferMutability (&EnumValuesbufferMutability())[3] {
-  static const bufferMutability values[] = {
-    bufferMutability_IMMUTABLE,
-    bufferMutability_SINGLE_WRITER_MUTABLE,
-    bufferMutability_APPEND_ONLY
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesbufferMutability() {
-  static const char * const names[4] = {
-    "IMMUTABLE",
-    "SINGLE_WRITER_MUTABLE",
-    "APPEND_ONLY",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNamebufferMutability(bufferMutability e) {
-  if (::flatbuffers::IsOutRange(e, bufferMutability_IMMUTABLE, bufferMutability_APPEND_ONLY)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesbufferMutability()[index];
-}
-
-/// Buffer ownership contract advertised by a stream port.
-enum bufferOwnership : uint8_t {
-  /// Arena / host owns the backing bytes; receiver must not free.
-  bufferOwnership_HOST_OWNED = 0,
-  /// Plugin owns the backing bytes; host must not free.
-  bufferOwnership_PLUGIN_OWNED = 1,
-  /// Ownership transfers with the frame (hand-off semantics).
-  bufferOwnership_TRANSFERRED = 2,
-  bufferOwnership_MIN = bufferOwnership_HOST_OWNED,
-  bufferOwnership_MAX = bufferOwnership_TRANSFERRED
-};
-
-inline const bufferOwnership (&EnumValuesbufferOwnership())[3] {
-  static const bufferOwnership values[] = {
-    bufferOwnership_HOST_OWNED,
-    bufferOwnership_PLUGIN_OWNED,
-    bufferOwnership_TRANSFERRED
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesbufferOwnership() {
-  static const char * const names[4] = {
-    "HOST_OWNED",
-    "PLUGIN_OWNED",
-    "TRANSFERRED",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNamebufferOwnership(bufferOwnership e) {
-  if (::flatbuffers::IsOutRange(e, bufferOwnership_HOST_OWNED, bufferOwnership_TRANSFERRED)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesbufferOwnership()[index];
-}
-
-/// Payload-schema identity for a stream frame or an accepted port type.
-struct FlatBufferTypeRef FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef FlatBufferTypeRefBuilder Builder;
+/// Request envelope carried by `plugin_invoke_stream`.
+struct PIVRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PIVRequestBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_SCHEMA_NAME = 4,
-    VT_FILE_IDENTIFIER = 6,
-    VT_SCHEMA_VERSION = 8,
-    VT_ROOT_TYPE = 10
+    VT_METHOD_ID = 4,
+    VT_INPUTS = 6,
+    VT_PAYLOAD_ARENA = 8,
+    VT_TRACE_ID = 10,
+    VT_OUTPUT_STREAM_CAP = 12
   };
-  /// Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
-  const ::flatbuffers::String *SCHEMA_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SCHEMA_NAME);
+  /// Stable method identifier from PLG.METHODS[].METHOD_ID.
+  const ::flatbuffers::String *METHOD_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_METHOD_ID);
   }
-  /// Optional 4-byte FlatBuffer file identifier.
-  const ::flatbuffers::String *FILE_IDENTIFIER() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FILE_IDENTIFIER);
+  /// Input frames. Each TAB.TYPE_REF names the payload schema and each
+  /// TAB.WIRE_FORMAT selects FLATBUFFER or ALIGNED_BINARY. TAB.OFFSET
+  /// is arena-relative into PAYLOAD_ARENA (or an absolute pointer when
+  /// PAYLOAD_ARENA is empty).
+  const ::flatbuffers::Vector<::flatbuffers::Offset<TAB>> *INPUTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<TAB>> *>(VT_INPUTS);
   }
-  /// Optional semver or schema revision string.
-  const ::flatbuffers::String *SCHEMA_VERSION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SCHEMA_VERSION);
+  /// Optional arena backing the INPUTS payload bodies. Empty means the
+  /// caller manages arena state out-of-band.
+  const ::flatbuffers::Vector<uint8_t> *PAYLOAD_ARENA() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_PAYLOAD_ARENA);
   }
-  /// Optional root type name within the schema.
-  const ::flatbuffers::String *ROOT_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ROOT_TYPE);
+  /// Optional trace identifier for request correlation.
+  uint64_t TRACE_ID() const {
+    return GetField<uint64_t>(VT_TRACE_ID, 0);
+  }
+  /// Optional yield-budget hint. Plugins MAY pause queued work after
+  /// draining this many output frames and return YIELDED for the caller
+  /// to resume. 0 = no hint.
+  uint32_t OUTPUT_STREAM_CAP() const {
+    return GetField<uint32_t>(VT_OUTPUT_STREAM_CAP, 0);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_SCHEMA_NAME) &&
-           verifier.VerifyString(SCHEMA_NAME()) &&
-           VerifyOffset(verifier, VT_FILE_IDENTIFIER) &&
-           verifier.VerifyString(FILE_IDENTIFIER()) &&
-           VerifyOffset(verifier, VT_SCHEMA_VERSION) &&
-           verifier.VerifyString(SCHEMA_VERSION()) &&
-           VerifyOffset(verifier, VT_ROOT_TYPE) &&
-           verifier.VerifyString(ROOT_TYPE()) &&
+           VerifyOffsetRequired(verifier, VT_METHOD_ID) &&
+           verifier.VerifyString(METHOD_ID()) &&
+           VerifyOffset(verifier, VT_INPUTS) &&
+           verifier.VerifyVector(INPUTS()) &&
+           verifier.VerifyVectorOfTables(INPUTS()) &&
+           VerifyOffset(verifier, VT_PAYLOAD_ARENA) &&
+           verifier.VerifyVector(PAYLOAD_ARENA()) &&
+           VerifyField<uint64_t>(verifier, VT_TRACE_ID, 8) &&
+           VerifyField<uint32_t>(verifier, VT_OUTPUT_STREAM_CAP, 4) &&
            verifier.EndTable();
   }
 };
 
-struct FlatBufferTypeRefBuilder {
-  typedef FlatBufferTypeRef Table;
+struct PIVRequestBuilder {
+  typedef PIVRequest Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_SCHEMA_NAME(::flatbuffers::Offset<::flatbuffers::String> SCHEMA_NAME) {
-    fbb_.AddOffset(FlatBufferTypeRef::VT_SCHEMA_NAME, SCHEMA_NAME);
+  void add_METHOD_ID(::flatbuffers::Offset<::flatbuffers::String> METHOD_ID) {
+    fbb_.AddOffset(PIVRequest::VT_METHOD_ID, METHOD_ID);
   }
-  void add_FILE_IDENTIFIER(::flatbuffers::Offset<::flatbuffers::String> FILE_IDENTIFIER) {
-    fbb_.AddOffset(FlatBufferTypeRef::VT_FILE_IDENTIFIER, FILE_IDENTIFIER);
+  void add_INPUTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TAB>>> INPUTS) {
+    fbb_.AddOffset(PIVRequest::VT_INPUTS, INPUTS);
   }
-  void add_SCHEMA_VERSION(::flatbuffers::Offset<::flatbuffers::String> SCHEMA_VERSION) {
-    fbb_.AddOffset(FlatBufferTypeRef::VT_SCHEMA_VERSION, SCHEMA_VERSION);
+  void add_PAYLOAD_ARENA(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PAYLOAD_ARENA) {
+    fbb_.AddOffset(PIVRequest::VT_PAYLOAD_ARENA, PAYLOAD_ARENA);
   }
-  void add_ROOT_TYPE(::flatbuffers::Offset<::flatbuffers::String> ROOT_TYPE) {
-    fbb_.AddOffset(FlatBufferTypeRef::VT_ROOT_TYPE, ROOT_TYPE);
+  void add_TRACE_ID(uint64_t TRACE_ID) {
+    fbb_.AddElement<uint64_t>(PIVRequest::VT_TRACE_ID, TRACE_ID, 0);
   }
-  explicit FlatBufferTypeRefBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_OUTPUT_STREAM_CAP(uint32_t OUTPUT_STREAM_CAP) {
+    fbb_.AddElement<uint32_t>(PIVRequest::VT_OUTPUT_STREAM_CAP, OUTPUT_STREAM_CAP, 0);
+  }
+  explicit PIVRequestBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<FlatBufferTypeRef> Finish() {
+  ::flatbuffers::Offset<PIVRequest> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<FlatBufferTypeRef>(end);
+    auto o = ::flatbuffers::Offset<PIVRequest>(end);
+    fbb_.Required(o, PIVRequest::VT_METHOD_ID);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<FlatBufferTypeRef> CreateFlatBufferTypeRef(
+inline ::flatbuffers::Offset<PIVRequest> CreatePIVRequest(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FILE_IDENTIFIER = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_VERSION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ROOT_TYPE = 0) {
-  FlatBufferTypeRefBuilder builder_(_fbb);
-  builder_.add_ROOT_TYPE(ROOT_TYPE);
-  builder_.add_SCHEMA_VERSION(SCHEMA_VERSION);
-  builder_.add_FILE_IDENTIFIER(FILE_IDENTIFIER);
-  builder_.add_SCHEMA_NAME(SCHEMA_NAME);
+    ::flatbuffers::Offset<::flatbuffers::String> METHOD_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TAB>>> INPUTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PAYLOAD_ARENA = 0,
+    uint64_t TRACE_ID = 0,
+    uint32_t OUTPUT_STREAM_CAP = 0) {
+  PIVRequestBuilder builder_(_fbb);
+  builder_.add_TRACE_ID(TRACE_ID);
+  builder_.add_OUTPUT_STREAM_CAP(OUTPUT_STREAM_CAP);
+  builder_.add_PAYLOAD_ARENA(PAYLOAD_ARENA);
+  builder_.add_INPUTS(INPUTS);
+  builder_.add_METHOD_ID(METHOD_ID);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<FlatBufferTypeRef> CreateFlatBufferTypeRefDirect(
+inline ::flatbuffers::Offset<PIVRequest> CreatePIVRequestDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *SCHEMA_NAME = nullptr,
-    const char *FILE_IDENTIFIER = nullptr,
-    const char *SCHEMA_VERSION = nullptr,
-    const char *ROOT_TYPE = nullptr) {
-  auto SCHEMA_NAME__ = SCHEMA_NAME ? _fbb.CreateString(SCHEMA_NAME) : 0;
-  auto FILE_IDENTIFIER__ = FILE_IDENTIFIER ? _fbb.CreateString(FILE_IDENTIFIER) : 0;
-  auto SCHEMA_VERSION__ = SCHEMA_VERSION ? _fbb.CreateString(SCHEMA_VERSION) : 0;
-  auto ROOT_TYPE__ = ROOT_TYPE ? _fbb.CreateString(ROOT_TYPE) : 0;
-  return CreateFlatBufferTypeRef(
+    const char *METHOD_ID = nullptr,
+    const std::vector<::flatbuffers::Offset<TAB>> *INPUTS = nullptr,
+    const std::vector<uint8_t> *PAYLOAD_ARENA = nullptr,
+    uint64_t TRACE_ID = 0,
+    uint32_t OUTPUT_STREAM_CAP = 0) {
+  auto METHOD_ID__ = METHOD_ID ? _fbb.CreateString(METHOD_ID) : 0;
+  auto INPUTS__ = INPUTS ? _fbb.CreateVector<::flatbuffers::Offset<TAB>>(*INPUTS) : 0;
+  auto PAYLOAD_ARENA__ = PAYLOAD_ARENA ? _fbb.CreateVector<uint8_t>(*PAYLOAD_ARENA) : 0;
+  return CreatePIVRequest(
       _fbb,
-      SCHEMA_NAME__,
-      FILE_IDENTIFIER__,
-      SCHEMA_VERSION__,
-      ROOT_TYPE__);
+      METHOD_ID__,
+      INPUTS__,
+      PAYLOAD_ARENA__,
+      TRACE_ID,
+      OUTPUT_STREAM_CAP);
 }
 
-/// Typed Arena Buffer — one descriptor for a payload slot in a shared arena.
-struct TAB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef TABBuilder Builder;
+/// Response envelope emitted by `plugin_invoke_stream`.
+struct PIVResponse FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PIVResponseBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_OFFSET = 4,
-    VT_SIZE = 6,
-    VT_ALIGNMENT = 8,
-    VT_WIRE_FORMAT = 10,
-    VT_TYPE_REF = 12,
-    VT_MUTABILITY = 14,
-    VT_OWNERSHIP = 16,
-    VT_FRAME_ID = 18,
-    VT_PORT_ID = 20
+    VT_STATUS_CODE = 4,
+    VT_STATUS = 6,
+    VT_YIELDED = 8,
+    VT_BACKLOG_REMAINING = 10,
+    VT_OUTPUTS = 12,
+    VT_PAYLOAD_ARENA = 14,
+    VT_ERROR_CODE = 16,
+    VT_ERROR_MESSAGE = 18,
+    VT_TRACE_ID = 20
   };
-  /// Byte offset of the payload body within the arena.
-  uint32_t OFFSET() const {
-    return GetField<uint32_t>(VT_OFFSET, 0);
+  /// Method-specific status code. Zero conventionally indicates success.
+  int32_t STATUS_CODE() const {
+    return GetField<int32_t>(VT_STATUS_CODE, 0);
   }
-  /// Byte length of the payload body.
-  uint32_t SIZE() const {
-    return GetField<uint32_t>(VT_SIZE, 0);
+  /// Coarse envelope status.
+  pivStatus STATUS() const {
+    return static_cast<pivStatus>(GetField<int32_t>(VT_STATUS, 0));
   }
-  /// Required start alignment of the payload body (in bytes).
-  uint32_t ALIGNMENT() const {
-    return GetField<uint32_t>(VT_ALIGNMENT, 0);
+  /// True when the method yielded before fully draining queued work.
+  bool YIELDED() const {
+    return GetField<uint8_t>(VT_YIELDED, 0) != 0;
   }
-  /// Wire format for the body.
-  payloadWireFormat WIRE_FORMAT() const {
-    return static_cast<payloadWireFormat>(GetField<uint8_t>(VT_WIRE_FORMAT, 0));
+  /// Outstanding frame count remaining after this response. Non-zero
+  /// only when STATUS == YIELDED.
+  uint32_t BACKLOG_REMAINING() const {
+    return GetField<uint32_t>(VT_BACKLOG_REMAINING, 0);
   }
-  /// Optional payload schema identity.
-  const FlatBufferTypeRef *TYPE_REF() const {
-    return GetPointer<const FlatBufferTypeRef *>(VT_TYPE_REF);
+  /// Output frames. Each TAB carries schema identity and wire format.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<TAB>> *OUTPUTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<TAB>> *>(VT_OUTPUTS);
   }
-  /// Mutability contract for the slot.
-  bufferMutability MUTABILITY() const {
-    return static_cast<bufferMutability>(GetField<uint8_t>(VT_MUTABILITY, 0));
+  /// Optional arena backing OUTPUTS payload bodies.
+  const ::flatbuffers::Vector<uint8_t> *PAYLOAD_ARENA() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_PAYLOAD_ARENA);
   }
-  /// Ownership contract for the slot.
-  bufferOwnership OWNERSHIP() const {
-    return static_cast<bufferOwnership>(GetField<uint8_t>(VT_OWNERSHIP, 0));
+  /// Stable machine-readable error code when STATUS == FAILED.
+  const ::flatbuffers::String *ERROR_CODE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ERROR_CODE);
   }
-  /// Optional opaque frame identifier for stream bookkeeping.
-  uint64_t FRAME_ID() const {
-    return GetField<uint64_t>(VT_FRAME_ID, 0);
+  /// Human-readable diagnostic when STATUS == FAILED.
+  const ::flatbuffers::String *ERROR_MESSAGE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ERROR_MESSAGE);
   }
-  /// Optional port identifier for frames that route to/from a named
-  /// input or output port on a method (maps to
-  /// `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
-  /// no port routing hint.
-  const ::flatbuffers::String *PORT_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PORT_ID);
+  /// Echo of the request's TRACE_ID for correlation.
+  uint64_t TRACE_ID() const {
+    return GetField<uint64_t>(VT_TRACE_ID, 0);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<uint32_t>(verifier, VT_OFFSET, 4) &&
-           VerifyField<uint32_t>(verifier, VT_SIZE, 4) &&
-           VerifyField<uint32_t>(verifier, VT_ALIGNMENT, 4) &&
-           VerifyField<uint8_t>(verifier, VT_WIRE_FORMAT, 1) &&
-           VerifyOffset(verifier, VT_TYPE_REF) &&
-           verifier.VerifyTable(TYPE_REF()) &&
-           VerifyField<uint8_t>(verifier, VT_MUTABILITY, 1) &&
-           VerifyField<uint8_t>(verifier, VT_OWNERSHIP, 1) &&
-           VerifyField<uint64_t>(verifier, VT_FRAME_ID, 8) &&
-           VerifyOffset(verifier, VT_PORT_ID) &&
-           verifier.VerifyString(PORT_ID()) &&
+           VerifyField<int32_t>(verifier, VT_STATUS_CODE, 4) &&
+           VerifyField<int32_t>(verifier, VT_STATUS, 4) &&
+           VerifyField<uint8_t>(verifier, VT_YIELDED, 1) &&
+           VerifyField<uint32_t>(verifier, VT_BACKLOG_REMAINING, 4) &&
+           VerifyOffset(verifier, VT_OUTPUTS) &&
+           verifier.VerifyVector(OUTPUTS()) &&
+           verifier.VerifyVectorOfTables(OUTPUTS()) &&
+           VerifyOffset(verifier, VT_PAYLOAD_ARENA) &&
+           verifier.VerifyVector(PAYLOAD_ARENA()) &&
+           VerifyOffset(verifier, VT_ERROR_CODE) &&
+           verifier.VerifyString(ERROR_CODE()) &&
+           VerifyOffset(verifier, VT_ERROR_MESSAGE) &&
+           verifier.VerifyString(ERROR_MESSAGE()) &&
+           VerifyField<uint64_t>(verifier, VT_TRACE_ID, 8) &&
            verifier.EndTable();
   }
 };
 
-struct TABBuilder {
-  typedef TAB Table;
+struct PIVResponseBuilder {
+  typedef PIVResponse Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_OFFSET(uint32_t OFFSET) {
-    fbb_.AddElement<uint32_t>(TAB::VT_OFFSET, OFFSET, 0);
+  void add_STATUS_CODE(int32_t STATUS_CODE) {
+    fbb_.AddElement<int32_t>(PIVResponse::VT_STATUS_CODE, STATUS_CODE, 0);
   }
-  void add_SIZE(uint32_t SIZE) {
-    fbb_.AddElement<uint32_t>(TAB::VT_SIZE, SIZE, 0);
+  void add_STATUS(pivStatus STATUS) {
+    fbb_.AddElement<int32_t>(PIVResponse::VT_STATUS, static_cast<int32_t>(STATUS), 0);
   }
-  void add_ALIGNMENT(uint32_t ALIGNMENT) {
-    fbb_.AddElement<uint32_t>(TAB::VT_ALIGNMENT, ALIGNMENT, 0);
+  void add_YIELDED(bool YIELDED) {
+    fbb_.AddElement<uint8_t>(PIVResponse::VT_YIELDED, static_cast<uint8_t>(YIELDED), 0);
   }
-  void add_WIRE_FORMAT(payloadWireFormat WIRE_FORMAT) {
-    fbb_.AddElement<uint8_t>(TAB::VT_WIRE_FORMAT, static_cast<uint8_t>(WIRE_FORMAT), 0);
+  void add_BACKLOG_REMAINING(uint32_t BACKLOG_REMAINING) {
+    fbb_.AddElement<uint32_t>(PIVResponse::VT_BACKLOG_REMAINING, BACKLOG_REMAINING, 0);
   }
-  void add_TYPE_REF(::flatbuffers::Offset<FlatBufferTypeRef> TYPE_REF) {
-    fbb_.AddOffset(TAB::VT_TYPE_REF, TYPE_REF);
+  void add_OUTPUTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TAB>>> OUTPUTS) {
+    fbb_.AddOffset(PIVResponse::VT_OUTPUTS, OUTPUTS);
   }
-  void add_MUTABILITY(bufferMutability MUTABILITY) {
-    fbb_.AddElement<uint8_t>(TAB::VT_MUTABILITY, static_cast<uint8_t>(MUTABILITY), 0);
+  void add_PAYLOAD_ARENA(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PAYLOAD_ARENA) {
+    fbb_.AddOffset(PIVResponse::VT_PAYLOAD_ARENA, PAYLOAD_ARENA);
   }
-  void add_OWNERSHIP(bufferOwnership OWNERSHIP) {
-    fbb_.AddElement<uint8_t>(TAB::VT_OWNERSHIP, static_cast<uint8_t>(OWNERSHIP), 0);
+  void add_ERROR_CODE(::flatbuffers::Offset<::flatbuffers::String> ERROR_CODE) {
+    fbb_.AddOffset(PIVResponse::VT_ERROR_CODE, ERROR_CODE);
   }
-  void add_FRAME_ID(uint64_t FRAME_ID) {
-    fbb_.AddElement<uint64_t>(TAB::VT_FRAME_ID, FRAME_ID, 0);
+  void add_ERROR_MESSAGE(::flatbuffers::Offset<::flatbuffers::String> ERROR_MESSAGE) {
+    fbb_.AddOffset(PIVResponse::VT_ERROR_MESSAGE, ERROR_MESSAGE);
   }
-  void add_PORT_ID(::flatbuffers::Offset<::flatbuffers::String> PORT_ID) {
-    fbb_.AddOffset(TAB::VT_PORT_ID, PORT_ID);
+  void add_TRACE_ID(uint64_t TRACE_ID) {
+    fbb_.AddElement<uint64_t>(PIVResponse::VT_TRACE_ID, TRACE_ID, 0);
   }
-  explicit TABBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit PIVResponseBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<TAB> Finish() {
+  ::flatbuffers::Offset<PIVResponse> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<TAB>(end);
+    auto o = ::flatbuffers::Offset<PIVResponse>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<TAB> CreateTAB(
+inline ::flatbuffers::Offset<PIVResponse> CreatePIVResponse(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    uint32_t OFFSET = 0,
-    uint32_t SIZE = 0,
-    uint32_t ALIGNMENT = 0,
-    payloadWireFormat WIRE_FORMAT = payloadWireFormat_FLATBUFFER,
-    ::flatbuffers::Offset<FlatBufferTypeRef> TYPE_REF = 0,
-    bufferMutability MUTABILITY = bufferMutability_IMMUTABLE,
-    bufferOwnership OWNERSHIP = bufferOwnership_HOST_OWNED,
-    uint64_t FRAME_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PORT_ID = 0) {
-  TABBuilder builder_(_fbb);
-  builder_.add_FRAME_ID(FRAME_ID);
-  builder_.add_PORT_ID(PORT_ID);
-  builder_.add_TYPE_REF(TYPE_REF);
-  builder_.add_ALIGNMENT(ALIGNMENT);
-  builder_.add_SIZE(SIZE);
-  builder_.add_OFFSET(OFFSET);
-  builder_.add_OWNERSHIP(OWNERSHIP);
-  builder_.add_MUTABILITY(MUTABILITY);
-  builder_.add_WIRE_FORMAT(WIRE_FORMAT);
+    int32_t STATUS_CODE = 0,
+    pivStatus STATUS = pivStatus_OK,
+    bool YIELDED = false,
+    uint32_t BACKLOG_REMAINING = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TAB>>> OUTPUTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PAYLOAD_ARENA = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ERROR_CODE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ERROR_MESSAGE = 0,
+    uint64_t TRACE_ID = 0) {
+  PIVResponseBuilder builder_(_fbb);
+  builder_.add_TRACE_ID(TRACE_ID);
+  builder_.add_ERROR_MESSAGE(ERROR_MESSAGE);
+  builder_.add_ERROR_CODE(ERROR_CODE);
+  builder_.add_PAYLOAD_ARENA(PAYLOAD_ARENA);
+  builder_.add_OUTPUTS(OUTPUTS);
+  builder_.add_BACKLOG_REMAINING(BACKLOG_REMAINING);
+  builder_.add_STATUS(STATUS);
+  builder_.add_STATUS_CODE(STATUS_CODE);
+  builder_.add_YIELDED(YIELDED);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<TAB> CreateTABDirect(
+inline ::flatbuffers::Offset<PIVResponse> CreatePIVResponseDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    uint32_t OFFSET = 0,
-    uint32_t SIZE = 0,
-    uint32_t ALIGNMENT = 0,
-    payloadWireFormat WIRE_FORMAT = payloadWireFormat_FLATBUFFER,
-    ::flatbuffers::Offset<FlatBufferTypeRef> TYPE_REF = 0,
-    bufferMutability MUTABILITY = bufferMutability_IMMUTABLE,
-    bufferOwnership OWNERSHIP = bufferOwnership_HOST_OWNED,
-    uint64_t FRAME_ID = 0,
-    const char *PORT_ID = nullptr) {
-  auto PORT_ID__ = PORT_ID ? _fbb.CreateString(PORT_ID) : 0;
-  return CreateTAB(
+    int32_t STATUS_CODE = 0,
+    pivStatus STATUS = pivStatus_OK,
+    bool YIELDED = false,
+    uint32_t BACKLOG_REMAINING = 0,
+    const std::vector<::flatbuffers::Offset<TAB>> *OUTPUTS = nullptr,
+    const std::vector<uint8_t> *PAYLOAD_ARENA = nullptr,
+    const char *ERROR_CODE = nullptr,
+    const char *ERROR_MESSAGE = nullptr,
+    uint64_t TRACE_ID = 0) {
+  auto OUTPUTS__ = OUTPUTS ? _fbb.CreateVector<::flatbuffers::Offset<TAB>>(*OUTPUTS) : 0;
+  auto PAYLOAD_ARENA__ = PAYLOAD_ARENA ? _fbb.CreateVector<uint8_t>(*PAYLOAD_ARENA) : 0;
+  auto ERROR_CODE__ = ERROR_CODE ? _fbb.CreateString(ERROR_CODE) : 0;
+  auto ERROR_MESSAGE__ = ERROR_MESSAGE ? _fbb.CreateString(ERROR_MESSAGE) : 0;
+  return CreatePIVResponse(
       _fbb,
-      OFFSET,
-      SIZE,
-      ALIGNMENT,
-      WIRE_FORMAT,
-      TYPE_REF,
-      MUTABILITY,
-      OWNERSHIP,
-      FRAME_ID,
-      PORT_ID__);
+      STATUS_CODE,
+      STATUS,
+      YIELDED,
+      BACKLOG_REMAINING,
+      OUTPUTS__,
+      PAYLOAD_ARENA__,
+      ERROR_CODE__,
+      ERROR_MESSAGE__,
+      TRACE_ID);
 }
 
-inline const TAB *GetTAB(const void *buf) {
-  return ::flatbuffers::GetRoot<TAB>(buf);
+/// Envelope — carries either a request or a response. Either REQUEST or
+/// RESPONSE is populated per message; both populated is undefined.
+struct PIV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PIVBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_REQUEST = 4,
+    VT_RESPONSE = 6
+  };
+  const PIVRequest *REQUEST() const {
+    return GetPointer<const PIVRequest *>(VT_REQUEST);
+  }
+  const PIVResponse *RESPONSE() const {
+    return GetPointer<const PIVResponse *>(VT_RESPONSE);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_REQUEST) &&
+           verifier.VerifyTable(REQUEST()) &&
+           VerifyOffset(verifier, VT_RESPONSE) &&
+           verifier.VerifyTable(RESPONSE()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PIVBuilder {
+  typedef PIV Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_REQUEST(::flatbuffers::Offset<PIVRequest> REQUEST) {
+    fbb_.AddOffset(PIV::VT_REQUEST, REQUEST);
+  }
+  void add_RESPONSE(::flatbuffers::Offset<PIVResponse> RESPONSE) {
+    fbb_.AddOffset(PIV::VT_RESPONSE, RESPONSE);
+  }
+  explicit PIVBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PIV> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PIV>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PIV> CreatePIV(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<PIVRequest> REQUEST = 0,
+    ::flatbuffers::Offset<PIVResponse> RESPONSE = 0) {
+  PIVBuilder builder_(_fbb);
+  builder_.add_RESPONSE(RESPONSE);
+  builder_.add_REQUEST(REQUEST);
+  return builder_.Finish();
 }
 
-inline const TAB *GetSizePrefixedTAB(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<TAB>(buf);
+inline const PIV *GetPIV(const void *buf) {
+  return ::flatbuffers::GetRoot<PIV>(buf);
 }
 
-inline const char *TABIdentifier() {
-  return "$TAB";
+inline const PIV *GetSizePrefixedPIV(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<PIV>(buf);
 }
 
-inline bool TABBufferHasIdentifier(const void *buf) {
+inline const char *PIVIdentifier() {
+  return "$PIV";
+}
+
+inline bool PIVBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, TABIdentifier());
+      buf, PIVIdentifier());
 }
 
-inline bool SizePrefixedTABBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedPIVBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, TABIdentifier(), true);
+      buf, PIVIdentifier(), true);
 }
 
 template <bool B = false>
-inline bool VerifyTABBuffer(
+inline bool VerifyPIVBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<TAB>(TABIdentifier());
+  return verifier.template VerifyBuffer<PIV>(PIVIdentifier());
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedTABBuffer(
+inline bool VerifySizePrefixedPIVBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<TAB>(TABIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<PIV>(PIVIdentifier());
 }
 
-inline void FinishTABBuffer(
+inline void FinishPIVBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<TAB> root) {
-  fbb.Finish(root, TABIdentifier());
+    ::flatbuffers::Offset<PIV> root) {
+  fbb.Finish(root, PIVIdentifier());
 }
 
-inline void FinishSizePrefixedTABBuffer(
+inline void FinishSizePrefixedPIVBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<TAB> root) {
-  fbb.FinishSizePrefixed(root, TABIdentifier());
+    ::flatbuffers::Offset<PIV> root) {
+  fbb.FinishSizePrefixed(root, PIVIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

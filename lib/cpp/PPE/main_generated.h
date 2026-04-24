@@ -13,624 +13,926 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-struct LCC;
-struct LCCBuilder;
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
-enum legacyCountryCode : int8_t {
-  /// Arab Satellite Communications Organization
-  legacyCountryCode_AB = 0,
-  /// Asia Broadcast Satellite
-  legacyCountryCode_ABS = 1,
-  /// Asia Satellite Telecommunications Company (ASIASAT)
-  legacyCountryCode_AC = 2,
-  /// Algeria
-  legacyCountryCode_ALG = 3,
-  /// Angola
-  legacyCountryCode_ANG = 4,
-  /// Argentina
-  legacyCountryCode_ARGN = 5,
-  /// Republic of Armenia
-  legacyCountryCode_ARM = 6,
-  /// Austria
-  legacyCountryCode_ASRA = 7,
-  /// Australia
-  legacyCountryCode_AUS = 8,
-  /// Azerbaijan
-  legacyCountryCode_AZER = 9,
-  /// Belgium
-  legacyCountryCode_BEL = 10,
-  /// Belarus
-  legacyCountryCode_BELA = 11,
-  /// Bermuda
-  legacyCountryCode_BERM = 12,
-  /// People's Republic of Bangladesh
-  legacyCountryCode_BGD = 13,
-  /// Kingdom of Bhutan
-  legacyCountryCode_BHUT = 14,
-  /// Bolivia
-  legacyCountryCode_BOL = 15,
-  /// Brazil
-  legacyCountryCode_BRAZ = 16,
-  /// Bulgaria
-  legacyCountryCode_BUL = 17,
-  /// Canada
-  legacyCountryCode_CA = 18,
-  /// China/Brazil
-  legacyCountryCode_CHBZ = 19,
-  /// China/Turkey
-  legacyCountryCode_CHTU = 20,
-  /// Chile
-  legacyCountryCode_CHLE = 21,
-  /// Commonwealth of Independent States (former USSR)
-  legacyCountryCode_CIS = 22,
-  /// Colombia
-  legacyCountryCode_COL = 23,
-  /// Republic of Costa Rica
-  legacyCountryCode_CRI = 24,
-  /// Czech Republic (former Czechoslovakia)
-  legacyCountryCode_CZCH = 25,
-  /// Denmark
-  legacyCountryCode_DEN = 26,
-  /// Republic of Djibouti
-  legacyCountryCode_DJI = 27,
-  /// Ecuador
-  legacyCountryCode_ECU = 28,
-  /// Egypt
-  legacyCountryCode_EGYP = 29,
-  /// European Space Agency
-  legacyCountryCode_ESA = 30,
-  /// European Space Research Organization
-  legacyCountryCode_ESRO = 31,
-  /// Estonia
-  legacyCountryCode_EST = 32,
-  /// Ethiopia
-  legacyCountryCode_ETH = 33,
-  /// European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
-  legacyCountryCode_EUME = 34,
-  /// European Telecommunications Satellite Organization (EUTELSAT)
-  legacyCountryCode_EUTE = 35,
-  /// France/Germany
-  legacyCountryCode_FGER = 36,
-  /// Finland
-  legacyCountryCode_FIN = 37,
-  /// France
-  legacyCountryCode_FR = 38,
-  /// France/Italy
-  legacyCountryCode_FRIT = 39,
-  /// Germany
-  legacyCountryCode_GER = 40,
-  /// Republic of Ghana
-  legacyCountryCode_GHA = 41,
-  /// Globalstar
-  legacyCountryCode_GLOB = 42,
-  /// Greece
-  legacyCountryCode_GREC = 43,
-  /// Greece/Saudi Arabia
-  legacyCountryCode_GRSA = 44,
-  /// Guatemala
-  legacyCountryCode_GUAT = 45,
-  /// Hungary
-  legacyCountryCode_HUN = 46,
-  /// International Mobile Satellite Organization (INMARSAT)
-  legacyCountryCode_IM = 47,
-  /// India
-  legacyCountryCode_IND = 48,
-  /// Indonesia
-  legacyCountryCode_INDO = 49,
-  /// Iran
-  legacyCountryCode_IRAN = 50,
-  /// Iraq
-  legacyCountryCode_IRAQ = 51,
-  /// Iridium
-  legacyCountryCode_IRID = 52,
-  /// Ireland
-  legacyCountryCode_IRL = 53,
-  /// Israel
-  legacyCountryCode_ISRA = 54,
-  /// Indian Space Research Organisation
-  legacyCountryCode_ISRO = 55,
-  /// International Space Station
-  legacyCountryCode_ISS = 56,
-  /// Italy
-  legacyCountryCode_IT = 57,
-  /// International Telecommunications Satellite Organization (INTELSAT)
-  legacyCountryCode_ITSO = 58,
-  /// Japan
-  legacyCountryCode_JPN = 59,
-  /// Kazakhstan
-  legacyCountryCode_KAZ = 60,
-  /// Republic of Kenya
-  legacyCountryCode_KEN = 61,
-  /// Laos
-  legacyCountryCode_LAOS = 62,
-  /// Democratic Socialist Republic of Sri Lanka
-  legacyCountryCode_LKA = 63,
-  /// Lithuania
-  legacyCountryCode_LTU = 64,
-  /// Luxembourg
-  legacyCountryCode_LUXE = 65,
-  /// Morocco
-  legacyCountryCode_MA = 66,
-  /// Malaysia
-  legacyCountryCode_MALA = 67,
-  /// Principality of Monaco
-  legacyCountryCode_MCO = 68,
-  /// Republic of Moldova
-  legacyCountryCode_MDA = 69,
-  /// Mexico
-  legacyCountryCode_MEX = 70,
-  /// Republic of the Union of Myanmar
-  legacyCountryCode_MMR = 71,
-  /// Mongolia
-  legacyCountryCode_MNG = 72,
-  /// Mauritius
-  legacyCountryCode_MUS = 73,
-  /// North Atlantic Treaty Organization
-  legacyCountryCode_NATO = 74,
-  /// Netherlands
-  legacyCountryCode_NETH = 75,
-  /// New ICO
-  legacyCountryCode_NICO = 76,
-  /// Nigeria
-  legacyCountryCode_NIG = 77,
-  /// Democratic People's Republic of Korea
-  legacyCountryCode_NKOR = 78,
-  /// Norway
-  legacyCountryCode_NOR = 79,
-  /// Federal Democratic Republic of Nepal
-  legacyCountryCode_NPL = 80,
-  /// New Zealand
-  legacyCountryCode_NZ = 81,
-  /// O3b Networks
-  legacyCountryCode_O3B = 82,
-  /// ORBCOMM
-  legacyCountryCode_ORB = 83,
-  /// Pakistan
-  legacyCountryCode_PAKI = 84,
-  /// Peru
-  legacyCountryCode_PERU = 85,
-  /// Poland
-  legacyCountryCode_POL = 86,
-  /// Portugal
-  legacyCountryCode_POR = 87,
-  /// People's Republic of China
-  legacyCountryCode_PRC = 88,
-  /// Republic of Paraguay
-  legacyCountryCode_PRY = 89,
-  /// People's Republic of China/European Space Agency
-  legacyCountryCode_PRES = 90,
-  /// State of Qatar
-  legacyCountryCode_QAT = 91,
-  /// RascomStar-QAF
-  legacyCountryCode_RASC = 92,
-  /// Taiwan (Republic of China)
-  legacyCountryCode_ROC = 93,
-  /// Romania
-  legacyCountryCode_ROM = 94,
-  /// Philippines (Republic of the Philippines)
-  legacyCountryCode_RP = 95,
-  /// Republic of Rwanda
-  legacyCountryCode_RWA = 96,
-  /// South Africa
-  legacyCountryCode_SAFR = 97,
-  /// Saudi Arabia
-  legacyCountryCode_SAUD = 98,
-  /// Republic of Sudan
-  legacyCountryCode_SDN = 99,
-  /// Sea Launch
-  legacyCountryCode_SEAL = 100,
-  /// SES
-  legacyCountryCode_SES = 101,
-  /// Singapore/Japan
-  legacyCountryCode_SGJP = 102,
-  /// Singapore
-  legacyCountryCode_SING = 103,
-  /// Republic of Korea
-  legacyCountryCode_SKOR = 104,
-  /// Spain
-  legacyCountryCode_SPN = 105,
-  /// Singapore/Taiwan
-  legacyCountryCode_STCT = 106,
-  /// Slovenia
-  legacyCountryCode_SVN = 107,
-  /// Sweden
-  legacyCountryCode_SWED = 108,
-  /// Switzerland
-  legacyCountryCode_SWTZ = 109,
-  /// To Be Determined
-  legacyCountryCode_TBD = 110,
-  /// Thailand
-  legacyCountryCode_THAI = 111,
-  /// Turkmenistan/Monaco
-  legacyCountryCode_TMMC = 112,
-  /// Republic of Tunisia
-  legacyCountryCode_TUN = 113,
-  /// Turkey
-  legacyCountryCode_TURK = 114,
-  /// United Arab Emirates
-  legacyCountryCode_UAE = 115,
-  /// United Kingdom
-  legacyCountryCode_UK = 116,
-  /// Ukraine
-  legacyCountryCode_UKR = 117,
-  /// Unknown
-  legacyCountryCode_UNK = 118,
-  /// Uruguay
-  legacyCountryCode_URY = 119,
-  /// United States
-  legacyCountryCode_US = 120,
-  /// United States/Brazil
-  legacyCountryCode_USBZ = 121,
-  /// Vatican City State
-  legacyCountryCode_VAT = 122,
-  /// Venezuela
-  legacyCountryCode_VENZ = 123,
-  /// Vietnam
-  legacyCountryCode_VTNM = 124,
-  /// Republic of Zimbabwe
-  legacyCountryCode_ZWE = 125,
-  legacyCountryCode_MIN = legacyCountryCode_AB,
-  legacyCountryCode_MAX = legacyCountryCode_ZWE
+struct PPEPositionRecord;
+struct PPEPositionRecordBuilder;
+
+struct PPEOrbitalElementRecord;
+struct PPEOrbitalElementRecordBuilder;
+
+struct PPE;
+struct PPEBuilder;
+
+/// Polynomial basis type for coefficient interpretation.
+/// Determines how the coefficient arrays are evaluated.
+enum polynomialBasisType : int8_t {
+  /// Chebyshev polynomials of the first kind T_n(x).
+  /// Most common for ephemeris fitting due to minimax approximation properties.
+  polynomialBasisType_CHEBYSHEV = 0,
+  /// Legendre polynomials P_n(x).
+  /// Orthogonal on [-1, 1] with unit weight function.
+  polynomialBasisType_LEGENDRE = 1,
+  /// Hermite interpolating polynomials.
+  /// Matches both function values and derivatives at nodes.
+  polynomialBasisType_HERMITE = 2,
+  /// Lagrange interpolating polynomials.
+  /// Exact interpolation through specified nodes.
+  polynomialBasisType_LAGRANGE = 3,
+  /// Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ...
+  polynomialBasisType_POWER_SERIES = 4,
+  polynomialBasisType_MIN = polynomialBasisType_CHEBYSHEV,
+  polynomialBasisType_MAX = polynomialBasisType_POWER_SERIES
 };
 
-inline const legacyCountryCode (&EnumValueslegacyCountryCode())[126] {
-  static const legacyCountryCode values[] = {
-    legacyCountryCode_AB,
-    legacyCountryCode_ABS,
-    legacyCountryCode_AC,
-    legacyCountryCode_ALG,
-    legacyCountryCode_ANG,
-    legacyCountryCode_ARGN,
-    legacyCountryCode_ARM,
-    legacyCountryCode_ASRA,
-    legacyCountryCode_AUS,
-    legacyCountryCode_AZER,
-    legacyCountryCode_BEL,
-    legacyCountryCode_BELA,
-    legacyCountryCode_BERM,
-    legacyCountryCode_BGD,
-    legacyCountryCode_BHUT,
-    legacyCountryCode_BOL,
-    legacyCountryCode_BRAZ,
-    legacyCountryCode_BUL,
-    legacyCountryCode_CA,
-    legacyCountryCode_CHBZ,
-    legacyCountryCode_CHTU,
-    legacyCountryCode_CHLE,
-    legacyCountryCode_CIS,
-    legacyCountryCode_COL,
-    legacyCountryCode_CRI,
-    legacyCountryCode_CZCH,
-    legacyCountryCode_DEN,
-    legacyCountryCode_DJI,
-    legacyCountryCode_ECU,
-    legacyCountryCode_EGYP,
-    legacyCountryCode_ESA,
-    legacyCountryCode_ESRO,
-    legacyCountryCode_EST,
-    legacyCountryCode_ETH,
-    legacyCountryCode_EUME,
-    legacyCountryCode_EUTE,
-    legacyCountryCode_FGER,
-    legacyCountryCode_FIN,
-    legacyCountryCode_FR,
-    legacyCountryCode_FRIT,
-    legacyCountryCode_GER,
-    legacyCountryCode_GHA,
-    legacyCountryCode_GLOB,
-    legacyCountryCode_GREC,
-    legacyCountryCode_GRSA,
-    legacyCountryCode_GUAT,
-    legacyCountryCode_HUN,
-    legacyCountryCode_IM,
-    legacyCountryCode_IND,
-    legacyCountryCode_INDO,
-    legacyCountryCode_IRAN,
-    legacyCountryCode_IRAQ,
-    legacyCountryCode_IRID,
-    legacyCountryCode_IRL,
-    legacyCountryCode_ISRA,
-    legacyCountryCode_ISRO,
-    legacyCountryCode_ISS,
-    legacyCountryCode_IT,
-    legacyCountryCode_ITSO,
-    legacyCountryCode_JPN,
-    legacyCountryCode_KAZ,
-    legacyCountryCode_KEN,
-    legacyCountryCode_LAOS,
-    legacyCountryCode_LKA,
-    legacyCountryCode_LTU,
-    legacyCountryCode_LUXE,
-    legacyCountryCode_MA,
-    legacyCountryCode_MALA,
-    legacyCountryCode_MCO,
-    legacyCountryCode_MDA,
-    legacyCountryCode_MEX,
-    legacyCountryCode_MMR,
-    legacyCountryCode_MNG,
-    legacyCountryCode_MUS,
-    legacyCountryCode_NATO,
-    legacyCountryCode_NETH,
-    legacyCountryCode_NICO,
-    legacyCountryCode_NIG,
-    legacyCountryCode_NKOR,
-    legacyCountryCode_NOR,
-    legacyCountryCode_NPL,
-    legacyCountryCode_NZ,
-    legacyCountryCode_O3B,
-    legacyCountryCode_ORB,
-    legacyCountryCode_PAKI,
-    legacyCountryCode_PERU,
-    legacyCountryCode_POL,
-    legacyCountryCode_POR,
-    legacyCountryCode_PRC,
-    legacyCountryCode_PRY,
-    legacyCountryCode_PRES,
-    legacyCountryCode_QAT,
-    legacyCountryCode_RASC,
-    legacyCountryCode_ROC,
-    legacyCountryCode_ROM,
-    legacyCountryCode_RP,
-    legacyCountryCode_RWA,
-    legacyCountryCode_SAFR,
-    legacyCountryCode_SAUD,
-    legacyCountryCode_SDN,
-    legacyCountryCode_SEAL,
-    legacyCountryCode_SES,
-    legacyCountryCode_SGJP,
-    legacyCountryCode_SING,
-    legacyCountryCode_SKOR,
-    legacyCountryCode_SPN,
-    legacyCountryCode_STCT,
-    legacyCountryCode_SVN,
-    legacyCountryCode_SWED,
-    legacyCountryCode_SWTZ,
-    legacyCountryCode_TBD,
-    legacyCountryCode_THAI,
-    legacyCountryCode_TMMC,
-    legacyCountryCode_TUN,
-    legacyCountryCode_TURK,
-    legacyCountryCode_UAE,
-    legacyCountryCode_UK,
-    legacyCountryCode_UKR,
-    legacyCountryCode_UNK,
-    legacyCountryCode_URY,
-    legacyCountryCode_US,
-    legacyCountryCode_USBZ,
-    legacyCountryCode_VAT,
-    legacyCountryCode_VENZ,
-    legacyCountryCode_VTNM,
-    legacyCountryCode_ZWE
+inline const polynomialBasisType (&EnumValuespolynomialBasisType())[5] {
+  static const polynomialBasisType values[] = {
+    polynomialBasisType_CHEBYSHEV,
+    polynomialBasisType_LEGENDRE,
+    polynomialBasisType_HERMITE,
+    polynomialBasisType_LAGRANGE,
+    polynomialBasisType_POWER_SERIES
   };
   return values;
 }
 
-inline const char * const *EnumNameslegacyCountryCode() {
-  static const char * const names[127] = {
-    "AB",
-    "ABS",
-    "AC",
-    "ALG",
-    "ANG",
-    "ARGN",
-    "ARM",
-    "ASRA",
-    "AUS",
-    "AZER",
-    "BEL",
-    "BELA",
-    "BERM",
-    "BGD",
-    "BHUT",
-    "BOL",
-    "BRAZ",
-    "BUL",
-    "CA",
-    "CHBZ",
-    "CHTU",
-    "CHLE",
-    "CIS",
-    "COL",
-    "CRI",
-    "CZCH",
-    "DEN",
-    "DJI",
-    "ECU",
-    "EGYP",
-    "ESA",
-    "ESRO",
-    "EST",
-    "ETH",
-    "EUME",
-    "EUTE",
-    "FGER",
-    "FIN",
-    "FR",
-    "FRIT",
-    "GER",
-    "GHA",
-    "GLOB",
-    "GREC",
-    "GRSA",
-    "GUAT",
-    "HUN",
-    "IM",
-    "IND",
-    "INDO",
-    "IRAN",
-    "IRAQ",
-    "IRID",
-    "IRL",
-    "ISRA",
-    "ISRO",
-    "ISS",
-    "IT",
-    "ITSO",
-    "JPN",
-    "KAZ",
-    "KEN",
-    "LAOS",
-    "LKA",
-    "LTU",
-    "LUXE",
-    "MA",
-    "MALA",
-    "MCO",
-    "MDA",
-    "MEX",
-    "MMR",
-    "MNG",
-    "MUS",
-    "NATO",
-    "NETH",
-    "NICO",
-    "NIG",
-    "NKOR",
-    "NOR",
-    "NPL",
-    "NZ",
-    "O3B",
-    "ORB",
-    "PAKI",
-    "PERU",
-    "POL",
-    "POR",
-    "PRC",
-    "PRY",
-    "PRES",
-    "QAT",
-    "RASC",
-    "ROC",
-    "ROM",
-    "RP",
-    "RWA",
-    "SAFR",
-    "SAUD",
-    "SDN",
-    "SEAL",
-    "SES",
-    "SGJP",
-    "SING",
-    "SKOR",
-    "SPN",
-    "STCT",
-    "SVN",
-    "SWED",
-    "SWTZ",
-    "TBD",
-    "THAI",
-    "TMMC",
-    "TUN",
-    "TURK",
-    "UAE",
-    "UK",
-    "UKR",
-    "UNK",
-    "URY",
-    "US",
-    "USBZ",
-    "VAT",
-    "VENZ",
-    "VTNM",
-    "ZWE",
+inline const char * const *EnumNamespolynomialBasisType() {
+  static const char * const names[6] = {
+    "CHEBYSHEV",
+    "LEGENDRE",
+    "HERMITE",
+    "LAGRANGE",
+    "POWER_SERIES",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNamelegacyCountryCode(legacyCountryCode e) {
-  if (::flatbuffers::IsOutRange(e, legacyCountryCode_AB, legacyCountryCode_ZWE)) return "";
+inline const char *EnumNamepolynomialBasisType(polynomialBasisType e) {
+  if (::flatbuffers::IsOutRange(e, polynomialBasisType_CHEBYSHEV, polynomialBasisType_POWER_SERIES)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNameslegacyCountryCode()[index];
+  return EnumNamespolynomialBasisType()[index];
 }
 
-/// Legacy Country Code
-struct LCC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef LCCBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_OWNER = 4
+/// Anomaly type flag for orbital element records.
+enum ppeAnomalyType : int8_t {
+  /// True anomaly (geometric angle from periapsis).
+  ppeAnomalyType_TRUE_ANOMALY = 0,
+  /// Mean anomaly (linear in time for Keplerian motion).
+  ppeAnomalyType_MEAN_ANOMALY = 1,
+  /// Eccentric anomaly (auxiliary angle in the Kepler equation).
+  ppeAnomalyType_ECCENTRIC_ANOMALY = 2,
+  ppeAnomalyType_MIN = ppeAnomalyType_TRUE_ANOMALY,
+  ppeAnomalyType_MAX = ppeAnomalyType_ECCENTRIC_ANOMALY
+};
+
+inline const ppeAnomalyType (&EnumValuesppeAnomalyType())[3] {
+  static const ppeAnomalyType values[] = {
+    ppeAnomalyType_TRUE_ANOMALY,
+    ppeAnomalyType_MEAN_ANOMALY,
+    ppeAnomalyType_ECCENTRIC_ANOMALY
   };
-  legacyCountryCode OWNER() const {
-    return static_cast<legacyCountryCode>(GetField<int8_t>(VT_OWNER, 0));
+  return values;
+}
+
+inline const char * const *EnumNamesppeAnomalyType() {
+  static const char * const names[4] = {
+    "TRUE_ANOMALY",
+    "MEAN_ANOMALY",
+    "ECCENTRIC_ANOMALY",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameppeAnomalyType(ppeAnomalyType e) {
+  if (::flatbuffers::IsOutRange(e, ppeAnomalyType_TRUE_ANOMALY, ppeAnomalyType_ECCENTRIC_ANOMALY)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesppeAnomalyType()[index];
+}
+
+/// Orbital element parameterization for the first element (size/shape).
+enum sizeShapeProfile : int8_t {
+  /// Semi-major axis (km). Standard for elliptical orbits.
+  sizeShapeProfile_SMA = 0,
+  /// Radius of periapsis (km). Preferred for hyperbolic orbits.
+  sizeShapeProfile_R_PERIAPSIS = 1,
+  sizeShapeProfile_MIN = sizeShapeProfile_SMA,
+  sizeShapeProfile_MAX = sizeShapeProfile_R_PERIAPSIS
+};
+
+inline const sizeShapeProfile (&EnumValuessizeShapeProfile())[2] {
+  static const sizeShapeProfile values[] = {
+    sizeShapeProfile_SMA,
+    sizeShapeProfile_R_PERIAPSIS
+  };
+  return values;
+}
+
+inline const char * const *EnumNamessizeShapeProfile() {
+  static const char * const names[3] = {
+    "SMA",
+    "R_PERIAPSIS",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamesizeShapeProfile(sizeShapeProfile e) {
+  if (::flatbuffers::IsOutRange(e, sizeShapeProfile_SMA, sizeShapeProfile_R_PERIAPSIS)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamessizeShapeProfile()[index];
+}
+
+/// A single time-segment record of polynomial coefficients for Cartesian position
+/// (and optionally velocity). Coefficients are stored per axis.
+///
+/// To evaluate position at time t within this record's validity window:
+///   1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN
+///      where tau is in [-1, +1].
+///   2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using
+///      the coefficients for each axis.
+///
+/// Velocity coefficients, if present, follow the same evaluation procedure.
+/// If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by
+/// analytically differentiating the position polynomial.
+struct PPEPositionRecord FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PPEPositionRecordBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EPOCH_MID = 4,
+    VT_EPOCH_HALF_SPAN = 6,
+    VT_NUM_COEFFICIENTS = 8,
+    VT_BASIS_TYPE = 10,
+    VT_POS_COEFF_X = 12,
+    VT_POS_COEFF_Y = 14,
+    VT_POS_COEFF_Z = 16,
+    VT_HAS_VELOCITY_COEFFICIENTS = 18,
+    VT_VEL_COEFF_X = 20,
+    VT_VEL_COEFF_Y = 22,
+    VT_VEL_COEFF_Z = 24,
+    VT_MAX_POSITION_RESIDUAL = 26,
+    VT_RMS_POSITION_RESIDUAL = 28
+  };
+  /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
+  /// Together with EPOCH_HALF_SPAN, defines the time interval:
+  ///   [EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]
+  const ::flatbuffers::String *EPOCH_MID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH_MID);
+  }
+  /// Half-span of the validity window in seconds.
+  /// The full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID.
+  double EPOCH_HALF_SPAN() const {
+    return GetField<double>(VT_EPOCH_HALF_SPAN, 0.0);
+  }
+  /// Number of polynomial coefficients per axis.
+  /// The polynomial degree is (NUM_COEFFICIENTS - 1).
+  /// Typical values: 8-32 for high-fidelity ephemeris fits.
+  uint16_t NUM_COEFFICIENTS() const {
+    return GetField<uint16_t>(VT_NUM_COEFFICIENTS, 0);
+  }
+  /// Polynomial basis type for interpreting the coefficient arrays.
+  polynomialBasisType BASIS_TYPE() const {
+    return static_cast<polynomialBasisType>(GetField<int8_t>(VT_BASIS_TYPE, 0));
+  }
+  /// Position coefficients for X-axis (km).
+  /// Length must equal NUM_COEFFICIENTS. Ordered c0, c1, ..., c_{N-1}.
+  const ::flatbuffers::Vector<double> *POS_COEFF_X() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POS_COEFF_X);
+  }
+  /// Position coefficients for Y-axis (km).
+  /// Length must equal NUM_COEFFICIENTS.
+  const ::flatbuffers::Vector<double> *POS_COEFF_Y() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POS_COEFF_Y);
+  }
+  /// Position coefficients for Z-axis (km).
+  /// Length must equal NUM_COEFFICIENTS.
+  const ::flatbuffers::Vector<double> *POS_COEFF_Z() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POS_COEFF_Z);
+  }
+  /// Whether explicit velocity coefficients are provided.
+  /// If false, velocity should be derived by differentiating the position polynomial.
+  bool HAS_VELOCITY_COEFFICIENTS() const {
+    return GetField<uint8_t>(VT_HAS_VELOCITY_COEFFICIENTS, 0) != 0;
+  }
+  /// Velocity coefficients for X-axis (km/s). Optional.
+  /// Length must equal NUM_COEFFICIENTS if present.
+  const ::flatbuffers::Vector<double> *VEL_COEFF_X() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_VEL_COEFF_X);
+  }
+  /// Velocity coefficients for Y-axis (km/s). Optional.
+  const ::flatbuffers::Vector<double> *VEL_COEFF_Y() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_VEL_COEFF_Y);
+  }
+  /// Velocity coefficients for Z-axis (km/s). Optional.
+  const ::flatbuffers::Vector<double> *VEL_COEFF_Z() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_VEL_COEFF_Z);
+  }
+  /// Maximum position fit residual over this segment (km). Optional quality metric.
+  double MAX_POSITION_RESIDUAL() const {
+    return GetField<double>(VT_MAX_POSITION_RESIDUAL, 0.0);
+  }
+  /// RMS position fit residual over this segment (km). Optional quality metric.
+  double RMS_POSITION_RESIDUAL() const {
+    return GetField<double>(VT_RMS_POSITION_RESIDUAL, 0.0);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<int8_t>(verifier, VT_OWNER, 1) &&
+           VerifyOffsetRequired(verifier, VT_EPOCH_MID) &&
+           verifier.VerifyString(EPOCH_MID()) &&
+           VerifyField<double>(verifier, VT_EPOCH_HALF_SPAN, 8) &&
+           VerifyField<uint16_t>(verifier, VT_NUM_COEFFICIENTS, 2) &&
+           VerifyField<int8_t>(verifier, VT_BASIS_TYPE, 1) &&
+           VerifyOffsetRequired(verifier, VT_POS_COEFF_X) &&
+           verifier.VerifyVector(POS_COEFF_X()) &&
+           VerifyOffsetRequired(verifier, VT_POS_COEFF_Y) &&
+           verifier.VerifyVector(POS_COEFF_Y()) &&
+           VerifyOffsetRequired(verifier, VT_POS_COEFF_Z) &&
+           verifier.VerifyVector(POS_COEFF_Z()) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_VELOCITY_COEFFICIENTS, 1) &&
+           VerifyOffset(verifier, VT_VEL_COEFF_X) &&
+           verifier.VerifyVector(VEL_COEFF_X()) &&
+           VerifyOffset(verifier, VT_VEL_COEFF_Y) &&
+           verifier.VerifyVector(VEL_COEFF_Y()) &&
+           VerifyOffset(verifier, VT_VEL_COEFF_Z) &&
+           verifier.VerifyVector(VEL_COEFF_Z()) &&
+           VerifyField<double>(verifier, VT_MAX_POSITION_RESIDUAL, 8) &&
+           VerifyField<double>(verifier, VT_RMS_POSITION_RESIDUAL, 8) &&
            verifier.EndTable();
   }
 };
 
-struct LCCBuilder {
-  typedef LCC Table;
+struct PPEPositionRecordBuilder {
+  typedef PPEPositionRecord Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_OWNER(legacyCountryCode OWNER) {
-    fbb_.AddElement<int8_t>(LCC::VT_OWNER, static_cast<int8_t>(OWNER), 0);
+  void add_EPOCH_MID(::flatbuffers::Offset<::flatbuffers::String> EPOCH_MID) {
+    fbb_.AddOffset(PPEPositionRecord::VT_EPOCH_MID, EPOCH_MID);
   }
-  explicit LCCBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_EPOCH_HALF_SPAN(double EPOCH_HALF_SPAN) {
+    fbb_.AddElement<double>(PPEPositionRecord::VT_EPOCH_HALF_SPAN, EPOCH_HALF_SPAN, 0.0);
+  }
+  void add_NUM_COEFFICIENTS(uint16_t NUM_COEFFICIENTS) {
+    fbb_.AddElement<uint16_t>(PPEPositionRecord::VT_NUM_COEFFICIENTS, NUM_COEFFICIENTS, 0);
+  }
+  void add_BASIS_TYPE(polynomialBasisType BASIS_TYPE) {
+    fbb_.AddElement<int8_t>(PPEPositionRecord::VT_BASIS_TYPE, static_cast<int8_t>(BASIS_TYPE), 0);
+  }
+  void add_POS_COEFF_X(::flatbuffers::Offset<::flatbuffers::Vector<double>> POS_COEFF_X) {
+    fbb_.AddOffset(PPEPositionRecord::VT_POS_COEFF_X, POS_COEFF_X);
+  }
+  void add_POS_COEFF_Y(::flatbuffers::Offset<::flatbuffers::Vector<double>> POS_COEFF_Y) {
+    fbb_.AddOffset(PPEPositionRecord::VT_POS_COEFF_Y, POS_COEFF_Y);
+  }
+  void add_POS_COEFF_Z(::flatbuffers::Offset<::flatbuffers::Vector<double>> POS_COEFF_Z) {
+    fbb_.AddOffset(PPEPositionRecord::VT_POS_COEFF_Z, POS_COEFF_Z);
+  }
+  void add_HAS_VELOCITY_COEFFICIENTS(bool HAS_VELOCITY_COEFFICIENTS) {
+    fbb_.AddElement<uint8_t>(PPEPositionRecord::VT_HAS_VELOCITY_COEFFICIENTS, static_cast<uint8_t>(HAS_VELOCITY_COEFFICIENTS), 0);
+  }
+  void add_VEL_COEFF_X(::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_X) {
+    fbb_.AddOffset(PPEPositionRecord::VT_VEL_COEFF_X, VEL_COEFF_X);
+  }
+  void add_VEL_COEFF_Y(::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_Y) {
+    fbb_.AddOffset(PPEPositionRecord::VT_VEL_COEFF_Y, VEL_COEFF_Y);
+  }
+  void add_VEL_COEFF_Z(::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_Z) {
+    fbb_.AddOffset(PPEPositionRecord::VT_VEL_COEFF_Z, VEL_COEFF_Z);
+  }
+  void add_MAX_POSITION_RESIDUAL(double MAX_POSITION_RESIDUAL) {
+    fbb_.AddElement<double>(PPEPositionRecord::VT_MAX_POSITION_RESIDUAL, MAX_POSITION_RESIDUAL, 0.0);
+  }
+  void add_RMS_POSITION_RESIDUAL(double RMS_POSITION_RESIDUAL) {
+    fbb_.AddElement<double>(PPEPositionRecord::VT_RMS_POSITION_RESIDUAL, RMS_POSITION_RESIDUAL, 0.0);
+  }
+  explicit PPEPositionRecordBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<LCC> Finish() {
+  ::flatbuffers::Offset<PPEPositionRecord> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<LCC>(end);
+    auto o = ::flatbuffers::Offset<PPEPositionRecord>(end);
+    fbb_.Required(o, PPEPositionRecord::VT_EPOCH_MID);
+    fbb_.Required(o, PPEPositionRecord::VT_POS_COEFF_X);
+    fbb_.Required(o, PPEPositionRecord::VT_POS_COEFF_Y);
+    fbb_.Required(o, PPEPositionRecord::VT_POS_COEFF_Z);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<LCC> CreateLCC(
+inline ::flatbuffers::Offset<PPEPositionRecord> CreatePPEPositionRecord(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    legacyCountryCode OWNER = legacyCountryCode_AB) {
-  LCCBuilder builder_(_fbb);
-  builder_.add_OWNER(OWNER);
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH_MID = 0,
+    double EPOCH_HALF_SPAN = 0.0,
+    uint16_t NUM_COEFFICIENTS = 0,
+    polynomialBasisType BASIS_TYPE = polynomialBasisType_CHEBYSHEV,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POS_COEFF_X = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POS_COEFF_Y = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POS_COEFF_Z = 0,
+    bool HAS_VELOCITY_COEFFICIENTS = false,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_X = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_Y = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_Z = 0,
+    double MAX_POSITION_RESIDUAL = 0.0,
+    double RMS_POSITION_RESIDUAL = 0.0) {
+  PPEPositionRecordBuilder builder_(_fbb);
+  builder_.add_RMS_POSITION_RESIDUAL(RMS_POSITION_RESIDUAL);
+  builder_.add_MAX_POSITION_RESIDUAL(MAX_POSITION_RESIDUAL);
+  builder_.add_EPOCH_HALF_SPAN(EPOCH_HALF_SPAN);
+  builder_.add_VEL_COEFF_Z(VEL_COEFF_Z);
+  builder_.add_VEL_COEFF_Y(VEL_COEFF_Y);
+  builder_.add_VEL_COEFF_X(VEL_COEFF_X);
+  builder_.add_POS_COEFF_Z(POS_COEFF_Z);
+  builder_.add_POS_COEFF_Y(POS_COEFF_Y);
+  builder_.add_POS_COEFF_X(POS_COEFF_X);
+  builder_.add_EPOCH_MID(EPOCH_MID);
+  builder_.add_NUM_COEFFICIENTS(NUM_COEFFICIENTS);
+  builder_.add_HAS_VELOCITY_COEFFICIENTS(HAS_VELOCITY_COEFFICIENTS);
+  builder_.add_BASIS_TYPE(BASIS_TYPE);
   return builder_.Finish();
 }
 
-inline const LCC *GetLCC(const void *buf) {
-  return ::flatbuffers::GetRoot<LCC>(buf);
+inline ::flatbuffers::Offset<PPEPositionRecord> CreatePPEPositionRecordDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *EPOCH_MID = nullptr,
+    double EPOCH_HALF_SPAN = 0.0,
+    uint16_t NUM_COEFFICIENTS = 0,
+    polynomialBasisType BASIS_TYPE = polynomialBasisType_CHEBYSHEV,
+    const std::vector<double> *POS_COEFF_X = nullptr,
+    const std::vector<double> *POS_COEFF_Y = nullptr,
+    const std::vector<double> *POS_COEFF_Z = nullptr,
+    bool HAS_VELOCITY_COEFFICIENTS = false,
+    const std::vector<double> *VEL_COEFF_X = nullptr,
+    const std::vector<double> *VEL_COEFF_Y = nullptr,
+    const std::vector<double> *VEL_COEFF_Z = nullptr,
+    double MAX_POSITION_RESIDUAL = 0.0,
+    double RMS_POSITION_RESIDUAL = 0.0) {
+  auto EPOCH_MID__ = EPOCH_MID ? _fbb.CreateString(EPOCH_MID) : 0;
+  auto POS_COEFF_X__ = POS_COEFF_X ? _fbb.CreateVector<double>(*POS_COEFF_X) : 0;
+  auto POS_COEFF_Y__ = POS_COEFF_Y ? _fbb.CreateVector<double>(*POS_COEFF_Y) : 0;
+  auto POS_COEFF_Z__ = POS_COEFF_Z ? _fbb.CreateVector<double>(*POS_COEFF_Z) : 0;
+  auto VEL_COEFF_X__ = VEL_COEFF_X ? _fbb.CreateVector<double>(*VEL_COEFF_X) : 0;
+  auto VEL_COEFF_Y__ = VEL_COEFF_Y ? _fbb.CreateVector<double>(*VEL_COEFF_Y) : 0;
+  auto VEL_COEFF_Z__ = VEL_COEFF_Z ? _fbb.CreateVector<double>(*VEL_COEFF_Z) : 0;
+  return CreatePPEPositionRecord(
+      _fbb,
+      EPOCH_MID__,
+      EPOCH_HALF_SPAN,
+      NUM_COEFFICIENTS,
+      BASIS_TYPE,
+      POS_COEFF_X__,
+      POS_COEFF_Y__,
+      POS_COEFF_Z__,
+      HAS_VELOCITY_COEFFICIENTS,
+      VEL_COEFF_X__,
+      VEL_COEFF_Y__,
+      VEL_COEFF_Z__,
+      MAX_POSITION_RESIDUAL,
+      RMS_POSITION_RESIDUAL);
 }
 
-inline const LCC *GetSizePrefixedLCC(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<LCC>(buf);
+/// A single time-segment record of polynomial coefficients for classical orbital elements.
+///
+/// The six classical elements are:
+///   1. SMA or R_PERIAPSIS (size/shape) — see SIZE_SHAPE_TYPE
+///   2. Eccentricity (dimensionless)
+///   3. Inclination (degrees)
+///   4. Right Ascension of Ascending Node / RAAN (degrees)
+///   5. Argument of Periapsis (degrees)
+///   6. Anomaly (degrees) — see ANOMALY_TYPE
+///
+/// Evaluation follows the same normalized-time procedure as PPEPositionRecord.
+struct PPEOrbitalElementRecord FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PPEOrbitalElementRecordBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EPOCH_MID = 4,
+    VT_EPOCH_HALF_SPAN = 6,
+    VT_NUM_COEFFICIENTS = 8,
+    VT_BASIS_TYPE = 10,
+    VT_SIZE_SHAPE_TYPE = 12,
+    VT_ANOMALY_TYPE = 14,
+    VT_COEFF_SIZE_SHAPE = 16,
+    VT_COEFF_ECCENTRICITY = 18,
+    VT_COEFF_INCLINATION = 20,
+    VT_COEFF_RAAN = 22,
+    VT_COEFF_ARG_PERIAPSIS = 24,
+    VT_COEFF_ANOMALY = 26,
+    VT_MAX_ELEMENT_RESIDUAL = 28,
+    VT_RMS_ELEMENT_RESIDUAL = 30
+  };
+  /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
+  const ::flatbuffers::String *EPOCH_MID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH_MID);
+  }
+  /// Half-span of the validity window in seconds.
+  double EPOCH_HALF_SPAN() const {
+    return GetField<double>(VT_EPOCH_HALF_SPAN, 0.0);
+  }
+  /// Number of polynomial coefficients per element.
+  uint16_t NUM_COEFFICIENTS() const {
+    return GetField<uint16_t>(VT_NUM_COEFFICIENTS, 0);
+  }
+  /// Polynomial basis type for interpreting the coefficient arrays.
+  polynomialBasisType BASIS_TYPE() const {
+    return static_cast<polynomialBasisType>(GetField<int8_t>(VT_BASIS_TYPE, 0));
+  }
+  /// Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
+  sizeShapeProfile SIZE_SHAPE_TYPE() const {
+    return static_cast<sizeShapeProfile>(GetField<int8_t>(VT_SIZE_SHAPE_TYPE, 0));
+  }
+  /// Anomaly type for the sixth orbital element.
+  ppeAnomalyType ANOMALY_TYPE() const {
+    return static_cast<ppeAnomalyType>(GetField<int8_t>(VT_ANOMALY_TYPE, 0));
+  }
+  /// Coefficients for SMA or radius of periapsis (km).
+  /// Length must equal NUM_COEFFICIENTS.
+  const ::flatbuffers::Vector<double> *COEFF_SIZE_SHAPE() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COEFF_SIZE_SHAPE);
+  }
+  /// Coefficients for eccentricity (dimensionless).
+  /// Length must equal NUM_COEFFICIENTS.
+  const ::flatbuffers::Vector<double> *COEFF_ECCENTRICITY() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COEFF_ECCENTRICITY);
+  }
+  /// Coefficients for inclination (degrees).
+  /// Length must equal NUM_COEFFICIENTS.
+  const ::flatbuffers::Vector<double> *COEFF_INCLINATION() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COEFF_INCLINATION);
+  }
+  /// Coefficients for RAAN (degrees).
+  /// Length must equal NUM_COEFFICIENTS.
+  const ::flatbuffers::Vector<double> *COEFF_RAAN() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COEFF_RAAN);
+  }
+  /// Coefficients for argument of periapsis (degrees).
+  /// Length must equal NUM_COEFFICIENTS.
+  const ::flatbuffers::Vector<double> *COEFF_ARG_PERIAPSIS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COEFF_ARG_PERIAPSIS);
+  }
+  /// Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.
+  /// Length must equal NUM_COEFFICIENTS.
+  const ::flatbuffers::Vector<double> *COEFF_ANOMALY() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COEFF_ANOMALY);
+  }
+  /// Maximum element fit residual over this segment. Optional quality metric.
+  /// Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).
+  double MAX_ELEMENT_RESIDUAL() const {
+    return GetField<double>(VT_MAX_ELEMENT_RESIDUAL, 0.0);
+  }
+  /// RMS element fit residual over this segment. Optional quality metric.
+  double RMS_ELEMENT_RESIDUAL() const {
+    return GetField<double>(VT_RMS_ELEMENT_RESIDUAL, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_EPOCH_MID) &&
+           verifier.VerifyString(EPOCH_MID()) &&
+           VerifyField<double>(verifier, VT_EPOCH_HALF_SPAN, 8) &&
+           VerifyField<uint16_t>(verifier, VT_NUM_COEFFICIENTS, 2) &&
+           VerifyField<int8_t>(verifier, VT_BASIS_TYPE, 1) &&
+           VerifyField<int8_t>(verifier, VT_SIZE_SHAPE_TYPE, 1) &&
+           VerifyField<int8_t>(verifier, VT_ANOMALY_TYPE, 1) &&
+           VerifyOffsetRequired(verifier, VT_COEFF_SIZE_SHAPE) &&
+           verifier.VerifyVector(COEFF_SIZE_SHAPE()) &&
+           VerifyOffsetRequired(verifier, VT_COEFF_ECCENTRICITY) &&
+           verifier.VerifyVector(COEFF_ECCENTRICITY()) &&
+           VerifyOffsetRequired(verifier, VT_COEFF_INCLINATION) &&
+           verifier.VerifyVector(COEFF_INCLINATION()) &&
+           VerifyOffsetRequired(verifier, VT_COEFF_RAAN) &&
+           verifier.VerifyVector(COEFF_RAAN()) &&
+           VerifyOffsetRequired(verifier, VT_COEFF_ARG_PERIAPSIS) &&
+           verifier.VerifyVector(COEFF_ARG_PERIAPSIS()) &&
+           VerifyOffsetRequired(verifier, VT_COEFF_ANOMALY) &&
+           verifier.VerifyVector(COEFF_ANOMALY()) &&
+           VerifyField<double>(verifier, VT_MAX_ELEMENT_RESIDUAL, 8) &&
+           VerifyField<double>(verifier, VT_RMS_ELEMENT_RESIDUAL, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct PPEOrbitalElementRecordBuilder {
+  typedef PPEOrbitalElementRecord Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_EPOCH_MID(::flatbuffers::Offset<::flatbuffers::String> EPOCH_MID) {
+    fbb_.AddOffset(PPEOrbitalElementRecord::VT_EPOCH_MID, EPOCH_MID);
+  }
+  void add_EPOCH_HALF_SPAN(double EPOCH_HALF_SPAN) {
+    fbb_.AddElement<double>(PPEOrbitalElementRecord::VT_EPOCH_HALF_SPAN, EPOCH_HALF_SPAN, 0.0);
+  }
+  void add_NUM_COEFFICIENTS(uint16_t NUM_COEFFICIENTS) {
+    fbb_.AddElement<uint16_t>(PPEOrbitalElementRecord::VT_NUM_COEFFICIENTS, NUM_COEFFICIENTS, 0);
+  }
+  void add_BASIS_TYPE(polynomialBasisType BASIS_TYPE) {
+    fbb_.AddElement<int8_t>(PPEOrbitalElementRecord::VT_BASIS_TYPE, static_cast<int8_t>(BASIS_TYPE), 0);
+  }
+  void add_SIZE_SHAPE_TYPE(sizeShapeProfile SIZE_SHAPE_TYPE) {
+    fbb_.AddElement<int8_t>(PPEOrbitalElementRecord::VT_SIZE_SHAPE_TYPE, static_cast<int8_t>(SIZE_SHAPE_TYPE), 0);
+  }
+  void add_ANOMALY_TYPE(ppeAnomalyType ANOMALY_TYPE) {
+    fbb_.AddElement<int8_t>(PPEOrbitalElementRecord::VT_ANOMALY_TYPE, static_cast<int8_t>(ANOMALY_TYPE), 0);
+  }
+  void add_COEFF_SIZE_SHAPE(::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_SIZE_SHAPE) {
+    fbb_.AddOffset(PPEOrbitalElementRecord::VT_COEFF_SIZE_SHAPE, COEFF_SIZE_SHAPE);
+  }
+  void add_COEFF_ECCENTRICITY(::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_ECCENTRICITY) {
+    fbb_.AddOffset(PPEOrbitalElementRecord::VT_COEFF_ECCENTRICITY, COEFF_ECCENTRICITY);
+  }
+  void add_COEFF_INCLINATION(::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_INCLINATION) {
+    fbb_.AddOffset(PPEOrbitalElementRecord::VT_COEFF_INCLINATION, COEFF_INCLINATION);
+  }
+  void add_COEFF_RAAN(::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_RAAN) {
+    fbb_.AddOffset(PPEOrbitalElementRecord::VT_COEFF_RAAN, COEFF_RAAN);
+  }
+  void add_COEFF_ARG_PERIAPSIS(::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_ARG_PERIAPSIS) {
+    fbb_.AddOffset(PPEOrbitalElementRecord::VT_COEFF_ARG_PERIAPSIS, COEFF_ARG_PERIAPSIS);
+  }
+  void add_COEFF_ANOMALY(::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_ANOMALY) {
+    fbb_.AddOffset(PPEOrbitalElementRecord::VT_COEFF_ANOMALY, COEFF_ANOMALY);
+  }
+  void add_MAX_ELEMENT_RESIDUAL(double MAX_ELEMENT_RESIDUAL) {
+    fbb_.AddElement<double>(PPEOrbitalElementRecord::VT_MAX_ELEMENT_RESIDUAL, MAX_ELEMENT_RESIDUAL, 0.0);
+  }
+  void add_RMS_ELEMENT_RESIDUAL(double RMS_ELEMENT_RESIDUAL) {
+    fbb_.AddElement<double>(PPEOrbitalElementRecord::VT_RMS_ELEMENT_RESIDUAL, RMS_ELEMENT_RESIDUAL, 0.0);
+  }
+  explicit PPEOrbitalElementRecordBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PPEOrbitalElementRecord> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PPEOrbitalElementRecord>(end);
+    fbb_.Required(o, PPEOrbitalElementRecord::VT_EPOCH_MID);
+    fbb_.Required(o, PPEOrbitalElementRecord::VT_COEFF_SIZE_SHAPE);
+    fbb_.Required(o, PPEOrbitalElementRecord::VT_COEFF_ECCENTRICITY);
+    fbb_.Required(o, PPEOrbitalElementRecord::VT_COEFF_INCLINATION);
+    fbb_.Required(o, PPEOrbitalElementRecord::VT_COEFF_RAAN);
+    fbb_.Required(o, PPEOrbitalElementRecord::VT_COEFF_ARG_PERIAPSIS);
+    fbb_.Required(o, PPEOrbitalElementRecord::VT_COEFF_ANOMALY);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PPEOrbitalElementRecord> CreatePPEOrbitalElementRecord(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH_MID = 0,
+    double EPOCH_HALF_SPAN = 0.0,
+    uint16_t NUM_COEFFICIENTS = 0,
+    polynomialBasisType BASIS_TYPE = polynomialBasisType_CHEBYSHEV,
+    sizeShapeProfile SIZE_SHAPE_TYPE = sizeShapeProfile_SMA,
+    ppeAnomalyType ANOMALY_TYPE = ppeAnomalyType_TRUE_ANOMALY,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_SIZE_SHAPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_ECCENTRICITY = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_INCLINATION = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_RAAN = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_ARG_PERIAPSIS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_ANOMALY = 0,
+    double MAX_ELEMENT_RESIDUAL = 0.0,
+    double RMS_ELEMENT_RESIDUAL = 0.0) {
+  PPEOrbitalElementRecordBuilder builder_(_fbb);
+  builder_.add_RMS_ELEMENT_RESIDUAL(RMS_ELEMENT_RESIDUAL);
+  builder_.add_MAX_ELEMENT_RESIDUAL(MAX_ELEMENT_RESIDUAL);
+  builder_.add_EPOCH_HALF_SPAN(EPOCH_HALF_SPAN);
+  builder_.add_COEFF_ANOMALY(COEFF_ANOMALY);
+  builder_.add_COEFF_ARG_PERIAPSIS(COEFF_ARG_PERIAPSIS);
+  builder_.add_COEFF_RAAN(COEFF_RAAN);
+  builder_.add_COEFF_INCLINATION(COEFF_INCLINATION);
+  builder_.add_COEFF_ECCENTRICITY(COEFF_ECCENTRICITY);
+  builder_.add_COEFF_SIZE_SHAPE(COEFF_SIZE_SHAPE);
+  builder_.add_EPOCH_MID(EPOCH_MID);
+  builder_.add_NUM_COEFFICIENTS(NUM_COEFFICIENTS);
+  builder_.add_ANOMALY_TYPE(ANOMALY_TYPE);
+  builder_.add_SIZE_SHAPE_TYPE(SIZE_SHAPE_TYPE);
+  builder_.add_BASIS_TYPE(BASIS_TYPE);
+  return builder_.Finish();
 }
 
-inline const char *LCCIdentifier() {
-  return "$LCC";
+inline ::flatbuffers::Offset<PPEOrbitalElementRecord> CreatePPEOrbitalElementRecordDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *EPOCH_MID = nullptr,
+    double EPOCH_HALF_SPAN = 0.0,
+    uint16_t NUM_COEFFICIENTS = 0,
+    polynomialBasisType BASIS_TYPE = polynomialBasisType_CHEBYSHEV,
+    sizeShapeProfile SIZE_SHAPE_TYPE = sizeShapeProfile_SMA,
+    ppeAnomalyType ANOMALY_TYPE = ppeAnomalyType_TRUE_ANOMALY,
+    const std::vector<double> *COEFF_SIZE_SHAPE = nullptr,
+    const std::vector<double> *COEFF_ECCENTRICITY = nullptr,
+    const std::vector<double> *COEFF_INCLINATION = nullptr,
+    const std::vector<double> *COEFF_RAAN = nullptr,
+    const std::vector<double> *COEFF_ARG_PERIAPSIS = nullptr,
+    const std::vector<double> *COEFF_ANOMALY = nullptr,
+    double MAX_ELEMENT_RESIDUAL = 0.0,
+    double RMS_ELEMENT_RESIDUAL = 0.0) {
+  auto EPOCH_MID__ = EPOCH_MID ? _fbb.CreateString(EPOCH_MID) : 0;
+  auto COEFF_SIZE_SHAPE__ = COEFF_SIZE_SHAPE ? _fbb.CreateVector<double>(*COEFF_SIZE_SHAPE) : 0;
+  auto COEFF_ECCENTRICITY__ = COEFF_ECCENTRICITY ? _fbb.CreateVector<double>(*COEFF_ECCENTRICITY) : 0;
+  auto COEFF_INCLINATION__ = COEFF_INCLINATION ? _fbb.CreateVector<double>(*COEFF_INCLINATION) : 0;
+  auto COEFF_RAAN__ = COEFF_RAAN ? _fbb.CreateVector<double>(*COEFF_RAAN) : 0;
+  auto COEFF_ARG_PERIAPSIS__ = COEFF_ARG_PERIAPSIS ? _fbb.CreateVector<double>(*COEFF_ARG_PERIAPSIS) : 0;
+  auto COEFF_ANOMALY__ = COEFF_ANOMALY ? _fbb.CreateVector<double>(*COEFF_ANOMALY) : 0;
+  return CreatePPEOrbitalElementRecord(
+      _fbb,
+      EPOCH_MID__,
+      EPOCH_HALF_SPAN,
+      NUM_COEFFICIENTS,
+      BASIS_TYPE,
+      SIZE_SHAPE_TYPE,
+      ANOMALY_TYPE,
+      COEFF_SIZE_SHAPE__,
+      COEFF_ECCENTRICITY__,
+      COEFF_INCLINATION__,
+      COEFF_RAAN__,
+      COEFF_ARG_PERIAPSIS__,
+      COEFF_ANOMALY__,
+      MAX_ELEMENT_RESIDUAL,
+      RMS_ELEMENT_RESIDUAL);
 }
 
-inline bool LCCBufferHasIdentifier(const void *buf) {
+/// Polynomial Ephemeris — top-level message containing metadata and
+/// one or more polynomial coefficient records for a single space object.
+///
+/// A PPE message may contain position records, orbital element records, or both.
+/// Records should be ordered chronologically by EPOCH_MID and should collectively
+/// cover the time span [START_TIME, STOP_TIME] without gaps.
+struct PPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PPEBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COMMENT = 4,
+    VT_OBJECT = 6,
+    VT_CENTER_NAME = 8,
+    VT_REFERENCE_FRAME = 10,
+    VT_TIME_SYSTEM = 12,
+    VT_START_TIME = 14,
+    VT_STOP_TIME = 16,
+    VT_DEFAULT_BASIS_TYPE = 18,
+    VT_POSITION_RECORDS = 20,
+    VT_ORBITAL_ELEMENT_RECORDS = 22,
+    VT_EPHEMERIS_SOURCE = 24,
+    VT_NOMINAL_SEGMENT_SPAN = 26,
+    VT_NOMINAL_NUM_COEFFICIENTS = 28
+  };
+  /// Plain-text comments.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COMMENT);
+  }
+  /// Space object identification.
+  const CAT *OBJECT() const {
+    return GetPointer<const CAT *>(VT_OBJECT);
+  }
+  /// Origin of the reference frame (e.g., EARTH, MOON, MARS).
+  const ::flatbuffers::String *CENTER_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CENTER_NAME);
+  }
+  /// Reference frame for position/velocity coefficients.
+  const RFM *REFERENCE_FRAME() const {
+    return GetPointer<const RFM *>(VT_REFERENCE_FRAME);
+  }
+  /// Time system used for all epochs in this message.
+  timingStandard TIME_SYSTEM() const {
+    return static_cast<timingStandard>(GetField<int8_t>(VT_TIME_SYSTEM, 0));
+  }
+  /// Start of the total time span covered by this ephemeris (ISO 8601).
+  const ::flatbuffers::String *START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_START_TIME);
+  }
+  /// End of the total time span covered by this ephemeris (ISO 8601).
+  const ::flatbuffers::String *STOP_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STOP_TIME);
+  }
+  /// Default polynomial basis type for all records in this message.
+  /// Individual records may override this with their own BASIS_TYPE field.
+  polynomialBasisType DEFAULT_BASIS_TYPE() const {
+    return static_cast<polynomialBasisType>(GetField<int8_t>(VT_DEFAULT_BASIS_TYPE, 0));
+  }
+  /// Array of position polynomial records.
+  /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>> *POSITION_RECORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>> *>(VT_POSITION_RECORDS);
+  }
+  /// Array of orbital element polynomial records.
+  /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PPEOrbitalElementRecord>> *ORBITAL_ELEMENT_RECORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PPEOrbitalElementRecord>> *>(VT_ORBITAL_ELEMENT_RECORDS);
+  }
+  /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+  const ::flatbuffers::String *EPHEMERIS_SOURCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_SOURCE);
+  }
+  /// Fit span in seconds used to generate each polynomial segment.
+  /// Informational; actual spans are in individual records.
+  double NOMINAL_SEGMENT_SPAN() const {
+    return GetField<double>(VT_NOMINAL_SEGMENT_SPAN, 0.0);
+  }
+  /// Nominal number of coefficients per segment.
+  /// Informational; actual counts are in individual records.
+  uint16_t NOMINAL_NUM_COEFFICIENTS() const {
+    return GetField<uint16_t>(VT_NOMINAL_NUM_COEFFICIENTS, 0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyVector(COMMENT()) &&
+           verifier.VerifyVectorOfStrings(COMMENT()) &&
+           VerifyOffset(verifier, VT_OBJECT) &&
+           verifier.VerifyTable(OBJECT()) &&
+           VerifyOffset(verifier, VT_CENTER_NAME) &&
+           verifier.VerifyString(CENTER_NAME()) &&
+           VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
+           verifier.VerifyTable(REFERENCE_FRAME()) &&
+           VerifyField<int8_t>(verifier, VT_TIME_SYSTEM, 1) &&
+           VerifyOffset(verifier, VT_START_TIME) &&
+           verifier.VerifyString(START_TIME()) &&
+           VerifyOffset(verifier, VT_STOP_TIME) &&
+           verifier.VerifyString(STOP_TIME()) &&
+           VerifyField<int8_t>(verifier, VT_DEFAULT_BASIS_TYPE, 1) &&
+           VerifyOffset(verifier, VT_POSITION_RECORDS) &&
+           verifier.VerifyVector(POSITION_RECORDS()) &&
+           verifier.VerifyVectorOfTables(POSITION_RECORDS()) &&
+           VerifyOffset(verifier, VT_ORBITAL_ELEMENT_RECORDS) &&
+           verifier.VerifyVector(ORBITAL_ELEMENT_RECORDS()) &&
+           verifier.VerifyVectorOfTables(ORBITAL_ELEMENT_RECORDS()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_SOURCE) &&
+           verifier.VerifyString(EPHEMERIS_SOURCE()) &&
+           VerifyField<double>(verifier, VT_NOMINAL_SEGMENT_SPAN, 8) &&
+           VerifyField<uint16_t>(verifier, VT_NOMINAL_NUM_COEFFICIENTS, 2) &&
+           verifier.EndTable();
+  }
+};
+
+struct PPEBuilder {
+  typedef PPE Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT) {
+    fbb_.AddOffset(PPE::VT_COMMENT, COMMENT);
+  }
+  void add_OBJECT(::flatbuffers::Offset<CAT> OBJECT) {
+    fbb_.AddOffset(PPE::VT_OBJECT, OBJECT);
+  }
+  void add_CENTER_NAME(::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME) {
+    fbb_.AddOffset(PPE::VT_CENTER_NAME, CENTER_NAME);
+  }
+  void add_REFERENCE_FRAME(::flatbuffers::Offset<RFM> REFERENCE_FRAME) {
+    fbb_.AddOffset(PPE::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  void add_TIME_SYSTEM(timingStandard TIME_SYSTEM) {
+    fbb_.AddElement<int8_t>(PPE::VT_TIME_SYSTEM, static_cast<int8_t>(TIME_SYSTEM), 0);
+  }
+  void add_START_TIME(::flatbuffers::Offset<::flatbuffers::String> START_TIME) {
+    fbb_.AddOffset(PPE::VT_START_TIME, START_TIME);
+  }
+  void add_STOP_TIME(::flatbuffers::Offset<::flatbuffers::String> STOP_TIME) {
+    fbb_.AddOffset(PPE::VT_STOP_TIME, STOP_TIME);
+  }
+  void add_DEFAULT_BASIS_TYPE(polynomialBasisType DEFAULT_BASIS_TYPE) {
+    fbb_.AddElement<int8_t>(PPE::VT_DEFAULT_BASIS_TYPE, static_cast<int8_t>(DEFAULT_BASIS_TYPE), 0);
+  }
+  void add_POSITION_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>>> POSITION_RECORDS) {
+    fbb_.AddOffset(PPE::VT_POSITION_RECORDS, POSITION_RECORDS);
+  }
+  void add_ORBITAL_ELEMENT_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEOrbitalElementRecord>>> ORBITAL_ELEMENT_RECORDS) {
+    fbb_.AddOffset(PPE::VT_ORBITAL_ELEMENT_RECORDS, ORBITAL_ELEMENT_RECORDS);
+  }
+  void add_EPHEMERIS_SOURCE(::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_SOURCE) {
+    fbb_.AddOffset(PPE::VT_EPHEMERIS_SOURCE, EPHEMERIS_SOURCE);
+  }
+  void add_NOMINAL_SEGMENT_SPAN(double NOMINAL_SEGMENT_SPAN) {
+    fbb_.AddElement<double>(PPE::VT_NOMINAL_SEGMENT_SPAN, NOMINAL_SEGMENT_SPAN, 0.0);
+  }
+  void add_NOMINAL_NUM_COEFFICIENTS(uint16_t NOMINAL_NUM_COEFFICIENTS) {
+    fbb_.AddElement<uint16_t>(PPE::VT_NOMINAL_NUM_COEFFICIENTS, NOMINAL_NUM_COEFFICIENTS, 0);
+  }
+  explicit PPEBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PPE> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PPE>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PPE> CreatePPE(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT = 0,
+    ::flatbuffers::Offset<CAT> OBJECT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME = 0,
+    ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
+    timingStandard TIME_SYSTEM = timingStandard_GMST,
+    ::flatbuffers::Offset<::flatbuffers::String> START_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> STOP_TIME = 0,
+    polynomialBasisType DEFAULT_BASIS_TYPE = polynomialBasisType_CHEBYSHEV,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>>> POSITION_RECORDS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEOrbitalElementRecord>>> ORBITAL_ELEMENT_RECORDS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_SOURCE = 0,
+    double NOMINAL_SEGMENT_SPAN = 0.0,
+    uint16_t NOMINAL_NUM_COEFFICIENTS = 0) {
+  PPEBuilder builder_(_fbb);
+  builder_.add_NOMINAL_SEGMENT_SPAN(NOMINAL_SEGMENT_SPAN);
+  builder_.add_EPHEMERIS_SOURCE(EPHEMERIS_SOURCE);
+  builder_.add_ORBITAL_ELEMENT_RECORDS(ORBITAL_ELEMENT_RECORDS);
+  builder_.add_POSITION_RECORDS(POSITION_RECORDS);
+  builder_.add_STOP_TIME(STOP_TIME);
+  builder_.add_START_TIME(START_TIME);
+  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
+  builder_.add_CENTER_NAME(CENTER_NAME);
+  builder_.add_OBJECT(OBJECT);
+  builder_.add_COMMENT(COMMENT);
+  builder_.add_NOMINAL_NUM_COEFFICIENTS(NOMINAL_NUM_COEFFICIENTS);
+  builder_.add_DEFAULT_BASIS_TYPE(DEFAULT_BASIS_TYPE);
+  builder_.add_TIME_SYSTEM(TIME_SYSTEM);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<PPE> CreatePPEDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT = nullptr,
+    ::flatbuffers::Offset<CAT> OBJECT = 0,
+    const char *CENTER_NAME = nullptr,
+    ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
+    timingStandard TIME_SYSTEM = timingStandard_GMST,
+    const char *START_TIME = nullptr,
+    const char *STOP_TIME = nullptr,
+    polynomialBasisType DEFAULT_BASIS_TYPE = polynomialBasisType_CHEBYSHEV,
+    const std::vector<::flatbuffers::Offset<PPEPositionRecord>> *POSITION_RECORDS = nullptr,
+    const std::vector<::flatbuffers::Offset<PPEOrbitalElementRecord>> *ORBITAL_ELEMENT_RECORDS = nullptr,
+    const char *EPHEMERIS_SOURCE = nullptr,
+    double NOMINAL_SEGMENT_SPAN = 0.0,
+    uint16_t NOMINAL_NUM_COEFFICIENTS = 0) {
+  auto COMMENT__ = COMMENT ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COMMENT) : 0;
+  auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
+  auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
+  auto STOP_TIME__ = STOP_TIME ? _fbb.CreateString(STOP_TIME) : 0;
+  auto POSITION_RECORDS__ = POSITION_RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<PPEPositionRecord>>(*POSITION_RECORDS) : 0;
+  auto ORBITAL_ELEMENT_RECORDS__ = ORBITAL_ELEMENT_RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<PPEOrbitalElementRecord>>(*ORBITAL_ELEMENT_RECORDS) : 0;
+  auto EPHEMERIS_SOURCE__ = EPHEMERIS_SOURCE ? _fbb.CreateString(EPHEMERIS_SOURCE) : 0;
+  return CreatePPE(
+      _fbb,
+      COMMENT__,
+      OBJECT,
+      CENTER_NAME__,
+      REFERENCE_FRAME,
+      TIME_SYSTEM,
+      START_TIME__,
+      STOP_TIME__,
+      DEFAULT_BASIS_TYPE,
+      POSITION_RECORDS__,
+      ORBITAL_ELEMENT_RECORDS__,
+      EPHEMERIS_SOURCE__,
+      NOMINAL_SEGMENT_SPAN,
+      NOMINAL_NUM_COEFFICIENTS);
+}
+
+inline const PPE *GetPPE(const void *buf) {
+  return ::flatbuffers::GetRoot<PPE>(buf);
+}
+
+inline const PPE *GetSizePrefixedPPE(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<PPE>(buf);
+}
+
+inline const char *PPEIdentifier() {
+  return "$PPE";
+}
+
+inline bool PPEBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, LCCIdentifier());
+      buf, PPEIdentifier());
 }
 
-inline bool SizePrefixedLCCBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedPPEBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, LCCIdentifier(), true);
+      buf, PPEIdentifier(), true);
 }
 
 template <bool B = false>
-inline bool VerifyLCCBuffer(
+inline bool VerifyPPEBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<LCC>(LCCIdentifier());
+  return verifier.template VerifyBuffer<PPE>(PPEIdentifier());
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedLCCBuffer(
+inline bool VerifySizePrefixedPPEBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<LCC>(LCCIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<PPE>(PPEIdentifier());
 }
 
-inline void FinishLCCBuffer(
+inline void FinishPPEBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<LCC> root) {
-  fbb.Finish(root, LCCIdentifier());
+    ::flatbuffers::Offset<PPE> root) {
+  fbb.Finish(root, PPEIdentifier());
 }
 
-inline void FinishSizePrefixedLCCBuffer(
+inline void FinishSizePrefixedPPEBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<LCC> root) {
-  fbb.FinishSizePrefixed(root, LCCIdentifier());
+    ::flatbuffers::Offset<PPE> root) {
+  fbb.FinishSizePrefixed(root, PPEIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

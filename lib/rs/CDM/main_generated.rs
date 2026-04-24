@@ -2,203 +2,49 @@
 // @generated
 extern crate alloc;
 
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_CELESTIAL_FRAME: i8 = 0;
+pub const ENUM_MIN_SCREENING_VOLUME_SHAPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_CELESTIAL_FRAME: i8 = 27;
+pub const ENUM_MAX_SCREENING_VOLUME_SHAPE: i8 = 1;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_CELESTIAL_FRAME: [CelestialFrame; 28] = [
-  CelestialFrame::GCRF,
-  CelestialFrame::ICRF,
-  CelestialFrame::J2000,
-  CelestialFrame::J2000A,
-  CelestialFrame::EME2000,
-  CelestialFrame::TEMEOFDATE,
-  CelestialFrame::GTOD,
-  CelestialFrame::CIRS,
-  CelestialFrame::MOD_EARTH,
-  CelestialFrame::MOD_CB,
-  CelestialFrame::MOD_MOON,
-  CelestialFrame::TOD_EARTH,
-  CelestialFrame::TOD_CB,
-  CelestialFrame::TOD_MOON,
-  CelestialFrame::TOE_EARTH,
-  CelestialFrame::TOE_CB,
-  CelestialFrame::TOE_MOON,
-  CelestialFrame::ITRF2000,
-  CelestialFrame::ITRF93,
-  CelestialFrame::ITRF97,
-  CelestialFrame::EFG,
-  CelestialFrame::FIXED_CB,
-  CelestialFrame::FIXED_EARTH,
-  CelestialFrame::WGS84,
-  CelestialFrame::DTRFYYYY,
-  CelestialFrame::ALIGN_EARTH,
-  CelestialFrame::ALIGN_CB,
-  CelestialFrame::B1950,
+pub const ENUM_VALUES_SCREENING_VOLUME_SHAPE: [screeningVolumeShape; 2] = [
+  screeningVolumeShape::ELLIPSOID,
+  screeningVolumeShape::BOX,
 ];
 
-/// https://www.sanaregistry.org/r/celestial_body_reference_frames/
-/// Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct CelestialFrame(pub i8);
+pub struct screeningVolumeShape(pub i8);
 #[allow(non_upper_case_globals)]
-impl CelestialFrame {
-  /// OID: 1.3.112.4.57.2.9
-  /// Inertial Earth-centered frame aligned with Earth's center of mass.
-  pub const GCRF: Self = Self(0);
-  /// OID: 1.3.112.4.57.2.11
-  /// International Celestial Reference Frame based on distant quasars.
-  pub const ICRF: Self = Self(1);
-  /// OID: 1.3.112.4.57.2.14
-  /// Classical J2000 inertial frame defined at epoch J2000.0.
-  pub const J2000: Self = Self(2);
-  /// OID: 1.3.112.4.57.2.15
-  /// Updated J2000 frame using IAU2000A precession-nutation models.
-  pub const J2000A: Self = Self(3);
-  /// OID: 1.3.112.4.57.2.7
-  /// Earth Mean Equator frame at epoch J2000 used in orbit determination.
-  pub const EME2000: Self = Self(4);
-  /// OID: 1.3.112.4.57.2.25
-  /// True Equator Mean Equinox of Date frame for satellite tracking.
-  pub const TEMEOFDATE: Self = Self(5);
-  /// OID: 1.3.112.4.57.2.10
-  /// Greenwich True of Date: Earth rotation relative to celestial reference.
-  pub const GTOD: Self = Self(6);
-  /// OID: 1.3.112.4.57.2.4
-  /// Celestial Intermediate Reference System based on CIP and CIO.
-  pub const CIRS: Self = Self(7);
-  /// OID: 1.3.112.4.57.2.18
-  /// Mean of Date (MOD) Earth frame using IAU1976 precession.
-  pub const MOD_EARTH: Self = Self(8);
-  /// OID: 1.3.112.4.57.2.17
-  /// Mean of Date (MOD) celestial body frame evaluated at each epoch.
-  pub const MOD_CB: Self = Self(9);
-  /// OID: 1.3.112.4.57.2.19
-  /// Mean of Date (MOD) Moon frame evaluated at each epoch.
-  pub const MOD_MOON: Self = Self(10);
-  /// OID: 1.3.112.4.57.2.29
-  /// True of Date (TOD) Earth frame with polar motion included.
-  pub const TOD_EARTH: Self = Self(11);
-  /// OID: 1.3.112.4.57.2.28
-  /// True of Date (TOD) celestial body frame.
-  pub const TOD_CB: Self = Self(12);
-  /// OID: 1.3.112.4.57.2.30
-  /// True of Date (TOD) Moon frame.
-  pub const TOD_MOON: Self = Self(13);
-  /// OID: 1.3.112.4.57.2.32
-  /// True of Epoch (TOE) Earth frame at specific epoch.
-  pub const TOE_EARTH: Self = Self(14);
-  /// OID: 1.3.112.4.57.2.31
-  /// True of Epoch (TOE) celestial body frame at specific epoch.
-  pub const TOE_CB: Self = Self(15);
-  /// OID: 1.3.112.4.57.2.33
-  /// True of Epoch (TOE) Moon frame at specific epoch.
-  pub const TOE_MOON: Self = Self(16);
-  /// OID: 1.3.112.4.57.2.13
-  /// International Terrestrial Reference Frame 2000 (Earth-fixed).
-  pub const ITRF2000: Self = Self(17);
-  /// OID: 1.3.112.4.57.2.13
-  /// International Terrestrial Reference Frame 1993 (Earth-fixed).
-  pub const ITRF93: Self = Self(18);
-  /// OID: 1.3.112.4.57.2.13
-  /// International Terrestrial Reference Frame 1997 (Earth-fixed).
-  pub const ITRF97: Self = Self(19);
-  /// OID: 1.3.112.4.57.2.6
-  /// Earth-Fixed Geocentric frame using geodetic coordinates.
-  pub const EFG: Self = Self(20);
-  /// OID: 1.3.112.4.57.2.8
-  /// Fixed frame of a celestial body.
-  pub const FIXED_CB: Self = Self(21);
-  /// OID: 1.3.112.4.57.2.39
-  /// Fixed Earth frame aligned with WGS84 ellipsoid.
-  pub const FIXED_EARTH: Self = Self(22);
-  /// WGS84 Earth-fixed terrestrial system.
-  pub const WGS84: Self = Self(23);
-  /// OID: 1.3.112.4.57.2.5
-  /// Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY).
-  pub const DTRFYYYY: Self = Self(24);
-  /// OID: 1.3.112.4.57.2.2
-  /// Mean Earth Equator and Equinox (ALIGN_EARTH) frame.
-  pub const ALIGN_EARTH: Self = Self(25);
-  /// OID: 1.3.112.4.57.2.1
-  /// Mean Central Body Equator and Equinox (ALIGN_CB) frame.
-  pub const ALIGN_CB: Self = Self(26);
-  /// OID: 1.3.112.4.57.2.3
-  /// Classical Besselian 1950 equator and equinox frame.
-  pub const B1950: Self = Self(27);
+impl screeningVolumeShape {
+  pub const ELLIPSOID: Self = Self(0);
+  pub const BOX: Self = Self(1);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 27;
+  pub const ENUM_MAX: i8 = 1;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::GCRF,
-    Self::ICRF,
-    Self::J2000,
-    Self::J2000A,
-    Self::EME2000,
-    Self::TEMEOFDATE,
-    Self::GTOD,
-    Self::CIRS,
-    Self::MOD_EARTH,
-    Self::MOD_CB,
-    Self::MOD_MOON,
-    Self::TOD_EARTH,
-    Self::TOD_CB,
-    Self::TOD_MOON,
-    Self::TOE_EARTH,
-    Self::TOE_CB,
-    Self::TOE_MOON,
-    Self::ITRF2000,
-    Self::ITRF93,
-    Self::ITRF97,
-    Self::EFG,
-    Self::FIXED_CB,
-    Self::FIXED_EARTH,
-    Self::WGS84,
-    Self::DTRFYYYY,
-    Self::ALIGN_EARTH,
-    Self::ALIGN_CB,
-    Self::B1950,
+    Self::ELLIPSOID,
+    Self::BOX,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::GCRF => Some("GCRF"),
-      Self::ICRF => Some("ICRF"),
-      Self::J2000 => Some("J2000"),
-      Self::J2000A => Some("J2000A"),
-      Self::EME2000 => Some("EME2000"),
-      Self::TEMEOFDATE => Some("TEMEOFDATE"),
-      Self::GTOD => Some("GTOD"),
-      Self::CIRS => Some("CIRS"),
-      Self::MOD_EARTH => Some("MOD_EARTH"),
-      Self::MOD_CB => Some("MOD_CB"),
-      Self::MOD_MOON => Some("MOD_MOON"),
-      Self::TOD_EARTH => Some("TOD_EARTH"),
-      Self::TOD_CB => Some("TOD_CB"),
-      Self::TOD_MOON => Some("TOD_MOON"),
-      Self::TOE_EARTH => Some("TOE_EARTH"),
-      Self::TOE_CB => Some("TOE_CB"),
-      Self::TOE_MOON => Some("TOE_MOON"),
-      Self::ITRF2000 => Some("ITRF2000"),
-      Self::ITRF93 => Some("ITRF93"),
-      Self::ITRF97 => Some("ITRF97"),
-      Self::EFG => Some("EFG"),
-      Self::FIXED_CB => Some("FIXED_CB"),
-      Self::FIXED_EARTH => Some("FIXED_EARTH"),
-      Self::WGS84 => Some("WGS84"),
-      Self::DTRFYYYY => Some("DTRFYYYY"),
-      Self::ALIGN_EARTH => Some("ALIGN_EARTH"),
-      Self::ALIGN_CB => Some("ALIGN_CB"),
-      Self::B1950 => Some("B1950"),
+      Self::ELLIPSOID => Some("ELLIPSOID"),
+      Self::BOX => Some("BOX"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for CelestialFrame {
+impl ::core::fmt::Debug for screeningVolumeShape {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -207,7 +53,7 @@ impl ::core::fmt::Debug for CelestialFrame {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for CelestialFrame {
+impl<'a> ::flatbuffers::Follow<'a> for screeningVolumeShape {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -216,15 +62,15 @@ impl<'a> ::flatbuffers::Follow<'a> for CelestialFrame {
   }
 }
 
-impl ::flatbuffers::Push for CelestialFrame {
-    type Output = CelestialFrame;
+impl ::flatbuffers::Push for screeningVolumeShape {
+    type Output = screeningVolumeShape;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for CelestialFrame {
+impl ::flatbuffers::EndianScalar for screeningVolumeShape {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -238,7 +84,7 @@ impl ::flatbuffers::EndianScalar for CelestialFrame {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for CelestialFrame {
+impl<'a> ::flatbuffers::Verifiable for screeningVolumeShape {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -247,132 +93,42 @@ impl<'a> ::flatbuffers::Verifiable for CelestialFrame {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for CelestialFrame {}
+impl ::flatbuffers::SimpleToVerifyInSlice for screeningVolumeShape {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_SPACECRAFT_FRAME: i8 = 0;
+pub const ENUM_MIN_COVARIANCE_ALGORITHM: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SPACECRAFT_FRAME: i8 = 15;
+pub const ENUM_MAX_COVARIANCE_ALGORITHM: i8 = 1;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SPACECRAFT_FRAME: [SpacecraftFrame; 16] = [
-  SpacecraftFrame::ACC_i,
-  SpacecraftFrame::ACTUATOR_i,
-  SpacecraftFrame::AST_i,
-  SpacecraftFrame::CSS_i,
-  SpacecraftFrame::DSS_i,
-  SpacecraftFrame::ESA_i,
-  SpacecraftFrame::GYRO_FRAME_i,
-  SpacecraftFrame::IMU_FRAME_i,
-  SpacecraftFrame::INSTRUMENT_i,
-  SpacecraftFrame::MTA_i,
-  SpacecraftFrame::RW_i,
-  SpacecraftFrame::SA_i,
-  SpacecraftFrame::SC_BODY_i,
-  SpacecraftFrame::SENSOR_i,
-  SpacecraftFrame::STARTRACKER_i,
-  SpacecraftFrame::TAM_i,
+pub const ENUM_VALUES_COVARIANCE_ALGORITHM: [covarianceAlgorithm; 2] = [
+  covarianceAlgorithm::CALCULATED,
+  covarianceAlgorithm::DEFAULT,
 ];
 
-/// https://sanaregistry.org/r/spacecraft_body_reference_frames/
-/// Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct SpacecraftFrame(pub i8);
+pub struct covarianceAlgorithm(pub i8);
 #[allow(non_upper_case_globals)]
-impl SpacecraftFrame {
-  /// OID: 1.3.112.4.57.8.1
-  /// Accelerometer instrument frame.
-  pub const ACC_i: Self = Self(0);
-  /// OID: 1.3.112.4.57.8.2
-  /// Actuator system frame.
-  pub const ACTUATOR_i: Self = Self(1);
-  /// OID: 1.3.112.4.57.8.3
-  /// Attitude Sensor Target frame.
-  pub const AST_i: Self = Self(2);
-  /// OID: 1.3.112.4.57.8.4
-  /// Coarse Sun Sensor frame.
-  pub const CSS_i: Self = Self(3);
-  /// OID: 1.3.112.4.57.8.5
-  /// Digital Sun Sensor frame.
-  pub const DSS_i: Self = Self(4);
-  /// OID: 1.3.112.4.57.8.6
-  /// Earth Sensor Assembly frame.
-  pub const ESA_i: Self = Self(5);
-  /// OID: 1.3.112.4.57.8.7
-  /// Gyroscope instrument frame.
-  pub const GYRO_FRAME_i: Self = Self(6);
-  /// OID: 1.3.112.4.57.8.8
-  /// Inertial Measurement Unit frame.
-  pub const IMU_FRAME_i: Self = Self(7);
-  /// OID: 1.3.112.4.57.8.9
-  /// Generic instrument mounting frame.
-  pub const INSTRUMENT_i: Self = Self(8);
-  /// OID: 1.3.112.4.57.8.10
-  /// Magnetic Torquer Assembly frame.
-  pub const MTA_i: Self = Self(9);
-  /// OID: 1.3.112.4.57.8.11
-  /// Reaction Wheel assembly frame.
-  pub const RW_i: Self = Self(10);
-  /// OID: 1.3.112.4.57.8.12
-  /// Solar Array frame.
-  pub const SA_i: Self = Self(11);
-  /// OID: 1.3.112.4.57.8.13
-  /// Spacecraft body fixed frame.
-  pub const SC_BODY_i: Self = Self(12);
-  /// OID: 1.3.112.4.57.8.14
-  /// Generic sensor assembly frame.
-  pub const SENSOR_i: Self = Self(13);
-  /// OID: 1.3.112.4.57.8.15
-  /// Star Tracker instrument frame.
-  pub const STARTRACKER_i: Self = Self(14);
-  /// OID: 1.3.112.4.57.8.16
-  /// Thermal Assembly Module frame.
-  pub const TAM_i: Self = Self(15);
+impl covarianceAlgorithm {
+  pub const CALCULATED: Self = Self(0);
+  pub const DEFAULT: Self = Self(1);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 15;
+  pub const ENUM_MAX: i8 = 1;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::ACC_i,
-    Self::ACTUATOR_i,
-    Self::AST_i,
-    Self::CSS_i,
-    Self::DSS_i,
-    Self::ESA_i,
-    Self::GYRO_FRAME_i,
-    Self::IMU_FRAME_i,
-    Self::INSTRUMENT_i,
-    Self::MTA_i,
-    Self::RW_i,
-    Self::SA_i,
-    Self::SC_BODY_i,
-    Self::SENSOR_i,
-    Self::STARTRACKER_i,
-    Self::TAM_i,
+    Self::CALCULATED,
+    Self::DEFAULT,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::ACC_i => Some("ACC_i"),
-      Self::ACTUATOR_i => Some("ACTUATOR_i"),
-      Self::AST_i => Some("AST_i"),
-      Self::CSS_i => Some("CSS_i"),
-      Self::DSS_i => Some("DSS_i"),
-      Self::ESA_i => Some("ESA_i"),
-      Self::GYRO_FRAME_i => Some("GYRO_FRAME_i"),
-      Self::IMU_FRAME_i => Some("IMU_FRAME_i"),
-      Self::INSTRUMENT_i => Some("INSTRUMENT_i"),
-      Self::MTA_i => Some("MTA_i"),
-      Self::RW_i => Some("RW_i"),
-      Self::SA_i => Some("SA_i"),
-      Self::SC_BODY_i => Some("SC_BODY_i"),
-      Self::SENSOR_i => Some("SENSOR_i"),
-      Self::STARTRACKER_i => Some("STARTRACKER_i"),
-      Self::TAM_i => Some("TAM_i"),
+      Self::CALCULATED => Some("CALCULATED"),
+      Self::DEFAULT => Some("DEFAULT"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for SpacecraftFrame {
+impl ::core::fmt::Debug for covarianceAlgorithm {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -381,7 +137,7 @@ impl ::core::fmt::Debug for SpacecraftFrame {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for SpacecraftFrame {
+impl<'a> ::flatbuffers::Follow<'a> for covarianceAlgorithm {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -390,15 +146,15 @@ impl<'a> ::flatbuffers::Follow<'a> for SpacecraftFrame {
   }
 }
 
-impl ::flatbuffers::Push for SpacecraftFrame {
-    type Output = SpacecraftFrame;
+impl ::flatbuffers::Push for covarianceAlgorithm {
+    type Output = covarianceAlgorithm;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for SpacecraftFrame {
+impl ::flatbuffers::EndianScalar for covarianceAlgorithm {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -412,7 +168,7 @@ impl ::flatbuffers::EndianScalar for SpacecraftFrame {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for SpacecraftFrame {
+impl<'a> ::flatbuffers::Verifiable for covarianceAlgorithm {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -421,1463 +177,1993 @@ impl<'a> ::flatbuffers::Verifiable for SpacecraftFrame {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for SpacecraftFrame {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_ORBIT_FRAME: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_ORBIT_FRAME: i8 = 15;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_ORBIT_FRAME: [OrbitFrame; 16] = [
-  OrbitFrame::EQW_INERTIAL,
-  OrbitFrame::LVLH_INERTIAL,
-  OrbitFrame::LVLH_ROTATING,
-  OrbitFrame::NSW_INERTIAL,
-  OrbitFrame::NSW_ROTATING,
-  OrbitFrame::NTW_INERTIAL,
-  OrbitFrame::NTW_ROTATING,
-  OrbitFrame::PQW_INERTIAL,
-  OrbitFrame::RSW_INERTIAL,
-  OrbitFrame::RSW_ROTATING,
-  OrbitFrame::SEZ_INERTIAL,
-  OrbitFrame::SEZ_ROTATING,
-  OrbitFrame::TNW_INERTIAL,
-  OrbitFrame::TNW_ROTATING,
-  OrbitFrame::VNC_INERTIAL,
-  OrbitFrame::VNC_ROTATING,
-];
-
-/// https://sanaregistry.org/r/orbit_relative_reference_frames/
-/// Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct OrbitFrame(pub i8);
-#[allow(non_upper_case_globals)]
-impl OrbitFrame {
-  /// OID: 1.3.112.4.57.3.1
-  /// Earth Equatorial Inertial frame aligned with J2000 epoch.
-  pub const EQW_INERTIAL: Self = Self(0);
-  /// OID: 1.3.112.4.57.3.3
-  /// Local Vertical Local Horizontal inertial frame.
-  pub const LVLH_INERTIAL: Self = Self(1);
-  /// OID: 1.3.112.4.57.3.2
-  /// Local Vertical Local Horizontal rotating frame.
-  pub const LVLH_ROTATING: Self = Self(2);
-  /// OID: 1.3.112.4.57.3.5
-  /// Normal along-track cross-track inertial frame.
-  pub const NSW_INERTIAL: Self = Self(3);
-  /// OID: 1.3.112.4.57.3.4
-  /// Normal along-track cross-track rotating frame.
-  pub const NSW_ROTATING: Self = Self(4);
-  /// OID: 1.3.112.4.57.3.7
-  /// Orbit normal Tangential cross-track inertial frame.
-  pub const NTW_INERTIAL: Self = Self(5);
-  /// OID: 1.3.112.4.57.3.6
-  /// Orbit normal Tangential cross-track rotating frame.
-  pub const NTW_ROTATING: Self = Self(6);
-  /// OID: 1.3.112.4.57.3.8
-  /// Perifocal frame aligned with orbit's perigee.
-  pub const PQW_INERTIAL: Self = Self(7);
-  /// OID: 1.3.112.4.57.3.10
-  /// Radial along-track cross-track inertial frame.
-  pub const RSW_INERTIAL: Self = Self(8);
-  /// OID: 1.3.112.4.57.3.9
-  /// Radial along-track cross-track rotating frame.
-  pub const RSW_ROTATING: Self = Self(9);
-  /// OID: 1.3.112.4.57.3.14
-  /// South-East-Zenith inertial (topocentric) frame.
-  pub const SEZ_INERTIAL: Self = Self(10);
-  /// OID: 1.3.112.4.57.3.13
-  /// South-East-Zenith rotating (topocentric) frame.
-  pub const SEZ_ROTATING: Self = Self(11);
-  /// OID: 1.3.112.4.57.3.12
-  /// Transverse normal cross-track inertial frame.
-  pub const TNW_INERTIAL: Self = Self(12);
-  /// OID: 1.3.112.4.57.3.11
-  /// Transverse normal cross-track rotating frame.
-  pub const TNW_ROTATING: Self = Self(13);
-  /// OID: 1.3.112.4.57.3.16
-  /// Velocity-normal co-normal inertial frame.
-  pub const VNC_INERTIAL: Self = Self(14);
-  /// OID: 1.3.112.4.57.3.15
-  /// Velocity-normal co-normal rotating frame.
-  pub const VNC_ROTATING: Self = Self(15);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 15;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::EQW_INERTIAL,
-    Self::LVLH_INERTIAL,
-    Self::LVLH_ROTATING,
-    Self::NSW_INERTIAL,
-    Self::NSW_ROTATING,
-    Self::NTW_INERTIAL,
-    Self::NTW_ROTATING,
-    Self::PQW_INERTIAL,
-    Self::RSW_INERTIAL,
-    Self::RSW_ROTATING,
-    Self::SEZ_INERTIAL,
-    Self::SEZ_ROTATING,
-    Self::TNW_INERTIAL,
-    Self::TNW_ROTATING,
-    Self::VNC_INERTIAL,
-    Self::VNC_ROTATING,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::EQW_INERTIAL => Some("EQW_INERTIAL"),
-      Self::LVLH_INERTIAL => Some("LVLH_INERTIAL"),
-      Self::LVLH_ROTATING => Some("LVLH_ROTATING"),
-      Self::NSW_INERTIAL => Some("NSW_INERTIAL"),
-      Self::NSW_ROTATING => Some("NSW_ROTATING"),
-      Self::NTW_INERTIAL => Some("NTW_INERTIAL"),
-      Self::NTW_ROTATING => Some("NTW_ROTATING"),
-      Self::PQW_INERTIAL => Some("PQW_INERTIAL"),
-      Self::RSW_INERTIAL => Some("RSW_INERTIAL"),
-      Self::RSW_ROTATING => Some("RSW_ROTATING"),
-      Self::SEZ_INERTIAL => Some("SEZ_INERTIAL"),
-      Self::SEZ_ROTATING => Some("SEZ_ROTATING"),
-      Self::TNW_INERTIAL => Some("TNW_INERTIAL"),
-      Self::TNW_ROTATING => Some("TNW_ROTATING"),
-      Self::VNC_INERTIAL => Some("VNC_INERTIAL"),
-      Self::VNC_ROTATING => Some("VNC_ROTATING"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for OrbitFrame {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for OrbitFrame {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for OrbitFrame {
-    type Output = OrbitFrame;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for OrbitFrame {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for OrbitFrame {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for OrbitFrame {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_CUSTOM_FRAME: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_CUSTOM_FRAME: i8 = 17;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_CUSTOM_FRAME: [CustomFrame; 18] = [
-  CustomFrame::ECEF,
-  CustomFrame::TEME,
-  CustomFrame::TEMEOFEPOCH,
-  CustomFrame::ENU,
-  CustomFrame::NED,
-  CustomFrame::NEU,
-  CustomFrame::RIC,
-  CustomFrame::RTN,
-  CustomFrame::TVN,
-  CustomFrame::VVLH,
-  CustomFrame::QSW,
-  CustomFrame::LTP,
-  CustomFrame::LVLH,
-  CustomFrame::PNE,
-  CustomFrame::BRF,
-  CustomFrame::RSW,
-  CustomFrame::TNW,
-  CustomFrame::UVW,
-];
-
-/// Non-registered or local use frames
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct CustomFrame(pub i8);
-#[allow(non_upper_case_globals)]
-impl CustomFrame {
-  /// Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
-  pub const ECEF: Self = Self(0);
-  /// True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking.
-  pub const TEME: Self = Self(1);
-  /// True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch.
-  pub const TEMEOFEPOCH: Self = Self(2);
-  /// East-North-Up: Local tangent plane for surface points.
-  pub const ENU: Self = Self(3);
-  /// North-East-Down: Aviation/navigation frame aligned with gravity.
-  pub const NED: Self = Self(4);
-  /// North-East-Up: Local tangent plane variant with Up positive.
-  pub const NEU: Self = Self(5);
-  /// Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
-  pub const RIC: Self = Self(6);
-  /// Radial-Transverse-Normal: Orbit frame for spacecraft dynamics.
-  pub const RTN: Self = Self(7);
-  /// Transverse-Velocity-Normal: Alternative orbit frame.
-  pub const TVN: Self = Self(8);
-  /// Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector.
-  pub const VVLH: Self = Self(9);
-  /// Radial-Tangential-Cross-track: Equivalent to LVLH/QSW.
-  pub const QSW: Self = Self(10);
-  /// Local Tangent Plane: Surface-fixed frame centered on a point.
-  pub const LTP: Self = Self(11);
-  /// Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity.
-  pub const LVLH: Self = Self(12);
-  /// Polar-North-East: Surface coordinate frame.
-  pub const PNE: Self = Self(13);
-  /// Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
-  pub const BRF: Self = Self(14);
-  /// Radial-Along-track-Cross-track: Same as RSW.
-  pub const RSW: Self = Self(15);
-  /// Tangential-Normal-Cross-track: Same as TNW.
-  pub const TNW: Self = Self(16);
-  /// Radial-UTF: Radial, Along-track, Cross-track variant.
-  pub const UVW: Self = Self(17);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 17;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::ECEF,
-    Self::TEME,
-    Self::TEMEOFEPOCH,
-    Self::ENU,
-    Self::NED,
-    Self::NEU,
-    Self::RIC,
-    Self::RTN,
-    Self::TVN,
-    Self::VVLH,
-    Self::QSW,
-    Self::LTP,
-    Self::LVLH,
-    Self::PNE,
-    Self::BRF,
-    Self::RSW,
-    Self::TNW,
-    Self::UVW,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::ECEF => Some("ECEF"),
-      Self::TEME => Some("TEME"),
-      Self::TEMEOFEPOCH => Some("TEMEOFEPOCH"),
-      Self::ENU => Some("ENU"),
-      Self::NED => Some("NED"),
-      Self::NEU => Some("NEU"),
-      Self::RIC => Some("RIC"),
-      Self::RTN => Some("RTN"),
-      Self::TVN => Some("TVN"),
-      Self::VVLH => Some("VVLH"),
-      Self::QSW => Some("QSW"),
-      Self::LTP => Some("LTP"),
-      Self::LVLH => Some("LVLH"),
-      Self::PNE => Some("PNE"),
-      Self::BRF => Some("BRF"),
-      Self::RSW => Some("RSW"),
-      Self::TNW => Some("TNW"),
-      Self::UVW => Some("UVW"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for CustomFrame {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for CustomFrame {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for CustomFrame {
-    type Output = CustomFrame;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for CustomFrame {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for CustomFrame {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for CustomFrame {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_RFMUNION: u8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RFMUNION: u8 = 4;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RFMUNION: [RFMUnion; 5] = [
-  RFMUnion::NONE,
-  RFMUnion::CelestialFrameWrapper,
-  RFMUnion::SpacecraftFrameWrapper,
-  RFMUnion::OrbitFrameWrapper,
-  RFMUnion::CustomFrameWrapper,
-];
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct RFMUnion(pub u8);
-#[allow(non_upper_case_globals)]
-impl RFMUnion {
-  pub const NONE: Self = Self(0);
-  pub const CelestialFrameWrapper: Self = Self(1);
-  pub const SpacecraftFrameWrapper: Self = Self(2);
-  pub const OrbitFrameWrapper: Self = Self(3);
-  pub const CustomFrameWrapper: Self = Self(4);
-
-  pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 4;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::NONE,
-    Self::CelestialFrameWrapper,
-    Self::SpacecraftFrameWrapper,
-    Self::OrbitFrameWrapper,
-    Self::CustomFrameWrapper,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::NONE => Some("NONE"),
-      Self::CelestialFrameWrapper => Some("CelestialFrameWrapper"),
-      Self::SpacecraftFrameWrapper => Some("SpacecraftFrameWrapper"),
-      Self::OrbitFrameWrapper => Some("OrbitFrameWrapper"),
-      Self::CustomFrameWrapper => Some("CustomFrameWrapper"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for RFMUnion {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for RFMUnion {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for RFMUnion {
-    type Output = RFMUnion;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for RFMUnion {
-  type Scalar = u8;
-  #[inline]
-  fn to_little_endian(self) -> u8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: u8) -> Self {
-    let b = u8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for RFMUnion {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    u8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for RFMUnion {}
-pub struct RFMUnionUnionTableOffset {}
-
-#[allow(clippy::upper_case_acronyms)]
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub enum RFMUnionT {
-  NONE,
-  CelestialFrameWrapper(alloc::boxed::Box<CelestialFrameWrapperT>),
-  SpacecraftFrameWrapper(alloc::boxed::Box<SpacecraftFrameWrapperT>),
-  OrbitFrameWrapper(alloc::boxed::Box<OrbitFrameWrapperT>),
-  CustomFrameWrapper(alloc::boxed::Box<CustomFrameWrapperT>),
-}
-impl Default for RFMUnionT {
-  fn default() -> Self {
-    Self::NONE
-  }
-}
-impl RFMUnionT {
-  pub fn rfmunion_type(&self) -> RFMUnion {
-    match self {
-      Self::NONE => RFMUnion::NONE,
-      Self::CelestialFrameWrapper(_) => RFMUnion::CelestialFrameWrapper,
-      Self::SpacecraftFrameWrapper(_) => RFMUnion::SpacecraftFrameWrapper,
-      Self::OrbitFrameWrapper(_) => RFMUnion::OrbitFrameWrapper,
-      Self::CustomFrameWrapper(_) => RFMUnion::CustomFrameWrapper,
-    }
-  }
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
-    match self {
-      Self::NONE => None,
-      Self::CelestialFrameWrapper(v) => Some(v.pack(fbb).as_union_value()),
-      Self::SpacecraftFrameWrapper(v) => Some(v.pack(fbb).as_union_value()),
-      Self::OrbitFrameWrapper(v) => Some(v.pack(fbb).as_union_value()),
-      Self::CustomFrameWrapper(v) => Some(v.pack(fbb).as_union_value()),
-    }
-  }
-  /// If the union variant matches, return the owned CelestialFrameWrapperT, setting the union to NONE.
-  pub fn take_celestial_frame_wrapper(&mut self) -> Option<alloc::boxed::Box<CelestialFrameWrapperT>> {
-    if let Self::CelestialFrameWrapper(_) = self {
-      let v = ::core::mem::replace(self, Self::NONE);
-      if let Self::CelestialFrameWrapper(w) = v {
-        Some(w)
-      } else {
-        unreachable!()
-      }
-    } else {
-      None
-    }
-  }
-  /// If the union variant matches, return a reference to the CelestialFrameWrapperT.
-  pub fn as_celestial_frame_wrapper(&self) -> Option<&CelestialFrameWrapperT> {
-    if let Self::CelestialFrameWrapper(v) = self { Some(v.as_ref()) } else { None }
-  }
-  /// If the union variant matches, return a mutable reference to the CelestialFrameWrapperT.
-  pub fn as_celestial_frame_wrapper_mut(&mut self) -> Option<&mut CelestialFrameWrapperT> {
-    if let Self::CelestialFrameWrapper(v) = self { Some(v.as_mut()) } else { None }
-  }
-  /// If the union variant matches, return the owned SpacecraftFrameWrapperT, setting the union to NONE.
-  pub fn take_spacecraft_frame_wrapper(&mut self) -> Option<alloc::boxed::Box<SpacecraftFrameWrapperT>> {
-    if let Self::SpacecraftFrameWrapper(_) = self {
-      let v = ::core::mem::replace(self, Self::NONE);
-      if let Self::SpacecraftFrameWrapper(w) = v {
-        Some(w)
-      } else {
-        unreachable!()
-      }
-    } else {
-      None
-    }
-  }
-  /// If the union variant matches, return a reference to the SpacecraftFrameWrapperT.
-  pub fn as_spacecraft_frame_wrapper(&self) -> Option<&SpacecraftFrameWrapperT> {
-    if let Self::SpacecraftFrameWrapper(v) = self { Some(v.as_ref()) } else { None }
-  }
-  /// If the union variant matches, return a mutable reference to the SpacecraftFrameWrapperT.
-  pub fn as_spacecraft_frame_wrapper_mut(&mut self) -> Option<&mut SpacecraftFrameWrapperT> {
-    if let Self::SpacecraftFrameWrapper(v) = self { Some(v.as_mut()) } else { None }
-  }
-  /// If the union variant matches, return the owned OrbitFrameWrapperT, setting the union to NONE.
-  pub fn take_orbit_frame_wrapper(&mut self) -> Option<alloc::boxed::Box<OrbitFrameWrapperT>> {
-    if let Self::OrbitFrameWrapper(_) = self {
-      let v = ::core::mem::replace(self, Self::NONE);
-      if let Self::OrbitFrameWrapper(w) = v {
-        Some(w)
-      } else {
-        unreachable!()
-      }
-    } else {
-      None
-    }
-  }
-  /// If the union variant matches, return a reference to the OrbitFrameWrapperT.
-  pub fn as_orbit_frame_wrapper(&self) -> Option<&OrbitFrameWrapperT> {
-    if let Self::OrbitFrameWrapper(v) = self { Some(v.as_ref()) } else { None }
-  }
-  /// If the union variant matches, return a mutable reference to the OrbitFrameWrapperT.
-  pub fn as_orbit_frame_wrapper_mut(&mut self) -> Option<&mut OrbitFrameWrapperT> {
-    if let Self::OrbitFrameWrapper(v) = self { Some(v.as_mut()) } else { None }
-  }
-  /// If the union variant matches, return the owned CustomFrameWrapperT, setting the union to NONE.
-  pub fn take_custom_frame_wrapper(&mut self) -> Option<alloc::boxed::Box<CustomFrameWrapperT>> {
-    if let Self::CustomFrameWrapper(_) = self {
-      let v = ::core::mem::replace(self, Self::NONE);
-      if let Self::CustomFrameWrapper(w) = v {
-        Some(w)
-      } else {
-        unreachable!()
-      }
-    } else {
-      None
-    }
-  }
-  /// If the union variant matches, return a reference to the CustomFrameWrapperT.
-  pub fn as_custom_frame_wrapper(&self) -> Option<&CustomFrameWrapperT> {
-    if let Self::CustomFrameWrapper(v) = self { Some(v.as_ref()) } else { None }
-  }
-  /// If the union variant matches, return a mutable reference to the CustomFrameWrapperT.
-  pub fn as_custom_frame_wrapper_mut(&mut self) -> Option<&mut CustomFrameWrapperT> {
-    if let Self::CustomFrameWrapper(v) = self { Some(v.as_mut()) } else { None }
-  }
-}
-pub enum CelestialFrameWrapperOffset {}
+impl ::flatbuffers::SimpleToVerifyInSlice for covarianceAlgorithm {}
+pub enum CDMObjectOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-pub struct CelestialFrameWrapper<'a> {
+pub struct CDMObject<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for CelestialFrameWrapper<'a> {
-  type Inner = CelestialFrameWrapper<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for CDMObject<'a> {
+  type Inner = CDMObject<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> CelestialFrameWrapper<'a> {
-  pub const VT_FRAME: ::flatbuffers::VOffsetT = 4;
+impl<'a> CDMObject<'a> {
+  pub const VT_COMMENT: ::flatbuffers::VOffsetT = 4;
+  pub const VT_OBJECT: ::flatbuffers::VOffsetT = 6;
+  pub const VT_POC: ::flatbuffers::VOffsetT = 8;
+  pub const VT_OPERATOR_CONTACT_POSITION: ::flatbuffers::VOffsetT = 10;
+  pub const VT_OPERATOR_ORGANIZATION: ::flatbuffers::VOffsetT = 12;
+  pub const VT_EPHEMERIS_NAME: ::flatbuffers::VOffsetT = 14;
+  pub const VT_COVARIANCE_METHOD: ::flatbuffers::VOffsetT = 16;
+  pub const VT_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 18;
+  pub const VT_GRAVITY_MODEL: ::flatbuffers::VOffsetT = 20;
+  pub const VT_ATMOSPHERIC_MODEL: ::flatbuffers::VOffsetT = 22;
+  pub const VT_N_BODY_PERTURBATIONS: ::flatbuffers::VOffsetT = 24;
+  pub const VT_SOLAR_RAD_PRESSURE: ::flatbuffers::VOffsetT = 26;
+  pub const VT_EARTH_TIDES: ::flatbuffers::VOffsetT = 28;
+  pub const VT_INTRACK_THRUST: ::flatbuffers::VOffsetT = 30;
+  pub const VT_TIME_LASTOB_START: ::flatbuffers::VOffsetT = 32;
+  pub const VT_TIME_LASTOB_END: ::flatbuffers::VOffsetT = 34;
+  pub const VT_RECOMMENDED_OD_SPAN: ::flatbuffers::VOffsetT = 36;
+  pub const VT_ACTUAL_OD_SPAN: ::flatbuffers::VOffsetT = 38;
+  pub const VT_OBS_AVAILABLE: ::flatbuffers::VOffsetT = 40;
+  pub const VT_OBS_USED: ::flatbuffers::VOffsetT = 42;
+  pub const VT_TRACKS_AVAILABLE: ::flatbuffers::VOffsetT = 44;
+  pub const VT_TRACKS_USED: ::flatbuffers::VOffsetT = 46;
+  pub const VT_RESIDUALS_ACCEPTED: ::flatbuffers::VOffsetT = 48;
+  pub const VT_WEIGHTED_RMS: ::flatbuffers::VOffsetT = 50;
+  pub const VT_AREA_PC: ::flatbuffers::VOffsetT = 52;
+  pub const VT_AREA_DRG: ::flatbuffers::VOffsetT = 54;
+  pub const VT_AREA_SRP: ::flatbuffers::VOffsetT = 56;
+  pub const VT_CR_AREA_OVER_MASS: ::flatbuffers::VOffsetT = 58;
+  pub const VT_THRUST_ACCELERATION: ::flatbuffers::VOffsetT = 60;
+  pub const VT_SEDR: ::flatbuffers::VOffsetT = 62;
+  pub const VT_X: ::flatbuffers::VOffsetT = 64;
+  pub const VT_Y: ::flatbuffers::VOffsetT = 66;
+  pub const VT_Z: ::flatbuffers::VOffsetT = 68;
+  pub const VT_X_DOT: ::flatbuffers::VOffsetT = 70;
+  pub const VT_Y_DOT: ::flatbuffers::VOffsetT = 72;
+  pub const VT_Z_DOT: ::flatbuffers::VOffsetT = 74;
+  pub const VT_COVARIANCE: ::flatbuffers::VOffsetT = 76;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    CelestialFrameWrapper { _tab: table }
+    CDMObject { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args CelestialFrameWrapperArgs
-  ) -> ::flatbuffers::WIPOffset<CelestialFrameWrapper<'bldr>> {
-    let mut builder = CelestialFrameWrapperBuilder::new(_fbb);
-    builder.add_frame(args.frame);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> CelestialFrameWrapperT {
-    let frame = self.frame();
-    CelestialFrameWrapperT {
-      frame,
-    }
-  }
-
-  #[inline]
-  pub fn frame(&self) -> CelestialFrame {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<CelestialFrame>(CelestialFrameWrapper::VT_FRAME, Some(CelestialFrame::GCRF)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for CelestialFrameWrapper<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<CelestialFrame>("frame", Self::VT_FRAME, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct CelestialFrameWrapperArgs {
-    pub frame: CelestialFrame,
-}
-impl<'a> Default for CelestialFrameWrapperArgs {
-  #[inline]
-  fn default() -> Self {
-    CelestialFrameWrapperArgs {
-      frame: CelestialFrame::GCRF,
-    }
-  }
-}
-
-pub struct CelestialFrameWrapperBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CelestialFrameWrapperBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_frame(&mut self, frame: CelestialFrame) {
-    self.fbb_.push_slot::<CelestialFrame>(CelestialFrameWrapper::VT_FRAME, frame, CelestialFrame::GCRF);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CelestialFrameWrapperBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    CelestialFrameWrapperBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<CelestialFrameWrapper<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for CelestialFrameWrapper<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("CelestialFrameWrapper");
-      ds.field("frame", &self.frame());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct CelestialFrameWrapperT {
-  pub frame: CelestialFrame,
-}
-impl Default for CelestialFrameWrapperT {
-  fn default() -> Self {
-    Self {
-      frame: CelestialFrame::GCRF,
-    }
-  }
-}
-impl CelestialFrameWrapperT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<CelestialFrameWrapper<'b>> {
-    let frame = self.frame;
-    CelestialFrameWrapper::create(_fbb, &CelestialFrameWrapperArgs{
-      frame,
-    })
-  }
-}
-pub enum SpacecraftFrameWrapperOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-pub struct SpacecraftFrameWrapper<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for SpacecraftFrameWrapper<'a> {
-  type Inner = SpacecraftFrameWrapper<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> SpacecraftFrameWrapper<'a> {
-  pub const VT_FRAME: ::flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    SpacecraftFrameWrapper { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args SpacecraftFrameWrapperArgs
-  ) -> ::flatbuffers::WIPOffset<SpacecraftFrameWrapper<'bldr>> {
-    let mut builder = SpacecraftFrameWrapperBuilder::new(_fbb);
-    builder.add_frame(args.frame);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> SpacecraftFrameWrapperT {
-    let frame = self.frame();
-    SpacecraftFrameWrapperT {
-      frame,
-    }
-  }
-
-  #[inline]
-  pub fn frame(&self) -> SpacecraftFrame {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<SpacecraftFrame>(SpacecraftFrameWrapper::VT_FRAME, Some(SpacecraftFrame::ACC_i)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for SpacecraftFrameWrapper<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<SpacecraftFrame>("frame", Self::VT_FRAME, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct SpacecraftFrameWrapperArgs {
-    pub frame: SpacecraftFrame,
-}
-impl<'a> Default for SpacecraftFrameWrapperArgs {
-  #[inline]
-  fn default() -> Self {
-    SpacecraftFrameWrapperArgs {
-      frame: SpacecraftFrame::ACC_i,
-    }
-  }
-}
-
-pub struct SpacecraftFrameWrapperBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SpacecraftFrameWrapperBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_frame(&mut self, frame: SpacecraftFrame) {
-    self.fbb_.push_slot::<SpacecraftFrame>(SpacecraftFrameWrapper::VT_FRAME, frame, SpacecraftFrame::ACC_i);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SpacecraftFrameWrapperBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    SpacecraftFrameWrapperBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<SpacecraftFrameWrapper<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for SpacecraftFrameWrapper<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("SpacecraftFrameWrapper");
-      ds.field("frame", &self.frame());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct SpacecraftFrameWrapperT {
-  pub frame: SpacecraftFrame,
-}
-impl Default for SpacecraftFrameWrapperT {
-  fn default() -> Self {
-    Self {
-      frame: SpacecraftFrame::ACC_i,
-    }
-  }
-}
-impl SpacecraftFrameWrapperT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<SpacecraftFrameWrapper<'b>> {
-    let frame = self.frame;
-    SpacecraftFrameWrapper::create(_fbb, &SpacecraftFrameWrapperArgs{
-      frame,
-    })
-  }
-}
-pub enum OrbitFrameWrapperOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-pub struct OrbitFrameWrapper<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for OrbitFrameWrapper<'a> {
-  type Inner = OrbitFrameWrapper<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> OrbitFrameWrapper<'a> {
-  pub const VT_FRAME: ::flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    OrbitFrameWrapper { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args OrbitFrameWrapperArgs
-  ) -> ::flatbuffers::WIPOffset<OrbitFrameWrapper<'bldr>> {
-    let mut builder = OrbitFrameWrapperBuilder::new(_fbb);
-    builder.add_frame(args.frame);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> OrbitFrameWrapperT {
-    let frame = self.frame();
-    OrbitFrameWrapperT {
-      frame,
-    }
-  }
-
-  #[inline]
-  pub fn frame(&self) -> OrbitFrame {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<OrbitFrame>(OrbitFrameWrapper::VT_FRAME, Some(OrbitFrame::EQW_INERTIAL)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for OrbitFrameWrapper<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<OrbitFrame>("frame", Self::VT_FRAME, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct OrbitFrameWrapperArgs {
-    pub frame: OrbitFrame,
-}
-impl<'a> Default for OrbitFrameWrapperArgs {
-  #[inline]
-  fn default() -> Self {
-    OrbitFrameWrapperArgs {
-      frame: OrbitFrame::EQW_INERTIAL,
-    }
-  }
-}
-
-pub struct OrbitFrameWrapperBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OrbitFrameWrapperBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_frame(&mut self, frame: OrbitFrame) {
-    self.fbb_.push_slot::<OrbitFrame>(OrbitFrameWrapper::VT_FRAME, frame, OrbitFrame::EQW_INERTIAL);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OrbitFrameWrapperBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    OrbitFrameWrapperBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<OrbitFrameWrapper<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for OrbitFrameWrapper<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("OrbitFrameWrapper");
-      ds.field("frame", &self.frame());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct OrbitFrameWrapperT {
-  pub frame: OrbitFrame,
-}
-impl Default for OrbitFrameWrapperT {
-  fn default() -> Self {
-    Self {
-      frame: OrbitFrame::EQW_INERTIAL,
-    }
-  }
-}
-impl OrbitFrameWrapperT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<OrbitFrameWrapper<'b>> {
-    let frame = self.frame;
-    OrbitFrameWrapper::create(_fbb, &OrbitFrameWrapperArgs{
-      frame,
-    })
-  }
-}
-pub enum CustomFrameWrapperOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-pub struct CustomFrameWrapper<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for CustomFrameWrapper<'a> {
-  type Inner = CustomFrameWrapper<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> CustomFrameWrapper<'a> {
-  pub const VT_FRAME: ::flatbuffers::VOffsetT = 4;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    CustomFrameWrapper { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args CustomFrameWrapperArgs
-  ) -> ::flatbuffers::WIPOffset<CustomFrameWrapper<'bldr>> {
-    let mut builder = CustomFrameWrapperBuilder::new(_fbb);
-    builder.add_frame(args.frame);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> CustomFrameWrapperT {
-    let frame = self.frame();
-    CustomFrameWrapperT {
-      frame,
-    }
-  }
-
-  #[inline]
-  pub fn frame(&self) -> CustomFrame {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<CustomFrame>(CustomFrameWrapper::VT_FRAME, Some(CustomFrame::ECEF)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for CustomFrameWrapper<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<CustomFrame>("frame", Self::VT_FRAME, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct CustomFrameWrapperArgs {
-    pub frame: CustomFrame,
-}
-impl<'a> Default for CustomFrameWrapperArgs {
-  #[inline]
-  fn default() -> Self {
-    CustomFrameWrapperArgs {
-      frame: CustomFrame::ECEF,
-    }
-  }
-}
-
-pub struct CustomFrameWrapperBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CustomFrameWrapperBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_frame(&mut self, frame: CustomFrame) {
-    self.fbb_.push_slot::<CustomFrame>(CustomFrameWrapper::VT_FRAME, frame, CustomFrame::ECEF);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CustomFrameWrapperBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    CustomFrameWrapperBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<CustomFrameWrapper<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for CustomFrameWrapper<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("CustomFrameWrapper");
-      ds.field("frame", &self.frame());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct CustomFrameWrapperT {
-  pub frame: CustomFrame,
-}
-impl Default for CustomFrameWrapperT {
-  fn default() -> Self {
-    Self {
-      frame: CustomFrame::ECEF,
-    }
-  }
-}
-impl CustomFrameWrapperT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<CustomFrameWrapper<'b>> {
-    let frame = self.frame;
-    CustomFrameWrapper::create(_fbb, &CustomFrameWrapperArgs{
-      frame,
-    })
-  }
-}
-pub enum RFMOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Reference Frame Message
-pub struct RFM<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for RFM<'a> {
-  type Inner = RFM<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> RFM<'a> {
-  pub const VT_REFERENCE_FRAME_TYPE: ::flatbuffers::VOffsetT = 4;
-  pub const VT_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 6;
-  pub const VT_INDEX: ::flatbuffers::VOffsetT = 8;
-  pub const VT_NAME: ::flatbuffers::VOffsetT = 10;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    RFM { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args RFMArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<RFM<'bldr>> {
-    let mut builder = RFMBuilder::new(_fbb);
-    if let Some(x) = args.NAME { builder.add_NAME(x); }
-    builder.add_INDEX(args.INDEX);
+    args: &'args CDMObjectArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<CDMObject<'bldr>> {
+    let mut builder = CDMObjectBuilder::new(_fbb);
+    builder.add_Z_DOT(args.Z_DOT);
+    builder.add_Y_DOT(args.Y_DOT);
+    builder.add_X_DOT(args.X_DOT);
+    builder.add_Z(args.Z);
+    builder.add_Y(args.Y);
+    builder.add_X(args.X);
+    builder.add_SEDR(args.SEDR);
+    builder.add_THRUST_ACCELERATION(args.THRUST_ACCELERATION);
+    builder.add_CR_AREA_OVER_MASS(args.CR_AREA_OVER_MASS);
+    builder.add_AREA_SRP(args.AREA_SRP);
+    builder.add_AREA_DRG(args.AREA_DRG);
+    builder.add_AREA_PC(args.AREA_PC);
+    builder.add_WEIGHTED_RMS(args.WEIGHTED_RMS);
+    builder.add_RESIDUALS_ACCEPTED(args.RESIDUALS_ACCEPTED);
+    builder.add_ACTUAL_OD_SPAN(args.ACTUAL_OD_SPAN);
+    builder.add_RECOMMENDED_OD_SPAN(args.RECOMMENDED_OD_SPAN);
+    if let Some(x) = args.COVARIANCE { builder.add_COVARIANCE(x); }
+    builder.add_TRACKS_USED(args.TRACKS_USED);
+    builder.add_TRACKS_AVAILABLE(args.TRACKS_AVAILABLE);
+    builder.add_OBS_USED(args.OBS_USED);
+    builder.add_OBS_AVAILABLE(args.OBS_AVAILABLE);
+    if let Some(x) = args.TIME_LASTOB_END { builder.add_TIME_LASTOB_END(x); }
+    if let Some(x) = args.TIME_LASTOB_START { builder.add_TIME_LASTOB_START(x); }
+    if let Some(x) = args.N_BODY_PERTURBATIONS { builder.add_N_BODY_PERTURBATIONS(x); }
+    if let Some(x) = args.ATMOSPHERIC_MODEL { builder.add_ATMOSPHERIC_MODEL(x); }
+    if let Some(x) = args.GRAVITY_MODEL { builder.add_GRAVITY_MODEL(x); }
     if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
-    builder.add_REFERENCE_FRAME_type(args.REFERENCE_FRAME_type);
+    if let Some(x) = args.EPHEMERIS_NAME { builder.add_EPHEMERIS_NAME(x); }
+    if let Some(x) = args.OPERATOR_ORGANIZATION { builder.add_OPERATOR_ORGANIZATION(x); }
+    if let Some(x) = args.OPERATOR_CONTACT_POSITION { builder.add_OPERATOR_CONTACT_POSITION(x); }
+    if let Some(x) = args.POC { builder.add_POC(x); }
+    if let Some(x) = args.OBJECT { builder.add_OBJECT(x); }
+    if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+    builder.add_INTRACK_THRUST(args.INTRACK_THRUST);
+    builder.add_EARTH_TIDES(args.EARTH_TIDES);
+    builder.add_SOLAR_RAD_PRESSURE(args.SOLAR_RAD_PRESSURE);
+    builder.add_COVARIANCE_METHOD(args.COVARIANCE_METHOD);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> RFMT {
-    let REFERENCE_FRAME = match self.REFERENCE_FRAME_type() {
-      RFMUnion::NONE => RFMUnionT::NONE,
-      RFMUnion::CelestialFrameWrapper => RFMUnionT::CelestialFrameWrapper(alloc::boxed::Box::new(
-        self.REFERENCE_FRAME_as_celestial_frame_wrapper()
-            .expect("Invalid union table, expected `RFMUnion::CelestialFrameWrapper`.")
-            .unpack()
-      )),
-      RFMUnion::SpacecraftFrameWrapper => RFMUnionT::SpacecraftFrameWrapper(alloc::boxed::Box::new(
-        self.REFERENCE_FRAME_as_spacecraft_frame_wrapper()
-            .expect("Invalid union table, expected `RFMUnion::SpacecraftFrameWrapper`.")
-            .unpack()
-      )),
-      RFMUnion::OrbitFrameWrapper => RFMUnionT::OrbitFrameWrapper(alloc::boxed::Box::new(
-        self.REFERENCE_FRAME_as_orbit_frame_wrapper()
-            .expect("Invalid union table, expected `RFMUnion::OrbitFrameWrapper`.")
-            .unpack()
-      )),
-      RFMUnion::CustomFrameWrapper => RFMUnionT::CustomFrameWrapper(alloc::boxed::Box::new(
-        self.REFERENCE_FRAME_as_custom_frame_wrapper()
-            .expect("Invalid union table, expected `RFMUnion::CustomFrameWrapper`.")
-            .unpack()
-      )),
-      _ => RFMUnionT::NONE,
-    };
-    let INDEX = self.INDEX();
-    let NAME = self.NAME().map(|x| {
+  pub fn unpack(&self) -> CDMObjectT {
+    let COMMENT = self.COMMENT().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    RFMT {
+    let OBJECT = self.OBJECT().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let POC = self.POC().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let OPERATOR_CONTACT_POSITION = self.OPERATOR_CONTACT_POSITION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OPERATOR_ORGANIZATION = self.OPERATOR_ORGANIZATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPHEMERIS_NAME = self.EPHEMERIS_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let COVARIANCE_METHOD = self.COVARIANCE_METHOD();
+    let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let GRAVITY_MODEL = self.GRAVITY_MODEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ATMOSPHERIC_MODEL = self.ATMOSPHERIC_MODEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let N_BODY_PERTURBATIONS = self.N_BODY_PERTURBATIONS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SOLAR_RAD_PRESSURE = self.SOLAR_RAD_PRESSURE();
+    let EARTH_TIDES = self.EARTH_TIDES();
+    let INTRACK_THRUST = self.INTRACK_THRUST();
+    let TIME_LASTOB_START = self.TIME_LASTOB_START().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TIME_LASTOB_END = self.TIME_LASTOB_END().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let RECOMMENDED_OD_SPAN = self.RECOMMENDED_OD_SPAN();
+    let ACTUAL_OD_SPAN = self.ACTUAL_OD_SPAN();
+    let OBS_AVAILABLE = self.OBS_AVAILABLE();
+    let OBS_USED = self.OBS_USED();
+    let TRACKS_AVAILABLE = self.TRACKS_AVAILABLE();
+    let TRACKS_USED = self.TRACKS_USED();
+    let RESIDUALS_ACCEPTED = self.RESIDUALS_ACCEPTED();
+    let WEIGHTED_RMS = self.WEIGHTED_RMS();
+    let AREA_PC = self.AREA_PC();
+    let AREA_DRG = self.AREA_DRG();
+    let AREA_SRP = self.AREA_SRP();
+    let CR_AREA_OVER_MASS = self.CR_AREA_OVER_MASS();
+    let THRUST_ACCELERATION = self.THRUST_ACCELERATION();
+    let SEDR = self.SEDR();
+    let X = self.X();
+    let Y = self.Y();
+    let Z = self.Z();
+    let X_DOT = self.X_DOT();
+    let Y_DOT = self.Y_DOT();
+    let Z_DOT = self.Z_DOT();
+    let COVARIANCE = self.COVARIANCE().map(|x| {
+      x.into_iter().collect()
+    });
+    CDMObjectT {
+      COMMENT,
+      OBJECT,
+      POC,
+      OPERATOR_CONTACT_POSITION,
+      OPERATOR_ORGANIZATION,
+      EPHEMERIS_NAME,
+      COVARIANCE_METHOD,
       REFERENCE_FRAME,
-      INDEX,
-      NAME,
+      GRAVITY_MODEL,
+      ATMOSPHERIC_MODEL,
+      N_BODY_PERTURBATIONS,
+      SOLAR_RAD_PRESSURE,
+      EARTH_TIDES,
+      INTRACK_THRUST,
+      TIME_LASTOB_START,
+      TIME_LASTOB_END,
+      RECOMMENDED_OD_SPAN,
+      ACTUAL_OD_SPAN,
+      OBS_AVAILABLE,
+      OBS_USED,
+      TRACKS_AVAILABLE,
+      TRACKS_USED,
+      RESIDUALS_ACCEPTED,
+      WEIGHTED_RMS,
+      AREA_PC,
+      AREA_DRG,
+      AREA_SRP,
+      CR_AREA_OVER_MASS,
+      THRUST_ACCELERATION,
+      SEDR,
+      X,
+      Y,
+      Z,
+      X_DOT,
+      Y_DOT,
+      Z_DOT,
+      COVARIANCE,
     }
   }
 
+  /// A comment
   #[inline]
-  pub fn REFERENCE_FRAME_type(&self) -> RFMUnion {
+  pub fn COMMENT(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<RFMUnion>(RFM::VT_REFERENCE_FRAME_TYPE, Some(RFMUnion::NONE)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_COMMENT, None)}
   }
   #[inline]
-  pub fn REFERENCE_FRAME(&self) -> Option<::flatbuffers::Table<'a>> {
+  pub fn OBJECT(&self) -> Option<CAT<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Table<'a>>>(RFM::VT_REFERENCE_FRAME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CAT>>(CDMObject::VT_OBJECT, None)}
   }
+  /// Point of Contact
   #[inline]
-  pub fn INDEX(&self) -> i32 {
+  pub fn POC(&self) -> Option<EPM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(RFM::VT_INDEX, Some(0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<EPM>>(CDMObject::VT_POC, None)}
   }
+  /// Operator contact position
   #[inline]
-  pub fn NAME(&self) -> Option<&'a str> {
+  pub fn OPERATOR_CONTACT_POSITION(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFM::VT_NAME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_OPERATOR_CONTACT_POSITION, None)}
   }
+  /// Operator organization
   #[inline]
-  #[allow(non_snake_case)]
-  pub fn REFERENCE_FRAME_as_celestial_frame_wrapper(&self) -> Option<CelestialFrameWrapper<'a>> {
-    if self.REFERENCE_FRAME_type() == RFMUnion::CelestialFrameWrapper {
-      self.REFERENCE_FRAME().map(|t| {
-       // Safety:
-       // Created from a valid Table for this object
-       // Which contains a valid union in this slot
-       unsafe { CelestialFrameWrapper::init_from_table(t) }
-     })
-    } else {
-      None
-    }
+  pub fn OPERATOR_ORGANIZATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_OPERATOR_ORGANIZATION, None)}
   }
-
+  /// Ephemeris name
   #[inline]
-  #[allow(non_snake_case)]
-  pub fn REFERENCE_FRAME_as_spacecraft_frame_wrapper(&self) -> Option<SpacecraftFrameWrapper<'a>> {
-    if self.REFERENCE_FRAME_type() == RFMUnion::SpacecraftFrameWrapper {
-      self.REFERENCE_FRAME().map(|t| {
-       // Safety:
-       // Created from a valid Table for this object
-       // Which contains a valid union in this slot
-       unsafe { SpacecraftFrameWrapper::init_from_table(t) }
-     })
-    } else {
-      None
-    }
+  pub fn EPHEMERIS_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_EPHEMERIS_NAME, None)}
   }
-
+  /// Covariance method
   #[inline]
-  #[allow(non_snake_case)]
-  pub fn REFERENCE_FRAME_as_orbit_frame_wrapper(&self) -> Option<OrbitFrameWrapper<'a>> {
-    if self.REFERENCE_FRAME_type() == RFMUnion::OrbitFrameWrapper {
-      self.REFERENCE_FRAME().map(|t| {
-       // Safety:
-       // Created from a valid Table for this object
-       // Which contains a valid union in this slot
-       unsafe { OrbitFrameWrapper::init_from_table(t) }
-     })
-    } else {
-      None
-    }
+  pub fn COVARIANCE_METHOD(&self) -> covarianceAlgorithm {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<covarianceAlgorithm>(CDMObject::VT_COVARIANCE_METHOD, Some(covarianceAlgorithm::CALCULATED)).unwrap()}
   }
-
+  /// Reference Frame in which the object position is defined
   #[inline]
-  #[allow(non_snake_case)]
-  pub fn REFERENCE_FRAME_as_custom_frame_wrapper(&self) -> Option<CustomFrameWrapper<'a>> {
-    if self.REFERENCE_FRAME_type() == RFMUnion::CustomFrameWrapper {
-      self.REFERENCE_FRAME().map(|t| {
-       // Safety:
-       // Created from a valid Table for this object
-       // Which contains a valid union in this slot
-       unsafe { CustomFrameWrapper::init_from_table(t) }
-     })
-    } else {
-      None
-    }
+  pub fn REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(CDMObject::VT_REFERENCE_FRAME, None)}
   }
-
+  /// Gravity model
+  #[inline]
+  pub fn GRAVITY_MODEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_GRAVITY_MODEL, None)}
+  }
+  /// Atmospheric model
+  #[inline]
+  pub fn ATMOSPHERIC_MODEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_ATMOSPHERIC_MODEL, None)}
+  }
+  /// N-body perturbations
+  #[inline]
+  pub fn N_BODY_PERTURBATIONS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_N_BODY_PERTURBATIONS, None)}
+  }
+  /// Solar radiation pressure
+  #[inline]
+  pub fn SOLAR_RAD_PRESSURE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CDMObject::VT_SOLAR_RAD_PRESSURE, Some(false)).unwrap()}
+  }
+  /// Earth tides
+  #[inline]
+  pub fn EARTH_TIDES(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CDMObject::VT_EARTH_TIDES, Some(false)).unwrap()}
+  }
+  /// Intrack thrust
+  #[inline]
+  pub fn INTRACK_THRUST(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CDMObject::VT_INTRACK_THRUST, Some(false)).unwrap()}
+  }
+  /// Time of last observation start
+  #[inline]
+  pub fn TIME_LASTOB_START(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_TIME_LASTOB_START, None)}
+  }
+  /// Time of last observation end
+  #[inline]
+  pub fn TIME_LASTOB_END(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_TIME_LASTOB_END, None)}
+  }
+  /// Recommended observation data span
+  #[inline]
+  pub fn RECOMMENDED_OD_SPAN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_RECOMMENDED_OD_SPAN, Some(0.0)).unwrap()}
+  }
+  /// Actual observation data span
+  #[inline]
+  pub fn ACTUAL_OD_SPAN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_ACTUAL_OD_SPAN, Some(0.0)).unwrap()}
+  }
+  /// Number of observations available
+  #[inline]
+  pub fn OBS_AVAILABLE(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(CDMObject::VT_OBS_AVAILABLE, Some(0)).unwrap()}
+  }
+  /// Number of observations used
+  #[inline]
+  pub fn OBS_USED(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(CDMObject::VT_OBS_USED, Some(0)).unwrap()}
+  }
+  /// Number of tracks available
+  #[inline]
+  pub fn TRACKS_AVAILABLE(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(CDMObject::VT_TRACKS_AVAILABLE, Some(0)).unwrap()}
+  }
+  /// Number of tracks used
+  #[inline]
+  pub fn TRACKS_USED(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(CDMObject::VT_TRACKS_USED, Some(0)).unwrap()}
+  }
+  /// Residuals accepted
+  #[inline]
+  pub fn RESIDUALS_ACCEPTED(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_RESIDUALS_ACCEPTED, Some(0.0)).unwrap()}
+  }
+  /// Weighted root mean square
+  #[inline]
+  pub fn WEIGHTED_RMS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_WEIGHTED_RMS, Some(0.0)).unwrap()}
+  }
+  /// Area of the object
+  #[inline]
+  pub fn AREA_PC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_AREA_PC, Some(0.0)).unwrap()}
+  }
+  /// Area of the object drag
+  #[inline]
+  pub fn AREA_DRG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_AREA_DRG, Some(0.0)).unwrap()}
+  }
+  /// Area of the object solar radiation pressure
+  #[inline]
+  pub fn AREA_SRP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_AREA_SRP, Some(0.0)).unwrap()}
+  }
+  /// Object's area-to-mass ratio
+  #[inline]
+  pub fn CR_AREA_OVER_MASS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_CR_AREA_OVER_MASS, Some(0.0)).unwrap()}
+  }
+  /// Object's thrust acceleration
+  #[inline]
+  pub fn THRUST_ACCELERATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_THRUST_ACCELERATION, Some(0.0)).unwrap()}
+  }
+  /// Object's solar flux
+  #[inline]
+  pub fn SEDR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_SEDR, Some(0.0)).unwrap()}
+  }
+  /// X-coordinate of the object's position in RTN coordinates
+  #[inline]
+  pub fn X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_X, Some(0.0)).unwrap()}
+  }
+  /// Y-coordinate of the object's position in RTN
+  #[inline]
+  pub fn Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_Y, Some(0.0)).unwrap()}
+  }
+  /// Z-coordinate of the object's position in RTN
+  #[inline]
+  pub fn Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_Z, Some(0.0)).unwrap()}
+  }
+  /// X-coordinate of the object's position in RTN coordinates
+  #[inline]
+  pub fn X_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_X_DOT, Some(0.0)).unwrap()}
+  }
+  /// Y-coordinate of the object's position in RTN
+  #[inline]
+  pub fn Y_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_Y_DOT, Some(0.0)).unwrap()}
+  }
+  /// Z-coordinate of the object's position in RTN
+  #[inline]
+  pub fn Z_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDMObject::VT_Z_DOT, Some(0.0)).unwrap()}
+  }
+  /// Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+  /// Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+  ///         CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+  ///         CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+  ///         CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+  ///         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+  ///         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
+  #[inline]
+  pub fn COVARIANCE(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(CDMObject::VT_COVARIANCE, None)}
+  }
 }
 
-impl ::flatbuffers::Verifiable for RFM<'_> {
+impl ::flatbuffers::Verifiable for CDMObject<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_union::<RFMUnion, _>("REFERENCE_FRAME_type", Self::VT_REFERENCE_FRAME_TYPE, "REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false, |key, v, pos| {
-        match key {
-          RFMUnion::CelestialFrameWrapper => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CelestialFrameWrapper>>("RFMUnion::CelestialFrameWrapper", pos),
-          RFMUnion::SpacecraftFrameWrapper => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SpacecraftFrameWrapper>>("RFMUnion::SpacecraftFrameWrapper", pos),
-          RFMUnion::OrbitFrameWrapper => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<OrbitFrameWrapper>>("RFMUnion::OrbitFrameWrapper", pos),
-          RFMUnion::CustomFrameWrapper => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CustomFrameWrapper>>("RFMUnion::CustomFrameWrapper", pos),
-          _ => Ok(()),
-        }
-     })?
-     .visit_field::<i32>("INDEX", Self::VT_INDEX, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<CAT>>("OBJECT", Self::VT_OBJECT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<EPM>>("POC", Self::VT_POC, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OPERATOR_CONTACT_POSITION", Self::VT_OPERATOR_CONTACT_POSITION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OPERATOR_ORGANIZATION", Self::VT_OPERATOR_ORGANIZATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME", Self::VT_EPHEMERIS_NAME, false)?
+     .visit_field::<covarianceAlgorithm>("COVARIANCE_METHOD", Self::VT_COVARIANCE_METHOD, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GRAVITY_MODEL", Self::VT_GRAVITY_MODEL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ATMOSPHERIC_MODEL", Self::VT_ATMOSPHERIC_MODEL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("N_BODY_PERTURBATIONS", Self::VT_N_BODY_PERTURBATIONS, false)?
+     .visit_field::<bool>("SOLAR_RAD_PRESSURE", Self::VT_SOLAR_RAD_PRESSURE, false)?
+     .visit_field::<bool>("EARTH_TIDES", Self::VT_EARTH_TIDES, false)?
+     .visit_field::<bool>("INTRACK_THRUST", Self::VT_INTRACK_THRUST, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TIME_LASTOB_START", Self::VT_TIME_LASTOB_START, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TIME_LASTOB_END", Self::VT_TIME_LASTOB_END, false)?
+     .visit_field::<f64>("RECOMMENDED_OD_SPAN", Self::VT_RECOMMENDED_OD_SPAN, false)?
+     .visit_field::<f64>("ACTUAL_OD_SPAN", Self::VT_ACTUAL_OD_SPAN, false)?
+     .visit_field::<u32>("OBS_AVAILABLE", Self::VT_OBS_AVAILABLE, false)?
+     .visit_field::<u32>("OBS_USED", Self::VT_OBS_USED, false)?
+     .visit_field::<u32>("TRACKS_AVAILABLE", Self::VT_TRACKS_AVAILABLE, false)?
+     .visit_field::<u32>("TRACKS_USED", Self::VT_TRACKS_USED, false)?
+     .visit_field::<f64>("RESIDUALS_ACCEPTED", Self::VT_RESIDUALS_ACCEPTED, false)?
+     .visit_field::<f64>("WEIGHTED_RMS", Self::VT_WEIGHTED_RMS, false)?
+     .visit_field::<f64>("AREA_PC", Self::VT_AREA_PC, false)?
+     .visit_field::<f64>("AREA_DRG", Self::VT_AREA_DRG, false)?
+     .visit_field::<f64>("AREA_SRP", Self::VT_AREA_SRP, false)?
+     .visit_field::<f64>("CR_AREA_OVER_MASS", Self::VT_CR_AREA_OVER_MASS, false)?
+     .visit_field::<f64>("THRUST_ACCELERATION", Self::VT_THRUST_ACCELERATION, false)?
+     .visit_field::<f64>("SEDR", Self::VT_SEDR, false)?
+     .visit_field::<f64>("X", Self::VT_X, false)?
+     .visit_field::<f64>("Y", Self::VT_Y, false)?
+     .visit_field::<f64>("Z", Self::VT_Z, false)?
+     .visit_field::<f64>("X_DOT", Self::VT_X_DOT, false)?
+     .visit_field::<f64>("Y_DOT", Self::VT_Y_DOT, false)?
+     .visit_field::<f64>("Z_DOT", Self::VT_Z_DOT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COVARIANCE", Self::VT_COVARIANCE, false)?
      .finish();
     Ok(())
   }
 }
-pub struct RFMArgs<'a> {
-    pub REFERENCE_FRAME_type: RFMUnion,
-    pub REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>>,
-    pub INDEX: i32,
-    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+pub struct CDMObjectArgs<'a> {
+    pub COMMENT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT: Option<::flatbuffers::WIPOffset<CAT<'a>>>,
+    pub POC: Option<::flatbuffers::WIPOffset<EPM<'a>>>,
+    pub OPERATOR_CONTACT_POSITION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OPERATOR_ORGANIZATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPHEMERIS_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COVARIANCE_METHOD: covarianceAlgorithm,
+    pub REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
+    pub GRAVITY_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ATMOSPHERIC_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub N_BODY_PERTURBATIONS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOLAR_RAD_PRESSURE: bool,
+    pub EARTH_TIDES: bool,
+    pub INTRACK_THRUST: bool,
+    pub TIME_LASTOB_START: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TIME_LASTOB_END: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RECOMMENDED_OD_SPAN: f64,
+    pub ACTUAL_OD_SPAN: f64,
+    pub OBS_AVAILABLE: u32,
+    pub OBS_USED: u32,
+    pub TRACKS_AVAILABLE: u32,
+    pub TRACKS_USED: u32,
+    pub RESIDUALS_ACCEPTED: f64,
+    pub WEIGHTED_RMS: f64,
+    pub AREA_PC: f64,
+    pub AREA_DRG: f64,
+    pub AREA_SRP: f64,
+    pub CR_AREA_OVER_MASS: f64,
+    pub THRUST_ACCELERATION: f64,
+    pub SEDR: f64,
+    pub X: f64,
+    pub Y: f64,
+    pub Z: f64,
+    pub X_DOT: f64,
+    pub Y_DOT: f64,
+    pub Z_DOT: f64,
+    pub COVARIANCE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
 }
-impl<'a> Default for RFMArgs<'a> {
+impl<'a> Default for CDMObjectArgs<'a> {
   #[inline]
   fn default() -> Self {
-    RFMArgs {
-      REFERENCE_FRAME_type: RFMUnion::NONE,
+    CDMObjectArgs {
+      COMMENT: None,
+      OBJECT: None,
+      POC: None,
+      OPERATOR_CONTACT_POSITION: None,
+      OPERATOR_ORGANIZATION: None,
+      EPHEMERIS_NAME: None,
+      COVARIANCE_METHOD: covarianceAlgorithm::CALCULATED,
       REFERENCE_FRAME: None,
-      INDEX: 0,
-      NAME: None,
+      GRAVITY_MODEL: None,
+      ATMOSPHERIC_MODEL: None,
+      N_BODY_PERTURBATIONS: None,
+      SOLAR_RAD_PRESSURE: false,
+      EARTH_TIDES: false,
+      INTRACK_THRUST: false,
+      TIME_LASTOB_START: None,
+      TIME_LASTOB_END: None,
+      RECOMMENDED_OD_SPAN: 0.0,
+      ACTUAL_OD_SPAN: 0.0,
+      OBS_AVAILABLE: 0,
+      OBS_USED: 0,
+      TRACKS_AVAILABLE: 0,
+      TRACKS_USED: 0,
+      RESIDUALS_ACCEPTED: 0.0,
+      WEIGHTED_RMS: 0.0,
+      AREA_PC: 0.0,
+      AREA_DRG: 0.0,
+      AREA_SRP: 0.0,
+      CR_AREA_OVER_MASS: 0.0,
+      THRUST_ACCELERATION: 0.0,
+      SEDR: 0.0,
+      X: 0.0,
+      Y: 0.0,
+      Z: 0.0,
+      X_DOT: 0.0,
+      Y_DOT: 0.0,
+      Z_DOT: 0.0,
+      COVARIANCE: None,
     }
   }
 }
 
-pub struct RFMBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct CDMObjectBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFMBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CDMObjectBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_REFERENCE_FRAME_type(&mut self, REFERENCE_FRAME_type: RFMUnion) {
-    self.fbb_.push_slot::<RFMUnion>(RFM::VT_REFERENCE_FRAME_TYPE, REFERENCE_FRAME_type, RFMUnion::NONE);
+  pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDMObject::VT_COMMENT, COMMENT);
   }
   #[inline]
-  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: ::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFM::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  pub fn add_OBJECT(&mut self, OBJECT: ::flatbuffers::WIPOffset<CAT<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CAT>>(CDMObject::VT_OBJECT, OBJECT);
   }
   #[inline]
-  pub fn add_INDEX(&mut self, INDEX: i32) {
-    self.fbb_.push_slot::<i32>(RFM::VT_INDEX, INDEX, 0);
+  pub fn add_POC(&mut self, POC: ::flatbuffers::WIPOffset<EPM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<EPM>>(CDMObject::VT_POC, POC);
   }
   #[inline]
-  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFM::VT_NAME, NAME);
+  pub fn add_OPERATOR_CONTACT_POSITION(&mut self, OPERATOR_CONTACT_POSITION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDMObject::VT_OPERATOR_CONTACT_POSITION, OPERATOR_CONTACT_POSITION);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFMBuilder<'a, 'b, A> {
+  pub fn add_OPERATOR_ORGANIZATION(&mut self, OPERATOR_ORGANIZATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDMObject::VT_OPERATOR_ORGANIZATION, OPERATOR_ORGANIZATION);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_NAME(&mut self, EPHEMERIS_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDMObject::VT_EPHEMERIS_NAME, EPHEMERIS_NAME);
+  }
+  #[inline]
+  pub fn add_COVARIANCE_METHOD(&mut self, COVARIANCE_METHOD: covarianceAlgorithm) {
+    self.fbb_.push_slot::<covarianceAlgorithm>(CDMObject::VT_COVARIANCE_METHOD, COVARIANCE_METHOD, covarianceAlgorithm::CALCULATED);
+  }
+  #[inline]
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(CDMObject::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  #[inline]
+  pub fn add_GRAVITY_MODEL(&mut self, GRAVITY_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDMObject::VT_GRAVITY_MODEL, GRAVITY_MODEL);
+  }
+  #[inline]
+  pub fn add_ATMOSPHERIC_MODEL(&mut self, ATMOSPHERIC_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDMObject::VT_ATMOSPHERIC_MODEL, ATMOSPHERIC_MODEL);
+  }
+  #[inline]
+  pub fn add_N_BODY_PERTURBATIONS(&mut self, N_BODY_PERTURBATIONS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDMObject::VT_N_BODY_PERTURBATIONS, N_BODY_PERTURBATIONS);
+  }
+  #[inline]
+  pub fn add_SOLAR_RAD_PRESSURE(&mut self, SOLAR_RAD_PRESSURE: bool) {
+    self.fbb_.push_slot::<bool>(CDMObject::VT_SOLAR_RAD_PRESSURE, SOLAR_RAD_PRESSURE, false);
+  }
+  #[inline]
+  pub fn add_EARTH_TIDES(&mut self, EARTH_TIDES: bool) {
+    self.fbb_.push_slot::<bool>(CDMObject::VT_EARTH_TIDES, EARTH_TIDES, false);
+  }
+  #[inline]
+  pub fn add_INTRACK_THRUST(&mut self, INTRACK_THRUST: bool) {
+    self.fbb_.push_slot::<bool>(CDMObject::VT_INTRACK_THRUST, INTRACK_THRUST, false);
+  }
+  #[inline]
+  pub fn add_TIME_LASTOB_START(&mut self, TIME_LASTOB_START: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDMObject::VT_TIME_LASTOB_START, TIME_LASTOB_START);
+  }
+  #[inline]
+  pub fn add_TIME_LASTOB_END(&mut self, TIME_LASTOB_END: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDMObject::VT_TIME_LASTOB_END, TIME_LASTOB_END);
+  }
+  #[inline]
+  pub fn add_RECOMMENDED_OD_SPAN(&mut self, RECOMMENDED_OD_SPAN: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_RECOMMENDED_OD_SPAN, RECOMMENDED_OD_SPAN, 0.0);
+  }
+  #[inline]
+  pub fn add_ACTUAL_OD_SPAN(&mut self, ACTUAL_OD_SPAN: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_ACTUAL_OD_SPAN, ACTUAL_OD_SPAN, 0.0);
+  }
+  #[inline]
+  pub fn add_OBS_AVAILABLE(&mut self, OBS_AVAILABLE: u32) {
+    self.fbb_.push_slot::<u32>(CDMObject::VT_OBS_AVAILABLE, OBS_AVAILABLE, 0);
+  }
+  #[inline]
+  pub fn add_OBS_USED(&mut self, OBS_USED: u32) {
+    self.fbb_.push_slot::<u32>(CDMObject::VT_OBS_USED, OBS_USED, 0);
+  }
+  #[inline]
+  pub fn add_TRACKS_AVAILABLE(&mut self, TRACKS_AVAILABLE: u32) {
+    self.fbb_.push_slot::<u32>(CDMObject::VT_TRACKS_AVAILABLE, TRACKS_AVAILABLE, 0);
+  }
+  #[inline]
+  pub fn add_TRACKS_USED(&mut self, TRACKS_USED: u32) {
+    self.fbb_.push_slot::<u32>(CDMObject::VT_TRACKS_USED, TRACKS_USED, 0);
+  }
+  #[inline]
+  pub fn add_RESIDUALS_ACCEPTED(&mut self, RESIDUALS_ACCEPTED: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_RESIDUALS_ACCEPTED, RESIDUALS_ACCEPTED, 0.0);
+  }
+  #[inline]
+  pub fn add_WEIGHTED_RMS(&mut self, WEIGHTED_RMS: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_WEIGHTED_RMS, WEIGHTED_RMS, 0.0);
+  }
+  #[inline]
+  pub fn add_AREA_PC(&mut self, AREA_PC: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_AREA_PC, AREA_PC, 0.0);
+  }
+  #[inline]
+  pub fn add_AREA_DRG(&mut self, AREA_DRG: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_AREA_DRG, AREA_DRG, 0.0);
+  }
+  #[inline]
+  pub fn add_AREA_SRP(&mut self, AREA_SRP: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_AREA_SRP, AREA_SRP, 0.0);
+  }
+  #[inline]
+  pub fn add_CR_AREA_OVER_MASS(&mut self, CR_AREA_OVER_MASS: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_CR_AREA_OVER_MASS, CR_AREA_OVER_MASS, 0.0);
+  }
+  #[inline]
+  pub fn add_THRUST_ACCELERATION(&mut self, THRUST_ACCELERATION: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_THRUST_ACCELERATION, THRUST_ACCELERATION, 0.0);
+  }
+  #[inline]
+  pub fn add_SEDR(&mut self, SEDR: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_SEDR, SEDR, 0.0);
+  }
+  #[inline]
+  pub fn add_X(&mut self, X: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_X, X, 0.0);
+  }
+  #[inline]
+  pub fn add_Y(&mut self, Y: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_Y, Y, 0.0);
+  }
+  #[inline]
+  pub fn add_Z(&mut self, Z: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_Z, Z, 0.0);
+  }
+  #[inline]
+  pub fn add_X_DOT(&mut self, X_DOT: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_X_DOT, X_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_Y_DOT(&mut self, Y_DOT: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_Y_DOT, Y_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_Z_DOT(&mut self, Z_DOT: f64) {
+    self.fbb_.push_slot::<f64>(CDMObject::VT_Z_DOT, Z_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_COVARIANCE(&mut self, COVARIANCE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDMObject::VT_COVARIANCE, COVARIANCE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CDMObjectBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    RFMBuilder {
+    CDMObjectBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<RFM<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<CDMObject<'a>> {
     let o = self.fbb_.end_table(self.start_);
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for RFM<'_> {
+impl ::core::fmt::Debug for CDMObject<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("RFM");
-      ds.field("REFERENCE_FRAME_type", &self.REFERENCE_FRAME_type());
-      match self.REFERENCE_FRAME_type() {
-        RFMUnion::CelestialFrameWrapper => {
-          if let Some(x) = self.REFERENCE_FRAME_as_celestial_frame_wrapper() {
-            ds.field("REFERENCE_FRAME", &x)
-          } else {
-            ds.field("REFERENCE_FRAME", &"InvalidFlatbuffer: Union discriminant does not match value.")
-          }
-        },
-        RFMUnion::SpacecraftFrameWrapper => {
-          if let Some(x) = self.REFERENCE_FRAME_as_spacecraft_frame_wrapper() {
-            ds.field("REFERENCE_FRAME", &x)
-          } else {
-            ds.field("REFERENCE_FRAME", &"InvalidFlatbuffer: Union discriminant does not match value.")
-          }
-        },
-        RFMUnion::OrbitFrameWrapper => {
-          if let Some(x) = self.REFERENCE_FRAME_as_orbit_frame_wrapper() {
-            ds.field("REFERENCE_FRAME", &x)
-          } else {
-            ds.field("REFERENCE_FRAME", &"InvalidFlatbuffer: Union discriminant does not match value.")
-          }
-        },
-        RFMUnion::CustomFrameWrapper => {
-          if let Some(x) = self.REFERENCE_FRAME_as_custom_frame_wrapper() {
-            ds.field("REFERENCE_FRAME", &x)
-          } else {
-            ds.field("REFERENCE_FRAME", &"InvalidFlatbuffer: Union discriminant does not match value.")
-          }
-        },
-        _ => {
-          let x: Option<()> = None;
-          ds.field("REFERENCE_FRAME", &x)
-        },
-      };
-      ds.field("INDEX", &self.INDEX());
-      ds.field("NAME", &self.NAME());
+    let mut ds = f.debug_struct("CDMObject");
+      ds.field("COMMENT", &self.COMMENT());
+      ds.field("OBJECT", &self.OBJECT());
+      ds.field("POC", &self.POC());
+      ds.field("OPERATOR_CONTACT_POSITION", &self.OPERATOR_CONTACT_POSITION());
+      ds.field("OPERATOR_ORGANIZATION", &self.OPERATOR_ORGANIZATION());
+      ds.field("EPHEMERIS_NAME", &self.EPHEMERIS_NAME());
+      ds.field("COVARIANCE_METHOD", &self.COVARIANCE_METHOD());
+      ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
+      ds.field("GRAVITY_MODEL", &self.GRAVITY_MODEL());
+      ds.field("ATMOSPHERIC_MODEL", &self.ATMOSPHERIC_MODEL());
+      ds.field("N_BODY_PERTURBATIONS", &self.N_BODY_PERTURBATIONS());
+      ds.field("SOLAR_RAD_PRESSURE", &self.SOLAR_RAD_PRESSURE());
+      ds.field("EARTH_TIDES", &self.EARTH_TIDES());
+      ds.field("INTRACK_THRUST", &self.INTRACK_THRUST());
+      ds.field("TIME_LASTOB_START", &self.TIME_LASTOB_START());
+      ds.field("TIME_LASTOB_END", &self.TIME_LASTOB_END());
+      ds.field("RECOMMENDED_OD_SPAN", &self.RECOMMENDED_OD_SPAN());
+      ds.field("ACTUAL_OD_SPAN", &self.ACTUAL_OD_SPAN());
+      ds.field("OBS_AVAILABLE", &self.OBS_AVAILABLE());
+      ds.field("OBS_USED", &self.OBS_USED());
+      ds.field("TRACKS_AVAILABLE", &self.TRACKS_AVAILABLE());
+      ds.field("TRACKS_USED", &self.TRACKS_USED());
+      ds.field("RESIDUALS_ACCEPTED", &self.RESIDUALS_ACCEPTED());
+      ds.field("WEIGHTED_RMS", &self.WEIGHTED_RMS());
+      ds.field("AREA_PC", &self.AREA_PC());
+      ds.field("AREA_DRG", &self.AREA_DRG());
+      ds.field("AREA_SRP", &self.AREA_SRP());
+      ds.field("CR_AREA_OVER_MASS", &self.CR_AREA_OVER_MASS());
+      ds.field("THRUST_ACCELERATION", &self.THRUST_ACCELERATION());
+      ds.field("SEDR", &self.SEDR());
+      ds.field("X", &self.X());
+      ds.field("Y", &self.Y());
+      ds.field("Z", &self.Z());
+      ds.field("X_DOT", &self.X_DOT());
+      ds.field("Y_DOT", &self.Y_DOT());
+      ds.field("Z_DOT", &self.Z_DOT());
+      ds.field("COVARIANCE", &self.COVARIANCE());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct RFMT {
-  pub REFERENCE_FRAME: RFMUnionT,
-  pub INDEX: i32,
-  pub NAME: Option<alloc::string::String>,
+pub struct CDMObjectT {
+  pub COMMENT: Option<alloc::string::String>,
+  pub OBJECT: Option<alloc::boxed::Box<CATT>>,
+  pub POC: Option<alloc::boxed::Box<EPMT>>,
+  pub OPERATOR_CONTACT_POSITION: Option<alloc::string::String>,
+  pub OPERATOR_ORGANIZATION: Option<alloc::string::String>,
+  pub EPHEMERIS_NAME: Option<alloc::string::String>,
+  pub COVARIANCE_METHOD: covarianceAlgorithm,
+  pub REFERENCE_FRAME: Option<alloc::boxed::Box<RFMT>>,
+  pub GRAVITY_MODEL: Option<alloc::string::String>,
+  pub ATMOSPHERIC_MODEL: Option<alloc::string::String>,
+  pub N_BODY_PERTURBATIONS: Option<alloc::string::String>,
+  pub SOLAR_RAD_PRESSURE: bool,
+  pub EARTH_TIDES: bool,
+  pub INTRACK_THRUST: bool,
+  pub TIME_LASTOB_START: Option<alloc::string::String>,
+  pub TIME_LASTOB_END: Option<alloc::string::String>,
+  pub RECOMMENDED_OD_SPAN: f64,
+  pub ACTUAL_OD_SPAN: f64,
+  pub OBS_AVAILABLE: u32,
+  pub OBS_USED: u32,
+  pub TRACKS_AVAILABLE: u32,
+  pub TRACKS_USED: u32,
+  pub RESIDUALS_ACCEPTED: f64,
+  pub WEIGHTED_RMS: f64,
+  pub AREA_PC: f64,
+  pub AREA_DRG: f64,
+  pub AREA_SRP: f64,
+  pub CR_AREA_OVER_MASS: f64,
+  pub THRUST_ACCELERATION: f64,
+  pub SEDR: f64,
+  pub X: f64,
+  pub Y: f64,
+  pub Z: f64,
+  pub X_DOT: f64,
+  pub Y_DOT: f64,
+  pub Z_DOT: f64,
+  pub COVARIANCE: Option<alloc::vec::Vec<f64>>,
 }
-impl Default for RFMT {
+impl Default for CDMObjectT {
   fn default() -> Self {
     Self {
-      REFERENCE_FRAME: RFMUnionT::NONE,
-      INDEX: 0,
-      NAME: None,
+      COMMENT: None,
+      OBJECT: None,
+      POC: None,
+      OPERATOR_CONTACT_POSITION: None,
+      OPERATOR_ORGANIZATION: None,
+      EPHEMERIS_NAME: None,
+      COVARIANCE_METHOD: covarianceAlgorithm::CALCULATED,
+      REFERENCE_FRAME: None,
+      GRAVITY_MODEL: None,
+      ATMOSPHERIC_MODEL: None,
+      N_BODY_PERTURBATIONS: None,
+      SOLAR_RAD_PRESSURE: false,
+      EARTH_TIDES: false,
+      INTRACK_THRUST: false,
+      TIME_LASTOB_START: None,
+      TIME_LASTOB_END: None,
+      RECOMMENDED_OD_SPAN: 0.0,
+      ACTUAL_OD_SPAN: 0.0,
+      OBS_AVAILABLE: 0,
+      OBS_USED: 0,
+      TRACKS_AVAILABLE: 0,
+      TRACKS_USED: 0,
+      RESIDUALS_ACCEPTED: 0.0,
+      WEIGHTED_RMS: 0.0,
+      AREA_PC: 0.0,
+      AREA_DRG: 0.0,
+      AREA_SRP: 0.0,
+      CR_AREA_OVER_MASS: 0.0,
+      THRUST_ACCELERATION: 0.0,
+      SEDR: 0.0,
+      X: 0.0,
+      Y: 0.0,
+      Z: 0.0,
+      X_DOT: 0.0,
+      Y_DOT: 0.0,
+      Z_DOT: 0.0,
+      COVARIANCE: None,
     }
   }
 }
-impl RFMT {
+impl CDMObjectT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<RFM<'b>> {
-    let REFERENCE_FRAME_type = self.REFERENCE_FRAME.rfmunion_type();
-    let REFERENCE_FRAME = self.REFERENCE_FRAME.pack(_fbb);
-    let INDEX = self.INDEX;
-    let NAME = self.NAME.as_ref().map(|x|{
+  ) -> ::flatbuffers::WIPOffset<CDMObject<'b>> {
+    let COMMENT = self.COMMENT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    RFM::create(_fbb, &RFMArgs{
-      REFERENCE_FRAME_type,
+    let OBJECT = self.OBJECT.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let POC = self.POC.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OPERATOR_CONTACT_POSITION = self.OPERATOR_CONTACT_POSITION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OPERATOR_ORGANIZATION = self.OPERATOR_ORGANIZATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPHEMERIS_NAME = self.EPHEMERIS_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COVARIANCE_METHOD = self.COVARIANCE_METHOD;
+    let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let GRAVITY_MODEL = self.GRAVITY_MODEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ATMOSPHERIC_MODEL = self.ATMOSPHERIC_MODEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let N_BODY_PERTURBATIONS = self.N_BODY_PERTURBATIONS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SOLAR_RAD_PRESSURE = self.SOLAR_RAD_PRESSURE;
+    let EARTH_TIDES = self.EARTH_TIDES;
+    let INTRACK_THRUST = self.INTRACK_THRUST;
+    let TIME_LASTOB_START = self.TIME_LASTOB_START.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TIME_LASTOB_END = self.TIME_LASTOB_END.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let RECOMMENDED_OD_SPAN = self.RECOMMENDED_OD_SPAN;
+    let ACTUAL_OD_SPAN = self.ACTUAL_OD_SPAN;
+    let OBS_AVAILABLE = self.OBS_AVAILABLE;
+    let OBS_USED = self.OBS_USED;
+    let TRACKS_AVAILABLE = self.TRACKS_AVAILABLE;
+    let TRACKS_USED = self.TRACKS_USED;
+    let RESIDUALS_ACCEPTED = self.RESIDUALS_ACCEPTED;
+    let WEIGHTED_RMS = self.WEIGHTED_RMS;
+    let AREA_PC = self.AREA_PC;
+    let AREA_DRG = self.AREA_DRG;
+    let AREA_SRP = self.AREA_SRP;
+    let CR_AREA_OVER_MASS = self.CR_AREA_OVER_MASS;
+    let THRUST_ACCELERATION = self.THRUST_ACCELERATION;
+    let SEDR = self.SEDR;
+    let X = self.X;
+    let Y = self.Y;
+    let Z = self.Z;
+    let X_DOT = self.X_DOT;
+    let Y_DOT = self.Y_DOT;
+    let Z_DOT = self.Z_DOT;
+    let COVARIANCE = self.COVARIANCE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    CDMObject::create(_fbb, &CDMObjectArgs{
+      COMMENT,
+      OBJECT,
+      POC,
+      OPERATOR_CONTACT_POSITION,
+      OPERATOR_ORGANIZATION,
+      EPHEMERIS_NAME,
+      COVARIANCE_METHOD,
       REFERENCE_FRAME,
-      INDEX,
-      NAME,
+      GRAVITY_MODEL,
+      ATMOSPHERIC_MODEL,
+      N_BODY_PERTURBATIONS,
+      SOLAR_RAD_PRESSURE,
+      EARTH_TIDES,
+      INTRACK_THRUST,
+      TIME_LASTOB_START,
+      TIME_LASTOB_END,
+      RECOMMENDED_OD_SPAN,
+      ACTUAL_OD_SPAN,
+      OBS_AVAILABLE,
+      OBS_USED,
+      TRACKS_AVAILABLE,
+      TRACKS_USED,
+      RESIDUALS_ACCEPTED,
+      WEIGHTED_RMS,
+      AREA_PC,
+      AREA_DRG,
+      AREA_SRP,
+      CR_AREA_OVER_MASS,
+      THRUST_ACCELERATION,
+      SEDR,
+      X,
+      Y,
+      Z,
+      X_DOT,
+      Y_DOT,
+      Z_DOT,
+      COVARIANCE,
+    })
+  }
+}
+pub enum CDMOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Conjunction Data Message
+pub struct CDM<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for CDM<'a> {
+  type Inner = CDM<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> CDM<'a> {
+  pub const VT_CCSDS_CDM_VERS: ::flatbuffers::VOffsetT = 4;
+  pub const VT_CREATION_DATE: ::flatbuffers::VOffsetT = 6;
+  pub const VT_ORIGINATOR: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MESSAGE_FOR: ::flatbuffers::VOffsetT = 10;
+  pub const VT_MESSAGE_ID: ::flatbuffers::VOffsetT = 12;
+  pub const VT_TCA: ::flatbuffers::VOffsetT = 14;
+  pub const VT_MISS_DISTANCE: ::flatbuffers::VOffsetT = 16;
+  pub const VT_RELATIVE_SPEED: ::flatbuffers::VOffsetT = 18;
+  pub const VT_RELATIVE_POSITION_R: ::flatbuffers::VOffsetT = 20;
+  pub const VT_RELATIVE_POSITION_T: ::flatbuffers::VOffsetT = 22;
+  pub const VT_RELATIVE_POSITION_N: ::flatbuffers::VOffsetT = 24;
+  pub const VT_RELATIVE_VELOCITY_R: ::flatbuffers::VOffsetT = 26;
+  pub const VT_RELATIVE_VELOCITY_T: ::flatbuffers::VOffsetT = 28;
+  pub const VT_RELATIVE_VELOCITY_N: ::flatbuffers::VOffsetT = 30;
+  pub const VT_START_SCREEN_PERIOD: ::flatbuffers::VOffsetT = 32;
+  pub const VT_STOP_SCREEN_PERIOD: ::flatbuffers::VOffsetT = 34;
+  pub const VT_SCREEN_VOLUME_FRAME: ::flatbuffers::VOffsetT = 36;
+  pub const VT_SCREEN_VOLUME_SHAPE: ::flatbuffers::VOffsetT = 38;
+  pub const VT_SCREEN_VOLUME_X: ::flatbuffers::VOffsetT = 40;
+  pub const VT_SCREEN_VOLUME_Y: ::flatbuffers::VOffsetT = 42;
+  pub const VT_SCREEN_VOLUME_Z: ::flatbuffers::VOffsetT = 44;
+  pub const VT_SCREEN_ENTRY_TIME: ::flatbuffers::VOffsetT = 46;
+  pub const VT_SCREEN_EXIT_TIME: ::flatbuffers::VOffsetT = 48;
+  pub const VT_COLLISION_PROBABILITY: ::flatbuffers::VOffsetT = 50;
+  pub const VT_COLLISION_PROBABILITY_METHOD: ::flatbuffers::VOffsetT = 52;
+  pub const VT_OBJECT1: ::flatbuffers::VOffsetT = 54;
+  pub const VT_OBJECT2: ::flatbuffers::VOffsetT = 56;
+  pub const VT_OBJECT1_DATASOURCE: ::flatbuffers::VOffsetT = 58;
+  pub const VT_OBJECT2_DATASOURCE: ::flatbuffers::VOffsetT = 60;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    CDM { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CDMArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<CDM<'bldr>> {
+    let mut builder = CDMBuilder::new(_fbb);
+    builder.add_COLLISION_PROBABILITY(args.COLLISION_PROBABILITY);
+    builder.add_SCREEN_VOLUME_Z(args.SCREEN_VOLUME_Z);
+    builder.add_SCREEN_VOLUME_Y(args.SCREEN_VOLUME_Y);
+    builder.add_SCREEN_VOLUME_X(args.SCREEN_VOLUME_X);
+    builder.add_RELATIVE_VELOCITY_N(args.RELATIVE_VELOCITY_N);
+    builder.add_RELATIVE_VELOCITY_T(args.RELATIVE_VELOCITY_T);
+    builder.add_RELATIVE_VELOCITY_R(args.RELATIVE_VELOCITY_R);
+    builder.add_RELATIVE_POSITION_N(args.RELATIVE_POSITION_N);
+    builder.add_RELATIVE_POSITION_T(args.RELATIVE_POSITION_T);
+    builder.add_RELATIVE_POSITION_R(args.RELATIVE_POSITION_R);
+    builder.add_RELATIVE_SPEED(args.RELATIVE_SPEED);
+    builder.add_MISS_DISTANCE(args.MISS_DISTANCE);
+    builder.add_CCSDS_CDM_VERS(args.CCSDS_CDM_VERS);
+    if let Some(x) = args.OBJECT2_DATASOURCE { builder.add_OBJECT2_DATASOURCE(x); }
+    if let Some(x) = args.OBJECT1_DATASOURCE { builder.add_OBJECT1_DATASOURCE(x); }
+    if let Some(x) = args.OBJECT2 { builder.add_OBJECT2(x); }
+    if let Some(x) = args.OBJECT1 { builder.add_OBJECT1(x); }
+    if let Some(x) = args.COLLISION_PROBABILITY_METHOD { builder.add_COLLISION_PROBABILITY_METHOD(x); }
+    if let Some(x) = args.SCREEN_EXIT_TIME { builder.add_SCREEN_EXIT_TIME(x); }
+    if let Some(x) = args.SCREEN_ENTRY_TIME { builder.add_SCREEN_ENTRY_TIME(x); }
+    if let Some(x) = args.SCREEN_VOLUME_FRAME { builder.add_SCREEN_VOLUME_FRAME(x); }
+    if let Some(x) = args.STOP_SCREEN_PERIOD { builder.add_STOP_SCREEN_PERIOD(x); }
+    if let Some(x) = args.START_SCREEN_PERIOD { builder.add_START_SCREEN_PERIOD(x); }
+    if let Some(x) = args.TCA { builder.add_TCA(x); }
+    if let Some(x) = args.MESSAGE_ID { builder.add_MESSAGE_ID(x); }
+    if let Some(x) = args.MESSAGE_FOR { builder.add_MESSAGE_FOR(x); }
+    if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
+    if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
+    builder.add_SCREEN_VOLUME_SHAPE(args.SCREEN_VOLUME_SHAPE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CDMT {
+    let CCSDS_CDM_VERS = self.CCSDS_CDM_VERS();
+    let CREATION_DATE = self.CREATION_DATE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ORIGINATOR = self.ORIGINATOR().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MESSAGE_FOR = self.MESSAGE_FOR().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MESSAGE_ID = self.MESSAGE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TCA = self.TCA().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MISS_DISTANCE = self.MISS_DISTANCE();
+    let RELATIVE_SPEED = self.RELATIVE_SPEED();
+    let RELATIVE_POSITION_R = self.RELATIVE_POSITION_R();
+    let RELATIVE_POSITION_T = self.RELATIVE_POSITION_T();
+    let RELATIVE_POSITION_N = self.RELATIVE_POSITION_N();
+    let RELATIVE_VELOCITY_R = self.RELATIVE_VELOCITY_R();
+    let RELATIVE_VELOCITY_T = self.RELATIVE_VELOCITY_T();
+    let RELATIVE_VELOCITY_N = self.RELATIVE_VELOCITY_N();
+    let START_SCREEN_PERIOD = self.START_SCREEN_PERIOD().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let STOP_SCREEN_PERIOD = self.STOP_SCREEN_PERIOD().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SCREEN_VOLUME_FRAME = self.SCREEN_VOLUME_FRAME().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let SCREEN_VOLUME_SHAPE = self.SCREEN_VOLUME_SHAPE();
+    let SCREEN_VOLUME_X = self.SCREEN_VOLUME_X();
+    let SCREEN_VOLUME_Y = self.SCREEN_VOLUME_Y();
+    let SCREEN_VOLUME_Z = self.SCREEN_VOLUME_Z();
+    let SCREEN_ENTRY_TIME = self.SCREEN_ENTRY_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SCREEN_EXIT_TIME = self.SCREEN_EXIT_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let COLLISION_PROBABILITY = self.COLLISION_PROBABILITY();
+    let COLLISION_PROBABILITY_METHOD = self.COLLISION_PROBABILITY_METHOD().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OBJECT1 = self.OBJECT1().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let OBJECT2 = self.OBJECT2().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let OBJECT1_DATASOURCE = self.OBJECT1_DATASOURCE().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let OBJECT2_DATASOURCE = self.OBJECT2_DATASOURCE().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    CDMT {
+      CCSDS_CDM_VERS,
+      CREATION_DATE,
+      ORIGINATOR,
+      MESSAGE_FOR,
+      MESSAGE_ID,
+      TCA,
+      MISS_DISTANCE,
+      RELATIVE_SPEED,
+      RELATIVE_POSITION_R,
+      RELATIVE_POSITION_T,
+      RELATIVE_POSITION_N,
+      RELATIVE_VELOCITY_R,
+      RELATIVE_VELOCITY_T,
+      RELATIVE_VELOCITY_N,
+      START_SCREEN_PERIOD,
+      STOP_SCREEN_PERIOD,
+      SCREEN_VOLUME_FRAME,
+      SCREEN_VOLUME_SHAPE,
+      SCREEN_VOLUME_X,
+      SCREEN_VOLUME_Y,
+      SCREEN_VOLUME_Z,
+      SCREEN_ENTRY_TIME,
+      SCREEN_EXIT_TIME,
+      COLLISION_PROBABILITY,
+      COLLISION_PROBABILITY_METHOD,
+      OBJECT1,
+      OBJECT2,
+      OBJECT1_DATASOURCE,
+      OBJECT2_DATASOURCE,
+    }
+  }
+
+  /// The version of the CCSDS CDM standard used
+  #[inline]
+  pub fn CCSDS_CDM_VERS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDM::VT_CCSDS_CDM_VERS, Some(0.0)).unwrap()}
+  }
+  /// The date the CDM message was created
+  #[inline]
+  pub fn CREATION_DATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDM::VT_CREATION_DATE, None)}
+  }
+  /// The originator of the CDM message
+  #[inline]
+  pub fn ORIGINATOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDM::VT_ORIGINATOR, None)}
+  }
+  /// The intended recipient of the CDM message
+  #[inline]
+  pub fn MESSAGE_FOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDM::VT_MESSAGE_FOR, None)}
+  }
+  /// A unique identifier for the CDM message
+  #[inline]
+  pub fn MESSAGE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDM::VT_MESSAGE_ID, None)}
+  }
+  /// Time of closest approach
+  #[inline]
+  pub fn TCA(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDM::VT_TCA, None)}
+  }
+  /// The miss distance between the two objects
+  #[inline]
+  pub fn MISS_DISTANCE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDM::VT_MISS_DISTANCE, Some(0.0)).unwrap()}
+  }
+  /// The relative speed between the two objects
+  #[inline]
+  pub fn RELATIVE_SPEED(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDM::VT_RELATIVE_SPEED, Some(0.0)).unwrap()}
+  }
+  /// The relative position R component
+  #[inline]
+  pub fn RELATIVE_POSITION_R(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDM::VT_RELATIVE_POSITION_R, Some(0.0)).unwrap()}
+  }
+  /// The relative position T component
+  #[inline]
+  pub fn RELATIVE_POSITION_T(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDM::VT_RELATIVE_POSITION_T, Some(0.0)).unwrap()}
+  }
+  /// The relative position N component
+  #[inline]
+  pub fn RELATIVE_POSITION_N(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDM::VT_RELATIVE_POSITION_N, Some(0.0)).unwrap()}
+  }
+  /// The relative velocity R component
+  #[inline]
+  pub fn RELATIVE_VELOCITY_R(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDM::VT_RELATIVE_VELOCITY_R, Some(0.0)).unwrap()}
+  }
+  /// The relative velocity T component
+  #[inline]
+  pub fn RELATIVE_VELOCITY_T(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDM::VT_RELATIVE_VELOCITY_T, Some(0.0)).unwrap()}
+  }
+  /// The relative velocity N component
+  #[inline]
+  pub fn RELATIVE_VELOCITY_N(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDM::VT_RELATIVE_VELOCITY_N, Some(0.0)).unwrap()}
+  }
+  /// The start time of the screening period
+  #[inline]
+  pub fn START_SCREEN_PERIOD(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDM::VT_START_SCREEN_PERIOD, None)}
+  }
+  /// The end time of the screening period
+  #[inline]
+  pub fn STOP_SCREEN_PERIOD(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDM::VT_STOP_SCREEN_PERIOD, None)}
+  }
+  /// The reference frame for the screening volume
+  #[inline]
+  pub fn SCREEN_VOLUME_FRAME(&self) -> Option<RFM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(CDM::VT_SCREEN_VOLUME_FRAME, None)}
+  }
+  /// The shape of the screening volume
+  #[inline]
+  pub fn SCREEN_VOLUME_SHAPE(&self) -> screeningVolumeShape {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<screeningVolumeShape>(CDM::VT_SCREEN_VOLUME_SHAPE, Some(screeningVolumeShape::ELLIPSOID)).unwrap()}
+  }
+  /// The X dimension of the screening volume
+  #[inline]
+  pub fn SCREEN_VOLUME_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDM::VT_SCREEN_VOLUME_X, Some(0.0)).unwrap()}
+  }
+  /// The Y dimension of the screening volume
+  #[inline]
+  pub fn SCREEN_VOLUME_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDM::VT_SCREEN_VOLUME_Y, Some(0.0)).unwrap()}
+  }
+  /// The Z dimension of the screening volume
+  #[inline]
+  pub fn SCREEN_VOLUME_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDM::VT_SCREEN_VOLUME_Z, Some(0.0)).unwrap()}
+  }
+  /// The time the objects entered the screening volume
+  #[inline]
+  pub fn SCREEN_ENTRY_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDM::VT_SCREEN_ENTRY_TIME, None)}
+  }
+  /// The time the objects exited the screening volume
+  #[inline]
+  pub fn SCREEN_EXIT_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDM::VT_SCREEN_EXIT_TIME, None)}
+  }
+  /// The probability of collision between the two objects
+  #[inline]
+  pub fn COLLISION_PROBABILITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CDM::VT_COLLISION_PROBABILITY, Some(0.0)).unwrap()}
+  }
+  /// The method used to calculate the collision probability
+  #[inline]
+  pub fn COLLISION_PROBABILITY_METHOD(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDM::VT_COLLISION_PROBABILITY_METHOD, None)}
+  }
+  /// The first object in the CDM message
+  #[inline]
+  pub fn OBJECT1(&self) -> Option<CDMObject<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CDMObject>>(CDM::VT_OBJECT1, None)}
+  }
+  /// The second object in the CDM message
+  #[inline]
+  pub fn OBJECT2(&self) -> Option<CDMObject<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CDMObject>>(CDM::VT_OBJECT2, None)}
+  }
+  /// Data Source for the positional information for Object 1
+  #[inline]
+  pub fn OBJECT1_DATASOURCE(&self) -> Option<PNM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PNM>>(CDM::VT_OBJECT1_DATASOURCE, None)}
+  }
+  /// Data Source for the positional information for Object 2
+  #[inline]
+  pub fn OBJECT2_DATASOURCE(&self) -> Option<PNM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PNM>>(CDM::VT_OBJECT2_DATASOURCE, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for CDM<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<f64>("CCSDS_CDM_VERS", Self::VT_CCSDS_CDM_VERS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATION_DATE", Self::VT_CREATION_DATE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR", Self::VT_ORIGINATOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE_FOR", Self::VT_MESSAGE_FOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE_ID", Self::VT_MESSAGE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TCA", Self::VT_TCA, false)?
+     .visit_field::<f64>("MISS_DISTANCE", Self::VT_MISS_DISTANCE, false)?
+     .visit_field::<f64>("RELATIVE_SPEED", Self::VT_RELATIVE_SPEED, false)?
+     .visit_field::<f64>("RELATIVE_POSITION_R", Self::VT_RELATIVE_POSITION_R, false)?
+     .visit_field::<f64>("RELATIVE_POSITION_T", Self::VT_RELATIVE_POSITION_T, false)?
+     .visit_field::<f64>("RELATIVE_POSITION_N", Self::VT_RELATIVE_POSITION_N, false)?
+     .visit_field::<f64>("RELATIVE_VELOCITY_R", Self::VT_RELATIVE_VELOCITY_R, false)?
+     .visit_field::<f64>("RELATIVE_VELOCITY_T", Self::VT_RELATIVE_VELOCITY_T, false)?
+     .visit_field::<f64>("RELATIVE_VELOCITY_N", Self::VT_RELATIVE_VELOCITY_N, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("START_SCREEN_PERIOD", Self::VT_START_SCREEN_PERIOD, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STOP_SCREEN_PERIOD", Self::VT_STOP_SCREEN_PERIOD, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("SCREEN_VOLUME_FRAME", Self::VT_SCREEN_VOLUME_FRAME, false)?
+     .visit_field::<screeningVolumeShape>("SCREEN_VOLUME_SHAPE", Self::VT_SCREEN_VOLUME_SHAPE, false)?
+     .visit_field::<f64>("SCREEN_VOLUME_X", Self::VT_SCREEN_VOLUME_X, false)?
+     .visit_field::<f64>("SCREEN_VOLUME_Y", Self::VT_SCREEN_VOLUME_Y, false)?
+     .visit_field::<f64>("SCREEN_VOLUME_Z", Self::VT_SCREEN_VOLUME_Z, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCREEN_ENTRY_TIME", Self::VT_SCREEN_ENTRY_TIME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCREEN_EXIT_TIME", Self::VT_SCREEN_EXIT_TIME, false)?
+     .visit_field::<f64>("COLLISION_PROBABILITY", Self::VT_COLLISION_PROBABILITY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COLLISION_PROBABILITY_METHOD", Self::VT_COLLISION_PROBABILITY_METHOD, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<CDMObject>>("OBJECT1", Self::VT_OBJECT1, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<CDMObject>>("OBJECT2", Self::VT_OBJECT2, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<PNM>>("OBJECT1_DATASOURCE", Self::VT_OBJECT1_DATASOURCE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<PNM>>("OBJECT2_DATASOURCE", Self::VT_OBJECT2_DATASOURCE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CDMArgs<'a> {
+    pub CCSDS_CDM_VERS: f64,
+    pub CREATION_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORIGINATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MESSAGE_FOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TCA: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MISS_DISTANCE: f64,
+    pub RELATIVE_SPEED: f64,
+    pub RELATIVE_POSITION_R: f64,
+    pub RELATIVE_POSITION_T: f64,
+    pub RELATIVE_POSITION_N: f64,
+    pub RELATIVE_VELOCITY_R: f64,
+    pub RELATIVE_VELOCITY_T: f64,
+    pub RELATIVE_VELOCITY_N: f64,
+    pub START_SCREEN_PERIOD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub STOP_SCREEN_PERIOD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SCREEN_VOLUME_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
+    pub SCREEN_VOLUME_SHAPE: screeningVolumeShape,
+    pub SCREEN_VOLUME_X: f64,
+    pub SCREEN_VOLUME_Y: f64,
+    pub SCREEN_VOLUME_Z: f64,
+    pub SCREEN_ENTRY_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SCREEN_EXIT_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COLLISION_PROBABILITY: f64,
+    pub COLLISION_PROBABILITY_METHOD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT1: Option<::flatbuffers::WIPOffset<CDMObject<'a>>>,
+    pub OBJECT2: Option<::flatbuffers::WIPOffset<CDMObject<'a>>>,
+    pub OBJECT1_DATASOURCE: Option<::flatbuffers::WIPOffset<PNM<'a>>>,
+    pub OBJECT2_DATASOURCE: Option<::flatbuffers::WIPOffset<PNM<'a>>>,
+}
+impl<'a> Default for CDMArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CDMArgs {
+      CCSDS_CDM_VERS: 0.0,
+      CREATION_DATE: None,
+      ORIGINATOR: None,
+      MESSAGE_FOR: None,
+      MESSAGE_ID: None,
+      TCA: None,
+      MISS_DISTANCE: 0.0,
+      RELATIVE_SPEED: 0.0,
+      RELATIVE_POSITION_R: 0.0,
+      RELATIVE_POSITION_T: 0.0,
+      RELATIVE_POSITION_N: 0.0,
+      RELATIVE_VELOCITY_R: 0.0,
+      RELATIVE_VELOCITY_T: 0.0,
+      RELATIVE_VELOCITY_N: 0.0,
+      START_SCREEN_PERIOD: None,
+      STOP_SCREEN_PERIOD: None,
+      SCREEN_VOLUME_FRAME: None,
+      SCREEN_VOLUME_SHAPE: screeningVolumeShape::ELLIPSOID,
+      SCREEN_VOLUME_X: 0.0,
+      SCREEN_VOLUME_Y: 0.0,
+      SCREEN_VOLUME_Z: 0.0,
+      SCREEN_ENTRY_TIME: None,
+      SCREEN_EXIT_TIME: None,
+      COLLISION_PROBABILITY: 0.0,
+      COLLISION_PROBABILITY_METHOD: None,
+      OBJECT1: None,
+      OBJECT2: None,
+      OBJECT1_DATASOURCE: None,
+      OBJECT2_DATASOURCE: None,
+    }
+  }
+}
+
+pub struct CDMBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CDMBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_CCSDS_CDM_VERS(&mut self, CCSDS_CDM_VERS: f64) {
+    self.fbb_.push_slot::<f64>(CDM::VT_CCSDS_CDM_VERS, CCSDS_CDM_VERS, 0.0);
+  }
+  #[inline]
+  pub fn add_CREATION_DATE(&mut self, CREATION_DATE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDM::VT_CREATION_DATE, CREATION_DATE);
+  }
+  #[inline]
+  pub fn add_ORIGINATOR(&mut self, ORIGINATOR: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDM::VT_ORIGINATOR, ORIGINATOR);
+  }
+  #[inline]
+  pub fn add_MESSAGE_FOR(&mut self, MESSAGE_FOR: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDM::VT_MESSAGE_FOR, MESSAGE_FOR);
+  }
+  #[inline]
+  pub fn add_MESSAGE_ID(&mut self, MESSAGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDM::VT_MESSAGE_ID, MESSAGE_ID);
+  }
+  #[inline]
+  pub fn add_TCA(&mut self, TCA: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDM::VT_TCA, TCA);
+  }
+  #[inline]
+  pub fn add_MISS_DISTANCE(&mut self, MISS_DISTANCE: f64) {
+    self.fbb_.push_slot::<f64>(CDM::VT_MISS_DISTANCE, MISS_DISTANCE, 0.0);
+  }
+  #[inline]
+  pub fn add_RELATIVE_SPEED(&mut self, RELATIVE_SPEED: f64) {
+    self.fbb_.push_slot::<f64>(CDM::VT_RELATIVE_SPEED, RELATIVE_SPEED, 0.0);
+  }
+  #[inline]
+  pub fn add_RELATIVE_POSITION_R(&mut self, RELATIVE_POSITION_R: f64) {
+    self.fbb_.push_slot::<f64>(CDM::VT_RELATIVE_POSITION_R, RELATIVE_POSITION_R, 0.0);
+  }
+  #[inline]
+  pub fn add_RELATIVE_POSITION_T(&mut self, RELATIVE_POSITION_T: f64) {
+    self.fbb_.push_slot::<f64>(CDM::VT_RELATIVE_POSITION_T, RELATIVE_POSITION_T, 0.0);
+  }
+  #[inline]
+  pub fn add_RELATIVE_POSITION_N(&mut self, RELATIVE_POSITION_N: f64) {
+    self.fbb_.push_slot::<f64>(CDM::VT_RELATIVE_POSITION_N, RELATIVE_POSITION_N, 0.0);
+  }
+  #[inline]
+  pub fn add_RELATIVE_VELOCITY_R(&mut self, RELATIVE_VELOCITY_R: f64) {
+    self.fbb_.push_slot::<f64>(CDM::VT_RELATIVE_VELOCITY_R, RELATIVE_VELOCITY_R, 0.0);
+  }
+  #[inline]
+  pub fn add_RELATIVE_VELOCITY_T(&mut self, RELATIVE_VELOCITY_T: f64) {
+    self.fbb_.push_slot::<f64>(CDM::VT_RELATIVE_VELOCITY_T, RELATIVE_VELOCITY_T, 0.0);
+  }
+  #[inline]
+  pub fn add_RELATIVE_VELOCITY_N(&mut self, RELATIVE_VELOCITY_N: f64) {
+    self.fbb_.push_slot::<f64>(CDM::VT_RELATIVE_VELOCITY_N, RELATIVE_VELOCITY_N, 0.0);
+  }
+  #[inline]
+  pub fn add_START_SCREEN_PERIOD(&mut self, START_SCREEN_PERIOD: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDM::VT_START_SCREEN_PERIOD, START_SCREEN_PERIOD);
+  }
+  #[inline]
+  pub fn add_STOP_SCREEN_PERIOD(&mut self, STOP_SCREEN_PERIOD: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDM::VT_STOP_SCREEN_PERIOD, STOP_SCREEN_PERIOD);
+  }
+  #[inline]
+  pub fn add_SCREEN_VOLUME_FRAME(&mut self, SCREEN_VOLUME_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(CDM::VT_SCREEN_VOLUME_FRAME, SCREEN_VOLUME_FRAME);
+  }
+  #[inline]
+  pub fn add_SCREEN_VOLUME_SHAPE(&mut self, SCREEN_VOLUME_SHAPE: screeningVolumeShape) {
+    self.fbb_.push_slot::<screeningVolumeShape>(CDM::VT_SCREEN_VOLUME_SHAPE, SCREEN_VOLUME_SHAPE, screeningVolumeShape::ELLIPSOID);
+  }
+  #[inline]
+  pub fn add_SCREEN_VOLUME_X(&mut self, SCREEN_VOLUME_X: f64) {
+    self.fbb_.push_slot::<f64>(CDM::VT_SCREEN_VOLUME_X, SCREEN_VOLUME_X, 0.0);
+  }
+  #[inline]
+  pub fn add_SCREEN_VOLUME_Y(&mut self, SCREEN_VOLUME_Y: f64) {
+    self.fbb_.push_slot::<f64>(CDM::VT_SCREEN_VOLUME_Y, SCREEN_VOLUME_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_SCREEN_VOLUME_Z(&mut self, SCREEN_VOLUME_Z: f64) {
+    self.fbb_.push_slot::<f64>(CDM::VT_SCREEN_VOLUME_Z, SCREEN_VOLUME_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_SCREEN_ENTRY_TIME(&mut self, SCREEN_ENTRY_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDM::VT_SCREEN_ENTRY_TIME, SCREEN_ENTRY_TIME);
+  }
+  #[inline]
+  pub fn add_SCREEN_EXIT_TIME(&mut self, SCREEN_EXIT_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDM::VT_SCREEN_EXIT_TIME, SCREEN_EXIT_TIME);
+  }
+  #[inline]
+  pub fn add_COLLISION_PROBABILITY(&mut self, COLLISION_PROBABILITY: f64) {
+    self.fbb_.push_slot::<f64>(CDM::VT_COLLISION_PROBABILITY, COLLISION_PROBABILITY, 0.0);
+  }
+  #[inline]
+  pub fn add_COLLISION_PROBABILITY_METHOD(&mut self, COLLISION_PROBABILITY_METHOD: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDM::VT_COLLISION_PROBABILITY_METHOD, COLLISION_PROBABILITY_METHOD);
+  }
+  #[inline]
+  pub fn add_OBJECT1(&mut self, OBJECT1: ::flatbuffers::WIPOffset<CDMObject<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CDMObject>>(CDM::VT_OBJECT1, OBJECT1);
+  }
+  #[inline]
+  pub fn add_OBJECT2(&mut self, OBJECT2: ::flatbuffers::WIPOffset<CDMObject<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CDMObject>>(CDM::VT_OBJECT2, OBJECT2);
+  }
+  #[inline]
+  pub fn add_OBJECT1_DATASOURCE(&mut self, OBJECT1_DATASOURCE: ::flatbuffers::WIPOffset<PNM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PNM>>(CDM::VT_OBJECT1_DATASOURCE, OBJECT1_DATASOURCE);
+  }
+  #[inline]
+  pub fn add_OBJECT2_DATASOURCE(&mut self, OBJECT2_DATASOURCE: ::flatbuffers::WIPOffset<PNM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PNM>>(CDM::VT_OBJECT2_DATASOURCE, OBJECT2_DATASOURCE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CDMBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CDMBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<CDM<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for CDM<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("CDM");
+      ds.field("CCSDS_CDM_VERS", &self.CCSDS_CDM_VERS());
+      ds.field("CREATION_DATE", &self.CREATION_DATE());
+      ds.field("ORIGINATOR", &self.ORIGINATOR());
+      ds.field("MESSAGE_FOR", &self.MESSAGE_FOR());
+      ds.field("MESSAGE_ID", &self.MESSAGE_ID());
+      ds.field("TCA", &self.TCA());
+      ds.field("MISS_DISTANCE", &self.MISS_DISTANCE());
+      ds.field("RELATIVE_SPEED", &self.RELATIVE_SPEED());
+      ds.field("RELATIVE_POSITION_R", &self.RELATIVE_POSITION_R());
+      ds.field("RELATIVE_POSITION_T", &self.RELATIVE_POSITION_T());
+      ds.field("RELATIVE_POSITION_N", &self.RELATIVE_POSITION_N());
+      ds.field("RELATIVE_VELOCITY_R", &self.RELATIVE_VELOCITY_R());
+      ds.field("RELATIVE_VELOCITY_T", &self.RELATIVE_VELOCITY_T());
+      ds.field("RELATIVE_VELOCITY_N", &self.RELATIVE_VELOCITY_N());
+      ds.field("START_SCREEN_PERIOD", &self.START_SCREEN_PERIOD());
+      ds.field("STOP_SCREEN_PERIOD", &self.STOP_SCREEN_PERIOD());
+      ds.field("SCREEN_VOLUME_FRAME", &self.SCREEN_VOLUME_FRAME());
+      ds.field("SCREEN_VOLUME_SHAPE", &self.SCREEN_VOLUME_SHAPE());
+      ds.field("SCREEN_VOLUME_X", &self.SCREEN_VOLUME_X());
+      ds.field("SCREEN_VOLUME_Y", &self.SCREEN_VOLUME_Y());
+      ds.field("SCREEN_VOLUME_Z", &self.SCREEN_VOLUME_Z());
+      ds.field("SCREEN_ENTRY_TIME", &self.SCREEN_ENTRY_TIME());
+      ds.field("SCREEN_EXIT_TIME", &self.SCREEN_EXIT_TIME());
+      ds.field("COLLISION_PROBABILITY", &self.COLLISION_PROBABILITY());
+      ds.field("COLLISION_PROBABILITY_METHOD", &self.COLLISION_PROBABILITY_METHOD());
+      ds.field("OBJECT1", &self.OBJECT1());
+      ds.field("OBJECT2", &self.OBJECT2());
+      ds.field("OBJECT1_DATASOURCE", &self.OBJECT1_DATASOURCE());
+      ds.field("OBJECT2_DATASOURCE", &self.OBJECT2_DATASOURCE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CDMT {
+  pub CCSDS_CDM_VERS: f64,
+  pub CREATION_DATE: Option<alloc::string::String>,
+  pub ORIGINATOR: Option<alloc::string::String>,
+  pub MESSAGE_FOR: Option<alloc::string::String>,
+  pub MESSAGE_ID: Option<alloc::string::String>,
+  pub TCA: Option<alloc::string::String>,
+  pub MISS_DISTANCE: f64,
+  pub RELATIVE_SPEED: f64,
+  pub RELATIVE_POSITION_R: f64,
+  pub RELATIVE_POSITION_T: f64,
+  pub RELATIVE_POSITION_N: f64,
+  pub RELATIVE_VELOCITY_R: f64,
+  pub RELATIVE_VELOCITY_T: f64,
+  pub RELATIVE_VELOCITY_N: f64,
+  pub START_SCREEN_PERIOD: Option<alloc::string::String>,
+  pub STOP_SCREEN_PERIOD: Option<alloc::string::String>,
+  pub SCREEN_VOLUME_FRAME: Option<alloc::boxed::Box<RFMT>>,
+  pub SCREEN_VOLUME_SHAPE: screeningVolumeShape,
+  pub SCREEN_VOLUME_X: f64,
+  pub SCREEN_VOLUME_Y: f64,
+  pub SCREEN_VOLUME_Z: f64,
+  pub SCREEN_ENTRY_TIME: Option<alloc::string::String>,
+  pub SCREEN_EXIT_TIME: Option<alloc::string::String>,
+  pub COLLISION_PROBABILITY: f64,
+  pub COLLISION_PROBABILITY_METHOD: Option<alloc::string::String>,
+  pub OBJECT1: Option<alloc::boxed::Box<CDMObjectT>>,
+  pub OBJECT2: Option<alloc::boxed::Box<CDMObjectT>>,
+  pub OBJECT1_DATASOURCE: Option<alloc::boxed::Box<PNMT>>,
+  pub OBJECT2_DATASOURCE: Option<alloc::boxed::Box<PNMT>>,
+}
+impl Default for CDMT {
+  fn default() -> Self {
+    Self {
+      CCSDS_CDM_VERS: 0.0,
+      CREATION_DATE: None,
+      ORIGINATOR: None,
+      MESSAGE_FOR: None,
+      MESSAGE_ID: None,
+      TCA: None,
+      MISS_DISTANCE: 0.0,
+      RELATIVE_SPEED: 0.0,
+      RELATIVE_POSITION_R: 0.0,
+      RELATIVE_POSITION_T: 0.0,
+      RELATIVE_POSITION_N: 0.0,
+      RELATIVE_VELOCITY_R: 0.0,
+      RELATIVE_VELOCITY_T: 0.0,
+      RELATIVE_VELOCITY_N: 0.0,
+      START_SCREEN_PERIOD: None,
+      STOP_SCREEN_PERIOD: None,
+      SCREEN_VOLUME_FRAME: None,
+      SCREEN_VOLUME_SHAPE: screeningVolumeShape::ELLIPSOID,
+      SCREEN_VOLUME_X: 0.0,
+      SCREEN_VOLUME_Y: 0.0,
+      SCREEN_VOLUME_Z: 0.0,
+      SCREEN_ENTRY_TIME: None,
+      SCREEN_EXIT_TIME: None,
+      COLLISION_PROBABILITY: 0.0,
+      COLLISION_PROBABILITY_METHOD: None,
+      OBJECT1: None,
+      OBJECT2: None,
+      OBJECT1_DATASOURCE: None,
+      OBJECT2_DATASOURCE: None,
+    }
+  }
+}
+impl CDMT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<CDM<'b>> {
+    let CCSDS_CDM_VERS = self.CCSDS_CDM_VERS;
+    let CREATION_DATE = self.CREATION_DATE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIGINATOR = self.ORIGINATOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MESSAGE_FOR = self.MESSAGE_FOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MESSAGE_ID = self.MESSAGE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TCA = self.TCA.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MISS_DISTANCE = self.MISS_DISTANCE;
+    let RELATIVE_SPEED = self.RELATIVE_SPEED;
+    let RELATIVE_POSITION_R = self.RELATIVE_POSITION_R;
+    let RELATIVE_POSITION_T = self.RELATIVE_POSITION_T;
+    let RELATIVE_POSITION_N = self.RELATIVE_POSITION_N;
+    let RELATIVE_VELOCITY_R = self.RELATIVE_VELOCITY_R;
+    let RELATIVE_VELOCITY_T = self.RELATIVE_VELOCITY_T;
+    let RELATIVE_VELOCITY_N = self.RELATIVE_VELOCITY_N;
+    let START_SCREEN_PERIOD = self.START_SCREEN_PERIOD.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let STOP_SCREEN_PERIOD = self.STOP_SCREEN_PERIOD.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SCREEN_VOLUME_FRAME = self.SCREEN_VOLUME_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let SCREEN_VOLUME_SHAPE = self.SCREEN_VOLUME_SHAPE;
+    let SCREEN_VOLUME_X = self.SCREEN_VOLUME_X;
+    let SCREEN_VOLUME_Y = self.SCREEN_VOLUME_Y;
+    let SCREEN_VOLUME_Z = self.SCREEN_VOLUME_Z;
+    let SCREEN_ENTRY_TIME = self.SCREEN_ENTRY_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SCREEN_EXIT_TIME = self.SCREEN_EXIT_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COLLISION_PROBABILITY = self.COLLISION_PROBABILITY;
+    let COLLISION_PROBABILITY_METHOD = self.COLLISION_PROBABILITY_METHOD.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OBJECT1 = self.OBJECT1.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OBJECT2 = self.OBJECT2.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OBJECT1_DATASOURCE = self.OBJECT1_DATASOURCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OBJECT2_DATASOURCE = self.OBJECT2_DATASOURCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    CDM::create(_fbb, &CDMArgs{
+      CCSDS_CDM_VERS,
+      CREATION_DATE,
+      ORIGINATOR,
+      MESSAGE_FOR,
+      MESSAGE_ID,
+      TCA,
+      MISS_DISTANCE,
+      RELATIVE_SPEED,
+      RELATIVE_POSITION_R,
+      RELATIVE_POSITION_T,
+      RELATIVE_POSITION_N,
+      RELATIVE_VELOCITY_R,
+      RELATIVE_VELOCITY_T,
+      RELATIVE_VELOCITY_N,
+      START_SCREEN_PERIOD,
+      STOP_SCREEN_PERIOD,
+      SCREEN_VOLUME_FRAME,
+      SCREEN_VOLUME_SHAPE,
+      SCREEN_VOLUME_X,
+      SCREEN_VOLUME_Y,
+      SCREEN_VOLUME_Z,
+      SCREEN_ENTRY_TIME,
+      SCREEN_EXIT_TIME,
+      COLLISION_PROBABILITY,
+      COLLISION_PROBABILITY_METHOD,
+      OBJECT1,
+      OBJECT2,
+      OBJECT1_DATASOURCE,
+      OBJECT2_DATASOURCE,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `RFM`
+/// Verifies that a buffer of bytes contains a `CDM`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_rfm_unchecked`.
-pub fn root_as_rfm(buf: &[u8]) -> Result<RFM<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<RFM>(buf)
+/// `root_as_cdm_unchecked`.
+pub fn root_as_cdm(buf: &[u8]) -> Result<CDM<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<CDM>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `RFM` and returns it.
+/// `CDM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_rfm_unchecked`.
-pub fn size_prefixed_root_as_rfm(buf: &[u8]) -> Result<RFM<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<RFM>(buf)
+/// `size_prefixed_root_as_cdm_unchecked`.
+pub fn size_prefixed_root_as_cdm(buf: &[u8]) -> Result<CDM<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<CDM>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `RFM` and returns it.
+/// contains a `CDM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_rfm_unchecked`.
-pub fn root_as_rfm_with_opts<'b, 'o>(
+/// `root_as_cdm_unchecked`.
+pub fn root_as_cdm_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<RFM<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<RFM<'b>>(opts, buf)
+) -> Result<CDM<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<CDM<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `RFM` and returns
+/// bytes contains a size prefixed `CDM` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_rfm_unchecked`.
-pub fn size_prefixed_root_as_rfm_with_opts<'b, 'o>(
+/// `root_as_cdm_unchecked`.
+pub fn size_prefixed_root_as_cdm_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<RFM<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<RFM<'b>>(opts, buf)
+) -> Result<CDM<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<CDM<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a RFM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a CDM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `RFM`.
-pub unsafe fn root_as_rfm_unchecked(buf: &[u8]) -> RFM<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<RFM>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `CDM`.
+pub unsafe fn root_as_cdm_unchecked(buf: &[u8]) -> CDM<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<CDM>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed RFM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed CDM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `RFM`.
-pub unsafe fn size_prefixed_root_as_rfm_unchecked(buf: &[u8]) -> RFM<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<RFM>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `CDM`.
+pub unsafe fn size_prefixed_root_as_cdm_unchecked(buf: &[u8]) -> CDM<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<CDM>(buf) }
 }
-pub const RFM_IDENTIFIER: &str = "$RFM";
+pub const CDM_IDENTIFIER: &str = "$CDM";
 
 #[inline]
-pub fn rfm_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, RFM_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn rfm_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, RFM_IDENTIFIER, true)
+pub fn cdm_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, CDM_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_rfm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn cdm_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, CDM_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_cdm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<RFM<'a>>) {
-  fbb.finish(root, Some(RFM_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<CDM<'a>>) {
+  fbb.finish(root, Some(CDM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_rfm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<RFM<'a>>) {
-  fbb.finish_size_prefixed(root, Some(RFM_IDENTIFIER));
+pub fn finish_size_prefixed_cdm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<CDM<'a>>) {
+  fbb.finish_size_prefixed(root, Some(CDM_IDENTIFIER));
 }

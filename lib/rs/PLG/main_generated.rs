@@ -2,48 +2,353 @@
 // @generated
 extern crate alloc;
 
+use crate::main_generated::*;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_PAYLOAD_WIRE_FORMAT: u8 = 0;
+pub const ENUM_MIN_PLUGIN_CATEGORY: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PAYLOAD_WIRE_FORMAT: u8 = 1;
+pub const ENUM_MAX_PLUGIN_CATEGORY: i8 = 8;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PAYLOAD_WIRE_FORMAT: [payloadWireFormat; 2] = [
-  payloadWireFormat::FLATBUFFER,
-  payloadWireFormat::ALIGNED_BINARY,
+pub const ENUM_VALUES_PLUGIN_CATEGORY: [pluginCategory; 9] = [
+  pluginCategory::Sensor,
+  pluginCategory::Propagator,
+  pluginCategory::Renderer,
+  pluginCategory::Analysis,
+  pluginCategory::DataSource,
+  pluginCategory::EW,
+  pluginCategory::Comms,
+  pluginCategory::Physics,
+  pluginCategory::Shader,
 ];
 
-/// Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
-/// through an arena-backed plugin stream. Carries enough identity for a
-/// receiver to dispatch on schema without inspecting the payload bytes.
-/// Logical payload wire format for a stream frame or an accepted port type.
+/// Plugin type category
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct payloadWireFormat(pub u8);
+pub struct pluginCategory(pub i8);
 #[allow(non_upper_case_globals)]
-impl payloadWireFormat {
-  /// Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF.
-  pub const FLATBUFFER: Self = Self(0);
-  /// Body is a raw aligned binary chunk (for example zero-copy structs).
-  pub const ALIGNED_BINARY: Self = Self(1);
+impl pluginCategory {
+  /// Sensor simulation and analysis
+  pub const Sensor: Self = Self(0);
+  /// Orbital propagation algorithms
+  pub const Propagator: Self = Self(1);
+  /// Custom rendering/visualization
+  pub const Renderer: Self = Self(2);
+  /// Data analysis and processing
+  pub const Analysis: Self = Self(3);
+  /// External data source integration
+  pub const DataSource: Self = Self(4);
+  /// Electronic warfare simulation
+  pub const EW: Self = Self(5);
+  /// Communications modeling
+  pub const Comms: Self = Self(6);
+  /// Physics simulation
+  pub const Physics: Self = Self(7);
+  /// GLSL shader plugins for custom visualization
+  pub const Shader: Self = Self(8);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 8;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::Sensor,
+    Self::Propagator,
+    Self::Renderer,
+    Self::Analysis,
+    Self::DataSource,
+    Self::EW,
+    Self::Comms,
+    Self::Physics,
+    Self::Shader,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::Sensor => Some("Sensor"),
+      Self::Propagator => Some("Propagator"),
+      Self::Renderer => Some("Renderer"),
+      Self::Analysis => Some("Analysis"),
+      Self::DataSource => Some("DataSource"),
+      Self::EW => Some("EW"),
+      Self::Comms => Some("Comms"),
+      Self::Physics => Some("Physics"),
+      Self::Shader => Some("Shader"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for pluginCategory {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for pluginCategory {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for pluginCategory {
+    type Output = pluginCategory;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for pluginCategory {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for pluginCategory {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for pluginCategory {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PURCHASE_TIER: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PURCHASE_TIER: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PURCHASE_TIER: [purchaseTier; 3] = [
+  purchaseTier::Free,
+  purchaseTier::OneTime,
+  purchaseTier::Subscription,
+];
+
+/// Storefront payment model for the plugin listing
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct purchaseTier(pub i8);
+#[allow(non_upper_case_globals)]
+impl purchaseTier {
+  /// No payment required
+  pub const Free: Self = Self(0);
+  /// Single one-time purchase
+  pub const OneTime: Self = Self(1);
+  /// Recurring subscription purchase
+  pub const Subscription: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::Free,
+    Self::OneTime,
+    Self::Subscription,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::Free => Some("Free"),
+      Self::OneTime => Some("OneTime"),
+      Self::Subscription => Some("Subscription"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for purchaseTier {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for purchaseTier {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for purchaseTier {
+    type Output = purchaseTier;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for purchaseTier {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for purchaseTier {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for purchaseTier {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PUBLICATION_STATE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PUBLICATION_STATE: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PUBLICATION_STATE: [publicationState; 3] = [
+  publicationState::Public,
+  publicationState::Unlisted,
+  publicationState::Retired,
+];
+
+/// Publication visibility for the plugin listing
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct publicationState(pub i8);
+#[allow(non_upper_case_globals)]
+impl publicationState {
+  /// Discoverable in public storefront listings
+  pub const Public: Self = Self(0);
+  /// Addressable directly but hidden from public browse surfaces
+  pub const Unlisted: Self = Self(1);
+  /// No longer offered for new installs or purchases
+  pub const Retired: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::Public,
+    Self::Unlisted,
+    Self::Retired,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::Public => Some("Public"),
+      Self::Unlisted => Some("Unlisted"),
+      Self::Retired => Some("Retired"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for publicationState {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for publicationState {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for publicationState {
+    type Output = publicationState;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for publicationState {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for publicationState {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for publicationState {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_INVOKE_SURFACE_KIND: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_INVOKE_SURFACE_KIND: u8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_INVOKE_SURFACE_KIND: [invokeSurfaceKind; 2] = [
+  invokeSurfaceKind::DIRECT,
+  invokeSurfaceKind::COMMAND,
+];
+
+/// Canonical invoke surfaces a plugin artifact can expose. A single
+/// artifact can support multiple.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct invokeSurfaceKind(pub u8);
+#[allow(non_upper_case_globals)]
+impl invokeSurfaceKind {
+  /// Direct ABI — host calls `plugin_invoke_stream` in-process.
+  pub const DIRECT: Self = Self(0);
+  /// Command surface — envelope is queued by a runtime host.
+  pub const COMMAND: Self = Self(1);
 
   pub const ENUM_MIN: u8 = 0;
   pub const ENUM_MAX: u8 = 1;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::FLATBUFFER,
-    Self::ALIGNED_BINARY,
+    Self::DIRECT,
+    Self::COMMAND,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::FLATBUFFER => Some("FLATBUFFER"),
-      Self::ALIGNED_BINARY => Some("ALIGNED_BINARY"),
+      Self::DIRECT => Some("DIRECT"),
+      Self::COMMAND => Some("COMMAND"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for payloadWireFormat {
+impl ::core::fmt::Debug for invokeSurfaceKind {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -52,7 +357,7 @@ impl ::core::fmt::Debug for payloadWireFormat {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for payloadWireFormat {
+impl<'a> ::flatbuffers::Follow<'a> for invokeSurfaceKind {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -61,15 +366,15 @@ impl<'a> ::flatbuffers::Follow<'a> for payloadWireFormat {
   }
 }
 
-impl ::flatbuffers::Push for payloadWireFormat {
-    type Output = payloadWireFormat;
+impl ::flatbuffers::Push for invokeSurfaceKind {
+    type Output = invokeSurfaceKind;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for payloadWireFormat {
+impl ::flatbuffers::EndianScalar for invokeSurfaceKind {
   type Scalar = u8;
   #[inline]
   fn to_little_endian(self) -> u8 {
@@ -83,7 +388,7 @@ impl ::flatbuffers::EndianScalar for payloadWireFormat {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for payloadWireFormat {
+impl<'a> ::flatbuffers::Verifiable for invokeSurfaceKind {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -92,50 +397,52 @@ impl<'a> ::flatbuffers::Verifiable for payloadWireFormat {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for payloadWireFormat {}
+impl ::flatbuffers::SimpleToVerifyInSlice for invokeSurfaceKind {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_BUFFER_MUTABILITY: u8 = 0;
+pub const ENUM_MIN_DRAIN_BEHAVIOR: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_BUFFER_MUTABILITY: u8 = 2;
+pub const ENUM_MAX_DRAIN_BEHAVIOR: u8 = 2;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_BUFFER_MUTABILITY: [bufferMutability; 3] = [
-  bufferMutability::IMMUTABLE,
-  bufferMutability::SINGLE_WRITER_MUTABLE,
-  bufferMutability::APPEND_ONLY,
+pub const ENUM_VALUES_DRAIN_BEHAVIOR: [drainBehavior; 3] = [
+  drainBehavior::SINGLE_SHOT,
+  drainBehavior::DRAIN_UNTIL_YIELD,
+  drainBehavior::DRAIN_TO_EMPTY,
 ];
 
-/// Buffer mutability contract advertised by a stream port.
+/// Drain semantics for a method that operates over queued stream frames.
+/// Enum name is deliberately distinct from any camelCase field name
+/// (`DRAIN_POLICY` would collide otherwise).
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct bufferMutability(pub u8);
+pub struct drainBehavior(pub u8);
 #[allow(non_upper_case_globals)]
-impl bufferMutability {
-  /// Buffer is immutable after produce.
-  pub const IMMUTABLE: Self = Self(0);
-  /// Buffer may be written in place by the owner (single writer).
-  pub const SINGLE_WRITER_MUTABLE: Self = Self(1);
-  /// Buffer is append-only (rings / logs).
-  pub const APPEND_ONLY: Self = Self(2);
+impl drainBehavior {
+  /// One invocation consumes exactly one input frame.
+  pub const SINGLE_SHOT: Self = Self(0);
+  /// Invocation drains queued work until it voluntarily yields.
+  pub const DRAIN_UNTIL_YIELD: Self = Self(1);
+  /// Invocation drains to empty before returning.
+  pub const DRAIN_TO_EMPTY: Self = Self(2);
 
   pub const ENUM_MIN: u8 = 0;
   pub const ENUM_MAX: u8 = 2;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::IMMUTABLE,
-    Self::SINGLE_WRITER_MUTABLE,
-    Self::APPEND_ONLY,
+    Self::SINGLE_SHOT,
+    Self::DRAIN_UNTIL_YIELD,
+    Self::DRAIN_TO_EMPTY,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::IMMUTABLE => Some("IMMUTABLE"),
-      Self::SINGLE_WRITER_MUTABLE => Some("SINGLE_WRITER_MUTABLE"),
-      Self::APPEND_ONLY => Some("APPEND_ONLY"),
+      Self::SINGLE_SHOT => Some("SINGLE_SHOT"),
+      Self::DRAIN_UNTIL_YIELD => Some("DRAIN_UNTIL_YIELD"),
+      Self::DRAIN_TO_EMPTY => Some("DRAIN_TO_EMPTY"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for bufferMutability {
+impl ::core::fmt::Debug for drainBehavior {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -144,7 +451,7 @@ impl ::core::fmt::Debug for bufferMutability {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for bufferMutability {
+impl<'a> ::flatbuffers::Follow<'a> for drainBehavior {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -153,15 +460,15 @@ impl<'a> ::flatbuffers::Follow<'a> for bufferMutability {
   }
 }
 
-impl ::flatbuffers::Push for bufferMutability {
-    type Output = bufferMutability;
+impl ::flatbuffers::Push for drainBehavior {
+    type Output = drainBehavior;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for bufferMutability {
+impl ::flatbuffers::EndianScalar for drainBehavior {
   type Scalar = u8;
   #[inline]
   fn to_little_endian(self) -> u8 {
@@ -175,7 +482,7 @@ impl ::flatbuffers::EndianScalar for bufferMutability {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for bufferMutability {
+impl<'a> ::flatbuffers::Verifiable for drainBehavior {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -184,50 +491,181 @@ impl<'a> ::flatbuffers::Verifiable for bufferMutability {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for bufferMutability {}
+impl ::flatbuffers::SimpleToVerifyInSlice for drainBehavior {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_BUFFER_OWNERSHIP: u8 = 0;
+pub const ENUM_MIN_HOST_CAPABILITY_KIND: u16 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_BUFFER_OWNERSHIP: u8 = 2;
+pub const ENUM_MAX_HOST_CAPABILITY_KIND: u16 = 35;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_BUFFER_OWNERSHIP: [bufferOwnership; 3] = [
-  bufferOwnership::HOST_OWNED,
-  bufferOwnership::PLUGIN_OWNED,
-  bufferOwnership::TRANSFERRED,
+pub const ENUM_VALUES_HOST_CAPABILITY_KIND: [hostCapabilityKind; 36] = [
+  hostCapabilityKind::CLOCK,
+  hostCapabilityKind::RANDOM,
+  hostCapabilityKind::LOGGING,
+  hostCapabilityKind::TIMERS,
+  hostCapabilityKind::PUBSUB,
+  hostCapabilityKind::PROTOCOL_DIAL,
+  hostCapabilityKind::PROTOCOL_HANDLE,
+  hostCapabilityKind::STORAGE_QUERY,
+  hostCapabilityKind::SCENE_ACCESS,
+  hostCapabilityKind::ENTITY_ACCESS,
+  hostCapabilityKind::RENDER_HOOKS,
+  hostCapabilityKind::HTTP,
+  hostCapabilityKind::FILESYSTEM,
+  hostCapabilityKind::PIPE,
+  hostCapabilityKind::NETWORK,
+  hostCapabilityKind::DATABASE,
+  hostCapabilityKind::STORAGE_ADAPTER,
+  hostCapabilityKind::STORAGE_WRITE,
+  hostCapabilityKind::WALLET_SIGN,
+  hostCapabilityKind::IPFS,
+  hostCapabilityKind::TLS,
+  hostCapabilityKind::MQTT,
+  hostCapabilityKind::WEBSOCKET,
+  hostCapabilityKind::TCP,
+  hostCapabilityKind::UDP,
+  hostCapabilityKind::PROCESS_EXEC,
+  hostCapabilityKind::CONTEXT_READ,
+  hostCapabilityKind::CONTEXT_WRITE,
+  hostCapabilityKind::CRYPTO_HASH,
+  hostCapabilityKind::CRYPTO_SIGN,
+  hostCapabilityKind::CRYPTO_VERIFY,
+  hostCapabilityKind::CRYPTO_ENCRYPT,
+  hostCapabilityKind::CRYPTO_DECRYPT,
+  hostCapabilityKind::CRYPTO_KEY_AGREEMENT,
+  hostCapabilityKind::CRYPTO_KDF,
+  hostCapabilityKind::SCHEDULE_CRON,
 ];
 
-/// Buffer ownership contract advertised by a stream port.
+/// Host capability classes a plugin may request. Extends the simpler
+/// `PluginCapability` (which is name+version metadata) with the richer
+/// enum-based surface that runtime hosts gate on.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct bufferOwnership(pub u8);
+pub struct hostCapabilityKind(pub u16);
 #[allow(non_upper_case_globals)]
-impl bufferOwnership {
-  /// Arena / host owns the backing bytes; receiver must not free.
-  pub const HOST_OWNED: Self = Self(0);
-  /// Plugin owns the backing bytes; host must not free.
-  pub const PLUGIN_OWNED: Self = Self(1);
-  /// Ownership transfers with the frame (hand-off semantics).
-  pub const TRANSFERRED: Self = Self(2);
+impl hostCapabilityKind {
+  pub const CLOCK: Self = Self(0);
+  pub const RANDOM: Self = Self(1);
+  pub const LOGGING: Self = Self(2);
+  pub const TIMERS: Self = Self(3);
+  pub const PUBSUB: Self = Self(4);
+  pub const PROTOCOL_DIAL: Self = Self(5);
+  pub const PROTOCOL_HANDLE: Self = Self(6);
+  pub const STORAGE_QUERY: Self = Self(7);
+  pub const SCENE_ACCESS: Self = Self(8);
+  pub const ENTITY_ACCESS: Self = Self(9);
+  pub const RENDER_HOOKS: Self = Self(10);
+  pub const HTTP: Self = Self(11);
+  pub const FILESYSTEM: Self = Self(12);
+  pub const PIPE: Self = Self(13);
+  pub const NETWORK: Self = Self(14);
+  pub const DATABASE: Self = Self(15);
+  pub const STORAGE_ADAPTER: Self = Self(16);
+  pub const STORAGE_WRITE: Self = Self(17);
+  pub const WALLET_SIGN: Self = Self(18);
+  pub const IPFS: Self = Self(19);
+  pub const TLS: Self = Self(20);
+  pub const MQTT: Self = Self(21);
+  pub const WEBSOCKET: Self = Self(22);
+  pub const TCP: Self = Self(23);
+  pub const UDP: Self = Self(24);
+  pub const PROCESS_EXEC: Self = Self(25);
+  pub const CONTEXT_READ: Self = Self(26);
+  pub const CONTEXT_WRITE: Self = Self(27);
+  pub const CRYPTO_HASH: Self = Self(28);
+  pub const CRYPTO_SIGN: Self = Self(29);
+  pub const CRYPTO_VERIFY: Self = Self(30);
+  pub const CRYPTO_ENCRYPT: Self = Self(31);
+  pub const CRYPTO_DECRYPT: Self = Self(32);
+  pub const CRYPTO_KEY_AGREEMENT: Self = Self(33);
+  pub const CRYPTO_KDF: Self = Self(34);
+  pub const SCHEDULE_CRON: Self = Self(35);
 
-  pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 2;
+  pub const ENUM_MIN: u16 = 0;
+  pub const ENUM_MAX: u16 = 35;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::HOST_OWNED,
-    Self::PLUGIN_OWNED,
-    Self::TRANSFERRED,
+    Self::CLOCK,
+    Self::RANDOM,
+    Self::LOGGING,
+    Self::TIMERS,
+    Self::PUBSUB,
+    Self::PROTOCOL_DIAL,
+    Self::PROTOCOL_HANDLE,
+    Self::STORAGE_QUERY,
+    Self::SCENE_ACCESS,
+    Self::ENTITY_ACCESS,
+    Self::RENDER_HOOKS,
+    Self::HTTP,
+    Self::FILESYSTEM,
+    Self::PIPE,
+    Self::NETWORK,
+    Self::DATABASE,
+    Self::STORAGE_ADAPTER,
+    Self::STORAGE_WRITE,
+    Self::WALLET_SIGN,
+    Self::IPFS,
+    Self::TLS,
+    Self::MQTT,
+    Self::WEBSOCKET,
+    Self::TCP,
+    Self::UDP,
+    Self::PROCESS_EXEC,
+    Self::CONTEXT_READ,
+    Self::CONTEXT_WRITE,
+    Self::CRYPTO_HASH,
+    Self::CRYPTO_SIGN,
+    Self::CRYPTO_VERIFY,
+    Self::CRYPTO_ENCRYPT,
+    Self::CRYPTO_DECRYPT,
+    Self::CRYPTO_KEY_AGREEMENT,
+    Self::CRYPTO_KDF,
+    Self::SCHEDULE_CRON,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::HOST_OWNED => Some("HOST_OWNED"),
-      Self::PLUGIN_OWNED => Some("PLUGIN_OWNED"),
-      Self::TRANSFERRED => Some("TRANSFERRED"),
+      Self::CLOCK => Some("CLOCK"),
+      Self::RANDOM => Some("RANDOM"),
+      Self::LOGGING => Some("LOGGING"),
+      Self::TIMERS => Some("TIMERS"),
+      Self::PUBSUB => Some("PUBSUB"),
+      Self::PROTOCOL_DIAL => Some("PROTOCOL_DIAL"),
+      Self::PROTOCOL_HANDLE => Some("PROTOCOL_HANDLE"),
+      Self::STORAGE_QUERY => Some("STORAGE_QUERY"),
+      Self::SCENE_ACCESS => Some("SCENE_ACCESS"),
+      Self::ENTITY_ACCESS => Some("ENTITY_ACCESS"),
+      Self::RENDER_HOOKS => Some("RENDER_HOOKS"),
+      Self::HTTP => Some("HTTP"),
+      Self::FILESYSTEM => Some("FILESYSTEM"),
+      Self::PIPE => Some("PIPE"),
+      Self::NETWORK => Some("NETWORK"),
+      Self::DATABASE => Some("DATABASE"),
+      Self::STORAGE_ADAPTER => Some("STORAGE_ADAPTER"),
+      Self::STORAGE_WRITE => Some("STORAGE_WRITE"),
+      Self::WALLET_SIGN => Some("WALLET_SIGN"),
+      Self::IPFS => Some("IPFS"),
+      Self::TLS => Some("TLS"),
+      Self::MQTT => Some("MQTT"),
+      Self::WEBSOCKET => Some("WEBSOCKET"),
+      Self::TCP => Some("TCP"),
+      Self::UDP => Some("UDP"),
+      Self::PROCESS_EXEC => Some("PROCESS_EXEC"),
+      Self::CONTEXT_READ => Some("CONTEXT_READ"),
+      Self::CONTEXT_WRITE => Some("CONTEXT_WRITE"),
+      Self::CRYPTO_HASH => Some("CRYPTO_HASH"),
+      Self::CRYPTO_SIGN => Some("CRYPTO_SIGN"),
+      Self::CRYPTO_VERIFY => Some("CRYPTO_VERIFY"),
+      Self::CRYPTO_ENCRYPT => Some("CRYPTO_ENCRYPT"),
+      Self::CRYPTO_DECRYPT => Some("CRYPTO_DECRYPT"),
+      Self::CRYPTO_KEY_AGREEMENT => Some("CRYPTO_KEY_AGREEMENT"),
+      Self::CRYPTO_KDF => Some("CRYPTO_KDF"),
+      Self::SCHEDULE_CRON => Some("SCHEDULE_CRON"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for bufferOwnership {
+impl ::core::fmt::Debug for hostCapabilityKind {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -236,672 +674,4200 @@ impl ::core::fmt::Debug for bufferOwnership {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for bufferOwnership {
+impl<'a> ::flatbuffers::Follow<'a> for hostCapabilityKind {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u16>(buf, loc) };
     Self(b)
   }
 }
 
-impl ::flatbuffers::Push for bufferOwnership {
-    type Output = bufferOwnership;
+impl ::flatbuffers::Push for hostCapabilityKind {
+    type Output = hostCapabilityKind;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+        unsafe { ::flatbuffers::emplace_scalar::<u16>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for bufferOwnership {
-  type Scalar = u8;
+impl ::flatbuffers::EndianScalar for hostCapabilityKind {
+  type Scalar = u16;
   #[inline]
-  fn to_little_endian(self) -> u8 {
+  fn to_little_endian(self) -> u16 {
     self.0.to_le()
   }
   #[inline]
   #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: u8) -> Self {
-    let b = u8::from_le(v);
+  fn from_little_endian(v: u16) -> Self {
+    let b = u16::from_le(v);
     Self(b)
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for bufferOwnership {
+impl<'a> ::flatbuffers::Verifiable for hostCapabilityKind {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    u8::run_verifier(v, pos)
+    u16::run_verifier(v, pos)
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for bufferOwnership {}
-pub enum FlatBufferTypeRefOffset {}
+impl ::flatbuffers::SimpleToVerifyInSlice for hostCapabilityKind {}
+pub enum PluginCapabilityOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Payload-schema identity for a stream frame or an accepted port type.
-pub struct FlatBufferTypeRef<'a> {
+/// Plugin capability declaration
+pub struct PluginCapability<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for FlatBufferTypeRef<'a> {
-  type Inner = FlatBufferTypeRef<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for PluginCapability<'a> {
+  type Inner = PluginCapability<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> FlatBufferTypeRef<'a> {
-  pub const VT_SCHEMA_NAME: ::flatbuffers::VOffsetT = 4;
-  pub const VT_FILE_IDENTIFIER: ::flatbuffers::VOffsetT = 6;
-  pub const VT_SCHEMA_VERSION: ::flatbuffers::VOffsetT = 8;
-  pub const VT_ROOT_TYPE: ::flatbuffers::VOffsetT = 10;
+impl<'a> PluginCapability<'a> {
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 4;
+  pub const VT_VERSION: ::flatbuffers::VOffsetT = 6;
+  pub const VT_REQUIRED: ::flatbuffers::VOffsetT = 8;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    FlatBufferTypeRef { _tab: table }
+    PluginCapability { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args FlatBufferTypeRefArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<FlatBufferTypeRef<'bldr>> {
-    let mut builder = FlatBufferTypeRefBuilder::new(_fbb);
-    if let Some(x) = args.ROOT_TYPE { builder.add_ROOT_TYPE(x); }
-    if let Some(x) = args.SCHEMA_VERSION { builder.add_SCHEMA_VERSION(x); }
-    if let Some(x) = args.FILE_IDENTIFIER { builder.add_FILE_IDENTIFIER(x); }
-    if let Some(x) = args.SCHEMA_NAME { builder.add_SCHEMA_NAME(x); }
+    args: &'args PluginCapabilityArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PluginCapability<'bldr>> {
+    let mut builder = PluginCapabilityBuilder::new(_fbb);
+    if let Some(x) = args.VERSION { builder.add_VERSION(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.add_REQUIRED(args.REQUIRED);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> FlatBufferTypeRefT {
-    let SCHEMA_NAME = self.SCHEMA_NAME().map(|x| {
+  pub fn unpack(&self) -> PluginCapabilityT {
+    let NAME = self.NAME().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let FILE_IDENTIFIER = self.FILE_IDENTIFIER().map(|x| {
+    let VERSION = self.VERSION().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let SCHEMA_VERSION = self.SCHEMA_VERSION().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let ROOT_TYPE = self.ROOT_TYPE().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    FlatBufferTypeRefT {
-      SCHEMA_NAME,
-      FILE_IDENTIFIER,
-      SCHEMA_VERSION,
-      ROOT_TYPE,
+    let REQUIRED = self.REQUIRED();
+    PluginCapabilityT {
+      NAME,
+      VERSION,
+      REQUIRED,
     }
   }
 
-  /// Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
+  /// Capability name, e.g., "gpu_compute", "wasm_simd"
   #[inline]
-  pub fn SCHEMA_NAME(&self) -> Option<&'a str> {
+  pub fn NAME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(FlatBufferTypeRef::VT_SCHEMA_NAME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PluginCapability::VT_NAME, None)}
   }
-  /// Optional 4-byte FlatBuffer file identifier.
+  /// Capability version
   #[inline]
-  pub fn FILE_IDENTIFIER(&self) -> Option<&'a str> {
+  pub fn VERSION(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(FlatBufferTypeRef::VT_FILE_IDENTIFIER, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PluginCapability::VT_VERSION, None)}
   }
-  /// Optional semver or schema revision string.
+  /// Whether this capability is required
   #[inline]
-  pub fn SCHEMA_VERSION(&self) -> Option<&'a str> {
+  pub fn REQUIRED(&self) -> bool {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(FlatBufferTypeRef::VT_SCHEMA_VERSION, None)}
-  }
-  /// Optional root type name within the schema.
-  #[inline]
-  pub fn ROOT_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(FlatBufferTypeRef::VT_ROOT_TYPE, None)}
+    unsafe { self._tab.get::<bool>(PluginCapability::VT_REQUIRED, Some(false)).unwrap()}
   }
 }
 
-impl ::flatbuffers::Verifiable for FlatBufferTypeRef<'_> {
+impl ::flatbuffers::Verifiable for PluginCapability<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCHEMA_NAME", Self::VT_SCHEMA_NAME, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FILE_IDENTIFIER", Self::VT_FILE_IDENTIFIER, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCHEMA_VERSION", Self::VT_SCHEMA_VERSION, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ROOT_TYPE", Self::VT_ROOT_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VERSION", Self::VT_VERSION, false)?
+     .visit_field::<bool>("REQUIRED", Self::VT_REQUIRED, false)?
      .finish();
     Ok(())
   }
 }
-pub struct FlatBufferTypeRefArgs<'a> {
-    pub SCHEMA_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub FILE_IDENTIFIER: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub SCHEMA_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub ROOT_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+pub struct PluginCapabilityArgs<'a> {
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REQUIRED: bool,
 }
-impl<'a> Default for FlatBufferTypeRefArgs<'a> {
+impl<'a> Default for PluginCapabilityArgs<'a> {
   #[inline]
   fn default() -> Self {
-    FlatBufferTypeRefArgs {
-      SCHEMA_NAME: None,
-      FILE_IDENTIFIER: None,
-      SCHEMA_VERSION: None,
-      ROOT_TYPE: None,
+    PluginCapabilityArgs {
+      NAME: None,
+      VERSION: None,
+      REQUIRED: false,
     }
   }
 }
 
-pub struct FlatBufferTypeRefBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct PluginCapabilityBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> FlatBufferTypeRefBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PluginCapabilityBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_SCHEMA_NAME(&mut self, SCHEMA_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(FlatBufferTypeRef::VT_SCHEMA_NAME, SCHEMA_NAME);
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PluginCapability::VT_NAME, NAME);
   }
   #[inline]
-  pub fn add_FILE_IDENTIFIER(&mut self, FILE_IDENTIFIER: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(FlatBufferTypeRef::VT_FILE_IDENTIFIER, FILE_IDENTIFIER);
+  pub fn add_VERSION(&mut self, VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PluginCapability::VT_VERSION, VERSION);
   }
   #[inline]
-  pub fn add_SCHEMA_VERSION(&mut self, SCHEMA_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(FlatBufferTypeRef::VT_SCHEMA_VERSION, SCHEMA_VERSION);
+  pub fn add_REQUIRED(&mut self, REQUIRED: bool) {
+    self.fbb_.push_slot::<bool>(PluginCapability::VT_REQUIRED, REQUIRED, false);
   }
   #[inline]
-  pub fn add_ROOT_TYPE(&mut self, ROOT_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(FlatBufferTypeRef::VT_ROOT_TYPE, ROOT_TYPE);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> FlatBufferTypeRefBuilder<'a, 'b, A> {
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PluginCapabilityBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    FlatBufferTypeRefBuilder {
+    PluginCapabilityBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<FlatBufferTypeRef<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PluginCapability<'a>> {
     let o = self.fbb_.end_table(self.start_);
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for FlatBufferTypeRef<'_> {
+impl ::core::fmt::Debug for PluginCapability<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("FlatBufferTypeRef");
-      ds.field("SCHEMA_NAME", &self.SCHEMA_NAME());
-      ds.field("FILE_IDENTIFIER", &self.FILE_IDENTIFIER());
-      ds.field("SCHEMA_VERSION", &self.SCHEMA_VERSION());
-      ds.field("ROOT_TYPE", &self.ROOT_TYPE());
+    let mut ds = f.debug_struct("PluginCapability");
+      ds.field("NAME", &self.NAME());
+      ds.field("VERSION", &self.VERSION());
+      ds.field("REQUIRED", &self.REQUIRED());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct FlatBufferTypeRefT {
-  pub SCHEMA_NAME: Option<alloc::string::String>,
-  pub FILE_IDENTIFIER: Option<alloc::string::String>,
-  pub SCHEMA_VERSION: Option<alloc::string::String>,
-  pub ROOT_TYPE: Option<alloc::string::String>,
+pub struct PluginCapabilityT {
+  pub NAME: Option<alloc::string::String>,
+  pub VERSION: Option<alloc::string::String>,
+  pub REQUIRED: bool,
 }
-impl Default for FlatBufferTypeRefT {
+impl Default for PluginCapabilityT {
   fn default() -> Self {
     Self {
-      SCHEMA_NAME: None,
-      FILE_IDENTIFIER: None,
-      SCHEMA_VERSION: None,
-      ROOT_TYPE: None,
+      NAME: None,
+      VERSION: None,
+      REQUIRED: false,
     }
   }
 }
-impl FlatBufferTypeRefT {
+impl PluginCapabilityT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<FlatBufferTypeRef<'b>> {
-    let SCHEMA_NAME = self.SCHEMA_NAME.as_ref().map(|x|{
+  ) -> ::flatbuffers::WIPOffset<PluginCapability<'b>> {
+    let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let FILE_IDENTIFIER = self.FILE_IDENTIFIER.as_ref().map(|x|{
+    let VERSION = self.VERSION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SCHEMA_VERSION = self.SCHEMA_VERSION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ROOT_TYPE = self.ROOT_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    FlatBufferTypeRef::create(_fbb, &FlatBufferTypeRefArgs{
-      SCHEMA_NAME,
-      FILE_IDENTIFIER,
-      SCHEMA_VERSION,
-      ROOT_TYPE,
+    let REQUIRED = self.REQUIRED;
+    PluginCapability::create(_fbb, &PluginCapabilityArgs{
+      NAME,
+      VERSION,
+      REQUIRED,
     })
   }
 }
-pub enum TABOffset {}
+pub enum PLGAcceptedTypeSetOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Typed Arena Buffer — one descriptor for a payload slot in a shared arena.
-pub struct TAB<'a> {
+/// Accepted schema family for a port. When a port accepts multiple wire
+/// formats (canonical FlatBuffer + aligned-binary), each ALLOWED_TYPE
+/// entry carries its own TAB.FlatBufferTypeRef with the schema identity,
+/// and the enclosing PLGPortManifest advertises both wire formats via
+/// ALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises
+/// aligned-binary MUST also advertise the canonical flatbuffer fallback
+/// for the same schema and file identifier in the same set.
+pub struct PLGAcceptedTypeSet<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for TAB<'a> {
-  type Inner = TAB<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for PLGAcceptedTypeSet<'a> {
+  type Inner = PLGAcceptedTypeSet<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> TAB<'a> {
-  pub const VT_OFFSET: ::flatbuffers::VOffsetT = 4;
-  pub const VT_SIZE: ::flatbuffers::VOffsetT = 6;
-  pub const VT_ALIGNMENT: ::flatbuffers::VOffsetT = 8;
-  pub const VT_WIRE_FORMAT: ::flatbuffers::VOffsetT = 10;
-  pub const VT_TYPE_REF: ::flatbuffers::VOffsetT = 12;
-  pub const VT_MUTABILITY: ::flatbuffers::VOffsetT = 14;
-  pub const VT_OWNERSHIP: ::flatbuffers::VOffsetT = 16;
-  pub const VT_FRAME_ID: ::flatbuffers::VOffsetT = 18;
-  pub const VT_PORT_ID: ::flatbuffers::VOffsetT = 20;
+impl<'a> PLGAcceptedTypeSet<'a> {
+  pub const VT_SET_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_ALLOWED_TYPES: ::flatbuffers::VOffsetT = 6;
+  pub const VT_ALLOWED_WIRE_FORMATS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 10;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    TAB { _tab: table }
+    PLGAcceptedTypeSet { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args TABArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<TAB<'bldr>> {
-    let mut builder = TABBuilder::new(_fbb);
-    builder.add_FRAME_ID(args.FRAME_ID);
-    if let Some(x) = args.PORT_ID { builder.add_PORT_ID(x); }
-    if let Some(x) = args.TYPE_REF { builder.add_TYPE_REF(x); }
-    builder.add_ALIGNMENT(args.ALIGNMENT);
-    builder.add_SIZE(args.SIZE);
-    builder.add_OFFSET(args.OFFSET);
-    builder.add_OWNERSHIP(args.OWNERSHIP);
-    builder.add_MUTABILITY(args.MUTABILITY);
-    builder.add_WIRE_FORMAT(args.WIRE_FORMAT);
+    args: &'args PLGAcceptedTypeSetArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PLGAcceptedTypeSet<'bldr>> {
+    let mut builder = PLGAcceptedTypeSetBuilder::new(_fbb);
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.ALLOWED_WIRE_FORMATS { builder.add_ALLOWED_WIRE_FORMATS(x); }
+    if let Some(x) = args.ALLOWED_TYPES { builder.add_ALLOWED_TYPES(x); }
+    if let Some(x) = args.SET_ID { builder.add_SET_ID(x); }
     builder.finish()
   }
 
-  pub fn unpack(&self) -> TABT {
-    let OFFSET = self.OFFSET();
-    let SIZE = self.SIZE();
-    let ALIGNMENT = self.ALIGNMENT();
-    let WIRE_FORMAT = self.WIRE_FORMAT();
-    let TYPE_REF = self.TYPE_REF().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
+  pub fn unpack(&self) -> PLGAcceptedTypeSetT {
+    let SET_ID = {
+      let x = self.SET_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let ALLOWED_TYPES = self.ALLOWED_TYPES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
     });
-    let MUTABILITY = self.MUTABILITY();
-    let OWNERSHIP = self.OWNERSHIP();
-    let FRAME_ID = self.FRAME_ID();
-    let PORT_ID = self.PORT_ID().map(|x| {
+    let ALLOWED_WIRE_FORMATS = self.ALLOWED_WIRE_FORMATS().map(|x| {
+      x.into_iter().collect()
+    });
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    TABT {
-      OFFSET,
-      SIZE,
-      ALIGNMENT,
-      WIRE_FORMAT,
-      TYPE_REF,
-      MUTABILITY,
-      OWNERSHIP,
-      FRAME_ID,
-      PORT_ID,
+    PLGAcceptedTypeSetT {
+      SET_ID,
+      ALLOWED_TYPES,
+      ALLOWED_WIRE_FORMATS,
+      DESCRIPTION,
     }
   }
 
-  /// Byte offset of the payload body within the arena.
+  /// Stable type-set identifier within the port.
   #[inline]
-  pub fn OFFSET(&self) -> u32 {
+  pub fn SET_ID(&self) -> &'a str {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(TAB::VT_OFFSET, Some(0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGAcceptedTypeSet::VT_SET_ID, None).unwrap()}
   }
-  /// Byte length of the payload body.
+  /// Specific FlatBuffer types accepted by the set.
   #[inline]
-  pub fn SIZE(&self) -> u32 {
+  pub fn ALLOWED_TYPES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<FlatBufferTypeRef<'a>>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(TAB::VT_SIZE, Some(0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<FlatBufferTypeRef>>>>(PLGAcceptedTypeSet::VT_ALLOWED_TYPES, None)}
   }
-  /// Required start alignment of the payload body (in bytes).
+  /// Wire formats this set accepts. If ALIGNED_BINARY is present,
+  /// FLATBUFFER MUST also be present for the same schemas.
   #[inline]
-  pub fn ALIGNMENT(&self) -> u32 {
+  pub fn ALLOWED_WIRE_FORMATS(&self) -> Option<::flatbuffers::Vector<'a, payloadWireFormat>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(TAB::VT_ALIGNMENT, Some(0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, payloadWireFormat>>>(PLGAcceptedTypeSet::VT_ALLOWED_WIRE_FORMATS, None)}
   }
-  /// Wire format for the body.
+  /// Human-readable explanation of the accepted schema family.
   #[inline]
-  pub fn WIRE_FORMAT(&self) -> payloadWireFormat {
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<payloadWireFormat>(TAB::VT_WIRE_FORMAT, Some(payloadWireFormat::FLATBUFFER)).unwrap()}
-  }
-  /// Optional payload schema identity.
-  #[inline]
-  pub fn TYPE_REF(&self) -> Option<FlatBufferTypeRef<'a>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FlatBufferTypeRef>>(TAB::VT_TYPE_REF, None)}
-  }
-  /// Mutability contract for the slot.
-  #[inline]
-  pub fn MUTABILITY(&self) -> bufferMutability {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bufferMutability>(TAB::VT_MUTABILITY, Some(bufferMutability::IMMUTABLE)).unwrap()}
-  }
-  /// Ownership contract for the slot.
-  #[inline]
-  pub fn OWNERSHIP(&self) -> bufferOwnership {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bufferOwnership>(TAB::VT_OWNERSHIP, Some(bufferOwnership::HOST_OWNED)).unwrap()}
-  }
-  /// Optional opaque frame identifier for stream bookkeeping.
-  #[inline]
-  pub fn FRAME_ID(&self) -> u64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u64>(TAB::VT_FRAME_ID, Some(0)).unwrap()}
-  }
-  /// Optional port identifier for frames that route to/from a named
-  /// input or output port on a method (maps to
-  /// `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
-  /// no port routing hint.
-  #[inline]
-  pub fn PORT_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TAB::VT_PORT_ID, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGAcceptedTypeSet::VT_DESCRIPTION, None)}
   }
 }
 
-impl ::flatbuffers::Verifiable for TAB<'_> {
+impl ::flatbuffers::Verifiable for PLGAcceptedTypeSet<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<u32>("OFFSET", Self::VT_OFFSET, false)?
-     .visit_field::<u32>("SIZE", Self::VT_SIZE, false)?
-     .visit_field::<u32>("ALIGNMENT", Self::VT_ALIGNMENT, false)?
-     .visit_field::<payloadWireFormat>("WIRE_FORMAT", Self::VT_WIRE_FORMAT, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<FlatBufferTypeRef>>("TYPE_REF", Self::VT_TYPE_REF, false)?
-     .visit_field::<bufferMutability>("MUTABILITY", Self::VT_MUTABILITY, false)?
-     .visit_field::<bufferOwnership>("OWNERSHIP", Self::VT_OWNERSHIP, false)?
-     .visit_field::<u64>("FRAME_ID", Self::VT_FRAME_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PORT_ID", Self::VT_PORT_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SET_ID", Self::VT_SET_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<FlatBufferTypeRef>>>>("ALLOWED_TYPES", Self::VT_ALLOWED_TYPES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, payloadWireFormat>>>("ALLOWED_WIRE_FORMATS", Self::VT_ALLOWED_WIRE_FORMATS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
      .finish();
     Ok(())
   }
 }
-pub struct TABArgs<'a> {
-    pub OFFSET: u32,
-    pub SIZE: u32,
-    pub ALIGNMENT: u32,
-    pub WIRE_FORMAT: payloadWireFormat,
-    pub TYPE_REF: Option<::flatbuffers::WIPOffset<FlatBufferTypeRef<'a>>>,
-    pub MUTABILITY: bufferMutability,
-    pub OWNERSHIP: bufferOwnership,
-    pub FRAME_ID: u64,
-    pub PORT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+pub struct PLGAcceptedTypeSetArgs<'a> {
+    pub SET_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ALLOWED_TYPES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<FlatBufferTypeRef<'a>>>>>,
+    pub ALLOWED_WIRE_FORMATS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, payloadWireFormat>>>,
+    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
-impl<'a> Default for TABArgs<'a> {
+impl<'a> Default for PLGAcceptedTypeSetArgs<'a> {
   #[inline]
   fn default() -> Self {
-    TABArgs {
-      OFFSET: 0,
-      SIZE: 0,
-      ALIGNMENT: 0,
-      WIRE_FORMAT: payloadWireFormat::FLATBUFFER,
-      TYPE_REF: None,
-      MUTABILITY: bufferMutability::IMMUTABLE,
-      OWNERSHIP: bufferOwnership::HOST_OWNED,
-      FRAME_ID: 0,
-      PORT_ID: None,
+    PLGAcceptedTypeSetArgs {
+      SET_ID: None, // required field
+      ALLOWED_TYPES: None,
+      ALLOWED_WIRE_FORMATS: None,
+      DESCRIPTION: None,
     }
   }
 }
 
-pub struct TABBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct PLGAcceptedTypeSetBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TABBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGAcceptedTypeSetBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_OFFSET(&mut self, OFFSET: u32) {
-    self.fbb_.push_slot::<u32>(TAB::VT_OFFSET, OFFSET, 0);
+  pub fn add_SET_ID(&mut self, SET_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGAcceptedTypeSet::VT_SET_ID, SET_ID);
   }
   #[inline]
-  pub fn add_SIZE(&mut self, SIZE: u32) {
-    self.fbb_.push_slot::<u32>(TAB::VT_SIZE, SIZE, 0);
+  pub fn add_ALLOWED_TYPES(&mut self, ALLOWED_TYPES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<FlatBufferTypeRef<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGAcceptedTypeSet::VT_ALLOWED_TYPES, ALLOWED_TYPES);
   }
   #[inline]
-  pub fn add_ALIGNMENT(&mut self, ALIGNMENT: u32) {
-    self.fbb_.push_slot::<u32>(TAB::VT_ALIGNMENT, ALIGNMENT, 0);
+  pub fn add_ALLOWED_WIRE_FORMATS(&mut self, ALLOWED_WIRE_FORMATS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , payloadWireFormat>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGAcceptedTypeSet::VT_ALLOWED_WIRE_FORMATS, ALLOWED_WIRE_FORMATS);
   }
   #[inline]
-  pub fn add_WIRE_FORMAT(&mut self, WIRE_FORMAT: payloadWireFormat) {
-    self.fbb_.push_slot::<payloadWireFormat>(TAB::VT_WIRE_FORMAT, WIRE_FORMAT, payloadWireFormat::FLATBUFFER);
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGAcceptedTypeSet::VT_DESCRIPTION, DESCRIPTION);
   }
   #[inline]
-  pub fn add_TYPE_REF(&mut self, TYPE_REF: ::flatbuffers::WIPOffset<FlatBufferTypeRef<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FlatBufferTypeRef>>(TAB::VT_TYPE_REF, TYPE_REF);
-  }
-  #[inline]
-  pub fn add_MUTABILITY(&mut self, MUTABILITY: bufferMutability) {
-    self.fbb_.push_slot::<bufferMutability>(TAB::VT_MUTABILITY, MUTABILITY, bufferMutability::IMMUTABLE);
-  }
-  #[inline]
-  pub fn add_OWNERSHIP(&mut self, OWNERSHIP: bufferOwnership) {
-    self.fbb_.push_slot::<bufferOwnership>(TAB::VT_OWNERSHIP, OWNERSHIP, bufferOwnership::HOST_OWNED);
-  }
-  #[inline]
-  pub fn add_FRAME_ID(&mut self, FRAME_ID: u64) {
-    self.fbb_.push_slot::<u64>(TAB::VT_FRAME_ID, FRAME_ID, 0);
-  }
-  #[inline]
-  pub fn add_PORT_ID(&mut self, PORT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TAB::VT_PORT_ID, PORT_ID);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TABBuilder<'a, 'b, A> {
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGAcceptedTypeSetBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    TABBuilder {
+    PLGAcceptedTypeSetBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<TAB<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PLGAcceptedTypeSet<'a>> {
     let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PLGAcceptedTypeSet::VT_SET_ID,"SET_ID");
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for TAB<'_> {
+impl ::core::fmt::Debug for PLGAcceptedTypeSet<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("TAB");
-      ds.field("OFFSET", &self.OFFSET());
-      ds.field("SIZE", &self.SIZE());
-      ds.field("ALIGNMENT", &self.ALIGNMENT());
-      ds.field("WIRE_FORMAT", &self.WIRE_FORMAT());
-      ds.field("TYPE_REF", &self.TYPE_REF());
-      ds.field("MUTABILITY", &self.MUTABILITY());
-      ds.field("OWNERSHIP", &self.OWNERSHIP());
-      ds.field("FRAME_ID", &self.FRAME_ID());
-      ds.field("PORT_ID", &self.PORT_ID());
+    let mut ds = f.debug_struct("PLGAcceptedTypeSet");
+      ds.field("SET_ID", &self.SET_ID());
+      ds.field("ALLOWED_TYPES", &self.ALLOWED_TYPES());
+      ds.field("ALLOWED_WIRE_FORMATS", &self.ALLOWED_WIRE_FORMATS());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct TABT {
-  pub OFFSET: u32,
-  pub SIZE: u32,
-  pub ALIGNMENT: u32,
-  pub WIRE_FORMAT: payloadWireFormat,
-  pub TYPE_REF: Option<alloc::boxed::Box<FlatBufferTypeRefT>>,
-  pub MUTABILITY: bufferMutability,
-  pub OWNERSHIP: bufferOwnership,
-  pub FRAME_ID: u64,
-  pub PORT_ID: Option<alloc::string::String>,
+pub struct PLGAcceptedTypeSetT {
+  pub SET_ID: alloc::string::String,
+  pub ALLOWED_TYPES: Option<alloc::vec::Vec<FlatBufferTypeRefT>>,
+  pub ALLOWED_WIRE_FORMATS: Option<alloc::vec::Vec<payloadWireFormat>>,
+  pub DESCRIPTION: Option<alloc::string::String>,
 }
-impl Default for TABT {
+impl Default for PLGAcceptedTypeSetT {
   fn default() -> Self {
     Self {
-      OFFSET: 0,
-      SIZE: 0,
-      ALIGNMENT: 0,
-      WIRE_FORMAT: payloadWireFormat::FLATBUFFER,
-      TYPE_REF: None,
-      MUTABILITY: bufferMutability::IMMUTABLE,
-      OWNERSHIP: bufferOwnership::HOST_OWNED,
-      FRAME_ID: 0,
-      PORT_ID: None,
+      SET_ID: alloc::string::ToString::to_string(""),
+      ALLOWED_TYPES: None,
+      ALLOWED_WIRE_FORMATS: None,
+      DESCRIPTION: None,
     }
   }
 }
-impl TABT {
+impl PLGAcceptedTypeSetT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<TAB<'b>> {
-    let OFFSET = self.OFFSET;
-    let SIZE = self.SIZE;
-    let ALIGNMENT = self.ALIGNMENT;
-    let WIRE_FORMAT = self.WIRE_FORMAT;
-    let TYPE_REF = self.TYPE_REF.as_ref().map(|x|{
-      x.pack(_fbb)
-    });
-    let MUTABILITY = self.MUTABILITY;
-    let OWNERSHIP = self.OWNERSHIP;
-    let FRAME_ID = self.FRAME_ID;
-    let PORT_ID = self.PORT_ID.as_ref().map(|x|{
+  ) -> ::flatbuffers::WIPOffset<PLGAcceptedTypeSet<'b>> {
+    let SET_ID = Some({
+      let x = &self.SET_ID;
       _fbb.create_string(x)
     });
-    TAB::create(_fbb, &TABArgs{
-      OFFSET,
-      SIZE,
-      ALIGNMENT,
-      WIRE_FORMAT,
-      TYPE_REF,
-      MUTABILITY,
-      OWNERSHIP,
-      FRAME_ID,
+    let ALLOWED_TYPES = self.ALLOWED_TYPES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let ALLOWED_WIRE_FORMATS = self.ALLOWED_WIRE_FORMATS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    PLGAcceptedTypeSet::create(_fbb, &PLGAcceptedTypeSetArgs{
+      SET_ID,
+      ALLOWED_TYPES,
+      ALLOWED_WIRE_FORMATS,
+      DESCRIPTION,
+    })
+  }
+}
+pub enum PLGPortManifestOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One input or output port on a method.
+pub struct PLGPortManifest<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PLGPortManifest<'a> {
+  type Inner = PLGPortManifest<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PLGPortManifest<'a> {
+  pub const VT_PORT_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_DISPLAY_NAME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_ACCEPTED_TYPE_SETS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MIN_STREAMS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_MAX_STREAMS: ::flatbuffers::VOffsetT = 12;
+  pub const VT_REQUIRED: ::flatbuffers::VOffsetT = 14;
+  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 16;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PLGPortManifest { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PLGPortManifestArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PLGPortManifest<'bldr>> {
+    let mut builder = PLGPortManifestBuilder::new(_fbb);
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.ACCEPTED_TYPE_SETS { builder.add_ACCEPTED_TYPE_SETS(x); }
+    if let Some(x) = args.DISPLAY_NAME { builder.add_DISPLAY_NAME(x); }
+    if let Some(x) = args.PORT_ID { builder.add_PORT_ID(x); }
+    builder.add_MAX_STREAMS(args.MAX_STREAMS);
+    builder.add_MIN_STREAMS(args.MIN_STREAMS);
+    builder.add_REQUIRED(args.REQUIRED);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PLGPortManifestT {
+    let PORT_ID = {
+      let x = self.PORT_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let DISPLAY_NAME = self.DISPLAY_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ACCEPTED_TYPE_SETS = self.ACCEPTED_TYPE_SETS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let MIN_STREAMS = self.MIN_STREAMS();
+    let MAX_STREAMS = self.MAX_STREAMS();
+    let REQUIRED = self.REQUIRED();
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    PLGPortManifestT {
       PORT_ID,
+      DISPLAY_NAME,
+      ACCEPTED_TYPE_SETS,
+      MIN_STREAMS,
+      MAX_STREAMS,
+      REQUIRED,
+      DESCRIPTION,
+    }
+  }
+
+  /// Stable port identifier within the method.
+  #[inline]
+  pub fn PORT_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGPortManifest::VT_PORT_ID, None).unwrap()}
+  }
+  /// Human-readable name for UIs.
+  #[inline]
+  pub fn DISPLAY_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGPortManifest::VT_DISPLAY_NAME, None)}
+  }
+  /// Type sets accepted on this port.
+  #[inline]
+  pub fn ACCEPTED_TYPE_SETS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGAcceptedTypeSet<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGAcceptedTypeSet>>>>(PLGPortManifest::VT_ACCEPTED_TYPE_SETS, None)}
+  }
+  /// Minimum number of streams that must be connected.
+  #[inline]
+  pub fn MIN_STREAMS(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(PLGPortManifest::VT_MIN_STREAMS, Some(1)).unwrap()}
+  }
+  /// Maximum number of streams that may be connected.
+  #[inline]
+  pub fn MAX_STREAMS(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(PLGPortManifest::VT_MAX_STREAMS, Some(1)).unwrap()}
+  }
+  /// Whether the port must be connected for invocation.
+  #[inline]
+  pub fn REQUIRED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(PLGPortManifest::VT_REQUIRED, Some(true)).unwrap()}
+  }
+  /// Optional human-readable description.
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGPortManifest::VT_DESCRIPTION, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PLGPortManifest<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PORT_ID", Self::VT_PORT_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DISPLAY_NAME", Self::VT_DISPLAY_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGAcceptedTypeSet>>>>("ACCEPTED_TYPE_SETS", Self::VT_ACCEPTED_TYPE_SETS, false)?
+     .visit_field::<u16>("MIN_STREAMS", Self::VT_MIN_STREAMS, false)?
+     .visit_field::<u16>("MAX_STREAMS", Self::VT_MAX_STREAMS, false)?
+     .visit_field::<bool>("REQUIRED", Self::VT_REQUIRED, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PLGPortManifestArgs<'a> {
+    pub PORT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DISPLAY_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ACCEPTED_TYPE_SETS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGAcceptedTypeSet<'a>>>>>,
+    pub MIN_STREAMS: u16,
+    pub MAX_STREAMS: u16,
+    pub REQUIRED: bool,
+    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for PLGPortManifestArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PLGPortManifestArgs {
+      PORT_ID: None, // required field
+      DISPLAY_NAME: None,
+      ACCEPTED_TYPE_SETS: None,
+      MIN_STREAMS: 1,
+      MAX_STREAMS: 1,
+      REQUIRED: true,
+      DESCRIPTION: None,
+    }
+  }
+}
+
+pub struct PLGPortManifestBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGPortManifestBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_PORT_ID(&mut self, PORT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGPortManifest::VT_PORT_ID, PORT_ID);
+  }
+  #[inline]
+  pub fn add_DISPLAY_NAME(&mut self, DISPLAY_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGPortManifest::VT_DISPLAY_NAME, DISPLAY_NAME);
+  }
+  #[inline]
+  pub fn add_ACCEPTED_TYPE_SETS(&mut self, ACCEPTED_TYPE_SETS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PLGAcceptedTypeSet<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGPortManifest::VT_ACCEPTED_TYPE_SETS, ACCEPTED_TYPE_SETS);
+  }
+  #[inline]
+  pub fn add_MIN_STREAMS(&mut self, MIN_STREAMS: u16) {
+    self.fbb_.push_slot::<u16>(PLGPortManifest::VT_MIN_STREAMS, MIN_STREAMS, 1);
+  }
+  #[inline]
+  pub fn add_MAX_STREAMS(&mut self, MAX_STREAMS: u16) {
+    self.fbb_.push_slot::<u16>(PLGPortManifest::VT_MAX_STREAMS, MAX_STREAMS, 1);
+  }
+  #[inline]
+  pub fn add_REQUIRED(&mut self, REQUIRED: bool) {
+    self.fbb_.push_slot::<bool>(PLGPortManifest::VT_REQUIRED, REQUIRED, true);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGPortManifest::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGPortManifestBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PLGPortManifestBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PLGPortManifest<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PLGPortManifest::VT_PORT_ID,"PORT_ID");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PLGPortManifest<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PLGPortManifest");
+      ds.field("PORT_ID", &self.PORT_ID());
+      ds.field("DISPLAY_NAME", &self.DISPLAY_NAME());
+      ds.field("ACCEPTED_TYPE_SETS", &self.ACCEPTED_TYPE_SETS());
+      ds.field("MIN_STREAMS", &self.MIN_STREAMS());
+      ds.field("MAX_STREAMS", &self.MAX_STREAMS());
+      ds.field("REQUIRED", &self.REQUIRED());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PLGPortManifestT {
+  pub PORT_ID: alloc::string::String,
+  pub DISPLAY_NAME: Option<alloc::string::String>,
+  pub ACCEPTED_TYPE_SETS: Option<alloc::vec::Vec<PLGAcceptedTypeSetT>>,
+  pub MIN_STREAMS: u16,
+  pub MAX_STREAMS: u16,
+  pub REQUIRED: bool,
+  pub DESCRIPTION: Option<alloc::string::String>,
+}
+impl Default for PLGPortManifestT {
+  fn default() -> Self {
+    Self {
+      PORT_ID: alloc::string::ToString::to_string(""),
+      DISPLAY_NAME: None,
+      ACCEPTED_TYPE_SETS: None,
+      MIN_STREAMS: 1,
+      MAX_STREAMS: 1,
+      REQUIRED: true,
+      DESCRIPTION: None,
+    }
+  }
+}
+impl PLGPortManifestT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PLGPortManifest<'b>> {
+    let PORT_ID = Some({
+      let x = &self.PORT_ID;
+      _fbb.create_string(x)
+    });
+    let DISPLAY_NAME = self.DISPLAY_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ACCEPTED_TYPE_SETS = self.ACCEPTED_TYPE_SETS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let MIN_STREAMS = self.MIN_STREAMS;
+    let MAX_STREAMS = self.MAX_STREAMS;
+    let REQUIRED = self.REQUIRED;
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    PLGPortManifest::create(_fbb, &PLGPortManifestArgs{
+      PORT_ID,
+      DISPLAY_NAME,
+      ACCEPTED_TYPE_SETS,
+      MIN_STREAMS,
+      MAX_STREAMS,
+      REQUIRED,
+      DESCRIPTION,
+    })
+  }
+}
+pub enum PLGHostCapabilityOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One host capability dependency (richer form of PluginCapability).
+pub struct PLGHostCapability<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PLGHostCapability<'a> {
+  type Inner = PLGHostCapability<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PLGHostCapability<'a> {
+  pub const VT_CAPABILITY: ::flatbuffers::VOffsetT = 4;
+  pub const VT_SCOPE: ::flatbuffers::VOffsetT = 6;
+  pub const VT_REQUIRED: ::flatbuffers::VOffsetT = 8;
+  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PLGHostCapability { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PLGHostCapabilityArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PLGHostCapability<'bldr>> {
+    let mut builder = PLGHostCapabilityBuilder::new(_fbb);
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.SCOPE { builder.add_SCOPE(x); }
+    builder.add_CAPABILITY(args.CAPABILITY);
+    builder.add_REQUIRED(args.REQUIRED);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PLGHostCapabilityT {
+    let CAPABILITY = self.CAPABILITY();
+    let SCOPE = self.SCOPE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let REQUIRED = self.REQUIRED();
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    PLGHostCapabilityT {
+      CAPABILITY,
+      SCOPE,
+      REQUIRED,
+      DESCRIPTION,
+    }
+  }
+
+  #[inline]
+  pub fn CAPABILITY(&self) -> hostCapabilityKind {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<hostCapabilityKind>(PLGHostCapability::VT_CAPABILITY, Some(hostCapabilityKind::CLOCK)).unwrap()}
+  }
+  #[inline]
+  pub fn SCOPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGHostCapability::VT_SCOPE, None)}
+  }
+  #[inline]
+  pub fn REQUIRED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(PLGHostCapability::VT_REQUIRED, Some(true)).unwrap()}
+  }
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGHostCapability::VT_DESCRIPTION, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PLGHostCapability<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<hostCapabilityKind>("CAPABILITY", Self::VT_CAPABILITY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCOPE", Self::VT_SCOPE, false)?
+     .visit_field::<bool>("REQUIRED", Self::VT_REQUIRED, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PLGHostCapabilityArgs<'a> {
+    pub CAPABILITY: hostCapabilityKind,
+    pub SCOPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REQUIRED: bool,
+    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for PLGHostCapabilityArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PLGHostCapabilityArgs {
+      CAPABILITY: hostCapabilityKind::CLOCK,
+      SCOPE: None,
+      REQUIRED: true,
+      DESCRIPTION: None,
+    }
+  }
+}
+
+pub struct PLGHostCapabilityBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGHostCapabilityBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_CAPABILITY(&mut self, CAPABILITY: hostCapabilityKind) {
+    self.fbb_.push_slot::<hostCapabilityKind>(PLGHostCapability::VT_CAPABILITY, CAPABILITY, hostCapabilityKind::CLOCK);
+  }
+  #[inline]
+  pub fn add_SCOPE(&mut self, SCOPE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGHostCapability::VT_SCOPE, SCOPE);
+  }
+  #[inline]
+  pub fn add_REQUIRED(&mut self, REQUIRED: bool) {
+    self.fbb_.push_slot::<bool>(PLGHostCapability::VT_REQUIRED, REQUIRED, true);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGHostCapability::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGHostCapabilityBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PLGHostCapabilityBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PLGHostCapability<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PLGHostCapability<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PLGHostCapability");
+      ds.field("CAPABILITY", &self.CAPABILITY());
+      ds.field("SCOPE", &self.SCOPE());
+      ds.field("REQUIRED", &self.REQUIRED());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PLGHostCapabilityT {
+  pub CAPABILITY: hostCapabilityKind,
+  pub SCOPE: Option<alloc::string::String>,
+  pub REQUIRED: bool,
+  pub DESCRIPTION: Option<alloc::string::String>,
+}
+impl Default for PLGHostCapabilityT {
+  fn default() -> Self {
+    Self {
+      CAPABILITY: hostCapabilityKind::CLOCK,
+      SCOPE: None,
+      REQUIRED: true,
+      DESCRIPTION: None,
+    }
+  }
+}
+impl PLGHostCapabilityT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PLGHostCapability<'b>> {
+    let CAPABILITY = self.CAPABILITY;
+    let SCOPE = self.SCOPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REQUIRED = self.REQUIRED;
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    PLGHostCapability::create(_fbb, &PLGHostCapabilityArgs{
+      CAPABILITY,
+      SCOPE,
+      REQUIRED,
+      DESCRIPTION,
+    })
+  }
+}
+pub enum PLGTimerSpecOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Timer entry declared by a plugin.
+pub struct PLGTimerSpec<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PLGTimerSpec<'a> {
+  type Inner = PLGTimerSpec<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PLGTimerSpec<'a> {
+  pub const VT_TIMER_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_METHOD_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_INPUT_PORT_ID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_DEFAULT_INTERVAL_MS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PLGTimerSpec { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PLGTimerSpecArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PLGTimerSpec<'bldr>> {
+    let mut builder = PLGTimerSpecBuilder::new(_fbb);
+    builder.add_DEFAULT_INTERVAL_MS(args.DEFAULT_INTERVAL_MS);
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.INPUT_PORT_ID { builder.add_INPUT_PORT_ID(x); }
+    if let Some(x) = args.METHOD_ID { builder.add_METHOD_ID(x); }
+    if let Some(x) = args.TIMER_ID { builder.add_TIMER_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PLGTimerSpecT {
+    let TIMER_ID = {
+      let x = self.TIMER_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let METHOD_ID = {
+      let x = self.METHOD_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let INPUT_PORT_ID = self.INPUT_PORT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DEFAULT_INTERVAL_MS = self.DEFAULT_INTERVAL_MS();
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    PLGTimerSpecT {
+      TIMER_ID,
+      METHOD_ID,
+      INPUT_PORT_ID,
+      DEFAULT_INTERVAL_MS,
+      DESCRIPTION,
+    }
+  }
+
+  #[inline]
+  pub fn TIMER_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGTimerSpec::VT_TIMER_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn METHOD_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGTimerSpec::VT_METHOD_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn INPUT_PORT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGTimerSpec::VT_INPUT_PORT_ID, None)}
+  }
+  #[inline]
+  pub fn DEFAULT_INTERVAL_MS(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PLGTimerSpec::VT_DEFAULT_INTERVAL_MS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGTimerSpec::VT_DESCRIPTION, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PLGTimerSpec<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TIMER_ID", Self::VT_TIMER_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("METHOD_ID", Self::VT_METHOD_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INPUT_PORT_ID", Self::VT_INPUT_PORT_ID, false)?
+     .visit_field::<u64>("DEFAULT_INTERVAL_MS", Self::VT_DEFAULT_INTERVAL_MS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PLGTimerSpecArgs<'a> {
+    pub TIMER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub METHOD_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INPUT_PORT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DEFAULT_INTERVAL_MS: u64,
+    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for PLGTimerSpecArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PLGTimerSpecArgs {
+      TIMER_ID: None, // required field
+      METHOD_ID: None, // required field
+      INPUT_PORT_ID: None,
+      DEFAULT_INTERVAL_MS: 0,
+      DESCRIPTION: None,
+    }
+  }
+}
+
+pub struct PLGTimerSpecBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGTimerSpecBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_TIMER_ID(&mut self, TIMER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGTimerSpec::VT_TIMER_ID, TIMER_ID);
+  }
+  #[inline]
+  pub fn add_METHOD_ID(&mut self, METHOD_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGTimerSpec::VT_METHOD_ID, METHOD_ID);
+  }
+  #[inline]
+  pub fn add_INPUT_PORT_ID(&mut self, INPUT_PORT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGTimerSpec::VT_INPUT_PORT_ID, INPUT_PORT_ID);
+  }
+  #[inline]
+  pub fn add_DEFAULT_INTERVAL_MS(&mut self, DEFAULT_INTERVAL_MS: u64) {
+    self.fbb_.push_slot::<u64>(PLGTimerSpec::VT_DEFAULT_INTERVAL_MS, DEFAULT_INTERVAL_MS, 0);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGTimerSpec::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGTimerSpecBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PLGTimerSpecBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PLGTimerSpec<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PLGTimerSpec::VT_TIMER_ID,"TIMER_ID");
+    self.fbb_.required(o, PLGTimerSpec::VT_METHOD_ID,"METHOD_ID");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PLGTimerSpec<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PLGTimerSpec");
+      ds.field("TIMER_ID", &self.TIMER_ID());
+      ds.field("METHOD_ID", &self.METHOD_ID());
+      ds.field("INPUT_PORT_ID", &self.INPUT_PORT_ID());
+      ds.field("DEFAULT_INTERVAL_MS", &self.DEFAULT_INTERVAL_MS());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PLGTimerSpecT {
+  pub TIMER_ID: alloc::string::String,
+  pub METHOD_ID: alloc::string::String,
+  pub INPUT_PORT_ID: Option<alloc::string::String>,
+  pub DEFAULT_INTERVAL_MS: u64,
+  pub DESCRIPTION: Option<alloc::string::String>,
+}
+impl Default for PLGTimerSpecT {
+  fn default() -> Self {
+    Self {
+      TIMER_ID: alloc::string::ToString::to_string(""),
+      METHOD_ID: alloc::string::ToString::to_string(""),
+      INPUT_PORT_ID: None,
+      DEFAULT_INTERVAL_MS: 0,
+      DESCRIPTION: None,
+    }
+  }
+}
+impl PLGTimerSpecT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PLGTimerSpec<'b>> {
+    let TIMER_ID = Some({
+      let x = &self.TIMER_ID;
+      _fbb.create_string(x)
+    });
+    let METHOD_ID = Some({
+      let x = &self.METHOD_ID;
+      _fbb.create_string(x)
+    });
+    let INPUT_PORT_ID = self.INPUT_PORT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DEFAULT_INTERVAL_MS = self.DEFAULT_INTERVAL_MS;
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    PLGTimerSpec::create(_fbb, &PLGTimerSpecArgs{
+      TIMER_ID,
+      METHOD_ID,
+      INPUT_PORT_ID,
+      DEFAULT_INTERVAL_MS,
+      DESCRIPTION,
+    })
+  }
+}
+pub enum PLGProtocolSpecOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Protocol handler declared by a plugin.
+pub struct PLGProtocolSpec<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PLGProtocolSpec<'a> {
+  type Inner = PLGProtocolSpec<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PLGProtocolSpec<'a> {
+  pub const VT_PROTOCOL_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_METHOD_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_INPUT_PORT_ID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_OUTPUT_PORT_ID: ::flatbuffers::VOffsetT = 10;
+  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 12;
+  pub const VT_WIRE_ID: ::flatbuffers::VOffsetT = 14;
+  pub const VT_TRANSPORT_KIND: ::flatbuffers::VOffsetT = 16;
+  pub const VT_ROLE: ::flatbuffers::VOffsetT = 18;
+  pub const VT_SPEC_URI: ::flatbuffers::VOffsetT = 20;
+  pub const VT_AUTO_INSTALL: ::flatbuffers::VOffsetT = 22;
+  pub const VT_ADVERTISE: ::flatbuffers::VOffsetT = 24;
+  pub const VT_DISCOVERY_KEY: ::flatbuffers::VOffsetT = 26;
+  pub const VT_DEFAULT_PORT: ::flatbuffers::VOffsetT = 28;
+  pub const VT_REQUIRE_SECURE_TRANSPORT: ::flatbuffers::VOffsetT = 30;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PLGProtocolSpec { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PLGProtocolSpecArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PLGProtocolSpec<'bldr>> {
+    let mut builder = PLGProtocolSpecBuilder::new(_fbb);
+    if let Some(x) = args.DISCOVERY_KEY { builder.add_DISCOVERY_KEY(x); }
+    if let Some(x) = args.SPEC_URI { builder.add_SPEC_URI(x); }
+    if let Some(x) = args.ROLE { builder.add_ROLE(x); }
+    if let Some(x) = args.TRANSPORT_KIND { builder.add_TRANSPORT_KIND(x); }
+    if let Some(x) = args.WIRE_ID { builder.add_WIRE_ID(x); }
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.OUTPUT_PORT_ID { builder.add_OUTPUT_PORT_ID(x); }
+    if let Some(x) = args.INPUT_PORT_ID { builder.add_INPUT_PORT_ID(x); }
+    if let Some(x) = args.METHOD_ID { builder.add_METHOD_ID(x); }
+    if let Some(x) = args.PROTOCOL_ID { builder.add_PROTOCOL_ID(x); }
+    builder.add_DEFAULT_PORT(args.DEFAULT_PORT);
+    builder.add_REQUIRE_SECURE_TRANSPORT(args.REQUIRE_SECURE_TRANSPORT);
+    builder.add_ADVERTISE(args.ADVERTISE);
+    builder.add_AUTO_INSTALL(args.AUTO_INSTALL);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PLGProtocolSpecT {
+    let PROTOCOL_ID = {
+      let x = self.PROTOCOL_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let METHOD_ID = {
+      let x = self.METHOD_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let INPUT_PORT_ID = self.INPUT_PORT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OUTPUT_PORT_ID = self.OUTPUT_PORT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let WIRE_ID = self.WIRE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TRANSPORT_KIND = self.TRANSPORT_KIND().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ROLE = self.ROLE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SPEC_URI = self.SPEC_URI().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let AUTO_INSTALL = self.AUTO_INSTALL();
+    let ADVERTISE = self.ADVERTISE();
+    let DISCOVERY_KEY = self.DISCOVERY_KEY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DEFAULT_PORT = self.DEFAULT_PORT();
+    let REQUIRE_SECURE_TRANSPORT = self.REQUIRE_SECURE_TRANSPORT();
+    PLGProtocolSpecT {
+      PROTOCOL_ID,
+      METHOD_ID,
+      INPUT_PORT_ID,
+      OUTPUT_PORT_ID,
+      DESCRIPTION,
+      WIRE_ID,
+      TRANSPORT_KIND,
+      ROLE,
+      SPEC_URI,
+      AUTO_INSTALL,
+      ADVERTISE,
+      DISCOVERY_KEY,
+      DEFAULT_PORT,
+      REQUIRE_SECURE_TRANSPORT,
+    }
+  }
+
+  #[inline]
+  pub fn PROTOCOL_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGProtocolSpec::VT_PROTOCOL_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn METHOD_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGProtocolSpec::VT_METHOD_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn INPUT_PORT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGProtocolSpec::VT_INPUT_PORT_ID, None)}
+  }
+  #[inline]
+  pub fn OUTPUT_PORT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGProtocolSpec::VT_OUTPUT_PORT_ID, None)}
+  }
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGProtocolSpec::VT_DESCRIPTION, None)}
+  }
+  #[inline]
+  pub fn WIRE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGProtocolSpec::VT_WIRE_ID, None)}
+  }
+  #[inline]
+  pub fn TRANSPORT_KIND(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGProtocolSpec::VT_TRANSPORT_KIND, None)}
+  }
+  #[inline]
+  pub fn ROLE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGProtocolSpec::VT_ROLE, None)}
+  }
+  #[inline]
+  pub fn SPEC_URI(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGProtocolSpec::VT_SPEC_URI, None)}
+  }
+  #[inline]
+  pub fn AUTO_INSTALL(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(PLGProtocolSpec::VT_AUTO_INSTALL, Some(true)).unwrap()}
+  }
+  #[inline]
+  pub fn ADVERTISE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(PLGProtocolSpec::VT_ADVERTISE, Some(false)).unwrap()}
+  }
+  #[inline]
+  pub fn DISCOVERY_KEY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGProtocolSpec::VT_DISCOVERY_KEY, None)}
+  }
+  #[inline]
+  pub fn DEFAULT_PORT(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(PLGProtocolSpec::VT_DEFAULT_PORT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn REQUIRE_SECURE_TRANSPORT(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(PLGProtocolSpec::VT_REQUIRE_SECURE_TRANSPORT, Some(false)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PLGProtocolSpec<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROTOCOL_ID", Self::VT_PROTOCOL_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("METHOD_ID", Self::VT_METHOD_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INPUT_PORT_ID", Self::VT_INPUT_PORT_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OUTPUT_PORT_ID", Self::VT_OUTPUT_PORT_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("WIRE_ID", Self::VT_WIRE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRANSPORT_KIND", Self::VT_TRANSPORT_KIND, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ROLE", Self::VT_ROLE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SPEC_URI", Self::VT_SPEC_URI, false)?
+     .visit_field::<bool>("AUTO_INSTALL", Self::VT_AUTO_INSTALL, false)?
+     .visit_field::<bool>("ADVERTISE", Self::VT_ADVERTISE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DISCOVERY_KEY", Self::VT_DISCOVERY_KEY, false)?
+     .visit_field::<u16>("DEFAULT_PORT", Self::VT_DEFAULT_PORT, false)?
+     .visit_field::<bool>("REQUIRE_SECURE_TRANSPORT", Self::VT_REQUIRE_SECURE_TRANSPORT, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PLGProtocolSpecArgs<'a> {
+    pub PROTOCOL_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub METHOD_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INPUT_PORT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OUTPUT_PORT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub WIRE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRANSPORT_KIND: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ROLE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SPEC_URI: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub AUTO_INSTALL: bool,
+    pub ADVERTISE: bool,
+    pub DISCOVERY_KEY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DEFAULT_PORT: u16,
+    pub REQUIRE_SECURE_TRANSPORT: bool,
+}
+impl<'a> Default for PLGProtocolSpecArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PLGProtocolSpecArgs {
+      PROTOCOL_ID: None, // required field
+      METHOD_ID: None, // required field
+      INPUT_PORT_ID: None,
+      OUTPUT_PORT_ID: None,
+      DESCRIPTION: None,
+      WIRE_ID: None,
+      TRANSPORT_KIND: None,
+      ROLE: None,
+      SPEC_URI: None,
+      AUTO_INSTALL: true,
+      ADVERTISE: false,
+      DISCOVERY_KEY: None,
+      DEFAULT_PORT: 0,
+      REQUIRE_SECURE_TRANSPORT: false,
+    }
+  }
+}
+
+pub struct PLGProtocolSpecBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGProtocolSpecBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_PROTOCOL_ID(&mut self, PROTOCOL_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGProtocolSpec::VT_PROTOCOL_ID, PROTOCOL_ID);
+  }
+  #[inline]
+  pub fn add_METHOD_ID(&mut self, METHOD_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGProtocolSpec::VT_METHOD_ID, METHOD_ID);
+  }
+  #[inline]
+  pub fn add_INPUT_PORT_ID(&mut self, INPUT_PORT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGProtocolSpec::VT_INPUT_PORT_ID, INPUT_PORT_ID);
+  }
+  #[inline]
+  pub fn add_OUTPUT_PORT_ID(&mut self, OUTPUT_PORT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGProtocolSpec::VT_OUTPUT_PORT_ID, OUTPUT_PORT_ID);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGProtocolSpec::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn add_WIRE_ID(&mut self, WIRE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGProtocolSpec::VT_WIRE_ID, WIRE_ID);
+  }
+  #[inline]
+  pub fn add_TRANSPORT_KIND(&mut self, TRANSPORT_KIND: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGProtocolSpec::VT_TRANSPORT_KIND, TRANSPORT_KIND);
+  }
+  #[inline]
+  pub fn add_ROLE(&mut self, ROLE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGProtocolSpec::VT_ROLE, ROLE);
+  }
+  #[inline]
+  pub fn add_SPEC_URI(&mut self, SPEC_URI: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGProtocolSpec::VT_SPEC_URI, SPEC_URI);
+  }
+  #[inline]
+  pub fn add_AUTO_INSTALL(&mut self, AUTO_INSTALL: bool) {
+    self.fbb_.push_slot::<bool>(PLGProtocolSpec::VT_AUTO_INSTALL, AUTO_INSTALL, true);
+  }
+  #[inline]
+  pub fn add_ADVERTISE(&mut self, ADVERTISE: bool) {
+    self.fbb_.push_slot::<bool>(PLGProtocolSpec::VT_ADVERTISE, ADVERTISE, false);
+  }
+  #[inline]
+  pub fn add_DISCOVERY_KEY(&mut self, DISCOVERY_KEY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGProtocolSpec::VT_DISCOVERY_KEY, DISCOVERY_KEY);
+  }
+  #[inline]
+  pub fn add_DEFAULT_PORT(&mut self, DEFAULT_PORT: u16) {
+    self.fbb_.push_slot::<u16>(PLGProtocolSpec::VT_DEFAULT_PORT, DEFAULT_PORT, 0);
+  }
+  #[inline]
+  pub fn add_REQUIRE_SECURE_TRANSPORT(&mut self, REQUIRE_SECURE_TRANSPORT: bool) {
+    self.fbb_.push_slot::<bool>(PLGProtocolSpec::VT_REQUIRE_SECURE_TRANSPORT, REQUIRE_SECURE_TRANSPORT, false);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGProtocolSpecBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PLGProtocolSpecBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PLGProtocolSpec<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PLGProtocolSpec::VT_PROTOCOL_ID,"PROTOCOL_ID");
+    self.fbb_.required(o, PLGProtocolSpec::VT_METHOD_ID,"METHOD_ID");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PLGProtocolSpec<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PLGProtocolSpec");
+      ds.field("PROTOCOL_ID", &self.PROTOCOL_ID());
+      ds.field("METHOD_ID", &self.METHOD_ID());
+      ds.field("INPUT_PORT_ID", &self.INPUT_PORT_ID());
+      ds.field("OUTPUT_PORT_ID", &self.OUTPUT_PORT_ID());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.field("WIRE_ID", &self.WIRE_ID());
+      ds.field("TRANSPORT_KIND", &self.TRANSPORT_KIND());
+      ds.field("ROLE", &self.ROLE());
+      ds.field("SPEC_URI", &self.SPEC_URI());
+      ds.field("AUTO_INSTALL", &self.AUTO_INSTALL());
+      ds.field("ADVERTISE", &self.ADVERTISE());
+      ds.field("DISCOVERY_KEY", &self.DISCOVERY_KEY());
+      ds.field("DEFAULT_PORT", &self.DEFAULT_PORT());
+      ds.field("REQUIRE_SECURE_TRANSPORT", &self.REQUIRE_SECURE_TRANSPORT());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PLGProtocolSpecT {
+  pub PROTOCOL_ID: alloc::string::String,
+  pub METHOD_ID: alloc::string::String,
+  pub INPUT_PORT_ID: Option<alloc::string::String>,
+  pub OUTPUT_PORT_ID: Option<alloc::string::String>,
+  pub DESCRIPTION: Option<alloc::string::String>,
+  pub WIRE_ID: Option<alloc::string::String>,
+  pub TRANSPORT_KIND: Option<alloc::string::String>,
+  pub ROLE: Option<alloc::string::String>,
+  pub SPEC_URI: Option<alloc::string::String>,
+  pub AUTO_INSTALL: bool,
+  pub ADVERTISE: bool,
+  pub DISCOVERY_KEY: Option<alloc::string::String>,
+  pub DEFAULT_PORT: u16,
+  pub REQUIRE_SECURE_TRANSPORT: bool,
+}
+impl Default for PLGProtocolSpecT {
+  fn default() -> Self {
+    Self {
+      PROTOCOL_ID: alloc::string::ToString::to_string(""),
+      METHOD_ID: alloc::string::ToString::to_string(""),
+      INPUT_PORT_ID: None,
+      OUTPUT_PORT_ID: None,
+      DESCRIPTION: None,
+      WIRE_ID: None,
+      TRANSPORT_KIND: None,
+      ROLE: None,
+      SPEC_URI: None,
+      AUTO_INSTALL: true,
+      ADVERTISE: false,
+      DISCOVERY_KEY: None,
+      DEFAULT_PORT: 0,
+      REQUIRE_SECURE_TRANSPORT: false,
+    }
+  }
+}
+impl PLGProtocolSpecT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PLGProtocolSpec<'b>> {
+    let PROTOCOL_ID = Some({
+      let x = &self.PROTOCOL_ID;
+      _fbb.create_string(x)
+    });
+    let METHOD_ID = Some({
+      let x = &self.METHOD_ID;
+      _fbb.create_string(x)
+    });
+    let INPUT_PORT_ID = self.INPUT_PORT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OUTPUT_PORT_ID = self.OUTPUT_PORT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let WIRE_ID = self.WIRE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRANSPORT_KIND = self.TRANSPORT_KIND.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ROLE = self.ROLE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SPEC_URI = self.SPEC_URI.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let AUTO_INSTALL = self.AUTO_INSTALL;
+    let ADVERTISE = self.ADVERTISE;
+    let DISCOVERY_KEY = self.DISCOVERY_KEY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DEFAULT_PORT = self.DEFAULT_PORT;
+    let REQUIRE_SECURE_TRANSPORT = self.REQUIRE_SECURE_TRANSPORT;
+    PLGProtocolSpec::create(_fbb, &PLGProtocolSpecArgs{
+      PROTOCOL_ID,
+      METHOD_ID,
+      INPUT_PORT_ID,
+      OUTPUT_PORT_ID,
+      DESCRIPTION,
+      WIRE_ID,
+      TRANSPORT_KIND,
+      ROLE,
+      SPEC_URI,
+      AUTO_INSTALL,
+      ADVERTISE,
+      DISCOVERY_KEY,
+      DEFAULT_PORT,
+      REQUIRE_SECURE_TRANSPORT,
+    })
+  }
+}
+pub enum PLGBuildArtifactOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Build artifact emitted by the plugin toolchain.
+pub struct PLGBuildArtifact<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PLGBuildArtifact<'a> {
+  type Inner = PLGBuildArtifact<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PLGBuildArtifact<'a> {
+  pub const VT_ARTIFACT_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_KIND: ::flatbuffers::VOffsetT = 6;
+  pub const VT_PATH: ::flatbuffers::VOffsetT = 8;
+  pub const VT_TARGET: ::flatbuffers::VOffsetT = 10;
+  pub const VT_ENTRY_SYMBOL: ::flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PLGBuildArtifact { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PLGBuildArtifactArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PLGBuildArtifact<'bldr>> {
+    let mut builder = PLGBuildArtifactBuilder::new(_fbb);
+    if let Some(x) = args.ENTRY_SYMBOL { builder.add_ENTRY_SYMBOL(x); }
+    if let Some(x) = args.TARGET { builder.add_TARGET(x); }
+    if let Some(x) = args.PATH { builder.add_PATH(x); }
+    if let Some(x) = args.KIND { builder.add_KIND(x); }
+    if let Some(x) = args.ARTIFACT_ID { builder.add_ARTIFACT_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PLGBuildArtifactT {
+    let ARTIFACT_ID = {
+      let x = self.ARTIFACT_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let KIND = self.KIND().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PATH = {
+      let x = self.PATH();
+      alloc::string::ToString::to_string(x)
+    };
+    let TARGET = self.TARGET().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ENTRY_SYMBOL = self.ENTRY_SYMBOL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    PLGBuildArtifactT {
+      ARTIFACT_ID,
+      KIND,
+      PATH,
+      TARGET,
+      ENTRY_SYMBOL,
+    }
+  }
+
+  #[inline]
+  pub fn ARTIFACT_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGBuildArtifact::VT_ARTIFACT_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn KIND(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGBuildArtifact::VT_KIND, None)}
+  }
+  #[inline]
+  pub fn PATH(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGBuildArtifact::VT_PATH, None).unwrap()}
+  }
+  #[inline]
+  pub fn TARGET(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGBuildArtifact::VT_TARGET, None)}
+  }
+  #[inline]
+  pub fn ENTRY_SYMBOL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGBuildArtifact::VT_ENTRY_SYMBOL, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PLGBuildArtifact<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ARTIFACT_ID", Self::VT_ARTIFACT_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KIND", Self::VT_KIND, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PATH", Self::VT_PATH, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TARGET", Self::VT_TARGET, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ENTRY_SYMBOL", Self::VT_ENTRY_SYMBOL, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PLGBuildArtifactArgs<'a> {
+    pub ARTIFACT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub KIND: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PATH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TARGET: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ENTRY_SYMBOL: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for PLGBuildArtifactArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PLGBuildArtifactArgs {
+      ARTIFACT_ID: None, // required field
+      KIND: None,
+      PATH: None, // required field
+      TARGET: None,
+      ENTRY_SYMBOL: None,
+    }
+  }
+}
+
+pub struct PLGBuildArtifactBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGBuildArtifactBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_ARTIFACT_ID(&mut self, ARTIFACT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGBuildArtifact::VT_ARTIFACT_ID, ARTIFACT_ID);
+  }
+  #[inline]
+  pub fn add_KIND(&mut self, KIND: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGBuildArtifact::VT_KIND, KIND);
+  }
+  #[inline]
+  pub fn add_PATH(&mut self, PATH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGBuildArtifact::VT_PATH, PATH);
+  }
+  #[inline]
+  pub fn add_TARGET(&mut self, TARGET: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGBuildArtifact::VT_TARGET, TARGET);
+  }
+  #[inline]
+  pub fn add_ENTRY_SYMBOL(&mut self, ENTRY_SYMBOL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGBuildArtifact::VT_ENTRY_SYMBOL, ENTRY_SYMBOL);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGBuildArtifactBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PLGBuildArtifactBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PLGBuildArtifact<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PLGBuildArtifact::VT_ARTIFACT_ID,"ARTIFACT_ID");
+    self.fbb_.required(o, PLGBuildArtifact::VT_PATH,"PATH");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PLGBuildArtifact<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PLGBuildArtifact");
+      ds.field("ARTIFACT_ID", &self.ARTIFACT_ID());
+      ds.field("KIND", &self.KIND());
+      ds.field("PATH", &self.PATH());
+      ds.field("TARGET", &self.TARGET());
+      ds.field("ENTRY_SYMBOL", &self.ENTRY_SYMBOL());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PLGBuildArtifactT {
+  pub ARTIFACT_ID: alloc::string::String,
+  pub KIND: Option<alloc::string::String>,
+  pub PATH: alloc::string::String,
+  pub TARGET: Option<alloc::string::String>,
+  pub ENTRY_SYMBOL: Option<alloc::string::String>,
+}
+impl Default for PLGBuildArtifactT {
+  fn default() -> Self {
+    Self {
+      ARTIFACT_ID: alloc::string::ToString::to_string(""),
+      KIND: None,
+      PATH: alloc::string::ToString::to_string(""),
+      TARGET: None,
+      ENTRY_SYMBOL: None,
+    }
+  }
+}
+impl PLGBuildArtifactT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PLGBuildArtifact<'b>> {
+    let ARTIFACT_ID = Some({
+      let x = &self.ARTIFACT_ID;
+      _fbb.create_string(x)
+    });
+    let KIND = self.KIND.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PATH = Some({
+      let x = &self.PATH;
+      _fbb.create_string(x)
+    });
+    let TARGET = self.TARGET.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ENTRY_SYMBOL = self.ENTRY_SYMBOL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    PLGBuildArtifact::create(_fbb, &PLGBuildArtifactArgs{
+      ARTIFACT_ID,
+      KIND,
+      PATH,
+      TARGET,
+      ENTRY_SYMBOL,
+    })
+  }
+}
+pub enum PLGMethodManifestOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Canonical method declaration.
+pub struct PLGMethodManifest<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PLGMethodManifest<'a> {
+  type Inner = PLGMethodManifest<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PLGMethodManifest<'a> {
+  pub const VT_METHOD_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_DISPLAY_NAME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_INPUT_PORTS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_OUTPUT_PORTS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_MAX_BATCH: ::flatbuffers::VOffsetT = 12;
+  pub const VT_DRAIN_POLICY: ::flatbuffers::VOffsetT = 14;
+  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 16;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PLGMethodManifest { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PLGMethodManifestArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PLGMethodManifest<'bldr>> {
+    let mut builder = PLGMethodManifestBuilder::new(_fbb);
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    builder.add_MAX_BATCH(args.MAX_BATCH);
+    if let Some(x) = args.OUTPUT_PORTS { builder.add_OUTPUT_PORTS(x); }
+    if let Some(x) = args.INPUT_PORTS { builder.add_INPUT_PORTS(x); }
+    if let Some(x) = args.DISPLAY_NAME { builder.add_DISPLAY_NAME(x); }
+    if let Some(x) = args.METHOD_ID { builder.add_METHOD_ID(x); }
+    builder.add_DRAIN_POLICY(args.DRAIN_POLICY);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PLGMethodManifestT {
+    let METHOD_ID = {
+      let x = self.METHOD_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let DISPLAY_NAME = self.DISPLAY_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INPUT_PORTS = self.INPUT_PORTS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let OUTPUT_PORTS = self.OUTPUT_PORTS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let MAX_BATCH = self.MAX_BATCH();
+    let DRAIN_POLICY = self.DRAIN_POLICY();
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    PLGMethodManifestT {
+      METHOD_ID,
+      DISPLAY_NAME,
+      INPUT_PORTS,
+      OUTPUT_PORTS,
+      MAX_BATCH,
+      DRAIN_POLICY,
+      DESCRIPTION,
+    }
+  }
+
+  #[inline]
+  pub fn METHOD_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGMethodManifest::VT_METHOD_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn DISPLAY_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGMethodManifest::VT_DISPLAY_NAME, None)}
+  }
+  #[inline]
+  pub fn INPUT_PORTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGPortManifest<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGPortManifest>>>>(PLGMethodManifest::VT_INPUT_PORTS, None)}
+  }
+  #[inline]
+  pub fn OUTPUT_PORTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGPortManifest<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGPortManifest>>>>(PLGMethodManifest::VT_OUTPUT_PORTS, None)}
+  }
+  #[inline]
+  pub fn MAX_BATCH(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(PLGMethodManifest::VT_MAX_BATCH, Some(1)).unwrap()}
+  }
+  #[inline]
+  pub fn DRAIN_POLICY(&self) -> drainBehavior {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<drainBehavior>(PLGMethodManifest::VT_DRAIN_POLICY, Some(drainBehavior::DRAIN_UNTIL_YIELD)).unwrap()}
+  }
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGMethodManifest::VT_DESCRIPTION, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PLGMethodManifest<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("METHOD_ID", Self::VT_METHOD_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DISPLAY_NAME", Self::VT_DISPLAY_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGPortManifest>>>>("INPUT_PORTS", Self::VT_INPUT_PORTS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGPortManifest>>>>("OUTPUT_PORTS", Self::VT_OUTPUT_PORTS, false)?
+     .visit_field::<u32>("MAX_BATCH", Self::VT_MAX_BATCH, false)?
+     .visit_field::<drainBehavior>("DRAIN_POLICY", Self::VT_DRAIN_POLICY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PLGMethodManifestArgs<'a> {
+    pub METHOD_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DISPLAY_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INPUT_PORTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGPortManifest<'a>>>>>,
+    pub OUTPUT_PORTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGPortManifest<'a>>>>>,
+    pub MAX_BATCH: u32,
+    pub DRAIN_POLICY: drainBehavior,
+    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for PLGMethodManifestArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PLGMethodManifestArgs {
+      METHOD_ID: None, // required field
+      DISPLAY_NAME: None,
+      INPUT_PORTS: None,
+      OUTPUT_PORTS: None,
+      MAX_BATCH: 1,
+      DRAIN_POLICY: drainBehavior::DRAIN_UNTIL_YIELD,
+      DESCRIPTION: None,
+    }
+  }
+}
+
+pub struct PLGMethodManifestBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGMethodManifestBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_METHOD_ID(&mut self, METHOD_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGMethodManifest::VT_METHOD_ID, METHOD_ID);
+  }
+  #[inline]
+  pub fn add_DISPLAY_NAME(&mut self, DISPLAY_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGMethodManifest::VT_DISPLAY_NAME, DISPLAY_NAME);
+  }
+  #[inline]
+  pub fn add_INPUT_PORTS(&mut self, INPUT_PORTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PLGPortManifest<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGMethodManifest::VT_INPUT_PORTS, INPUT_PORTS);
+  }
+  #[inline]
+  pub fn add_OUTPUT_PORTS(&mut self, OUTPUT_PORTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PLGPortManifest<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGMethodManifest::VT_OUTPUT_PORTS, OUTPUT_PORTS);
+  }
+  #[inline]
+  pub fn add_MAX_BATCH(&mut self, MAX_BATCH: u32) {
+    self.fbb_.push_slot::<u32>(PLGMethodManifest::VT_MAX_BATCH, MAX_BATCH, 1);
+  }
+  #[inline]
+  pub fn add_DRAIN_POLICY(&mut self, DRAIN_POLICY: drainBehavior) {
+    self.fbb_.push_slot::<drainBehavior>(PLGMethodManifest::VT_DRAIN_POLICY, DRAIN_POLICY, drainBehavior::DRAIN_UNTIL_YIELD);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGMethodManifest::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGMethodManifestBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PLGMethodManifestBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PLGMethodManifest<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PLGMethodManifest::VT_METHOD_ID,"METHOD_ID");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PLGMethodManifest<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PLGMethodManifest");
+      ds.field("METHOD_ID", &self.METHOD_ID());
+      ds.field("DISPLAY_NAME", &self.DISPLAY_NAME());
+      ds.field("INPUT_PORTS", &self.INPUT_PORTS());
+      ds.field("OUTPUT_PORTS", &self.OUTPUT_PORTS());
+      ds.field("MAX_BATCH", &self.MAX_BATCH());
+      ds.field("DRAIN_POLICY", &self.DRAIN_POLICY());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PLGMethodManifestT {
+  pub METHOD_ID: alloc::string::String,
+  pub DISPLAY_NAME: Option<alloc::string::String>,
+  pub INPUT_PORTS: Option<alloc::vec::Vec<PLGPortManifestT>>,
+  pub OUTPUT_PORTS: Option<alloc::vec::Vec<PLGPortManifestT>>,
+  pub MAX_BATCH: u32,
+  pub DRAIN_POLICY: drainBehavior,
+  pub DESCRIPTION: Option<alloc::string::String>,
+}
+impl Default for PLGMethodManifestT {
+  fn default() -> Self {
+    Self {
+      METHOD_ID: alloc::string::ToString::to_string(""),
+      DISPLAY_NAME: None,
+      INPUT_PORTS: None,
+      OUTPUT_PORTS: None,
+      MAX_BATCH: 1,
+      DRAIN_POLICY: drainBehavior::DRAIN_UNTIL_YIELD,
+      DESCRIPTION: None,
+    }
+  }
+}
+impl PLGMethodManifestT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PLGMethodManifest<'b>> {
+    let METHOD_ID = Some({
+      let x = &self.METHOD_ID;
+      _fbb.create_string(x)
+    });
+    let DISPLAY_NAME = self.DISPLAY_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INPUT_PORTS = self.INPUT_PORTS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let OUTPUT_PORTS = self.OUTPUT_PORTS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let MAX_BATCH = self.MAX_BATCH;
+    let DRAIN_POLICY = self.DRAIN_POLICY;
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    PLGMethodManifest::create(_fbb, &PLGMethodManifestArgs{
+      METHOD_ID,
+      DISPLAY_NAME,
+      INPUT_PORTS,
+      OUTPUT_PORTS,
+      MAX_BATCH,
+      DRAIN_POLICY,
+      DESCRIPTION,
+    })
+  }
+}
+pub enum PluginDependencyOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Plugin dependency on another plugin
+pub struct PluginDependency<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PluginDependency<'a> {
+  type Inner = PluginDependency<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PluginDependency<'a> {
+  pub const VT_PLUGIN_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_MIN_VERSION: ::flatbuffers::VOffsetT = 6;
+  pub const VT_MAX_VERSION: ::flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PluginDependency { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PluginDependencyArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PluginDependency<'bldr>> {
+    let mut builder = PluginDependencyBuilder::new(_fbb);
+    if let Some(x) = args.MAX_VERSION { builder.add_MAX_VERSION(x); }
+    if let Some(x) = args.MIN_VERSION { builder.add_MIN_VERSION(x); }
+    if let Some(x) = args.PLUGIN_ID { builder.add_PLUGIN_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PluginDependencyT {
+    let PLUGIN_ID = self.PLUGIN_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MIN_VERSION = self.MIN_VERSION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MAX_VERSION = self.MAX_VERSION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    PluginDependencyT {
+      PLUGIN_ID,
+      MIN_VERSION,
+      MAX_VERSION,
+    }
+  }
+
+  /// Plugin ID of the dependency
+  #[inline]
+  pub fn PLUGIN_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PluginDependency::VT_PLUGIN_ID, None)}
+  }
+  /// Minimum version required (semver)
+  #[inline]
+  pub fn MIN_VERSION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PluginDependency::VT_MIN_VERSION, None)}
+  }
+  /// Maximum version allowed (optional)
+  #[inline]
+  pub fn MAX_VERSION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PluginDependency::VT_MAX_VERSION, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PluginDependency<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PLUGIN_ID", Self::VT_PLUGIN_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MIN_VERSION", Self::VT_MIN_VERSION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAX_VERSION", Self::VT_MAX_VERSION, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PluginDependencyArgs<'a> {
+    pub PLUGIN_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MIN_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAX_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for PluginDependencyArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PluginDependencyArgs {
+      PLUGIN_ID: None,
+      MIN_VERSION: None,
+      MAX_VERSION: None,
+    }
+  }
+}
+
+pub struct PluginDependencyBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PluginDependencyBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_PLUGIN_ID(&mut self, PLUGIN_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PluginDependency::VT_PLUGIN_ID, PLUGIN_ID);
+  }
+  #[inline]
+  pub fn add_MIN_VERSION(&mut self, MIN_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PluginDependency::VT_MIN_VERSION, MIN_VERSION);
+  }
+  #[inline]
+  pub fn add_MAX_VERSION(&mut self, MAX_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PluginDependency::VT_MAX_VERSION, MAX_VERSION);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PluginDependencyBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PluginDependencyBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PluginDependency<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PluginDependency<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PluginDependency");
+      ds.field("PLUGIN_ID", &self.PLUGIN_ID());
+      ds.field("MIN_VERSION", &self.MIN_VERSION());
+      ds.field("MAX_VERSION", &self.MAX_VERSION());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PluginDependencyT {
+  pub PLUGIN_ID: Option<alloc::string::String>,
+  pub MIN_VERSION: Option<alloc::string::String>,
+  pub MAX_VERSION: Option<alloc::string::String>,
+}
+impl Default for PluginDependencyT {
+  fn default() -> Self {
+    Self {
+      PLUGIN_ID: None,
+      MIN_VERSION: None,
+      MAX_VERSION: None,
+    }
+  }
+}
+impl PluginDependencyT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PluginDependency<'b>> {
+    let PLUGIN_ID = self.PLUGIN_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MIN_VERSION = self.MIN_VERSION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MAX_VERSION = self.MAX_VERSION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    PluginDependency::create(_fbb, &PluginDependencyArgs{
+      PLUGIN_ID,
+      MIN_VERSION,
+      MAX_VERSION,
+    })
+  }
+}
+pub enum EntryFunctionOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Plugin entry point function definition
+pub struct EntryFunction<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for EntryFunction<'a> {
+  type Inner = EntryFunction<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> EntryFunction<'a> {
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 4;
+  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 6;
+  pub const VT_INPUT_SCHEMAS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_OUTPUT_SCHEMA: ::flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    EntryFunction { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args EntryFunctionArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<EntryFunction<'bldr>> {
+    let mut builder = EntryFunctionBuilder::new(_fbb);
+    if let Some(x) = args.OUTPUT_SCHEMA { builder.add_OUTPUT_SCHEMA(x); }
+    if let Some(x) = args.INPUT_SCHEMAS { builder.add_INPUT_SCHEMAS(x); }
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> EntryFunctionT {
+    let NAME = {
+      let x = self.NAME();
+      alloc::string::ToString::to_string(x)
+    };
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INPUT_SCHEMAS = self.INPUT_SCHEMAS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let OUTPUT_SCHEMA = self.OUTPUT_SCHEMA().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    EntryFunctionT {
+      NAME,
+      DESCRIPTION,
+      INPUT_SCHEMAS,
+      OUTPUT_SCHEMA,
+    }
+  }
+
+  /// Function name as exported from WASM
+  #[inline]
+  pub fn NAME(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EntryFunction::VT_NAME, None).unwrap()}
+  }
+  /// Human-readable description
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EntryFunction::VT_DESCRIPTION, None)}
+  }
+  /// Input parameter types (FlatBuffer schema names)
+  #[inline]
+  pub fn INPUT_SCHEMAS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(EntryFunction::VT_INPUT_SCHEMAS, None)}
+  }
+  /// Output type (FlatBuffer schema name)
+  #[inline]
+  pub fn OUTPUT_SCHEMA(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EntryFunction::VT_OUTPUT_SCHEMA, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for EntryFunction<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("INPUT_SCHEMAS", Self::VT_INPUT_SCHEMAS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OUTPUT_SCHEMA", Self::VT_OUTPUT_SCHEMA, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct EntryFunctionArgs<'a> {
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INPUT_SCHEMAS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub OUTPUT_SCHEMA: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for EntryFunctionArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    EntryFunctionArgs {
+      NAME: None, // required field
+      DESCRIPTION: None,
+      INPUT_SCHEMAS: None,
+      OUTPUT_SCHEMA: None,
+    }
+  }
+}
+
+pub struct EntryFunctionBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EntryFunctionBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EntryFunction::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EntryFunction::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn add_INPUT_SCHEMAS(&mut self, INPUT_SCHEMAS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EntryFunction::VT_INPUT_SCHEMAS, INPUT_SCHEMAS);
+  }
+  #[inline]
+  pub fn add_OUTPUT_SCHEMA(&mut self, OUTPUT_SCHEMA: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EntryFunction::VT_OUTPUT_SCHEMA, OUTPUT_SCHEMA);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EntryFunctionBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    EntryFunctionBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<EntryFunction<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, EntryFunction::VT_NAME,"NAME");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for EntryFunction<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("EntryFunction");
+      ds.field("NAME", &self.NAME());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.field("INPUT_SCHEMAS", &self.INPUT_SCHEMAS());
+      ds.field("OUTPUT_SCHEMA", &self.OUTPUT_SCHEMA());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct EntryFunctionT {
+  pub NAME: alloc::string::String,
+  pub DESCRIPTION: Option<alloc::string::String>,
+  pub INPUT_SCHEMAS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub OUTPUT_SCHEMA: Option<alloc::string::String>,
+}
+impl Default for EntryFunctionT {
+  fn default() -> Self {
+    Self {
+      NAME: alloc::string::ToString::to_string(""),
+      DESCRIPTION: None,
+      INPUT_SCHEMAS: None,
+      OUTPUT_SCHEMA: None,
+    }
+  }
+}
+impl EntryFunctionT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<EntryFunction<'b>> {
+    let NAME = Some({
+      let x = &self.NAME;
+      _fbb.create_string(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INPUT_SCHEMAS = self.INPUT_SCHEMAS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let OUTPUT_SCHEMA = self.OUTPUT_SCHEMA.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    EntryFunction::create(_fbb, &EntryFunctionArgs{
+      NAME,
+      DESCRIPTION,
+      INPUT_SCHEMAS,
+      OUTPUT_SCHEMA,
+    })
+  }
+}
+pub enum PLGOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Plugin Manifest - canonical signed storefront and WASM distribution record
+pub struct PLG<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PLG<'a> {
+  type Inner = PLG<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PLG<'a> {
+  pub const VT_PLUGIN_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_VERSION: ::flatbuffers::VOffsetT = 8;
+  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 10;
+  pub const VT_TAGLINE: ::flatbuffers::VOffsetT = 12;
+  pub const VT_PLUGIN_TYPE: ::flatbuffers::VOffsetT = 14;
+  pub const VT_PUBLISHER_NAME: ::flatbuffers::VOffsetT = 16;
+  pub const VT_PUBLISHER_HANDLE: ::flatbuffers::VOffsetT = 18;
+  pub const VT_PUBLISHER_URL: ::flatbuffers::VOffsetT = 20;
+  pub const VT_SUPPORT_URL: ::flatbuffers::VOffsetT = 22;
+  pub const VT_TAGS: ::flatbuffers::VOffsetT = 24;
+  pub const VT_FEATURES: ::flatbuffers::VOffsetT = 26;
+  pub const VT_SCREENSHOT_URLS: ::flatbuffers::VOffsetT = 28;
+  pub const VT_BANNER_URL: ::flatbuffers::VOffsetT = 30;
+  pub const VT_ABI_VERSION: ::flatbuffers::VOffsetT = 32;
+  pub const VT_WASM_HASH: ::flatbuffers::VOffsetT = 34;
+  pub const VT_WASM_SIZE: ::flatbuffers::VOffsetT = 36;
+  pub const VT_WASM_CID: ::flatbuffers::VOffsetT = 38;
+  pub const VT_ENCRYPTED_WASM_HASH: ::flatbuffers::VOffsetT = 40;
+  pub const VT_ENCRYPTED_WASM_SIZE: ::flatbuffers::VOffsetT = 42;
+  pub const VT_ENTRY_FUNCTIONS: ::flatbuffers::VOffsetT = 44;
+  pub const VT_REQUIRED_SCHEMAS: ::flatbuffers::VOffsetT = 46;
+  pub const VT_DEPENDENCIES: ::flatbuffers::VOffsetT = 48;
+  pub const VT_CAPABILITIES: ::flatbuffers::VOffsetT = 50;
+  pub const VT_PROVIDER_PEER_ID: ::flatbuffers::VOffsetT = 52;
+  pub const VT_PROVIDER_EPM_CID: ::flatbuffers::VOffsetT = 54;
+  pub const VT_ENCRYPTED: ::flatbuffers::VOffsetT = 56;
+  pub const VT_REQUIRED_SCOPE: ::flatbuffers::VOffsetT = 58;
+  pub const VT_KEY_ID: ::flatbuffers::VOffsetT = 60;
+  pub const VT_ALLOWED_DOMAINS: ::flatbuffers::VOffsetT = 62;
+  pub const VT_MAX_GRANT_TIMEOUT_MS: ::flatbuffers::VOffsetT = 64;
+  pub const VT_MIN_PERMISSIONS: ::flatbuffers::VOffsetT = 66;
+  pub const VT_CREATED_AT: ::flatbuffers::VOffsetT = 68;
+  pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 70;
+  pub const VT_DOCUMENTATION_URL: ::flatbuffers::VOffsetT = 72;
+  pub const VT_CHANGELOG_URL: ::flatbuffers::VOffsetT = 74;
+  pub const VT_ICON_URL: ::flatbuffers::VOffsetT = 76;
+  pub const VT_LICENSE: ::flatbuffers::VOffsetT = 78;
+  pub const VT_PAYMENT_MODEL: ::flatbuffers::VOffsetT = 80;
+  pub const VT_PRICE_USD_CENTS: ::flatbuffers::VOffsetT = 82;
+  pub const VT_SUBSCRIPTION_PERIOD_DAYS: ::flatbuffers::VOffsetT = 84;
+  pub const VT_ACCEPTED_PAYMENT_METHODS: ::flatbuffers::VOffsetT = 86;
+  pub const VT_LISTING_STATUS: ::flatbuffers::VOffsetT = 88;
+  pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 90;
+  pub const VT_INVOKE_SURFACES: ::flatbuffers::VOffsetT = 92;
+  pub const VT_METHODS: ::flatbuffers::VOffsetT = 94;
+  pub const VT_HOST_CAPABILITIES: ::flatbuffers::VOffsetT = 96;
+  pub const VT_TIMERS: ::flatbuffers::VOffsetT = 98;
+  pub const VT_PROTOCOLS: ::flatbuffers::VOffsetT = 100;
+  pub const VT_SCHEMAS_USED: ::flatbuffers::VOffsetT = 102;
+  pub const VT_BUILD_ARTIFACTS: ::flatbuffers::VOffsetT = 104;
+  pub const VT_RUNTIME_TARGETS: ::flatbuffers::VOffsetT = 106;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PLG { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PLGArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PLG<'bldr>> {
+    let mut builder = PLGBuilder::new(_fbb);
+    builder.add_UPDATED_AT(args.UPDATED_AT);
+    builder.add_CREATED_AT(args.CREATED_AT);
+    builder.add_MAX_GRANT_TIMEOUT_MS(args.MAX_GRANT_TIMEOUT_MS);
+    builder.add_ENCRYPTED_WASM_SIZE(args.ENCRYPTED_WASM_SIZE);
+    builder.add_WASM_SIZE(args.WASM_SIZE);
+    if let Some(x) = args.RUNTIME_TARGETS { builder.add_RUNTIME_TARGETS(x); }
+    if let Some(x) = args.BUILD_ARTIFACTS { builder.add_BUILD_ARTIFACTS(x); }
+    if let Some(x) = args.SCHEMAS_USED { builder.add_SCHEMAS_USED(x); }
+    if let Some(x) = args.PROTOCOLS { builder.add_PROTOCOLS(x); }
+    if let Some(x) = args.TIMERS { builder.add_TIMERS(x); }
+    if let Some(x) = args.HOST_CAPABILITIES { builder.add_HOST_CAPABILITIES(x); }
+    if let Some(x) = args.METHODS { builder.add_METHODS(x); }
+    if let Some(x) = args.INVOKE_SURFACES { builder.add_INVOKE_SURFACES(x); }
+    if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
+    if let Some(x) = args.ACCEPTED_PAYMENT_METHODS { builder.add_ACCEPTED_PAYMENT_METHODS(x); }
+    builder.add_SUBSCRIPTION_PERIOD_DAYS(args.SUBSCRIPTION_PERIOD_DAYS);
+    builder.add_PRICE_USD_CENTS(args.PRICE_USD_CENTS);
+    if let Some(x) = args.LICENSE { builder.add_LICENSE(x); }
+    if let Some(x) = args.ICON_URL { builder.add_ICON_URL(x); }
+    if let Some(x) = args.CHANGELOG_URL { builder.add_CHANGELOG_URL(x); }
+    if let Some(x) = args.DOCUMENTATION_URL { builder.add_DOCUMENTATION_URL(x); }
+    if let Some(x) = args.MIN_PERMISSIONS { builder.add_MIN_PERMISSIONS(x); }
+    if let Some(x) = args.ALLOWED_DOMAINS { builder.add_ALLOWED_DOMAINS(x); }
+    if let Some(x) = args.KEY_ID { builder.add_KEY_ID(x); }
+    if let Some(x) = args.REQUIRED_SCOPE { builder.add_REQUIRED_SCOPE(x); }
+    if let Some(x) = args.PROVIDER_EPM_CID { builder.add_PROVIDER_EPM_CID(x); }
+    if let Some(x) = args.PROVIDER_PEER_ID { builder.add_PROVIDER_PEER_ID(x); }
+    if let Some(x) = args.CAPABILITIES { builder.add_CAPABILITIES(x); }
+    if let Some(x) = args.DEPENDENCIES { builder.add_DEPENDENCIES(x); }
+    if let Some(x) = args.REQUIRED_SCHEMAS { builder.add_REQUIRED_SCHEMAS(x); }
+    if let Some(x) = args.ENTRY_FUNCTIONS { builder.add_ENTRY_FUNCTIONS(x); }
+    if let Some(x) = args.ENCRYPTED_WASM_HASH { builder.add_ENCRYPTED_WASM_HASH(x); }
+    if let Some(x) = args.WASM_CID { builder.add_WASM_CID(x); }
+    if let Some(x) = args.WASM_HASH { builder.add_WASM_HASH(x); }
+    builder.add_ABI_VERSION(args.ABI_VERSION);
+    if let Some(x) = args.BANNER_URL { builder.add_BANNER_URL(x); }
+    if let Some(x) = args.SCREENSHOT_URLS { builder.add_SCREENSHOT_URLS(x); }
+    if let Some(x) = args.FEATURES { builder.add_FEATURES(x); }
+    if let Some(x) = args.TAGS { builder.add_TAGS(x); }
+    if let Some(x) = args.SUPPORT_URL { builder.add_SUPPORT_URL(x); }
+    if let Some(x) = args.PUBLISHER_URL { builder.add_PUBLISHER_URL(x); }
+    if let Some(x) = args.PUBLISHER_HANDLE { builder.add_PUBLISHER_HANDLE(x); }
+    if let Some(x) = args.PUBLISHER_NAME { builder.add_PUBLISHER_NAME(x); }
+    if let Some(x) = args.TAGLINE { builder.add_TAGLINE(x); }
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.VERSION { builder.add_VERSION(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    if let Some(x) = args.PLUGIN_ID { builder.add_PLUGIN_ID(x); }
+    builder.add_LISTING_STATUS(args.LISTING_STATUS);
+    builder.add_PAYMENT_MODEL(args.PAYMENT_MODEL);
+    builder.add_ENCRYPTED(args.ENCRYPTED);
+    builder.add_PLUGIN_TYPE(args.PLUGIN_TYPE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PLGT {
+    let PLUGIN_ID = {
+      let x = self.PLUGIN_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let NAME = {
+      let x = self.NAME();
+      alloc::string::ToString::to_string(x)
+    };
+    let VERSION = {
+      let x = self.VERSION();
+      alloc::string::ToString::to_string(x)
+    };
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TAGLINE = self.TAGLINE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PLUGIN_TYPE = self.PLUGIN_TYPE();
+    let PUBLISHER_NAME = self.PUBLISHER_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PUBLISHER_HANDLE = self.PUBLISHER_HANDLE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PUBLISHER_URL = self.PUBLISHER_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SUPPORT_URL = self.SUPPORT_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TAGS = self.TAGS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let FEATURES = self.FEATURES().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let SCREENSHOT_URLS = self.SCREENSHOT_URLS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let BANNER_URL = self.BANNER_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ABI_VERSION = self.ABI_VERSION();
+    let WASM_HASH = self.WASM_HASH().map(|x| {
+      x.into_iter().collect()
+    });
+    let WASM_SIZE = self.WASM_SIZE();
+    let WASM_CID = self.WASM_CID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ENCRYPTED_WASM_HASH = self.ENCRYPTED_WASM_HASH().map(|x| {
+      x.into_iter().collect()
+    });
+    let ENCRYPTED_WASM_SIZE = self.ENCRYPTED_WASM_SIZE();
+    let ENTRY_FUNCTIONS = self.ENTRY_FUNCTIONS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let REQUIRED_SCHEMAS = self.REQUIRED_SCHEMAS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let DEPENDENCIES = self.DEPENDENCIES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let CAPABILITIES = self.CAPABILITIES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let PROVIDER_PEER_ID = self.PROVIDER_PEER_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PROVIDER_EPM_CID = self.PROVIDER_EPM_CID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ENCRYPTED = self.ENCRYPTED();
+    let REQUIRED_SCOPE = self.REQUIRED_SCOPE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let KEY_ID = self.KEY_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ALLOWED_DOMAINS = self.ALLOWED_DOMAINS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let MAX_GRANT_TIMEOUT_MS = self.MAX_GRANT_TIMEOUT_MS();
+    let MIN_PERMISSIONS = self.MIN_PERMISSIONS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let CREATED_AT = self.CREATED_AT();
+    let UPDATED_AT = self.UPDATED_AT();
+    let DOCUMENTATION_URL = self.DOCUMENTATION_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CHANGELOG_URL = self.CHANGELOG_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ICON_URL = self.ICON_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LICENSE = self.LICENSE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PAYMENT_MODEL = self.PAYMENT_MODEL();
+    let PRICE_USD_CENTS = self.PRICE_USD_CENTS();
+    let SUBSCRIPTION_PERIOD_DAYS = self.SUBSCRIPTION_PERIOD_DAYS();
+    let ACCEPTED_PAYMENT_METHODS = self.ACCEPTED_PAYMENT_METHODS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let LISTING_STATUS = self.LISTING_STATUS();
+    let SIGNATURE = self.SIGNATURE().map(|x| {
+      x.into_iter().collect()
+    });
+    let INVOKE_SURFACES = self.INVOKE_SURFACES().map(|x| {
+      x.into_iter().collect()
+    });
+    let METHODS = self.METHODS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let HOST_CAPABILITIES = self.HOST_CAPABILITIES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let TIMERS = self.TIMERS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let PROTOCOLS = self.PROTOCOLS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let SCHEMAS_USED = self.SCHEMAS_USED().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let BUILD_ARTIFACTS = self.BUILD_ARTIFACTS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let RUNTIME_TARGETS = self.RUNTIME_TARGETS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    PLGT {
+      PLUGIN_ID,
+      NAME,
+      VERSION,
+      DESCRIPTION,
+      TAGLINE,
+      PLUGIN_TYPE,
+      PUBLISHER_NAME,
+      PUBLISHER_HANDLE,
+      PUBLISHER_URL,
+      SUPPORT_URL,
+      TAGS,
+      FEATURES,
+      SCREENSHOT_URLS,
+      BANNER_URL,
+      ABI_VERSION,
+      WASM_HASH,
+      WASM_SIZE,
+      WASM_CID,
+      ENCRYPTED_WASM_HASH,
+      ENCRYPTED_WASM_SIZE,
+      ENTRY_FUNCTIONS,
+      REQUIRED_SCHEMAS,
+      DEPENDENCIES,
+      CAPABILITIES,
+      PROVIDER_PEER_ID,
+      PROVIDER_EPM_CID,
+      ENCRYPTED,
+      REQUIRED_SCOPE,
+      KEY_ID,
+      ALLOWED_DOMAINS,
+      MAX_GRANT_TIMEOUT_MS,
+      MIN_PERMISSIONS,
+      CREATED_AT,
+      UPDATED_AT,
+      DOCUMENTATION_URL,
+      CHANGELOG_URL,
+      ICON_URL,
+      LICENSE,
+      PAYMENT_MODEL,
+      PRICE_USD_CENTS,
+      SUBSCRIPTION_PERIOD_DAYS,
+      ACCEPTED_PAYMENT_METHODS,
+      LISTING_STATUS,
+      SIGNATURE,
+      INVOKE_SURFACES,
+      METHODS,
+      HOST_CAPABILITIES,
+      TIMERS,
+      PROTOCOLS,
+      SCHEMAS_USED,
+      BUILD_ARTIFACTS,
+      RUNTIME_TARGETS,
+    }
+  }
+
+  /// Unique identifier for the plugin
+  #[inline]
+  pub fn PLUGIN_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_PLUGIN_ID, None).unwrap()}
+  }
+  /// Human-readable plugin name
+  #[inline]
+  pub fn NAME(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_NAME, None).unwrap()}
+  }
+  /// Plugin version (semver format)
+  #[inline]
+  pub fn VERSION(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_VERSION, None).unwrap()}
+  }
+  /// Detailed description of plugin functionality
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_DESCRIPTION, None)}
+  }
+  /// Short marketing summary shown in storefront listings
+  #[inline]
+  pub fn TAGLINE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_TAGLINE, None)}
+  }
+  /// Type/category of the plugin
+  #[inline]
+  pub fn PLUGIN_TYPE(&self) -> pluginCategory {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<pluginCategory>(PLG::VT_PLUGIN_TYPE, Some(pluginCategory::Sensor)).unwrap()}
+  }
+  /// Human-readable publisher or organization name
+  #[inline]
+  pub fn PUBLISHER_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_PUBLISHER_NAME, None)}
+  }
+  /// Publisher handle or username
+  #[inline]
+  pub fn PUBLISHER_HANDLE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_PUBLISHER_HANDLE, None)}
+  }
+  /// Canonical publisher website
+  #[inline]
+  pub fn PUBLISHER_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_PUBLISHER_URL, None)}
+  }
+  /// Support or helpdesk URL for this plugin
+  #[inline]
+  pub fn SUPPORT_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_SUPPORT_URL, None)}
+  }
+  /// Search and categorization tags for discovery
+  #[inline]
+  pub fn TAGS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_TAGS, None)}
+  }
+  /// Short feature bullets highlighted in storefront listings
+  #[inline]
+  pub fn FEATURES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_FEATURES, None)}
+  }
+  /// Screenshot URLs showing the plugin in use
+  #[inline]
+  pub fn SCREENSHOT_URLS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_SCREENSHOT_URLS, None)}
+  }
+  /// Optional hero/banner image URL for the listing
+  #[inline]
+  pub fn BANNER_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_BANNER_URL, None)}
+  }
+  /// ABI version for compatibility checking
+  #[inline]
+  pub fn ABI_VERSION(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(PLG::VT_ABI_VERSION, Some(1)).unwrap()}
+  }
+  /// SHA256 hash of the decrypted WASM binary
+  #[inline]
+  pub fn WASM_HASH(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(PLG::VT_WASM_HASH, None)}
+  }
+  /// Size of decrypted WASM binary in bytes
+  #[inline]
+  pub fn WASM_SIZE(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PLG::VT_WASM_SIZE, Some(0)).unwrap()}
+  }
+  /// IPFS CID of the encrypted WASM binary
+  #[inline]
+  pub fn WASM_CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_WASM_CID, None)}
+  }
+  /// SHA256 hash of the encrypted delivery artifact bytes
+  #[inline]
+  pub fn ENCRYPTED_WASM_HASH(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(PLG::VT_ENCRYPTED_WASM_HASH, None)}
+  }
+  /// Size of the encrypted delivery artifact in bytes
+  #[inline]
+  pub fn ENCRYPTED_WASM_SIZE(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PLG::VT_ENCRYPTED_WASM_SIZE, Some(0)).unwrap()}
+  }
+  /// Entry point functions exported by the plugin
+  #[inline]
+  pub fn ENTRY_FUNCTIONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<EntryFunction<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<EntryFunction>>>>(PLG::VT_ENTRY_FUNCTIONS, None)}
+  }
+  /// FlatBuffer schemas required by this plugin
+  #[inline]
+  pub fn REQUIRED_SCHEMAS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_REQUIRED_SCHEMAS, None)}
+  }
+  /// Other plugins this depends on
+  #[inline]
+  pub fn DEPENDENCIES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PluginDependency<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PluginDependency>>>>(PLG::VT_DEPENDENCIES, None)}
+  }
+  /// Capabilities provided by this plugin
+  #[inline]
+  pub fn CAPABILITIES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PluginCapability<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PluginCapability>>>>(PLG::VT_CAPABILITIES, None)}
+  }
+  /// Peer ID of the plugin provider
+  #[inline]
+  pub fn PROVIDER_PEER_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_PROVIDER_PEER_ID, None)}
+  }
+  /// IPFS CID of provider's EPM (Entity Profile Message)
+  #[inline]
+  pub fn PROVIDER_EPM_CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_PROVIDER_EPM_CID, None)}
+  }
+  /// Whether the WASM binary is encrypted
+  #[inline]
+  pub fn ENCRYPTED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(PLG::VT_ENCRYPTED, Some(true)).unwrap()}
+  }
+  /// Canonical required scope for grant issuance
+  #[inline]
+  pub fn REQUIRED_SCOPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_REQUIRED_SCOPE, None)}
+  }
+  /// Provider-local identifier for the module content key
+  #[inline]
+  pub fn KEY_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_KEY_ID, None)}
+  }
+  /// Allowed requester domains for module grants
+  #[inline]
+  pub fn ALLOWED_DOMAINS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_ALLOWED_DOMAINS, None)}
+  }
+  /// Maximum grant timeout allowed for this module publication
+  #[inline]
+  pub fn MAX_GRANT_TIMEOUT_MS(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PLG::VT_MAX_GRANT_TIMEOUT_MS, Some(0)).unwrap()}
+  }
+  /// Minimum permissions required to run
+  #[inline]
+  pub fn MIN_PERMISSIONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_MIN_PERMISSIONS, None)}
+  }
+  /// Unix timestamp when plugin was created
+  #[inline]
+  pub fn CREATED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PLG::VT_CREATED_AT, Some(0)).unwrap()}
+  }
+  /// Unix timestamp when plugin was last updated
+  #[inline]
+  pub fn UPDATED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PLG::VT_UPDATED_AT, Some(0)).unwrap()}
+  }
+  /// URL to plugin documentation
+  #[inline]
+  pub fn DOCUMENTATION_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_DOCUMENTATION_URL, None)}
+  }
+  /// URL to plugin changelog or release notes
+  #[inline]
+  pub fn CHANGELOG_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_CHANGELOG_URL, None)}
+  }
+  /// URL to plugin icon/logo
+  #[inline]
+  pub fn ICON_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_ICON_URL, None)}
+  }
+  /// License identifier (SPDX format)
+  #[inline]
+  pub fn LICENSE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_LICENSE, None)}
+  }
+  /// Commercial model used for storefront purchase flows
+  #[inline]
+  pub fn PAYMENT_MODEL(&self) -> purchaseTier {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<purchaseTier>(PLG::VT_PAYMENT_MODEL, Some(purchaseTier::Free)).unwrap()}
+  }
+  /// Price in USD cents for one-time purchase or subscription period
+  #[inline]
+  pub fn PRICE_USD_CENTS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(PLG::VT_PRICE_USD_CENTS, Some(0)).unwrap()}
+  }
+  /// Subscription billing period length in days
+  #[inline]
+  pub fn SUBSCRIPTION_PERIOD_DAYS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(PLG::VT_SUBSCRIPTION_PERIOD_DAYS, Some(0)).unwrap()}
+  }
+  /// Accepted payment methods, e.g. "stripe", "sol", "usdc"
+  #[inline]
+  pub fn ACCEPTED_PAYMENT_METHODS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_ACCEPTED_PAYMENT_METHODS, None)}
+  }
+  /// Storefront publication state for this manifest version
+  #[inline]
+  pub fn LISTING_STATUS(&self) -> publicationState {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<publicationState>(PLG::VT_LISTING_STATUS, Some(publicationState::Public)).unwrap()}
+  }
+  /// Ed25519 signature from provider over manifest
+  #[inline]
+  pub fn SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(PLG::VT_SIGNATURE, None)}
+  }
+  /// Canonical invoke surfaces this artifact exposes. A single plugin
+  /// MAY list both DIRECT and COMMAND when it supports both.
+  #[inline]
+  pub fn INVOKE_SURFACES(&self) -> Option<::flatbuffers::Vector<'a, invokeSurfaceKind>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, invokeSurfaceKind>>>(PLG::VT_INVOKE_SURFACES, None)}
+  }
+  /// Rich per-method invoke manifests (port shape, drain semantics,
+  /// accepted wire formats). ENTRY_FUNCTIONS retains the slim
+  /// name+input_schemas+output_schema summary; METHODS carries the full
+  /// invoke-surface detail including aligned-binary advertisement.
+  #[inline]
+  pub fn METHODS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGMethodManifest<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGMethodManifest>>>>(PLG::VT_METHODS, None)}
+  }
+  /// Enum-typed host capability dependencies (richer than CAPABILITIES,
+  /// which is string-tagged metadata).
+  #[inline]
+  pub fn HOST_CAPABILITIES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGHostCapability<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGHostCapability>>>>(PLG::VT_HOST_CAPABILITIES, None)}
+  }
+  /// Timer declarations for scheduled invocations.
+  #[inline]
+  pub fn TIMERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGTimerSpec<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGTimerSpec>>>>(PLG::VT_TIMERS, None)}
+  }
+  /// Protocol handler declarations.
+  #[inline]
+  pub fn PROTOCOLS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGProtocolSpec<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGProtocolSpec>>>>(PLG::VT_PROTOCOLS, None)}
+  }
+  /// FlatBuffer schemas this plugin depends on at the invoke surface.
+  #[inline]
+  pub fn SCHEMAS_USED(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<FlatBufferTypeRef<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<FlatBufferTypeRef>>>>(PLG::VT_SCHEMAS_USED, None)}
+  }
+  /// Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+  #[inline]
+  pub fn BUILD_ARTIFACTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGBuildArtifact<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGBuildArtifact>>>>(PLG::VT_BUILD_ARTIFACTS, None)}
+  }
+  /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+  #[inline]
+  pub fn RUNTIME_TARGETS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_RUNTIME_TARGETS, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PLG<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PLUGIN_ID", Self::VT_PLUGIN_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VERSION", Self::VT_VERSION, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TAGLINE", Self::VT_TAGLINE, false)?
+     .visit_field::<pluginCategory>("PLUGIN_TYPE", Self::VT_PLUGIN_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PUBLISHER_NAME", Self::VT_PUBLISHER_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PUBLISHER_HANDLE", Self::VT_PUBLISHER_HANDLE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PUBLISHER_URL", Self::VT_PUBLISHER_URL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SUPPORT_URL", Self::VT_SUPPORT_URL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("FEATURES", Self::VT_FEATURES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("SCREENSHOT_URLS", Self::VT_SCREENSHOT_URLS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BANNER_URL", Self::VT_BANNER_URL, false)?
+     .visit_field::<u32>("ABI_VERSION", Self::VT_ABI_VERSION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("WASM_HASH", Self::VT_WASM_HASH, false)?
+     .visit_field::<u64>("WASM_SIZE", Self::VT_WASM_SIZE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("WASM_CID", Self::VT_WASM_CID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("ENCRYPTED_WASM_HASH", Self::VT_ENCRYPTED_WASM_HASH, false)?
+     .visit_field::<u64>("ENCRYPTED_WASM_SIZE", Self::VT_ENCRYPTED_WASM_SIZE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<EntryFunction>>>>("ENTRY_FUNCTIONS", Self::VT_ENTRY_FUNCTIONS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("REQUIRED_SCHEMAS", Self::VT_REQUIRED_SCHEMAS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PluginDependency>>>>("DEPENDENCIES", Self::VT_DEPENDENCIES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PluginCapability>>>>("CAPABILITIES", Self::VT_CAPABILITIES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_PEER_ID", Self::VT_PROVIDER_PEER_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_EPM_CID", Self::VT_PROVIDER_EPM_CID, false)?
+     .visit_field::<bool>("ENCRYPTED", Self::VT_ENCRYPTED, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REQUIRED_SCOPE", Self::VT_REQUIRED_SCOPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KEY_ID", Self::VT_KEY_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ALLOWED_DOMAINS", Self::VT_ALLOWED_DOMAINS, false)?
+     .visit_field::<u64>("MAX_GRANT_TIMEOUT_MS", Self::VT_MAX_GRANT_TIMEOUT_MS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("MIN_PERMISSIONS", Self::VT_MIN_PERMISSIONS, false)?
+     .visit_field::<u64>("CREATED_AT", Self::VT_CREATED_AT, false)?
+     .visit_field::<u64>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DOCUMENTATION_URL", Self::VT_DOCUMENTATION_URL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CHANGELOG_URL", Self::VT_CHANGELOG_URL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ICON_URL", Self::VT_ICON_URL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LICENSE", Self::VT_LICENSE, false)?
+     .visit_field::<purchaseTier>("PAYMENT_MODEL", Self::VT_PAYMENT_MODEL, false)?
+     .visit_field::<u32>("PRICE_USD_CENTS", Self::VT_PRICE_USD_CENTS, false)?
+     .visit_field::<u32>("SUBSCRIPTION_PERIOD_DAYS", Self::VT_SUBSCRIPTION_PERIOD_DAYS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ACCEPTED_PAYMENT_METHODS", Self::VT_ACCEPTED_PAYMENT_METHODS, false)?
+     .visit_field::<publicationState>("LISTING_STATUS", Self::VT_LISTING_STATUS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, invokeSurfaceKind>>>("INVOKE_SURFACES", Self::VT_INVOKE_SURFACES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGMethodManifest>>>>("METHODS", Self::VT_METHODS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGHostCapability>>>>("HOST_CAPABILITIES", Self::VT_HOST_CAPABILITIES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGTimerSpec>>>>("TIMERS", Self::VT_TIMERS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGProtocolSpec>>>>("PROTOCOLS", Self::VT_PROTOCOLS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<FlatBufferTypeRef>>>>("SCHEMAS_USED", Self::VT_SCHEMAS_USED, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGBuildArtifact>>>>("BUILD_ARTIFACTS", Self::VT_BUILD_ARTIFACTS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("RUNTIME_TARGETS", Self::VT_RUNTIME_TARGETS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PLGArgs<'a> {
+    pub PLUGIN_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TAGLINE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PLUGIN_TYPE: pluginCategory,
+    pub PUBLISHER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PUBLISHER_HANDLE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PUBLISHER_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SUPPORT_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TAGS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub FEATURES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub SCREENSHOT_URLS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub BANNER_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ABI_VERSION: u32,
+    pub WASM_HASH: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub WASM_SIZE: u64,
+    pub WASM_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ENCRYPTED_WASM_HASH: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub ENCRYPTED_WASM_SIZE: u64,
+    pub ENTRY_FUNCTIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<EntryFunction<'a>>>>>,
+    pub REQUIRED_SCHEMAS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub DEPENDENCIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PluginDependency<'a>>>>>,
+    pub CAPABILITIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PluginCapability<'a>>>>>,
+    pub PROVIDER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PROVIDER_EPM_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ENCRYPTED: bool,
+    pub REQUIRED_SCOPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub KEY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ALLOWED_DOMAINS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub MAX_GRANT_TIMEOUT_MS: u64,
+    pub MIN_PERMISSIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub CREATED_AT: u64,
+    pub UPDATED_AT: u64,
+    pub DOCUMENTATION_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CHANGELOG_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ICON_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LICENSE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PAYMENT_MODEL: purchaseTier,
+    pub PRICE_USD_CENTS: u32,
+    pub SUBSCRIPTION_PERIOD_DAYS: u32,
+    pub ACCEPTED_PAYMENT_METHODS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub LISTING_STATUS: publicationState,
+    pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub INVOKE_SURFACES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, invokeSurfaceKind>>>,
+    pub METHODS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGMethodManifest<'a>>>>>,
+    pub HOST_CAPABILITIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGHostCapability<'a>>>>>,
+    pub TIMERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGTimerSpec<'a>>>>>,
+    pub PROTOCOLS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGProtocolSpec<'a>>>>>,
+    pub SCHEMAS_USED: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<FlatBufferTypeRef<'a>>>>>,
+    pub BUILD_ARTIFACTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGBuildArtifact<'a>>>>>,
+    pub RUNTIME_TARGETS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+}
+impl<'a> Default for PLGArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PLGArgs {
+      PLUGIN_ID: None, // required field
+      NAME: None, // required field
+      VERSION: None, // required field
+      DESCRIPTION: None,
+      TAGLINE: None,
+      PLUGIN_TYPE: pluginCategory::Sensor,
+      PUBLISHER_NAME: None,
+      PUBLISHER_HANDLE: None,
+      PUBLISHER_URL: None,
+      SUPPORT_URL: None,
+      TAGS: None,
+      FEATURES: None,
+      SCREENSHOT_URLS: None,
+      BANNER_URL: None,
+      ABI_VERSION: 1,
+      WASM_HASH: None,
+      WASM_SIZE: 0,
+      WASM_CID: None,
+      ENCRYPTED_WASM_HASH: None,
+      ENCRYPTED_WASM_SIZE: 0,
+      ENTRY_FUNCTIONS: None,
+      REQUIRED_SCHEMAS: None,
+      DEPENDENCIES: None,
+      CAPABILITIES: None,
+      PROVIDER_PEER_ID: None,
+      PROVIDER_EPM_CID: None,
+      ENCRYPTED: true,
+      REQUIRED_SCOPE: None,
+      KEY_ID: None,
+      ALLOWED_DOMAINS: None,
+      MAX_GRANT_TIMEOUT_MS: 0,
+      MIN_PERMISSIONS: None,
+      CREATED_AT: 0,
+      UPDATED_AT: 0,
+      DOCUMENTATION_URL: None,
+      CHANGELOG_URL: None,
+      ICON_URL: None,
+      LICENSE: None,
+      PAYMENT_MODEL: purchaseTier::Free,
+      PRICE_USD_CENTS: 0,
+      SUBSCRIPTION_PERIOD_DAYS: 0,
+      ACCEPTED_PAYMENT_METHODS: None,
+      LISTING_STATUS: publicationState::Public,
+      SIGNATURE: None,
+      INVOKE_SURFACES: None,
+      METHODS: None,
+      HOST_CAPABILITIES: None,
+      TIMERS: None,
+      PROTOCOLS: None,
+      SCHEMAS_USED: None,
+      BUILD_ARTIFACTS: None,
+      RUNTIME_TARGETS: None,
+    }
+  }
+}
+
+pub struct PLGBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_PLUGIN_ID(&mut self, PLUGIN_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_PLUGIN_ID, PLUGIN_ID);
+  }
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_VERSION(&mut self, VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_VERSION, VERSION);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn add_TAGLINE(&mut self, TAGLINE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_TAGLINE, TAGLINE);
+  }
+  #[inline]
+  pub fn add_PLUGIN_TYPE(&mut self, PLUGIN_TYPE: pluginCategory) {
+    self.fbb_.push_slot::<pluginCategory>(PLG::VT_PLUGIN_TYPE, PLUGIN_TYPE, pluginCategory::Sensor);
+  }
+  #[inline]
+  pub fn add_PUBLISHER_NAME(&mut self, PUBLISHER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_PUBLISHER_NAME, PUBLISHER_NAME);
+  }
+  #[inline]
+  pub fn add_PUBLISHER_HANDLE(&mut self, PUBLISHER_HANDLE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_PUBLISHER_HANDLE, PUBLISHER_HANDLE);
+  }
+  #[inline]
+  pub fn add_PUBLISHER_URL(&mut self, PUBLISHER_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_PUBLISHER_URL, PUBLISHER_URL);
+  }
+  #[inline]
+  pub fn add_SUPPORT_URL(&mut self, SUPPORT_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_SUPPORT_URL, SUPPORT_URL);
+  }
+  #[inline]
+  pub fn add_TAGS(&mut self, TAGS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_TAGS, TAGS);
+  }
+  #[inline]
+  pub fn add_FEATURES(&mut self, FEATURES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_FEATURES, FEATURES);
+  }
+  #[inline]
+  pub fn add_SCREENSHOT_URLS(&mut self, SCREENSHOT_URLS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_SCREENSHOT_URLS, SCREENSHOT_URLS);
+  }
+  #[inline]
+  pub fn add_BANNER_URL(&mut self, BANNER_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_BANNER_URL, BANNER_URL);
+  }
+  #[inline]
+  pub fn add_ABI_VERSION(&mut self, ABI_VERSION: u32) {
+    self.fbb_.push_slot::<u32>(PLG::VT_ABI_VERSION, ABI_VERSION, 1);
+  }
+  #[inline]
+  pub fn add_WASM_HASH(&mut self, WASM_HASH: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_WASM_HASH, WASM_HASH);
+  }
+  #[inline]
+  pub fn add_WASM_SIZE(&mut self, WASM_SIZE: u64) {
+    self.fbb_.push_slot::<u64>(PLG::VT_WASM_SIZE, WASM_SIZE, 0);
+  }
+  #[inline]
+  pub fn add_WASM_CID(&mut self, WASM_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_WASM_CID, WASM_CID);
+  }
+  #[inline]
+  pub fn add_ENCRYPTED_WASM_HASH(&mut self, ENCRYPTED_WASM_HASH: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ENCRYPTED_WASM_HASH, ENCRYPTED_WASM_HASH);
+  }
+  #[inline]
+  pub fn add_ENCRYPTED_WASM_SIZE(&mut self, ENCRYPTED_WASM_SIZE: u64) {
+    self.fbb_.push_slot::<u64>(PLG::VT_ENCRYPTED_WASM_SIZE, ENCRYPTED_WASM_SIZE, 0);
+  }
+  #[inline]
+  pub fn add_ENTRY_FUNCTIONS(&mut self, ENTRY_FUNCTIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<EntryFunction<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ENTRY_FUNCTIONS, ENTRY_FUNCTIONS);
+  }
+  #[inline]
+  pub fn add_REQUIRED_SCHEMAS(&mut self, REQUIRED_SCHEMAS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_REQUIRED_SCHEMAS, REQUIRED_SCHEMAS);
+  }
+  #[inline]
+  pub fn add_DEPENDENCIES(&mut self, DEPENDENCIES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PluginDependency<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_DEPENDENCIES, DEPENDENCIES);
+  }
+  #[inline]
+  pub fn add_CAPABILITIES(&mut self, CAPABILITIES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PluginCapability<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_CAPABILITIES, CAPABILITIES);
+  }
+  #[inline]
+  pub fn add_PROVIDER_PEER_ID(&mut self, PROVIDER_PEER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_PROVIDER_PEER_ID, PROVIDER_PEER_ID);
+  }
+  #[inline]
+  pub fn add_PROVIDER_EPM_CID(&mut self, PROVIDER_EPM_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_PROVIDER_EPM_CID, PROVIDER_EPM_CID);
+  }
+  #[inline]
+  pub fn add_ENCRYPTED(&mut self, ENCRYPTED: bool) {
+    self.fbb_.push_slot::<bool>(PLG::VT_ENCRYPTED, ENCRYPTED, true);
+  }
+  #[inline]
+  pub fn add_REQUIRED_SCOPE(&mut self, REQUIRED_SCOPE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_REQUIRED_SCOPE, REQUIRED_SCOPE);
+  }
+  #[inline]
+  pub fn add_KEY_ID(&mut self, KEY_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_KEY_ID, KEY_ID);
+  }
+  #[inline]
+  pub fn add_ALLOWED_DOMAINS(&mut self, ALLOWED_DOMAINS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ALLOWED_DOMAINS, ALLOWED_DOMAINS);
+  }
+  #[inline]
+  pub fn add_MAX_GRANT_TIMEOUT_MS(&mut self, MAX_GRANT_TIMEOUT_MS: u64) {
+    self.fbb_.push_slot::<u64>(PLG::VT_MAX_GRANT_TIMEOUT_MS, MAX_GRANT_TIMEOUT_MS, 0);
+  }
+  #[inline]
+  pub fn add_MIN_PERMISSIONS(&mut self, MIN_PERMISSIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_MIN_PERMISSIONS, MIN_PERMISSIONS);
+  }
+  #[inline]
+  pub fn add_CREATED_AT(&mut self, CREATED_AT: u64) {
+    self.fbb_.push_slot::<u64>(PLG::VT_CREATED_AT, CREATED_AT, 0);
+  }
+  #[inline]
+  pub fn add_UPDATED_AT(&mut self, UPDATED_AT: u64) {
+    self.fbb_.push_slot::<u64>(PLG::VT_UPDATED_AT, UPDATED_AT, 0);
+  }
+  #[inline]
+  pub fn add_DOCUMENTATION_URL(&mut self, DOCUMENTATION_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_DOCUMENTATION_URL, DOCUMENTATION_URL);
+  }
+  #[inline]
+  pub fn add_CHANGELOG_URL(&mut self, CHANGELOG_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_CHANGELOG_URL, CHANGELOG_URL);
+  }
+  #[inline]
+  pub fn add_ICON_URL(&mut self, ICON_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ICON_URL, ICON_URL);
+  }
+  #[inline]
+  pub fn add_LICENSE(&mut self, LICENSE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_LICENSE, LICENSE);
+  }
+  #[inline]
+  pub fn add_PAYMENT_MODEL(&mut self, PAYMENT_MODEL: purchaseTier) {
+    self.fbb_.push_slot::<purchaseTier>(PLG::VT_PAYMENT_MODEL, PAYMENT_MODEL, purchaseTier::Free);
+  }
+  #[inline]
+  pub fn add_PRICE_USD_CENTS(&mut self, PRICE_USD_CENTS: u32) {
+    self.fbb_.push_slot::<u32>(PLG::VT_PRICE_USD_CENTS, PRICE_USD_CENTS, 0);
+  }
+  #[inline]
+  pub fn add_SUBSCRIPTION_PERIOD_DAYS(&mut self, SUBSCRIPTION_PERIOD_DAYS: u32) {
+    self.fbb_.push_slot::<u32>(PLG::VT_SUBSCRIPTION_PERIOD_DAYS, SUBSCRIPTION_PERIOD_DAYS, 0);
+  }
+  #[inline]
+  pub fn add_ACCEPTED_PAYMENT_METHODS(&mut self, ACCEPTED_PAYMENT_METHODS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ACCEPTED_PAYMENT_METHODS, ACCEPTED_PAYMENT_METHODS);
+  }
+  #[inline]
+  pub fn add_LISTING_STATUS(&mut self, LISTING_STATUS: publicationState) {
+    self.fbb_.push_slot::<publicationState>(PLG::VT_LISTING_STATUS, LISTING_STATUS, publicationState::Public);
+  }
+  #[inline]
+  pub fn add_SIGNATURE(&mut self, SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_SIGNATURE, SIGNATURE);
+  }
+  #[inline]
+  pub fn add_INVOKE_SURFACES(&mut self, INVOKE_SURFACES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , invokeSurfaceKind>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_INVOKE_SURFACES, INVOKE_SURFACES);
+  }
+  #[inline]
+  pub fn add_METHODS(&mut self, METHODS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PLGMethodManifest<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_METHODS, METHODS);
+  }
+  #[inline]
+  pub fn add_HOST_CAPABILITIES(&mut self, HOST_CAPABILITIES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PLGHostCapability<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_HOST_CAPABILITIES, HOST_CAPABILITIES);
+  }
+  #[inline]
+  pub fn add_TIMERS(&mut self, TIMERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PLGTimerSpec<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_TIMERS, TIMERS);
+  }
+  #[inline]
+  pub fn add_PROTOCOLS(&mut self, PROTOCOLS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PLGProtocolSpec<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_PROTOCOLS, PROTOCOLS);
+  }
+  #[inline]
+  pub fn add_SCHEMAS_USED(&mut self, SCHEMAS_USED: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<FlatBufferTypeRef<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_SCHEMAS_USED, SCHEMAS_USED);
+  }
+  #[inline]
+  pub fn add_BUILD_ARTIFACTS(&mut self, BUILD_ARTIFACTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PLGBuildArtifact<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_BUILD_ARTIFACTS, BUILD_ARTIFACTS);
+  }
+  #[inline]
+  pub fn add_RUNTIME_TARGETS(&mut self, RUNTIME_TARGETS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_RUNTIME_TARGETS, RUNTIME_TARGETS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PLGBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PLG<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PLG::VT_PLUGIN_ID,"PLUGIN_ID");
+    self.fbb_.required(o, PLG::VT_NAME,"NAME");
+    self.fbb_.required(o, PLG::VT_VERSION,"VERSION");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PLG<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PLG");
+      ds.field("PLUGIN_ID", &self.PLUGIN_ID());
+      ds.field("NAME", &self.NAME());
+      ds.field("VERSION", &self.VERSION());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.field("TAGLINE", &self.TAGLINE());
+      ds.field("PLUGIN_TYPE", &self.PLUGIN_TYPE());
+      ds.field("PUBLISHER_NAME", &self.PUBLISHER_NAME());
+      ds.field("PUBLISHER_HANDLE", &self.PUBLISHER_HANDLE());
+      ds.field("PUBLISHER_URL", &self.PUBLISHER_URL());
+      ds.field("SUPPORT_URL", &self.SUPPORT_URL());
+      ds.field("TAGS", &self.TAGS());
+      ds.field("FEATURES", &self.FEATURES());
+      ds.field("SCREENSHOT_URLS", &self.SCREENSHOT_URLS());
+      ds.field("BANNER_URL", &self.BANNER_URL());
+      ds.field("ABI_VERSION", &self.ABI_VERSION());
+      ds.field("WASM_HASH", &self.WASM_HASH());
+      ds.field("WASM_SIZE", &self.WASM_SIZE());
+      ds.field("WASM_CID", &self.WASM_CID());
+      ds.field("ENCRYPTED_WASM_HASH", &self.ENCRYPTED_WASM_HASH());
+      ds.field("ENCRYPTED_WASM_SIZE", &self.ENCRYPTED_WASM_SIZE());
+      ds.field("ENTRY_FUNCTIONS", &self.ENTRY_FUNCTIONS());
+      ds.field("REQUIRED_SCHEMAS", &self.REQUIRED_SCHEMAS());
+      ds.field("DEPENDENCIES", &self.DEPENDENCIES());
+      ds.field("CAPABILITIES", &self.CAPABILITIES());
+      ds.field("PROVIDER_PEER_ID", &self.PROVIDER_PEER_ID());
+      ds.field("PROVIDER_EPM_CID", &self.PROVIDER_EPM_CID());
+      ds.field("ENCRYPTED", &self.ENCRYPTED());
+      ds.field("REQUIRED_SCOPE", &self.REQUIRED_SCOPE());
+      ds.field("KEY_ID", &self.KEY_ID());
+      ds.field("ALLOWED_DOMAINS", &self.ALLOWED_DOMAINS());
+      ds.field("MAX_GRANT_TIMEOUT_MS", &self.MAX_GRANT_TIMEOUT_MS());
+      ds.field("MIN_PERMISSIONS", &self.MIN_PERMISSIONS());
+      ds.field("CREATED_AT", &self.CREATED_AT());
+      ds.field("UPDATED_AT", &self.UPDATED_AT());
+      ds.field("DOCUMENTATION_URL", &self.DOCUMENTATION_URL());
+      ds.field("CHANGELOG_URL", &self.CHANGELOG_URL());
+      ds.field("ICON_URL", &self.ICON_URL());
+      ds.field("LICENSE", &self.LICENSE());
+      ds.field("PAYMENT_MODEL", &self.PAYMENT_MODEL());
+      ds.field("PRICE_USD_CENTS", &self.PRICE_USD_CENTS());
+      ds.field("SUBSCRIPTION_PERIOD_DAYS", &self.SUBSCRIPTION_PERIOD_DAYS());
+      ds.field("ACCEPTED_PAYMENT_METHODS", &self.ACCEPTED_PAYMENT_METHODS());
+      ds.field("LISTING_STATUS", &self.LISTING_STATUS());
+      ds.field("SIGNATURE", &self.SIGNATURE());
+      ds.field("INVOKE_SURFACES", &self.INVOKE_SURFACES());
+      ds.field("METHODS", &self.METHODS());
+      ds.field("HOST_CAPABILITIES", &self.HOST_CAPABILITIES());
+      ds.field("TIMERS", &self.TIMERS());
+      ds.field("PROTOCOLS", &self.PROTOCOLS());
+      ds.field("SCHEMAS_USED", &self.SCHEMAS_USED());
+      ds.field("BUILD_ARTIFACTS", &self.BUILD_ARTIFACTS());
+      ds.field("RUNTIME_TARGETS", &self.RUNTIME_TARGETS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PLGT {
+  pub PLUGIN_ID: alloc::string::String,
+  pub NAME: alloc::string::String,
+  pub VERSION: alloc::string::String,
+  pub DESCRIPTION: Option<alloc::string::String>,
+  pub TAGLINE: Option<alloc::string::String>,
+  pub PLUGIN_TYPE: pluginCategory,
+  pub PUBLISHER_NAME: Option<alloc::string::String>,
+  pub PUBLISHER_HANDLE: Option<alloc::string::String>,
+  pub PUBLISHER_URL: Option<alloc::string::String>,
+  pub SUPPORT_URL: Option<alloc::string::String>,
+  pub TAGS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub FEATURES: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub SCREENSHOT_URLS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub BANNER_URL: Option<alloc::string::String>,
+  pub ABI_VERSION: u32,
+  pub WASM_HASH: Option<alloc::vec::Vec<u8>>,
+  pub WASM_SIZE: u64,
+  pub WASM_CID: Option<alloc::string::String>,
+  pub ENCRYPTED_WASM_HASH: Option<alloc::vec::Vec<u8>>,
+  pub ENCRYPTED_WASM_SIZE: u64,
+  pub ENTRY_FUNCTIONS: Option<alloc::vec::Vec<EntryFunctionT>>,
+  pub REQUIRED_SCHEMAS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub DEPENDENCIES: Option<alloc::vec::Vec<PluginDependencyT>>,
+  pub CAPABILITIES: Option<alloc::vec::Vec<PluginCapabilityT>>,
+  pub PROVIDER_PEER_ID: Option<alloc::string::String>,
+  pub PROVIDER_EPM_CID: Option<alloc::string::String>,
+  pub ENCRYPTED: bool,
+  pub REQUIRED_SCOPE: Option<alloc::string::String>,
+  pub KEY_ID: Option<alloc::string::String>,
+  pub ALLOWED_DOMAINS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub MAX_GRANT_TIMEOUT_MS: u64,
+  pub MIN_PERMISSIONS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub CREATED_AT: u64,
+  pub UPDATED_AT: u64,
+  pub DOCUMENTATION_URL: Option<alloc::string::String>,
+  pub CHANGELOG_URL: Option<alloc::string::String>,
+  pub ICON_URL: Option<alloc::string::String>,
+  pub LICENSE: Option<alloc::string::String>,
+  pub PAYMENT_MODEL: purchaseTier,
+  pub PRICE_USD_CENTS: u32,
+  pub SUBSCRIPTION_PERIOD_DAYS: u32,
+  pub ACCEPTED_PAYMENT_METHODS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub LISTING_STATUS: publicationState,
+  pub SIGNATURE: Option<alloc::vec::Vec<u8>>,
+  pub INVOKE_SURFACES: Option<alloc::vec::Vec<invokeSurfaceKind>>,
+  pub METHODS: Option<alloc::vec::Vec<PLGMethodManifestT>>,
+  pub HOST_CAPABILITIES: Option<alloc::vec::Vec<PLGHostCapabilityT>>,
+  pub TIMERS: Option<alloc::vec::Vec<PLGTimerSpecT>>,
+  pub PROTOCOLS: Option<alloc::vec::Vec<PLGProtocolSpecT>>,
+  pub SCHEMAS_USED: Option<alloc::vec::Vec<FlatBufferTypeRefT>>,
+  pub BUILD_ARTIFACTS: Option<alloc::vec::Vec<PLGBuildArtifactT>>,
+  pub RUNTIME_TARGETS: Option<alloc::vec::Vec<alloc::string::String>>,
+}
+impl Default for PLGT {
+  fn default() -> Self {
+    Self {
+      PLUGIN_ID: alloc::string::ToString::to_string(""),
+      NAME: alloc::string::ToString::to_string(""),
+      VERSION: alloc::string::ToString::to_string(""),
+      DESCRIPTION: None,
+      TAGLINE: None,
+      PLUGIN_TYPE: pluginCategory::Sensor,
+      PUBLISHER_NAME: None,
+      PUBLISHER_HANDLE: None,
+      PUBLISHER_URL: None,
+      SUPPORT_URL: None,
+      TAGS: None,
+      FEATURES: None,
+      SCREENSHOT_URLS: None,
+      BANNER_URL: None,
+      ABI_VERSION: 1,
+      WASM_HASH: None,
+      WASM_SIZE: 0,
+      WASM_CID: None,
+      ENCRYPTED_WASM_HASH: None,
+      ENCRYPTED_WASM_SIZE: 0,
+      ENTRY_FUNCTIONS: None,
+      REQUIRED_SCHEMAS: None,
+      DEPENDENCIES: None,
+      CAPABILITIES: None,
+      PROVIDER_PEER_ID: None,
+      PROVIDER_EPM_CID: None,
+      ENCRYPTED: true,
+      REQUIRED_SCOPE: None,
+      KEY_ID: None,
+      ALLOWED_DOMAINS: None,
+      MAX_GRANT_TIMEOUT_MS: 0,
+      MIN_PERMISSIONS: None,
+      CREATED_AT: 0,
+      UPDATED_AT: 0,
+      DOCUMENTATION_URL: None,
+      CHANGELOG_URL: None,
+      ICON_URL: None,
+      LICENSE: None,
+      PAYMENT_MODEL: purchaseTier::Free,
+      PRICE_USD_CENTS: 0,
+      SUBSCRIPTION_PERIOD_DAYS: 0,
+      ACCEPTED_PAYMENT_METHODS: None,
+      LISTING_STATUS: publicationState::Public,
+      SIGNATURE: None,
+      INVOKE_SURFACES: None,
+      METHODS: None,
+      HOST_CAPABILITIES: None,
+      TIMERS: None,
+      PROTOCOLS: None,
+      SCHEMAS_USED: None,
+      BUILD_ARTIFACTS: None,
+      RUNTIME_TARGETS: None,
+    }
+  }
+}
+impl PLGT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PLG<'b>> {
+    let PLUGIN_ID = Some({
+      let x = &self.PLUGIN_ID;
+      _fbb.create_string(x)
+    });
+    let NAME = Some({
+      let x = &self.NAME;
+      _fbb.create_string(x)
+    });
+    let VERSION = Some({
+      let x = &self.VERSION;
+      _fbb.create_string(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TAGLINE = self.TAGLINE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PLUGIN_TYPE = self.PLUGIN_TYPE;
+    let PUBLISHER_NAME = self.PUBLISHER_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PUBLISHER_HANDLE = self.PUBLISHER_HANDLE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PUBLISHER_URL = self.PUBLISHER_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SUPPORT_URL = self.SUPPORT_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TAGS = self.TAGS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let FEATURES = self.FEATURES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let SCREENSHOT_URLS = self.SCREENSHOT_URLS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let BANNER_URL = self.BANNER_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ABI_VERSION = self.ABI_VERSION;
+    let WASM_HASH = self.WASM_HASH.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let WASM_SIZE = self.WASM_SIZE;
+    let WASM_CID = self.WASM_CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ENCRYPTED_WASM_HASH = self.ENCRYPTED_WASM_HASH.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let ENCRYPTED_WASM_SIZE = self.ENCRYPTED_WASM_SIZE;
+    let ENTRY_FUNCTIONS = self.ENTRY_FUNCTIONS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let REQUIRED_SCHEMAS = self.REQUIRED_SCHEMAS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let DEPENDENCIES = self.DEPENDENCIES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let CAPABILITIES = self.CAPABILITIES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let PROVIDER_PEER_ID = self.PROVIDER_PEER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PROVIDER_EPM_CID = self.PROVIDER_EPM_CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ENCRYPTED = self.ENCRYPTED;
+    let REQUIRED_SCOPE = self.REQUIRED_SCOPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let KEY_ID = self.KEY_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ALLOWED_DOMAINS = self.ALLOWED_DOMAINS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let MAX_GRANT_TIMEOUT_MS = self.MAX_GRANT_TIMEOUT_MS;
+    let MIN_PERMISSIONS = self.MIN_PERMISSIONS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let CREATED_AT = self.CREATED_AT;
+    let UPDATED_AT = self.UPDATED_AT;
+    let DOCUMENTATION_URL = self.DOCUMENTATION_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CHANGELOG_URL = self.CHANGELOG_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ICON_URL = self.ICON_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LICENSE = self.LICENSE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PAYMENT_MODEL = self.PAYMENT_MODEL;
+    let PRICE_USD_CENTS = self.PRICE_USD_CENTS;
+    let SUBSCRIPTION_PERIOD_DAYS = self.SUBSCRIPTION_PERIOD_DAYS;
+    let ACCEPTED_PAYMENT_METHODS = self.ACCEPTED_PAYMENT_METHODS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let LISTING_STATUS = self.LISTING_STATUS;
+    let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let INVOKE_SURFACES = self.INVOKE_SURFACES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let METHODS = self.METHODS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let HOST_CAPABILITIES = self.HOST_CAPABILITIES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let TIMERS = self.TIMERS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let PROTOCOLS = self.PROTOCOLS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let SCHEMAS_USED = self.SCHEMAS_USED.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let BUILD_ARTIFACTS = self.BUILD_ARTIFACTS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let RUNTIME_TARGETS = self.RUNTIME_TARGETS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    PLG::create(_fbb, &PLGArgs{
+      PLUGIN_ID,
+      NAME,
+      VERSION,
+      DESCRIPTION,
+      TAGLINE,
+      PLUGIN_TYPE,
+      PUBLISHER_NAME,
+      PUBLISHER_HANDLE,
+      PUBLISHER_URL,
+      SUPPORT_URL,
+      TAGS,
+      FEATURES,
+      SCREENSHOT_URLS,
+      BANNER_URL,
+      ABI_VERSION,
+      WASM_HASH,
+      WASM_SIZE,
+      WASM_CID,
+      ENCRYPTED_WASM_HASH,
+      ENCRYPTED_WASM_SIZE,
+      ENTRY_FUNCTIONS,
+      REQUIRED_SCHEMAS,
+      DEPENDENCIES,
+      CAPABILITIES,
+      PROVIDER_PEER_ID,
+      PROVIDER_EPM_CID,
+      ENCRYPTED,
+      REQUIRED_SCOPE,
+      KEY_ID,
+      ALLOWED_DOMAINS,
+      MAX_GRANT_TIMEOUT_MS,
+      MIN_PERMISSIONS,
+      CREATED_AT,
+      UPDATED_AT,
+      DOCUMENTATION_URL,
+      CHANGELOG_URL,
+      ICON_URL,
+      LICENSE,
+      PAYMENT_MODEL,
+      PRICE_USD_CENTS,
+      SUBSCRIPTION_PERIOD_DAYS,
+      ACCEPTED_PAYMENT_METHODS,
+      LISTING_STATUS,
+      SIGNATURE,
+      INVOKE_SURFACES,
+      METHODS,
+      HOST_CAPABILITIES,
+      TIMERS,
+      PROTOCOLS,
+      SCHEMAS_USED,
+      BUILD_ARTIFACTS,
+      RUNTIME_TARGETS,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `TAB`
+/// Verifies that a buffer of bytes contains a `PLG`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_tab_unchecked`.
-pub fn root_as_tab(buf: &[u8]) -> Result<TAB<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<TAB>(buf)
+/// `root_as_plg_unchecked`.
+pub fn root_as_plg(buf: &[u8]) -> Result<PLG<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<PLG>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `TAB` and returns it.
+/// `PLG` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_tab_unchecked`.
-pub fn size_prefixed_root_as_tab(buf: &[u8]) -> Result<TAB<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<TAB>(buf)
+/// `size_prefixed_root_as_plg_unchecked`.
+pub fn size_prefixed_root_as_plg(buf: &[u8]) -> Result<PLG<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<PLG>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `TAB` and returns it.
+/// contains a `PLG` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_tab_unchecked`.
-pub fn root_as_tab_with_opts<'b, 'o>(
+/// `root_as_plg_unchecked`.
+pub fn root_as_plg_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<TAB<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<TAB<'b>>(opts, buf)
+) -> Result<PLG<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<PLG<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `TAB` and returns
+/// bytes contains a size prefixed `PLG` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_tab_unchecked`.
-pub fn size_prefixed_root_as_tab_with_opts<'b, 'o>(
+/// `root_as_plg_unchecked`.
+pub fn size_prefixed_root_as_plg_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<TAB<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<TAB<'b>>(opts, buf)
+) -> Result<PLG<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<PLG<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a TAB and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a PLG and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `TAB`.
-pub unsafe fn root_as_tab_unchecked(buf: &[u8]) -> TAB<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<TAB>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `PLG`.
+pub unsafe fn root_as_plg_unchecked(buf: &[u8]) -> PLG<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<PLG>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed TAB and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed PLG and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `TAB`.
-pub unsafe fn size_prefixed_root_as_tab_unchecked(buf: &[u8]) -> TAB<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<TAB>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `PLG`.
+pub unsafe fn size_prefixed_root_as_plg_unchecked(buf: &[u8]) -> PLG<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<PLG>(buf) }
 }
-pub const TAB_IDENTIFIER: &str = "$TAB";
+pub const PLG_IDENTIFIER: &str = "$PLG";
 
 #[inline]
-pub fn tab_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, TAB_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn tab_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, TAB_IDENTIFIER, true)
+pub fn plg_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, PLG_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_tab_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn plg_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, PLG_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_plg_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<TAB<'a>>) {
-  fbb.finish(root, Some(TAB_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<PLG<'a>>) {
+  fbb.finish(root, Some(PLG_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_tab_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<TAB<'a>>) {
-  fbb.finish_size_prefixed(root, Some(TAB_IDENTIFIER));
+pub fn finish_size_prefixed_plg_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<PLG<'a>>) {
+  fbb.finish_size_prefixed(root, Some(PLG_IDENTIFIER));
 }

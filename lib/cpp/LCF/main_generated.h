@@ -13,292 +13,360 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-struct KRF;
-struct KRFBuilder;
+#include "main_generated.h"
 
-enum keyReferenceRole : int8_t {
-  keyReferenceRole_Unknown = 0,
-  keyReferenceRole_ProviderSigning = 1,
-  keyReferenceRole_ProviderWrapping = 2,
-  keyReferenceRole_RequesterSigning = 3,
-  keyReferenceRole_PublicationContent = 4,
-  keyReferenceRole_VerificationKey = 5,
-  keyReferenceRole_DecryptKey = 6,
-  keyReferenceRole_MIN = keyReferenceRole_Unknown,
-  keyReferenceRole_MAX = keyReferenceRole_DecryptKey
+struct LCF;
+struct LCFBuilder;
+
+enum licensingConfigMessageType : int8_t {
+  licensingConfigMessageType_Configure = 0,
+  licensingConfigMessageType_Status = 1,
+  licensingConfigMessageType_MIN = licensingConfigMessageType_Configure,
+  licensingConfigMessageType_MAX = licensingConfigMessageType_Status
 };
 
-inline const keyReferenceRole (&EnumValueskeyReferenceRole())[7] {
-  static const keyReferenceRole values[] = {
-    keyReferenceRole_Unknown,
-    keyReferenceRole_ProviderSigning,
-    keyReferenceRole_ProviderWrapping,
-    keyReferenceRole_RequesterSigning,
-    keyReferenceRole_PublicationContent,
-    keyReferenceRole_VerificationKey,
-    keyReferenceRole_DecryptKey
+inline const licensingConfigMessageType (&EnumValueslicensingConfigMessageType())[2] {
+  static const licensingConfigMessageType values[] = {
+    licensingConfigMessageType_Configure,
+    licensingConfigMessageType_Status
   };
   return values;
 }
 
-inline const char * const *EnumNameskeyReferenceRole() {
-  static const char * const names[8] = {
-    "Unknown",
-    "ProviderSigning",
-    "ProviderWrapping",
-    "RequesterSigning",
-    "PublicationContent",
-    "VerificationKey",
-    "DecryptKey",
+inline const char * const *EnumNameslicensingConfigMessageType() {
+  static const char * const names[3] = {
+    "Configure",
+    "Status",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNamekeyReferenceRole(keyReferenceRole e) {
-  if (::flatbuffers::IsOutRange(e, keyReferenceRole_Unknown, keyReferenceRole_DecryptKey)) return "";
+inline const char *EnumNamelicensingConfigMessageType(licensingConfigMessageType e) {
+  if (::flatbuffers::IsOutRange(e, licensingConfigMessageType_Configure, licensingConfigMessageType_Status)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNameskeyReferenceRole()[index];
+  return EnumNameslicensingConfigMessageType()[index];
 }
 
-enum keyReferenceAlgorithm : int8_t {
-  keyReferenceAlgorithm_Unknown = 0,
-  keyReferenceAlgorithm_Ed25519Seed = 1,
-  keyReferenceAlgorithm_Ed25519Public = 2,
-  keyReferenceAlgorithm_X25519Private = 3,
-  keyReferenceAlgorithm_X25519Public = 4,
-  keyReferenceAlgorithm_Aes256Gcm = 5,
-  keyReferenceAlgorithm_Opaque = 6,
-  keyReferenceAlgorithm_MIN = keyReferenceAlgorithm_Unknown,
-  keyReferenceAlgorithm_MAX = keyReferenceAlgorithm_Opaque
+enum licensingConfigRole : int8_t {
+  licensingConfigRole_Provider = 0,
+  licensingConfigRole_Requester = 1,
+  licensingConfigRole_MIN = licensingConfigRole_Provider,
+  licensingConfigRole_MAX = licensingConfigRole_Requester
 };
 
-inline const keyReferenceAlgorithm (&EnumValueskeyReferenceAlgorithm())[7] {
-  static const keyReferenceAlgorithm values[] = {
-    keyReferenceAlgorithm_Unknown,
-    keyReferenceAlgorithm_Ed25519Seed,
-    keyReferenceAlgorithm_Ed25519Public,
-    keyReferenceAlgorithm_X25519Private,
-    keyReferenceAlgorithm_X25519Public,
-    keyReferenceAlgorithm_Aes256Gcm,
-    keyReferenceAlgorithm_Opaque
+inline const licensingConfigRole (&EnumValueslicensingConfigRole())[2] {
+  static const licensingConfigRole values[] = {
+    licensingConfigRole_Provider,
+    licensingConfigRole_Requester
   };
   return values;
 }
 
-inline const char * const *EnumNameskeyReferenceAlgorithm() {
-  static const char * const names[8] = {
-    "Unknown",
-    "Ed25519Seed",
-    "Ed25519Public",
-    "X25519Private",
-    "X25519Public",
-    "Aes256Gcm",
-    "Opaque",
+inline const char * const *EnumNameslicensingConfigRole() {
+  static const char * const names[3] = {
+    "Provider",
+    "Requester",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNamekeyReferenceAlgorithm(keyReferenceAlgorithm e) {
-  if (::flatbuffers::IsOutRange(e, keyReferenceAlgorithm_Unknown, keyReferenceAlgorithm_Opaque)) return "";
+inline const char *EnumNamelicensingConfigRole(licensingConfigRole e) {
+  if (::flatbuffers::IsOutRange(e, licensingConfigRole_Provider, licensingConfigRole_Requester)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNameskeyReferenceAlgorithm()[index];
+  return EnumNameslicensingConfigRole()[index];
 }
 
-/// Key Reference Frame
-struct KRF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef KRFBuilder Builder;
+/// Licensing Configuration Frame
+struct LCF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef LCFBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_KEY_ID = 4,
-    VT_SLOT_ID = 6,
-    VT_ROLE = 8,
-    VT_ALGORITHM = 10,
-    VT_PUBLIC_KEY = 12,
-    VT_VERSION = 14,
-    VT_EXPIRES_AT = 16,
-    VT_HOST_MANAGED = 18
+    VT_MESSAGE_TYPE = 4,
+    VT_ROLE = 6,
+    VT_PROVIDER_PEER_ID = 8,
+    VT_PROVIDER_SIGNING_KEY = 10,
+    VT_PROVIDER_WRAPPING_KEY = 12,
+    VT_REQUESTER_SIGNING_KEY = 14,
+    VT_ACTIVE_KEY_VERSION = 16,
+    VT_EXPIRES_AT = 18,
+    VT_MAX_CLOCK_SKEW_MS = 20,
+    VT_CHALLENGE_TTL_MS = 22,
+    VT_CAPABILITY_TOKEN = 24,
+    VT_INITIALIZED = 26,
+    VT_NEEDS_ROTATION = 28,
+    VT_STATUS_CODE = 30,
+    VT_STATUS_MESSAGE = 32
   };
-  /// Logical key identifier used across publication and grant records.
-  const ::flatbuffers::String *KEY_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_KEY_ID);
+  /// Distinguishes configuration inputs from runtime status outputs.
+  licensingConfigMessageType MESSAGE_TYPE() const {
+    return static_cast<licensingConfigMessageType>(GetField<int8_t>(VT_MESSAGE_TYPE, 0));
   }
-  /// Host-managed key slot or key handle identifier.
-  const ::flatbuffers::String *SLOT_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SLOT_ID);
+  /// Indicates whether the configuration/status applies to server/provider or requester/client behavior.
+  licensingConfigRole ROLE() const {
+    return static_cast<licensingConfigRole>(GetField<int8_t>(VT_ROLE, 0));
   }
-  /// Role the referenced key fulfills for the module flow.
-  keyReferenceRole ROLE() const {
-    return static_cast<keyReferenceRole>(GetField<int8_t>(VT_ROLE, 0));
+  /// Peer ID advertised by the licensing provider.
+  const ::flatbuffers::String *PROVIDER_PEER_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PROVIDER_PEER_ID);
   }
-  /// Algorithm or key family for the referenced key.
-  keyReferenceAlgorithm ALGORITHM() const {
-    return static_cast<keyReferenceAlgorithm>(GetField<int8_t>(VT_ALGORITHM, 0));
+  /// Host-managed long-lived signing key used for grant signatures.
+  const KRF *PROVIDER_SIGNING_KEY() const {
+    return GetPointer<const KRF *>(VT_PROVIDER_SIGNING_KEY);
   }
-  /// Optional public bytes for verification or peer identity binding.
-  const ::flatbuffers::Vector<uint8_t> *PUBLIC_KEY() const {
-    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_PUBLIC_KEY);
+  /// Host-managed wrapping key used to protect per-publication content keys for requesters.
+  const KRF *PROVIDER_WRAPPING_KEY() const {
+    return GetPointer<const KRF *>(VT_PROVIDER_WRAPPING_KEY);
   }
-  /// Logical version of the referenced key.
-  uint32_t VERSION() const {
-    return GetField<uint32_t>(VT_VERSION, 0);
+  /// Optional requester signing key reference for requester-hosted flows.
+  const KRF *REQUESTER_SIGNING_KEY() const {
+    return GetPointer<const KRF *>(VT_REQUESTER_SIGNING_KEY);
   }
-  /// Expiration time in unix milliseconds, or 0 if unbounded.
+  /// Logical active publication/grant key version.
+  uint32_t ACTIVE_KEY_VERSION() const {
+    return GetField<uint32_t>(VT_ACTIVE_KEY_VERSION, 0);
+  }
+  /// Runtime expiry in unix milliseconds, or 0 if unbounded.
   uint64_t EXPIRES_AT() const {
     return GetField<uint64_t>(VT_EXPIRES_AT, 0);
   }
-  /// True when the secret material remains in the host key slot.
-  bool HOST_MANAGED() const {
-    return GetField<uint8_t>(VT_HOST_MANAGED, 1) != 0;
+  /// Maximum accepted requester/provider clock skew in milliseconds.
+  uint64_t MAX_CLOCK_SKEW_MS() const {
+    return GetField<uint64_t>(VT_MAX_CLOCK_SKEW_MS, 0);
+  }
+  /// Challenge time-to-live in milliseconds.
+  uint64_t CHALLENGE_TTL_MS() const {
+    return GetField<uint64_t>(VT_CHALLENGE_TTL_MS, 0);
+  }
+  /// Optional capability token bytes returned with successful grants.
+  const ::flatbuffers::Vector<uint8_t> *CAPABILITY_TOKEN() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_CAPABILITY_TOKEN);
+  }
+  /// Whether the runtime has been initialized successfully.
+  bool INITIALIZED() const {
+    return GetField<uint8_t>(VT_INITIALIZED, 0) != 0;
+  }
+  /// Whether the runtime needs issuer key rotation or refreshed configuration.
+  bool NEEDS_ROTATION() const {
+    return GetField<uint8_t>(VT_NEEDS_ROTATION, 0) != 0;
+  }
+  /// Optional machine-readable status code for status/error responses.
+  const ::flatbuffers::String *STATUS_CODE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STATUS_CODE);
+  }
+  /// Optional human-readable status or error message.
+  const ::flatbuffers::String *STATUS_MESSAGE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STATUS_MESSAGE);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_KEY_ID) &&
-           verifier.VerifyString(KEY_ID()) &&
-           VerifyOffset(verifier, VT_SLOT_ID) &&
-           verifier.VerifyString(SLOT_ID()) &&
+           VerifyField<int8_t>(verifier, VT_MESSAGE_TYPE, 1) &&
            VerifyField<int8_t>(verifier, VT_ROLE, 1) &&
-           VerifyField<int8_t>(verifier, VT_ALGORITHM, 1) &&
-           VerifyOffset(verifier, VT_PUBLIC_KEY) &&
-           verifier.VerifyVector(PUBLIC_KEY()) &&
-           VerifyField<uint32_t>(verifier, VT_VERSION, 4) &&
+           VerifyOffset(verifier, VT_PROVIDER_PEER_ID) &&
+           verifier.VerifyString(PROVIDER_PEER_ID()) &&
+           VerifyOffset(verifier, VT_PROVIDER_SIGNING_KEY) &&
+           verifier.VerifyTable(PROVIDER_SIGNING_KEY()) &&
+           VerifyOffset(verifier, VT_PROVIDER_WRAPPING_KEY) &&
+           verifier.VerifyTable(PROVIDER_WRAPPING_KEY()) &&
+           VerifyOffset(verifier, VT_REQUESTER_SIGNING_KEY) &&
+           verifier.VerifyTable(REQUESTER_SIGNING_KEY()) &&
+           VerifyField<uint32_t>(verifier, VT_ACTIVE_KEY_VERSION, 4) &&
            VerifyField<uint64_t>(verifier, VT_EXPIRES_AT, 8) &&
-           VerifyField<uint8_t>(verifier, VT_HOST_MANAGED, 1) &&
+           VerifyField<uint64_t>(verifier, VT_MAX_CLOCK_SKEW_MS, 8) &&
+           VerifyField<uint64_t>(verifier, VT_CHALLENGE_TTL_MS, 8) &&
+           VerifyOffset(verifier, VT_CAPABILITY_TOKEN) &&
+           verifier.VerifyVector(CAPABILITY_TOKEN()) &&
+           VerifyField<uint8_t>(verifier, VT_INITIALIZED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_NEEDS_ROTATION, 1) &&
+           VerifyOffset(verifier, VT_STATUS_CODE) &&
+           verifier.VerifyString(STATUS_CODE()) &&
+           VerifyOffset(verifier, VT_STATUS_MESSAGE) &&
+           verifier.VerifyString(STATUS_MESSAGE()) &&
            verifier.EndTable();
   }
 };
 
-struct KRFBuilder {
-  typedef KRF Table;
+struct LCFBuilder {
+  typedef LCF Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_KEY_ID(::flatbuffers::Offset<::flatbuffers::String> KEY_ID) {
-    fbb_.AddOffset(KRF::VT_KEY_ID, KEY_ID);
+  void add_MESSAGE_TYPE(licensingConfigMessageType MESSAGE_TYPE) {
+    fbb_.AddElement<int8_t>(LCF::VT_MESSAGE_TYPE, static_cast<int8_t>(MESSAGE_TYPE), 0);
   }
-  void add_SLOT_ID(::flatbuffers::Offset<::flatbuffers::String> SLOT_ID) {
-    fbb_.AddOffset(KRF::VT_SLOT_ID, SLOT_ID);
+  void add_ROLE(licensingConfigRole ROLE) {
+    fbb_.AddElement<int8_t>(LCF::VT_ROLE, static_cast<int8_t>(ROLE), 0);
   }
-  void add_ROLE(keyReferenceRole ROLE) {
-    fbb_.AddElement<int8_t>(KRF::VT_ROLE, static_cast<int8_t>(ROLE), 0);
+  void add_PROVIDER_PEER_ID(::flatbuffers::Offset<::flatbuffers::String> PROVIDER_PEER_ID) {
+    fbb_.AddOffset(LCF::VT_PROVIDER_PEER_ID, PROVIDER_PEER_ID);
   }
-  void add_ALGORITHM(keyReferenceAlgorithm ALGORITHM) {
-    fbb_.AddElement<int8_t>(KRF::VT_ALGORITHM, static_cast<int8_t>(ALGORITHM), 0);
+  void add_PROVIDER_SIGNING_KEY(::flatbuffers::Offset<KRF> PROVIDER_SIGNING_KEY) {
+    fbb_.AddOffset(LCF::VT_PROVIDER_SIGNING_KEY, PROVIDER_SIGNING_KEY);
   }
-  void add_PUBLIC_KEY(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PUBLIC_KEY) {
-    fbb_.AddOffset(KRF::VT_PUBLIC_KEY, PUBLIC_KEY);
+  void add_PROVIDER_WRAPPING_KEY(::flatbuffers::Offset<KRF> PROVIDER_WRAPPING_KEY) {
+    fbb_.AddOffset(LCF::VT_PROVIDER_WRAPPING_KEY, PROVIDER_WRAPPING_KEY);
   }
-  void add_VERSION(uint32_t VERSION) {
-    fbb_.AddElement<uint32_t>(KRF::VT_VERSION, VERSION, 0);
+  void add_REQUESTER_SIGNING_KEY(::flatbuffers::Offset<KRF> REQUESTER_SIGNING_KEY) {
+    fbb_.AddOffset(LCF::VT_REQUESTER_SIGNING_KEY, REQUESTER_SIGNING_KEY);
+  }
+  void add_ACTIVE_KEY_VERSION(uint32_t ACTIVE_KEY_VERSION) {
+    fbb_.AddElement<uint32_t>(LCF::VT_ACTIVE_KEY_VERSION, ACTIVE_KEY_VERSION, 0);
   }
   void add_EXPIRES_AT(uint64_t EXPIRES_AT) {
-    fbb_.AddElement<uint64_t>(KRF::VT_EXPIRES_AT, EXPIRES_AT, 0);
+    fbb_.AddElement<uint64_t>(LCF::VT_EXPIRES_AT, EXPIRES_AT, 0);
   }
-  void add_HOST_MANAGED(bool HOST_MANAGED) {
-    fbb_.AddElement<uint8_t>(KRF::VT_HOST_MANAGED, static_cast<uint8_t>(HOST_MANAGED), 1);
+  void add_MAX_CLOCK_SKEW_MS(uint64_t MAX_CLOCK_SKEW_MS) {
+    fbb_.AddElement<uint64_t>(LCF::VT_MAX_CLOCK_SKEW_MS, MAX_CLOCK_SKEW_MS, 0);
   }
-  explicit KRFBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_CHALLENGE_TTL_MS(uint64_t CHALLENGE_TTL_MS) {
+    fbb_.AddElement<uint64_t>(LCF::VT_CHALLENGE_TTL_MS, CHALLENGE_TTL_MS, 0);
+  }
+  void add_CAPABILITY_TOKEN(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CAPABILITY_TOKEN) {
+    fbb_.AddOffset(LCF::VT_CAPABILITY_TOKEN, CAPABILITY_TOKEN);
+  }
+  void add_INITIALIZED(bool INITIALIZED) {
+    fbb_.AddElement<uint8_t>(LCF::VT_INITIALIZED, static_cast<uint8_t>(INITIALIZED), 0);
+  }
+  void add_NEEDS_ROTATION(bool NEEDS_ROTATION) {
+    fbb_.AddElement<uint8_t>(LCF::VT_NEEDS_ROTATION, static_cast<uint8_t>(NEEDS_ROTATION), 0);
+  }
+  void add_STATUS_CODE(::flatbuffers::Offset<::flatbuffers::String> STATUS_CODE) {
+    fbb_.AddOffset(LCF::VT_STATUS_CODE, STATUS_CODE);
+  }
+  void add_STATUS_MESSAGE(::flatbuffers::Offset<::flatbuffers::String> STATUS_MESSAGE) {
+    fbb_.AddOffset(LCF::VT_STATUS_MESSAGE, STATUS_MESSAGE);
+  }
+  explicit LCFBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<KRF> Finish() {
+  ::flatbuffers::Offset<LCF> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<KRF>(end);
+    auto o = ::flatbuffers::Offset<LCF>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<KRF> CreateKRF(
+inline ::flatbuffers::Offset<LCF> CreateLCF(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> KEY_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SLOT_ID = 0,
-    keyReferenceRole ROLE = keyReferenceRole_Unknown,
-    keyReferenceAlgorithm ALGORITHM = keyReferenceAlgorithm_Unknown,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PUBLIC_KEY = 0,
-    uint32_t VERSION = 0,
+    licensingConfigMessageType MESSAGE_TYPE = licensingConfigMessageType_Configure,
+    licensingConfigRole ROLE = licensingConfigRole_Provider,
+    ::flatbuffers::Offset<::flatbuffers::String> PROVIDER_PEER_ID = 0,
+    ::flatbuffers::Offset<KRF> PROVIDER_SIGNING_KEY = 0,
+    ::flatbuffers::Offset<KRF> PROVIDER_WRAPPING_KEY = 0,
+    ::flatbuffers::Offset<KRF> REQUESTER_SIGNING_KEY = 0,
+    uint32_t ACTIVE_KEY_VERSION = 0,
     uint64_t EXPIRES_AT = 0,
-    bool HOST_MANAGED = true) {
-  KRFBuilder builder_(_fbb);
+    uint64_t MAX_CLOCK_SKEW_MS = 0,
+    uint64_t CHALLENGE_TTL_MS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> CAPABILITY_TOKEN = 0,
+    bool INITIALIZED = false,
+    bool NEEDS_ROTATION = false,
+    ::flatbuffers::Offset<::flatbuffers::String> STATUS_CODE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> STATUS_MESSAGE = 0) {
+  LCFBuilder builder_(_fbb);
+  builder_.add_CHALLENGE_TTL_MS(CHALLENGE_TTL_MS);
+  builder_.add_MAX_CLOCK_SKEW_MS(MAX_CLOCK_SKEW_MS);
   builder_.add_EXPIRES_AT(EXPIRES_AT);
-  builder_.add_VERSION(VERSION);
-  builder_.add_PUBLIC_KEY(PUBLIC_KEY);
-  builder_.add_SLOT_ID(SLOT_ID);
-  builder_.add_KEY_ID(KEY_ID);
-  builder_.add_HOST_MANAGED(HOST_MANAGED);
-  builder_.add_ALGORITHM(ALGORITHM);
+  builder_.add_STATUS_MESSAGE(STATUS_MESSAGE);
+  builder_.add_STATUS_CODE(STATUS_CODE);
+  builder_.add_CAPABILITY_TOKEN(CAPABILITY_TOKEN);
+  builder_.add_ACTIVE_KEY_VERSION(ACTIVE_KEY_VERSION);
+  builder_.add_REQUESTER_SIGNING_KEY(REQUESTER_SIGNING_KEY);
+  builder_.add_PROVIDER_WRAPPING_KEY(PROVIDER_WRAPPING_KEY);
+  builder_.add_PROVIDER_SIGNING_KEY(PROVIDER_SIGNING_KEY);
+  builder_.add_PROVIDER_PEER_ID(PROVIDER_PEER_ID);
+  builder_.add_NEEDS_ROTATION(NEEDS_ROTATION);
+  builder_.add_INITIALIZED(INITIALIZED);
   builder_.add_ROLE(ROLE);
+  builder_.add_MESSAGE_TYPE(MESSAGE_TYPE);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<KRF> CreateKRFDirect(
+inline ::flatbuffers::Offset<LCF> CreateLCFDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *KEY_ID = nullptr,
-    const char *SLOT_ID = nullptr,
-    keyReferenceRole ROLE = keyReferenceRole_Unknown,
-    keyReferenceAlgorithm ALGORITHM = keyReferenceAlgorithm_Unknown,
-    const std::vector<uint8_t> *PUBLIC_KEY = nullptr,
-    uint32_t VERSION = 0,
+    licensingConfigMessageType MESSAGE_TYPE = licensingConfigMessageType_Configure,
+    licensingConfigRole ROLE = licensingConfigRole_Provider,
+    const char *PROVIDER_PEER_ID = nullptr,
+    ::flatbuffers::Offset<KRF> PROVIDER_SIGNING_KEY = 0,
+    ::flatbuffers::Offset<KRF> PROVIDER_WRAPPING_KEY = 0,
+    ::flatbuffers::Offset<KRF> REQUESTER_SIGNING_KEY = 0,
+    uint32_t ACTIVE_KEY_VERSION = 0,
     uint64_t EXPIRES_AT = 0,
-    bool HOST_MANAGED = true) {
-  auto KEY_ID__ = KEY_ID ? _fbb.CreateString(KEY_ID) : 0;
-  auto SLOT_ID__ = SLOT_ID ? _fbb.CreateString(SLOT_ID) : 0;
-  auto PUBLIC_KEY__ = PUBLIC_KEY ? _fbb.CreateVector<uint8_t>(*PUBLIC_KEY) : 0;
-  return CreateKRF(
+    uint64_t MAX_CLOCK_SKEW_MS = 0,
+    uint64_t CHALLENGE_TTL_MS = 0,
+    const std::vector<uint8_t> *CAPABILITY_TOKEN = nullptr,
+    bool INITIALIZED = false,
+    bool NEEDS_ROTATION = false,
+    const char *STATUS_CODE = nullptr,
+    const char *STATUS_MESSAGE = nullptr) {
+  auto PROVIDER_PEER_ID__ = PROVIDER_PEER_ID ? _fbb.CreateString(PROVIDER_PEER_ID) : 0;
+  auto CAPABILITY_TOKEN__ = CAPABILITY_TOKEN ? _fbb.CreateVector<uint8_t>(*CAPABILITY_TOKEN) : 0;
+  auto STATUS_CODE__ = STATUS_CODE ? _fbb.CreateString(STATUS_CODE) : 0;
+  auto STATUS_MESSAGE__ = STATUS_MESSAGE ? _fbb.CreateString(STATUS_MESSAGE) : 0;
+  return CreateLCF(
       _fbb,
-      KEY_ID__,
-      SLOT_ID__,
+      MESSAGE_TYPE,
       ROLE,
-      ALGORITHM,
-      PUBLIC_KEY__,
-      VERSION,
+      PROVIDER_PEER_ID__,
+      PROVIDER_SIGNING_KEY,
+      PROVIDER_WRAPPING_KEY,
+      REQUESTER_SIGNING_KEY,
+      ACTIVE_KEY_VERSION,
       EXPIRES_AT,
-      HOST_MANAGED);
+      MAX_CLOCK_SKEW_MS,
+      CHALLENGE_TTL_MS,
+      CAPABILITY_TOKEN__,
+      INITIALIZED,
+      NEEDS_ROTATION,
+      STATUS_CODE__,
+      STATUS_MESSAGE__);
 }
 
-inline const KRF *GetKRF(const void *buf) {
-  return ::flatbuffers::GetRoot<KRF>(buf);
+inline const LCF *GetLCF(const void *buf) {
+  return ::flatbuffers::GetRoot<LCF>(buf);
 }
 
-inline const KRF *GetSizePrefixedKRF(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<KRF>(buf);
+inline const LCF *GetSizePrefixedLCF(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<LCF>(buf);
 }
 
-inline const char *KRFIdentifier() {
-  return "$KRF";
+inline const char *LCFIdentifier() {
+  return "$LCF";
 }
 
-inline bool KRFBufferHasIdentifier(const void *buf) {
+inline bool LCFBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, KRFIdentifier());
+      buf, LCFIdentifier());
 }
 
-inline bool SizePrefixedKRFBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedLCFBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, KRFIdentifier(), true);
+      buf, LCFIdentifier(), true);
 }
 
 template <bool B = false>
-inline bool VerifyKRFBuffer(
+inline bool VerifyLCFBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<KRF>(KRFIdentifier());
+  return verifier.template VerifyBuffer<LCF>(LCFIdentifier());
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedKRFBuffer(
+inline bool VerifySizePrefixedLCFBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<KRF>(KRFIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<LCF>(LCFIdentifier());
 }
 
-inline void FinishKRFBuffer(
+inline void FinishLCFBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<KRF> root) {
-  fbb.Finish(root, KRFIdentifier());
+    ::flatbuffers::Offset<LCF> root) {
+  fbb.Finish(root, LCFIdentifier());
 }
 
-inline void FinishSizePrefixedKRFBuffer(
+inline void FinishSizePrefixedLCFBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<KRF> root) {
-  fbb.FinishSizePrefixed(root, KRFIdentifier());
+    ::flatbuffers::Offset<LCF> root) {
+  fbb.FinishSizePrefixed(root, LCFIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

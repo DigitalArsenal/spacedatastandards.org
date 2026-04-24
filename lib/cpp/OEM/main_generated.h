@@ -16,923 +16,1013 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
-struct PPEPositionRecord;
-struct PPEPositionRecordBuilder;
+struct ephemerisDataLine;
+struct ephemerisDataLineBuilder;
 
-struct PPEOrbitalElementRecord;
-struct PPEOrbitalElementRecordBuilder;
+struct covarianceMatrixLine;
+struct covarianceMatrixLineBuilder;
 
-struct PPE;
-struct PPEBuilder;
+struct ephemerisDataBlock;
+struct ephemerisDataBlockBuilder;
 
-/// Polynomial basis type for coefficient interpretation.
-/// Determines how the coefficient arrays are evaluated.
-enum polynomialBasisType : int8_t {
-  /// Chebyshev polynomials of the first kind T_n(x).
-  /// Most common for ephemeris fitting due to minimax approximation properties.
-  polynomialBasisType_CHEBYSHEV = 0,
-  /// Legendre polynomials P_n(x).
-  /// Orthogonal on [-1, 1] with unit weight function.
-  polynomialBasisType_LEGENDRE = 1,
-  /// Hermite interpolating polynomials.
-  /// Matches both function values and derivatives at nodes.
-  polynomialBasisType_HERMITE = 2,
-  /// Lagrange interpolating polynomials.
-  /// Exact interpolation through specified nodes.
-  polynomialBasisType_LAGRANGE = 3,
-  /// Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ...
-  polynomialBasisType_POWER_SERIES = 4,
-  polynomialBasisType_MIN = polynomialBasisType_CHEBYSHEV,
-  polynomialBasisType_MAX = polynomialBasisType_POWER_SERIES
-};
+struct OEM;
+struct OEMBuilder;
 
-inline const polynomialBasisType (&EnumValuespolynomialBasisType())[5] {
-  static const polynomialBasisType values[] = {
-    polynomialBasisType_CHEBYSHEV,
-    polynomialBasisType_LEGENDRE,
-    polynomialBasisType_HERMITE,
-    polynomialBasisType_LAGRANGE,
-    polynomialBasisType_POWER_SERIES
-  };
-  return values;
-}
-
-inline const char * const *EnumNamespolynomialBasisType() {
-  static const char * const names[6] = {
-    "CHEBYSHEV",
-    "LEGENDRE",
-    "HERMITE",
-    "LAGRANGE",
-    "POWER_SERIES",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNamepolynomialBasisType(polynomialBasisType e) {
-  if (::flatbuffers::IsOutRange(e, polynomialBasisType_CHEBYSHEV, polynomialBasisType_POWER_SERIES)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamespolynomialBasisType()[index];
-}
-
-/// Anomaly type flag for orbital element records.
-enum ppeAnomalyType : int8_t {
-  /// True anomaly (geometric angle from periapsis).
-  ppeAnomalyType_TRUE_ANOMALY = 0,
-  /// Mean anomaly (linear in time for Keplerian motion).
-  ppeAnomalyType_MEAN_ANOMALY = 1,
-  /// Eccentric anomaly (auxiliary angle in the Kepler equation).
-  ppeAnomalyType_ECCENTRIC_ANOMALY = 2,
-  ppeAnomalyType_MIN = ppeAnomalyType_TRUE_ANOMALY,
-  ppeAnomalyType_MAX = ppeAnomalyType_ECCENTRIC_ANOMALY
-};
-
-inline const ppeAnomalyType (&EnumValuesppeAnomalyType())[3] {
-  static const ppeAnomalyType values[] = {
-    ppeAnomalyType_TRUE_ANOMALY,
-    ppeAnomalyType_MEAN_ANOMALY,
-    ppeAnomalyType_ECCENTRIC_ANOMALY
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesppeAnomalyType() {
-  static const char * const names[4] = {
-    "TRUE_ANOMALY",
-    "MEAN_ANOMALY",
-    "ECCENTRIC_ANOMALY",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameppeAnomalyType(ppeAnomalyType e) {
-  if (::flatbuffers::IsOutRange(e, ppeAnomalyType_TRUE_ANOMALY, ppeAnomalyType_ECCENTRIC_ANOMALY)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesppeAnomalyType()[index];
-}
-
-/// Orbital element parameterization for the first element (size/shape).
-enum sizeShapeProfile : int8_t {
-  /// Semi-major axis (km). Standard for elliptical orbits.
-  sizeShapeProfile_SMA = 0,
-  /// Radius of periapsis (km). Preferred for hyperbolic orbits.
-  sizeShapeProfile_R_PERIAPSIS = 1,
-  sizeShapeProfile_MIN = sizeShapeProfile_SMA,
-  sizeShapeProfile_MAX = sizeShapeProfile_R_PERIAPSIS
-};
-
-inline const sizeShapeProfile (&EnumValuessizeShapeProfile())[2] {
-  static const sizeShapeProfile values[] = {
-    sizeShapeProfile_SMA,
-    sizeShapeProfile_R_PERIAPSIS
-  };
-  return values;
-}
-
-inline const char * const *EnumNamessizeShapeProfile() {
-  static const char * const names[3] = {
-    "SMA",
-    "R_PERIAPSIS",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNamesizeShapeProfile(sizeShapeProfile e) {
-  if (::flatbuffers::IsOutRange(e, sizeShapeProfile_SMA, sizeShapeProfile_R_PERIAPSIS)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamessizeShapeProfile()[index];
-}
-
-/// A single time-segment record of polynomial coefficients for Cartesian position
-/// (and optionally velocity). Coefficients are stored per axis.
-///
-/// To evaluate position at time t within this record's validity window:
-///   1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN
-///      where tau is in [-1, +1].
-///   2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using
-///      the coefficients for each axis.
-///
-/// Velocity coefficients, if present, follow the same evaluation procedure.
-/// If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by
-/// analytically differentiating the position polynomial.
-struct PPEPositionRecord FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PPEPositionRecordBuilder Builder;
+/// A single ephemeris data line (for non-uniform time steps only)
+/// Use this format when time intervals between states are irregular.
+/// For uniform time steps, use the compact EPHEMERIS_DATA array instead.
+struct ephemerisDataLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ephemerisDataLineBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_EPOCH_MID = 4,
-    VT_EPOCH_HALF_SPAN = 6,
-    VT_NUM_COEFFICIENTS = 8,
-    VT_BASIS_TYPE = 10,
-    VT_POS_COEFF_X = 12,
-    VT_POS_COEFF_Y = 14,
-    VT_POS_COEFF_Z = 16,
-    VT_HAS_VELOCITY_COEFFICIENTS = 18,
-    VT_VEL_COEFF_X = 20,
-    VT_VEL_COEFF_Y = 22,
-    VT_VEL_COEFF_Z = 24,
-    VT_MAX_POSITION_RESIDUAL = 26,
-    VT_RMS_POSITION_RESIDUAL = 28
+    VT_EPOCH = 4,
+    VT_X = 6,
+    VT_Y = 8,
+    VT_Z = 10,
+    VT_X_DOT = 12,
+    VT_Y_DOT = 14,
+    VT_Z_DOT = 16,
+    VT_X_DDOT = 18,
+    VT_Y_DDOT = 20,
+    VT_Z_DDOT = 22
   };
-  /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
-  /// Together with EPOCH_HALF_SPAN, defines the time interval:
-  ///   [EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]
-  const ::flatbuffers::String *EPOCH_MID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH_MID);
+  /// Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }
-  /// Half-span of the validity window in seconds.
-  /// The full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID.
-  double EPOCH_HALF_SPAN() const {
-    return GetField<double>(VT_EPOCH_HALF_SPAN, 0.0);
+  /// Position vector X-component km
+  double X() const {
+    return GetField<double>(VT_X, 0.0);
   }
-  /// Number of polynomial coefficients per axis.
-  /// The polynomial degree is (NUM_COEFFICIENTS - 1).
-  /// Typical values: 8-32 for high-fidelity ephemeris fits.
-  uint16_t NUM_COEFFICIENTS() const {
-    return GetField<uint16_t>(VT_NUM_COEFFICIENTS, 0);
+  /// Position vector Y-component km
+  double Y() const {
+    return GetField<double>(VT_Y, 0.0);
   }
-  /// Polynomial basis type for interpreting the coefficient arrays.
-  polynomialBasisType BASIS_TYPE() const {
-    return static_cast<polynomialBasisType>(GetField<int8_t>(VT_BASIS_TYPE, 0));
+  /// Position vector Z-component km
+  double Z() const {
+    return GetField<double>(VT_Z, 0.0);
   }
-  /// Position coefficients for X-axis (km).
-  /// Length must equal NUM_COEFFICIENTS. Ordered c0, c1, ..., c_{N-1}.
-  const ::flatbuffers::Vector<double> *POS_COEFF_X() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POS_COEFF_X);
+  /// Velocity vector X-component km/s
+  double X_DOT() const {
+    return GetField<double>(VT_X_DOT, 0.0);
   }
-  /// Position coefficients for Y-axis (km).
-  /// Length must equal NUM_COEFFICIENTS.
-  const ::flatbuffers::Vector<double> *POS_COEFF_Y() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POS_COEFF_Y);
+  /// Velocity vector Y-component km/s
+  double Y_DOT() const {
+    return GetField<double>(VT_Y_DOT, 0.0);
   }
-  /// Position coefficients for Z-axis (km).
-  /// Length must equal NUM_COEFFICIENTS.
-  const ::flatbuffers::Vector<double> *POS_COEFF_Z() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POS_COEFF_Z);
+  /// Velocity vector Z-component km/s
+  double Z_DOT() const {
+    return GetField<double>(VT_Z_DOT, 0.0);
   }
-  /// Whether explicit velocity coefficients are provided.
-  /// If false, velocity should be derived by differentiating the position polynomial.
-  bool HAS_VELOCITY_COEFFICIENTS() const {
-    return GetField<uint8_t>(VT_HAS_VELOCITY_COEFFICIENTS, 0) != 0;
+  /// Optional: Acceleration vector X-component km/s²
+  double X_DDOT() const {
+    return GetField<double>(VT_X_DDOT, 0.0);
   }
-  /// Velocity coefficients for X-axis (km/s). Optional.
-  /// Length must equal NUM_COEFFICIENTS if present.
-  const ::flatbuffers::Vector<double> *VEL_COEFF_X() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_VEL_COEFF_X);
+  /// Optional: Acceleration vector Y-component km/s²
+  double Y_DDOT() const {
+    return GetField<double>(VT_Y_DDOT, 0.0);
   }
-  /// Velocity coefficients for Y-axis (km/s). Optional.
-  const ::flatbuffers::Vector<double> *VEL_COEFF_Y() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_VEL_COEFF_Y);
-  }
-  /// Velocity coefficients for Z-axis (km/s). Optional.
-  const ::flatbuffers::Vector<double> *VEL_COEFF_Z() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_VEL_COEFF_Z);
-  }
-  /// Maximum position fit residual over this segment (km). Optional quality metric.
-  double MAX_POSITION_RESIDUAL() const {
-    return GetField<double>(VT_MAX_POSITION_RESIDUAL, 0.0);
-  }
-  /// RMS position fit residual over this segment (km). Optional quality metric.
-  double RMS_POSITION_RESIDUAL() const {
-    return GetField<double>(VT_RMS_POSITION_RESIDUAL, 0.0);
+  /// Optional: Acceleration vector Z-component km/s²
+  double Z_DDOT() const {
+    return GetField<double>(VT_Z_DDOT, 0.0);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffsetRequired(verifier, VT_EPOCH_MID) &&
-           verifier.VerifyString(EPOCH_MID()) &&
-           VerifyField<double>(verifier, VT_EPOCH_HALF_SPAN, 8) &&
-           VerifyField<uint16_t>(verifier, VT_NUM_COEFFICIENTS, 2) &&
-           VerifyField<int8_t>(verifier, VT_BASIS_TYPE, 1) &&
-           VerifyOffsetRequired(verifier, VT_POS_COEFF_X) &&
-           verifier.VerifyVector(POS_COEFF_X()) &&
-           VerifyOffsetRequired(verifier, VT_POS_COEFF_Y) &&
-           verifier.VerifyVector(POS_COEFF_Y()) &&
-           VerifyOffsetRequired(verifier, VT_POS_COEFF_Z) &&
-           verifier.VerifyVector(POS_COEFF_Z()) &&
-           VerifyField<uint8_t>(verifier, VT_HAS_VELOCITY_COEFFICIENTS, 1) &&
-           VerifyOffset(verifier, VT_VEL_COEFF_X) &&
-           verifier.VerifyVector(VEL_COEFF_X()) &&
-           VerifyOffset(verifier, VT_VEL_COEFF_Y) &&
-           verifier.VerifyVector(VEL_COEFF_Y()) &&
-           VerifyOffset(verifier, VT_VEL_COEFF_Z) &&
-           verifier.VerifyVector(VEL_COEFF_Z()) &&
-           VerifyField<double>(verifier, VT_MAX_POSITION_RESIDUAL, 8) &&
-           VerifyField<double>(verifier, VT_RMS_POSITION_RESIDUAL, 8) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<double>(verifier, VT_X, 8) &&
+           VerifyField<double>(verifier, VT_Y, 8) &&
+           VerifyField<double>(verifier, VT_Z, 8) &&
+           VerifyField<double>(verifier, VT_X_DOT, 8) &&
+           VerifyField<double>(verifier, VT_Y_DOT, 8) &&
+           VerifyField<double>(verifier, VT_Z_DOT, 8) &&
+           VerifyField<double>(verifier, VT_X_DDOT, 8) &&
+           VerifyField<double>(verifier, VT_Y_DDOT, 8) &&
+           VerifyField<double>(verifier, VT_Z_DDOT, 8) &&
            verifier.EndTable();
   }
 };
 
-struct PPEPositionRecordBuilder {
-  typedef PPEPositionRecord Table;
+struct ephemerisDataLineBuilder {
+  typedef ephemerisDataLine Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_EPOCH_MID(::flatbuffers::Offset<::flatbuffers::String> EPOCH_MID) {
-    fbb_.AddOffset(PPEPositionRecord::VT_EPOCH_MID, EPOCH_MID);
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(ephemerisDataLine::VT_EPOCH, EPOCH);
   }
-  void add_EPOCH_HALF_SPAN(double EPOCH_HALF_SPAN) {
-    fbb_.AddElement<double>(PPEPositionRecord::VT_EPOCH_HALF_SPAN, EPOCH_HALF_SPAN, 0.0);
+  void add_X(double X) {
+    fbb_.AddElement<double>(ephemerisDataLine::VT_X, X, 0.0);
   }
-  void add_NUM_COEFFICIENTS(uint16_t NUM_COEFFICIENTS) {
-    fbb_.AddElement<uint16_t>(PPEPositionRecord::VT_NUM_COEFFICIENTS, NUM_COEFFICIENTS, 0);
+  void add_Y(double Y) {
+    fbb_.AddElement<double>(ephemerisDataLine::VT_Y, Y, 0.0);
   }
-  void add_BASIS_TYPE(polynomialBasisType BASIS_TYPE) {
-    fbb_.AddElement<int8_t>(PPEPositionRecord::VT_BASIS_TYPE, static_cast<int8_t>(BASIS_TYPE), 0);
+  void add_Z(double Z) {
+    fbb_.AddElement<double>(ephemerisDataLine::VT_Z, Z, 0.0);
   }
-  void add_POS_COEFF_X(::flatbuffers::Offset<::flatbuffers::Vector<double>> POS_COEFF_X) {
-    fbb_.AddOffset(PPEPositionRecord::VT_POS_COEFF_X, POS_COEFF_X);
+  void add_X_DOT(double X_DOT) {
+    fbb_.AddElement<double>(ephemerisDataLine::VT_X_DOT, X_DOT, 0.0);
   }
-  void add_POS_COEFF_Y(::flatbuffers::Offset<::flatbuffers::Vector<double>> POS_COEFF_Y) {
-    fbb_.AddOffset(PPEPositionRecord::VT_POS_COEFF_Y, POS_COEFF_Y);
+  void add_Y_DOT(double Y_DOT) {
+    fbb_.AddElement<double>(ephemerisDataLine::VT_Y_DOT, Y_DOT, 0.0);
   }
-  void add_POS_COEFF_Z(::flatbuffers::Offset<::flatbuffers::Vector<double>> POS_COEFF_Z) {
-    fbb_.AddOffset(PPEPositionRecord::VT_POS_COEFF_Z, POS_COEFF_Z);
+  void add_Z_DOT(double Z_DOT) {
+    fbb_.AddElement<double>(ephemerisDataLine::VT_Z_DOT, Z_DOT, 0.0);
   }
-  void add_HAS_VELOCITY_COEFFICIENTS(bool HAS_VELOCITY_COEFFICIENTS) {
-    fbb_.AddElement<uint8_t>(PPEPositionRecord::VT_HAS_VELOCITY_COEFFICIENTS, static_cast<uint8_t>(HAS_VELOCITY_COEFFICIENTS), 0);
+  void add_X_DDOT(double X_DDOT) {
+    fbb_.AddElement<double>(ephemerisDataLine::VT_X_DDOT, X_DDOT, 0.0);
   }
-  void add_VEL_COEFF_X(::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_X) {
-    fbb_.AddOffset(PPEPositionRecord::VT_VEL_COEFF_X, VEL_COEFF_X);
+  void add_Y_DDOT(double Y_DDOT) {
+    fbb_.AddElement<double>(ephemerisDataLine::VT_Y_DDOT, Y_DDOT, 0.0);
   }
-  void add_VEL_COEFF_Y(::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_Y) {
-    fbb_.AddOffset(PPEPositionRecord::VT_VEL_COEFF_Y, VEL_COEFF_Y);
+  void add_Z_DDOT(double Z_DDOT) {
+    fbb_.AddElement<double>(ephemerisDataLine::VT_Z_DDOT, Z_DDOT, 0.0);
   }
-  void add_VEL_COEFF_Z(::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_Z) {
-    fbb_.AddOffset(PPEPositionRecord::VT_VEL_COEFF_Z, VEL_COEFF_Z);
-  }
-  void add_MAX_POSITION_RESIDUAL(double MAX_POSITION_RESIDUAL) {
-    fbb_.AddElement<double>(PPEPositionRecord::VT_MAX_POSITION_RESIDUAL, MAX_POSITION_RESIDUAL, 0.0);
-  }
-  void add_RMS_POSITION_RESIDUAL(double RMS_POSITION_RESIDUAL) {
-    fbb_.AddElement<double>(PPEPositionRecord::VT_RMS_POSITION_RESIDUAL, RMS_POSITION_RESIDUAL, 0.0);
-  }
-  explicit PPEPositionRecordBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit ephemerisDataLineBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<PPEPositionRecord> Finish() {
+  ::flatbuffers::Offset<ephemerisDataLine> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PPEPositionRecord>(end);
-    fbb_.Required(o, PPEPositionRecord::VT_EPOCH_MID);
-    fbb_.Required(o, PPEPositionRecord::VT_POS_COEFF_X);
-    fbb_.Required(o, PPEPositionRecord::VT_POS_COEFF_Y);
-    fbb_.Required(o, PPEPositionRecord::VT_POS_COEFF_Z);
+    auto o = ::flatbuffers::Offset<ephemerisDataLine>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<PPEPositionRecord> CreatePPEPositionRecord(
+inline ::flatbuffers::Offset<ephemerisDataLine> CreateephemerisDataLine(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> EPOCH_MID = 0,
-    double EPOCH_HALF_SPAN = 0.0,
-    uint16_t NUM_COEFFICIENTS = 0,
-    polynomialBasisType BASIS_TYPE = polynomialBasisType_CHEBYSHEV,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POS_COEFF_X = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POS_COEFF_Y = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POS_COEFF_Z = 0,
-    bool HAS_VELOCITY_COEFFICIENTS = false,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_X = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_Y = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_Z = 0,
-    double MAX_POSITION_RESIDUAL = 0.0,
-    double RMS_POSITION_RESIDUAL = 0.0) {
-  PPEPositionRecordBuilder builder_(_fbb);
-  builder_.add_RMS_POSITION_RESIDUAL(RMS_POSITION_RESIDUAL);
-  builder_.add_MAX_POSITION_RESIDUAL(MAX_POSITION_RESIDUAL);
-  builder_.add_EPOCH_HALF_SPAN(EPOCH_HALF_SPAN);
-  builder_.add_VEL_COEFF_Z(VEL_COEFF_Z);
-  builder_.add_VEL_COEFF_Y(VEL_COEFF_Y);
-  builder_.add_VEL_COEFF_X(VEL_COEFF_X);
-  builder_.add_POS_COEFF_Z(POS_COEFF_Z);
-  builder_.add_POS_COEFF_Y(POS_COEFF_Y);
-  builder_.add_POS_COEFF_X(POS_COEFF_X);
-  builder_.add_EPOCH_MID(EPOCH_MID);
-  builder_.add_NUM_COEFFICIENTS(NUM_COEFFICIENTS);
-  builder_.add_HAS_VELOCITY_COEFFICIENTS(HAS_VELOCITY_COEFFICIENTS);
-  builder_.add_BASIS_TYPE(BASIS_TYPE);
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    double X = 0.0,
+    double Y = 0.0,
+    double Z = 0.0,
+    double X_DOT = 0.0,
+    double Y_DOT = 0.0,
+    double Z_DOT = 0.0,
+    double X_DDOT = 0.0,
+    double Y_DDOT = 0.0,
+    double Z_DDOT = 0.0) {
+  ephemerisDataLineBuilder builder_(_fbb);
+  builder_.add_Z_DDOT(Z_DDOT);
+  builder_.add_Y_DDOT(Y_DDOT);
+  builder_.add_X_DDOT(X_DDOT);
+  builder_.add_Z_DOT(Z_DOT);
+  builder_.add_Y_DOT(Y_DOT);
+  builder_.add_X_DOT(X_DOT);
+  builder_.add_Z(Z);
+  builder_.add_Y(Y);
+  builder_.add_X(X);
+  builder_.add_EPOCH(EPOCH);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<PPEPositionRecord> CreatePPEPositionRecordDirect(
+inline ::flatbuffers::Offset<ephemerisDataLine> CreateephemerisDataLineDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *EPOCH_MID = nullptr,
-    double EPOCH_HALF_SPAN = 0.0,
-    uint16_t NUM_COEFFICIENTS = 0,
-    polynomialBasisType BASIS_TYPE = polynomialBasisType_CHEBYSHEV,
-    const std::vector<double> *POS_COEFF_X = nullptr,
-    const std::vector<double> *POS_COEFF_Y = nullptr,
-    const std::vector<double> *POS_COEFF_Z = nullptr,
-    bool HAS_VELOCITY_COEFFICIENTS = false,
-    const std::vector<double> *VEL_COEFF_X = nullptr,
-    const std::vector<double> *VEL_COEFF_Y = nullptr,
-    const std::vector<double> *VEL_COEFF_Z = nullptr,
-    double MAX_POSITION_RESIDUAL = 0.0,
-    double RMS_POSITION_RESIDUAL = 0.0) {
-  auto EPOCH_MID__ = EPOCH_MID ? _fbb.CreateString(EPOCH_MID) : 0;
-  auto POS_COEFF_X__ = POS_COEFF_X ? _fbb.CreateVector<double>(*POS_COEFF_X) : 0;
-  auto POS_COEFF_Y__ = POS_COEFF_Y ? _fbb.CreateVector<double>(*POS_COEFF_Y) : 0;
-  auto POS_COEFF_Z__ = POS_COEFF_Z ? _fbb.CreateVector<double>(*POS_COEFF_Z) : 0;
-  auto VEL_COEFF_X__ = VEL_COEFF_X ? _fbb.CreateVector<double>(*VEL_COEFF_X) : 0;
-  auto VEL_COEFF_Y__ = VEL_COEFF_Y ? _fbb.CreateVector<double>(*VEL_COEFF_Y) : 0;
-  auto VEL_COEFF_Z__ = VEL_COEFF_Z ? _fbb.CreateVector<double>(*VEL_COEFF_Z) : 0;
-  return CreatePPEPositionRecord(
+    const char *EPOCH = nullptr,
+    double X = 0.0,
+    double Y = 0.0,
+    double Z = 0.0,
+    double X_DOT = 0.0,
+    double Y_DOT = 0.0,
+    double Z_DOT = 0.0,
+    double X_DDOT = 0.0,
+    double Y_DDOT = 0.0,
+    double Z_DDOT = 0.0) {
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  return CreateephemerisDataLine(
       _fbb,
-      EPOCH_MID__,
-      EPOCH_HALF_SPAN,
-      NUM_COEFFICIENTS,
-      BASIS_TYPE,
-      POS_COEFF_X__,
-      POS_COEFF_Y__,
-      POS_COEFF_Z__,
-      HAS_VELOCITY_COEFFICIENTS,
-      VEL_COEFF_X__,
-      VEL_COEFF_Y__,
-      VEL_COEFF_Z__,
-      MAX_POSITION_RESIDUAL,
-      RMS_POSITION_RESIDUAL);
+      EPOCH__,
+      X,
+      Y,
+      Z,
+      X_DOT,
+      Y_DOT,
+      Z_DOT,
+      X_DDOT,
+      Y_DDOT,
+      Z_DDOT);
 }
 
-/// A single time-segment record of polynomial coefficients for classical orbital elements.
-///
-/// The six classical elements are:
-///   1. SMA or R_PERIAPSIS (size/shape) — see SIZE_SHAPE_TYPE
-///   2. Eccentricity (dimensionless)
-///   3. Inclination (degrees)
-///   4. Right Ascension of Ascending Node / RAAN (degrees)
-///   5. Argument of Periapsis (degrees)
-///   6. Anomaly (degrees) — see ANOMALY_TYPE
-///
-/// Evaluation follows the same normalized-time procedure as PPEPositionRecord.
-struct PPEOrbitalElementRecord FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PPEOrbitalElementRecordBuilder Builder;
+/// Position/Velocity Covariance Matrix Line
+struct covarianceMatrixLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef covarianceMatrixLineBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_EPOCH_MID = 4,
-    VT_EPOCH_HALF_SPAN = 6,
-    VT_NUM_COEFFICIENTS = 8,
-    VT_BASIS_TYPE = 10,
-    VT_SIZE_SHAPE_TYPE = 12,
-    VT_ANOMALY_TYPE = 14,
-    VT_COEFF_SIZE_SHAPE = 16,
-    VT_COEFF_ECCENTRICITY = 18,
-    VT_COEFF_INCLINATION = 20,
-    VT_COEFF_RAAN = 22,
-    VT_COEFF_ARG_PERIAPSIS = 24,
-    VT_COEFF_ANOMALY = 26,
-    VT_MAX_ELEMENT_RESIDUAL = 28,
-    VT_RMS_ELEMENT_RESIDUAL = 30
+    VT_EPOCH = 4,
+    VT_CX_X = 6,
+    VT_CY_X = 8,
+    VT_CY_Y = 10,
+    VT_CZ_X = 12,
+    VT_CZ_Y = 14,
+    VT_CZ_Z = 16,
+    VT_CX_DOT_X = 18,
+    VT_CX_DOT_Y = 20,
+    VT_CX_DOT_Z = 22,
+    VT_CX_DOT_X_DOT = 24,
+    VT_CY_DOT_X = 26,
+    VT_CY_DOT_Y = 28,
+    VT_CY_DOT_Z = 30,
+    VT_CY_DOT_X_DOT = 32,
+    VT_CY_DOT_Y_DOT = 34,
+    VT_CZ_DOT_X = 36,
+    VT_CZ_DOT_Y = 38,
+    VT_CZ_DOT_Z = 40,
+    VT_CZ_DOT_X_DOT = 42,
+    VT_CZ_DOT_Y_DOT = 44,
+    VT_CZ_DOT_Z_DOT = 46
   };
-  /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
-  const ::flatbuffers::String *EPOCH_MID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH_MID);
+  /// Epoch
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }
-  /// Half-span of the validity window in seconds.
-  double EPOCH_HALF_SPAN() const {
-    return GetField<double>(VT_EPOCH_HALF_SPAN, 0.0);
+  /// Covariance matrix [1,1] km**2
+  double CX_X() const {
+    return GetField<double>(VT_CX_X, 0.0);
   }
-  /// Number of polynomial coefficients per element.
-  uint16_t NUM_COEFFICIENTS() const {
-    return GetField<uint16_t>(VT_NUM_COEFFICIENTS, 0);
+  /// Covariance matrix [2,1] km**2
+  double CY_X() const {
+    return GetField<double>(VT_CY_X, 0.0);
   }
-  /// Polynomial basis type for interpreting the coefficient arrays.
-  polynomialBasisType BASIS_TYPE() const {
-    return static_cast<polynomialBasisType>(GetField<int8_t>(VT_BASIS_TYPE, 0));
+  /// Covariance matrix [2,2] km**2
+  double CY_Y() const {
+    return GetField<double>(VT_CY_Y, 0.0);
   }
-  /// Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
-  sizeShapeProfile SIZE_SHAPE_TYPE() const {
-    return static_cast<sizeShapeProfile>(GetField<int8_t>(VT_SIZE_SHAPE_TYPE, 0));
+  /// Covariance matrix [3,1] km**2
+  double CZ_X() const {
+    return GetField<double>(VT_CZ_X, 0.0);
   }
-  /// Anomaly type for the sixth orbital element.
-  ppeAnomalyType ANOMALY_TYPE() const {
-    return static_cast<ppeAnomalyType>(GetField<int8_t>(VT_ANOMALY_TYPE, 0));
+  /// Covariance matrix [3,2] km**2
+  double CZ_Y() const {
+    return GetField<double>(VT_CZ_Y, 0.0);
   }
-  /// Coefficients for SMA or radius of periapsis (km).
-  /// Length must equal NUM_COEFFICIENTS.
-  const ::flatbuffers::Vector<double> *COEFF_SIZE_SHAPE() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COEFF_SIZE_SHAPE);
+  /// Covariance matrix [3,3] km**2
+  double CZ_Z() const {
+    return GetField<double>(VT_CZ_Z, 0.0);
   }
-  /// Coefficients for eccentricity (dimensionless).
-  /// Length must equal NUM_COEFFICIENTS.
-  const ::flatbuffers::Vector<double> *COEFF_ECCENTRICITY() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COEFF_ECCENTRICITY);
+  /// Covariance matrix [4,1] km**2/s
+  double CX_DOT_X() const {
+    return GetField<double>(VT_CX_DOT_X, 0.0);
   }
-  /// Coefficients for inclination (degrees).
-  /// Length must equal NUM_COEFFICIENTS.
-  const ::flatbuffers::Vector<double> *COEFF_INCLINATION() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COEFF_INCLINATION);
+  /// Covariance matrix [4,2] km**2/s
+  double CX_DOT_Y() const {
+    return GetField<double>(VT_CX_DOT_Y, 0.0);
   }
-  /// Coefficients for RAAN (degrees).
-  /// Length must equal NUM_COEFFICIENTS.
-  const ::flatbuffers::Vector<double> *COEFF_RAAN() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COEFF_RAAN);
+  /// Covariance matrix [4,3] km**2/s
+  double CX_DOT_Z() const {
+    return GetField<double>(VT_CX_DOT_Z, 0.0);
   }
-  /// Coefficients for argument of periapsis (degrees).
-  /// Length must equal NUM_COEFFICIENTS.
-  const ::flatbuffers::Vector<double> *COEFF_ARG_PERIAPSIS() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COEFF_ARG_PERIAPSIS);
+  /// Covariance matrix [4,4] km**2/s**2
+  double CX_DOT_X_DOT() const {
+    return GetField<double>(VT_CX_DOT_X_DOT, 0.0);
   }
-  /// Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.
-  /// Length must equal NUM_COEFFICIENTS.
-  const ::flatbuffers::Vector<double> *COEFF_ANOMALY() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COEFF_ANOMALY);
+  /// Covariance matrix [5,1] km**2/s
+  double CY_DOT_X() const {
+    return GetField<double>(VT_CY_DOT_X, 0.0);
   }
-  /// Maximum element fit residual over this segment. Optional quality metric.
-  /// Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).
-  double MAX_ELEMENT_RESIDUAL() const {
-    return GetField<double>(VT_MAX_ELEMENT_RESIDUAL, 0.0);
+  /// Covariance matrix [5,2] km**2/s
+  double CY_DOT_Y() const {
+    return GetField<double>(VT_CY_DOT_Y, 0.0);
   }
-  /// RMS element fit residual over this segment. Optional quality metric.
-  double RMS_ELEMENT_RESIDUAL() const {
-    return GetField<double>(VT_RMS_ELEMENT_RESIDUAL, 0.0);
+  /// Covariance matrix [5,3] km**2/s
+  double CY_DOT_Z() const {
+    return GetField<double>(VT_CY_DOT_Z, 0.0);
+  }
+  /// Covariance matrix [5,4] km**2/s**2
+  double CY_DOT_X_DOT() const {
+    return GetField<double>(VT_CY_DOT_X_DOT, 0.0);
+  }
+  /// Covariance matrix [5,5] km**2/s**2
+  double CY_DOT_Y_DOT() const {
+    return GetField<double>(VT_CY_DOT_Y_DOT, 0.0);
+  }
+  /// Covariance matrix [6,1] km**2/s
+  double CZ_DOT_X() const {
+    return GetField<double>(VT_CZ_DOT_X, 0.0);
+  }
+  /// Covariance matrix [6,2] km**2/s
+  double CZ_DOT_Y() const {
+    return GetField<double>(VT_CZ_DOT_Y, 0.0);
+  }
+  /// Covariance matrix [6,3] km**2/s
+  double CZ_DOT_Z() const {
+    return GetField<double>(VT_CZ_DOT_Z, 0.0);
+  }
+  /// Covariance matrix [6,4] km**2/s**2
+  double CZ_DOT_X_DOT() const {
+    return GetField<double>(VT_CZ_DOT_X_DOT, 0.0);
+  }
+  /// Covariance matrix [6,5] km**2/s**2
+  double CZ_DOT_Y_DOT() const {
+    return GetField<double>(VT_CZ_DOT_Y_DOT, 0.0);
+  }
+  /// Covariance matrix [6,6] km**2/s**2
+  double CZ_DOT_Z_DOT() const {
+    return GetField<double>(VT_CZ_DOT_Z_DOT, 0.0);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffsetRequired(verifier, VT_EPOCH_MID) &&
-           verifier.VerifyString(EPOCH_MID()) &&
-           VerifyField<double>(verifier, VT_EPOCH_HALF_SPAN, 8) &&
-           VerifyField<uint16_t>(verifier, VT_NUM_COEFFICIENTS, 2) &&
-           VerifyField<int8_t>(verifier, VT_BASIS_TYPE, 1) &&
-           VerifyField<int8_t>(verifier, VT_SIZE_SHAPE_TYPE, 1) &&
-           VerifyField<int8_t>(verifier, VT_ANOMALY_TYPE, 1) &&
-           VerifyOffsetRequired(verifier, VT_COEFF_SIZE_SHAPE) &&
-           verifier.VerifyVector(COEFF_SIZE_SHAPE()) &&
-           VerifyOffsetRequired(verifier, VT_COEFF_ECCENTRICITY) &&
-           verifier.VerifyVector(COEFF_ECCENTRICITY()) &&
-           VerifyOffsetRequired(verifier, VT_COEFF_INCLINATION) &&
-           verifier.VerifyVector(COEFF_INCLINATION()) &&
-           VerifyOffsetRequired(verifier, VT_COEFF_RAAN) &&
-           verifier.VerifyVector(COEFF_RAAN()) &&
-           VerifyOffsetRequired(verifier, VT_COEFF_ARG_PERIAPSIS) &&
-           verifier.VerifyVector(COEFF_ARG_PERIAPSIS()) &&
-           VerifyOffsetRequired(verifier, VT_COEFF_ANOMALY) &&
-           verifier.VerifyVector(COEFF_ANOMALY()) &&
-           VerifyField<double>(verifier, VT_MAX_ELEMENT_RESIDUAL, 8) &&
-           VerifyField<double>(verifier, VT_RMS_ELEMENT_RESIDUAL, 8) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<double>(verifier, VT_CX_X, 8) &&
+           VerifyField<double>(verifier, VT_CY_X, 8) &&
+           VerifyField<double>(verifier, VT_CY_Y, 8) &&
+           VerifyField<double>(verifier, VT_CZ_X, 8) &&
+           VerifyField<double>(verifier, VT_CZ_Y, 8) &&
+           VerifyField<double>(verifier, VT_CZ_Z, 8) &&
+           VerifyField<double>(verifier, VT_CX_DOT_X, 8) &&
+           VerifyField<double>(verifier, VT_CX_DOT_Y, 8) &&
+           VerifyField<double>(verifier, VT_CX_DOT_Z, 8) &&
+           VerifyField<double>(verifier, VT_CX_DOT_X_DOT, 8) &&
+           VerifyField<double>(verifier, VT_CY_DOT_X, 8) &&
+           VerifyField<double>(verifier, VT_CY_DOT_Y, 8) &&
+           VerifyField<double>(verifier, VT_CY_DOT_Z, 8) &&
+           VerifyField<double>(verifier, VT_CY_DOT_X_DOT, 8) &&
+           VerifyField<double>(verifier, VT_CY_DOT_Y_DOT, 8) &&
+           VerifyField<double>(verifier, VT_CZ_DOT_X, 8) &&
+           VerifyField<double>(verifier, VT_CZ_DOT_Y, 8) &&
+           VerifyField<double>(verifier, VT_CZ_DOT_Z, 8) &&
+           VerifyField<double>(verifier, VT_CZ_DOT_X_DOT, 8) &&
+           VerifyField<double>(verifier, VT_CZ_DOT_Y_DOT, 8) &&
+           VerifyField<double>(verifier, VT_CZ_DOT_Z_DOT, 8) &&
            verifier.EndTable();
   }
 };
 
-struct PPEOrbitalElementRecordBuilder {
-  typedef PPEOrbitalElementRecord Table;
+struct covarianceMatrixLineBuilder {
+  typedef covarianceMatrixLine Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_EPOCH_MID(::flatbuffers::Offset<::flatbuffers::String> EPOCH_MID) {
-    fbb_.AddOffset(PPEOrbitalElementRecord::VT_EPOCH_MID, EPOCH_MID);
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(covarianceMatrixLine::VT_EPOCH, EPOCH);
   }
-  void add_EPOCH_HALF_SPAN(double EPOCH_HALF_SPAN) {
-    fbb_.AddElement<double>(PPEOrbitalElementRecord::VT_EPOCH_HALF_SPAN, EPOCH_HALF_SPAN, 0.0);
+  void add_CX_X(double CX_X) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CX_X, CX_X, 0.0);
   }
-  void add_NUM_COEFFICIENTS(uint16_t NUM_COEFFICIENTS) {
-    fbb_.AddElement<uint16_t>(PPEOrbitalElementRecord::VT_NUM_COEFFICIENTS, NUM_COEFFICIENTS, 0);
+  void add_CY_X(double CY_X) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CY_X, CY_X, 0.0);
   }
-  void add_BASIS_TYPE(polynomialBasisType BASIS_TYPE) {
-    fbb_.AddElement<int8_t>(PPEOrbitalElementRecord::VT_BASIS_TYPE, static_cast<int8_t>(BASIS_TYPE), 0);
+  void add_CY_Y(double CY_Y) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CY_Y, CY_Y, 0.0);
   }
-  void add_SIZE_SHAPE_TYPE(sizeShapeProfile SIZE_SHAPE_TYPE) {
-    fbb_.AddElement<int8_t>(PPEOrbitalElementRecord::VT_SIZE_SHAPE_TYPE, static_cast<int8_t>(SIZE_SHAPE_TYPE), 0);
+  void add_CZ_X(double CZ_X) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CZ_X, CZ_X, 0.0);
   }
-  void add_ANOMALY_TYPE(ppeAnomalyType ANOMALY_TYPE) {
-    fbb_.AddElement<int8_t>(PPEOrbitalElementRecord::VT_ANOMALY_TYPE, static_cast<int8_t>(ANOMALY_TYPE), 0);
+  void add_CZ_Y(double CZ_Y) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CZ_Y, CZ_Y, 0.0);
   }
-  void add_COEFF_SIZE_SHAPE(::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_SIZE_SHAPE) {
-    fbb_.AddOffset(PPEOrbitalElementRecord::VT_COEFF_SIZE_SHAPE, COEFF_SIZE_SHAPE);
+  void add_CZ_Z(double CZ_Z) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CZ_Z, CZ_Z, 0.0);
   }
-  void add_COEFF_ECCENTRICITY(::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_ECCENTRICITY) {
-    fbb_.AddOffset(PPEOrbitalElementRecord::VT_COEFF_ECCENTRICITY, COEFF_ECCENTRICITY);
+  void add_CX_DOT_X(double CX_DOT_X) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CX_DOT_X, CX_DOT_X, 0.0);
   }
-  void add_COEFF_INCLINATION(::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_INCLINATION) {
-    fbb_.AddOffset(PPEOrbitalElementRecord::VT_COEFF_INCLINATION, COEFF_INCLINATION);
+  void add_CX_DOT_Y(double CX_DOT_Y) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CX_DOT_Y, CX_DOT_Y, 0.0);
   }
-  void add_COEFF_RAAN(::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_RAAN) {
-    fbb_.AddOffset(PPEOrbitalElementRecord::VT_COEFF_RAAN, COEFF_RAAN);
+  void add_CX_DOT_Z(double CX_DOT_Z) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CX_DOT_Z, CX_DOT_Z, 0.0);
   }
-  void add_COEFF_ARG_PERIAPSIS(::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_ARG_PERIAPSIS) {
-    fbb_.AddOffset(PPEOrbitalElementRecord::VT_COEFF_ARG_PERIAPSIS, COEFF_ARG_PERIAPSIS);
+  void add_CX_DOT_X_DOT(double CX_DOT_X_DOT) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CX_DOT_X_DOT, CX_DOT_X_DOT, 0.0);
   }
-  void add_COEFF_ANOMALY(::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_ANOMALY) {
-    fbb_.AddOffset(PPEOrbitalElementRecord::VT_COEFF_ANOMALY, COEFF_ANOMALY);
+  void add_CY_DOT_X(double CY_DOT_X) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CY_DOT_X, CY_DOT_X, 0.0);
   }
-  void add_MAX_ELEMENT_RESIDUAL(double MAX_ELEMENT_RESIDUAL) {
-    fbb_.AddElement<double>(PPEOrbitalElementRecord::VT_MAX_ELEMENT_RESIDUAL, MAX_ELEMENT_RESIDUAL, 0.0);
+  void add_CY_DOT_Y(double CY_DOT_Y) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CY_DOT_Y, CY_DOT_Y, 0.0);
   }
-  void add_RMS_ELEMENT_RESIDUAL(double RMS_ELEMENT_RESIDUAL) {
-    fbb_.AddElement<double>(PPEOrbitalElementRecord::VT_RMS_ELEMENT_RESIDUAL, RMS_ELEMENT_RESIDUAL, 0.0);
+  void add_CY_DOT_Z(double CY_DOT_Z) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CY_DOT_Z, CY_DOT_Z, 0.0);
   }
-  explicit PPEOrbitalElementRecordBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_CY_DOT_X_DOT(double CY_DOT_X_DOT) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CY_DOT_X_DOT, CY_DOT_X_DOT, 0.0);
+  }
+  void add_CY_DOT_Y_DOT(double CY_DOT_Y_DOT) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CY_DOT_Y_DOT, CY_DOT_Y_DOT, 0.0);
+  }
+  void add_CZ_DOT_X(double CZ_DOT_X) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CZ_DOT_X, CZ_DOT_X, 0.0);
+  }
+  void add_CZ_DOT_Y(double CZ_DOT_Y) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CZ_DOT_Y, CZ_DOT_Y, 0.0);
+  }
+  void add_CZ_DOT_Z(double CZ_DOT_Z) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CZ_DOT_Z, CZ_DOT_Z, 0.0);
+  }
+  void add_CZ_DOT_X_DOT(double CZ_DOT_X_DOT) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CZ_DOT_X_DOT, CZ_DOT_X_DOT, 0.0);
+  }
+  void add_CZ_DOT_Y_DOT(double CZ_DOT_Y_DOT) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CZ_DOT_Y_DOT, CZ_DOT_Y_DOT, 0.0);
+  }
+  void add_CZ_DOT_Z_DOT(double CZ_DOT_Z_DOT) {
+    fbb_.AddElement<double>(covarianceMatrixLine::VT_CZ_DOT_Z_DOT, CZ_DOT_Z_DOT, 0.0);
+  }
+  explicit covarianceMatrixLineBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<PPEOrbitalElementRecord> Finish() {
+  ::flatbuffers::Offset<covarianceMatrixLine> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PPEOrbitalElementRecord>(end);
-    fbb_.Required(o, PPEOrbitalElementRecord::VT_EPOCH_MID);
-    fbb_.Required(o, PPEOrbitalElementRecord::VT_COEFF_SIZE_SHAPE);
-    fbb_.Required(o, PPEOrbitalElementRecord::VT_COEFF_ECCENTRICITY);
-    fbb_.Required(o, PPEOrbitalElementRecord::VT_COEFF_INCLINATION);
-    fbb_.Required(o, PPEOrbitalElementRecord::VT_COEFF_RAAN);
-    fbb_.Required(o, PPEOrbitalElementRecord::VT_COEFF_ARG_PERIAPSIS);
-    fbb_.Required(o, PPEOrbitalElementRecord::VT_COEFF_ANOMALY);
+    auto o = ::flatbuffers::Offset<covarianceMatrixLine>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<PPEOrbitalElementRecord> CreatePPEOrbitalElementRecord(
+inline ::flatbuffers::Offset<covarianceMatrixLine> CreatecovarianceMatrixLine(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> EPOCH_MID = 0,
-    double EPOCH_HALF_SPAN = 0.0,
-    uint16_t NUM_COEFFICIENTS = 0,
-    polynomialBasisType BASIS_TYPE = polynomialBasisType_CHEBYSHEV,
-    sizeShapeProfile SIZE_SHAPE_TYPE = sizeShapeProfile_SMA,
-    ppeAnomalyType ANOMALY_TYPE = ppeAnomalyType_TRUE_ANOMALY,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_SIZE_SHAPE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_ECCENTRICITY = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_INCLINATION = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_RAAN = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_ARG_PERIAPSIS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COEFF_ANOMALY = 0,
-    double MAX_ELEMENT_RESIDUAL = 0.0,
-    double RMS_ELEMENT_RESIDUAL = 0.0) {
-  PPEOrbitalElementRecordBuilder builder_(_fbb);
-  builder_.add_RMS_ELEMENT_RESIDUAL(RMS_ELEMENT_RESIDUAL);
-  builder_.add_MAX_ELEMENT_RESIDUAL(MAX_ELEMENT_RESIDUAL);
-  builder_.add_EPOCH_HALF_SPAN(EPOCH_HALF_SPAN);
-  builder_.add_COEFF_ANOMALY(COEFF_ANOMALY);
-  builder_.add_COEFF_ARG_PERIAPSIS(COEFF_ARG_PERIAPSIS);
-  builder_.add_COEFF_RAAN(COEFF_RAAN);
-  builder_.add_COEFF_INCLINATION(COEFF_INCLINATION);
-  builder_.add_COEFF_ECCENTRICITY(COEFF_ECCENTRICITY);
-  builder_.add_COEFF_SIZE_SHAPE(COEFF_SIZE_SHAPE);
-  builder_.add_EPOCH_MID(EPOCH_MID);
-  builder_.add_NUM_COEFFICIENTS(NUM_COEFFICIENTS);
-  builder_.add_ANOMALY_TYPE(ANOMALY_TYPE);
-  builder_.add_SIZE_SHAPE_TYPE(SIZE_SHAPE_TYPE);
-  builder_.add_BASIS_TYPE(BASIS_TYPE);
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    double CX_X = 0.0,
+    double CY_X = 0.0,
+    double CY_Y = 0.0,
+    double CZ_X = 0.0,
+    double CZ_Y = 0.0,
+    double CZ_Z = 0.0,
+    double CX_DOT_X = 0.0,
+    double CX_DOT_Y = 0.0,
+    double CX_DOT_Z = 0.0,
+    double CX_DOT_X_DOT = 0.0,
+    double CY_DOT_X = 0.0,
+    double CY_DOT_Y = 0.0,
+    double CY_DOT_Z = 0.0,
+    double CY_DOT_X_DOT = 0.0,
+    double CY_DOT_Y_DOT = 0.0,
+    double CZ_DOT_X = 0.0,
+    double CZ_DOT_Y = 0.0,
+    double CZ_DOT_Z = 0.0,
+    double CZ_DOT_X_DOT = 0.0,
+    double CZ_DOT_Y_DOT = 0.0,
+    double CZ_DOT_Z_DOT = 0.0) {
+  covarianceMatrixLineBuilder builder_(_fbb);
+  builder_.add_CZ_DOT_Z_DOT(CZ_DOT_Z_DOT);
+  builder_.add_CZ_DOT_Y_DOT(CZ_DOT_Y_DOT);
+  builder_.add_CZ_DOT_X_DOT(CZ_DOT_X_DOT);
+  builder_.add_CZ_DOT_Z(CZ_DOT_Z);
+  builder_.add_CZ_DOT_Y(CZ_DOT_Y);
+  builder_.add_CZ_DOT_X(CZ_DOT_X);
+  builder_.add_CY_DOT_Y_DOT(CY_DOT_Y_DOT);
+  builder_.add_CY_DOT_X_DOT(CY_DOT_X_DOT);
+  builder_.add_CY_DOT_Z(CY_DOT_Z);
+  builder_.add_CY_DOT_Y(CY_DOT_Y);
+  builder_.add_CY_DOT_X(CY_DOT_X);
+  builder_.add_CX_DOT_X_DOT(CX_DOT_X_DOT);
+  builder_.add_CX_DOT_Z(CX_DOT_Z);
+  builder_.add_CX_DOT_Y(CX_DOT_Y);
+  builder_.add_CX_DOT_X(CX_DOT_X);
+  builder_.add_CZ_Z(CZ_Z);
+  builder_.add_CZ_Y(CZ_Y);
+  builder_.add_CZ_X(CZ_X);
+  builder_.add_CY_Y(CY_Y);
+  builder_.add_CY_X(CY_X);
+  builder_.add_CX_X(CX_X);
+  builder_.add_EPOCH(EPOCH);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<PPEOrbitalElementRecord> CreatePPEOrbitalElementRecordDirect(
+inline ::flatbuffers::Offset<covarianceMatrixLine> CreatecovarianceMatrixLineDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *EPOCH_MID = nullptr,
-    double EPOCH_HALF_SPAN = 0.0,
-    uint16_t NUM_COEFFICIENTS = 0,
-    polynomialBasisType BASIS_TYPE = polynomialBasisType_CHEBYSHEV,
-    sizeShapeProfile SIZE_SHAPE_TYPE = sizeShapeProfile_SMA,
-    ppeAnomalyType ANOMALY_TYPE = ppeAnomalyType_TRUE_ANOMALY,
-    const std::vector<double> *COEFF_SIZE_SHAPE = nullptr,
-    const std::vector<double> *COEFF_ECCENTRICITY = nullptr,
-    const std::vector<double> *COEFF_INCLINATION = nullptr,
-    const std::vector<double> *COEFF_RAAN = nullptr,
-    const std::vector<double> *COEFF_ARG_PERIAPSIS = nullptr,
-    const std::vector<double> *COEFF_ANOMALY = nullptr,
-    double MAX_ELEMENT_RESIDUAL = 0.0,
-    double RMS_ELEMENT_RESIDUAL = 0.0) {
-  auto EPOCH_MID__ = EPOCH_MID ? _fbb.CreateString(EPOCH_MID) : 0;
-  auto COEFF_SIZE_SHAPE__ = COEFF_SIZE_SHAPE ? _fbb.CreateVector<double>(*COEFF_SIZE_SHAPE) : 0;
-  auto COEFF_ECCENTRICITY__ = COEFF_ECCENTRICITY ? _fbb.CreateVector<double>(*COEFF_ECCENTRICITY) : 0;
-  auto COEFF_INCLINATION__ = COEFF_INCLINATION ? _fbb.CreateVector<double>(*COEFF_INCLINATION) : 0;
-  auto COEFF_RAAN__ = COEFF_RAAN ? _fbb.CreateVector<double>(*COEFF_RAAN) : 0;
-  auto COEFF_ARG_PERIAPSIS__ = COEFF_ARG_PERIAPSIS ? _fbb.CreateVector<double>(*COEFF_ARG_PERIAPSIS) : 0;
-  auto COEFF_ANOMALY__ = COEFF_ANOMALY ? _fbb.CreateVector<double>(*COEFF_ANOMALY) : 0;
-  return CreatePPEOrbitalElementRecord(
+    const char *EPOCH = nullptr,
+    double CX_X = 0.0,
+    double CY_X = 0.0,
+    double CY_Y = 0.0,
+    double CZ_X = 0.0,
+    double CZ_Y = 0.0,
+    double CZ_Z = 0.0,
+    double CX_DOT_X = 0.0,
+    double CX_DOT_Y = 0.0,
+    double CX_DOT_Z = 0.0,
+    double CX_DOT_X_DOT = 0.0,
+    double CY_DOT_X = 0.0,
+    double CY_DOT_Y = 0.0,
+    double CY_DOT_Z = 0.0,
+    double CY_DOT_X_DOT = 0.0,
+    double CY_DOT_Y_DOT = 0.0,
+    double CZ_DOT_X = 0.0,
+    double CZ_DOT_Y = 0.0,
+    double CZ_DOT_Z = 0.0,
+    double CZ_DOT_X_DOT = 0.0,
+    double CZ_DOT_Y_DOT = 0.0,
+    double CZ_DOT_Z_DOT = 0.0) {
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  return CreatecovarianceMatrixLine(
       _fbb,
-      EPOCH_MID__,
-      EPOCH_HALF_SPAN,
-      NUM_COEFFICIENTS,
-      BASIS_TYPE,
-      SIZE_SHAPE_TYPE,
-      ANOMALY_TYPE,
-      COEFF_SIZE_SHAPE__,
-      COEFF_ECCENTRICITY__,
-      COEFF_INCLINATION__,
-      COEFF_RAAN__,
-      COEFF_ARG_PERIAPSIS__,
-      COEFF_ANOMALY__,
-      MAX_ELEMENT_RESIDUAL,
-      RMS_ELEMENT_RESIDUAL);
+      EPOCH__,
+      CX_X,
+      CY_X,
+      CY_Y,
+      CZ_X,
+      CZ_Y,
+      CZ_Z,
+      CX_DOT_X,
+      CX_DOT_Y,
+      CX_DOT_Z,
+      CX_DOT_X_DOT,
+      CY_DOT_X,
+      CY_DOT_Y,
+      CY_DOT_Z,
+      CY_DOT_X_DOT,
+      CY_DOT_Y_DOT,
+      CZ_DOT_X,
+      CZ_DOT_Y,
+      CZ_DOT_Z,
+      CZ_DOT_X_DOT,
+      CZ_DOT_Y_DOT,
+      CZ_DOT_Z_DOT);
 }
 
-/// Polynomial Ephemeris — top-level message containing metadata and
-/// one or more polynomial coefficient records for a single space object.
-///
-/// A PPE message may contain position records, orbital element records, or both.
-/// Records should be ordered chronologically by EPOCH_MID and should collectively
-/// cover the time span [START_TIME, STOP_TIME] without gaps.
-struct PPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PPEBuilder Builder;
+/// OEM Ephemeris Data Block
+struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ephemerisDataBlockBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_COMMENT = 4,
     VT_OBJECT = 6,
     VT_CENTER_NAME = 8,
     VT_REFERENCE_FRAME = 10,
-    VT_TIME_SYSTEM = 12,
-    VT_START_TIME = 14,
-    VT_STOP_TIME = 16,
-    VT_DEFAULT_BASIS_TYPE = 18,
-    VT_POSITION_RECORDS = 20,
-    VT_ORBITAL_ELEMENT_RECORDS = 22,
-    VT_EPHEMERIS_SOURCE = 24,
-    VT_NOMINAL_SEGMENT_SPAN = 26,
-    VT_NOMINAL_NUM_COEFFICIENTS = 28
+    VT_REFERENCE_FRAME_EPOCH = 12,
+    VT_COV_REFERENCE_FRAME = 14,
+    VT_TIME_SYSTEM = 16,
+    VT_START_TIME = 18,
+    VT_USEABLE_START_TIME = 20,
+    VT_USEABLE_STOP_TIME = 22,
+    VT_STOP_TIME = 24,
+    VT_INTERPOLATION = 26,
+    VT_INTERPOLATION_DEGREE = 28,
+    VT_STEP_SIZE = 30,
+    VT_STATE_VECTOR_SIZE = 32,
+    VT_EPHEMERIS_DATA = 34,
+    VT_EPHEMERIS_DATA_LINES = 36,
+    VT_COVARIANCE_MATRIX_LINES = 38,
+    VT_POLYNOMIAL_POSITION_RECORDS = 40
   };
-  /// Plain-text comments.
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COMMENT);
+  /// Plain-Text Comment
+  const ::flatbuffers::String *COMMENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
   }
-  /// Space object identification.
+  /// Satellite name for the first object
   const CAT *OBJECT() const {
     return GetPointer<const CAT *>(VT_OBJECT);
   }
-  /// Origin of the reference frame (e.g., EARTH, MOON, MARS).
+  /// Origin of reference frame (EARTH, MARS, MOON, etc.)
   const ::flatbuffers::String *CENTER_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CENTER_NAME);
   }
-  /// Reference frame for position/velocity coefficients.
+  /// Name of the reference frame (TEME, EME2000, etc.)
   const RFM *REFERENCE_FRAME() const {
     return GetPointer<const RFM *>(VT_REFERENCE_FRAME);
   }
-  /// Time system used for all epochs in this message.
+  /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
+  const ::flatbuffers::String *REFERENCE_FRAME_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE_FRAME_EPOCH);
+  }
+  /// Reference frame for the covariance matrix
+  const RFM *COV_REFERENCE_FRAME() const {
+    return GetPointer<const RFM *>(VT_COV_REFERENCE_FRAME);
+  }
+  /// Time system used for the orbit state and covariance matrix. (UTC)
   timingStandard TIME_SYSTEM() const {
     return static_cast<timingStandard>(GetField<int8_t>(VT_TIME_SYSTEM, 0));
   }
-  /// Start of the total time span covered by this ephemeris (ISO 8601).
+  /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
   const ::flatbuffers::String *START_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_START_TIME);
   }
-  /// End of the total time span covered by this ephemeris (ISO 8601).
+  /// Optional start USEABLE time span covered by ephemeris data (ISO 8601)
+  const ::flatbuffers::String *USEABLE_START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_USEABLE_START_TIME);
+  }
+  /// Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
+  const ::flatbuffers::String *USEABLE_STOP_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_USEABLE_STOP_TIME);
+  }
+  /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
   const ::flatbuffers::String *STOP_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_STOP_TIME);
   }
-  /// Default polynomial basis type for all records in this message.
-  /// Individual records may override this with their own BASIS_TYPE field.
-  polynomialBasisType DEFAULT_BASIS_TYPE() const {
-    return static_cast<polynomialBasisType>(GetField<int8_t>(VT_DEFAULT_BASIS_TYPE, 0));
+  /// Recommended interpolation method for ephemeris data.
+  /// Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+  /// When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
+  /// for high-fidelity polynomial interpolation instead of interpolating across
+  /// discrete state vectors.
+  const ::flatbuffers::String *INTERPOLATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INTERPOLATION);
   }
-  /// Array of position polynomial records.
-  /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
-  const ::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>> *POSITION_RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>> *>(VT_POSITION_RECORDS);
+  /// Recommended interpolation degree for ephemeris data
+  uint32_t INTERPOLATION_DEGREE() const {
+    return GetField<uint32_t>(VT_INTERPOLATION_DEGREE, 0);
   }
-  /// Array of orbital element polynomial records.
-  /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
-  const ::flatbuffers::Vector<::flatbuffers::Offset<PPEOrbitalElementRecord>> *ORBITAL_ELEMENT_RECORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PPEOrbitalElementRecord>> *>(VT_ORBITAL_ELEMENT_RECORDS);
+  /// Time interval between ephemeris states in seconds.
+  /// If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
+  /// If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
+  double STEP_SIZE() const {
+    return GetField<double>(VT_STEP_SIZE, 0.0);
   }
-  /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
-  const ::flatbuffers::String *EPHEMERIS_SOURCE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_SOURCE);
+  /// Number of components per state vector in EPHEMERIS_DATA array.
+  /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  /// Only used when STEP_SIZE > 0. Default is 6.
+  uint8_t STATE_VECTOR_SIZE() const {
+    return GetField<uint8_t>(VT_STATE_VECTOR_SIZE, 6);
   }
-  /// Fit span in seconds used to generate each polynomial segment.
-  /// Informational; actual spans are in individual records.
-  double NOMINAL_SEGMENT_SPAN() const {
-    return GetField<double>(VT_NOMINAL_SEGMENT_SPAN, 0.0);
+  /// Compact ephemeris data as row-major array of doubles.
+  /// Only used when STEP_SIZE > 0.
+  /// Layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+  /// Units: position in km, velocity in km/s, acceleration in km/s²
+  /// Length must be divisible by STATE_VECTOR_SIZE.
+  /// Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE
+  const ::flatbuffers::Vector<double> *EPHEMERIS_DATA() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_EPHEMERIS_DATA);
   }
-  /// Nominal number of coefficients per segment.
-  /// Informational; actual counts are in individual records.
-  uint16_t NOMINAL_NUM_COEFFICIENTS() const {
-    return GetField<uint16_t>(VT_NOMINAL_NUM_COEFFICIENTS, 0);
+  /// Array of ephemeris data lines with explicit epochs.
+  /// Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
+  /// Each line contains its own EPOCH timestamp.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ephemerisDataLine>> *EPHEMERIS_DATA_LINES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ephemerisDataLine>> *>(VT_EPHEMERIS_DATA_LINES);
+  }
+  /// Array of covariance matrix lines (optional)
+  const ::flatbuffers::Vector<::flatbuffers::Offset<covarianceMatrixLine>> *COVARIANCE_MATRIX_LINES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<covarianceMatrixLine>> *>(VT_COVARIANCE_MATRIX_LINES);
+  }
+  /// Optional polynomial position records for high-fidelity interpolation.
+  /// Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+  /// polynomial coefficients for continuous position (and optionally velocity) evaluation.
+  /// See PPE schema for record structure and evaluation procedure.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>> *POLYNOMIAL_POSITION_RECORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>> *>(VT_POLYNOMIAL_POSITION_RECORDS);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COMMENT) &&
-           verifier.VerifyVector(COMMENT()) &&
-           verifier.VerifyVectorOfStrings(COMMENT()) &&
+           verifier.VerifyString(COMMENT()) &&
            VerifyOffset(verifier, VT_OBJECT) &&
            verifier.VerifyTable(OBJECT()) &&
            VerifyOffset(verifier, VT_CENTER_NAME) &&
            verifier.VerifyString(CENTER_NAME()) &&
            VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
            verifier.VerifyTable(REFERENCE_FRAME()) &&
+           VerifyOffset(verifier, VT_REFERENCE_FRAME_EPOCH) &&
+           verifier.VerifyString(REFERENCE_FRAME_EPOCH()) &&
+           VerifyOffset(verifier, VT_COV_REFERENCE_FRAME) &&
+           verifier.VerifyTable(COV_REFERENCE_FRAME()) &&
            VerifyField<int8_t>(verifier, VT_TIME_SYSTEM, 1) &&
            VerifyOffset(verifier, VT_START_TIME) &&
            verifier.VerifyString(START_TIME()) &&
+           VerifyOffset(verifier, VT_USEABLE_START_TIME) &&
+           verifier.VerifyString(USEABLE_START_TIME()) &&
+           VerifyOffset(verifier, VT_USEABLE_STOP_TIME) &&
+           verifier.VerifyString(USEABLE_STOP_TIME()) &&
            VerifyOffset(verifier, VT_STOP_TIME) &&
            verifier.VerifyString(STOP_TIME()) &&
-           VerifyField<int8_t>(verifier, VT_DEFAULT_BASIS_TYPE, 1) &&
-           VerifyOffset(verifier, VT_POSITION_RECORDS) &&
-           verifier.VerifyVector(POSITION_RECORDS()) &&
-           verifier.VerifyVectorOfTables(POSITION_RECORDS()) &&
-           VerifyOffset(verifier, VT_ORBITAL_ELEMENT_RECORDS) &&
-           verifier.VerifyVector(ORBITAL_ELEMENT_RECORDS()) &&
-           verifier.VerifyVectorOfTables(ORBITAL_ELEMENT_RECORDS()) &&
-           VerifyOffset(verifier, VT_EPHEMERIS_SOURCE) &&
-           verifier.VerifyString(EPHEMERIS_SOURCE()) &&
-           VerifyField<double>(verifier, VT_NOMINAL_SEGMENT_SPAN, 8) &&
-           VerifyField<uint16_t>(verifier, VT_NOMINAL_NUM_COEFFICIENTS, 2) &&
+           VerifyOffset(verifier, VT_INTERPOLATION) &&
+           verifier.VerifyString(INTERPOLATION()) &&
+           VerifyField<uint32_t>(verifier, VT_INTERPOLATION_DEGREE, 4) &&
+           VerifyField<double>(verifier, VT_STEP_SIZE, 8) &&
+           VerifyField<uint8_t>(verifier, VT_STATE_VECTOR_SIZE, 1) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_DATA) &&
+           verifier.VerifyVector(EPHEMERIS_DATA()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_DATA_LINES) &&
+           verifier.VerifyVector(EPHEMERIS_DATA_LINES()) &&
+           verifier.VerifyVectorOfTables(EPHEMERIS_DATA_LINES()) &&
+           VerifyOffset(verifier, VT_COVARIANCE_MATRIX_LINES) &&
+           verifier.VerifyVector(COVARIANCE_MATRIX_LINES()) &&
+           verifier.VerifyVectorOfTables(COVARIANCE_MATRIX_LINES()) &&
+           VerifyOffset(verifier, VT_POLYNOMIAL_POSITION_RECORDS) &&
+           verifier.VerifyVector(POLYNOMIAL_POSITION_RECORDS()) &&
+           verifier.VerifyVectorOfTables(POLYNOMIAL_POSITION_RECORDS()) &&
            verifier.EndTable();
   }
 };
 
-struct PPEBuilder {
-  typedef PPE Table;
+struct ephemerisDataBlockBuilder {
+  typedef ephemerisDataBlock Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT) {
-    fbb_.AddOffset(PPE::VT_COMMENT, COMMENT);
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
+    fbb_.AddOffset(ephemerisDataBlock::VT_COMMENT, COMMENT);
   }
   void add_OBJECT(::flatbuffers::Offset<CAT> OBJECT) {
-    fbb_.AddOffset(PPE::VT_OBJECT, OBJECT);
+    fbb_.AddOffset(ephemerisDataBlock::VT_OBJECT, OBJECT);
   }
   void add_CENTER_NAME(::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME) {
-    fbb_.AddOffset(PPE::VT_CENTER_NAME, CENTER_NAME);
+    fbb_.AddOffset(ephemerisDataBlock::VT_CENTER_NAME, CENTER_NAME);
   }
   void add_REFERENCE_FRAME(::flatbuffers::Offset<RFM> REFERENCE_FRAME) {
-    fbb_.AddOffset(PPE::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+    fbb_.AddOffset(ephemerisDataBlock::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  void add_REFERENCE_FRAME_EPOCH(::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME_EPOCH) {
+    fbb_.AddOffset(ephemerisDataBlock::VT_REFERENCE_FRAME_EPOCH, REFERENCE_FRAME_EPOCH);
+  }
+  void add_COV_REFERENCE_FRAME(::flatbuffers::Offset<RFM> COV_REFERENCE_FRAME) {
+    fbb_.AddOffset(ephemerisDataBlock::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME);
   }
   void add_TIME_SYSTEM(timingStandard TIME_SYSTEM) {
-    fbb_.AddElement<int8_t>(PPE::VT_TIME_SYSTEM, static_cast<int8_t>(TIME_SYSTEM), 0);
+    fbb_.AddElement<int8_t>(ephemerisDataBlock::VT_TIME_SYSTEM, static_cast<int8_t>(TIME_SYSTEM), 0);
   }
   void add_START_TIME(::flatbuffers::Offset<::flatbuffers::String> START_TIME) {
-    fbb_.AddOffset(PPE::VT_START_TIME, START_TIME);
+    fbb_.AddOffset(ephemerisDataBlock::VT_START_TIME, START_TIME);
+  }
+  void add_USEABLE_START_TIME(::flatbuffers::Offset<::flatbuffers::String> USEABLE_START_TIME) {
+    fbb_.AddOffset(ephemerisDataBlock::VT_USEABLE_START_TIME, USEABLE_START_TIME);
+  }
+  void add_USEABLE_STOP_TIME(::flatbuffers::Offset<::flatbuffers::String> USEABLE_STOP_TIME) {
+    fbb_.AddOffset(ephemerisDataBlock::VT_USEABLE_STOP_TIME, USEABLE_STOP_TIME);
   }
   void add_STOP_TIME(::flatbuffers::Offset<::flatbuffers::String> STOP_TIME) {
-    fbb_.AddOffset(PPE::VT_STOP_TIME, STOP_TIME);
+    fbb_.AddOffset(ephemerisDataBlock::VT_STOP_TIME, STOP_TIME);
   }
-  void add_DEFAULT_BASIS_TYPE(polynomialBasisType DEFAULT_BASIS_TYPE) {
-    fbb_.AddElement<int8_t>(PPE::VT_DEFAULT_BASIS_TYPE, static_cast<int8_t>(DEFAULT_BASIS_TYPE), 0);
+  void add_INTERPOLATION(::flatbuffers::Offset<::flatbuffers::String> INTERPOLATION) {
+    fbb_.AddOffset(ephemerisDataBlock::VT_INTERPOLATION, INTERPOLATION);
   }
-  void add_POSITION_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>>> POSITION_RECORDS) {
-    fbb_.AddOffset(PPE::VT_POSITION_RECORDS, POSITION_RECORDS);
+  void add_INTERPOLATION_DEGREE(uint32_t INTERPOLATION_DEGREE) {
+    fbb_.AddElement<uint32_t>(ephemerisDataBlock::VT_INTERPOLATION_DEGREE, INTERPOLATION_DEGREE, 0);
   }
-  void add_ORBITAL_ELEMENT_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEOrbitalElementRecord>>> ORBITAL_ELEMENT_RECORDS) {
-    fbb_.AddOffset(PPE::VT_ORBITAL_ELEMENT_RECORDS, ORBITAL_ELEMENT_RECORDS);
+  void add_STEP_SIZE(double STEP_SIZE) {
+    fbb_.AddElement<double>(ephemerisDataBlock::VT_STEP_SIZE, STEP_SIZE, 0.0);
   }
-  void add_EPHEMERIS_SOURCE(::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_SOURCE) {
-    fbb_.AddOffset(PPE::VT_EPHEMERIS_SOURCE, EPHEMERIS_SOURCE);
+  void add_STATE_VECTOR_SIZE(uint8_t STATE_VECTOR_SIZE) {
+    fbb_.AddElement<uint8_t>(ephemerisDataBlock::VT_STATE_VECTOR_SIZE, STATE_VECTOR_SIZE, 6);
   }
-  void add_NOMINAL_SEGMENT_SPAN(double NOMINAL_SEGMENT_SPAN) {
-    fbb_.AddElement<double>(PPE::VT_NOMINAL_SEGMENT_SPAN, NOMINAL_SEGMENT_SPAN, 0.0);
+  void add_EPHEMERIS_DATA(::flatbuffers::Offset<::flatbuffers::Vector<double>> EPHEMERIS_DATA) {
+    fbb_.AddOffset(ephemerisDataBlock::VT_EPHEMERIS_DATA, EPHEMERIS_DATA);
   }
-  void add_NOMINAL_NUM_COEFFICIENTS(uint16_t NOMINAL_NUM_COEFFICIENTS) {
-    fbb_.AddElement<uint16_t>(PPE::VT_NOMINAL_NUM_COEFFICIENTS, NOMINAL_NUM_COEFFICIENTS, 0);
+  void add_EPHEMERIS_DATA_LINES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ephemerisDataLine>>> EPHEMERIS_DATA_LINES) {
+    fbb_.AddOffset(ephemerisDataBlock::VT_EPHEMERIS_DATA_LINES, EPHEMERIS_DATA_LINES);
   }
-  explicit PPEBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_COVARIANCE_MATRIX_LINES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<covarianceMatrixLine>>> COVARIANCE_MATRIX_LINES) {
+    fbb_.AddOffset(ephemerisDataBlock::VT_COVARIANCE_MATRIX_LINES, COVARIANCE_MATRIX_LINES);
+  }
+  void add_POLYNOMIAL_POSITION_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>>> POLYNOMIAL_POSITION_RECORDS) {
+    fbb_.AddOffset(ephemerisDataBlock::VT_POLYNOMIAL_POSITION_RECORDS, POLYNOMIAL_POSITION_RECORDS);
+  }
+  explicit ephemerisDataBlockBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<PPE> Finish() {
+  ::flatbuffers::Offset<ephemerisDataBlock> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PPE>(end);
+    auto o = ::flatbuffers::Offset<ephemerisDataBlock>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<PPE> CreatePPE(
+inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlock(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
     ::flatbuffers::Offset<CAT> OBJECT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME = 0,
     ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME_EPOCH = 0,
+    ::flatbuffers::Offset<RFM> COV_REFERENCE_FRAME = 0,
     timingStandard TIME_SYSTEM = timingStandard_GMST,
     ::flatbuffers::Offset<::flatbuffers::String> START_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> USEABLE_START_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> USEABLE_STOP_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> STOP_TIME = 0,
-    polynomialBasisType DEFAULT_BASIS_TYPE = polynomialBasisType_CHEBYSHEV,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>>> POSITION_RECORDS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEOrbitalElementRecord>>> ORBITAL_ELEMENT_RECORDS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_SOURCE = 0,
-    double NOMINAL_SEGMENT_SPAN = 0.0,
-    uint16_t NOMINAL_NUM_COEFFICIENTS = 0) {
-  PPEBuilder builder_(_fbb);
-  builder_.add_NOMINAL_SEGMENT_SPAN(NOMINAL_SEGMENT_SPAN);
-  builder_.add_EPHEMERIS_SOURCE(EPHEMERIS_SOURCE);
-  builder_.add_ORBITAL_ELEMENT_RECORDS(ORBITAL_ELEMENT_RECORDS);
-  builder_.add_POSITION_RECORDS(POSITION_RECORDS);
+    ::flatbuffers::Offset<::flatbuffers::String> INTERPOLATION = 0,
+    uint32_t INTERPOLATION_DEGREE = 0,
+    double STEP_SIZE = 0.0,
+    uint8_t STATE_VECTOR_SIZE = 6,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> EPHEMERIS_DATA = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ephemerisDataLine>>> EPHEMERIS_DATA_LINES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<covarianceMatrixLine>>> COVARIANCE_MATRIX_LINES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>>> POLYNOMIAL_POSITION_RECORDS = 0) {
+  ephemerisDataBlockBuilder builder_(_fbb);
+  builder_.add_STEP_SIZE(STEP_SIZE);
+  builder_.add_POLYNOMIAL_POSITION_RECORDS(POLYNOMIAL_POSITION_RECORDS);
+  builder_.add_COVARIANCE_MATRIX_LINES(COVARIANCE_MATRIX_LINES);
+  builder_.add_EPHEMERIS_DATA_LINES(EPHEMERIS_DATA_LINES);
+  builder_.add_EPHEMERIS_DATA(EPHEMERIS_DATA);
+  builder_.add_INTERPOLATION_DEGREE(INTERPOLATION_DEGREE);
+  builder_.add_INTERPOLATION(INTERPOLATION);
   builder_.add_STOP_TIME(STOP_TIME);
+  builder_.add_USEABLE_STOP_TIME(USEABLE_STOP_TIME);
+  builder_.add_USEABLE_START_TIME(USEABLE_START_TIME);
   builder_.add_START_TIME(START_TIME);
+  builder_.add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME);
+  builder_.add_REFERENCE_FRAME_EPOCH(REFERENCE_FRAME_EPOCH);
   builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
   builder_.add_CENTER_NAME(CENTER_NAME);
   builder_.add_OBJECT(OBJECT);
   builder_.add_COMMENT(COMMENT);
-  builder_.add_NOMINAL_NUM_COEFFICIENTS(NOMINAL_NUM_COEFFICIENTS);
-  builder_.add_DEFAULT_BASIS_TYPE(DEFAULT_BASIS_TYPE);
+  builder_.add_STATE_VECTOR_SIZE(STATE_VECTOR_SIZE);
   builder_.add_TIME_SYSTEM(TIME_SYSTEM);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<PPE> CreatePPEDirect(
+inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT = nullptr,
+    const char *COMMENT = nullptr,
     ::flatbuffers::Offset<CAT> OBJECT = 0,
     const char *CENTER_NAME = nullptr,
     ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
+    const char *REFERENCE_FRAME_EPOCH = nullptr,
+    ::flatbuffers::Offset<RFM> COV_REFERENCE_FRAME = 0,
     timingStandard TIME_SYSTEM = timingStandard_GMST,
     const char *START_TIME = nullptr,
+    const char *USEABLE_START_TIME = nullptr,
+    const char *USEABLE_STOP_TIME = nullptr,
     const char *STOP_TIME = nullptr,
-    polynomialBasisType DEFAULT_BASIS_TYPE = polynomialBasisType_CHEBYSHEV,
-    const std::vector<::flatbuffers::Offset<PPEPositionRecord>> *POSITION_RECORDS = nullptr,
-    const std::vector<::flatbuffers::Offset<PPEOrbitalElementRecord>> *ORBITAL_ELEMENT_RECORDS = nullptr,
-    const char *EPHEMERIS_SOURCE = nullptr,
-    double NOMINAL_SEGMENT_SPAN = 0.0,
-    uint16_t NOMINAL_NUM_COEFFICIENTS = 0) {
-  auto COMMENT__ = COMMENT ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COMMENT) : 0;
+    const char *INTERPOLATION = nullptr,
+    uint32_t INTERPOLATION_DEGREE = 0,
+    double STEP_SIZE = 0.0,
+    uint8_t STATE_VECTOR_SIZE = 6,
+    const std::vector<double> *EPHEMERIS_DATA = nullptr,
+    const std::vector<::flatbuffers::Offset<ephemerisDataLine>> *EPHEMERIS_DATA_LINES = nullptr,
+    const std::vector<::flatbuffers::Offset<covarianceMatrixLine>> *COVARIANCE_MATRIX_LINES = nullptr,
+    const std::vector<::flatbuffers::Offset<PPEPositionRecord>> *POLYNOMIAL_POSITION_RECORDS = nullptr) {
+  auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
   auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
+  auto REFERENCE_FRAME_EPOCH__ = REFERENCE_FRAME_EPOCH ? _fbb.CreateString(REFERENCE_FRAME_EPOCH) : 0;
   auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
+  auto USEABLE_START_TIME__ = USEABLE_START_TIME ? _fbb.CreateString(USEABLE_START_TIME) : 0;
+  auto USEABLE_STOP_TIME__ = USEABLE_STOP_TIME ? _fbb.CreateString(USEABLE_STOP_TIME) : 0;
   auto STOP_TIME__ = STOP_TIME ? _fbb.CreateString(STOP_TIME) : 0;
-  auto POSITION_RECORDS__ = POSITION_RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<PPEPositionRecord>>(*POSITION_RECORDS) : 0;
-  auto ORBITAL_ELEMENT_RECORDS__ = ORBITAL_ELEMENT_RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<PPEOrbitalElementRecord>>(*ORBITAL_ELEMENT_RECORDS) : 0;
-  auto EPHEMERIS_SOURCE__ = EPHEMERIS_SOURCE ? _fbb.CreateString(EPHEMERIS_SOURCE) : 0;
-  return CreatePPE(
+  auto INTERPOLATION__ = INTERPOLATION ? _fbb.CreateString(INTERPOLATION) : 0;
+  auto EPHEMERIS_DATA__ = EPHEMERIS_DATA ? _fbb.CreateVector<double>(*EPHEMERIS_DATA) : 0;
+  auto EPHEMERIS_DATA_LINES__ = EPHEMERIS_DATA_LINES ? _fbb.CreateVector<::flatbuffers::Offset<ephemerisDataLine>>(*EPHEMERIS_DATA_LINES) : 0;
+  auto COVARIANCE_MATRIX_LINES__ = COVARIANCE_MATRIX_LINES ? _fbb.CreateVector<::flatbuffers::Offset<covarianceMatrixLine>>(*COVARIANCE_MATRIX_LINES) : 0;
+  auto POLYNOMIAL_POSITION_RECORDS__ = POLYNOMIAL_POSITION_RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<PPEPositionRecord>>(*POLYNOMIAL_POSITION_RECORDS) : 0;
+  return CreateephemerisDataBlock(
       _fbb,
       COMMENT__,
       OBJECT,
       CENTER_NAME__,
       REFERENCE_FRAME,
+      REFERENCE_FRAME_EPOCH__,
+      COV_REFERENCE_FRAME,
       TIME_SYSTEM,
       START_TIME__,
+      USEABLE_START_TIME__,
+      USEABLE_STOP_TIME__,
       STOP_TIME__,
-      DEFAULT_BASIS_TYPE,
-      POSITION_RECORDS__,
-      ORBITAL_ELEMENT_RECORDS__,
-      EPHEMERIS_SOURCE__,
-      NOMINAL_SEGMENT_SPAN,
-      NOMINAL_NUM_COEFFICIENTS);
+      INTERPOLATION__,
+      INTERPOLATION_DEGREE,
+      STEP_SIZE,
+      STATE_VECTOR_SIZE,
+      EPHEMERIS_DATA__,
+      EPHEMERIS_DATA_LINES__,
+      COVARIANCE_MATRIX_LINES__,
+      POLYNOMIAL_POSITION_RECORDS__);
 }
 
-inline const PPE *GetPPE(const void *buf) {
-  return ::flatbuffers::GetRoot<PPE>(buf);
+/// Orbit Ephemeris Message
+struct OEM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef OEMBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CLASSIFICATION = 4,
+    VT_CCSDS_OEM_VERS = 6,
+    VT_CREATION_DATE = 8,
+    VT_ORIGINATOR = 10,
+    VT_EPHEMERIS_DATA_BLOCK = 12
+  };
+  /// OEM Header
+  /// Classification marking of the data in IC/CAPCO Portion-marked format.
+  const ::flatbuffers::String *CLASSIFICATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION);
+  }
+  /// OEM Version
+  double CCSDS_OEM_VERS() const {
+    return GetField<double>(VT_CCSDS_OEM_VERS, 0.0);
+  }
+  /// Creation Date
+  const ::flatbuffers::String *CREATION_DATE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CREATION_DATE);
+  }
+  /// Originator
+  const ::flatbuffers::String *ORIGINATOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIGINATOR);
+  }
+  /// Array of ephemeris data blocks
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ephemerisDataBlock>> *EPHEMERIS_DATA_BLOCK() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ephemerisDataBlock>> *>(VT_EPHEMERIS_DATA_BLOCK);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_CLASSIFICATION) &&
+           verifier.VerifyString(CLASSIFICATION()) &&
+           VerifyField<double>(verifier, VT_CCSDS_OEM_VERS, 8) &&
+           VerifyOffset(verifier, VT_CREATION_DATE) &&
+           verifier.VerifyString(CREATION_DATE()) &&
+           VerifyOffset(verifier, VT_ORIGINATOR) &&
+           verifier.VerifyString(ORIGINATOR()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_DATA_BLOCK) &&
+           verifier.VerifyVector(EPHEMERIS_DATA_BLOCK()) &&
+           verifier.VerifyVectorOfTables(EPHEMERIS_DATA_BLOCK()) &&
+           verifier.EndTable();
+  }
+};
+
+struct OEMBuilder {
+  typedef OEM Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_CLASSIFICATION(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION) {
+    fbb_.AddOffset(OEM::VT_CLASSIFICATION, CLASSIFICATION);
+  }
+  void add_CCSDS_OEM_VERS(double CCSDS_OEM_VERS) {
+    fbb_.AddElement<double>(OEM::VT_CCSDS_OEM_VERS, CCSDS_OEM_VERS, 0.0);
+  }
+  void add_CREATION_DATE(::flatbuffers::Offset<::flatbuffers::String> CREATION_DATE) {
+    fbb_.AddOffset(OEM::VT_CREATION_DATE, CREATION_DATE);
+  }
+  void add_ORIGINATOR(::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR) {
+    fbb_.AddOffset(OEM::VT_ORIGINATOR, ORIGINATOR);
+  }
+  void add_EPHEMERIS_DATA_BLOCK(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ephemerisDataBlock>>> EPHEMERIS_DATA_BLOCK) {
+    fbb_.AddOffset(OEM::VT_EPHEMERIS_DATA_BLOCK, EPHEMERIS_DATA_BLOCK);
+  }
+  explicit OEMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<OEM> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<OEM>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<OEM> CreateOEM(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION = 0,
+    double CCSDS_OEM_VERS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> CREATION_DATE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ephemerisDataBlock>>> EPHEMERIS_DATA_BLOCK = 0) {
+  OEMBuilder builder_(_fbb);
+  builder_.add_CCSDS_OEM_VERS(CCSDS_OEM_VERS);
+  builder_.add_EPHEMERIS_DATA_BLOCK(EPHEMERIS_DATA_BLOCK);
+  builder_.add_ORIGINATOR(ORIGINATOR);
+  builder_.add_CREATION_DATE(CREATION_DATE);
+  builder_.add_CLASSIFICATION(CLASSIFICATION);
+  return builder_.Finish();
 }
 
-inline const PPE *GetSizePrefixedPPE(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<PPE>(buf);
+inline ::flatbuffers::Offset<OEM> CreateOEMDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *CLASSIFICATION = nullptr,
+    double CCSDS_OEM_VERS = 0.0,
+    const char *CREATION_DATE = nullptr,
+    const char *ORIGINATOR = nullptr,
+    const std::vector<::flatbuffers::Offset<ephemerisDataBlock>> *EPHEMERIS_DATA_BLOCK = nullptr) {
+  auto CLASSIFICATION__ = CLASSIFICATION ? _fbb.CreateString(CLASSIFICATION) : 0;
+  auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
+  auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
+  auto EPHEMERIS_DATA_BLOCK__ = EPHEMERIS_DATA_BLOCK ? _fbb.CreateVector<::flatbuffers::Offset<ephemerisDataBlock>>(*EPHEMERIS_DATA_BLOCK) : 0;
+  return CreateOEM(
+      _fbb,
+      CLASSIFICATION__,
+      CCSDS_OEM_VERS,
+      CREATION_DATE__,
+      ORIGINATOR__,
+      EPHEMERIS_DATA_BLOCK__);
 }
 
-inline const char *PPEIdentifier() {
-  return "$PPE";
+inline const OEM *GetOEM(const void *buf) {
+  return ::flatbuffers::GetRoot<OEM>(buf);
 }
 
-inline bool PPEBufferHasIdentifier(const void *buf) {
+inline const OEM *GetSizePrefixedOEM(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<OEM>(buf);
+}
+
+inline const char *OEMIdentifier() {
+  return "$OEM";
+}
+
+inline bool OEMBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, PPEIdentifier());
+      buf, OEMIdentifier());
 }
 
-inline bool SizePrefixedPPEBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedOEMBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, PPEIdentifier(), true);
+      buf, OEMIdentifier(), true);
 }
 
 template <bool B = false>
-inline bool VerifyPPEBuffer(
+inline bool VerifyOEMBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<PPE>(PPEIdentifier());
+  return verifier.template VerifyBuffer<OEM>(OEMIdentifier());
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedPPEBuffer(
+inline bool VerifySizePrefixedOEMBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<PPE>(PPEIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<OEM>(OEMIdentifier());
 }
 
-inline void FinishPPEBuffer(
+inline void FinishOEMBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<PPE> root) {
-  fbb.Finish(root, PPEIdentifier());
+    ::flatbuffers::Offset<OEM> root) {
+  fbb.Finish(root, OEMIdentifier());
 }
 
-inline void FinishSizePrefixedPPEBuffer(
+inline void FinishSizePrefixedOEMBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<PPE> root) {
-  fbb.FinishSizePrefixed(root, PPEIdentifier());
+    ::flatbuffers::Offset<OEM> root) {
+  fbb.FinishSizePrefixed(root, OEMIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

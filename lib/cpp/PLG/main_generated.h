@@ -13,427 +13,2439 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-struct FlatBufferTypeRef;
-struct FlatBufferTypeRefBuilder;
+#include "main_generated.h"
 
-struct TAB;
-struct TABBuilder;
+struct PluginCapability;
+struct PluginCapabilityBuilder;
 
-/// Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
-/// through an arena-backed plugin stream. Carries enough identity for a
-/// receiver to dispatch on schema without inspecting the payload bytes.
-/// Logical payload wire format for a stream frame or an accepted port type.
-enum payloadWireFormat : uint8_t {
-  /// Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF.
-  payloadWireFormat_FLATBUFFER = 0,
-  /// Body is a raw aligned binary chunk (for example zero-copy structs).
-  payloadWireFormat_ALIGNED_BINARY = 1,
-  payloadWireFormat_MIN = payloadWireFormat_FLATBUFFER,
-  payloadWireFormat_MAX = payloadWireFormat_ALIGNED_BINARY
+struct PLGAcceptedTypeSet;
+struct PLGAcceptedTypeSetBuilder;
+
+struct PLGPortManifest;
+struct PLGPortManifestBuilder;
+
+struct PLGHostCapability;
+struct PLGHostCapabilityBuilder;
+
+struct PLGTimerSpec;
+struct PLGTimerSpecBuilder;
+
+struct PLGProtocolSpec;
+struct PLGProtocolSpecBuilder;
+
+struct PLGBuildArtifact;
+struct PLGBuildArtifactBuilder;
+
+struct PLGMethodManifest;
+struct PLGMethodManifestBuilder;
+
+struct PluginDependency;
+struct PluginDependencyBuilder;
+
+struct EntryFunction;
+struct EntryFunctionBuilder;
+
+struct PLG;
+struct PLGBuilder;
+
+/// Plugin type category
+enum pluginCategory : int8_t {
+  /// Sensor simulation and analysis
+  pluginCategory_Sensor = 0,
+  /// Orbital propagation algorithms
+  pluginCategory_Propagator = 1,
+  /// Custom rendering/visualization
+  pluginCategory_Renderer = 2,
+  /// Data analysis and processing
+  pluginCategory_Analysis = 3,
+  /// External data source integration
+  pluginCategory_DataSource = 4,
+  /// Electronic warfare simulation
+  pluginCategory_EW = 5,
+  /// Communications modeling
+  pluginCategory_Comms = 6,
+  /// Physics simulation
+  pluginCategory_Physics = 7,
+  /// GLSL shader plugins for custom visualization
+  pluginCategory_Shader = 8,
+  pluginCategory_MIN = pluginCategory_Sensor,
+  pluginCategory_MAX = pluginCategory_Shader
 };
 
-inline const payloadWireFormat (&EnumValuespayloadWireFormat())[2] {
-  static const payloadWireFormat values[] = {
-    payloadWireFormat_FLATBUFFER,
-    payloadWireFormat_ALIGNED_BINARY
+inline const pluginCategory (&EnumValuespluginCategory())[9] {
+  static const pluginCategory values[] = {
+    pluginCategory_Sensor,
+    pluginCategory_Propagator,
+    pluginCategory_Renderer,
+    pluginCategory_Analysis,
+    pluginCategory_DataSource,
+    pluginCategory_EW,
+    pluginCategory_Comms,
+    pluginCategory_Physics,
+    pluginCategory_Shader
   };
   return values;
 }
 
-inline const char * const *EnumNamespayloadWireFormat() {
+inline const char * const *EnumNamespluginCategory() {
+  static const char * const names[10] = {
+    "Sensor",
+    "Propagator",
+    "Renderer",
+    "Analysis",
+    "DataSource",
+    "EW",
+    "Comms",
+    "Physics",
+    "Shader",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamepluginCategory(pluginCategory e) {
+  if (::flatbuffers::IsOutRange(e, pluginCategory_Sensor, pluginCategory_Shader)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamespluginCategory()[index];
+}
+
+/// Storefront payment model for the plugin listing
+enum purchaseTier : int8_t {
+  /// No payment required
+  purchaseTier_Free = 0,
+  /// Single one-time purchase
+  purchaseTier_OneTime = 1,
+  /// Recurring subscription purchase
+  purchaseTier_Subscription = 2,
+  purchaseTier_MIN = purchaseTier_Free,
+  purchaseTier_MAX = purchaseTier_Subscription
+};
+
+inline const purchaseTier (&EnumValuespurchaseTier())[3] {
+  static const purchaseTier values[] = {
+    purchaseTier_Free,
+    purchaseTier_OneTime,
+    purchaseTier_Subscription
+  };
+  return values;
+}
+
+inline const char * const *EnumNamespurchaseTier() {
+  static const char * const names[4] = {
+    "Free",
+    "OneTime",
+    "Subscription",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamepurchaseTier(purchaseTier e) {
+  if (::flatbuffers::IsOutRange(e, purchaseTier_Free, purchaseTier_Subscription)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamespurchaseTier()[index];
+}
+
+/// Publication visibility for the plugin listing
+enum publicationState : int8_t {
+  /// Discoverable in public storefront listings
+  publicationState_Public = 0,
+  /// Addressable directly but hidden from public browse surfaces
+  publicationState_Unlisted = 1,
+  /// No longer offered for new installs or purchases
+  publicationState_Retired = 2,
+  publicationState_MIN = publicationState_Public,
+  publicationState_MAX = publicationState_Retired
+};
+
+inline const publicationState (&EnumValuespublicationState())[3] {
+  static const publicationState values[] = {
+    publicationState_Public,
+    publicationState_Unlisted,
+    publicationState_Retired
+  };
+  return values;
+}
+
+inline const char * const *EnumNamespublicationState() {
+  static const char * const names[4] = {
+    "Public",
+    "Unlisted",
+    "Retired",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamepublicationState(publicationState e) {
+  if (::flatbuffers::IsOutRange(e, publicationState_Public, publicationState_Retired)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamespublicationState()[index];
+}
+
+/// Canonical invoke surfaces a plugin artifact can expose. A single
+/// artifact can support multiple.
+enum invokeSurfaceKind : uint8_t {
+  /// Direct ABI — host calls `plugin_invoke_stream` in-process.
+  invokeSurfaceKind_DIRECT = 0,
+  /// Command surface — envelope is queued by a runtime host.
+  invokeSurfaceKind_COMMAND = 1,
+  invokeSurfaceKind_MIN = invokeSurfaceKind_DIRECT,
+  invokeSurfaceKind_MAX = invokeSurfaceKind_COMMAND
+};
+
+inline const invokeSurfaceKind (&EnumValuesinvokeSurfaceKind())[2] {
+  static const invokeSurfaceKind values[] = {
+    invokeSurfaceKind_DIRECT,
+    invokeSurfaceKind_COMMAND
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesinvokeSurfaceKind() {
   static const char * const names[3] = {
-    "FLATBUFFER",
-    "ALIGNED_BINARY",
+    "DIRECT",
+    "COMMAND",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNamepayloadWireFormat(payloadWireFormat e) {
-  if (::flatbuffers::IsOutRange(e, payloadWireFormat_FLATBUFFER, payloadWireFormat_ALIGNED_BINARY)) return "";
+inline const char *EnumNameinvokeSurfaceKind(invokeSurfaceKind e) {
+  if (::flatbuffers::IsOutRange(e, invokeSurfaceKind_DIRECT, invokeSurfaceKind_COMMAND)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamespayloadWireFormat()[index];
+  return EnumNamesinvokeSurfaceKind()[index];
 }
 
-/// Buffer mutability contract advertised by a stream port.
-enum bufferMutability : uint8_t {
-  /// Buffer is immutable after produce.
-  bufferMutability_IMMUTABLE = 0,
-  /// Buffer may be written in place by the owner (single writer).
-  bufferMutability_SINGLE_WRITER_MUTABLE = 1,
-  /// Buffer is append-only (rings / logs).
-  bufferMutability_APPEND_ONLY = 2,
-  bufferMutability_MIN = bufferMutability_IMMUTABLE,
-  bufferMutability_MAX = bufferMutability_APPEND_ONLY
+/// Drain semantics for a method that operates over queued stream frames.
+/// Enum name is deliberately distinct from any camelCase field name
+/// (`DRAIN_POLICY` would collide otherwise).
+enum drainBehavior : uint8_t {
+  /// One invocation consumes exactly one input frame.
+  drainBehavior_SINGLE_SHOT = 0,
+  /// Invocation drains queued work until it voluntarily yields.
+  drainBehavior_DRAIN_UNTIL_YIELD = 1,
+  /// Invocation drains to empty before returning.
+  drainBehavior_DRAIN_TO_EMPTY = 2,
+  drainBehavior_MIN = drainBehavior_SINGLE_SHOT,
+  drainBehavior_MAX = drainBehavior_DRAIN_TO_EMPTY
 };
 
-inline const bufferMutability (&EnumValuesbufferMutability())[3] {
-  static const bufferMutability values[] = {
-    bufferMutability_IMMUTABLE,
-    bufferMutability_SINGLE_WRITER_MUTABLE,
-    bufferMutability_APPEND_ONLY
+inline const drainBehavior (&EnumValuesdrainBehavior())[3] {
+  static const drainBehavior values[] = {
+    drainBehavior_SINGLE_SHOT,
+    drainBehavior_DRAIN_UNTIL_YIELD,
+    drainBehavior_DRAIN_TO_EMPTY
   };
   return values;
 }
 
-inline const char * const *EnumNamesbufferMutability() {
+inline const char * const *EnumNamesdrainBehavior() {
   static const char * const names[4] = {
-    "IMMUTABLE",
-    "SINGLE_WRITER_MUTABLE",
-    "APPEND_ONLY",
+    "SINGLE_SHOT",
+    "DRAIN_UNTIL_YIELD",
+    "DRAIN_TO_EMPTY",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNamebufferMutability(bufferMutability e) {
-  if (::flatbuffers::IsOutRange(e, bufferMutability_IMMUTABLE, bufferMutability_APPEND_ONLY)) return "";
+inline const char *EnumNamedrainBehavior(drainBehavior e) {
+  if (::flatbuffers::IsOutRange(e, drainBehavior_SINGLE_SHOT, drainBehavior_DRAIN_TO_EMPTY)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesbufferMutability()[index];
+  return EnumNamesdrainBehavior()[index];
 }
 
-/// Buffer ownership contract advertised by a stream port.
-enum bufferOwnership : uint8_t {
-  /// Arena / host owns the backing bytes; receiver must not free.
-  bufferOwnership_HOST_OWNED = 0,
-  /// Plugin owns the backing bytes; host must not free.
-  bufferOwnership_PLUGIN_OWNED = 1,
-  /// Ownership transfers with the frame (hand-off semantics).
-  bufferOwnership_TRANSFERRED = 2,
-  bufferOwnership_MIN = bufferOwnership_HOST_OWNED,
-  bufferOwnership_MAX = bufferOwnership_TRANSFERRED
+/// Host capability classes a plugin may request. Extends the simpler
+/// `PluginCapability` (which is name+version metadata) with the richer
+/// enum-based surface that runtime hosts gate on.
+enum hostCapabilityKind : uint16_t {
+  hostCapabilityKind_CLOCK = 0,
+  hostCapabilityKind_RANDOM = 1,
+  hostCapabilityKind_LOGGING = 2,
+  hostCapabilityKind_TIMERS = 3,
+  hostCapabilityKind_PUBSUB = 4,
+  hostCapabilityKind_PROTOCOL_DIAL = 5,
+  hostCapabilityKind_PROTOCOL_HANDLE = 6,
+  hostCapabilityKind_STORAGE_QUERY = 7,
+  hostCapabilityKind_SCENE_ACCESS = 8,
+  hostCapabilityKind_ENTITY_ACCESS = 9,
+  hostCapabilityKind_RENDER_HOOKS = 10,
+  hostCapabilityKind_HTTP = 11,
+  hostCapabilityKind_FILESYSTEM = 12,
+  hostCapabilityKind_PIPE = 13,
+  hostCapabilityKind_NETWORK = 14,
+  hostCapabilityKind_DATABASE = 15,
+  hostCapabilityKind_STORAGE_ADAPTER = 16,
+  hostCapabilityKind_STORAGE_WRITE = 17,
+  hostCapabilityKind_WALLET_SIGN = 18,
+  hostCapabilityKind_IPFS = 19,
+  hostCapabilityKind_TLS = 20,
+  hostCapabilityKind_MQTT = 21,
+  hostCapabilityKind_WEBSOCKET = 22,
+  hostCapabilityKind_TCP = 23,
+  hostCapabilityKind_UDP = 24,
+  hostCapabilityKind_PROCESS_EXEC = 25,
+  hostCapabilityKind_CONTEXT_READ = 26,
+  hostCapabilityKind_CONTEXT_WRITE = 27,
+  hostCapabilityKind_CRYPTO_HASH = 28,
+  hostCapabilityKind_CRYPTO_SIGN = 29,
+  hostCapabilityKind_CRYPTO_VERIFY = 30,
+  hostCapabilityKind_CRYPTO_ENCRYPT = 31,
+  hostCapabilityKind_CRYPTO_DECRYPT = 32,
+  hostCapabilityKind_CRYPTO_KEY_AGREEMENT = 33,
+  hostCapabilityKind_CRYPTO_KDF = 34,
+  hostCapabilityKind_SCHEDULE_CRON = 35,
+  hostCapabilityKind_MIN = hostCapabilityKind_CLOCK,
+  hostCapabilityKind_MAX = hostCapabilityKind_SCHEDULE_CRON
 };
 
-inline const bufferOwnership (&EnumValuesbufferOwnership())[3] {
-  static const bufferOwnership values[] = {
-    bufferOwnership_HOST_OWNED,
-    bufferOwnership_PLUGIN_OWNED,
-    bufferOwnership_TRANSFERRED
+inline const hostCapabilityKind (&EnumValueshostCapabilityKind())[36] {
+  static const hostCapabilityKind values[] = {
+    hostCapabilityKind_CLOCK,
+    hostCapabilityKind_RANDOM,
+    hostCapabilityKind_LOGGING,
+    hostCapabilityKind_TIMERS,
+    hostCapabilityKind_PUBSUB,
+    hostCapabilityKind_PROTOCOL_DIAL,
+    hostCapabilityKind_PROTOCOL_HANDLE,
+    hostCapabilityKind_STORAGE_QUERY,
+    hostCapabilityKind_SCENE_ACCESS,
+    hostCapabilityKind_ENTITY_ACCESS,
+    hostCapabilityKind_RENDER_HOOKS,
+    hostCapabilityKind_HTTP,
+    hostCapabilityKind_FILESYSTEM,
+    hostCapabilityKind_PIPE,
+    hostCapabilityKind_NETWORK,
+    hostCapabilityKind_DATABASE,
+    hostCapabilityKind_STORAGE_ADAPTER,
+    hostCapabilityKind_STORAGE_WRITE,
+    hostCapabilityKind_WALLET_SIGN,
+    hostCapabilityKind_IPFS,
+    hostCapabilityKind_TLS,
+    hostCapabilityKind_MQTT,
+    hostCapabilityKind_WEBSOCKET,
+    hostCapabilityKind_TCP,
+    hostCapabilityKind_UDP,
+    hostCapabilityKind_PROCESS_EXEC,
+    hostCapabilityKind_CONTEXT_READ,
+    hostCapabilityKind_CONTEXT_WRITE,
+    hostCapabilityKind_CRYPTO_HASH,
+    hostCapabilityKind_CRYPTO_SIGN,
+    hostCapabilityKind_CRYPTO_VERIFY,
+    hostCapabilityKind_CRYPTO_ENCRYPT,
+    hostCapabilityKind_CRYPTO_DECRYPT,
+    hostCapabilityKind_CRYPTO_KEY_AGREEMENT,
+    hostCapabilityKind_CRYPTO_KDF,
+    hostCapabilityKind_SCHEDULE_CRON
   };
   return values;
 }
 
-inline const char * const *EnumNamesbufferOwnership() {
-  static const char * const names[4] = {
-    "HOST_OWNED",
-    "PLUGIN_OWNED",
-    "TRANSFERRED",
+inline const char * const *EnumNameshostCapabilityKind() {
+  static const char * const names[37] = {
+    "CLOCK",
+    "RANDOM",
+    "LOGGING",
+    "TIMERS",
+    "PUBSUB",
+    "PROTOCOL_DIAL",
+    "PROTOCOL_HANDLE",
+    "STORAGE_QUERY",
+    "SCENE_ACCESS",
+    "ENTITY_ACCESS",
+    "RENDER_HOOKS",
+    "HTTP",
+    "FILESYSTEM",
+    "PIPE",
+    "NETWORK",
+    "DATABASE",
+    "STORAGE_ADAPTER",
+    "STORAGE_WRITE",
+    "WALLET_SIGN",
+    "IPFS",
+    "TLS",
+    "MQTT",
+    "WEBSOCKET",
+    "TCP",
+    "UDP",
+    "PROCESS_EXEC",
+    "CONTEXT_READ",
+    "CONTEXT_WRITE",
+    "CRYPTO_HASH",
+    "CRYPTO_SIGN",
+    "CRYPTO_VERIFY",
+    "CRYPTO_ENCRYPT",
+    "CRYPTO_DECRYPT",
+    "CRYPTO_KEY_AGREEMENT",
+    "CRYPTO_KDF",
+    "SCHEDULE_CRON",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNamebufferOwnership(bufferOwnership e) {
-  if (::flatbuffers::IsOutRange(e, bufferOwnership_HOST_OWNED, bufferOwnership_TRANSFERRED)) return "";
+inline const char *EnumNamehostCapabilityKind(hostCapabilityKind e) {
+  if (::flatbuffers::IsOutRange(e, hostCapabilityKind_CLOCK, hostCapabilityKind_SCHEDULE_CRON)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesbufferOwnership()[index];
+  return EnumNameshostCapabilityKind()[index];
 }
 
-/// Payload-schema identity for a stream frame or an accepted port type.
-struct FlatBufferTypeRef FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef FlatBufferTypeRefBuilder Builder;
+/// Plugin capability declaration
+struct PluginCapability FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PluginCapabilityBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_SCHEMA_NAME = 4,
-    VT_FILE_IDENTIFIER = 6,
-    VT_SCHEMA_VERSION = 8,
-    VT_ROOT_TYPE = 10
+    VT_NAME = 4,
+    VT_VERSION = 6,
+    VT_REQUIRED = 8
   };
-  /// Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
-  const ::flatbuffers::String *SCHEMA_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SCHEMA_NAME);
+  /// Capability name, e.g., "gpu_compute", "wasm_simd"
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
-  /// Optional 4-byte FlatBuffer file identifier.
-  const ::flatbuffers::String *FILE_IDENTIFIER() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FILE_IDENTIFIER);
+  /// Capability version
+  const ::flatbuffers::String *VERSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_VERSION);
   }
-  /// Optional semver or schema revision string.
-  const ::flatbuffers::String *SCHEMA_VERSION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SCHEMA_VERSION);
-  }
-  /// Optional root type name within the schema.
-  const ::flatbuffers::String *ROOT_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ROOT_TYPE);
+  /// Whether this capability is required
+  bool REQUIRED() const {
+    return GetField<uint8_t>(VT_REQUIRED, 0) != 0;
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_SCHEMA_NAME) &&
-           verifier.VerifyString(SCHEMA_NAME()) &&
-           VerifyOffset(verifier, VT_FILE_IDENTIFIER) &&
-           verifier.VerifyString(FILE_IDENTIFIER()) &&
-           VerifyOffset(verifier, VT_SCHEMA_VERSION) &&
-           verifier.VerifyString(SCHEMA_VERSION()) &&
-           VerifyOffset(verifier, VT_ROOT_TYPE) &&
-           verifier.VerifyString(ROOT_TYPE()) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_VERSION) &&
+           verifier.VerifyString(VERSION()) &&
+           VerifyField<uint8_t>(verifier, VT_REQUIRED, 1) &&
            verifier.EndTable();
   }
 };
 
-struct FlatBufferTypeRefBuilder {
-  typedef FlatBufferTypeRef Table;
+struct PluginCapabilityBuilder {
+  typedef PluginCapability Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_SCHEMA_NAME(::flatbuffers::Offset<::flatbuffers::String> SCHEMA_NAME) {
-    fbb_.AddOffset(FlatBufferTypeRef::VT_SCHEMA_NAME, SCHEMA_NAME);
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(PluginCapability::VT_NAME, NAME);
   }
-  void add_FILE_IDENTIFIER(::flatbuffers::Offset<::flatbuffers::String> FILE_IDENTIFIER) {
-    fbb_.AddOffset(FlatBufferTypeRef::VT_FILE_IDENTIFIER, FILE_IDENTIFIER);
+  void add_VERSION(::flatbuffers::Offset<::flatbuffers::String> VERSION) {
+    fbb_.AddOffset(PluginCapability::VT_VERSION, VERSION);
   }
-  void add_SCHEMA_VERSION(::flatbuffers::Offset<::flatbuffers::String> SCHEMA_VERSION) {
-    fbb_.AddOffset(FlatBufferTypeRef::VT_SCHEMA_VERSION, SCHEMA_VERSION);
+  void add_REQUIRED(bool REQUIRED) {
+    fbb_.AddElement<uint8_t>(PluginCapability::VT_REQUIRED, static_cast<uint8_t>(REQUIRED), 0);
   }
-  void add_ROOT_TYPE(::flatbuffers::Offset<::flatbuffers::String> ROOT_TYPE) {
-    fbb_.AddOffset(FlatBufferTypeRef::VT_ROOT_TYPE, ROOT_TYPE);
-  }
-  explicit FlatBufferTypeRefBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit PluginCapabilityBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<FlatBufferTypeRef> Finish() {
+  ::flatbuffers::Offset<PluginCapability> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<FlatBufferTypeRef>(end);
+    auto o = ::flatbuffers::Offset<PluginCapability>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<FlatBufferTypeRef> CreateFlatBufferTypeRef(
+inline ::flatbuffers::Offset<PluginCapability> CreatePluginCapability(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FILE_IDENTIFIER = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_VERSION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ROOT_TYPE = 0) {
-  FlatBufferTypeRefBuilder builder_(_fbb);
-  builder_.add_ROOT_TYPE(ROOT_TYPE);
-  builder_.add_SCHEMA_VERSION(SCHEMA_VERSION);
-  builder_.add_FILE_IDENTIFIER(FILE_IDENTIFIER);
-  builder_.add_SCHEMA_NAME(SCHEMA_NAME);
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> VERSION = 0,
+    bool REQUIRED = false) {
+  PluginCapabilityBuilder builder_(_fbb);
+  builder_.add_VERSION(VERSION);
+  builder_.add_NAME(NAME);
+  builder_.add_REQUIRED(REQUIRED);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<FlatBufferTypeRef> CreateFlatBufferTypeRefDirect(
+inline ::flatbuffers::Offset<PluginCapability> CreatePluginCapabilityDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *SCHEMA_NAME = nullptr,
-    const char *FILE_IDENTIFIER = nullptr,
-    const char *SCHEMA_VERSION = nullptr,
-    const char *ROOT_TYPE = nullptr) {
-  auto SCHEMA_NAME__ = SCHEMA_NAME ? _fbb.CreateString(SCHEMA_NAME) : 0;
-  auto FILE_IDENTIFIER__ = FILE_IDENTIFIER ? _fbb.CreateString(FILE_IDENTIFIER) : 0;
-  auto SCHEMA_VERSION__ = SCHEMA_VERSION ? _fbb.CreateString(SCHEMA_VERSION) : 0;
-  auto ROOT_TYPE__ = ROOT_TYPE ? _fbb.CreateString(ROOT_TYPE) : 0;
-  return CreateFlatBufferTypeRef(
+    const char *NAME = nullptr,
+    const char *VERSION = nullptr,
+    bool REQUIRED = false) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto VERSION__ = VERSION ? _fbb.CreateString(VERSION) : 0;
+  return CreatePluginCapability(
       _fbb,
-      SCHEMA_NAME__,
-      FILE_IDENTIFIER__,
-      SCHEMA_VERSION__,
-      ROOT_TYPE__);
+      NAME__,
+      VERSION__,
+      REQUIRED);
 }
 
-/// Typed Arena Buffer — one descriptor for a payload slot in a shared arena.
-struct TAB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef TABBuilder Builder;
+/// Accepted schema family for a port. When a port accepts multiple wire
+/// formats (canonical FlatBuffer + aligned-binary), each ALLOWED_TYPE
+/// entry carries its own TAB.FlatBufferTypeRef with the schema identity,
+/// and the enclosing PLGPortManifest advertises both wire formats via
+/// ALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises
+/// aligned-binary MUST also advertise the canonical flatbuffer fallback
+/// for the same schema and file identifier in the same set.
+struct PLGAcceptedTypeSet FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PLGAcceptedTypeSetBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_OFFSET = 4,
-    VT_SIZE = 6,
-    VT_ALIGNMENT = 8,
-    VT_WIRE_FORMAT = 10,
-    VT_TYPE_REF = 12,
-    VT_MUTABILITY = 14,
-    VT_OWNERSHIP = 16,
-    VT_FRAME_ID = 18,
-    VT_PORT_ID = 20
+    VT_SET_ID = 4,
+    VT_ALLOWED_TYPES = 6,
+    VT_ALLOWED_WIRE_FORMATS = 8,
+    VT_DESCRIPTION = 10
   };
-  /// Byte offset of the payload body within the arena.
-  uint32_t OFFSET() const {
-    return GetField<uint32_t>(VT_OFFSET, 0);
+  /// Stable type-set identifier within the port.
+  const ::flatbuffers::String *SET_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SET_ID);
   }
-  /// Byte length of the payload body.
-  uint32_t SIZE() const {
-    return GetField<uint32_t>(VT_SIZE, 0);
+  /// Specific FlatBuffer types accepted by the set.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<FlatBufferTypeRef>> *ALLOWED_TYPES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<FlatBufferTypeRef>> *>(VT_ALLOWED_TYPES);
   }
-  /// Required start alignment of the payload body (in bytes).
-  uint32_t ALIGNMENT() const {
-    return GetField<uint32_t>(VT_ALIGNMENT, 0);
+  /// Wire formats this set accepts. If ALIGNED_BINARY is present,
+  /// FLATBUFFER MUST also be present for the same schemas.
+  const ::flatbuffers::Vector<uint8_t> *ALLOWED_WIRE_FORMATS() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_ALLOWED_WIRE_FORMATS);
   }
-  /// Wire format for the body.
-  payloadWireFormat WIRE_FORMAT() const {
-    return static_cast<payloadWireFormat>(GetField<uint8_t>(VT_WIRE_FORMAT, 0));
+  /// Human-readable explanation of the accepted schema family.
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
   }
-  /// Optional payload schema identity.
-  const FlatBufferTypeRef *TYPE_REF() const {
-    return GetPointer<const FlatBufferTypeRef *>(VT_TYPE_REF);
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_SET_ID) &&
+           verifier.VerifyString(SET_ID()) &&
+           VerifyOffset(verifier, VT_ALLOWED_TYPES) &&
+           verifier.VerifyVector(ALLOWED_TYPES()) &&
+           verifier.VerifyVectorOfTables(ALLOWED_TYPES()) &&
+           VerifyOffset(verifier, VT_ALLOWED_WIRE_FORMATS) &&
+           verifier.VerifyVector(ALLOWED_WIRE_FORMATS()) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           verifier.EndTable();
   }
-  /// Mutability contract for the slot.
-  bufferMutability MUTABILITY() const {
-    return static_cast<bufferMutability>(GetField<uint8_t>(VT_MUTABILITY, 0));
+};
+
+struct PLGAcceptedTypeSetBuilder {
+  typedef PLGAcceptedTypeSet Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SET_ID(::flatbuffers::Offset<::flatbuffers::String> SET_ID) {
+    fbb_.AddOffset(PLGAcceptedTypeSet::VT_SET_ID, SET_ID);
   }
-  /// Ownership contract for the slot.
-  bufferOwnership OWNERSHIP() const {
-    return static_cast<bufferOwnership>(GetField<uint8_t>(VT_OWNERSHIP, 0));
+  void add_ALLOWED_TYPES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<FlatBufferTypeRef>>> ALLOWED_TYPES) {
+    fbb_.AddOffset(PLGAcceptedTypeSet::VT_ALLOWED_TYPES, ALLOWED_TYPES);
   }
-  /// Optional opaque frame identifier for stream bookkeeping.
-  uint64_t FRAME_ID() const {
-    return GetField<uint64_t>(VT_FRAME_ID, 0);
+  void add_ALLOWED_WIRE_FORMATS(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> ALLOWED_WIRE_FORMATS) {
+    fbb_.AddOffset(PLGAcceptedTypeSet::VT_ALLOWED_WIRE_FORMATS, ALLOWED_WIRE_FORMATS);
   }
-  /// Optional port identifier for frames that route to/from a named
-  /// input or output port on a method (maps to
-  /// `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
-  /// no port routing hint.
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(PLGAcceptedTypeSet::VT_DESCRIPTION, DESCRIPTION);
+  }
+  explicit PLGAcceptedTypeSetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PLGAcceptedTypeSet> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PLGAcceptedTypeSet>(end);
+    fbb_.Required(o, PLGAcceptedTypeSet::VT_SET_ID);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PLGAcceptedTypeSet> CreatePLGAcceptedTypeSet(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> SET_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<FlatBufferTypeRef>>> ALLOWED_TYPES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> ALLOWED_WIRE_FORMATS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0) {
+  PLGAcceptedTypeSetBuilder builder_(_fbb);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_ALLOWED_WIRE_FORMATS(ALLOWED_WIRE_FORMATS);
+  builder_.add_ALLOWED_TYPES(ALLOWED_TYPES);
+  builder_.add_SET_ID(SET_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<PLGAcceptedTypeSet> CreatePLGAcceptedTypeSetDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *SET_ID = nullptr,
+    const std::vector<::flatbuffers::Offset<FlatBufferTypeRef>> *ALLOWED_TYPES = nullptr,
+    const std::vector<uint8_t> *ALLOWED_WIRE_FORMATS = nullptr,
+    const char *DESCRIPTION = nullptr) {
+  auto SET_ID__ = SET_ID ? _fbb.CreateString(SET_ID) : 0;
+  auto ALLOWED_TYPES__ = ALLOWED_TYPES ? _fbb.CreateVector<::flatbuffers::Offset<FlatBufferTypeRef>>(*ALLOWED_TYPES) : 0;
+  auto ALLOWED_WIRE_FORMATS__ = ALLOWED_WIRE_FORMATS ? _fbb.CreateVector<uint8_t>(*ALLOWED_WIRE_FORMATS) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  return CreatePLGAcceptedTypeSet(
+      _fbb,
+      SET_ID__,
+      ALLOWED_TYPES__,
+      ALLOWED_WIRE_FORMATS__,
+      DESCRIPTION__);
+}
+
+/// One input or output port on a method.
+struct PLGPortManifest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PLGPortManifestBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PORT_ID = 4,
+    VT_DISPLAY_NAME = 6,
+    VT_ACCEPTED_TYPE_SETS = 8,
+    VT_MIN_STREAMS = 10,
+    VT_MAX_STREAMS = 12,
+    VT_REQUIRED = 14,
+    VT_DESCRIPTION = 16
+  };
+  /// Stable port identifier within the method.
   const ::flatbuffers::String *PORT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PORT_ID);
   }
+  /// Human-readable name for UIs.
+  const ::flatbuffers::String *DISPLAY_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DISPLAY_NAME);
+  }
+  /// Type sets accepted on this port.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PLGAcceptedTypeSet>> *ACCEPTED_TYPE_SETS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PLGAcceptedTypeSet>> *>(VT_ACCEPTED_TYPE_SETS);
+  }
+  /// Minimum number of streams that must be connected.
+  uint16_t MIN_STREAMS() const {
+    return GetField<uint16_t>(VT_MIN_STREAMS, 1);
+  }
+  /// Maximum number of streams that may be connected.
+  uint16_t MAX_STREAMS() const {
+    return GetField<uint16_t>(VT_MAX_STREAMS, 1);
+  }
+  /// Whether the port must be connected for invocation.
+  bool REQUIRED() const {
+    return GetField<uint8_t>(VT_REQUIRED, 1) != 0;
+  }
+  /// Optional human-readable description.
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<uint32_t>(verifier, VT_OFFSET, 4) &&
-           VerifyField<uint32_t>(verifier, VT_SIZE, 4) &&
-           VerifyField<uint32_t>(verifier, VT_ALIGNMENT, 4) &&
-           VerifyField<uint8_t>(verifier, VT_WIRE_FORMAT, 1) &&
-           VerifyOffset(verifier, VT_TYPE_REF) &&
-           verifier.VerifyTable(TYPE_REF()) &&
-           VerifyField<uint8_t>(verifier, VT_MUTABILITY, 1) &&
-           VerifyField<uint8_t>(verifier, VT_OWNERSHIP, 1) &&
-           VerifyField<uint64_t>(verifier, VT_FRAME_ID, 8) &&
-           VerifyOffset(verifier, VT_PORT_ID) &&
+           VerifyOffsetRequired(verifier, VT_PORT_ID) &&
            verifier.VerifyString(PORT_ID()) &&
+           VerifyOffset(verifier, VT_DISPLAY_NAME) &&
+           verifier.VerifyString(DISPLAY_NAME()) &&
+           VerifyOffset(verifier, VT_ACCEPTED_TYPE_SETS) &&
+           verifier.VerifyVector(ACCEPTED_TYPE_SETS()) &&
+           verifier.VerifyVectorOfTables(ACCEPTED_TYPE_SETS()) &&
+           VerifyField<uint16_t>(verifier, VT_MIN_STREAMS, 2) &&
+           VerifyField<uint16_t>(verifier, VT_MAX_STREAMS, 2) &&
+           VerifyField<uint8_t>(verifier, VT_REQUIRED, 1) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
            verifier.EndTable();
   }
 };
 
-struct TABBuilder {
-  typedef TAB Table;
+struct PLGPortManifestBuilder {
+  typedef PLGPortManifest Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_OFFSET(uint32_t OFFSET) {
-    fbb_.AddElement<uint32_t>(TAB::VT_OFFSET, OFFSET, 0);
-  }
-  void add_SIZE(uint32_t SIZE) {
-    fbb_.AddElement<uint32_t>(TAB::VT_SIZE, SIZE, 0);
-  }
-  void add_ALIGNMENT(uint32_t ALIGNMENT) {
-    fbb_.AddElement<uint32_t>(TAB::VT_ALIGNMENT, ALIGNMENT, 0);
-  }
-  void add_WIRE_FORMAT(payloadWireFormat WIRE_FORMAT) {
-    fbb_.AddElement<uint8_t>(TAB::VT_WIRE_FORMAT, static_cast<uint8_t>(WIRE_FORMAT), 0);
-  }
-  void add_TYPE_REF(::flatbuffers::Offset<FlatBufferTypeRef> TYPE_REF) {
-    fbb_.AddOffset(TAB::VT_TYPE_REF, TYPE_REF);
-  }
-  void add_MUTABILITY(bufferMutability MUTABILITY) {
-    fbb_.AddElement<uint8_t>(TAB::VT_MUTABILITY, static_cast<uint8_t>(MUTABILITY), 0);
-  }
-  void add_OWNERSHIP(bufferOwnership OWNERSHIP) {
-    fbb_.AddElement<uint8_t>(TAB::VT_OWNERSHIP, static_cast<uint8_t>(OWNERSHIP), 0);
-  }
-  void add_FRAME_ID(uint64_t FRAME_ID) {
-    fbb_.AddElement<uint64_t>(TAB::VT_FRAME_ID, FRAME_ID, 0);
-  }
   void add_PORT_ID(::flatbuffers::Offset<::flatbuffers::String> PORT_ID) {
-    fbb_.AddOffset(TAB::VT_PORT_ID, PORT_ID);
+    fbb_.AddOffset(PLGPortManifest::VT_PORT_ID, PORT_ID);
   }
-  explicit TABBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_DISPLAY_NAME(::flatbuffers::Offset<::flatbuffers::String> DISPLAY_NAME) {
+    fbb_.AddOffset(PLGPortManifest::VT_DISPLAY_NAME, DISPLAY_NAME);
+  }
+  void add_ACCEPTED_TYPE_SETS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGAcceptedTypeSet>>> ACCEPTED_TYPE_SETS) {
+    fbb_.AddOffset(PLGPortManifest::VT_ACCEPTED_TYPE_SETS, ACCEPTED_TYPE_SETS);
+  }
+  void add_MIN_STREAMS(uint16_t MIN_STREAMS) {
+    fbb_.AddElement<uint16_t>(PLGPortManifest::VT_MIN_STREAMS, MIN_STREAMS, 1);
+  }
+  void add_MAX_STREAMS(uint16_t MAX_STREAMS) {
+    fbb_.AddElement<uint16_t>(PLGPortManifest::VT_MAX_STREAMS, MAX_STREAMS, 1);
+  }
+  void add_REQUIRED(bool REQUIRED) {
+    fbb_.AddElement<uint8_t>(PLGPortManifest::VT_REQUIRED, static_cast<uint8_t>(REQUIRED), 1);
+  }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(PLGPortManifest::VT_DESCRIPTION, DESCRIPTION);
+  }
+  explicit PLGPortManifestBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<TAB> Finish() {
+  ::flatbuffers::Offset<PLGPortManifest> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<TAB>(end);
+    auto o = ::flatbuffers::Offset<PLGPortManifest>(end);
+    fbb_.Required(o, PLGPortManifest::VT_PORT_ID);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<TAB> CreateTAB(
+inline ::flatbuffers::Offset<PLGPortManifest> CreatePLGPortManifest(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    uint32_t OFFSET = 0,
-    uint32_t SIZE = 0,
-    uint32_t ALIGNMENT = 0,
-    payloadWireFormat WIRE_FORMAT = payloadWireFormat_FLATBUFFER,
-    ::flatbuffers::Offset<FlatBufferTypeRef> TYPE_REF = 0,
-    bufferMutability MUTABILITY = bufferMutability_IMMUTABLE,
-    bufferOwnership OWNERSHIP = bufferOwnership_HOST_OWNED,
-    uint64_t FRAME_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PORT_ID = 0) {
-  TABBuilder builder_(_fbb);
-  builder_.add_FRAME_ID(FRAME_ID);
+    ::flatbuffers::Offset<::flatbuffers::String> PORT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DISPLAY_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGAcceptedTypeSet>>> ACCEPTED_TYPE_SETS = 0,
+    uint16_t MIN_STREAMS = 1,
+    uint16_t MAX_STREAMS = 1,
+    bool REQUIRED = true,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0) {
+  PLGPortManifestBuilder builder_(_fbb);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_ACCEPTED_TYPE_SETS(ACCEPTED_TYPE_SETS);
+  builder_.add_DISPLAY_NAME(DISPLAY_NAME);
   builder_.add_PORT_ID(PORT_ID);
-  builder_.add_TYPE_REF(TYPE_REF);
-  builder_.add_ALIGNMENT(ALIGNMENT);
-  builder_.add_SIZE(SIZE);
-  builder_.add_OFFSET(OFFSET);
-  builder_.add_OWNERSHIP(OWNERSHIP);
-  builder_.add_MUTABILITY(MUTABILITY);
-  builder_.add_WIRE_FORMAT(WIRE_FORMAT);
+  builder_.add_MAX_STREAMS(MAX_STREAMS);
+  builder_.add_MIN_STREAMS(MIN_STREAMS);
+  builder_.add_REQUIRED(REQUIRED);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<TAB> CreateTABDirect(
+inline ::flatbuffers::Offset<PLGPortManifest> CreatePLGPortManifestDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    uint32_t OFFSET = 0,
-    uint32_t SIZE = 0,
-    uint32_t ALIGNMENT = 0,
-    payloadWireFormat WIRE_FORMAT = payloadWireFormat_FLATBUFFER,
-    ::flatbuffers::Offset<FlatBufferTypeRef> TYPE_REF = 0,
-    bufferMutability MUTABILITY = bufferMutability_IMMUTABLE,
-    bufferOwnership OWNERSHIP = bufferOwnership_HOST_OWNED,
-    uint64_t FRAME_ID = 0,
-    const char *PORT_ID = nullptr) {
+    const char *PORT_ID = nullptr,
+    const char *DISPLAY_NAME = nullptr,
+    const std::vector<::flatbuffers::Offset<PLGAcceptedTypeSet>> *ACCEPTED_TYPE_SETS = nullptr,
+    uint16_t MIN_STREAMS = 1,
+    uint16_t MAX_STREAMS = 1,
+    bool REQUIRED = true,
+    const char *DESCRIPTION = nullptr) {
   auto PORT_ID__ = PORT_ID ? _fbb.CreateString(PORT_ID) : 0;
-  return CreateTAB(
+  auto DISPLAY_NAME__ = DISPLAY_NAME ? _fbb.CreateString(DISPLAY_NAME) : 0;
+  auto ACCEPTED_TYPE_SETS__ = ACCEPTED_TYPE_SETS ? _fbb.CreateVector<::flatbuffers::Offset<PLGAcceptedTypeSet>>(*ACCEPTED_TYPE_SETS) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  return CreatePLGPortManifest(
       _fbb,
-      OFFSET,
-      SIZE,
-      ALIGNMENT,
-      WIRE_FORMAT,
-      TYPE_REF,
-      MUTABILITY,
-      OWNERSHIP,
-      FRAME_ID,
-      PORT_ID__);
+      PORT_ID__,
+      DISPLAY_NAME__,
+      ACCEPTED_TYPE_SETS__,
+      MIN_STREAMS,
+      MAX_STREAMS,
+      REQUIRED,
+      DESCRIPTION__);
 }
 
-inline const TAB *GetTAB(const void *buf) {
-  return ::flatbuffers::GetRoot<TAB>(buf);
+/// One host capability dependency (richer form of PluginCapability).
+struct PLGHostCapability FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PLGHostCapabilityBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CAPABILITY = 4,
+    VT_SCOPE = 6,
+    VT_REQUIRED = 8,
+    VT_DESCRIPTION = 10
+  };
+  hostCapabilityKind CAPABILITY() const {
+    return static_cast<hostCapabilityKind>(GetField<uint16_t>(VT_CAPABILITY, 0));
+  }
+  const ::flatbuffers::String *SCOPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SCOPE);
+  }
+  bool REQUIRED() const {
+    return GetField<uint8_t>(VT_REQUIRED, 1) != 0;
+  }
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint16_t>(verifier, VT_CAPABILITY, 2) &&
+           VerifyOffset(verifier, VT_SCOPE) &&
+           verifier.VerifyString(SCOPE()) &&
+           VerifyField<uint8_t>(verifier, VT_REQUIRED, 1) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PLGHostCapabilityBuilder {
+  typedef PLGHostCapability Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_CAPABILITY(hostCapabilityKind CAPABILITY) {
+    fbb_.AddElement<uint16_t>(PLGHostCapability::VT_CAPABILITY, static_cast<uint16_t>(CAPABILITY), 0);
+  }
+  void add_SCOPE(::flatbuffers::Offset<::flatbuffers::String> SCOPE) {
+    fbb_.AddOffset(PLGHostCapability::VT_SCOPE, SCOPE);
+  }
+  void add_REQUIRED(bool REQUIRED) {
+    fbb_.AddElement<uint8_t>(PLGHostCapability::VT_REQUIRED, static_cast<uint8_t>(REQUIRED), 1);
+  }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(PLGHostCapability::VT_DESCRIPTION, DESCRIPTION);
+  }
+  explicit PLGHostCapabilityBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PLGHostCapability> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PLGHostCapability>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PLGHostCapability> CreatePLGHostCapability(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    hostCapabilityKind CAPABILITY = hostCapabilityKind_CLOCK,
+    ::flatbuffers::Offset<::flatbuffers::String> SCOPE = 0,
+    bool REQUIRED = true,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0) {
+  PLGHostCapabilityBuilder builder_(_fbb);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_SCOPE(SCOPE);
+  builder_.add_CAPABILITY(CAPABILITY);
+  builder_.add_REQUIRED(REQUIRED);
+  return builder_.Finish();
 }
 
-inline const TAB *GetSizePrefixedTAB(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<TAB>(buf);
+inline ::flatbuffers::Offset<PLGHostCapability> CreatePLGHostCapabilityDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    hostCapabilityKind CAPABILITY = hostCapabilityKind_CLOCK,
+    const char *SCOPE = nullptr,
+    bool REQUIRED = true,
+    const char *DESCRIPTION = nullptr) {
+  auto SCOPE__ = SCOPE ? _fbb.CreateString(SCOPE) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  return CreatePLGHostCapability(
+      _fbb,
+      CAPABILITY,
+      SCOPE__,
+      REQUIRED,
+      DESCRIPTION__);
 }
 
-inline const char *TABIdentifier() {
-  return "$TAB";
+/// Timer entry declared by a plugin.
+struct PLGTimerSpec FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PLGTimerSpecBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TIMER_ID = 4,
+    VT_METHOD_ID = 6,
+    VT_INPUT_PORT_ID = 8,
+    VT_DEFAULT_INTERVAL_MS = 10,
+    VT_DESCRIPTION = 12
+  };
+  const ::flatbuffers::String *TIMER_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TIMER_ID);
+  }
+  const ::flatbuffers::String *METHOD_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_METHOD_ID);
+  }
+  const ::flatbuffers::String *INPUT_PORT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INPUT_PORT_ID);
+  }
+  uint64_t DEFAULT_INTERVAL_MS() const {
+    return GetField<uint64_t>(VT_DEFAULT_INTERVAL_MS, 0);
+  }
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_TIMER_ID) &&
+           verifier.VerifyString(TIMER_ID()) &&
+           VerifyOffsetRequired(verifier, VT_METHOD_ID) &&
+           verifier.VerifyString(METHOD_ID()) &&
+           VerifyOffset(verifier, VT_INPUT_PORT_ID) &&
+           verifier.VerifyString(INPUT_PORT_ID()) &&
+           VerifyField<uint64_t>(verifier, VT_DEFAULT_INTERVAL_MS, 8) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PLGTimerSpecBuilder {
+  typedef PLGTimerSpec Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_TIMER_ID(::flatbuffers::Offset<::flatbuffers::String> TIMER_ID) {
+    fbb_.AddOffset(PLGTimerSpec::VT_TIMER_ID, TIMER_ID);
+  }
+  void add_METHOD_ID(::flatbuffers::Offset<::flatbuffers::String> METHOD_ID) {
+    fbb_.AddOffset(PLGTimerSpec::VT_METHOD_ID, METHOD_ID);
+  }
+  void add_INPUT_PORT_ID(::flatbuffers::Offset<::flatbuffers::String> INPUT_PORT_ID) {
+    fbb_.AddOffset(PLGTimerSpec::VT_INPUT_PORT_ID, INPUT_PORT_ID);
+  }
+  void add_DEFAULT_INTERVAL_MS(uint64_t DEFAULT_INTERVAL_MS) {
+    fbb_.AddElement<uint64_t>(PLGTimerSpec::VT_DEFAULT_INTERVAL_MS, DEFAULT_INTERVAL_MS, 0);
+  }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(PLGTimerSpec::VT_DESCRIPTION, DESCRIPTION);
+  }
+  explicit PLGTimerSpecBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PLGTimerSpec> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PLGTimerSpec>(end);
+    fbb_.Required(o, PLGTimerSpec::VT_TIMER_ID);
+    fbb_.Required(o, PLGTimerSpec::VT_METHOD_ID);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PLGTimerSpec> CreatePLGTimerSpec(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> TIMER_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> METHOD_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> INPUT_PORT_ID = 0,
+    uint64_t DEFAULT_INTERVAL_MS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0) {
+  PLGTimerSpecBuilder builder_(_fbb);
+  builder_.add_DEFAULT_INTERVAL_MS(DEFAULT_INTERVAL_MS);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_INPUT_PORT_ID(INPUT_PORT_ID);
+  builder_.add_METHOD_ID(METHOD_ID);
+  builder_.add_TIMER_ID(TIMER_ID);
+  return builder_.Finish();
 }
 
-inline bool TABBufferHasIdentifier(const void *buf) {
+inline ::flatbuffers::Offset<PLGTimerSpec> CreatePLGTimerSpecDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *TIMER_ID = nullptr,
+    const char *METHOD_ID = nullptr,
+    const char *INPUT_PORT_ID = nullptr,
+    uint64_t DEFAULT_INTERVAL_MS = 0,
+    const char *DESCRIPTION = nullptr) {
+  auto TIMER_ID__ = TIMER_ID ? _fbb.CreateString(TIMER_ID) : 0;
+  auto METHOD_ID__ = METHOD_ID ? _fbb.CreateString(METHOD_ID) : 0;
+  auto INPUT_PORT_ID__ = INPUT_PORT_ID ? _fbb.CreateString(INPUT_PORT_ID) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  return CreatePLGTimerSpec(
+      _fbb,
+      TIMER_ID__,
+      METHOD_ID__,
+      INPUT_PORT_ID__,
+      DEFAULT_INTERVAL_MS,
+      DESCRIPTION__);
+}
+
+/// Protocol handler declared by a plugin.
+struct PLGProtocolSpec FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PLGProtocolSpecBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PROTOCOL_ID = 4,
+    VT_METHOD_ID = 6,
+    VT_INPUT_PORT_ID = 8,
+    VT_OUTPUT_PORT_ID = 10,
+    VT_DESCRIPTION = 12,
+    VT_WIRE_ID = 14,
+    VT_TRANSPORT_KIND = 16,
+    VT_ROLE = 18,
+    VT_SPEC_URI = 20,
+    VT_AUTO_INSTALL = 22,
+    VT_ADVERTISE = 24,
+    VT_DISCOVERY_KEY = 26,
+    VT_DEFAULT_PORT = 28,
+    VT_REQUIRE_SECURE_TRANSPORT = 30
+  };
+  const ::flatbuffers::String *PROTOCOL_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PROTOCOL_ID);
+  }
+  const ::flatbuffers::String *METHOD_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_METHOD_ID);
+  }
+  const ::flatbuffers::String *INPUT_PORT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INPUT_PORT_ID);
+  }
+  const ::flatbuffers::String *OUTPUT_PORT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OUTPUT_PORT_ID);
+  }
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  const ::flatbuffers::String *WIRE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_WIRE_ID);
+  }
+  const ::flatbuffers::String *TRANSPORT_KIND() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRANSPORT_KIND);
+  }
+  const ::flatbuffers::String *ROLE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ROLE);
+  }
+  const ::flatbuffers::String *SPEC_URI() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SPEC_URI);
+  }
+  bool AUTO_INSTALL() const {
+    return GetField<uint8_t>(VT_AUTO_INSTALL, 1) != 0;
+  }
+  bool ADVERTISE() const {
+    return GetField<uint8_t>(VT_ADVERTISE, 0) != 0;
+  }
+  const ::flatbuffers::String *DISCOVERY_KEY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DISCOVERY_KEY);
+  }
+  uint16_t DEFAULT_PORT() const {
+    return GetField<uint16_t>(VT_DEFAULT_PORT, 0);
+  }
+  bool REQUIRE_SECURE_TRANSPORT() const {
+    return GetField<uint8_t>(VT_REQUIRE_SECURE_TRANSPORT, 0) != 0;
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_PROTOCOL_ID) &&
+           verifier.VerifyString(PROTOCOL_ID()) &&
+           VerifyOffsetRequired(verifier, VT_METHOD_ID) &&
+           verifier.VerifyString(METHOD_ID()) &&
+           VerifyOffset(verifier, VT_INPUT_PORT_ID) &&
+           verifier.VerifyString(INPUT_PORT_ID()) &&
+           VerifyOffset(verifier, VT_OUTPUT_PORT_ID) &&
+           verifier.VerifyString(OUTPUT_PORT_ID()) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           VerifyOffset(verifier, VT_WIRE_ID) &&
+           verifier.VerifyString(WIRE_ID()) &&
+           VerifyOffset(verifier, VT_TRANSPORT_KIND) &&
+           verifier.VerifyString(TRANSPORT_KIND()) &&
+           VerifyOffset(verifier, VT_ROLE) &&
+           verifier.VerifyString(ROLE()) &&
+           VerifyOffset(verifier, VT_SPEC_URI) &&
+           verifier.VerifyString(SPEC_URI()) &&
+           VerifyField<uint8_t>(verifier, VT_AUTO_INSTALL, 1) &&
+           VerifyField<uint8_t>(verifier, VT_ADVERTISE, 1) &&
+           VerifyOffset(verifier, VT_DISCOVERY_KEY) &&
+           verifier.VerifyString(DISCOVERY_KEY()) &&
+           VerifyField<uint16_t>(verifier, VT_DEFAULT_PORT, 2) &&
+           VerifyField<uint8_t>(verifier, VT_REQUIRE_SECURE_TRANSPORT, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct PLGProtocolSpecBuilder {
+  typedef PLGProtocolSpec Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_PROTOCOL_ID(::flatbuffers::Offset<::flatbuffers::String> PROTOCOL_ID) {
+    fbb_.AddOffset(PLGProtocolSpec::VT_PROTOCOL_ID, PROTOCOL_ID);
+  }
+  void add_METHOD_ID(::flatbuffers::Offset<::flatbuffers::String> METHOD_ID) {
+    fbb_.AddOffset(PLGProtocolSpec::VT_METHOD_ID, METHOD_ID);
+  }
+  void add_INPUT_PORT_ID(::flatbuffers::Offset<::flatbuffers::String> INPUT_PORT_ID) {
+    fbb_.AddOffset(PLGProtocolSpec::VT_INPUT_PORT_ID, INPUT_PORT_ID);
+  }
+  void add_OUTPUT_PORT_ID(::flatbuffers::Offset<::flatbuffers::String> OUTPUT_PORT_ID) {
+    fbb_.AddOffset(PLGProtocolSpec::VT_OUTPUT_PORT_ID, OUTPUT_PORT_ID);
+  }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(PLGProtocolSpec::VT_DESCRIPTION, DESCRIPTION);
+  }
+  void add_WIRE_ID(::flatbuffers::Offset<::flatbuffers::String> WIRE_ID) {
+    fbb_.AddOffset(PLGProtocolSpec::VT_WIRE_ID, WIRE_ID);
+  }
+  void add_TRANSPORT_KIND(::flatbuffers::Offset<::flatbuffers::String> TRANSPORT_KIND) {
+    fbb_.AddOffset(PLGProtocolSpec::VT_TRANSPORT_KIND, TRANSPORT_KIND);
+  }
+  void add_ROLE(::flatbuffers::Offset<::flatbuffers::String> ROLE) {
+    fbb_.AddOffset(PLGProtocolSpec::VT_ROLE, ROLE);
+  }
+  void add_SPEC_URI(::flatbuffers::Offset<::flatbuffers::String> SPEC_URI) {
+    fbb_.AddOffset(PLGProtocolSpec::VT_SPEC_URI, SPEC_URI);
+  }
+  void add_AUTO_INSTALL(bool AUTO_INSTALL) {
+    fbb_.AddElement<uint8_t>(PLGProtocolSpec::VT_AUTO_INSTALL, static_cast<uint8_t>(AUTO_INSTALL), 1);
+  }
+  void add_ADVERTISE(bool ADVERTISE) {
+    fbb_.AddElement<uint8_t>(PLGProtocolSpec::VT_ADVERTISE, static_cast<uint8_t>(ADVERTISE), 0);
+  }
+  void add_DISCOVERY_KEY(::flatbuffers::Offset<::flatbuffers::String> DISCOVERY_KEY) {
+    fbb_.AddOffset(PLGProtocolSpec::VT_DISCOVERY_KEY, DISCOVERY_KEY);
+  }
+  void add_DEFAULT_PORT(uint16_t DEFAULT_PORT) {
+    fbb_.AddElement<uint16_t>(PLGProtocolSpec::VT_DEFAULT_PORT, DEFAULT_PORT, 0);
+  }
+  void add_REQUIRE_SECURE_TRANSPORT(bool REQUIRE_SECURE_TRANSPORT) {
+    fbb_.AddElement<uint8_t>(PLGProtocolSpec::VT_REQUIRE_SECURE_TRANSPORT, static_cast<uint8_t>(REQUIRE_SECURE_TRANSPORT), 0);
+  }
+  explicit PLGProtocolSpecBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PLGProtocolSpec> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PLGProtocolSpec>(end);
+    fbb_.Required(o, PLGProtocolSpec::VT_PROTOCOL_ID);
+    fbb_.Required(o, PLGProtocolSpec::VT_METHOD_ID);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PLGProtocolSpec> CreatePLGProtocolSpec(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> PROTOCOL_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> METHOD_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> INPUT_PORT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OUTPUT_PORT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> WIRE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TRANSPORT_KIND = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ROLE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SPEC_URI = 0,
+    bool AUTO_INSTALL = true,
+    bool ADVERTISE = false,
+    ::flatbuffers::Offset<::flatbuffers::String> DISCOVERY_KEY = 0,
+    uint16_t DEFAULT_PORT = 0,
+    bool REQUIRE_SECURE_TRANSPORT = false) {
+  PLGProtocolSpecBuilder builder_(_fbb);
+  builder_.add_DISCOVERY_KEY(DISCOVERY_KEY);
+  builder_.add_SPEC_URI(SPEC_URI);
+  builder_.add_ROLE(ROLE);
+  builder_.add_TRANSPORT_KIND(TRANSPORT_KIND);
+  builder_.add_WIRE_ID(WIRE_ID);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_OUTPUT_PORT_ID(OUTPUT_PORT_ID);
+  builder_.add_INPUT_PORT_ID(INPUT_PORT_ID);
+  builder_.add_METHOD_ID(METHOD_ID);
+  builder_.add_PROTOCOL_ID(PROTOCOL_ID);
+  builder_.add_DEFAULT_PORT(DEFAULT_PORT);
+  builder_.add_REQUIRE_SECURE_TRANSPORT(REQUIRE_SECURE_TRANSPORT);
+  builder_.add_ADVERTISE(ADVERTISE);
+  builder_.add_AUTO_INSTALL(AUTO_INSTALL);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<PLGProtocolSpec> CreatePLGProtocolSpecDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *PROTOCOL_ID = nullptr,
+    const char *METHOD_ID = nullptr,
+    const char *INPUT_PORT_ID = nullptr,
+    const char *OUTPUT_PORT_ID = nullptr,
+    const char *DESCRIPTION = nullptr,
+    const char *WIRE_ID = nullptr,
+    const char *TRANSPORT_KIND = nullptr,
+    const char *ROLE = nullptr,
+    const char *SPEC_URI = nullptr,
+    bool AUTO_INSTALL = true,
+    bool ADVERTISE = false,
+    const char *DISCOVERY_KEY = nullptr,
+    uint16_t DEFAULT_PORT = 0,
+    bool REQUIRE_SECURE_TRANSPORT = false) {
+  auto PROTOCOL_ID__ = PROTOCOL_ID ? _fbb.CreateString(PROTOCOL_ID) : 0;
+  auto METHOD_ID__ = METHOD_ID ? _fbb.CreateString(METHOD_ID) : 0;
+  auto INPUT_PORT_ID__ = INPUT_PORT_ID ? _fbb.CreateString(INPUT_PORT_ID) : 0;
+  auto OUTPUT_PORT_ID__ = OUTPUT_PORT_ID ? _fbb.CreateString(OUTPUT_PORT_ID) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  auto WIRE_ID__ = WIRE_ID ? _fbb.CreateString(WIRE_ID) : 0;
+  auto TRANSPORT_KIND__ = TRANSPORT_KIND ? _fbb.CreateString(TRANSPORT_KIND) : 0;
+  auto ROLE__ = ROLE ? _fbb.CreateString(ROLE) : 0;
+  auto SPEC_URI__ = SPEC_URI ? _fbb.CreateString(SPEC_URI) : 0;
+  auto DISCOVERY_KEY__ = DISCOVERY_KEY ? _fbb.CreateString(DISCOVERY_KEY) : 0;
+  return CreatePLGProtocolSpec(
+      _fbb,
+      PROTOCOL_ID__,
+      METHOD_ID__,
+      INPUT_PORT_ID__,
+      OUTPUT_PORT_ID__,
+      DESCRIPTION__,
+      WIRE_ID__,
+      TRANSPORT_KIND__,
+      ROLE__,
+      SPEC_URI__,
+      AUTO_INSTALL,
+      ADVERTISE,
+      DISCOVERY_KEY__,
+      DEFAULT_PORT,
+      REQUIRE_SECURE_TRANSPORT);
+}
+
+/// Build artifact emitted by the plugin toolchain.
+struct PLGBuildArtifact FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PLGBuildArtifactBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ARTIFACT_ID = 4,
+    VT_KIND = 6,
+    VT_PATH = 8,
+    VT_TARGET = 10,
+    VT_ENTRY_SYMBOL = 12
+  };
+  const ::flatbuffers::String *ARTIFACT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ARTIFACT_ID);
+  }
+  const ::flatbuffers::String *KIND() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_KIND);
+  }
+  const ::flatbuffers::String *PATH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PATH);
+  }
+  const ::flatbuffers::String *TARGET() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TARGET);
+  }
+  const ::flatbuffers::String *ENTRY_SYMBOL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ENTRY_SYMBOL);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_ARTIFACT_ID) &&
+           verifier.VerifyString(ARTIFACT_ID()) &&
+           VerifyOffset(verifier, VT_KIND) &&
+           verifier.VerifyString(KIND()) &&
+           VerifyOffsetRequired(verifier, VT_PATH) &&
+           verifier.VerifyString(PATH()) &&
+           VerifyOffset(verifier, VT_TARGET) &&
+           verifier.VerifyString(TARGET()) &&
+           VerifyOffset(verifier, VT_ENTRY_SYMBOL) &&
+           verifier.VerifyString(ENTRY_SYMBOL()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PLGBuildArtifactBuilder {
+  typedef PLGBuildArtifact Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ARTIFACT_ID(::flatbuffers::Offset<::flatbuffers::String> ARTIFACT_ID) {
+    fbb_.AddOffset(PLGBuildArtifact::VT_ARTIFACT_ID, ARTIFACT_ID);
+  }
+  void add_KIND(::flatbuffers::Offset<::flatbuffers::String> KIND) {
+    fbb_.AddOffset(PLGBuildArtifact::VT_KIND, KIND);
+  }
+  void add_PATH(::flatbuffers::Offset<::flatbuffers::String> PATH) {
+    fbb_.AddOffset(PLGBuildArtifact::VT_PATH, PATH);
+  }
+  void add_TARGET(::flatbuffers::Offset<::flatbuffers::String> TARGET) {
+    fbb_.AddOffset(PLGBuildArtifact::VT_TARGET, TARGET);
+  }
+  void add_ENTRY_SYMBOL(::flatbuffers::Offset<::flatbuffers::String> ENTRY_SYMBOL) {
+    fbb_.AddOffset(PLGBuildArtifact::VT_ENTRY_SYMBOL, ENTRY_SYMBOL);
+  }
+  explicit PLGBuildArtifactBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PLGBuildArtifact> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PLGBuildArtifact>(end);
+    fbb_.Required(o, PLGBuildArtifact::VT_ARTIFACT_ID);
+    fbb_.Required(o, PLGBuildArtifact::VT_PATH);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PLGBuildArtifact> CreatePLGBuildArtifact(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> ARTIFACT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> KIND = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PATH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TARGET = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ENTRY_SYMBOL = 0) {
+  PLGBuildArtifactBuilder builder_(_fbb);
+  builder_.add_ENTRY_SYMBOL(ENTRY_SYMBOL);
+  builder_.add_TARGET(TARGET);
+  builder_.add_PATH(PATH);
+  builder_.add_KIND(KIND);
+  builder_.add_ARTIFACT_ID(ARTIFACT_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<PLGBuildArtifact> CreatePLGBuildArtifactDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *ARTIFACT_ID = nullptr,
+    const char *KIND = nullptr,
+    const char *PATH = nullptr,
+    const char *TARGET = nullptr,
+    const char *ENTRY_SYMBOL = nullptr) {
+  auto ARTIFACT_ID__ = ARTIFACT_ID ? _fbb.CreateString(ARTIFACT_ID) : 0;
+  auto KIND__ = KIND ? _fbb.CreateString(KIND) : 0;
+  auto PATH__ = PATH ? _fbb.CreateString(PATH) : 0;
+  auto TARGET__ = TARGET ? _fbb.CreateString(TARGET) : 0;
+  auto ENTRY_SYMBOL__ = ENTRY_SYMBOL ? _fbb.CreateString(ENTRY_SYMBOL) : 0;
+  return CreatePLGBuildArtifact(
+      _fbb,
+      ARTIFACT_ID__,
+      KIND__,
+      PATH__,
+      TARGET__,
+      ENTRY_SYMBOL__);
+}
+
+/// Canonical method declaration.
+struct PLGMethodManifest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PLGMethodManifestBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_METHOD_ID = 4,
+    VT_DISPLAY_NAME = 6,
+    VT_INPUT_PORTS = 8,
+    VT_OUTPUT_PORTS = 10,
+    VT_MAX_BATCH = 12,
+    VT_DRAIN_POLICY = 14,
+    VT_DESCRIPTION = 16
+  };
+  const ::flatbuffers::String *METHOD_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_METHOD_ID);
+  }
+  const ::flatbuffers::String *DISPLAY_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DISPLAY_NAME);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PLGPortManifest>> *INPUT_PORTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PLGPortManifest>> *>(VT_INPUT_PORTS);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PLGPortManifest>> *OUTPUT_PORTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PLGPortManifest>> *>(VT_OUTPUT_PORTS);
+  }
+  uint32_t MAX_BATCH() const {
+    return GetField<uint32_t>(VT_MAX_BATCH, 1);
+  }
+  drainBehavior DRAIN_POLICY() const {
+    return static_cast<drainBehavior>(GetField<uint8_t>(VT_DRAIN_POLICY, 1));
+  }
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_METHOD_ID) &&
+           verifier.VerifyString(METHOD_ID()) &&
+           VerifyOffset(verifier, VT_DISPLAY_NAME) &&
+           verifier.VerifyString(DISPLAY_NAME()) &&
+           VerifyOffset(verifier, VT_INPUT_PORTS) &&
+           verifier.VerifyVector(INPUT_PORTS()) &&
+           verifier.VerifyVectorOfTables(INPUT_PORTS()) &&
+           VerifyOffset(verifier, VT_OUTPUT_PORTS) &&
+           verifier.VerifyVector(OUTPUT_PORTS()) &&
+           verifier.VerifyVectorOfTables(OUTPUT_PORTS()) &&
+           VerifyField<uint32_t>(verifier, VT_MAX_BATCH, 4) &&
+           VerifyField<uint8_t>(verifier, VT_DRAIN_POLICY, 1) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PLGMethodManifestBuilder {
+  typedef PLGMethodManifest Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_METHOD_ID(::flatbuffers::Offset<::flatbuffers::String> METHOD_ID) {
+    fbb_.AddOffset(PLGMethodManifest::VT_METHOD_ID, METHOD_ID);
+  }
+  void add_DISPLAY_NAME(::flatbuffers::Offset<::flatbuffers::String> DISPLAY_NAME) {
+    fbb_.AddOffset(PLGMethodManifest::VT_DISPLAY_NAME, DISPLAY_NAME);
+  }
+  void add_INPUT_PORTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGPortManifest>>> INPUT_PORTS) {
+    fbb_.AddOffset(PLGMethodManifest::VT_INPUT_PORTS, INPUT_PORTS);
+  }
+  void add_OUTPUT_PORTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGPortManifest>>> OUTPUT_PORTS) {
+    fbb_.AddOffset(PLGMethodManifest::VT_OUTPUT_PORTS, OUTPUT_PORTS);
+  }
+  void add_MAX_BATCH(uint32_t MAX_BATCH) {
+    fbb_.AddElement<uint32_t>(PLGMethodManifest::VT_MAX_BATCH, MAX_BATCH, 1);
+  }
+  void add_DRAIN_POLICY(drainBehavior DRAIN_POLICY) {
+    fbb_.AddElement<uint8_t>(PLGMethodManifest::VT_DRAIN_POLICY, static_cast<uint8_t>(DRAIN_POLICY), 1);
+  }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(PLGMethodManifest::VT_DESCRIPTION, DESCRIPTION);
+  }
+  explicit PLGMethodManifestBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PLGMethodManifest> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PLGMethodManifest>(end);
+    fbb_.Required(o, PLGMethodManifest::VT_METHOD_ID);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PLGMethodManifest> CreatePLGMethodManifest(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> METHOD_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DISPLAY_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGPortManifest>>> INPUT_PORTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGPortManifest>>> OUTPUT_PORTS = 0,
+    uint32_t MAX_BATCH = 1,
+    drainBehavior DRAIN_POLICY = drainBehavior_DRAIN_UNTIL_YIELD,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0) {
+  PLGMethodManifestBuilder builder_(_fbb);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_MAX_BATCH(MAX_BATCH);
+  builder_.add_OUTPUT_PORTS(OUTPUT_PORTS);
+  builder_.add_INPUT_PORTS(INPUT_PORTS);
+  builder_.add_DISPLAY_NAME(DISPLAY_NAME);
+  builder_.add_METHOD_ID(METHOD_ID);
+  builder_.add_DRAIN_POLICY(DRAIN_POLICY);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<PLGMethodManifest> CreatePLGMethodManifestDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *METHOD_ID = nullptr,
+    const char *DISPLAY_NAME = nullptr,
+    const std::vector<::flatbuffers::Offset<PLGPortManifest>> *INPUT_PORTS = nullptr,
+    const std::vector<::flatbuffers::Offset<PLGPortManifest>> *OUTPUT_PORTS = nullptr,
+    uint32_t MAX_BATCH = 1,
+    drainBehavior DRAIN_POLICY = drainBehavior_DRAIN_UNTIL_YIELD,
+    const char *DESCRIPTION = nullptr) {
+  auto METHOD_ID__ = METHOD_ID ? _fbb.CreateString(METHOD_ID) : 0;
+  auto DISPLAY_NAME__ = DISPLAY_NAME ? _fbb.CreateString(DISPLAY_NAME) : 0;
+  auto INPUT_PORTS__ = INPUT_PORTS ? _fbb.CreateVector<::flatbuffers::Offset<PLGPortManifest>>(*INPUT_PORTS) : 0;
+  auto OUTPUT_PORTS__ = OUTPUT_PORTS ? _fbb.CreateVector<::flatbuffers::Offset<PLGPortManifest>>(*OUTPUT_PORTS) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  return CreatePLGMethodManifest(
+      _fbb,
+      METHOD_ID__,
+      DISPLAY_NAME__,
+      INPUT_PORTS__,
+      OUTPUT_PORTS__,
+      MAX_BATCH,
+      DRAIN_POLICY,
+      DESCRIPTION__);
+}
+
+/// Plugin dependency on another plugin
+struct PluginDependency FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PluginDependencyBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PLUGIN_ID = 4,
+    VT_MIN_VERSION = 6,
+    VT_MAX_VERSION = 8
+  };
+  /// Plugin ID of the dependency
+  const ::flatbuffers::String *PLUGIN_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PLUGIN_ID);
+  }
+  /// Minimum version required (semver)
+  const ::flatbuffers::String *MIN_VERSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MIN_VERSION);
+  }
+  /// Maximum version allowed (optional)
+  const ::flatbuffers::String *MAX_VERSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MAX_VERSION);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_PLUGIN_ID) &&
+           verifier.VerifyString(PLUGIN_ID()) &&
+           VerifyOffset(verifier, VT_MIN_VERSION) &&
+           verifier.VerifyString(MIN_VERSION()) &&
+           VerifyOffset(verifier, VT_MAX_VERSION) &&
+           verifier.VerifyString(MAX_VERSION()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PluginDependencyBuilder {
+  typedef PluginDependency Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_PLUGIN_ID(::flatbuffers::Offset<::flatbuffers::String> PLUGIN_ID) {
+    fbb_.AddOffset(PluginDependency::VT_PLUGIN_ID, PLUGIN_ID);
+  }
+  void add_MIN_VERSION(::flatbuffers::Offset<::flatbuffers::String> MIN_VERSION) {
+    fbb_.AddOffset(PluginDependency::VT_MIN_VERSION, MIN_VERSION);
+  }
+  void add_MAX_VERSION(::flatbuffers::Offset<::flatbuffers::String> MAX_VERSION) {
+    fbb_.AddOffset(PluginDependency::VT_MAX_VERSION, MAX_VERSION);
+  }
+  explicit PluginDependencyBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PluginDependency> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PluginDependency>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PluginDependency> CreatePluginDependency(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> PLUGIN_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MIN_VERSION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MAX_VERSION = 0) {
+  PluginDependencyBuilder builder_(_fbb);
+  builder_.add_MAX_VERSION(MAX_VERSION);
+  builder_.add_MIN_VERSION(MIN_VERSION);
+  builder_.add_PLUGIN_ID(PLUGIN_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<PluginDependency> CreatePluginDependencyDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *PLUGIN_ID = nullptr,
+    const char *MIN_VERSION = nullptr,
+    const char *MAX_VERSION = nullptr) {
+  auto PLUGIN_ID__ = PLUGIN_ID ? _fbb.CreateString(PLUGIN_ID) : 0;
+  auto MIN_VERSION__ = MIN_VERSION ? _fbb.CreateString(MIN_VERSION) : 0;
+  auto MAX_VERSION__ = MAX_VERSION ? _fbb.CreateString(MAX_VERSION) : 0;
+  return CreatePluginDependency(
+      _fbb,
+      PLUGIN_ID__,
+      MIN_VERSION__,
+      MAX_VERSION__);
+}
+
+/// Plugin entry point function definition
+struct EntryFunction FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef EntryFunctionBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_DESCRIPTION = 6,
+    VT_INPUT_SCHEMAS = 8,
+    VT_OUTPUT_SCHEMA = 10
+  };
+  /// Function name as exported from WASM
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Human-readable description
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  /// Input parameter types (FlatBuffer schema names)
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *INPUT_SCHEMAS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_INPUT_SCHEMAS);
+  }
+  /// Output type (FlatBuffer schema name)
+  const ::flatbuffers::String *OUTPUT_SCHEMA() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OUTPUT_SCHEMA);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           VerifyOffset(verifier, VT_INPUT_SCHEMAS) &&
+           verifier.VerifyVector(INPUT_SCHEMAS()) &&
+           verifier.VerifyVectorOfStrings(INPUT_SCHEMAS()) &&
+           VerifyOffset(verifier, VT_OUTPUT_SCHEMA) &&
+           verifier.VerifyString(OUTPUT_SCHEMA()) &&
+           verifier.EndTable();
+  }
+};
+
+struct EntryFunctionBuilder {
+  typedef EntryFunction Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(EntryFunction::VT_NAME, NAME);
+  }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(EntryFunction::VT_DESCRIPTION, DESCRIPTION);
+  }
+  void add_INPUT_SCHEMAS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> INPUT_SCHEMAS) {
+    fbb_.AddOffset(EntryFunction::VT_INPUT_SCHEMAS, INPUT_SCHEMAS);
+  }
+  void add_OUTPUT_SCHEMA(::flatbuffers::Offset<::flatbuffers::String> OUTPUT_SCHEMA) {
+    fbb_.AddOffset(EntryFunction::VT_OUTPUT_SCHEMA, OUTPUT_SCHEMA);
+  }
+  explicit EntryFunctionBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<EntryFunction> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<EntryFunction>(end);
+    fbb_.Required(o, EntryFunction::VT_NAME);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<EntryFunction> CreateEntryFunction(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> INPUT_SCHEMAS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OUTPUT_SCHEMA = 0) {
+  EntryFunctionBuilder builder_(_fbb);
+  builder_.add_OUTPUT_SCHEMA(OUTPUT_SCHEMA);
+  builder_.add_INPUT_SCHEMAS(INPUT_SCHEMAS);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_NAME(NAME);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<EntryFunction> CreateEntryFunctionDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *NAME = nullptr,
+    const char *DESCRIPTION = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *INPUT_SCHEMAS = nullptr,
+    const char *OUTPUT_SCHEMA = nullptr) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  auto INPUT_SCHEMAS__ = INPUT_SCHEMAS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*INPUT_SCHEMAS) : 0;
+  auto OUTPUT_SCHEMA__ = OUTPUT_SCHEMA ? _fbb.CreateString(OUTPUT_SCHEMA) : 0;
+  return CreateEntryFunction(
+      _fbb,
+      NAME__,
+      DESCRIPTION__,
+      INPUT_SCHEMAS__,
+      OUTPUT_SCHEMA__);
+}
+
+/// Plugin Manifest - canonical signed storefront and WASM distribution record
+struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PLGBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PLUGIN_ID = 4,
+    VT_NAME = 6,
+    VT_VERSION = 8,
+    VT_DESCRIPTION = 10,
+    VT_TAGLINE = 12,
+    VT_PLUGIN_TYPE = 14,
+    VT_PUBLISHER_NAME = 16,
+    VT_PUBLISHER_HANDLE = 18,
+    VT_PUBLISHER_URL = 20,
+    VT_SUPPORT_URL = 22,
+    VT_TAGS = 24,
+    VT_FEATURES = 26,
+    VT_SCREENSHOT_URLS = 28,
+    VT_BANNER_URL = 30,
+    VT_ABI_VERSION = 32,
+    VT_WASM_HASH = 34,
+    VT_WASM_SIZE = 36,
+    VT_WASM_CID = 38,
+    VT_ENCRYPTED_WASM_HASH = 40,
+    VT_ENCRYPTED_WASM_SIZE = 42,
+    VT_ENTRY_FUNCTIONS = 44,
+    VT_REQUIRED_SCHEMAS = 46,
+    VT_DEPENDENCIES = 48,
+    VT_CAPABILITIES = 50,
+    VT_PROVIDER_PEER_ID = 52,
+    VT_PROVIDER_EPM_CID = 54,
+    VT_ENCRYPTED = 56,
+    VT_REQUIRED_SCOPE = 58,
+    VT_KEY_ID = 60,
+    VT_ALLOWED_DOMAINS = 62,
+    VT_MAX_GRANT_TIMEOUT_MS = 64,
+    VT_MIN_PERMISSIONS = 66,
+    VT_CREATED_AT = 68,
+    VT_UPDATED_AT = 70,
+    VT_DOCUMENTATION_URL = 72,
+    VT_CHANGELOG_URL = 74,
+    VT_ICON_URL = 76,
+    VT_LICENSE = 78,
+    VT_PAYMENT_MODEL = 80,
+    VT_PRICE_USD_CENTS = 82,
+    VT_SUBSCRIPTION_PERIOD_DAYS = 84,
+    VT_ACCEPTED_PAYMENT_METHODS = 86,
+    VT_LISTING_STATUS = 88,
+    VT_SIGNATURE = 90,
+    VT_INVOKE_SURFACES = 92,
+    VT_METHODS = 94,
+    VT_HOST_CAPABILITIES = 96,
+    VT_TIMERS = 98,
+    VT_PROTOCOLS = 100,
+    VT_SCHEMAS_USED = 102,
+    VT_BUILD_ARTIFACTS = 104,
+    VT_RUNTIME_TARGETS = 106
+  };
+  /// Unique identifier for the plugin
+  const ::flatbuffers::String *PLUGIN_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PLUGIN_ID);
+  }
+  /// Human-readable plugin name
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Plugin version (semver format)
+  const ::flatbuffers::String *VERSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_VERSION);
+  }
+  /// Detailed description of plugin functionality
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  /// Short marketing summary shown in storefront listings
+  const ::flatbuffers::String *TAGLINE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TAGLINE);
+  }
+  /// Type/category of the plugin
+  pluginCategory PLUGIN_TYPE() const {
+    return static_cast<pluginCategory>(GetField<int8_t>(VT_PLUGIN_TYPE, 0));
+  }
+  /// Human-readable publisher or organization name
+  const ::flatbuffers::String *PUBLISHER_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PUBLISHER_NAME);
+  }
+  /// Publisher handle or username
+  const ::flatbuffers::String *PUBLISHER_HANDLE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PUBLISHER_HANDLE);
+  }
+  /// Canonical publisher website
+  const ::flatbuffers::String *PUBLISHER_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PUBLISHER_URL);
+  }
+  /// Support or helpdesk URL for this plugin
+  const ::flatbuffers::String *SUPPORT_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SUPPORT_URL);
+  }
+  /// Search and categorization tags for discovery
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
+  }
+  /// Short feature bullets highlighted in storefront listings
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *FEATURES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_FEATURES);
+  }
+  /// Screenshot URLs showing the plugin in use
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SCREENSHOT_URLS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SCREENSHOT_URLS);
+  }
+  /// Optional hero/banner image URL for the listing
+  const ::flatbuffers::String *BANNER_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BANNER_URL);
+  }
+  /// ABI version for compatibility checking
+  uint32_t ABI_VERSION() const {
+    return GetField<uint32_t>(VT_ABI_VERSION, 1);
+  }
+  /// SHA256 hash of the decrypted WASM binary
+  const ::flatbuffers::Vector<uint8_t> *WASM_HASH() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_WASM_HASH);
+  }
+  /// Size of decrypted WASM binary in bytes
+  uint64_t WASM_SIZE() const {
+    return GetField<uint64_t>(VT_WASM_SIZE, 0);
+  }
+  /// IPFS CID of the encrypted WASM binary
+  const ::flatbuffers::String *WASM_CID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_WASM_CID);
+  }
+  /// SHA256 hash of the encrypted delivery artifact bytes
+  const ::flatbuffers::Vector<uint8_t> *ENCRYPTED_WASM_HASH() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_ENCRYPTED_WASM_HASH);
+  }
+  /// Size of the encrypted delivery artifact in bytes
+  uint64_t ENCRYPTED_WASM_SIZE() const {
+    return GetField<uint64_t>(VT_ENCRYPTED_WASM_SIZE, 0);
+  }
+  /// Entry point functions exported by the plugin
+  const ::flatbuffers::Vector<::flatbuffers::Offset<EntryFunction>> *ENTRY_FUNCTIONS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<EntryFunction>> *>(VT_ENTRY_FUNCTIONS);
+  }
+  /// FlatBuffer schemas required by this plugin
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *REQUIRED_SCHEMAS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_REQUIRED_SCHEMAS);
+  }
+  /// Other plugins this depends on
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PluginDependency>> *DEPENDENCIES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PluginDependency>> *>(VT_DEPENDENCIES);
+  }
+  /// Capabilities provided by this plugin
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PluginCapability>> *CAPABILITIES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PluginCapability>> *>(VT_CAPABILITIES);
+  }
+  /// Peer ID of the plugin provider
+  const ::flatbuffers::String *PROVIDER_PEER_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PROVIDER_PEER_ID);
+  }
+  /// IPFS CID of provider's EPM (Entity Profile Message)
+  const ::flatbuffers::String *PROVIDER_EPM_CID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PROVIDER_EPM_CID);
+  }
+  /// Whether the WASM binary is encrypted
+  bool ENCRYPTED() const {
+    return GetField<uint8_t>(VT_ENCRYPTED, 1) != 0;
+  }
+  /// Canonical required scope for grant issuance
+  const ::flatbuffers::String *REQUIRED_SCOPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REQUIRED_SCOPE);
+  }
+  /// Provider-local identifier for the module content key
+  const ::flatbuffers::String *KEY_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_KEY_ID);
+  }
+  /// Allowed requester domains for module grants
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ALLOWED_DOMAINS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ALLOWED_DOMAINS);
+  }
+  /// Maximum grant timeout allowed for this module publication
+  uint64_t MAX_GRANT_TIMEOUT_MS() const {
+    return GetField<uint64_t>(VT_MAX_GRANT_TIMEOUT_MS, 0);
+  }
+  /// Minimum permissions required to run
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MIN_PERMISSIONS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MIN_PERMISSIONS);
+  }
+  /// Unix timestamp when plugin was created
+  uint64_t CREATED_AT() const {
+    return GetField<uint64_t>(VT_CREATED_AT, 0);
+  }
+  /// Unix timestamp when plugin was last updated
+  uint64_t UPDATED_AT() const {
+    return GetField<uint64_t>(VT_UPDATED_AT, 0);
+  }
+  /// URL to plugin documentation
+  const ::flatbuffers::String *DOCUMENTATION_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DOCUMENTATION_URL);
+  }
+  /// URL to plugin changelog or release notes
+  const ::flatbuffers::String *CHANGELOG_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CHANGELOG_URL);
+  }
+  /// URL to plugin icon/logo
+  const ::flatbuffers::String *ICON_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ICON_URL);
+  }
+  /// License identifier (SPDX format)
+  const ::flatbuffers::String *LICENSE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LICENSE);
+  }
+  /// Commercial model used for storefront purchase flows
+  purchaseTier PAYMENT_MODEL() const {
+    return static_cast<purchaseTier>(GetField<int8_t>(VT_PAYMENT_MODEL, 0));
+  }
+  /// Price in USD cents for one-time purchase or subscription period
+  uint32_t PRICE_USD_CENTS() const {
+    return GetField<uint32_t>(VT_PRICE_USD_CENTS, 0);
+  }
+  /// Subscription billing period length in days
+  uint32_t SUBSCRIPTION_PERIOD_DAYS() const {
+    return GetField<uint32_t>(VT_SUBSCRIPTION_PERIOD_DAYS, 0);
+  }
+  /// Accepted payment methods, e.g. "stripe", "sol", "usdc"
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ACCEPTED_PAYMENT_METHODS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ACCEPTED_PAYMENT_METHODS);
+  }
+  /// Storefront publication state for this manifest version
+  publicationState LISTING_STATUS() const {
+    return static_cast<publicationState>(GetField<int8_t>(VT_LISTING_STATUS, 0));
+  }
+  /// Ed25519 signature from provider over manifest
+  const ::flatbuffers::Vector<uint8_t> *SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_SIGNATURE);
+  }
+  /// Canonical invoke surfaces this artifact exposes. A single plugin
+  /// MAY list both DIRECT and COMMAND when it supports both.
+  const ::flatbuffers::Vector<uint8_t> *INVOKE_SURFACES() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_INVOKE_SURFACES);
+  }
+  /// Rich per-method invoke manifests (port shape, drain semantics,
+  /// accepted wire formats). ENTRY_FUNCTIONS retains the slim
+  /// name+input_schemas+output_schema summary; METHODS carries the full
+  /// invoke-surface detail including aligned-binary advertisement.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PLGMethodManifest>> *METHODS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PLGMethodManifest>> *>(VT_METHODS);
+  }
+  /// Enum-typed host capability dependencies (richer than CAPABILITIES,
+  /// which is string-tagged metadata).
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PLGHostCapability>> *HOST_CAPABILITIES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PLGHostCapability>> *>(VT_HOST_CAPABILITIES);
+  }
+  /// Timer declarations for scheduled invocations.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PLGTimerSpec>> *TIMERS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PLGTimerSpec>> *>(VT_TIMERS);
+  }
+  /// Protocol handler declarations.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PLGProtocolSpec>> *PROTOCOLS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PLGProtocolSpec>> *>(VT_PROTOCOLS);
+  }
+  /// FlatBuffer schemas this plugin depends on at the invoke surface.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<FlatBufferTypeRef>> *SCHEMAS_USED() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<FlatBufferTypeRef>> *>(VT_SCHEMAS_USED);
+  }
+  /// Build artifacts emitted by the toolchain (WASM, bindings, etc.).
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PLGBuildArtifact>> *BUILD_ARTIFACTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PLGBuildArtifact>> *>(VT_BUILD_ARTIFACTS);
+  }
+  /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *RUNTIME_TARGETS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_RUNTIME_TARGETS);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_PLUGIN_ID) &&
+           verifier.VerifyString(PLUGIN_ID()) &&
+           VerifyOffsetRequired(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffsetRequired(verifier, VT_VERSION) &&
+           verifier.VerifyString(VERSION()) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           VerifyOffset(verifier, VT_TAGLINE) &&
+           verifier.VerifyString(TAGLINE()) &&
+           VerifyField<int8_t>(verifier, VT_PLUGIN_TYPE, 1) &&
+           VerifyOffset(verifier, VT_PUBLISHER_NAME) &&
+           verifier.VerifyString(PUBLISHER_NAME()) &&
+           VerifyOffset(verifier, VT_PUBLISHER_HANDLE) &&
+           verifier.VerifyString(PUBLISHER_HANDLE()) &&
+           VerifyOffset(verifier, VT_PUBLISHER_URL) &&
+           verifier.VerifyString(PUBLISHER_URL()) &&
+           VerifyOffset(verifier, VT_SUPPORT_URL) &&
+           verifier.VerifyString(SUPPORT_URL()) &&
+           VerifyOffset(verifier, VT_TAGS) &&
+           verifier.VerifyVector(TAGS()) &&
+           verifier.VerifyVectorOfStrings(TAGS()) &&
+           VerifyOffset(verifier, VT_FEATURES) &&
+           verifier.VerifyVector(FEATURES()) &&
+           verifier.VerifyVectorOfStrings(FEATURES()) &&
+           VerifyOffset(verifier, VT_SCREENSHOT_URLS) &&
+           verifier.VerifyVector(SCREENSHOT_URLS()) &&
+           verifier.VerifyVectorOfStrings(SCREENSHOT_URLS()) &&
+           VerifyOffset(verifier, VT_BANNER_URL) &&
+           verifier.VerifyString(BANNER_URL()) &&
+           VerifyField<uint32_t>(verifier, VT_ABI_VERSION, 4) &&
+           VerifyOffset(verifier, VT_WASM_HASH) &&
+           verifier.VerifyVector(WASM_HASH()) &&
+           VerifyField<uint64_t>(verifier, VT_WASM_SIZE, 8) &&
+           VerifyOffset(verifier, VT_WASM_CID) &&
+           verifier.VerifyString(WASM_CID()) &&
+           VerifyOffset(verifier, VT_ENCRYPTED_WASM_HASH) &&
+           verifier.VerifyVector(ENCRYPTED_WASM_HASH()) &&
+           VerifyField<uint64_t>(verifier, VT_ENCRYPTED_WASM_SIZE, 8) &&
+           VerifyOffset(verifier, VT_ENTRY_FUNCTIONS) &&
+           verifier.VerifyVector(ENTRY_FUNCTIONS()) &&
+           verifier.VerifyVectorOfTables(ENTRY_FUNCTIONS()) &&
+           VerifyOffset(verifier, VT_REQUIRED_SCHEMAS) &&
+           verifier.VerifyVector(REQUIRED_SCHEMAS()) &&
+           verifier.VerifyVectorOfStrings(REQUIRED_SCHEMAS()) &&
+           VerifyOffset(verifier, VT_DEPENDENCIES) &&
+           verifier.VerifyVector(DEPENDENCIES()) &&
+           verifier.VerifyVectorOfTables(DEPENDENCIES()) &&
+           VerifyOffset(verifier, VT_CAPABILITIES) &&
+           verifier.VerifyVector(CAPABILITIES()) &&
+           verifier.VerifyVectorOfTables(CAPABILITIES()) &&
+           VerifyOffset(verifier, VT_PROVIDER_PEER_ID) &&
+           verifier.VerifyString(PROVIDER_PEER_ID()) &&
+           VerifyOffset(verifier, VT_PROVIDER_EPM_CID) &&
+           verifier.VerifyString(PROVIDER_EPM_CID()) &&
+           VerifyField<uint8_t>(verifier, VT_ENCRYPTED, 1) &&
+           VerifyOffset(verifier, VT_REQUIRED_SCOPE) &&
+           verifier.VerifyString(REQUIRED_SCOPE()) &&
+           VerifyOffset(verifier, VT_KEY_ID) &&
+           verifier.VerifyString(KEY_ID()) &&
+           VerifyOffset(verifier, VT_ALLOWED_DOMAINS) &&
+           verifier.VerifyVector(ALLOWED_DOMAINS()) &&
+           verifier.VerifyVectorOfStrings(ALLOWED_DOMAINS()) &&
+           VerifyField<uint64_t>(verifier, VT_MAX_GRANT_TIMEOUT_MS, 8) &&
+           VerifyOffset(verifier, VT_MIN_PERMISSIONS) &&
+           verifier.VerifyVector(MIN_PERMISSIONS()) &&
+           verifier.VerifyVectorOfStrings(MIN_PERMISSIONS()) &&
+           VerifyField<uint64_t>(verifier, VT_CREATED_AT, 8) &&
+           VerifyField<uint64_t>(verifier, VT_UPDATED_AT, 8) &&
+           VerifyOffset(verifier, VT_DOCUMENTATION_URL) &&
+           verifier.VerifyString(DOCUMENTATION_URL()) &&
+           VerifyOffset(verifier, VT_CHANGELOG_URL) &&
+           verifier.VerifyString(CHANGELOG_URL()) &&
+           VerifyOffset(verifier, VT_ICON_URL) &&
+           verifier.VerifyString(ICON_URL()) &&
+           VerifyOffset(verifier, VT_LICENSE) &&
+           verifier.VerifyString(LICENSE()) &&
+           VerifyField<int8_t>(verifier, VT_PAYMENT_MODEL, 1) &&
+           VerifyField<uint32_t>(verifier, VT_PRICE_USD_CENTS, 4) &&
+           VerifyField<uint32_t>(verifier, VT_SUBSCRIPTION_PERIOD_DAYS, 4) &&
+           VerifyOffset(verifier, VT_ACCEPTED_PAYMENT_METHODS) &&
+           verifier.VerifyVector(ACCEPTED_PAYMENT_METHODS()) &&
+           verifier.VerifyVectorOfStrings(ACCEPTED_PAYMENT_METHODS()) &&
+           VerifyField<int8_t>(verifier, VT_LISTING_STATUS, 1) &&
+           VerifyOffset(verifier, VT_SIGNATURE) &&
+           verifier.VerifyVector(SIGNATURE()) &&
+           VerifyOffset(verifier, VT_INVOKE_SURFACES) &&
+           verifier.VerifyVector(INVOKE_SURFACES()) &&
+           VerifyOffset(verifier, VT_METHODS) &&
+           verifier.VerifyVector(METHODS()) &&
+           verifier.VerifyVectorOfTables(METHODS()) &&
+           VerifyOffset(verifier, VT_HOST_CAPABILITIES) &&
+           verifier.VerifyVector(HOST_CAPABILITIES()) &&
+           verifier.VerifyVectorOfTables(HOST_CAPABILITIES()) &&
+           VerifyOffset(verifier, VT_TIMERS) &&
+           verifier.VerifyVector(TIMERS()) &&
+           verifier.VerifyVectorOfTables(TIMERS()) &&
+           VerifyOffset(verifier, VT_PROTOCOLS) &&
+           verifier.VerifyVector(PROTOCOLS()) &&
+           verifier.VerifyVectorOfTables(PROTOCOLS()) &&
+           VerifyOffset(verifier, VT_SCHEMAS_USED) &&
+           verifier.VerifyVector(SCHEMAS_USED()) &&
+           verifier.VerifyVectorOfTables(SCHEMAS_USED()) &&
+           VerifyOffset(verifier, VT_BUILD_ARTIFACTS) &&
+           verifier.VerifyVector(BUILD_ARTIFACTS()) &&
+           verifier.VerifyVectorOfTables(BUILD_ARTIFACTS()) &&
+           VerifyOffset(verifier, VT_RUNTIME_TARGETS) &&
+           verifier.VerifyVector(RUNTIME_TARGETS()) &&
+           verifier.VerifyVectorOfStrings(RUNTIME_TARGETS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PLGBuilder {
+  typedef PLG Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_PLUGIN_ID(::flatbuffers::Offset<::flatbuffers::String> PLUGIN_ID) {
+    fbb_.AddOffset(PLG::VT_PLUGIN_ID, PLUGIN_ID);
+  }
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(PLG::VT_NAME, NAME);
+  }
+  void add_VERSION(::flatbuffers::Offset<::flatbuffers::String> VERSION) {
+    fbb_.AddOffset(PLG::VT_VERSION, VERSION);
+  }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(PLG::VT_DESCRIPTION, DESCRIPTION);
+  }
+  void add_TAGLINE(::flatbuffers::Offset<::flatbuffers::String> TAGLINE) {
+    fbb_.AddOffset(PLG::VT_TAGLINE, TAGLINE);
+  }
+  void add_PLUGIN_TYPE(pluginCategory PLUGIN_TYPE) {
+    fbb_.AddElement<int8_t>(PLG::VT_PLUGIN_TYPE, static_cast<int8_t>(PLUGIN_TYPE), 0);
+  }
+  void add_PUBLISHER_NAME(::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_NAME) {
+    fbb_.AddOffset(PLG::VT_PUBLISHER_NAME, PUBLISHER_NAME);
+  }
+  void add_PUBLISHER_HANDLE(::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_HANDLE) {
+    fbb_.AddOffset(PLG::VT_PUBLISHER_HANDLE, PUBLISHER_HANDLE);
+  }
+  void add_PUBLISHER_URL(::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_URL) {
+    fbb_.AddOffset(PLG::VT_PUBLISHER_URL, PUBLISHER_URL);
+  }
+  void add_SUPPORT_URL(::flatbuffers::Offset<::flatbuffers::String> SUPPORT_URL) {
+    fbb_.AddOffset(PLG::VT_SUPPORT_URL, SUPPORT_URL);
+  }
+  void add_TAGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS) {
+    fbb_.AddOffset(PLG::VT_TAGS, TAGS);
+  }
+  void add_FEATURES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> FEATURES) {
+    fbb_.AddOffset(PLG::VT_FEATURES, FEATURES);
+  }
+  void add_SCREENSHOT_URLS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SCREENSHOT_URLS) {
+    fbb_.AddOffset(PLG::VT_SCREENSHOT_URLS, SCREENSHOT_URLS);
+  }
+  void add_BANNER_URL(::flatbuffers::Offset<::flatbuffers::String> BANNER_URL) {
+    fbb_.AddOffset(PLG::VT_BANNER_URL, BANNER_URL);
+  }
+  void add_ABI_VERSION(uint32_t ABI_VERSION) {
+    fbb_.AddElement<uint32_t>(PLG::VT_ABI_VERSION, ABI_VERSION, 1);
+  }
+  void add_WASM_HASH(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> WASM_HASH) {
+    fbb_.AddOffset(PLG::VT_WASM_HASH, WASM_HASH);
+  }
+  void add_WASM_SIZE(uint64_t WASM_SIZE) {
+    fbb_.AddElement<uint64_t>(PLG::VT_WASM_SIZE, WASM_SIZE, 0);
+  }
+  void add_WASM_CID(::flatbuffers::Offset<::flatbuffers::String> WASM_CID) {
+    fbb_.AddOffset(PLG::VT_WASM_CID, WASM_CID);
+  }
+  void add_ENCRYPTED_WASM_HASH(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> ENCRYPTED_WASM_HASH) {
+    fbb_.AddOffset(PLG::VT_ENCRYPTED_WASM_HASH, ENCRYPTED_WASM_HASH);
+  }
+  void add_ENCRYPTED_WASM_SIZE(uint64_t ENCRYPTED_WASM_SIZE) {
+    fbb_.AddElement<uint64_t>(PLG::VT_ENCRYPTED_WASM_SIZE, ENCRYPTED_WASM_SIZE, 0);
+  }
+  void add_ENTRY_FUNCTIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EntryFunction>>> ENTRY_FUNCTIONS) {
+    fbb_.AddOffset(PLG::VT_ENTRY_FUNCTIONS, ENTRY_FUNCTIONS);
+  }
+  void add_REQUIRED_SCHEMAS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> REQUIRED_SCHEMAS) {
+    fbb_.AddOffset(PLG::VT_REQUIRED_SCHEMAS, REQUIRED_SCHEMAS);
+  }
+  void add_DEPENDENCIES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PluginDependency>>> DEPENDENCIES) {
+    fbb_.AddOffset(PLG::VT_DEPENDENCIES, DEPENDENCIES);
+  }
+  void add_CAPABILITIES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PluginCapability>>> CAPABILITIES) {
+    fbb_.AddOffset(PLG::VT_CAPABILITIES, CAPABILITIES);
+  }
+  void add_PROVIDER_PEER_ID(::flatbuffers::Offset<::flatbuffers::String> PROVIDER_PEER_ID) {
+    fbb_.AddOffset(PLG::VT_PROVIDER_PEER_ID, PROVIDER_PEER_ID);
+  }
+  void add_PROVIDER_EPM_CID(::flatbuffers::Offset<::flatbuffers::String> PROVIDER_EPM_CID) {
+    fbb_.AddOffset(PLG::VT_PROVIDER_EPM_CID, PROVIDER_EPM_CID);
+  }
+  void add_ENCRYPTED(bool ENCRYPTED) {
+    fbb_.AddElement<uint8_t>(PLG::VT_ENCRYPTED, static_cast<uint8_t>(ENCRYPTED), 1);
+  }
+  void add_REQUIRED_SCOPE(::flatbuffers::Offset<::flatbuffers::String> REQUIRED_SCOPE) {
+    fbb_.AddOffset(PLG::VT_REQUIRED_SCOPE, REQUIRED_SCOPE);
+  }
+  void add_KEY_ID(::flatbuffers::Offset<::flatbuffers::String> KEY_ID) {
+    fbb_.AddOffset(PLG::VT_KEY_ID, KEY_ID);
+  }
+  void add_ALLOWED_DOMAINS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALLOWED_DOMAINS) {
+    fbb_.AddOffset(PLG::VT_ALLOWED_DOMAINS, ALLOWED_DOMAINS);
+  }
+  void add_MAX_GRANT_TIMEOUT_MS(uint64_t MAX_GRANT_TIMEOUT_MS) {
+    fbb_.AddElement<uint64_t>(PLG::VT_MAX_GRANT_TIMEOUT_MS, MAX_GRANT_TIMEOUT_MS, 0);
+  }
+  void add_MIN_PERMISSIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MIN_PERMISSIONS) {
+    fbb_.AddOffset(PLG::VT_MIN_PERMISSIONS, MIN_PERMISSIONS);
+  }
+  void add_CREATED_AT(uint64_t CREATED_AT) {
+    fbb_.AddElement<uint64_t>(PLG::VT_CREATED_AT, CREATED_AT, 0);
+  }
+  void add_UPDATED_AT(uint64_t UPDATED_AT) {
+    fbb_.AddElement<uint64_t>(PLG::VT_UPDATED_AT, UPDATED_AT, 0);
+  }
+  void add_DOCUMENTATION_URL(::flatbuffers::Offset<::flatbuffers::String> DOCUMENTATION_URL) {
+    fbb_.AddOffset(PLG::VT_DOCUMENTATION_URL, DOCUMENTATION_URL);
+  }
+  void add_CHANGELOG_URL(::flatbuffers::Offset<::flatbuffers::String> CHANGELOG_URL) {
+    fbb_.AddOffset(PLG::VT_CHANGELOG_URL, CHANGELOG_URL);
+  }
+  void add_ICON_URL(::flatbuffers::Offset<::flatbuffers::String> ICON_URL) {
+    fbb_.AddOffset(PLG::VT_ICON_URL, ICON_URL);
+  }
+  void add_LICENSE(::flatbuffers::Offset<::flatbuffers::String> LICENSE) {
+    fbb_.AddOffset(PLG::VT_LICENSE, LICENSE);
+  }
+  void add_PAYMENT_MODEL(purchaseTier PAYMENT_MODEL) {
+    fbb_.AddElement<int8_t>(PLG::VT_PAYMENT_MODEL, static_cast<int8_t>(PAYMENT_MODEL), 0);
+  }
+  void add_PRICE_USD_CENTS(uint32_t PRICE_USD_CENTS) {
+    fbb_.AddElement<uint32_t>(PLG::VT_PRICE_USD_CENTS, PRICE_USD_CENTS, 0);
+  }
+  void add_SUBSCRIPTION_PERIOD_DAYS(uint32_t SUBSCRIPTION_PERIOD_DAYS) {
+    fbb_.AddElement<uint32_t>(PLG::VT_SUBSCRIPTION_PERIOD_DAYS, SUBSCRIPTION_PERIOD_DAYS, 0);
+  }
+  void add_ACCEPTED_PAYMENT_METHODS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ACCEPTED_PAYMENT_METHODS) {
+    fbb_.AddOffset(PLG::VT_ACCEPTED_PAYMENT_METHODS, ACCEPTED_PAYMENT_METHODS);
+  }
+  void add_LISTING_STATUS(publicationState LISTING_STATUS) {
+    fbb_.AddElement<int8_t>(PLG::VT_LISTING_STATUS, static_cast<int8_t>(LISTING_STATUS), 0);
+  }
+  void add_SIGNATURE(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE) {
+    fbb_.AddOffset(PLG::VT_SIGNATURE, SIGNATURE);
+  }
+  void add_INVOKE_SURFACES(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> INVOKE_SURFACES) {
+    fbb_.AddOffset(PLG::VT_INVOKE_SURFACES, INVOKE_SURFACES);
+  }
+  void add_METHODS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGMethodManifest>>> METHODS) {
+    fbb_.AddOffset(PLG::VT_METHODS, METHODS);
+  }
+  void add_HOST_CAPABILITIES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGHostCapability>>> HOST_CAPABILITIES) {
+    fbb_.AddOffset(PLG::VT_HOST_CAPABILITIES, HOST_CAPABILITIES);
+  }
+  void add_TIMERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGTimerSpec>>> TIMERS) {
+    fbb_.AddOffset(PLG::VT_TIMERS, TIMERS);
+  }
+  void add_PROTOCOLS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGProtocolSpec>>> PROTOCOLS) {
+    fbb_.AddOffset(PLG::VT_PROTOCOLS, PROTOCOLS);
+  }
+  void add_SCHEMAS_USED(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<FlatBufferTypeRef>>> SCHEMAS_USED) {
+    fbb_.AddOffset(PLG::VT_SCHEMAS_USED, SCHEMAS_USED);
+  }
+  void add_BUILD_ARTIFACTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGBuildArtifact>>> BUILD_ARTIFACTS) {
+    fbb_.AddOffset(PLG::VT_BUILD_ARTIFACTS, BUILD_ARTIFACTS);
+  }
+  void add_RUNTIME_TARGETS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> RUNTIME_TARGETS) {
+    fbb_.AddOffset(PLG::VT_RUNTIME_TARGETS, RUNTIME_TARGETS);
+  }
+  explicit PLGBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PLG> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PLG>(end);
+    fbb_.Required(o, PLG::VT_PLUGIN_ID);
+    fbb_.Required(o, PLG::VT_NAME);
+    fbb_.Required(o, PLG::VT_VERSION);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PLG> CreatePLG(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> PLUGIN_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> VERSION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TAGLINE = 0,
+    pluginCategory PLUGIN_TYPE = pluginCategory_Sensor,
+    ::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_HANDLE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PUBLISHER_URL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SUPPORT_URL = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> FEATURES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SCREENSHOT_URLS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> BANNER_URL = 0,
+    uint32_t ABI_VERSION = 1,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> WASM_HASH = 0,
+    uint64_t WASM_SIZE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> WASM_CID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> ENCRYPTED_WASM_HASH = 0,
+    uint64_t ENCRYPTED_WASM_SIZE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EntryFunction>>> ENTRY_FUNCTIONS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> REQUIRED_SCHEMAS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PluginDependency>>> DEPENDENCIES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PluginCapability>>> CAPABILITIES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PROVIDER_PEER_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PROVIDER_EPM_CID = 0,
+    bool ENCRYPTED = true,
+    ::flatbuffers::Offset<::flatbuffers::String> REQUIRED_SCOPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> KEY_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALLOWED_DOMAINS = 0,
+    uint64_t MAX_GRANT_TIMEOUT_MS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MIN_PERMISSIONS = 0,
+    uint64_t CREATED_AT = 0,
+    uint64_t UPDATED_AT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DOCUMENTATION_URL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CHANGELOG_URL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ICON_URL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LICENSE = 0,
+    purchaseTier PAYMENT_MODEL = purchaseTier_Free,
+    uint32_t PRICE_USD_CENTS = 0,
+    uint32_t SUBSCRIPTION_PERIOD_DAYS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ACCEPTED_PAYMENT_METHODS = 0,
+    publicationState LISTING_STATUS = publicationState_Public,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> INVOKE_SURFACES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGMethodManifest>>> METHODS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGHostCapability>>> HOST_CAPABILITIES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGTimerSpec>>> TIMERS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGProtocolSpec>>> PROTOCOLS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<FlatBufferTypeRef>>> SCHEMAS_USED = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLGBuildArtifact>>> BUILD_ARTIFACTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> RUNTIME_TARGETS = 0) {
+  PLGBuilder builder_(_fbb);
+  builder_.add_UPDATED_AT(UPDATED_AT);
+  builder_.add_CREATED_AT(CREATED_AT);
+  builder_.add_MAX_GRANT_TIMEOUT_MS(MAX_GRANT_TIMEOUT_MS);
+  builder_.add_ENCRYPTED_WASM_SIZE(ENCRYPTED_WASM_SIZE);
+  builder_.add_WASM_SIZE(WASM_SIZE);
+  builder_.add_RUNTIME_TARGETS(RUNTIME_TARGETS);
+  builder_.add_BUILD_ARTIFACTS(BUILD_ARTIFACTS);
+  builder_.add_SCHEMAS_USED(SCHEMAS_USED);
+  builder_.add_PROTOCOLS(PROTOCOLS);
+  builder_.add_TIMERS(TIMERS);
+  builder_.add_HOST_CAPABILITIES(HOST_CAPABILITIES);
+  builder_.add_METHODS(METHODS);
+  builder_.add_INVOKE_SURFACES(INVOKE_SURFACES);
+  builder_.add_SIGNATURE(SIGNATURE);
+  builder_.add_ACCEPTED_PAYMENT_METHODS(ACCEPTED_PAYMENT_METHODS);
+  builder_.add_SUBSCRIPTION_PERIOD_DAYS(SUBSCRIPTION_PERIOD_DAYS);
+  builder_.add_PRICE_USD_CENTS(PRICE_USD_CENTS);
+  builder_.add_LICENSE(LICENSE);
+  builder_.add_ICON_URL(ICON_URL);
+  builder_.add_CHANGELOG_URL(CHANGELOG_URL);
+  builder_.add_DOCUMENTATION_URL(DOCUMENTATION_URL);
+  builder_.add_MIN_PERMISSIONS(MIN_PERMISSIONS);
+  builder_.add_ALLOWED_DOMAINS(ALLOWED_DOMAINS);
+  builder_.add_KEY_ID(KEY_ID);
+  builder_.add_REQUIRED_SCOPE(REQUIRED_SCOPE);
+  builder_.add_PROVIDER_EPM_CID(PROVIDER_EPM_CID);
+  builder_.add_PROVIDER_PEER_ID(PROVIDER_PEER_ID);
+  builder_.add_CAPABILITIES(CAPABILITIES);
+  builder_.add_DEPENDENCIES(DEPENDENCIES);
+  builder_.add_REQUIRED_SCHEMAS(REQUIRED_SCHEMAS);
+  builder_.add_ENTRY_FUNCTIONS(ENTRY_FUNCTIONS);
+  builder_.add_ENCRYPTED_WASM_HASH(ENCRYPTED_WASM_HASH);
+  builder_.add_WASM_CID(WASM_CID);
+  builder_.add_WASM_HASH(WASM_HASH);
+  builder_.add_ABI_VERSION(ABI_VERSION);
+  builder_.add_BANNER_URL(BANNER_URL);
+  builder_.add_SCREENSHOT_URLS(SCREENSHOT_URLS);
+  builder_.add_FEATURES(FEATURES);
+  builder_.add_TAGS(TAGS);
+  builder_.add_SUPPORT_URL(SUPPORT_URL);
+  builder_.add_PUBLISHER_URL(PUBLISHER_URL);
+  builder_.add_PUBLISHER_HANDLE(PUBLISHER_HANDLE);
+  builder_.add_PUBLISHER_NAME(PUBLISHER_NAME);
+  builder_.add_TAGLINE(TAGLINE);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_VERSION(VERSION);
+  builder_.add_NAME(NAME);
+  builder_.add_PLUGIN_ID(PLUGIN_ID);
+  builder_.add_LISTING_STATUS(LISTING_STATUS);
+  builder_.add_PAYMENT_MODEL(PAYMENT_MODEL);
+  builder_.add_ENCRYPTED(ENCRYPTED);
+  builder_.add_PLUGIN_TYPE(PLUGIN_TYPE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *PLUGIN_ID = nullptr,
+    const char *NAME = nullptr,
+    const char *VERSION = nullptr,
+    const char *DESCRIPTION = nullptr,
+    const char *TAGLINE = nullptr,
+    pluginCategory PLUGIN_TYPE = pluginCategory_Sensor,
+    const char *PUBLISHER_NAME = nullptr,
+    const char *PUBLISHER_HANDLE = nullptr,
+    const char *PUBLISHER_URL = nullptr,
+    const char *SUPPORT_URL = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *FEATURES = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SCREENSHOT_URLS = nullptr,
+    const char *BANNER_URL = nullptr,
+    uint32_t ABI_VERSION = 1,
+    const std::vector<uint8_t> *WASM_HASH = nullptr,
+    uint64_t WASM_SIZE = 0,
+    const char *WASM_CID = nullptr,
+    const std::vector<uint8_t> *ENCRYPTED_WASM_HASH = nullptr,
+    uint64_t ENCRYPTED_WASM_SIZE = 0,
+    const std::vector<::flatbuffers::Offset<EntryFunction>> *ENTRY_FUNCTIONS = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *REQUIRED_SCHEMAS = nullptr,
+    const std::vector<::flatbuffers::Offset<PluginDependency>> *DEPENDENCIES = nullptr,
+    const std::vector<::flatbuffers::Offset<PluginCapability>> *CAPABILITIES = nullptr,
+    const char *PROVIDER_PEER_ID = nullptr,
+    const char *PROVIDER_EPM_CID = nullptr,
+    bool ENCRYPTED = true,
+    const char *REQUIRED_SCOPE = nullptr,
+    const char *KEY_ID = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ALLOWED_DOMAINS = nullptr,
+    uint64_t MAX_GRANT_TIMEOUT_MS = 0,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MIN_PERMISSIONS = nullptr,
+    uint64_t CREATED_AT = 0,
+    uint64_t UPDATED_AT = 0,
+    const char *DOCUMENTATION_URL = nullptr,
+    const char *CHANGELOG_URL = nullptr,
+    const char *ICON_URL = nullptr,
+    const char *LICENSE = nullptr,
+    purchaseTier PAYMENT_MODEL = purchaseTier_Free,
+    uint32_t PRICE_USD_CENTS = 0,
+    uint32_t SUBSCRIPTION_PERIOD_DAYS = 0,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ACCEPTED_PAYMENT_METHODS = nullptr,
+    publicationState LISTING_STATUS = publicationState_Public,
+    const std::vector<uint8_t> *SIGNATURE = nullptr,
+    const std::vector<uint8_t> *INVOKE_SURFACES = nullptr,
+    const std::vector<::flatbuffers::Offset<PLGMethodManifest>> *METHODS = nullptr,
+    const std::vector<::flatbuffers::Offset<PLGHostCapability>> *HOST_CAPABILITIES = nullptr,
+    const std::vector<::flatbuffers::Offset<PLGTimerSpec>> *TIMERS = nullptr,
+    const std::vector<::flatbuffers::Offset<PLGProtocolSpec>> *PROTOCOLS = nullptr,
+    const std::vector<::flatbuffers::Offset<FlatBufferTypeRef>> *SCHEMAS_USED = nullptr,
+    const std::vector<::flatbuffers::Offset<PLGBuildArtifact>> *BUILD_ARTIFACTS = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *RUNTIME_TARGETS = nullptr) {
+  auto PLUGIN_ID__ = PLUGIN_ID ? _fbb.CreateString(PLUGIN_ID) : 0;
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto VERSION__ = VERSION ? _fbb.CreateString(VERSION) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  auto TAGLINE__ = TAGLINE ? _fbb.CreateString(TAGLINE) : 0;
+  auto PUBLISHER_NAME__ = PUBLISHER_NAME ? _fbb.CreateString(PUBLISHER_NAME) : 0;
+  auto PUBLISHER_HANDLE__ = PUBLISHER_HANDLE ? _fbb.CreateString(PUBLISHER_HANDLE) : 0;
+  auto PUBLISHER_URL__ = PUBLISHER_URL ? _fbb.CreateString(PUBLISHER_URL) : 0;
+  auto SUPPORT_URL__ = SUPPORT_URL ? _fbb.CreateString(SUPPORT_URL) : 0;
+  auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
+  auto FEATURES__ = FEATURES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*FEATURES) : 0;
+  auto SCREENSHOT_URLS__ = SCREENSHOT_URLS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SCREENSHOT_URLS) : 0;
+  auto BANNER_URL__ = BANNER_URL ? _fbb.CreateString(BANNER_URL) : 0;
+  auto WASM_HASH__ = WASM_HASH ? _fbb.CreateVector<uint8_t>(*WASM_HASH) : 0;
+  auto WASM_CID__ = WASM_CID ? _fbb.CreateString(WASM_CID) : 0;
+  auto ENCRYPTED_WASM_HASH__ = ENCRYPTED_WASM_HASH ? _fbb.CreateVector<uint8_t>(*ENCRYPTED_WASM_HASH) : 0;
+  auto ENTRY_FUNCTIONS__ = ENTRY_FUNCTIONS ? _fbb.CreateVector<::flatbuffers::Offset<EntryFunction>>(*ENTRY_FUNCTIONS) : 0;
+  auto REQUIRED_SCHEMAS__ = REQUIRED_SCHEMAS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*REQUIRED_SCHEMAS) : 0;
+  auto DEPENDENCIES__ = DEPENDENCIES ? _fbb.CreateVector<::flatbuffers::Offset<PluginDependency>>(*DEPENDENCIES) : 0;
+  auto CAPABILITIES__ = CAPABILITIES ? _fbb.CreateVector<::flatbuffers::Offset<PluginCapability>>(*CAPABILITIES) : 0;
+  auto PROVIDER_PEER_ID__ = PROVIDER_PEER_ID ? _fbb.CreateString(PROVIDER_PEER_ID) : 0;
+  auto PROVIDER_EPM_CID__ = PROVIDER_EPM_CID ? _fbb.CreateString(PROVIDER_EPM_CID) : 0;
+  auto REQUIRED_SCOPE__ = REQUIRED_SCOPE ? _fbb.CreateString(REQUIRED_SCOPE) : 0;
+  auto KEY_ID__ = KEY_ID ? _fbb.CreateString(KEY_ID) : 0;
+  auto ALLOWED_DOMAINS__ = ALLOWED_DOMAINS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ALLOWED_DOMAINS) : 0;
+  auto MIN_PERMISSIONS__ = MIN_PERMISSIONS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MIN_PERMISSIONS) : 0;
+  auto DOCUMENTATION_URL__ = DOCUMENTATION_URL ? _fbb.CreateString(DOCUMENTATION_URL) : 0;
+  auto CHANGELOG_URL__ = CHANGELOG_URL ? _fbb.CreateString(CHANGELOG_URL) : 0;
+  auto ICON_URL__ = ICON_URL ? _fbb.CreateString(ICON_URL) : 0;
+  auto LICENSE__ = LICENSE ? _fbb.CreateString(LICENSE) : 0;
+  auto ACCEPTED_PAYMENT_METHODS__ = ACCEPTED_PAYMENT_METHODS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ACCEPTED_PAYMENT_METHODS) : 0;
+  auto SIGNATURE__ = SIGNATURE ? _fbb.CreateVector<uint8_t>(*SIGNATURE) : 0;
+  auto INVOKE_SURFACES__ = INVOKE_SURFACES ? _fbb.CreateVector<uint8_t>(*INVOKE_SURFACES) : 0;
+  auto METHODS__ = METHODS ? _fbb.CreateVector<::flatbuffers::Offset<PLGMethodManifest>>(*METHODS) : 0;
+  auto HOST_CAPABILITIES__ = HOST_CAPABILITIES ? _fbb.CreateVector<::flatbuffers::Offset<PLGHostCapability>>(*HOST_CAPABILITIES) : 0;
+  auto TIMERS__ = TIMERS ? _fbb.CreateVector<::flatbuffers::Offset<PLGTimerSpec>>(*TIMERS) : 0;
+  auto PROTOCOLS__ = PROTOCOLS ? _fbb.CreateVector<::flatbuffers::Offset<PLGProtocolSpec>>(*PROTOCOLS) : 0;
+  auto SCHEMAS_USED__ = SCHEMAS_USED ? _fbb.CreateVector<::flatbuffers::Offset<FlatBufferTypeRef>>(*SCHEMAS_USED) : 0;
+  auto BUILD_ARTIFACTS__ = BUILD_ARTIFACTS ? _fbb.CreateVector<::flatbuffers::Offset<PLGBuildArtifact>>(*BUILD_ARTIFACTS) : 0;
+  auto RUNTIME_TARGETS__ = RUNTIME_TARGETS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*RUNTIME_TARGETS) : 0;
+  return CreatePLG(
+      _fbb,
+      PLUGIN_ID__,
+      NAME__,
+      VERSION__,
+      DESCRIPTION__,
+      TAGLINE__,
+      PLUGIN_TYPE,
+      PUBLISHER_NAME__,
+      PUBLISHER_HANDLE__,
+      PUBLISHER_URL__,
+      SUPPORT_URL__,
+      TAGS__,
+      FEATURES__,
+      SCREENSHOT_URLS__,
+      BANNER_URL__,
+      ABI_VERSION,
+      WASM_HASH__,
+      WASM_SIZE,
+      WASM_CID__,
+      ENCRYPTED_WASM_HASH__,
+      ENCRYPTED_WASM_SIZE,
+      ENTRY_FUNCTIONS__,
+      REQUIRED_SCHEMAS__,
+      DEPENDENCIES__,
+      CAPABILITIES__,
+      PROVIDER_PEER_ID__,
+      PROVIDER_EPM_CID__,
+      ENCRYPTED,
+      REQUIRED_SCOPE__,
+      KEY_ID__,
+      ALLOWED_DOMAINS__,
+      MAX_GRANT_TIMEOUT_MS,
+      MIN_PERMISSIONS__,
+      CREATED_AT,
+      UPDATED_AT,
+      DOCUMENTATION_URL__,
+      CHANGELOG_URL__,
+      ICON_URL__,
+      LICENSE__,
+      PAYMENT_MODEL,
+      PRICE_USD_CENTS,
+      SUBSCRIPTION_PERIOD_DAYS,
+      ACCEPTED_PAYMENT_METHODS__,
+      LISTING_STATUS,
+      SIGNATURE__,
+      INVOKE_SURFACES__,
+      METHODS__,
+      HOST_CAPABILITIES__,
+      TIMERS__,
+      PROTOCOLS__,
+      SCHEMAS_USED__,
+      BUILD_ARTIFACTS__,
+      RUNTIME_TARGETS__);
+}
+
+inline const PLG *GetPLG(const void *buf) {
+  return ::flatbuffers::GetRoot<PLG>(buf);
+}
+
+inline const PLG *GetSizePrefixedPLG(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<PLG>(buf);
+}
+
+inline const char *PLGIdentifier() {
+  return "$PLG";
+}
+
+inline bool PLGBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, TABIdentifier());
+      buf, PLGIdentifier());
 }
 
-inline bool SizePrefixedTABBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedPLGBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, TABIdentifier(), true);
+      buf, PLGIdentifier(), true);
 }
 
 template <bool B = false>
-inline bool VerifyTABBuffer(
+inline bool VerifyPLGBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<TAB>(TABIdentifier());
+  return verifier.template VerifyBuffer<PLG>(PLGIdentifier());
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedTABBuffer(
+inline bool VerifySizePrefixedPLGBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<TAB>(TABIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<PLG>(PLGIdentifier());
 }
 
-inline void FinishTABBuffer(
+inline void FinishPLGBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<TAB> root) {
-  fbb.Finish(root, TABIdentifier());
+    ::flatbuffers::Offset<PLG> root) {
+  fbb.Finish(root, PLGIdentifier());
 }
 
-inline void FinishSizePrefixedTABBuffer(
+inline void FinishSizePrefixedPLGBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<TAB> root) {
-  fbb.FinishSizePrefixed(root, TABIdentifier());
+    ::flatbuffers::Offset<PLG> root) {
+  fbb.FinishSizePrefixed(root, PLGIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

@@ -13,522 +13,402 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-struct ETM;
-struct ETMBuilder;
+#include "main_generated.h"
 
-/// Entity category for shared entity metadata index rows.
-enum entityKind : int8_t {
-  entityKind_ENTITY = 0,
-  entityKind_SPACE = 1,
-  entityKind_GROUND = 2,
-  entityKind_AIRCRAFT = 3,
-  entityKind_MISSILE = 4,
-  entityKind_SHIP = 5,
-  entityKind_VEHICLE = 6,
-  entityKind_SENSOR = 7,
-  entityKind_OTHER = 127,
-  entityKind_MIN = entityKind_ENTITY,
-  entityKind_MAX = entityKind_OTHER
+struct CAQRequest;
+struct CAQRequestBuilder;
+
+struct CAQResult;
+struct CAQResultBuilder;
+
+struct CAQ;
+struct CAQBuilder;
+
+/// Catalog query discriminator. Callers and host plugins use this enum to
+/// select a query shape for in-memory catalog queries answered by a host
+/// runtime (for example the shared FlatSQL entity collection).
+enum catalogQueryKind : uint8_t {
+  /// Return matched entity metadata rows.
+  catalogQueryKind_ROWS = 0,
+  /// Return only the matched entity indices.
+  catalogQueryKind_ENTITY_INDICES = 1,
+  /// Return a packed visibility mask (one byte per entity).
+  catalogQueryKind_VISIBILITY_MASK = 2,
+  /// Return a single catalog row by entity index.
+  catalogQueryKind_CATALOG_ROW = 3,
+  catalogQueryKind_MIN = catalogQueryKind_ROWS,
+  catalogQueryKind_MAX = catalogQueryKind_CATALOG_ROW
 };
 
-inline const entityKind (&EnumValuesentityKind())[9] {
-  static const entityKind values[] = {
-    entityKind_ENTITY,
-    entityKind_SPACE,
-    entityKind_GROUND,
-    entityKind_AIRCRAFT,
-    entityKind_MISSILE,
-    entityKind_SHIP,
-    entityKind_VEHICLE,
-    entityKind_SENSOR,
-    entityKind_OTHER
+inline const catalogQueryKind (&EnumValuescatalogQueryKind())[4] {
+  static const catalogQueryKind values[] = {
+    catalogQueryKind_ROWS,
+    catalogQueryKind_ENTITY_INDICES,
+    catalogQueryKind_VISIBILITY_MASK,
+    catalogQueryKind_CATALOG_ROW
   };
   return values;
 }
 
-inline const char *EnumNameentityKind(entityKind e) {
-  switch (e) {
-    case entityKind_ENTITY: return "ENTITY";
-    case entityKind_SPACE: return "SPACE";
-    case entityKind_GROUND: return "GROUND";
-    case entityKind_AIRCRAFT: return "AIRCRAFT";
-    case entityKind_MISSILE: return "MISSILE";
-    case entityKind_SHIP: return "SHIP";
-    case entityKind_VEHICLE: return "VEHICLE";
-    case entityKind_SENSOR: return "SENSOR";
-    case entityKind_OTHER: return "OTHER";
-    default: return "";
-  }
+inline const char * const *EnumNamescatalogQueryKind() {
+  static const char * const names[5] = {
+    "ROWS",
+    "ENTITY_INDICES",
+    "VISIBILITY_MASK",
+    "CATALOG_ROW",
+    nullptr
+  };
+  return names;
 }
 
-/// Entity Metadata — generic queryable metadata for a host-local entity.
-/// Participates in shared FlatSQL/WASM runtimes where multiple plugins
-/// cross-query the same entity collection.
-struct ETM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef ETMBuilder Builder;
+inline const char *EnumNamecatalogQueryKind(catalogQueryKind e) {
+  if (::flatbuffers::IsOutRange(e, catalogQueryKind_ROWS, catalogQueryKind_CATALOG_ROW)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamescatalogQueryKind()[index];
+}
+
+/// Catalog query request payload.
+struct CAQRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CAQRequestBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_ENTITY_ID = 4,
-    VT_NAME = 6,
-    VT_KIND = 8,
-    VT_SUBTYPE = 10,
-    VT_PARENT_ENTITY_ID = 12,
-    VT_WASM_HANDLE = 14,
-    VT_NORAD_CAT_ID = 16,
-    VT_OBJECT_NAME = 18,
-    VT_OBJECT_ID = 20,
-    VT_CAT_OBJECT_NAME = 22,
-    VT_CAT_OBJECT_ID = 24,
-    VT_FACILITY_TYPE = 26,
-    VT_SEARCH_TEXT = 28,
-    VT_OWNER = 30,
-    VT_STATUS_CODE = 32,
-    VT_LAUNCH_DATE = 34,
-    VT_LAUNCH_YEAR = 36,
-    VT_ORBIT_REGIME = 38,
-    VT_PERIOD = 40,
-    VT_INCLINATION = 42,
-    VT_APOGEE = 44,
-    VT_PERIGEE = 46,
-    VT_MEAN_MOTION = 48,
-    VT_ECCENTRICITY = 50,
-    VT_BSTAR = 52,
-    VT_HAS_GP = 54,
-    VT_RESERVED = 56
+    VT_KIND = 4,
+    VT_QUERY = 6,
+    VT_ENTITY_INDEX = 8,
+    VT_MAX_COUNT = 10,
+    VT_ENTITY_COUNT = 12
   };
-  /// Stable host-local entity identifier.
-  const ::flatbuffers::String *ENTITY_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ENTITY_ID);
+  catalogQueryKind KIND() const {
+    return static_cast<catalogQueryKind>(GetField<uint8_t>(VT_KIND, 0));
   }
-  /// Human-readable entity name used for shared query/search surfaces.
-  const ::flatbuffers::String *NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  /// Host-specific query string (for example a FlatSQL or DSL expression).
+  const ::flatbuffers::String *QUERY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_QUERY);
   }
-  /// Broad entity category.
-  entityKind KIND() const {
-    return static_cast<entityKind>(GetField<int8_t>(VT_KIND, 0));
+  /// Entity index for single-row queries.
+  uint32_t ENTITY_INDEX() const {
+    return GetField<uint32_t>(VT_ENTITY_INDEX, 0);
   }
-  /// More specific runtime subtype or class name.
-  const ::flatbuffers::String *SUBTYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SUBTYPE);
+  /// Upper bound on the number of rows / indices to return (0 = unbounded).
+  uint32_t MAX_COUNT() const {
+    return GetField<uint32_t>(VT_MAX_COUNT, 0);
   }
-  /// Optional parent entity id for hierarchy / linkage queries.
-  const ::flatbuffers::String *PARENT_ENTITY_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PARENT_ENTITY_ID);
-  }
-  /// Collection-scoped WASM handle used for batch visibility application.
-  uint32_t WASM_HANDLE() const {
-    return GetField<uint32_t>(VT_WASM_HANDLE, 0);
-  }
-  /// Optional NORAD catalog id for standards-backed entities.
-  uint32_t NORAD_CAT_ID() const {
-    return GetField<uint32_t>(VT_NORAD_CAT_ID, 0);
-  }
-  /// Primary object name surfaced by attached standards metadata.
-  const ::flatbuffers::String *OBJECT_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
-  }
-  /// Primary international / object designator surfaced by attached standards metadata.
-  const ::flatbuffers::String *OBJECT_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
-  }
-  /// Secondary CAT object name when different from the primary object name.
-  const ::flatbuffers::String *CAT_OBJECT_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CAT_OBJECT_NAME);
-  }
-  /// Secondary CAT object id when different from the primary object id.
-  const ::flatbuffers::String *CAT_OBJECT_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CAT_OBJECT_ID);
-  }
-  /// Ground / facility subtype metadata for non-space entity search.
-  const ::flatbuffers::String *FACILITY_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FACILITY_TYPE);
-  }
-  /// Pre-normalized phrase-search text for collection-wide shared queries.
-  const ::flatbuffers::String *SEARCH_TEXT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SEARCH_TEXT);
-  }
-  /// CAT owner country code.
-  const ::flatbuffers::String *OWNER() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OWNER);
-  }
-  /// CAT operational status code.
-  const ::flatbuffers::String *STATUS_CODE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_STATUS_CODE);
-  }
-  /// CAT launch date.
-  const ::flatbuffers::String *LAUNCH_DATE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_DATE);
-  }
-  /// Launch year derived from launch date.
-  const ::flatbuffers::String *LAUNCH_YEAR() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_YEAR);
-  }
-  /// Derived orbit regime classification.
-  const ::flatbuffers::String *ORBIT_REGIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ORBIT_REGIME);
-  }
-  /// Orbital period in minutes.
-  double PERIOD() const {
-    return GetField<double>(VT_PERIOD, 0.0);
-  }
-  /// Inclination in degrees.
-  double INCLINATION() const {
-    return GetField<double>(VT_INCLINATION, 0.0);
-  }
-  /// Apogee altitude in kilometers.
-  double APOGEE() const {
-    return GetField<double>(VT_APOGEE, 0.0);
-  }
-  /// Perigee altitude in kilometers.
-  double PERIGEE() const {
-    return GetField<double>(VT_PERIGEE, 0.0);
-  }
-  /// Mean motion in revolutions per day.
-  double MEAN_MOTION() const {
-    return GetField<double>(VT_MEAN_MOTION, 0.0);
-  }
-  /// Orbital eccentricity.
-  double ECCENTRICITY() const {
-    return GetField<double>(VT_ECCENTRICITY, 0.0);
-  }
-  /// B* drag term from OMM.
-  double BSTAR() const {
-    return GetField<double>(VT_BSTAR, 0.0);
-  }
-  /// Whether GP / OMM state is present for the entity.
-  bool HAS_GP() const {
-    return GetField<uint8_t>(VT_HAS_GP, 0) != 0;
-  }
-  /// Reserved for forward-compatible growth.
-  const ::flatbuffers::Vector<uint8_t> *RESERVED() const {
-    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_RESERVED);
+  /// Expected number of entities in the catalog at the time the request was
+  /// issued, used to size visibility masks.
+  uint32_t ENTITY_COUNT() const {
+    return GetField<uint32_t>(VT_ENTITY_COUNT, 0);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_ENTITY_ID) &&
-           verifier.VerifyString(ENTITY_ID()) &&
-           VerifyOffset(verifier, VT_NAME) &&
-           verifier.VerifyString(NAME()) &&
-           VerifyField<int8_t>(verifier, VT_KIND, 1) &&
-           VerifyOffset(verifier, VT_SUBTYPE) &&
-           verifier.VerifyString(SUBTYPE()) &&
-           VerifyOffset(verifier, VT_PARENT_ENTITY_ID) &&
-           verifier.VerifyString(PARENT_ENTITY_ID()) &&
-           VerifyField<uint32_t>(verifier, VT_WASM_HANDLE, 4) &&
-           VerifyField<uint32_t>(verifier, VT_NORAD_CAT_ID, 4) &&
-           VerifyOffset(verifier, VT_OBJECT_NAME) &&
-           verifier.VerifyString(OBJECT_NAME()) &&
-           VerifyOffset(verifier, VT_OBJECT_ID) &&
-           verifier.VerifyString(OBJECT_ID()) &&
-           VerifyOffset(verifier, VT_CAT_OBJECT_NAME) &&
-           verifier.VerifyString(CAT_OBJECT_NAME()) &&
-           VerifyOffset(verifier, VT_CAT_OBJECT_ID) &&
-           verifier.VerifyString(CAT_OBJECT_ID()) &&
-           VerifyOffset(verifier, VT_FACILITY_TYPE) &&
-           verifier.VerifyString(FACILITY_TYPE()) &&
-           VerifyOffset(verifier, VT_SEARCH_TEXT) &&
-           verifier.VerifyString(SEARCH_TEXT()) &&
-           VerifyOffset(verifier, VT_OWNER) &&
-           verifier.VerifyString(OWNER()) &&
-           VerifyOffset(verifier, VT_STATUS_CODE) &&
-           verifier.VerifyString(STATUS_CODE()) &&
-           VerifyOffset(verifier, VT_LAUNCH_DATE) &&
-           verifier.VerifyString(LAUNCH_DATE()) &&
-           VerifyOffset(verifier, VT_LAUNCH_YEAR) &&
-           verifier.VerifyString(LAUNCH_YEAR()) &&
-           VerifyOffset(verifier, VT_ORBIT_REGIME) &&
-           verifier.VerifyString(ORBIT_REGIME()) &&
-           VerifyField<double>(verifier, VT_PERIOD, 8) &&
-           VerifyField<double>(verifier, VT_INCLINATION, 8) &&
-           VerifyField<double>(verifier, VT_APOGEE, 8) &&
-           VerifyField<double>(verifier, VT_PERIGEE, 8) &&
-           VerifyField<double>(verifier, VT_MEAN_MOTION, 8) &&
-           VerifyField<double>(verifier, VT_ECCENTRICITY, 8) &&
-           VerifyField<double>(verifier, VT_BSTAR, 8) &&
-           VerifyField<uint8_t>(verifier, VT_HAS_GP, 1) &&
-           VerifyOffset(verifier, VT_RESERVED) &&
-           verifier.VerifyVector(RESERVED()) &&
+           VerifyField<uint8_t>(verifier, VT_KIND, 1) &&
+           VerifyOffset(verifier, VT_QUERY) &&
+           verifier.VerifyString(QUERY()) &&
+           VerifyField<uint32_t>(verifier, VT_ENTITY_INDEX, 4) &&
+           VerifyField<uint32_t>(verifier, VT_MAX_COUNT, 4) &&
+           VerifyField<uint32_t>(verifier, VT_ENTITY_COUNT, 4) &&
            verifier.EndTable();
   }
 };
 
-struct ETMBuilder {
-  typedef ETM Table;
+struct CAQRequestBuilder {
+  typedef CAQRequest Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_ENTITY_ID(::flatbuffers::Offset<::flatbuffers::String> ENTITY_ID) {
-    fbb_.AddOffset(ETM::VT_ENTITY_ID, ENTITY_ID);
+  void add_KIND(catalogQueryKind KIND) {
+    fbb_.AddElement<uint8_t>(CAQRequest::VT_KIND, static_cast<uint8_t>(KIND), 0);
   }
-  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
-    fbb_.AddOffset(ETM::VT_NAME, NAME);
+  void add_QUERY(::flatbuffers::Offset<::flatbuffers::String> QUERY) {
+    fbb_.AddOffset(CAQRequest::VT_QUERY, QUERY);
   }
-  void add_KIND(entityKind KIND) {
-    fbb_.AddElement<int8_t>(ETM::VT_KIND, static_cast<int8_t>(KIND), 0);
+  void add_ENTITY_INDEX(uint32_t ENTITY_INDEX) {
+    fbb_.AddElement<uint32_t>(CAQRequest::VT_ENTITY_INDEX, ENTITY_INDEX, 0);
   }
-  void add_SUBTYPE(::flatbuffers::Offset<::flatbuffers::String> SUBTYPE) {
-    fbb_.AddOffset(ETM::VT_SUBTYPE, SUBTYPE);
+  void add_MAX_COUNT(uint32_t MAX_COUNT) {
+    fbb_.AddElement<uint32_t>(CAQRequest::VT_MAX_COUNT, MAX_COUNT, 0);
   }
-  void add_PARENT_ENTITY_ID(::flatbuffers::Offset<::flatbuffers::String> PARENT_ENTITY_ID) {
-    fbb_.AddOffset(ETM::VT_PARENT_ENTITY_ID, PARENT_ENTITY_ID);
+  void add_ENTITY_COUNT(uint32_t ENTITY_COUNT) {
+    fbb_.AddElement<uint32_t>(CAQRequest::VT_ENTITY_COUNT, ENTITY_COUNT, 0);
   }
-  void add_WASM_HANDLE(uint32_t WASM_HANDLE) {
-    fbb_.AddElement<uint32_t>(ETM::VT_WASM_HANDLE, WASM_HANDLE, 0);
-  }
-  void add_NORAD_CAT_ID(uint32_t NORAD_CAT_ID) {
-    fbb_.AddElement<uint32_t>(ETM::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
-  }
-  void add_OBJECT_NAME(::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME) {
-    fbb_.AddOffset(ETM::VT_OBJECT_NAME, OBJECT_NAME);
-  }
-  void add_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID) {
-    fbb_.AddOffset(ETM::VT_OBJECT_ID, OBJECT_ID);
-  }
-  void add_CAT_OBJECT_NAME(::flatbuffers::Offset<::flatbuffers::String> CAT_OBJECT_NAME) {
-    fbb_.AddOffset(ETM::VT_CAT_OBJECT_NAME, CAT_OBJECT_NAME);
-  }
-  void add_CAT_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> CAT_OBJECT_ID) {
-    fbb_.AddOffset(ETM::VT_CAT_OBJECT_ID, CAT_OBJECT_ID);
-  }
-  void add_FACILITY_TYPE(::flatbuffers::Offset<::flatbuffers::String> FACILITY_TYPE) {
-    fbb_.AddOffset(ETM::VT_FACILITY_TYPE, FACILITY_TYPE);
-  }
-  void add_SEARCH_TEXT(::flatbuffers::Offset<::flatbuffers::String> SEARCH_TEXT) {
-    fbb_.AddOffset(ETM::VT_SEARCH_TEXT, SEARCH_TEXT);
-  }
-  void add_OWNER(::flatbuffers::Offset<::flatbuffers::String> OWNER) {
-    fbb_.AddOffset(ETM::VT_OWNER, OWNER);
-  }
-  void add_STATUS_CODE(::flatbuffers::Offset<::flatbuffers::String> STATUS_CODE) {
-    fbb_.AddOffset(ETM::VT_STATUS_CODE, STATUS_CODE);
-  }
-  void add_LAUNCH_DATE(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_DATE) {
-    fbb_.AddOffset(ETM::VT_LAUNCH_DATE, LAUNCH_DATE);
-  }
-  void add_LAUNCH_YEAR(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_YEAR) {
-    fbb_.AddOffset(ETM::VT_LAUNCH_YEAR, LAUNCH_YEAR);
-  }
-  void add_ORBIT_REGIME(::flatbuffers::Offset<::flatbuffers::String> ORBIT_REGIME) {
-    fbb_.AddOffset(ETM::VT_ORBIT_REGIME, ORBIT_REGIME);
-  }
-  void add_PERIOD(double PERIOD) {
-    fbb_.AddElement<double>(ETM::VT_PERIOD, PERIOD, 0.0);
-  }
-  void add_INCLINATION(double INCLINATION) {
-    fbb_.AddElement<double>(ETM::VT_INCLINATION, INCLINATION, 0.0);
-  }
-  void add_APOGEE(double APOGEE) {
-    fbb_.AddElement<double>(ETM::VT_APOGEE, APOGEE, 0.0);
-  }
-  void add_PERIGEE(double PERIGEE) {
-    fbb_.AddElement<double>(ETM::VT_PERIGEE, PERIGEE, 0.0);
-  }
-  void add_MEAN_MOTION(double MEAN_MOTION) {
-    fbb_.AddElement<double>(ETM::VT_MEAN_MOTION, MEAN_MOTION, 0.0);
-  }
-  void add_ECCENTRICITY(double ECCENTRICITY) {
-    fbb_.AddElement<double>(ETM::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
-  }
-  void add_BSTAR(double BSTAR) {
-    fbb_.AddElement<double>(ETM::VT_BSTAR, BSTAR, 0.0);
-  }
-  void add_HAS_GP(bool HAS_GP) {
-    fbb_.AddElement<uint8_t>(ETM::VT_HAS_GP, static_cast<uint8_t>(HAS_GP), 0);
-  }
-  void add_RESERVED(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> RESERVED) {
-    fbb_.AddOffset(ETM::VT_RESERVED, RESERVED);
-  }
-  explicit ETMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CAQRequestBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<ETM> Finish() {
+  ::flatbuffers::Offset<CAQRequest> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<ETM>(end);
+    auto o = ::flatbuffers::Offset<CAQRequest>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<ETM> CreateETM(
+inline ::flatbuffers::Offset<CAQRequest> CreateCAQRequest(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> ENTITY_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
-    entityKind KIND = entityKind_ENTITY,
-    ::flatbuffers::Offset<::flatbuffers::String> SUBTYPE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PARENT_ENTITY_ID = 0,
-    uint32_t WASM_HANDLE = 0,
-    uint32_t NORAD_CAT_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CAT_OBJECT_NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CAT_OBJECT_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FACILITY_TYPE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SEARCH_TEXT = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OWNER = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> STATUS_CODE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_DATE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_YEAR = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORBIT_REGIME = 0,
-    double PERIOD = 0.0,
-    double INCLINATION = 0.0,
-    double APOGEE = 0.0,
-    double PERIGEE = 0.0,
-    double MEAN_MOTION = 0.0,
-    double ECCENTRICITY = 0.0,
-    double BSTAR = 0.0,
-    bool HAS_GP = false,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> RESERVED = 0) {
-  ETMBuilder builder_(_fbb);
-  builder_.add_BSTAR(BSTAR);
-  builder_.add_ECCENTRICITY(ECCENTRICITY);
-  builder_.add_MEAN_MOTION(MEAN_MOTION);
-  builder_.add_PERIGEE(PERIGEE);
-  builder_.add_APOGEE(APOGEE);
-  builder_.add_INCLINATION(INCLINATION);
-  builder_.add_PERIOD(PERIOD);
-  builder_.add_RESERVED(RESERVED);
-  builder_.add_ORBIT_REGIME(ORBIT_REGIME);
-  builder_.add_LAUNCH_YEAR(LAUNCH_YEAR);
-  builder_.add_LAUNCH_DATE(LAUNCH_DATE);
-  builder_.add_STATUS_CODE(STATUS_CODE);
-  builder_.add_OWNER(OWNER);
-  builder_.add_SEARCH_TEXT(SEARCH_TEXT);
-  builder_.add_FACILITY_TYPE(FACILITY_TYPE);
-  builder_.add_CAT_OBJECT_ID(CAT_OBJECT_ID);
-  builder_.add_CAT_OBJECT_NAME(CAT_OBJECT_NAME);
-  builder_.add_OBJECT_ID(OBJECT_ID);
-  builder_.add_OBJECT_NAME(OBJECT_NAME);
-  builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
-  builder_.add_WASM_HANDLE(WASM_HANDLE);
-  builder_.add_PARENT_ENTITY_ID(PARENT_ENTITY_ID);
-  builder_.add_SUBTYPE(SUBTYPE);
-  builder_.add_NAME(NAME);
-  builder_.add_ENTITY_ID(ENTITY_ID);
-  builder_.add_HAS_GP(HAS_GP);
+    catalogQueryKind KIND = catalogQueryKind_ROWS,
+    ::flatbuffers::Offset<::flatbuffers::String> QUERY = 0,
+    uint32_t ENTITY_INDEX = 0,
+    uint32_t MAX_COUNT = 0,
+    uint32_t ENTITY_COUNT = 0) {
+  CAQRequestBuilder builder_(_fbb);
+  builder_.add_ENTITY_COUNT(ENTITY_COUNT);
+  builder_.add_MAX_COUNT(MAX_COUNT);
+  builder_.add_ENTITY_INDEX(ENTITY_INDEX);
+  builder_.add_QUERY(QUERY);
   builder_.add_KIND(KIND);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<ETM> CreateETMDirect(
+inline ::flatbuffers::Offset<CAQRequest> CreateCAQRequestDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *ENTITY_ID = nullptr,
-    const char *NAME = nullptr,
-    entityKind KIND = entityKind_ENTITY,
-    const char *SUBTYPE = nullptr,
-    const char *PARENT_ENTITY_ID = nullptr,
-    uint32_t WASM_HANDLE = 0,
-    uint32_t NORAD_CAT_ID = 0,
-    const char *OBJECT_NAME = nullptr,
-    const char *OBJECT_ID = nullptr,
-    const char *CAT_OBJECT_NAME = nullptr,
-    const char *CAT_OBJECT_ID = nullptr,
-    const char *FACILITY_TYPE = nullptr,
-    const char *SEARCH_TEXT = nullptr,
-    const char *OWNER = nullptr,
-    const char *STATUS_CODE = nullptr,
-    const char *LAUNCH_DATE = nullptr,
-    const char *LAUNCH_YEAR = nullptr,
-    const char *ORBIT_REGIME = nullptr,
-    double PERIOD = 0.0,
-    double INCLINATION = 0.0,
-    double APOGEE = 0.0,
-    double PERIGEE = 0.0,
-    double MEAN_MOTION = 0.0,
-    double ECCENTRICITY = 0.0,
-    double BSTAR = 0.0,
-    bool HAS_GP = false,
-    const std::vector<uint8_t> *RESERVED = nullptr) {
-  auto ENTITY_ID__ = ENTITY_ID ? _fbb.CreateString(ENTITY_ID) : 0;
-  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
-  auto SUBTYPE__ = SUBTYPE ? _fbb.CreateString(SUBTYPE) : 0;
-  auto PARENT_ENTITY_ID__ = PARENT_ENTITY_ID ? _fbb.CreateString(PARENT_ENTITY_ID) : 0;
-  auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
-  auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
-  auto CAT_OBJECT_NAME__ = CAT_OBJECT_NAME ? _fbb.CreateString(CAT_OBJECT_NAME) : 0;
-  auto CAT_OBJECT_ID__ = CAT_OBJECT_ID ? _fbb.CreateString(CAT_OBJECT_ID) : 0;
-  auto FACILITY_TYPE__ = FACILITY_TYPE ? _fbb.CreateString(FACILITY_TYPE) : 0;
-  auto SEARCH_TEXT__ = SEARCH_TEXT ? _fbb.CreateString(SEARCH_TEXT) : 0;
-  auto OWNER__ = OWNER ? _fbb.CreateString(OWNER) : 0;
-  auto STATUS_CODE__ = STATUS_CODE ? _fbb.CreateString(STATUS_CODE) : 0;
-  auto LAUNCH_DATE__ = LAUNCH_DATE ? _fbb.CreateString(LAUNCH_DATE) : 0;
-  auto LAUNCH_YEAR__ = LAUNCH_YEAR ? _fbb.CreateString(LAUNCH_YEAR) : 0;
-  auto ORBIT_REGIME__ = ORBIT_REGIME ? _fbb.CreateString(ORBIT_REGIME) : 0;
-  auto RESERVED__ = RESERVED ? _fbb.CreateVector<uint8_t>(*RESERVED) : 0;
-  return CreateETM(
+    catalogQueryKind KIND = catalogQueryKind_ROWS,
+    const char *QUERY = nullptr,
+    uint32_t ENTITY_INDEX = 0,
+    uint32_t MAX_COUNT = 0,
+    uint32_t ENTITY_COUNT = 0) {
+  auto QUERY__ = QUERY ? _fbb.CreateString(QUERY) : 0;
+  return CreateCAQRequest(
       _fbb,
-      ENTITY_ID__,
-      NAME__,
       KIND,
-      SUBTYPE__,
-      PARENT_ENTITY_ID__,
-      WASM_HANDLE,
-      NORAD_CAT_ID,
-      OBJECT_NAME__,
-      OBJECT_ID__,
-      CAT_OBJECT_NAME__,
-      CAT_OBJECT_ID__,
-      FACILITY_TYPE__,
-      SEARCH_TEXT__,
-      OWNER__,
-      STATUS_CODE__,
-      LAUNCH_DATE__,
-      LAUNCH_YEAR__,
-      ORBIT_REGIME__,
-      PERIOD,
-      INCLINATION,
-      APOGEE,
-      PERIGEE,
-      MEAN_MOTION,
-      ECCENTRICITY,
-      BSTAR,
-      HAS_GP,
-      RESERVED__);
+      QUERY__,
+      ENTITY_INDEX,
+      MAX_COUNT,
+      ENTITY_COUNT);
 }
 
-inline const ETM *GetETM(const void *buf) {
-  return ::flatbuffers::GetRoot<ETM>(buf);
+/// Catalog query result payload.
+struct CAQResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CAQResultBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_KIND = 4,
+    VT_ROWS = 6,
+    VT_ENTITY_INDICES = 8,
+    VT_MASK = 10,
+    VT_VISIBLE_COUNT = 12,
+    VT_ENTITY_INDEX = 14,
+    VT_ROW = 16
+  };
+  catalogQueryKind KIND() const {
+    return static_cast<catalogQueryKind>(GetField<uint8_t>(VT_KIND, 0));
+  }
+  /// Populated when KIND == ROWS.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ETM>> *ROWS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ETM>> *>(VT_ROWS);
+  }
+  /// Populated when KIND == ENTITY_INDICES.
+  const ::flatbuffers::Vector<uint32_t> *ENTITY_INDICES() const {
+    return GetPointer<const ::flatbuffers::Vector<uint32_t> *>(VT_ENTITY_INDICES);
+  }
+  /// Populated when KIND == VISIBILITY_MASK (one byte per entity).
+  const ::flatbuffers::Vector<uint8_t> *MASK() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_MASK);
+  }
+  /// Number of visible (masked-in) entities in MASK.
+  uint32_t VISIBLE_COUNT() const {
+    return GetField<uint32_t>(VT_VISIBLE_COUNT, 0);
+  }
+  /// Populated when KIND == CATALOG_ROW.
+  uint32_t ENTITY_INDEX() const {
+    return GetField<uint32_t>(VT_ENTITY_INDEX, 0);
+  }
+  /// Single matched row when KIND == CATALOG_ROW.
+  const ETM *ROW() const {
+    return GetPointer<const ETM *>(VT_ROW);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_KIND, 1) &&
+           VerifyOffset(verifier, VT_ROWS) &&
+           verifier.VerifyVector(ROWS()) &&
+           verifier.VerifyVectorOfTables(ROWS()) &&
+           VerifyOffset(verifier, VT_ENTITY_INDICES) &&
+           verifier.VerifyVector(ENTITY_INDICES()) &&
+           VerifyOffset(verifier, VT_MASK) &&
+           verifier.VerifyVector(MASK()) &&
+           VerifyField<uint32_t>(verifier, VT_VISIBLE_COUNT, 4) &&
+           VerifyField<uint32_t>(verifier, VT_ENTITY_INDEX, 4) &&
+           VerifyOffset(verifier, VT_ROW) &&
+           verifier.VerifyTable(ROW()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CAQResultBuilder {
+  typedef CAQResult Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_KIND(catalogQueryKind KIND) {
+    fbb_.AddElement<uint8_t>(CAQResult::VT_KIND, static_cast<uint8_t>(KIND), 0);
+  }
+  void add_ROWS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ETM>>> ROWS) {
+    fbb_.AddOffset(CAQResult::VT_ROWS, ROWS);
+  }
+  void add_ENTITY_INDICES(::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> ENTITY_INDICES) {
+    fbb_.AddOffset(CAQResult::VT_ENTITY_INDICES, ENTITY_INDICES);
+  }
+  void add_MASK(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> MASK) {
+    fbb_.AddOffset(CAQResult::VT_MASK, MASK);
+  }
+  void add_VISIBLE_COUNT(uint32_t VISIBLE_COUNT) {
+    fbb_.AddElement<uint32_t>(CAQResult::VT_VISIBLE_COUNT, VISIBLE_COUNT, 0);
+  }
+  void add_ENTITY_INDEX(uint32_t ENTITY_INDEX) {
+    fbb_.AddElement<uint32_t>(CAQResult::VT_ENTITY_INDEX, ENTITY_INDEX, 0);
+  }
+  void add_ROW(::flatbuffers::Offset<ETM> ROW) {
+    fbb_.AddOffset(CAQResult::VT_ROW, ROW);
+  }
+  explicit CAQResultBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CAQResult> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CAQResult>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CAQResult> CreateCAQResult(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    catalogQueryKind KIND = catalogQueryKind_ROWS,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ETM>>> ROWS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> ENTITY_INDICES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> MASK = 0,
+    uint32_t VISIBLE_COUNT = 0,
+    uint32_t ENTITY_INDEX = 0,
+    ::flatbuffers::Offset<ETM> ROW = 0) {
+  CAQResultBuilder builder_(_fbb);
+  builder_.add_ROW(ROW);
+  builder_.add_ENTITY_INDEX(ENTITY_INDEX);
+  builder_.add_VISIBLE_COUNT(VISIBLE_COUNT);
+  builder_.add_MASK(MASK);
+  builder_.add_ENTITY_INDICES(ENTITY_INDICES);
+  builder_.add_ROWS(ROWS);
+  builder_.add_KIND(KIND);
+  return builder_.Finish();
 }
 
-inline const ETM *GetSizePrefixedETM(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<ETM>(buf);
+inline ::flatbuffers::Offset<CAQResult> CreateCAQResultDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    catalogQueryKind KIND = catalogQueryKind_ROWS,
+    const std::vector<::flatbuffers::Offset<ETM>> *ROWS = nullptr,
+    const std::vector<uint32_t> *ENTITY_INDICES = nullptr,
+    const std::vector<uint8_t> *MASK = nullptr,
+    uint32_t VISIBLE_COUNT = 0,
+    uint32_t ENTITY_INDEX = 0,
+    ::flatbuffers::Offset<ETM> ROW = 0) {
+  auto ROWS__ = ROWS ? _fbb.CreateVector<::flatbuffers::Offset<ETM>>(*ROWS) : 0;
+  auto ENTITY_INDICES__ = ENTITY_INDICES ? _fbb.CreateVector<uint32_t>(*ENTITY_INDICES) : 0;
+  auto MASK__ = MASK ? _fbb.CreateVector<uint8_t>(*MASK) : 0;
+  return CreateCAQResult(
+      _fbb,
+      KIND,
+      ROWS__,
+      ENTITY_INDICES__,
+      MASK__,
+      VISIBLE_COUNT,
+      ENTITY_INDEX,
+      ROW);
 }
 
-inline const char *ETMIdentifier() {
-  return "$ETM";
+/// Catalog query envelope — carries either a request or a result payload.
+struct CAQ FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CAQBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_REQUEST = 4,
+    VT_RESULT = 6
+  };
+  const CAQRequest *REQUEST() const {
+    return GetPointer<const CAQRequest *>(VT_REQUEST);
+  }
+  const CAQResult *RESULT() const {
+    return GetPointer<const CAQResult *>(VT_RESULT);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_REQUEST) &&
+           verifier.VerifyTable(REQUEST()) &&
+           VerifyOffset(verifier, VT_RESULT) &&
+           verifier.VerifyTable(RESULT()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CAQBuilder {
+  typedef CAQ Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_REQUEST(::flatbuffers::Offset<CAQRequest> REQUEST) {
+    fbb_.AddOffset(CAQ::VT_REQUEST, REQUEST);
+  }
+  void add_RESULT(::flatbuffers::Offset<CAQResult> RESULT) {
+    fbb_.AddOffset(CAQ::VT_RESULT, RESULT);
+  }
+  explicit CAQBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CAQ> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CAQ>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CAQ> CreateCAQ(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<CAQRequest> REQUEST = 0,
+    ::flatbuffers::Offset<CAQResult> RESULT = 0) {
+  CAQBuilder builder_(_fbb);
+  builder_.add_RESULT(RESULT);
+  builder_.add_REQUEST(REQUEST);
+  return builder_.Finish();
 }
 
-inline bool ETMBufferHasIdentifier(const void *buf) {
+inline const CAQ *GetCAQ(const void *buf) {
+  return ::flatbuffers::GetRoot<CAQ>(buf);
+}
+
+inline const CAQ *GetSizePrefixedCAQ(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<CAQ>(buf);
+}
+
+inline const char *CAQIdentifier() {
+  return "$CAQ";
+}
+
+inline bool CAQBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, ETMIdentifier());
+      buf, CAQIdentifier());
 }
 
-inline bool SizePrefixedETMBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedCAQBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, ETMIdentifier(), true);
+      buf, CAQIdentifier(), true);
 }
 
 template <bool B = false>
-inline bool VerifyETMBuffer(
+inline bool VerifyCAQBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<ETM>(ETMIdentifier());
+  return verifier.template VerifyBuffer<CAQ>(CAQIdentifier());
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedETMBuffer(
+inline bool VerifySizePrefixedCAQBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<ETM>(ETMIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<CAQ>(CAQIdentifier());
 }
 
-inline void FinishETMBuffer(
+inline void FinishCAQBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<ETM> root) {
-  fbb.Finish(root, ETMIdentifier());
+    ::flatbuffers::Offset<CAQ> root) {
+  fbb.Finish(root, CAQIdentifier());
 }
 
-inline void FinishSizePrefixedETMBuffer(
+inline void FinishSizePrefixedCAQBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<ETM> root) {
-  fbb.FinishSizePrefixed(root, ETMIdentifier());
+    ::flatbuffers::Offset<CAQ> root) {
+  fbb.FinishSizePrefixed(root, CAQIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

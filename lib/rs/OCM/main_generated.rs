@@ -2,664 +2,77 @@
 // @generated
 extern crate alloc;
 
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_LEGACY_COUNTRY_CODE: i8 = 0;
+pub const ENUM_MIN_TRAJECTORY_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_LEGACY_COUNTRY_CODE: i8 = 125;
+pub const ENUM_MAX_TRAJECTORY_TYPE: i8 = 5;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_LEGACY_COUNTRY_CODE: [legacyCountryCode; 126] = [
-  legacyCountryCode::AB,
-  legacyCountryCode::ABS,
-  legacyCountryCode::AC,
-  legacyCountryCode::ALG,
-  legacyCountryCode::ANG,
-  legacyCountryCode::ARGN,
-  legacyCountryCode::ARM,
-  legacyCountryCode::ASRA,
-  legacyCountryCode::AUS,
-  legacyCountryCode::AZER,
-  legacyCountryCode::BEL,
-  legacyCountryCode::BELA,
-  legacyCountryCode::BERM,
-  legacyCountryCode::BGD,
-  legacyCountryCode::BHUT,
-  legacyCountryCode::BOL,
-  legacyCountryCode::BRAZ,
-  legacyCountryCode::BUL,
-  legacyCountryCode::CA,
-  legacyCountryCode::CHBZ,
-  legacyCountryCode::CHTU,
-  legacyCountryCode::CHLE,
-  legacyCountryCode::CIS,
-  legacyCountryCode::COL,
-  legacyCountryCode::CRI,
-  legacyCountryCode::CZCH,
-  legacyCountryCode::DEN,
-  legacyCountryCode::DJI,
-  legacyCountryCode::ECU,
-  legacyCountryCode::EGYP,
-  legacyCountryCode::ESA,
-  legacyCountryCode::ESRO,
-  legacyCountryCode::EST,
-  legacyCountryCode::ETH,
-  legacyCountryCode::EUME,
-  legacyCountryCode::EUTE,
-  legacyCountryCode::FGER,
-  legacyCountryCode::FIN,
-  legacyCountryCode::FR,
-  legacyCountryCode::FRIT,
-  legacyCountryCode::GER,
-  legacyCountryCode::GHA,
-  legacyCountryCode::GLOB,
-  legacyCountryCode::GREC,
-  legacyCountryCode::GRSA,
-  legacyCountryCode::GUAT,
-  legacyCountryCode::HUN,
-  legacyCountryCode::IM,
-  legacyCountryCode::IND,
-  legacyCountryCode::INDO,
-  legacyCountryCode::IRAN,
-  legacyCountryCode::IRAQ,
-  legacyCountryCode::IRID,
-  legacyCountryCode::IRL,
-  legacyCountryCode::ISRA,
-  legacyCountryCode::ISRO,
-  legacyCountryCode::ISS,
-  legacyCountryCode::IT,
-  legacyCountryCode::ITSO,
-  legacyCountryCode::JPN,
-  legacyCountryCode::KAZ,
-  legacyCountryCode::KEN,
-  legacyCountryCode::LAOS,
-  legacyCountryCode::LKA,
-  legacyCountryCode::LTU,
-  legacyCountryCode::LUXE,
-  legacyCountryCode::MA,
-  legacyCountryCode::MALA,
-  legacyCountryCode::MCO,
-  legacyCountryCode::MDA,
-  legacyCountryCode::MEX,
-  legacyCountryCode::MMR,
-  legacyCountryCode::MNG,
-  legacyCountryCode::MUS,
-  legacyCountryCode::NATO,
-  legacyCountryCode::NETH,
-  legacyCountryCode::NICO,
-  legacyCountryCode::NIG,
-  legacyCountryCode::NKOR,
-  legacyCountryCode::NOR,
-  legacyCountryCode::NPL,
-  legacyCountryCode::NZ,
-  legacyCountryCode::O3B,
-  legacyCountryCode::ORB,
-  legacyCountryCode::PAKI,
-  legacyCountryCode::PERU,
-  legacyCountryCode::POL,
-  legacyCountryCode::POR,
-  legacyCountryCode::PRC,
-  legacyCountryCode::PRY,
-  legacyCountryCode::PRES,
-  legacyCountryCode::QAT,
-  legacyCountryCode::RASC,
-  legacyCountryCode::ROC,
-  legacyCountryCode::ROM,
-  legacyCountryCode::RP,
-  legacyCountryCode::RWA,
-  legacyCountryCode::SAFR,
-  legacyCountryCode::SAUD,
-  legacyCountryCode::SDN,
-  legacyCountryCode::SEAL,
-  legacyCountryCode::SES,
-  legacyCountryCode::SGJP,
-  legacyCountryCode::SING,
-  legacyCountryCode::SKOR,
-  legacyCountryCode::SPN,
-  legacyCountryCode::STCT,
-  legacyCountryCode::SVN,
-  legacyCountryCode::SWED,
-  legacyCountryCode::SWTZ,
-  legacyCountryCode::TBD,
-  legacyCountryCode::THAI,
-  legacyCountryCode::TMMC,
-  legacyCountryCode::TUN,
-  legacyCountryCode::TURK,
-  legacyCountryCode::UAE,
-  legacyCountryCode::UK,
-  legacyCountryCode::UKR,
-  legacyCountryCode::UNK,
-  legacyCountryCode::URY,
-  legacyCountryCode::US,
-  legacyCountryCode::USBZ,
-  legacyCountryCode::VAT,
-  legacyCountryCode::VENZ,
-  legacyCountryCode::VTNM,
-  legacyCountryCode::ZWE,
+pub const ENUM_VALUES_TRAJECTORY_TYPE: [trajectoryType; 6] = [
+  trajectoryType::CARTESIAN_PV,
+  trajectoryType::CARTESIAN_PVA,
+  trajectoryType::POLYNOMIAL_POS,
+  trajectoryType::POLYNOMIAL_OE,
+  trajectoryType::HERMITE,
+  trajectoryType::LAGRANGE,
 ];
 
+/// Trajectory state representation type.
+/// Defines how trajectory data is parameterized in this OCM.
+/// CCSDS 502.0-B-3 Section 7 specifies multiple trajectory state types.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct legacyCountryCode(pub i8);
+pub struct trajectoryType(pub i8);
 #[allow(non_upper_case_globals)]
-impl legacyCountryCode {
-  /// Arab Satellite Communications Organization
-  pub const AB: Self = Self(0);
-  /// Asia Broadcast Satellite
-  pub const ABS: Self = Self(1);
-  /// Asia Satellite Telecommunications Company (ASIASAT)
-  pub const AC: Self = Self(2);
-  /// Algeria
-  pub const ALG: Self = Self(3);
-  /// Angola
-  pub const ANG: Self = Self(4);
-  /// Argentina
-  pub const ARGN: Self = Self(5);
-  /// Republic of Armenia
-  pub const ARM: Self = Self(6);
-  /// Austria
-  pub const ASRA: Self = Self(7);
-  /// Australia
-  pub const AUS: Self = Self(8);
-  /// Azerbaijan
-  pub const AZER: Self = Self(9);
-  /// Belgium
-  pub const BEL: Self = Self(10);
-  /// Belarus
-  pub const BELA: Self = Self(11);
-  /// Bermuda
-  pub const BERM: Self = Self(12);
-  /// People's Republic of Bangladesh
-  pub const BGD: Self = Self(13);
-  /// Kingdom of Bhutan
-  pub const BHUT: Self = Self(14);
-  /// Bolivia
-  pub const BOL: Self = Self(15);
-  /// Brazil
-  pub const BRAZ: Self = Self(16);
-  /// Bulgaria
-  pub const BUL: Self = Self(17);
-  /// Canada
-  pub const CA: Self = Self(18);
-  /// China/Brazil
-  pub const CHBZ: Self = Self(19);
-  /// China/Turkey
-  pub const CHTU: Self = Self(20);
-  /// Chile
-  pub const CHLE: Self = Self(21);
-  /// Commonwealth of Independent States (former USSR)
-  pub const CIS: Self = Self(22);
-  /// Colombia
-  pub const COL: Self = Self(23);
-  /// Republic of Costa Rica
-  pub const CRI: Self = Self(24);
-  /// Czech Republic (former Czechoslovakia)
-  pub const CZCH: Self = Self(25);
-  /// Denmark
-  pub const DEN: Self = Self(26);
-  /// Republic of Djibouti
-  pub const DJI: Self = Self(27);
-  /// Ecuador
-  pub const ECU: Self = Self(28);
-  /// Egypt
-  pub const EGYP: Self = Self(29);
-  /// European Space Agency
-  pub const ESA: Self = Self(30);
-  /// European Space Research Organization
-  pub const ESRO: Self = Self(31);
-  /// Estonia
-  pub const EST: Self = Self(32);
-  /// Ethiopia
-  pub const ETH: Self = Self(33);
-  /// European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
-  pub const EUME: Self = Self(34);
-  /// European Telecommunications Satellite Organization (EUTELSAT)
-  pub const EUTE: Self = Self(35);
-  /// France/Germany
-  pub const FGER: Self = Self(36);
-  /// Finland
-  pub const FIN: Self = Self(37);
-  /// France
-  pub const FR: Self = Self(38);
-  /// France/Italy
-  pub const FRIT: Self = Self(39);
-  /// Germany
-  pub const GER: Self = Self(40);
-  /// Republic of Ghana
-  pub const GHA: Self = Self(41);
-  /// Globalstar
-  pub const GLOB: Self = Self(42);
-  /// Greece
-  pub const GREC: Self = Self(43);
-  /// Greece/Saudi Arabia
-  pub const GRSA: Self = Self(44);
-  /// Guatemala
-  pub const GUAT: Self = Self(45);
-  /// Hungary
-  pub const HUN: Self = Self(46);
-  /// International Mobile Satellite Organization (INMARSAT)
-  pub const IM: Self = Self(47);
-  /// India
-  pub const IND: Self = Self(48);
-  /// Indonesia
-  pub const INDO: Self = Self(49);
-  /// Iran
-  pub const IRAN: Self = Self(50);
-  /// Iraq
-  pub const IRAQ: Self = Self(51);
-  /// Iridium
-  pub const IRID: Self = Self(52);
-  /// Ireland
-  pub const IRL: Self = Self(53);
-  /// Israel
-  pub const ISRA: Self = Self(54);
-  /// Indian Space Research Organisation
-  pub const ISRO: Self = Self(55);
-  /// International Space Station
-  pub const ISS: Self = Self(56);
-  /// Italy
-  pub const IT: Self = Self(57);
-  /// International Telecommunications Satellite Organization (INTELSAT)
-  pub const ITSO: Self = Self(58);
-  /// Japan
-  pub const JPN: Self = Self(59);
-  /// Kazakhstan
-  pub const KAZ: Self = Self(60);
-  /// Republic of Kenya
-  pub const KEN: Self = Self(61);
-  /// Laos
-  pub const LAOS: Self = Self(62);
-  /// Democratic Socialist Republic of Sri Lanka
-  pub const LKA: Self = Self(63);
-  /// Lithuania
-  pub const LTU: Self = Self(64);
-  /// Luxembourg
-  pub const LUXE: Self = Self(65);
-  /// Morocco
-  pub const MA: Self = Self(66);
-  /// Malaysia
-  pub const MALA: Self = Self(67);
-  /// Principality of Monaco
-  pub const MCO: Self = Self(68);
-  /// Republic of Moldova
-  pub const MDA: Self = Self(69);
-  /// Mexico
-  pub const MEX: Self = Self(70);
-  /// Republic of the Union of Myanmar
-  pub const MMR: Self = Self(71);
-  /// Mongolia
-  pub const MNG: Self = Self(72);
-  /// Mauritius
-  pub const MUS: Self = Self(73);
-  /// North Atlantic Treaty Organization
-  pub const NATO: Self = Self(74);
-  /// Netherlands
-  pub const NETH: Self = Self(75);
-  /// New ICO
-  pub const NICO: Self = Self(76);
-  /// Nigeria
-  pub const NIG: Self = Self(77);
-  /// Democratic People's Republic of Korea
-  pub const NKOR: Self = Self(78);
-  /// Norway
-  pub const NOR: Self = Self(79);
-  /// Federal Democratic Republic of Nepal
-  pub const NPL: Self = Self(80);
-  /// New Zealand
-  pub const NZ: Self = Self(81);
-  /// O3b Networks
-  pub const O3B: Self = Self(82);
-  /// ORBCOMM
-  pub const ORB: Self = Self(83);
-  /// Pakistan
-  pub const PAKI: Self = Self(84);
-  /// Peru
-  pub const PERU: Self = Self(85);
-  /// Poland
-  pub const POL: Self = Self(86);
-  /// Portugal
-  pub const POR: Self = Self(87);
-  /// People's Republic of China
-  pub const PRC: Self = Self(88);
-  /// Republic of Paraguay
-  pub const PRY: Self = Self(89);
-  /// People's Republic of China/European Space Agency
-  pub const PRES: Self = Self(90);
-  /// State of Qatar
-  pub const QAT: Self = Self(91);
-  /// RascomStar-QAF
-  pub const RASC: Self = Self(92);
-  /// Taiwan (Republic of China)
-  pub const ROC: Self = Self(93);
-  /// Romania
-  pub const ROM: Self = Self(94);
-  /// Philippines (Republic of the Philippines)
-  pub const RP: Self = Self(95);
-  /// Republic of Rwanda
-  pub const RWA: Self = Self(96);
-  /// South Africa
-  pub const SAFR: Self = Self(97);
-  /// Saudi Arabia
-  pub const SAUD: Self = Self(98);
-  /// Republic of Sudan
-  pub const SDN: Self = Self(99);
-  /// Sea Launch
-  pub const SEAL: Self = Self(100);
-  /// SES
-  pub const SES: Self = Self(101);
-  /// Singapore/Japan
-  pub const SGJP: Self = Self(102);
-  /// Singapore
-  pub const SING: Self = Self(103);
-  /// Republic of Korea
-  pub const SKOR: Self = Self(104);
-  /// Spain
-  pub const SPN: Self = Self(105);
-  /// Singapore/Taiwan
-  pub const STCT: Self = Self(106);
-  /// Slovenia
-  pub const SVN: Self = Self(107);
-  /// Sweden
-  pub const SWED: Self = Self(108);
-  /// Switzerland
-  pub const SWTZ: Self = Self(109);
-  /// To Be Determined
-  pub const TBD: Self = Self(110);
-  /// Thailand
-  pub const THAI: Self = Self(111);
-  /// Turkmenistan/Monaco
-  pub const TMMC: Self = Self(112);
-  /// Republic of Tunisia
-  pub const TUN: Self = Self(113);
-  /// Turkey
-  pub const TURK: Self = Self(114);
-  /// United Arab Emirates
-  pub const UAE: Self = Self(115);
-  /// United Kingdom
-  pub const UK: Self = Self(116);
-  /// Ukraine
-  pub const UKR: Self = Self(117);
-  /// Unknown
-  pub const UNK: Self = Self(118);
-  /// Uruguay
-  pub const URY: Self = Self(119);
-  /// United States
-  pub const US: Self = Self(120);
-  /// United States/Brazil
-  pub const USBZ: Self = Self(121);
-  /// Vatican City State
-  pub const VAT: Self = Self(122);
-  /// Venezuela
-  pub const VENZ: Self = Self(123);
-  /// Vietnam
-  pub const VTNM: Self = Self(124);
-  /// Republic of Zimbabwe
-  pub const ZWE: Self = Self(125);
+impl trajectoryType {
+  /// Cartesian position and velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT).
+  pub const CARTESIAN_PV: Self = Self(0);
+  /// Cartesian position, velocity, and acceleration (9 components).
+  pub const CARTESIAN_PVA: Self = Self(1);
+  /// Polynomial coefficients for Cartesian position (and optionally velocity).
+  /// Associated data in POLYNOMIAL_POSITION_RECORDS.
+  pub const POLYNOMIAL_POS: Self = Self(2);
+  /// Polynomial coefficients for classical orbital elements.
+  /// Associated data in POLYNOMIAL_OE_RECORDS.
+  pub const POLYNOMIAL_OE: Self = Self(3);
+  /// Hermite interpolating polynomial representation.
+  pub const HERMITE: Self = Self(4);
+  /// Lagrange interpolating polynomial representation.
+  pub const LAGRANGE: Self = Self(5);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 125;
+  pub const ENUM_MAX: i8 = 5;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::AB,
-    Self::ABS,
-    Self::AC,
-    Self::ALG,
-    Self::ANG,
-    Self::ARGN,
-    Self::ARM,
-    Self::ASRA,
-    Self::AUS,
-    Self::AZER,
-    Self::BEL,
-    Self::BELA,
-    Self::BERM,
-    Self::BGD,
-    Self::BHUT,
-    Self::BOL,
-    Self::BRAZ,
-    Self::BUL,
-    Self::CA,
-    Self::CHBZ,
-    Self::CHTU,
-    Self::CHLE,
-    Self::CIS,
-    Self::COL,
-    Self::CRI,
-    Self::CZCH,
-    Self::DEN,
-    Self::DJI,
-    Self::ECU,
-    Self::EGYP,
-    Self::ESA,
-    Self::ESRO,
-    Self::EST,
-    Self::ETH,
-    Self::EUME,
-    Self::EUTE,
-    Self::FGER,
-    Self::FIN,
-    Self::FR,
-    Self::FRIT,
-    Self::GER,
-    Self::GHA,
-    Self::GLOB,
-    Self::GREC,
-    Self::GRSA,
-    Self::GUAT,
-    Self::HUN,
-    Self::IM,
-    Self::IND,
-    Self::INDO,
-    Self::IRAN,
-    Self::IRAQ,
-    Self::IRID,
-    Self::IRL,
-    Self::ISRA,
-    Self::ISRO,
-    Self::ISS,
-    Self::IT,
-    Self::ITSO,
-    Self::JPN,
-    Self::KAZ,
-    Self::KEN,
-    Self::LAOS,
-    Self::LKA,
-    Self::LTU,
-    Self::LUXE,
-    Self::MA,
-    Self::MALA,
-    Self::MCO,
-    Self::MDA,
-    Self::MEX,
-    Self::MMR,
-    Self::MNG,
-    Self::MUS,
-    Self::NATO,
-    Self::NETH,
-    Self::NICO,
-    Self::NIG,
-    Self::NKOR,
-    Self::NOR,
-    Self::NPL,
-    Self::NZ,
-    Self::O3B,
-    Self::ORB,
-    Self::PAKI,
-    Self::PERU,
-    Self::POL,
-    Self::POR,
-    Self::PRC,
-    Self::PRY,
-    Self::PRES,
-    Self::QAT,
-    Self::RASC,
-    Self::ROC,
-    Self::ROM,
-    Self::RP,
-    Self::RWA,
-    Self::SAFR,
-    Self::SAUD,
-    Self::SDN,
-    Self::SEAL,
-    Self::SES,
-    Self::SGJP,
-    Self::SING,
-    Self::SKOR,
-    Self::SPN,
-    Self::STCT,
-    Self::SVN,
-    Self::SWED,
-    Self::SWTZ,
-    Self::TBD,
-    Self::THAI,
-    Self::TMMC,
-    Self::TUN,
-    Self::TURK,
-    Self::UAE,
-    Self::UK,
-    Self::UKR,
-    Self::UNK,
-    Self::URY,
-    Self::US,
-    Self::USBZ,
-    Self::VAT,
-    Self::VENZ,
-    Self::VTNM,
-    Self::ZWE,
+    Self::CARTESIAN_PV,
+    Self::CARTESIAN_PVA,
+    Self::POLYNOMIAL_POS,
+    Self::POLYNOMIAL_OE,
+    Self::HERMITE,
+    Self::LAGRANGE,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::AB => Some("AB"),
-      Self::ABS => Some("ABS"),
-      Self::AC => Some("AC"),
-      Self::ALG => Some("ALG"),
-      Self::ANG => Some("ANG"),
-      Self::ARGN => Some("ARGN"),
-      Self::ARM => Some("ARM"),
-      Self::ASRA => Some("ASRA"),
-      Self::AUS => Some("AUS"),
-      Self::AZER => Some("AZER"),
-      Self::BEL => Some("BEL"),
-      Self::BELA => Some("BELA"),
-      Self::BERM => Some("BERM"),
-      Self::BGD => Some("BGD"),
-      Self::BHUT => Some("BHUT"),
-      Self::BOL => Some("BOL"),
-      Self::BRAZ => Some("BRAZ"),
-      Self::BUL => Some("BUL"),
-      Self::CA => Some("CA"),
-      Self::CHBZ => Some("CHBZ"),
-      Self::CHTU => Some("CHTU"),
-      Self::CHLE => Some("CHLE"),
-      Self::CIS => Some("CIS"),
-      Self::COL => Some("COL"),
-      Self::CRI => Some("CRI"),
-      Self::CZCH => Some("CZCH"),
-      Self::DEN => Some("DEN"),
-      Self::DJI => Some("DJI"),
-      Self::ECU => Some("ECU"),
-      Self::EGYP => Some("EGYP"),
-      Self::ESA => Some("ESA"),
-      Self::ESRO => Some("ESRO"),
-      Self::EST => Some("EST"),
-      Self::ETH => Some("ETH"),
-      Self::EUME => Some("EUME"),
-      Self::EUTE => Some("EUTE"),
-      Self::FGER => Some("FGER"),
-      Self::FIN => Some("FIN"),
-      Self::FR => Some("FR"),
-      Self::FRIT => Some("FRIT"),
-      Self::GER => Some("GER"),
-      Self::GHA => Some("GHA"),
-      Self::GLOB => Some("GLOB"),
-      Self::GREC => Some("GREC"),
-      Self::GRSA => Some("GRSA"),
-      Self::GUAT => Some("GUAT"),
-      Self::HUN => Some("HUN"),
-      Self::IM => Some("IM"),
-      Self::IND => Some("IND"),
-      Self::INDO => Some("INDO"),
-      Self::IRAN => Some("IRAN"),
-      Self::IRAQ => Some("IRAQ"),
-      Self::IRID => Some("IRID"),
-      Self::IRL => Some("IRL"),
-      Self::ISRA => Some("ISRA"),
-      Self::ISRO => Some("ISRO"),
-      Self::ISS => Some("ISS"),
-      Self::IT => Some("IT"),
-      Self::ITSO => Some("ITSO"),
-      Self::JPN => Some("JPN"),
-      Self::KAZ => Some("KAZ"),
-      Self::KEN => Some("KEN"),
-      Self::LAOS => Some("LAOS"),
-      Self::LKA => Some("LKA"),
-      Self::LTU => Some("LTU"),
-      Self::LUXE => Some("LUXE"),
-      Self::MA => Some("MA"),
-      Self::MALA => Some("MALA"),
-      Self::MCO => Some("MCO"),
-      Self::MDA => Some("MDA"),
-      Self::MEX => Some("MEX"),
-      Self::MMR => Some("MMR"),
-      Self::MNG => Some("MNG"),
-      Self::MUS => Some("MUS"),
-      Self::NATO => Some("NATO"),
-      Self::NETH => Some("NETH"),
-      Self::NICO => Some("NICO"),
-      Self::NIG => Some("NIG"),
-      Self::NKOR => Some("NKOR"),
-      Self::NOR => Some("NOR"),
-      Self::NPL => Some("NPL"),
-      Self::NZ => Some("NZ"),
-      Self::O3B => Some("O3B"),
-      Self::ORB => Some("ORB"),
-      Self::PAKI => Some("PAKI"),
-      Self::PERU => Some("PERU"),
-      Self::POL => Some("POL"),
-      Self::POR => Some("POR"),
-      Self::PRC => Some("PRC"),
-      Self::PRY => Some("PRY"),
-      Self::PRES => Some("PRES"),
-      Self::QAT => Some("QAT"),
-      Self::RASC => Some("RASC"),
-      Self::ROC => Some("ROC"),
-      Self::ROM => Some("ROM"),
-      Self::RP => Some("RP"),
-      Self::RWA => Some("RWA"),
-      Self::SAFR => Some("SAFR"),
-      Self::SAUD => Some("SAUD"),
-      Self::SDN => Some("SDN"),
-      Self::SEAL => Some("SEAL"),
-      Self::SES => Some("SES"),
-      Self::SGJP => Some("SGJP"),
-      Self::SING => Some("SING"),
-      Self::SKOR => Some("SKOR"),
-      Self::SPN => Some("SPN"),
-      Self::STCT => Some("STCT"),
-      Self::SVN => Some("SVN"),
-      Self::SWED => Some("SWED"),
-      Self::SWTZ => Some("SWTZ"),
-      Self::TBD => Some("TBD"),
-      Self::THAI => Some("THAI"),
-      Self::TMMC => Some("TMMC"),
-      Self::TUN => Some("TUN"),
-      Self::TURK => Some("TURK"),
-      Self::UAE => Some("UAE"),
-      Self::UK => Some("UK"),
-      Self::UKR => Some("UKR"),
-      Self::UNK => Some("UNK"),
-      Self::URY => Some("URY"),
-      Self::US => Some("US"),
-      Self::USBZ => Some("USBZ"),
-      Self::VAT => Some("VAT"),
-      Self::VENZ => Some("VENZ"),
-      Self::VTNM => Some("VTNM"),
-      Self::ZWE => Some("ZWE"),
+      Self::CARTESIAN_PV => Some("CARTESIAN_PV"),
+      Self::CARTESIAN_PVA => Some("CARTESIAN_PVA"),
+      Self::POLYNOMIAL_POS => Some("POLYNOMIAL_POS"),
+      Self::POLYNOMIAL_OE => Some("POLYNOMIAL_OE"),
+      Self::HERMITE => Some("HERMITE"),
+      Self::LAGRANGE => Some("LAGRANGE"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for legacyCountryCode {
+impl ::core::fmt::Debug for trajectoryType {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -668,7 +81,7 @@ impl ::core::fmt::Debug for legacyCountryCode {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for legacyCountryCode {
+impl<'a> ::flatbuffers::Follow<'a> for trajectoryType {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -677,15 +90,15 @@ impl<'a> ::flatbuffers::Follow<'a> for legacyCountryCode {
   }
 }
 
-impl ::flatbuffers::Push for legacyCountryCode {
-    type Output = legacyCountryCode;
+impl ::flatbuffers::Push for trajectoryType {
+    type Output = trajectoryType;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for legacyCountryCode {
+impl ::flatbuffers::EndianScalar for trajectoryType {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -699,7 +112,7 @@ impl ::flatbuffers::EndianScalar for legacyCountryCode {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for legacyCountryCode {
+impl<'a> ::flatbuffers::Verifiable for trajectoryType {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -708,213 +121,5070 @@ impl<'a> ::flatbuffers::Verifiable for legacyCountryCode {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for legacyCountryCode {}
-pub enum LCCOffset {}
+impl ::flatbuffers::SimpleToVerifyInSlice for trajectoryType {}
+pub enum HeaderOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Legacy Country Code
-pub struct LCC<'a> {
+pub struct Header<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for LCC<'a> {
-  type Inner = LCC<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for Header<'a> {
+  type Inner = Header<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> LCC<'a> {
-  pub const VT_OWNER: ::flatbuffers::VOffsetT = 4;
+impl<'a> Header<'a> {
+  pub const VT_CCSDS_OCM_VERS: ::flatbuffers::VOffsetT = 4;
+  pub const VT_COMMENT: ::flatbuffers::VOffsetT = 6;
+  pub const VT_CLASSIFICATION: ::flatbuffers::VOffsetT = 8;
+  pub const VT_CREATION_DATE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_ORIGINATOR: ::flatbuffers::VOffsetT = 12;
+  pub const VT_MESSAGE_ID: ::flatbuffers::VOffsetT = 14;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    LCC { _tab: table }
+    Header { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args LCCArgs
-  ) -> ::flatbuffers::WIPOffset<LCC<'bldr>> {
-    let mut builder = LCCBuilder::new(_fbb);
-    builder.add_OWNER(args.OWNER);
+    args: &'args HeaderArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<Header<'bldr>> {
+    let mut builder = HeaderBuilder::new(_fbb);
+    if let Some(x) = args.MESSAGE_ID { builder.add_MESSAGE_ID(x); }
+    if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
+    if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
+    if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
+    if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+    if let Some(x) = args.CCSDS_OCM_VERS { builder.add_CCSDS_OCM_VERS(x); }
     builder.finish()
   }
 
-  pub fn unpack(&self) -> LCCT {
-    let OWNER = self.OWNER();
-    LCCT {
-      OWNER,
+  pub fn unpack(&self) -> HeaderT {
+    let CCSDS_OCM_VERS = self.CCSDS_OCM_VERS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let COMMENT = self.COMMENT().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let CLASSIFICATION = self.CLASSIFICATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CREATION_DATE = self.CREATION_DATE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ORIGINATOR = self.ORIGINATOR().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MESSAGE_ID = self.MESSAGE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    HeaderT {
+      CCSDS_OCM_VERS,
+      COMMENT,
+      CLASSIFICATION,
+      CREATION_DATE,
+      ORIGINATOR,
+      MESSAGE_ID,
     }
   }
 
+  /// Format version in the form of 'x.y', where 'y' is incremented for minor changes, and 'x' for major changes.
   #[inline]
-  pub fn OWNER(&self) -> legacyCountryCode {
+  pub fn CCSDS_OCM_VERS(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<legacyCountryCode>(LCC::VT_OWNER, Some(legacyCountryCode::AB)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Header::VT_CCSDS_OCM_VERS, None)}
+  }
+  /// Comments (a contiguous set of one or more comment lines may be provided immediately after the version number).
+  #[inline]
+  pub fn COMMENT(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(Header::VT_COMMENT, None)}
+  }
+  /// User-defined free-text message classification/caveats of this OCM.
+  #[inline]
+  pub fn CLASSIFICATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Header::VT_CLASSIFICATION, None)}
+  }
+  /// File creation date/time in UTC.
+  #[inline]
+  pub fn CREATION_DATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Header::VT_CREATION_DATE, None)}
+  }
+  /// Creating agency or operator.
+  #[inline]
+  pub fn ORIGINATOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Header::VT_ORIGINATOR, None)}
+  }
+  /// Free-text field containing an ID that uniquely identifies a message from this originator.
+  #[inline]
+  pub fn MESSAGE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Header::VT_MESSAGE_ID, None)}
   }
 }
 
-impl ::flatbuffers::Verifiable for LCC<'_> {
+impl ::flatbuffers::Verifiable for Header<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<legacyCountryCode>("OWNER", Self::VT_OWNER, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CCSDS_OCM_VERS", Self::VT_CCSDS_OCM_VERS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION", Self::VT_CLASSIFICATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATION_DATE", Self::VT_CREATION_DATE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR", Self::VT_ORIGINATOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE_ID", Self::VT_MESSAGE_ID, false)?
      .finish();
     Ok(())
   }
 }
-pub struct LCCArgs {
-    pub OWNER: legacyCountryCode,
+pub struct HeaderArgs<'a> {
+    pub CCSDS_OCM_VERS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COMMENT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub CLASSIFICATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CREATION_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORIGINATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
-impl<'a> Default for LCCArgs {
+impl<'a> Default for HeaderArgs<'a> {
   #[inline]
   fn default() -> Self {
-    LCCArgs {
-      OWNER: legacyCountryCode::AB,
+    HeaderArgs {
+      CCSDS_OCM_VERS: None,
+      COMMENT: None,
+      CLASSIFICATION: None,
+      CREATION_DATE: None,
+      ORIGINATOR: None,
+      MESSAGE_ID: None,
     }
   }
 }
 
-pub struct LCCBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct HeaderBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> LCCBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> HeaderBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_OWNER(&mut self, OWNER: legacyCountryCode) {
-    self.fbb_.push_slot::<legacyCountryCode>(LCC::VT_OWNER, OWNER, legacyCountryCode::AB);
+  pub fn add_CCSDS_OCM_VERS(&mut self, CCSDS_OCM_VERS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Header::VT_CCSDS_OCM_VERS, CCSDS_OCM_VERS);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> LCCBuilder<'a, 'b, A> {
+  pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Header::VT_COMMENT, COMMENT);
+  }
+  #[inline]
+  pub fn add_CLASSIFICATION(&mut self, CLASSIFICATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Header::VT_CLASSIFICATION, CLASSIFICATION);
+  }
+  #[inline]
+  pub fn add_CREATION_DATE(&mut self, CREATION_DATE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Header::VT_CREATION_DATE, CREATION_DATE);
+  }
+  #[inline]
+  pub fn add_ORIGINATOR(&mut self, ORIGINATOR: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Header::VT_ORIGINATOR, ORIGINATOR);
+  }
+  #[inline]
+  pub fn add_MESSAGE_ID(&mut self, MESSAGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Header::VT_MESSAGE_ID, MESSAGE_ID);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> HeaderBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    LCCBuilder {
+    HeaderBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<LCC<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<Header<'a>> {
     let o = self.fbb_.end_table(self.start_);
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for LCC<'_> {
+impl ::core::fmt::Debug for Header<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("LCC");
-      ds.field("OWNER", &self.OWNER());
+    let mut ds = f.debug_struct("Header");
+      ds.field("CCSDS_OCM_VERS", &self.CCSDS_OCM_VERS());
+      ds.field("COMMENT", &self.COMMENT());
+      ds.field("CLASSIFICATION", &self.CLASSIFICATION());
+      ds.field("CREATION_DATE", &self.CREATION_DATE());
+      ds.field("ORIGINATOR", &self.ORIGINATOR());
+      ds.field("MESSAGE_ID", &self.MESSAGE_ID());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct LCCT {
-  pub OWNER: legacyCountryCode,
+pub struct HeaderT {
+  pub CCSDS_OCM_VERS: Option<alloc::string::String>,
+  pub COMMENT: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub CLASSIFICATION: Option<alloc::string::String>,
+  pub CREATION_DATE: Option<alloc::string::String>,
+  pub ORIGINATOR: Option<alloc::string::String>,
+  pub MESSAGE_ID: Option<alloc::string::String>,
 }
-impl Default for LCCT {
+impl Default for HeaderT {
   fn default() -> Self {
     Self {
-      OWNER: legacyCountryCode::AB,
+      CCSDS_OCM_VERS: None,
+      COMMENT: None,
+      CLASSIFICATION: None,
+      CREATION_DATE: None,
+      ORIGINATOR: None,
+      MESSAGE_ID: None,
     }
   }
 }
-impl LCCT {
+impl HeaderT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<LCC<'b>> {
-    let OWNER = self.OWNER;
-    LCC::create(_fbb, &LCCArgs{
+  ) -> ::flatbuffers::WIPOffset<Header<'b>> {
+    let CCSDS_OCM_VERS = self.CCSDS_OCM_VERS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COMMENT = self.COMMENT.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let CLASSIFICATION = self.CLASSIFICATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CREATION_DATE = self.CREATION_DATE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIGINATOR = self.ORIGINATOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MESSAGE_ID = self.MESSAGE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    Header::create(_fbb, &HeaderArgs{
+      CCSDS_OCM_VERS,
+      COMMENT,
+      CLASSIFICATION,
+      CREATION_DATE,
+      ORIGINATOR,
+      MESSAGE_ID,
+    })
+  }
+}
+pub enum MetadataOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct Metadata<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for Metadata<'a> {
+  type Inner = Metadata<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> Metadata<'a> {
+  pub const VT_COMMENT: ::flatbuffers::VOffsetT = 4;
+  pub const VT_OBJECT_NAME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_INTERNATIONAL_DESIGNATOR: ::flatbuffers::VOffsetT = 8;
+  pub const VT_CATALOG_NAME: ::flatbuffers::VOffsetT = 10;
+  pub const VT_OBJECT_DESIGNATOR: ::flatbuffers::VOffsetT = 12;
+  pub const VT_ALTERNATE_NAMES: ::flatbuffers::VOffsetT = 14;
+  pub const VT_ORIGINATOR_POC: ::flatbuffers::VOffsetT = 16;
+  pub const VT_ORIGINATOR_POSITION: ::flatbuffers::VOffsetT = 18;
+  pub const VT_ORIGINATOR_PHONE: ::flatbuffers::VOffsetT = 20;
+  pub const VT_ORIGINATOR_EMAIL: ::flatbuffers::VOffsetT = 22;
+  pub const VT_ORIGINATOR_ADDRESS: ::flatbuffers::VOffsetT = 24;
+  pub const VT_TECH_ORG: ::flatbuffers::VOffsetT = 26;
+  pub const VT_TECH_POC: ::flatbuffers::VOffsetT = 28;
+  pub const VT_TECH_POSITION: ::flatbuffers::VOffsetT = 30;
+  pub const VT_TECH_PHONE: ::flatbuffers::VOffsetT = 32;
+  pub const VT_TECH_EMAIL: ::flatbuffers::VOffsetT = 34;
+  pub const VT_TECH_ADDRESS: ::flatbuffers::VOffsetT = 36;
+  pub const VT_PREVIOUS_MESSAGE_ID: ::flatbuffers::VOffsetT = 38;
+  pub const VT_NEXT_MESSAGE_ID: ::flatbuffers::VOffsetT = 40;
+  pub const VT_ADM_MSG_LINK: ::flatbuffers::VOffsetT = 42;
+  pub const VT_CDM_MSG_LINK: ::flatbuffers::VOffsetT = 44;
+  pub const VT_PRM_MSG_LINK: ::flatbuffers::VOffsetT = 46;
+  pub const VT_RDM_MSG_LINK: ::flatbuffers::VOffsetT = 48;
+  pub const VT_TDM_MSG_LINK: ::flatbuffers::VOffsetT = 50;
+  pub const VT_OPERATOR: ::flatbuffers::VOffsetT = 52;
+  pub const VT_OWNER: ::flatbuffers::VOffsetT = 54;
+  pub const VT_COUNTRY: ::flatbuffers::VOffsetT = 56;
+  pub const VT_CONSTELLATION: ::flatbuffers::VOffsetT = 58;
+  pub const VT_OBJECT_TYPE: ::flatbuffers::VOffsetT = 60;
+  pub const VT_TIME_SYSTEM: ::flatbuffers::VOffsetT = 62;
+  pub const VT_EPOCH_TZERO: ::flatbuffers::VOffsetT = 64;
+  pub const VT_OPS_STATUS: ::flatbuffers::VOffsetT = 66;
+  pub const VT_ORBIT_CATEGORY: ::flatbuffers::VOffsetT = 68;
+  pub const VT_OCM_DATA_ELEMENTS: ::flatbuffers::VOffsetT = 70;
+  pub const VT_SCLK_OFFSET_AT_EPOCH: ::flatbuffers::VOffsetT = 72;
+  pub const VT_SCLK_SEC_PER_SI_SEC: ::flatbuffers::VOffsetT = 74;
+  pub const VT_PREVIOUS_MESSAGE_EPOCH: ::flatbuffers::VOffsetT = 76;
+  pub const VT_NEXT_MESSAGE_EPOCH: ::flatbuffers::VOffsetT = 78;
+  pub const VT_START_TIME: ::flatbuffers::VOffsetT = 80;
+  pub const VT_STOP_TIME: ::flatbuffers::VOffsetT = 82;
+  pub const VT_TIME_SPAN: ::flatbuffers::VOffsetT = 84;
+  pub const VT_TAIMUTC_AT_TZERO: ::flatbuffers::VOffsetT = 86;
+  pub const VT_NEXT_LEAP_EPOCH: ::flatbuffers::VOffsetT = 88;
+  pub const VT_NEXT_LEAP_TAIMUTC: ::flatbuffers::VOffsetT = 90;
+  pub const VT_UT1MUTC_AT_TZERO: ::flatbuffers::VOffsetT = 92;
+  pub const VT_EOP_SOURCE: ::flatbuffers::VOffsetT = 94;
+  pub const VT_INTERP_METHOD_EOP: ::flatbuffers::VOffsetT = 96;
+  pub const VT_CELESTIAL_SOURCE: ::flatbuffers::VOffsetT = 98;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    Metadata { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args MetadataArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<Metadata<'bldr>> {
+    let mut builder = MetadataBuilder::new(_fbb);
+    builder.add_UT1MUTC_AT_TZERO(args.UT1MUTC_AT_TZERO);
+    builder.add_NEXT_LEAP_TAIMUTC(args.NEXT_LEAP_TAIMUTC);
+    builder.add_TAIMUTC_AT_TZERO(args.TAIMUTC_AT_TZERO);
+    builder.add_TIME_SPAN(args.TIME_SPAN);
+    builder.add_SCLK_SEC_PER_SI_SEC(args.SCLK_SEC_PER_SI_SEC);
+    builder.add_SCLK_OFFSET_AT_EPOCH(args.SCLK_OFFSET_AT_EPOCH);
+    if let Some(x) = args.CELESTIAL_SOURCE { builder.add_CELESTIAL_SOURCE(x); }
+    if let Some(x) = args.INTERP_METHOD_EOP { builder.add_INTERP_METHOD_EOP(x); }
+    if let Some(x) = args.EOP_SOURCE { builder.add_EOP_SOURCE(x); }
+    if let Some(x) = args.NEXT_LEAP_EPOCH { builder.add_NEXT_LEAP_EPOCH(x); }
+    if let Some(x) = args.STOP_TIME { builder.add_STOP_TIME(x); }
+    if let Some(x) = args.START_TIME { builder.add_START_TIME(x); }
+    if let Some(x) = args.NEXT_MESSAGE_EPOCH { builder.add_NEXT_MESSAGE_EPOCH(x); }
+    if let Some(x) = args.PREVIOUS_MESSAGE_EPOCH { builder.add_PREVIOUS_MESSAGE_EPOCH(x); }
+    if let Some(x) = args.OCM_DATA_ELEMENTS { builder.add_OCM_DATA_ELEMENTS(x); }
+    if let Some(x) = args.ORBIT_CATEGORY { builder.add_ORBIT_CATEGORY(x); }
+    if let Some(x) = args.OPS_STATUS { builder.add_OPS_STATUS(x); }
+    if let Some(x) = args.EPOCH_TZERO { builder.add_EPOCH_TZERO(x); }
+    if let Some(x) = args.TIME_SYSTEM { builder.add_TIME_SYSTEM(x); }
+    if let Some(x) = args.OBJECT_TYPE { builder.add_OBJECT_TYPE(x); }
+    if let Some(x) = args.CONSTELLATION { builder.add_CONSTELLATION(x); }
+    if let Some(x) = args.COUNTRY { builder.add_COUNTRY(x); }
+    if let Some(x) = args.OWNER { builder.add_OWNER(x); }
+    if let Some(x) = args.OPERATOR { builder.add_OPERATOR(x); }
+    if let Some(x) = args.TDM_MSG_LINK { builder.add_TDM_MSG_LINK(x); }
+    if let Some(x) = args.RDM_MSG_LINK { builder.add_RDM_MSG_LINK(x); }
+    if let Some(x) = args.PRM_MSG_LINK { builder.add_PRM_MSG_LINK(x); }
+    if let Some(x) = args.CDM_MSG_LINK { builder.add_CDM_MSG_LINK(x); }
+    if let Some(x) = args.ADM_MSG_LINK { builder.add_ADM_MSG_LINK(x); }
+    if let Some(x) = args.NEXT_MESSAGE_ID { builder.add_NEXT_MESSAGE_ID(x); }
+    if let Some(x) = args.PREVIOUS_MESSAGE_ID { builder.add_PREVIOUS_MESSAGE_ID(x); }
+    if let Some(x) = args.TECH_ADDRESS { builder.add_TECH_ADDRESS(x); }
+    if let Some(x) = args.TECH_EMAIL { builder.add_TECH_EMAIL(x); }
+    if let Some(x) = args.TECH_PHONE { builder.add_TECH_PHONE(x); }
+    if let Some(x) = args.TECH_POSITION { builder.add_TECH_POSITION(x); }
+    if let Some(x) = args.TECH_POC { builder.add_TECH_POC(x); }
+    if let Some(x) = args.TECH_ORG { builder.add_TECH_ORG(x); }
+    if let Some(x) = args.ORIGINATOR_ADDRESS { builder.add_ORIGINATOR_ADDRESS(x); }
+    if let Some(x) = args.ORIGINATOR_EMAIL { builder.add_ORIGINATOR_EMAIL(x); }
+    if let Some(x) = args.ORIGINATOR_PHONE { builder.add_ORIGINATOR_PHONE(x); }
+    if let Some(x) = args.ORIGINATOR_POSITION { builder.add_ORIGINATOR_POSITION(x); }
+    if let Some(x) = args.ORIGINATOR_POC { builder.add_ORIGINATOR_POC(x); }
+    if let Some(x) = args.ALTERNATE_NAMES { builder.add_ALTERNATE_NAMES(x); }
+    if let Some(x) = args.OBJECT_DESIGNATOR { builder.add_OBJECT_DESIGNATOR(x); }
+    if let Some(x) = args.CATALOG_NAME { builder.add_CATALOG_NAME(x); }
+    if let Some(x) = args.INTERNATIONAL_DESIGNATOR { builder.add_INTERNATIONAL_DESIGNATOR(x); }
+    if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
+    if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> MetadataT {
+    let COMMENT = self.COMMENT().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let OBJECT_NAME = self.OBJECT_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INTERNATIONAL_DESIGNATOR = self.INTERNATIONAL_DESIGNATOR().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CATALOG_NAME = self.CATALOG_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ALTERNATE_NAMES = self.ALTERNATE_NAMES().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let ORIGINATOR_POC = self.ORIGINATOR_POC().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ORIGINATOR_POSITION = self.ORIGINATOR_POSITION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ORIGINATOR_PHONE = self.ORIGINATOR_PHONE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ORIGINATOR_EMAIL = self.ORIGINATOR_EMAIL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ORIGINATOR_ADDRESS = self.ORIGINATOR_ADDRESS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TECH_ORG = self.TECH_ORG().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TECH_POC = self.TECH_POC().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TECH_POSITION = self.TECH_POSITION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TECH_PHONE = self.TECH_PHONE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TECH_EMAIL = self.TECH_EMAIL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TECH_ADDRESS = self.TECH_ADDRESS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PREVIOUS_MESSAGE_ID = self.PREVIOUS_MESSAGE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let NEXT_MESSAGE_ID = self.NEXT_MESSAGE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ADM_MSG_LINK = self.ADM_MSG_LINK().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CDM_MSG_LINK = self.CDM_MSG_LINK().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PRM_MSG_LINK = self.PRM_MSG_LINK().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let RDM_MSG_LINK = self.RDM_MSG_LINK().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TDM_MSG_LINK = self.TDM_MSG_LINK().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let OPERATOR = self.OPERATOR().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OWNER = self.OWNER().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let COUNTRY = self.COUNTRY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CONSTELLATION = self.CONSTELLATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OBJECT_TYPE = self.OBJECT_TYPE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TIME_SYSTEM = self.TIME_SYSTEM().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPOCH_TZERO = self.EPOCH_TZERO().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OPS_STATUS = self.OPS_STATUS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ORBIT_CATEGORY = self.ORBIT_CATEGORY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OCM_DATA_ELEMENTS = self.OCM_DATA_ELEMENTS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let SCLK_OFFSET_AT_EPOCH = self.SCLK_OFFSET_AT_EPOCH();
+    let SCLK_SEC_PER_SI_SEC = self.SCLK_SEC_PER_SI_SEC();
+    let PREVIOUS_MESSAGE_EPOCH = self.PREVIOUS_MESSAGE_EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let NEXT_MESSAGE_EPOCH = self.NEXT_MESSAGE_EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let START_TIME = self.START_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let STOP_TIME = self.STOP_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TIME_SPAN = self.TIME_SPAN();
+    let TAIMUTC_AT_TZERO = self.TAIMUTC_AT_TZERO();
+    let NEXT_LEAP_EPOCH = self.NEXT_LEAP_EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let NEXT_LEAP_TAIMUTC = self.NEXT_LEAP_TAIMUTC();
+    let UT1MUTC_AT_TZERO = self.UT1MUTC_AT_TZERO();
+    let EOP_SOURCE = self.EOP_SOURCE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INTERP_METHOD_EOP = self.INTERP_METHOD_EOP().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CELESTIAL_SOURCE = self.CELESTIAL_SOURCE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    MetadataT {
+      COMMENT,
+      OBJECT_NAME,
+      INTERNATIONAL_DESIGNATOR,
+      CATALOG_NAME,
+      OBJECT_DESIGNATOR,
+      ALTERNATE_NAMES,
+      ORIGINATOR_POC,
+      ORIGINATOR_POSITION,
+      ORIGINATOR_PHONE,
+      ORIGINATOR_EMAIL,
+      ORIGINATOR_ADDRESS,
+      TECH_ORG,
+      TECH_POC,
+      TECH_POSITION,
+      TECH_PHONE,
+      TECH_EMAIL,
+      TECH_ADDRESS,
+      PREVIOUS_MESSAGE_ID,
+      NEXT_MESSAGE_ID,
+      ADM_MSG_LINK,
+      CDM_MSG_LINK,
+      PRM_MSG_LINK,
+      RDM_MSG_LINK,
+      TDM_MSG_LINK,
+      OPERATOR,
       OWNER,
+      COUNTRY,
+      CONSTELLATION,
+      OBJECT_TYPE,
+      TIME_SYSTEM,
+      EPOCH_TZERO,
+      OPS_STATUS,
+      ORBIT_CATEGORY,
+      OCM_DATA_ELEMENTS,
+      SCLK_OFFSET_AT_EPOCH,
+      SCLK_SEC_PER_SI_SEC,
+      PREVIOUS_MESSAGE_EPOCH,
+      NEXT_MESSAGE_EPOCH,
+      START_TIME,
+      STOP_TIME,
+      TIME_SPAN,
+      TAIMUTC_AT_TZERO,
+      NEXT_LEAP_EPOCH,
+      NEXT_LEAP_TAIMUTC,
+      UT1MUTC_AT_TZERO,
+      EOP_SOURCE,
+      INTERP_METHOD_EOP,
+      CELESTIAL_SOURCE,
+    }
+  }
+
+  /// Comments in the Metadata section.
+  #[inline]
+  pub fn COMMENT(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(Metadata::VT_COMMENT, None)}
+  }
+  /// Free-text field containing the name of the object.
+  #[inline]
+  pub fn OBJECT_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_OBJECT_NAME, None)}
+  }
+  /// International designator for the object as assigned by COSPAR.
+  #[inline]
+  pub fn INTERNATIONAL_DESIGNATOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_INTERNATIONAL_DESIGNATOR, None)}
+  }
+  /// Satellite catalog source from which 'OBJECT_DESIGNATOR' was obtained.
+  #[inline]
+  pub fn CATALOG_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_CATALOG_NAME, None)}
+  }
+  /// Unique satellite identification designator from the catalog.
+  #[inline]
+  pub fn OBJECT_DESIGNATOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_OBJECT_DESIGNATOR, None)}
+  }
+  /// Alternate names of this space object.
+  #[inline]
+  pub fn ALTERNATE_NAMES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(Metadata::VT_ALTERNATE_NAMES, None)}
+  }
+  /// Originator or programmatic Point-of-Contact (PoC) for OCM.
+  #[inline]
+  pub fn ORIGINATOR_POC(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_ORIGINATOR_POC, None)}
+  }
+  /// Contact position of the originator PoC.
+  #[inline]
+  pub fn ORIGINATOR_POSITION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_ORIGINATOR_POSITION, None)}
+  }
+  /// Originator PoC phone number.
+  #[inline]
+  pub fn ORIGINATOR_PHONE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_ORIGINATOR_PHONE, None)}
+  }
+  /// Originator PoC email address.
+  #[inline]
+  pub fn ORIGINATOR_EMAIL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_ORIGINATOR_EMAIL, None)}
+  }
+  /// Originator's physical address information.
+  #[inline]
+  pub fn ORIGINATOR_ADDRESS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_ORIGINATOR_ADDRESS, None)}
+  }
+  /// Creating agency or operator for technical contact.
+  #[inline]
+  pub fn TECH_ORG(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_TECH_ORG, None)}
+  }
+  /// Technical Point-of-Contact (PoC) for OCM.
+  #[inline]
+  pub fn TECH_POC(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_TECH_POC, None)}
+  }
+  /// Contact position of the technical PoC.
+  #[inline]
+  pub fn TECH_POSITION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_TECH_POSITION, None)}
+  }
+  /// Technical PoC phone number.
+  #[inline]
+  pub fn TECH_PHONE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_TECH_PHONE, None)}
+  }
+  /// Technical PoC email address.
+  #[inline]
+  pub fn TECH_EMAIL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_TECH_EMAIL, None)}
+  }
+  /// Technical PoC physical address information.
+  #[inline]
+  pub fn TECH_ADDRESS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_TECH_ADDRESS, None)}
+  }
+  /// ID that uniquely identifies the previous message from this originator.
+  #[inline]
+  pub fn PREVIOUS_MESSAGE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_PREVIOUS_MESSAGE_ID, None)}
+  }
+  /// ID that uniquely identifies the next message from this originator.
+  #[inline]
+  pub fn NEXT_MESSAGE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_NEXT_MESSAGE_ID, None)}
+  }
+  /// Unique identifier of Attitude Data Messages linked to this OCM.
+  #[inline]
+  pub fn ADM_MSG_LINK(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_ADM_MSG_LINK, None)}
+  }
+  /// Unique identifier of Conjunction Data Messages linked to this OCM.
+  #[inline]
+  pub fn CDM_MSG_LINK(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_CDM_MSG_LINK, None)}
+  }
+  /// Unique identifier of Pointing Request Messages linked to this OCM.
+  #[inline]
+  pub fn PRM_MSG_LINK(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_PRM_MSG_LINK, None)}
+  }
+  /// Unique identifier of Reentry Data Messages linked to this OCM.
+  #[inline]
+  pub fn RDM_MSG_LINK(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_RDM_MSG_LINK, None)}
+  }
+  /// List of Tracking Data Messages upon which this orbit determination is based.
+  #[inline]
+  pub fn TDM_MSG_LINK(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(Metadata::VT_TDM_MSG_LINK, None)}
+  }
+  /// Operator of the space object.
+  #[inline]
+  pub fn OPERATOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_OPERATOR, None)}
+  }
+  /// Owner of the space object.
+  #[inline]
+  pub fn OWNER(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_OWNER, None)}
+  }
+  /// Country where the space object owner is based.
+  #[inline]
+  pub fn COUNTRY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_COUNTRY, None)}
+  }
+  /// Name of the constellation to which this space object belongs.
+  #[inline]
+  pub fn CONSTELLATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_CONSTELLATION, None)}
+  }
+  /// Specification of the type of object (e.g., PAYLOAD, ROCKET BODY, DEBRIS).
+  #[inline]
+  pub fn OBJECT_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_OBJECT_TYPE, None)}
+  }
+  /// Time system for all absolute time stamps in this OCM, including EPOCH_TZERO.
+  #[inline]
+  pub fn TIME_SYSTEM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_TIME_SYSTEM, None)}
+  }
+  /// Default epoch to which all relative times are referenced in data blocks.
+  #[inline]
+  pub fn EPOCH_TZERO(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_EPOCH_TZERO, None)}
+  }
+  /// Specification of the operational status of the space object.
+  #[inline]
+  pub fn OPS_STATUS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_OPS_STATUS, None)}
+  }
+  /// Specification of the type of orbit (e.g., GEO, LEO).
+  #[inline]
+  pub fn ORBIT_CATEGORY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_ORBIT_CATEGORY, None)}
+  }
+  /// List of elements of information data blocks included in this message.
+  #[inline]
+  pub fn OCM_DATA_ELEMENTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(Metadata::VT_OCM_DATA_ELEMENTS, None)}
+  }
+  /// Number of spacecraft clock counts at EPOCH_TZERO (used if TIME_SYSTEM is SCLK).
+  #[inline]
+  pub fn SCLK_OFFSET_AT_EPOCH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(Metadata::VT_SCLK_OFFSET_AT_EPOCH, Some(0.0)).unwrap()}
+  }
+  /// Number of clock seconds occurring during one SI second (used if TIME_SYSTEM is SCLK).
+  #[inline]
+  pub fn SCLK_SEC_PER_SI_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(Metadata::VT_SCLK_SEC_PER_SI_SEC, Some(0.0)).unwrap()}
+  }
+  /// Creation epoch of the previous message from this originator.
+  #[inline]
+  pub fn PREVIOUS_MESSAGE_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_PREVIOUS_MESSAGE_EPOCH, None)}
+  }
+  /// Anticipated (or actual) epoch of the next message from this originator.
+  #[inline]
+  pub fn NEXT_MESSAGE_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_NEXT_MESSAGE_EPOCH, None)}
+  }
+  /// Time of the earliest data contained in the OCM.
+  #[inline]
+  pub fn START_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_START_TIME, None)}
+  }
+  /// Time of the latest data contained in the OCM.
+  #[inline]
+  pub fn STOP_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_STOP_TIME, None)}
+  }
+  /// Span of time that the OCM covers, measured in days.
+  #[inline]
+  pub fn TIME_SPAN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(Metadata::VT_TIME_SPAN, Some(0.0)).unwrap()}
+  }
+  /// Difference (TAI - UTC) in seconds at EPOCH_TZERO.
+  #[inline]
+  pub fn TAIMUTC_AT_TZERO(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(Metadata::VT_TAIMUTC_AT_TZERO, Some(0.0)).unwrap()}
+  }
+  /// Epoch of next leap second.
+  #[inline]
+  pub fn NEXT_LEAP_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_NEXT_LEAP_EPOCH, None)}
+  }
+  /// Difference (TAI - UTC) in seconds at NEXT_LEAP_EPOCH.
+  #[inline]
+  pub fn NEXT_LEAP_TAIMUTC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(Metadata::VT_NEXT_LEAP_TAIMUTC, Some(0.0)).unwrap()}
+  }
+  /// Difference (UT1 - UTC) in seconds at EPOCH_TZERO.
+  #[inline]
+  pub fn UT1MUTC_AT_TZERO(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(Metadata::VT_UT1MUTC_AT_TZERO, Some(0.0)).unwrap()}
+  }
+  /// Source and version of Earth Orientation Parameters used.
+  #[inline]
+  pub fn EOP_SOURCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_EOP_SOURCE, None)}
+  }
+  /// Method used to select or interpolate sequential EOP data.
+  #[inline]
+  pub fn INTERP_METHOD_EOP(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_INTERP_METHOD_EOP, None)}
+  }
+  /// Source and version of celestial body ephemeris data used.
+  #[inline]
+  pub fn CELESTIAL_SOURCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_CELESTIAL_SOURCE, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for Metadata<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INTERNATIONAL_DESIGNATOR", Self::VT_INTERNATIONAL_DESIGNATOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CATALOG_NAME", Self::VT_CATALOG_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_DESIGNATOR", Self::VT_OBJECT_DESIGNATOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ALTERNATE_NAMES", Self::VT_ALTERNATE_NAMES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR_POC", Self::VT_ORIGINATOR_POC, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR_POSITION", Self::VT_ORIGINATOR_POSITION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR_PHONE", Self::VT_ORIGINATOR_PHONE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR_EMAIL", Self::VT_ORIGINATOR_EMAIL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR_ADDRESS", Self::VT_ORIGINATOR_ADDRESS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TECH_ORG", Self::VT_TECH_ORG, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TECH_POC", Self::VT_TECH_POC, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TECH_POSITION", Self::VT_TECH_POSITION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TECH_PHONE", Self::VT_TECH_PHONE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TECH_EMAIL", Self::VT_TECH_EMAIL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TECH_ADDRESS", Self::VT_TECH_ADDRESS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PREVIOUS_MESSAGE_ID", Self::VT_PREVIOUS_MESSAGE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NEXT_MESSAGE_ID", Self::VT_NEXT_MESSAGE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ADM_MSG_LINK", Self::VT_ADM_MSG_LINK, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CDM_MSG_LINK", Self::VT_CDM_MSG_LINK, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRM_MSG_LINK", Self::VT_PRM_MSG_LINK, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RDM_MSG_LINK", Self::VT_RDM_MSG_LINK, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("TDM_MSG_LINK", Self::VT_TDM_MSG_LINK, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OPERATOR", Self::VT_OPERATOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OWNER", Self::VT_OWNER, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COUNTRY", Self::VT_COUNTRY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONSTELLATION", Self::VT_CONSTELLATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_TYPE", Self::VT_OBJECT_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH_TZERO", Self::VT_EPOCH_TZERO, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OPS_STATUS", Self::VT_OPS_STATUS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORBIT_CATEGORY", Self::VT_ORBIT_CATEGORY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("OCM_DATA_ELEMENTS", Self::VT_OCM_DATA_ELEMENTS, false)?
+     .visit_field::<f64>("SCLK_OFFSET_AT_EPOCH", Self::VT_SCLK_OFFSET_AT_EPOCH, false)?
+     .visit_field::<f64>("SCLK_SEC_PER_SI_SEC", Self::VT_SCLK_SEC_PER_SI_SEC, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PREVIOUS_MESSAGE_EPOCH", Self::VT_PREVIOUS_MESSAGE_EPOCH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NEXT_MESSAGE_EPOCH", Self::VT_NEXT_MESSAGE_EPOCH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STOP_TIME", Self::VT_STOP_TIME, false)?
+     .visit_field::<f64>("TIME_SPAN", Self::VT_TIME_SPAN, false)?
+     .visit_field::<f64>("TAIMUTC_AT_TZERO", Self::VT_TAIMUTC_AT_TZERO, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NEXT_LEAP_EPOCH", Self::VT_NEXT_LEAP_EPOCH, false)?
+     .visit_field::<f64>("NEXT_LEAP_TAIMUTC", Self::VT_NEXT_LEAP_TAIMUTC, false)?
+     .visit_field::<f64>("UT1MUTC_AT_TZERO", Self::VT_UT1MUTC_AT_TZERO, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EOP_SOURCE", Self::VT_EOP_SOURCE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INTERP_METHOD_EOP", Self::VT_INTERP_METHOD_EOP, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CELESTIAL_SOURCE", Self::VT_CELESTIAL_SOURCE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct MetadataArgs<'a> {
+    pub COMMENT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub OBJECT_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTERNATIONAL_DESIGNATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CATALOG_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_DESIGNATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ALTERNATE_NAMES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub ORIGINATOR_POC: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORIGINATOR_POSITION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORIGINATOR_PHONE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORIGINATOR_EMAIL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORIGINATOR_ADDRESS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TECH_ORG: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TECH_POC: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TECH_POSITION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TECH_PHONE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TECH_EMAIL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TECH_ADDRESS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PREVIOUS_MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NEXT_MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ADM_MSG_LINK: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CDM_MSG_LINK: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PRM_MSG_LINK: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RDM_MSG_LINK: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TDM_MSG_LINK: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub OPERATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OWNER: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COUNTRY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CONSTELLATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TIME_SYSTEM: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH_TZERO: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OPS_STATUS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORBIT_CATEGORY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OCM_DATA_ELEMENTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub SCLK_OFFSET_AT_EPOCH: f64,
+    pub SCLK_SEC_PER_SI_SEC: f64,
+    pub PREVIOUS_MESSAGE_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NEXT_MESSAGE_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub START_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub STOP_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TIME_SPAN: f64,
+    pub TAIMUTC_AT_TZERO: f64,
+    pub NEXT_LEAP_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NEXT_LEAP_TAIMUTC: f64,
+    pub UT1MUTC_AT_TZERO: f64,
+    pub EOP_SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTERP_METHOD_EOP: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CELESTIAL_SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for MetadataArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    MetadataArgs {
+      COMMENT: None,
+      OBJECT_NAME: None,
+      INTERNATIONAL_DESIGNATOR: None,
+      CATALOG_NAME: None,
+      OBJECT_DESIGNATOR: None,
+      ALTERNATE_NAMES: None,
+      ORIGINATOR_POC: None,
+      ORIGINATOR_POSITION: None,
+      ORIGINATOR_PHONE: None,
+      ORIGINATOR_EMAIL: None,
+      ORIGINATOR_ADDRESS: None,
+      TECH_ORG: None,
+      TECH_POC: None,
+      TECH_POSITION: None,
+      TECH_PHONE: None,
+      TECH_EMAIL: None,
+      TECH_ADDRESS: None,
+      PREVIOUS_MESSAGE_ID: None,
+      NEXT_MESSAGE_ID: None,
+      ADM_MSG_LINK: None,
+      CDM_MSG_LINK: None,
+      PRM_MSG_LINK: None,
+      RDM_MSG_LINK: None,
+      TDM_MSG_LINK: None,
+      OPERATOR: None,
+      OWNER: None,
+      COUNTRY: None,
+      CONSTELLATION: None,
+      OBJECT_TYPE: None,
+      TIME_SYSTEM: None,
+      EPOCH_TZERO: None,
+      OPS_STATUS: None,
+      ORBIT_CATEGORY: None,
+      OCM_DATA_ELEMENTS: None,
+      SCLK_OFFSET_AT_EPOCH: 0.0,
+      SCLK_SEC_PER_SI_SEC: 0.0,
+      PREVIOUS_MESSAGE_EPOCH: None,
+      NEXT_MESSAGE_EPOCH: None,
+      START_TIME: None,
+      STOP_TIME: None,
+      TIME_SPAN: 0.0,
+      TAIMUTC_AT_TZERO: 0.0,
+      NEXT_LEAP_EPOCH: None,
+      NEXT_LEAP_TAIMUTC: 0.0,
+      UT1MUTC_AT_TZERO: 0.0,
+      EOP_SOURCE: None,
+      INTERP_METHOD_EOP: None,
+      CELESTIAL_SOURCE: None,
+    }
+  }
+}
+
+pub struct MetadataBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MetadataBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_COMMENT, COMMENT);
+  }
+  #[inline]
+  pub fn add_OBJECT_NAME(&mut self, OBJECT_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_OBJECT_NAME, OBJECT_NAME);
+  }
+  #[inline]
+  pub fn add_INTERNATIONAL_DESIGNATOR(&mut self, INTERNATIONAL_DESIGNATOR: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_INTERNATIONAL_DESIGNATOR, INTERNATIONAL_DESIGNATOR);
+  }
+  #[inline]
+  pub fn add_CATALOG_NAME(&mut self, CATALOG_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_CATALOG_NAME, CATALOG_NAME);
+  }
+  #[inline]
+  pub fn add_OBJECT_DESIGNATOR(&mut self, OBJECT_DESIGNATOR: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
+  }
+  #[inline]
+  pub fn add_ALTERNATE_NAMES(&mut self, ALTERNATE_NAMES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_ALTERNATE_NAMES, ALTERNATE_NAMES);
+  }
+  #[inline]
+  pub fn add_ORIGINATOR_POC(&mut self, ORIGINATOR_POC: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_ORIGINATOR_POC, ORIGINATOR_POC);
+  }
+  #[inline]
+  pub fn add_ORIGINATOR_POSITION(&mut self, ORIGINATOR_POSITION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_ORIGINATOR_POSITION, ORIGINATOR_POSITION);
+  }
+  #[inline]
+  pub fn add_ORIGINATOR_PHONE(&mut self, ORIGINATOR_PHONE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_ORIGINATOR_PHONE, ORIGINATOR_PHONE);
+  }
+  #[inline]
+  pub fn add_ORIGINATOR_EMAIL(&mut self, ORIGINATOR_EMAIL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_ORIGINATOR_EMAIL, ORIGINATOR_EMAIL);
+  }
+  #[inline]
+  pub fn add_ORIGINATOR_ADDRESS(&mut self, ORIGINATOR_ADDRESS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_ORIGINATOR_ADDRESS, ORIGINATOR_ADDRESS);
+  }
+  #[inline]
+  pub fn add_TECH_ORG(&mut self, TECH_ORG: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_TECH_ORG, TECH_ORG);
+  }
+  #[inline]
+  pub fn add_TECH_POC(&mut self, TECH_POC: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_TECH_POC, TECH_POC);
+  }
+  #[inline]
+  pub fn add_TECH_POSITION(&mut self, TECH_POSITION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_TECH_POSITION, TECH_POSITION);
+  }
+  #[inline]
+  pub fn add_TECH_PHONE(&mut self, TECH_PHONE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_TECH_PHONE, TECH_PHONE);
+  }
+  #[inline]
+  pub fn add_TECH_EMAIL(&mut self, TECH_EMAIL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_TECH_EMAIL, TECH_EMAIL);
+  }
+  #[inline]
+  pub fn add_TECH_ADDRESS(&mut self, TECH_ADDRESS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_TECH_ADDRESS, TECH_ADDRESS);
+  }
+  #[inline]
+  pub fn add_PREVIOUS_MESSAGE_ID(&mut self, PREVIOUS_MESSAGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_PREVIOUS_MESSAGE_ID, PREVIOUS_MESSAGE_ID);
+  }
+  #[inline]
+  pub fn add_NEXT_MESSAGE_ID(&mut self, NEXT_MESSAGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_NEXT_MESSAGE_ID, NEXT_MESSAGE_ID);
+  }
+  #[inline]
+  pub fn add_ADM_MSG_LINK(&mut self, ADM_MSG_LINK: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_ADM_MSG_LINK, ADM_MSG_LINK);
+  }
+  #[inline]
+  pub fn add_CDM_MSG_LINK(&mut self, CDM_MSG_LINK: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_CDM_MSG_LINK, CDM_MSG_LINK);
+  }
+  #[inline]
+  pub fn add_PRM_MSG_LINK(&mut self, PRM_MSG_LINK: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_PRM_MSG_LINK, PRM_MSG_LINK);
+  }
+  #[inline]
+  pub fn add_RDM_MSG_LINK(&mut self, RDM_MSG_LINK: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_RDM_MSG_LINK, RDM_MSG_LINK);
+  }
+  #[inline]
+  pub fn add_TDM_MSG_LINK(&mut self, TDM_MSG_LINK: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_TDM_MSG_LINK, TDM_MSG_LINK);
+  }
+  #[inline]
+  pub fn add_OPERATOR(&mut self, OPERATOR: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_OPERATOR, OPERATOR);
+  }
+  #[inline]
+  pub fn add_OWNER(&mut self, OWNER: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_OWNER, OWNER);
+  }
+  #[inline]
+  pub fn add_COUNTRY(&mut self, COUNTRY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_COUNTRY, COUNTRY);
+  }
+  #[inline]
+  pub fn add_CONSTELLATION(&mut self, CONSTELLATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_CONSTELLATION, CONSTELLATION);
+  }
+  #[inline]
+  pub fn add_OBJECT_TYPE(&mut self, OBJECT_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_OBJECT_TYPE, OBJECT_TYPE);
+  }
+  #[inline]
+  pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_TIME_SYSTEM, TIME_SYSTEM);
+  }
+  #[inline]
+  pub fn add_EPOCH_TZERO(&mut self, EPOCH_TZERO: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_EPOCH_TZERO, EPOCH_TZERO);
+  }
+  #[inline]
+  pub fn add_OPS_STATUS(&mut self, OPS_STATUS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_OPS_STATUS, OPS_STATUS);
+  }
+  #[inline]
+  pub fn add_ORBIT_CATEGORY(&mut self, ORBIT_CATEGORY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_ORBIT_CATEGORY, ORBIT_CATEGORY);
+  }
+  #[inline]
+  pub fn add_OCM_DATA_ELEMENTS(&mut self, OCM_DATA_ELEMENTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_OCM_DATA_ELEMENTS, OCM_DATA_ELEMENTS);
+  }
+  #[inline]
+  pub fn add_SCLK_OFFSET_AT_EPOCH(&mut self, SCLK_OFFSET_AT_EPOCH: f64) {
+    self.fbb_.push_slot::<f64>(Metadata::VT_SCLK_OFFSET_AT_EPOCH, SCLK_OFFSET_AT_EPOCH, 0.0);
+  }
+  #[inline]
+  pub fn add_SCLK_SEC_PER_SI_SEC(&mut self, SCLK_SEC_PER_SI_SEC: f64) {
+    self.fbb_.push_slot::<f64>(Metadata::VT_SCLK_SEC_PER_SI_SEC, SCLK_SEC_PER_SI_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_PREVIOUS_MESSAGE_EPOCH(&mut self, PREVIOUS_MESSAGE_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_PREVIOUS_MESSAGE_EPOCH, PREVIOUS_MESSAGE_EPOCH);
+  }
+  #[inline]
+  pub fn add_NEXT_MESSAGE_EPOCH(&mut self, NEXT_MESSAGE_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_NEXT_MESSAGE_EPOCH, NEXT_MESSAGE_EPOCH);
+  }
+  #[inline]
+  pub fn add_START_TIME(&mut self, START_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_START_TIME, START_TIME);
+  }
+  #[inline]
+  pub fn add_STOP_TIME(&mut self, STOP_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_STOP_TIME, STOP_TIME);
+  }
+  #[inline]
+  pub fn add_TIME_SPAN(&mut self, TIME_SPAN: f64) {
+    self.fbb_.push_slot::<f64>(Metadata::VT_TIME_SPAN, TIME_SPAN, 0.0);
+  }
+  #[inline]
+  pub fn add_TAIMUTC_AT_TZERO(&mut self, TAIMUTC_AT_TZERO: f64) {
+    self.fbb_.push_slot::<f64>(Metadata::VT_TAIMUTC_AT_TZERO, TAIMUTC_AT_TZERO, 0.0);
+  }
+  #[inline]
+  pub fn add_NEXT_LEAP_EPOCH(&mut self, NEXT_LEAP_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_NEXT_LEAP_EPOCH, NEXT_LEAP_EPOCH);
+  }
+  #[inline]
+  pub fn add_NEXT_LEAP_TAIMUTC(&mut self, NEXT_LEAP_TAIMUTC: f64) {
+    self.fbb_.push_slot::<f64>(Metadata::VT_NEXT_LEAP_TAIMUTC, NEXT_LEAP_TAIMUTC, 0.0);
+  }
+  #[inline]
+  pub fn add_UT1MUTC_AT_TZERO(&mut self, UT1MUTC_AT_TZERO: f64) {
+    self.fbb_.push_slot::<f64>(Metadata::VT_UT1MUTC_AT_TZERO, UT1MUTC_AT_TZERO, 0.0);
+  }
+  #[inline]
+  pub fn add_EOP_SOURCE(&mut self, EOP_SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_EOP_SOURCE, EOP_SOURCE);
+  }
+  #[inline]
+  pub fn add_INTERP_METHOD_EOP(&mut self, INTERP_METHOD_EOP: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_INTERP_METHOD_EOP, INTERP_METHOD_EOP);
+  }
+  #[inline]
+  pub fn add_CELESTIAL_SOURCE(&mut self, CELESTIAL_SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Metadata::VT_CELESTIAL_SOURCE, CELESTIAL_SOURCE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> MetadataBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    MetadataBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<Metadata<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for Metadata<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("Metadata");
+      ds.field("COMMENT", &self.COMMENT());
+      ds.field("OBJECT_NAME", &self.OBJECT_NAME());
+      ds.field("INTERNATIONAL_DESIGNATOR", &self.INTERNATIONAL_DESIGNATOR());
+      ds.field("CATALOG_NAME", &self.CATALOG_NAME());
+      ds.field("OBJECT_DESIGNATOR", &self.OBJECT_DESIGNATOR());
+      ds.field("ALTERNATE_NAMES", &self.ALTERNATE_NAMES());
+      ds.field("ORIGINATOR_POC", &self.ORIGINATOR_POC());
+      ds.field("ORIGINATOR_POSITION", &self.ORIGINATOR_POSITION());
+      ds.field("ORIGINATOR_PHONE", &self.ORIGINATOR_PHONE());
+      ds.field("ORIGINATOR_EMAIL", &self.ORIGINATOR_EMAIL());
+      ds.field("ORIGINATOR_ADDRESS", &self.ORIGINATOR_ADDRESS());
+      ds.field("TECH_ORG", &self.TECH_ORG());
+      ds.field("TECH_POC", &self.TECH_POC());
+      ds.field("TECH_POSITION", &self.TECH_POSITION());
+      ds.field("TECH_PHONE", &self.TECH_PHONE());
+      ds.field("TECH_EMAIL", &self.TECH_EMAIL());
+      ds.field("TECH_ADDRESS", &self.TECH_ADDRESS());
+      ds.field("PREVIOUS_MESSAGE_ID", &self.PREVIOUS_MESSAGE_ID());
+      ds.field("NEXT_MESSAGE_ID", &self.NEXT_MESSAGE_ID());
+      ds.field("ADM_MSG_LINK", &self.ADM_MSG_LINK());
+      ds.field("CDM_MSG_LINK", &self.CDM_MSG_LINK());
+      ds.field("PRM_MSG_LINK", &self.PRM_MSG_LINK());
+      ds.field("RDM_MSG_LINK", &self.RDM_MSG_LINK());
+      ds.field("TDM_MSG_LINK", &self.TDM_MSG_LINK());
+      ds.field("OPERATOR", &self.OPERATOR());
+      ds.field("OWNER", &self.OWNER());
+      ds.field("COUNTRY", &self.COUNTRY());
+      ds.field("CONSTELLATION", &self.CONSTELLATION());
+      ds.field("OBJECT_TYPE", &self.OBJECT_TYPE());
+      ds.field("TIME_SYSTEM", &self.TIME_SYSTEM());
+      ds.field("EPOCH_TZERO", &self.EPOCH_TZERO());
+      ds.field("OPS_STATUS", &self.OPS_STATUS());
+      ds.field("ORBIT_CATEGORY", &self.ORBIT_CATEGORY());
+      ds.field("OCM_DATA_ELEMENTS", &self.OCM_DATA_ELEMENTS());
+      ds.field("SCLK_OFFSET_AT_EPOCH", &self.SCLK_OFFSET_AT_EPOCH());
+      ds.field("SCLK_SEC_PER_SI_SEC", &self.SCLK_SEC_PER_SI_SEC());
+      ds.field("PREVIOUS_MESSAGE_EPOCH", &self.PREVIOUS_MESSAGE_EPOCH());
+      ds.field("NEXT_MESSAGE_EPOCH", &self.NEXT_MESSAGE_EPOCH());
+      ds.field("START_TIME", &self.START_TIME());
+      ds.field("STOP_TIME", &self.STOP_TIME());
+      ds.field("TIME_SPAN", &self.TIME_SPAN());
+      ds.field("TAIMUTC_AT_TZERO", &self.TAIMUTC_AT_TZERO());
+      ds.field("NEXT_LEAP_EPOCH", &self.NEXT_LEAP_EPOCH());
+      ds.field("NEXT_LEAP_TAIMUTC", &self.NEXT_LEAP_TAIMUTC());
+      ds.field("UT1MUTC_AT_TZERO", &self.UT1MUTC_AT_TZERO());
+      ds.field("EOP_SOURCE", &self.EOP_SOURCE());
+      ds.field("INTERP_METHOD_EOP", &self.INTERP_METHOD_EOP());
+      ds.field("CELESTIAL_SOURCE", &self.CELESTIAL_SOURCE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct MetadataT {
+  pub COMMENT: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub OBJECT_NAME: Option<alloc::string::String>,
+  pub INTERNATIONAL_DESIGNATOR: Option<alloc::string::String>,
+  pub CATALOG_NAME: Option<alloc::string::String>,
+  pub OBJECT_DESIGNATOR: Option<alloc::string::String>,
+  pub ALTERNATE_NAMES: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub ORIGINATOR_POC: Option<alloc::string::String>,
+  pub ORIGINATOR_POSITION: Option<alloc::string::String>,
+  pub ORIGINATOR_PHONE: Option<alloc::string::String>,
+  pub ORIGINATOR_EMAIL: Option<alloc::string::String>,
+  pub ORIGINATOR_ADDRESS: Option<alloc::string::String>,
+  pub TECH_ORG: Option<alloc::string::String>,
+  pub TECH_POC: Option<alloc::string::String>,
+  pub TECH_POSITION: Option<alloc::string::String>,
+  pub TECH_PHONE: Option<alloc::string::String>,
+  pub TECH_EMAIL: Option<alloc::string::String>,
+  pub TECH_ADDRESS: Option<alloc::string::String>,
+  pub PREVIOUS_MESSAGE_ID: Option<alloc::string::String>,
+  pub NEXT_MESSAGE_ID: Option<alloc::string::String>,
+  pub ADM_MSG_LINK: Option<alloc::string::String>,
+  pub CDM_MSG_LINK: Option<alloc::string::String>,
+  pub PRM_MSG_LINK: Option<alloc::string::String>,
+  pub RDM_MSG_LINK: Option<alloc::string::String>,
+  pub TDM_MSG_LINK: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub OPERATOR: Option<alloc::string::String>,
+  pub OWNER: Option<alloc::string::String>,
+  pub COUNTRY: Option<alloc::string::String>,
+  pub CONSTELLATION: Option<alloc::string::String>,
+  pub OBJECT_TYPE: Option<alloc::string::String>,
+  pub TIME_SYSTEM: Option<alloc::string::String>,
+  pub EPOCH_TZERO: Option<alloc::string::String>,
+  pub OPS_STATUS: Option<alloc::string::String>,
+  pub ORBIT_CATEGORY: Option<alloc::string::String>,
+  pub OCM_DATA_ELEMENTS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub SCLK_OFFSET_AT_EPOCH: f64,
+  pub SCLK_SEC_PER_SI_SEC: f64,
+  pub PREVIOUS_MESSAGE_EPOCH: Option<alloc::string::String>,
+  pub NEXT_MESSAGE_EPOCH: Option<alloc::string::String>,
+  pub START_TIME: Option<alloc::string::String>,
+  pub STOP_TIME: Option<alloc::string::String>,
+  pub TIME_SPAN: f64,
+  pub TAIMUTC_AT_TZERO: f64,
+  pub NEXT_LEAP_EPOCH: Option<alloc::string::String>,
+  pub NEXT_LEAP_TAIMUTC: f64,
+  pub UT1MUTC_AT_TZERO: f64,
+  pub EOP_SOURCE: Option<alloc::string::String>,
+  pub INTERP_METHOD_EOP: Option<alloc::string::String>,
+  pub CELESTIAL_SOURCE: Option<alloc::string::String>,
+}
+impl Default for MetadataT {
+  fn default() -> Self {
+    Self {
+      COMMENT: None,
+      OBJECT_NAME: None,
+      INTERNATIONAL_DESIGNATOR: None,
+      CATALOG_NAME: None,
+      OBJECT_DESIGNATOR: None,
+      ALTERNATE_NAMES: None,
+      ORIGINATOR_POC: None,
+      ORIGINATOR_POSITION: None,
+      ORIGINATOR_PHONE: None,
+      ORIGINATOR_EMAIL: None,
+      ORIGINATOR_ADDRESS: None,
+      TECH_ORG: None,
+      TECH_POC: None,
+      TECH_POSITION: None,
+      TECH_PHONE: None,
+      TECH_EMAIL: None,
+      TECH_ADDRESS: None,
+      PREVIOUS_MESSAGE_ID: None,
+      NEXT_MESSAGE_ID: None,
+      ADM_MSG_LINK: None,
+      CDM_MSG_LINK: None,
+      PRM_MSG_LINK: None,
+      RDM_MSG_LINK: None,
+      TDM_MSG_LINK: None,
+      OPERATOR: None,
+      OWNER: None,
+      COUNTRY: None,
+      CONSTELLATION: None,
+      OBJECT_TYPE: None,
+      TIME_SYSTEM: None,
+      EPOCH_TZERO: None,
+      OPS_STATUS: None,
+      ORBIT_CATEGORY: None,
+      OCM_DATA_ELEMENTS: None,
+      SCLK_OFFSET_AT_EPOCH: 0.0,
+      SCLK_SEC_PER_SI_SEC: 0.0,
+      PREVIOUS_MESSAGE_EPOCH: None,
+      NEXT_MESSAGE_EPOCH: None,
+      START_TIME: None,
+      STOP_TIME: None,
+      TIME_SPAN: 0.0,
+      TAIMUTC_AT_TZERO: 0.0,
+      NEXT_LEAP_EPOCH: None,
+      NEXT_LEAP_TAIMUTC: 0.0,
+      UT1MUTC_AT_TZERO: 0.0,
+      EOP_SOURCE: None,
+      INTERP_METHOD_EOP: None,
+      CELESTIAL_SOURCE: None,
+    }
+  }
+}
+impl MetadataT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<Metadata<'b>> {
+    let COMMENT = self.COMMENT.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let OBJECT_NAME = self.OBJECT_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INTERNATIONAL_DESIGNATOR = self.INTERNATIONAL_DESIGNATOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CATALOG_NAME = self.CATALOG_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ALTERNATE_NAMES = self.ALTERNATE_NAMES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let ORIGINATOR_POC = self.ORIGINATOR_POC.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIGINATOR_POSITION = self.ORIGINATOR_POSITION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIGINATOR_PHONE = self.ORIGINATOR_PHONE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIGINATOR_EMAIL = self.ORIGINATOR_EMAIL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIGINATOR_ADDRESS = self.ORIGINATOR_ADDRESS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TECH_ORG = self.TECH_ORG.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TECH_POC = self.TECH_POC.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TECH_POSITION = self.TECH_POSITION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TECH_PHONE = self.TECH_PHONE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TECH_EMAIL = self.TECH_EMAIL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TECH_ADDRESS = self.TECH_ADDRESS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PREVIOUS_MESSAGE_ID = self.PREVIOUS_MESSAGE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NEXT_MESSAGE_ID = self.NEXT_MESSAGE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ADM_MSG_LINK = self.ADM_MSG_LINK.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CDM_MSG_LINK = self.CDM_MSG_LINK.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PRM_MSG_LINK = self.PRM_MSG_LINK.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let RDM_MSG_LINK = self.RDM_MSG_LINK.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TDM_MSG_LINK = self.TDM_MSG_LINK.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let OPERATOR = self.OPERATOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OWNER = self.OWNER.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COUNTRY = self.COUNTRY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CONSTELLATION = self.CONSTELLATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OBJECT_TYPE = self.OBJECT_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TIME_SYSTEM = self.TIME_SYSTEM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPOCH_TZERO = self.EPOCH_TZERO.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OPS_STATUS = self.OPS_STATUS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORBIT_CATEGORY = self.ORBIT_CATEGORY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OCM_DATA_ELEMENTS = self.OCM_DATA_ELEMENTS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let SCLK_OFFSET_AT_EPOCH = self.SCLK_OFFSET_AT_EPOCH;
+    let SCLK_SEC_PER_SI_SEC = self.SCLK_SEC_PER_SI_SEC;
+    let PREVIOUS_MESSAGE_EPOCH = self.PREVIOUS_MESSAGE_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NEXT_MESSAGE_EPOCH = self.NEXT_MESSAGE_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let START_TIME = self.START_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let STOP_TIME = self.STOP_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TIME_SPAN = self.TIME_SPAN;
+    let TAIMUTC_AT_TZERO = self.TAIMUTC_AT_TZERO;
+    let NEXT_LEAP_EPOCH = self.NEXT_LEAP_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NEXT_LEAP_TAIMUTC = self.NEXT_LEAP_TAIMUTC;
+    let UT1MUTC_AT_TZERO = self.UT1MUTC_AT_TZERO;
+    let EOP_SOURCE = self.EOP_SOURCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INTERP_METHOD_EOP = self.INTERP_METHOD_EOP.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CELESTIAL_SOURCE = self.CELESTIAL_SOURCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    Metadata::create(_fbb, &MetadataArgs{
+      COMMENT,
+      OBJECT_NAME,
+      INTERNATIONAL_DESIGNATOR,
+      CATALOG_NAME,
+      OBJECT_DESIGNATOR,
+      ALTERNATE_NAMES,
+      ORIGINATOR_POC,
+      ORIGINATOR_POSITION,
+      ORIGINATOR_PHONE,
+      ORIGINATOR_EMAIL,
+      ORIGINATOR_ADDRESS,
+      TECH_ORG,
+      TECH_POC,
+      TECH_POSITION,
+      TECH_PHONE,
+      TECH_EMAIL,
+      TECH_ADDRESS,
+      PREVIOUS_MESSAGE_ID,
+      NEXT_MESSAGE_ID,
+      ADM_MSG_LINK,
+      CDM_MSG_LINK,
+      PRM_MSG_LINK,
+      RDM_MSG_LINK,
+      TDM_MSG_LINK,
+      OPERATOR,
+      OWNER,
+      COUNTRY,
+      CONSTELLATION,
+      OBJECT_TYPE,
+      TIME_SYSTEM,
+      EPOCH_TZERO,
+      OPS_STATUS,
+      ORBIT_CATEGORY,
+      OCM_DATA_ELEMENTS,
+      SCLK_OFFSET_AT_EPOCH,
+      SCLK_SEC_PER_SI_SEC,
+      PREVIOUS_MESSAGE_EPOCH,
+      NEXT_MESSAGE_EPOCH,
+      START_TIME,
+      STOP_TIME,
+      TIME_SPAN,
+      TAIMUTC_AT_TZERO,
+      NEXT_LEAP_EPOCH,
+      NEXT_LEAP_TAIMUTC,
+      UT1MUTC_AT_TZERO,
+      EOP_SOURCE,
+      INTERP_METHOD_EOP,
+      CELESTIAL_SOURCE,
+    })
+  }
+}
+pub enum StateVectorOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct StateVector<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for StateVector<'a> {
+  type Inner = StateVector<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> StateVector<'a> {
+  pub const VT_EPOCH: ::flatbuffers::VOffsetT = 4;
+  pub const VT_X: ::flatbuffers::VOffsetT = 6;
+  pub const VT_Y: ::flatbuffers::VOffsetT = 8;
+  pub const VT_Z: ::flatbuffers::VOffsetT = 10;
+  pub const VT_X_DOT: ::flatbuffers::VOffsetT = 12;
+  pub const VT_Y_DOT: ::flatbuffers::VOffsetT = 14;
+  pub const VT_Z_DOT: ::flatbuffers::VOffsetT = 16;
+  pub const VT_X_DDOT: ::flatbuffers::VOffsetT = 18;
+  pub const VT_Y_DDOT: ::flatbuffers::VOffsetT = 20;
+  pub const VT_Z_DDOT: ::flatbuffers::VOffsetT = 22;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    StateVector { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args StateVectorArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<StateVector<'bldr>> {
+    let mut builder = StateVectorBuilder::new(_fbb);
+    builder.add_Z_DDOT(args.Z_DDOT);
+    builder.add_Y_DDOT(args.Y_DDOT);
+    builder.add_X_DDOT(args.X_DDOT);
+    builder.add_Z_DOT(args.Z_DOT);
+    builder.add_Y_DOT(args.Y_DOT);
+    builder.add_X_DOT(args.X_DOT);
+    builder.add_Z(args.Z);
+    builder.add_Y(args.Y);
+    builder.add_X(args.X);
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> StateVectorT {
+    let EPOCH = self.EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let X = self.X();
+    let Y = self.Y();
+    let Z = self.Z();
+    let X_DOT = self.X_DOT();
+    let Y_DOT = self.Y_DOT();
+    let Z_DOT = self.Z_DOT();
+    let X_DDOT = self.X_DDOT();
+    let Y_DDOT = self.Y_DDOT();
+    let Z_DDOT = self.Z_DDOT();
+    StateVectorT {
+      EPOCH,
+      X,
+      Y,
+      Z,
+      X_DOT,
+      Y_DOT,
+      Z_DOT,
+      X_DDOT,
+      Y_DDOT,
+      Z_DDOT,
+    }
+  }
+
+  /// Epoch of the state vector.
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(StateVector::VT_EPOCH, None)}
+  }
+  /// X component of position in the specified reference frame.
+  #[inline]
+  pub fn X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(StateVector::VT_X, Some(0.0)).unwrap()}
+  }
+  /// Y component of position.
+  #[inline]
+  pub fn Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(StateVector::VT_Y, Some(0.0)).unwrap()}
+  }
+  /// Z component of position.
+  #[inline]
+  pub fn Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(StateVector::VT_Z, Some(0.0)).unwrap()}
+  }
+  /// X component of velocity.
+  #[inline]
+  pub fn X_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(StateVector::VT_X_DOT, Some(0.0)).unwrap()}
+  }
+  /// Y component of velocity.
+  #[inline]
+  pub fn Y_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(StateVector::VT_Y_DOT, Some(0.0)).unwrap()}
+  }
+  /// Z component of velocity.
+  #[inline]
+  pub fn Z_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(StateVector::VT_Z_DOT, Some(0.0)).unwrap()}
+  }
+  /// X component of acceleration.
+  #[inline]
+  pub fn X_DDOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(StateVector::VT_X_DDOT, Some(0.0)).unwrap()}
+  }
+  /// Y component of acceleration.
+  #[inline]
+  pub fn Y_DDOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(StateVector::VT_Y_DDOT, Some(0.0)).unwrap()}
+  }
+  /// Z component of acceleration.
+  #[inline]
+  pub fn Z_DDOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(StateVector::VT_Z_DDOT, Some(0.0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for StateVector<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<f64>("X", Self::VT_X, false)?
+     .visit_field::<f64>("Y", Self::VT_Y, false)?
+     .visit_field::<f64>("Z", Self::VT_Z, false)?
+     .visit_field::<f64>("X_DOT", Self::VT_X_DOT, false)?
+     .visit_field::<f64>("Y_DOT", Self::VT_Y_DOT, false)?
+     .visit_field::<f64>("Z_DOT", Self::VT_Z_DOT, false)?
+     .visit_field::<f64>("X_DDOT", Self::VT_X_DDOT, false)?
+     .visit_field::<f64>("Y_DDOT", Self::VT_Y_DDOT, false)?
+     .visit_field::<f64>("Z_DDOT", Self::VT_Z_DDOT, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct StateVectorArgs<'a> {
+    pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub X: f64,
+    pub Y: f64,
+    pub Z: f64,
+    pub X_DOT: f64,
+    pub Y_DOT: f64,
+    pub Z_DOT: f64,
+    pub X_DDOT: f64,
+    pub Y_DDOT: f64,
+    pub Z_DDOT: f64,
+}
+impl<'a> Default for StateVectorArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    StateVectorArgs {
+      EPOCH: None,
+      X: 0.0,
+      Y: 0.0,
+      Z: 0.0,
+      X_DOT: 0.0,
+      Y_DOT: 0.0,
+      Z_DOT: 0.0,
+      X_DDOT: 0.0,
+      Y_DDOT: 0.0,
+      Z_DDOT: 0.0,
+    }
+  }
+}
+
+pub struct StateVectorBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> StateVectorBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(StateVector::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_X(&mut self, X: f64) {
+    self.fbb_.push_slot::<f64>(StateVector::VT_X, X, 0.0);
+  }
+  #[inline]
+  pub fn add_Y(&mut self, Y: f64) {
+    self.fbb_.push_slot::<f64>(StateVector::VT_Y, Y, 0.0);
+  }
+  #[inline]
+  pub fn add_Z(&mut self, Z: f64) {
+    self.fbb_.push_slot::<f64>(StateVector::VT_Z, Z, 0.0);
+  }
+  #[inline]
+  pub fn add_X_DOT(&mut self, X_DOT: f64) {
+    self.fbb_.push_slot::<f64>(StateVector::VT_X_DOT, X_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_Y_DOT(&mut self, Y_DOT: f64) {
+    self.fbb_.push_slot::<f64>(StateVector::VT_Y_DOT, Y_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_Z_DOT(&mut self, Z_DOT: f64) {
+    self.fbb_.push_slot::<f64>(StateVector::VT_Z_DOT, Z_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_X_DDOT(&mut self, X_DDOT: f64) {
+    self.fbb_.push_slot::<f64>(StateVector::VT_X_DDOT, X_DDOT, 0.0);
+  }
+  #[inline]
+  pub fn add_Y_DDOT(&mut self, Y_DDOT: f64) {
+    self.fbb_.push_slot::<f64>(StateVector::VT_Y_DDOT, Y_DDOT, 0.0);
+  }
+  #[inline]
+  pub fn add_Z_DDOT(&mut self, Z_DDOT: f64) {
+    self.fbb_.push_slot::<f64>(StateVector::VT_Z_DDOT, Z_DDOT, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> StateVectorBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    StateVectorBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<StateVector<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for StateVector<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("StateVector");
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("X", &self.X());
+      ds.field("Y", &self.Y());
+      ds.field("Z", &self.Z());
+      ds.field("X_DOT", &self.X_DOT());
+      ds.field("Y_DOT", &self.Y_DOT());
+      ds.field("Z_DOT", &self.Z_DOT());
+      ds.field("X_DDOT", &self.X_DDOT());
+      ds.field("Y_DDOT", &self.Y_DDOT());
+      ds.field("Z_DDOT", &self.Z_DDOT());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct StateVectorT {
+  pub EPOCH: Option<alloc::string::String>,
+  pub X: f64,
+  pub Y: f64,
+  pub Z: f64,
+  pub X_DOT: f64,
+  pub Y_DOT: f64,
+  pub Z_DOT: f64,
+  pub X_DDOT: f64,
+  pub Y_DDOT: f64,
+  pub Z_DDOT: f64,
+}
+impl Default for StateVectorT {
+  fn default() -> Self {
+    Self {
+      EPOCH: None,
+      X: 0.0,
+      Y: 0.0,
+      Z: 0.0,
+      X_DOT: 0.0,
+      Y_DOT: 0.0,
+      Z_DOT: 0.0,
+      X_DDOT: 0.0,
+      Y_DDOT: 0.0,
+      Z_DDOT: 0.0,
+    }
+  }
+}
+impl StateVectorT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<StateVector<'b>> {
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let X = self.X;
+    let Y = self.Y;
+    let Z = self.Z;
+    let X_DOT = self.X_DOT;
+    let Y_DOT = self.Y_DOT;
+    let Z_DOT = self.Z_DOT;
+    let X_DDOT = self.X_DDOT;
+    let Y_DDOT = self.Y_DDOT;
+    let Z_DDOT = self.Z_DDOT;
+    StateVector::create(_fbb, &StateVectorArgs{
+      EPOCH,
+      X,
+      Y,
+      Z,
+      X_DOT,
+      Y_DOT,
+      Z_DOT,
+      X_DDOT,
+      Y_DDOT,
+      Z_DDOT,
+    })
+  }
+}
+pub enum PhysicalPropertiesOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct PhysicalProperties<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PhysicalProperties<'a> {
+  type Inner = PhysicalProperties<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PhysicalProperties<'a> {
+  pub const VT_COMMENT: ::flatbuffers::VOffsetT = 4;
+  pub const VT_WET_MASS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_DRY_MASS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MASS_UNITS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_OEB_Q1: ::flatbuffers::VOffsetT = 12;
+  pub const VT_OEB_Q2: ::flatbuffers::VOffsetT = 14;
+  pub const VT_OEB_Q3: ::flatbuffers::VOffsetT = 16;
+  pub const VT_OEB_QC: ::flatbuffers::VOffsetT = 18;
+  pub const VT_OEB_MAX: ::flatbuffers::VOffsetT = 20;
+  pub const VT_OEB_INT: ::flatbuffers::VOffsetT = 22;
+  pub const VT_OEB_MIN: ::flatbuffers::VOffsetT = 24;
+  pub const VT_AREA_ALONG_OEB_MAX: ::flatbuffers::VOffsetT = 26;
+  pub const VT_AREA_ALONG_OEB_INT: ::flatbuffers::VOffsetT = 28;
+  pub const VT_AREA_ALONG_OEB_MIN: ::flatbuffers::VOffsetT = 30;
+  pub const VT_AREA_UNITS: ::flatbuffers::VOffsetT = 32;
+  pub const VT_DRAG_CONST_AREA: ::flatbuffers::VOffsetT = 34;
+  pub const VT_DRAG_COEFF_NOM: ::flatbuffers::VOffsetT = 36;
+  pub const VT_DRAG_UNCERTAINTY: ::flatbuffers::VOffsetT = 38;
+  pub const VT_SRP_CONST_AREA: ::flatbuffers::VOffsetT = 40;
+  pub const VT_SOLAR_RAD_COEFF: ::flatbuffers::VOffsetT = 42;
+  pub const VT_SRP_UNCERTAINTY: ::flatbuffers::VOffsetT = 44;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PhysicalProperties { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PhysicalPropertiesArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PhysicalProperties<'bldr>> {
+    let mut builder = PhysicalPropertiesBuilder::new(_fbb);
+    builder.add_SRP_UNCERTAINTY(args.SRP_UNCERTAINTY);
+    builder.add_SOLAR_RAD_COEFF(args.SOLAR_RAD_COEFF);
+    builder.add_SRP_CONST_AREA(args.SRP_CONST_AREA);
+    builder.add_DRAG_UNCERTAINTY(args.DRAG_UNCERTAINTY);
+    builder.add_DRAG_COEFF_NOM(args.DRAG_COEFF_NOM);
+    builder.add_DRAG_CONST_AREA(args.DRAG_CONST_AREA);
+    builder.add_AREA_ALONG_OEB_MIN(args.AREA_ALONG_OEB_MIN);
+    builder.add_AREA_ALONG_OEB_INT(args.AREA_ALONG_OEB_INT);
+    builder.add_AREA_ALONG_OEB_MAX(args.AREA_ALONG_OEB_MAX);
+    builder.add_OEB_MIN(args.OEB_MIN);
+    builder.add_OEB_INT(args.OEB_INT);
+    builder.add_OEB_MAX(args.OEB_MAX);
+    builder.add_OEB_QC(args.OEB_QC);
+    builder.add_OEB_Q3(args.OEB_Q3);
+    builder.add_OEB_Q2(args.OEB_Q2);
+    builder.add_OEB_Q1(args.OEB_Q1);
+    builder.add_DRY_MASS(args.DRY_MASS);
+    builder.add_WET_MASS(args.WET_MASS);
+    if let Some(x) = args.AREA_UNITS { builder.add_AREA_UNITS(x); }
+    if let Some(x) = args.MASS_UNITS { builder.add_MASS_UNITS(x); }
+    if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PhysicalPropertiesT {
+    let COMMENT = self.COMMENT().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let WET_MASS = self.WET_MASS();
+    let DRY_MASS = self.DRY_MASS();
+    let MASS_UNITS = self.MASS_UNITS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OEB_Q1 = self.OEB_Q1();
+    let OEB_Q2 = self.OEB_Q2();
+    let OEB_Q3 = self.OEB_Q3();
+    let OEB_QC = self.OEB_QC();
+    let OEB_MAX = self.OEB_MAX();
+    let OEB_INT = self.OEB_INT();
+    let OEB_MIN = self.OEB_MIN();
+    let AREA_ALONG_OEB_MAX = self.AREA_ALONG_OEB_MAX();
+    let AREA_ALONG_OEB_INT = self.AREA_ALONG_OEB_INT();
+    let AREA_ALONG_OEB_MIN = self.AREA_ALONG_OEB_MIN();
+    let AREA_UNITS = self.AREA_UNITS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DRAG_CONST_AREA = self.DRAG_CONST_AREA();
+    let DRAG_COEFF_NOM = self.DRAG_COEFF_NOM();
+    let DRAG_UNCERTAINTY = self.DRAG_UNCERTAINTY();
+    let SRP_CONST_AREA = self.SRP_CONST_AREA();
+    let SOLAR_RAD_COEFF = self.SOLAR_RAD_COEFF();
+    let SRP_UNCERTAINTY = self.SRP_UNCERTAINTY();
+    PhysicalPropertiesT {
+      COMMENT,
+      WET_MASS,
+      DRY_MASS,
+      MASS_UNITS,
+      OEB_Q1,
+      OEB_Q2,
+      OEB_Q3,
+      OEB_QC,
+      OEB_MAX,
+      OEB_INT,
+      OEB_MIN,
+      AREA_ALONG_OEB_MAX,
+      AREA_ALONG_OEB_INT,
+      AREA_ALONG_OEB_MIN,
+      AREA_UNITS,
+      DRAG_CONST_AREA,
+      DRAG_COEFF_NOM,
+      DRAG_UNCERTAINTY,
+      SRP_CONST_AREA,
+      SOLAR_RAD_COEFF,
+      SRP_UNCERTAINTY,
+    }
+  }
+
+  /// Comments in the Physical Properties section.
+  #[inline]
+  pub fn COMMENT(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PhysicalProperties::VT_COMMENT, None)}
+  }
+  /// Wet mass of the space object.
+  #[inline]
+  pub fn WET_MASS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_WET_MASS, Some(0.0)).unwrap()}
+  }
+  /// Dry mass of the space object.
+  #[inline]
+  pub fn DRY_MASS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_DRY_MASS, Some(0.0)).unwrap()}
+  }
+  /// Units for mass values.
+  #[inline]
+  pub fn MASS_UNITS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PhysicalProperties::VT_MASS_UNITS, None)}
+  }
+  /// Quaternion component q1 of orientation from OEB to EME2000.
+  #[inline]
+  pub fn OEB_Q1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_OEB_Q1, Some(0.0)).unwrap()}
+  }
+  /// Quaternion component q2.
+  #[inline]
+  pub fn OEB_Q2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_OEB_Q2, Some(0.0)).unwrap()}
+  }
+  /// Quaternion component q3.
+  #[inline]
+  pub fn OEB_Q3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_OEB_Q3, Some(0.0)).unwrap()}
+  }
+  /// Quaternion scalar component qc.
+  #[inline]
+  pub fn OEB_QC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_OEB_QC, Some(0.0)).unwrap()}
+  }
+  /// Maximum dimension of the object along OEB frame axes.
+  #[inline]
+  pub fn OEB_MAX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_OEB_MAX, Some(0.0)).unwrap()}
+  }
+  /// Intermediate dimension along OEB frame axes.
+  #[inline]
+  pub fn OEB_INT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_OEB_INT, Some(0.0)).unwrap()}
+  }
+  /// Minimum dimension of the object along OEB frame axes.
+  #[inline]
+  pub fn OEB_MIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_OEB_MIN, Some(0.0)).unwrap()}
+  }
+  /// Area along OEB_MAX axis.
+  #[inline]
+  pub fn AREA_ALONG_OEB_MAX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_AREA_ALONG_OEB_MAX, Some(0.0)).unwrap()}
+  }
+  /// Area along OEB_INT axis.
+  #[inline]
+  pub fn AREA_ALONG_OEB_INT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_AREA_ALONG_OEB_INT, Some(0.0)).unwrap()}
+  }
+  /// Area along OEB_MIN axis.
+  #[inline]
+  pub fn AREA_ALONG_OEB_MIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_AREA_ALONG_OEB_MIN, Some(0.0)).unwrap()}
+  }
+  /// Units for area values.
+  #[inline]
+  pub fn AREA_UNITS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PhysicalProperties::VT_AREA_UNITS, None)}
+  }
+  /// Constant area for drag computations.
+  #[inline]
+  pub fn DRAG_CONST_AREA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_DRAG_CONST_AREA, Some(0.0)).unwrap()}
+  }
+  /// Nominal drag coefficient.
+  #[inline]
+  pub fn DRAG_COEFF_NOM(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_DRAG_COEFF_NOM, Some(0.0)).unwrap()}
+  }
+  /// Uncertainty in the drag coefficient.
+  #[inline]
+  pub fn DRAG_UNCERTAINTY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_DRAG_UNCERTAINTY, Some(0.0)).unwrap()}
+  }
+  /// Constant area for solar radiation pressure computations.
+  #[inline]
+  pub fn SRP_CONST_AREA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_SRP_CONST_AREA, Some(0.0)).unwrap()}
+  }
+  /// Nominal solar radiation pressure coefficient.
+  #[inline]
+  pub fn SOLAR_RAD_COEFF(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_SOLAR_RAD_COEFF, Some(0.0)).unwrap()}
+  }
+  /// Uncertainty in the solar radiation pressure coefficient.
+  #[inline]
+  pub fn SRP_UNCERTAINTY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(PhysicalProperties::VT_SRP_UNCERTAINTY, Some(0.0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PhysicalProperties<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
+     .visit_field::<f64>("WET_MASS", Self::VT_WET_MASS, false)?
+     .visit_field::<f64>("DRY_MASS", Self::VT_DRY_MASS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MASS_UNITS", Self::VT_MASS_UNITS, false)?
+     .visit_field::<f64>("OEB_Q1", Self::VT_OEB_Q1, false)?
+     .visit_field::<f64>("OEB_Q2", Self::VT_OEB_Q2, false)?
+     .visit_field::<f64>("OEB_Q3", Self::VT_OEB_Q3, false)?
+     .visit_field::<f64>("OEB_QC", Self::VT_OEB_QC, false)?
+     .visit_field::<f64>("OEB_MAX", Self::VT_OEB_MAX, false)?
+     .visit_field::<f64>("OEB_INT", Self::VT_OEB_INT, false)?
+     .visit_field::<f64>("OEB_MIN", Self::VT_OEB_MIN, false)?
+     .visit_field::<f64>("AREA_ALONG_OEB_MAX", Self::VT_AREA_ALONG_OEB_MAX, false)?
+     .visit_field::<f64>("AREA_ALONG_OEB_INT", Self::VT_AREA_ALONG_OEB_INT, false)?
+     .visit_field::<f64>("AREA_ALONG_OEB_MIN", Self::VT_AREA_ALONG_OEB_MIN, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("AREA_UNITS", Self::VT_AREA_UNITS, false)?
+     .visit_field::<f64>("DRAG_CONST_AREA", Self::VT_DRAG_CONST_AREA, false)?
+     .visit_field::<f64>("DRAG_COEFF_NOM", Self::VT_DRAG_COEFF_NOM, false)?
+     .visit_field::<f64>("DRAG_UNCERTAINTY", Self::VT_DRAG_UNCERTAINTY, false)?
+     .visit_field::<f64>("SRP_CONST_AREA", Self::VT_SRP_CONST_AREA, false)?
+     .visit_field::<f64>("SOLAR_RAD_COEFF", Self::VT_SOLAR_RAD_COEFF, false)?
+     .visit_field::<f64>("SRP_UNCERTAINTY", Self::VT_SRP_UNCERTAINTY, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PhysicalPropertiesArgs<'a> {
+    pub COMMENT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub WET_MASS: f64,
+    pub DRY_MASS: f64,
+    pub MASS_UNITS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OEB_Q1: f64,
+    pub OEB_Q2: f64,
+    pub OEB_Q3: f64,
+    pub OEB_QC: f64,
+    pub OEB_MAX: f64,
+    pub OEB_INT: f64,
+    pub OEB_MIN: f64,
+    pub AREA_ALONG_OEB_MAX: f64,
+    pub AREA_ALONG_OEB_INT: f64,
+    pub AREA_ALONG_OEB_MIN: f64,
+    pub AREA_UNITS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DRAG_CONST_AREA: f64,
+    pub DRAG_COEFF_NOM: f64,
+    pub DRAG_UNCERTAINTY: f64,
+    pub SRP_CONST_AREA: f64,
+    pub SOLAR_RAD_COEFF: f64,
+    pub SRP_UNCERTAINTY: f64,
+}
+impl<'a> Default for PhysicalPropertiesArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PhysicalPropertiesArgs {
+      COMMENT: None,
+      WET_MASS: 0.0,
+      DRY_MASS: 0.0,
+      MASS_UNITS: None,
+      OEB_Q1: 0.0,
+      OEB_Q2: 0.0,
+      OEB_Q3: 0.0,
+      OEB_QC: 0.0,
+      OEB_MAX: 0.0,
+      OEB_INT: 0.0,
+      OEB_MIN: 0.0,
+      AREA_ALONG_OEB_MAX: 0.0,
+      AREA_ALONG_OEB_INT: 0.0,
+      AREA_ALONG_OEB_MIN: 0.0,
+      AREA_UNITS: None,
+      DRAG_CONST_AREA: 0.0,
+      DRAG_COEFF_NOM: 0.0,
+      DRAG_UNCERTAINTY: 0.0,
+      SRP_CONST_AREA: 0.0,
+      SOLAR_RAD_COEFF: 0.0,
+      SRP_UNCERTAINTY: 0.0,
+    }
+  }
+}
+
+pub struct PhysicalPropertiesBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PhysicalPropertiesBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PhysicalProperties::VT_COMMENT, COMMENT);
+  }
+  #[inline]
+  pub fn add_WET_MASS(&mut self, WET_MASS: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_WET_MASS, WET_MASS, 0.0);
+  }
+  #[inline]
+  pub fn add_DRY_MASS(&mut self, DRY_MASS: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_DRY_MASS, DRY_MASS, 0.0);
+  }
+  #[inline]
+  pub fn add_MASS_UNITS(&mut self, MASS_UNITS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PhysicalProperties::VT_MASS_UNITS, MASS_UNITS);
+  }
+  #[inline]
+  pub fn add_OEB_Q1(&mut self, OEB_Q1: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_OEB_Q1, OEB_Q1, 0.0);
+  }
+  #[inline]
+  pub fn add_OEB_Q2(&mut self, OEB_Q2: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_OEB_Q2, OEB_Q2, 0.0);
+  }
+  #[inline]
+  pub fn add_OEB_Q3(&mut self, OEB_Q3: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_OEB_Q3, OEB_Q3, 0.0);
+  }
+  #[inline]
+  pub fn add_OEB_QC(&mut self, OEB_QC: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_OEB_QC, OEB_QC, 0.0);
+  }
+  #[inline]
+  pub fn add_OEB_MAX(&mut self, OEB_MAX: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_OEB_MAX, OEB_MAX, 0.0);
+  }
+  #[inline]
+  pub fn add_OEB_INT(&mut self, OEB_INT: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_OEB_INT, OEB_INT, 0.0);
+  }
+  #[inline]
+  pub fn add_OEB_MIN(&mut self, OEB_MIN: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_OEB_MIN, OEB_MIN, 0.0);
+  }
+  #[inline]
+  pub fn add_AREA_ALONG_OEB_MAX(&mut self, AREA_ALONG_OEB_MAX: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_AREA_ALONG_OEB_MAX, AREA_ALONG_OEB_MAX, 0.0);
+  }
+  #[inline]
+  pub fn add_AREA_ALONG_OEB_INT(&mut self, AREA_ALONG_OEB_INT: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_AREA_ALONG_OEB_INT, AREA_ALONG_OEB_INT, 0.0);
+  }
+  #[inline]
+  pub fn add_AREA_ALONG_OEB_MIN(&mut self, AREA_ALONG_OEB_MIN: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_AREA_ALONG_OEB_MIN, AREA_ALONG_OEB_MIN, 0.0);
+  }
+  #[inline]
+  pub fn add_AREA_UNITS(&mut self, AREA_UNITS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PhysicalProperties::VT_AREA_UNITS, AREA_UNITS);
+  }
+  #[inline]
+  pub fn add_DRAG_CONST_AREA(&mut self, DRAG_CONST_AREA: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_DRAG_CONST_AREA, DRAG_CONST_AREA, 0.0);
+  }
+  #[inline]
+  pub fn add_DRAG_COEFF_NOM(&mut self, DRAG_COEFF_NOM: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_DRAG_COEFF_NOM, DRAG_COEFF_NOM, 0.0);
+  }
+  #[inline]
+  pub fn add_DRAG_UNCERTAINTY(&mut self, DRAG_UNCERTAINTY: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_DRAG_UNCERTAINTY, DRAG_UNCERTAINTY, 0.0);
+  }
+  #[inline]
+  pub fn add_SRP_CONST_AREA(&mut self, SRP_CONST_AREA: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_SRP_CONST_AREA, SRP_CONST_AREA, 0.0);
+  }
+  #[inline]
+  pub fn add_SOLAR_RAD_COEFF(&mut self, SOLAR_RAD_COEFF: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_SOLAR_RAD_COEFF, SOLAR_RAD_COEFF, 0.0);
+  }
+  #[inline]
+  pub fn add_SRP_UNCERTAINTY(&mut self, SRP_UNCERTAINTY: f64) {
+    self.fbb_.push_slot::<f64>(PhysicalProperties::VT_SRP_UNCERTAINTY, SRP_UNCERTAINTY, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PhysicalPropertiesBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PhysicalPropertiesBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PhysicalProperties<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PhysicalProperties<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PhysicalProperties");
+      ds.field("COMMENT", &self.COMMENT());
+      ds.field("WET_MASS", &self.WET_MASS());
+      ds.field("DRY_MASS", &self.DRY_MASS());
+      ds.field("MASS_UNITS", &self.MASS_UNITS());
+      ds.field("OEB_Q1", &self.OEB_Q1());
+      ds.field("OEB_Q2", &self.OEB_Q2());
+      ds.field("OEB_Q3", &self.OEB_Q3());
+      ds.field("OEB_QC", &self.OEB_QC());
+      ds.field("OEB_MAX", &self.OEB_MAX());
+      ds.field("OEB_INT", &self.OEB_INT());
+      ds.field("OEB_MIN", &self.OEB_MIN());
+      ds.field("AREA_ALONG_OEB_MAX", &self.AREA_ALONG_OEB_MAX());
+      ds.field("AREA_ALONG_OEB_INT", &self.AREA_ALONG_OEB_INT());
+      ds.field("AREA_ALONG_OEB_MIN", &self.AREA_ALONG_OEB_MIN());
+      ds.field("AREA_UNITS", &self.AREA_UNITS());
+      ds.field("DRAG_CONST_AREA", &self.DRAG_CONST_AREA());
+      ds.field("DRAG_COEFF_NOM", &self.DRAG_COEFF_NOM());
+      ds.field("DRAG_UNCERTAINTY", &self.DRAG_UNCERTAINTY());
+      ds.field("SRP_CONST_AREA", &self.SRP_CONST_AREA());
+      ds.field("SOLAR_RAD_COEFF", &self.SOLAR_RAD_COEFF());
+      ds.field("SRP_UNCERTAINTY", &self.SRP_UNCERTAINTY());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PhysicalPropertiesT {
+  pub COMMENT: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub WET_MASS: f64,
+  pub DRY_MASS: f64,
+  pub MASS_UNITS: Option<alloc::string::String>,
+  pub OEB_Q1: f64,
+  pub OEB_Q2: f64,
+  pub OEB_Q3: f64,
+  pub OEB_QC: f64,
+  pub OEB_MAX: f64,
+  pub OEB_INT: f64,
+  pub OEB_MIN: f64,
+  pub AREA_ALONG_OEB_MAX: f64,
+  pub AREA_ALONG_OEB_INT: f64,
+  pub AREA_ALONG_OEB_MIN: f64,
+  pub AREA_UNITS: Option<alloc::string::String>,
+  pub DRAG_CONST_AREA: f64,
+  pub DRAG_COEFF_NOM: f64,
+  pub DRAG_UNCERTAINTY: f64,
+  pub SRP_CONST_AREA: f64,
+  pub SOLAR_RAD_COEFF: f64,
+  pub SRP_UNCERTAINTY: f64,
+}
+impl Default for PhysicalPropertiesT {
+  fn default() -> Self {
+    Self {
+      COMMENT: None,
+      WET_MASS: 0.0,
+      DRY_MASS: 0.0,
+      MASS_UNITS: None,
+      OEB_Q1: 0.0,
+      OEB_Q2: 0.0,
+      OEB_Q3: 0.0,
+      OEB_QC: 0.0,
+      OEB_MAX: 0.0,
+      OEB_INT: 0.0,
+      OEB_MIN: 0.0,
+      AREA_ALONG_OEB_MAX: 0.0,
+      AREA_ALONG_OEB_INT: 0.0,
+      AREA_ALONG_OEB_MIN: 0.0,
+      AREA_UNITS: None,
+      DRAG_CONST_AREA: 0.0,
+      DRAG_COEFF_NOM: 0.0,
+      DRAG_UNCERTAINTY: 0.0,
+      SRP_CONST_AREA: 0.0,
+      SOLAR_RAD_COEFF: 0.0,
+      SRP_UNCERTAINTY: 0.0,
+    }
+  }
+}
+impl PhysicalPropertiesT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PhysicalProperties<'b>> {
+    let COMMENT = self.COMMENT.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let WET_MASS = self.WET_MASS;
+    let DRY_MASS = self.DRY_MASS;
+    let MASS_UNITS = self.MASS_UNITS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OEB_Q1 = self.OEB_Q1;
+    let OEB_Q2 = self.OEB_Q2;
+    let OEB_Q3 = self.OEB_Q3;
+    let OEB_QC = self.OEB_QC;
+    let OEB_MAX = self.OEB_MAX;
+    let OEB_INT = self.OEB_INT;
+    let OEB_MIN = self.OEB_MIN;
+    let AREA_ALONG_OEB_MAX = self.AREA_ALONG_OEB_MAX;
+    let AREA_ALONG_OEB_INT = self.AREA_ALONG_OEB_INT;
+    let AREA_ALONG_OEB_MIN = self.AREA_ALONG_OEB_MIN;
+    let AREA_UNITS = self.AREA_UNITS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DRAG_CONST_AREA = self.DRAG_CONST_AREA;
+    let DRAG_COEFF_NOM = self.DRAG_COEFF_NOM;
+    let DRAG_UNCERTAINTY = self.DRAG_UNCERTAINTY;
+    let SRP_CONST_AREA = self.SRP_CONST_AREA;
+    let SOLAR_RAD_COEFF = self.SOLAR_RAD_COEFF;
+    let SRP_UNCERTAINTY = self.SRP_UNCERTAINTY;
+    PhysicalProperties::create(_fbb, &PhysicalPropertiesArgs{
+      COMMENT,
+      WET_MASS,
+      DRY_MASS,
+      MASS_UNITS,
+      OEB_Q1,
+      OEB_Q2,
+      OEB_Q3,
+      OEB_QC,
+      OEB_MAX,
+      OEB_INT,
+      OEB_MIN,
+      AREA_ALONG_OEB_MAX,
+      AREA_ALONG_OEB_INT,
+      AREA_ALONG_OEB_MIN,
+      AREA_UNITS,
+      DRAG_CONST_AREA,
+      DRAG_COEFF_NOM,
+      DRAG_UNCERTAINTY,
+      SRP_CONST_AREA,
+      SOLAR_RAD_COEFF,
+      SRP_UNCERTAINTY,
+    })
+  }
+}
+pub enum PerturbationsOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct Perturbations<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for Perturbations<'a> {
+  type Inner = Perturbations<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> Perturbations<'a> {
+  pub const VT_COMMENT: ::flatbuffers::VOffsetT = 4;
+  pub const VT_ATMOSPHERIC_MODEL: ::flatbuffers::VOffsetT = 6;
+  pub const VT_GRAVITY_MODEL: ::flatbuffers::VOffsetT = 8;
+  pub const VT_GRAVITY_DEGREE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_GRAVITY_ORDER: ::flatbuffers::VOffsetT = 12;
+  pub const VT_GM: ::flatbuffers::VOffsetT = 14;
+  pub const VT_N_BODY_PERTURBATIONS: ::flatbuffers::VOffsetT = 16;
+  pub const VT_OCEAN_TIDES_MODEL: ::flatbuffers::VOffsetT = 18;
+  pub const VT_SOLID_TIDES_MODEL: ::flatbuffers::VOffsetT = 20;
+  pub const VT_ATMOSPHERIC_TIDES_MODEL: ::flatbuffers::VOffsetT = 22;
+  pub const VT_GEOPOTENTIAL_MODEL: ::flatbuffers::VOffsetT = 24;
+  pub const VT_SOLAR_RAD_PRESSURE: ::flatbuffers::VOffsetT = 26;
+  pub const VT_ALBEDO: ::flatbuffers::VOffsetT = 28;
+  pub const VT_THERMAL: ::flatbuffers::VOffsetT = 30;
+  pub const VT_RELATIVITY: ::flatbuffers::VOffsetT = 32;
+  pub const VT_ATMOSPHERIC_DRAG: ::flatbuffers::VOffsetT = 34;
+  pub const VT_FIXED_GEOMAG_KP: ::flatbuffers::VOffsetT = 36;
+  pub const VT_FIXED_F10P7: ::flatbuffers::VOffsetT = 38;
+  pub const VT_FIXED_F10P7_MEAN: ::flatbuffers::VOffsetT = 40;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    Perturbations { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PerturbationsArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<Perturbations<'bldr>> {
+    let mut builder = PerturbationsBuilder::new(_fbb);
+    builder.add_FIXED_F10P7_MEAN(args.FIXED_F10P7_MEAN);
+    builder.add_FIXED_F10P7(args.FIXED_F10P7);
+    builder.add_FIXED_GEOMAG_KP(args.FIXED_GEOMAG_KP);
+    builder.add_GM(args.GM);
+    if let Some(x) = args.ATMOSPHERIC_DRAG { builder.add_ATMOSPHERIC_DRAG(x); }
+    if let Some(x) = args.RELATIVITY { builder.add_RELATIVITY(x); }
+    if let Some(x) = args.THERMAL { builder.add_THERMAL(x); }
+    if let Some(x) = args.ALBEDO { builder.add_ALBEDO(x); }
+    if let Some(x) = args.SOLAR_RAD_PRESSURE { builder.add_SOLAR_RAD_PRESSURE(x); }
+    if let Some(x) = args.GEOPOTENTIAL_MODEL { builder.add_GEOPOTENTIAL_MODEL(x); }
+    if let Some(x) = args.ATMOSPHERIC_TIDES_MODEL { builder.add_ATMOSPHERIC_TIDES_MODEL(x); }
+    if let Some(x) = args.SOLID_TIDES_MODEL { builder.add_SOLID_TIDES_MODEL(x); }
+    if let Some(x) = args.OCEAN_TIDES_MODEL { builder.add_OCEAN_TIDES_MODEL(x); }
+    if let Some(x) = args.N_BODY_PERTURBATIONS { builder.add_N_BODY_PERTURBATIONS(x); }
+    builder.add_GRAVITY_ORDER(args.GRAVITY_ORDER);
+    builder.add_GRAVITY_DEGREE(args.GRAVITY_DEGREE);
+    if let Some(x) = args.GRAVITY_MODEL { builder.add_GRAVITY_MODEL(x); }
+    if let Some(x) = args.ATMOSPHERIC_MODEL { builder.add_ATMOSPHERIC_MODEL(x); }
+    if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PerturbationsT {
+    let COMMENT = self.COMMENT().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let ATMOSPHERIC_MODEL = self.ATMOSPHERIC_MODEL().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let GRAVITY_MODEL = self.GRAVITY_MODEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let GRAVITY_DEGREE = self.GRAVITY_DEGREE();
+    let GRAVITY_ORDER = self.GRAVITY_ORDER();
+    let GM = self.GM();
+    let N_BODY_PERTURBATIONS = self.N_BODY_PERTURBATIONS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let OCEAN_TIDES_MODEL = self.OCEAN_TIDES_MODEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SOLID_TIDES_MODEL = self.SOLID_TIDES_MODEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ATMOSPHERIC_TIDES_MODEL = self.ATMOSPHERIC_TIDES_MODEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let GEOPOTENTIAL_MODEL = self.GEOPOTENTIAL_MODEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SOLAR_RAD_PRESSURE = self.SOLAR_RAD_PRESSURE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ALBEDO = self.ALBEDO().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let THERMAL = self.THERMAL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let RELATIVITY = self.RELATIVITY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ATMOSPHERIC_DRAG = self.ATMOSPHERIC_DRAG().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let FIXED_GEOMAG_KP = self.FIXED_GEOMAG_KP();
+    let FIXED_F10P7 = self.FIXED_F10P7();
+    let FIXED_F10P7_MEAN = self.FIXED_F10P7_MEAN();
+    PerturbationsT {
+      COMMENT,
+      ATMOSPHERIC_MODEL,
+      GRAVITY_MODEL,
+      GRAVITY_DEGREE,
+      GRAVITY_ORDER,
+      GM,
+      N_BODY_PERTURBATIONS,
+      OCEAN_TIDES_MODEL,
+      SOLID_TIDES_MODEL,
+      ATMOSPHERIC_TIDES_MODEL,
+      GEOPOTENTIAL_MODEL,
+      SOLAR_RAD_PRESSURE,
+      ALBEDO,
+      THERMAL,
+      RELATIVITY,
+      ATMOSPHERIC_DRAG,
+      FIXED_GEOMAG_KP,
+      FIXED_F10P7,
+      FIXED_F10P7_MEAN,
+    }
+  }
+
+  /// Comments in the Perturbations section.
+  #[inline]
+  pub fn COMMENT(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(Perturbations::VT_COMMENT, None)}
+  }
+  /// Atmospheric model used.
+  #[inline]
+  pub fn ATMOSPHERIC_MODEL(&self) -> Option<ATM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<ATM>>(Perturbations::VT_ATMOSPHERIC_MODEL, None)}
+  }
+  /// Gravity model used.
+  #[inline]
+  pub fn GRAVITY_MODEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_GRAVITY_MODEL, None)}
+  }
+  /// Degree of the gravity model.
+  #[inline]
+  pub fn GRAVITY_DEGREE(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(Perturbations::VT_GRAVITY_DEGREE, Some(0)).unwrap()}
+  }
+  /// Order of the gravity model.
+  #[inline]
+  pub fn GRAVITY_ORDER(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(Perturbations::VT_GRAVITY_ORDER, Some(0)).unwrap()}
+  }
+  /// Gravitational constant times the mass of the central body.
+  #[inline]
+  pub fn GM(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(Perturbations::VT_GM, Some(0.0)).unwrap()}
+  }
+  /// List of celestial bodies included in n-body perturbations.
+  #[inline]
+  pub fn N_BODY_PERTURBATIONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(Perturbations::VT_N_BODY_PERTURBATIONS, None)}
+  }
+  /// Ocean tides model used.
+  #[inline]
+  pub fn OCEAN_TIDES_MODEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_OCEAN_TIDES_MODEL, None)}
+  }
+  /// Solid tides model used.
+  #[inline]
+  pub fn SOLID_TIDES_MODEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_SOLID_TIDES_MODEL, None)}
+  }
+  /// Atmospheric tides model used.
+  #[inline]
+  pub fn ATMOSPHERIC_TIDES_MODEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_ATMOSPHERIC_TIDES_MODEL, None)}
+  }
+  /// Geopotential model used.
+  #[inline]
+  pub fn GEOPOTENTIAL_MODEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_GEOPOTENTIAL_MODEL, None)}
+  }
+  /// Solar radiation pressure model used.
+  #[inline]
+  pub fn SOLAR_RAD_PRESSURE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_SOLAR_RAD_PRESSURE, None)}
+  }
+  /// Albedo model used.
+  #[inline]
+  pub fn ALBEDO(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_ALBEDO, None)}
+  }
+  /// Thermal model used.
+  #[inline]
+  pub fn THERMAL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_THERMAL, None)}
+  }
+  /// Relativity model used.
+  #[inline]
+  pub fn RELATIVITY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_RELATIVITY, None)}
+  }
+  /// Atmospheric drag model used.
+  #[inline]
+  pub fn ATMOSPHERIC_DRAG(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_ATMOSPHERIC_DRAG, None)}
+  }
+  /// Fixed geomagnetic Kp index used.
+  #[inline]
+  pub fn FIXED_GEOMAG_KP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_GEOMAG_KP, Some(0.0)).unwrap()}
+  }
+  /// Fixed F10.7 solar flux value used.
+  #[inline]
+  pub fn FIXED_F10P7(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_F10P7, Some(0.0)).unwrap()}
+  }
+  /// Fixed mean F10.7 solar flux value used.
+  #[inline]
+  pub fn FIXED_F10P7_MEAN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_F10P7_MEAN, Some(0.0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for Perturbations<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<ATM>>("ATMOSPHERIC_MODEL", Self::VT_ATMOSPHERIC_MODEL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GRAVITY_MODEL", Self::VT_GRAVITY_MODEL, false)?
+     .visit_field::<i32>("GRAVITY_DEGREE", Self::VT_GRAVITY_DEGREE, false)?
+     .visit_field::<i32>("GRAVITY_ORDER", Self::VT_GRAVITY_ORDER, false)?
+     .visit_field::<f64>("GM", Self::VT_GM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("N_BODY_PERTURBATIONS", Self::VT_N_BODY_PERTURBATIONS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OCEAN_TIDES_MODEL", Self::VT_OCEAN_TIDES_MODEL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOLID_TIDES_MODEL", Self::VT_SOLID_TIDES_MODEL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ATMOSPHERIC_TIDES_MODEL", Self::VT_ATMOSPHERIC_TIDES_MODEL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GEOPOTENTIAL_MODEL", Self::VT_GEOPOTENTIAL_MODEL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOLAR_RAD_PRESSURE", Self::VT_SOLAR_RAD_PRESSURE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ALBEDO", Self::VT_ALBEDO, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("THERMAL", Self::VT_THERMAL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RELATIVITY", Self::VT_RELATIVITY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ATMOSPHERIC_DRAG", Self::VT_ATMOSPHERIC_DRAG, false)?
+     .visit_field::<f64>("FIXED_GEOMAG_KP", Self::VT_FIXED_GEOMAG_KP, false)?
+     .visit_field::<f64>("FIXED_F10P7", Self::VT_FIXED_F10P7, false)?
+     .visit_field::<f64>("FIXED_F10P7_MEAN", Self::VT_FIXED_F10P7_MEAN, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PerturbationsArgs<'a> {
+    pub COMMENT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub ATMOSPHERIC_MODEL: Option<::flatbuffers::WIPOffset<ATM<'a>>>,
+    pub GRAVITY_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub GRAVITY_DEGREE: i32,
+    pub GRAVITY_ORDER: i32,
+    pub GM: f64,
+    pub N_BODY_PERTURBATIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub OCEAN_TIDES_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOLID_TIDES_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ATMOSPHERIC_TIDES_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub GEOPOTENTIAL_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOLAR_RAD_PRESSURE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ALBEDO: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub THERMAL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RELATIVITY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ATMOSPHERIC_DRAG: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FIXED_GEOMAG_KP: f64,
+    pub FIXED_F10P7: f64,
+    pub FIXED_F10P7_MEAN: f64,
+}
+impl<'a> Default for PerturbationsArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PerturbationsArgs {
+      COMMENT: None,
+      ATMOSPHERIC_MODEL: None,
+      GRAVITY_MODEL: None,
+      GRAVITY_DEGREE: 0,
+      GRAVITY_ORDER: 0,
+      GM: 0.0,
+      N_BODY_PERTURBATIONS: None,
+      OCEAN_TIDES_MODEL: None,
+      SOLID_TIDES_MODEL: None,
+      ATMOSPHERIC_TIDES_MODEL: None,
+      GEOPOTENTIAL_MODEL: None,
+      SOLAR_RAD_PRESSURE: None,
+      ALBEDO: None,
+      THERMAL: None,
+      RELATIVITY: None,
+      ATMOSPHERIC_DRAG: None,
+      FIXED_GEOMAG_KP: 0.0,
+      FIXED_F10P7: 0.0,
+      FIXED_F10P7_MEAN: 0.0,
+    }
+  }
+}
+
+pub struct PerturbationsBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PerturbationsBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_COMMENT, COMMENT);
+  }
+  #[inline]
+  pub fn add_ATMOSPHERIC_MODEL(&mut self, ATMOSPHERIC_MODEL: ::flatbuffers::WIPOffset<ATM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<ATM>>(Perturbations::VT_ATMOSPHERIC_MODEL, ATMOSPHERIC_MODEL);
+  }
+  #[inline]
+  pub fn add_GRAVITY_MODEL(&mut self, GRAVITY_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_GRAVITY_MODEL, GRAVITY_MODEL);
+  }
+  #[inline]
+  pub fn add_GRAVITY_DEGREE(&mut self, GRAVITY_DEGREE: i32) {
+    self.fbb_.push_slot::<i32>(Perturbations::VT_GRAVITY_DEGREE, GRAVITY_DEGREE, 0);
+  }
+  #[inline]
+  pub fn add_GRAVITY_ORDER(&mut self, GRAVITY_ORDER: i32) {
+    self.fbb_.push_slot::<i32>(Perturbations::VT_GRAVITY_ORDER, GRAVITY_ORDER, 0);
+  }
+  #[inline]
+  pub fn add_GM(&mut self, GM: f64) {
+    self.fbb_.push_slot::<f64>(Perturbations::VT_GM, GM, 0.0);
+  }
+  #[inline]
+  pub fn add_N_BODY_PERTURBATIONS(&mut self, N_BODY_PERTURBATIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_N_BODY_PERTURBATIONS, N_BODY_PERTURBATIONS);
+  }
+  #[inline]
+  pub fn add_OCEAN_TIDES_MODEL(&mut self, OCEAN_TIDES_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_OCEAN_TIDES_MODEL, OCEAN_TIDES_MODEL);
+  }
+  #[inline]
+  pub fn add_SOLID_TIDES_MODEL(&mut self, SOLID_TIDES_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_SOLID_TIDES_MODEL, SOLID_TIDES_MODEL);
+  }
+  #[inline]
+  pub fn add_ATMOSPHERIC_TIDES_MODEL(&mut self, ATMOSPHERIC_TIDES_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_ATMOSPHERIC_TIDES_MODEL, ATMOSPHERIC_TIDES_MODEL);
+  }
+  #[inline]
+  pub fn add_GEOPOTENTIAL_MODEL(&mut self, GEOPOTENTIAL_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_GEOPOTENTIAL_MODEL, GEOPOTENTIAL_MODEL);
+  }
+  #[inline]
+  pub fn add_SOLAR_RAD_PRESSURE(&mut self, SOLAR_RAD_PRESSURE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_SOLAR_RAD_PRESSURE, SOLAR_RAD_PRESSURE);
+  }
+  #[inline]
+  pub fn add_ALBEDO(&mut self, ALBEDO: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_ALBEDO, ALBEDO);
+  }
+  #[inline]
+  pub fn add_THERMAL(&mut self, THERMAL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_THERMAL, THERMAL);
+  }
+  #[inline]
+  pub fn add_RELATIVITY(&mut self, RELATIVITY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_RELATIVITY, RELATIVITY);
+  }
+  #[inline]
+  pub fn add_ATMOSPHERIC_DRAG(&mut self, ATMOSPHERIC_DRAG: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_ATMOSPHERIC_DRAG, ATMOSPHERIC_DRAG);
+  }
+  #[inline]
+  pub fn add_FIXED_GEOMAG_KP(&mut self, FIXED_GEOMAG_KP: f64) {
+    self.fbb_.push_slot::<f64>(Perturbations::VT_FIXED_GEOMAG_KP, FIXED_GEOMAG_KP, 0.0);
+  }
+  #[inline]
+  pub fn add_FIXED_F10P7(&mut self, FIXED_F10P7: f64) {
+    self.fbb_.push_slot::<f64>(Perturbations::VT_FIXED_F10P7, FIXED_F10P7, 0.0);
+  }
+  #[inline]
+  pub fn add_FIXED_F10P7_MEAN(&mut self, FIXED_F10P7_MEAN: f64) {
+    self.fbb_.push_slot::<f64>(Perturbations::VT_FIXED_F10P7_MEAN, FIXED_F10P7_MEAN, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PerturbationsBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PerturbationsBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<Perturbations<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for Perturbations<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("Perturbations");
+      ds.field("COMMENT", &self.COMMENT());
+      ds.field("ATMOSPHERIC_MODEL", &self.ATMOSPHERIC_MODEL());
+      ds.field("GRAVITY_MODEL", &self.GRAVITY_MODEL());
+      ds.field("GRAVITY_DEGREE", &self.GRAVITY_DEGREE());
+      ds.field("GRAVITY_ORDER", &self.GRAVITY_ORDER());
+      ds.field("GM", &self.GM());
+      ds.field("N_BODY_PERTURBATIONS", &self.N_BODY_PERTURBATIONS());
+      ds.field("OCEAN_TIDES_MODEL", &self.OCEAN_TIDES_MODEL());
+      ds.field("SOLID_TIDES_MODEL", &self.SOLID_TIDES_MODEL());
+      ds.field("ATMOSPHERIC_TIDES_MODEL", &self.ATMOSPHERIC_TIDES_MODEL());
+      ds.field("GEOPOTENTIAL_MODEL", &self.GEOPOTENTIAL_MODEL());
+      ds.field("SOLAR_RAD_PRESSURE", &self.SOLAR_RAD_PRESSURE());
+      ds.field("ALBEDO", &self.ALBEDO());
+      ds.field("THERMAL", &self.THERMAL());
+      ds.field("RELATIVITY", &self.RELATIVITY());
+      ds.field("ATMOSPHERIC_DRAG", &self.ATMOSPHERIC_DRAG());
+      ds.field("FIXED_GEOMAG_KP", &self.FIXED_GEOMAG_KP());
+      ds.field("FIXED_F10P7", &self.FIXED_F10P7());
+      ds.field("FIXED_F10P7_MEAN", &self.FIXED_F10P7_MEAN());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PerturbationsT {
+  pub COMMENT: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub ATMOSPHERIC_MODEL: Option<alloc::boxed::Box<ATMT>>,
+  pub GRAVITY_MODEL: Option<alloc::string::String>,
+  pub GRAVITY_DEGREE: i32,
+  pub GRAVITY_ORDER: i32,
+  pub GM: f64,
+  pub N_BODY_PERTURBATIONS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub OCEAN_TIDES_MODEL: Option<alloc::string::String>,
+  pub SOLID_TIDES_MODEL: Option<alloc::string::String>,
+  pub ATMOSPHERIC_TIDES_MODEL: Option<alloc::string::String>,
+  pub GEOPOTENTIAL_MODEL: Option<alloc::string::String>,
+  pub SOLAR_RAD_PRESSURE: Option<alloc::string::String>,
+  pub ALBEDO: Option<alloc::string::String>,
+  pub THERMAL: Option<alloc::string::String>,
+  pub RELATIVITY: Option<alloc::string::String>,
+  pub ATMOSPHERIC_DRAG: Option<alloc::string::String>,
+  pub FIXED_GEOMAG_KP: f64,
+  pub FIXED_F10P7: f64,
+  pub FIXED_F10P7_MEAN: f64,
+}
+impl Default for PerturbationsT {
+  fn default() -> Self {
+    Self {
+      COMMENT: None,
+      ATMOSPHERIC_MODEL: None,
+      GRAVITY_MODEL: None,
+      GRAVITY_DEGREE: 0,
+      GRAVITY_ORDER: 0,
+      GM: 0.0,
+      N_BODY_PERTURBATIONS: None,
+      OCEAN_TIDES_MODEL: None,
+      SOLID_TIDES_MODEL: None,
+      ATMOSPHERIC_TIDES_MODEL: None,
+      GEOPOTENTIAL_MODEL: None,
+      SOLAR_RAD_PRESSURE: None,
+      ALBEDO: None,
+      THERMAL: None,
+      RELATIVITY: None,
+      ATMOSPHERIC_DRAG: None,
+      FIXED_GEOMAG_KP: 0.0,
+      FIXED_F10P7: 0.0,
+      FIXED_F10P7_MEAN: 0.0,
+    }
+  }
+}
+impl PerturbationsT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<Perturbations<'b>> {
+    let COMMENT = self.COMMENT.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let ATMOSPHERIC_MODEL = self.ATMOSPHERIC_MODEL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let GRAVITY_MODEL = self.GRAVITY_MODEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GRAVITY_DEGREE = self.GRAVITY_DEGREE;
+    let GRAVITY_ORDER = self.GRAVITY_ORDER;
+    let GM = self.GM;
+    let N_BODY_PERTURBATIONS = self.N_BODY_PERTURBATIONS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let OCEAN_TIDES_MODEL = self.OCEAN_TIDES_MODEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SOLID_TIDES_MODEL = self.SOLID_TIDES_MODEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ATMOSPHERIC_TIDES_MODEL = self.ATMOSPHERIC_TIDES_MODEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GEOPOTENTIAL_MODEL = self.GEOPOTENTIAL_MODEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SOLAR_RAD_PRESSURE = self.SOLAR_RAD_PRESSURE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ALBEDO = self.ALBEDO.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let THERMAL = self.THERMAL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let RELATIVITY = self.RELATIVITY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ATMOSPHERIC_DRAG = self.ATMOSPHERIC_DRAG.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FIXED_GEOMAG_KP = self.FIXED_GEOMAG_KP;
+    let FIXED_F10P7 = self.FIXED_F10P7;
+    let FIXED_F10P7_MEAN = self.FIXED_F10P7_MEAN;
+    Perturbations::create(_fbb, &PerturbationsArgs{
+      COMMENT,
+      ATMOSPHERIC_MODEL,
+      GRAVITY_MODEL,
+      GRAVITY_DEGREE,
+      GRAVITY_ORDER,
+      GM,
+      N_BODY_PERTURBATIONS,
+      OCEAN_TIDES_MODEL,
+      SOLID_TIDES_MODEL,
+      ATMOSPHERIC_TIDES_MODEL,
+      GEOPOTENTIAL_MODEL,
+      SOLAR_RAD_PRESSURE,
+      ALBEDO,
+      THERMAL,
+      RELATIVITY,
+      ATMOSPHERIC_DRAG,
+      FIXED_GEOMAG_KP,
+      FIXED_F10P7,
+      FIXED_F10P7_MEAN,
+    })
+  }
+}
+pub enum ManeuverOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct Maneuver<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for Maneuver<'a> {
+  type Inner = Maneuver<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> Maneuver<'a> {
+  pub const VT_MAN_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_MAN_BASIS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_MAN_DEVICE_ID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MAN_PREV_ID: ::flatbuffers::VOffsetT = 10;
+  pub const VT_MAN_PURPOSE: ::flatbuffers::VOffsetT = 12;
+  pub const VT_MAN_REF_FRAME: ::flatbuffers::VOffsetT = 14;
+  pub const VT_MAN_FRAME_EPOCH: ::flatbuffers::VOffsetT = 16;
+  pub const VT_MAN_TYPE: ::flatbuffers::VOffsetT = 18;
+  pub const VT_MAN_EPOCH_START: ::flatbuffers::VOffsetT = 20;
+  pub const VT_MAN_DURATION: ::flatbuffers::VOffsetT = 22;
+  pub const VT_MAN_UNITS: ::flatbuffers::VOffsetT = 24;
+  pub const VT_DATA: ::flatbuffers::VOffsetT = 26;
+  pub const VT_MAN_COMMENT: ::flatbuffers::VOffsetT = 28;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    Maneuver { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args ManeuverArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<Maneuver<'bldr>> {
+    let mut builder = ManeuverBuilder::new(_fbb);
+    builder.add_MAN_DURATION(args.MAN_DURATION);
+    if let Some(x) = args.MAN_COMMENT { builder.add_MAN_COMMENT(x); }
+    if let Some(x) = args.DATA { builder.add_DATA(x); }
+    if let Some(x) = args.MAN_UNITS { builder.add_MAN_UNITS(x); }
+    if let Some(x) = args.MAN_EPOCH_START { builder.add_MAN_EPOCH_START(x); }
+    if let Some(x) = args.MAN_TYPE { builder.add_MAN_TYPE(x); }
+    if let Some(x) = args.MAN_FRAME_EPOCH { builder.add_MAN_FRAME_EPOCH(x); }
+    if let Some(x) = args.MAN_REF_FRAME { builder.add_MAN_REF_FRAME(x); }
+    if let Some(x) = args.MAN_PURPOSE { builder.add_MAN_PURPOSE(x); }
+    if let Some(x) = args.MAN_PREV_ID { builder.add_MAN_PREV_ID(x); }
+    if let Some(x) = args.MAN_DEVICE_ID { builder.add_MAN_DEVICE_ID(x); }
+    if let Some(x) = args.MAN_BASIS { builder.add_MAN_BASIS(x); }
+    if let Some(x) = args.MAN_ID { builder.add_MAN_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> ManeuverT {
+    let MAN_ID = self.MAN_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MAN_BASIS = self.MAN_BASIS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MAN_DEVICE_ID = self.MAN_DEVICE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MAN_PREV_ID = self.MAN_PREV_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MAN_PURPOSE = self.MAN_PURPOSE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MAN_REF_FRAME = self.MAN_REF_FRAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MAN_FRAME_EPOCH = self.MAN_FRAME_EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MAN_TYPE = self.MAN_TYPE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MAN_EPOCH_START = self.MAN_EPOCH_START().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MAN_DURATION = self.MAN_DURATION();
+    let MAN_UNITS = self.MAN_UNITS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let DATA = self.DATA().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let MAN_COMMENT = self.MAN_COMMENT().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    ManeuverT {
+      MAN_ID,
+      MAN_BASIS,
+      MAN_DEVICE_ID,
+      MAN_PREV_ID,
+      MAN_PURPOSE,
+      MAN_REF_FRAME,
+      MAN_FRAME_EPOCH,
+      MAN_TYPE,
+      MAN_EPOCH_START,
+      MAN_DURATION,
+      MAN_UNITS,
+      DATA,
+      MAN_COMMENT,
+    }
+  }
+
+  /// Unique identifier for the maneuver.
+  #[inline]
+  pub fn MAN_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_ID, None)}
+  }
+  /// Basis of the maneuver plan (e.g., planned, predicted, estimated).
+  #[inline]
+  pub fn MAN_BASIS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_BASIS, None)}
+  }
+  /// Identifier of the maneuver device.
+  #[inline]
+  pub fn MAN_DEVICE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_DEVICE_ID, None)}
+  }
+  /// Identifier of the previous maneuver.
+  #[inline]
+  pub fn MAN_PREV_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_PREV_ID, None)}
+  }
+  /// Purpose of the maneuver.
+  #[inline]
+  pub fn MAN_PURPOSE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_PURPOSE, None)}
+  }
+  /// Reference frame for the maneuver data.
+  #[inline]
+  pub fn MAN_REF_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_REF_FRAME, None)}
+  }
+  /// Epoch of the maneuver reference frame.
+  #[inline]
+  pub fn MAN_FRAME_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_FRAME_EPOCH, None)}
+  }
+  /// Type of maneuver (e.g., IMPULSIVE, FINITE).
+  #[inline]
+  pub fn MAN_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_TYPE, None)}
+  }
+  /// Start epoch of the maneuver.
+  #[inline]
+  pub fn MAN_EPOCH_START(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_EPOCH_START, None)}
+  }
+  /// Duration of the maneuver.
+  #[inline]
+  pub fn MAN_DURATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(Maneuver::VT_MAN_DURATION, Some(0.0)).unwrap()}
+  }
+  /// Units for the maneuver data values.
+  #[inline]
+  pub fn MAN_UNITS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(Maneuver::VT_MAN_UNITS, None)}
+  }
+  /// Data associated with the maneuver.
+  #[inline]
+  pub fn DATA(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(Maneuver::VT_DATA, None)}
+  }
+  /// Comments related to the maneuver.
+  #[inline]
+  pub fn MAN_COMMENT(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(Maneuver::VT_MAN_COMMENT, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for Maneuver<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_ID", Self::VT_MAN_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_BASIS", Self::VT_MAN_BASIS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_DEVICE_ID", Self::VT_MAN_DEVICE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_PREV_ID", Self::VT_MAN_PREV_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_PURPOSE", Self::VT_MAN_PURPOSE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_REF_FRAME", Self::VT_MAN_REF_FRAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_FRAME_EPOCH", Self::VT_MAN_FRAME_EPOCH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_TYPE", Self::VT_MAN_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_EPOCH_START", Self::VT_MAN_EPOCH_START, false)?
+     .visit_field::<f64>("MAN_DURATION", Self::VT_MAN_DURATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("MAN_UNITS", Self::VT_MAN_UNITS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("DATA", Self::VT_DATA, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("MAN_COMMENT", Self::VT_MAN_COMMENT, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct ManeuverArgs<'a> {
+    pub MAN_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_BASIS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_DEVICE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_PREV_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_PURPOSE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_REF_FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_FRAME_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_EPOCH_START: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_DURATION: f64,
+    pub MAN_UNITS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub DATA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub MAN_COMMENT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+}
+impl<'a> Default for ManeuverArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    ManeuverArgs {
+      MAN_ID: None,
+      MAN_BASIS: None,
+      MAN_DEVICE_ID: None,
+      MAN_PREV_ID: None,
+      MAN_PURPOSE: None,
+      MAN_REF_FRAME: None,
+      MAN_FRAME_EPOCH: None,
+      MAN_TYPE: None,
+      MAN_EPOCH_START: None,
+      MAN_DURATION: 0.0,
+      MAN_UNITS: None,
+      DATA: None,
+      MAN_COMMENT: None,
+    }
+  }
+}
+
+pub struct ManeuverBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ManeuverBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_MAN_ID(&mut self, MAN_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_ID, MAN_ID);
+  }
+  #[inline]
+  pub fn add_MAN_BASIS(&mut self, MAN_BASIS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_BASIS, MAN_BASIS);
+  }
+  #[inline]
+  pub fn add_MAN_DEVICE_ID(&mut self, MAN_DEVICE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_DEVICE_ID, MAN_DEVICE_ID);
+  }
+  #[inline]
+  pub fn add_MAN_PREV_ID(&mut self, MAN_PREV_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_PREV_ID, MAN_PREV_ID);
+  }
+  #[inline]
+  pub fn add_MAN_PURPOSE(&mut self, MAN_PURPOSE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_PURPOSE, MAN_PURPOSE);
+  }
+  #[inline]
+  pub fn add_MAN_REF_FRAME(&mut self, MAN_REF_FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_REF_FRAME, MAN_REF_FRAME);
+  }
+  #[inline]
+  pub fn add_MAN_FRAME_EPOCH(&mut self, MAN_FRAME_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_FRAME_EPOCH, MAN_FRAME_EPOCH);
+  }
+  #[inline]
+  pub fn add_MAN_TYPE(&mut self, MAN_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_TYPE, MAN_TYPE);
+  }
+  #[inline]
+  pub fn add_MAN_EPOCH_START(&mut self, MAN_EPOCH_START: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_EPOCH_START, MAN_EPOCH_START);
+  }
+  #[inline]
+  pub fn add_MAN_DURATION(&mut self, MAN_DURATION: f64) {
+    self.fbb_.push_slot::<f64>(Maneuver::VT_MAN_DURATION, MAN_DURATION, 0.0);
+  }
+  #[inline]
+  pub fn add_MAN_UNITS(&mut self, MAN_UNITS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_UNITS, MAN_UNITS);
+  }
+  #[inline]
+  pub fn add_DATA(&mut self, DATA: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_DATA, DATA);
+  }
+  #[inline]
+  pub fn add_MAN_COMMENT(&mut self, MAN_COMMENT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_COMMENT, MAN_COMMENT);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ManeuverBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    ManeuverBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<Maneuver<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for Maneuver<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("Maneuver");
+      ds.field("MAN_ID", &self.MAN_ID());
+      ds.field("MAN_BASIS", &self.MAN_BASIS());
+      ds.field("MAN_DEVICE_ID", &self.MAN_DEVICE_ID());
+      ds.field("MAN_PREV_ID", &self.MAN_PREV_ID());
+      ds.field("MAN_PURPOSE", &self.MAN_PURPOSE());
+      ds.field("MAN_REF_FRAME", &self.MAN_REF_FRAME());
+      ds.field("MAN_FRAME_EPOCH", &self.MAN_FRAME_EPOCH());
+      ds.field("MAN_TYPE", &self.MAN_TYPE());
+      ds.field("MAN_EPOCH_START", &self.MAN_EPOCH_START());
+      ds.field("MAN_DURATION", &self.MAN_DURATION());
+      ds.field("MAN_UNITS", &self.MAN_UNITS());
+      ds.field("DATA", &self.DATA());
+      ds.field("MAN_COMMENT", &self.MAN_COMMENT());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct ManeuverT {
+  pub MAN_ID: Option<alloc::string::String>,
+  pub MAN_BASIS: Option<alloc::string::String>,
+  pub MAN_DEVICE_ID: Option<alloc::string::String>,
+  pub MAN_PREV_ID: Option<alloc::string::String>,
+  pub MAN_PURPOSE: Option<alloc::string::String>,
+  pub MAN_REF_FRAME: Option<alloc::string::String>,
+  pub MAN_FRAME_EPOCH: Option<alloc::string::String>,
+  pub MAN_TYPE: Option<alloc::string::String>,
+  pub MAN_EPOCH_START: Option<alloc::string::String>,
+  pub MAN_DURATION: f64,
+  pub MAN_UNITS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub DATA: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub MAN_COMMENT: Option<alloc::vec::Vec<alloc::string::String>>,
+}
+impl Default for ManeuverT {
+  fn default() -> Self {
+    Self {
+      MAN_ID: None,
+      MAN_BASIS: None,
+      MAN_DEVICE_ID: None,
+      MAN_PREV_ID: None,
+      MAN_PURPOSE: None,
+      MAN_REF_FRAME: None,
+      MAN_FRAME_EPOCH: None,
+      MAN_TYPE: None,
+      MAN_EPOCH_START: None,
+      MAN_DURATION: 0.0,
+      MAN_UNITS: None,
+      DATA: None,
+      MAN_COMMENT: None,
+    }
+  }
+}
+impl ManeuverT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<Maneuver<'b>> {
+    let MAN_ID = self.MAN_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MAN_BASIS = self.MAN_BASIS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MAN_DEVICE_ID = self.MAN_DEVICE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MAN_PREV_ID = self.MAN_PREV_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MAN_PURPOSE = self.MAN_PURPOSE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MAN_REF_FRAME = self.MAN_REF_FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MAN_FRAME_EPOCH = self.MAN_FRAME_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MAN_TYPE = self.MAN_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MAN_EPOCH_START = self.MAN_EPOCH_START.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MAN_DURATION = self.MAN_DURATION;
+    let MAN_UNITS = self.MAN_UNITS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let DATA = self.DATA.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let MAN_COMMENT = self.MAN_COMMENT.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    Maneuver::create(_fbb, &ManeuverArgs{
+      MAN_ID,
+      MAN_BASIS,
+      MAN_DEVICE_ID,
+      MAN_PREV_ID,
+      MAN_PURPOSE,
+      MAN_REF_FRAME,
+      MAN_FRAME_EPOCH,
+      MAN_TYPE,
+      MAN_EPOCH_START,
+      MAN_DURATION,
+      MAN_UNITS,
+      DATA,
+      MAN_COMMENT,
+    })
+  }
+}
+pub enum OrbitDeterminationOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct OrbitDetermination<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OrbitDetermination<'a> {
+  type Inner = OrbitDetermination<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> OrbitDetermination<'a> {
+  pub const VT_OD_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_OD_PREV_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_OD_ALGORITHM: ::flatbuffers::VOffsetT = 8;
+  pub const VT_OD_METHOD: ::flatbuffers::VOffsetT = 10;
+  pub const VT_OD_EPOCH: ::flatbuffers::VOffsetT = 12;
+  pub const VT_OD_TIME_TAG: ::flatbuffers::VOffsetT = 14;
+  pub const VT_OD_PROCESS_NOISE: ::flatbuffers::VOffsetT = 16;
+  pub const VT_OD_COV_REDUCTION: ::flatbuffers::VOffsetT = 18;
+  pub const VT_OD_NOISE_MODELS: ::flatbuffers::VOffsetT = 20;
+  pub const VT_OD_OBSERVATIONS_TYPE: ::flatbuffers::VOffsetT = 22;
+  pub const VT_OD_OBSERVATIONS_USED: ::flatbuffers::VOffsetT = 24;
+  pub const VT_OD_TRACKS_USED: ::flatbuffers::VOffsetT = 26;
+  pub const VT_OD_DATA_WEIGHTING: ::flatbuffers::VOffsetT = 28;
+  pub const VT_OD_CONVERGENCE_CRITERIA: ::flatbuffers::VOffsetT = 30;
+  pub const VT_OD_EST_PARAMETERS: ::flatbuffers::VOffsetT = 32;
+  pub const VT_OD_APRIORI_DATA: ::flatbuffers::VOffsetT = 34;
+  pub const VT_OD_RESIDUALS: ::flatbuffers::VOffsetT = 36;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    OrbitDetermination { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args OrbitDeterminationArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<OrbitDetermination<'bldr>> {
+    let mut builder = OrbitDeterminationBuilder::new(_fbb);
+    if let Some(x) = args.OD_RESIDUALS { builder.add_OD_RESIDUALS(x); }
+    if let Some(x) = args.OD_APRIORI_DATA { builder.add_OD_APRIORI_DATA(x); }
+    if let Some(x) = args.OD_EST_PARAMETERS { builder.add_OD_EST_PARAMETERS(x); }
+    if let Some(x) = args.OD_CONVERGENCE_CRITERIA { builder.add_OD_CONVERGENCE_CRITERIA(x); }
+    if let Some(x) = args.OD_DATA_WEIGHTING { builder.add_OD_DATA_WEIGHTING(x); }
+    builder.add_OD_TRACKS_USED(args.OD_TRACKS_USED);
+    builder.add_OD_OBSERVATIONS_USED(args.OD_OBSERVATIONS_USED);
+    if let Some(x) = args.OD_OBSERVATIONS_TYPE { builder.add_OD_OBSERVATIONS_TYPE(x); }
+    if let Some(x) = args.OD_NOISE_MODELS { builder.add_OD_NOISE_MODELS(x); }
+    if let Some(x) = args.OD_COV_REDUCTION { builder.add_OD_COV_REDUCTION(x); }
+    if let Some(x) = args.OD_PROCESS_NOISE { builder.add_OD_PROCESS_NOISE(x); }
+    if let Some(x) = args.OD_TIME_TAG { builder.add_OD_TIME_TAG(x); }
+    if let Some(x) = args.OD_EPOCH { builder.add_OD_EPOCH(x); }
+    if let Some(x) = args.OD_METHOD { builder.add_OD_METHOD(x); }
+    if let Some(x) = args.OD_ALGORITHM { builder.add_OD_ALGORITHM(x); }
+    if let Some(x) = args.OD_PREV_ID { builder.add_OD_PREV_ID(x); }
+    if let Some(x) = args.OD_ID { builder.add_OD_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> OrbitDeterminationT {
+    let OD_ID = self.OD_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OD_PREV_ID = self.OD_PREV_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OD_ALGORITHM = self.OD_ALGORITHM().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OD_METHOD = self.OD_METHOD().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OD_EPOCH = self.OD_EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OD_TIME_TAG = self.OD_TIME_TAG().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OD_PROCESS_NOISE = self.OD_PROCESS_NOISE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OD_COV_REDUCTION = self.OD_COV_REDUCTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OD_NOISE_MODELS = self.OD_NOISE_MODELS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OD_OBSERVATIONS_TYPE = self.OD_OBSERVATIONS_TYPE().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let OD_OBSERVATIONS_USED = self.OD_OBSERVATIONS_USED();
+    let OD_TRACKS_USED = self.OD_TRACKS_USED();
+    let OD_DATA_WEIGHTING = self.OD_DATA_WEIGHTING().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OD_CONVERGENCE_CRITERIA = self.OD_CONVERGENCE_CRITERIA().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OD_EST_PARAMETERS = self.OD_EST_PARAMETERS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let OD_APRIORI_DATA = self.OD_APRIORI_DATA().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OD_RESIDUALS = self.OD_RESIDUALS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    OrbitDeterminationT {
+      OD_ID,
+      OD_PREV_ID,
+      OD_ALGORITHM,
+      OD_METHOD,
+      OD_EPOCH,
+      OD_TIME_TAG,
+      OD_PROCESS_NOISE,
+      OD_COV_REDUCTION,
+      OD_NOISE_MODELS,
+      OD_OBSERVATIONS_TYPE,
+      OD_OBSERVATIONS_USED,
+      OD_TRACKS_USED,
+      OD_DATA_WEIGHTING,
+      OD_CONVERGENCE_CRITERIA,
+      OD_EST_PARAMETERS,
+      OD_APRIORI_DATA,
+      OD_RESIDUALS,
+    }
+  }
+
+  /// Unique identifier for the orbit determination.
+  #[inline]
+  pub fn OD_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_ID, None)}
+  }
+  /// Identifier of the previous orbit determination.
+  #[inline]
+  pub fn OD_PREV_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_PREV_ID, None)}
+  }
+  /// Algorithm used for orbit determination.
+  #[inline]
+  pub fn OD_ALGORITHM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_ALGORITHM, None)}
+  }
+  /// Method used for orbit determination.
+  #[inline]
+  pub fn OD_METHOD(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_METHOD, None)}
+  }
+  /// Epoch of the orbit determination.
+  #[inline]
+  pub fn OD_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_EPOCH, None)}
+  }
+  /// Time tag of the orbit determination.
+  #[inline]
+  pub fn OD_TIME_TAG(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_TIME_TAG, None)}
+  }
+  /// Process noise model used.
+  #[inline]
+  pub fn OD_PROCESS_NOISE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_PROCESS_NOISE, None)}
+  }
+  /// Covariance reduction techniques used.
+  #[inline]
+  pub fn OD_COV_REDUCTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_COV_REDUCTION, None)}
+  }
+  /// Noise models used.
+  #[inline]
+  pub fn OD_NOISE_MODELS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_NOISE_MODELS, None)}
+  }
+  /// Types of observations used (e.g., RANGE, DOPPLER).
+  #[inline]
+  pub fn OD_OBSERVATIONS_TYPE(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(OrbitDetermination::VT_OD_OBSERVATIONS_TYPE, None)}
+  }
+  /// Number of observations used.
+  #[inline]
+  pub fn OD_OBSERVATIONS_USED(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(OrbitDetermination::VT_OD_OBSERVATIONS_USED, Some(0)).unwrap()}
+  }
+  /// Number of tracks used.
+  #[inline]
+  pub fn OD_TRACKS_USED(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(OrbitDetermination::VT_OD_TRACKS_USED, Some(0)).unwrap()}
+  }
+  /// Data weighting scheme used.
+  #[inline]
+  pub fn OD_DATA_WEIGHTING(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_DATA_WEIGHTING, None)}
+  }
+  /// Convergence criteria used.
+  #[inline]
+  pub fn OD_CONVERGENCE_CRITERIA(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_CONVERGENCE_CRITERIA, None)}
+  }
+  /// Parameters estimated during orbit determination.
+  #[inline]
+  pub fn OD_EST_PARAMETERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(OrbitDetermination::VT_OD_EST_PARAMETERS, None)}
+  }
+  /// A priori data used for orbit determination.
+  #[inline]
+  pub fn OD_APRIORI_DATA(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_APRIORI_DATA, None)}
+  }
+  /// Residuals from the orbit determination.
+  #[inline]
+  pub fn OD_RESIDUALS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_RESIDUALS, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for OrbitDetermination<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_ID", Self::VT_OD_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_PREV_ID", Self::VT_OD_PREV_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_ALGORITHM", Self::VT_OD_ALGORITHM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_METHOD", Self::VT_OD_METHOD, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_EPOCH", Self::VT_OD_EPOCH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_TIME_TAG", Self::VT_OD_TIME_TAG, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_PROCESS_NOISE", Self::VT_OD_PROCESS_NOISE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_COV_REDUCTION", Self::VT_OD_COV_REDUCTION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_NOISE_MODELS", Self::VT_OD_NOISE_MODELS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("OD_OBSERVATIONS_TYPE", Self::VT_OD_OBSERVATIONS_TYPE, false)?
+     .visit_field::<i32>("OD_OBSERVATIONS_USED", Self::VT_OD_OBSERVATIONS_USED, false)?
+     .visit_field::<i32>("OD_TRACKS_USED", Self::VT_OD_TRACKS_USED, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_DATA_WEIGHTING", Self::VT_OD_DATA_WEIGHTING, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_CONVERGENCE_CRITERIA", Self::VT_OD_CONVERGENCE_CRITERIA, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("OD_EST_PARAMETERS", Self::VT_OD_EST_PARAMETERS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_APRIORI_DATA", Self::VT_OD_APRIORI_DATA, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_RESIDUALS", Self::VT_OD_RESIDUALS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct OrbitDeterminationArgs<'a> {
+    pub OD_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_PREV_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_ALGORITHM: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_METHOD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_TIME_TAG: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_PROCESS_NOISE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_COV_REDUCTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_NOISE_MODELS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_OBSERVATIONS_TYPE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub OD_OBSERVATIONS_USED: i32,
+    pub OD_TRACKS_USED: i32,
+    pub OD_DATA_WEIGHTING: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_CONVERGENCE_CRITERIA: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_EST_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub OD_APRIORI_DATA: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_RESIDUALS: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for OrbitDeterminationArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    OrbitDeterminationArgs {
+      OD_ID: None,
+      OD_PREV_ID: None,
+      OD_ALGORITHM: None,
+      OD_METHOD: None,
+      OD_EPOCH: None,
+      OD_TIME_TAG: None,
+      OD_PROCESS_NOISE: None,
+      OD_COV_REDUCTION: None,
+      OD_NOISE_MODELS: None,
+      OD_OBSERVATIONS_TYPE: None,
+      OD_OBSERVATIONS_USED: 0,
+      OD_TRACKS_USED: 0,
+      OD_DATA_WEIGHTING: None,
+      OD_CONVERGENCE_CRITERIA: None,
+      OD_EST_PARAMETERS: None,
+      OD_APRIORI_DATA: None,
+      OD_RESIDUALS: None,
+    }
+  }
+}
+
+pub struct OrbitDeterminationBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OrbitDeterminationBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_OD_ID(&mut self, OD_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_ID, OD_ID);
+  }
+  #[inline]
+  pub fn add_OD_PREV_ID(&mut self, OD_PREV_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_PREV_ID, OD_PREV_ID);
+  }
+  #[inline]
+  pub fn add_OD_ALGORITHM(&mut self, OD_ALGORITHM: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_ALGORITHM, OD_ALGORITHM);
+  }
+  #[inline]
+  pub fn add_OD_METHOD(&mut self, OD_METHOD: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_METHOD, OD_METHOD);
+  }
+  #[inline]
+  pub fn add_OD_EPOCH(&mut self, OD_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_EPOCH, OD_EPOCH);
+  }
+  #[inline]
+  pub fn add_OD_TIME_TAG(&mut self, OD_TIME_TAG: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_TIME_TAG, OD_TIME_TAG);
+  }
+  #[inline]
+  pub fn add_OD_PROCESS_NOISE(&mut self, OD_PROCESS_NOISE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_PROCESS_NOISE, OD_PROCESS_NOISE);
+  }
+  #[inline]
+  pub fn add_OD_COV_REDUCTION(&mut self, OD_COV_REDUCTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_COV_REDUCTION, OD_COV_REDUCTION);
+  }
+  #[inline]
+  pub fn add_OD_NOISE_MODELS(&mut self, OD_NOISE_MODELS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_NOISE_MODELS, OD_NOISE_MODELS);
+  }
+  #[inline]
+  pub fn add_OD_OBSERVATIONS_TYPE(&mut self, OD_OBSERVATIONS_TYPE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_OBSERVATIONS_TYPE, OD_OBSERVATIONS_TYPE);
+  }
+  #[inline]
+  pub fn add_OD_OBSERVATIONS_USED(&mut self, OD_OBSERVATIONS_USED: i32) {
+    self.fbb_.push_slot::<i32>(OrbitDetermination::VT_OD_OBSERVATIONS_USED, OD_OBSERVATIONS_USED, 0);
+  }
+  #[inline]
+  pub fn add_OD_TRACKS_USED(&mut self, OD_TRACKS_USED: i32) {
+    self.fbb_.push_slot::<i32>(OrbitDetermination::VT_OD_TRACKS_USED, OD_TRACKS_USED, 0);
+  }
+  #[inline]
+  pub fn add_OD_DATA_WEIGHTING(&mut self, OD_DATA_WEIGHTING: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_DATA_WEIGHTING, OD_DATA_WEIGHTING);
+  }
+  #[inline]
+  pub fn add_OD_CONVERGENCE_CRITERIA(&mut self, OD_CONVERGENCE_CRITERIA: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_CONVERGENCE_CRITERIA, OD_CONVERGENCE_CRITERIA);
+  }
+  #[inline]
+  pub fn add_OD_EST_PARAMETERS(&mut self, OD_EST_PARAMETERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_EST_PARAMETERS, OD_EST_PARAMETERS);
+  }
+  #[inline]
+  pub fn add_OD_APRIORI_DATA(&mut self, OD_APRIORI_DATA: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_APRIORI_DATA, OD_APRIORI_DATA);
+  }
+  #[inline]
+  pub fn add_OD_RESIDUALS(&mut self, OD_RESIDUALS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_RESIDUALS, OD_RESIDUALS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OrbitDeterminationBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    OrbitDeterminationBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<OrbitDetermination<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for OrbitDetermination<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("OrbitDetermination");
+      ds.field("OD_ID", &self.OD_ID());
+      ds.field("OD_PREV_ID", &self.OD_PREV_ID());
+      ds.field("OD_ALGORITHM", &self.OD_ALGORITHM());
+      ds.field("OD_METHOD", &self.OD_METHOD());
+      ds.field("OD_EPOCH", &self.OD_EPOCH());
+      ds.field("OD_TIME_TAG", &self.OD_TIME_TAG());
+      ds.field("OD_PROCESS_NOISE", &self.OD_PROCESS_NOISE());
+      ds.field("OD_COV_REDUCTION", &self.OD_COV_REDUCTION());
+      ds.field("OD_NOISE_MODELS", &self.OD_NOISE_MODELS());
+      ds.field("OD_OBSERVATIONS_TYPE", &self.OD_OBSERVATIONS_TYPE());
+      ds.field("OD_OBSERVATIONS_USED", &self.OD_OBSERVATIONS_USED());
+      ds.field("OD_TRACKS_USED", &self.OD_TRACKS_USED());
+      ds.field("OD_DATA_WEIGHTING", &self.OD_DATA_WEIGHTING());
+      ds.field("OD_CONVERGENCE_CRITERIA", &self.OD_CONVERGENCE_CRITERIA());
+      ds.field("OD_EST_PARAMETERS", &self.OD_EST_PARAMETERS());
+      ds.field("OD_APRIORI_DATA", &self.OD_APRIORI_DATA());
+      ds.field("OD_RESIDUALS", &self.OD_RESIDUALS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OrbitDeterminationT {
+  pub OD_ID: Option<alloc::string::String>,
+  pub OD_PREV_ID: Option<alloc::string::String>,
+  pub OD_ALGORITHM: Option<alloc::string::String>,
+  pub OD_METHOD: Option<alloc::string::String>,
+  pub OD_EPOCH: Option<alloc::string::String>,
+  pub OD_TIME_TAG: Option<alloc::string::String>,
+  pub OD_PROCESS_NOISE: Option<alloc::string::String>,
+  pub OD_COV_REDUCTION: Option<alloc::string::String>,
+  pub OD_NOISE_MODELS: Option<alloc::string::String>,
+  pub OD_OBSERVATIONS_TYPE: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub OD_OBSERVATIONS_USED: i32,
+  pub OD_TRACKS_USED: i32,
+  pub OD_DATA_WEIGHTING: Option<alloc::string::String>,
+  pub OD_CONVERGENCE_CRITERIA: Option<alloc::string::String>,
+  pub OD_EST_PARAMETERS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub OD_APRIORI_DATA: Option<alloc::string::String>,
+  pub OD_RESIDUALS: Option<alloc::string::String>,
+}
+impl Default for OrbitDeterminationT {
+  fn default() -> Self {
+    Self {
+      OD_ID: None,
+      OD_PREV_ID: None,
+      OD_ALGORITHM: None,
+      OD_METHOD: None,
+      OD_EPOCH: None,
+      OD_TIME_TAG: None,
+      OD_PROCESS_NOISE: None,
+      OD_COV_REDUCTION: None,
+      OD_NOISE_MODELS: None,
+      OD_OBSERVATIONS_TYPE: None,
+      OD_OBSERVATIONS_USED: 0,
+      OD_TRACKS_USED: 0,
+      OD_DATA_WEIGHTING: None,
+      OD_CONVERGENCE_CRITERIA: None,
+      OD_EST_PARAMETERS: None,
+      OD_APRIORI_DATA: None,
+      OD_RESIDUALS: None,
+    }
+  }
+}
+impl OrbitDeterminationT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<OrbitDetermination<'b>> {
+    let OD_ID = self.OD_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OD_PREV_ID = self.OD_PREV_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OD_ALGORITHM = self.OD_ALGORITHM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OD_METHOD = self.OD_METHOD.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OD_EPOCH = self.OD_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OD_TIME_TAG = self.OD_TIME_TAG.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OD_PROCESS_NOISE = self.OD_PROCESS_NOISE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OD_COV_REDUCTION = self.OD_COV_REDUCTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OD_NOISE_MODELS = self.OD_NOISE_MODELS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OD_OBSERVATIONS_TYPE = self.OD_OBSERVATIONS_TYPE.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let OD_OBSERVATIONS_USED = self.OD_OBSERVATIONS_USED;
+    let OD_TRACKS_USED = self.OD_TRACKS_USED;
+    let OD_DATA_WEIGHTING = self.OD_DATA_WEIGHTING.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OD_CONVERGENCE_CRITERIA = self.OD_CONVERGENCE_CRITERIA.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OD_EST_PARAMETERS = self.OD_EST_PARAMETERS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let OD_APRIORI_DATA = self.OD_APRIORI_DATA.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OD_RESIDUALS = self.OD_RESIDUALS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    OrbitDetermination::create(_fbb, &OrbitDeterminationArgs{
+      OD_ID,
+      OD_PREV_ID,
+      OD_ALGORITHM,
+      OD_METHOD,
+      OD_EPOCH,
+      OD_TIME_TAG,
+      OD_PROCESS_NOISE,
+      OD_COV_REDUCTION,
+      OD_NOISE_MODELS,
+      OD_OBSERVATIONS_TYPE,
+      OD_OBSERVATIONS_USED,
+      OD_TRACKS_USED,
+      OD_DATA_WEIGHTING,
+      OD_CONVERGENCE_CRITERIA,
+      OD_EST_PARAMETERS,
+      OD_APRIORI_DATA,
+      OD_RESIDUALS,
+    })
+  }
+}
+pub enum UserDefinedParametersOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct UserDefinedParameters<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for UserDefinedParameters<'a> {
+  type Inner = UserDefinedParameters<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> UserDefinedParameters<'a> {
+  pub const VT_PARAM_NAME: ::flatbuffers::VOffsetT = 4;
+  pub const VT_PARAM_VALUE: ::flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    UserDefinedParameters { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args UserDefinedParametersArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<UserDefinedParameters<'bldr>> {
+    let mut builder = UserDefinedParametersBuilder::new(_fbb);
+    if let Some(x) = args.PARAM_VALUE { builder.add_PARAM_VALUE(x); }
+    if let Some(x) = args.PARAM_NAME { builder.add_PARAM_NAME(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> UserDefinedParametersT {
+    let PARAM_NAME = self.PARAM_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PARAM_VALUE = self.PARAM_VALUE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    UserDefinedParametersT {
+      PARAM_NAME,
+      PARAM_VALUE,
+    }
+  }
+
+  /// Name of the user-defined parameter.
+  #[inline]
+  pub fn PARAM_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(UserDefinedParameters::VT_PARAM_NAME, None)}
+  }
+  /// Value of the user-defined parameter.
+  #[inline]
+  pub fn PARAM_VALUE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(UserDefinedParameters::VT_PARAM_VALUE, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for UserDefinedParameters<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARAM_NAME", Self::VT_PARAM_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARAM_VALUE", Self::VT_PARAM_VALUE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct UserDefinedParametersArgs<'a> {
+    pub PARAM_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PARAM_VALUE: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for UserDefinedParametersArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    UserDefinedParametersArgs {
+      PARAM_NAME: None,
+      PARAM_VALUE: None,
+    }
+  }
+}
+
+pub struct UserDefinedParametersBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> UserDefinedParametersBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_PARAM_NAME(&mut self, PARAM_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(UserDefinedParameters::VT_PARAM_NAME, PARAM_NAME);
+  }
+  #[inline]
+  pub fn add_PARAM_VALUE(&mut self, PARAM_VALUE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(UserDefinedParameters::VT_PARAM_VALUE, PARAM_VALUE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> UserDefinedParametersBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    UserDefinedParametersBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<UserDefinedParameters<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for UserDefinedParameters<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("UserDefinedParameters");
+      ds.field("PARAM_NAME", &self.PARAM_NAME());
+      ds.field("PARAM_VALUE", &self.PARAM_VALUE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct UserDefinedParametersT {
+  pub PARAM_NAME: Option<alloc::string::String>,
+  pub PARAM_VALUE: Option<alloc::string::String>,
+}
+impl Default for UserDefinedParametersT {
+  fn default() -> Self {
+    Self {
+      PARAM_NAME: None,
+      PARAM_VALUE: None,
+    }
+  }
+}
+impl UserDefinedParametersT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<UserDefinedParameters<'b>> {
+    let PARAM_NAME = self.PARAM_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PARAM_VALUE = self.PARAM_VALUE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    UserDefinedParameters::create(_fbb, &UserDefinedParametersArgs{
+      PARAM_NAME,
+      PARAM_VALUE,
+    })
+  }
+}
+pub enum OCMOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Orbit Comprehensive Message
+pub struct OCM<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OCM<'a> {
+  type Inner = OCM<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> OCM<'a> {
+  pub const VT_HEADER: ::flatbuffers::VOffsetT = 4;
+  pub const VT_METADATA: ::flatbuffers::VOffsetT = 6;
+  pub const VT_TRAJ_TYPE: ::flatbuffers::VOffsetT = 8;
+  pub const VT_TRAJ_TYPE_DESCRIPTION: ::flatbuffers::VOffsetT = 10;
+  pub const VT_STATE_STEP_SIZE: ::flatbuffers::VOffsetT = 12;
+  pub const VT_STATE_VECTOR_SIZE: ::flatbuffers::VOffsetT = 14;
+  pub const VT_STATE_DATA: ::flatbuffers::VOffsetT = 16;
+  pub const VT_COVARIANCE_DATA: ::flatbuffers::VOffsetT = 18;
+  pub const VT_POLYNOMIAL_POSITION_RECORDS: ::flatbuffers::VOffsetT = 20;
+  pub const VT_POLYNOMIAL_OE_RECORDS: ::flatbuffers::VOffsetT = 22;
+  pub const VT_PHYSICAL_PROPERTIES: ::flatbuffers::VOffsetT = 24;
+  pub const VT_MANEUVER_DATA: ::flatbuffers::VOffsetT = 26;
+  pub const VT_PERTURBATIONS: ::flatbuffers::VOffsetT = 28;
+  pub const VT_ORBIT_DETERMINATION: ::flatbuffers::VOffsetT = 30;
+  pub const VT_USER_DEFINED_PARAMETERS: ::flatbuffers::VOffsetT = 32;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    OCM { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args OCMArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<OCM<'bldr>> {
+    let mut builder = OCMBuilder::new(_fbb);
+    builder.add_STATE_STEP_SIZE(args.STATE_STEP_SIZE);
+    if let Some(x) = args.USER_DEFINED_PARAMETERS { builder.add_USER_DEFINED_PARAMETERS(x); }
+    if let Some(x) = args.ORBIT_DETERMINATION { builder.add_ORBIT_DETERMINATION(x); }
+    if let Some(x) = args.PERTURBATIONS { builder.add_PERTURBATIONS(x); }
+    if let Some(x) = args.MANEUVER_DATA { builder.add_MANEUVER_DATA(x); }
+    if let Some(x) = args.PHYSICAL_PROPERTIES { builder.add_PHYSICAL_PROPERTIES(x); }
+    if let Some(x) = args.POLYNOMIAL_OE_RECORDS { builder.add_POLYNOMIAL_OE_RECORDS(x); }
+    if let Some(x) = args.POLYNOMIAL_POSITION_RECORDS { builder.add_POLYNOMIAL_POSITION_RECORDS(x); }
+    if let Some(x) = args.COVARIANCE_DATA { builder.add_COVARIANCE_DATA(x); }
+    if let Some(x) = args.STATE_DATA { builder.add_STATE_DATA(x); }
+    if let Some(x) = args.TRAJ_TYPE_DESCRIPTION { builder.add_TRAJ_TYPE_DESCRIPTION(x); }
+    if let Some(x) = args.METADATA { builder.add_METADATA(x); }
+    if let Some(x) = args.HEADER { builder.add_HEADER(x); }
+    builder.add_STATE_VECTOR_SIZE(args.STATE_VECTOR_SIZE);
+    builder.add_TRAJ_TYPE(args.TRAJ_TYPE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> OCMT {
+    let HEADER = self.HEADER().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let METADATA = self.METADATA().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let TRAJ_TYPE = self.TRAJ_TYPE();
+    let TRAJ_TYPE_DESCRIPTION = self.TRAJ_TYPE_DESCRIPTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let STATE_STEP_SIZE = self.STATE_STEP_SIZE();
+    let STATE_VECTOR_SIZE = self.STATE_VECTOR_SIZE();
+    let STATE_DATA = self.STATE_DATA().map(|x| {
+      x.into_iter().collect()
+    });
+    let COVARIANCE_DATA = self.COVARIANCE_DATA().map(|x| {
+      x.into_iter().collect()
+    });
+    let POLYNOMIAL_POSITION_RECORDS = self.POLYNOMIAL_POSITION_RECORDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let POLYNOMIAL_OE_RECORDS = self.POLYNOMIAL_OE_RECORDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let PHYSICAL_PROPERTIES = self.PHYSICAL_PROPERTIES().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let MANEUVER_DATA = self.MANEUVER_DATA().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let PERTURBATIONS = self.PERTURBATIONS().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let ORBIT_DETERMINATION = self.ORBIT_DETERMINATION().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let USER_DEFINED_PARAMETERS = self.USER_DEFINED_PARAMETERS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    OCMT {
+      HEADER,
+      METADATA,
+      TRAJ_TYPE,
+      TRAJ_TYPE_DESCRIPTION,
+      STATE_STEP_SIZE,
+      STATE_VECTOR_SIZE,
+      STATE_DATA,
+      COVARIANCE_DATA,
+      POLYNOMIAL_POSITION_RECORDS,
+      POLYNOMIAL_OE_RECORDS,
+      PHYSICAL_PROPERTIES,
+      MANEUVER_DATA,
+      PERTURBATIONS,
+      ORBIT_DETERMINATION,
+      USER_DEFINED_PARAMETERS,
+    }
+  }
+
+  /// Header section of the OCM.
+  #[inline]
+  pub fn HEADER(&self) -> Option<Header<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<Header>>(OCM::VT_HEADER, None)}
+  }
+  /// Metadata section of the OCM.
+  #[inline]
+  pub fn METADATA(&self) -> Option<Metadata<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<Metadata>>(OCM::VT_METADATA, None)}
+  }
+  /// Trajectory state representation type.
+  /// Determines how orbit state data is parameterized in this message.
+  /// For CARTESIAN_PV/CARTESIAN_PVA, use STATE_DATA array.
+  /// For POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays.
+  #[inline]
+  pub fn TRAJ_TYPE(&self) -> trajectoryType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<trajectoryType>(OCM::VT_TRAJ_TYPE, Some(trajectoryType::CARTESIAN_PV)).unwrap()}
+  }
+  /// Legacy trajectory type string for backward compatibility and extended types
+  /// (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
+  #[inline]
+  pub fn TRAJ_TYPE_DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCM::VT_TRAJ_TYPE_DESCRIPTION, None)}
+  }
+  /// Time interval between state vectors in seconds (required for time-series data).
+  #[inline]
+  pub fn STATE_STEP_SIZE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OCM::VT_STATE_STEP_SIZE, Some(0.0)).unwrap()}
+  }
+  /// Number of components per state vector.
+  /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  #[inline]
+  pub fn STATE_VECTOR_SIZE(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(OCM::VT_STATE_VECTOR_SIZE, Some(6)).unwrap()}
+  }
+  /// State data as row-major array of doubles.
+  /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+  /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+  /// Length must be divisible by STATE_VECTOR_SIZE.
+  #[inline]
+  pub fn STATE_DATA(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCM::VT_STATE_DATA, None)}
+  }
+  /// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+  /// Time alignment matches STATE_DATA epochs.
+  #[inline]
+  pub fn COVARIANCE_DATA(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCM::VT_COVARIANCE_DATA, None)}
+  }
+  /// Polynomial position records.
+  /// Used when TRAJ_TYPE is POLYNOMIAL_POS. Each record covers a time segment
+  /// with polynomial coefficients for X, Y, Z position (and optionally velocity).
+  /// See PPE schema for record structure and evaluation procedure.
+  #[inline]
+  pub fn POLYNOMIAL_POSITION_RECORDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord>>>>(OCM::VT_POLYNOMIAL_POSITION_RECORDS, None)}
+  }
+  /// Polynomial orbital element records.
+  /// Used when TRAJ_TYPE is POLYNOMIAL_OE. Each record covers a time segment
+  /// with polynomial coefficients for classical orbital elements.
+  /// See PPE schema for record structure and evaluation procedure.
+  #[inline]
+  pub fn POLYNOMIAL_OE_RECORDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord>>>>(OCM::VT_POLYNOMIAL_OE_RECORDS, None)}
+  }
+  /// Physical properties of the space object.
+  #[inline]
+  pub fn PHYSICAL_PROPERTIES(&self) -> Option<PhysicalProperties<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PhysicalProperties>>(OCM::VT_PHYSICAL_PROPERTIES, None)}
+  }
+  /// Maneuver data.
+  #[inline]
+  pub fn MANEUVER_DATA(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<Maneuver<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<Maneuver>>>>(OCM::VT_MANEUVER_DATA, None)}
+  }
+  /// Perturbations parameters used.
+  #[inline]
+  pub fn PERTURBATIONS(&self) -> Option<Perturbations<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<Perturbations>>(OCM::VT_PERTURBATIONS, None)}
+  }
+  /// Orbit determination data.
+  #[inline]
+  pub fn ORBIT_DETERMINATION(&self) -> Option<OrbitDetermination<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OrbitDetermination>>(OCM::VT_ORBIT_DETERMINATION, None)}
+  }
+  /// User-defined parameters and supplemental comments.
+  #[inline]
+  pub fn USER_DEFINED_PARAMETERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<UserDefinedParameters<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<UserDefinedParameters>>>>(OCM::VT_USER_DEFINED_PARAMETERS, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for OCM<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<Header>>("HEADER", Self::VT_HEADER, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<Metadata>>("METADATA", Self::VT_METADATA, false)?
+     .visit_field::<trajectoryType>("TRAJ_TYPE", Self::VT_TRAJ_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRAJ_TYPE_DESCRIPTION", Self::VT_TRAJ_TYPE_DESCRIPTION, false)?
+     .visit_field::<f64>("STATE_STEP_SIZE", Self::VT_STATE_STEP_SIZE, false)?
+     .visit_field::<u8>("STATE_VECTOR_SIZE", Self::VT_STATE_VECTOR_SIZE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("STATE_DATA", Self::VT_STATE_DATA, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COVARIANCE_DATA", Self::VT_COVARIANCE_DATA, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PPEPositionRecord>>>>("POLYNOMIAL_POSITION_RECORDS", Self::VT_POLYNOMIAL_POSITION_RECORDS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord>>>>("POLYNOMIAL_OE_RECORDS", Self::VT_POLYNOMIAL_OE_RECORDS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<PhysicalProperties>>("PHYSICAL_PROPERTIES", Self::VT_PHYSICAL_PROPERTIES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<Maneuver>>>>("MANEUVER_DATA", Self::VT_MANEUVER_DATA, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<Perturbations>>("PERTURBATIONS", Self::VT_PERTURBATIONS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<OrbitDetermination>>("ORBIT_DETERMINATION", Self::VT_ORBIT_DETERMINATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<UserDefinedParameters>>>>("USER_DEFINED_PARAMETERS", Self::VT_USER_DEFINED_PARAMETERS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct OCMArgs<'a> {
+    pub HEADER: Option<::flatbuffers::WIPOffset<Header<'a>>>,
+    pub METADATA: Option<::flatbuffers::WIPOffset<Metadata<'a>>>,
+    pub TRAJ_TYPE: trajectoryType,
+    pub TRAJ_TYPE_DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub STATE_STEP_SIZE: f64,
+    pub STATE_VECTOR_SIZE: u8,
+    pub STATE_DATA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub COVARIANCE_DATA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub POLYNOMIAL_POSITION_RECORDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'a>>>>>,
+    pub POLYNOMIAL_OE_RECORDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord<'a>>>>>,
+    pub PHYSICAL_PROPERTIES: Option<::flatbuffers::WIPOffset<PhysicalProperties<'a>>>,
+    pub MANEUVER_DATA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<Maneuver<'a>>>>>,
+    pub PERTURBATIONS: Option<::flatbuffers::WIPOffset<Perturbations<'a>>>,
+    pub ORBIT_DETERMINATION: Option<::flatbuffers::WIPOffset<OrbitDetermination<'a>>>,
+    pub USER_DEFINED_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<UserDefinedParameters<'a>>>>>,
+}
+impl<'a> Default for OCMArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    OCMArgs {
+      HEADER: None,
+      METADATA: None,
+      TRAJ_TYPE: trajectoryType::CARTESIAN_PV,
+      TRAJ_TYPE_DESCRIPTION: None,
+      STATE_STEP_SIZE: 0.0,
+      STATE_VECTOR_SIZE: 6,
+      STATE_DATA: None,
+      COVARIANCE_DATA: None,
+      POLYNOMIAL_POSITION_RECORDS: None,
+      POLYNOMIAL_OE_RECORDS: None,
+      PHYSICAL_PROPERTIES: None,
+      MANEUVER_DATA: None,
+      PERTURBATIONS: None,
+      ORBIT_DETERMINATION: None,
+      USER_DEFINED_PARAMETERS: None,
+    }
+  }
+}
+
+pub struct OCMBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_HEADER(&mut self, HEADER: ::flatbuffers::WIPOffset<Header<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<Header>>(OCM::VT_HEADER, HEADER);
+  }
+  #[inline]
+  pub fn add_METADATA(&mut self, METADATA: ::flatbuffers::WIPOffset<Metadata<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<Metadata>>(OCM::VT_METADATA, METADATA);
+  }
+  #[inline]
+  pub fn add_TRAJ_TYPE(&mut self, TRAJ_TYPE: trajectoryType) {
+    self.fbb_.push_slot::<trajectoryType>(OCM::VT_TRAJ_TYPE, TRAJ_TYPE, trajectoryType::CARTESIAN_PV);
+  }
+  #[inline]
+  pub fn add_TRAJ_TYPE_DESCRIPTION(&mut self, TRAJ_TYPE_DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_TRAJ_TYPE_DESCRIPTION, TRAJ_TYPE_DESCRIPTION);
+  }
+  #[inline]
+  pub fn add_STATE_STEP_SIZE(&mut self, STATE_STEP_SIZE: f64) {
+    self.fbb_.push_slot::<f64>(OCM::VT_STATE_STEP_SIZE, STATE_STEP_SIZE, 0.0);
+  }
+  #[inline]
+  pub fn add_STATE_VECTOR_SIZE(&mut self, STATE_VECTOR_SIZE: u8) {
+    self.fbb_.push_slot::<u8>(OCM::VT_STATE_VECTOR_SIZE, STATE_VECTOR_SIZE, 6);
+  }
+  #[inline]
+  pub fn add_STATE_DATA(&mut self, STATE_DATA: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_STATE_DATA, STATE_DATA);
+  }
+  #[inline]
+  pub fn add_COVARIANCE_DATA(&mut self, COVARIANCE_DATA: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_COVARIANCE_DATA, COVARIANCE_DATA);
+  }
+  #[inline]
+  pub fn add_POLYNOMIAL_POSITION_RECORDS(&mut self, POLYNOMIAL_POSITION_RECORDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_POLYNOMIAL_POSITION_RECORDS, POLYNOMIAL_POSITION_RECORDS);
+  }
+  #[inline]
+  pub fn add_POLYNOMIAL_OE_RECORDS(&mut self, POLYNOMIAL_OE_RECORDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_POLYNOMIAL_OE_RECORDS, POLYNOMIAL_OE_RECORDS);
+  }
+  #[inline]
+  pub fn add_PHYSICAL_PROPERTIES(&mut self, PHYSICAL_PROPERTIES: ::flatbuffers::WIPOffset<PhysicalProperties<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PhysicalProperties>>(OCM::VT_PHYSICAL_PROPERTIES, PHYSICAL_PROPERTIES);
+  }
+  #[inline]
+  pub fn add_MANEUVER_DATA(&mut self, MANEUVER_DATA: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<Maneuver<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_MANEUVER_DATA, MANEUVER_DATA);
+  }
+  #[inline]
+  pub fn add_PERTURBATIONS(&mut self, PERTURBATIONS: ::flatbuffers::WIPOffset<Perturbations<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<Perturbations>>(OCM::VT_PERTURBATIONS, PERTURBATIONS);
+  }
+  #[inline]
+  pub fn add_ORBIT_DETERMINATION(&mut self, ORBIT_DETERMINATION: ::flatbuffers::WIPOffset<OrbitDetermination<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<OrbitDetermination>>(OCM::VT_ORBIT_DETERMINATION, ORBIT_DETERMINATION);
+  }
+  #[inline]
+  pub fn add_USER_DEFINED_PARAMETERS(&mut self, USER_DEFINED_PARAMETERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<UserDefinedParameters<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_USER_DEFINED_PARAMETERS, USER_DEFINED_PARAMETERS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    OCMBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<OCM<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for OCM<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("OCM");
+      ds.field("HEADER", &self.HEADER());
+      ds.field("METADATA", &self.METADATA());
+      ds.field("TRAJ_TYPE", &self.TRAJ_TYPE());
+      ds.field("TRAJ_TYPE_DESCRIPTION", &self.TRAJ_TYPE_DESCRIPTION());
+      ds.field("STATE_STEP_SIZE", &self.STATE_STEP_SIZE());
+      ds.field("STATE_VECTOR_SIZE", &self.STATE_VECTOR_SIZE());
+      ds.field("STATE_DATA", &self.STATE_DATA());
+      ds.field("COVARIANCE_DATA", &self.COVARIANCE_DATA());
+      ds.field("POLYNOMIAL_POSITION_RECORDS", &self.POLYNOMIAL_POSITION_RECORDS());
+      ds.field("POLYNOMIAL_OE_RECORDS", &self.POLYNOMIAL_OE_RECORDS());
+      ds.field("PHYSICAL_PROPERTIES", &self.PHYSICAL_PROPERTIES());
+      ds.field("MANEUVER_DATA", &self.MANEUVER_DATA());
+      ds.field("PERTURBATIONS", &self.PERTURBATIONS());
+      ds.field("ORBIT_DETERMINATION", &self.ORBIT_DETERMINATION());
+      ds.field("USER_DEFINED_PARAMETERS", &self.USER_DEFINED_PARAMETERS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OCMT {
+  pub HEADER: Option<alloc::boxed::Box<HeaderT>>,
+  pub METADATA: Option<alloc::boxed::Box<MetadataT>>,
+  pub TRAJ_TYPE: trajectoryType,
+  pub TRAJ_TYPE_DESCRIPTION: Option<alloc::string::String>,
+  pub STATE_STEP_SIZE: f64,
+  pub STATE_VECTOR_SIZE: u8,
+  pub STATE_DATA: Option<alloc::vec::Vec<f64>>,
+  pub COVARIANCE_DATA: Option<alloc::vec::Vec<f64>>,
+  pub POLYNOMIAL_POSITION_RECORDS: Option<alloc::vec::Vec<PPEPositionRecordT>>,
+  pub POLYNOMIAL_OE_RECORDS: Option<alloc::vec::Vec<PPEOrbitalElementRecordT>>,
+  pub PHYSICAL_PROPERTIES: Option<alloc::boxed::Box<PhysicalPropertiesT>>,
+  pub MANEUVER_DATA: Option<alloc::vec::Vec<ManeuverT>>,
+  pub PERTURBATIONS: Option<alloc::boxed::Box<PerturbationsT>>,
+  pub ORBIT_DETERMINATION: Option<alloc::boxed::Box<OrbitDeterminationT>>,
+  pub USER_DEFINED_PARAMETERS: Option<alloc::vec::Vec<UserDefinedParametersT>>,
+}
+impl Default for OCMT {
+  fn default() -> Self {
+    Self {
+      HEADER: None,
+      METADATA: None,
+      TRAJ_TYPE: trajectoryType::CARTESIAN_PV,
+      TRAJ_TYPE_DESCRIPTION: None,
+      STATE_STEP_SIZE: 0.0,
+      STATE_VECTOR_SIZE: 6,
+      STATE_DATA: None,
+      COVARIANCE_DATA: None,
+      POLYNOMIAL_POSITION_RECORDS: None,
+      POLYNOMIAL_OE_RECORDS: None,
+      PHYSICAL_PROPERTIES: None,
+      MANEUVER_DATA: None,
+      PERTURBATIONS: None,
+      ORBIT_DETERMINATION: None,
+      USER_DEFINED_PARAMETERS: None,
+    }
+  }
+}
+impl OCMT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<OCM<'b>> {
+    let HEADER = self.HEADER.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let METADATA = self.METADATA.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let TRAJ_TYPE = self.TRAJ_TYPE;
+    let TRAJ_TYPE_DESCRIPTION = self.TRAJ_TYPE_DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let STATE_STEP_SIZE = self.STATE_STEP_SIZE;
+    let STATE_VECTOR_SIZE = self.STATE_VECTOR_SIZE;
+    let STATE_DATA = self.STATE_DATA.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let COVARIANCE_DATA = self.COVARIANCE_DATA.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let POLYNOMIAL_POSITION_RECORDS = self.POLYNOMIAL_POSITION_RECORDS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let POLYNOMIAL_OE_RECORDS = self.POLYNOMIAL_OE_RECORDS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let PHYSICAL_PROPERTIES = self.PHYSICAL_PROPERTIES.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let MANEUVER_DATA = self.MANEUVER_DATA.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let PERTURBATIONS = self.PERTURBATIONS.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let ORBIT_DETERMINATION = self.ORBIT_DETERMINATION.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let USER_DEFINED_PARAMETERS = self.USER_DEFINED_PARAMETERS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    OCM::create(_fbb, &OCMArgs{
+      HEADER,
+      METADATA,
+      TRAJ_TYPE,
+      TRAJ_TYPE_DESCRIPTION,
+      STATE_STEP_SIZE,
+      STATE_VECTOR_SIZE,
+      STATE_DATA,
+      COVARIANCE_DATA,
+      POLYNOMIAL_POSITION_RECORDS,
+      POLYNOMIAL_OE_RECORDS,
+      PHYSICAL_PROPERTIES,
+      MANEUVER_DATA,
+      PERTURBATIONS,
+      ORBIT_DETERMINATION,
+      USER_DEFINED_PARAMETERS,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `LCC`
+/// Verifies that a buffer of bytes contains a `OCM`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_lcc_unchecked`.
-pub fn root_as_lcc(buf: &[u8]) -> Result<LCC<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<LCC>(buf)
+/// `root_as_ocm_unchecked`.
+pub fn root_as_ocm(buf: &[u8]) -> Result<OCM<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<OCM>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `LCC` and returns it.
+/// `OCM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_lcc_unchecked`.
-pub fn size_prefixed_root_as_lcc(buf: &[u8]) -> Result<LCC<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<LCC>(buf)
+/// `size_prefixed_root_as_ocm_unchecked`.
+pub fn size_prefixed_root_as_ocm(buf: &[u8]) -> Result<OCM<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<OCM>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `LCC` and returns it.
+/// contains a `OCM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_lcc_unchecked`.
-pub fn root_as_lcc_with_opts<'b, 'o>(
+/// `root_as_ocm_unchecked`.
+pub fn root_as_ocm_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<LCC<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<LCC<'b>>(opts, buf)
+) -> Result<OCM<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<OCM<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `LCC` and returns
+/// bytes contains a size prefixed `OCM` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_lcc_unchecked`.
-pub fn size_prefixed_root_as_lcc_with_opts<'b, 'o>(
+/// `root_as_ocm_unchecked`.
+pub fn size_prefixed_root_as_ocm_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<LCC<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<LCC<'b>>(opts, buf)
+) -> Result<OCM<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<OCM<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a LCC and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a OCM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `LCC`.
-pub unsafe fn root_as_lcc_unchecked(buf: &[u8]) -> LCC<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<LCC>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `OCM`.
+pub unsafe fn root_as_ocm_unchecked(buf: &[u8]) -> OCM<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<OCM>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed LCC and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed OCM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `LCC`.
-pub unsafe fn size_prefixed_root_as_lcc_unchecked(buf: &[u8]) -> LCC<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<LCC>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `OCM`.
+pub unsafe fn size_prefixed_root_as_ocm_unchecked(buf: &[u8]) -> OCM<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<OCM>(buf) }
 }
-pub const LCC_IDENTIFIER: &str = "$LCC";
+pub const OCM_IDENTIFIER: &str = "$OCM";
 
 #[inline]
-pub fn lcc_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, LCC_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn lcc_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, LCC_IDENTIFIER, true)
+pub fn ocm_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, OCM_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_lcc_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn ocm_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, OCM_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_ocm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<LCC<'a>>) {
-  fbb.finish(root, Some(LCC_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<OCM<'a>>) {
+  fbb.finish(root, Some(OCM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_lcc_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<LCC<'a>>) {
-  fbb.finish_size_prefixed(root, Some(LCC_IDENTIFIER));
+pub fn finish_size_prefixed_ocm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<OCM<'a>>) {
+  fbb.finish_size_prefixed(root, Some(OCM_IDENTIFIER));
 }

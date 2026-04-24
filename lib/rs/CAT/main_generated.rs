@@ -2,664 +2,57 @@
 // @generated
 extern crate alloc;
 
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_LEGACY_COUNTRY_CODE: i8 = 0;
+pub const ENUM_MIN_SPACE_OBJECT_CLASS: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_LEGACY_COUNTRY_CODE: i8 = 125;
+pub const ENUM_MAX_SPACE_OBJECT_CLASS: i8 = 3;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_LEGACY_COUNTRY_CODE: [legacyCountryCode; 126] = [
-  legacyCountryCode::AB,
-  legacyCountryCode::ABS,
-  legacyCountryCode::AC,
-  legacyCountryCode::ALG,
-  legacyCountryCode::ANG,
-  legacyCountryCode::ARGN,
-  legacyCountryCode::ARM,
-  legacyCountryCode::ASRA,
-  legacyCountryCode::AUS,
-  legacyCountryCode::AZER,
-  legacyCountryCode::BEL,
-  legacyCountryCode::BELA,
-  legacyCountryCode::BERM,
-  legacyCountryCode::BGD,
-  legacyCountryCode::BHUT,
-  legacyCountryCode::BOL,
-  legacyCountryCode::BRAZ,
-  legacyCountryCode::BUL,
-  legacyCountryCode::CA,
-  legacyCountryCode::CHBZ,
-  legacyCountryCode::CHTU,
-  legacyCountryCode::CHLE,
-  legacyCountryCode::CIS,
-  legacyCountryCode::COL,
-  legacyCountryCode::CRI,
-  legacyCountryCode::CZCH,
-  legacyCountryCode::DEN,
-  legacyCountryCode::DJI,
-  legacyCountryCode::ECU,
-  legacyCountryCode::EGYP,
-  legacyCountryCode::ESA,
-  legacyCountryCode::ESRO,
-  legacyCountryCode::EST,
-  legacyCountryCode::ETH,
-  legacyCountryCode::EUME,
-  legacyCountryCode::EUTE,
-  legacyCountryCode::FGER,
-  legacyCountryCode::FIN,
-  legacyCountryCode::FR,
-  legacyCountryCode::FRIT,
-  legacyCountryCode::GER,
-  legacyCountryCode::GHA,
-  legacyCountryCode::GLOB,
-  legacyCountryCode::GREC,
-  legacyCountryCode::GRSA,
-  legacyCountryCode::GUAT,
-  legacyCountryCode::HUN,
-  legacyCountryCode::IM,
-  legacyCountryCode::IND,
-  legacyCountryCode::INDO,
-  legacyCountryCode::IRAN,
-  legacyCountryCode::IRAQ,
-  legacyCountryCode::IRID,
-  legacyCountryCode::IRL,
-  legacyCountryCode::ISRA,
-  legacyCountryCode::ISRO,
-  legacyCountryCode::ISS,
-  legacyCountryCode::IT,
-  legacyCountryCode::ITSO,
-  legacyCountryCode::JPN,
-  legacyCountryCode::KAZ,
-  legacyCountryCode::KEN,
-  legacyCountryCode::LAOS,
-  legacyCountryCode::LKA,
-  legacyCountryCode::LTU,
-  legacyCountryCode::LUXE,
-  legacyCountryCode::MA,
-  legacyCountryCode::MALA,
-  legacyCountryCode::MCO,
-  legacyCountryCode::MDA,
-  legacyCountryCode::MEX,
-  legacyCountryCode::MMR,
-  legacyCountryCode::MNG,
-  legacyCountryCode::MUS,
-  legacyCountryCode::NATO,
-  legacyCountryCode::NETH,
-  legacyCountryCode::NICO,
-  legacyCountryCode::NIG,
-  legacyCountryCode::NKOR,
-  legacyCountryCode::NOR,
-  legacyCountryCode::NPL,
-  legacyCountryCode::NZ,
-  legacyCountryCode::O3B,
-  legacyCountryCode::ORB,
-  legacyCountryCode::PAKI,
-  legacyCountryCode::PERU,
-  legacyCountryCode::POL,
-  legacyCountryCode::POR,
-  legacyCountryCode::PRC,
-  legacyCountryCode::PRY,
-  legacyCountryCode::PRES,
-  legacyCountryCode::QAT,
-  legacyCountryCode::RASC,
-  legacyCountryCode::ROC,
-  legacyCountryCode::ROM,
-  legacyCountryCode::RP,
-  legacyCountryCode::RWA,
-  legacyCountryCode::SAFR,
-  legacyCountryCode::SAUD,
-  legacyCountryCode::SDN,
-  legacyCountryCode::SEAL,
-  legacyCountryCode::SES,
-  legacyCountryCode::SGJP,
-  legacyCountryCode::SING,
-  legacyCountryCode::SKOR,
-  legacyCountryCode::SPN,
-  legacyCountryCode::STCT,
-  legacyCountryCode::SVN,
-  legacyCountryCode::SWED,
-  legacyCountryCode::SWTZ,
-  legacyCountryCode::TBD,
-  legacyCountryCode::THAI,
-  legacyCountryCode::TMMC,
-  legacyCountryCode::TUN,
-  legacyCountryCode::TURK,
-  legacyCountryCode::UAE,
-  legacyCountryCode::UK,
-  legacyCountryCode::UKR,
-  legacyCountryCode::UNK,
-  legacyCountryCode::URY,
-  legacyCountryCode::US,
-  legacyCountryCode::USBZ,
-  legacyCountryCode::VAT,
-  legacyCountryCode::VENZ,
-  legacyCountryCode::VTNM,
-  legacyCountryCode::ZWE,
+pub const ENUM_VALUES_SPACE_OBJECT_CLASS: [spaceObjectClass; 4] = [
+  spaceObjectClass::PAYLOAD,
+  spaceObjectClass::ROCKET_BODY,
+  spaceObjectClass::DEBRIS,
+  spaceObjectClass::UNKNOWN,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct legacyCountryCode(pub i8);
+pub struct spaceObjectClass(pub i8);
 #[allow(non_upper_case_globals)]
-impl legacyCountryCode {
-  /// Arab Satellite Communications Organization
-  pub const AB: Self = Self(0);
-  /// Asia Broadcast Satellite
-  pub const ABS: Self = Self(1);
-  /// Asia Satellite Telecommunications Company (ASIASAT)
-  pub const AC: Self = Self(2);
-  /// Algeria
-  pub const ALG: Self = Self(3);
-  /// Angola
-  pub const ANG: Self = Self(4);
-  /// Argentina
-  pub const ARGN: Self = Self(5);
-  /// Republic of Armenia
-  pub const ARM: Self = Self(6);
-  /// Austria
-  pub const ASRA: Self = Self(7);
-  /// Australia
-  pub const AUS: Self = Self(8);
-  /// Azerbaijan
-  pub const AZER: Self = Self(9);
-  /// Belgium
-  pub const BEL: Self = Self(10);
-  /// Belarus
-  pub const BELA: Self = Self(11);
-  /// Bermuda
-  pub const BERM: Self = Self(12);
-  /// People's Republic of Bangladesh
-  pub const BGD: Self = Self(13);
-  /// Kingdom of Bhutan
-  pub const BHUT: Self = Self(14);
-  /// Bolivia
-  pub const BOL: Self = Self(15);
-  /// Brazil
-  pub const BRAZ: Self = Self(16);
-  /// Bulgaria
-  pub const BUL: Self = Self(17);
-  /// Canada
-  pub const CA: Self = Self(18);
-  /// China/Brazil
-  pub const CHBZ: Self = Self(19);
-  /// China/Turkey
-  pub const CHTU: Self = Self(20);
-  /// Chile
-  pub const CHLE: Self = Self(21);
-  /// Commonwealth of Independent States (former USSR)
-  pub const CIS: Self = Self(22);
-  /// Colombia
-  pub const COL: Self = Self(23);
-  /// Republic of Costa Rica
-  pub const CRI: Self = Self(24);
-  /// Czech Republic (former Czechoslovakia)
-  pub const CZCH: Self = Self(25);
-  /// Denmark
-  pub const DEN: Self = Self(26);
-  /// Republic of Djibouti
-  pub const DJI: Self = Self(27);
-  /// Ecuador
-  pub const ECU: Self = Self(28);
-  /// Egypt
-  pub const EGYP: Self = Self(29);
-  /// European Space Agency
-  pub const ESA: Self = Self(30);
-  /// European Space Research Organization
-  pub const ESRO: Self = Self(31);
-  /// Estonia
-  pub const EST: Self = Self(32);
-  /// Ethiopia
-  pub const ETH: Self = Self(33);
-  /// European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
-  pub const EUME: Self = Self(34);
-  /// European Telecommunications Satellite Organization (EUTELSAT)
-  pub const EUTE: Self = Self(35);
-  /// France/Germany
-  pub const FGER: Self = Self(36);
-  /// Finland
-  pub const FIN: Self = Self(37);
-  /// France
-  pub const FR: Self = Self(38);
-  /// France/Italy
-  pub const FRIT: Self = Self(39);
-  /// Germany
-  pub const GER: Self = Self(40);
-  /// Republic of Ghana
-  pub const GHA: Self = Self(41);
-  /// Globalstar
-  pub const GLOB: Self = Self(42);
-  /// Greece
-  pub const GREC: Self = Self(43);
-  /// Greece/Saudi Arabia
-  pub const GRSA: Self = Self(44);
-  /// Guatemala
-  pub const GUAT: Self = Self(45);
-  /// Hungary
-  pub const HUN: Self = Self(46);
-  /// International Mobile Satellite Organization (INMARSAT)
-  pub const IM: Self = Self(47);
-  /// India
-  pub const IND: Self = Self(48);
-  /// Indonesia
-  pub const INDO: Self = Self(49);
-  /// Iran
-  pub const IRAN: Self = Self(50);
-  /// Iraq
-  pub const IRAQ: Self = Self(51);
-  /// Iridium
-  pub const IRID: Self = Self(52);
-  /// Ireland
-  pub const IRL: Self = Self(53);
-  /// Israel
-  pub const ISRA: Self = Self(54);
-  /// Indian Space Research Organisation
-  pub const ISRO: Self = Self(55);
-  /// International Space Station
-  pub const ISS: Self = Self(56);
-  /// Italy
-  pub const IT: Self = Self(57);
-  /// International Telecommunications Satellite Organization (INTELSAT)
-  pub const ITSO: Self = Self(58);
-  /// Japan
-  pub const JPN: Self = Self(59);
-  /// Kazakhstan
-  pub const KAZ: Self = Self(60);
-  /// Republic of Kenya
-  pub const KEN: Self = Self(61);
-  /// Laos
-  pub const LAOS: Self = Self(62);
-  /// Democratic Socialist Republic of Sri Lanka
-  pub const LKA: Self = Self(63);
-  /// Lithuania
-  pub const LTU: Self = Self(64);
-  /// Luxembourg
-  pub const LUXE: Self = Self(65);
-  /// Morocco
-  pub const MA: Self = Self(66);
-  /// Malaysia
-  pub const MALA: Self = Self(67);
-  /// Principality of Monaco
-  pub const MCO: Self = Self(68);
-  /// Republic of Moldova
-  pub const MDA: Self = Self(69);
-  /// Mexico
-  pub const MEX: Self = Self(70);
-  /// Republic of the Union of Myanmar
-  pub const MMR: Self = Self(71);
-  /// Mongolia
-  pub const MNG: Self = Self(72);
-  /// Mauritius
-  pub const MUS: Self = Self(73);
-  /// North Atlantic Treaty Organization
-  pub const NATO: Self = Self(74);
-  /// Netherlands
-  pub const NETH: Self = Self(75);
-  /// New ICO
-  pub const NICO: Self = Self(76);
-  /// Nigeria
-  pub const NIG: Self = Self(77);
-  /// Democratic People's Republic of Korea
-  pub const NKOR: Self = Self(78);
-  /// Norway
-  pub const NOR: Self = Self(79);
-  /// Federal Democratic Republic of Nepal
-  pub const NPL: Self = Self(80);
-  /// New Zealand
-  pub const NZ: Self = Self(81);
-  /// O3b Networks
-  pub const O3B: Self = Self(82);
-  /// ORBCOMM
-  pub const ORB: Self = Self(83);
-  /// Pakistan
-  pub const PAKI: Self = Self(84);
-  /// Peru
-  pub const PERU: Self = Self(85);
-  /// Poland
-  pub const POL: Self = Self(86);
-  /// Portugal
-  pub const POR: Self = Self(87);
-  /// People's Republic of China
-  pub const PRC: Self = Self(88);
-  /// Republic of Paraguay
-  pub const PRY: Self = Self(89);
-  /// People's Republic of China/European Space Agency
-  pub const PRES: Self = Self(90);
-  /// State of Qatar
-  pub const QAT: Self = Self(91);
-  /// RascomStar-QAF
-  pub const RASC: Self = Self(92);
-  /// Taiwan (Republic of China)
-  pub const ROC: Self = Self(93);
-  /// Romania
-  pub const ROM: Self = Self(94);
-  /// Philippines (Republic of the Philippines)
-  pub const RP: Self = Self(95);
-  /// Republic of Rwanda
-  pub const RWA: Self = Self(96);
-  /// South Africa
-  pub const SAFR: Self = Self(97);
-  /// Saudi Arabia
-  pub const SAUD: Self = Self(98);
-  /// Republic of Sudan
-  pub const SDN: Self = Self(99);
-  /// Sea Launch
-  pub const SEAL: Self = Self(100);
-  /// SES
-  pub const SES: Self = Self(101);
-  /// Singapore/Japan
-  pub const SGJP: Self = Self(102);
-  /// Singapore
-  pub const SING: Self = Self(103);
-  /// Republic of Korea
-  pub const SKOR: Self = Self(104);
-  /// Spain
-  pub const SPN: Self = Self(105);
-  /// Singapore/Taiwan
-  pub const STCT: Self = Self(106);
-  /// Slovenia
-  pub const SVN: Self = Self(107);
-  /// Sweden
-  pub const SWED: Self = Self(108);
-  /// Switzerland
-  pub const SWTZ: Self = Self(109);
-  /// To Be Determined
-  pub const TBD: Self = Self(110);
-  /// Thailand
-  pub const THAI: Self = Self(111);
-  /// Turkmenistan/Monaco
-  pub const TMMC: Self = Self(112);
-  /// Republic of Tunisia
-  pub const TUN: Self = Self(113);
-  /// Turkey
-  pub const TURK: Self = Self(114);
-  /// United Arab Emirates
-  pub const UAE: Self = Self(115);
-  /// United Kingdom
-  pub const UK: Self = Self(116);
-  /// Ukraine
-  pub const UKR: Self = Self(117);
-  /// Unknown
-  pub const UNK: Self = Self(118);
-  /// Uruguay
-  pub const URY: Self = Self(119);
-  /// United States
-  pub const US: Self = Self(120);
-  /// United States/Brazil
-  pub const USBZ: Self = Self(121);
-  /// Vatican City State
-  pub const VAT: Self = Self(122);
-  /// Venezuela
-  pub const VENZ: Self = Self(123);
-  /// Vietnam
-  pub const VTNM: Self = Self(124);
-  /// Republic of Zimbabwe
-  pub const ZWE: Self = Self(125);
+impl spaceObjectClass {
+  /// 0
+  pub const PAYLOAD: Self = Self(0);
+  /// 1
+  pub const ROCKET_BODY: Self = Self(1);
+  /// 2
+  pub const DEBRIS: Self = Self(2);
+  /// 3
+  pub const UNKNOWN: Self = Self(3);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 125;
+  pub const ENUM_MAX: i8 = 3;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::AB,
-    Self::ABS,
-    Self::AC,
-    Self::ALG,
-    Self::ANG,
-    Self::ARGN,
-    Self::ARM,
-    Self::ASRA,
-    Self::AUS,
-    Self::AZER,
-    Self::BEL,
-    Self::BELA,
-    Self::BERM,
-    Self::BGD,
-    Self::BHUT,
-    Self::BOL,
-    Self::BRAZ,
-    Self::BUL,
-    Self::CA,
-    Self::CHBZ,
-    Self::CHTU,
-    Self::CHLE,
-    Self::CIS,
-    Self::COL,
-    Self::CRI,
-    Self::CZCH,
-    Self::DEN,
-    Self::DJI,
-    Self::ECU,
-    Self::EGYP,
-    Self::ESA,
-    Self::ESRO,
-    Self::EST,
-    Self::ETH,
-    Self::EUME,
-    Self::EUTE,
-    Self::FGER,
-    Self::FIN,
-    Self::FR,
-    Self::FRIT,
-    Self::GER,
-    Self::GHA,
-    Self::GLOB,
-    Self::GREC,
-    Self::GRSA,
-    Self::GUAT,
-    Self::HUN,
-    Self::IM,
-    Self::IND,
-    Self::INDO,
-    Self::IRAN,
-    Self::IRAQ,
-    Self::IRID,
-    Self::IRL,
-    Self::ISRA,
-    Self::ISRO,
-    Self::ISS,
-    Self::IT,
-    Self::ITSO,
-    Self::JPN,
-    Self::KAZ,
-    Self::KEN,
-    Self::LAOS,
-    Self::LKA,
-    Self::LTU,
-    Self::LUXE,
-    Self::MA,
-    Self::MALA,
-    Self::MCO,
-    Self::MDA,
-    Self::MEX,
-    Self::MMR,
-    Self::MNG,
-    Self::MUS,
-    Self::NATO,
-    Self::NETH,
-    Self::NICO,
-    Self::NIG,
-    Self::NKOR,
-    Self::NOR,
-    Self::NPL,
-    Self::NZ,
-    Self::O3B,
-    Self::ORB,
-    Self::PAKI,
-    Self::PERU,
-    Self::POL,
-    Self::POR,
-    Self::PRC,
-    Self::PRY,
-    Self::PRES,
-    Self::QAT,
-    Self::RASC,
-    Self::ROC,
-    Self::ROM,
-    Self::RP,
-    Self::RWA,
-    Self::SAFR,
-    Self::SAUD,
-    Self::SDN,
-    Self::SEAL,
-    Self::SES,
-    Self::SGJP,
-    Self::SING,
-    Self::SKOR,
-    Self::SPN,
-    Self::STCT,
-    Self::SVN,
-    Self::SWED,
-    Self::SWTZ,
-    Self::TBD,
-    Self::THAI,
-    Self::TMMC,
-    Self::TUN,
-    Self::TURK,
-    Self::UAE,
-    Self::UK,
-    Self::UKR,
-    Self::UNK,
-    Self::URY,
-    Self::US,
-    Self::USBZ,
-    Self::VAT,
-    Self::VENZ,
-    Self::VTNM,
-    Self::ZWE,
+    Self::PAYLOAD,
+    Self::ROCKET_BODY,
+    Self::DEBRIS,
+    Self::UNKNOWN,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::AB => Some("AB"),
-      Self::ABS => Some("ABS"),
-      Self::AC => Some("AC"),
-      Self::ALG => Some("ALG"),
-      Self::ANG => Some("ANG"),
-      Self::ARGN => Some("ARGN"),
-      Self::ARM => Some("ARM"),
-      Self::ASRA => Some("ASRA"),
-      Self::AUS => Some("AUS"),
-      Self::AZER => Some("AZER"),
-      Self::BEL => Some("BEL"),
-      Self::BELA => Some("BELA"),
-      Self::BERM => Some("BERM"),
-      Self::BGD => Some("BGD"),
-      Self::BHUT => Some("BHUT"),
-      Self::BOL => Some("BOL"),
-      Self::BRAZ => Some("BRAZ"),
-      Self::BUL => Some("BUL"),
-      Self::CA => Some("CA"),
-      Self::CHBZ => Some("CHBZ"),
-      Self::CHTU => Some("CHTU"),
-      Self::CHLE => Some("CHLE"),
-      Self::CIS => Some("CIS"),
-      Self::COL => Some("COL"),
-      Self::CRI => Some("CRI"),
-      Self::CZCH => Some("CZCH"),
-      Self::DEN => Some("DEN"),
-      Self::DJI => Some("DJI"),
-      Self::ECU => Some("ECU"),
-      Self::EGYP => Some("EGYP"),
-      Self::ESA => Some("ESA"),
-      Self::ESRO => Some("ESRO"),
-      Self::EST => Some("EST"),
-      Self::ETH => Some("ETH"),
-      Self::EUME => Some("EUME"),
-      Self::EUTE => Some("EUTE"),
-      Self::FGER => Some("FGER"),
-      Self::FIN => Some("FIN"),
-      Self::FR => Some("FR"),
-      Self::FRIT => Some("FRIT"),
-      Self::GER => Some("GER"),
-      Self::GHA => Some("GHA"),
-      Self::GLOB => Some("GLOB"),
-      Self::GREC => Some("GREC"),
-      Self::GRSA => Some("GRSA"),
-      Self::GUAT => Some("GUAT"),
-      Self::HUN => Some("HUN"),
-      Self::IM => Some("IM"),
-      Self::IND => Some("IND"),
-      Self::INDO => Some("INDO"),
-      Self::IRAN => Some("IRAN"),
-      Self::IRAQ => Some("IRAQ"),
-      Self::IRID => Some("IRID"),
-      Self::IRL => Some("IRL"),
-      Self::ISRA => Some("ISRA"),
-      Self::ISRO => Some("ISRO"),
-      Self::ISS => Some("ISS"),
-      Self::IT => Some("IT"),
-      Self::ITSO => Some("ITSO"),
-      Self::JPN => Some("JPN"),
-      Self::KAZ => Some("KAZ"),
-      Self::KEN => Some("KEN"),
-      Self::LAOS => Some("LAOS"),
-      Self::LKA => Some("LKA"),
-      Self::LTU => Some("LTU"),
-      Self::LUXE => Some("LUXE"),
-      Self::MA => Some("MA"),
-      Self::MALA => Some("MALA"),
-      Self::MCO => Some("MCO"),
-      Self::MDA => Some("MDA"),
-      Self::MEX => Some("MEX"),
-      Self::MMR => Some("MMR"),
-      Self::MNG => Some("MNG"),
-      Self::MUS => Some("MUS"),
-      Self::NATO => Some("NATO"),
-      Self::NETH => Some("NETH"),
-      Self::NICO => Some("NICO"),
-      Self::NIG => Some("NIG"),
-      Self::NKOR => Some("NKOR"),
-      Self::NOR => Some("NOR"),
-      Self::NPL => Some("NPL"),
-      Self::NZ => Some("NZ"),
-      Self::O3B => Some("O3B"),
-      Self::ORB => Some("ORB"),
-      Self::PAKI => Some("PAKI"),
-      Self::PERU => Some("PERU"),
-      Self::POL => Some("POL"),
-      Self::POR => Some("POR"),
-      Self::PRC => Some("PRC"),
-      Self::PRY => Some("PRY"),
-      Self::PRES => Some("PRES"),
-      Self::QAT => Some("QAT"),
-      Self::RASC => Some("RASC"),
-      Self::ROC => Some("ROC"),
-      Self::ROM => Some("ROM"),
-      Self::RP => Some("RP"),
-      Self::RWA => Some("RWA"),
-      Self::SAFR => Some("SAFR"),
-      Self::SAUD => Some("SAUD"),
-      Self::SDN => Some("SDN"),
-      Self::SEAL => Some("SEAL"),
-      Self::SES => Some("SES"),
-      Self::SGJP => Some("SGJP"),
-      Self::SING => Some("SING"),
-      Self::SKOR => Some("SKOR"),
-      Self::SPN => Some("SPN"),
-      Self::STCT => Some("STCT"),
-      Self::SVN => Some("SVN"),
-      Self::SWED => Some("SWED"),
-      Self::SWTZ => Some("SWTZ"),
-      Self::TBD => Some("TBD"),
-      Self::THAI => Some("THAI"),
-      Self::TMMC => Some("TMMC"),
-      Self::TUN => Some("TUN"),
-      Self::TURK => Some("TURK"),
-      Self::UAE => Some("UAE"),
-      Self::UK => Some("UK"),
-      Self::UKR => Some("UKR"),
-      Self::UNK => Some("UNK"),
-      Self::URY => Some("URY"),
-      Self::US => Some("US"),
-      Self::USBZ => Some("USBZ"),
-      Self::VAT => Some("VAT"),
-      Self::VENZ => Some("VENZ"),
-      Self::VTNM => Some("VTNM"),
-      Self::ZWE => Some("ZWE"),
+      Self::PAYLOAD => Some("PAYLOAD"),
+      Self::ROCKET_BODY => Some("ROCKET_BODY"),
+      Self::DEBRIS => Some("DEBRIS"),
+      Self::UNKNOWN => Some("UNKNOWN"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for legacyCountryCode {
+impl ::core::fmt::Debug for spaceObjectClass {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -668,7 +61,7 @@ impl ::core::fmt::Debug for legacyCountryCode {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for legacyCountryCode {
+impl<'a> ::flatbuffers::Follow<'a> for spaceObjectClass {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -677,15 +70,15 @@ impl<'a> ::flatbuffers::Follow<'a> for legacyCountryCode {
   }
 }
 
-impl ::flatbuffers::Push for legacyCountryCode {
-    type Output = legacyCountryCode;
+impl ::flatbuffers::Push for spaceObjectClass {
+    type Output = spaceObjectClass;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for legacyCountryCode {
+impl ::flatbuffers::EndianScalar for spaceObjectClass {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -699,7 +92,7 @@ impl ::flatbuffers::EndianScalar for legacyCountryCode {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for legacyCountryCode {
+impl<'a> ::flatbuffers::Verifiable for spaceObjectClass {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -708,213 +101,1171 @@ impl<'a> ::flatbuffers::Verifiable for legacyCountryCode {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for legacyCountryCode {}
-pub enum LCCOffset {}
+impl ::flatbuffers::SimpleToVerifyInSlice for spaceObjectClass {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_OPERATIONAL_STATE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_OPERATIONAL_STATE: i8 = 7;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_OPERATIONAL_STATE: [operationalState; 8] = [
+  operationalState::OPERATIONAL,
+  operationalState::NONOPERATIONAL,
+  operationalState::PARTIALLY_OPERATIONAL,
+  operationalState::BACKUP_STANDBY,
+  operationalState::SPARE,
+  operationalState::EXTENDED_MISSION,
+  operationalState::DECAYED,
+  operationalState::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct operationalState(pub i8);
+#[allow(non_upper_case_globals)]
+impl operationalState {
+  /// +
+  pub const OPERATIONAL: Self = Self(0);
+  /// -
+  pub const NONOPERATIONAL: Self = Self(1);
+  /// P
+  pub const PARTIALLY_OPERATIONAL: Self = Self(2);
+  /// B
+  pub const BACKUP_STANDBY: Self = Self(3);
+  /// S
+  pub const SPARE: Self = Self(4);
+  /// X
+  pub const EXTENDED_MISSION: Self = Self(5);
+  /// D
+  pub const DECAYED: Self = Self(6);
+  /// ?
+  pub const UNKNOWN: Self = Self(7);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 7;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::OPERATIONAL,
+    Self::NONOPERATIONAL,
+    Self::PARTIALLY_OPERATIONAL,
+    Self::BACKUP_STANDBY,
+    Self::SPARE,
+    Self::EXTENDED_MISSION,
+    Self::DECAYED,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::OPERATIONAL => Some("OPERATIONAL"),
+      Self::NONOPERATIONAL => Some("NONOPERATIONAL"),
+      Self::PARTIALLY_OPERATIONAL => Some("PARTIALLY_OPERATIONAL"),
+      Self::BACKUP_STANDBY => Some("BACKUP_STANDBY"),
+      Self::SPARE => Some("SPARE"),
+      Self::EXTENDED_MISSION => Some("EXTENDED_MISSION"),
+      Self::DECAYED => Some("DECAYED"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for operationalState {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for operationalState {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for operationalState {
+    type Output = operationalState;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for operationalState {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for operationalState {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for operationalState {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_DATA_AVAILABILITY: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_DATA_AVAILABILITY: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_DATA_AVAILABILITY: [dataAvailability; 4] = [
+  dataAvailability::NO_CURRENT_ELEMENTS,
+  dataAvailability::NO_INITIAL_ELEMENTS,
+  dataAvailability::NO_ELEMENTS_AVAILABLE,
+  dataAvailability::OK,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct dataAvailability(pub i8);
+#[allow(non_upper_case_globals)]
+impl dataAvailability {
+  /// NCE
+  pub const NO_CURRENT_ELEMENTS: Self = Self(0);
+  /// NIE
+  pub const NO_INITIAL_ELEMENTS: Self = Self(1);
+  /// NEA
+  pub const NO_ELEMENTS_AVAILABLE: Self = Self(2);
+  /// OK
+  pub const OK: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::NO_CURRENT_ELEMENTS,
+    Self::NO_INITIAL_ELEMENTS,
+    Self::NO_ELEMENTS_AVAILABLE,
+    Self::OK,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::NO_CURRENT_ELEMENTS => Some("NO_CURRENT_ELEMENTS"),
+      Self::NO_INITIAL_ELEMENTS => Some("NO_INITIAL_ELEMENTS"),
+      Self::NO_ELEMENTS_AVAILABLE => Some("NO_ELEMENTS_AVAILABLE"),
+      Self::OK => Some("OK"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for dataAvailability {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for dataAvailability {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for dataAvailability {
+    type Output = dataAvailability;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for dataAvailability {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for dataAvailability {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for dataAvailability {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ORBIT_REGIME: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ORBIT_REGIME: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ORBIT_REGIME: [orbitRegime; 5] = [
+  orbitRegime::ORBIT,
+  orbitRegime::LANDING,
+  orbitRegime::IMPACT,
+  orbitRegime::DOCKED,
+  orbitRegime::ROUNDTRIP,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct orbitRegime(pub i8);
+#[allow(non_upper_case_globals)]
+impl orbitRegime {
+  /// 0
+  pub const ORBIT: Self = Self(0);
+  /// 1
+  pub const LANDING: Self = Self(1);
+  /// 2
+  pub const IMPACT: Self = Self(2);
+  /// 3
+  pub const DOCKED: Self = Self(3);
+  /// 4
+  pub const ROUNDTRIP: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::ORBIT,
+    Self::LANDING,
+    Self::IMPACT,
+    Self::DOCKED,
+    Self::ROUNDTRIP,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::ORBIT => Some("ORBIT"),
+      Self::LANDING => Some("LANDING"),
+      Self::IMPACT => Some("IMPACT"),
+      Self::DOCKED => Some("DOCKED"),
+      Self::ROUNDTRIP => Some("ROUNDTRIP"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for orbitRegime {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for orbitRegime {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for orbitRegime {
+    type Output = orbitRegime;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for orbitRegime {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for orbitRegime {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for orbitRegime {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_MASS_CATEGORY: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_MASS_CATEGORY: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_MASS_CATEGORY: [massCategory; 2] = [
+  massCategory::DRY,
+  massCategory::WET,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct massCategory(pub i8);
+#[allow(non_upper_case_globals)]
+impl massCategory {
+  pub const DRY: Self = Self(0);
+  pub const WET: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::DRY,
+    Self::WET,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::DRY => Some("DRY"),
+      Self::WET => Some("WET"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for massCategory {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for massCategory {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for massCategory {
+    type Output = massCategory;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for massCategory {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for massCategory {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for massCategory {}
+pub enum CATOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Legacy Country Code
-pub struct LCC<'a> {
+/// Catalog Entity Message
+pub struct CAT<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for LCC<'a> {
-  type Inner = LCC<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for CAT<'a> {
+  type Inner = CAT<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> LCC<'a> {
-  pub const VT_OWNER: ::flatbuffers::VOffsetT = 4;
+impl<'a> CAT<'a> {
+  pub const VT_OBJECT_NAME: ::flatbuffers::VOffsetT = 4;
+  pub const VT_OBJECT_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_NORAD_CAT_ID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_OBJECT_TYPE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_OPS_STATUS_CODE: ::flatbuffers::VOffsetT = 12;
+  pub const VT_OWNER: ::flatbuffers::VOffsetT = 14;
+  pub const VT_LAUNCH_DATE: ::flatbuffers::VOffsetT = 16;
+  pub const VT_LAUNCH_SITE: ::flatbuffers::VOffsetT = 18;
+  pub const VT_DECAY_DATE: ::flatbuffers::VOffsetT = 20;
+  pub const VT_PERIOD: ::flatbuffers::VOffsetT = 22;
+  pub const VT_INCLINATION: ::flatbuffers::VOffsetT = 24;
+  pub const VT_APOGEE: ::flatbuffers::VOffsetT = 26;
+  pub const VT_PERIGEE: ::flatbuffers::VOffsetT = 28;
+  pub const VT_RCS: ::flatbuffers::VOffsetT = 30;
+  pub const VT_DATA_STATUS_CODE: ::flatbuffers::VOffsetT = 32;
+  pub const VT_ORBIT_CENTER: ::flatbuffers::VOffsetT = 34;
+  pub const VT_ORBIT_TYPE: ::flatbuffers::VOffsetT = 36;
+  pub const VT_DEPLOYMENT_DATE: ::flatbuffers::VOffsetT = 38;
+  pub const VT_MANEUVERABLE: ::flatbuffers::VOffsetT = 40;
+  pub const VT_SIZE: ::flatbuffers::VOffsetT = 42;
+  pub const VT_MASS: ::flatbuffers::VOffsetT = 44;
+  pub const VT_MASS_TYPE: ::flatbuffers::VOffsetT = 46;
+  pub const VT_PAYLOADS: ::flatbuffers::VOffsetT = 48;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    LCC { _tab: table }
+    CAT { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args LCCArgs
-  ) -> ::flatbuffers::WIPOffset<LCC<'bldr>> {
-    let mut builder = LCCBuilder::new(_fbb);
+    args: &'args CATArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<CAT<'bldr>> {
+    let mut builder = CATBuilder::new(_fbb);
+    builder.add_MASS(args.MASS);
+    builder.add_SIZE(args.SIZE);
+    builder.add_RCS(args.RCS);
+    builder.add_PERIGEE(args.PERIGEE);
+    builder.add_APOGEE(args.APOGEE);
+    builder.add_INCLINATION(args.INCLINATION);
+    builder.add_PERIOD(args.PERIOD);
+    if let Some(x) = args.PAYLOADS { builder.add_PAYLOADS(x); }
+    if let Some(x) = args.DEPLOYMENT_DATE { builder.add_DEPLOYMENT_DATE(x); }
+    if let Some(x) = args.ORBIT_CENTER { builder.add_ORBIT_CENTER(x); }
+    if let Some(x) = args.DECAY_DATE { builder.add_DECAY_DATE(x); }
+    if let Some(x) = args.LAUNCH_SITE { builder.add_LAUNCH_SITE(x); }
+    if let Some(x) = args.LAUNCH_DATE { builder.add_LAUNCH_DATE(x); }
+    builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
+    if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
+    if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
+    builder.add_MASS_TYPE(args.MASS_TYPE);
+    builder.add_MANEUVERABLE(args.MANEUVERABLE);
+    builder.add_ORBIT_TYPE(args.ORBIT_TYPE);
+    builder.add_DATA_STATUS_CODE(args.DATA_STATUS_CODE);
     builder.add_OWNER(args.OWNER);
+    builder.add_OPS_STATUS_CODE(args.OPS_STATUS_CODE);
+    builder.add_OBJECT_TYPE(args.OBJECT_TYPE);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> LCCT {
+  pub fn unpack(&self) -> CATT {
+    let OBJECT_NAME = self.OBJECT_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OBJECT_ID = self.OBJECT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let NORAD_CAT_ID = self.NORAD_CAT_ID();
+    let OBJECT_TYPE = self.OBJECT_TYPE();
+    let OPS_STATUS_CODE = self.OPS_STATUS_CODE();
     let OWNER = self.OWNER();
-    LCCT {
+    let LAUNCH_DATE = self.LAUNCH_DATE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LAUNCH_SITE = self.LAUNCH_SITE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DECAY_DATE = self.DECAY_DATE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PERIOD = self.PERIOD();
+    let INCLINATION = self.INCLINATION();
+    let APOGEE = self.APOGEE();
+    let PERIGEE = self.PERIGEE();
+    let RCS = self.RCS();
+    let DATA_STATUS_CODE = self.DATA_STATUS_CODE();
+    let ORBIT_CENTER = self.ORBIT_CENTER().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ORBIT_TYPE = self.ORBIT_TYPE();
+    let DEPLOYMENT_DATE = self.DEPLOYMENT_DATE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MANEUVERABLE = self.MANEUVERABLE();
+    let SIZE = self.SIZE();
+    let MASS = self.MASS();
+    let MASS_TYPE = self.MASS_TYPE();
+    let PAYLOADS = self.PAYLOADS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    CATT {
+      OBJECT_NAME,
+      OBJECT_ID,
+      NORAD_CAT_ID,
+      OBJECT_TYPE,
+      OPS_STATUS_CODE,
       OWNER,
+      LAUNCH_DATE,
+      LAUNCH_SITE,
+      DECAY_DATE,
+      PERIOD,
+      INCLINATION,
+      APOGEE,
+      PERIGEE,
+      RCS,
+      DATA_STATUS_CODE,
+      ORBIT_CENTER,
+      ORBIT_TYPE,
+      DEPLOYMENT_DATE,
+      MANEUVERABLE,
+      SIZE,
+      MASS,
+      MASS_TYPE,
+      PAYLOADS,
     }
   }
 
+  /// Satellite Name(s)
+  #[inline]
+  pub fn OBJECT_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_OBJECT_NAME, None)}
+  }
+  /// International Designator (YYYY-NNNAAA)
+  #[inline]
+  pub fn OBJECT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_OBJECT_ID, None)}
+  }
+  /// NORAD Catalog Number
+  #[inline]
+  pub fn NORAD_CAT_ID(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(CAT::VT_NORAD_CAT_ID, Some(0)).unwrap()}
+  }
+  /// Object type (Payload, Rocket body, Debris, Unknown)
+  #[inline]
+  pub fn OBJECT_TYPE(&self) -> spaceObjectClass {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<spaceObjectClass>(CAT::VT_OBJECT_TYPE, Some(spaceObjectClass::UNKNOWN)).unwrap()}
+  }
+  /// Operational Status Code
+  #[inline]
+  pub fn OPS_STATUS_CODE(&self) -> operationalState {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<operationalState>(CAT::VT_OPS_STATUS_CODE, Some(operationalState::UNKNOWN)).unwrap()}
+  }
+  /// Ownership, typically country or company
   #[inline]
   pub fn OWNER(&self) -> legacyCountryCode {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<legacyCountryCode>(LCC::VT_OWNER, Some(legacyCountryCode::AB)).unwrap()}
+    unsafe { self._tab.get::<legacyCountryCode>(CAT::VT_OWNER, Some(legacyCountryCode::AB)).unwrap()}
+  }
+  /// Launch Date [year-month-day] (ISO 8601)
+  #[inline]
+  pub fn LAUNCH_DATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_LAUNCH_DATE, None)}
+  }
+  /// Launch Site
+  #[inline]
+  pub fn LAUNCH_SITE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_LAUNCH_SITE, None)}
+  }
+  /// Decay Date, if applicable [year-month-day] (ISO 8601)
+  #[inline]
+  pub fn DECAY_DATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_DECAY_DATE, None)}
+  }
+  /// Orbital period [minutes]
+  #[inline]
+  pub fn PERIOD(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CAT::VT_PERIOD, Some(0.0)).unwrap()}
+  }
+  /// Inclination [degrees]
+  #[inline]
+  pub fn INCLINATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CAT::VT_INCLINATION, Some(0.0)).unwrap()}
+  }
+  /// Apogee Altitude [kilometers]
+  #[inline]
+  pub fn APOGEE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CAT::VT_APOGEE, Some(0.0)).unwrap()}
+  }
+  /// Perigee Altitude [kilometers]
+  #[inline]
+  pub fn PERIGEE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CAT::VT_PERIGEE, Some(0.0)).unwrap()}
+  }
+  /// Radar Cross Section [meters2]; blank if no data available
+  #[inline]
+  pub fn RCS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CAT::VT_RCS, Some(0.0)).unwrap()}
+  }
+  /// Data status code; blank otherwise
+  #[inline]
+  pub fn DATA_STATUS_CODE(&self) -> dataAvailability {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<dataAvailability>(CAT::VT_DATA_STATUS_CODE, Some(dataAvailability::NO_CURRENT_ELEMENTS)).unwrap()}
+  }
+  /// Orbit center
+  #[inline]
+  pub fn ORBIT_CENTER(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_ORBIT_CENTER, None)}
+  }
+  /// Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
+  #[inline]
+  pub fn ORBIT_TYPE(&self) -> orbitRegime {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<orbitRegime>(CAT::VT_ORBIT_TYPE, Some(orbitRegime::ORBIT)).unwrap()}
+  }
+  /// Deployment Date [year-month-day] (ISO 8601)
+  #[inline]
+  pub fn DEPLOYMENT_DATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_DEPLOYMENT_DATE, None)}
+  }
+  /// Indicates if the object is maneuverable
+  #[inline]
+  pub fn MANEUVERABLE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CAT::VT_MANEUVERABLE, Some(false)).unwrap()}
+  }
+  /// Size [meters]; blank if no data available
+  #[inline]
+  pub fn SIZE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CAT::VT_SIZE, Some(0.0)).unwrap()}
+  }
+  /// Mass [kilograms]; blank if no data available
+  #[inline]
+  pub fn MASS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CAT::VT_MASS, Some(0.0)).unwrap()}
+  }
+  /// Mass type (Dry, Wet)
+  #[inline]
+  pub fn MASS_TYPE(&self) -> massCategory {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<massCategory>(CAT::VT_MASS_TYPE, Some(massCategory::DRY)).unwrap()}
+  }
+  /// Vector of PAYLOADS
+  #[inline]
+  pub fn PAYLOADS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLD<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLD>>>>(CAT::VT_PAYLOADS, None)}
   }
 }
 
-impl ::flatbuffers::Verifiable for LCC<'_> {
+impl ::flatbuffers::Verifiable for CAT<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, false)?
+     .visit_field::<u32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
+     .visit_field::<spaceObjectClass>("OBJECT_TYPE", Self::VT_OBJECT_TYPE, false)?
+     .visit_field::<operationalState>("OPS_STATUS_CODE", Self::VT_OPS_STATUS_CODE, false)?
      .visit_field::<legacyCountryCode>("OWNER", Self::VT_OWNER, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAUNCH_DATE", Self::VT_LAUNCH_DATE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAUNCH_SITE", Self::VT_LAUNCH_SITE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DECAY_DATE", Self::VT_DECAY_DATE, false)?
+     .visit_field::<f64>("PERIOD", Self::VT_PERIOD, false)?
+     .visit_field::<f64>("INCLINATION", Self::VT_INCLINATION, false)?
+     .visit_field::<f64>("APOGEE", Self::VT_APOGEE, false)?
+     .visit_field::<f64>("PERIGEE", Self::VT_PERIGEE, false)?
+     .visit_field::<f64>("RCS", Self::VT_RCS, false)?
+     .visit_field::<dataAvailability>("DATA_STATUS_CODE", Self::VT_DATA_STATUS_CODE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORBIT_CENTER", Self::VT_ORBIT_CENTER, false)?
+     .visit_field::<orbitRegime>("ORBIT_TYPE", Self::VT_ORBIT_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DEPLOYMENT_DATE", Self::VT_DEPLOYMENT_DATE, false)?
+     .visit_field::<bool>("MANEUVERABLE", Self::VT_MANEUVERABLE, false)?
+     .visit_field::<f64>("SIZE", Self::VT_SIZE, false)?
+     .visit_field::<f64>("MASS", Self::VT_MASS, false)?
+     .visit_field::<massCategory>("MASS_TYPE", Self::VT_MASS_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLD>>>>("PAYLOADS", Self::VT_PAYLOADS, false)?
      .finish();
     Ok(())
   }
 }
-pub struct LCCArgs {
+pub struct CATArgs<'a> {
+    pub OBJECT_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NORAD_CAT_ID: u32,
+    pub OBJECT_TYPE: spaceObjectClass,
+    pub OPS_STATUS_CODE: operationalState,
     pub OWNER: legacyCountryCode,
+    pub LAUNCH_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LAUNCH_SITE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DECAY_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PERIOD: f64,
+    pub INCLINATION: f64,
+    pub APOGEE: f64,
+    pub PERIGEE: f64,
+    pub RCS: f64,
+    pub DATA_STATUS_CODE: dataAvailability,
+    pub ORBIT_CENTER: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORBIT_TYPE: orbitRegime,
+    pub DEPLOYMENT_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MANEUVERABLE: bool,
+    pub SIZE: f64,
+    pub MASS: f64,
+    pub MASS_TYPE: massCategory,
+    pub PAYLOADS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLD<'a>>>>>,
 }
-impl<'a> Default for LCCArgs {
+impl<'a> Default for CATArgs<'a> {
   #[inline]
   fn default() -> Self {
-    LCCArgs {
+    CATArgs {
+      OBJECT_NAME: None,
+      OBJECT_ID: None,
+      NORAD_CAT_ID: 0,
+      OBJECT_TYPE: spaceObjectClass::UNKNOWN,
+      OPS_STATUS_CODE: operationalState::UNKNOWN,
       OWNER: legacyCountryCode::AB,
+      LAUNCH_DATE: None,
+      LAUNCH_SITE: None,
+      DECAY_DATE: None,
+      PERIOD: 0.0,
+      INCLINATION: 0.0,
+      APOGEE: 0.0,
+      PERIGEE: 0.0,
+      RCS: 0.0,
+      DATA_STATUS_CODE: dataAvailability::NO_CURRENT_ELEMENTS,
+      ORBIT_CENTER: None,
+      ORBIT_TYPE: orbitRegime::ORBIT,
+      DEPLOYMENT_DATE: None,
+      MANEUVERABLE: false,
+      SIZE: 0.0,
+      MASS: 0.0,
+      MASS_TYPE: massCategory::DRY,
+      PAYLOADS: None,
     }
   }
 }
 
-pub struct LCCBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct CATBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> LCCBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CATBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_OWNER(&mut self, OWNER: legacyCountryCode) {
-    self.fbb_.push_slot::<legacyCountryCode>(LCC::VT_OWNER, OWNER, legacyCountryCode::AB);
+  pub fn add_OBJECT_NAME(&mut self, OBJECT_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_OBJECT_NAME, OBJECT_NAME);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> LCCBuilder<'a, 'b, A> {
+  pub fn add_OBJECT_ID(&mut self, OBJECT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_OBJECT_ID, OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_NORAD_CAT_ID(&mut self, NORAD_CAT_ID: u32) {
+    self.fbb_.push_slot::<u32>(CAT::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
+  }
+  #[inline]
+  pub fn add_OBJECT_TYPE(&mut self, OBJECT_TYPE: spaceObjectClass) {
+    self.fbb_.push_slot::<spaceObjectClass>(CAT::VT_OBJECT_TYPE, OBJECT_TYPE, spaceObjectClass::UNKNOWN);
+  }
+  #[inline]
+  pub fn add_OPS_STATUS_CODE(&mut self, OPS_STATUS_CODE: operationalState) {
+    self.fbb_.push_slot::<operationalState>(CAT::VT_OPS_STATUS_CODE, OPS_STATUS_CODE, operationalState::UNKNOWN);
+  }
+  #[inline]
+  pub fn add_OWNER(&mut self, OWNER: legacyCountryCode) {
+    self.fbb_.push_slot::<legacyCountryCode>(CAT::VT_OWNER, OWNER, legacyCountryCode::AB);
+  }
+  #[inline]
+  pub fn add_LAUNCH_DATE(&mut self, LAUNCH_DATE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_LAUNCH_DATE, LAUNCH_DATE);
+  }
+  #[inline]
+  pub fn add_LAUNCH_SITE(&mut self, LAUNCH_SITE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_LAUNCH_SITE, LAUNCH_SITE);
+  }
+  #[inline]
+  pub fn add_DECAY_DATE(&mut self, DECAY_DATE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_DECAY_DATE, DECAY_DATE);
+  }
+  #[inline]
+  pub fn add_PERIOD(&mut self, PERIOD: f64) {
+    self.fbb_.push_slot::<f64>(CAT::VT_PERIOD, PERIOD, 0.0);
+  }
+  #[inline]
+  pub fn add_INCLINATION(&mut self, INCLINATION: f64) {
+    self.fbb_.push_slot::<f64>(CAT::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  #[inline]
+  pub fn add_APOGEE(&mut self, APOGEE: f64) {
+    self.fbb_.push_slot::<f64>(CAT::VT_APOGEE, APOGEE, 0.0);
+  }
+  #[inline]
+  pub fn add_PERIGEE(&mut self, PERIGEE: f64) {
+    self.fbb_.push_slot::<f64>(CAT::VT_PERIGEE, PERIGEE, 0.0);
+  }
+  #[inline]
+  pub fn add_RCS(&mut self, RCS: f64) {
+    self.fbb_.push_slot::<f64>(CAT::VT_RCS, RCS, 0.0);
+  }
+  #[inline]
+  pub fn add_DATA_STATUS_CODE(&mut self, DATA_STATUS_CODE: dataAvailability) {
+    self.fbb_.push_slot::<dataAvailability>(CAT::VT_DATA_STATUS_CODE, DATA_STATUS_CODE, dataAvailability::NO_CURRENT_ELEMENTS);
+  }
+  #[inline]
+  pub fn add_ORBIT_CENTER(&mut self, ORBIT_CENTER: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_ORBIT_CENTER, ORBIT_CENTER);
+  }
+  #[inline]
+  pub fn add_ORBIT_TYPE(&mut self, ORBIT_TYPE: orbitRegime) {
+    self.fbb_.push_slot::<orbitRegime>(CAT::VT_ORBIT_TYPE, ORBIT_TYPE, orbitRegime::ORBIT);
+  }
+  #[inline]
+  pub fn add_DEPLOYMENT_DATE(&mut self, DEPLOYMENT_DATE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_DEPLOYMENT_DATE, DEPLOYMENT_DATE);
+  }
+  #[inline]
+  pub fn add_MANEUVERABLE(&mut self, MANEUVERABLE: bool) {
+    self.fbb_.push_slot::<bool>(CAT::VT_MANEUVERABLE, MANEUVERABLE, false);
+  }
+  #[inline]
+  pub fn add_SIZE(&mut self, SIZE: f64) {
+    self.fbb_.push_slot::<f64>(CAT::VT_SIZE, SIZE, 0.0);
+  }
+  #[inline]
+  pub fn add_MASS(&mut self, MASS: f64) {
+    self.fbb_.push_slot::<f64>(CAT::VT_MASS, MASS, 0.0);
+  }
+  #[inline]
+  pub fn add_MASS_TYPE(&mut self, MASS_TYPE: massCategory) {
+    self.fbb_.push_slot::<massCategory>(CAT::VT_MASS_TYPE, MASS_TYPE, massCategory::DRY);
+  }
+  #[inline]
+  pub fn add_PAYLOADS(&mut self, PAYLOADS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PLD<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_PAYLOADS, PAYLOADS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CATBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    LCCBuilder {
+    CATBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<LCC<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<CAT<'a>> {
     let o = self.fbb_.end_table(self.start_);
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for LCC<'_> {
+impl ::core::fmt::Debug for CAT<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("LCC");
+    let mut ds = f.debug_struct("CAT");
+      ds.field("OBJECT_NAME", &self.OBJECT_NAME());
+      ds.field("OBJECT_ID", &self.OBJECT_ID());
+      ds.field("NORAD_CAT_ID", &self.NORAD_CAT_ID());
+      ds.field("OBJECT_TYPE", &self.OBJECT_TYPE());
+      ds.field("OPS_STATUS_CODE", &self.OPS_STATUS_CODE());
       ds.field("OWNER", &self.OWNER());
+      ds.field("LAUNCH_DATE", &self.LAUNCH_DATE());
+      ds.field("LAUNCH_SITE", &self.LAUNCH_SITE());
+      ds.field("DECAY_DATE", &self.DECAY_DATE());
+      ds.field("PERIOD", &self.PERIOD());
+      ds.field("INCLINATION", &self.INCLINATION());
+      ds.field("APOGEE", &self.APOGEE());
+      ds.field("PERIGEE", &self.PERIGEE());
+      ds.field("RCS", &self.RCS());
+      ds.field("DATA_STATUS_CODE", &self.DATA_STATUS_CODE());
+      ds.field("ORBIT_CENTER", &self.ORBIT_CENTER());
+      ds.field("ORBIT_TYPE", &self.ORBIT_TYPE());
+      ds.field("DEPLOYMENT_DATE", &self.DEPLOYMENT_DATE());
+      ds.field("MANEUVERABLE", &self.MANEUVERABLE());
+      ds.field("SIZE", &self.SIZE());
+      ds.field("MASS", &self.MASS());
+      ds.field("MASS_TYPE", &self.MASS_TYPE());
+      ds.field("PAYLOADS", &self.PAYLOADS());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct LCCT {
+pub struct CATT {
+  pub OBJECT_NAME: Option<alloc::string::String>,
+  pub OBJECT_ID: Option<alloc::string::String>,
+  pub NORAD_CAT_ID: u32,
+  pub OBJECT_TYPE: spaceObjectClass,
+  pub OPS_STATUS_CODE: operationalState,
   pub OWNER: legacyCountryCode,
+  pub LAUNCH_DATE: Option<alloc::string::String>,
+  pub LAUNCH_SITE: Option<alloc::string::String>,
+  pub DECAY_DATE: Option<alloc::string::String>,
+  pub PERIOD: f64,
+  pub INCLINATION: f64,
+  pub APOGEE: f64,
+  pub PERIGEE: f64,
+  pub RCS: f64,
+  pub DATA_STATUS_CODE: dataAvailability,
+  pub ORBIT_CENTER: Option<alloc::string::String>,
+  pub ORBIT_TYPE: orbitRegime,
+  pub DEPLOYMENT_DATE: Option<alloc::string::String>,
+  pub MANEUVERABLE: bool,
+  pub SIZE: f64,
+  pub MASS: f64,
+  pub MASS_TYPE: massCategory,
+  pub PAYLOADS: Option<alloc::vec::Vec<PLDT>>,
 }
-impl Default for LCCT {
+impl Default for CATT {
   fn default() -> Self {
     Self {
+      OBJECT_NAME: None,
+      OBJECT_ID: None,
+      NORAD_CAT_ID: 0,
+      OBJECT_TYPE: spaceObjectClass::UNKNOWN,
+      OPS_STATUS_CODE: operationalState::UNKNOWN,
       OWNER: legacyCountryCode::AB,
+      LAUNCH_DATE: None,
+      LAUNCH_SITE: None,
+      DECAY_DATE: None,
+      PERIOD: 0.0,
+      INCLINATION: 0.0,
+      APOGEE: 0.0,
+      PERIGEE: 0.0,
+      RCS: 0.0,
+      DATA_STATUS_CODE: dataAvailability::NO_CURRENT_ELEMENTS,
+      ORBIT_CENTER: None,
+      ORBIT_TYPE: orbitRegime::ORBIT,
+      DEPLOYMENT_DATE: None,
+      MANEUVERABLE: false,
+      SIZE: 0.0,
+      MASS: 0.0,
+      MASS_TYPE: massCategory::DRY,
+      PAYLOADS: None,
     }
   }
 }
-impl LCCT {
+impl CATT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<LCC<'b>> {
+  ) -> ::flatbuffers::WIPOffset<CAT<'b>> {
+    let OBJECT_NAME = self.OBJECT_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OBJECT_ID = self.OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NORAD_CAT_ID = self.NORAD_CAT_ID;
+    let OBJECT_TYPE = self.OBJECT_TYPE;
+    let OPS_STATUS_CODE = self.OPS_STATUS_CODE;
     let OWNER = self.OWNER;
-    LCC::create(_fbb, &LCCArgs{
+    let LAUNCH_DATE = self.LAUNCH_DATE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LAUNCH_SITE = self.LAUNCH_SITE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DECAY_DATE = self.DECAY_DATE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PERIOD = self.PERIOD;
+    let INCLINATION = self.INCLINATION;
+    let APOGEE = self.APOGEE;
+    let PERIGEE = self.PERIGEE;
+    let RCS = self.RCS;
+    let DATA_STATUS_CODE = self.DATA_STATUS_CODE;
+    let ORBIT_CENTER = self.ORBIT_CENTER.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORBIT_TYPE = self.ORBIT_TYPE;
+    let DEPLOYMENT_DATE = self.DEPLOYMENT_DATE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MANEUVERABLE = self.MANEUVERABLE;
+    let SIZE = self.SIZE;
+    let MASS = self.MASS;
+    let MASS_TYPE = self.MASS_TYPE;
+    let PAYLOADS = self.PAYLOADS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    CAT::create(_fbb, &CATArgs{
+      OBJECT_NAME,
+      OBJECT_ID,
+      NORAD_CAT_ID,
+      OBJECT_TYPE,
+      OPS_STATUS_CODE,
       OWNER,
+      LAUNCH_DATE,
+      LAUNCH_SITE,
+      DECAY_DATE,
+      PERIOD,
+      INCLINATION,
+      APOGEE,
+      PERIGEE,
+      RCS,
+      DATA_STATUS_CODE,
+      ORBIT_CENTER,
+      ORBIT_TYPE,
+      DEPLOYMENT_DATE,
+      MANEUVERABLE,
+      SIZE,
+      MASS,
+      MASS_TYPE,
+      PAYLOADS,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `LCC`
+/// Verifies that a buffer of bytes contains a `CAT`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_lcc_unchecked`.
-pub fn root_as_lcc(buf: &[u8]) -> Result<LCC<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<LCC>(buf)
+/// `root_as_cat_unchecked`.
+pub fn root_as_cat(buf: &[u8]) -> Result<CAT<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<CAT>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `LCC` and returns it.
+/// `CAT` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_lcc_unchecked`.
-pub fn size_prefixed_root_as_lcc(buf: &[u8]) -> Result<LCC<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<LCC>(buf)
+/// `size_prefixed_root_as_cat_unchecked`.
+pub fn size_prefixed_root_as_cat(buf: &[u8]) -> Result<CAT<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<CAT>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `LCC` and returns it.
+/// contains a `CAT` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_lcc_unchecked`.
-pub fn root_as_lcc_with_opts<'b, 'o>(
+/// `root_as_cat_unchecked`.
+pub fn root_as_cat_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<LCC<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<LCC<'b>>(opts, buf)
+) -> Result<CAT<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<CAT<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `LCC` and returns
+/// bytes contains a size prefixed `CAT` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_lcc_unchecked`.
-pub fn size_prefixed_root_as_lcc_with_opts<'b, 'o>(
+/// `root_as_cat_unchecked`.
+pub fn size_prefixed_root_as_cat_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<LCC<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<LCC<'b>>(opts, buf)
+) -> Result<CAT<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<CAT<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a LCC and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a CAT and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `LCC`.
-pub unsafe fn root_as_lcc_unchecked(buf: &[u8]) -> LCC<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<LCC>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `CAT`.
+pub unsafe fn root_as_cat_unchecked(buf: &[u8]) -> CAT<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<CAT>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed LCC and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed CAT and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `LCC`.
-pub unsafe fn size_prefixed_root_as_lcc_unchecked(buf: &[u8]) -> LCC<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<LCC>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `CAT`.
+pub unsafe fn size_prefixed_root_as_cat_unchecked(buf: &[u8]) -> CAT<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<CAT>(buf) }
 }
-pub const LCC_IDENTIFIER: &str = "$LCC";
+pub const CAT_IDENTIFIER: &str = "$CAT";
 
 #[inline]
-pub fn lcc_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, LCC_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn lcc_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, LCC_IDENTIFIER, true)
+pub fn cat_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, CAT_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_lcc_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn cat_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, CAT_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_cat_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<LCC<'a>>) {
-  fbb.finish(root, Some(LCC_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<CAT<'a>>) {
+  fbb.finish(root, Some(CAT_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_lcc_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<LCC<'a>>) {
-  fbb.finish_size_prefixed(root, Some(LCC_IDENTIFIER));
+pub fn finish_size_prefixed_cat_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<CAT<'a>>) {
+  fbb.finish_size_prefixed(root, Some(CAT_IDENTIFIER));
 }

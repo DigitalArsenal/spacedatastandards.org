@@ -2,71 +2,58 @@
 // @generated
 extern crate alloc;
 
+use crate::main_generated::*;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_ENTITY_KIND: i8 = 0;
+pub const ENUM_MIN_CATALOG_QUERY_KIND: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_ENTITY_KIND: i8 = 127;
+pub const ENUM_MAX_CATALOG_QUERY_KIND: u8 = 3;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_ENTITY_KIND: [entityKind; 9] = [
-  entityKind::ENTITY,
-  entityKind::SPACE,
-  entityKind::GROUND,
-  entityKind::AIRCRAFT,
-  entityKind::MISSILE,
-  entityKind::SHIP,
-  entityKind::VEHICLE,
-  entityKind::SENSOR,
-  entityKind::OTHER,
+pub const ENUM_VALUES_CATALOG_QUERY_KIND: [catalogQueryKind; 4] = [
+  catalogQueryKind::ROWS,
+  catalogQueryKind::ENTITY_INDICES,
+  catalogQueryKind::VISIBILITY_MASK,
+  catalogQueryKind::CATALOG_ROW,
 ];
 
-/// Entity category for shared entity metadata index rows.
+/// Catalog query discriminator. Callers and host plugins use this enum to
+/// select a query shape for in-memory catalog queries answered by a host
+/// runtime (for example the shared FlatSQL entity collection).
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct entityKind(pub i8);
+pub struct catalogQueryKind(pub u8);
 #[allow(non_upper_case_globals)]
-impl entityKind {
-  pub const ENTITY: Self = Self(0);
-  pub const SPACE: Self = Self(1);
-  pub const GROUND: Self = Self(2);
-  pub const AIRCRAFT: Self = Self(3);
-  pub const MISSILE: Self = Self(4);
-  pub const SHIP: Self = Self(5);
-  pub const VEHICLE: Self = Self(6);
-  pub const SENSOR: Self = Self(7);
-  pub const OTHER: Self = Self(127);
+impl catalogQueryKind {
+  /// Return matched entity metadata rows.
+  pub const ROWS: Self = Self(0);
+  /// Return only the matched entity indices.
+  pub const ENTITY_INDICES: Self = Self(1);
+  /// Return a packed visibility mask (one byte per entity).
+  pub const VISIBILITY_MASK: Self = Self(2);
+  /// Return a single catalog row by entity index.
+  pub const CATALOG_ROW: Self = Self(3);
 
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 127;
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 3;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::ENTITY,
-    Self::SPACE,
-    Self::GROUND,
-    Self::AIRCRAFT,
-    Self::MISSILE,
-    Self::SHIP,
-    Self::VEHICLE,
-    Self::SENSOR,
-    Self::OTHER,
+    Self::ROWS,
+    Self::ENTITY_INDICES,
+    Self::VISIBILITY_MASK,
+    Self::CATALOG_ROW,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::ENTITY => Some("ENTITY"),
-      Self::SPACE => Some("SPACE"),
-      Self::GROUND => Some("GROUND"),
-      Self::AIRCRAFT => Some("AIRCRAFT"),
-      Self::MISSILE => Some("MISSILE"),
-      Self::SHIP => Some("SHIP"),
-      Self::VEHICLE => Some("VEHICLE"),
-      Self::SENSOR => Some("SENSOR"),
-      Self::OTHER => Some("OTHER"),
+      Self::ROWS => Some("ROWS"),
+      Self::ENTITY_INDICES => Some("ENTITY_INDICES"),
+      Self::VISIBILITY_MASK => Some("VISIBILITY_MASK"),
+      Self::CATALOG_ROW => Some("CATALOG_ROW"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for entityKind {
+impl ::core::fmt::Debug for catalogQueryKind {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -75,944 +62,797 @@ impl ::core::fmt::Debug for entityKind {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for entityKind {
+impl<'a> ::flatbuffers::Follow<'a> for catalogQueryKind {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
     Self(b)
   }
 }
 
-impl ::flatbuffers::Push for entityKind {
-    type Output = entityKind;
+impl ::flatbuffers::Push for catalogQueryKind {
+    type Output = catalogQueryKind;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for entityKind {
-  type Scalar = i8;
+impl ::flatbuffers::EndianScalar for catalogQueryKind {
+  type Scalar = u8;
   #[inline]
-  fn to_little_endian(self) -> i8 {
+  fn to_little_endian(self) -> u8 {
     self.0.to_le()
   }
   #[inline]
   #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
     Self(b)
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for entityKind {
+impl<'a> ::flatbuffers::Verifiable for catalogQueryKind {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
+    u8::run_verifier(v, pos)
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for entityKind {}
-pub enum ETMOffset {}
+impl ::flatbuffers::SimpleToVerifyInSlice for catalogQueryKind {}
+pub enum CAQRequestOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Entity Metadata — generic queryable metadata for a host-local entity.
-/// Participates in shared FlatSQL/WASM runtimes where multiple plugins
-/// cross-query the same entity collection.
-pub struct ETM<'a> {
+/// Catalog query request payload.
+pub struct CAQRequest<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for ETM<'a> {
-  type Inner = ETM<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for CAQRequest<'a> {
+  type Inner = CAQRequest<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> ETM<'a> {
-  pub const VT_ENTITY_ID: ::flatbuffers::VOffsetT = 4;
-  pub const VT_NAME: ::flatbuffers::VOffsetT = 6;
-  pub const VT_KIND: ::flatbuffers::VOffsetT = 8;
-  pub const VT_SUBTYPE: ::flatbuffers::VOffsetT = 10;
-  pub const VT_PARENT_ENTITY_ID: ::flatbuffers::VOffsetT = 12;
-  pub const VT_WASM_HANDLE: ::flatbuffers::VOffsetT = 14;
-  pub const VT_NORAD_CAT_ID: ::flatbuffers::VOffsetT = 16;
-  pub const VT_OBJECT_NAME: ::flatbuffers::VOffsetT = 18;
-  pub const VT_OBJECT_ID: ::flatbuffers::VOffsetT = 20;
-  pub const VT_CAT_OBJECT_NAME: ::flatbuffers::VOffsetT = 22;
-  pub const VT_CAT_OBJECT_ID: ::flatbuffers::VOffsetT = 24;
-  pub const VT_FACILITY_TYPE: ::flatbuffers::VOffsetT = 26;
-  pub const VT_SEARCH_TEXT: ::flatbuffers::VOffsetT = 28;
-  pub const VT_OWNER: ::flatbuffers::VOffsetT = 30;
-  pub const VT_STATUS_CODE: ::flatbuffers::VOffsetT = 32;
-  pub const VT_LAUNCH_DATE: ::flatbuffers::VOffsetT = 34;
-  pub const VT_LAUNCH_YEAR: ::flatbuffers::VOffsetT = 36;
-  pub const VT_ORBIT_REGIME: ::flatbuffers::VOffsetT = 38;
-  pub const VT_PERIOD: ::flatbuffers::VOffsetT = 40;
-  pub const VT_INCLINATION: ::flatbuffers::VOffsetT = 42;
-  pub const VT_APOGEE: ::flatbuffers::VOffsetT = 44;
-  pub const VT_PERIGEE: ::flatbuffers::VOffsetT = 46;
-  pub const VT_MEAN_MOTION: ::flatbuffers::VOffsetT = 48;
-  pub const VT_ECCENTRICITY: ::flatbuffers::VOffsetT = 50;
-  pub const VT_BSTAR: ::flatbuffers::VOffsetT = 52;
-  pub const VT_HAS_GP: ::flatbuffers::VOffsetT = 54;
-  pub const VT_RESERVED: ::flatbuffers::VOffsetT = 56;
+impl<'a> CAQRequest<'a> {
+  pub const VT_KIND: ::flatbuffers::VOffsetT = 4;
+  pub const VT_QUERY: ::flatbuffers::VOffsetT = 6;
+  pub const VT_ENTITY_INDEX: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MAX_COUNT: ::flatbuffers::VOffsetT = 10;
+  pub const VT_ENTITY_COUNT: ::flatbuffers::VOffsetT = 12;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    ETM { _tab: table }
+    CAQRequest { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args ETMArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<ETM<'bldr>> {
-    let mut builder = ETMBuilder::new(_fbb);
-    builder.add_BSTAR(args.BSTAR);
-    builder.add_ECCENTRICITY(args.ECCENTRICITY);
-    builder.add_MEAN_MOTION(args.MEAN_MOTION);
-    builder.add_PERIGEE(args.PERIGEE);
-    builder.add_APOGEE(args.APOGEE);
-    builder.add_INCLINATION(args.INCLINATION);
-    builder.add_PERIOD(args.PERIOD);
-    if let Some(x) = args.RESERVED { builder.add_RESERVED(x); }
-    if let Some(x) = args.ORBIT_REGIME { builder.add_ORBIT_REGIME(x); }
-    if let Some(x) = args.LAUNCH_YEAR { builder.add_LAUNCH_YEAR(x); }
-    if let Some(x) = args.LAUNCH_DATE { builder.add_LAUNCH_DATE(x); }
-    if let Some(x) = args.STATUS_CODE { builder.add_STATUS_CODE(x); }
-    if let Some(x) = args.OWNER { builder.add_OWNER(x); }
-    if let Some(x) = args.SEARCH_TEXT { builder.add_SEARCH_TEXT(x); }
-    if let Some(x) = args.FACILITY_TYPE { builder.add_FACILITY_TYPE(x); }
-    if let Some(x) = args.CAT_OBJECT_ID { builder.add_CAT_OBJECT_ID(x); }
-    if let Some(x) = args.CAT_OBJECT_NAME { builder.add_CAT_OBJECT_NAME(x); }
-    if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
-    if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
-    builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
-    builder.add_WASM_HANDLE(args.WASM_HANDLE);
-    if let Some(x) = args.PARENT_ENTITY_ID { builder.add_PARENT_ENTITY_ID(x); }
-    if let Some(x) = args.SUBTYPE { builder.add_SUBTYPE(x); }
-    if let Some(x) = args.NAME { builder.add_NAME(x); }
-    if let Some(x) = args.ENTITY_ID { builder.add_ENTITY_ID(x); }
-    builder.add_HAS_GP(args.HAS_GP);
+    args: &'args CAQRequestArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<CAQRequest<'bldr>> {
+    let mut builder = CAQRequestBuilder::new(_fbb);
+    builder.add_ENTITY_COUNT(args.ENTITY_COUNT);
+    builder.add_MAX_COUNT(args.MAX_COUNT);
+    builder.add_ENTITY_INDEX(args.ENTITY_INDEX);
+    if let Some(x) = args.QUERY { builder.add_QUERY(x); }
     builder.add_KIND(args.KIND);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> ETMT {
-    let ENTITY_ID = self.ENTITY_ID().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let NAME = self.NAME().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
+  pub fn unpack(&self) -> CAQRequestT {
     let KIND = self.KIND();
-    let SUBTYPE = self.SUBTYPE().map(|x| {
+    let QUERY = self.QUERY().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let PARENT_ENTITY_ID = self.PARENT_ENTITY_ID().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let WASM_HANDLE = self.WASM_HANDLE();
-    let NORAD_CAT_ID = self.NORAD_CAT_ID();
-    let OBJECT_NAME = self.OBJECT_NAME().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let OBJECT_ID = self.OBJECT_ID().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let CAT_OBJECT_NAME = self.CAT_OBJECT_NAME().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let CAT_OBJECT_ID = self.CAT_OBJECT_ID().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let FACILITY_TYPE = self.FACILITY_TYPE().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let SEARCH_TEXT = self.SEARCH_TEXT().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let OWNER = self.OWNER().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let STATUS_CODE = self.STATUS_CODE().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let LAUNCH_DATE = self.LAUNCH_DATE().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let LAUNCH_YEAR = self.LAUNCH_YEAR().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let ORBIT_REGIME = self.ORBIT_REGIME().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let PERIOD = self.PERIOD();
-    let INCLINATION = self.INCLINATION();
-    let APOGEE = self.APOGEE();
-    let PERIGEE = self.PERIGEE();
-    let MEAN_MOTION = self.MEAN_MOTION();
-    let ECCENTRICITY = self.ECCENTRICITY();
-    let BSTAR = self.BSTAR();
-    let HAS_GP = self.HAS_GP();
-    let RESERVED = self.RESERVED().map(|x| {
-      x.into_iter().collect()
-    });
-    ETMT {
-      ENTITY_ID,
-      NAME,
+    let ENTITY_INDEX = self.ENTITY_INDEX();
+    let MAX_COUNT = self.MAX_COUNT();
+    let ENTITY_COUNT = self.ENTITY_COUNT();
+    CAQRequestT {
       KIND,
-      SUBTYPE,
-      PARENT_ENTITY_ID,
-      WASM_HANDLE,
-      NORAD_CAT_ID,
-      OBJECT_NAME,
-      OBJECT_ID,
-      CAT_OBJECT_NAME,
-      CAT_OBJECT_ID,
-      FACILITY_TYPE,
-      SEARCH_TEXT,
-      OWNER,
-      STATUS_CODE,
-      LAUNCH_DATE,
-      LAUNCH_YEAR,
-      ORBIT_REGIME,
-      PERIOD,
-      INCLINATION,
-      APOGEE,
-      PERIGEE,
-      MEAN_MOTION,
-      ECCENTRICITY,
-      BSTAR,
-      HAS_GP,
-      RESERVED,
+      QUERY,
+      ENTITY_INDEX,
+      MAX_COUNT,
+      ENTITY_COUNT,
     }
   }
 
-  /// Stable host-local entity identifier.
   #[inline]
-  pub fn ENTITY_ID(&self) -> Option<&'a str> {
+  pub fn KIND(&self) -> catalogQueryKind {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_ENTITY_ID, None)}
+    unsafe { self._tab.get::<catalogQueryKind>(CAQRequest::VT_KIND, Some(catalogQueryKind::ROWS)).unwrap()}
   }
-  /// Human-readable entity name used for shared query/search surfaces.
+  /// Host-specific query string (for example a FlatSQL or DSL expression).
   #[inline]
-  pub fn NAME(&self) -> Option<&'a str> {
+  pub fn QUERY(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_NAME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAQRequest::VT_QUERY, None)}
   }
-  /// Broad entity category.
+  /// Entity index for single-row queries.
   #[inline]
-  pub fn KIND(&self) -> entityKind {
+  pub fn ENTITY_INDEX(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<entityKind>(ETM::VT_KIND, Some(entityKind::ENTITY)).unwrap()}
+    unsafe { self._tab.get::<u32>(CAQRequest::VT_ENTITY_INDEX, Some(0)).unwrap()}
   }
-  /// More specific runtime subtype or class name.
+  /// Upper bound on the number of rows / indices to return (0 = unbounded).
   #[inline]
-  pub fn SUBTYPE(&self) -> Option<&'a str> {
+  pub fn MAX_COUNT(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_SUBTYPE, None)}
+    unsafe { self._tab.get::<u32>(CAQRequest::VT_MAX_COUNT, Some(0)).unwrap()}
   }
-  /// Optional parent entity id for hierarchy / linkage queries.
+  /// Expected number of entities in the catalog at the time the request was
+  /// issued, used to size visibility masks.
   #[inline]
-  pub fn PARENT_ENTITY_ID(&self) -> Option<&'a str> {
+  pub fn ENTITY_COUNT(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_PARENT_ENTITY_ID, None)}
-  }
-  /// Collection-scoped WASM handle used for batch visibility application.
-  #[inline]
-  pub fn WASM_HANDLE(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(ETM::VT_WASM_HANDLE, Some(0)).unwrap()}
-  }
-  /// Optional NORAD catalog id for standards-backed entities.
-  #[inline]
-  pub fn NORAD_CAT_ID(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(ETM::VT_NORAD_CAT_ID, Some(0)).unwrap()}
-  }
-  /// Primary object name surfaced by attached standards metadata.
-  #[inline]
-  pub fn OBJECT_NAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_OBJECT_NAME, None)}
-  }
-  /// Primary international / object designator surfaced by attached standards metadata.
-  #[inline]
-  pub fn OBJECT_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_OBJECT_ID, None)}
-  }
-  /// Secondary CAT object name when different from the primary object name.
-  #[inline]
-  pub fn CAT_OBJECT_NAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_CAT_OBJECT_NAME, None)}
-  }
-  /// Secondary CAT object id when different from the primary object id.
-  #[inline]
-  pub fn CAT_OBJECT_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_CAT_OBJECT_ID, None)}
-  }
-  /// Ground / facility subtype metadata for non-space entity search.
-  #[inline]
-  pub fn FACILITY_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_FACILITY_TYPE, None)}
-  }
-  /// Pre-normalized phrase-search text for collection-wide shared queries.
-  #[inline]
-  pub fn SEARCH_TEXT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_SEARCH_TEXT, None)}
-  }
-  /// CAT owner country code.
-  #[inline]
-  pub fn OWNER(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_OWNER, None)}
-  }
-  /// CAT operational status code.
-  #[inline]
-  pub fn STATUS_CODE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_STATUS_CODE, None)}
-  }
-  /// CAT launch date.
-  #[inline]
-  pub fn LAUNCH_DATE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_LAUNCH_DATE, None)}
-  }
-  /// Launch year derived from launch date.
-  #[inline]
-  pub fn LAUNCH_YEAR(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_LAUNCH_YEAR, None)}
-  }
-  /// Derived orbit regime classification.
-  #[inline]
-  pub fn ORBIT_REGIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_ORBIT_REGIME, None)}
-  }
-  /// Orbital period in minutes.
-  #[inline]
-  pub fn PERIOD(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(ETM::VT_PERIOD, Some(0.0)).unwrap()}
-  }
-  /// Inclination in degrees.
-  #[inline]
-  pub fn INCLINATION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(ETM::VT_INCLINATION, Some(0.0)).unwrap()}
-  }
-  /// Apogee altitude in kilometers.
-  #[inline]
-  pub fn APOGEE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(ETM::VT_APOGEE, Some(0.0)).unwrap()}
-  }
-  /// Perigee altitude in kilometers.
-  #[inline]
-  pub fn PERIGEE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(ETM::VT_PERIGEE, Some(0.0)).unwrap()}
-  }
-  /// Mean motion in revolutions per day.
-  #[inline]
-  pub fn MEAN_MOTION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(ETM::VT_MEAN_MOTION, Some(0.0)).unwrap()}
-  }
-  /// Orbital eccentricity.
-  #[inline]
-  pub fn ECCENTRICITY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(ETM::VT_ECCENTRICITY, Some(0.0)).unwrap()}
-  }
-  /// B* drag term from OMM.
-  #[inline]
-  pub fn BSTAR(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(ETM::VT_BSTAR, Some(0.0)).unwrap()}
-  }
-  /// Whether GP / OMM state is present for the entity.
-  #[inline]
-  pub fn HAS_GP(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(ETM::VT_HAS_GP, Some(false)).unwrap()}
-  }
-  /// Reserved for forward-compatible growth.
-  #[inline]
-  pub fn RESERVED(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ETM::VT_RESERVED, None)}
+    unsafe { self._tab.get::<u32>(CAQRequest::VT_ENTITY_COUNT, Some(0)).unwrap()}
   }
 }
 
-impl ::flatbuffers::Verifiable for ETM<'_> {
+impl ::flatbuffers::Verifiable for CAQRequest<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ENTITY_ID", Self::VT_ENTITY_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-     .visit_field::<entityKind>("KIND", Self::VT_KIND, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SUBTYPE", Self::VT_SUBTYPE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARENT_ENTITY_ID", Self::VT_PARENT_ENTITY_ID, false)?
-     .visit_field::<u32>("WASM_HANDLE", Self::VT_WASM_HANDLE, false)?
-     .visit_field::<u32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CAT_OBJECT_NAME", Self::VT_CAT_OBJECT_NAME, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CAT_OBJECT_ID", Self::VT_CAT_OBJECT_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FACILITY_TYPE", Self::VT_FACILITY_TYPE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SEARCH_TEXT", Self::VT_SEARCH_TEXT, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OWNER", Self::VT_OWNER, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STATUS_CODE", Self::VT_STATUS_CODE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAUNCH_DATE", Self::VT_LAUNCH_DATE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAUNCH_YEAR", Self::VT_LAUNCH_YEAR, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORBIT_REGIME", Self::VT_ORBIT_REGIME, false)?
-     .visit_field::<f64>("PERIOD", Self::VT_PERIOD, false)?
-     .visit_field::<f64>("INCLINATION", Self::VT_INCLINATION, false)?
-     .visit_field::<f64>("APOGEE", Self::VT_APOGEE, false)?
-     .visit_field::<f64>("PERIGEE", Self::VT_PERIGEE, false)?
-     .visit_field::<f64>("MEAN_MOTION", Self::VT_MEAN_MOTION, false)?
-     .visit_field::<f64>("ECCENTRICITY", Self::VT_ECCENTRICITY, false)?
-     .visit_field::<f64>("BSTAR", Self::VT_BSTAR, false)?
-     .visit_field::<bool>("HAS_GP", Self::VT_HAS_GP, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("RESERVED", Self::VT_RESERVED, false)?
+     .visit_field::<catalogQueryKind>("KIND", Self::VT_KIND, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("QUERY", Self::VT_QUERY, false)?
+     .visit_field::<u32>("ENTITY_INDEX", Self::VT_ENTITY_INDEX, false)?
+     .visit_field::<u32>("MAX_COUNT", Self::VT_MAX_COUNT, false)?
+     .visit_field::<u32>("ENTITY_COUNT", Self::VT_ENTITY_COUNT, false)?
      .finish();
     Ok(())
   }
 }
-pub struct ETMArgs<'a> {
-    pub ENTITY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub KIND: entityKind,
-    pub SUBTYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub PARENT_ENTITY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub WASM_HANDLE: u32,
-    pub NORAD_CAT_ID: u32,
-    pub OBJECT_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub CAT_OBJECT_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub CAT_OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub FACILITY_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub SEARCH_TEXT: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub OWNER: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub STATUS_CODE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub LAUNCH_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub LAUNCH_YEAR: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub ORBIT_REGIME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub PERIOD: f64,
-    pub INCLINATION: f64,
-    pub APOGEE: f64,
-    pub PERIGEE: f64,
-    pub MEAN_MOTION: f64,
-    pub ECCENTRICITY: f64,
-    pub BSTAR: f64,
-    pub HAS_GP: bool,
-    pub RESERVED: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+pub struct CAQRequestArgs<'a> {
+    pub KIND: catalogQueryKind,
+    pub QUERY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ENTITY_INDEX: u32,
+    pub MAX_COUNT: u32,
+    pub ENTITY_COUNT: u32,
 }
-impl<'a> Default for ETMArgs<'a> {
+impl<'a> Default for CAQRequestArgs<'a> {
   #[inline]
   fn default() -> Self {
-    ETMArgs {
-      ENTITY_ID: None,
-      NAME: None,
-      KIND: entityKind::ENTITY,
-      SUBTYPE: None,
-      PARENT_ENTITY_ID: None,
-      WASM_HANDLE: 0,
-      NORAD_CAT_ID: 0,
-      OBJECT_NAME: None,
-      OBJECT_ID: None,
-      CAT_OBJECT_NAME: None,
-      CAT_OBJECT_ID: None,
-      FACILITY_TYPE: None,
-      SEARCH_TEXT: None,
-      OWNER: None,
-      STATUS_CODE: None,
-      LAUNCH_DATE: None,
-      LAUNCH_YEAR: None,
-      ORBIT_REGIME: None,
-      PERIOD: 0.0,
-      INCLINATION: 0.0,
-      APOGEE: 0.0,
-      PERIGEE: 0.0,
-      MEAN_MOTION: 0.0,
-      ECCENTRICITY: 0.0,
-      BSTAR: 0.0,
-      HAS_GP: false,
-      RESERVED: None,
+    CAQRequestArgs {
+      KIND: catalogQueryKind::ROWS,
+      QUERY: None,
+      ENTITY_INDEX: 0,
+      MAX_COUNT: 0,
+      ENTITY_COUNT: 0,
     }
   }
 }
 
-pub struct ETMBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct CAQRequestBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ETMBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CAQRequestBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_ENTITY_ID(&mut self, ENTITY_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_ENTITY_ID, ENTITY_ID);
+  pub fn add_KIND(&mut self, KIND: catalogQueryKind) {
+    self.fbb_.push_slot::<catalogQueryKind>(CAQRequest::VT_KIND, KIND, catalogQueryKind::ROWS);
   }
   #[inline]
-  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_NAME, NAME);
+  pub fn add_QUERY(&mut self, QUERY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAQRequest::VT_QUERY, QUERY);
   }
   #[inline]
-  pub fn add_KIND(&mut self, KIND: entityKind) {
-    self.fbb_.push_slot::<entityKind>(ETM::VT_KIND, KIND, entityKind::ENTITY);
+  pub fn add_ENTITY_INDEX(&mut self, ENTITY_INDEX: u32) {
+    self.fbb_.push_slot::<u32>(CAQRequest::VT_ENTITY_INDEX, ENTITY_INDEX, 0);
   }
   #[inline]
-  pub fn add_SUBTYPE(&mut self, SUBTYPE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_SUBTYPE, SUBTYPE);
+  pub fn add_MAX_COUNT(&mut self, MAX_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(CAQRequest::VT_MAX_COUNT, MAX_COUNT, 0);
   }
   #[inline]
-  pub fn add_PARENT_ENTITY_ID(&mut self, PARENT_ENTITY_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_PARENT_ENTITY_ID, PARENT_ENTITY_ID);
+  pub fn add_ENTITY_COUNT(&mut self, ENTITY_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(CAQRequest::VT_ENTITY_COUNT, ENTITY_COUNT, 0);
   }
   #[inline]
-  pub fn add_WASM_HANDLE(&mut self, WASM_HANDLE: u32) {
-    self.fbb_.push_slot::<u32>(ETM::VT_WASM_HANDLE, WASM_HANDLE, 0);
-  }
-  #[inline]
-  pub fn add_NORAD_CAT_ID(&mut self, NORAD_CAT_ID: u32) {
-    self.fbb_.push_slot::<u32>(ETM::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
-  }
-  #[inline]
-  pub fn add_OBJECT_NAME(&mut self, OBJECT_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_OBJECT_NAME, OBJECT_NAME);
-  }
-  #[inline]
-  pub fn add_OBJECT_ID(&mut self, OBJECT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_OBJECT_ID, OBJECT_ID);
-  }
-  #[inline]
-  pub fn add_CAT_OBJECT_NAME(&mut self, CAT_OBJECT_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_CAT_OBJECT_NAME, CAT_OBJECT_NAME);
-  }
-  #[inline]
-  pub fn add_CAT_OBJECT_ID(&mut self, CAT_OBJECT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_CAT_OBJECT_ID, CAT_OBJECT_ID);
-  }
-  #[inline]
-  pub fn add_FACILITY_TYPE(&mut self, FACILITY_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_FACILITY_TYPE, FACILITY_TYPE);
-  }
-  #[inline]
-  pub fn add_SEARCH_TEXT(&mut self, SEARCH_TEXT: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_SEARCH_TEXT, SEARCH_TEXT);
-  }
-  #[inline]
-  pub fn add_OWNER(&mut self, OWNER: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_OWNER, OWNER);
-  }
-  #[inline]
-  pub fn add_STATUS_CODE(&mut self, STATUS_CODE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_STATUS_CODE, STATUS_CODE);
-  }
-  #[inline]
-  pub fn add_LAUNCH_DATE(&mut self, LAUNCH_DATE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_LAUNCH_DATE, LAUNCH_DATE);
-  }
-  #[inline]
-  pub fn add_LAUNCH_YEAR(&mut self, LAUNCH_YEAR: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_LAUNCH_YEAR, LAUNCH_YEAR);
-  }
-  #[inline]
-  pub fn add_ORBIT_REGIME(&mut self, ORBIT_REGIME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_ORBIT_REGIME, ORBIT_REGIME);
-  }
-  #[inline]
-  pub fn add_PERIOD(&mut self, PERIOD: f64) {
-    self.fbb_.push_slot::<f64>(ETM::VT_PERIOD, PERIOD, 0.0);
-  }
-  #[inline]
-  pub fn add_INCLINATION(&mut self, INCLINATION: f64) {
-    self.fbb_.push_slot::<f64>(ETM::VT_INCLINATION, INCLINATION, 0.0);
-  }
-  #[inline]
-  pub fn add_APOGEE(&mut self, APOGEE: f64) {
-    self.fbb_.push_slot::<f64>(ETM::VT_APOGEE, APOGEE, 0.0);
-  }
-  #[inline]
-  pub fn add_PERIGEE(&mut self, PERIGEE: f64) {
-    self.fbb_.push_slot::<f64>(ETM::VT_PERIGEE, PERIGEE, 0.0);
-  }
-  #[inline]
-  pub fn add_MEAN_MOTION(&mut self, MEAN_MOTION: f64) {
-    self.fbb_.push_slot::<f64>(ETM::VT_MEAN_MOTION, MEAN_MOTION, 0.0);
-  }
-  #[inline]
-  pub fn add_ECCENTRICITY(&mut self, ECCENTRICITY: f64) {
-    self.fbb_.push_slot::<f64>(ETM::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
-  }
-  #[inline]
-  pub fn add_BSTAR(&mut self, BSTAR: f64) {
-    self.fbb_.push_slot::<f64>(ETM::VT_BSTAR, BSTAR, 0.0);
-  }
-  #[inline]
-  pub fn add_HAS_GP(&mut self, HAS_GP: bool) {
-    self.fbb_.push_slot::<bool>(ETM::VT_HAS_GP, HAS_GP, false);
-  }
-  #[inline]
-  pub fn add_RESERVED(&mut self, RESERVED: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_RESERVED, RESERVED);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ETMBuilder<'a, 'b, A> {
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CAQRequestBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    ETMBuilder {
+    CAQRequestBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<ETM<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<CAQRequest<'a>> {
     let o = self.fbb_.end_table(self.start_);
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for ETM<'_> {
+impl ::core::fmt::Debug for CAQRequest<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("ETM");
-      ds.field("ENTITY_ID", &self.ENTITY_ID());
-      ds.field("NAME", &self.NAME());
+    let mut ds = f.debug_struct("CAQRequest");
       ds.field("KIND", &self.KIND());
-      ds.field("SUBTYPE", &self.SUBTYPE());
-      ds.field("PARENT_ENTITY_ID", &self.PARENT_ENTITY_ID());
-      ds.field("WASM_HANDLE", &self.WASM_HANDLE());
-      ds.field("NORAD_CAT_ID", &self.NORAD_CAT_ID());
-      ds.field("OBJECT_NAME", &self.OBJECT_NAME());
-      ds.field("OBJECT_ID", &self.OBJECT_ID());
-      ds.field("CAT_OBJECT_NAME", &self.CAT_OBJECT_NAME());
-      ds.field("CAT_OBJECT_ID", &self.CAT_OBJECT_ID());
-      ds.field("FACILITY_TYPE", &self.FACILITY_TYPE());
-      ds.field("SEARCH_TEXT", &self.SEARCH_TEXT());
-      ds.field("OWNER", &self.OWNER());
-      ds.field("STATUS_CODE", &self.STATUS_CODE());
-      ds.field("LAUNCH_DATE", &self.LAUNCH_DATE());
-      ds.field("LAUNCH_YEAR", &self.LAUNCH_YEAR());
-      ds.field("ORBIT_REGIME", &self.ORBIT_REGIME());
-      ds.field("PERIOD", &self.PERIOD());
-      ds.field("INCLINATION", &self.INCLINATION());
-      ds.field("APOGEE", &self.APOGEE());
-      ds.field("PERIGEE", &self.PERIGEE());
-      ds.field("MEAN_MOTION", &self.MEAN_MOTION());
-      ds.field("ECCENTRICITY", &self.ECCENTRICITY());
-      ds.field("BSTAR", &self.BSTAR());
-      ds.field("HAS_GP", &self.HAS_GP());
-      ds.field("RESERVED", &self.RESERVED());
+      ds.field("QUERY", &self.QUERY());
+      ds.field("ENTITY_INDEX", &self.ENTITY_INDEX());
+      ds.field("MAX_COUNT", &self.MAX_COUNT());
+      ds.field("ENTITY_COUNT", &self.ENTITY_COUNT());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct ETMT {
-  pub ENTITY_ID: Option<alloc::string::String>,
-  pub NAME: Option<alloc::string::String>,
-  pub KIND: entityKind,
-  pub SUBTYPE: Option<alloc::string::String>,
-  pub PARENT_ENTITY_ID: Option<alloc::string::String>,
-  pub WASM_HANDLE: u32,
-  pub NORAD_CAT_ID: u32,
-  pub OBJECT_NAME: Option<alloc::string::String>,
-  pub OBJECT_ID: Option<alloc::string::String>,
-  pub CAT_OBJECT_NAME: Option<alloc::string::String>,
-  pub CAT_OBJECT_ID: Option<alloc::string::String>,
-  pub FACILITY_TYPE: Option<alloc::string::String>,
-  pub SEARCH_TEXT: Option<alloc::string::String>,
-  pub OWNER: Option<alloc::string::String>,
-  pub STATUS_CODE: Option<alloc::string::String>,
-  pub LAUNCH_DATE: Option<alloc::string::String>,
-  pub LAUNCH_YEAR: Option<alloc::string::String>,
-  pub ORBIT_REGIME: Option<alloc::string::String>,
-  pub PERIOD: f64,
-  pub INCLINATION: f64,
-  pub APOGEE: f64,
-  pub PERIGEE: f64,
-  pub MEAN_MOTION: f64,
-  pub ECCENTRICITY: f64,
-  pub BSTAR: f64,
-  pub HAS_GP: bool,
-  pub RESERVED: Option<alloc::vec::Vec<u8>>,
+pub struct CAQRequestT {
+  pub KIND: catalogQueryKind,
+  pub QUERY: Option<alloc::string::String>,
+  pub ENTITY_INDEX: u32,
+  pub MAX_COUNT: u32,
+  pub ENTITY_COUNT: u32,
 }
-impl Default for ETMT {
+impl Default for CAQRequestT {
   fn default() -> Self {
     Self {
-      ENTITY_ID: None,
-      NAME: None,
-      KIND: entityKind::ENTITY,
-      SUBTYPE: None,
-      PARENT_ENTITY_ID: None,
-      WASM_HANDLE: 0,
-      NORAD_CAT_ID: 0,
-      OBJECT_NAME: None,
-      OBJECT_ID: None,
-      CAT_OBJECT_NAME: None,
-      CAT_OBJECT_ID: None,
-      FACILITY_TYPE: None,
-      SEARCH_TEXT: None,
-      OWNER: None,
-      STATUS_CODE: None,
-      LAUNCH_DATE: None,
-      LAUNCH_YEAR: None,
-      ORBIT_REGIME: None,
-      PERIOD: 0.0,
-      INCLINATION: 0.0,
-      APOGEE: 0.0,
-      PERIGEE: 0.0,
-      MEAN_MOTION: 0.0,
-      ECCENTRICITY: 0.0,
-      BSTAR: 0.0,
-      HAS_GP: false,
-      RESERVED: None,
+      KIND: catalogQueryKind::ROWS,
+      QUERY: None,
+      ENTITY_INDEX: 0,
+      MAX_COUNT: 0,
+      ENTITY_COUNT: 0,
     }
   }
 }
-impl ETMT {
+impl CAQRequestT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<ETM<'b>> {
-    let ENTITY_ID = self.ENTITY_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let NAME = self.NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+  ) -> ::flatbuffers::WIPOffset<CAQRequest<'b>> {
     let KIND = self.KIND;
-    let SUBTYPE = self.SUBTYPE.as_ref().map(|x|{
+    let QUERY = self.QUERY.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let PARENT_ENTITY_ID = self.PARENT_ENTITY_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let ENTITY_INDEX = self.ENTITY_INDEX;
+    let MAX_COUNT = self.MAX_COUNT;
+    let ENTITY_COUNT = self.ENTITY_COUNT;
+    CAQRequest::create(_fbb, &CAQRequestArgs{
+      KIND,
+      QUERY,
+      ENTITY_INDEX,
+      MAX_COUNT,
+      ENTITY_COUNT,
+    })
+  }
+}
+pub enum CAQResultOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Catalog query result payload.
+pub struct CAQResult<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for CAQResult<'a> {
+  type Inner = CAQResult<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> CAQResult<'a> {
+  pub const VT_KIND: ::flatbuffers::VOffsetT = 4;
+  pub const VT_ROWS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_ENTITY_INDICES: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MASK: ::flatbuffers::VOffsetT = 10;
+  pub const VT_VISIBLE_COUNT: ::flatbuffers::VOffsetT = 12;
+  pub const VT_ENTITY_INDEX: ::flatbuffers::VOffsetT = 14;
+  pub const VT_ROW: ::flatbuffers::VOffsetT = 16;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    CAQResult { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CAQResultArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<CAQResult<'bldr>> {
+    let mut builder = CAQResultBuilder::new(_fbb);
+    if let Some(x) = args.ROW { builder.add_ROW(x); }
+    builder.add_ENTITY_INDEX(args.ENTITY_INDEX);
+    builder.add_VISIBLE_COUNT(args.VISIBLE_COUNT);
+    if let Some(x) = args.MASK { builder.add_MASK(x); }
+    if let Some(x) = args.ENTITY_INDICES { builder.add_ENTITY_INDICES(x); }
+    if let Some(x) = args.ROWS { builder.add_ROWS(x); }
+    builder.add_KIND(args.KIND);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CAQResultT {
+    let KIND = self.KIND();
+    let ROWS = self.ROWS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
     });
-    let WASM_HANDLE = self.WASM_HANDLE;
-    let NORAD_CAT_ID = self.NORAD_CAT_ID;
-    let OBJECT_NAME = self.OBJECT_NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let ENTITY_INDICES = self.ENTITY_INDICES().map(|x| {
+      x.into_iter().collect()
     });
-    let OBJECT_ID = self.OBJECT_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let MASK = self.MASK().map(|x| {
+      x.into_iter().collect()
     });
-    let CAT_OBJECT_NAME = self.CAT_OBJECT_NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let VISIBLE_COUNT = self.VISIBLE_COUNT();
+    let ENTITY_INDEX = self.ENTITY_INDEX();
+    let ROW = self.ROW().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
     });
-    let CAT_OBJECT_ID = self.CAT_OBJECT_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
+    CAQResultT {
+      KIND,
+      ROWS,
+      ENTITY_INDICES,
+      MASK,
+      VISIBLE_COUNT,
+      ENTITY_INDEX,
+      ROW,
+    }
+  }
+
+  #[inline]
+  pub fn KIND(&self) -> catalogQueryKind {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<catalogQueryKind>(CAQResult::VT_KIND, Some(catalogQueryKind::ROWS)).unwrap()}
+  }
+  /// Populated when KIND == ROWS.
+  #[inline]
+  pub fn ROWS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ETM<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ETM>>>>(CAQResult::VT_ROWS, None)}
+  }
+  /// Populated when KIND == ENTITY_INDICES.
+  #[inline]
+  pub fn ENTITY_INDICES(&self) -> Option<::flatbuffers::Vector<'a, u32>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u32>>>(CAQResult::VT_ENTITY_INDICES, None)}
+  }
+  /// Populated when KIND == VISIBILITY_MASK (one byte per entity).
+  #[inline]
+  pub fn MASK(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(CAQResult::VT_MASK, None)}
+  }
+  /// Number of visible (masked-in) entities in MASK.
+  #[inline]
+  pub fn VISIBLE_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(CAQResult::VT_VISIBLE_COUNT, Some(0)).unwrap()}
+  }
+  /// Populated when KIND == CATALOG_ROW.
+  #[inline]
+  pub fn ENTITY_INDEX(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(CAQResult::VT_ENTITY_INDEX, Some(0)).unwrap()}
+  }
+  /// Single matched row when KIND == CATALOG_ROW.
+  #[inline]
+  pub fn ROW(&self) -> Option<ETM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<ETM>>(CAQResult::VT_ROW, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for CAQResult<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<catalogQueryKind>("KIND", Self::VT_KIND, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ETM>>>>("ROWS", Self::VT_ROWS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u32>>>("ENTITY_INDICES", Self::VT_ENTITY_INDICES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("MASK", Self::VT_MASK, false)?
+     .visit_field::<u32>("VISIBLE_COUNT", Self::VT_VISIBLE_COUNT, false)?
+     .visit_field::<u32>("ENTITY_INDEX", Self::VT_ENTITY_INDEX, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<ETM>>("ROW", Self::VT_ROW, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CAQResultArgs<'a> {
+    pub KIND: catalogQueryKind,
+    pub ROWS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ETM<'a>>>>>,
+    pub ENTITY_INDICES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u32>>>,
+    pub MASK: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub VISIBLE_COUNT: u32,
+    pub ENTITY_INDEX: u32,
+    pub ROW: Option<::flatbuffers::WIPOffset<ETM<'a>>>,
+}
+impl<'a> Default for CAQResultArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CAQResultArgs {
+      KIND: catalogQueryKind::ROWS,
+      ROWS: None,
+      ENTITY_INDICES: None,
+      MASK: None,
+      VISIBLE_COUNT: 0,
+      ENTITY_INDEX: 0,
+      ROW: None,
+    }
+  }
+}
+
+pub struct CAQResultBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CAQResultBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_KIND(&mut self, KIND: catalogQueryKind) {
+    self.fbb_.push_slot::<catalogQueryKind>(CAQResult::VT_KIND, KIND, catalogQueryKind::ROWS);
+  }
+  #[inline]
+  pub fn add_ROWS(&mut self, ROWS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ETM<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAQResult::VT_ROWS, ROWS);
+  }
+  #[inline]
+  pub fn add_ENTITY_INDICES(&mut self, ENTITY_INDICES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u32>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAQResult::VT_ENTITY_INDICES, ENTITY_INDICES);
+  }
+  #[inline]
+  pub fn add_MASK(&mut self, MASK: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAQResult::VT_MASK, MASK);
+  }
+  #[inline]
+  pub fn add_VISIBLE_COUNT(&mut self, VISIBLE_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(CAQResult::VT_VISIBLE_COUNT, VISIBLE_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_ENTITY_INDEX(&mut self, ENTITY_INDEX: u32) {
+    self.fbb_.push_slot::<u32>(CAQResult::VT_ENTITY_INDEX, ENTITY_INDEX, 0);
+  }
+  #[inline]
+  pub fn add_ROW(&mut self, ROW: ::flatbuffers::WIPOffset<ETM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<ETM>>(CAQResult::VT_ROW, ROW);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CAQResultBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CAQResultBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<CAQResult<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for CAQResult<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("CAQResult");
+      ds.field("KIND", &self.KIND());
+      ds.field("ROWS", &self.ROWS());
+      ds.field("ENTITY_INDICES", &self.ENTITY_INDICES());
+      ds.field("MASK", &self.MASK());
+      ds.field("VISIBLE_COUNT", &self.VISIBLE_COUNT());
+      ds.field("ENTITY_INDEX", &self.ENTITY_INDEX());
+      ds.field("ROW", &self.ROW());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CAQResultT {
+  pub KIND: catalogQueryKind,
+  pub ROWS: Option<alloc::vec::Vec<ETMT>>,
+  pub ENTITY_INDICES: Option<alloc::vec::Vec<u32>>,
+  pub MASK: Option<alloc::vec::Vec<u8>>,
+  pub VISIBLE_COUNT: u32,
+  pub ENTITY_INDEX: u32,
+  pub ROW: Option<alloc::boxed::Box<ETMT>>,
+}
+impl Default for CAQResultT {
+  fn default() -> Self {
+    Self {
+      KIND: catalogQueryKind::ROWS,
+      ROWS: None,
+      ENTITY_INDICES: None,
+      MASK: None,
+      VISIBLE_COUNT: 0,
+      ENTITY_INDEX: 0,
+      ROW: None,
+    }
+  }
+}
+impl CAQResultT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<CAQResult<'b>> {
+    let KIND = self.KIND;
+    let ROWS = self.ROWS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
-    let FACILITY_TYPE = self.FACILITY_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SEARCH_TEXT = self.SEARCH_TEXT.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let OWNER = self.OWNER.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let STATUS_CODE = self.STATUS_CODE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let LAUNCH_DATE = self.LAUNCH_DATE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let LAUNCH_YEAR = self.LAUNCH_YEAR.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ORBIT_REGIME = self.ORBIT_REGIME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let PERIOD = self.PERIOD;
-    let INCLINATION = self.INCLINATION;
-    let APOGEE = self.APOGEE;
-    let PERIGEE = self.PERIGEE;
-    let MEAN_MOTION = self.MEAN_MOTION;
-    let ECCENTRICITY = self.ECCENTRICITY;
-    let BSTAR = self.BSTAR;
-    let HAS_GP = self.HAS_GP;
-    let RESERVED = self.RESERVED.as_ref().map(|x|{
+    let ENTITY_INDICES = self.ENTITY_INDICES.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
-    ETM::create(_fbb, &ETMArgs{
-      ENTITY_ID,
-      NAME,
+    let MASK = self.MASK.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let VISIBLE_COUNT = self.VISIBLE_COUNT;
+    let ENTITY_INDEX = self.ENTITY_INDEX;
+    let ROW = self.ROW.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    CAQResult::create(_fbb, &CAQResultArgs{
       KIND,
-      SUBTYPE,
-      PARENT_ENTITY_ID,
-      WASM_HANDLE,
-      NORAD_CAT_ID,
-      OBJECT_NAME,
-      OBJECT_ID,
-      CAT_OBJECT_NAME,
-      CAT_OBJECT_ID,
-      FACILITY_TYPE,
-      SEARCH_TEXT,
-      OWNER,
-      STATUS_CODE,
-      LAUNCH_DATE,
-      LAUNCH_YEAR,
-      ORBIT_REGIME,
-      PERIOD,
-      INCLINATION,
-      APOGEE,
-      PERIGEE,
-      MEAN_MOTION,
-      ECCENTRICITY,
-      BSTAR,
-      HAS_GP,
-      RESERVED,
+      ROWS,
+      ENTITY_INDICES,
+      MASK,
+      VISIBLE_COUNT,
+      ENTITY_INDEX,
+      ROW,
+    })
+  }
+}
+pub enum CAQOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Catalog query envelope — carries either a request or a result payload.
+pub struct CAQ<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for CAQ<'a> {
+  type Inner = CAQ<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> CAQ<'a> {
+  pub const VT_REQUEST: ::flatbuffers::VOffsetT = 4;
+  pub const VT_RESULT: ::flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    CAQ { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CAQArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<CAQ<'bldr>> {
+    let mut builder = CAQBuilder::new(_fbb);
+    if let Some(x) = args.RESULT { builder.add_RESULT(x); }
+    if let Some(x) = args.REQUEST { builder.add_REQUEST(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CAQT {
+    let REQUEST = self.REQUEST().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let RESULT = self.RESULT().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    CAQT {
+      REQUEST,
+      RESULT,
+    }
+  }
+
+  #[inline]
+  pub fn REQUEST(&self) -> Option<CAQRequest<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CAQRequest>>(CAQ::VT_REQUEST, None)}
+  }
+  #[inline]
+  pub fn RESULT(&self) -> Option<CAQResult<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CAQResult>>(CAQ::VT_RESULT, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for CAQ<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<CAQRequest>>("REQUEST", Self::VT_REQUEST, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<CAQResult>>("RESULT", Self::VT_RESULT, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CAQArgs<'a> {
+    pub REQUEST: Option<::flatbuffers::WIPOffset<CAQRequest<'a>>>,
+    pub RESULT: Option<::flatbuffers::WIPOffset<CAQResult<'a>>>,
+}
+impl<'a> Default for CAQArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CAQArgs {
+      REQUEST: None,
+      RESULT: None,
+    }
+  }
+}
+
+pub struct CAQBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CAQBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_REQUEST(&mut self, REQUEST: ::flatbuffers::WIPOffset<CAQRequest<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CAQRequest>>(CAQ::VT_REQUEST, REQUEST);
+  }
+  #[inline]
+  pub fn add_RESULT(&mut self, RESULT: ::flatbuffers::WIPOffset<CAQResult<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CAQResult>>(CAQ::VT_RESULT, RESULT);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CAQBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CAQBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<CAQ<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for CAQ<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("CAQ");
+      ds.field("REQUEST", &self.REQUEST());
+      ds.field("RESULT", &self.RESULT());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CAQT {
+  pub REQUEST: Option<alloc::boxed::Box<CAQRequestT>>,
+  pub RESULT: Option<alloc::boxed::Box<CAQResultT>>,
+}
+impl Default for CAQT {
+  fn default() -> Self {
+    Self {
+      REQUEST: None,
+      RESULT: None,
+    }
+  }
+}
+impl CAQT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<CAQ<'b>> {
+    let REQUEST = self.REQUEST.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let RESULT = self.RESULT.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    CAQ::create(_fbb, &CAQArgs{
+      REQUEST,
+      RESULT,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `ETM`
+/// Verifies that a buffer of bytes contains a `CAQ`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_etm_unchecked`.
-pub fn root_as_etm(buf: &[u8]) -> Result<ETM<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<ETM>(buf)
+/// `root_as_caq_unchecked`.
+pub fn root_as_caq(buf: &[u8]) -> Result<CAQ<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<CAQ>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `ETM` and returns it.
+/// `CAQ` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_etm_unchecked`.
-pub fn size_prefixed_root_as_etm(buf: &[u8]) -> Result<ETM<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<ETM>(buf)
+/// `size_prefixed_root_as_caq_unchecked`.
+pub fn size_prefixed_root_as_caq(buf: &[u8]) -> Result<CAQ<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<CAQ>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `ETM` and returns it.
+/// contains a `CAQ` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_etm_unchecked`.
-pub fn root_as_etm_with_opts<'b, 'o>(
+/// `root_as_caq_unchecked`.
+pub fn root_as_caq_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<ETM<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<ETM<'b>>(opts, buf)
+) -> Result<CAQ<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<CAQ<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `ETM` and returns
+/// bytes contains a size prefixed `CAQ` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_etm_unchecked`.
-pub fn size_prefixed_root_as_etm_with_opts<'b, 'o>(
+/// `root_as_caq_unchecked`.
+pub fn size_prefixed_root_as_caq_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<ETM<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<ETM<'b>>(opts, buf)
+) -> Result<CAQ<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<CAQ<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a ETM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a CAQ and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `ETM`.
-pub unsafe fn root_as_etm_unchecked(buf: &[u8]) -> ETM<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<ETM>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `CAQ`.
+pub unsafe fn root_as_caq_unchecked(buf: &[u8]) -> CAQ<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<CAQ>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed ETM and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed CAQ and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `ETM`.
-pub unsafe fn size_prefixed_root_as_etm_unchecked(buf: &[u8]) -> ETM<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<ETM>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `CAQ`.
+pub unsafe fn size_prefixed_root_as_caq_unchecked(buf: &[u8]) -> CAQ<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<CAQ>(buf) }
 }
-pub const ETM_IDENTIFIER: &str = "$ETM";
+pub const CAQ_IDENTIFIER: &str = "$CAQ";
 
 #[inline]
-pub fn etm_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, ETM_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn etm_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, ETM_IDENTIFIER, true)
+pub fn caq_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, CAQ_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_etm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn caq_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, CAQ_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_caq_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<ETM<'a>>) {
-  fbb.finish(root, Some(ETM_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<CAQ<'a>>) {
+  fbb.finish(root, Some(CAQ_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_etm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<ETM<'a>>) {
-  fbb.finish_size_prefixed(root, Some(ETM_IDENTIFIER));
+pub fn finish_size_prefixed_caq_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<CAQ<'a>>) {
+  fbb.finish_size_prefixed(root, Some(CAQ_IDENTIFIER));
 }

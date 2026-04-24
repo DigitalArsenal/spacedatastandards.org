@@ -13,624 +13,621 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-struct LCC;
-struct LCCBuilder;
+#include "main_generated.h"
+#include "main_generated.h"
 
-enum legacyCountryCode : int8_t {
-  /// Arab Satellite Communications Organization
-  legacyCountryCode_AB = 0,
-  /// Asia Broadcast Satellite
-  legacyCountryCode_ABS = 1,
-  /// Asia Satellite Telecommunications Company (ASIASAT)
-  legacyCountryCode_AC = 2,
-  /// Algeria
-  legacyCountryCode_ALG = 3,
-  /// Angola
-  legacyCountryCode_ANG = 4,
-  /// Argentina
-  legacyCountryCode_ARGN = 5,
-  /// Republic of Armenia
-  legacyCountryCode_ARM = 6,
-  /// Austria
-  legacyCountryCode_ASRA = 7,
-  /// Australia
-  legacyCountryCode_AUS = 8,
-  /// Azerbaijan
-  legacyCountryCode_AZER = 9,
-  /// Belgium
-  legacyCountryCode_BEL = 10,
-  /// Belarus
-  legacyCountryCode_BELA = 11,
-  /// Bermuda
-  legacyCountryCode_BERM = 12,
-  /// People's Republic of Bangladesh
-  legacyCountryCode_BGD = 13,
-  /// Kingdom of Bhutan
-  legacyCountryCode_BHUT = 14,
-  /// Bolivia
-  legacyCountryCode_BOL = 15,
-  /// Brazil
-  legacyCountryCode_BRAZ = 16,
-  /// Bulgaria
-  legacyCountryCode_BUL = 17,
-  /// Canada
-  legacyCountryCode_CA = 18,
-  /// China/Brazil
-  legacyCountryCode_CHBZ = 19,
-  /// China/Turkey
-  legacyCountryCode_CHTU = 20,
-  /// Chile
-  legacyCountryCode_CHLE = 21,
-  /// Commonwealth of Independent States (former USSR)
-  legacyCountryCode_CIS = 22,
-  /// Colombia
-  legacyCountryCode_COL = 23,
-  /// Republic of Costa Rica
-  legacyCountryCode_CRI = 24,
-  /// Czech Republic (former Czechoslovakia)
-  legacyCountryCode_CZCH = 25,
-  /// Denmark
-  legacyCountryCode_DEN = 26,
-  /// Republic of Djibouti
-  legacyCountryCode_DJI = 27,
-  /// Ecuador
-  legacyCountryCode_ECU = 28,
-  /// Egypt
-  legacyCountryCode_EGYP = 29,
-  /// European Space Agency
-  legacyCountryCode_ESA = 30,
-  /// European Space Research Organization
-  legacyCountryCode_ESRO = 31,
-  /// Estonia
-  legacyCountryCode_EST = 32,
-  /// Ethiopia
-  legacyCountryCode_ETH = 33,
-  /// European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
-  legacyCountryCode_EUME = 34,
-  /// European Telecommunications Satellite Organization (EUTELSAT)
-  legacyCountryCode_EUTE = 35,
-  /// France/Germany
-  legacyCountryCode_FGER = 36,
-  /// Finland
-  legacyCountryCode_FIN = 37,
-  /// France
-  legacyCountryCode_FR = 38,
-  /// France/Italy
-  legacyCountryCode_FRIT = 39,
-  /// Germany
-  legacyCountryCode_GER = 40,
-  /// Republic of Ghana
-  legacyCountryCode_GHA = 41,
-  /// Globalstar
-  legacyCountryCode_GLOB = 42,
-  /// Greece
-  legacyCountryCode_GREC = 43,
-  /// Greece/Saudi Arabia
-  legacyCountryCode_GRSA = 44,
-  /// Guatemala
-  legacyCountryCode_GUAT = 45,
-  /// Hungary
-  legacyCountryCode_HUN = 46,
-  /// International Mobile Satellite Organization (INMARSAT)
-  legacyCountryCode_IM = 47,
-  /// India
-  legacyCountryCode_IND = 48,
-  /// Indonesia
-  legacyCountryCode_INDO = 49,
-  /// Iran
-  legacyCountryCode_IRAN = 50,
-  /// Iraq
-  legacyCountryCode_IRAQ = 51,
-  /// Iridium
-  legacyCountryCode_IRID = 52,
-  /// Ireland
-  legacyCountryCode_IRL = 53,
-  /// Israel
-  legacyCountryCode_ISRA = 54,
-  /// Indian Space Research Organisation
-  legacyCountryCode_ISRO = 55,
-  /// International Space Station
-  legacyCountryCode_ISS = 56,
-  /// Italy
-  legacyCountryCode_IT = 57,
-  /// International Telecommunications Satellite Organization (INTELSAT)
-  legacyCountryCode_ITSO = 58,
-  /// Japan
-  legacyCountryCode_JPN = 59,
-  /// Kazakhstan
-  legacyCountryCode_KAZ = 60,
-  /// Republic of Kenya
-  legacyCountryCode_KEN = 61,
-  /// Laos
-  legacyCountryCode_LAOS = 62,
-  /// Democratic Socialist Republic of Sri Lanka
-  legacyCountryCode_LKA = 63,
-  /// Lithuania
-  legacyCountryCode_LTU = 64,
-  /// Luxembourg
-  legacyCountryCode_LUXE = 65,
-  /// Morocco
-  legacyCountryCode_MA = 66,
-  /// Malaysia
-  legacyCountryCode_MALA = 67,
-  /// Principality of Monaco
-  legacyCountryCode_MCO = 68,
-  /// Republic of Moldova
-  legacyCountryCode_MDA = 69,
-  /// Mexico
-  legacyCountryCode_MEX = 70,
-  /// Republic of the Union of Myanmar
-  legacyCountryCode_MMR = 71,
-  /// Mongolia
-  legacyCountryCode_MNG = 72,
-  /// Mauritius
-  legacyCountryCode_MUS = 73,
-  /// North Atlantic Treaty Organization
-  legacyCountryCode_NATO = 74,
-  /// Netherlands
-  legacyCountryCode_NETH = 75,
-  /// New ICO
-  legacyCountryCode_NICO = 76,
-  /// Nigeria
-  legacyCountryCode_NIG = 77,
-  /// Democratic People's Republic of Korea
-  legacyCountryCode_NKOR = 78,
-  /// Norway
-  legacyCountryCode_NOR = 79,
-  /// Federal Democratic Republic of Nepal
-  legacyCountryCode_NPL = 80,
-  /// New Zealand
-  legacyCountryCode_NZ = 81,
-  /// O3b Networks
-  legacyCountryCode_O3B = 82,
-  /// ORBCOMM
-  legacyCountryCode_ORB = 83,
-  /// Pakistan
-  legacyCountryCode_PAKI = 84,
-  /// Peru
-  legacyCountryCode_PERU = 85,
-  /// Poland
-  legacyCountryCode_POL = 86,
-  /// Portugal
-  legacyCountryCode_POR = 87,
-  /// People's Republic of China
-  legacyCountryCode_PRC = 88,
-  /// Republic of Paraguay
-  legacyCountryCode_PRY = 89,
-  /// People's Republic of China/European Space Agency
-  legacyCountryCode_PRES = 90,
-  /// State of Qatar
-  legacyCountryCode_QAT = 91,
-  /// RascomStar-QAF
-  legacyCountryCode_RASC = 92,
-  /// Taiwan (Republic of China)
-  legacyCountryCode_ROC = 93,
-  /// Romania
-  legacyCountryCode_ROM = 94,
-  /// Philippines (Republic of the Philippines)
-  legacyCountryCode_RP = 95,
-  /// Republic of Rwanda
-  legacyCountryCode_RWA = 96,
-  /// South Africa
-  legacyCountryCode_SAFR = 97,
-  /// Saudi Arabia
-  legacyCountryCode_SAUD = 98,
-  /// Republic of Sudan
-  legacyCountryCode_SDN = 99,
-  /// Sea Launch
-  legacyCountryCode_SEAL = 100,
-  /// SES
-  legacyCountryCode_SES = 101,
-  /// Singapore/Japan
-  legacyCountryCode_SGJP = 102,
-  /// Singapore
-  legacyCountryCode_SING = 103,
-  /// Republic of Korea
-  legacyCountryCode_SKOR = 104,
-  /// Spain
-  legacyCountryCode_SPN = 105,
-  /// Singapore/Taiwan
-  legacyCountryCode_STCT = 106,
-  /// Slovenia
-  legacyCountryCode_SVN = 107,
-  /// Sweden
-  legacyCountryCode_SWED = 108,
-  /// Switzerland
-  legacyCountryCode_SWTZ = 109,
-  /// To Be Determined
-  legacyCountryCode_TBD = 110,
-  /// Thailand
-  legacyCountryCode_THAI = 111,
-  /// Turkmenistan/Monaco
-  legacyCountryCode_TMMC = 112,
-  /// Republic of Tunisia
-  legacyCountryCode_TUN = 113,
-  /// Turkey
-  legacyCountryCode_TURK = 114,
-  /// United Arab Emirates
-  legacyCountryCode_UAE = 115,
-  /// United Kingdom
-  legacyCountryCode_UK = 116,
-  /// Ukraine
-  legacyCountryCode_UKR = 117,
-  /// Unknown
-  legacyCountryCode_UNK = 118,
-  /// Uruguay
-  legacyCountryCode_URY = 119,
-  /// United States
-  legacyCountryCode_US = 120,
-  /// United States/Brazil
-  legacyCountryCode_USBZ = 121,
-  /// Vatican City State
-  legacyCountryCode_VAT = 122,
-  /// Venezuela
-  legacyCountryCode_VENZ = 123,
-  /// Vietnam
-  legacyCountryCode_VTNM = 124,
-  /// Republic of Zimbabwe
-  legacyCountryCode_ZWE = 125,
-  legacyCountryCode_MIN = legacyCountryCode_AB,
-  legacyCountryCode_MAX = legacyCountryCode_ZWE
+struct CAT;
+struct CATBuilder;
+
+enum spaceObjectClass : int8_t {
+  /// 0
+  spaceObjectClass_PAYLOAD = 0,
+  /// 1
+  spaceObjectClass_ROCKET_BODY = 1,
+  /// 2
+  spaceObjectClass_DEBRIS = 2,
+  /// 3
+  spaceObjectClass_UNKNOWN = 3,
+  spaceObjectClass_MIN = spaceObjectClass_PAYLOAD,
+  spaceObjectClass_MAX = spaceObjectClass_UNKNOWN
 };
 
-inline const legacyCountryCode (&EnumValueslegacyCountryCode())[126] {
-  static const legacyCountryCode values[] = {
-    legacyCountryCode_AB,
-    legacyCountryCode_ABS,
-    legacyCountryCode_AC,
-    legacyCountryCode_ALG,
-    legacyCountryCode_ANG,
-    legacyCountryCode_ARGN,
-    legacyCountryCode_ARM,
-    legacyCountryCode_ASRA,
-    legacyCountryCode_AUS,
-    legacyCountryCode_AZER,
-    legacyCountryCode_BEL,
-    legacyCountryCode_BELA,
-    legacyCountryCode_BERM,
-    legacyCountryCode_BGD,
-    legacyCountryCode_BHUT,
-    legacyCountryCode_BOL,
-    legacyCountryCode_BRAZ,
-    legacyCountryCode_BUL,
-    legacyCountryCode_CA,
-    legacyCountryCode_CHBZ,
-    legacyCountryCode_CHTU,
-    legacyCountryCode_CHLE,
-    legacyCountryCode_CIS,
-    legacyCountryCode_COL,
-    legacyCountryCode_CRI,
-    legacyCountryCode_CZCH,
-    legacyCountryCode_DEN,
-    legacyCountryCode_DJI,
-    legacyCountryCode_ECU,
-    legacyCountryCode_EGYP,
-    legacyCountryCode_ESA,
-    legacyCountryCode_ESRO,
-    legacyCountryCode_EST,
-    legacyCountryCode_ETH,
-    legacyCountryCode_EUME,
-    legacyCountryCode_EUTE,
-    legacyCountryCode_FGER,
-    legacyCountryCode_FIN,
-    legacyCountryCode_FR,
-    legacyCountryCode_FRIT,
-    legacyCountryCode_GER,
-    legacyCountryCode_GHA,
-    legacyCountryCode_GLOB,
-    legacyCountryCode_GREC,
-    legacyCountryCode_GRSA,
-    legacyCountryCode_GUAT,
-    legacyCountryCode_HUN,
-    legacyCountryCode_IM,
-    legacyCountryCode_IND,
-    legacyCountryCode_INDO,
-    legacyCountryCode_IRAN,
-    legacyCountryCode_IRAQ,
-    legacyCountryCode_IRID,
-    legacyCountryCode_IRL,
-    legacyCountryCode_ISRA,
-    legacyCountryCode_ISRO,
-    legacyCountryCode_ISS,
-    legacyCountryCode_IT,
-    legacyCountryCode_ITSO,
-    legacyCountryCode_JPN,
-    legacyCountryCode_KAZ,
-    legacyCountryCode_KEN,
-    legacyCountryCode_LAOS,
-    legacyCountryCode_LKA,
-    legacyCountryCode_LTU,
-    legacyCountryCode_LUXE,
-    legacyCountryCode_MA,
-    legacyCountryCode_MALA,
-    legacyCountryCode_MCO,
-    legacyCountryCode_MDA,
-    legacyCountryCode_MEX,
-    legacyCountryCode_MMR,
-    legacyCountryCode_MNG,
-    legacyCountryCode_MUS,
-    legacyCountryCode_NATO,
-    legacyCountryCode_NETH,
-    legacyCountryCode_NICO,
-    legacyCountryCode_NIG,
-    legacyCountryCode_NKOR,
-    legacyCountryCode_NOR,
-    legacyCountryCode_NPL,
-    legacyCountryCode_NZ,
-    legacyCountryCode_O3B,
-    legacyCountryCode_ORB,
-    legacyCountryCode_PAKI,
-    legacyCountryCode_PERU,
-    legacyCountryCode_POL,
-    legacyCountryCode_POR,
-    legacyCountryCode_PRC,
-    legacyCountryCode_PRY,
-    legacyCountryCode_PRES,
-    legacyCountryCode_QAT,
-    legacyCountryCode_RASC,
-    legacyCountryCode_ROC,
-    legacyCountryCode_ROM,
-    legacyCountryCode_RP,
-    legacyCountryCode_RWA,
-    legacyCountryCode_SAFR,
-    legacyCountryCode_SAUD,
-    legacyCountryCode_SDN,
-    legacyCountryCode_SEAL,
-    legacyCountryCode_SES,
-    legacyCountryCode_SGJP,
-    legacyCountryCode_SING,
-    legacyCountryCode_SKOR,
-    legacyCountryCode_SPN,
-    legacyCountryCode_STCT,
-    legacyCountryCode_SVN,
-    legacyCountryCode_SWED,
-    legacyCountryCode_SWTZ,
-    legacyCountryCode_TBD,
-    legacyCountryCode_THAI,
-    legacyCountryCode_TMMC,
-    legacyCountryCode_TUN,
-    legacyCountryCode_TURK,
-    legacyCountryCode_UAE,
-    legacyCountryCode_UK,
-    legacyCountryCode_UKR,
-    legacyCountryCode_UNK,
-    legacyCountryCode_URY,
-    legacyCountryCode_US,
-    legacyCountryCode_USBZ,
-    legacyCountryCode_VAT,
-    legacyCountryCode_VENZ,
-    legacyCountryCode_VTNM,
-    legacyCountryCode_ZWE
+inline const spaceObjectClass (&EnumValuesspaceObjectClass())[4] {
+  static const spaceObjectClass values[] = {
+    spaceObjectClass_PAYLOAD,
+    spaceObjectClass_ROCKET_BODY,
+    spaceObjectClass_DEBRIS,
+    spaceObjectClass_UNKNOWN
   };
   return values;
 }
 
-inline const char * const *EnumNameslegacyCountryCode() {
-  static const char * const names[127] = {
-    "AB",
-    "ABS",
-    "AC",
-    "ALG",
-    "ANG",
-    "ARGN",
-    "ARM",
-    "ASRA",
-    "AUS",
-    "AZER",
-    "BEL",
-    "BELA",
-    "BERM",
-    "BGD",
-    "BHUT",
-    "BOL",
-    "BRAZ",
-    "BUL",
-    "CA",
-    "CHBZ",
-    "CHTU",
-    "CHLE",
-    "CIS",
-    "COL",
-    "CRI",
-    "CZCH",
-    "DEN",
-    "DJI",
-    "ECU",
-    "EGYP",
-    "ESA",
-    "ESRO",
-    "EST",
-    "ETH",
-    "EUME",
-    "EUTE",
-    "FGER",
-    "FIN",
-    "FR",
-    "FRIT",
-    "GER",
-    "GHA",
-    "GLOB",
-    "GREC",
-    "GRSA",
-    "GUAT",
-    "HUN",
-    "IM",
-    "IND",
-    "INDO",
-    "IRAN",
-    "IRAQ",
-    "IRID",
-    "IRL",
-    "ISRA",
-    "ISRO",
-    "ISS",
-    "IT",
-    "ITSO",
-    "JPN",
-    "KAZ",
-    "KEN",
-    "LAOS",
-    "LKA",
-    "LTU",
-    "LUXE",
-    "MA",
-    "MALA",
-    "MCO",
-    "MDA",
-    "MEX",
-    "MMR",
-    "MNG",
-    "MUS",
-    "NATO",
-    "NETH",
-    "NICO",
-    "NIG",
-    "NKOR",
-    "NOR",
-    "NPL",
-    "NZ",
-    "O3B",
-    "ORB",
-    "PAKI",
-    "PERU",
-    "POL",
-    "POR",
-    "PRC",
-    "PRY",
-    "PRES",
-    "QAT",
-    "RASC",
-    "ROC",
-    "ROM",
-    "RP",
-    "RWA",
-    "SAFR",
-    "SAUD",
-    "SDN",
-    "SEAL",
-    "SES",
-    "SGJP",
-    "SING",
-    "SKOR",
-    "SPN",
-    "STCT",
-    "SVN",
-    "SWED",
-    "SWTZ",
-    "TBD",
-    "THAI",
-    "TMMC",
-    "TUN",
-    "TURK",
-    "UAE",
-    "UK",
-    "UKR",
-    "UNK",
-    "URY",
-    "US",
-    "USBZ",
-    "VAT",
-    "VENZ",
-    "VTNM",
-    "ZWE",
+inline const char * const *EnumNamesspaceObjectClass() {
+  static const char * const names[5] = {
+    "PAYLOAD",
+    "ROCKET_BODY",
+    "DEBRIS",
+    "UNKNOWN",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNamelegacyCountryCode(legacyCountryCode e) {
-  if (::flatbuffers::IsOutRange(e, legacyCountryCode_AB, legacyCountryCode_ZWE)) return "";
+inline const char *EnumNamespaceObjectClass(spaceObjectClass e) {
+  if (::flatbuffers::IsOutRange(e, spaceObjectClass_PAYLOAD, spaceObjectClass_UNKNOWN)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNameslegacyCountryCode()[index];
+  return EnumNamesspaceObjectClass()[index];
 }
 
-/// Legacy Country Code
-struct LCC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef LCCBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_OWNER = 4
+enum operationalState : int8_t {
+  /// +
+  operationalState_OPERATIONAL = 0,
+  /// -
+  operationalState_NONOPERATIONAL = 1,
+  /// P
+  operationalState_PARTIALLY_OPERATIONAL = 2,
+  /// B
+  operationalState_BACKUP_STANDBY = 3,
+  /// S
+  operationalState_SPARE = 4,
+  /// X
+  operationalState_EXTENDED_MISSION = 5,
+  /// D
+  operationalState_DECAYED = 6,
+  /// ?
+  operationalState_UNKNOWN = 7,
+  operationalState_MIN = operationalState_OPERATIONAL,
+  operationalState_MAX = operationalState_UNKNOWN
+};
+
+inline const operationalState (&EnumValuesoperationalState())[8] {
+  static const operationalState values[] = {
+    operationalState_OPERATIONAL,
+    operationalState_NONOPERATIONAL,
+    operationalState_PARTIALLY_OPERATIONAL,
+    operationalState_BACKUP_STANDBY,
+    operationalState_SPARE,
+    operationalState_EXTENDED_MISSION,
+    operationalState_DECAYED,
+    operationalState_UNKNOWN
   };
+  return values;
+}
+
+inline const char * const *EnumNamesoperationalState() {
+  static const char * const names[9] = {
+    "OPERATIONAL",
+    "NONOPERATIONAL",
+    "PARTIALLY_OPERATIONAL",
+    "BACKUP_STANDBY",
+    "SPARE",
+    "EXTENDED_MISSION",
+    "DECAYED",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameoperationalState(operationalState e) {
+  if (::flatbuffers::IsOutRange(e, operationalState_OPERATIONAL, operationalState_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesoperationalState()[index];
+}
+
+enum dataAvailability : int8_t {
+  /// NCE
+  dataAvailability_NO_CURRENT_ELEMENTS = 0,
+  /// NIE
+  dataAvailability_NO_INITIAL_ELEMENTS = 1,
+  /// NEA
+  dataAvailability_NO_ELEMENTS_AVAILABLE = 2,
+  /// OK
+  dataAvailability_OK = 3,
+  dataAvailability_MIN = dataAvailability_NO_CURRENT_ELEMENTS,
+  dataAvailability_MAX = dataAvailability_OK
+};
+
+inline const dataAvailability (&EnumValuesdataAvailability())[4] {
+  static const dataAvailability values[] = {
+    dataAvailability_NO_CURRENT_ELEMENTS,
+    dataAvailability_NO_INITIAL_ELEMENTS,
+    dataAvailability_NO_ELEMENTS_AVAILABLE,
+    dataAvailability_OK
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesdataAvailability() {
+  static const char * const names[5] = {
+    "NO_CURRENT_ELEMENTS",
+    "NO_INITIAL_ELEMENTS",
+    "NO_ELEMENTS_AVAILABLE",
+    "OK",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamedataAvailability(dataAvailability e) {
+  if (::flatbuffers::IsOutRange(e, dataAvailability_NO_CURRENT_ELEMENTS, dataAvailability_OK)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesdataAvailability()[index];
+}
+
+enum orbitRegime : int8_t {
+  /// 0
+  orbitRegime_ORBIT = 0,
+  /// 1
+  orbitRegime_LANDING = 1,
+  /// 2
+  orbitRegime_IMPACT = 2,
+  /// 3
+  orbitRegime_DOCKED = 3,
+  /// 4
+  orbitRegime_ROUNDTRIP = 4,
+  orbitRegime_MIN = orbitRegime_ORBIT,
+  orbitRegime_MAX = orbitRegime_ROUNDTRIP
+};
+
+inline const orbitRegime (&EnumValuesorbitRegime())[5] {
+  static const orbitRegime values[] = {
+    orbitRegime_ORBIT,
+    orbitRegime_LANDING,
+    orbitRegime_IMPACT,
+    orbitRegime_DOCKED,
+    orbitRegime_ROUNDTRIP
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesorbitRegime() {
+  static const char * const names[6] = {
+    "ORBIT",
+    "LANDING",
+    "IMPACT",
+    "DOCKED",
+    "ROUNDTRIP",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameorbitRegime(orbitRegime e) {
+  if (::flatbuffers::IsOutRange(e, orbitRegime_ORBIT, orbitRegime_ROUNDTRIP)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesorbitRegime()[index];
+}
+
+enum massCategory : int8_t {
+  massCategory_DRY = 0,
+  massCategory_WET = 1,
+  massCategory_MIN = massCategory_DRY,
+  massCategory_MAX = massCategory_WET
+};
+
+inline const massCategory (&EnumValuesmassCategory())[2] {
+  static const massCategory values[] = {
+    massCategory_DRY,
+    massCategory_WET
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesmassCategory() {
+  static const char * const names[3] = {
+    "DRY",
+    "WET",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamemassCategory(massCategory e) {
+  if (::flatbuffers::IsOutRange(e, massCategory_DRY, massCategory_WET)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesmassCategory()[index];
+}
+
+/// Catalog Entity Message
+struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CATBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_OBJECT_NAME = 4,
+    VT_OBJECT_ID = 6,
+    VT_NORAD_CAT_ID = 8,
+    VT_OBJECT_TYPE = 10,
+    VT_OPS_STATUS_CODE = 12,
+    VT_OWNER = 14,
+    VT_LAUNCH_DATE = 16,
+    VT_LAUNCH_SITE = 18,
+    VT_DECAY_DATE = 20,
+    VT_PERIOD = 22,
+    VT_INCLINATION = 24,
+    VT_APOGEE = 26,
+    VT_PERIGEE = 28,
+    VT_RCS = 30,
+    VT_DATA_STATUS_CODE = 32,
+    VT_ORBIT_CENTER = 34,
+    VT_ORBIT_TYPE = 36,
+    VT_DEPLOYMENT_DATE = 38,
+    VT_MANEUVERABLE = 40,
+    VT_SIZE = 42,
+    VT_MASS = 44,
+    VT_MASS_TYPE = 46,
+    VT_PAYLOADS = 48
+  };
+  /// Satellite Name(s)
+  const ::flatbuffers::String *OBJECT_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
+  }
+  /// International Designator (YYYY-NNNAAA)
+  const ::flatbuffers::String *OBJECT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
+  }
+  /// NORAD Catalog Number
+  uint32_t NORAD_CAT_ID() const {
+    return GetField<uint32_t>(VT_NORAD_CAT_ID, 0);
+  }
+  /// Object type (Payload, Rocket body, Debris, Unknown)
+  spaceObjectClass OBJECT_TYPE() const {
+    return static_cast<spaceObjectClass>(GetField<int8_t>(VT_OBJECT_TYPE, 3));
+  }
+  /// Operational Status Code
+  operationalState OPS_STATUS_CODE() const {
+    return static_cast<operationalState>(GetField<int8_t>(VT_OPS_STATUS_CODE, 7));
+  }
+  /// Ownership, typically country or company
   legacyCountryCode OWNER() const {
     return static_cast<legacyCountryCode>(GetField<int8_t>(VT_OWNER, 0));
+  }
+  /// Launch Date [year-month-day] (ISO 8601)
+  const ::flatbuffers::String *LAUNCH_DATE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_DATE);
+  }
+  /// Launch Site
+  const ::flatbuffers::String *LAUNCH_SITE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_SITE);
+  }
+  /// Decay Date, if applicable [year-month-day] (ISO 8601)
+  const ::flatbuffers::String *DECAY_DATE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DECAY_DATE);
+  }
+  /// Orbital period [minutes]
+  double PERIOD() const {
+    return GetField<double>(VT_PERIOD, 0.0);
+  }
+  /// Inclination [degrees]
+  double INCLINATION() const {
+    return GetField<double>(VT_INCLINATION, 0.0);
+  }
+  /// Apogee Altitude [kilometers]
+  double APOGEE() const {
+    return GetField<double>(VT_APOGEE, 0.0);
+  }
+  /// Perigee Altitude [kilometers]
+  double PERIGEE() const {
+    return GetField<double>(VT_PERIGEE, 0.0);
+  }
+  /// Radar Cross Section [meters2]; blank if no data available
+  double RCS() const {
+    return GetField<double>(VT_RCS, 0.0);
+  }
+  /// Data status code; blank otherwise
+  dataAvailability DATA_STATUS_CODE() const {
+    return static_cast<dataAvailability>(GetField<int8_t>(VT_DATA_STATUS_CODE, 0));
+  }
+  /// Orbit center
+  const ::flatbuffers::String *ORBIT_CENTER() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORBIT_CENTER);
+  }
+  /// Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
+  orbitRegime ORBIT_TYPE() const {
+    return static_cast<orbitRegime>(GetField<int8_t>(VT_ORBIT_TYPE, 0));
+  }
+  /// Deployment Date [year-month-day] (ISO 8601)
+  const ::flatbuffers::String *DEPLOYMENT_DATE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DEPLOYMENT_DATE);
+  }
+  /// Indicates if the object is maneuverable
+  bool MANEUVERABLE() const {
+    return GetField<uint8_t>(VT_MANEUVERABLE, 0) != 0;
+  }
+  /// Size [meters]; blank if no data available
+  double SIZE() const {
+    return GetField<double>(VT_SIZE, 0.0);
+  }
+  /// Mass [kilograms]; blank if no data available
+  double MASS() const {
+    return GetField<double>(VT_MASS, 0.0);
+  }
+  /// Mass type (Dry, Wet)
+  massCategory MASS_TYPE() const {
+    return static_cast<massCategory>(GetField<int8_t>(VT_MASS_TYPE, 0));
+  }
+  /// Vector of PAYLOADS
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PLD>> *PAYLOADS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PLD>> *>(VT_PAYLOADS);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_OBJECT_NAME) &&
+           verifier.VerifyString(OBJECT_NAME()) &&
+           VerifyOffset(verifier, VT_OBJECT_ID) &&
+           verifier.VerifyString(OBJECT_ID()) &&
+           VerifyField<uint32_t>(verifier, VT_NORAD_CAT_ID, 4) &&
+           VerifyField<int8_t>(verifier, VT_OBJECT_TYPE, 1) &&
+           VerifyField<int8_t>(verifier, VT_OPS_STATUS_CODE, 1) &&
            VerifyField<int8_t>(verifier, VT_OWNER, 1) &&
+           VerifyOffset(verifier, VT_LAUNCH_DATE) &&
+           verifier.VerifyString(LAUNCH_DATE()) &&
+           VerifyOffset(verifier, VT_LAUNCH_SITE) &&
+           verifier.VerifyString(LAUNCH_SITE()) &&
+           VerifyOffset(verifier, VT_DECAY_DATE) &&
+           verifier.VerifyString(DECAY_DATE()) &&
+           VerifyField<double>(verifier, VT_PERIOD, 8) &&
+           VerifyField<double>(verifier, VT_INCLINATION, 8) &&
+           VerifyField<double>(verifier, VT_APOGEE, 8) &&
+           VerifyField<double>(verifier, VT_PERIGEE, 8) &&
+           VerifyField<double>(verifier, VT_RCS, 8) &&
+           VerifyField<int8_t>(verifier, VT_DATA_STATUS_CODE, 1) &&
+           VerifyOffset(verifier, VT_ORBIT_CENTER) &&
+           verifier.VerifyString(ORBIT_CENTER()) &&
+           VerifyField<int8_t>(verifier, VT_ORBIT_TYPE, 1) &&
+           VerifyOffset(verifier, VT_DEPLOYMENT_DATE) &&
+           verifier.VerifyString(DEPLOYMENT_DATE()) &&
+           VerifyField<uint8_t>(verifier, VT_MANEUVERABLE, 1) &&
+           VerifyField<double>(verifier, VT_SIZE, 8) &&
+           VerifyField<double>(verifier, VT_MASS, 8) &&
+           VerifyField<int8_t>(verifier, VT_MASS_TYPE, 1) &&
+           VerifyOffset(verifier, VT_PAYLOADS) &&
+           verifier.VerifyVector(PAYLOADS()) &&
+           verifier.VerifyVectorOfTables(PAYLOADS()) &&
            verifier.EndTable();
   }
 };
 
-struct LCCBuilder {
-  typedef LCC Table;
+struct CATBuilder {
+  typedef CAT Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_OWNER(legacyCountryCode OWNER) {
-    fbb_.AddElement<int8_t>(LCC::VT_OWNER, static_cast<int8_t>(OWNER), 0);
+  void add_OBJECT_NAME(::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME) {
+    fbb_.AddOffset(CAT::VT_OBJECT_NAME, OBJECT_NAME);
   }
-  explicit LCCBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID) {
+    fbb_.AddOffset(CAT::VT_OBJECT_ID, OBJECT_ID);
+  }
+  void add_NORAD_CAT_ID(uint32_t NORAD_CAT_ID) {
+    fbb_.AddElement<uint32_t>(CAT::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
+  }
+  void add_OBJECT_TYPE(spaceObjectClass OBJECT_TYPE) {
+    fbb_.AddElement<int8_t>(CAT::VT_OBJECT_TYPE, static_cast<int8_t>(OBJECT_TYPE), 3);
+  }
+  void add_OPS_STATUS_CODE(operationalState OPS_STATUS_CODE) {
+    fbb_.AddElement<int8_t>(CAT::VT_OPS_STATUS_CODE, static_cast<int8_t>(OPS_STATUS_CODE), 7);
+  }
+  void add_OWNER(legacyCountryCode OWNER) {
+    fbb_.AddElement<int8_t>(CAT::VT_OWNER, static_cast<int8_t>(OWNER), 0);
+  }
+  void add_LAUNCH_DATE(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_DATE) {
+    fbb_.AddOffset(CAT::VT_LAUNCH_DATE, LAUNCH_DATE);
+  }
+  void add_LAUNCH_SITE(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_SITE) {
+    fbb_.AddOffset(CAT::VT_LAUNCH_SITE, LAUNCH_SITE);
+  }
+  void add_DECAY_DATE(::flatbuffers::Offset<::flatbuffers::String> DECAY_DATE) {
+    fbb_.AddOffset(CAT::VT_DECAY_DATE, DECAY_DATE);
+  }
+  void add_PERIOD(double PERIOD) {
+    fbb_.AddElement<double>(CAT::VT_PERIOD, PERIOD, 0.0);
+  }
+  void add_INCLINATION(double INCLINATION) {
+    fbb_.AddElement<double>(CAT::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  void add_APOGEE(double APOGEE) {
+    fbb_.AddElement<double>(CAT::VT_APOGEE, APOGEE, 0.0);
+  }
+  void add_PERIGEE(double PERIGEE) {
+    fbb_.AddElement<double>(CAT::VT_PERIGEE, PERIGEE, 0.0);
+  }
+  void add_RCS(double RCS) {
+    fbb_.AddElement<double>(CAT::VT_RCS, RCS, 0.0);
+  }
+  void add_DATA_STATUS_CODE(dataAvailability DATA_STATUS_CODE) {
+    fbb_.AddElement<int8_t>(CAT::VT_DATA_STATUS_CODE, static_cast<int8_t>(DATA_STATUS_CODE), 0);
+  }
+  void add_ORBIT_CENTER(::flatbuffers::Offset<::flatbuffers::String> ORBIT_CENTER) {
+    fbb_.AddOffset(CAT::VT_ORBIT_CENTER, ORBIT_CENTER);
+  }
+  void add_ORBIT_TYPE(orbitRegime ORBIT_TYPE) {
+    fbb_.AddElement<int8_t>(CAT::VT_ORBIT_TYPE, static_cast<int8_t>(ORBIT_TYPE), 0);
+  }
+  void add_DEPLOYMENT_DATE(::flatbuffers::Offset<::flatbuffers::String> DEPLOYMENT_DATE) {
+    fbb_.AddOffset(CAT::VT_DEPLOYMENT_DATE, DEPLOYMENT_DATE);
+  }
+  void add_MANEUVERABLE(bool MANEUVERABLE) {
+    fbb_.AddElement<uint8_t>(CAT::VT_MANEUVERABLE, static_cast<uint8_t>(MANEUVERABLE), 0);
+  }
+  void add_SIZE(double SIZE) {
+    fbb_.AddElement<double>(CAT::VT_SIZE, SIZE, 0.0);
+  }
+  void add_MASS(double MASS) {
+    fbb_.AddElement<double>(CAT::VT_MASS, MASS, 0.0);
+  }
+  void add_MASS_TYPE(massCategory MASS_TYPE) {
+    fbb_.AddElement<int8_t>(CAT::VT_MASS_TYPE, static_cast<int8_t>(MASS_TYPE), 0);
+  }
+  void add_PAYLOADS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLD>>> PAYLOADS) {
+    fbb_.AddOffset(CAT::VT_PAYLOADS, PAYLOADS);
+  }
+  explicit CATBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<LCC> Finish() {
+  ::flatbuffers::Offset<CAT> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<LCC>(end);
+    auto o = ::flatbuffers::Offset<CAT>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<LCC> CreateLCC(
+inline ::flatbuffers::Offset<CAT> CreateCAT(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    legacyCountryCode OWNER = legacyCountryCode_AB) {
-  LCCBuilder builder_(_fbb);
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID = 0,
+    uint32_t NORAD_CAT_ID = 0,
+    spaceObjectClass OBJECT_TYPE = spaceObjectClass_UNKNOWN,
+    operationalState OPS_STATUS_CODE = operationalState_UNKNOWN,
+    legacyCountryCode OWNER = legacyCountryCode_AB,
+    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_DATE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_SITE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DECAY_DATE = 0,
+    double PERIOD = 0.0,
+    double INCLINATION = 0.0,
+    double APOGEE = 0.0,
+    double PERIGEE = 0.0,
+    double RCS = 0.0,
+    dataAvailability DATA_STATUS_CODE = dataAvailability_NO_CURRENT_ELEMENTS,
+    ::flatbuffers::Offset<::flatbuffers::String> ORBIT_CENTER = 0,
+    orbitRegime ORBIT_TYPE = orbitRegime_ORBIT,
+    ::flatbuffers::Offset<::flatbuffers::String> DEPLOYMENT_DATE = 0,
+    bool MANEUVERABLE = false,
+    double SIZE = 0.0,
+    double MASS = 0.0,
+    massCategory MASS_TYPE = massCategory_DRY,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PLD>>> PAYLOADS = 0) {
+  CATBuilder builder_(_fbb);
+  builder_.add_MASS(MASS);
+  builder_.add_SIZE(SIZE);
+  builder_.add_RCS(RCS);
+  builder_.add_PERIGEE(PERIGEE);
+  builder_.add_APOGEE(APOGEE);
+  builder_.add_INCLINATION(INCLINATION);
+  builder_.add_PERIOD(PERIOD);
+  builder_.add_PAYLOADS(PAYLOADS);
+  builder_.add_DEPLOYMENT_DATE(DEPLOYMENT_DATE);
+  builder_.add_ORBIT_CENTER(ORBIT_CENTER);
+  builder_.add_DECAY_DATE(DECAY_DATE);
+  builder_.add_LAUNCH_SITE(LAUNCH_SITE);
+  builder_.add_LAUNCH_DATE(LAUNCH_DATE);
+  builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
+  builder_.add_OBJECT_ID(OBJECT_ID);
+  builder_.add_OBJECT_NAME(OBJECT_NAME);
+  builder_.add_MASS_TYPE(MASS_TYPE);
+  builder_.add_MANEUVERABLE(MANEUVERABLE);
+  builder_.add_ORBIT_TYPE(ORBIT_TYPE);
+  builder_.add_DATA_STATUS_CODE(DATA_STATUS_CODE);
   builder_.add_OWNER(OWNER);
+  builder_.add_OPS_STATUS_CODE(OPS_STATUS_CODE);
+  builder_.add_OBJECT_TYPE(OBJECT_TYPE);
   return builder_.Finish();
 }
 
-inline const LCC *GetLCC(const void *buf) {
-  return ::flatbuffers::GetRoot<LCC>(buf);
+inline ::flatbuffers::Offset<CAT> CreateCATDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *OBJECT_NAME = nullptr,
+    const char *OBJECT_ID = nullptr,
+    uint32_t NORAD_CAT_ID = 0,
+    spaceObjectClass OBJECT_TYPE = spaceObjectClass_UNKNOWN,
+    operationalState OPS_STATUS_CODE = operationalState_UNKNOWN,
+    legacyCountryCode OWNER = legacyCountryCode_AB,
+    const char *LAUNCH_DATE = nullptr,
+    const char *LAUNCH_SITE = nullptr,
+    const char *DECAY_DATE = nullptr,
+    double PERIOD = 0.0,
+    double INCLINATION = 0.0,
+    double APOGEE = 0.0,
+    double PERIGEE = 0.0,
+    double RCS = 0.0,
+    dataAvailability DATA_STATUS_CODE = dataAvailability_NO_CURRENT_ELEMENTS,
+    const char *ORBIT_CENTER = nullptr,
+    orbitRegime ORBIT_TYPE = orbitRegime_ORBIT,
+    const char *DEPLOYMENT_DATE = nullptr,
+    bool MANEUVERABLE = false,
+    double SIZE = 0.0,
+    double MASS = 0.0,
+    massCategory MASS_TYPE = massCategory_DRY,
+    const std::vector<::flatbuffers::Offset<PLD>> *PAYLOADS = nullptr) {
+  auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
+  auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
+  auto LAUNCH_DATE__ = LAUNCH_DATE ? _fbb.CreateString(LAUNCH_DATE) : 0;
+  auto LAUNCH_SITE__ = LAUNCH_SITE ? _fbb.CreateString(LAUNCH_SITE) : 0;
+  auto DECAY_DATE__ = DECAY_DATE ? _fbb.CreateString(DECAY_DATE) : 0;
+  auto ORBIT_CENTER__ = ORBIT_CENTER ? _fbb.CreateString(ORBIT_CENTER) : 0;
+  auto DEPLOYMENT_DATE__ = DEPLOYMENT_DATE ? _fbb.CreateString(DEPLOYMENT_DATE) : 0;
+  auto PAYLOADS__ = PAYLOADS ? _fbb.CreateVector<::flatbuffers::Offset<PLD>>(*PAYLOADS) : 0;
+  return CreateCAT(
+      _fbb,
+      OBJECT_NAME__,
+      OBJECT_ID__,
+      NORAD_CAT_ID,
+      OBJECT_TYPE,
+      OPS_STATUS_CODE,
+      OWNER,
+      LAUNCH_DATE__,
+      LAUNCH_SITE__,
+      DECAY_DATE__,
+      PERIOD,
+      INCLINATION,
+      APOGEE,
+      PERIGEE,
+      RCS,
+      DATA_STATUS_CODE,
+      ORBIT_CENTER__,
+      ORBIT_TYPE,
+      DEPLOYMENT_DATE__,
+      MANEUVERABLE,
+      SIZE,
+      MASS,
+      MASS_TYPE,
+      PAYLOADS__);
 }
 
-inline const LCC *GetSizePrefixedLCC(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<LCC>(buf);
+inline const CAT *GetCAT(const void *buf) {
+  return ::flatbuffers::GetRoot<CAT>(buf);
 }
 
-inline const char *LCCIdentifier() {
-  return "$LCC";
+inline const CAT *GetSizePrefixedCAT(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<CAT>(buf);
 }
 
-inline bool LCCBufferHasIdentifier(const void *buf) {
+inline const char *CATIdentifier() {
+  return "$CAT";
+}
+
+inline bool CATBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, LCCIdentifier());
+      buf, CATIdentifier());
 }
 
-inline bool SizePrefixedLCCBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedCATBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, LCCIdentifier(), true);
+      buf, CATIdentifier(), true);
 }
 
 template <bool B = false>
-inline bool VerifyLCCBuffer(
+inline bool VerifyCATBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<LCC>(LCCIdentifier());
+  return verifier.template VerifyBuffer<CAT>(CATIdentifier());
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedLCCBuffer(
+inline bool VerifySizePrefixedCATBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<LCC>(LCCIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<CAT>(CATIdentifier());
 }
 
-inline void FinishLCCBuffer(
+inline void FinishCATBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<LCC> root) {
-  fbb.Finish(root, LCCIdentifier());
+    ::flatbuffers::Offset<CAT> root) {
+  fbb.Finish(root, CATIdentifier());
 }
 
-inline void FinishSizePrefixedLCCBuffer(
+inline void FinishSizePrefixedCATBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<LCC> root) {
-  fbb.FinishSizePrefixed(root, LCCIdentifier());
+    ::flatbuffers::Offset<CAT> root) {
+  fbb.FinishSizePrefixed(root, CATIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

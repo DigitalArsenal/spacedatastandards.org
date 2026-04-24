@@ -2,48 +2,60 @@
 // @generated
 extern crate alloc;
 
+use crate::main_generated::*;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_PAYLOAD_WIRE_FORMAT: u8 = 0;
+pub const ENUM_MIN_PIV_STATUS: i32 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PAYLOAD_WIRE_FORMAT: u8 = 1;
+pub const ENUM_MAX_PIV_STATUS: i32 = 3;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PAYLOAD_WIRE_FORMAT: [payloadWireFormat; 2] = [
-  payloadWireFormat::FLATBUFFER,
-  payloadWireFormat::ALIGNED_BINARY,
+pub const ENUM_VALUES_PIV_STATUS: [pivStatus; 4] = [
+  pivStatus::OK,
+  pivStatus::NOT_FOUND,
+  pivStatus::YIELDED,
+  pivStatus::FAILED,
 ];
 
-/// Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
-/// through an arena-backed plugin stream. Carries enough identity for a
-/// receiver to dispatch on schema without inspecting the payload bytes.
-/// Logical payload wire format for a stream frame or an accepted port type.
+/// Coarse envelope status for an invoke response. Per-method numeric
+/// return codes travel in STATUS_CODE; STATUS categorizes the outcome
+/// for host routing (retry, yield-and-resume, fail-closed) without the
+/// host having to decode method-specific numbers.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct payloadWireFormat(pub u8);
+pub struct pivStatus(pub i32);
 #[allow(non_upper_case_globals)]
-impl payloadWireFormat {
-  /// Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF.
-  pub const FLATBUFFER: Self = Self(0);
-  /// Body is a raw aligned binary chunk (for example zero-copy structs).
-  pub const ALIGNED_BINARY: Self = Self(1);
+impl pivStatus {
+  /// Invocation completed; STATUS_CODE carries the method-specific value.
+  pub const OK: Self = Self(0);
+  /// Method id not registered on the target plugin.
+  pub const NOT_FOUND: Self = Self(1);
+  /// Invocation succeeded but yielded before draining queued work.
+  /// Caller should inspect BACKLOG_REMAINING and re-invoke to continue.
+  pub const YIELDED: Self = Self(2);
+  /// Invocation failed; ERROR_CODE + ERROR_MESSAGE describe the failure.
+  pub const FAILED: Self = Self(3);
 
-  pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 1;
+  pub const ENUM_MIN: i32 = 0;
+  pub const ENUM_MAX: i32 = 3;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::FLATBUFFER,
-    Self::ALIGNED_BINARY,
+    Self::OK,
+    Self::NOT_FOUND,
+    Self::YIELDED,
+    Self::FAILED,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::FLATBUFFER => Some("FLATBUFFER"),
-      Self::ALIGNED_BINARY => Some("ALIGNED_BINARY"),
+      Self::OK => Some("OK"),
+      Self::NOT_FOUND => Some("NOT_FOUND"),
+      Self::YIELDED => Some("YIELDED"),
+      Self::FAILED => Some("FAILED"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for payloadWireFormat {
+impl ::core::fmt::Debug for pivStatus {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -52,856 +64,865 @@ impl ::core::fmt::Debug for payloadWireFormat {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for payloadWireFormat {
+impl<'a> ::flatbuffers::Follow<'a> for pivStatus {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i32>(buf, loc) };
     Self(b)
   }
 }
 
-impl ::flatbuffers::Push for payloadWireFormat {
-    type Output = payloadWireFormat;
+impl ::flatbuffers::Push for pivStatus {
+    type Output = pivStatus;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+        unsafe { ::flatbuffers::emplace_scalar::<i32>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for payloadWireFormat {
-  type Scalar = u8;
+impl ::flatbuffers::EndianScalar for pivStatus {
+  type Scalar = i32;
   #[inline]
-  fn to_little_endian(self) -> u8 {
+  fn to_little_endian(self) -> i32 {
     self.0.to_le()
   }
   #[inline]
   #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: u8) -> Self {
-    let b = u8::from_le(v);
+  fn from_little_endian(v: i32) -> Self {
+    let b = i32::from_le(v);
     Self(b)
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for payloadWireFormat {
+impl<'a> ::flatbuffers::Verifiable for pivStatus {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    u8::run_verifier(v, pos)
+    i32::run_verifier(v, pos)
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for payloadWireFormat {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_BUFFER_MUTABILITY: u8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_BUFFER_MUTABILITY: u8 = 2;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_BUFFER_MUTABILITY: [bufferMutability; 3] = [
-  bufferMutability::IMMUTABLE,
-  bufferMutability::SINGLE_WRITER_MUTABLE,
-  bufferMutability::APPEND_ONLY,
-];
-
-/// Buffer mutability contract advertised by a stream port.
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct bufferMutability(pub u8);
-#[allow(non_upper_case_globals)]
-impl bufferMutability {
-  /// Buffer is immutable after produce.
-  pub const IMMUTABLE: Self = Self(0);
-  /// Buffer may be written in place by the owner (single writer).
-  pub const SINGLE_WRITER_MUTABLE: Self = Self(1);
-  /// Buffer is append-only (rings / logs).
-  pub const APPEND_ONLY: Self = Self(2);
-
-  pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 2;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::IMMUTABLE,
-    Self::SINGLE_WRITER_MUTABLE,
-    Self::APPEND_ONLY,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::IMMUTABLE => Some("IMMUTABLE"),
-      Self::SINGLE_WRITER_MUTABLE => Some("SINGLE_WRITER_MUTABLE"),
-      Self::APPEND_ONLY => Some("APPEND_ONLY"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for bufferMutability {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for bufferMutability {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for bufferMutability {
-    type Output = bufferMutability;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for bufferMutability {
-  type Scalar = u8;
-  #[inline]
-  fn to_little_endian(self) -> u8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: u8) -> Self {
-    let b = u8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for bufferMutability {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    u8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for bufferMutability {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_BUFFER_OWNERSHIP: u8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_BUFFER_OWNERSHIP: u8 = 2;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_BUFFER_OWNERSHIP: [bufferOwnership; 3] = [
-  bufferOwnership::HOST_OWNED,
-  bufferOwnership::PLUGIN_OWNED,
-  bufferOwnership::TRANSFERRED,
-];
-
-/// Buffer ownership contract advertised by a stream port.
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct bufferOwnership(pub u8);
-#[allow(non_upper_case_globals)]
-impl bufferOwnership {
-  /// Arena / host owns the backing bytes; receiver must not free.
-  pub const HOST_OWNED: Self = Self(0);
-  /// Plugin owns the backing bytes; host must not free.
-  pub const PLUGIN_OWNED: Self = Self(1);
-  /// Ownership transfers with the frame (hand-off semantics).
-  pub const TRANSFERRED: Self = Self(2);
-
-  pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 2;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::HOST_OWNED,
-    Self::PLUGIN_OWNED,
-    Self::TRANSFERRED,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::HOST_OWNED => Some("HOST_OWNED"),
-      Self::PLUGIN_OWNED => Some("PLUGIN_OWNED"),
-      Self::TRANSFERRED => Some("TRANSFERRED"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for bufferOwnership {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for bufferOwnership {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for bufferOwnership {
-    type Output = bufferOwnership;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for bufferOwnership {
-  type Scalar = u8;
-  #[inline]
-  fn to_little_endian(self) -> u8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: u8) -> Self {
-    let b = u8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for bufferOwnership {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    u8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for bufferOwnership {}
-pub enum FlatBufferTypeRefOffset {}
+impl ::flatbuffers::SimpleToVerifyInSlice for pivStatus {}
+pub enum PIVRequestOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Payload-schema identity for a stream frame or an accepted port type.
-pub struct FlatBufferTypeRef<'a> {
+/// Request envelope carried by `plugin_invoke_stream`.
+pub struct PIVRequest<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for FlatBufferTypeRef<'a> {
-  type Inner = FlatBufferTypeRef<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for PIVRequest<'a> {
+  type Inner = PIVRequest<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> FlatBufferTypeRef<'a> {
-  pub const VT_SCHEMA_NAME: ::flatbuffers::VOffsetT = 4;
-  pub const VT_FILE_IDENTIFIER: ::flatbuffers::VOffsetT = 6;
-  pub const VT_SCHEMA_VERSION: ::flatbuffers::VOffsetT = 8;
-  pub const VT_ROOT_TYPE: ::flatbuffers::VOffsetT = 10;
+impl<'a> PIVRequest<'a> {
+  pub const VT_METHOD_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_INPUTS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_PAYLOAD_ARENA: ::flatbuffers::VOffsetT = 8;
+  pub const VT_TRACE_ID: ::flatbuffers::VOffsetT = 10;
+  pub const VT_OUTPUT_STREAM_CAP: ::flatbuffers::VOffsetT = 12;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    FlatBufferTypeRef { _tab: table }
+    PIVRequest { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args FlatBufferTypeRefArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<FlatBufferTypeRef<'bldr>> {
-    let mut builder = FlatBufferTypeRefBuilder::new(_fbb);
-    if let Some(x) = args.ROOT_TYPE { builder.add_ROOT_TYPE(x); }
-    if let Some(x) = args.SCHEMA_VERSION { builder.add_SCHEMA_VERSION(x); }
-    if let Some(x) = args.FILE_IDENTIFIER { builder.add_FILE_IDENTIFIER(x); }
-    if let Some(x) = args.SCHEMA_NAME { builder.add_SCHEMA_NAME(x); }
+    args: &'args PIVRequestArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PIVRequest<'bldr>> {
+    let mut builder = PIVRequestBuilder::new(_fbb);
+    builder.add_TRACE_ID(args.TRACE_ID);
+    builder.add_OUTPUT_STREAM_CAP(args.OUTPUT_STREAM_CAP);
+    if let Some(x) = args.PAYLOAD_ARENA { builder.add_PAYLOAD_ARENA(x); }
+    if let Some(x) = args.INPUTS { builder.add_INPUTS(x); }
+    if let Some(x) = args.METHOD_ID { builder.add_METHOD_ID(x); }
     builder.finish()
   }
 
-  pub fn unpack(&self) -> FlatBufferTypeRefT {
-    let SCHEMA_NAME = self.SCHEMA_NAME().map(|x| {
+  pub fn unpack(&self) -> PIVRequestT {
+    let METHOD_ID = {
+      let x = self.METHOD_ID();
       alloc::string::ToString::to_string(x)
+    };
+    let INPUTS = self.INPUTS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
     });
-    let FILE_IDENTIFIER = self.FILE_IDENTIFIER().map(|x| {
-      alloc::string::ToString::to_string(x)
+    let PAYLOAD_ARENA = self.PAYLOAD_ARENA().map(|x| {
+      x.into_iter().collect()
     });
-    let SCHEMA_VERSION = self.SCHEMA_VERSION().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let ROOT_TYPE = self.ROOT_TYPE().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    FlatBufferTypeRefT {
-      SCHEMA_NAME,
-      FILE_IDENTIFIER,
-      SCHEMA_VERSION,
-      ROOT_TYPE,
+    let TRACE_ID = self.TRACE_ID();
+    let OUTPUT_STREAM_CAP = self.OUTPUT_STREAM_CAP();
+    PIVRequestT {
+      METHOD_ID,
+      INPUTS,
+      PAYLOAD_ARENA,
+      TRACE_ID,
+      OUTPUT_STREAM_CAP,
     }
   }
 
-  /// Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
+  /// Stable method identifier from PLG.METHODS[].METHOD_ID.
   #[inline]
-  pub fn SCHEMA_NAME(&self) -> Option<&'a str> {
+  pub fn METHOD_ID(&self) -> &'a str {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(FlatBufferTypeRef::VT_SCHEMA_NAME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PIVRequest::VT_METHOD_ID, None).unwrap()}
   }
-  /// Optional 4-byte FlatBuffer file identifier.
+  /// Input frames. Each TAB.TYPE_REF names the payload schema and each
+  /// TAB.WIRE_FORMAT selects FLATBUFFER or ALIGNED_BINARY. TAB.OFFSET
+  /// is arena-relative into PAYLOAD_ARENA (or an absolute pointer when
+  /// PAYLOAD_ARENA is empty).
   #[inline]
-  pub fn FILE_IDENTIFIER(&self) -> Option<&'a str> {
+  pub fn INPUTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TAB<'a>>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(FlatBufferTypeRef::VT_FILE_IDENTIFIER, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TAB>>>>(PIVRequest::VT_INPUTS, None)}
   }
-  /// Optional semver or schema revision string.
+  /// Optional arena backing the INPUTS payload bodies. Empty means the
+  /// caller manages arena state out-of-band.
   #[inline]
-  pub fn SCHEMA_VERSION(&self) -> Option<&'a str> {
+  pub fn PAYLOAD_ARENA(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(FlatBufferTypeRef::VT_SCHEMA_VERSION, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(PIVRequest::VT_PAYLOAD_ARENA, None)}
   }
-  /// Optional root type name within the schema.
+  /// Optional trace identifier for request correlation.
   #[inline]
-  pub fn ROOT_TYPE(&self) -> Option<&'a str> {
+  pub fn TRACE_ID(&self) -> u64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(FlatBufferTypeRef::VT_ROOT_TYPE, None)}
+    unsafe { self._tab.get::<u64>(PIVRequest::VT_TRACE_ID, Some(0)).unwrap()}
+  }
+  /// Optional yield-budget hint. Plugins MAY pause queued work after
+  /// draining this many output frames and return YIELDED for the caller
+  /// to resume. 0 = no hint.
+  #[inline]
+  pub fn OUTPUT_STREAM_CAP(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(PIVRequest::VT_OUTPUT_STREAM_CAP, Some(0)).unwrap()}
   }
 }
 
-impl ::flatbuffers::Verifiable for FlatBufferTypeRef<'_> {
+impl ::flatbuffers::Verifiable for PIVRequest<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCHEMA_NAME", Self::VT_SCHEMA_NAME, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FILE_IDENTIFIER", Self::VT_FILE_IDENTIFIER, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCHEMA_VERSION", Self::VT_SCHEMA_VERSION, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ROOT_TYPE", Self::VT_ROOT_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("METHOD_ID", Self::VT_METHOD_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<TAB>>>>("INPUTS", Self::VT_INPUTS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("PAYLOAD_ARENA", Self::VT_PAYLOAD_ARENA, false)?
+     .visit_field::<u64>("TRACE_ID", Self::VT_TRACE_ID, false)?
+     .visit_field::<u32>("OUTPUT_STREAM_CAP", Self::VT_OUTPUT_STREAM_CAP, false)?
      .finish();
     Ok(())
   }
 }
-pub struct FlatBufferTypeRefArgs<'a> {
-    pub SCHEMA_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub FILE_IDENTIFIER: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub SCHEMA_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub ROOT_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+pub struct PIVRequestArgs<'a> {
+    pub METHOD_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INPUTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TAB<'a>>>>>,
+    pub PAYLOAD_ARENA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub TRACE_ID: u64,
+    pub OUTPUT_STREAM_CAP: u32,
 }
-impl<'a> Default for FlatBufferTypeRefArgs<'a> {
+impl<'a> Default for PIVRequestArgs<'a> {
   #[inline]
   fn default() -> Self {
-    FlatBufferTypeRefArgs {
-      SCHEMA_NAME: None,
-      FILE_IDENTIFIER: None,
-      SCHEMA_VERSION: None,
-      ROOT_TYPE: None,
+    PIVRequestArgs {
+      METHOD_ID: None, // required field
+      INPUTS: None,
+      PAYLOAD_ARENA: None,
+      TRACE_ID: 0,
+      OUTPUT_STREAM_CAP: 0,
     }
   }
 }
 
-pub struct FlatBufferTypeRefBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct PIVRequestBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> FlatBufferTypeRefBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PIVRequestBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_SCHEMA_NAME(&mut self, SCHEMA_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(FlatBufferTypeRef::VT_SCHEMA_NAME, SCHEMA_NAME);
+  pub fn add_METHOD_ID(&mut self, METHOD_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PIVRequest::VT_METHOD_ID, METHOD_ID);
   }
   #[inline]
-  pub fn add_FILE_IDENTIFIER(&mut self, FILE_IDENTIFIER: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(FlatBufferTypeRef::VT_FILE_IDENTIFIER, FILE_IDENTIFIER);
+  pub fn add_INPUTS(&mut self, INPUTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<TAB<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PIVRequest::VT_INPUTS, INPUTS);
   }
   #[inline]
-  pub fn add_SCHEMA_VERSION(&mut self, SCHEMA_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(FlatBufferTypeRef::VT_SCHEMA_VERSION, SCHEMA_VERSION);
+  pub fn add_PAYLOAD_ARENA(&mut self, PAYLOAD_ARENA: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PIVRequest::VT_PAYLOAD_ARENA, PAYLOAD_ARENA);
   }
   #[inline]
-  pub fn add_ROOT_TYPE(&mut self, ROOT_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(FlatBufferTypeRef::VT_ROOT_TYPE, ROOT_TYPE);
+  pub fn add_TRACE_ID(&mut self, TRACE_ID: u64) {
+    self.fbb_.push_slot::<u64>(PIVRequest::VT_TRACE_ID, TRACE_ID, 0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> FlatBufferTypeRefBuilder<'a, 'b, A> {
+  pub fn add_OUTPUT_STREAM_CAP(&mut self, OUTPUT_STREAM_CAP: u32) {
+    self.fbb_.push_slot::<u32>(PIVRequest::VT_OUTPUT_STREAM_CAP, OUTPUT_STREAM_CAP, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PIVRequestBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    FlatBufferTypeRefBuilder {
+    PIVRequestBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<FlatBufferTypeRef<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PIVRequest<'a>> {
     let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PIVRequest::VT_METHOD_ID,"METHOD_ID");
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for FlatBufferTypeRef<'_> {
+impl ::core::fmt::Debug for PIVRequest<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("FlatBufferTypeRef");
-      ds.field("SCHEMA_NAME", &self.SCHEMA_NAME());
-      ds.field("FILE_IDENTIFIER", &self.FILE_IDENTIFIER());
-      ds.field("SCHEMA_VERSION", &self.SCHEMA_VERSION());
-      ds.field("ROOT_TYPE", &self.ROOT_TYPE());
+    let mut ds = f.debug_struct("PIVRequest");
+      ds.field("METHOD_ID", &self.METHOD_ID());
+      ds.field("INPUTS", &self.INPUTS());
+      ds.field("PAYLOAD_ARENA", &self.PAYLOAD_ARENA());
+      ds.field("TRACE_ID", &self.TRACE_ID());
+      ds.field("OUTPUT_STREAM_CAP", &self.OUTPUT_STREAM_CAP());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct FlatBufferTypeRefT {
-  pub SCHEMA_NAME: Option<alloc::string::String>,
-  pub FILE_IDENTIFIER: Option<alloc::string::String>,
-  pub SCHEMA_VERSION: Option<alloc::string::String>,
-  pub ROOT_TYPE: Option<alloc::string::String>,
+pub struct PIVRequestT {
+  pub METHOD_ID: alloc::string::String,
+  pub INPUTS: Option<alloc::vec::Vec<TABT>>,
+  pub PAYLOAD_ARENA: Option<alloc::vec::Vec<u8>>,
+  pub TRACE_ID: u64,
+  pub OUTPUT_STREAM_CAP: u32,
 }
-impl Default for FlatBufferTypeRefT {
+impl Default for PIVRequestT {
   fn default() -> Self {
     Self {
-      SCHEMA_NAME: None,
-      FILE_IDENTIFIER: None,
-      SCHEMA_VERSION: None,
-      ROOT_TYPE: None,
+      METHOD_ID: alloc::string::ToString::to_string(""),
+      INPUTS: None,
+      PAYLOAD_ARENA: None,
+      TRACE_ID: 0,
+      OUTPUT_STREAM_CAP: 0,
     }
   }
 }
-impl FlatBufferTypeRefT {
+impl PIVRequestT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<FlatBufferTypeRef<'b>> {
-    let SCHEMA_NAME = self.SCHEMA_NAME.as_ref().map(|x|{
+  ) -> ::flatbuffers::WIPOffset<PIVRequest<'b>> {
+    let METHOD_ID = Some({
+      let x = &self.METHOD_ID;
       _fbb.create_string(x)
     });
-    let FILE_IDENTIFIER = self.FILE_IDENTIFIER.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let INPUTS = self.INPUTS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
-    let SCHEMA_VERSION = self.SCHEMA_VERSION.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let PAYLOAD_ARENA = self.PAYLOAD_ARENA.as_ref().map(|x|{
+      _fbb.create_vector(x)
     });
-    let ROOT_TYPE = self.ROOT_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    FlatBufferTypeRef::create(_fbb, &FlatBufferTypeRefArgs{
-      SCHEMA_NAME,
-      FILE_IDENTIFIER,
-      SCHEMA_VERSION,
-      ROOT_TYPE,
+    let TRACE_ID = self.TRACE_ID;
+    let OUTPUT_STREAM_CAP = self.OUTPUT_STREAM_CAP;
+    PIVRequest::create(_fbb, &PIVRequestArgs{
+      METHOD_ID,
+      INPUTS,
+      PAYLOAD_ARENA,
+      TRACE_ID,
+      OUTPUT_STREAM_CAP,
     })
   }
 }
-pub enum TABOffset {}
+pub enum PIVResponseOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Typed Arena Buffer — one descriptor for a payload slot in a shared arena.
-pub struct TAB<'a> {
+/// Response envelope emitted by `plugin_invoke_stream`.
+pub struct PIVResponse<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for TAB<'a> {
-  type Inner = TAB<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for PIVResponse<'a> {
+  type Inner = PIVResponse<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> TAB<'a> {
-  pub const VT_OFFSET: ::flatbuffers::VOffsetT = 4;
-  pub const VT_SIZE: ::flatbuffers::VOffsetT = 6;
-  pub const VT_ALIGNMENT: ::flatbuffers::VOffsetT = 8;
-  pub const VT_WIRE_FORMAT: ::flatbuffers::VOffsetT = 10;
-  pub const VT_TYPE_REF: ::flatbuffers::VOffsetT = 12;
-  pub const VT_MUTABILITY: ::flatbuffers::VOffsetT = 14;
-  pub const VT_OWNERSHIP: ::flatbuffers::VOffsetT = 16;
-  pub const VT_FRAME_ID: ::flatbuffers::VOffsetT = 18;
-  pub const VT_PORT_ID: ::flatbuffers::VOffsetT = 20;
+impl<'a> PIVResponse<'a> {
+  pub const VT_STATUS_CODE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_STATUS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_YIELDED: ::flatbuffers::VOffsetT = 8;
+  pub const VT_BACKLOG_REMAINING: ::flatbuffers::VOffsetT = 10;
+  pub const VT_OUTPUTS: ::flatbuffers::VOffsetT = 12;
+  pub const VT_PAYLOAD_ARENA: ::flatbuffers::VOffsetT = 14;
+  pub const VT_ERROR_CODE: ::flatbuffers::VOffsetT = 16;
+  pub const VT_ERROR_MESSAGE: ::flatbuffers::VOffsetT = 18;
+  pub const VT_TRACE_ID: ::flatbuffers::VOffsetT = 20;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    TAB { _tab: table }
+    PIVResponse { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args TABArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<TAB<'bldr>> {
-    let mut builder = TABBuilder::new(_fbb);
-    builder.add_FRAME_ID(args.FRAME_ID);
-    if let Some(x) = args.PORT_ID { builder.add_PORT_ID(x); }
-    if let Some(x) = args.TYPE_REF { builder.add_TYPE_REF(x); }
-    builder.add_ALIGNMENT(args.ALIGNMENT);
-    builder.add_SIZE(args.SIZE);
-    builder.add_OFFSET(args.OFFSET);
-    builder.add_OWNERSHIP(args.OWNERSHIP);
-    builder.add_MUTABILITY(args.MUTABILITY);
-    builder.add_WIRE_FORMAT(args.WIRE_FORMAT);
+    args: &'args PIVResponseArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PIVResponse<'bldr>> {
+    let mut builder = PIVResponseBuilder::new(_fbb);
+    builder.add_TRACE_ID(args.TRACE_ID);
+    if let Some(x) = args.ERROR_MESSAGE { builder.add_ERROR_MESSAGE(x); }
+    if let Some(x) = args.ERROR_CODE { builder.add_ERROR_CODE(x); }
+    if let Some(x) = args.PAYLOAD_ARENA { builder.add_PAYLOAD_ARENA(x); }
+    if let Some(x) = args.OUTPUTS { builder.add_OUTPUTS(x); }
+    builder.add_BACKLOG_REMAINING(args.BACKLOG_REMAINING);
+    builder.add_STATUS(args.STATUS);
+    builder.add_STATUS_CODE(args.STATUS_CODE);
+    builder.add_YIELDED(args.YIELDED);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> TABT {
-    let OFFSET = self.OFFSET();
-    let SIZE = self.SIZE();
-    let ALIGNMENT = self.ALIGNMENT();
-    let WIRE_FORMAT = self.WIRE_FORMAT();
-    let TYPE_REF = self.TYPE_REF().map(|x| {
-      alloc::boxed::Box::new(x.unpack())
+  pub fn unpack(&self) -> PIVResponseT {
+    let STATUS_CODE = self.STATUS_CODE();
+    let STATUS = self.STATUS();
+    let YIELDED = self.YIELDED();
+    let BACKLOG_REMAINING = self.BACKLOG_REMAINING();
+    let OUTPUTS = self.OUTPUTS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
     });
-    let MUTABILITY = self.MUTABILITY();
-    let OWNERSHIP = self.OWNERSHIP();
-    let FRAME_ID = self.FRAME_ID();
-    let PORT_ID = self.PORT_ID().map(|x| {
+    let PAYLOAD_ARENA = self.PAYLOAD_ARENA().map(|x| {
+      x.into_iter().collect()
+    });
+    let ERROR_CODE = self.ERROR_CODE().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    TABT {
-      OFFSET,
-      SIZE,
-      ALIGNMENT,
-      WIRE_FORMAT,
-      TYPE_REF,
-      MUTABILITY,
-      OWNERSHIP,
-      FRAME_ID,
-      PORT_ID,
+    let ERROR_MESSAGE = self.ERROR_MESSAGE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TRACE_ID = self.TRACE_ID();
+    PIVResponseT {
+      STATUS_CODE,
+      STATUS,
+      YIELDED,
+      BACKLOG_REMAINING,
+      OUTPUTS,
+      PAYLOAD_ARENA,
+      ERROR_CODE,
+      ERROR_MESSAGE,
+      TRACE_ID,
     }
   }
 
-  /// Byte offset of the payload body within the arena.
+  /// Method-specific status code. Zero conventionally indicates success.
   #[inline]
-  pub fn OFFSET(&self) -> u32 {
+  pub fn STATUS_CODE(&self) -> i32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(TAB::VT_OFFSET, Some(0)).unwrap()}
+    unsafe { self._tab.get::<i32>(PIVResponse::VT_STATUS_CODE, Some(0)).unwrap()}
   }
-  /// Byte length of the payload body.
+  /// Coarse envelope status.
   #[inline]
-  pub fn SIZE(&self) -> u32 {
+  pub fn STATUS(&self) -> pivStatus {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(TAB::VT_SIZE, Some(0)).unwrap()}
+    unsafe { self._tab.get::<pivStatus>(PIVResponse::VT_STATUS, Some(pivStatus::OK)).unwrap()}
   }
-  /// Required start alignment of the payload body (in bytes).
+  /// True when the method yielded before fully draining queued work.
   #[inline]
-  pub fn ALIGNMENT(&self) -> u32 {
+  pub fn YIELDED(&self) -> bool {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(TAB::VT_ALIGNMENT, Some(0)).unwrap()}
+    unsafe { self._tab.get::<bool>(PIVResponse::VT_YIELDED, Some(false)).unwrap()}
   }
-  /// Wire format for the body.
+  /// Outstanding frame count remaining after this response. Non-zero
+  /// only when STATUS == YIELDED.
   #[inline]
-  pub fn WIRE_FORMAT(&self) -> payloadWireFormat {
+  pub fn BACKLOG_REMAINING(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<payloadWireFormat>(TAB::VT_WIRE_FORMAT, Some(payloadWireFormat::FLATBUFFER)).unwrap()}
+    unsafe { self._tab.get::<u32>(PIVResponse::VT_BACKLOG_REMAINING, Some(0)).unwrap()}
   }
-  /// Optional payload schema identity.
+  /// Output frames. Each TAB carries schema identity and wire format.
   #[inline]
-  pub fn TYPE_REF(&self) -> Option<FlatBufferTypeRef<'a>> {
+  pub fn OUTPUTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TAB<'a>>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FlatBufferTypeRef>>(TAB::VT_TYPE_REF, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TAB>>>>(PIVResponse::VT_OUTPUTS, None)}
   }
-  /// Mutability contract for the slot.
+  /// Optional arena backing OUTPUTS payload bodies.
   #[inline]
-  pub fn MUTABILITY(&self) -> bufferMutability {
+  pub fn PAYLOAD_ARENA(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bufferMutability>(TAB::VT_MUTABILITY, Some(bufferMutability::IMMUTABLE)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(PIVResponse::VT_PAYLOAD_ARENA, None)}
   }
-  /// Ownership contract for the slot.
+  /// Stable machine-readable error code when STATUS == FAILED.
   #[inline]
-  pub fn OWNERSHIP(&self) -> bufferOwnership {
+  pub fn ERROR_CODE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bufferOwnership>(TAB::VT_OWNERSHIP, Some(bufferOwnership::HOST_OWNED)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PIVResponse::VT_ERROR_CODE, None)}
   }
-  /// Optional opaque frame identifier for stream bookkeeping.
+  /// Human-readable diagnostic when STATUS == FAILED.
   #[inline]
-  pub fn FRAME_ID(&self) -> u64 {
+  pub fn ERROR_MESSAGE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u64>(TAB::VT_FRAME_ID, Some(0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PIVResponse::VT_ERROR_MESSAGE, None)}
   }
-  /// Optional port identifier for frames that route to/from a named
-  /// input or output port on a method (maps to
-  /// `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
-  /// no port routing hint.
+  /// Echo of the request's TRACE_ID for correlation.
   #[inline]
-  pub fn PORT_ID(&self) -> Option<&'a str> {
+  pub fn TRACE_ID(&self) -> u64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TAB::VT_PORT_ID, None)}
+    unsafe { self._tab.get::<u64>(PIVResponse::VT_TRACE_ID, Some(0)).unwrap()}
   }
 }
 
-impl ::flatbuffers::Verifiable for TAB<'_> {
+impl ::flatbuffers::Verifiable for PIVResponse<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<u32>("OFFSET", Self::VT_OFFSET, false)?
-     .visit_field::<u32>("SIZE", Self::VT_SIZE, false)?
-     .visit_field::<u32>("ALIGNMENT", Self::VT_ALIGNMENT, false)?
-     .visit_field::<payloadWireFormat>("WIRE_FORMAT", Self::VT_WIRE_FORMAT, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<FlatBufferTypeRef>>("TYPE_REF", Self::VT_TYPE_REF, false)?
-     .visit_field::<bufferMutability>("MUTABILITY", Self::VT_MUTABILITY, false)?
-     .visit_field::<bufferOwnership>("OWNERSHIP", Self::VT_OWNERSHIP, false)?
-     .visit_field::<u64>("FRAME_ID", Self::VT_FRAME_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PORT_ID", Self::VT_PORT_ID, false)?
+     .visit_field::<i32>("STATUS_CODE", Self::VT_STATUS_CODE, false)?
+     .visit_field::<pivStatus>("STATUS", Self::VT_STATUS, false)?
+     .visit_field::<bool>("YIELDED", Self::VT_YIELDED, false)?
+     .visit_field::<u32>("BACKLOG_REMAINING", Self::VT_BACKLOG_REMAINING, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<TAB>>>>("OUTPUTS", Self::VT_OUTPUTS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("PAYLOAD_ARENA", Self::VT_PAYLOAD_ARENA, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ERROR_CODE", Self::VT_ERROR_CODE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ERROR_MESSAGE", Self::VT_ERROR_MESSAGE, false)?
+     .visit_field::<u64>("TRACE_ID", Self::VT_TRACE_ID, false)?
      .finish();
     Ok(())
   }
 }
-pub struct TABArgs<'a> {
-    pub OFFSET: u32,
-    pub SIZE: u32,
-    pub ALIGNMENT: u32,
-    pub WIRE_FORMAT: payloadWireFormat,
-    pub TYPE_REF: Option<::flatbuffers::WIPOffset<FlatBufferTypeRef<'a>>>,
-    pub MUTABILITY: bufferMutability,
-    pub OWNERSHIP: bufferOwnership,
-    pub FRAME_ID: u64,
-    pub PORT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+pub struct PIVResponseArgs<'a> {
+    pub STATUS_CODE: i32,
+    pub STATUS: pivStatus,
+    pub YIELDED: bool,
+    pub BACKLOG_REMAINING: u32,
+    pub OUTPUTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TAB<'a>>>>>,
+    pub PAYLOAD_ARENA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub ERROR_CODE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ERROR_MESSAGE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRACE_ID: u64,
 }
-impl<'a> Default for TABArgs<'a> {
+impl<'a> Default for PIVResponseArgs<'a> {
   #[inline]
   fn default() -> Self {
-    TABArgs {
-      OFFSET: 0,
-      SIZE: 0,
-      ALIGNMENT: 0,
-      WIRE_FORMAT: payloadWireFormat::FLATBUFFER,
-      TYPE_REF: None,
-      MUTABILITY: bufferMutability::IMMUTABLE,
-      OWNERSHIP: bufferOwnership::HOST_OWNED,
-      FRAME_ID: 0,
-      PORT_ID: None,
+    PIVResponseArgs {
+      STATUS_CODE: 0,
+      STATUS: pivStatus::OK,
+      YIELDED: false,
+      BACKLOG_REMAINING: 0,
+      OUTPUTS: None,
+      PAYLOAD_ARENA: None,
+      ERROR_CODE: None,
+      ERROR_MESSAGE: None,
+      TRACE_ID: 0,
     }
   }
 }
 
-pub struct TABBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct PIVResponseBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TABBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PIVResponseBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_OFFSET(&mut self, OFFSET: u32) {
-    self.fbb_.push_slot::<u32>(TAB::VT_OFFSET, OFFSET, 0);
+  pub fn add_STATUS_CODE(&mut self, STATUS_CODE: i32) {
+    self.fbb_.push_slot::<i32>(PIVResponse::VT_STATUS_CODE, STATUS_CODE, 0);
   }
   #[inline]
-  pub fn add_SIZE(&mut self, SIZE: u32) {
-    self.fbb_.push_slot::<u32>(TAB::VT_SIZE, SIZE, 0);
+  pub fn add_STATUS(&mut self, STATUS: pivStatus) {
+    self.fbb_.push_slot::<pivStatus>(PIVResponse::VT_STATUS, STATUS, pivStatus::OK);
   }
   #[inline]
-  pub fn add_ALIGNMENT(&mut self, ALIGNMENT: u32) {
-    self.fbb_.push_slot::<u32>(TAB::VT_ALIGNMENT, ALIGNMENT, 0);
+  pub fn add_YIELDED(&mut self, YIELDED: bool) {
+    self.fbb_.push_slot::<bool>(PIVResponse::VT_YIELDED, YIELDED, false);
   }
   #[inline]
-  pub fn add_WIRE_FORMAT(&mut self, WIRE_FORMAT: payloadWireFormat) {
-    self.fbb_.push_slot::<payloadWireFormat>(TAB::VT_WIRE_FORMAT, WIRE_FORMAT, payloadWireFormat::FLATBUFFER);
+  pub fn add_BACKLOG_REMAINING(&mut self, BACKLOG_REMAINING: u32) {
+    self.fbb_.push_slot::<u32>(PIVResponse::VT_BACKLOG_REMAINING, BACKLOG_REMAINING, 0);
   }
   #[inline]
-  pub fn add_TYPE_REF(&mut self, TYPE_REF: ::flatbuffers::WIPOffset<FlatBufferTypeRef<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FlatBufferTypeRef>>(TAB::VT_TYPE_REF, TYPE_REF);
+  pub fn add_OUTPUTS(&mut self, OUTPUTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<TAB<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PIVResponse::VT_OUTPUTS, OUTPUTS);
   }
   #[inline]
-  pub fn add_MUTABILITY(&mut self, MUTABILITY: bufferMutability) {
-    self.fbb_.push_slot::<bufferMutability>(TAB::VT_MUTABILITY, MUTABILITY, bufferMutability::IMMUTABLE);
+  pub fn add_PAYLOAD_ARENA(&mut self, PAYLOAD_ARENA: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PIVResponse::VT_PAYLOAD_ARENA, PAYLOAD_ARENA);
   }
   #[inline]
-  pub fn add_OWNERSHIP(&mut self, OWNERSHIP: bufferOwnership) {
-    self.fbb_.push_slot::<bufferOwnership>(TAB::VT_OWNERSHIP, OWNERSHIP, bufferOwnership::HOST_OWNED);
+  pub fn add_ERROR_CODE(&mut self, ERROR_CODE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PIVResponse::VT_ERROR_CODE, ERROR_CODE);
   }
   #[inline]
-  pub fn add_FRAME_ID(&mut self, FRAME_ID: u64) {
-    self.fbb_.push_slot::<u64>(TAB::VT_FRAME_ID, FRAME_ID, 0);
+  pub fn add_ERROR_MESSAGE(&mut self, ERROR_MESSAGE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PIVResponse::VT_ERROR_MESSAGE, ERROR_MESSAGE);
   }
   #[inline]
-  pub fn add_PORT_ID(&mut self, PORT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TAB::VT_PORT_ID, PORT_ID);
+  pub fn add_TRACE_ID(&mut self, TRACE_ID: u64) {
+    self.fbb_.push_slot::<u64>(PIVResponse::VT_TRACE_ID, TRACE_ID, 0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TABBuilder<'a, 'b, A> {
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PIVResponseBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    TABBuilder {
+    PIVResponseBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<TAB<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PIVResponse<'a>> {
     let o = self.fbb_.end_table(self.start_);
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for TAB<'_> {
+impl ::core::fmt::Debug for PIVResponse<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("TAB");
-      ds.field("OFFSET", &self.OFFSET());
-      ds.field("SIZE", &self.SIZE());
-      ds.field("ALIGNMENT", &self.ALIGNMENT());
-      ds.field("WIRE_FORMAT", &self.WIRE_FORMAT());
-      ds.field("TYPE_REF", &self.TYPE_REF());
-      ds.field("MUTABILITY", &self.MUTABILITY());
-      ds.field("OWNERSHIP", &self.OWNERSHIP());
-      ds.field("FRAME_ID", &self.FRAME_ID());
-      ds.field("PORT_ID", &self.PORT_ID());
+    let mut ds = f.debug_struct("PIVResponse");
+      ds.field("STATUS_CODE", &self.STATUS_CODE());
+      ds.field("STATUS", &self.STATUS());
+      ds.field("YIELDED", &self.YIELDED());
+      ds.field("BACKLOG_REMAINING", &self.BACKLOG_REMAINING());
+      ds.field("OUTPUTS", &self.OUTPUTS());
+      ds.field("PAYLOAD_ARENA", &self.PAYLOAD_ARENA());
+      ds.field("ERROR_CODE", &self.ERROR_CODE());
+      ds.field("ERROR_MESSAGE", &self.ERROR_MESSAGE());
+      ds.field("TRACE_ID", &self.TRACE_ID());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct TABT {
-  pub OFFSET: u32,
-  pub SIZE: u32,
-  pub ALIGNMENT: u32,
-  pub WIRE_FORMAT: payloadWireFormat,
-  pub TYPE_REF: Option<alloc::boxed::Box<FlatBufferTypeRefT>>,
-  pub MUTABILITY: bufferMutability,
-  pub OWNERSHIP: bufferOwnership,
-  pub FRAME_ID: u64,
-  pub PORT_ID: Option<alloc::string::String>,
+pub struct PIVResponseT {
+  pub STATUS_CODE: i32,
+  pub STATUS: pivStatus,
+  pub YIELDED: bool,
+  pub BACKLOG_REMAINING: u32,
+  pub OUTPUTS: Option<alloc::vec::Vec<TABT>>,
+  pub PAYLOAD_ARENA: Option<alloc::vec::Vec<u8>>,
+  pub ERROR_CODE: Option<alloc::string::String>,
+  pub ERROR_MESSAGE: Option<alloc::string::String>,
+  pub TRACE_ID: u64,
 }
-impl Default for TABT {
+impl Default for PIVResponseT {
   fn default() -> Self {
     Self {
-      OFFSET: 0,
-      SIZE: 0,
-      ALIGNMENT: 0,
-      WIRE_FORMAT: payloadWireFormat::FLATBUFFER,
-      TYPE_REF: None,
-      MUTABILITY: bufferMutability::IMMUTABLE,
-      OWNERSHIP: bufferOwnership::HOST_OWNED,
-      FRAME_ID: 0,
-      PORT_ID: None,
+      STATUS_CODE: 0,
+      STATUS: pivStatus::OK,
+      YIELDED: false,
+      BACKLOG_REMAINING: 0,
+      OUTPUTS: None,
+      PAYLOAD_ARENA: None,
+      ERROR_CODE: None,
+      ERROR_MESSAGE: None,
+      TRACE_ID: 0,
     }
   }
 }
-impl TABT {
+impl PIVResponseT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<TAB<'b>> {
-    let OFFSET = self.OFFSET;
-    let SIZE = self.SIZE;
-    let ALIGNMENT = self.ALIGNMENT;
-    let WIRE_FORMAT = self.WIRE_FORMAT;
-    let TYPE_REF = self.TYPE_REF.as_ref().map(|x|{
-      x.pack(_fbb)
+  ) -> ::flatbuffers::WIPOffset<PIVResponse<'b>> {
+    let STATUS_CODE = self.STATUS_CODE;
+    let STATUS = self.STATUS;
+    let YIELDED = self.YIELDED;
+    let BACKLOG_REMAINING = self.BACKLOG_REMAINING;
+    let OUTPUTS = self.OUTPUTS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
-    let MUTABILITY = self.MUTABILITY;
-    let OWNERSHIP = self.OWNERSHIP;
-    let FRAME_ID = self.FRAME_ID;
-    let PORT_ID = self.PORT_ID.as_ref().map(|x|{
+    let PAYLOAD_ARENA = self.PAYLOAD_ARENA.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let ERROR_CODE = self.ERROR_CODE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    TAB::create(_fbb, &TABArgs{
-      OFFSET,
-      SIZE,
-      ALIGNMENT,
-      WIRE_FORMAT,
-      TYPE_REF,
-      MUTABILITY,
-      OWNERSHIP,
-      FRAME_ID,
-      PORT_ID,
+    let ERROR_MESSAGE = self.ERROR_MESSAGE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRACE_ID = self.TRACE_ID;
+    PIVResponse::create(_fbb, &PIVResponseArgs{
+      STATUS_CODE,
+      STATUS,
+      YIELDED,
+      BACKLOG_REMAINING,
+      OUTPUTS,
+      PAYLOAD_ARENA,
+      ERROR_CODE,
+      ERROR_MESSAGE,
+      TRACE_ID,
+    })
+  }
+}
+pub enum PIVOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Envelope — carries either a request or a response. Either REQUEST or
+/// RESPONSE is populated per message; both populated is undefined.
+pub struct PIV<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PIV<'a> {
+  type Inner = PIV<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PIV<'a> {
+  pub const VT_REQUEST: ::flatbuffers::VOffsetT = 4;
+  pub const VT_RESPONSE: ::flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PIV { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PIVArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PIV<'bldr>> {
+    let mut builder = PIVBuilder::new(_fbb);
+    if let Some(x) = args.RESPONSE { builder.add_RESPONSE(x); }
+    if let Some(x) = args.REQUEST { builder.add_REQUEST(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PIVT {
+    let REQUEST = self.REQUEST().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let RESPONSE = self.RESPONSE().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    PIVT {
+      REQUEST,
+      RESPONSE,
+    }
+  }
+
+  #[inline]
+  pub fn REQUEST(&self) -> Option<PIVRequest<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PIVRequest>>(PIV::VT_REQUEST, None)}
+  }
+  #[inline]
+  pub fn RESPONSE(&self) -> Option<PIVResponse<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PIVResponse>>(PIV::VT_RESPONSE, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PIV<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<PIVRequest>>("REQUEST", Self::VT_REQUEST, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<PIVResponse>>("RESPONSE", Self::VT_RESPONSE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PIVArgs<'a> {
+    pub REQUEST: Option<::flatbuffers::WIPOffset<PIVRequest<'a>>>,
+    pub RESPONSE: Option<::flatbuffers::WIPOffset<PIVResponse<'a>>>,
+}
+impl<'a> Default for PIVArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PIVArgs {
+      REQUEST: None,
+      RESPONSE: None,
+    }
+  }
+}
+
+pub struct PIVBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PIVBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_REQUEST(&mut self, REQUEST: ::flatbuffers::WIPOffset<PIVRequest<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PIVRequest>>(PIV::VT_REQUEST, REQUEST);
+  }
+  #[inline]
+  pub fn add_RESPONSE(&mut self, RESPONSE: ::flatbuffers::WIPOffset<PIVResponse<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PIVResponse>>(PIV::VT_RESPONSE, RESPONSE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PIVBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PIVBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PIV<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PIV<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PIV");
+      ds.field("REQUEST", &self.REQUEST());
+      ds.field("RESPONSE", &self.RESPONSE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PIVT {
+  pub REQUEST: Option<alloc::boxed::Box<PIVRequestT>>,
+  pub RESPONSE: Option<alloc::boxed::Box<PIVResponseT>>,
+}
+impl Default for PIVT {
+  fn default() -> Self {
+    Self {
+      REQUEST: None,
+      RESPONSE: None,
+    }
+  }
+}
+impl PIVT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PIV<'b>> {
+    let REQUEST = self.REQUEST.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let RESPONSE = self.RESPONSE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    PIV::create(_fbb, &PIVArgs{
+      REQUEST,
+      RESPONSE,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `TAB`
+/// Verifies that a buffer of bytes contains a `PIV`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_tab_unchecked`.
-pub fn root_as_tab(buf: &[u8]) -> Result<TAB<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<TAB>(buf)
+/// `root_as_piv_unchecked`.
+pub fn root_as_piv(buf: &[u8]) -> Result<PIV<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<PIV>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `TAB` and returns it.
+/// `PIV` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_tab_unchecked`.
-pub fn size_prefixed_root_as_tab(buf: &[u8]) -> Result<TAB<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<TAB>(buf)
+/// `size_prefixed_root_as_piv_unchecked`.
+pub fn size_prefixed_root_as_piv(buf: &[u8]) -> Result<PIV<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<PIV>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `TAB` and returns it.
+/// contains a `PIV` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_tab_unchecked`.
-pub fn root_as_tab_with_opts<'b, 'o>(
+/// `root_as_piv_unchecked`.
+pub fn root_as_piv_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<TAB<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<TAB<'b>>(opts, buf)
+) -> Result<PIV<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<PIV<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `TAB` and returns
+/// bytes contains a size prefixed `PIV` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_tab_unchecked`.
-pub fn size_prefixed_root_as_tab_with_opts<'b, 'o>(
+/// `root_as_piv_unchecked`.
+pub fn size_prefixed_root_as_piv_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<TAB<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<TAB<'b>>(opts, buf)
+) -> Result<PIV<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<PIV<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a TAB and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a PIV and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `TAB`.
-pub unsafe fn root_as_tab_unchecked(buf: &[u8]) -> TAB<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<TAB>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `PIV`.
+pub unsafe fn root_as_piv_unchecked(buf: &[u8]) -> PIV<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<PIV>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed TAB and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed PIV and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `TAB`.
-pub unsafe fn size_prefixed_root_as_tab_unchecked(buf: &[u8]) -> TAB<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<TAB>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `PIV`.
+pub unsafe fn size_prefixed_root_as_piv_unchecked(buf: &[u8]) -> PIV<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<PIV>(buf) }
 }
-pub const TAB_IDENTIFIER: &str = "$TAB";
+pub const PIV_IDENTIFIER: &str = "$PIV";
 
 #[inline]
-pub fn tab_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, TAB_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn tab_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, TAB_IDENTIFIER, true)
+pub fn piv_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, PIV_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_tab_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn piv_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, PIV_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_piv_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<TAB<'a>>) {
-  fbb.finish(root, Some(TAB_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<PIV<'a>>) {
+  fbb.finish(root, Some(PIV_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_tab_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<TAB<'a>>) {
-  fbb.finish_size_prefixed(root, Some(TAB_IDENTIFIER));
+pub fn finish_size_prefixed_piv_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<PIV<'a>>) {
+  fbb.finish_size_prefixed(root, Some(PIV_IDENTIFIER));
 }

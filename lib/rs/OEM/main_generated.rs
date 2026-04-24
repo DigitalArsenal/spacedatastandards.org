@@ -8,1339 +8,1064 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_POLYNOMIAL_BASIS_TYPE: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_POLYNOMIAL_BASIS_TYPE: i8 = 4;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_POLYNOMIAL_BASIS_TYPE: [polynomialBasisType; 5] = [
-  polynomialBasisType::CHEBYSHEV,
-  polynomialBasisType::LEGENDRE,
-  polynomialBasisType::HERMITE,
-  polynomialBasisType::LAGRANGE,
-  polynomialBasisType::POWER_SERIES,
-];
-
-/// Polynomial basis type for coefficient interpretation.
-/// Determines how the coefficient arrays are evaluated.
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct polynomialBasisType(pub i8);
-#[allow(non_upper_case_globals)]
-impl polynomialBasisType {
-  /// Chebyshev polynomials of the first kind T_n(x).
-  /// Most common for ephemeris fitting due to minimax approximation properties.
-  pub const CHEBYSHEV: Self = Self(0);
-  /// Legendre polynomials P_n(x).
-  /// Orthogonal on [-1, 1] with unit weight function.
-  pub const LEGENDRE: Self = Self(1);
-  /// Hermite interpolating polynomials.
-  /// Matches both function values and derivatives at nodes.
-  pub const HERMITE: Self = Self(2);
-  /// Lagrange interpolating polynomials.
-  /// Exact interpolation through specified nodes.
-  pub const LAGRANGE: Self = Self(3);
-  /// Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ...
-  pub const POWER_SERIES: Self = Self(4);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 4;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::CHEBYSHEV,
-    Self::LEGENDRE,
-    Self::HERMITE,
-    Self::LAGRANGE,
-    Self::POWER_SERIES,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::CHEBYSHEV => Some("CHEBYSHEV"),
-      Self::LEGENDRE => Some("LEGENDRE"),
-      Self::HERMITE => Some("HERMITE"),
-      Self::LAGRANGE => Some("LAGRANGE"),
-      Self::POWER_SERIES => Some("POWER_SERIES"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for polynomialBasisType {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for polynomialBasisType {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for polynomialBasisType {
-    type Output = polynomialBasisType;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for polynomialBasisType {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for polynomialBasisType {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for polynomialBasisType {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_PPE_ANOMALY_TYPE: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PPE_ANOMALY_TYPE: i8 = 2;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PPE_ANOMALY_TYPE: [ppeAnomalyType; 3] = [
-  ppeAnomalyType::TRUE_ANOMALY,
-  ppeAnomalyType::MEAN_ANOMALY,
-  ppeAnomalyType::ECCENTRIC_ANOMALY,
-];
-
-/// Anomaly type flag for orbital element records.
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct ppeAnomalyType(pub i8);
-#[allow(non_upper_case_globals)]
-impl ppeAnomalyType {
-  /// True anomaly (geometric angle from periapsis).
-  pub const TRUE_ANOMALY: Self = Self(0);
-  /// Mean anomaly (linear in time for Keplerian motion).
-  pub const MEAN_ANOMALY: Self = Self(1);
-  /// Eccentric anomaly (auxiliary angle in the Kepler equation).
-  pub const ECCENTRIC_ANOMALY: Self = Self(2);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 2;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::TRUE_ANOMALY,
-    Self::MEAN_ANOMALY,
-    Self::ECCENTRIC_ANOMALY,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::TRUE_ANOMALY => Some("TRUE_ANOMALY"),
-      Self::MEAN_ANOMALY => Some("MEAN_ANOMALY"),
-      Self::ECCENTRIC_ANOMALY => Some("ECCENTRIC_ANOMALY"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for ppeAnomalyType {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for ppeAnomalyType {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for ppeAnomalyType {
-    type Output = ppeAnomalyType;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for ppeAnomalyType {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for ppeAnomalyType {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for ppeAnomalyType {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_SIZE_SHAPE_PROFILE: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SIZE_SHAPE_PROFILE: i8 = 1;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SIZE_SHAPE_PROFILE: [sizeShapeProfile; 2] = [
-  sizeShapeProfile::SMA,
-  sizeShapeProfile::R_PERIAPSIS,
-];
-
-/// Orbital element parameterization for the first element (size/shape).
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct sizeShapeProfile(pub i8);
-#[allow(non_upper_case_globals)]
-impl sizeShapeProfile {
-  /// Semi-major axis (km). Standard for elliptical orbits.
-  pub const SMA: Self = Self(0);
-  /// Radius of periapsis (km). Preferred for hyperbolic orbits.
-  pub const R_PERIAPSIS: Self = Self(1);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 1;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::SMA,
-    Self::R_PERIAPSIS,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::SMA => Some("SMA"),
-      Self::R_PERIAPSIS => Some("R_PERIAPSIS"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for sizeShapeProfile {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for sizeShapeProfile {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for sizeShapeProfile {
-    type Output = sizeShapeProfile;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for sizeShapeProfile {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for sizeShapeProfile {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for sizeShapeProfile {}
-pub enum PPEPositionRecordOffset {}
+pub enum ephemerisDataLineOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// A single time-segment record of polynomial coefficients for Cartesian position
-/// (and optionally velocity). Coefficients are stored per axis.
-///
-/// To evaluate position at time t within this record's validity window:
-///   1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN
-///      where tau is in [-1, +1].
-///   2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using
-///      the coefficients for each axis.
-///
-/// Velocity coefficients, if present, follow the same evaluation procedure.
-/// If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by
-/// analytically differentiating the position polynomial.
-pub struct PPEPositionRecord<'a> {
+/// A single ephemeris data line (for non-uniform time steps only)
+/// Use this format when time intervals between states are irregular.
+/// For uniform time steps, use the compact EPHEMERIS_DATA array instead.
+pub struct ephemerisDataLine<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for PPEPositionRecord<'a> {
-  type Inner = PPEPositionRecord<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for ephemerisDataLine<'a> {
+  type Inner = ephemerisDataLine<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> PPEPositionRecord<'a> {
-  pub const VT_EPOCH_MID: ::flatbuffers::VOffsetT = 4;
-  pub const VT_EPOCH_HALF_SPAN: ::flatbuffers::VOffsetT = 6;
-  pub const VT_NUM_COEFFICIENTS: ::flatbuffers::VOffsetT = 8;
-  pub const VT_BASIS_TYPE: ::flatbuffers::VOffsetT = 10;
-  pub const VT_POS_COEFF_X: ::flatbuffers::VOffsetT = 12;
-  pub const VT_POS_COEFF_Y: ::flatbuffers::VOffsetT = 14;
-  pub const VT_POS_COEFF_Z: ::flatbuffers::VOffsetT = 16;
-  pub const VT_HAS_VELOCITY_COEFFICIENTS: ::flatbuffers::VOffsetT = 18;
-  pub const VT_VEL_COEFF_X: ::flatbuffers::VOffsetT = 20;
-  pub const VT_VEL_COEFF_Y: ::flatbuffers::VOffsetT = 22;
-  pub const VT_VEL_COEFF_Z: ::flatbuffers::VOffsetT = 24;
-  pub const VT_MAX_POSITION_RESIDUAL: ::flatbuffers::VOffsetT = 26;
-  pub const VT_RMS_POSITION_RESIDUAL: ::flatbuffers::VOffsetT = 28;
+impl<'a> ephemerisDataLine<'a> {
+  pub const VT_EPOCH: ::flatbuffers::VOffsetT = 4;
+  pub const VT_X: ::flatbuffers::VOffsetT = 6;
+  pub const VT_Y: ::flatbuffers::VOffsetT = 8;
+  pub const VT_Z: ::flatbuffers::VOffsetT = 10;
+  pub const VT_X_DOT: ::flatbuffers::VOffsetT = 12;
+  pub const VT_Y_DOT: ::flatbuffers::VOffsetT = 14;
+  pub const VT_Z_DOT: ::flatbuffers::VOffsetT = 16;
+  pub const VT_X_DDOT: ::flatbuffers::VOffsetT = 18;
+  pub const VT_Y_DDOT: ::flatbuffers::VOffsetT = 20;
+  pub const VT_Z_DDOT: ::flatbuffers::VOffsetT = 22;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    PPEPositionRecord { _tab: table }
+    ephemerisDataLine { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args PPEPositionRecordArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<PPEPositionRecord<'bldr>> {
-    let mut builder = PPEPositionRecordBuilder::new(_fbb);
-    builder.add_RMS_POSITION_RESIDUAL(args.RMS_POSITION_RESIDUAL);
-    builder.add_MAX_POSITION_RESIDUAL(args.MAX_POSITION_RESIDUAL);
-    builder.add_EPOCH_HALF_SPAN(args.EPOCH_HALF_SPAN);
-    if let Some(x) = args.VEL_COEFF_Z { builder.add_VEL_COEFF_Z(x); }
-    if let Some(x) = args.VEL_COEFF_Y { builder.add_VEL_COEFF_Y(x); }
-    if let Some(x) = args.VEL_COEFF_X { builder.add_VEL_COEFF_X(x); }
-    if let Some(x) = args.POS_COEFF_Z { builder.add_POS_COEFF_Z(x); }
-    if let Some(x) = args.POS_COEFF_Y { builder.add_POS_COEFF_Y(x); }
-    if let Some(x) = args.POS_COEFF_X { builder.add_POS_COEFF_X(x); }
-    if let Some(x) = args.EPOCH_MID { builder.add_EPOCH_MID(x); }
-    builder.add_NUM_COEFFICIENTS(args.NUM_COEFFICIENTS);
-    builder.add_HAS_VELOCITY_COEFFICIENTS(args.HAS_VELOCITY_COEFFICIENTS);
-    builder.add_BASIS_TYPE(args.BASIS_TYPE);
+    args: &'args ephemerisDataLineArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<ephemerisDataLine<'bldr>> {
+    let mut builder = ephemerisDataLineBuilder::new(_fbb);
+    builder.add_Z_DDOT(args.Z_DDOT);
+    builder.add_Y_DDOT(args.Y_DDOT);
+    builder.add_X_DDOT(args.X_DDOT);
+    builder.add_Z_DOT(args.Z_DOT);
+    builder.add_Y_DOT(args.Y_DOT);
+    builder.add_X_DOT(args.X_DOT);
+    builder.add_Z(args.Z);
+    builder.add_Y(args.Y);
+    builder.add_X(args.X);
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
     builder.finish()
   }
 
-  pub fn unpack(&self) -> PPEPositionRecordT {
-    let EPOCH_MID = {
-      let x = self.EPOCH_MID();
+  pub fn unpack(&self) -> ephemerisDataLineT {
+    let EPOCH = self.EPOCH().map(|x| {
       alloc::string::ToString::to_string(x)
-    };
-    let EPOCH_HALF_SPAN = self.EPOCH_HALF_SPAN();
-    let NUM_COEFFICIENTS = self.NUM_COEFFICIENTS();
-    let BASIS_TYPE = self.BASIS_TYPE();
-    let POS_COEFF_X = {
-      let x = self.POS_COEFF_X();
-      x.into_iter().collect()
-    };
-    let POS_COEFF_Y = {
-      let x = self.POS_COEFF_Y();
-      x.into_iter().collect()
-    };
-    let POS_COEFF_Z = {
-      let x = self.POS_COEFF_Z();
-      x.into_iter().collect()
-    };
-    let HAS_VELOCITY_COEFFICIENTS = self.HAS_VELOCITY_COEFFICIENTS();
-    let VEL_COEFF_X = self.VEL_COEFF_X().map(|x| {
-      x.into_iter().collect()
     });
-    let VEL_COEFF_Y = self.VEL_COEFF_Y().map(|x| {
-      x.into_iter().collect()
-    });
-    let VEL_COEFF_Z = self.VEL_COEFF_Z().map(|x| {
-      x.into_iter().collect()
-    });
-    let MAX_POSITION_RESIDUAL = self.MAX_POSITION_RESIDUAL();
-    let RMS_POSITION_RESIDUAL = self.RMS_POSITION_RESIDUAL();
-    PPEPositionRecordT {
-      EPOCH_MID,
-      EPOCH_HALF_SPAN,
-      NUM_COEFFICIENTS,
-      BASIS_TYPE,
-      POS_COEFF_X,
-      POS_COEFF_Y,
-      POS_COEFF_Z,
-      HAS_VELOCITY_COEFFICIENTS,
-      VEL_COEFF_X,
-      VEL_COEFF_Y,
-      VEL_COEFF_Z,
-      MAX_POSITION_RESIDUAL,
-      RMS_POSITION_RESIDUAL,
+    let X = self.X();
+    let Y = self.Y();
+    let Z = self.Z();
+    let X_DOT = self.X_DOT();
+    let Y_DOT = self.Y_DOT();
+    let Z_DOT = self.Z_DOT();
+    let X_DDOT = self.X_DDOT();
+    let Y_DDOT = self.Y_DDOT();
+    let Z_DDOT = self.Z_DDOT();
+    ephemerisDataLineT {
+      EPOCH,
+      X,
+      Y,
+      Z,
+      X_DOT,
+      Y_DOT,
+      Z_DOT,
+      X_DDOT,
+      Y_DDOT,
+      Z_DDOT,
     }
   }
 
-  /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
-  /// Together with EPOCH_HALF_SPAN, defines the time interval:
-  ///   [EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]
+  /// Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
   #[inline]
-  pub fn EPOCH_MID(&self) -> &'a str {
+  pub fn EPOCH(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPEPositionRecord::VT_EPOCH_MID, None).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ephemerisDataLine::VT_EPOCH, None)}
   }
-  /// Half-span of the validity window in seconds.
-  /// The full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID.
+  /// Position vector X-component km
   #[inline]
-  pub fn EPOCH_HALF_SPAN(&self) -> f64 {
+  pub fn X(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(PPEPositionRecord::VT_EPOCH_HALF_SPAN, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_X, Some(0.0)).unwrap()}
   }
-  /// Number of polynomial coefficients per axis.
-  /// The polynomial degree is (NUM_COEFFICIENTS - 1).
-  /// Typical values: 8-32 for high-fidelity ephemeris fits.
+  /// Position vector Y-component km
   #[inline]
-  pub fn NUM_COEFFICIENTS(&self) -> u16 {
+  pub fn Y(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u16>(PPEPositionRecord::VT_NUM_COEFFICIENTS, Some(0)).unwrap()}
+    unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_Y, Some(0.0)).unwrap()}
   }
-  /// Polynomial basis type for interpreting the coefficient arrays.
+  /// Position vector Z-component km
   #[inline]
-  pub fn BASIS_TYPE(&self) -> polynomialBasisType {
+  pub fn Z(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<polynomialBasisType>(PPEPositionRecord::VT_BASIS_TYPE, Some(polynomialBasisType::CHEBYSHEV)).unwrap()}
+    unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_Z, Some(0.0)).unwrap()}
   }
-  /// Position coefficients for X-axis (km).
-  /// Length must equal NUM_COEFFICIENTS. Ordered c0, c1, ..., c_{N-1}.
+  /// Velocity vector X-component km/s
   #[inline]
-  pub fn POS_COEFF_X(&self) -> ::flatbuffers::Vector<'a, f64> {
+  pub fn X_DOT(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEPositionRecord::VT_POS_COEFF_X, None).unwrap()}
+    unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_X_DOT, Some(0.0)).unwrap()}
   }
-  /// Position coefficients for Y-axis (km).
-  /// Length must equal NUM_COEFFICIENTS.
+  /// Velocity vector Y-component km/s
   #[inline]
-  pub fn POS_COEFF_Y(&self) -> ::flatbuffers::Vector<'a, f64> {
+  pub fn Y_DOT(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEPositionRecord::VT_POS_COEFF_Y, None).unwrap()}
+    unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_Y_DOT, Some(0.0)).unwrap()}
   }
-  /// Position coefficients for Z-axis (km).
-  /// Length must equal NUM_COEFFICIENTS.
+  /// Velocity vector Z-component km/s
   #[inline]
-  pub fn POS_COEFF_Z(&self) -> ::flatbuffers::Vector<'a, f64> {
+  pub fn Z_DOT(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEPositionRecord::VT_POS_COEFF_Z, None).unwrap()}
+    unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_Z_DOT, Some(0.0)).unwrap()}
   }
-  /// Whether explicit velocity coefficients are provided.
-  /// If false, velocity should be derived by differentiating the position polynomial.
+  /// Optional: Acceleration vector X-component km/s²
   #[inline]
-  pub fn HAS_VELOCITY_COEFFICIENTS(&self) -> bool {
+  pub fn X_DDOT(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(PPEPositionRecord::VT_HAS_VELOCITY_COEFFICIENTS, Some(false)).unwrap()}
+    unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_X_DDOT, Some(0.0)).unwrap()}
   }
-  /// Velocity coefficients for X-axis (km/s). Optional.
-  /// Length must equal NUM_COEFFICIENTS if present.
+  /// Optional: Acceleration vector Y-component km/s²
   #[inline]
-  pub fn VEL_COEFF_X(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+  pub fn Y_DDOT(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEPositionRecord::VT_VEL_COEFF_X, None)}
+    unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_Y_DDOT, Some(0.0)).unwrap()}
   }
-  /// Velocity coefficients for Y-axis (km/s). Optional.
+  /// Optional: Acceleration vector Z-component km/s²
   #[inline]
-  pub fn VEL_COEFF_Y(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+  pub fn Z_DDOT(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEPositionRecord::VT_VEL_COEFF_Y, None)}
-  }
-  /// Velocity coefficients for Z-axis (km/s). Optional.
-  #[inline]
-  pub fn VEL_COEFF_Z(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEPositionRecord::VT_VEL_COEFF_Z, None)}
-  }
-  /// Maximum position fit residual over this segment (km). Optional quality metric.
-  #[inline]
-  pub fn MAX_POSITION_RESIDUAL(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(PPEPositionRecord::VT_MAX_POSITION_RESIDUAL, Some(0.0)).unwrap()}
-  }
-  /// RMS position fit residual over this segment (km). Optional quality metric.
-  #[inline]
-  pub fn RMS_POSITION_RESIDUAL(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(PPEPositionRecord::VT_RMS_POSITION_RESIDUAL, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(ephemerisDataLine::VT_Z_DDOT, Some(0.0)).unwrap()}
   }
 }
 
-impl ::flatbuffers::Verifiable for PPEPositionRecord<'_> {
+impl ::flatbuffers::Verifiable for ephemerisDataLine<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH_MID", Self::VT_EPOCH_MID, true)?
-     .visit_field::<f64>("EPOCH_HALF_SPAN", Self::VT_EPOCH_HALF_SPAN, false)?
-     .visit_field::<u16>("NUM_COEFFICIENTS", Self::VT_NUM_COEFFICIENTS, false)?
-     .visit_field::<polynomialBasisType>("BASIS_TYPE", Self::VT_BASIS_TYPE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("POS_COEFF_X", Self::VT_POS_COEFF_X, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("POS_COEFF_Y", Self::VT_POS_COEFF_Y, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("POS_COEFF_Z", Self::VT_POS_COEFF_Z, true)?
-     .visit_field::<bool>("HAS_VELOCITY_COEFFICIENTS", Self::VT_HAS_VELOCITY_COEFFICIENTS, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("VEL_COEFF_X", Self::VT_VEL_COEFF_X, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("VEL_COEFF_Y", Self::VT_VEL_COEFF_Y, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("VEL_COEFF_Z", Self::VT_VEL_COEFF_Z, false)?
-     .visit_field::<f64>("MAX_POSITION_RESIDUAL", Self::VT_MAX_POSITION_RESIDUAL, false)?
-     .visit_field::<f64>("RMS_POSITION_RESIDUAL", Self::VT_RMS_POSITION_RESIDUAL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<f64>("X", Self::VT_X, false)?
+     .visit_field::<f64>("Y", Self::VT_Y, false)?
+     .visit_field::<f64>("Z", Self::VT_Z, false)?
+     .visit_field::<f64>("X_DOT", Self::VT_X_DOT, false)?
+     .visit_field::<f64>("Y_DOT", Self::VT_Y_DOT, false)?
+     .visit_field::<f64>("Z_DOT", Self::VT_Z_DOT, false)?
+     .visit_field::<f64>("X_DDOT", Self::VT_X_DDOT, false)?
+     .visit_field::<f64>("Y_DDOT", Self::VT_Y_DDOT, false)?
+     .visit_field::<f64>("Z_DDOT", Self::VT_Z_DDOT, false)?
      .finish();
     Ok(())
   }
 }
-pub struct PPEPositionRecordArgs<'a> {
-    pub EPOCH_MID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub EPOCH_HALF_SPAN: f64,
-    pub NUM_COEFFICIENTS: u16,
-    pub BASIS_TYPE: polynomialBasisType,
-    pub POS_COEFF_X: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub POS_COEFF_Y: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub POS_COEFF_Z: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub HAS_VELOCITY_COEFFICIENTS: bool,
-    pub VEL_COEFF_X: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub VEL_COEFF_Y: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub VEL_COEFF_Z: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub MAX_POSITION_RESIDUAL: f64,
-    pub RMS_POSITION_RESIDUAL: f64,
+pub struct ephemerisDataLineArgs<'a> {
+    pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub X: f64,
+    pub Y: f64,
+    pub Z: f64,
+    pub X_DOT: f64,
+    pub Y_DOT: f64,
+    pub Z_DOT: f64,
+    pub X_DDOT: f64,
+    pub Y_DDOT: f64,
+    pub Z_DDOT: f64,
 }
-impl<'a> Default for PPEPositionRecordArgs<'a> {
+impl<'a> Default for ephemerisDataLineArgs<'a> {
   #[inline]
   fn default() -> Self {
-    PPEPositionRecordArgs {
-      EPOCH_MID: None, // required field
-      EPOCH_HALF_SPAN: 0.0,
-      NUM_COEFFICIENTS: 0,
-      BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
-      POS_COEFF_X: None, // required field
-      POS_COEFF_Y: None, // required field
-      POS_COEFF_Z: None, // required field
-      HAS_VELOCITY_COEFFICIENTS: false,
-      VEL_COEFF_X: None,
-      VEL_COEFF_Y: None,
-      VEL_COEFF_Z: None,
-      MAX_POSITION_RESIDUAL: 0.0,
-      RMS_POSITION_RESIDUAL: 0.0,
+    ephemerisDataLineArgs {
+      EPOCH: None,
+      X: 0.0,
+      Y: 0.0,
+      Z: 0.0,
+      X_DOT: 0.0,
+      Y_DOT: 0.0,
+      Z_DOT: 0.0,
+      X_DDOT: 0.0,
+      Y_DDOT: 0.0,
+      Z_DDOT: 0.0,
     }
   }
 }
 
-pub struct PPEPositionRecordBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct ephemerisDataLineBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PPEPositionRecordBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ephemerisDataLineBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_EPOCH_MID(&mut self, EPOCH_MID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_EPOCH_MID, EPOCH_MID);
+  pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataLine::VT_EPOCH, EPOCH);
   }
   #[inline]
-  pub fn add_EPOCH_HALF_SPAN(&mut self, EPOCH_HALF_SPAN: f64) {
-    self.fbb_.push_slot::<f64>(PPEPositionRecord::VT_EPOCH_HALF_SPAN, EPOCH_HALF_SPAN, 0.0);
+  pub fn add_X(&mut self, X: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_X, X, 0.0);
   }
   #[inline]
-  pub fn add_NUM_COEFFICIENTS(&mut self, NUM_COEFFICIENTS: u16) {
-    self.fbb_.push_slot::<u16>(PPEPositionRecord::VT_NUM_COEFFICIENTS, NUM_COEFFICIENTS, 0);
+  pub fn add_Y(&mut self, Y: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_Y, Y, 0.0);
   }
   #[inline]
-  pub fn add_BASIS_TYPE(&mut self, BASIS_TYPE: polynomialBasisType) {
-    self.fbb_.push_slot::<polynomialBasisType>(PPEPositionRecord::VT_BASIS_TYPE, BASIS_TYPE, polynomialBasisType::CHEBYSHEV);
+  pub fn add_Z(&mut self, Z: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_Z, Z, 0.0);
   }
   #[inline]
-  pub fn add_POS_COEFF_X(&mut self, POS_COEFF_X: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_POS_COEFF_X, POS_COEFF_X);
+  pub fn add_X_DOT(&mut self, X_DOT: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_X_DOT, X_DOT, 0.0);
   }
   #[inline]
-  pub fn add_POS_COEFF_Y(&mut self, POS_COEFF_Y: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_POS_COEFF_Y, POS_COEFF_Y);
+  pub fn add_Y_DOT(&mut self, Y_DOT: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_Y_DOT, Y_DOT, 0.0);
   }
   #[inline]
-  pub fn add_POS_COEFF_Z(&mut self, POS_COEFF_Z: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_POS_COEFF_Z, POS_COEFF_Z);
+  pub fn add_Z_DOT(&mut self, Z_DOT: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_Z_DOT, Z_DOT, 0.0);
   }
   #[inline]
-  pub fn add_HAS_VELOCITY_COEFFICIENTS(&mut self, HAS_VELOCITY_COEFFICIENTS: bool) {
-    self.fbb_.push_slot::<bool>(PPEPositionRecord::VT_HAS_VELOCITY_COEFFICIENTS, HAS_VELOCITY_COEFFICIENTS, false);
+  pub fn add_X_DDOT(&mut self, X_DDOT: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_X_DDOT, X_DDOT, 0.0);
   }
   #[inline]
-  pub fn add_VEL_COEFF_X(&mut self, VEL_COEFF_X: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_VEL_COEFF_X, VEL_COEFF_X);
+  pub fn add_Y_DDOT(&mut self, Y_DDOT: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_Y_DDOT, Y_DDOT, 0.0);
   }
   #[inline]
-  pub fn add_VEL_COEFF_Y(&mut self, VEL_COEFF_Y: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_VEL_COEFF_Y, VEL_COEFF_Y);
+  pub fn add_Z_DDOT(&mut self, Z_DDOT: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataLine::VT_Z_DDOT, Z_DDOT, 0.0);
   }
   #[inline]
-  pub fn add_VEL_COEFF_Z(&mut self, VEL_COEFF_Z: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEPositionRecord::VT_VEL_COEFF_Z, VEL_COEFF_Z);
-  }
-  #[inline]
-  pub fn add_MAX_POSITION_RESIDUAL(&mut self, MAX_POSITION_RESIDUAL: f64) {
-    self.fbb_.push_slot::<f64>(PPEPositionRecord::VT_MAX_POSITION_RESIDUAL, MAX_POSITION_RESIDUAL, 0.0);
-  }
-  #[inline]
-  pub fn add_RMS_POSITION_RESIDUAL(&mut self, RMS_POSITION_RESIDUAL: f64) {
-    self.fbb_.push_slot::<f64>(PPEPositionRecord::VT_RMS_POSITION_RESIDUAL, RMS_POSITION_RESIDUAL, 0.0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PPEPositionRecordBuilder<'a, 'b, A> {
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ephemerisDataLineBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    PPEPositionRecordBuilder {
+    ephemerisDataLineBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<PPEPositionRecord<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<ephemerisDataLine<'a>> {
     let o = self.fbb_.end_table(self.start_);
-    self.fbb_.required(o, PPEPositionRecord::VT_EPOCH_MID,"EPOCH_MID");
-    self.fbb_.required(o, PPEPositionRecord::VT_POS_COEFF_X,"POS_COEFF_X");
-    self.fbb_.required(o, PPEPositionRecord::VT_POS_COEFF_Y,"POS_COEFF_Y");
-    self.fbb_.required(o, PPEPositionRecord::VT_POS_COEFF_Z,"POS_COEFF_Z");
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for PPEPositionRecord<'_> {
+impl ::core::fmt::Debug for ephemerisDataLine<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("PPEPositionRecord");
-      ds.field("EPOCH_MID", &self.EPOCH_MID());
-      ds.field("EPOCH_HALF_SPAN", &self.EPOCH_HALF_SPAN());
-      ds.field("NUM_COEFFICIENTS", &self.NUM_COEFFICIENTS());
-      ds.field("BASIS_TYPE", &self.BASIS_TYPE());
-      ds.field("POS_COEFF_X", &self.POS_COEFF_X());
-      ds.field("POS_COEFF_Y", &self.POS_COEFF_Y());
-      ds.field("POS_COEFF_Z", &self.POS_COEFF_Z());
-      ds.field("HAS_VELOCITY_COEFFICIENTS", &self.HAS_VELOCITY_COEFFICIENTS());
-      ds.field("VEL_COEFF_X", &self.VEL_COEFF_X());
-      ds.field("VEL_COEFF_Y", &self.VEL_COEFF_Y());
-      ds.field("VEL_COEFF_Z", &self.VEL_COEFF_Z());
-      ds.field("MAX_POSITION_RESIDUAL", &self.MAX_POSITION_RESIDUAL());
-      ds.field("RMS_POSITION_RESIDUAL", &self.RMS_POSITION_RESIDUAL());
+    let mut ds = f.debug_struct("ephemerisDataLine");
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("X", &self.X());
+      ds.field("Y", &self.Y());
+      ds.field("Z", &self.Z());
+      ds.field("X_DOT", &self.X_DOT());
+      ds.field("Y_DOT", &self.Y_DOT());
+      ds.field("Z_DOT", &self.Z_DOT());
+      ds.field("X_DDOT", &self.X_DDOT());
+      ds.field("Y_DDOT", &self.Y_DDOT());
+      ds.field("Z_DDOT", &self.Z_DDOT());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct PPEPositionRecordT {
-  pub EPOCH_MID: alloc::string::String,
-  pub EPOCH_HALF_SPAN: f64,
-  pub NUM_COEFFICIENTS: u16,
-  pub BASIS_TYPE: polynomialBasisType,
-  pub POS_COEFF_X: alloc::vec::Vec<f64>,
-  pub POS_COEFF_Y: alloc::vec::Vec<f64>,
-  pub POS_COEFF_Z: alloc::vec::Vec<f64>,
-  pub HAS_VELOCITY_COEFFICIENTS: bool,
-  pub VEL_COEFF_X: Option<alloc::vec::Vec<f64>>,
-  pub VEL_COEFF_Y: Option<alloc::vec::Vec<f64>>,
-  pub VEL_COEFF_Z: Option<alloc::vec::Vec<f64>>,
-  pub MAX_POSITION_RESIDUAL: f64,
-  pub RMS_POSITION_RESIDUAL: f64,
+pub struct ephemerisDataLineT {
+  pub EPOCH: Option<alloc::string::String>,
+  pub X: f64,
+  pub Y: f64,
+  pub Z: f64,
+  pub X_DOT: f64,
+  pub Y_DOT: f64,
+  pub Z_DOT: f64,
+  pub X_DDOT: f64,
+  pub Y_DDOT: f64,
+  pub Z_DDOT: f64,
 }
-impl Default for PPEPositionRecordT {
+impl Default for ephemerisDataLineT {
   fn default() -> Self {
     Self {
-      EPOCH_MID: alloc::string::ToString::to_string(""),
-      EPOCH_HALF_SPAN: 0.0,
-      NUM_COEFFICIENTS: 0,
-      BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
-      POS_COEFF_X: Default::default(),
-      POS_COEFF_Y: Default::default(),
-      POS_COEFF_Z: Default::default(),
-      HAS_VELOCITY_COEFFICIENTS: false,
-      VEL_COEFF_X: None,
-      VEL_COEFF_Y: None,
-      VEL_COEFF_Z: None,
-      MAX_POSITION_RESIDUAL: 0.0,
-      RMS_POSITION_RESIDUAL: 0.0,
+      EPOCH: None,
+      X: 0.0,
+      Y: 0.0,
+      Z: 0.0,
+      X_DOT: 0.0,
+      Y_DOT: 0.0,
+      Z_DOT: 0.0,
+      X_DDOT: 0.0,
+      Y_DDOT: 0.0,
+      Z_DDOT: 0.0,
     }
   }
 }
-impl PPEPositionRecordT {
+impl ephemerisDataLineT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<PPEPositionRecord<'b>> {
-    let EPOCH_MID = Some({
-      let x = &self.EPOCH_MID;
+  ) -> ::flatbuffers::WIPOffset<ephemerisDataLine<'b>> {
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let EPOCH_HALF_SPAN = self.EPOCH_HALF_SPAN;
-    let NUM_COEFFICIENTS = self.NUM_COEFFICIENTS;
-    let BASIS_TYPE = self.BASIS_TYPE;
-    let POS_COEFF_X = Some({
-      let x = &self.POS_COEFF_X;
-      _fbb.create_vector(x)
-    });
-    let POS_COEFF_Y = Some({
-      let x = &self.POS_COEFF_Y;
-      _fbb.create_vector(x)
-    });
-    let POS_COEFF_Z = Some({
-      let x = &self.POS_COEFF_Z;
-      _fbb.create_vector(x)
-    });
-    let HAS_VELOCITY_COEFFICIENTS = self.HAS_VELOCITY_COEFFICIENTS;
-    let VEL_COEFF_X = self.VEL_COEFF_X.as_ref().map(|x|{
-      _fbb.create_vector(x)
-    });
-    let VEL_COEFF_Y = self.VEL_COEFF_Y.as_ref().map(|x|{
-      _fbb.create_vector(x)
-    });
-    let VEL_COEFF_Z = self.VEL_COEFF_Z.as_ref().map(|x|{
-      _fbb.create_vector(x)
-    });
-    let MAX_POSITION_RESIDUAL = self.MAX_POSITION_RESIDUAL;
-    let RMS_POSITION_RESIDUAL = self.RMS_POSITION_RESIDUAL;
-    PPEPositionRecord::create(_fbb, &PPEPositionRecordArgs{
-      EPOCH_MID,
-      EPOCH_HALF_SPAN,
-      NUM_COEFFICIENTS,
-      BASIS_TYPE,
-      POS_COEFF_X,
-      POS_COEFF_Y,
-      POS_COEFF_Z,
-      HAS_VELOCITY_COEFFICIENTS,
-      VEL_COEFF_X,
-      VEL_COEFF_Y,
-      VEL_COEFF_Z,
-      MAX_POSITION_RESIDUAL,
-      RMS_POSITION_RESIDUAL,
+    let X = self.X;
+    let Y = self.Y;
+    let Z = self.Z;
+    let X_DOT = self.X_DOT;
+    let Y_DOT = self.Y_DOT;
+    let Z_DOT = self.Z_DOT;
+    let X_DDOT = self.X_DDOT;
+    let Y_DDOT = self.Y_DDOT;
+    let Z_DDOT = self.Z_DDOT;
+    ephemerisDataLine::create(_fbb, &ephemerisDataLineArgs{
+      EPOCH,
+      X,
+      Y,
+      Z,
+      X_DOT,
+      Y_DOT,
+      Z_DOT,
+      X_DDOT,
+      Y_DDOT,
+      Z_DDOT,
     })
   }
 }
-pub enum PPEOrbitalElementRecordOffset {}
+pub enum covarianceMatrixLineOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// A single time-segment record of polynomial coefficients for classical orbital elements.
-///
-/// The six classical elements are:
-///   1. SMA or R_PERIAPSIS (size/shape) — see SIZE_SHAPE_TYPE
-///   2. Eccentricity (dimensionless)
-///   3. Inclination (degrees)
-///   4. Right Ascension of Ascending Node / RAAN (degrees)
-///   5. Argument of Periapsis (degrees)
-///   6. Anomaly (degrees) — see ANOMALY_TYPE
-///
-/// Evaluation follows the same normalized-time procedure as PPEPositionRecord.
-pub struct PPEOrbitalElementRecord<'a> {
+/// Position/Velocity Covariance Matrix Line
+pub struct covarianceMatrixLine<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for PPEOrbitalElementRecord<'a> {
-  type Inner = PPEOrbitalElementRecord<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for covarianceMatrixLine<'a> {
+  type Inner = covarianceMatrixLine<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> PPEOrbitalElementRecord<'a> {
-  pub const VT_EPOCH_MID: ::flatbuffers::VOffsetT = 4;
-  pub const VT_EPOCH_HALF_SPAN: ::flatbuffers::VOffsetT = 6;
-  pub const VT_NUM_COEFFICIENTS: ::flatbuffers::VOffsetT = 8;
-  pub const VT_BASIS_TYPE: ::flatbuffers::VOffsetT = 10;
-  pub const VT_SIZE_SHAPE_TYPE: ::flatbuffers::VOffsetT = 12;
-  pub const VT_ANOMALY_TYPE: ::flatbuffers::VOffsetT = 14;
-  pub const VT_COEFF_SIZE_SHAPE: ::flatbuffers::VOffsetT = 16;
-  pub const VT_COEFF_ECCENTRICITY: ::flatbuffers::VOffsetT = 18;
-  pub const VT_COEFF_INCLINATION: ::flatbuffers::VOffsetT = 20;
-  pub const VT_COEFF_RAAN: ::flatbuffers::VOffsetT = 22;
-  pub const VT_COEFF_ARG_PERIAPSIS: ::flatbuffers::VOffsetT = 24;
-  pub const VT_COEFF_ANOMALY: ::flatbuffers::VOffsetT = 26;
-  pub const VT_MAX_ELEMENT_RESIDUAL: ::flatbuffers::VOffsetT = 28;
-  pub const VT_RMS_ELEMENT_RESIDUAL: ::flatbuffers::VOffsetT = 30;
+impl<'a> covarianceMatrixLine<'a> {
+  pub const VT_EPOCH: ::flatbuffers::VOffsetT = 4;
+  pub const VT_CX_X: ::flatbuffers::VOffsetT = 6;
+  pub const VT_CY_X: ::flatbuffers::VOffsetT = 8;
+  pub const VT_CY_Y: ::flatbuffers::VOffsetT = 10;
+  pub const VT_CZ_X: ::flatbuffers::VOffsetT = 12;
+  pub const VT_CZ_Y: ::flatbuffers::VOffsetT = 14;
+  pub const VT_CZ_Z: ::flatbuffers::VOffsetT = 16;
+  pub const VT_CX_DOT_X: ::flatbuffers::VOffsetT = 18;
+  pub const VT_CX_DOT_Y: ::flatbuffers::VOffsetT = 20;
+  pub const VT_CX_DOT_Z: ::flatbuffers::VOffsetT = 22;
+  pub const VT_CX_DOT_X_DOT: ::flatbuffers::VOffsetT = 24;
+  pub const VT_CY_DOT_X: ::flatbuffers::VOffsetT = 26;
+  pub const VT_CY_DOT_Y: ::flatbuffers::VOffsetT = 28;
+  pub const VT_CY_DOT_Z: ::flatbuffers::VOffsetT = 30;
+  pub const VT_CY_DOT_X_DOT: ::flatbuffers::VOffsetT = 32;
+  pub const VT_CY_DOT_Y_DOT: ::flatbuffers::VOffsetT = 34;
+  pub const VT_CZ_DOT_X: ::flatbuffers::VOffsetT = 36;
+  pub const VT_CZ_DOT_Y: ::flatbuffers::VOffsetT = 38;
+  pub const VT_CZ_DOT_Z: ::flatbuffers::VOffsetT = 40;
+  pub const VT_CZ_DOT_X_DOT: ::flatbuffers::VOffsetT = 42;
+  pub const VT_CZ_DOT_Y_DOT: ::flatbuffers::VOffsetT = 44;
+  pub const VT_CZ_DOT_Z_DOT: ::flatbuffers::VOffsetT = 46;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    PPEOrbitalElementRecord { _tab: table }
+    covarianceMatrixLine { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args PPEOrbitalElementRecordArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<PPEOrbitalElementRecord<'bldr>> {
-    let mut builder = PPEOrbitalElementRecordBuilder::new(_fbb);
-    builder.add_RMS_ELEMENT_RESIDUAL(args.RMS_ELEMENT_RESIDUAL);
-    builder.add_MAX_ELEMENT_RESIDUAL(args.MAX_ELEMENT_RESIDUAL);
-    builder.add_EPOCH_HALF_SPAN(args.EPOCH_HALF_SPAN);
-    if let Some(x) = args.COEFF_ANOMALY { builder.add_COEFF_ANOMALY(x); }
-    if let Some(x) = args.COEFF_ARG_PERIAPSIS { builder.add_COEFF_ARG_PERIAPSIS(x); }
-    if let Some(x) = args.COEFF_RAAN { builder.add_COEFF_RAAN(x); }
-    if let Some(x) = args.COEFF_INCLINATION { builder.add_COEFF_INCLINATION(x); }
-    if let Some(x) = args.COEFF_ECCENTRICITY { builder.add_COEFF_ECCENTRICITY(x); }
-    if let Some(x) = args.COEFF_SIZE_SHAPE { builder.add_COEFF_SIZE_SHAPE(x); }
-    if let Some(x) = args.EPOCH_MID { builder.add_EPOCH_MID(x); }
-    builder.add_NUM_COEFFICIENTS(args.NUM_COEFFICIENTS);
-    builder.add_ANOMALY_TYPE(args.ANOMALY_TYPE);
-    builder.add_SIZE_SHAPE_TYPE(args.SIZE_SHAPE_TYPE);
-    builder.add_BASIS_TYPE(args.BASIS_TYPE);
+    args: &'args covarianceMatrixLineArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<covarianceMatrixLine<'bldr>> {
+    let mut builder = covarianceMatrixLineBuilder::new(_fbb);
+    builder.add_CZ_DOT_Z_DOT(args.CZ_DOT_Z_DOT);
+    builder.add_CZ_DOT_Y_DOT(args.CZ_DOT_Y_DOT);
+    builder.add_CZ_DOT_X_DOT(args.CZ_DOT_X_DOT);
+    builder.add_CZ_DOT_Z(args.CZ_DOT_Z);
+    builder.add_CZ_DOT_Y(args.CZ_DOT_Y);
+    builder.add_CZ_DOT_X(args.CZ_DOT_X);
+    builder.add_CY_DOT_Y_DOT(args.CY_DOT_Y_DOT);
+    builder.add_CY_DOT_X_DOT(args.CY_DOT_X_DOT);
+    builder.add_CY_DOT_Z(args.CY_DOT_Z);
+    builder.add_CY_DOT_Y(args.CY_DOT_Y);
+    builder.add_CY_DOT_X(args.CY_DOT_X);
+    builder.add_CX_DOT_X_DOT(args.CX_DOT_X_DOT);
+    builder.add_CX_DOT_Z(args.CX_DOT_Z);
+    builder.add_CX_DOT_Y(args.CX_DOT_Y);
+    builder.add_CX_DOT_X(args.CX_DOT_X);
+    builder.add_CZ_Z(args.CZ_Z);
+    builder.add_CZ_Y(args.CZ_Y);
+    builder.add_CZ_X(args.CZ_X);
+    builder.add_CY_Y(args.CY_Y);
+    builder.add_CY_X(args.CY_X);
+    builder.add_CX_X(args.CX_X);
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
     builder.finish()
   }
 
-  pub fn unpack(&self) -> PPEOrbitalElementRecordT {
-    let EPOCH_MID = {
-      let x = self.EPOCH_MID();
+  pub fn unpack(&self) -> covarianceMatrixLineT {
+    let EPOCH = self.EPOCH().map(|x| {
       alloc::string::ToString::to_string(x)
-    };
-    let EPOCH_HALF_SPAN = self.EPOCH_HALF_SPAN();
-    let NUM_COEFFICIENTS = self.NUM_COEFFICIENTS();
-    let BASIS_TYPE = self.BASIS_TYPE();
-    let SIZE_SHAPE_TYPE = self.SIZE_SHAPE_TYPE();
-    let ANOMALY_TYPE = self.ANOMALY_TYPE();
-    let COEFF_SIZE_SHAPE = {
-      let x = self.COEFF_SIZE_SHAPE();
-      x.into_iter().collect()
-    };
-    let COEFF_ECCENTRICITY = {
-      let x = self.COEFF_ECCENTRICITY();
-      x.into_iter().collect()
-    };
-    let COEFF_INCLINATION = {
-      let x = self.COEFF_INCLINATION();
-      x.into_iter().collect()
-    };
-    let COEFF_RAAN = {
-      let x = self.COEFF_RAAN();
-      x.into_iter().collect()
-    };
-    let COEFF_ARG_PERIAPSIS = {
-      let x = self.COEFF_ARG_PERIAPSIS();
-      x.into_iter().collect()
-    };
-    let COEFF_ANOMALY = {
-      let x = self.COEFF_ANOMALY();
-      x.into_iter().collect()
-    };
-    let MAX_ELEMENT_RESIDUAL = self.MAX_ELEMENT_RESIDUAL();
-    let RMS_ELEMENT_RESIDUAL = self.RMS_ELEMENT_RESIDUAL();
-    PPEOrbitalElementRecordT {
-      EPOCH_MID,
-      EPOCH_HALF_SPAN,
-      NUM_COEFFICIENTS,
-      BASIS_TYPE,
-      SIZE_SHAPE_TYPE,
-      ANOMALY_TYPE,
-      COEFF_SIZE_SHAPE,
-      COEFF_ECCENTRICITY,
-      COEFF_INCLINATION,
-      COEFF_RAAN,
-      COEFF_ARG_PERIAPSIS,
-      COEFF_ANOMALY,
-      MAX_ELEMENT_RESIDUAL,
-      RMS_ELEMENT_RESIDUAL,
+    });
+    let CX_X = self.CX_X();
+    let CY_X = self.CY_X();
+    let CY_Y = self.CY_Y();
+    let CZ_X = self.CZ_X();
+    let CZ_Y = self.CZ_Y();
+    let CZ_Z = self.CZ_Z();
+    let CX_DOT_X = self.CX_DOT_X();
+    let CX_DOT_Y = self.CX_DOT_Y();
+    let CX_DOT_Z = self.CX_DOT_Z();
+    let CX_DOT_X_DOT = self.CX_DOT_X_DOT();
+    let CY_DOT_X = self.CY_DOT_X();
+    let CY_DOT_Y = self.CY_DOT_Y();
+    let CY_DOT_Z = self.CY_DOT_Z();
+    let CY_DOT_X_DOT = self.CY_DOT_X_DOT();
+    let CY_DOT_Y_DOT = self.CY_DOT_Y_DOT();
+    let CZ_DOT_X = self.CZ_DOT_X();
+    let CZ_DOT_Y = self.CZ_DOT_Y();
+    let CZ_DOT_Z = self.CZ_DOT_Z();
+    let CZ_DOT_X_DOT = self.CZ_DOT_X_DOT();
+    let CZ_DOT_Y_DOT = self.CZ_DOT_Y_DOT();
+    let CZ_DOT_Z_DOT = self.CZ_DOT_Z_DOT();
+    covarianceMatrixLineT {
+      EPOCH,
+      CX_X,
+      CY_X,
+      CY_Y,
+      CZ_X,
+      CZ_Y,
+      CZ_Z,
+      CX_DOT_X,
+      CX_DOT_Y,
+      CX_DOT_Z,
+      CX_DOT_X_DOT,
+      CY_DOT_X,
+      CY_DOT_Y,
+      CY_DOT_Z,
+      CY_DOT_X_DOT,
+      CY_DOT_Y_DOT,
+      CZ_DOT_X,
+      CZ_DOT_Y,
+      CZ_DOT_Z,
+      CZ_DOT_X_DOT,
+      CZ_DOT_Y_DOT,
+      CZ_DOT_Z_DOT,
     }
   }
 
-  /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
+  /// Epoch
   #[inline]
-  pub fn EPOCH_MID(&self) -> &'a str {
+  pub fn EPOCH(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPEOrbitalElementRecord::VT_EPOCH_MID, None).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(covarianceMatrixLine::VT_EPOCH, None)}
   }
-  /// Half-span of the validity window in seconds.
+  /// Covariance matrix [1,1] km**2
   #[inline]
-  pub fn EPOCH_HALF_SPAN(&self) -> f64 {
+  pub fn CX_X(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(PPEOrbitalElementRecord::VT_EPOCH_HALF_SPAN, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CX_X, Some(0.0)).unwrap()}
   }
-  /// Number of polynomial coefficients per element.
+  /// Covariance matrix [2,1] km**2
   #[inline]
-  pub fn NUM_COEFFICIENTS(&self) -> u16 {
+  pub fn CY_X(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u16>(PPEOrbitalElementRecord::VT_NUM_COEFFICIENTS, Some(0)).unwrap()}
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CY_X, Some(0.0)).unwrap()}
   }
-  /// Polynomial basis type for interpreting the coefficient arrays.
+  /// Covariance matrix [2,2] km**2
   #[inline]
-  pub fn BASIS_TYPE(&self) -> polynomialBasisType {
+  pub fn CY_Y(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<polynomialBasisType>(PPEOrbitalElementRecord::VT_BASIS_TYPE, Some(polynomialBasisType::CHEBYSHEV)).unwrap()}
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CY_Y, Some(0.0)).unwrap()}
   }
-  /// Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
+  /// Covariance matrix [3,1] km**2
   #[inline]
-  pub fn SIZE_SHAPE_TYPE(&self) -> sizeShapeProfile {
+  pub fn CZ_X(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<sizeShapeProfile>(PPEOrbitalElementRecord::VT_SIZE_SHAPE_TYPE, Some(sizeShapeProfile::SMA)).unwrap()}
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CZ_X, Some(0.0)).unwrap()}
   }
-  /// Anomaly type for the sixth orbital element.
+  /// Covariance matrix [3,2] km**2
   #[inline]
-  pub fn ANOMALY_TYPE(&self) -> ppeAnomalyType {
+  pub fn CZ_Y(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<ppeAnomalyType>(PPEOrbitalElementRecord::VT_ANOMALY_TYPE, Some(ppeAnomalyType::TRUE_ANOMALY)).unwrap()}
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CZ_Y, Some(0.0)).unwrap()}
   }
-  /// Coefficients for SMA or radius of periapsis (km).
-  /// Length must equal NUM_COEFFICIENTS.
+  /// Covariance matrix [3,3] km**2
   #[inline]
-  pub fn COEFF_SIZE_SHAPE(&self) -> ::flatbuffers::Vector<'a, f64> {
+  pub fn CZ_Z(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEOrbitalElementRecord::VT_COEFF_SIZE_SHAPE, None).unwrap()}
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CZ_Z, Some(0.0)).unwrap()}
   }
-  /// Coefficients for eccentricity (dimensionless).
-  /// Length must equal NUM_COEFFICIENTS.
+  /// Covariance matrix [4,1] km**2/s
   #[inline]
-  pub fn COEFF_ECCENTRICITY(&self) -> ::flatbuffers::Vector<'a, f64> {
+  pub fn CX_DOT_X(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEOrbitalElementRecord::VT_COEFF_ECCENTRICITY, None).unwrap()}
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CX_DOT_X, Some(0.0)).unwrap()}
   }
-  /// Coefficients for inclination (degrees).
-  /// Length must equal NUM_COEFFICIENTS.
+  /// Covariance matrix [4,2] km**2/s
   #[inline]
-  pub fn COEFF_INCLINATION(&self) -> ::flatbuffers::Vector<'a, f64> {
+  pub fn CX_DOT_Y(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEOrbitalElementRecord::VT_COEFF_INCLINATION, None).unwrap()}
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CX_DOT_Y, Some(0.0)).unwrap()}
   }
-  /// Coefficients for RAAN (degrees).
-  /// Length must equal NUM_COEFFICIENTS.
+  /// Covariance matrix [4,3] km**2/s
   #[inline]
-  pub fn COEFF_RAAN(&self) -> ::flatbuffers::Vector<'a, f64> {
+  pub fn CX_DOT_Z(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEOrbitalElementRecord::VT_COEFF_RAAN, None).unwrap()}
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CX_DOT_Z, Some(0.0)).unwrap()}
   }
-  /// Coefficients for argument of periapsis (degrees).
-  /// Length must equal NUM_COEFFICIENTS.
+  /// Covariance matrix [4,4] km**2/s**2
   #[inline]
-  pub fn COEFF_ARG_PERIAPSIS(&self) -> ::flatbuffers::Vector<'a, f64> {
+  pub fn CX_DOT_X_DOT(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEOrbitalElementRecord::VT_COEFF_ARG_PERIAPSIS, None).unwrap()}
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CX_DOT_X_DOT, Some(0.0)).unwrap()}
   }
-  /// Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.
-  /// Length must equal NUM_COEFFICIENTS.
+  /// Covariance matrix [5,1] km**2/s
   #[inline]
-  pub fn COEFF_ANOMALY(&self) -> ::flatbuffers::Vector<'a, f64> {
+  pub fn CY_DOT_X(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPEOrbitalElementRecord::VT_COEFF_ANOMALY, None).unwrap()}
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CY_DOT_X, Some(0.0)).unwrap()}
   }
-  /// Maximum element fit residual over this segment. Optional quality metric.
-  /// Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).
+  /// Covariance matrix [5,2] km**2/s
   #[inline]
-  pub fn MAX_ELEMENT_RESIDUAL(&self) -> f64 {
+  pub fn CY_DOT_Y(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(PPEOrbitalElementRecord::VT_MAX_ELEMENT_RESIDUAL, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CY_DOT_Y, Some(0.0)).unwrap()}
   }
-  /// RMS element fit residual over this segment. Optional quality metric.
+  /// Covariance matrix [5,3] km**2/s
   #[inline]
-  pub fn RMS_ELEMENT_RESIDUAL(&self) -> f64 {
+  pub fn CY_DOT_Z(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(PPEOrbitalElementRecord::VT_RMS_ELEMENT_RESIDUAL, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CY_DOT_Z, Some(0.0)).unwrap()}
+  }
+  /// Covariance matrix [5,4] km**2/s**2
+  #[inline]
+  pub fn CY_DOT_X_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CY_DOT_X_DOT, Some(0.0)).unwrap()}
+  }
+  /// Covariance matrix [5,5] km**2/s**2
+  #[inline]
+  pub fn CY_DOT_Y_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CY_DOT_Y_DOT, Some(0.0)).unwrap()}
+  }
+  /// Covariance matrix [6,1] km**2/s
+  #[inline]
+  pub fn CZ_DOT_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CZ_DOT_X, Some(0.0)).unwrap()}
+  }
+  /// Covariance matrix [6,2] km**2/s
+  #[inline]
+  pub fn CZ_DOT_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CZ_DOT_Y, Some(0.0)).unwrap()}
+  }
+  /// Covariance matrix [6,3] km**2/s
+  #[inline]
+  pub fn CZ_DOT_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CZ_DOT_Z, Some(0.0)).unwrap()}
+  }
+  /// Covariance matrix [6,4] km**2/s**2
+  #[inline]
+  pub fn CZ_DOT_X_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CZ_DOT_X_DOT, Some(0.0)).unwrap()}
+  }
+  /// Covariance matrix [6,5] km**2/s**2
+  #[inline]
+  pub fn CZ_DOT_Y_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CZ_DOT_Y_DOT, Some(0.0)).unwrap()}
+  }
+  /// Covariance matrix [6,6] km**2/s**2
+  #[inline]
+  pub fn CZ_DOT_Z_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CZ_DOT_Z_DOT, Some(0.0)).unwrap()}
   }
 }
 
-impl ::flatbuffers::Verifiable for PPEOrbitalElementRecord<'_> {
+impl ::flatbuffers::Verifiable for covarianceMatrixLine<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH_MID", Self::VT_EPOCH_MID, true)?
-     .visit_field::<f64>("EPOCH_HALF_SPAN", Self::VT_EPOCH_HALF_SPAN, false)?
-     .visit_field::<u16>("NUM_COEFFICIENTS", Self::VT_NUM_COEFFICIENTS, false)?
-     .visit_field::<polynomialBasisType>("BASIS_TYPE", Self::VT_BASIS_TYPE, false)?
-     .visit_field::<sizeShapeProfile>("SIZE_SHAPE_TYPE", Self::VT_SIZE_SHAPE_TYPE, false)?
-     .visit_field::<ppeAnomalyType>("ANOMALY_TYPE", Self::VT_ANOMALY_TYPE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_SIZE_SHAPE", Self::VT_COEFF_SIZE_SHAPE, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_ECCENTRICITY", Self::VT_COEFF_ECCENTRICITY, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_INCLINATION", Self::VT_COEFF_INCLINATION, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_RAAN", Self::VT_COEFF_RAAN, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_ARG_PERIAPSIS", Self::VT_COEFF_ARG_PERIAPSIS, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COEFF_ANOMALY", Self::VT_COEFF_ANOMALY, true)?
-     .visit_field::<f64>("MAX_ELEMENT_RESIDUAL", Self::VT_MAX_ELEMENT_RESIDUAL, false)?
-     .visit_field::<f64>("RMS_ELEMENT_RESIDUAL", Self::VT_RMS_ELEMENT_RESIDUAL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<f64>("CX_X", Self::VT_CX_X, false)?
+     .visit_field::<f64>("CY_X", Self::VT_CY_X, false)?
+     .visit_field::<f64>("CY_Y", Self::VT_CY_Y, false)?
+     .visit_field::<f64>("CZ_X", Self::VT_CZ_X, false)?
+     .visit_field::<f64>("CZ_Y", Self::VT_CZ_Y, false)?
+     .visit_field::<f64>("CZ_Z", Self::VT_CZ_Z, false)?
+     .visit_field::<f64>("CX_DOT_X", Self::VT_CX_DOT_X, false)?
+     .visit_field::<f64>("CX_DOT_Y", Self::VT_CX_DOT_Y, false)?
+     .visit_field::<f64>("CX_DOT_Z", Self::VT_CX_DOT_Z, false)?
+     .visit_field::<f64>("CX_DOT_X_DOT", Self::VT_CX_DOT_X_DOT, false)?
+     .visit_field::<f64>("CY_DOT_X", Self::VT_CY_DOT_X, false)?
+     .visit_field::<f64>("CY_DOT_Y", Self::VT_CY_DOT_Y, false)?
+     .visit_field::<f64>("CY_DOT_Z", Self::VT_CY_DOT_Z, false)?
+     .visit_field::<f64>("CY_DOT_X_DOT", Self::VT_CY_DOT_X_DOT, false)?
+     .visit_field::<f64>("CY_DOT_Y_DOT", Self::VT_CY_DOT_Y_DOT, false)?
+     .visit_field::<f64>("CZ_DOT_X", Self::VT_CZ_DOT_X, false)?
+     .visit_field::<f64>("CZ_DOT_Y", Self::VT_CZ_DOT_Y, false)?
+     .visit_field::<f64>("CZ_DOT_Z", Self::VT_CZ_DOT_Z, false)?
+     .visit_field::<f64>("CZ_DOT_X_DOT", Self::VT_CZ_DOT_X_DOT, false)?
+     .visit_field::<f64>("CZ_DOT_Y_DOT", Self::VT_CZ_DOT_Y_DOT, false)?
+     .visit_field::<f64>("CZ_DOT_Z_DOT", Self::VT_CZ_DOT_Z_DOT, false)?
      .finish();
     Ok(())
   }
 }
-pub struct PPEOrbitalElementRecordArgs<'a> {
-    pub EPOCH_MID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub EPOCH_HALF_SPAN: f64,
-    pub NUM_COEFFICIENTS: u16,
-    pub BASIS_TYPE: polynomialBasisType,
-    pub SIZE_SHAPE_TYPE: sizeShapeProfile,
-    pub ANOMALY_TYPE: ppeAnomalyType,
-    pub COEFF_SIZE_SHAPE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub COEFF_ECCENTRICITY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub COEFF_INCLINATION: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub COEFF_RAAN: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub COEFF_ARG_PERIAPSIS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub COEFF_ANOMALY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub MAX_ELEMENT_RESIDUAL: f64,
-    pub RMS_ELEMENT_RESIDUAL: f64,
+pub struct covarianceMatrixLineArgs<'a> {
+    pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CX_X: f64,
+    pub CY_X: f64,
+    pub CY_Y: f64,
+    pub CZ_X: f64,
+    pub CZ_Y: f64,
+    pub CZ_Z: f64,
+    pub CX_DOT_X: f64,
+    pub CX_DOT_Y: f64,
+    pub CX_DOT_Z: f64,
+    pub CX_DOT_X_DOT: f64,
+    pub CY_DOT_X: f64,
+    pub CY_DOT_Y: f64,
+    pub CY_DOT_Z: f64,
+    pub CY_DOT_X_DOT: f64,
+    pub CY_DOT_Y_DOT: f64,
+    pub CZ_DOT_X: f64,
+    pub CZ_DOT_Y: f64,
+    pub CZ_DOT_Z: f64,
+    pub CZ_DOT_X_DOT: f64,
+    pub CZ_DOT_Y_DOT: f64,
+    pub CZ_DOT_Z_DOT: f64,
 }
-impl<'a> Default for PPEOrbitalElementRecordArgs<'a> {
+impl<'a> Default for covarianceMatrixLineArgs<'a> {
   #[inline]
   fn default() -> Self {
-    PPEOrbitalElementRecordArgs {
-      EPOCH_MID: None, // required field
-      EPOCH_HALF_SPAN: 0.0,
-      NUM_COEFFICIENTS: 0,
-      BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
-      SIZE_SHAPE_TYPE: sizeShapeProfile::SMA,
-      ANOMALY_TYPE: ppeAnomalyType::TRUE_ANOMALY,
-      COEFF_SIZE_SHAPE: None, // required field
-      COEFF_ECCENTRICITY: None, // required field
-      COEFF_INCLINATION: None, // required field
-      COEFF_RAAN: None, // required field
-      COEFF_ARG_PERIAPSIS: None, // required field
-      COEFF_ANOMALY: None, // required field
-      MAX_ELEMENT_RESIDUAL: 0.0,
-      RMS_ELEMENT_RESIDUAL: 0.0,
+    covarianceMatrixLineArgs {
+      EPOCH: None,
+      CX_X: 0.0,
+      CY_X: 0.0,
+      CY_Y: 0.0,
+      CZ_X: 0.0,
+      CZ_Y: 0.0,
+      CZ_Z: 0.0,
+      CX_DOT_X: 0.0,
+      CX_DOT_Y: 0.0,
+      CX_DOT_Z: 0.0,
+      CX_DOT_X_DOT: 0.0,
+      CY_DOT_X: 0.0,
+      CY_DOT_Y: 0.0,
+      CY_DOT_Z: 0.0,
+      CY_DOT_X_DOT: 0.0,
+      CY_DOT_Y_DOT: 0.0,
+      CZ_DOT_X: 0.0,
+      CZ_DOT_Y: 0.0,
+      CZ_DOT_Z: 0.0,
+      CZ_DOT_X_DOT: 0.0,
+      CZ_DOT_Y_DOT: 0.0,
+      CZ_DOT_Z_DOT: 0.0,
     }
   }
 }
 
-pub struct PPEOrbitalElementRecordBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct covarianceMatrixLineBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PPEOrbitalElementRecordBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> covarianceMatrixLineBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_EPOCH_MID(&mut self, EPOCH_MID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_EPOCH_MID, EPOCH_MID);
+  pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(covarianceMatrixLine::VT_EPOCH, EPOCH);
   }
   #[inline]
-  pub fn add_EPOCH_HALF_SPAN(&mut self, EPOCH_HALF_SPAN: f64) {
-    self.fbb_.push_slot::<f64>(PPEOrbitalElementRecord::VT_EPOCH_HALF_SPAN, EPOCH_HALF_SPAN, 0.0);
+  pub fn add_CX_X(&mut self, CX_X: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CX_X, CX_X, 0.0);
   }
   #[inline]
-  pub fn add_NUM_COEFFICIENTS(&mut self, NUM_COEFFICIENTS: u16) {
-    self.fbb_.push_slot::<u16>(PPEOrbitalElementRecord::VT_NUM_COEFFICIENTS, NUM_COEFFICIENTS, 0);
+  pub fn add_CY_X(&mut self, CY_X: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CY_X, CY_X, 0.0);
   }
   #[inline]
-  pub fn add_BASIS_TYPE(&mut self, BASIS_TYPE: polynomialBasisType) {
-    self.fbb_.push_slot::<polynomialBasisType>(PPEOrbitalElementRecord::VT_BASIS_TYPE, BASIS_TYPE, polynomialBasisType::CHEBYSHEV);
+  pub fn add_CY_Y(&mut self, CY_Y: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CY_Y, CY_Y, 0.0);
   }
   #[inline]
-  pub fn add_SIZE_SHAPE_TYPE(&mut self, SIZE_SHAPE_TYPE: sizeShapeProfile) {
-    self.fbb_.push_slot::<sizeShapeProfile>(PPEOrbitalElementRecord::VT_SIZE_SHAPE_TYPE, SIZE_SHAPE_TYPE, sizeShapeProfile::SMA);
+  pub fn add_CZ_X(&mut self, CZ_X: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CZ_X, CZ_X, 0.0);
   }
   #[inline]
-  pub fn add_ANOMALY_TYPE(&mut self, ANOMALY_TYPE: ppeAnomalyType) {
-    self.fbb_.push_slot::<ppeAnomalyType>(PPEOrbitalElementRecord::VT_ANOMALY_TYPE, ANOMALY_TYPE, ppeAnomalyType::TRUE_ANOMALY);
+  pub fn add_CZ_Y(&mut self, CZ_Y: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CZ_Y, CZ_Y, 0.0);
   }
   #[inline]
-  pub fn add_COEFF_SIZE_SHAPE(&mut self, COEFF_SIZE_SHAPE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_COEFF_SIZE_SHAPE, COEFF_SIZE_SHAPE);
+  pub fn add_CZ_Z(&mut self, CZ_Z: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CZ_Z, CZ_Z, 0.0);
   }
   #[inline]
-  pub fn add_COEFF_ECCENTRICITY(&mut self, COEFF_ECCENTRICITY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_COEFF_ECCENTRICITY, COEFF_ECCENTRICITY);
+  pub fn add_CX_DOT_X(&mut self, CX_DOT_X: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CX_DOT_X, CX_DOT_X, 0.0);
   }
   #[inline]
-  pub fn add_COEFF_INCLINATION(&mut self, COEFF_INCLINATION: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_COEFF_INCLINATION, COEFF_INCLINATION);
+  pub fn add_CX_DOT_Y(&mut self, CX_DOT_Y: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CX_DOT_Y, CX_DOT_Y, 0.0);
   }
   #[inline]
-  pub fn add_COEFF_RAAN(&mut self, COEFF_RAAN: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_COEFF_RAAN, COEFF_RAAN);
+  pub fn add_CX_DOT_Z(&mut self, CX_DOT_Z: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CX_DOT_Z, CX_DOT_Z, 0.0);
   }
   #[inline]
-  pub fn add_COEFF_ARG_PERIAPSIS(&mut self, COEFF_ARG_PERIAPSIS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_COEFF_ARG_PERIAPSIS, COEFF_ARG_PERIAPSIS);
+  pub fn add_CX_DOT_X_DOT(&mut self, CX_DOT_X_DOT: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CX_DOT_X_DOT, CX_DOT_X_DOT, 0.0);
   }
   #[inline]
-  pub fn add_COEFF_ANOMALY(&mut self, COEFF_ANOMALY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEOrbitalElementRecord::VT_COEFF_ANOMALY, COEFF_ANOMALY);
+  pub fn add_CY_DOT_X(&mut self, CY_DOT_X: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CY_DOT_X, CY_DOT_X, 0.0);
   }
   #[inline]
-  pub fn add_MAX_ELEMENT_RESIDUAL(&mut self, MAX_ELEMENT_RESIDUAL: f64) {
-    self.fbb_.push_slot::<f64>(PPEOrbitalElementRecord::VT_MAX_ELEMENT_RESIDUAL, MAX_ELEMENT_RESIDUAL, 0.0);
+  pub fn add_CY_DOT_Y(&mut self, CY_DOT_Y: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CY_DOT_Y, CY_DOT_Y, 0.0);
   }
   #[inline]
-  pub fn add_RMS_ELEMENT_RESIDUAL(&mut self, RMS_ELEMENT_RESIDUAL: f64) {
-    self.fbb_.push_slot::<f64>(PPEOrbitalElementRecord::VT_RMS_ELEMENT_RESIDUAL, RMS_ELEMENT_RESIDUAL, 0.0);
+  pub fn add_CY_DOT_Z(&mut self, CY_DOT_Z: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CY_DOT_Z, CY_DOT_Z, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PPEOrbitalElementRecordBuilder<'a, 'b, A> {
+  pub fn add_CY_DOT_X_DOT(&mut self, CY_DOT_X_DOT: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CY_DOT_X_DOT, CY_DOT_X_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_CY_DOT_Y_DOT(&mut self, CY_DOT_Y_DOT: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CY_DOT_Y_DOT, CY_DOT_Y_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_CZ_DOT_X(&mut self, CZ_DOT_X: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CZ_DOT_X, CZ_DOT_X, 0.0);
+  }
+  #[inline]
+  pub fn add_CZ_DOT_Y(&mut self, CZ_DOT_Y: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CZ_DOT_Y, CZ_DOT_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_CZ_DOT_Z(&mut self, CZ_DOT_Z: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CZ_DOT_Z, CZ_DOT_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_CZ_DOT_X_DOT(&mut self, CZ_DOT_X_DOT: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CZ_DOT_X_DOT, CZ_DOT_X_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_CZ_DOT_Y_DOT(&mut self, CZ_DOT_Y_DOT: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CZ_DOT_Y_DOT, CZ_DOT_Y_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_CZ_DOT_Z_DOT(&mut self, CZ_DOT_Z_DOT: f64) {
+    self.fbb_.push_slot::<f64>(covarianceMatrixLine::VT_CZ_DOT_Z_DOT, CZ_DOT_Z_DOT, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> covarianceMatrixLineBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    PPEOrbitalElementRecordBuilder {
+    covarianceMatrixLineBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<PPEOrbitalElementRecord<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<covarianceMatrixLine<'a>> {
     let o = self.fbb_.end_table(self.start_);
-    self.fbb_.required(o, PPEOrbitalElementRecord::VT_EPOCH_MID,"EPOCH_MID");
-    self.fbb_.required(o, PPEOrbitalElementRecord::VT_COEFF_SIZE_SHAPE,"COEFF_SIZE_SHAPE");
-    self.fbb_.required(o, PPEOrbitalElementRecord::VT_COEFF_ECCENTRICITY,"COEFF_ECCENTRICITY");
-    self.fbb_.required(o, PPEOrbitalElementRecord::VT_COEFF_INCLINATION,"COEFF_INCLINATION");
-    self.fbb_.required(o, PPEOrbitalElementRecord::VT_COEFF_RAAN,"COEFF_RAAN");
-    self.fbb_.required(o, PPEOrbitalElementRecord::VT_COEFF_ARG_PERIAPSIS,"COEFF_ARG_PERIAPSIS");
-    self.fbb_.required(o, PPEOrbitalElementRecord::VT_COEFF_ANOMALY,"COEFF_ANOMALY");
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for PPEOrbitalElementRecord<'_> {
+impl ::core::fmt::Debug for covarianceMatrixLine<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("PPEOrbitalElementRecord");
-      ds.field("EPOCH_MID", &self.EPOCH_MID());
-      ds.field("EPOCH_HALF_SPAN", &self.EPOCH_HALF_SPAN());
-      ds.field("NUM_COEFFICIENTS", &self.NUM_COEFFICIENTS());
-      ds.field("BASIS_TYPE", &self.BASIS_TYPE());
-      ds.field("SIZE_SHAPE_TYPE", &self.SIZE_SHAPE_TYPE());
-      ds.field("ANOMALY_TYPE", &self.ANOMALY_TYPE());
-      ds.field("COEFF_SIZE_SHAPE", &self.COEFF_SIZE_SHAPE());
-      ds.field("COEFF_ECCENTRICITY", &self.COEFF_ECCENTRICITY());
-      ds.field("COEFF_INCLINATION", &self.COEFF_INCLINATION());
-      ds.field("COEFF_RAAN", &self.COEFF_RAAN());
-      ds.field("COEFF_ARG_PERIAPSIS", &self.COEFF_ARG_PERIAPSIS());
-      ds.field("COEFF_ANOMALY", &self.COEFF_ANOMALY());
-      ds.field("MAX_ELEMENT_RESIDUAL", &self.MAX_ELEMENT_RESIDUAL());
-      ds.field("RMS_ELEMENT_RESIDUAL", &self.RMS_ELEMENT_RESIDUAL());
+    let mut ds = f.debug_struct("covarianceMatrixLine");
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("CX_X", &self.CX_X());
+      ds.field("CY_X", &self.CY_X());
+      ds.field("CY_Y", &self.CY_Y());
+      ds.field("CZ_X", &self.CZ_X());
+      ds.field("CZ_Y", &self.CZ_Y());
+      ds.field("CZ_Z", &self.CZ_Z());
+      ds.field("CX_DOT_X", &self.CX_DOT_X());
+      ds.field("CX_DOT_Y", &self.CX_DOT_Y());
+      ds.field("CX_DOT_Z", &self.CX_DOT_Z());
+      ds.field("CX_DOT_X_DOT", &self.CX_DOT_X_DOT());
+      ds.field("CY_DOT_X", &self.CY_DOT_X());
+      ds.field("CY_DOT_Y", &self.CY_DOT_Y());
+      ds.field("CY_DOT_Z", &self.CY_DOT_Z());
+      ds.field("CY_DOT_X_DOT", &self.CY_DOT_X_DOT());
+      ds.field("CY_DOT_Y_DOT", &self.CY_DOT_Y_DOT());
+      ds.field("CZ_DOT_X", &self.CZ_DOT_X());
+      ds.field("CZ_DOT_Y", &self.CZ_DOT_Y());
+      ds.field("CZ_DOT_Z", &self.CZ_DOT_Z());
+      ds.field("CZ_DOT_X_DOT", &self.CZ_DOT_X_DOT());
+      ds.field("CZ_DOT_Y_DOT", &self.CZ_DOT_Y_DOT());
+      ds.field("CZ_DOT_Z_DOT", &self.CZ_DOT_Z_DOT());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct PPEOrbitalElementRecordT {
-  pub EPOCH_MID: alloc::string::String,
-  pub EPOCH_HALF_SPAN: f64,
-  pub NUM_COEFFICIENTS: u16,
-  pub BASIS_TYPE: polynomialBasisType,
-  pub SIZE_SHAPE_TYPE: sizeShapeProfile,
-  pub ANOMALY_TYPE: ppeAnomalyType,
-  pub COEFF_SIZE_SHAPE: alloc::vec::Vec<f64>,
-  pub COEFF_ECCENTRICITY: alloc::vec::Vec<f64>,
-  pub COEFF_INCLINATION: alloc::vec::Vec<f64>,
-  pub COEFF_RAAN: alloc::vec::Vec<f64>,
-  pub COEFF_ARG_PERIAPSIS: alloc::vec::Vec<f64>,
-  pub COEFF_ANOMALY: alloc::vec::Vec<f64>,
-  pub MAX_ELEMENT_RESIDUAL: f64,
-  pub RMS_ELEMENT_RESIDUAL: f64,
+pub struct covarianceMatrixLineT {
+  pub EPOCH: Option<alloc::string::String>,
+  pub CX_X: f64,
+  pub CY_X: f64,
+  pub CY_Y: f64,
+  pub CZ_X: f64,
+  pub CZ_Y: f64,
+  pub CZ_Z: f64,
+  pub CX_DOT_X: f64,
+  pub CX_DOT_Y: f64,
+  pub CX_DOT_Z: f64,
+  pub CX_DOT_X_DOT: f64,
+  pub CY_DOT_X: f64,
+  pub CY_DOT_Y: f64,
+  pub CY_DOT_Z: f64,
+  pub CY_DOT_X_DOT: f64,
+  pub CY_DOT_Y_DOT: f64,
+  pub CZ_DOT_X: f64,
+  pub CZ_DOT_Y: f64,
+  pub CZ_DOT_Z: f64,
+  pub CZ_DOT_X_DOT: f64,
+  pub CZ_DOT_Y_DOT: f64,
+  pub CZ_DOT_Z_DOT: f64,
 }
-impl Default for PPEOrbitalElementRecordT {
+impl Default for covarianceMatrixLineT {
   fn default() -> Self {
     Self {
-      EPOCH_MID: alloc::string::ToString::to_string(""),
-      EPOCH_HALF_SPAN: 0.0,
-      NUM_COEFFICIENTS: 0,
-      BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
-      SIZE_SHAPE_TYPE: sizeShapeProfile::SMA,
-      ANOMALY_TYPE: ppeAnomalyType::TRUE_ANOMALY,
-      COEFF_SIZE_SHAPE: Default::default(),
-      COEFF_ECCENTRICITY: Default::default(),
-      COEFF_INCLINATION: Default::default(),
-      COEFF_RAAN: Default::default(),
-      COEFF_ARG_PERIAPSIS: Default::default(),
-      COEFF_ANOMALY: Default::default(),
-      MAX_ELEMENT_RESIDUAL: 0.0,
-      RMS_ELEMENT_RESIDUAL: 0.0,
+      EPOCH: None,
+      CX_X: 0.0,
+      CY_X: 0.0,
+      CY_Y: 0.0,
+      CZ_X: 0.0,
+      CZ_Y: 0.0,
+      CZ_Z: 0.0,
+      CX_DOT_X: 0.0,
+      CX_DOT_Y: 0.0,
+      CX_DOT_Z: 0.0,
+      CX_DOT_X_DOT: 0.0,
+      CY_DOT_X: 0.0,
+      CY_DOT_Y: 0.0,
+      CY_DOT_Z: 0.0,
+      CY_DOT_X_DOT: 0.0,
+      CY_DOT_Y_DOT: 0.0,
+      CZ_DOT_X: 0.0,
+      CZ_DOT_Y: 0.0,
+      CZ_DOT_Z: 0.0,
+      CZ_DOT_X_DOT: 0.0,
+      CZ_DOT_Y_DOT: 0.0,
+      CZ_DOT_Z_DOT: 0.0,
     }
   }
 }
-impl PPEOrbitalElementRecordT {
+impl covarianceMatrixLineT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<PPEOrbitalElementRecord<'b>> {
-    let EPOCH_MID = Some({
-      let x = &self.EPOCH_MID;
+  ) -> ::flatbuffers::WIPOffset<covarianceMatrixLine<'b>> {
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let EPOCH_HALF_SPAN = self.EPOCH_HALF_SPAN;
-    let NUM_COEFFICIENTS = self.NUM_COEFFICIENTS;
-    let BASIS_TYPE = self.BASIS_TYPE;
-    let SIZE_SHAPE_TYPE = self.SIZE_SHAPE_TYPE;
-    let ANOMALY_TYPE = self.ANOMALY_TYPE;
-    let COEFF_SIZE_SHAPE = Some({
-      let x = &self.COEFF_SIZE_SHAPE;
-      _fbb.create_vector(x)
-    });
-    let COEFF_ECCENTRICITY = Some({
-      let x = &self.COEFF_ECCENTRICITY;
-      _fbb.create_vector(x)
-    });
-    let COEFF_INCLINATION = Some({
-      let x = &self.COEFF_INCLINATION;
-      _fbb.create_vector(x)
-    });
-    let COEFF_RAAN = Some({
-      let x = &self.COEFF_RAAN;
-      _fbb.create_vector(x)
-    });
-    let COEFF_ARG_PERIAPSIS = Some({
-      let x = &self.COEFF_ARG_PERIAPSIS;
-      _fbb.create_vector(x)
-    });
-    let COEFF_ANOMALY = Some({
-      let x = &self.COEFF_ANOMALY;
-      _fbb.create_vector(x)
-    });
-    let MAX_ELEMENT_RESIDUAL = self.MAX_ELEMENT_RESIDUAL;
-    let RMS_ELEMENT_RESIDUAL = self.RMS_ELEMENT_RESIDUAL;
-    PPEOrbitalElementRecord::create(_fbb, &PPEOrbitalElementRecordArgs{
-      EPOCH_MID,
-      EPOCH_HALF_SPAN,
-      NUM_COEFFICIENTS,
-      BASIS_TYPE,
-      SIZE_SHAPE_TYPE,
-      ANOMALY_TYPE,
-      COEFF_SIZE_SHAPE,
-      COEFF_ECCENTRICITY,
-      COEFF_INCLINATION,
-      COEFF_RAAN,
-      COEFF_ARG_PERIAPSIS,
-      COEFF_ANOMALY,
-      MAX_ELEMENT_RESIDUAL,
-      RMS_ELEMENT_RESIDUAL,
+    let CX_X = self.CX_X;
+    let CY_X = self.CY_X;
+    let CY_Y = self.CY_Y;
+    let CZ_X = self.CZ_X;
+    let CZ_Y = self.CZ_Y;
+    let CZ_Z = self.CZ_Z;
+    let CX_DOT_X = self.CX_DOT_X;
+    let CX_DOT_Y = self.CX_DOT_Y;
+    let CX_DOT_Z = self.CX_DOT_Z;
+    let CX_DOT_X_DOT = self.CX_DOT_X_DOT;
+    let CY_DOT_X = self.CY_DOT_X;
+    let CY_DOT_Y = self.CY_DOT_Y;
+    let CY_DOT_Z = self.CY_DOT_Z;
+    let CY_DOT_X_DOT = self.CY_DOT_X_DOT;
+    let CY_DOT_Y_DOT = self.CY_DOT_Y_DOT;
+    let CZ_DOT_X = self.CZ_DOT_X;
+    let CZ_DOT_Y = self.CZ_DOT_Y;
+    let CZ_DOT_Z = self.CZ_DOT_Z;
+    let CZ_DOT_X_DOT = self.CZ_DOT_X_DOT;
+    let CZ_DOT_Y_DOT = self.CZ_DOT_Y_DOT;
+    let CZ_DOT_Z_DOT = self.CZ_DOT_Z_DOT;
+    covarianceMatrixLine::create(_fbb, &covarianceMatrixLineArgs{
+      EPOCH,
+      CX_X,
+      CY_X,
+      CY_Y,
+      CZ_X,
+      CZ_Y,
+      CZ_Z,
+      CX_DOT_X,
+      CX_DOT_Y,
+      CX_DOT_Z,
+      CX_DOT_X_DOT,
+      CY_DOT_X,
+      CY_DOT_Y,
+      CY_DOT_Z,
+      CY_DOT_X_DOT,
+      CY_DOT_Y_DOT,
+      CZ_DOT_X,
+      CZ_DOT_Y,
+      CZ_DOT_Z,
+      CZ_DOT_X_DOT,
+      CZ_DOT_Y_DOT,
+      CZ_DOT_Z_DOT,
     })
   }
 }
-pub enum PPEOffset {}
+pub enum ephemerisDataBlockOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Polynomial Ephemeris — top-level message containing metadata and
-/// one or more polynomial coefficient records for a single space object.
-///
-/// A PPE message may contain position records, orbital element records, or both.
-/// Records should be ordered chronologically by EPOCH_MID and should collectively
-/// cover the time span [START_TIME, STOP_TIME] without gaps.
-pub struct PPE<'a> {
+/// OEM Ephemeris Data Block
+pub struct ephemerisDataBlock<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for PPE<'a> {
-  type Inner = PPE<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for ephemerisDataBlock<'a> {
+  type Inner = ephemerisDataBlock<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> PPE<'a> {
+impl<'a> ephemerisDataBlock<'a> {
   pub const VT_COMMENT: ::flatbuffers::VOffsetT = 4;
   pub const VT_OBJECT: ::flatbuffers::VOffsetT = 6;
   pub const VT_CENTER_NAME: ::flatbuffers::VOffsetT = 8;
   pub const VT_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 10;
-  pub const VT_TIME_SYSTEM: ::flatbuffers::VOffsetT = 12;
-  pub const VT_START_TIME: ::flatbuffers::VOffsetT = 14;
-  pub const VT_STOP_TIME: ::flatbuffers::VOffsetT = 16;
-  pub const VT_DEFAULT_BASIS_TYPE: ::flatbuffers::VOffsetT = 18;
-  pub const VT_POSITION_RECORDS: ::flatbuffers::VOffsetT = 20;
-  pub const VT_ORBITAL_ELEMENT_RECORDS: ::flatbuffers::VOffsetT = 22;
-  pub const VT_EPHEMERIS_SOURCE: ::flatbuffers::VOffsetT = 24;
-  pub const VT_NOMINAL_SEGMENT_SPAN: ::flatbuffers::VOffsetT = 26;
-  pub const VT_NOMINAL_NUM_COEFFICIENTS: ::flatbuffers::VOffsetT = 28;
+  pub const VT_REFERENCE_FRAME_EPOCH: ::flatbuffers::VOffsetT = 12;
+  pub const VT_COV_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 14;
+  pub const VT_TIME_SYSTEM: ::flatbuffers::VOffsetT = 16;
+  pub const VT_START_TIME: ::flatbuffers::VOffsetT = 18;
+  pub const VT_USEABLE_START_TIME: ::flatbuffers::VOffsetT = 20;
+  pub const VT_USEABLE_STOP_TIME: ::flatbuffers::VOffsetT = 22;
+  pub const VT_STOP_TIME: ::flatbuffers::VOffsetT = 24;
+  pub const VT_INTERPOLATION: ::flatbuffers::VOffsetT = 26;
+  pub const VT_INTERPOLATION_DEGREE: ::flatbuffers::VOffsetT = 28;
+  pub const VT_STEP_SIZE: ::flatbuffers::VOffsetT = 30;
+  pub const VT_STATE_VECTOR_SIZE: ::flatbuffers::VOffsetT = 32;
+  pub const VT_EPHEMERIS_DATA: ::flatbuffers::VOffsetT = 34;
+  pub const VT_EPHEMERIS_DATA_LINES: ::flatbuffers::VOffsetT = 36;
+  pub const VT_COVARIANCE_MATRIX_LINES: ::flatbuffers::VOffsetT = 38;
+  pub const VT_POLYNOMIAL_POSITION_RECORDS: ::flatbuffers::VOffsetT = 40;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    PPE { _tab: table }
+    ephemerisDataBlock { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args PPEArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<PPE<'bldr>> {
-    let mut builder = PPEBuilder::new(_fbb);
-    builder.add_NOMINAL_SEGMENT_SPAN(args.NOMINAL_SEGMENT_SPAN);
-    if let Some(x) = args.EPHEMERIS_SOURCE { builder.add_EPHEMERIS_SOURCE(x); }
-    if let Some(x) = args.ORBITAL_ELEMENT_RECORDS { builder.add_ORBITAL_ELEMENT_RECORDS(x); }
-    if let Some(x) = args.POSITION_RECORDS { builder.add_POSITION_RECORDS(x); }
+    args: &'args ephemerisDataBlockArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<ephemerisDataBlock<'bldr>> {
+    let mut builder = ephemerisDataBlockBuilder::new(_fbb);
+    builder.add_STEP_SIZE(args.STEP_SIZE);
+    if let Some(x) = args.POLYNOMIAL_POSITION_RECORDS { builder.add_POLYNOMIAL_POSITION_RECORDS(x); }
+    if let Some(x) = args.COVARIANCE_MATRIX_LINES { builder.add_COVARIANCE_MATRIX_LINES(x); }
+    if let Some(x) = args.EPHEMERIS_DATA_LINES { builder.add_EPHEMERIS_DATA_LINES(x); }
+    if let Some(x) = args.EPHEMERIS_DATA { builder.add_EPHEMERIS_DATA(x); }
+    builder.add_INTERPOLATION_DEGREE(args.INTERPOLATION_DEGREE);
+    if let Some(x) = args.INTERPOLATION { builder.add_INTERPOLATION(x); }
     if let Some(x) = args.STOP_TIME { builder.add_STOP_TIME(x); }
+    if let Some(x) = args.USEABLE_STOP_TIME { builder.add_USEABLE_STOP_TIME(x); }
+    if let Some(x) = args.USEABLE_START_TIME { builder.add_USEABLE_START_TIME(x); }
     if let Some(x) = args.START_TIME { builder.add_START_TIME(x); }
+    if let Some(x) = args.COV_REFERENCE_FRAME { builder.add_COV_REFERENCE_FRAME(x); }
+    if let Some(x) = args.REFERENCE_FRAME_EPOCH { builder.add_REFERENCE_FRAME_EPOCH(x); }
     if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
     if let Some(x) = args.CENTER_NAME { builder.add_CENTER_NAME(x); }
     if let Some(x) = args.OBJECT { builder.add_OBJECT(x); }
     if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
-    builder.add_NOMINAL_NUM_COEFFICIENTS(args.NOMINAL_NUM_COEFFICIENTS);
-    builder.add_DEFAULT_BASIS_TYPE(args.DEFAULT_BASIS_TYPE);
+    builder.add_STATE_VECTOR_SIZE(args.STATE_VECTOR_SIZE);
     builder.add_TIME_SYSTEM(args.TIME_SYSTEM);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> PPET {
+  pub fn unpack(&self) -> ephemerisDataBlockT {
     let COMMENT = self.COMMENT().map(|x| {
-      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+      alloc::string::ToString::to_string(x)
     });
     let OBJECT = self.OBJECT().map(|x| {
       alloc::boxed::Box::new(x.unpack())
@@ -1351,346 +1076,492 @@ impl<'a> PPE<'a> {
     let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
       alloc::boxed::Box::new(x.unpack())
     });
+    let REFERENCE_FRAME_EPOCH = self.REFERENCE_FRAME_EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
     let TIME_SYSTEM = self.TIME_SYSTEM();
     let START_TIME = self.START_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let USEABLE_START_TIME = self.USEABLE_START_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let USEABLE_STOP_TIME = self.USEABLE_STOP_TIME().map(|x| {
       alloc::string::ToString::to_string(x)
     });
     let STOP_TIME = self.STOP_TIME().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let DEFAULT_BASIS_TYPE = self.DEFAULT_BASIS_TYPE();
-    let POSITION_RECORDS = self.POSITION_RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    let ORBITAL_ELEMENT_RECORDS = self.ORBITAL_ELEMENT_RECORDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    let EPHEMERIS_SOURCE = self.EPHEMERIS_SOURCE().map(|x| {
+    let INTERPOLATION = self.INTERPOLATION().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let NOMINAL_SEGMENT_SPAN = self.NOMINAL_SEGMENT_SPAN();
-    let NOMINAL_NUM_COEFFICIENTS = self.NOMINAL_NUM_COEFFICIENTS();
-    PPET {
+    let INTERPOLATION_DEGREE = self.INTERPOLATION_DEGREE();
+    let STEP_SIZE = self.STEP_SIZE();
+    let STATE_VECTOR_SIZE = self.STATE_VECTOR_SIZE();
+    let EPHEMERIS_DATA = self.EPHEMERIS_DATA().map(|x| {
+      x.into_iter().collect()
+    });
+    let EPHEMERIS_DATA_LINES = self.EPHEMERIS_DATA_LINES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let COVARIANCE_MATRIX_LINES = self.COVARIANCE_MATRIX_LINES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let POLYNOMIAL_POSITION_RECORDS = self.POLYNOMIAL_POSITION_RECORDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    ephemerisDataBlockT {
       COMMENT,
       OBJECT,
       CENTER_NAME,
       REFERENCE_FRAME,
+      REFERENCE_FRAME_EPOCH,
+      COV_REFERENCE_FRAME,
       TIME_SYSTEM,
       START_TIME,
+      USEABLE_START_TIME,
+      USEABLE_STOP_TIME,
       STOP_TIME,
-      DEFAULT_BASIS_TYPE,
-      POSITION_RECORDS,
-      ORBITAL_ELEMENT_RECORDS,
-      EPHEMERIS_SOURCE,
-      NOMINAL_SEGMENT_SPAN,
-      NOMINAL_NUM_COEFFICIENTS,
+      INTERPOLATION,
+      INTERPOLATION_DEGREE,
+      STEP_SIZE,
+      STATE_VECTOR_SIZE,
+      EPHEMERIS_DATA,
+      EPHEMERIS_DATA_LINES,
+      COVARIANCE_MATRIX_LINES,
+      POLYNOMIAL_POSITION_RECORDS,
     }
   }
 
-  /// Plain-text comments.
+  /// Plain-Text Comment
   #[inline]
-  pub fn COMMENT(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn COMMENT(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PPE::VT_COMMENT, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ephemerisDataBlock::VT_COMMENT, None)}
   }
-  /// Space object identification.
+  /// Satellite name for the first object
   #[inline]
   pub fn OBJECT(&self) -> Option<CAT<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CAT>>(PPE::VT_OBJECT, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CAT>>(ephemerisDataBlock::VT_OBJECT, None)}
   }
-  /// Origin of the reference frame (e.g., EARTH, MOON, MARS).
+  /// Origin of reference frame (EARTH, MARS, MOON, etc.)
   #[inline]
   pub fn CENTER_NAME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPE::VT_CENTER_NAME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ephemerisDataBlock::VT_CENTER_NAME, None)}
   }
-  /// Reference frame for position/velocity coefficients.
+  /// Name of the reference frame (TEME, EME2000, etc.)
   #[inline]
   pub fn REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(PPE::VT_REFERENCE_FRAME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(ephemerisDataBlock::VT_REFERENCE_FRAME, None)}
   }
-  /// Time system used for all epochs in this message.
+  /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
+  #[inline]
+  pub fn REFERENCE_FRAME_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ephemerisDataBlock::VT_REFERENCE_FRAME_EPOCH, None)}
+  }
+  /// Reference frame for the covariance matrix
+  #[inline]
+  pub fn COV_REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(ephemerisDataBlock::VT_COV_REFERENCE_FRAME, None)}
+  }
+  /// Time system used for the orbit state and covariance matrix. (UTC)
   #[inline]
   pub fn TIME_SYSTEM(&self) -> timingStandard {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<timingStandard>(PPE::VT_TIME_SYSTEM, Some(timingStandard::GMST)).unwrap()}
+    unsafe { self._tab.get::<timingStandard>(ephemerisDataBlock::VT_TIME_SYSTEM, Some(timingStandard::GMST)).unwrap()}
   }
-  /// Start of the total time span covered by this ephemeris (ISO 8601).
+  /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
   #[inline]
   pub fn START_TIME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPE::VT_START_TIME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ephemerisDataBlock::VT_START_TIME, None)}
   }
-  /// End of the total time span covered by this ephemeris (ISO 8601).
+  /// Optional start USEABLE time span covered by ephemeris data (ISO 8601)
+  #[inline]
+  pub fn USEABLE_START_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ephemerisDataBlock::VT_USEABLE_START_TIME, None)}
+  }
+  /// Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
+  #[inline]
+  pub fn USEABLE_STOP_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ephemerisDataBlock::VT_USEABLE_STOP_TIME, None)}
+  }
+  /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
   #[inline]
   pub fn STOP_TIME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPE::VT_STOP_TIME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ephemerisDataBlock::VT_STOP_TIME, None)}
   }
-  /// Default polynomial basis type for all records in this message.
-  /// Individual records may override this with their own BASIS_TYPE field.
+  /// Recommended interpolation method for ephemeris data.
+  /// Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+  /// When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
+  /// for high-fidelity polynomial interpolation instead of interpolating across
+  /// discrete state vectors.
   #[inline]
-  pub fn DEFAULT_BASIS_TYPE(&self) -> polynomialBasisType {
+  pub fn INTERPOLATION(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<polynomialBasisType>(PPE::VT_DEFAULT_BASIS_TYPE, Some(polynomialBasisType::CHEBYSHEV)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ephemerisDataBlock::VT_INTERPOLATION, None)}
   }
-  /// Array of position polynomial records.
-  /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
+  /// Recommended interpolation degree for ephemeris data
   #[inline]
-  pub fn POSITION_RECORDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'a>>>> {
+  pub fn INTERPOLATION_DEGREE(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord>>>>(PPE::VT_POSITION_RECORDS, None)}
+    unsafe { self._tab.get::<u32>(ephemerisDataBlock::VT_INTERPOLATION_DEGREE, Some(0)).unwrap()}
   }
-  /// Array of orbital element polynomial records.
-  /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
+  /// Time interval between ephemeris states in seconds.
+  /// If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
+  /// If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
   #[inline]
-  pub fn ORBITAL_ELEMENT_RECORDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord<'a>>>> {
+  pub fn STEP_SIZE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord>>>>(PPE::VT_ORBITAL_ELEMENT_RECORDS, None)}
+    unsafe { self._tab.get::<f64>(ephemerisDataBlock::VT_STEP_SIZE, Some(0.0)).unwrap()}
   }
-  /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+  /// Number of components per state vector in EPHEMERIS_DATA array.
+  /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  /// Only used when STEP_SIZE > 0. Default is 6.
   #[inline]
-  pub fn EPHEMERIS_SOURCE(&self) -> Option<&'a str> {
+  pub fn STATE_VECTOR_SIZE(&self) -> u8 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPE::VT_EPHEMERIS_SOURCE, None)}
+    unsafe { self._tab.get::<u8>(ephemerisDataBlock::VT_STATE_VECTOR_SIZE, Some(6)).unwrap()}
   }
-  /// Fit span in seconds used to generate each polynomial segment.
-  /// Informational; actual spans are in individual records.
+  /// Compact ephemeris data as row-major array of doubles.
+  /// Only used when STEP_SIZE > 0.
+  /// Layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+  /// Units: position in km, velocity in km/s, acceleration in km/s²
+  /// Length must be divisible by STATE_VECTOR_SIZE.
+  /// Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE
   #[inline]
-  pub fn NOMINAL_SEGMENT_SPAN(&self) -> f64 {
+  pub fn EPHEMERIS_DATA(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(PPE::VT_NOMINAL_SEGMENT_SPAN, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(ephemerisDataBlock::VT_EPHEMERIS_DATA, None)}
   }
-  /// Nominal number of coefficients per segment.
-  /// Informational; actual counts are in individual records.
+  /// Array of ephemeris data lines with explicit epochs.
+  /// Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
+  /// Each line contains its own EPOCH timestamp.
   #[inline]
-  pub fn NOMINAL_NUM_COEFFICIENTS(&self) -> u16 {
+  pub fn EPHEMERIS_DATA_LINES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ephemerisDataLine<'a>>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u16>(PPE::VT_NOMINAL_NUM_COEFFICIENTS, Some(0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ephemerisDataLine>>>>(ephemerisDataBlock::VT_EPHEMERIS_DATA_LINES, None)}
+  }
+  /// Array of covariance matrix lines (optional)
+  #[inline]
+  pub fn COVARIANCE_MATRIX_LINES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<covarianceMatrixLine<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<covarianceMatrixLine>>>>(ephemerisDataBlock::VT_COVARIANCE_MATRIX_LINES, None)}
+  }
+  /// Optional polynomial position records for high-fidelity interpolation.
+  /// Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+  /// polynomial coefficients for continuous position (and optionally velocity) evaluation.
+  /// See PPE schema for record structure and evaluation procedure.
+  #[inline]
+  pub fn POLYNOMIAL_POSITION_RECORDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord>>>>(ephemerisDataBlock::VT_POLYNOMIAL_POSITION_RECORDS, None)}
   }
 }
 
-impl ::flatbuffers::Verifiable for PPE<'_> {
+impl ::flatbuffers::Verifiable for ephemerisDataBlock<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<CAT>>("OBJECT", Self::VT_OBJECT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REFERENCE_FRAME_EPOCH", Self::VT_REFERENCE_FRAME_EPOCH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
      .visit_field::<timingStandard>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("USEABLE_START_TIME", Self::VT_USEABLE_START_TIME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("USEABLE_STOP_TIME", Self::VT_USEABLE_STOP_TIME, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STOP_TIME", Self::VT_STOP_TIME, false)?
-     .visit_field::<polynomialBasisType>("DEFAULT_BASIS_TYPE", Self::VT_DEFAULT_BASIS_TYPE, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PPEPositionRecord>>>>("POSITION_RECORDS", Self::VT_POSITION_RECORDS, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord>>>>("ORBITAL_ELEMENT_RECORDS", Self::VT_ORBITAL_ELEMENT_RECORDS, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_SOURCE", Self::VT_EPHEMERIS_SOURCE, false)?
-     .visit_field::<f64>("NOMINAL_SEGMENT_SPAN", Self::VT_NOMINAL_SEGMENT_SPAN, false)?
-     .visit_field::<u16>("NOMINAL_NUM_COEFFICIENTS", Self::VT_NOMINAL_NUM_COEFFICIENTS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INTERPOLATION", Self::VT_INTERPOLATION, false)?
+     .visit_field::<u32>("INTERPOLATION_DEGREE", Self::VT_INTERPOLATION_DEGREE, false)?
+     .visit_field::<f64>("STEP_SIZE", Self::VT_STEP_SIZE, false)?
+     .visit_field::<u8>("STATE_VECTOR_SIZE", Self::VT_STATE_VECTOR_SIZE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("EPHEMERIS_DATA", Self::VT_EPHEMERIS_DATA, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ephemerisDataLine>>>>("EPHEMERIS_DATA_LINES", Self::VT_EPHEMERIS_DATA_LINES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<covarianceMatrixLine>>>>("COVARIANCE_MATRIX_LINES", Self::VT_COVARIANCE_MATRIX_LINES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PPEPositionRecord>>>>("POLYNOMIAL_POSITION_RECORDS", Self::VT_POLYNOMIAL_POSITION_RECORDS, false)?
      .finish();
     Ok(())
   }
 }
-pub struct PPEArgs<'a> {
-    pub COMMENT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+pub struct ephemerisDataBlockArgs<'a> {
+    pub COMMENT: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub OBJECT: Option<::flatbuffers::WIPOffset<CAT<'a>>>,
     pub CENTER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
+    pub REFERENCE_FRAME_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
     pub TIME_SYSTEM: timingStandard,
     pub START_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub USEABLE_START_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub USEABLE_STOP_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub STOP_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub DEFAULT_BASIS_TYPE: polynomialBasisType,
-    pub POSITION_RECORDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'a>>>>>,
-    pub ORBITAL_ELEMENT_RECORDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord<'a>>>>>,
-    pub EPHEMERIS_SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub NOMINAL_SEGMENT_SPAN: f64,
-    pub NOMINAL_NUM_COEFFICIENTS: u16,
+    pub INTERPOLATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTERPOLATION_DEGREE: u32,
+    pub STEP_SIZE: f64,
+    pub STATE_VECTOR_SIZE: u8,
+    pub EPHEMERIS_DATA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub EPHEMERIS_DATA_LINES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ephemerisDataLine<'a>>>>>,
+    pub COVARIANCE_MATRIX_LINES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<covarianceMatrixLine<'a>>>>>,
+    pub POLYNOMIAL_POSITION_RECORDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'a>>>>>,
 }
-impl<'a> Default for PPEArgs<'a> {
+impl<'a> Default for ephemerisDataBlockArgs<'a> {
   #[inline]
   fn default() -> Self {
-    PPEArgs {
+    ephemerisDataBlockArgs {
       COMMENT: None,
       OBJECT: None,
       CENTER_NAME: None,
       REFERENCE_FRAME: None,
+      REFERENCE_FRAME_EPOCH: None,
+      COV_REFERENCE_FRAME: None,
       TIME_SYSTEM: timingStandard::GMST,
       START_TIME: None,
+      USEABLE_START_TIME: None,
+      USEABLE_STOP_TIME: None,
       STOP_TIME: None,
-      DEFAULT_BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
-      POSITION_RECORDS: None,
-      ORBITAL_ELEMENT_RECORDS: None,
-      EPHEMERIS_SOURCE: None,
-      NOMINAL_SEGMENT_SPAN: 0.0,
-      NOMINAL_NUM_COEFFICIENTS: 0,
+      INTERPOLATION: None,
+      INTERPOLATION_DEGREE: 0,
+      STEP_SIZE: 0.0,
+      STATE_VECTOR_SIZE: 6,
+      EPHEMERIS_DATA: None,
+      EPHEMERIS_DATA_LINES: None,
+      COVARIANCE_MATRIX_LINES: None,
+      POLYNOMIAL_POSITION_RECORDS: None,
     }
   }
 }
 
-pub struct PPEBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct ephemerisDataBlockBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PPEBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ephemerisDataBlockBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_COMMENT, COMMENT);
+  pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_COMMENT, COMMENT);
   }
   #[inline]
   pub fn add_OBJECT(&mut self, OBJECT: ::flatbuffers::WIPOffset<CAT<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CAT>>(PPE::VT_OBJECT, OBJECT);
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CAT>>(ephemerisDataBlock::VT_OBJECT, OBJECT);
   }
   #[inline]
   pub fn add_CENTER_NAME(&mut self, CENTER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_CENTER_NAME, CENTER_NAME);
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_CENTER_NAME, CENTER_NAME);
   }
   #[inline]
   pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(PPE::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(ephemerisDataBlock::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  #[inline]
+  pub fn add_REFERENCE_FRAME_EPOCH(&mut self, REFERENCE_FRAME_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_REFERENCE_FRAME_EPOCH, REFERENCE_FRAME_EPOCH);
+  }
+  #[inline]
+  pub fn add_COV_REFERENCE_FRAME(&mut self, COV_REFERENCE_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(ephemerisDataBlock::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME);
   }
   #[inline]
   pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timingStandard) {
-    self.fbb_.push_slot::<timingStandard>(PPE::VT_TIME_SYSTEM, TIME_SYSTEM, timingStandard::GMST);
+    self.fbb_.push_slot::<timingStandard>(ephemerisDataBlock::VT_TIME_SYSTEM, TIME_SYSTEM, timingStandard::GMST);
   }
   #[inline]
   pub fn add_START_TIME(&mut self, START_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_START_TIME, START_TIME);
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_START_TIME, START_TIME);
+  }
+  #[inline]
+  pub fn add_USEABLE_START_TIME(&mut self, USEABLE_START_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_USEABLE_START_TIME, USEABLE_START_TIME);
+  }
+  #[inline]
+  pub fn add_USEABLE_STOP_TIME(&mut self, USEABLE_STOP_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_USEABLE_STOP_TIME, USEABLE_STOP_TIME);
   }
   #[inline]
   pub fn add_STOP_TIME(&mut self, STOP_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_STOP_TIME, STOP_TIME);
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_STOP_TIME, STOP_TIME);
   }
   #[inline]
-  pub fn add_DEFAULT_BASIS_TYPE(&mut self, DEFAULT_BASIS_TYPE: polynomialBasisType) {
-    self.fbb_.push_slot::<polynomialBasisType>(PPE::VT_DEFAULT_BASIS_TYPE, DEFAULT_BASIS_TYPE, polynomialBasisType::CHEBYSHEV);
+  pub fn add_INTERPOLATION(&mut self, INTERPOLATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_INTERPOLATION, INTERPOLATION);
   }
   #[inline]
-  pub fn add_POSITION_RECORDS(&mut self, POSITION_RECORDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_POSITION_RECORDS, POSITION_RECORDS);
+  pub fn add_INTERPOLATION_DEGREE(&mut self, INTERPOLATION_DEGREE: u32) {
+    self.fbb_.push_slot::<u32>(ephemerisDataBlock::VT_INTERPOLATION_DEGREE, INTERPOLATION_DEGREE, 0);
   }
   #[inline]
-  pub fn add_ORBITAL_ELEMENT_RECORDS(&mut self, ORBITAL_ELEMENT_RECORDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_ORBITAL_ELEMENT_RECORDS, ORBITAL_ELEMENT_RECORDS);
+  pub fn add_STEP_SIZE(&mut self, STEP_SIZE: f64) {
+    self.fbb_.push_slot::<f64>(ephemerisDataBlock::VT_STEP_SIZE, STEP_SIZE, 0.0);
   }
   #[inline]
-  pub fn add_EPHEMERIS_SOURCE(&mut self, EPHEMERIS_SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_EPHEMERIS_SOURCE, EPHEMERIS_SOURCE);
+  pub fn add_STATE_VECTOR_SIZE(&mut self, STATE_VECTOR_SIZE: u8) {
+    self.fbb_.push_slot::<u8>(ephemerisDataBlock::VT_STATE_VECTOR_SIZE, STATE_VECTOR_SIZE, 6);
   }
   #[inline]
-  pub fn add_NOMINAL_SEGMENT_SPAN(&mut self, NOMINAL_SEGMENT_SPAN: f64) {
-    self.fbb_.push_slot::<f64>(PPE::VT_NOMINAL_SEGMENT_SPAN, NOMINAL_SEGMENT_SPAN, 0.0);
+  pub fn add_EPHEMERIS_DATA(&mut self, EPHEMERIS_DATA: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_EPHEMERIS_DATA, EPHEMERIS_DATA);
   }
   #[inline]
-  pub fn add_NOMINAL_NUM_COEFFICIENTS(&mut self, NOMINAL_NUM_COEFFICIENTS: u16) {
-    self.fbb_.push_slot::<u16>(PPE::VT_NOMINAL_NUM_COEFFICIENTS, NOMINAL_NUM_COEFFICIENTS, 0);
+  pub fn add_EPHEMERIS_DATA_LINES(&mut self, EPHEMERIS_DATA_LINES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ephemerisDataLine<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_EPHEMERIS_DATA_LINES, EPHEMERIS_DATA_LINES);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PPEBuilder<'a, 'b, A> {
+  pub fn add_COVARIANCE_MATRIX_LINES(&mut self, COVARIANCE_MATRIX_LINES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<covarianceMatrixLine<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_COVARIANCE_MATRIX_LINES, COVARIANCE_MATRIX_LINES);
+  }
+  #[inline]
+  pub fn add_POLYNOMIAL_POSITION_RECORDS(&mut self, POLYNOMIAL_POSITION_RECORDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ephemerisDataBlock::VT_POLYNOMIAL_POSITION_RECORDS, POLYNOMIAL_POSITION_RECORDS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ephemerisDataBlockBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    PPEBuilder {
+    ephemerisDataBlockBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<PPE<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<ephemerisDataBlock<'a>> {
     let o = self.fbb_.end_table(self.start_);
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for PPE<'_> {
+impl ::core::fmt::Debug for ephemerisDataBlock<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("PPE");
+    let mut ds = f.debug_struct("ephemerisDataBlock");
       ds.field("COMMENT", &self.COMMENT());
       ds.field("OBJECT", &self.OBJECT());
       ds.field("CENTER_NAME", &self.CENTER_NAME());
       ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
+      ds.field("REFERENCE_FRAME_EPOCH", &self.REFERENCE_FRAME_EPOCH());
+      ds.field("COV_REFERENCE_FRAME", &self.COV_REFERENCE_FRAME());
       ds.field("TIME_SYSTEM", &self.TIME_SYSTEM());
       ds.field("START_TIME", &self.START_TIME());
+      ds.field("USEABLE_START_TIME", &self.USEABLE_START_TIME());
+      ds.field("USEABLE_STOP_TIME", &self.USEABLE_STOP_TIME());
       ds.field("STOP_TIME", &self.STOP_TIME());
-      ds.field("DEFAULT_BASIS_TYPE", &self.DEFAULT_BASIS_TYPE());
-      ds.field("POSITION_RECORDS", &self.POSITION_RECORDS());
-      ds.field("ORBITAL_ELEMENT_RECORDS", &self.ORBITAL_ELEMENT_RECORDS());
-      ds.field("EPHEMERIS_SOURCE", &self.EPHEMERIS_SOURCE());
-      ds.field("NOMINAL_SEGMENT_SPAN", &self.NOMINAL_SEGMENT_SPAN());
-      ds.field("NOMINAL_NUM_COEFFICIENTS", &self.NOMINAL_NUM_COEFFICIENTS());
+      ds.field("INTERPOLATION", &self.INTERPOLATION());
+      ds.field("INTERPOLATION_DEGREE", &self.INTERPOLATION_DEGREE());
+      ds.field("STEP_SIZE", &self.STEP_SIZE());
+      ds.field("STATE_VECTOR_SIZE", &self.STATE_VECTOR_SIZE());
+      ds.field("EPHEMERIS_DATA", &self.EPHEMERIS_DATA());
+      ds.field("EPHEMERIS_DATA_LINES", &self.EPHEMERIS_DATA_LINES());
+      ds.field("COVARIANCE_MATRIX_LINES", &self.COVARIANCE_MATRIX_LINES());
+      ds.field("POLYNOMIAL_POSITION_RECORDS", &self.POLYNOMIAL_POSITION_RECORDS());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct PPET {
-  pub COMMENT: Option<alloc::vec::Vec<alloc::string::String>>,
+pub struct ephemerisDataBlockT {
+  pub COMMENT: Option<alloc::string::String>,
   pub OBJECT: Option<alloc::boxed::Box<CATT>>,
   pub CENTER_NAME: Option<alloc::string::String>,
   pub REFERENCE_FRAME: Option<alloc::boxed::Box<RFMT>>,
+  pub REFERENCE_FRAME_EPOCH: Option<alloc::string::String>,
+  pub COV_REFERENCE_FRAME: Option<alloc::boxed::Box<RFMT>>,
   pub TIME_SYSTEM: timingStandard,
   pub START_TIME: Option<alloc::string::String>,
+  pub USEABLE_START_TIME: Option<alloc::string::String>,
+  pub USEABLE_STOP_TIME: Option<alloc::string::String>,
   pub STOP_TIME: Option<alloc::string::String>,
-  pub DEFAULT_BASIS_TYPE: polynomialBasisType,
-  pub POSITION_RECORDS: Option<alloc::vec::Vec<PPEPositionRecordT>>,
-  pub ORBITAL_ELEMENT_RECORDS: Option<alloc::vec::Vec<PPEOrbitalElementRecordT>>,
-  pub EPHEMERIS_SOURCE: Option<alloc::string::String>,
-  pub NOMINAL_SEGMENT_SPAN: f64,
-  pub NOMINAL_NUM_COEFFICIENTS: u16,
+  pub INTERPOLATION: Option<alloc::string::String>,
+  pub INTERPOLATION_DEGREE: u32,
+  pub STEP_SIZE: f64,
+  pub STATE_VECTOR_SIZE: u8,
+  pub EPHEMERIS_DATA: Option<alloc::vec::Vec<f64>>,
+  pub EPHEMERIS_DATA_LINES: Option<alloc::vec::Vec<ephemerisDataLineT>>,
+  pub COVARIANCE_MATRIX_LINES: Option<alloc::vec::Vec<covarianceMatrixLineT>>,
+  pub POLYNOMIAL_POSITION_RECORDS: Option<alloc::vec::Vec<PPEPositionRecordT>>,
 }
-impl Default for PPET {
+impl Default for ephemerisDataBlockT {
   fn default() -> Self {
     Self {
       COMMENT: None,
       OBJECT: None,
       CENTER_NAME: None,
       REFERENCE_FRAME: None,
+      REFERENCE_FRAME_EPOCH: None,
+      COV_REFERENCE_FRAME: None,
       TIME_SYSTEM: timingStandard::GMST,
       START_TIME: None,
+      USEABLE_START_TIME: None,
+      USEABLE_STOP_TIME: None,
       STOP_TIME: None,
-      DEFAULT_BASIS_TYPE: polynomialBasisType::CHEBYSHEV,
-      POSITION_RECORDS: None,
-      ORBITAL_ELEMENT_RECORDS: None,
-      EPHEMERIS_SOURCE: None,
-      NOMINAL_SEGMENT_SPAN: 0.0,
-      NOMINAL_NUM_COEFFICIENTS: 0,
+      INTERPOLATION: None,
+      INTERPOLATION_DEGREE: 0,
+      STEP_SIZE: 0.0,
+      STATE_VECTOR_SIZE: 6,
+      EPHEMERIS_DATA: None,
+      EPHEMERIS_DATA_LINES: None,
+      COVARIANCE_MATRIX_LINES: None,
+      POLYNOMIAL_POSITION_RECORDS: None,
     }
   }
 }
-impl PPET {
+impl ephemerisDataBlockT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<PPE<'b>> {
+  ) -> ::flatbuffers::WIPOffset<ephemerisDataBlock<'b>> {
     let COMMENT = self.COMMENT.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_string(x)
     });
     let OBJECT = self.OBJECT.as_ref().map(|x|{
       x.pack(_fbb)
@@ -1701,122 +1572,386 @@ impl PPET {
     let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let REFERENCE_FRAME_EPOCH = self.REFERENCE_FRAME_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let TIME_SYSTEM = self.TIME_SYSTEM;
     let START_TIME = self.START_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let USEABLE_START_TIME = self.USEABLE_START_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let USEABLE_STOP_TIME = self.USEABLE_STOP_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let STOP_TIME = self.STOP_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let DEFAULT_BASIS_TYPE = self.DEFAULT_BASIS_TYPE;
-    let POSITION_RECORDS = self.POSITION_RECORDS.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    let ORBITAL_ELEMENT_RECORDS = self.ORBITAL_ELEMENT_RECORDS.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    let EPHEMERIS_SOURCE = self.EPHEMERIS_SOURCE.as_ref().map(|x|{
+    let INTERPOLATION = self.INTERPOLATION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let NOMINAL_SEGMENT_SPAN = self.NOMINAL_SEGMENT_SPAN;
-    let NOMINAL_NUM_COEFFICIENTS = self.NOMINAL_NUM_COEFFICIENTS;
-    PPE::create(_fbb, &PPEArgs{
+    let INTERPOLATION_DEGREE = self.INTERPOLATION_DEGREE;
+    let STEP_SIZE = self.STEP_SIZE;
+    let STATE_VECTOR_SIZE = self.STATE_VECTOR_SIZE;
+    let EPHEMERIS_DATA = self.EPHEMERIS_DATA.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let EPHEMERIS_DATA_LINES = self.EPHEMERIS_DATA_LINES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let COVARIANCE_MATRIX_LINES = self.COVARIANCE_MATRIX_LINES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let POLYNOMIAL_POSITION_RECORDS = self.POLYNOMIAL_POSITION_RECORDS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    ephemerisDataBlock::create(_fbb, &ephemerisDataBlockArgs{
       COMMENT,
       OBJECT,
       CENTER_NAME,
       REFERENCE_FRAME,
+      REFERENCE_FRAME_EPOCH,
+      COV_REFERENCE_FRAME,
       TIME_SYSTEM,
       START_TIME,
+      USEABLE_START_TIME,
+      USEABLE_STOP_TIME,
       STOP_TIME,
-      DEFAULT_BASIS_TYPE,
-      POSITION_RECORDS,
-      ORBITAL_ELEMENT_RECORDS,
-      EPHEMERIS_SOURCE,
-      NOMINAL_SEGMENT_SPAN,
-      NOMINAL_NUM_COEFFICIENTS,
+      INTERPOLATION,
+      INTERPOLATION_DEGREE,
+      STEP_SIZE,
+      STATE_VECTOR_SIZE,
+      EPHEMERIS_DATA,
+      EPHEMERIS_DATA_LINES,
+      COVARIANCE_MATRIX_LINES,
+      POLYNOMIAL_POSITION_RECORDS,
+    })
+  }
+}
+pub enum OEMOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Orbit Ephemeris Message
+pub struct OEM<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OEM<'a> {
+  type Inner = OEM<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> OEM<'a> {
+  pub const VT_CLASSIFICATION: ::flatbuffers::VOffsetT = 4;
+  pub const VT_CCSDS_OEM_VERS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_CREATION_DATE: ::flatbuffers::VOffsetT = 8;
+  pub const VT_ORIGINATOR: ::flatbuffers::VOffsetT = 10;
+  pub const VT_EPHEMERIS_DATA_BLOCK: ::flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    OEM { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args OEMArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<OEM<'bldr>> {
+    let mut builder = OEMBuilder::new(_fbb);
+    builder.add_CCSDS_OEM_VERS(args.CCSDS_OEM_VERS);
+    if let Some(x) = args.EPHEMERIS_DATA_BLOCK { builder.add_EPHEMERIS_DATA_BLOCK(x); }
+    if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
+    if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
+    if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> OEMT {
+    let CLASSIFICATION = self.CLASSIFICATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CCSDS_OEM_VERS = self.CCSDS_OEM_VERS();
+    let CREATION_DATE = self.CREATION_DATE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ORIGINATOR = self.ORIGINATOR().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPHEMERIS_DATA_BLOCK = self.EPHEMERIS_DATA_BLOCK().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    OEMT {
+      CLASSIFICATION,
+      CCSDS_OEM_VERS,
+      CREATION_DATE,
+      ORIGINATOR,
+      EPHEMERIS_DATA_BLOCK,
+    }
+  }
+
+  /// OEM Header
+  /// Classification marking of the data in IC/CAPCO Portion-marked format.
+  #[inline]
+  pub fn CLASSIFICATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OEM::VT_CLASSIFICATION, None)}
+  }
+  /// OEM Version
+  #[inline]
+  pub fn CCSDS_OEM_VERS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OEM::VT_CCSDS_OEM_VERS, Some(0.0)).unwrap()}
+  }
+  /// Creation Date
+  #[inline]
+  pub fn CREATION_DATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OEM::VT_CREATION_DATE, None)}
+  }
+  /// Originator
+  #[inline]
+  pub fn ORIGINATOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OEM::VT_ORIGINATOR, None)}
+  }
+  /// Array of ephemeris data blocks
+  #[inline]
+  pub fn EPHEMERIS_DATA_BLOCK(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ephemerisDataBlock<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ephemerisDataBlock>>>>(OEM::VT_EPHEMERIS_DATA_BLOCK, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for OEM<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION", Self::VT_CLASSIFICATION, false)?
+     .visit_field::<f64>("CCSDS_OEM_VERS", Self::VT_CCSDS_OEM_VERS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATION_DATE", Self::VT_CREATION_DATE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR", Self::VT_ORIGINATOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ephemerisDataBlock>>>>("EPHEMERIS_DATA_BLOCK", Self::VT_EPHEMERIS_DATA_BLOCK, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct OEMArgs<'a> {
+    pub CLASSIFICATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CCSDS_OEM_VERS: f64,
+    pub CREATION_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORIGINATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPHEMERIS_DATA_BLOCK: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ephemerisDataBlock<'a>>>>>,
+}
+impl<'a> Default for OEMArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    OEMArgs {
+      CLASSIFICATION: None,
+      CCSDS_OEM_VERS: 0.0,
+      CREATION_DATE: None,
+      ORIGINATOR: None,
+      EPHEMERIS_DATA_BLOCK: None,
+    }
+  }
+}
+
+pub struct OEMBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OEMBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_CLASSIFICATION(&mut self, CLASSIFICATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OEM::VT_CLASSIFICATION, CLASSIFICATION);
+  }
+  #[inline]
+  pub fn add_CCSDS_OEM_VERS(&mut self, CCSDS_OEM_VERS: f64) {
+    self.fbb_.push_slot::<f64>(OEM::VT_CCSDS_OEM_VERS, CCSDS_OEM_VERS, 0.0);
+  }
+  #[inline]
+  pub fn add_CREATION_DATE(&mut self, CREATION_DATE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OEM::VT_CREATION_DATE, CREATION_DATE);
+  }
+  #[inline]
+  pub fn add_ORIGINATOR(&mut self, ORIGINATOR: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OEM::VT_ORIGINATOR, ORIGINATOR);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_DATA_BLOCK(&mut self, EPHEMERIS_DATA_BLOCK: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ephemerisDataBlock<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OEM::VT_EPHEMERIS_DATA_BLOCK, EPHEMERIS_DATA_BLOCK);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OEMBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    OEMBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<OEM<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for OEM<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("OEM");
+      ds.field("CLASSIFICATION", &self.CLASSIFICATION());
+      ds.field("CCSDS_OEM_VERS", &self.CCSDS_OEM_VERS());
+      ds.field("CREATION_DATE", &self.CREATION_DATE());
+      ds.field("ORIGINATOR", &self.ORIGINATOR());
+      ds.field("EPHEMERIS_DATA_BLOCK", &self.EPHEMERIS_DATA_BLOCK());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OEMT {
+  pub CLASSIFICATION: Option<alloc::string::String>,
+  pub CCSDS_OEM_VERS: f64,
+  pub CREATION_DATE: Option<alloc::string::String>,
+  pub ORIGINATOR: Option<alloc::string::String>,
+  pub EPHEMERIS_DATA_BLOCK: Option<alloc::vec::Vec<ephemerisDataBlockT>>,
+}
+impl Default for OEMT {
+  fn default() -> Self {
+    Self {
+      CLASSIFICATION: None,
+      CCSDS_OEM_VERS: 0.0,
+      CREATION_DATE: None,
+      ORIGINATOR: None,
+      EPHEMERIS_DATA_BLOCK: None,
+    }
+  }
+}
+impl OEMT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<OEM<'b>> {
+    let CLASSIFICATION = self.CLASSIFICATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CCSDS_OEM_VERS = self.CCSDS_OEM_VERS;
+    let CREATION_DATE = self.CREATION_DATE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIGINATOR = self.ORIGINATOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPHEMERIS_DATA_BLOCK = self.EPHEMERIS_DATA_BLOCK.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    OEM::create(_fbb, &OEMArgs{
+      CLASSIFICATION,
+      CCSDS_OEM_VERS,
+      CREATION_DATE,
+      ORIGINATOR,
+      EPHEMERIS_DATA_BLOCK,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `PPE`
+/// Verifies that a buffer of bytes contains a `OEM`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_ppe_unchecked`.
-pub fn root_as_ppe(buf: &[u8]) -> Result<PPE<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<PPE>(buf)
+/// `root_as_oem_unchecked`.
+pub fn root_as_oem(buf: &[u8]) -> Result<OEM<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<OEM>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `PPE` and returns it.
+/// `OEM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_ppe_unchecked`.
-pub fn size_prefixed_root_as_ppe(buf: &[u8]) -> Result<PPE<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<PPE>(buf)
+/// `size_prefixed_root_as_oem_unchecked`.
+pub fn size_prefixed_root_as_oem(buf: &[u8]) -> Result<OEM<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<OEM>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `PPE` and returns it.
+/// contains a `OEM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_ppe_unchecked`.
-pub fn root_as_ppe_with_opts<'b, 'o>(
+/// `root_as_oem_unchecked`.
+pub fn root_as_oem_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<PPE<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<PPE<'b>>(opts, buf)
+) -> Result<OEM<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<OEM<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `PPE` and returns
+/// bytes contains a size prefixed `OEM` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_ppe_unchecked`.
-pub fn size_prefixed_root_as_ppe_with_opts<'b, 'o>(
+/// `root_as_oem_unchecked`.
+pub fn size_prefixed_root_as_oem_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<PPE<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<PPE<'b>>(opts, buf)
+) -> Result<OEM<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<OEM<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a PPE and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a OEM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `PPE`.
-pub unsafe fn root_as_ppe_unchecked(buf: &[u8]) -> PPE<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<PPE>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `OEM`.
+pub unsafe fn root_as_oem_unchecked(buf: &[u8]) -> OEM<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<OEM>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed PPE and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed OEM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `PPE`.
-pub unsafe fn size_prefixed_root_as_ppe_unchecked(buf: &[u8]) -> PPE<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<PPE>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `OEM`.
+pub unsafe fn size_prefixed_root_as_oem_unchecked(buf: &[u8]) -> OEM<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<OEM>(buf) }
 }
-pub const PPE_IDENTIFIER: &str = "$PPE";
+pub const OEM_IDENTIFIER: &str = "$OEM";
 
 #[inline]
-pub fn ppe_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, PPE_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn ppe_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, PPE_IDENTIFIER, true)
+pub fn oem_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, OEM_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_ppe_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn oem_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, OEM_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_oem_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<PPE<'a>>) {
-  fbb.finish(root, Some(PPE_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<OEM<'a>>) {
+  fbb.finish(root, Some(OEM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_ppe_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<PPE<'a>>) {
-  fbb.finish_size_prefixed(root, Some(PPE_IDENTIFIER));
+pub fn finish_size_prefixed_oem_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<OEM<'a>>) {
+  fbb.finish_size_prefixed(root, Some(OEM_IDENTIFIER));
 }

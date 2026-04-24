@@ -72,7 +72,18 @@ function runCodeGeneration(flatc, schemaInput, datatype) {
   for (const includeDir of flatc._cachedIncludeDirs) {
     args.push("-I", includeDir);
   }
-  for (const compilationUnit of schemaInput.compilationUnits ?? [schemaInput.entry]) {
+  // Generators that emit a single filename per input (Rust: main_generated.rs,
+  // C++: main_generated.h) collide when multiple main.fbs files share one
+  // output dir — each compilation unit overwrites the previous. Pass only the
+  // entry schema to those; -I flags above resolve imports for type checking.
+  // Per-type-output generators (TS, Python, Java, Go, etc.) still need every
+  // transitive include as a compilation unit so sibling-type files (e.g.
+  // RecordType.ts's `./STF.js` import) exist in the same output dir.
+  const flatOutputExts = new Set(["rs", "cpp"]);
+  const compilationUnits = flatOutputExts.has(datatype.ext)
+    ? [schemaInput.entry]
+    : (schemaInput.compilationUnits ?? [schemaInput.entry]);
+  for (const compilationUnit of compilationUnits) {
     args.push(compilationUnit);
   }
 

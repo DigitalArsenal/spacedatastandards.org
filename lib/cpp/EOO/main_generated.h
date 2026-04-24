@@ -13,1017 +13,1971 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-struct FrequencyRange;
-struct FrequencyRangeBuilder;
+#include "main_generated.h"
+#include "main_generated.h"
 
-struct StokesParameters;
-struct StokesParametersBuilder;
+struct EOO;
+struct EOOBuilder;
 
-struct Band;
-struct BandBuilder;
-
-struct IDM;
-struct IDMBuilder;
-
-/// Different types of polarization in EMT
-enum PolarizationType : int8_t {
-  PolarizationType_linear = 0,
-  PolarizationType_circular = 1,
-  PolarizationType_elliptical = 2,
-  PolarizationType_unpolarized = 3,
-  PolarizationType_MIN = PolarizationType_linear,
-  PolarizationType_MAX = PolarizationType_unpolarized
+/// Enumeration for data collection methods
+enum CollectMethod : int8_t {
+  CollectMethod_SIDEREAL = 0,
+  CollectMethod_RATE_TRACK = 1,
+  CollectMethod_FIXED_STARE = 2,
+  CollectMethod_OTHER = 3,
+  CollectMethod_MIN = CollectMethod_SIDEREAL,
+  CollectMethod_MAX = CollectMethod_OTHER
 };
 
-inline const PolarizationType (&EnumValuesPolarizationType())[4] {
-  static const PolarizationType values[] = {
-    PolarizationType_linear,
-    PolarizationType_circular,
-    PolarizationType_elliptical,
-    PolarizationType_unpolarized
+inline const CollectMethod (&EnumValuesCollectMethod())[4] {
+  static const CollectMethod values[] = {
+    CollectMethod_SIDEREAL,
+    CollectMethod_RATE_TRACK,
+    CollectMethod_FIXED_STARE,
+    CollectMethod_OTHER
   };
   return values;
 }
 
-inline const char * const *EnumNamesPolarizationType() {
+inline const char * const *EnumNamesCollectMethod() {
   static const char * const names[5] = {
-    "linear",
-    "circular",
-    "elliptical",
-    "unpolarized",
+    "SIDEREAL",
+    "RATE_TRACK",
+    "FIXED_STARE",
+    "OTHER",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNamePolarizationType(PolarizationType e) {
-  if (::flatbuffers::IsOutRange(e, PolarizationType_linear, PolarizationType_unpolarized)) return "";
+inline const char *EnumNameCollectMethod(CollectMethod e) {
+  if (::flatbuffers::IsOutRange(e, CollectMethod_SIDEREAL, CollectMethod_OTHER)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesPolarizationType()[index];
+  return EnumNamesCollectMethod()[index];
 }
 
-/// Simple polarization types
-enum SimplePolarization : int8_t {
-  SimplePolarization_vertical = 0,
-  SimplePolarization_horizontal = 1,
-  SimplePolarization_leftHandCircular = 2,
-  SimplePolarization_rightHandCircular = 3,
-  SimplePolarization_MIN = SimplePolarization_vertical,
-  SimplePolarization_MAX = SimplePolarization_rightHandCircular
+enum ObservationPosition : int8_t {
+  ObservationPosition_FENCE = 0,
+  ObservationPosition_FIRST = 1,
+  ObservationPosition_IN = 2,
+  ObservationPosition_LAST = 3,
+  ObservationPosition_SINGLE = 4,
+  ObservationPosition_MIN = ObservationPosition_FENCE,
+  ObservationPosition_MAX = ObservationPosition_SINGLE
 };
 
-inline const SimplePolarization (&EnumValuesSimplePolarization())[4] {
-  static const SimplePolarization values[] = {
-    SimplePolarization_vertical,
-    SimplePolarization_horizontal,
-    SimplePolarization_leftHandCircular,
-    SimplePolarization_rightHandCircular
+inline const ObservationPosition (&EnumValuesObservationPosition())[5] {
+  static const ObservationPosition values[] = {
+    ObservationPosition_FENCE,
+    ObservationPosition_FIRST,
+    ObservationPosition_IN,
+    ObservationPosition_LAST,
+    ObservationPosition_SINGLE
   };
   return values;
 }
 
-inline const char * const *EnumNamesSimplePolarization() {
-  static const char * const names[5] = {
-    "vertical",
-    "horizontal",
-    "leftHandCircular",
-    "rightHandCircular",
+inline const char * const *EnumNamesObservationPosition() {
+  static const char * const names[6] = {
+    "FENCE",
+    "FIRST",
+    "IN",
+    "LAST",
+    "SINGLE",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNameSimplePolarization(SimplePolarization e) {
-  if (::flatbuffers::IsOutRange(e, SimplePolarization_vertical, SimplePolarization_rightHandCircular)) return "";
+inline const char *EnumNameObservationPosition(ObservationPosition e) {
+  if (::flatbuffers::IsOutRange(e, ObservationPosition_FENCE, ObservationPosition_SINGLE)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesSimplePolarization()[index];
+  return EnumNamesObservationPosition()[index];
 }
 
-/// Enum for the mode of data (real, simulated, synthetic)
-enum DataMode : int8_t {
-  /// Data collected during an exercise scenario.
-  DataMode_EXERCISE = 0,
-  /// Data collected from real-world observations.
-  DataMode_REAL = 1,
-  /// Data generated through simulation.
-  DataMode_SIMULATED = 2,
-  /// Data collected for testing purposes.
-  DataMode_TEST = 3,
-  DataMode_MIN = DataMode_EXERCISE,
-  DataMode_MAX = DataMode_TEST
-};
-
-inline const DataMode (&EnumValuesDataMode())[4] {
-  static const DataMode values[] = {
-    DataMode_EXERCISE,
-    DataMode_REAL,
-    DataMode_SIMULATED,
-    DataMode_TEST
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesDataMode() {
-  static const char * const names[5] = {
-    "EXERCISE",
-    "REAL",
-    "SIMULATED",
-    "TEST",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameDataMode(DataMode e) {
-  if (::flatbuffers::IsOutRange(e, DataMode_EXERCISE, DataMode_TEST)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesDataMode()[index];
-}
-
-enum DeviceType : int8_t {
-  /// Basic or undefined sensor type
-  DeviceType_UNKNOWN = 0,
-  /// General optical sensors
-  DeviceType_OPTICAL = 1,
-  /// Detects infrared radiation
-  DeviceType_INFRARED_SENSOR = 2,
-  /// Sensitive to ultraviolet light
-  DeviceType_ULTRAVIOLET_SENSOR = 3,
-  /// For X-ray detection
-  DeviceType_X_RAY_SENSOR = 4,
-  /// For gamma-ray detection
-  DeviceType_GAMMA_RAY_SENSOR = 5,
-  /// Basic radar systems
-  DeviceType_RADAR = 6,
-  /// Advanced radar with phased array technology
-  DeviceType_PHASED_ARRAY_RADAR = 7,
-  /// For high-resolution imaging
-  DeviceType_SYNTHETIC_APERTURE_RADAR = 8,
-  /// For astronomical observations using bistatic setup
-  DeviceType_BISTATIC_RADIO_TELESCOPE = 9,
-  /// For radio astronomy
-  DeviceType_RADIO_TELESCOPE = 10,
-  /// For atmospheric studies
-  DeviceType_ATMOSPHERIC_SENSOR = 11,
-  /// For observing space weather phenomena
-  DeviceType_SPACE_WEATHER_SENSOR = 12,
-  /// General environmental monitoring
-  DeviceType_ENVIRONMENTAL_SENSOR = 13,
-  /// For measuring seismic activities
-  DeviceType_SEISMIC_SENSOR = 14,
-  /// For gravity measurements
-  DeviceType_GRAVIMETRIC_SENSOR = 15,
-  /// For magnetic field detection
-  DeviceType_MAGNETIC_SENSOR = 16,
-  /// For electromagnetic field analysis
-  DeviceType_ELECTROMAGNETIC_SENSOR = 17,
-  /// For temperature and heat detection
-  DeviceType_THERMAL_SENSOR = 18,
-  /// For detecting chemicals and substances
-  DeviceType_CHEMICAL_SENSOR = 19,
-  /// For biological research and detection
-  DeviceType_BIOLOGICAL_SENSOR = 20,
-  /// For detecting ionizing radiation
-  DeviceType_RADIATION_SENSOR = 21,
-  /// For detecting subatomic particles
-  DeviceType_PARTICLE_DETECTOR = 22,
-  /// Light Detection and Ranging
-  DeviceType_LIDAR = 23,
-  /// Sound Navigation and Ranging
-  DeviceType_SONAR = 24,
-  /// General telescopes for astronomical observations
-  DeviceType_TELESCOPE = 25,
-  /// For spectral analysis
-  DeviceType_SPECTROSCOPIC_SENSOR = 26,
-  /// For measuring light intensity
-  DeviceType_PHOTOMETRIC_SENSOR = 27,
-  /// For analyzing polarization of light
-  DeviceType_POLARIMETRIC_SENSOR = 28,
-  /// For detailed imaging using interference
-  DeviceType_INTERFEROMETRIC_SENSOR = 29,
-  /// Capturing image data at multiple wavelengths
-  DeviceType_MULTISPECTRAL_SENSOR = 30,
-  /// Advanced imaging across many spectral bands
-  DeviceType_HYPERSPECTRAL_SENSOR = 31,
-  /// For Global Positioning System reception
-  DeviceType_GPS_RECEIVER = 32,
-  /// Standard radio communication device
-  DeviceType_RADIO_COMMUNICATIONS = 33,
-  /// Advanced laser communication system
-  DeviceType_LASER_COMMUNICATIONS = 34,
-  /// Satellite communication system
-  DeviceType_SATELLITE_COMMUNICATIONS = 35,
-  /// Device for laser-based experiments and measurements
-  DeviceType_LASER_INSTRUMENT = 36,
-  /// Radio frequency analysis and measurement device
-  DeviceType_RF_ANALYZER = 37,
-  /// Device for ionospheric research
-  DeviceType_IONOSPHERIC_SENSOR = 38,
-  /// Device for laser-based imaging
-  DeviceType_LASER_IMAGING = 39,
-  /// Advanced optical telescope
-  DeviceType_OPTICAL_TELESCOPE = 40,
-  /// Device for high-resolution optical observations
-  DeviceType_HIGH_RESOLUTION_OPTICAL = 41,
-  DeviceType_RADIO = 42,
-  /// Microwave communication device
-  DeviceType_MICROWAVE_TRANSMITTER = 43,
-  /// Device for radio frequency monitoring
-  DeviceType_RF_MONITOR = 44,
-  /// High-frequency radio communication device
-  DeviceType_HF_RADIO_COMMUNICATIONS = 45,
-  DeviceType_MIN = DeviceType_UNKNOWN,
-  DeviceType_MAX = DeviceType_HF_RADIO_COMMUNICATIONS
-};
-
-inline const DeviceType (&EnumValuesDeviceType())[46] {
-  static const DeviceType values[] = {
-    DeviceType_UNKNOWN,
-    DeviceType_OPTICAL,
-    DeviceType_INFRARED_SENSOR,
-    DeviceType_ULTRAVIOLET_SENSOR,
-    DeviceType_X_RAY_SENSOR,
-    DeviceType_GAMMA_RAY_SENSOR,
-    DeviceType_RADAR,
-    DeviceType_PHASED_ARRAY_RADAR,
-    DeviceType_SYNTHETIC_APERTURE_RADAR,
-    DeviceType_BISTATIC_RADIO_TELESCOPE,
-    DeviceType_RADIO_TELESCOPE,
-    DeviceType_ATMOSPHERIC_SENSOR,
-    DeviceType_SPACE_WEATHER_SENSOR,
-    DeviceType_ENVIRONMENTAL_SENSOR,
-    DeviceType_SEISMIC_SENSOR,
-    DeviceType_GRAVIMETRIC_SENSOR,
-    DeviceType_MAGNETIC_SENSOR,
-    DeviceType_ELECTROMAGNETIC_SENSOR,
-    DeviceType_THERMAL_SENSOR,
-    DeviceType_CHEMICAL_SENSOR,
-    DeviceType_BIOLOGICAL_SENSOR,
-    DeviceType_RADIATION_SENSOR,
-    DeviceType_PARTICLE_DETECTOR,
-    DeviceType_LIDAR,
-    DeviceType_SONAR,
-    DeviceType_TELESCOPE,
-    DeviceType_SPECTROSCOPIC_SENSOR,
-    DeviceType_PHOTOMETRIC_SENSOR,
-    DeviceType_POLARIMETRIC_SENSOR,
-    DeviceType_INTERFEROMETRIC_SENSOR,
-    DeviceType_MULTISPECTRAL_SENSOR,
-    DeviceType_HYPERSPECTRAL_SENSOR,
-    DeviceType_GPS_RECEIVER,
-    DeviceType_RADIO_COMMUNICATIONS,
-    DeviceType_LASER_COMMUNICATIONS,
-    DeviceType_SATELLITE_COMMUNICATIONS,
-    DeviceType_LASER_INSTRUMENT,
-    DeviceType_RF_ANALYZER,
-    DeviceType_IONOSPHERIC_SENSOR,
-    DeviceType_LASER_IMAGING,
-    DeviceType_OPTICAL_TELESCOPE,
-    DeviceType_HIGH_RESOLUTION_OPTICAL,
-    DeviceType_RADIO,
-    DeviceType_MICROWAVE_TRANSMITTER,
-    DeviceType_RF_MONITOR,
-    DeviceType_HF_RADIO_COMMUNICATIONS
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesDeviceType() {
-  static const char * const names[47] = {
-    "UNKNOWN",
-    "OPTICAL",
-    "INFRARED_SENSOR",
-    "ULTRAVIOLET_SENSOR",
-    "X_RAY_SENSOR",
-    "GAMMA_RAY_SENSOR",
-    "RADAR",
-    "PHASED_ARRAY_RADAR",
-    "SYNTHETIC_APERTURE_RADAR",
-    "BISTATIC_RADIO_TELESCOPE",
-    "RADIO_TELESCOPE",
-    "ATMOSPHERIC_SENSOR",
-    "SPACE_WEATHER_SENSOR",
-    "ENVIRONMENTAL_SENSOR",
-    "SEISMIC_SENSOR",
-    "GRAVIMETRIC_SENSOR",
-    "MAGNETIC_SENSOR",
-    "ELECTROMAGNETIC_SENSOR",
-    "THERMAL_SENSOR",
-    "CHEMICAL_SENSOR",
-    "BIOLOGICAL_SENSOR",
-    "RADIATION_SENSOR",
-    "PARTICLE_DETECTOR",
-    "LIDAR",
-    "SONAR",
-    "TELESCOPE",
-    "SPECTROSCOPIC_SENSOR",
-    "PHOTOMETRIC_SENSOR",
-    "POLARIMETRIC_SENSOR",
-    "INTERFEROMETRIC_SENSOR",
-    "MULTISPECTRAL_SENSOR",
-    "HYPERSPECTRAL_SENSOR",
-    "GPS_RECEIVER",
-    "RADIO_COMMUNICATIONS",
-    "LASER_COMMUNICATIONS",
-    "SATELLITE_COMMUNICATIONS",
-    "LASER_INSTRUMENT",
-    "RF_ANALYZER",
-    "IONOSPHERIC_SENSOR",
-    "LASER_IMAGING",
-    "OPTICAL_TELESCOPE",
-    "HIGH_RESOLUTION_OPTICAL",
-    "RADIO",
-    "MICROWAVE_TRANSMITTER",
-    "RF_MONITOR",
-    "HF_RADIO_COMMUNICATIONS",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameDeviceType(DeviceType e) {
-  if (::flatbuffers::IsOutRange(e, DeviceType_UNKNOWN, DeviceType_HF_RADIO_COMMUNICATIONS)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesDeviceType()[index];
-}
-
-/// Frequency range with lower and upper limits
-struct FrequencyRange FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef FrequencyRangeBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_LOWER = 4,
-    VT_UPPER = 6
-  };
-  /// Lower frequency in MHz
-  double LOWER() const {
-    return GetField<double>(VT_LOWER, 0.0);
-  }
-  /// Upper frequency in MHz
-  double UPPER() const {
-    return GetField<double>(VT_UPPER, 0.0);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<double>(verifier, VT_LOWER, 8) &&
-           VerifyField<double>(verifier, VT_UPPER, 8) &&
-           verifier.EndTable();
-  }
-};
-
-struct FrequencyRangeBuilder {
-  typedef FrequencyRange Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_LOWER(double LOWER) {
-    fbb_.AddElement<double>(FrequencyRange::VT_LOWER, LOWER, 0.0);
-  }
-  void add_UPPER(double UPPER) {
-    fbb_.AddElement<double>(FrequencyRange::VT_UPPER, UPPER, 0.0);
-  }
-  explicit FrequencyRangeBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<FrequencyRange> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<FrequencyRange>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<FrequencyRange> CreateFrequencyRange(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    double LOWER = 0.0,
-    double UPPER = 0.0) {
-  FrequencyRangeBuilder builder_(_fbb);
-  builder_.add_UPPER(UPPER);
-  builder_.add_LOWER(LOWER);
-  return builder_.Finish();
-}
-
-/// Stokes parameters, representing different aspects of polarization
-struct StokesParameters FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef StokesParametersBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_I = 4,
-    VT_Q = 6,
-    VT_U = 8,
-    VT_V = 10
-  };
-  /// Intensity
-  double I() const {
-    return GetField<double>(VT_I, 0.0);
-  }
-  /// Linear polarization
-  double Q() const {
-    return GetField<double>(VT_Q, 0.0);
-  }
-  /// Another linear polarization, orthogonal to Q
-  double U() const {
-    return GetField<double>(VT_U, 0.0);
-  }
-  /// Circular polarization
-  double V() const {
-    return GetField<double>(VT_V, 0.0);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<double>(verifier, VT_I, 8) &&
-           VerifyField<double>(verifier, VT_Q, 8) &&
-           VerifyField<double>(verifier, VT_U, 8) &&
-           VerifyField<double>(verifier, VT_V, 8) &&
-           verifier.EndTable();
-  }
-};
-
-struct StokesParametersBuilder {
-  typedef StokesParameters Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_I(double I) {
-    fbb_.AddElement<double>(StokesParameters::VT_I, I, 0.0);
-  }
-  void add_Q(double Q) {
-    fbb_.AddElement<double>(StokesParameters::VT_Q, Q, 0.0);
-  }
-  void add_U(double U) {
-    fbb_.AddElement<double>(StokesParameters::VT_U, U, 0.0);
-  }
-  void add_V(double V) {
-    fbb_.AddElement<double>(StokesParameters::VT_V, V, 0.0);
-  }
-  explicit StokesParametersBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<StokesParameters> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<StokesParameters>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<StokesParameters> CreateStokesParameters(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    double I = 0.0,
-    double Q = 0.0,
-    double U = 0.0,
-    double V = 0.0) {
-  StokesParametersBuilder builder_(_fbb);
-  builder_.add_V(V);
-  builder_.add_U(U);
-  builder_.add_Q(Q);
-  builder_.add_I(I);
-  return builder_.Finish();
-}
-
-/// Table representing a frequency band with a name and frequency range
-struct Band FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef BandBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_NAME = 4,
-    VT_FREQUENCY_RANGE = 6
-  };
-  /// Name of the band
-  const ::flatbuffers::String *NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
-  }
-  /// Frequency range of the band
-  const FrequencyRange *FREQUENCY_RANGE() const {
-    return GetPointer<const FrequencyRange *>(VT_FREQUENCY_RANGE);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_NAME) &&
-           verifier.VerifyString(NAME()) &&
-           VerifyOffset(verifier, VT_FREQUENCY_RANGE) &&
-           verifier.VerifyTable(FREQUENCY_RANGE()) &&
-           verifier.EndTable();
-  }
-};
-
-struct BandBuilder {
-  typedef Band Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
-    fbb_.AddOffset(Band::VT_NAME, NAME);
-  }
-  void add_FREQUENCY_RANGE(::flatbuffers::Offset<FrequencyRange> FREQUENCY_RANGE) {
-    fbb_.AddOffset(Band::VT_FREQUENCY_RANGE, FREQUENCY_RANGE);
-  }
-  explicit BandBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<Band> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Band>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<Band> CreateBand(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
-    ::flatbuffers::Offset<FrequencyRange> FREQUENCY_RANGE = 0) {
-  BandBuilder builder_(_fbb);
-  builder_.add_FREQUENCY_RANGE(FREQUENCY_RANGE);
-  builder_.add_NAME(NAME);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<Band> CreateBandDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *NAME = nullptr,
-    ::flatbuffers::Offset<FrequencyRange> FREQUENCY_RANGE = 0) {
-  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
-  return CreateBand(
-      _fbb,
-      NAME__,
-      FREQUENCY_RANGE);
-}
-
-/// Integrated Device Message
-struct IDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef IDMBuilder Builder;
+/// Electro-Optical Observation
+struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef EOOBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
-    VT_NAME = 6,
-    VT_DATA_MODE = 8,
-    VT_UPLINK = 10,
-    VT_DOWNLINK = 12,
-    VT_BEACON = 14,
-    VT_BAND = 16,
-    VT_POLARIZATION_TYPE = 18,
-    VT_SIMPLE_POLARIZATION = 20,
-    VT_STOKES_PARAMETERS = 22,
-    VT_POWER_REQUIRED = 24,
-    VT_POWER_TYPE = 26,
-    VT_TRANSMIT = 28,
-    VT_RECEIVE = 30,
-    VT_SENSOR_TYPE = 32,
-    VT_SOURCE = 34,
-    VT_LAST_OB_TIME = 36,
-    VT_LOWER_LEFT_ELEVATION_LIMIT = 38,
-    VT_UPPER_LEFT_AZIMUTH_LIMIT = 40,
-    VT_LOWER_RIGHT_ELEVATION_LIMIT = 42,
-    VT_LOWER_LEFT_AZIMUTH_LIMIT = 44,
-    VT_UPPER_RIGHT_ELEVATION_LIMIT = 46,
-    VT_UPPER_RIGHT_AZIMUTH_LIMIT = 48,
-    VT_LOWER_RIGHT_AZIMUTH_LIMIT = 50,
-    VT_UPPER_LEFT_ELEVATION_LIMIT = 52,
-    VT_RIGHT_GEO_BELT_LIMIT = 54,
-    VT_LEFT_GEO_BELT_LIMIT = 56,
-    VT_MAGNITUDE_LIMIT = 58,
-    VT_TASKABLE = 60
+    VT_CLASSIFICATION = 6,
+    VT_OB_TIME = 8,
+    VT_CORR_QUALITY = 10,
+    VT_ID_ON_ORBIT = 12,
+    VT_SENSOR_ID = 14,
+    VT_COLLECT_METHOD = 16,
+    VT_NORAD_CAT_ID = 18,
+    VT_TASK_ID = 20,
+    VT_TRANSACTION_ID = 22,
+    VT_IMAGE_SET_ID = 24,
+    VT_IMAGE_SET_LENGTH = 26,
+    VT_SEQUENCE_ID = 28,
+    VT_OB_POSITION = 30,
+    VT_ORIG_OBJECT_ID = 32,
+    VT_ORIG_SENSOR_ID = 34,
+    VT_UCT = 36,
+    VT_AZIMUTH = 38,
+    VT_AZIMUTH_UNC = 40,
+    VT_AZIMUTH_BIAS = 42,
+    VT_AZIMUTH_RATE = 44,
+    VT_ELEVATION = 46,
+    VT_ELEVATION_UNC = 48,
+    VT_ELEVATION_BIAS = 50,
+    VT_ELEVATION_RATE = 52,
+    VT_RANGE = 54,
+    VT_RANGE_UNC = 56,
+    VT_RANGE_BIAS = 58,
+    VT_RANGE_RATE = 60,
+    VT_RANGE_RATE_UNC = 62,
+    VT_RA = 64,
+    VT_RA_RATE = 66,
+    VT_RA_UNC = 68,
+    VT_RA_BIAS = 70,
+    VT_DECLINATION = 72,
+    VT_DECLINATION_RATE = 74,
+    VT_DECLINATION_UNC = 76,
+    VT_DECLINATION_BIAS = 78,
+    VT_LOSX = 80,
+    VT_LOSY = 82,
+    VT_LOSZ = 84,
+    VT_LOS_UNC = 86,
+    VT_LOSXVEL = 88,
+    VT_LOSYVEL = 90,
+    VT_LOSZVEL = 92,
+    VT_SENLAT = 94,
+    VT_SENLON = 96,
+    VT_SENALT = 98,
+    VT_SENX = 100,
+    VT_SENY = 102,
+    VT_SENZ = 104,
+    VT_FOV_COUNT = 106,
+    VT_FOV_COUNT_UCTS = 108,
+    VT_EXP_DURATION = 110,
+    VT_ZEROPTD = 112,
+    VT_NET_OBJ_SIG = 114,
+    VT_NET_OBJ_SIG_UNC = 116,
+    VT_MAG = 118,
+    VT_MAG_UNC = 120,
+    VT_MAG_NORM_RANGE = 122,
+    VT_GEOLAT = 124,
+    VT_GEOLON = 126,
+    VT_GEOALT = 128,
+    VT_GEORANGE = 130,
+    VT_SKY_BKGRND = 132,
+    VT_PRIMARY_EXTINCTION = 134,
+    VT_PRIMARY_EXTINCTION_UNC = 136,
+    VT_SOLAR_PHASE_ANGLE = 138,
+    VT_SOLAR_EQ_PHASE_ANGLE = 140,
+    VT_SOLAR_DEC_ANGLE = 142,
+    VT_SHUTTER_DELAY = 144,
+    VT_TIMING_BIAS = 146,
+    VT_RAW_FILE_URI = 148,
+    VT_INTENSITY = 150,
+    VT_BG_INTENSITY = 152,
+    VT_DESCRIPTOR = 154,
+    VT_SOURCE = 156,
+    VT_ORIGIN = 158,
+    VT_DATA_MODE = 160,
+    VT_CREATED_AT = 162,
+    VT_CREATED_BY = 164,
+    VT_REFERENCE_FRAME = 166,
+    VT_SEN_REFERENCE_FRAME = 168,
+    VT_UMBRA = 170,
+    VT_PENUMBRA = 172,
+    VT_ORIG_NETWORK = 174,
+    VT_SOURCE_DL = 176,
+    VT_TYPE = 178,
+    VT_AZIMUTH_MEASURED = 180,
+    VT_ELEVATION_MEASURED = 182,
+    VT_RANGE_MEASURED = 184,
+    VT_RANGERATE_MEASURED = 186,
+    VT_RA_MEASURED = 188,
+    VT_DECLINATION_MEASURED = 190,
+    VT_NIIRS = 192,
+    VT_METERS_PER_PIXEL = 194,
+    VT_IMAGE_SNR = 196,
+    VT_IMAGE_BIT_DEPTH = 198,
+    VT_IMAGE_WIDTH = 200,
+    VT_IMAGE_HEIGHT = 202,
+    VT_IMAGE_COMPRESSION = 204,
+    VT_IMAGE_COMPRESSION_RATIO = 206,
+    VT_PROCESSED_IMAGE_URI = 208,
+    VT_IMAGE_AUTO_ENHANCED = 210,
+    VT_MULTI_FRAME_STACKED = 212,
+    VT_SYNTHETIC_TRACKING_USED = 214,
+    VT_IMAGE_SHARPNESS = 216,
+    VT_IMAGE_NOISE_STDDEV = 218,
+    VT_IMAGE_CONTRAST = 220,
+    VT_IMAGE_DYNAMIC_RANGE = 222,
+    VT_IMAGE_ENTROPY = 224,
+    VT_BACKGROUND_UNIFORMITY = 226,
+    VT_BACKGROUND_MEAN_LEVEL = 228,
+    VT_SATURATED_PIXEL_PERCENT = 230,
+    VT_DEAD_PIXEL_PERCENT = 232,
+    VT_PSF_FWHM = 234,
+    VT_CLOUD_COVER_PERCENT = 236,
+    VT_CLOUD_DETECTION_CONFIDENCE = 238,
+    VT_HAZE_PERCENT = 240,
+    VT_AEROSOL_OPTICAL_THICKNESS = 242,
+    VT_WATER_VAPOR_CONTENT = 244,
+    VT_SUN_ELEVATION = 246,
+    VT_SUN_AZIMUTH = 248,
+    VT_VIEW_ZENITH_ANGLE = 250,
+    VT_VIEW_AZIMUTH_ANGLE = 252,
+    VT_OFF_NADIR_ANGLE = 254,
+    VT_SWATH_WIDTH_KM = 256,
+    VT_MEAN_TERRAIN_ELEVATION = 258,
+    VT_TERRAIN_ELEVATION_STDDEV = 260,
+    VT_SHADOW_COVER_PERCENT = 262,
+    VT_SUNGLINT_PRESENT = 264,
+    VT_SUNGLINT_PERCENT = 266,
+    VT_SNOW_ICE_COVER_PERCENT = 268,
+    VT_VALID_DATA_AREA_KM2 = 270
   };
-  /// Unique identifier for the EMT
+  /// Unique identifier of the record.
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
-  /// Name of the EMT
-  const ::flatbuffers::String *NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  /// Classification marking of the data in IC/CAPCO Portion-marked format.
+  const ::flatbuffers::String *CLASSIFICATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION);
   }
-  /// Mode of the data (real, simulated, synthetic)
-  DataMode DATA_MODE() const {
-    return static_cast<DataMode>(GetField<int8_t>(VT_DATA_MODE, 0));
+  /// Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
+  const ::flatbuffers::String *OB_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OB_TIME);
   }
-  /// Uplink frequency range
-  const FrequencyRange *UPLINK() const {
-    return GetPointer<const FrequencyRange *>(VT_UPLINK);
+  /// Correlation score of the observation when compared to a known orbit state.
+  float CORR_QUALITY() const {
+    return GetField<float>(VT_CORR_QUALITY, 0.0f);
   }
-  /// Downlink frequency range
-  const FrequencyRange *DOWNLINK() const {
-    return GetPointer<const FrequencyRange *>(VT_DOWNLINK);
+  /// Server will auto-populate with SAT_NO if available.
+  const ::flatbuffers::String *ID_ON_ORBIT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ID_ON_ORBIT);
   }
-  /// Beacon frequency range
-  const FrequencyRange *BEACON() const {
-    return GetPointer<const FrequencyRange *>(VT_BEACON);
+  /// Unique ID of the sensor. Must have a corresponding sensor record on the server.
+  const ::flatbuffers::String *SENSOR_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_ID);
   }
-  /// Bands associated with the EMT
-  const ::flatbuffers::Vector<::flatbuffers::Offset<Band>> *BAND() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<Band>> *>(VT_BAND);
+  /// Accepted Collection Method
+  CollectMethod COLLECT_METHOD() const {
+    return static_cast<CollectMethod>(GetField<int8_t>(VT_COLLECT_METHOD, 0));
   }
-  /// Type of polarization used
-  PolarizationType POLARIZATION_TYPE() const {
-    return static_cast<PolarizationType>(GetField<int8_t>(VT_POLARIZATION_TYPE, 0));
+  /// 18SDS satellite number. Only list if correlated against the 18SDS catalog.
+  int32_t NORAD_CAT_ID() const {
+    return GetField<int32_t>(VT_NORAD_CAT_ID, 0);
   }
-  /// Simple polarization configuration
-  SimplePolarization SIMPLE_POLARIZATION() const {
-    return static_cast<SimplePolarization>(GetField<int8_t>(VT_SIMPLE_POLARIZATION, 0));
+  /// Identifier for the collectRequest message if the collection was in response to tasking.
+  const ::flatbuffers::String *TASK_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TASK_ID);
   }
-  /// Stokes parameters for polarization characterization
-  const StokesParameters *STOKES_PARAMETERS() const {
-    return GetPointer<const StokesParameters *>(VT_STOKES_PARAMETERS);
+  /// Optional identifier to track a transaction.
+  const ::flatbuffers::String *TRANSACTION_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
   }
-  /// Power required in Watts
-  double POWER_REQUIRED() const {
-    return GetField<double>(VT_POWER_REQUIRED, 0.0);
+  /// The user-defined set ID of a sequence of images.
+  const ::flatbuffers::String *IMAGE_SET_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IMAGE_SET_ID);
   }
-  /// Type of power (eg. AC or DC)
-  const ::flatbuffers::String *POWER_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_POWER_TYPE);
+  /// The number of images in an image set.
+  int32_t IMAGE_SET_LENGTH() const {
+    return GetField<int32_t>(VT_IMAGE_SET_LENGTH, 0);
   }
-  /// Indicates if the EMT can transmit
-  bool TRANSMIT() const {
-    return GetField<uint8_t>(VT_TRANSMIT, 0) != 0;
+  /// The sequence ID of an image within an image set.
+  int32_t SEQUENCE_ID() const {
+    return GetField<int32_t>(VT_SEQUENCE_ID, 0);
   }
-  /// Indicates if the EMT can receive
-  bool RECEIVE() const {
-    return GetField<uint8_t>(VT_RECEIVE, 0) != 0;
+  /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
+  ObservationPosition OB_POSITION() const {
+    return static_cast<ObservationPosition>(GetField<int8_t>(VT_OB_POSITION, 0));
   }
-  /// Type of the sensor
-  DeviceType SENSOR_TYPE() const {
-    return static_cast<DeviceType>(GetField<int8_t>(VT_SENSOR_TYPE, 0));
+  /// Provider maintained ID. May not be consistent with 18SDS SAT_NO.
+  const ::flatbuffers::String *ORIG_OBJECT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
-  /// Source of the data
+  /// Sensor ID.
+  const ::flatbuffers::String *ORIG_SENSOR_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
+  }
+  /// Required if correlation is attempted. Indicates whether correlation succeeded.
+  bool UCT() const {
+    return GetField<uint8_t>(VT_UCT, 0) != 0;
+  }
+  /// Line of sight azimuth angle in degrees and topocentric frame.
+  float AZIMUTH() const {
+    return GetField<float>(VT_AZIMUTH, 0.0f);
+  }
+  /// One sigma uncertainty in the line of sight azimuth angle, in degrees.
+  float AZIMUTH_UNC() const {
+    return GetField<float>(VT_AZIMUTH_UNC, 0.0f);
+  }
+  /// Sensor line of sight azimuth angle bias in degrees.
+  float AZIMUTH_BIAS() const {
+    return GetField<float>(VT_AZIMUTH_BIAS, 0.0f);
+  }
+  /// Rate of change of the line of sight azimuth in degrees per second.
+  float AZIMUTH_RATE() const {
+    return GetField<float>(VT_AZIMUTH_RATE, 0.0f);
+  }
+  /// Line of sight elevation in degrees and topocentric frame.
+  float ELEVATION() const {
+    return GetField<float>(VT_ELEVATION, 0.0f);
+  }
+  /// One sigma uncertainty in the line of sight elevation angle, in degrees.
+  float ELEVATION_UNC() const {
+    return GetField<float>(VT_ELEVATION_UNC, 0.0f);
+  }
+  /// Sensor line of sight elevation bias in degrees.
+  float ELEVATION_BIAS() const {
+    return GetField<float>(VT_ELEVATION_BIAS, 0.0f);
+  }
+  /// Rate of change of the line of sight elevation in degrees per second.
+  float ELEVATION_RATE() const {
+    return GetField<float>(VT_ELEVATION_RATE, 0.0f);
+  }
+  /// Line of sight range in km. Reported value should include all applicable corrections.
+  float RANGE() const {
+    return GetField<float>(VT_RANGE, 0.0f);
+  }
+  /// One sigma uncertainty in the line of sight range, in km.
+  float RANGE_UNC() const {
+    return GetField<float>(VT_RANGE_UNC, 0.0f);
+  }
+  /// Sensor line of sight range bias in km.
+  float RANGE_BIAS() const {
+    return GetField<float>(VT_RANGE_BIAS, 0.0f);
+  }
+  /// Range rate in km/s. Reported value should include all applicable corrections.
+  float RANGE_RATE() const {
+    return GetField<float>(VT_RANGE_RATE, 0.0f);
+  }
+  /// One sigma uncertainty in the line of sight range rate, in km/sec.
+  float RANGE_RATE_UNC() const {
+    return GetField<float>(VT_RANGE_RATE_UNC, 0.0f);
+  }
+  /// Right ascension in degrees. Required metric reporting field for EO observations.
+  float RA() const {
+    return GetField<float>(VT_RA, 0.0f);
+  }
+  /// Line of sight right ascension rate of change, in degrees/sec.
+  float RA_RATE() const {
+    return GetField<float>(VT_RA_RATE, 0.0f);
+  }
+  /// One sigma uncertainty in the line of sight right ascension angle, in degrees.
+  float RA_UNC() const {
+    return GetField<float>(VT_RA_UNC, 0.0f);
+  }
+  /// Sensor line of sight right ascension bias in degrees.
+  float RA_BIAS() const {
+    return GetField<float>(VT_RA_BIAS, 0.0f);
+  }
+  /// Declination in degrees. Required metric reporting field for EO observations.
+  float DECLINATION() const {
+    return GetField<float>(VT_DECLINATION, 0.0f);
+  }
+  /// Line of sight declination rate of change, in degrees/sec.
+  float DECLINATION_RATE() const {
+    return GetField<float>(VT_DECLINATION_RATE, 0.0f);
+  }
+  /// One sigma uncertainty in the line of sight declination angle, in degrees.
+  float DECLINATION_UNC() const {
+    return GetField<float>(VT_DECLINATION_UNC, 0.0f);
+  }
+  /// Sensor line of sight declination angle bias in degrees.
+  float DECLINATION_BIAS() const {
+    return GetField<float>(VT_DECLINATION_BIAS, 0.0f);
+  }
+  /// X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
+  float LOSX() const {
+    return GetField<float>(VT_LOSX, 0.0f);
+  }
+  /// Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
+  float LOSY() const {
+    return GetField<float>(VT_LOSY, 0.0f);
+  }
+  /// Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
+  float LOSZ() const {
+    return GetField<float>(VT_LOSZ, 0.0f);
+  }
+  /// One sigma uncertainty in the line-of-sight direction vector components.
+  float LOS_UNC() const {
+    return GetField<float>(VT_LOS_UNC, 0.0f);
+  }
+  /// X-component of the velocity vector along the line of sight, in km/s.
+  float LOSXVEL() const {
+    return GetField<float>(VT_LOSXVEL, 0.0f);
+  }
+  /// Y-component of the velocity vector along the line of sight, in km/s.
+  float LOSYVEL() const {
+    return GetField<float>(VT_LOSYVEL, 0.0f);
+  }
+  /// Z-component of the velocity vector along the line of sight, in km/s.
+  float LOSZVEL() const {
+    return GetField<float>(VT_LOSZVEL, 0.0f);
+  }
+  /// WGS-84 latitude in decimal degrees at the time of the observation.
+  float SENLAT() const {
+    return GetField<float>(VT_SENLAT, 0.0f);
+  }
+  /// WGS-84 longitude in decimal degrees at the time of the observation.
+  float SENLON() const {
+    return GetField<float>(VT_SENLON, 0.0f);
+  }
+  /// Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
+  float SENALT() const {
+    return GetField<float>(VT_SENALT, 0.0f);
+  }
+  /// Cartesian X position in km at the time of the observation.
+  float SENX() const {
+    return GetField<float>(VT_SENX, 0.0f);
+  }
+  /// Cartesian Y position in km at the time of the observation.
+  float SENY() const {
+    return GetField<float>(VT_SENY, 0.0f);
+  }
+  /// Cartesian Z position in km at the time of the observation.
+  float SENZ() const {
+    return GetField<float>(VT_SENZ, 0.0f);
+  }
+  /// Total number of satellites in the field of view.
+  int32_t FOV_COUNT() const {
+    return GetField<int32_t>(VT_FOV_COUNT, 0);
+  }
+  /// Number of uncorrelated satellites in the field of view (JCO).
+  int32_t FOV_COUNT_UCTS() const {
+    return GetField<int32_t>(VT_FOV_COUNT_UCTS, 0);
+  }
+  /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+  /// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+  /// observations are going to be used for photometric processing.
+  float EXP_DURATION() const {
+    return GetField<float>(VT_EXP_DURATION, 0.0f);
+  }
+  /// Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
+  float ZEROPTD() const {
+    return GetField<float>(VT_ZEROPTD, 0.0f);
+  }
+  /// Net object signature = counts / EXP_DURATION.
+  float NET_OBJ_SIG() const {
+    return GetField<float>(VT_NET_OBJ_SIG, 0.0f);
+  }
+  /// Net object signature uncertainty = counts uncertainty / EXP_DURATION.
+  float NET_OBJ_SIG_UNC() const {
+    return GetField<float>(VT_NET_OBJ_SIG_UNC, 0.0f);
+  }
+  /// Measure of observed brightness calibrated against the Gaia G-band.
+  float MAG() const {
+    return GetField<float>(VT_MAG, 0.0f);
+  }
+  /// Uncertainty of the observed brightness.
+  float MAG_UNC() const {
+    return GetField<float>(VT_MAG_UNC, 0.0f);
+  }
+  /// [Definition needed].
+  float MAG_NORM_RANGE() const {
+    return GetField<float>(VT_MAG_NORM_RANGE, 0.0f);
+  }
+  /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+  /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
+  float GEOLAT() const {
+    return GetField<float>(VT_GEOLAT, 0.0f);
+  }
+  /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+  /// and viewing geometry. It must NOT be computed from the orbit state.
+  float GEOLON() const {
+    return GetField<float>(VT_GEOLON, 0.0f);
+  }
+  /// Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
+  float GEOALT() const {
+    return GetField<float>(VT_GEOALT, 0.0f);
+  }
+  /// Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
+  float GEORANGE() const {
+    return GetField<float>(VT_GEORANGE, 0.0f);
+  }
+  /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+  /// empty part of the night sky.
+  float SKY_BKGRND() const {
+    return GetField<float>(VT_SKY_BKGRND, 0.0f);
+  }
+  /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+  /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+  /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+  /// object and the observer.
+  float PRIMARY_EXTINCTION() const {
+    return GetField<float>(VT_PRIMARY_EXTINCTION, 0.0f);
+  }
+  /// Primary Extinction Coefficient Uncertainty, in Magnitudes.
+  float PRIMARY_EXTINCTION_UNC() const {
+    return GetField<float>(VT_PRIMARY_EXTINCTION_UNC, 0.0f);
+  }
+  /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+  /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
+  float SOLAR_PHASE_ANGLE() const {
+    return GetField<float>(VT_SOLAR_PHASE_ANGLE, 0.0f);
+  }
+  /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+  /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+  /// and positive when opening (after the opposition).
+  float SOLAR_EQ_PHASE_ANGLE() const {
+    return GetField<float>(VT_SOLAR_EQ_PHASE_ANGLE, 0.0f);
+  }
+  /// Angle from the sun to the equatorial plane.
+  float SOLAR_DEC_ANGLE() const {
+    return GetField<float>(VT_SOLAR_DEC_ANGLE, 0.0f);
+  }
+  /// Shutter delay in seconds.
+  float SHUTTER_DELAY() const {
+    return GetField<float>(VT_SHUTTER_DELAY, 0.0f);
+  }
+  /// Sensor timing bias in seconds.
+  float TIMING_BIAS() const {
+    return GetField<float>(VT_TIMING_BIAS, 0.0f);
+  }
+  /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
+  const ::flatbuffers::String *RAW_FILE_URI() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RAW_FILE_URI);
+  }
+  /// Intensity of the target for IR observations, in kw/sr/em.
+  float INTENSITY() const {
+    return GetField<float>(VT_INTENSITY, 0.0f);
+  }
+  /// Background intensity for IR observations, in kw/sr/um.
+  float BG_INTENSITY() const {
+    return GetField<float>(VT_BG_INTENSITY, 0.0f);
+  }
+  /// Optional source-provided and searchable metadata or descriptor of the data.
+  const ::flatbuffers::String *DESCRIPTOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTOR);
+  }
+  /// Source of the data.
   const ::flatbuffers::String *SOURCE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE);
   }
-  /// Timestamp of the last observation
-  const ::flatbuffers::String *LAST_OB_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LAST_OB_TIME);
+  /// Originating system or organization which produced the data, if different from the source.
+  /// The origin may be different than the source if the source was a mediating system which forwarded 
+  /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
+  const ::flatbuffers::String *ORIGIN() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIGIN);
   }
-  /// Lower left elevation limit
-  double LOWER_LEFT_ELEVATION_LIMIT() const {
-    return GetField<double>(VT_LOWER_LEFT_ELEVATION_LIMIT, 0.0);
+  /// Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
+  DataMode DATA_MODE() const {
+    return static_cast<DataMode>(GetField<int8_t>(VT_DATA_MODE, 0));
   }
-  /// Upper left azimuth limit
-  double UPPER_LEFT_AZIMUTH_LIMIT() const {
-    return GetField<double>(VT_UPPER_LEFT_AZIMUTH_LIMIT, 0.0);
+  /// Time the row was created in the database, auto-populated by the system.
+  const ::flatbuffers::String *CREATED_AT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CREATED_AT);
   }
-  /// Lower right elevation limit
-  double LOWER_RIGHT_ELEVATION_LIMIT() const {
-    return GetField<double>(VT_LOWER_RIGHT_ELEVATION_LIMIT, 0.0);
+  /// Application user who created the row in the database, auto-populated by the system.
+  const ::flatbuffers::String *CREATED_BY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CREATED_BY);
   }
-  /// Lower left azimuth limit
-  double LOWER_LEFT_AZIMUTH_LIMIT() const {
-    return GetField<double>(VT_LOWER_LEFT_AZIMUTH_LIMIT, 0.0);
+  /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
+  const RFM *REFERENCE_FRAME() const {
+    return GetPointer<const RFM *>(VT_REFERENCE_FRAME);
   }
-  /// Upper right elevation limit
-  double UPPER_RIGHT_ELEVATION_LIMIT() const {
-    return GetField<double>(VT_UPPER_RIGHT_ELEVATION_LIMIT, 0.0);
+  /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+  /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+  /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
+  const RFM *SEN_REFERENCE_FRAME() const {
+    return GetPointer<const RFM *>(VT_SEN_REFERENCE_FRAME);
   }
-  /// Upper right azimuth limit
-  double UPPER_RIGHT_AZIMUTH_LIMIT() const {
-    return GetField<double>(VT_UPPER_RIGHT_AZIMUTH_LIMIT, 0.0);
+  /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
+  bool UMBRA() const {
+    return GetField<uint8_t>(VT_UMBRA, 0) != 0;
   }
-  /// Lower right azimuth limit
-  double LOWER_RIGHT_AZIMUTH_LIMIT() const {
-    return GetField<double>(VT_LOWER_RIGHT_AZIMUTH_LIMIT, 0.0);
+  /// Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+  /// This field is highly recommended if the observations will be used for photometric processing.
+  bool PENUMBRA() const {
+    return GetField<uint8_t>(VT_PENUMBRA, 0) != 0;
   }
-  /// Upper left elevation limit
-  double UPPER_LEFT_ELEVATION_LIMIT() const {
-    return GetField<double>(VT_UPPER_LEFT_ELEVATION_LIMIT, 0.0);
+  /// The originating source network on which this record was created, auto-populated by the system.
+  const ::flatbuffers::String *ORIG_NETWORK() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_NETWORK);
   }
-  /// Right geostationary belt limit
-  double RIGHT_GEO_BELT_LIMIT() const {
-    return GetField<double>(VT_RIGHT_GEO_BELT_LIMIT, 0.0);
+  /// The source from which this record was received.
+  const ::flatbuffers::String *SOURCE_DL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_DL);
   }
-  /// Left geostationary belt limit
-  double LEFT_GEO_BELT_LIMIT() const {
-    return GetField<double>(VT_LEFT_GEO_BELT_LIMIT, 0.0);
+  /// Device Type
+  DeviceType TYPE() const {
+    return static_cast<DeviceType>(GetField<int8_t>(VT_TYPE, 0));
   }
-  /// Magnitude limit of the sensor
-  double MAGNITUDE_LIMIT() const {
-    return GetField<double>(VT_MAGNITUDE_LIMIT, 0.0);
+  /// True if measured, false if computed. Required if azimuth is reported.
+  bool AZIMUTH_MEASURED() const {
+    return GetField<uint8_t>(VT_AZIMUTH_MEASURED, 0) != 0;
   }
-  /// Indicates if the site is taskable
-  bool TASKABLE() const {
-    return GetField<uint8_t>(VT_TASKABLE, 0) != 0;
+  /// True if measured, false if computed. Required if elevation is reported.
+  bool ELEVATION_MEASURED() const {
+    return GetField<uint8_t>(VT_ELEVATION_MEASURED, 0) != 0;
+  }
+  /// True if measured, false if computed. Required if range is reported.
+  bool RANGE_MEASURED() const {
+    return GetField<uint8_t>(VT_RANGE_MEASURED, 0) != 0;
+  }
+  /// True if measured, false if computed. Required if range-rate is reported.
+  bool RANGERATE_MEASURED() const {
+    return GetField<uint8_t>(VT_RANGERATE_MEASURED, 0) != 0;
+  }
+  /// True if measured, false if computed. Required if right ascension is reported.
+  bool RA_MEASURED() const {
+    return GetField<uint8_t>(VT_RA_MEASURED, 0) != 0;
+  }
+  /// True if measured, false if computed. Required if declination is reported.
+  bool DECLINATION_MEASURED() const {
+    return GetField<uint8_t>(VT_DECLINATION_MEASURED, 0) != 0;
+  }
+  /// National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+  float NIIRS() const {
+    return GetField<float>(VT_NIIRS, 0.0f);
+  }
+  /// Ground sample distance in meters per pixel.
+  float METERS_PER_PIXEL() const {
+    return GetField<float>(VT_METERS_PER_PIXEL, 0.0f);
+  }
+  /// Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+  float IMAGE_SNR() const {
+    return GetField<float>(VT_IMAGE_SNR, 0.0f);
+  }
+  /// Bit depth of the image (e.g., 8, 12, 16).
+  int32_t IMAGE_BIT_DEPTH() const {
+    return GetField<int32_t>(VT_IMAGE_BIT_DEPTH, 0);
+  }
+  /// Width of the image in pixels.
+  int32_t IMAGE_WIDTH() const {
+    return GetField<int32_t>(VT_IMAGE_WIDTH, 0);
+  }
+  /// Height of the image in pixels.
+  int32_t IMAGE_HEIGHT() const {
+    return GetField<int32_t>(VT_IMAGE_HEIGHT, 0);
+  }
+  /// Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+  const ::flatbuffers::String *IMAGE_COMPRESSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IMAGE_COMPRESSION);
+  }
+  /// Compression ratio used (original size / compressed size), if applicable.
+  float IMAGE_COMPRESSION_RATIO() const {
+    return GetField<float>(VT_IMAGE_COMPRESSION_RATIO, 0.0f);
+  }
+  /// URI to the processed image used for this observation.
+  const ::flatbuffers::String *PROCESSED_IMAGE_URI() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PROCESSED_IMAGE_URI);
+  }
+  /// Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+  bool IMAGE_AUTO_ENHANCED() const {
+    return GetField<uint8_t>(VT_IMAGE_AUTO_ENHANCED, 0) != 0;
+  }
+  /// True if the observation was taken with multiple frames stacked into one image.
+  bool MULTI_FRAME_STACKED() const {
+    return GetField<uint8_t>(VT_MULTI_FRAME_STACKED, 0) != 0;
+  }
+  /// True if synthetic tracking was used to create the image.
+  bool SYNTHETIC_TRACKING_USED() const {
+    return GetField<uint8_t>(VT_SYNTHETIC_TRACKING_USED, 0) != 0;
+  }
+  /// Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+  float IMAGE_SHARPNESS() const {
+    return GetField<float>(VT_IMAGE_SHARPNESS, 0.0f);
+  }
+  /// Noise level of the image, estimated via pixel intensity variance in background regions.
+  float IMAGE_NOISE_STDDEV() const {
+    return GetField<float>(VT_IMAGE_NOISE_STDDEV, 0.0f);
+  }
+  /// Contrast metric of the image, such as Michelson contrast or RMS contrast.
+  float IMAGE_CONTRAST() const {
+    return GetField<float>(VT_IMAGE_CONTRAST, 0.0f);
+  }
+  /// Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+  float IMAGE_DYNAMIC_RANGE() const {
+    return GetField<float>(VT_IMAGE_DYNAMIC_RANGE, 0.0f);
+  }
+  /// Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+  float IMAGE_ENTROPY() const {
+    return GetField<float>(VT_IMAGE_ENTROPY, 0.0f);
+  }
+  /// Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+  float BACKGROUND_UNIFORMITY() const {
+    return GetField<float>(VT_BACKGROUND_UNIFORMITY, 0.0f);
+  }
+  /// Mean background level, computed from non-object regions in pixel units.
+  float BACKGROUND_MEAN_LEVEL() const {
+    return GetField<float>(VT_BACKGROUND_MEAN_LEVEL, 0.0f);
+  }
+  /// Percentage of saturated pixels in the image. Indicates overexposure when high.
+  float SATURATED_PIXEL_PERCENT() const {
+    return GetField<float>(VT_SATURATED_PIXEL_PERCENT, 0.0f);
+  }
+  /// Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+  float DEAD_PIXEL_PERCENT() const {
+    return GetField<float>(VT_DEAD_PIXEL_PERCENT, 0.0f);
+  }
+  /// Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+  float PSF_FWHM() const {
+    return GetField<float>(VT_PSF_FWHM, 0.0f);
+  }
+  /// Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+  float CLOUD_COVER_PERCENT() const {
+    return GetField<float>(VT_CLOUD_COVER_PERCENT, 0.0f);
+  }
+  /// Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+  float CLOUD_DETECTION_CONFIDENCE() const {
+    return GetField<float>(VT_CLOUD_DETECTION_CONFIDENCE, 0.0f);
+  }
+  /// Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+  float HAZE_PERCENT() const {
+    return GetField<float>(VT_HAZE_PERCENT, 0.0f);
+  }
+  /// Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+  float AEROSOL_OPTICAL_THICKNESS() const {
+    return GetField<float>(VT_AEROSOL_OPTICAL_THICKNESS, 0.0f);
+  }
+  /// Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+  float WATER_VAPOR_CONTENT() const {
+    return GetField<float>(VT_WATER_VAPOR_CONTENT, 0.0f);
+  }
+  /// Sun elevation angle at the time of image capture, in degrees above the horizon.
+  float SUN_ELEVATION() const {
+    return GetField<float>(VT_SUN_ELEVATION, 0.0f);
+  }
+  /// Sun azimuth angle at the time of image capture, in degrees from true north.
+  float SUN_AZIMUTH() const {
+    return GetField<float>(VT_SUN_AZIMUTH, 0.0f);
+  }
+  /// View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+  float VIEW_ZENITH_ANGLE() const {
+    return GetField<float>(VT_VIEW_ZENITH_ANGLE, 0.0f);
+  }
+  /// View azimuth angle (direction of sensor relative to north), in degrees.
+  float VIEW_AZIMUTH_ANGLE() const {
+    return GetField<float>(VT_VIEW_AZIMUTH_ANGLE, 0.0f);
+  }
+  /// Off-nadir angle of the sensor at the time of image capture, in degrees.
+  float OFF_NADIR_ANGLE() const {
+    return GetField<float>(VT_OFF_NADIR_ANGLE, 0.0f);
+  }
+  /// Ground coverage width of the image swath in kilometers.
+  float SWATH_WIDTH_KM() const {
+    return GetField<float>(VT_SWATH_WIDTH_KM, 0.0f);
+  }
+  /// Mean terrain elevation in the image footprint, in meters above sea level.
+  float MEAN_TERRAIN_ELEVATION() const {
+    return GetField<float>(VT_MEAN_TERRAIN_ELEVATION, 0.0f);
+  }
+  /// Standard deviation of terrain elevation in the image footprint, in meters.
+  float TERRAIN_ELEVATION_STDDEV() const {
+    return GetField<float>(VT_TERRAIN_ELEVATION_STDDEV, 0.0f);
+  }
+  /// Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+  float SHADOW_COVER_PERCENT() const {
+    return GetField<float>(VT_SHADOW_COVER_PERCENT, 0.0f);
+  }
+  /// Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+  bool SUNGLINT_PRESENT() const {
+    return GetField<uint8_t>(VT_SUNGLINT_PRESENT, 0) != 0;
+  }
+  /// Percentage of image affected by sunglint.
+  float SUNGLINT_PERCENT() const {
+    return GetField<float>(VT_SUNGLINT_PERCENT, 0.0f);
+  }
+  /// Estimated percentage of snow or ice coverage in the image footprint.
+  float SNOW_ICE_COVER_PERCENT() const {
+    return GetField<float>(VT_SNOW_ICE_COVER_PERCENT, 0.0f);
+  }
+  /// Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+  float VALID_DATA_AREA_KM2() const {
+    return GetField<float>(VT_VALID_DATA_AREA_KM2, 0.0f);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
-           VerifyOffset(verifier, VT_NAME) &&
-           verifier.VerifyString(NAME()) &&
-           VerifyField<int8_t>(verifier, VT_DATA_MODE, 1) &&
-           VerifyOffset(verifier, VT_UPLINK) &&
-           verifier.VerifyTable(UPLINK()) &&
-           VerifyOffset(verifier, VT_DOWNLINK) &&
-           verifier.VerifyTable(DOWNLINK()) &&
-           VerifyOffset(verifier, VT_BEACON) &&
-           verifier.VerifyTable(BEACON()) &&
-           VerifyOffset(verifier, VT_BAND) &&
-           verifier.VerifyVector(BAND()) &&
-           verifier.VerifyVectorOfTables(BAND()) &&
-           VerifyField<int8_t>(verifier, VT_POLARIZATION_TYPE, 1) &&
-           VerifyField<int8_t>(verifier, VT_SIMPLE_POLARIZATION, 1) &&
-           VerifyOffset(verifier, VT_STOKES_PARAMETERS) &&
-           verifier.VerifyTable(STOKES_PARAMETERS()) &&
-           VerifyField<double>(verifier, VT_POWER_REQUIRED, 8) &&
-           VerifyOffset(verifier, VT_POWER_TYPE) &&
-           verifier.VerifyString(POWER_TYPE()) &&
-           VerifyField<uint8_t>(verifier, VT_TRANSMIT, 1) &&
-           VerifyField<uint8_t>(verifier, VT_RECEIVE, 1) &&
-           VerifyField<int8_t>(verifier, VT_SENSOR_TYPE, 1) &&
+           VerifyOffset(verifier, VT_CLASSIFICATION) &&
+           verifier.VerifyString(CLASSIFICATION()) &&
+           VerifyOffset(verifier, VT_OB_TIME) &&
+           verifier.VerifyString(OB_TIME()) &&
+           VerifyField<float>(verifier, VT_CORR_QUALITY, 4) &&
+           VerifyOffset(verifier, VT_ID_ON_ORBIT) &&
+           verifier.VerifyString(ID_ON_ORBIT()) &&
+           VerifyOffset(verifier, VT_SENSOR_ID) &&
+           verifier.VerifyString(SENSOR_ID()) &&
+           VerifyField<int8_t>(verifier, VT_COLLECT_METHOD, 1) &&
+           VerifyField<int32_t>(verifier, VT_NORAD_CAT_ID, 4) &&
+           VerifyOffset(verifier, VT_TASK_ID) &&
+           verifier.VerifyString(TASK_ID()) &&
+           VerifyOffset(verifier, VT_TRANSACTION_ID) &&
+           verifier.VerifyString(TRANSACTION_ID()) &&
+           VerifyOffset(verifier, VT_IMAGE_SET_ID) &&
+           verifier.VerifyString(IMAGE_SET_ID()) &&
+           VerifyField<int32_t>(verifier, VT_IMAGE_SET_LENGTH, 4) &&
+           VerifyField<int32_t>(verifier, VT_SEQUENCE_ID, 4) &&
+           VerifyField<int8_t>(verifier, VT_OB_POSITION, 1) &&
+           VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
+           verifier.VerifyString(ORIG_OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_ORIG_SENSOR_ID) &&
+           verifier.VerifyString(ORIG_SENSOR_ID()) &&
+           VerifyField<uint8_t>(verifier, VT_UCT, 1) &&
+           VerifyField<float>(verifier, VT_AZIMUTH, 4) &&
+           VerifyField<float>(verifier, VT_AZIMUTH_UNC, 4) &&
+           VerifyField<float>(verifier, VT_AZIMUTH_BIAS, 4) &&
+           VerifyField<float>(verifier, VT_AZIMUTH_RATE, 4) &&
+           VerifyField<float>(verifier, VT_ELEVATION, 4) &&
+           VerifyField<float>(verifier, VT_ELEVATION_UNC, 4) &&
+           VerifyField<float>(verifier, VT_ELEVATION_BIAS, 4) &&
+           VerifyField<float>(verifier, VT_ELEVATION_RATE, 4) &&
+           VerifyField<float>(verifier, VT_RANGE, 4) &&
+           VerifyField<float>(verifier, VT_RANGE_UNC, 4) &&
+           VerifyField<float>(verifier, VT_RANGE_BIAS, 4) &&
+           VerifyField<float>(verifier, VT_RANGE_RATE, 4) &&
+           VerifyField<float>(verifier, VT_RANGE_RATE_UNC, 4) &&
+           VerifyField<float>(verifier, VT_RA, 4) &&
+           VerifyField<float>(verifier, VT_RA_RATE, 4) &&
+           VerifyField<float>(verifier, VT_RA_UNC, 4) &&
+           VerifyField<float>(verifier, VT_RA_BIAS, 4) &&
+           VerifyField<float>(verifier, VT_DECLINATION, 4) &&
+           VerifyField<float>(verifier, VT_DECLINATION_RATE, 4) &&
+           VerifyField<float>(verifier, VT_DECLINATION_UNC, 4) &&
+           VerifyField<float>(verifier, VT_DECLINATION_BIAS, 4) &&
+           VerifyField<float>(verifier, VT_LOSX, 4) &&
+           VerifyField<float>(verifier, VT_LOSY, 4) &&
+           VerifyField<float>(verifier, VT_LOSZ, 4) &&
+           VerifyField<float>(verifier, VT_LOS_UNC, 4) &&
+           VerifyField<float>(verifier, VT_LOSXVEL, 4) &&
+           VerifyField<float>(verifier, VT_LOSYVEL, 4) &&
+           VerifyField<float>(verifier, VT_LOSZVEL, 4) &&
+           VerifyField<float>(verifier, VT_SENLAT, 4) &&
+           VerifyField<float>(verifier, VT_SENLON, 4) &&
+           VerifyField<float>(verifier, VT_SENALT, 4) &&
+           VerifyField<float>(verifier, VT_SENX, 4) &&
+           VerifyField<float>(verifier, VT_SENY, 4) &&
+           VerifyField<float>(verifier, VT_SENZ, 4) &&
+           VerifyField<int32_t>(verifier, VT_FOV_COUNT, 4) &&
+           VerifyField<int32_t>(verifier, VT_FOV_COUNT_UCTS, 4) &&
+           VerifyField<float>(verifier, VT_EXP_DURATION, 4) &&
+           VerifyField<float>(verifier, VT_ZEROPTD, 4) &&
+           VerifyField<float>(verifier, VT_NET_OBJ_SIG, 4) &&
+           VerifyField<float>(verifier, VT_NET_OBJ_SIG_UNC, 4) &&
+           VerifyField<float>(verifier, VT_MAG, 4) &&
+           VerifyField<float>(verifier, VT_MAG_UNC, 4) &&
+           VerifyField<float>(verifier, VT_MAG_NORM_RANGE, 4) &&
+           VerifyField<float>(verifier, VT_GEOLAT, 4) &&
+           VerifyField<float>(verifier, VT_GEOLON, 4) &&
+           VerifyField<float>(verifier, VT_GEOALT, 4) &&
+           VerifyField<float>(verifier, VT_GEORANGE, 4) &&
+           VerifyField<float>(verifier, VT_SKY_BKGRND, 4) &&
+           VerifyField<float>(verifier, VT_PRIMARY_EXTINCTION, 4) &&
+           VerifyField<float>(verifier, VT_PRIMARY_EXTINCTION_UNC, 4) &&
+           VerifyField<float>(verifier, VT_SOLAR_PHASE_ANGLE, 4) &&
+           VerifyField<float>(verifier, VT_SOLAR_EQ_PHASE_ANGLE, 4) &&
+           VerifyField<float>(verifier, VT_SOLAR_DEC_ANGLE, 4) &&
+           VerifyField<float>(verifier, VT_SHUTTER_DELAY, 4) &&
+           VerifyField<float>(verifier, VT_TIMING_BIAS, 4) &&
+           VerifyOffset(verifier, VT_RAW_FILE_URI) &&
+           verifier.VerifyString(RAW_FILE_URI()) &&
+           VerifyField<float>(verifier, VT_INTENSITY, 4) &&
+           VerifyField<float>(verifier, VT_BG_INTENSITY, 4) &&
+           VerifyOffset(verifier, VT_DESCRIPTOR) &&
+           verifier.VerifyString(DESCRIPTOR()) &&
            VerifyOffset(verifier, VT_SOURCE) &&
            verifier.VerifyString(SOURCE()) &&
-           VerifyOffset(verifier, VT_LAST_OB_TIME) &&
-           verifier.VerifyString(LAST_OB_TIME()) &&
-           VerifyField<double>(verifier, VT_LOWER_LEFT_ELEVATION_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_UPPER_LEFT_AZIMUTH_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_LOWER_RIGHT_ELEVATION_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_LOWER_LEFT_AZIMUTH_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_UPPER_RIGHT_ELEVATION_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_UPPER_RIGHT_AZIMUTH_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_LOWER_RIGHT_AZIMUTH_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_UPPER_LEFT_ELEVATION_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_RIGHT_GEO_BELT_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_LEFT_GEO_BELT_LIMIT, 8) &&
-           VerifyField<double>(verifier, VT_MAGNITUDE_LIMIT, 8) &&
-           VerifyField<uint8_t>(verifier, VT_TASKABLE, 1) &&
+           VerifyOffset(verifier, VT_ORIGIN) &&
+           verifier.VerifyString(ORIGIN()) &&
+           VerifyField<int8_t>(verifier, VT_DATA_MODE, 1) &&
+           VerifyOffset(verifier, VT_CREATED_AT) &&
+           verifier.VerifyString(CREATED_AT()) &&
+           VerifyOffset(verifier, VT_CREATED_BY) &&
+           verifier.VerifyString(CREATED_BY()) &&
+           VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
+           verifier.VerifyTable(REFERENCE_FRAME()) &&
+           VerifyOffset(verifier, VT_SEN_REFERENCE_FRAME) &&
+           verifier.VerifyTable(SEN_REFERENCE_FRAME()) &&
+           VerifyField<uint8_t>(verifier, VT_UMBRA, 1) &&
+           VerifyField<uint8_t>(verifier, VT_PENUMBRA, 1) &&
+           VerifyOffset(verifier, VT_ORIG_NETWORK) &&
+           verifier.VerifyString(ORIG_NETWORK()) &&
+           VerifyOffset(verifier, VT_SOURCE_DL) &&
+           verifier.VerifyString(SOURCE_DL()) &&
+           VerifyField<int8_t>(verifier, VT_TYPE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_AZIMUTH_MEASURED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_ELEVATION_MEASURED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_RANGE_MEASURED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_RANGERATE_MEASURED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_RA_MEASURED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_DECLINATION_MEASURED, 1) &&
+           VerifyField<float>(verifier, VT_NIIRS, 4) &&
+           VerifyField<float>(verifier, VT_METERS_PER_PIXEL, 4) &&
+           VerifyField<float>(verifier, VT_IMAGE_SNR, 4) &&
+           VerifyField<int32_t>(verifier, VT_IMAGE_BIT_DEPTH, 4) &&
+           VerifyField<int32_t>(verifier, VT_IMAGE_WIDTH, 4) &&
+           VerifyField<int32_t>(verifier, VT_IMAGE_HEIGHT, 4) &&
+           VerifyOffset(verifier, VT_IMAGE_COMPRESSION) &&
+           verifier.VerifyString(IMAGE_COMPRESSION()) &&
+           VerifyField<float>(verifier, VT_IMAGE_COMPRESSION_RATIO, 4) &&
+           VerifyOffset(verifier, VT_PROCESSED_IMAGE_URI) &&
+           verifier.VerifyString(PROCESSED_IMAGE_URI()) &&
+           VerifyField<uint8_t>(verifier, VT_IMAGE_AUTO_ENHANCED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_MULTI_FRAME_STACKED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_SYNTHETIC_TRACKING_USED, 1) &&
+           VerifyField<float>(verifier, VT_IMAGE_SHARPNESS, 4) &&
+           VerifyField<float>(verifier, VT_IMAGE_NOISE_STDDEV, 4) &&
+           VerifyField<float>(verifier, VT_IMAGE_CONTRAST, 4) &&
+           VerifyField<float>(verifier, VT_IMAGE_DYNAMIC_RANGE, 4) &&
+           VerifyField<float>(verifier, VT_IMAGE_ENTROPY, 4) &&
+           VerifyField<float>(verifier, VT_BACKGROUND_UNIFORMITY, 4) &&
+           VerifyField<float>(verifier, VT_BACKGROUND_MEAN_LEVEL, 4) &&
+           VerifyField<float>(verifier, VT_SATURATED_PIXEL_PERCENT, 4) &&
+           VerifyField<float>(verifier, VT_DEAD_PIXEL_PERCENT, 4) &&
+           VerifyField<float>(verifier, VT_PSF_FWHM, 4) &&
+           VerifyField<float>(verifier, VT_CLOUD_COVER_PERCENT, 4) &&
+           VerifyField<float>(verifier, VT_CLOUD_DETECTION_CONFIDENCE, 4) &&
+           VerifyField<float>(verifier, VT_HAZE_PERCENT, 4) &&
+           VerifyField<float>(verifier, VT_AEROSOL_OPTICAL_THICKNESS, 4) &&
+           VerifyField<float>(verifier, VT_WATER_VAPOR_CONTENT, 4) &&
+           VerifyField<float>(verifier, VT_SUN_ELEVATION, 4) &&
+           VerifyField<float>(verifier, VT_SUN_AZIMUTH, 4) &&
+           VerifyField<float>(verifier, VT_VIEW_ZENITH_ANGLE, 4) &&
+           VerifyField<float>(verifier, VT_VIEW_AZIMUTH_ANGLE, 4) &&
+           VerifyField<float>(verifier, VT_OFF_NADIR_ANGLE, 4) &&
+           VerifyField<float>(verifier, VT_SWATH_WIDTH_KM, 4) &&
+           VerifyField<float>(verifier, VT_MEAN_TERRAIN_ELEVATION, 4) &&
+           VerifyField<float>(verifier, VT_TERRAIN_ELEVATION_STDDEV, 4) &&
+           VerifyField<float>(verifier, VT_SHADOW_COVER_PERCENT, 4) &&
+           VerifyField<uint8_t>(verifier, VT_SUNGLINT_PRESENT, 1) &&
+           VerifyField<float>(verifier, VT_SUNGLINT_PERCENT, 4) &&
+           VerifyField<float>(verifier, VT_SNOW_ICE_COVER_PERCENT, 4) &&
+           VerifyField<float>(verifier, VT_VALID_DATA_AREA_KM2, 4) &&
            verifier.EndTable();
   }
 };
 
-struct IDMBuilder {
-  typedef IDM Table;
+struct EOOBuilder {
+  typedef EOO Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
-    fbb_.AddOffset(IDM::VT_ID, ID);
+    fbb_.AddOffset(EOO::VT_ID, ID);
   }
-  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
-    fbb_.AddOffset(IDM::VT_NAME, NAME);
+  void add_CLASSIFICATION(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION) {
+    fbb_.AddOffset(EOO::VT_CLASSIFICATION, CLASSIFICATION);
   }
-  void add_DATA_MODE(DataMode DATA_MODE) {
-    fbb_.AddElement<int8_t>(IDM::VT_DATA_MODE, static_cast<int8_t>(DATA_MODE), 0);
+  void add_OB_TIME(::flatbuffers::Offset<::flatbuffers::String> OB_TIME) {
+    fbb_.AddOffset(EOO::VT_OB_TIME, OB_TIME);
   }
-  void add_UPLINK(::flatbuffers::Offset<FrequencyRange> UPLINK) {
-    fbb_.AddOffset(IDM::VT_UPLINK, UPLINK);
+  void add_CORR_QUALITY(float CORR_QUALITY) {
+    fbb_.AddElement<float>(EOO::VT_CORR_QUALITY, CORR_QUALITY, 0.0f);
   }
-  void add_DOWNLINK(::flatbuffers::Offset<FrequencyRange> DOWNLINK) {
-    fbb_.AddOffset(IDM::VT_DOWNLINK, DOWNLINK);
+  void add_ID_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ID_ON_ORBIT) {
+    fbb_.AddOffset(EOO::VT_ID_ON_ORBIT, ID_ON_ORBIT);
   }
-  void add_BEACON(::flatbuffers::Offset<FrequencyRange> BEACON) {
-    fbb_.AddOffset(IDM::VT_BEACON, BEACON);
+  void add_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID) {
+    fbb_.AddOffset(EOO::VT_SENSOR_ID, SENSOR_ID);
   }
-  void add_BAND(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<Band>>> BAND) {
-    fbb_.AddOffset(IDM::VT_BAND, BAND);
+  void add_COLLECT_METHOD(CollectMethod COLLECT_METHOD) {
+    fbb_.AddElement<int8_t>(EOO::VT_COLLECT_METHOD, static_cast<int8_t>(COLLECT_METHOD), 0);
   }
-  void add_POLARIZATION_TYPE(PolarizationType POLARIZATION_TYPE) {
-    fbb_.AddElement<int8_t>(IDM::VT_POLARIZATION_TYPE, static_cast<int8_t>(POLARIZATION_TYPE), 0);
+  void add_NORAD_CAT_ID(int32_t NORAD_CAT_ID) {
+    fbb_.AddElement<int32_t>(EOO::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
   }
-  void add_SIMPLE_POLARIZATION(SimplePolarization SIMPLE_POLARIZATION) {
-    fbb_.AddElement<int8_t>(IDM::VT_SIMPLE_POLARIZATION, static_cast<int8_t>(SIMPLE_POLARIZATION), 0);
+  void add_TASK_ID(::flatbuffers::Offset<::flatbuffers::String> TASK_ID) {
+    fbb_.AddOffset(EOO::VT_TASK_ID, TASK_ID);
   }
-  void add_STOKES_PARAMETERS(::flatbuffers::Offset<StokesParameters> STOKES_PARAMETERS) {
-    fbb_.AddOffset(IDM::VT_STOKES_PARAMETERS, STOKES_PARAMETERS);
+  void add_TRANSACTION_ID(::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID) {
+    fbb_.AddOffset(EOO::VT_TRANSACTION_ID, TRANSACTION_ID);
   }
-  void add_POWER_REQUIRED(double POWER_REQUIRED) {
-    fbb_.AddElement<double>(IDM::VT_POWER_REQUIRED, POWER_REQUIRED, 0.0);
+  void add_IMAGE_SET_ID(::flatbuffers::Offset<::flatbuffers::String> IMAGE_SET_ID) {
+    fbb_.AddOffset(EOO::VT_IMAGE_SET_ID, IMAGE_SET_ID);
   }
-  void add_POWER_TYPE(::flatbuffers::Offset<::flatbuffers::String> POWER_TYPE) {
-    fbb_.AddOffset(IDM::VT_POWER_TYPE, POWER_TYPE);
+  void add_IMAGE_SET_LENGTH(int32_t IMAGE_SET_LENGTH) {
+    fbb_.AddElement<int32_t>(EOO::VT_IMAGE_SET_LENGTH, IMAGE_SET_LENGTH, 0);
   }
-  void add_TRANSMIT(bool TRANSMIT) {
-    fbb_.AddElement<uint8_t>(IDM::VT_TRANSMIT, static_cast<uint8_t>(TRANSMIT), 0);
+  void add_SEQUENCE_ID(int32_t SEQUENCE_ID) {
+    fbb_.AddElement<int32_t>(EOO::VT_SEQUENCE_ID, SEQUENCE_ID, 0);
   }
-  void add_RECEIVE(bool RECEIVE) {
-    fbb_.AddElement<uint8_t>(IDM::VT_RECEIVE, static_cast<uint8_t>(RECEIVE), 0);
+  void add_OB_POSITION(ObservationPosition OB_POSITION) {
+    fbb_.AddElement<int8_t>(EOO::VT_OB_POSITION, static_cast<int8_t>(OB_POSITION), 0);
   }
-  void add_SENSOR_TYPE(DeviceType SENSOR_TYPE) {
-    fbb_.AddElement<int8_t>(IDM::VT_SENSOR_TYPE, static_cast<int8_t>(SENSOR_TYPE), 0);
+  void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
+    fbb_.AddOffset(EOO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  void add_ORIG_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID) {
+    fbb_.AddOffset(EOO::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
+  }
+  void add_UCT(bool UCT) {
+    fbb_.AddElement<uint8_t>(EOO::VT_UCT, static_cast<uint8_t>(UCT), 0);
+  }
+  void add_AZIMUTH(float AZIMUTH) {
+    fbb_.AddElement<float>(EOO::VT_AZIMUTH, AZIMUTH, 0.0f);
+  }
+  void add_AZIMUTH_UNC(float AZIMUTH_UNC) {
+    fbb_.AddElement<float>(EOO::VT_AZIMUTH_UNC, AZIMUTH_UNC, 0.0f);
+  }
+  void add_AZIMUTH_BIAS(float AZIMUTH_BIAS) {
+    fbb_.AddElement<float>(EOO::VT_AZIMUTH_BIAS, AZIMUTH_BIAS, 0.0f);
+  }
+  void add_AZIMUTH_RATE(float AZIMUTH_RATE) {
+    fbb_.AddElement<float>(EOO::VT_AZIMUTH_RATE, AZIMUTH_RATE, 0.0f);
+  }
+  void add_ELEVATION(float ELEVATION) {
+    fbb_.AddElement<float>(EOO::VT_ELEVATION, ELEVATION, 0.0f);
+  }
+  void add_ELEVATION_UNC(float ELEVATION_UNC) {
+    fbb_.AddElement<float>(EOO::VT_ELEVATION_UNC, ELEVATION_UNC, 0.0f);
+  }
+  void add_ELEVATION_BIAS(float ELEVATION_BIAS) {
+    fbb_.AddElement<float>(EOO::VT_ELEVATION_BIAS, ELEVATION_BIAS, 0.0f);
+  }
+  void add_ELEVATION_RATE(float ELEVATION_RATE) {
+    fbb_.AddElement<float>(EOO::VT_ELEVATION_RATE, ELEVATION_RATE, 0.0f);
+  }
+  void add_RANGE(float RANGE) {
+    fbb_.AddElement<float>(EOO::VT_RANGE, RANGE, 0.0f);
+  }
+  void add_RANGE_UNC(float RANGE_UNC) {
+    fbb_.AddElement<float>(EOO::VT_RANGE_UNC, RANGE_UNC, 0.0f);
+  }
+  void add_RANGE_BIAS(float RANGE_BIAS) {
+    fbb_.AddElement<float>(EOO::VT_RANGE_BIAS, RANGE_BIAS, 0.0f);
+  }
+  void add_RANGE_RATE(float RANGE_RATE) {
+    fbb_.AddElement<float>(EOO::VT_RANGE_RATE, RANGE_RATE, 0.0f);
+  }
+  void add_RANGE_RATE_UNC(float RANGE_RATE_UNC) {
+    fbb_.AddElement<float>(EOO::VT_RANGE_RATE_UNC, RANGE_RATE_UNC, 0.0f);
+  }
+  void add_RA(float RA) {
+    fbb_.AddElement<float>(EOO::VT_RA, RA, 0.0f);
+  }
+  void add_RA_RATE(float RA_RATE) {
+    fbb_.AddElement<float>(EOO::VT_RA_RATE, RA_RATE, 0.0f);
+  }
+  void add_RA_UNC(float RA_UNC) {
+    fbb_.AddElement<float>(EOO::VT_RA_UNC, RA_UNC, 0.0f);
+  }
+  void add_RA_BIAS(float RA_BIAS) {
+    fbb_.AddElement<float>(EOO::VT_RA_BIAS, RA_BIAS, 0.0f);
+  }
+  void add_DECLINATION(float DECLINATION) {
+    fbb_.AddElement<float>(EOO::VT_DECLINATION, DECLINATION, 0.0f);
+  }
+  void add_DECLINATION_RATE(float DECLINATION_RATE) {
+    fbb_.AddElement<float>(EOO::VT_DECLINATION_RATE, DECLINATION_RATE, 0.0f);
+  }
+  void add_DECLINATION_UNC(float DECLINATION_UNC) {
+    fbb_.AddElement<float>(EOO::VT_DECLINATION_UNC, DECLINATION_UNC, 0.0f);
+  }
+  void add_DECLINATION_BIAS(float DECLINATION_BIAS) {
+    fbb_.AddElement<float>(EOO::VT_DECLINATION_BIAS, DECLINATION_BIAS, 0.0f);
+  }
+  void add_LOSX(float LOSX) {
+    fbb_.AddElement<float>(EOO::VT_LOSX, LOSX, 0.0f);
+  }
+  void add_LOSY(float LOSY) {
+    fbb_.AddElement<float>(EOO::VT_LOSY, LOSY, 0.0f);
+  }
+  void add_LOSZ(float LOSZ) {
+    fbb_.AddElement<float>(EOO::VT_LOSZ, LOSZ, 0.0f);
+  }
+  void add_LOS_UNC(float LOS_UNC) {
+    fbb_.AddElement<float>(EOO::VT_LOS_UNC, LOS_UNC, 0.0f);
+  }
+  void add_LOSXVEL(float LOSXVEL) {
+    fbb_.AddElement<float>(EOO::VT_LOSXVEL, LOSXVEL, 0.0f);
+  }
+  void add_LOSYVEL(float LOSYVEL) {
+    fbb_.AddElement<float>(EOO::VT_LOSYVEL, LOSYVEL, 0.0f);
+  }
+  void add_LOSZVEL(float LOSZVEL) {
+    fbb_.AddElement<float>(EOO::VT_LOSZVEL, LOSZVEL, 0.0f);
+  }
+  void add_SENLAT(float SENLAT) {
+    fbb_.AddElement<float>(EOO::VT_SENLAT, SENLAT, 0.0f);
+  }
+  void add_SENLON(float SENLON) {
+    fbb_.AddElement<float>(EOO::VT_SENLON, SENLON, 0.0f);
+  }
+  void add_SENALT(float SENALT) {
+    fbb_.AddElement<float>(EOO::VT_SENALT, SENALT, 0.0f);
+  }
+  void add_SENX(float SENX) {
+    fbb_.AddElement<float>(EOO::VT_SENX, SENX, 0.0f);
+  }
+  void add_SENY(float SENY) {
+    fbb_.AddElement<float>(EOO::VT_SENY, SENY, 0.0f);
+  }
+  void add_SENZ(float SENZ) {
+    fbb_.AddElement<float>(EOO::VT_SENZ, SENZ, 0.0f);
+  }
+  void add_FOV_COUNT(int32_t FOV_COUNT) {
+    fbb_.AddElement<int32_t>(EOO::VT_FOV_COUNT, FOV_COUNT, 0);
+  }
+  void add_FOV_COUNT_UCTS(int32_t FOV_COUNT_UCTS) {
+    fbb_.AddElement<int32_t>(EOO::VT_FOV_COUNT_UCTS, FOV_COUNT_UCTS, 0);
+  }
+  void add_EXP_DURATION(float EXP_DURATION) {
+    fbb_.AddElement<float>(EOO::VT_EXP_DURATION, EXP_DURATION, 0.0f);
+  }
+  void add_ZEROPTD(float ZEROPTD) {
+    fbb_.AddElement<float>(EOO::VT_ZEROPTD, ZEROPTD, 0.0f);
+  }
+  void add_NET_OBJ_SIG(float NET_OBJ_SIG) {
+    fbb_.AddElement<float>(EOO::VT_NET_OBJ_SIG, NET_OBJ_SIG, 0.0f);
+  }
+  void add_NET_OBJ_SIG_UNC(float NET_OBJ_SIG_UNC) {
+    fbb_.AddElement<float>(EOO::VT_NET_OBJ_SIG_UNC, NET_OBJ_SIG_UNC, 0.0f);
+  }
+  void add_MAG(float MAG) {
+    fbb_.AddElement<float>(EOO::VT_MAG, MAG, 0.0f);
+  }
+  void add_MAG_UNC(float MAG_UNC) {
+    fbb_.AddElement<float>(EOO::VT_MAG_UNC, MAG_UNC, 0.0f);
+  }
+  void add_MAG_NORM_RANGE(float MAG_NORM_RANGE) {
+    fbb_.AddElement<float>(EOO::VT_MAG_NORM_RANGE, MAG_NORM_RANGE, 0.0f);
+  }
+  void add_GEOLAT(float GEOLAT) {
+    fbb_.AddElement<float>(EOO::VT_GEOLAT, GEOLAT, 0.0f);
+  }
+  void add_GEOLON(float GEOLON) {
+    fbb_.AddElement<float>(EOO::VT_GEOLON, GEOLON, 0.0f);
+  }
+  void add_GEOALT(float GEOALT) {
+    fbb_.AddElement<float>(EOO::VT_GEOALT, GEOALT, 0.0f);
+  }
+  void add_GEORANGE(float GEORANGE) {
+    fbb_.AddElement<float>(EOO::VT_GEORANGE, GEORANGE, 0.0f);
+  }
+  void add_SKY_BKGRND(float SKY_BKGRND) {
+    fbb_.AddElement<float>(EOO::VT_SKY_BKGRND, SKY_BKGRND, 0.0f);
+  }
+  void add_PRIMARY_EXTINCTION(float PRIMARY_EXTINCTION) {
+    fbb_.AddElement<float>(EOO::VT_PRIMARY_EXTINCTION, PRIMARY_EXTINCTION, 0.0f);
+  }
+  void add_PRIMARY_EXTINCTION_UNC(float PRIMARY_EXTINCTION_UNC) {
+    fbb_.AddElement<float>(EOO::VT_PRIMARY_EXTINCTION_UNC, PRIMARY_EXTINCTION_UNC, 0.0f);
+  }
+  void add_SOLAR_PHASE_ANGLE(float SOLAR_PHASE_ANGLE) {
+    fbb_.AddElement<float>(EOO::VT_SOLAR_PHASE_ANGLE, SOLAR_PHASE_ANGLE, 0.0f);
+  }
+  void add_SOLAR_EQ_PHASE_ANGLE(float SOLAR_EQ_PHASE_ANGLE) {
+    fbb_.AddElement<float>(EOO::VT_SOLAR_EQ_PHASE_ANGLE, SOLAR_EQ_PHASE_ANGLE, 0.0f);
+  }
+  void add_SOLAR_DEC_ANGLE(float SOLAR_DEC_ANGLE) {
+    fbb_.AddElement<float>(EOO::VT_SOLAR_DEC_ANGLE, SOLAR_DEC_ANGLE, 0.0f);
+  }
+  void add_SHUTTER_DELAY(float SHUTTER_DELAY) {
+    fbb_.AddElement<float>(EOO::VT_SHUTTER_DELAY, SHUTTER_DELAY, 0.0f);
+  }
+  void add_TIMING_BIAS(float TIMING_BIAS) {
+    fbb_.AddElement<float>(EOO::VT_TIMING_BIAS, TIMING_BIAS, 0.0f);
+  }
+  void add_RAW_FILE_URI(::flatbuffers::Offset<::flatbuffers::String> RAW_FILE_URI) {
+    fbb_.AddOffset(EOO::VT_RAW_FILE_URI, RAW_FILE_URI);
+  }
+  void add_INTENSITY(float INTENSITY) {
+    fbb_.AddElement<float>(EOO::VT_INTENSITY, INTENSITY, 0.0f);
+  }
+  void add_BG_INTENSITY(float BG_INTENSITY) {
+    fbb_.AddElement<float>(EOO::VT_BG_INTENSITY, BG_INTENSITY, 0.0f);
+  }
+  void add_DESCRIPTOR(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR) {
+    fbb_.AddOffset(EOO::VT_DESCRIPTOR, DESCRIPTOR);
   }
   void add_SOURCE(::flatbuffers::Offset<::flatbuffers::String> SOURCE) {
-    fbb_.AddOffset(IDM::VT_SOURCE, SOURCE);
+    fbb_.AddOffset(EOO::VT_SOURCE, SOURCE);
   }
-  void add_LAST_OB_TIME(::flatbuffers::Offset<::flatbuffers::String> LAST_OB_TIME) {
-    fbb_.AddOffset(IDM::VT_LAST_OB_TIME, LAST_OB_TIME);
+  void add_ORIGIN(::flatbuffers::Offset<::flatbuffers::String> ORIGIN) {
+    fbb_.AddOffset(EOO::VT_ORIGIN, ORIGIN);
   }
-  void add_LOWER_LEFT_ELEVATION_LIMIT(double LOWER_LEFT_ELEVATION_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_LOWER_LEFT_ELEVATION_LIMIT, LOWER_LEFT_ELEVATION_LIMIT, 0.0);
+  void add_DATA_MODE(DataMode DATA_MODE) {
+    fbb_.AddElement<int8_t>(EOO::VT_DATA_MODE, static_cast<int8_t>(DATA_MODE), 0);
   }
-  void add_UPPER_LEFT_AZIMUTH_LIMIT(double UPPER_LEFT_AZIMUTH_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_UPPER_LEFT_AZIMUTH_LIMIT, UPPER_LEFT_AZIMUTH_LIMIT, 0.0);
+  void add_CREATED_AT(::flatbuffers::Offset<::flatbuffers::String> CREATED_AT) {
+    fbb_.AddOffset(EOO::VT_CREATED_AT, CREATED_AT);
   }
-  void add_LOWER_RIGHT_ELEVATION_LIMIT(double LOWER_RIGHT_ELEVATION_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_LOWER_RIGHT_ELEVATION_LIMIT, LOWER_RIGHT_ELEVATION_LIMIT, 0.0);
+  void add_CREATED_BY(::flatbuffers::Offset<::flatbuffers::String> CREATED_BY) {
+    fbb_.AddOffset(EOO::VT_CREATED_BY, CREATED_BY);
   }
-  void add_LOWER_LEFT_AZIMUTH_LIMIT(double LOWER_LEFT_AZIMUTH_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_LOWER_LEFT_AZIMUTH_LIMIT, LOWER_LEFT_AZIMUTH_LIMIT, 0.0);
+  void add_REFERENCE_FRAME(::flatbuffers::Offset<RFM> REFERENCE_FRAME) {
+    fbb_.AddOffset(EOO::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
-  void add_UPPER_RIGHT_ELEVATION_LIMIT(double UPPER_RIGHT_ELEVATION_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_UPPER_RIGHT_ELEVATION_LIMIT, UPPER_RIGHT_ELEVATION_LIMIT, 0.0);
+  void add_SEN_REFERENCE_FRAME(::flatbuffers::Offset<RFM> SEN_REFERENCE_FRAME) {
+    fbb_.AddOffset(EOO::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
   }
-  void add_UPPER_RIGHT_AZIMUTH_LIMIT(double UPPER_RIGHT_AZIMUTH_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_UPPER_RIGHT_AZIMUTH_LIMIT, UPPER_RIGHT_AZIMUTH_LIMIT, 0.0);
+  void add_UMBRA(bool UMBRA) {
+    fbb_.AddElement<uint8_t>(EOO::VT_UMBRA, static_cast<uint8_t>(UMBRA), 0);
   }
-  void add_LOWER_RIGHT_AZIMUTH_LIMIT(double LOWER_RIGHT_AZIMUTH_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_LOWER_RIGHT_AZIMUTH_LIMIT, LOWER_RIGHT_AZIMUTH_LIMIT, 0.0);
+  void add_PENUMBRA(bool PENUMBRA) {
+    fbb_.AddElement<uint8_t>(EOO::VT_PENUMBRA, static_cast<uint8_t>(PENUMBRA), 0);
   }
-  void add_UPPER_LEFT_ELEVATION_LIMIT(double UPPER_LEFT_ELEVATION_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_UPPER_LEFT_ELEVATION_LIMIT, UPPER_LEFT_ELEVATION_LIMIT, 0.0);
+  void add_ORIG_NETWORK(::flatbuffers::Offset<::flatbuffers::String> ORIG_NETWORK) {
+    fbb_.AddOffset(EOO::VT_ORIG_NETWORK, ORIG_NETWORK);
   }
-  void add_RIGHT_GEO_BELT_LIMIT(double RIGHT_GEO_BELT_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_RIGHT_GEO_BELT_LIMIT, RIGHT_GEO_BELT_LIMIT, 0.0);
+  void add_SOURCE_DL(::flatbuffers::Offset<::flatbuffers::String> SOURCE_DL) {
+    fbb_.AddOffset(EOO::VT_SOURCE_DL, SOURCE_DL);
   }
-  void add_LEFT_GEO_BELT_LIMIT(double LEFT_GEO_BELT_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_LEFT_GEO_BELT_LIMIT, LEFT_GEO_BELT_LIMIT, 0.0);
+  void add_TYPE(DeviceType TYPE) {
+    fbb_.AddElement<int8_t>(EOO::VT_TYPE, static_cast<int8_t>(TYPE), 0);
   }
-  void add_MAGNITUDE_LIMIT(double MAGNITUDE_LIMIT) {
-    fbb_.AddElement<double>(IDM::VT_MAGNITUDE_LIMIT, MAGNITUDE_LIMIT, 0.0);
+  void add_AZIMUTH_MEASURED(bool AZIMUTH_MEASURED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_AZIMUTH_MEASURED, static_cast<uint8_t>(AZIMUTH_MEASURED), 0);
   }
-  void add_TASKABLE(bool TASKABLE) {
-    fbb_.AddElement<uint8_t>(IDM::VT_TASKABLE, static_cast<uint8_t>(TASKABLE), 0);
+  void add_ELEVATION_MEASURED(bool ELEVATION_MEASURED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_ELEVATION_MEASURED, static_cast<uint8_t>(ELEVATION_MEASURED), 0);
   }
-  explicit IDMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_RANGE_MEASURED(bool RANGE_MEASURED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_RANGE_MEASURED, static_cast<uint8_t>(RANGE_MEASURED), 0);
+  }
+  void add_RANGERATE_MEASURED(bool RANGERATE_MEASURED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_RANGERATE_MEASURED, static_cast<uint8_t>(RANGERATE_MEASURED), 0);
+  }
+  void add_RA_MEASURED(bool RA_MEASURED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_RA_MEASURED, static_cast<uint8_t>(RA_MEASURED), 0);
+  }
+  void add_DECLINATION_MEASURED(bool DECLINATION_MEASURED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_DECLINATION_MEASURED, static_cast<uint8_t>(DECLINATION_MEASURED), 0);
+  }
+  void add_NIIRS(float NIIRS) {
+    fbb_.AddElement<float>(EOO::VT_NIIRS, NIIRS, 0.0f);
+  }
+  void add_METERS_PER_PIXEL(float METERS_PER_PIXEL) {
+    fbb_.AddElement<float>(EOO::VT_METERS_PER_PIXEL, METERS_PER_PIXEL, 0.0f);
+  }
+  void add_IMAGE_SNR(float IMAGE_SNR) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_SNR, IMAGE_SNR, 0.0f);
+  }
+  void add_IMAGE_BIT_DEPTH(int32_t IMAGE_BIT_DEPTH) {
+    fbb_.AddElement<int32_t>(EOO::VT_IMAGE_BIT_DEPTH, IMAGE_BIT_DEPTH, 0);
+  }
+  void add_IMAGE_WIDTH(int32_t IMAGE_WIDTH) {
+    fbb_.AddElement<int32_t>(EOO::VT_IMAGE_WIDTH, IMAGE_WIDTH, 0);
+  }
+  void add_IMAGE_HEIGHT(int32_t IMAGE_HEIGHT) {
+    fbb_.AddElement<int32_t>(EOO::VT_IMAGE_HEIGHT, IMAGE_HEIGHT, 0);
+  }
+  void add_IMAGE_COMPRESSION(::flatbuffers::Offset<::flatbuffers::String> IMAGE_COMPRESSION) {
+    fbb_.AddOffset(EOO::VT_IMAGE_COMPRESSION, IMAGE_COMPRESSION);
+  }
+  void add_IMAGE_COMPRESSION_RATIO(float IMAGE_COMPRESSION_RATIO) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_COMPRESSION_RATIO, IMAGE_COMPRESSION_RATIO, 0.0f);
+  }
+  void add_PROCESSED_IMAGE_URI(::flatbuffers::Offset<::flatbuffers::String> PROCESSED_IMAGE_URI) {
+    fbb_.AddOffset(EOO::VT_PROCESSED_IMAGE_URI, PROCESSED_IMAGE_URI);
+  }
+  void add_IMAGE_AUTO_ENHANCED(bool IMAGE_AUTO_ENHANCED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_IMAGE_AUTO_ENHANCED, static_cast<uint8_t>(IMAGE_AUTO_ENHANCED), 0);
+  }
+  void add_MULTI_FRAME_STACKED(bool MULTI_FRAME_STACKED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_MULTI_FRAME_STACKED, static_cast<uint8_t>(MULTI_FRAME_STACKED), 0);
+  }
+  void add_SYNTHETIC_TRACKING_USED(bool SYNTHETIC_TRACKING_USED) {
+    fbb_.AddElement<uint8_t>(EOO::VT_SYNTHETIC_TRACKING_USED, static_cast<uint8_t>(SYNTHETIC_TRACKING_USED), 0);
+  }
+  void add_IMAGE_SHARPNESS(float IMAGE_SHARPNESS) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_SHARPNESS, IMAGE_SHARPNESS, 0.0f);
+  }
+  void add_IMAGE_NOISE_STDDEV(float IMAGE_NOISE_STDDEV) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_NOISE_STDDEV, IMAGE_NOISE_STDDEV, 0.0f);
+  }
+  void add_IMAGE_CONTRAST(float IMAGE_CONTRAST) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_CONTRAST, IMAGE_CONTRAST, 0.0f);
+  }
+  void add_IMAGE_DYNAMIC_RANGE(float IMAGE_DYNAMIC_RANGE) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_DYNAMIC_RANGE, IMAGE_DYNAMIC_RANGE, 0.0f);
+  }
+  void add_IMAGE_ENTROPY(float IMAGE_ENTROPY) {
+    fbb_.AddElement<float>(EOO::VT_IMAGE_ENTROPY, IMAGE_ENTROPY, 0.0f);
+  }
+  void add_BACKGROUND_UNIFORMITY(float BACKGROUND_UNIFORMITY) {
+    fbb_.AddElement<float>(EOO::VT_BACKGROUND_UNIFORMITY, BACKGROUND_UNIFORMITY, 0.0f);
+  }
+  void add_BACKGROUND_MEAN_LEVEL(float BACKGROUND_MEAN_LEVEL) {
+    fbb_.AddElement<float>(EOO::VT_BACKGROUND_MEAN_LEVEL, BACKGROUND_MEAN_LEVEL, 0.0f);
+  }
+  void add_SATURATED_PIXEL_PERCENT(float SATURATED_PIXEL_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_SATURATED_PIXEL_PERCENT, SATURATED_PIXEL_PERCENT, 0.0f);
+  }
+  void add_DEAD_PIXEL_PERCENT(float DEAD_PIXEL_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_DEAD_PIXEL_PERCENT, DEAD_PIXEL_PERCENT, 0.0f);
+  }
+  void add_PSF_FWHM(float PSF_FWHM) {
+    fbb_.AddElement<float>(EOO::VT_PSF_FWHM, PSF_FWHM, 0.0f);
+  }
+  void add_CLOUD_COVER_PERCENT(float CLOUD_COVER_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_CLOUD_COVER_PERCENT, CLOUD_COVER_PERCENT, 0.0f);
+  }
+  void add_CLOUD_DETECTION_CONFIDENCE(float CLOUD_DETECTION_CONFIDENCE) {
+    fbb_.AddElement<float>(EOO::VT_CLOUD_DETECTION_CONFIDENCE, CLOUD_DETECTION_CONFIDENCE, 0.0f);
+  }
+  void add_HAZE_PERCENT(float HAZE_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_HAZE_PERCENT, HAZE_PERCENT, 0.0f);
+  }
+  void add_AEROSOL_OPTICAL_THICKNESS(float AEROSOL_OPTICAL_THICKNESS) {
+    fbb_.AddElement<float>(EOO::VT_AEROSOL_OPTICAL_THICKNESS, AEROSOL_OPTICAL_THICKNESS, 0.0f);
+  }
+  void add_WATER_VAPOR_CONTENT(float WATER_VAPOR_CONTENT) {
+    fbb_.AddElement<float>(EOO::VT_WATER_VAPOR_CONTENT, WATER_VAPOR_CONTENT, 0.0f);
+  }
+  void add_SUN_ELEVATION(float SUN_ELEVATION) {
+    fbb_.AddElement<float>(EOO::VT_SUN_ELEVATION, SUN_ELEVATION, 0.0f);
+  }
+  void add_SUN_AZIMUTH(float SUN_AZIMUTH) {
+    fbb_.AddElement<float>(EOO::VT_SUN_AZIMUTH, SUN_AZIMUTH, 0.0f);
+  }
+  void add_VIEW_ZENITH_ANGLE(float VIEW_ZENITH_ANGLE) {
+    fbb_.AddElement<float>(EOO::VT_VIEW_ZENITH_ANGLE, VIEW_ZENITH_ANGLE, 0.0f);
+  }
+  void add_VIEW_AZIMUTH_ANGLE(float VIEW_AZIMUTH_ANGLE) {
+    fbb_.AddElement<float>(EOO::VT_VIEW_AZIMUTH_ANGLE, VIEW_AZIMUTH_ANGLE, 0.0f);
+  }
+  void add_OFF_NADIR_ANGLE(float OFF_NADIR_ANGLE) {
+    fbb_.AddElement<float>(EOO::VT_OFF_NADIR_ANGLE, OFF_NADIR_ANGLE, 0.0f);
+  }
+  void add_SWATH_WIDTH_KM(float SWATH_WIDTH_KM) {
+    fbb_.AddElement<float>(EOO::VT_SWATH_WIDTH_KM, SWATH_WIDTH_KM, 0.0f);
+  }
+  void add_MEAN_TERRAIN_ELEVATION(float MEAN_TERRAIN_ELEVATION) {
+    fbb_.AddElement<float>(EOO::VT_MEAN_TERRAIN_ELEVATION, MEAN_TERRAIN_ELEVATION, 0.0f);
+  }
+  void add_TERRAIN_ELEVATION_STDDEV(float TERRAIN_ELEVATION_STDDEV) {
+    fbb_.AddElement<float>(EOO::VT_TERRAIN_ELEVATION_STDDEV, TERRAIN_ELEVATION_STDDEV, 0.0f);
+  }
+  void add_SHADOW_COVER_PERCENT(float SHADOW_COVER_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_SHADOW_COVER_PERCENT, SHADOW_COVER_PERCENT, 0.0f);
+  }
+  void add_SUNGLINT_PRESENT(bool SUNGLINT_PRESENT) {
+    fbb_.AddElement<uint8_t>(EOO::VT_SUNGLINT_PRESENT, static_cast<uint8_t>(SUNGLINT_PRESENT), 0);
+  }
+  void add_SUNGLINT_PERCENT(float SUNGLINT_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_SUNGLINT_PERCENT, SUNGLINT_PERCENT, 0.0f);
+  }
+  void add_SNOW_ICE_COVER_PERCENT(float SNOW_ICE_COVER_PERCENT) {
+    fbb_.AddElement<float>(EOO::VT_SNOW_ICE_COVER_PERCENT, SNOW_ICE_COVER_PERCENT, 0.0f);
+  }
+  void add_VALID_DATA_AREA_KM2(float VALID_DATA_AREA_KM2) {
+    fbb_.AddElement<float>(EOO::VT_VALID_DATA_AREA_KM2, VALID_DATA_AREA_KM2, 0.0f);
+  }
+  explicit EOOBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<IDM> Finish() {
+  ::flatbuffers::Offset<EOO> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<IDM>(end);
+    auto o = ::flatbuffers::Offset<EOO>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<IDM> CreateIDM(
+inline ::flatbuffers::Offset<EOO> CreateEOO(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
-    DataMode DATA_MODE = DataMode_EXERCISE,
-    ::flatbuffers::Offset<FrequencyRange> UPLINK = 0,
-    ::flatbuffers::Offset<FrequencyRange> DOWNLINK = 0,
-    ::flatbuffers::Offset<FrequencyRange> BEACON = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<Band>>> BAND = 0,
-    PolarizationType POLARIZATION_TYPE = PolarizationType_linear,
-    SimplePolarization SIMPLE_POLARIZATION = SimplePolarization_vertical,
-    ::flatbuffers::Offset<StokesParameters> STOKES_PARAMETERS = 0,
-    double POWER_REQUIRED = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> POWER_TYPE = 0,
-    bool TRANSMIT = false,
-    bool RECEIVE = false,
-    DeviceType SENSOR_TYPE = DeviceType_UNKNOWN,
+    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OB_TIME = 0,
+    float CORR_QUALITY = 0.0f,
+    ::flatbuffers::Offset<::flatbuffers::String> ID_ON_ORBIT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID = 0,
+    CollectMethod COLLECT_METHOD = CollectMethod_SIDEREAL,
+    int32_t NORAD_CAT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TASK_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> IMAGE_SET_ID = 0,
+    int32_t IMAGE_SET_LENGTH = 0,
+    int32_t SEQUENCE_ID = 0,
+    ObservationPosition OB_POSITION = ObservationPosition_FENCE,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
+    bool UCT = false,
+    float AZIMUTH = 0.0f,
+    float AZIMUTH_UNC = 0.0f,
+    float AZIMUTH_BIAS = 0.0f,
+    float AZIMUTH_RATE = 0.0f,
+    float ELEVATION = 0.0f,
+    float ELEVATION_UNC = 0.0f,
+    float ELEVATION_BIAS = 0.0f,
+    float ELEVATION_RATE = 0.0f,
+    float RANGE = 0.0f,
+    float RANGE_UNC = 0.0f,
+    float RANGE_BIAS = 0.0f,
+    float RANGE_RATE = 0.0f,
+    float RANGE_RATE_UNC = 0.0f,
+    float RA = 0.0f,
+    float RA_RATE = 0.0f,
+    float RA_UNC = 0.0f,
+    float RA_BIAS = 0.0f,
+    float DECLINATION = 0.0f,
+    float DECLINATION_RATE = 0.0f,
+    float DECLINATION_UNC = 0.0f,
+    float DECLINATION_BIAS = 0.0f,
+    float LOSX = 0.0f,
+    float LOSY = 0.0f,
+    float LOSZ = 0.0f,
+    float LOS_UNC = 0.0f,
+    float LOSXVEL = 0.0f,
+    float LOSYVEL = 0.0f,
+    float LOSZVEL = 0.0f,
+    float SENLAT = 0.0f,
+    float SENLON = 0.0f,
+    float SENALT = 0.0f,
+    float SENX = 0.0f,
+    float SENY = 0.0f,
+    float SENZ = 0.0f,
+    int32_t FOV_COUNT = 0,
+    int32_t FOV_COUNT_UCTS = 0,
+    float EXP_DURATION = 0.0f,
+    float ZEROPTD = 0.0f,
+    float NET_OBJ_SIG = 0.0f,
+    float NET_OBJ_SIG_UNC = 0.0f,
+    float MAG = 0.0f,
+    float MAG_UNC = 0.0f,
+    float MAG_NORM_RANGE = 0.0f,
+    float GEOLAT = 0.0f,
+    float GEOLON = 0.0f,
+    float GEOALT = 0.0f,
+    float GEORANGE = 0.0f,
+    float SKY_BKGRND = 0.0f,
+    float PRIMARY_EXTINCTION = 0.0f,
+    float PRIMARY_EXTINCTION_UNC = 0.0f,
+    float SOLAR_PHASE_ANGLE = 0.0f,
+    float SOLAR_EQ_PHASE_ANGLE = 0.0f,
+    float SOLAR_DEC_ANGLE = 0.0f,
+    float SHUTTER_DELAY = 0.0f,
+    float TIMING_BIAS = 0.0f,
+    ::flatbuffers::Offset<::flatbuffers::String> RAW_FILE_URI = 0,
+    float INTENSITY = 0.0f,
+    float BG_INTENSITY = 0.0f,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SOURCE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LAST_OB_TIME = 0,
-    double LOWER_LEFT_ELEVATION_LIMIT = 0.0,
-    double UPPER_LEFT_AZIMUTH_LIMIT = 0.0,
-    double LOWER_RIGHT_ELEVATION_LIMIT = 0.0,
-    double LOWER_LEFT_AZIMUTH_LIMIT = 0.0,
-    double UPPER_RIGHT_ELEVATION_LIMIT = 0.0,
-    double UPPER_RIGHT_AZIMUTH_LIMIT = 0.0,
-    double LOWER_RIGHT_AZIMUTH_LIMIT = 0.0,
-    double UPPER_LEFT_ELEVATION_LIMIT = 0.0,
-    double RIGHT_GEO_BELT_LIMIT = 0.0,
-    double LEFT_GEO_BELT_LIMIT = 0.0,
-    double MAGNITUDE_LIMIT = 0.0,
-    bool TASKABLE = false) {
-  IDMBuilder builder_(_fbb);
-  builder_.add_MAGNITUDE_LIMIT(MAGNITUDE_LIMIT);
-  builder_.add_LEFT_GEO_BELT_LIMIT(LEFT_GEO_BELT_LIMIT);
-  builder_.add_RIGHT_GEO_BELT_LIMIT(RIGHT_GEO_BELT_LIMIT);
-  builder_.add_UPPER_LEFT_ELEVATION_LIMIT(UPPER_LEFT_ELEVATION_LIMIT);
-  builder_.add_LOWER_RIGHT_AZIMUTH_LIMIT(LOWER_RIGHT_AZIMUTH_LIMIT);
-  builder_.add_UPPER_RIGHT_AZIMUTH_LIMIT(UPPER_RIGHT_AZIMUTH_LIMIT);
-  builder_.add_UPPER_RIGHT_ELEVATION_LIMIT(UPPER_RIGHT_ELEVATION_LIMIT);
-  builder_.add_LOWER_LEFT_AZIMUTH_LIMIT(LOWER_LEFT_AZIMUTH_LIMIT);
-  builder_.add_LOWER_RIGHT_ELEVATION_LIMIT(LOWER_RIGHT_ELEVATION_LIMIT);
-  builder_.add_UPPER_LEFT_AZIMUTH_LIMIT(UPPER_LEFT_AZIMUTH_LIMIT);
-  builder_.add_LOWER_LEFT_ELEVATION_LIMIT(LOWER_LEFT_ELEVATION_LIMIT);
-  builder_.add_POWER_REQUIRED(POWER_REQUIRED);
-  builder_.add_LAST_OB_TIME(LAST_OB_TIME);
+    ::flatbuffers::Offset<::flatbuffers::String> ORIGIN = 0,
+    DataMode DATA_MODE = DataMode_EXERCISE,
+    ::flatbuffers::Offset<::flatbuffers::String> CREATED_AT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CREATED_BY = 0,
+    ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
+    ::flatbuffers::Offset<RFM> SEN_REFERENCE_FRAME = 0,
+    bool UMBRA = false,
+    bool PENUMBRA = false,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_NETWORK = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SOURCE_DL = 0,
+    DeviceType TYPE = DeviceType_UNKNOWN,
+    bool AZIMUTH_MEASURED = false,
+    bool ELEVATION_MEASURED = false,
+    bool RANGE_MEASURED = false,
+    bool RANGERATE_MEASURED = false,
+    bool RA_MEASURED = false,
+    bool DECLINATION_MEASURED = false,
+    float NIIRS = 0.0f,
+    float METERS_PER_PIXEL = 0.0f,
+    float IMAGE_SNR = 0.0f,
+    int32_t IMAGE_BIT_DEPTH = 0,
+    int32_t IMAGE_WIDTH = 0,
+    int32_t IMAGE_HEIGHT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> IMAGE_COMPRESSION = 0,
+    float IMAGE_COMPRESSION_RATIO = 0.0f,
+    ::flatbuffers::Offset<::flatbuffers::String> PROCESSED_IMAGE_URI = 0,
+    bool IMAGE_AUTO_ENHANCED = false,
+    bool MULTI_FRAME_STACKED = false,
+    bool SYNTHETIC_TRACKING_USED = false,
+    float IMAGE_SHARPNESS = 0.0f,
+    float IMAGE_NOISE_STDDEV = 0.0f,
+    float IMAGE_CONTRAST = 0.0f,
+    float IMAGE_DYNAMIC_RANGE = 0.0f,
+    float IMAGE_ENTROPY = 0.0f,
+    float BACKGROUND_UNIFORMITY = 0.0f,
+    float BACKGROUND_MEAN_LEVEL = 0.0f,
+    float SATURATED_PIXEL_PERCENT = 0.0f,
+    float DEAD_PIXEL_PERCENT = 0.0f,
+    float PSF_FWHM = 0.0f,
+    float CLOUD_COVER_PERCENT = 0.0f,
+    float CLOUD_DETECTION_CONFIDENCE = 0.0f,
+    float HAZE_PERCENT = 0.0f,
+    float AEROSOL_OPTICAL_THICKNESS = 0.0f,
+    float WATER_VAPOR_CONTENT = 0.0f,
+    float SUN_ELEVATION = 0.0f,
+    float SUN_AZIMUTH = 0.0f,
+    float VIEW_ZENITH_ANGLE = 0.0f,
+    float VIEW_AZIMUTH_ANGLE = 0.0f,
+    float OFF_NADIR_ANGLE = 0.0f,
+    float SWATH_WIDTH_KM = 0.0f,
+    float MEAN_TERRAIN_ELEVATION = 0.0f,
+    float TERRAIN_ELEVATION_STDDEV = 0.0f,
+    float SHADOW_COVER_PERCENT = 0.0f,
+    bool SUNGLINT_PRESENT = false,
+    float SUNGLINT_PERCENT = 0.0f,
+    float SNOW_ICE_COVER_PERCENT = 0.0f,
+    float VALID_DATA_AREA_KM2 = 0.0f) {
+  EOOBuilder builder_(_fbb);
+  builder_.add_VALID_DATA_AREA_KM2(VALID_DATA_AREA_KM2);
+  builder_.add_SNOW_ICE_COVER_PERCENT(SNOW_ICE_COVER_PERCENT);
+  builder_.add_SUNGLINT_PERCENT(SUNGLINT_PERCENT);
+  builder_.add_SHADOW_COVER_PERCENT(SHADOW_COVER_PERCENT);
+  builder_.add_TERRAIN_ELEVATION_STDDEV(TERRAIN_ELEVATION_STDDEV);
+  builder_.add_MEAN_TERRAIN_ELEVATION(MEAN_TERRAIN_ELEVATION);
+  builder_.add_SWATH_WIDTH_KM(SWATH_WIDTH_KM);
+  builder_.add_OFF_NADIR_ANGLE(OFF_NADIR_ANGLE);
+  builder_.add_VIEW_AZIMUTH_ANGLE(VIEW_AZIMUTH_ANGLE);
+  builder_.add_VIEW_ZENITH_ANGLE(VIEW_ZENITH_ANGLE);
+  builder_.add_SUN_AZIMUTH(SUN_AZIMUTH);
+  builder_.add_SUN_ELEVATION(SUN_ELEVATION);
+  builder_.add_WATER_VAPOR_CONTENT(WATER_VAPOR_CONTENT);
+  builder_.add_AEROSOL_OPTICAL_THICKNESS(AEROSOL_OPTICAL_THICKNESS);
+  builder_.add_HAZE_PERCENT(HAZE_PERCENT);
+  builder_.add_CLOUD_DETECTION_CONFIDENCE(CLOUD_DETECTION_CONFIDENCE);
+  builder_.add_CLOUD_COVER_PERCENT(CLOUD_COVER_PERCENT);
+  builder_.add_PSF_FWHM(PSF_FWHM);
+  builder_.add_DEAD_PIXEL_PERCENT(DEAD_PIXEL_PERCENT);
+  builder_.add_SATURATED_PIXEL_PERCENT(SATURATED_PIXEL_PERCENT);
+  builder_.add_BACKGROUND_MEAN_LEVEL(BACKGROUND_MEAN_LEVEL);
+  builder_.add_BACKGROUND_UNIFORMITY(BACKGROUND_UNIFORMITY);
+  builder_.add_IMAGE_ENTROPY(IMAGE_ENTROPY);
+  builder_.add_IMAGE_DYNAMIC_RANGE(IMAGE_DYNAMIC_RANGE);
+  builder_.add_IMAGE_CONTRAST(IMAGE_CONTRAST);
+  builder_.add_IMAGE_NOISE_STDDEV(IMAGE_NOISE_STDDEV);
+  builder_.add_IMAGE_SHARPNESS(IMAGE_SHARPNESS);
+  builder_.add_PROCESSED_IMAGE_URI(PROCESSED_IMAGE_URI);
+  builder_.add_IMAGE_COMPRESSION_RATIO(IMAGE_COMPRESSION_RATIO);
+  builder_.add_IMAGE_COMPRESSION(IMAGE_COMPRESSION);
+  builder_.add_IMAGE_HEIGHT(IMAGE_HEIGHT);
+  builder_.add_IMAGE_WIDTH(IMAGE_WIDTH);
+  builder_.add_IMAGE_BIT_DEPTH(IMAGE_BIT_DEPTH);
+  builder_.add_IMAGE_SNR(IMAGE_SNR);
+  builder_.add_METERS_PER_PIXEL(METERS_PER_PIXEL);
+  builder_.add_NIIRS(NIIRS);
+  builder_.add_SOURCE_DL(SOURCE_DL);
+  builder_.add_ORIG_NETWORK(ORIG_NETWORK);
+  builder_.add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME);
+  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
+  builder_.add_CREATED_BY(CREATED_BY);
+  builder_.add_CREATED_AT(CREATED_AT);
+  builder_.add_ORIGIN(ORIGIN);
   builder_.add_SOURCE(SOURCE);
-  builder_.add_POWER_TYPE(POWER_TYPE);
-  builder_.add_STOKES_PARAMETERS(STOKES_PARAMETERS);
-  builder_.add_BAND(BAND);
-  builder_.add_BEACON(BEACON);
-  builder_.add_DOWNLINK(DOWNLINK);
-  builder_.add_UPLINK(UPLINK);
-  builder_.add_NAME(NAME);
+  builder_.add_DESCRIPTOR(DESCRIPTOR);
+  builder_.add_BG_INTENSITY(BG_INTENSITY);
+  builder_.add_INTENSITY(INTENSITY);
+  builder_.add_RAW_FILE_URI(RAW_FILE_URI);
+  builder_.add_TIMING_BIAS(TIMING_BIAS);
+  builder_.add_SHUTTER_DELAY(SHUTTER_DELAY);
+  builder_.add_SOLAR_DEC_ANGLE(SOLAR_DEC_ANGLE);
+  builder_.add_SOLAR_EQ_PHASE_ANGLE(SOLAR_EQ_PHASE_ANGLE);
+  builder_.add_SOLAR_PHASE_ANGLE(SOLAR_PHASE_ANGLE);
+  builder_.add_PRIMARY_EXTINCTION_UNC(PRIMARY_EXTINCTION_UNC);
+  builder_.add_PRIMARY_EXTINCTION(PRIMARY_EXTINCTION);
+  builder_.add_SKY_BKGRND(SKY_BKGRND);
+  builder_.add_GEORANGE(GEORANGE);
+  builder_.add_GEOALT(GEOALT);
+  builder_.add_GEOLON(GEOLON);
+  builder_.add_GEOLAT(GEOLAT);
+  builder_.add_MAG_NORM_RANGE(MAG_NORM_RANGE);
+  builder_.add_MAG_UNC(MAG_UNC);
+  builder_.add_MAG(MAG);
+  builder_.add_NET_OBJ_SIG_UNC(NET_OBJ_SIG_UNC);
+  builder_.add_NET_OBJ_SIG(NET_OBJ_SIG);
+  builder_.add_ZEROPTD(ZEROPTD);
+  builder_.add_EXP_DURATION(EXP_DURATION);
+  builder_.add_FOV_COUNT_UCTS(FOV_COUNT_UCTS);
+  builder_.add_FOV_COUNT(FOV_COUNT);
+  builder_.add_SENZ(SENZ);
+  builder_.add_SENY(SENY);
+  builder_.add_SENX(SENX);
+  builder_.add_SENALT(SENALT);
+  builder_.add_SENLON(SENLON);
+  builder_.add_SENLAT(SENLAT);
+  builder_.add_LOSZVEL(LOSZVEL);
+  builder_.add_LOSYVEL(LOSYVEL);
+  builder_.add_LOSXVEL(LOSXVEL);
+  builder_.add_LOS_UNC(LOS_UNC);
+  builder_.add_LOSZ(LOSZ);
+  builder_.add_LOSY(LOSY);
+  builder_.add_LOSX(LOSX);
+  builder_.add_DECLINATION_BIAS(DECLINATION_BIAS);
+  builder_.add_DECLINATION_UNC(DECLINATION_UNC);
+  builder_.add_DECLINATION_RATE(DECLINATION_RATE);
+  builder_.add_DECLINATION(DECLINATION);
+  builder_.add_RA_BIAS(RA_BIAS);
+  builder_.add_RA_UNC(RA_UNC);
+  builder_.add_RA_RATE(RA_RATE);
+  builder_.add_RA(RA);
+  builder_.add_RANGE_RATE_UNC(RANGE_RATE_UNC);
+  builder_.add_RANGE_RATE(RANGE_RATE);
+  builder_.add_RANGE_BIAS(RANGE_BIAS);
+  builder_.add_RANGE_UNC(RANGE_UNC);
+  builder_.add_RANGE(RANGE);
+  builder_.add_ELEVATION_RATE(ELEVATION_RATE);
+  builder_.add_ELEVATION_BIAS(ELEVATION_BIAS);
+  builder_.add_ELEVATION_UNC(ELEVATION_UNC);
+  builder_.add_ELEVATION(ELEVATION);
+  builder_.add_AZIMUTH_RATE(AZIMUTH_RATE);
+  builder_.add_AZIMUTH_BIAS(AZIMUTH_BIAS);
+  builder_.add_AZIMUTH_UNC(AZIMUTH_UNC);
+  builder_.add_AZIMUTH(AZIMUTH);
+  builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
+  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
+  builder_.add_SEQUENCE_ID(SEQUENCE_ID);
+  builder_.add_IMAGE_SET_LENGTH(IMAGE_SET_LENGTH);
+  builder_.add_IMAGE_SET_ID(IMAGE_SET_ID);
+  builder_.add_TRANSACTION_ID(TRANSACTION_ID);
+  builder_.add_TASK_ID(TASK_ID);
+  builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
+  builder_.add_SENSOR_ID(SENSOR_ID);
+  builder_.add_ID_ON_ORBIT(ID_ON_ORBIT);
+  builder_.add_CORR_QUALITY(CORR_QUALITY);
+  builder_.add_OB_TIME(OB_TIME);
+  builder_.add_CLASSIFICATION(CLASSIFICATION);
   builder_.add_ID(ID);
-  builder_.add_TASKABLE(TASKABLE);
-  builder_.add_SENSOR_TYPE(SENSOR_TYPE);
-  builder_.add_RECEIVE(RECEIVE);
-  builder_.add_TRANSMIT(TRANSMIT);
-  builder_.add_SIMPLE_POLARIZATION(SIMPLE_POLARIZATION);
-  builder_.add_POLARIZATION_TYPE(POLARIZATION_TYPE);
+  builder_.add_SUNGLINT_PRESENT(SUNGLINT_PRESENT);
+  builder_.add_SYNTHETIC_TRACKING_USED(SYNTHETIC_TRACKING_USED);
+  builder_.add_MULTI_FRAME_STACKED(MULTI_FRAME_STACKED);
+  builder_.add_IMAGE_AUTO_ENHANCED(IMAGE_AUTO_ENHANCED);
+  builder_.add_DECLINATION_MEASURED(DECLINATION_MEASURED);
+  builder_.add_RA_MEASURED(RA_MEASURED);
+  builder_.add_RANGERATE_MEASURED(RANGERATE_MEASURED);
+  builder_.add_RANGE_MEASURED(RANGE_MEASURED);
+  builder_.add_ELEVATION_MEASURED(ELEVATION_MEASURED);
+  builder_.add_AZIMUTH_MEASURED(AZIMUTH_MEASURED);
+  builder_.add_TYPE(TYPE);
+  builder_.add_PENUMBRA(PENUMBRA);
+  builder_.add_UMBRA(UMBRA);
   builder_.add_DATA_MODE(DATA_MODE);
+  builder_.add_UCT(UCT);
+  builder_.add_OB_POSITION(OB_POSITION);
+  builder_.add_COLLECT_METHOD(COLLECT_METHOD);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<IDM> CreateIDMDirect(
+inline ::flatbuffers::Offset<EOO> CreateEOODirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
-    const char *NAME = nullptr,
-    DataMode DATA_MODE = DataMode_EXERCISE,
-    ::flatbuffers::Offset<FrequencyRange> UPLINK = 0,
-    ::flatbuffers::Offset<FrequencyRange> DOWNLINK = 0,
-    ::flatbuffers::Offset<FrequencyRange> BEACON = 0,
-    const std::vector<::flatbuffers::Offset<Band>> *BAND = nullptr,
-    PolarizationType POLARIZATION_TYPE = PolarizationType_linear,
-    SimplePolarization SIMPLE_POLARIZATION = SimplePolarization_vertical,
-    ::flatbuffers::Offset<StokesParameters> STOKES_PARAMETERS = 0,
-    double POWER_REQUIRED = 0.0,
-    const char *POWER_TYPE = nullptr,
-    bool TRANSMIT = false,
-    bool RECEIVE = false,
-    DeviceType SENSOR_TYPE = DeviceType_UNKNOWN,
+    const char *CLASSIFICATION = nullptr,
+    const char *OB_TIME = nullptr,
+    float CORR_QUALITY = 0.0f,
+    const char *ID_ON_ORBIT = nullptr,
+    const char *SENSOR_ID = nullptr,
+    CollectMethod COLLECT_METHOD = CollectMethod_SIDEREAL,
+    int32_t NORAD_CAT_ID = 0,
+    const char *TASK_ID = nullptr,
+    const char *TRANSACTION_ID = nullptr,
+    const char *IMAGE_SET_ID = nullptr,
+    int32_t IMAGE_SET_LENGTH = 0,
+    int32_t SEQUENCE_ID = 0,
+    ObservationPosition OB_POSITION = ObservationPosition_FENCE,
+    const char *ORIG_OBJECT_ID = nullptr,
+    const char *ORIG_SENSOR_ID = nullptr,
+    bool UCT = false,
+    float AZIMUTH = 0.0f,
+    float AZIMUTH_UNC = 0.0f,
+    float AZIMUTH_BIAS = 0.0f,
+    float AZIMUTH_RATE = 0.0f,
+    float ELEVATION = 0.0f,
+    float ELEVATION_UNC = 0.0f,
+    float ELEVATION_BIAS = 0.0f,
+    float ELEVATION_RATE = 0.0f,
+    float RANGE = 0.0f,
+    float RANGE_UNC = 0.0f,
+    float RANGE_BIAS = 0.0f,
+    float RANGE_RATE = 0.0f,
+    float RANGE_RATE_UNC = 0.0f,
+    float RA = 0.0f,
+    float RA_RATE = 0.0f,
+    float RA_UNC = 0.0f,
+    float RA_BIAS = 0.0f,
+    float DECLINATION = 0.0f,
+    float DECLINATION_RATE = 0.0f,
+    float DECLINATION_UNC = 0.0f,
+    float DECLINATION_BIAS = 0.0f,
+    float LOSX = 0.0f,
+    float LOSY = 0.0f,
+    float LOSZ = 0.0f,
+    float LOS_UNC = 0.0f,
+    float LOSXVEL = 0.0f,
+    float LOSYVEL = 0.0f,
+    float LOSZVEL = 0.0f,
+    float SENLAT = 0.0f,
+    float SENLON = 0.0f,
+    float SENALT = 0.0f,
+    float SENX = 0.0f,
+    float SENY = 0.0f,
+    float SENZ = 0.0f,
+    int32_t FOV_COUNT = 0,
+    int32_t FOV_COUNT_UCTS = 0,
+    float EXP_DURATION = 0.0f,
+    float ZEROPTD = 0.0f,
+    float NET_OBJ_SIG = 0.0f,
+    float NET_OBJ_SIG_UNC = 0.0f,
+    float MAG = 0.0f,
+    float MAG_UNC = 0.0f,
+    float MAG_NORM_RANGE = 0.0f,
+    float GEOLAT = 0.0f,
+    float GEOLON = 0.0f,
+    float GEOALT = 0.0f,
+    float GEORANGE = 0.0f,
+    float SKY_BKGRND = 0.0f,
+    float PRIMARY_EXTINCTION = 0.0f,
+    float PRIMARY_EXTINCTION_UNC = 0.0f,
+    float SOLAR_PHASE_ANGLE = 0.0f,
+    float SOLAR_EQ_PHASE_ANGLE = 0.0f,
+    float SOLAR_DEC_ANGLE = 0.0f,
+    float SHUTTER_DELAY = 0.0f,
+    float TIMING_BIAS = 0.0f,
+    const char *RAW_FILE_URI = nullptr,
+    float INTENSITY = 0.0f,
+    float BG_INTENSITY = 0.0f,
+    const char *DESCRIPTOR = nullptr,
     const char *SOURCE = nullptr,
-    const char *LAST_OB_TIME = nullptr,
-    double LOWER_LEFT_ELEVATION_LIMIT = 0.0,
-    double UPPER_LEFT_AZIMUTH_LIMIT = 0.0,
-    double LOWER_RIGHT_ELEVATION_LIMIT = 0.0,
-    double LOWER_LEFT_AZIMUTH_LIMIT = 0.0,
-    double UPPER_RIGHT_ELEVATION_LIMIT = 0.0,
-    double UPPER_RIGHT_AZIMUTH_LIMIT = 0.0,
-    double LOWER_RIGHT_AZIMUTH_LIMIT = 0.0,
-    double UPPER_LEFT_ELEVATION_LIMIT = 0.0,
-    double RIGHT_GEO_BELT_LIMIT = 0.0,
-    double LEFT_GEO_BELT_LIMIT = 0.0,
-    double MAGNITUDE_LIMIT = 0.0,
-    bool TASKABLE = false) {
+    const char *ORIGIN = nullptr,
+    DataMode DATA_MODE = DataMode_EXERCISE,
+    const char *CREATED_AT = nullptr,
+    const char *CREATED_BY = nullptr,
+    ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
+    ::flatbuffers::Offset<RFM> SEN_REFERENCE_FRAME = 0,
+    bool UMBRA = false,
+    bool PENUMBRA = false,
+    const char *ORIG_NETWORK = nullptr,
+    const char *SOURCE_DL = nullptr,
+    DeviceType TYPE = DeviceType_UNKNOWN,
+    bool AZIMUTH_MEASURED = false,
+    bool ELEVATION_MEASURED = false,
+    bool RANGE_MEASURED = false,
+    bool RANGERATE_MEASURED = false,
+    bool RA_MEASURED = false,
+    bool DECLINATION_MEASURED = false,
+    float NIIRS = 0.0f,
+    float METERS_PER_PIXEL = 0.0f,
+    float IMAGE_SNR = 0.0f,
+    int32_t IMAGE_BIT_DEPTH = 0,
+    int32_t IMAGE_WIDTH = 0,
+    int32_t IMAGE_HEIGHT = 0,
+    const char *IMAGE_COMPRESSION = nullptr,
+    float IMAGE_COMPRESSION_RATIO = 0.0f,
+    const char *PROCESSED_IMAGE_URI = nullptr,
+    bool IMAGE_AUTO_ENHANCED = false,
+    bool MULTI_FRAME_STACKED = false,
+    bool SYNTHETIC_TRACKING_USED = false,
+    float IMAGE_SHARPNESS = 0.0f,
+    float IMAGE_NOISE_STDDEV = 0.0f,
+    float IMAGE_CONTRAST = 0.0f,
+    float IMAGE_DYNAMIC_RANGE = 0.0f,
+    float IMAGE_ENTROPY = 0.0f,
+    float BACKGROUND_UNIFORMITY = 0.0f,
+    float BACKGROUND_MEAN_LEVEL = 0.0f,
+    float SATURATED_PIXEL_PERCENT = 0.0f,
+    float DEAD_PIXEL_PERCENT = 0.0f,
+    float PSF_FWHM = 0.0f,
+    float CLOUD_COVER_PERCENT = 0.0f,
+    float CLOUD_DETECTION_CONFIDENCE = 0.0f,
+    float HAZE_PERCENT = 0.0f,
+    float AEROSOL_OPTICAL_THICKNESS = 0.0f,
+    float WATER_VAPOR_CONTENT = 0.0f,
+    float SUN_ELEVATION = 0.0f,
+    float SUN_AZIMUTH = 0.0f,
+    float VIEW_ZENITH_ANGLE = 0.0f,
+    float VIEW_AZIMUTH_ANGLE = 0.0f,
+    float OFF_NADIR_ANGLE = 0.0f,
+    float SWATH_WIDTH_KM = 0.0f,
+    float MEAN_TERRAIN_ELEVATION = 0.0f,
+    float TERRAIN_ELEVATION_STDDEV = 0.0f,
+    float SHADOW_COVER_PERCENT = 0.0f,
+    bool SUNGLINT_PRESENT = false,
+    float SUNGLINT_PERCENT = 0.0f,
+    float SNOW_ICE_COVER_PERCENT = 0.0f,
+    float VALID_DATA_AREA_KM2 = 0.0f) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
-  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
-  auto BAND__ = BAND ? _fbb.CreateVector<::flatbuffers::Offset<Band>>(*BAND) : 0;
-  auto POWER_TYPE__ = POWER_TYPE ? _fbb.CreateString(POWER_TYPE) : 0;
+  auto CLASSIFICATION__ = CLASSIFICATION ? _fbb.CreateString(CLASSIFICATION) : 0;
+  auto OB_TIME__ = OB_TIME ? _fbb.CreateString(OB_TIME) : 0;
+  auto ID_ON_ORBIT__ = ID_ON_ORBIT ? _fbb.CreateString(ID_ON_ORBIT) : 0;
+  auto SENSOR_ID__ = SENSOR_ID ? _fbb.CreateString(SENSOR_ID) : 0;
+  auto TASK_ID__ = TASK_ID ? _fbb.CreateString(TASK_ID) : 0;
+  auto TRANSACTION_ID__ = TRANSACTION_ID ? _fbb.CreateString(TRANSACTION_ID) : 0;
+  auto IMAGE_SET_ID__ = IMAGE_SET_ID ? _fbb.CreateString(IMAGE_SET_ID) : 0;
+  auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
+  auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
+  auto RAW_FILE_URI__ = RAW_FILE_URI ? _fbb.CreateString(RAW_FILE_URI) : 0;
+  auto DESCRIPTOR__ = DESCRIPTOR ? _fbb.CreateString(DESCRIPTOR) : 0;
   auto SOURCE__ = SOURCE ? _fbb.CreateString(SOURCE) : 0;
-  auto LAST_OB_TIME__ = LAST_OB_TIME ? _fbb.CreateString(LAST_OB_TIME) : 0;
-  return CreateIDM(
+  auto ORIGIN__ = ORIGIN ? _fbb.CreateString(ORIGIN) : 0;
+  auto CREATED_AT__ = CREATED_AT ? _fbb.CreateString(CREATED_AT) : 0;
+  auto CREATED_BY__ = CREATED_BY ? _fbb.CreateString(CREATED_BY) : 0;
+  auto ORIG_NETWORK__ = ORIG_NETWORK ? _fbb.CreateString(ORIG_NETWORK) : 0;
+  auto SOURCE_DL__ = SOURCE_DL ? _fbb.CreateString(SOURCE_DL) : 0;
+  auto IMAGE_COMPRESSION__ = IMAGE_COMPRESSION ? _fbb.CreateString(IMAGE_COMPRESSION) : 0;
+  auto PROCESSED_IMAGE_URI__ = PROCESSED_IMAGE_URI ? _fbb.CreateString(PROCESSED_IMAGE_URI) : 0;
+  return CreateEOO(
       _fbb,
       ID__,
-      NAME__,
-      DATA_MODE,
-      UPLINK,
-      DOWNLINK,
-      BEACON,
-      BAND__,
-      POLARIZATION_TYPE,
-      SIMPLE_POLARIZATION,
-      STOKES_PARAMETERS,
-      POWER_REQUIRED,
-      POWER_TYPE__,
-      TRANSMIT,
-      RECEIVE,
-      SENSOR_TYPE,
+      CLASSIFICATION__,
+      OB_TIME__,
+      CORR_QUALITY,
+      ID_ON_ORBIT__,
+      SENSOR_ID__,
+      COLLECT_METHOD,
+      NORAD_CAT_ID,
+      TASK_ID__,
+      TRANSACTION_ID__,
+      IMAGE_SET_ID__,
+      IMAGE_SET_LENGTH,
+      SEQUENCE_ID,
+      OB_POSITION,
+      ORIG_OBJECT_ID__,
+      ORIG_SENSOR_ID__,
+      UCT,
+      AZIMUTH,
+      AZIMUTH_UNC,
+      AZIMUTH_BIAS,
+      AZIMUTH_RATE,
+      ELEVATION,
+      ELEVATION_UNC,
+      ELEVATION_BIAS,
+      ELEVATION_RATE,
+      RANGE,
+      RANGE_UNC,
+      RANGE_BIAS,
+      RANGE_RATE,
+      RANGE_RATE_UNC,
+      RA,
+      RA_RATE,
+      RA_UNC,
+      RA_BIAS,
+      DECLINATION,
+      DECLINATION_RATE,
+      DECLINATION_UNC,
+      DECLINATION_BIAS,
+      LOSX,
+      LOSY,
+      LOSZ,
+      LOS_UNC,
+      LOSXVEL,
+      LOSYVEL,
+      LOSZVEL,
+      SENLAT,
+      SENLON,
+      SENALT,
+      SENX,
+      SENY,
+      SENZ,
+      FOV_COUNT,
+      FOV_COUNT_UCTS,
+      EXP_DURATION,
+      ZEROPTD,
+      NET_OBJ_SIG,
+      NET_OBJ_SIG_UNC,
+      MAG,
+      MAG_UNC,
+      MAG_NORM_RANGE,
+      GEOLAT,
+      GEOLON,
+      GEOALT,
+      GEORANGE,
+      SKY_BKGRND,
+      PRIMARY_EXTINCTION,
+      PRIMARY_EXTINCTION_UNC,
+      SOLAR_PHASE_ANGLE,
+      SOLAR_EQ_PHASE_ANGLE,
+      SOLAR_DEC_ANGLE,
+      SHUTTER_DELAY,
+      TIMING_BIAS,
+      RAW_FILE_URI__,
+      INTENSITY,
+      BG_INTENSITY,
+      DESCRIPTOR__,
       SOURCE__,
-      LAST_OB_TIME__,
-      LOWER_LEFT_ELEVATION_LIMIT,
-      UPPER_LEFT_AZIMUTH_LIMIT,
-      LOWER_RIGHT_ELEVATION_LIMIT,
-      LOWER_LEFT_AZIMUTH_LIMIT,
-      UPPER_RIGHT_ELEVATION_LIMIT,
-      UPPER_RIGHT_AZIMUTH_LIMIT,
-      LOWER_RIGHT_AZIMUTH_LIMIT,
-      UPPER_LEFT_ELEVATION_LIMIT,
-      RIGHT_GEO_BELT_LIMIT,
-      LEFT_GEO_BELT_LIMIT,
-      MAGNITUDE_LIMIT,
-      TASKABLE);
+      ORIGIN__,
+      DATA_MODE,
+      CREATED_AT__,
+      CREATED_BY__,
+      REFERENCE_FRAME,
+      SEN_REFERENCE_FRAME,
+      UMBRA,
+      PENUMBRA,
+      ORIG_NETWORK__,
+      SOURCE_DL__,
+      TYPE,
+      AZIMUTH_MEASURED,
+      ELEVATION_MEASURED,
+      RANGE_MEASURED,
+      RANGERATE_MEASURED,
+      RA_MEASURED,
+      DECLINATION_MEASURED,
+      NIIRS,
+      METERS_PER_PIXEL,
+      IMAGE_SNR,
+      IMAGE_BIT_DEPTH,
+      IMAGE_WIDTH,
+      IMAGE_HEIGHT,
+      IMAGE_COMPRESSION__,
+      IMAGE_COMPRESSION_RATIO,
+      PROCESSED_IMAGE_URI__,
+      IMAGE_AUTO_ENHANCED,
+      MULTI_FRAME_STACKED,
+      SYNTHETIC_TRACKING_USED,
+      IMAGE_SHARPNESS,
+      IMAGE_NOISE_STDDEV,
+      IMAGE_CONTRAST,
+      IMAGE_DYNAMIC_RANGE,
+      IMAGE_ENTROPY,
+      BACKGROUND_UNIFORMITY,
+      BACKGROUND_MEAN_LEVEL,
+      SATURATED_PIXEL_PERCENT,
+      DEAD_PIXEL_PERCENT,
+      PSF_FWHM,
+      CLOUD_COVER_PERCENT,
+      CLOUD_DETECTION_CONFIDENCE,
+      HAZE_PERCENT,
+      AEROSOL_OPTICAL_THICKNESS,
+      WATER_VAPOR_CONTENT,
+      SUN_ELEVATION,
+      SUN_AZIMUTH,
+      VIEW_ZENITH_ANGLE,
+      VIEW_AZIMUTH_ANGLE,
+      OFF_NADIR_ANGLE,
+      SWATH_WIDTH_KM,
+      MEAN_TERRAIN_ELEVATION,
+      TERRAIN_ELEVATION_STDDEV,
+      SHADOW_COVER_PERCENT,
+      SUNGLINT_PRESENT,
+      SUNGLINT_PERCENT,
+      SNOW_ICE_COVER_PERCENT,
+      VALID_DATA_AREA_KM2);
 }
 
-inline const IDM *GetIDM(const void *buf) {
-  return ::flatbuffers::GetRoot<IDM>(buf);
+inline const EOO *GetEOO(const void *buf) {
+  return ::flatbuffers::GetRoot<EOO>(buf);
 }
 
-inline const IDM *GetSizePrefixedIDM(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<IDM>(buf);
+inline const EOO *GetSizePrefixedEOO(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<EOO>(buf);
 }
 
-inline const char *IDMIdentifier() {
-  return "$IDM";
+inline const char *EOOIdentifier() {
+  return "$EOO";
 }
 
-inline bool IDMBufferHasIdentifier(const void *buf) {
+inline bool EOOBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, IDMIdentifier());
+      buf, EOOIdentifier());
 }
 
-inline bool SizePrefixedIDMBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedEOOBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, IDMIdentifier(), true);
+      buf, EOOIdentifier(), true);
 }
 
 template <bool B = false>
-inline bool VerifyIDMBuffer(
+inline bool VerifyEOOBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<IDM>(IDMIdentifier());
+  return verifier.template VerifyBuffer<EOO>(EOOIdentifier());
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedIDMBuffer(
+inline bool VerifySizePrefixedEOOBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<IDM>(IDMIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<EOO>(EOOIdentifier());
 }
 
-inline void FinishIDMBuffer(
+inline void FinishEOOBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<IDM> root) {
-  fbb.Finish(root, IDMIdentifier());
+    ::flatbuffers::Offset<EOO> root) {
+  fbb.Finish(root, EOOIdentifier());
 }
 
-inline void FinishSizePrefixedIDMBuffer(
+inline void FinishSizePrefixedEOOBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<IDM> root) {
-  fbb.FinishSizePrefixed(root, IDMIdentifier());
+    ::flatbuffers::Offset<EOO> root) {
+  fbb.FinishSizePrefixed(root, EOOIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

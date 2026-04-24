@@ -2,48 +2,50 @@
 // @generated
 extern crate alloc;
 
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_KEY_EXCHANGE: i8 = 0;
+pub const ENUM_MIN_LICENSING_GRANT_MESSAGE_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_KEY_EXCHANGE: i8 = 2;
+pub const ENUM_MAX_LICENSING_GRANT_MESSAGE_TYPE: i8 = 2;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_KEY_EXCHANGE: [KeyExchange; 3] = [
-  KeyExchange::X25519,
-  KeyExchange::Secp256k1,
-  KeyExchange::P256,
+pub const ENUM_VALUES_LICENSING_GRANT_MESSAGE_TYPE: [licensingGrantMessageType; 3] = [
+  licensingGrantMessageType::Request,
+  licensingGrantMessageType::Granted,
+  licensingGrantMessageType::Denied,
 ];
 
-/// Encryption Header for FlatBuffers field-level encryption
-/// Key exchange algorithm used to derive the shared secret
+/// Licensing grant message type
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct KeyExchange(pub i8);
+pub struct licensingGrantMessageType(pub i8);
 #[allow(non_upper_case_globals)]
-impl KeyExchange {
-  pub const X25519: Self = Self(0);
-  pub const Secp256k1: Self = Self(1);
-  pub const P256: Self = Self(2);
+impl licensingGrantMessageType {
+  pub const Request: Self = Self(0);
+  pub const Granted: Self = Self(1);
+  pub const Denied: Self = Self(2);
 
   pub const ENUM_MIN: i8 = 0;
   pub const ENUM_MAX: i8 = 2;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::X25519,
-    Self::Secp256k1,
-    Self::P256,
+    Self::Request,
+    Self::Granted,
+    Self::Denied,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::X25519 => Some("X25519"),
-      Self::Secp256k1 => Some("Secp256k1"),
-      Self::P256 => Some("P256"),
+      Self::Request => Some("Request"),
+      Self::Granted => Some("Granted"),
+      Self::Denied => Some("Denied"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for KeyExchange {
+impl ::core::fmt::Debug for licensingGrantMessageType {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -52,7 +54,7 @@ impl ::core::fmt::Debug for KeyExchange {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for KeyExchange {
+impl<'a> ::flatbuffers::Follow<'a> for licensingGrantMessageType {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -61,15 +63,15 @@ impl<'a> ::flatbuffers::Follow<'a> for KeyExchange {
   }
 }
 
-impl ::flatbuffers::Push for KeyExchange {
-    type Output = KeyExchange;
+impl ::flatbuffers::Push for licensingGrantMessageType {
+    type Output = licensingGrantMessageType;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for KeyExchange {
+impl ::flatbuffers::EndianScalar for licensingGrantMessageType {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -83,7 +85,7 @@ impl ::flatbuffers::EndianScalar for KeyExchange {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for KeyExchange {
+impl<'a> ::flatbuffers::Verifiable for licensingGrantMessageType {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -92,646 +94,742 @@ impl<'a> ::flatbuffers::Verifiable for KeyExchange {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for KeyExchange {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_SYMMETRIC_ALGO: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SYMMETRIC_ALGO: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SYMMETRIC_ALGO: [SymmetricAlgo; 1] = [
-  SymmetricAlgo::AES_256_CTR,
-];
-
-/// Symmetric encryption algorithm
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct SymmetricAlgo(pub i8);
-#[allow(non_upper_case_globals)]
-impl SymmetricAlgo {
-  pub const AES_256_CTR: Self = Self(0);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 0;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::AES_256_CTR,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::AES_256_CTR => Some("AES_256_CTR"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for SymmetricAlgo {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for SymmetricAlgo {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for SymmetricAlgo {
-    type Output = SymmetricAlgo;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for SymmetricAlgo {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for SymmetricAlgo {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for SymmetricAlgo {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_KDF: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_KDF: i8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_KDF: [KDF; 1] = [
-  KDF::HKDF_SHA256,
-];
-
-/// Key derivation function
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct KDF(pub i8);
-#[allow(non_upper_case_globals)]
-impl KDF {
-  pub const HKDF_SHA256: Self = Self(0);
-
-  pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 0;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::HKDF_SHA256,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::HKDF_SHA256 => Some("HKDF_SHA256"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for KDF {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for KDF {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for KDF {
-    type Output = KDF;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for KDF {
-  type Scalar = i8;
-  #[inline]
-  fn to_little_endian(self) -> i8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: i8) -> Self {
-    let b = i8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for KDF {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    i8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for KDF {}
-pub enum ENCOffset {}
+impl ::flatbuffers::SimpleToVerifyInSlice for licensingGrantMessageType {}
+pub enum LGROffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Encryption Header containing all parameters needed for decryption
-pub struct ENC<'a> {
+/// Licensing grant message
+pub struct LGR<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for ENC<'a> {
-  type Inner = ENC<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for LGR<'a> {
+  type Inner = LGR<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> ENC<'a> {
-  pub const VT_VERSION: ::flatbuffers::VOffsetT = 4;
-  pub const VT_KEY_EXCHANGE: ::flatbuffers::VOffsetT = 6;
-  pub const VT_SYMMETRIC: ::flatbuffers::VOffsetT = 8;
-  pub const VT_KEY_DERIVATION: ::flatbuffers::VOffsetT = 10;
-  pub const VT_EPHEMERAL_PUBLIC_KEY: ::flatbuffers::VOffsetT = 12;
-  pub const VT_NONCE_START: ::flatbuffers::VOffsetT = 14;
-  pub const VT_RECIPIENT_KEY_ID: ::flatbuffers::VOffsetT = 16;
-  pub const VT_CONTEXT: ::flatbuffers::VOffsetT = 18;
-  pub const VT_SCHEMA_HASH: ::flatbuffers::VOffsetT = 20;
-  pub const VT_ROOT_TYPE: ::flatbuffers::VOffsetT = 22;
-  pub const VT_TIMESTAMP: ::flatbuffers::VOffsetT = 24;
+impl<'a> LGR<'a> {
+  pub const VT_MESSAGE_TYPE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_REQUEST_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_MODULE_ID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MODULE_VERSION: ::flatbuffers::VOffsetT = 10;
+  pub const VT_REQUESTER_PEER_ID: ::flatbuffers::VOffsetT = 12;
+  pub const VT_REQUESTER_XPUB: ::flatbuffers::VOffsetT = 14;
+  pub const VT_REQUESTED_DOMAIN: ::flatbuffers::VOffsetT = 16;
+  pub const VT_REQUESTED_TIMEOUT_MS: ::flatbuffers::VOffsetT = 18;
+  pub const VT_GRANTED_DOMAIN: ::flatbuffers::VOffsetT = 20;
+  pub const VT_GRANTED_TIMEOUT_MS: ::flatbuffers::VOffsetT = 22;
+  pub const VT_EXPIRES_AT: ::flatbuffers::VOffsetT = 24;
+  pub const VT_REQUIRED_SCOPE: ::flatbuffers::VOffsetT = 26;
+  pub const VT_GRANT_STATUS: ::flatbuffers::VOffsetT = 28;
+  pub const VT_DENIAL_REASON: ::flatbuffers::VOffsetT = 30;
+  pub const VT_CAPABILITY_TOKEN: ::flatbuffers::VOffsetT = 32;
+  pub const VT_MODULE_DESCRIPTOR: ::flatbuffers::VOffsetT = 34;
+  pub const VT_WRAPPED_CONTENT_KEY_HEADER: ::flatbuffers::VOffsetT = 36;
+  pub const VT_WRAPPED_CONTENT_KEY_PAYLOAD: ::flatbuffers::VOffsetT = 38;
+  pub const VT_GRANT_VERIFIER_PUBKEY: ::flatbuffers::VOffsetT = 40;
+  pub const VT_PROVIDER_SIGNATURE: ::flatbuffers::VOffsetT = 42;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    ENC { _tab: table }
+    LGR { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args ENCArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<ENC<'bldr>> {
-    let mut builder = ENCBuilder::new(_fbb);
-    builder.add_TIMESTAMP(args.TIMESTAMP);
-    if let Some(x) = args.ROOT_TYPE { builder.add_ROOT_TYPE(x); }
-    if let Some(x) = args.SCHEMA_HASH { builder.add_SCHEMA_HASH(x); }
-    if let Some(x) = args.CONTEXT { builder.add_CONTEXT(x); }
-    if let Some(x) = args.RECIPIENT_KEY_ID { builder.add_RECIPIENT_KEY_ID(x); }
-    if let Some(x) = args.NONCE_START { builder.add_NONCE_START(x); }
-    if let Some(x) = args.EPHEMERAL_PUBLIC_KEY { builder.add_EPHEMERAL_PUBLIC_KEY(x); }
-    builder.add_KEY_DERIVATION(args.KEY_DERIVATION);
-    builder.add_SYMMETRIC(args.SYMMETRIC);
-    builder.add_KEY_EXCHANGE(args.KEY_EXCHANGE);
-    builder.add_VERSION(args.VERSION);
+    args: &'args LGRArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<LGR<'bldr>> {
+    let mut builder = LGRBuilder::new(_fbb);
+    builder.add_EXPIRES_AT(args.EXPIRES_AT);
+    builder.add_GRANTED_TIMEOUT_MS(args.GRANTED_TIMEOUT_MS);
+    builder.add_REQUESTED_TIMEOUT_MS(args.REQUESTED_TIMEOUT_MS);
+    if let Some(x) = args.PROVIDER_SIGNATURE { builder.add_PROVIDER_SIGNATURE(x); }
+    if let Some(x) = args.GRANT_VERIFIER_PUBKEY { builder.add_GRANT_VERIFIER_PUBKEY(x); }
+    if let Some(x) = args.WRAPPED_CONTENT_KEY_PAYLOAD { builder.add_WRAPPED_CONTENT_KEY_PAYLOAD(x); }
+    if let Some(x) = args.WRAPPED_CONTENT_KEY_HEADER { builder.add_WRAPPED_CONTENT_KEY_HEADER(x); }
+    if let Some(x) = args.MODULE_DESCRIPTOR { builder.add_MODULE_DESCRIPTOR(x); }
+    if let Some(x) = args.CAPABILITY_TOKEN { builder.add_CAPABILITY_TOKEN(x); }
+    if let Some(x) = args.DENIAL_REASON { builder.add_DENIAL_REASON(x); }
+    if let Some(x) = args.GRANT_STATUS { builder.add_GRANT_STATUS(x); }
+    if let Some(x) = args.REQUIRED_SCOPE { builder.add_REQUIRED_SCOPE(x); }
+    if let Some(x) = args.GRANTED_DOMAIN { builder.add_GRANTED_DOMAIN(x); }
+    if let Some(x) = args.REQUESTED_DOMAIN { builder.add_REQUESTED_DOMAIN(x); }
+    if let Some(x) = args.REQUESTER_XPUB { builder.add_REQUESTER_XPUB(x); }
+    if let Some(x) = args.REQUESTER_PEER_ID { builder.add_REQUESTER_PEER_ID(x); }
+    if let Some(x) = args.MODULE_VERSION { builder.add_MODULE_VERSION(x); }
+    if let Some(x) = args.MODULE_ID { builder.add_MODULE_ID(x); }
+    if let Some(x) = args.REQUEST_ID { builder.add_REQUEST_ID(x); }
+    builder.add_MESSAGE_TYPE(args.MESSAGE_TYPE);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> ENCT {
-    let VERSION = self.VERSION();
-    let KEY_EXCHANGE = self.KEY_EXCHANGE();
-    let SYMMETRIC = self.SYMMETRIC();
-    let KEY_DERIVATION = self.KEY_DERIVATION();
-    let EPHEMERAL_PUBLIC_KEY = {
-      let x = self.EPHEMERAL_PUBLIC_KEY();
-      x.into_iter().collect()
+  pub fn unpack(&self) -> LGRT {
+    let MESSAGE_TYPE = self.MESSAGE_TYPE();
+    let REQUEST_ID = {
+      let x = self.REQUEST_ID();
+      alloc::string::ToString::to_string(x)
     };
-    let NONCE_START = {
-      let x = self.NONCE_START();
-      x.into_iter().collect()
+    let MODULE_ID = {
+      let x = self.MODULE_ID();
+      alloc::string::ToString::to_string(x)
     };
-    let RECIPIENT_KEY_ID = self.RECIPIENT_KEY_ID().map(|x| {
-      x.into_iter().collect()
-    });
-    let CONTEXT = self.CONTEXT().map(|x| {
+    let MODULE_VERSION = self.MODULE_VERSION().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let SCHEMA_HASH = self.SCHEMA_HASH().map(|x| {
-      x.into_iter().collect()
-    });
-    let ROOT_TYPE = self.ROOT_TYPE().map(|x| {
+    let REQUESTER_PEER_ID = self.REQUESTER_PEER_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let TIMESTAMP = self.TIMESTAMP();
-    ENCT {
-      VERSION,
-      KEY_EXCHANGE,
-      SYMMETRIC,
-      KEY_DERIVATION,
-      EPHEMERAL_PUBLIC_KEY,
-      NONCE_START,
-      RECIPIENT_KEY_ID,
-      CONTEXT,
-      SCHEMA_HASH,
-      ROOT_TYPE,
-      TIMESTAMP,
+    let REQUESTER_XPUB = self.REQUESTER_XPUB().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let REQUESTED_DOMAIN = self.REQUESTED_DOMAIN().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let REQUESTED_TIMEOUT_MS = self.REQUESTED_TIMEOUT_MS();
+    let GRANTED_DOMAIN = self.GRANTED_DOMAIN().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let GRANTED_TIMEOUT_MS = self.GRANTED_TIMEOUT_MS();
+    let EXPIRES_AT = self.EXPIRES_AT();
+    let REQUIRED_SCOPE = self.REQUIRED_SCOPE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let GRANT_STATUS = self.GRANT_STATUS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DENIAL_REASON = self.DENIAL_REASON().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CAPABILITY_TOKEN = self.CAPABILITY_TOKEN().map(|x| {
+      x.into_iter().collect()
+    });
+    let MODULE_DESCRIPTOR = self.MODULE_DESCRIPTOR().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let WRAPPED_CONTENT_KEY_HEADER = self.WRAPPED_CONTENT_KEY_HEADER().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let WRAPPED_CONTENT_KEY_PAYLOAD = self.WRAPPED_CONTENT_KEY_PAYLOAD().map(|x| {
+      x.into_iter().collect()
+    });
+    let GRANT_VERIFIER_PUBKEY = self.GRANT_VERIFIER_PUBKEY().map(|x| {
+      x.into_iter().collect()
+    });
+    let PROVIDER_SIGNATURE = self.PROVIDER_SIGNATURE().map(|x| {
+      x.into_iter().collect()
+    });
+    LGRT {
+      MESSAGE_TYPE,
+      REQUEST_ID,
+      MODULE_ID,
+      MODULE_VERSION,
+      REQUESTER_PEER_ID,
+      REQUESTER_XPUB,
+      REQUESTED_DOMAIN,
+      REQUESTED_TIMEOUT_MS,
+      GRANTED_DOMAIN,
+      GRANTED_TIMEOUT_MS,
+      EXPIRES_AT,
+      REQUIRED_SCOPE,
+      GRANT_STATUS,
+      DENIAL_REASON,
+      CAPABILITY_TOKEN,
+      MODULE_DESCRIPTOR,
+      WRAPPED_CONTENT_KEY_HEADER,
+      WRAPPED_CONTENT_KEY_PAYLOAD,
+      GRANT_VERIFIER_PUBKEY,
+      PROVIDER_SIGNATURE,
     }
   }
 
-  /// Schema version for forward compatibility
+  /// Message type
   #[inline]
-  pub fn VERSION(&self) -> u8 {
+  pub fn MESSAGE_TYPE(&self) -> licensingGrantMessageType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u8>(ENC::VT_VERSION, Some(1)).unwrap()}
+    unsafe { self._tab.get::<licensingGrantMessageType>(LGR::VT_MESSAGE_TYPE, Some(licensingGrantMessageType::Request)).unwrap()}
   }
-  /// Key exchange algorithm used
+  /// Unique request identifier
   #[inline]
-  pub fn KEY_EXCHANGE(&self) -> KeyExchange {
+  pub fn REQUEST_ID(&self) -> &'a str {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<KeyExchange>(ENC::VT_KEY_EXCHANGE, Some(KeyExchange::X25519)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LGR::VT_REQUEST_ID, None).unwrap()}
   }
-  /// Symmetric encryption algorithm used
+  /// Canonical module identifier
   #[inline]
-  pub fn SYMMETRIC(&self) -> SymmetricAlgo {
+  pub fn MODULE_ID(&self) -> &'a str {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<SymmetricAlgo>(ENC::VT_SYMMETRIC, Some(SymmetricAlgo::AES_256_CTR)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LGR::VT_MODULE_ID, None).unwrap()}
   }
-  /// Key derivation function used
+  /// Optional module version
   #[inline]
-  pub fn KEY_DERIVATION(&self) -> KDF {
+  pub fn MODULE_VERSION(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<KDF>(ENC::VT_KEY_DERIVATION, Some(KDF::HKDF_SHA256)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LGR::VT_MODULE_VERSION, None)}
   }
-  /// Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
+  /// Requester peer identifier
   #[inline]
-  pub fn EPHEMERAL_PUBLIC_KEY(&self) -> ::flatbuffers::Vector<'a, u8> {
+  pub fn REQUESTER_PEER_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ENC::VT_EPHEMERAL_PUBLIC_KEY, None).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LGR::VT_REQUESTER_PEER_ID, None)}
   }
-  /// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+  /// Requester account identity or wallet xpub
   #[inline]
-  pub fn NONCE_START(&self) -> ::flatbuffers::Vector<'a, u8> {
+  pub fn REQUESTER_XPUB(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ENC::VT_NONCE_START, None).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LGR::VT_REQUESTER_XPUB, None)}
   }
-  /// Optional identifier for the recipient's public key (up to 32 bytes)
+  /// Requested domain
   #[inline]
-  pub fn RECIPIENT_KEY_ID(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+  pub fn REQUESTED_DOMAIN(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ENC::VT_RECIPIENT_KEY_ID, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LGR::VT_REQUESTED_DOMAIN, None)}
   }
-  /// Optional domain separation context string
+  /// Requested timeout in milliseconds
   #[inline]
-  pub fn CONTEXT(&self) -> Option<&'a str> {
+  pub fn REQUESTED_TIMEOUT_MS(&self) -> u64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ENC::VT_CONTEXT, None)}
+    unsafe { self._tab.get::<u64>(LGR::VT_REQUESTED_TIMEOUT_MS, Some(0)).unwrap()}
   }
-  /// Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
+  /// Granted domain
   #[inline]
-  pub fn SCHEMA_HASH(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+  pub fn GRANTED_DOMAIN(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ENC::VT_SCHEMA_HASH, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LGR::VT_GRANTED_DOMAIN, None)}
   }
-  /// Optional root type name from the schema
+  /// Granted timeout in milliseconds
   #[inline]
-  pub fn ROOT_TYPE(&self) -> Option<&'a str> {
+  pub fn GRANTED_TIMEOUT_MS(&self) -> u64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ENC::VT_ROOT_TYPE, None)}
+    unsafe { self._tab.get::<u64>(LGR::VT_GRANTED_TIMEOUT_MS, Some(0)).unwrap()}
   }
-  /// Optional Unix timestamp (milliseconds) when encryption was performed
+  /// Grant expiration time in milliseconds since epoch
   #[inline]
-  pub fn TIMESTAMP(&self) -> u64 {
+  pub fn EXPIRES_AT(&self) -> u64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u64>(ENC::VT_TIMESTAMP, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u64>(LGR::VT_EXPIRES_AT, Some(0)).unwrap()}
+  }
+  /// Required scope for the publication
+  #[inline]
+  pub fn REQUIRED_SCOPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LGR::VT_REQUIRED_SCOPE, None)}
+  }
+  /// Grant status string
+  #[inline]
+  pub fn GRANT_STATUS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LGR::VT_GRANT_STATUS, None)}
+  }
+  /// Structured denial reason
+  #[inline]
+  pub fn DENIAL_REASON(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LGR::VT_DENIAL_REASON, None)}
+  }
+  /// Issued capability token bytes
+  #[inline]
+  pub fn CAPABILITY_TOKEN(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(LGR::VT_CAPABILITY_TOKEN, None)}
+  }
+  /// Published module descriptor
+  #[inline]
+  pub fn MODULE_DESCRIPTOR(&self) -> Option<PLG<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PLG>>(LGR::VT_MODULE_DESCRIPTOR, None)}
+  }
+  /// Encryption header for the recipient-specific wrapped content-key payload.
+  #[inline]
+  pub fn WRAPPED_CONTENT_KEY_HEADER(&self) -> Option<ENC<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<ENC>>(LGR::VT_WRAPPED_CONTENT_KEY_HEADER, None)}
+  }
+  /// Encrypted FlatBuffer payload containing the recipient-specific content key
+  /// material. The payload currently uses `$KMF` semantics and is decrypted
+  /// using `WRAPPED_CONTENT_KEY_HEADER` before reading the key bytes.
+  #[inline]
+  pub fn WRAPPED_CONTENT_KEY_PAYLOAD(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(LGR::VT_WRAPPED_CONTENT_KEY_PAYLOAD, None)}
+  }
+  /// Provider public key used to verify the grant signature
+  #[inline]
+  pub fn GRANT_VERIFIER_PUBKEY(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(LGR::VT_GRANT_VERIFIER_PUBKEY, None)}
+  }
+  /// Provider signature over the grant
+  #[inline]
+  pub fn PROVIDER_SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(LGR::VT_PROVIDER_SIGNATURE, None)}
   }
 }
 
-impl ::flatbuffers::Verifiable for ENC<'_> {
+impl ::flatbuffers::Verifiable for LGR<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<u8>("VERSION", Self::VT_VERSION, false)?
-     .visit_field::<KeyExchange>("KEY_EXCHANGE", Self::VT_KEY_EXCHANGE, false)?
-     .visit_field::<SymmetricAlgo>("SYMMETRIC", Self::VT_SYMMETRIC, false)?
-     .visit_field::<KDF>("KEY_DERIVATION", Self::VT_KEY_DERIVATION, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("EPHEMERAL_PUBLIC_KEY", Self::VT_EPHEMERAL_PUBLIC_KEY, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("NONCE_START", Self::VT_NONCE_START, true)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("RECIPIENT_KEY_ID", Self::VT_RECIPIENT_KEY_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONTEXT", Self::VT_CONTEXT, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SCHEMA_HASH", Self::VT_SCHEMA_HASH, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ROOT_TYPE", Self::VT_ROOT_TYPE, false)?
-     .visit_field::<u64>("TIMESTAMP", Self::VT_TIMESTAMP, false)?
+     .visit_field::<licensingGrantMessageType>("MESSAGE_TYPE", Self::VT_MESSAGE_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REQUEST_ID", Self::VT_REQUEST_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_ID", Self::VT_MODULE_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_VERSION", Self::VT_MODULE_VERSION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REQUESTER_PEER_ID", Self::VT_REQUESTER_PEER_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REQUESTER_XPUB", Self::VT_REQUESTER_XPUB, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REQUESTED_DOMAIN", Self::VT_REQUESTED_DOMAIN, false)?
+     .visit_field::<u64>("REQUESTED_TIMEOUT_MS", Self::VT_REQUESTED_TIMEOUT_MS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GRANTED_DOMAIN", Self::VT_GRANTED_DOMAIN, false)?
+     .visit_field::<u64>("GRANTED_TIMEOUT_MS", Self::VT_GRANTED_TIMEOUT_MS, false)?
+     .visit_field::<u64>("EXPIRES_AT", Self::VT_EXPIRES_AT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REQUIRED_SCOPE", Self::VT_REQUIRED_SCOPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GRANT_STATUS", Self::VT_GRANT_STATUS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DENIAL_REASON", Self::VT_DENIAL_REASON, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("CAPABILITY_TOKEN", Self::VT_CAPABILITY_TOKEN, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<PLG>>("MODULE_DESCRIPTOR", Self::VT_MODULE_DESCRIPTOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<ENC>>("WRAPPED_CONTENT_KEY_HEADER", Self::VT_WRAPPED_CONTENT_KEY_HEADER, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("WRAPPED_CONTENT_KEY_PAYLOAD", Self::VT_WRAPPED_CONTENT_KEY_PAYLOAD, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("GRANT_VERIFIER_PUBKEY", Self::VT_GRANT_VERIFIER_PUBKEY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("PROVIDER_SIGNATURE", Self::VT_PROVIDER_SIGNATURE, false)?
      .finish();
     Ok(())
   }
 }
-pub struct ENCArgs<'a> {
-    pub VERSION: u8,
-    pub KEY_EXCHANGE: KeyExchange,
-    pub SYMMETRIC: SymmetricAlgo,
-    pub KEY_DERIVATION: KDF,
-    pub EPHEMERAL_PUBLIC_KEY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
-    pub NONCE_START: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
-    pub RECIPIENT_KEY_ID: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
-    pub CONTEXT: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub SCHEMA_HASH: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
-    pub ROOT_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub TIMESTAMP: u64,
+pub struct LGRArgs<'a> {
+    pub MESSAGE_TYPE: licensingGrantMessageType,
+    pub REQUEST_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REQUESTER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REQUESTER_XPUB: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REQUESTED_DOMAIN: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REQUESTED_TIMEOUT_MS: u64,
+    pub GRANTED_DOMAIN: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub GRANTED_TIMEOUT_MS: u64,
+    pub EXPIRES_AT: u64,
+    pub REQUIRED_SCOPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub GRANT_STATUS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DENIAL_REASON: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CAPABILITY_TOKEN: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub MODULE_DESCRIPTOR: Option<::flatbuffers::WIPOffset<PLG<'a>>>,
+    pub WRAPPED_CONTENT_KEY_HEADER: Option<::flatbuffers::WIPOffset<ENC<'a>>>,
+    pub WRAPPED_CONTENT_KEY_PAYLOAD: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub GRANT_VERIFIER_PUBKEY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub PROVIDER_SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
 }
-impl<'a> Default for ENCArgs<'a> {
+impl<'a> Default for LGRArgs<'a> {
   #[inline]
   fn default() -> Self {
-    ENCArgs {
-      VERSION: 1,
-      KEY_EXCHANGE: KeyExchange::X25519,
-      SYMMETRIC: SymmetricAlgo::AES_256_CTR,
-      KEY_DERIVATION: KDF::HKDF_SHA256,
-      EPHEMERAL_PUBLIC_KEY: None, // required field
-      NONCE_START: None, // required field
-      RECIPIENT_KEY_ID: None,
-      CONTEXT: None,
-      SCHEMA_HASH: None,
-      ROOT_TYPE: None,
-      TIMESTAMP: 0,
+    LGRArgs {
+      MESSAGE_TYPE: licensingGrantMessageType::Request,
+      REQUEST_ID: None, // required field
+      MODULE_ID: None, // required field
+      MODULE_VERSION: None,
+      REQUESTER_PEER_ID: None,
+      REQUESTER_XPUB: None,
+      REQUESTED_DOMAIN: None,
+      REQUESTED_TIMEOUT_MS: 0,
+      GRANTED_DOMAIN: None,
+      GRANTED_TIMEOUT_MS: 0,
+      EXPIRES_AT: 0,
+      REQUIRED_SCOPE: None,
+      GRANT_STATUS: None,
+      DENIAL_REASON: None,
+      CAPABILITY_TOKEN: None,
+      MODULE_DESCRIPTOR: None,
+      WRAPPED_CONTENT_KEY_HEADER: None,
+      WRAPPED_CONTENT_KEY_PAYLOAD: None,
+      GRANT_VERIFIER_PUBKEY: None,
+      PROVIDER_SIGNATURE: None,
     }
   }
 }
 
-pub struct ENCBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct LGRBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ENCBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> LGRBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_VERSION(&mut self, VERSION: u8) {
-    self.fbb_.push_slot::<u8>(ENC::VT_VERSION, VERSION, 1);
+  pub fn add_MESSAGE_TYPE(&mut self, MESSAGE_TYPE: licensingGrantMessageType) {
+    self.fbb_.push_slot::<licensingGrantMessageType>(LGR::VT_MESSAGE_TYPE, MESSAGE_TYPE, licensingGrantMessageType::Request);
   }
   #[inline]
-  pub fn add_KEY_EXCHANGE(&mut self, KEY_EXCHANGE: KeyExchange) {
-    self.fbb_.push_slot::<KeyExchange>(ENC::VT_KEY_EXCHANGE, KEY_EXCHANGE, KeyExchange::X25519);
+  pub fn add_REQUEST_ID(&mut self, REQUEST_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_REQUEST_ID, REQUEST_ID);
   }
   #[inline]
-  pub fn add_SYMMETRIC(&mut self, SYMMETRIC: SymmetricAlgo) {
-    self.fbb_.push_slot::<SymmetricAlgo>(ENC::VT_SYMMETRIC, SYMMETRIC, SymmetricAlgo::AES_256_CTR);
+  pub fn add_MODULE_ID(&mut self, MODULE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_MODULE_ID, MODULE_ID);
   }
   #[inline]
-  pub fn add_KEY_DERIVATION(&mut self, KEY_DERIVATION: KDF) {
-    self.fbb_.push_slot::<KDF>(ENC::VT_KEY_DERIVATION, KEY_DERIVATION, KDF::HKDF_SHA256);
+  pub fn add_MODULE_VERSION(&mut self, MODULE_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_MODULE_VERSION, MODULE_VERSION);
   }
   #[inline]
-  pub fn add_EPHEMERAL_PUBLIC_KEY(&mut self, EPHEMERAL_PUBLIC_KEY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ENC::VT_EPHEMERAL_PUBLIC_KEY, EPHEMERAL_PUBLIC_KEY);
+  pub fn add_REQUESTER_PEER_ID(&mut self, REQUESTER_PEER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_REQUESTER_PEER_ID, REQUESTER_PEER_ID);
   }
   #[inline]
-  pub fn add_NONCE_START(&mut self, NONCE_START: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ENC::VT_NONCE_START, NONCE_START);
+  pub fn add_REQUESTER_XPUB(&mut self, REQUESTER_XPUB: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_REQUESTER_XPUB, REQUESTER_XPUB);
   }
   #[inline]
-  pub fn add_RECIPIENT_KEY_ID(&mut self, RECIPIENT_KEY_ID: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ENC::VT_RECIPIENT_KEY_ID, RECIPIENT_KEY_ID);
+  pub fn add_REQUESTED_DOMAIN(&mut self, REQUESTED_DOMAIN: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_REQUESTED_DOMAIN, REQUESTED_DOMAIN);
   }
   #[inline]
-  pub fn add_CONTEXT(&mut self, CONTEXT: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ENC::VT_CONTEXT, CONTEXT);
+  pub fn add_REQUESTED_TIMEOUT_MS(&mut self, REQUESTED_TIMEOUT_MS: u64) {
+    self.fbb_.push_slot::<u64>(LGR::VT_REQUESTED_TIMEOUT_MS, REQUESTED_TIMEOUT_MS, 0);
   }
   #[inline]
-  pub fn add_SCHEMA_HASH(&mut self, SCHEMA_HASH: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ENC::VT_SCHEMA_HASH, SCHEMA_HASH);
+  pub fn add_GRANTED_DOMAIN(&mut self, GRANTED_DOMAIN: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_GRANTED_DOMAIN, GRANTED_DOMAIN);
   }
   #[inline]
-  pub fn add_ROOT_TYPE(&mut self, ROOT_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ENC::VT_ROOT_TYPE, ROOT_TYPE);
+  pub fn add_GRANTED_TIMEOUT_MS(&mut self, GRANTED_TIMEOUT_MS: u64) {
+    self.fbb_.push_slot::<u64>(LGR::VT_GRANTED_TIMEOUT_MS, GRANTED_TIMEOUT_MS, 0);
   }
   #[inline]
-  pub fn add_TIMESTAMP(&mut self, TIMESTAMP: u64) {
-    self.fbb_.push_slot::<u64>(ENC::VT_TIMESTAMP, TIMESTAMP, 0);
+  pub fn add_EXPIRES_AT(&mut self, EXPIRES_AT: u64) {
+    self.fbb_.push_slot::<u64>(LGR::VT_EXPIRES_AT, EXPIRES_AT, 0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ENCBuilder<'a, 'b, A> {
+  pub fn add_REQUIRED_SCOPE(&mut self, REQUIRED_SCOPE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_REQUIRED_SCOPE, REQUIRED_SCOPE);
+  }
+  #[inline]
+  pub fn add_GRANT_STATUS(&mut self, GRANT_STATUS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_GRANT_STATUS, GRANT_STATUS);
+  }
+  #[inline]
+  pub fn add_DENIAL_REASON(&mut self, DENIAL_REASON: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_DENIAL_REASON, DENIAL_REASON);
+  }
+  #[inline]
+  pub fn add_CAPABILITY_TOKEN(&mut self, CAPABILITY_TOKEN: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_CAPABILITY_TOKEN, CAPABILITY_TOKEN);
+  }
+  #[inline]
+  pub fn add_MODULE_DESCRIPTOR(&mut self, MODULE_DESCRIPTOR: ::flatbuffers::WIPOffset<PLG<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PLG>>(LGR::VT_MODULE_DESCRIPTOR, MODULE_DESCRIPTOR);
+  }
+  #[inline]
+  pub fn add_WRAPPED_CONTENT_KEY_HEADER(&mut self, WRAPPED_CONTENT_KEY_HEADER: ::flatbuffers::WIPOffset<ENC<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<ENC>>(LGR::VT_WRAPPED_CONTENT_KEY_HEADER, WRAPPED_CONTENT_KEY_HEADER);
+  }
+  #[inline]
+  pub fn add_WRAPPED_CONTENT_KEY_PAYLOAD(&mut self, WRAPPED_CONTENT_KEY_PAYLOAD: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_WRAPPED_CONTENT_KEY_PAYLOAD, WRAPPED_CONTENT_KEY_PAYLOAD);
+  }
+  #[inline]
+  pub fn add_GRANT_VERIFIER_PUBKEY(&mut self, GRANT_VERIFIER_PUBKEY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_GRANT_VERIFIER_PUBKEY, GRANT_VERIFIER_PUBKEY);
+  }
+  #[inline]
+  pub fn add_PROVIDER_SIGNATURE(&mut self, PROVIDER_SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LGR::VT_PROVIDER_SIGNATURE, PROVIDER_SIGNATURE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> LGRBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    ENCBuilder {
+    LGRBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<ENC<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<LGR<'a>> {
     let o = self.fbb_.end_table(self.start_);
-    self.fbb_.required(o, ENC::VT_EPHEMERAL_PUBLIC_KEY,"EPHEMERAL_PUBLIC_KEY");
-    self.fbb_.required(o, ENC::VT_NONCE_START,"NONCE_START");
+    self.fbb_.required(o, LGR::VT_REQUEST_ID,"REQUEST_ID");
+    self.fbb_.required(o, LGR::VT_MODULE_ID,"MODULE_ID");
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for ENC<'_> {
+impl ::core::fmt::Debug for LGR<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("ENC");
-      ds.field("VERSION", &self.VERSION());
-      ds.field("KEY_EXCHANGE", &self.KEY_EXCHANGE());
-      ds.field("SYMMETRIC", &self.SYMMETRIC());
-      ds.field("KEY_DERIVATION", &self.KEY_DERIVATION());
-      ds.field("EPHEMERAL_PUBLIC_KEY", &self.EPHEMERAL_PUBLIC_KEY());
-      ds.field("NONCE_START", &self.NONCE_START());
-      ds.field("RECIPIENT_KEY_ID", &self.RECIPIENT_KEY_ID());
-      ds.field("CONTEXT", &self.CONTEXT());
-      ds.field("SCHEMA_HASH", &self.SCHEMA_HASH());
-      ds.field("ROOT_TYPE", &self.ROOT_TYPE());
-      ds.field("TIMESTAMP", &self.TIMESTAMP());
+    let mut ds = f.debug_struct("LGR");
+      ds.field("MESSAGE_TYPE", &self.MESSAGE_TYPE());
+      ds.field("REQUEST_ID", &self.REQUEST_ID());
+      ds.field("MODULE_ID", &self.MODULE_ID());
+      ds.field("MODULE_VERSION", &self.MODULE_VERSION());
+      ds.field("REQUESTER_PEER_ID", &self.REQUESTER_PEER_ID());
+      ds.field("REQUESTER_XPUB", &self.REQUESTER_XPUB());
+      ds.field("REQUESTED_DOMAIN", &self.REQUESTED_DOMAIN());
+      ds.field("REQUESTED_TIMEOUT_MS", &self.REQUESTED_TIMEOUT_MS());
+      ds.field("GRANTED_DOMAIN", &self.GRANTED_DOMAIN());
+      ds.field("GRANTED_TIMEOUT_MS", &self.GRANTED_TIMEOUT_MS());
+      ds.field("EXPIRES_AT", &self.EXPIRES_AT());
+      ds.field("REQUIRED_SCOPE", &self.REQUIRED_SCOPE());
+      ds.field("GRANT_STATUS", &self.GRANT_STATUS());
+      ds.field("DENIAL_REASON", &self.DENIAL_REASON());
+      ds.field("CAPABILITY_TOKEN", &self.CAPABILITY_TOKEN());
+      ds.field("MODULE_DESCRIPTOR", &self.MODULE_DESCRIPTOR());
+      ds.field("WRAPPED_CONTENT_KEY_HEADER", &self.WRAPPED_CONTENT_KEY_HEADER());
+      ds.field("WRAPPED_CONTENT_KEY_PAYLOAD", &self.WRAPPED_CONTENT_KEY_PAYLOAD());
+      ds.field("GRANT_VERIFIER_PUBKEY", &self.GRANT_VERIFIER_PUBKEY());
+      ds.field("PROVIDER_SIGNATURE", &self.PROVIDER_SIGNATURE());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct ENCT {
-  pub VERSION: u8,
-  pub KEY_EXCHANGE: KeyExchange,
-  pub SYMMETRIC: SymmetricAlgo,
-  pub KEY_DERIVATION: KDF,
-  pub EPHEMERAL_PUBLIC_KEY: alloc::vec::Vec<u8>,
-  pub NONCE_START: alloc::vec::Vec<u8>,
-  pub RECIPIENT_KEY_ID: Option<alloc::vec::Vec<u8>>,
-  pub CONTEXT: Option<alloc::string::String>,
-  pub SCHEMA_HASH: Option<alloc::vec::Vec<u8>>,
-  pub ROOT_TYPE: Option<alloc::string::String>,
-  pub TIMESTAMP: u64,
+pub struct LGRT {
+  pub MESSAGE_TYPE: licensingGrantMessageType,
+  pub REQUEST_ID: alloc::string::String,
+  pub MODULE_ID: alloc::string::String,
+  pub MODULE_VERSION: Option<alloc::string::String>,
+  pub REQUESTER_PEER_ID: Option<alloc::string::String>,
+  pub REQUESTER_XPUB: Option<alloc::string::String>,
+  pub REQUESTED_DOMAIN: Option<alloc::string::String>,
+  pub REQUESTED_TIMEOUT_MS: u64,
+  pub GRANTED_DOMAIN: Option<alloc::string::String>,
+  pub GRANTED_TIMEOUT_MS: u64,
+  pub EXPIRES_AT: u64,
+  pub REQUIRED_SCOPE: Option<alloc::string::String>,
+  pub GRANT_STATUS: Option<alloc::string::String>,
+  pub DENIAL_REASON: Option<alloc::string::String>,
+  pub CAPABILITY_TOKEN: Option<alloc::vec::Vec<u8>>,
+  pub MODULE_DESCRIPTOR: Option<alloc::boxed::Box<PLGT>>,
+  pub WRAPPED_CONTENT_KEY_HEADER: Option<alloc::boxed::Box<ENCT>>,
+  pub WRAPPED_CONTENT_KEY_PAYLOAD: Option<alloc::vec::Vec<u8>>,
+  pub GRANT_VERIFIER_PUBKEY: Option<alloc::vec::Vec<u8>>,
+  pub PROVIDER_SIGNATURE: Option<alloc::vec::Vec<u8>>,
 }
-impl Default for ENCT {
+impl Default for LGRT {
   fn default() -> Self {
     Self {
-      VERSION: 1,
-      KEY_EXCHANGE: KeyExchange::X25519,
-      SYMMETRIC: SymmetricAlgo::AES_256_CTR,
-      KEY_DERIVATION: KDF::HKDF_SHA256,
-      EPHEMERAL_PUBLIC_KEY: Default::default(),
-      NONCE_START: Default::default(),
-      RECIPIENT_KEY_ID: None,
-      CONTEXT: None,
-      SCHEMA_HASH: None,
-      ROOT_TYPE: None,
-      TIMESTAMP: 0,
+      MESSAGE_TYPE: licensingGrantMessageType::Request,
+      REQUEST_ID: alloc::string::ToString::to_string(""),
+      MODULE_ID: alloc::string::ToString::to_string(""),
+      MODULE_VERSION: None,
+      REQUESTER_PEER_ID: None,
+      REQUESTER_XPUB: None,
+      REQUESTED_DOMAIN: None,
+      REQUESTED_TIMEOUT_MS: 0,
+      GRANTED_DOMAIN: None,
+      GRANTED_TIMEOUT_MS: 0,
+      EXPIRES_AT: 0,
+      REQUIRED_SCOPE: None,
+      GRANT_STATUS: None,
+      DENIAL_REASON: None,
+      CAPABILITY_TOKEN: None,
+      MODULE_DESCRIPTOR: None,
+      WRAPPED_CONTENT_KEY_HEADER: None,
+      WRAPPED_CONTENT_KEY_PAYLOAD: None,
+      GRANT_VERIFIER_PUBKEY: None,
+      PROVIDER_SIGNATURE: None,
     }
   }
 }
-impl ENCT {
+impl LGRT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<ENC<'b>> {
-    let VERSION = self.VERSION;
-    let KEY_EXCHANGE = self.KEY_EXCHANGE;
-    let SYMMETRIC = self.SYMMETRIC;
-    let KEY_DERIVATION = self.KEY_DERIVATION;
-    let EPHEMERAL_PUBLIC_KEY = Some({
-      let x = &self.EPHEMERAL_PUBLIC_KEY;
-      _fbb.create_vector(x)
-    });
-    let NONCE_START = Some({
-      let x = &self.NONCE_START;
-      _fbb.create_vector(x)
-    });
-    let RECIPIENT_KEY_ID = self.RECIPIENT_KEY_ID.as_ref().map(|x|{
-      _fbb.create_vector(x)
-    });
-    let CONTEXT = self.CONTEXT.as_ref().map(|x|{
+  ) -> ::flatbuffers::WIPOffset<LGR<'b>> {
+    let MESSAGE_TYPE = self.MESSAGE_TYPE;
+    let REQUEST_ID = Some({
+      let x = &self.REQUEST_ID;
       _fbb.create_string(x)
     });
-    let SCHEMA_HASH = self.SCHEMA_HASH.as_ref().map(|x|{
-      _fbb.create_vector(x)
-    });
-    let ROOT_TYPE = self.ROOT_TYPE.as_ref().map(|x|{
+    let MODULE_ID = Some({
+      let x = &self.MODULE_ID;
       _fbb.create_string(x)
     });
-    let TIMESTAMP = self.TIMESTAMP;
-    ENC::create(_fbb, &ENCArgs{
-      VERSION,
-      KEY_EXCHANGE,
-      SYMMETRIC,
-      KEY_DERIVATION,
-      EPHEMERAL_PUBLIC_KEY,
-      NONCE_START,
-      RECIPIENT_KEY_ID,
-      CONTEXT,
-      SCHEMA_HASH,
-      ROOT_TYPE,
-      TIMESTAMP,
+    let MODULE_VERSION = self.MODULE_VERSION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REQUESTER_PEER_ID = self.REQUESTER_PEER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REQUESTER_XPUB = self.REQUESTER_XPUB.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REQUESTED_DOMAIN = self.REQUESTED_DOMAIN.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REQUESTED_TIMEOUT_MS = self.REQUESTED_TIMEOUT_MS;
+    let GRANTED_DOMAIN = self.GRANTED_DOMAIN.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GRANTED_TIMEOUT_MS = self.GRANTED_TIMEOUT_MS;
+    let EXPIRES_AT = self.EXPIRES_AT;
+    let REQUIRED_SCOPE = self.REQUIRED_SCOPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GRANT_STATUS = self.GRANT_STATUS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DENIAL_REASON = self.DENIAL_REASON.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CAPABILITY_TOKEN = self.CAPABILITY_TOKEN.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let MODULE_DESCRIPTOR = self.MODULE_DESCRIPTOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let WRAPPED_CONTENT_KEY_HEADER = self.WRAPPED_CONTENT_KEY_HEADER.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let WRAPPED_CONTENT_KEY_PAYLOAD = self.WRAPPED_CONTENT_KEY_PAYLOAD.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let GRANT_VERIFIER_PUBKEY = self.GRANT_VERIFIER_PUBKEY.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let PROVIDER_SIGNATURE = self.PROVIDER_SIGNATURE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    LGR::create(_fbb, &LGRArgs{
+      MESSAGE_TYPE,
+      REQUEST_ID,
+      MODULE_ID,
+      MODULE_VERSION,
+      REQUESTER_PEER_ID,
+      REQUESTER_XPUB,
+      REQUESTED_DOMAIN,
+      REQUESTED_TIMEOUT_MS,
+      GRANTED_DOMAIN,
+      GRANTED_TIMEOUT_MS,
+      EXPIRES_AT,
+      REQUIRED_SCOPE,
+      GRANT_STATUS,
+      DENIAL_REASON,
+      CAPABILITY_TOKEN,
+      MODULE_DESCRIPTOR,
+      WRAPPED_CONTENT_KEY_HEADER,
+      WRAPPED_CONTENT_KEY_PAYLOAD,
+      GRANT_VERIFIER_PUBKEY,
+      PROVIDER_SIGNATURE,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `ENC`
+/// Verifies that a buffer of bytes contains a `LGR`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_enc_unchecked`.
-pub fn root_as_enc(buf: &[u8]) -> Result<ENC<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<ENC>(buf)
+/// `root_as_lgr_unchecked`.
+pub fn root_as_lgr(buf: &[u8]) -> Result<LGR<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<LGR>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `ENC` and returns it.
+/// `LGR` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_enc_unchecked`.
-pub fn size_prefixed_root_as_enc(buf: &[u8]) -> Result<ENC<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<ENC>(buf)
+/// `size_prefixed_root_as_lgr_unchecked`.
+pub fn size_prefixed_root_as_lgr(buf: &[u8]) -> Result<LGR<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<LGR>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `ENC` and returns it.
+/// contains a `LGR` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_enc_unchecked`.
-pub fn root_as_enc_with_opts<'b, 'o>(
+/// `root_as_lgr_unchecked`.
+pub fn root_as_lgr_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<ENC<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<ENC<'b>>(opts, buf)
+) -> Result<LGR<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<LGR<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `ENC` and returns
+/// bytes contains a size prefixed `LGR` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_enc_unchecked`.
-pub fn size_prefixed_root_as_enc_with_opts<'b, 'o>(
+/// `root_as_lgr_unchecked`.
+pub fn size_prefixed_root_as_lgr_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<ENC<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<ENC<'b>>(opts, buf)
+) -> Result<LGR<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<LGR<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a ENC and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a LGR and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `ENC`.
-pub unsafe fn root_as_enc_unchecked(buf: &[u8]) -> ENC<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<ENC>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `LGR`.
+pub unsafe fn root_as_lgr_unchecked(buf: &[u8]) -> LGR<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<LGR>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed ENC and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed LGR and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `ENC`.
-pub unsafe fn size_prefixed_root_as_enc_unchecked(buf: &[u8]) -> ENC<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<ENC>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `LGR`.
+pub unsafe fn size_prefixed_root_as_lgr_unchecked(buf: &[u8]) -> LGR<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<LGR>(buf) }
 }
-pub const ENC_IDENTIFIER: &str = "$ENC";
+pub const LGR_IDENTIFIER: &str = "$LGR";
 
 #[inline]
-pub fn enc_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, ENC_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn enc_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, ENC_IDENTIFIER, true)
+pub fn lgr_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, LGR_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_enc_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn lgr_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, LGR_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_lgr_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<ENC<'a>>) {
-  fbb.finish(root, Some(ENC_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<LGR<'a>>) {
+  fbb.finish(root, Some(LGR_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_enc_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<ENC<'a>>) {
-  fbb.finish_size_prefixed(root, Some(ENC_IDENTIFIER));
+pub fn finish_size_prefixed_lgr_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<LGR<'a>>) {
+  fbb.finish_size_prefixed(root, Some(LGR_IDENTIFIER));
 }

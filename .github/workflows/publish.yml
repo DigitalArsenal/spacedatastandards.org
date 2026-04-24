@@ -203,8 +203,10 @@ jobs:
 
       - name: Create pyproject.toml
         run: |
-          # Convert semver to PEP 440: replace - with . (e.g., 23.3.3-0.3.1 -> 23.3.3.0.3.1)
-          PEP440_VERSION=$(echo "${{ needs.build.outputs.version }}" | tr '-' '.')
+          # Convert semver to PEP 440:
+          #   - replace '-' with '.' (e.g., 23.3.3-0.3.1 -> 23.3.3.0.3.1)
+          #   - strip '+buildmeta' (PyPI rejects PEP 440 local-version segments)
+          PEP440_VERSION=$(echo "${{ needs.build.outputs.version }}" | tr '-' '.' | cut -d+ -f1)
           cat > lib/py/pyproject.toml << EOF
           [build-system]
           requires = ["setuptools>=61.0", "wheel"]
@@ -583,7 +585,7 @@ jobs:
                   <dependency>
                       <groupId>com.google.flatbuffers</groupId>
                       <artifactId>flatbuffers-java</artifactId>
-                      <version>24.3.25</version>
+                      <version>25.2.10</version>
                   </dependency>
               </dependencies>
 
@@ -675,6 +677,13 @@ jobs:
           # FlatBuffers unions with >127 members overflow Java's signed byte.
           # Change RecordType constants from byte to int to support >127 union members.
           find lib/java -name 'RecordType.java' -exec sed -i 's/public static final byte/public static final int/g' {} +
+
+      - name: Align ValidateVersion to Maven-available runtime
+        run: |
+          # flatc 25.12.19 emits Constants.FLATBUFFERS_25_12_19() version-compat
+          # checks, but Google has not published flatbuffers-java:25.12.19 to
+          # Maven Central (latest is 25.2.10). Rewrite to the available runtime.
+          find lib/java -name '*.java' -exec sed -i 's/FLATBUFFERS_25_12_19/FLATBUFFERS_25_2_10/g' {} +
 
       - name: Build and sign artifacts
         run: |

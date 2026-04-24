@@ -2,62 +2,43 @@
 // @generated
 extern crate alloc;
 
+use crate::main_generated::*;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_KEY_REFERENCE_ROLE: i8 = 0;
+pub const ENUM_MIN_LICENSING_CONFIG_MESSAGE_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_KEY_REFERENCE_ROLE: i8 = 6;
+pub const ENUM_MAX_LICENSING_CONFIG_MESSAGE_TYPE: i8 = 1;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_KEY_REFERENCE_ROLE: [keyReferenceRole; 7] = [
-  keyReferenceRole::Unknown,
-  keyReferenceRole::ProviderSigning,
-  keyReferenceRole::ProviderWrapping,
-  keyReferenceRole::RequesterSigning,
-  keyReferenceRole::PublicationContent,
-  keyReferenceRole::VerificationKey,
-  keyReferenceRole::DecryptKey,
+pub const ENUM_VALUES_LICENSING_CONFIG_MESSAGE_TYPE: [licensingConfigMessageType; 2] = [
+  licensingConfigMessageType::Configure,
+  licensingConfigMessageType::Status,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct keyReferenceRole(pub i8);
+pub struct licensingConfigMessageType(pub i8);
 #[allow(non_upper_case_globals)]
-impl keyReferenceRole {
-  pub const Unknown: Self = Self(0);
-  pub const ProviderSigning: Self = Self(1);
-  pub const ProviderWrapping: Self = Self(2);
-  pub const RequesterSigning: Self = Self(3);
-  pub const PublicationContent: Self = Self(4);
-  pub const VerificationKey: Self = Self(5);
-  pub const DecryptKey: Self = Self(6);
+impl licensingConfigMessageType {
+  pub const Configure: Self = Self(0);
+  pub const Status: Self = Self(1);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 6;
+  pub const ENUM_MAX: i8 = 1;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::Unknown,
-    Self::ProviderSigning,
-    Self::ProviderWrapping,
-    Self::RequesterSigning,
-    Self::PublicationContent,
-    Self::VerificationKey,
-    Self::DecryptKey,
+    Self::Configure,
+    Self::Status,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::Unknown => Some("Unknown"),
-      Self::ProviderSigning => Some("ProviderSigning"),
-      Self::ProviderWrapping => Some("ProviderWrapping"),
-      Self::RequesterSigning => Some("RequesterSigning"),
-      Self::PublicationContent => Some("PublicationContent"),
-      Self::VerificationKey => Some("VerificationKey"),
-      Self::DecryptKey => Some("DecryptKey"),
+      Self::Configure => Some("Configure"),
+      Self::Status => Some("Status"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for keyReferenceRole {
+impl ::core::fmt::Debug for licensingConfigMessageType {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -66,7 +47,7 @@ impl ::core::fmt::Debug for keyReferenceRole {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for keyReferenceRole {
+impl<'a> ::flatbuffers::Follow<'a> for licensingConfigMessageType {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -75,15 +56,15 @@ impl<'a> ::flatbuffers::Follow<'a> for keyReferenceRole {
   }
 }
 
-impl ::flatbuffers::Push for keyReferenceRole {
-    type Output = keyReferenceRole;
+impl ::flatbuffers::Push for licensingConfigMessageType {
+    type Output = licensingConfigMessageType;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for keyReferenceRole {
+impl ::flatbuffers::EndianScalar for licensingConfigMessageType {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -97,7 +78,7 @@ impl ::flatbuffers::EndianScalar for keyReferenceRole {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for keyReferenceRole {
+impl<'a> ::flatbuffers::Verifiable for licensingConfigMessageType {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -106,62 +87,42 @@ impl<'a> ::flatbuffers::Verifiable for keyReferenceRole {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for keyReferenceRole {}
+impl ::flatbuffers::SimpleToVerifyInSlice for licensingConfigMessageType {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_KEY_REFERENCE_ALGORITHM: i8 = 0;
+pub const ENUM_MIN_LICENSING_CONFIG_ROLE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_KEY_REFERENCE_ALGORITHM: i8 = 6;
+pub const ENUM_MAX_LICENSING_CONFIG_ROLE: i8 = 1;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_KEY_REFERENCE_ALGORITHM: [keyReferenceAlgorithm; 7] = [
-  keyReferenceAlgorithm::Unknown,
-  keyReferenceAlgorithm::Ed25519Seed,
-  keyReferenceAlgorithm::Ed25519Public,
-  keyReferenceAlgorithm::X25519Private,
-  keyReferenceAlgorithm::X25519Public,
-  keyReferenceAlgorithm::Aes256Gcm,
-  keyReferenceAlgorithm::Opaque,
+pub const ENUM_VALUES_LICENSING_CONFIG_ROLE: [licensingConfigRole; 2] = [
+  licensingConfigRole::Provider,
+  licensingConfigRole::Requester,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct keyReferenceAlgorithm(pub i8);
+pub struct licensingConfigRole(pub i8);
 #[allow(non_upper_case_globals)]
-impl keyReferenceAlgorithm {
-  pub const Unknown: Self = Self(0);
-  pub const Ed25519Seed: Self = Self(1);
-  pub const Ed25519Public: Self = Self(2);
-  pub const X25519Private: Self = Self(3);
-  pub const X25519Public: Self = Self(4);
-  pub const Aes256Gcm: Self = Self(5);
-  pub const Opaque: Self = Self(6);
+impl licensingConfigRole {
+  pub const Provider: Self = Self(0);
+  pub const Requester: Self = Self(1);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 6;
+  pub const ENUM_MAX: i8 = 1;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::Unknown,
-    Self::Ed25519Seed,
-    Self::Ed25519Public,
-    Self::X25519Private,
-    Self::X25519Public,
-    Self::Aes256Gcm,
-    Self::Opaque,
+    Self::Provider,
+    Self::Requester,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::Unknown => Some("Unknown"),
-      Self::Ed25519Seed => Some("Ed25519Seed"),
-      Self::Ed25519Public => Some("Ed25519Public"),
-      Self::X25519Private => Some("X25519Private"),
-      Self::X25519Public => Some("X25519Public"),
-      Self::Aes256Gcm => Some("Aes256Gcm"),
-      Self::Opaque => Some("Opaque"),
+      Self::Provider => Some("Provider"),
+      Self::Requester => Some("Requester"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for keyReferenceAlgorithm {
+impl ::core::fmt::Debug for licensingConfigRole {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -170,7 +131,7 @@ impl ::core::fmt::Debug for keyReferenceAlgorithm {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for keyReferenceAlgorithm {
+impl<'a> ::flatbuffers::Follow<'a> for licensingConfigRole {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -179,15 +140,15 @@ impl<'a> ::flatbuffers::Follow<'a> for keyReferenceAlgorithm {
   }
 }
 
-impl ::flatbuffers::Push for keyReferenceAlgorithm {
-    type Output = keyReferenceAlgorithm;
+impl ::flatbuffers::Push for licensingConfigRole {
+    type Output = licensingConfigRole;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for keyReferenceAlgorithm {
+impl ::flatbuffers::EndianScalar for licensingConfigRole {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -201,7 +162,7 @@ impl ::flatbuffers::EndianScalar for keyReferenceAlgorithm {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for keyReferenceAlgorithm {
+impl<'a> ::flatbuffers::Verifiable for licensingConfigRole {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -210,394 +171,578 @@ impl<'a> ::flatbuffers::Verifiable for keyReferenceAlgorithm {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for keyReferenceAlgorithm {}
-pub enum KRFOffset {}
+impl ::flatbuffers::SimpleToVerifyInSlice for licensingConfigRole {}
+pub enum LCFOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Key Reference Frame
-pub struct KRF<'a> {
+/// Licensing Configuration Frame
+pub struct LCF<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for KRF<'a> {
-  type Inner = KRF<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for LCF<'a> {
+  type Inner = LCF<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> KRF<'a> {
-  pub const VT_KEY_ID: ::flatbuffers::VOffsetT = 4;
-  pub const VT_SLOT_ID: ::flatbuffers::VOffsetT = 6;
-  pub const VT_ROLE: ::flatbuffers::VOffsetT = 8;
-  pub const VT_ALGORITHM: ::flatbuffers::VOffsetT = 10;
-  pub const VT_PUBLIC_KEY: ::flatbuffers::VOffsetT = 12;
-  pub const VT_VERSION: ::flatbuffers::VOffsetT = 14;
-  pub const VT_EXPIRES_AT: ::flatbuffers::VOffsetT = 16;
-  pub const VT_HOST_MANAGED: ::flatbuffers::VOffsetT = 18;
+impl<'a> LCF<'a> {
+  pub const VT_MESSAGE_TYPE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_ROLE: ::flatbuffers::VOffsetT = 6;
+  pub const VT_PROVIDER_PEER_ID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_PROVIDER_SIGNING_KEY: ::flatbuffers::VOffsetT = 10;
+  pub const VT_PROVIDER_WRAPPING_KEY: ::flatbuffers::VOffsetT = 12;
+  pub const VT_REQUESTER_SIGNING_KEY: ::flatbuffers::VOffsetT = 14;
+  pub const VT_ACTIVE_KEY_VERSION: ::flatbuffers::VOffsetT = 16;
+  pub const VT_EXPIRES_AT: ::flatbuffers::VOffsetT = 18;
+  pub const VT_MAX_CLOCK_SKEW_MS: ::flatbuffers::VOffsetT = 20;
+  pub const VT_CHALLENGE_TTL_MS: ::flatbuffers::VOffsetT = 22;
+  pub const VT_CAPABILITY_TOKEN: ::flatbuffers::VOffsetT = 24;
+  pub const VT_INITIALIZED: ::flatbuffers::VOffsetT = 26;
+  pub const VT_NEEDS_ROTATION: ::flatbuffers::VOffsetT = 28;
+  pub const VT_STATUS_CODE: ::flatbuffers::VOffsetT = 30;
+  pub const VT_STATUS_MESSAGE: ::flatbuffers::VOffsetT = 32;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    KRF { _tab: table }
+    LCF { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args KRFArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<KRF<'bldr>> {
-    let mut builder = KRFBuilder::new(_fbb);
+    args: &'args LCFArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<LCF<'bldr>> {
+    let mut builder = LCFBuilder::new(_fbb);
+    builder.add_CHALLENGE_TTL_MS(args.CHALLENGE_TTL_MS);
+    builder.add_MAX_CLOCK_SKEW_MS(args.MAX_CLOCK_SKEW_MS);
     builder.add_EXPIRES_AT(args.EXPIRES_AT);
-    builder.add_VERSION(args.VERSION);
-    if let Some(x) = args.PUBLIC_KEY { builder.add_PUBLIC_KEY(x); }
-    if let Some(x) = args.SLOT_ID { builder.add_SLOT_ID(x); }
-    if let Some(x) = args.KEY_ID { builder.add_KEY_ID(x); }
-    builder.add_HOST_MANAGED(args.HOST_MANAGED);
-    builder.add_ALGORITHM(args.ALGORITHM);
+    if let Some(x) = args.STATUS_MESSAGE { builder.add_STATUS_MESSAGE(x); }
+    if let Some(x) = args.STATUS_CODE { builder.add_STATUS_CODE(x); }
+    if let Some(x) = args.CAPABILITY_TOKEN { builder.add_CAPABILITY_TOKEN(x); }
+    builder.add_ACTIVE_KEY_VERSION(args.ACTIVE_KEY_VERSION);
+    if let Some(x) = args.REQUESTER_SIGNING_KEY { builder.add_REQUESTER_SIGNING_KEY(x); }
+    if let Some(x) = args.PROVIDER_WRAPPING_KEY { builder.add_PROVIDER_WRAPPING_KEY(x); }
+    if let Some(x) = args.PROVIDER_SIGNING_KEY { builder.add_PROVIDER_SIGNING_KEY(x); }
+    if let Some(x) = args.PROVIDER_PEER_ID { builder.add_PROVIDER_PEER_ID(x); }
+    builder.add_NEEDS_ROTATION(args.NEEDS_ROTATION);
+    builder.add_INITIALIZED(args.INITIALIZED);
     builder.add_ROLE(args.ROLE);
+    builder.add_MESSAGE_TYPE(args.MESSAGE_TYPE);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> KRFT {
-    let KEY_ID = self.KEY_ID().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let SLOT_ID = self.SLOT_ID().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
+  pub fn unpack(&self) -> LCFT {
+    let MESSAGE_TYPE = self.MESSAGE_TYPE();
     let ROLE = self.ROLE();
-    let ALGORITHM = self.ALGORITHM();
-    let PUBLIC_KEY = self.PUBLIC_KEY().map(|x| {
+    let PROVIDER_PEER_ID = self.PROVIDER_PEER_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PROVIDER_SIGNING_KEY = self.PROVIDER_SIGNING_KEY().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let PROVIDER_WRAPPING_KEY = self.PROVIDER_WRAPPING_KEY().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let REQUESTER_SIGNING_KEY = self.REQUESTER_SIGNING_KEY().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let ACTIVE_KEY_VERSION = self.ACTIVE_KEY_VERSION();
+    let EXPIRES_AT = self.EXPIRES_AT();
+    let MAX_CLOCK_SKEW_MS = self.MAX_CLOCK_SKEW_MS();
+    let CHALLENGE_TTL_MS = self.CHALLENGE_TTL_MS();
+    let CAPABILITY_TOKEN = self.CAPABILITY_TOKEN().map(|x| {
       x.into_iter().collect()
     });
-    let VERSION = self.VERSION();
-    let EXPIRES_AT = self.EXPIRES_AT();
-    let HOST_MANAGED = self.HOST_MANAGED();
-    KRFT {
-      KEY_ID,
-      SLOT_ID,
+    let INITIALIZED = self.INITIALIZED();
+    let NEEDS_ROTATION = self.NEEDS_ROTATION();
+    let STATUS_CODE = self.STATUS_CODE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let STATUS_MESSAGE = self.STATUS_MESSAGE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    LCFT {
+      MESSAGE_TYPE,
       ROLE,
-      ALGORITHM,
-      PUBLIC_KEY,
-      VERSION,
+      PROVIDER_PEER_ID,
+      PROVIDER_SIGNING_KEY,
+      PROVIDER_WRAPPING_KEY,
+      REQUESTER_SIGNING_KEY,
+      ACTIVE_KEY_VERSION,
       EXPIRES_AT,
-      HOST_MANAGED,
+      MAX_CLOCK_SKEW_MS,
+      CHALLENGE_TTL_MS,
+      CAPABILITY_TOKEN,
+      INITIALIZED,
+      NEEDS_ROTATION,
+      STATUS_CODE,
+      STATUS_MESSAGE,
     }
   }
 
-  /// Logical key identifier used across publication and grant records.
+  /// Distinguishes configuration inputs from runtime status outputs.
   #[inline]
-  pub fn KEY_ID(&self) -> Option<&'a str> {
+  pub fn MESSAGE_TYPE(&self) -> licensingConfigMessageType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(KRF::VT_KEY_ID, None)}
+    unsafe { self._tab.get::<licensingConfigMessageType>(LCF::VT_MESSAGE_TYPE, Some(licensingConfigMessageType::Configure)).unwrap()}
   }
-  /// Host-managed key slot or key handle identifier.
+  /// Indicates whether the configuration/status applies to server/provider or requester/client behavior.
   #[inline]
-  pub fn SLOT_ID(&self) -> Option<&'a str> {
+  pub fn ROLE(&self) -> licensingConfigRole {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(KRF::VT_SLOT_ID, None)}
+    unsafe { self._tab.get::<licensingConfigRole>(LCF::VT_ROLE, Some(licensingConfigRole::Provider)).unwrap()}
   }
-  /// Role the referenced key fulfills for the module flow.
+  /// Peer ID advertised by the licensing provider.
   #[inline]
-  pub fn ROLE(&self) -> keyReferenceRole {
+  pub fn PROVIDER_PEER_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<keyReferenceRole>(KRF::VT_ROLE, Some(keyReferenceRole::Unknown)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LCF::VT_PROVIDER_PEER_ID, None)}
   }
-  /// Algorithm or key family for the referenced key.
+  /// Host-managed long-lived signing key used for grant signatures.
   #[inline]
-  pub fn ALGORITHM(&self) -> keyReferenceAlgorithm {
+  pub fn PROVIDER_SIGNING_KEY(&self) -> Option<KRF<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<keyReferenceAlgorithm>(KRF::VT_ALGORITHM, Some(keyReferenceAlgorithm::Unknown)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<KRF>>(LCF::VT_PROVIDER_SIGNING_KEY, None)}
   }
-  /// Optional public bytes for verification or peer identity binding.
+  /// Host-managed wrapping key used to protect per-publication content keys for requesters.
   #[inline]
-  pub fn PUBLIC_KEY(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+  pub fn PROVIDER_WRAPPING_KEY(&self) -> Option<KRF<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(KRF::VT_PUBLIC_KEY, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<KRF>>(LCF::VT_PROVIDER_WRAPPING_KEY, None)}
   }
-  /// Logical version of the referenced key.
+  /// Optional requester signing key reference for requester-hosted flows.
   #[inline]
-  pub fn VERSION(&self) -> u32 {
+  pub fn REQUESTER_SIGNING_KEY(&self) -> Option<KRF<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(KRF::VT_VERSION, Some(0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<KRF>>(LCF::VT_REQUESTER_SIGNING_KEY, None)}
   }
-  /// Expiration time in unix milliseconds, or 0 if unbounded.
+  /// Logical active publication/grant key version.
+  #[inline]
+  pub fn ACTIVE_KEY_VERSION(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(LCF::VT_ACTIVE_KEY_VERSION, Some(0)).unwrap()}
+  }
+  /// Runtime expiry in unix milliseconds, or 0 if unbounded.
   #[inline]
   pub fn EXPIRES_AT(&self) -> u64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u64>(KRF::VT_EXPIRES_AT, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u64>(LCF::VT_EXPIRES_AT, Some(0)).unwrap()}
   }
-  /// True when the secret material remains in the host key slot.
+  /// Maximum accepted requester/provider clock skew in milliseconds.
   #[inline]
-  pub fn HOST_MANAGED(&self) -> bool {
+  pub fn MAX_CLOCK_SKEW_MS(&self) -> u64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(KRF::VT_HOST_MANAGED, Some(true)).unwrap()}
+    unsafe { self._tab.get::<u64>(LCF::VT_MAX_CLOCK_SKEW_MS, Some(0)).unwrap()}
+  }
+  /// Challenge time-to-live in milliseconds.
+  #[inline]
+  pub fn CHALLENGE_TTL_MS(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(LCF::VT_CHALLENGE_TTL_MS, Some(0)).unwrap()}
+  }
+  /// Optional capability token bytes returned with successful grants.
+  #[inline]
+  pub fn CAPABILITY_TOKEN(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(LCF::VT_CAPABILITY_TOKEN, None)}
+  }
+  /// Whether the runtime has been initialized successfully.
+  #[inline]
+  pub fn INITIALIZED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(LCF::VT_INITIALIZED, Some(false)).unwrap()}
+  }
+  /// Whether the runtime needs issuer key rotation or refreshed configuration.
+  #[inline]
+  pub fn NEEDS_ROTATION(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(LCF::VT_NEEDS_ROTATION, Some(false)).unwrap()}
+  }
+  /// Optional machine-readable status code for status/error responses.
+  #[inline]
+  pub fn STATUS_CODE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LCF::VT_STATUS_CODE, None)}
+  }
+  /// Optional human-readable status or error message.
+  #[inline]
+  pub fn STATUS_MESSAGE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LCF::VT_STATUS_MESSAGE, None)}
   }
 }
 
-impl ::flatbuffers::Verifiable for KRF<'_> {
+impl ::flatbuffers::Verifiable for LCF<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KEY_ID", Self::VT_KEY_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SLOT_ID", Self::VT_SLOT_ID, false)?
-     .visit_field::<keyReferenceRole>("ROLE", Self::VT_ROLE, false)?
-     .visit_field::<keyReferenceAlgorithm>("ALGORITHM", Self::VT_ALGORITHM, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("PUBLIC_KEY", Self::VT_PUBLIC_KEY, false)?
-     .visit_field::<u32>("VERSION", Self::VT_VERSION, false)?
+     .visit_field::<licensingConfigMessageType>("MESSAGE_TYPE", Self::VT_MESSAGE_TYPE, false)?
+     .visit_field::<licensingConfigRole>("ROLE", Self::VT_ROLE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_PEER_ID", Self::VT_PROVIDER_PEER_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<KRF>>("PROVIDER_SIGNING_KEY", Self::VT_PROVIDER_SIGNING_KEY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<KRF>>("PROVIDER_WRAPPING_KEY", Self::VT_PROVIDER_WRAPPING_KEY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<KRF>>("REQUESTER_SIGNING_KEY", Self::VT_REQUESTER_SIGNING_KEY, false)?
+     .visit_field::<u32>("ACTIVE_KEY_VERSION", Self::VT_ACTIVE_KEY_VERSION, false)?
      .visit_field::<u64>("EXPIRES_AT", Self::VT_EXPIRES_AT, false)?
-     .visit_field::<bool>("HOST_MANAGED", Self::VT_HOST_MANAGED, false)?
+     .visit_field::<u64>("MAX_CLOCK_SKEW_MS", Self::VT_MAX_CLOCK_SKEW_MS, false)?
+     .visit_field::<u64>("CHALLENGE_TTL_MS", Self::VT_CHALLENGE_TTL_MS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("CAPABILITY_TOKEN", Self::VT_CAPABILITY_TOKEN, false)?
+     .visit_field::<bool>("INITIALIZED", Self::VT_INITIALIZED, false)?
+     .visit_field::<bool>("NEEDS_ROTATION", Self::VT_NEEDS_ROTATION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STATUS_CODE", Self::VT_STATUS_CODE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STATUS_MESSAGE", Self::VT_STATUS_MESSAGE, false)?
      .finish();
     Ok(())
   }
 }
-pub struct KRFArgs<'a> {
-    pub KEY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub SLOT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub ROLE: keyReferenceRole,
-    pub ALGORITHM: keyReferenceAlgorithm,
-    pub PUBLIC_KEY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
-    pub VERSION: u32,
+pub struct LCFArgs<'a> {
+    pub MESSAGE_TYPE: licensingConfigMessageType,
+    pub ROLE: licensingConfigRole,
+    pub PROVIDER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PROVIDER_SIGNING_KEY: Option<::flatbuffers::WIPOffset<KRF<'a>>>,
+    pub PROVIDER_WRAPPING_KEY: Option<::flatbuffers::WIPOffset<KRF<'a>>>,
+    pub REQUESTER_SIGNING_KEY: Option<::flatbuffers::WIPOffset<KRF<'a>>>,
+    pub ACTIVE_KEY_VERSION: u32,
     pub EXPIRES_AT: u64,
-    pub HOST_MANAGED: bool,
+    pub MAX_CLOCK_SKEW_MS: u64,
+    pub CHALLENGE_TTL_MS: u64,
+    pub CAPABILITY_TOKEN: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub INITIALIZED: bool,
+    pub NEEDS_ROTATION: bool,
+    pub STATUS_CODE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub STATUS_MESSAGE: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
-impl<'a> Default for KRFArgs<'a> {
+impl<'a> Default for LCFArgs<'a> {
   #[inline]
   fn default() -> Self {
-    KRFArgs {
-      KEY_ID: None,
-      SLOT_ID: None,
-      ROLE: keyReferenceRole::Unknown,
-      ALGORITHM: keyReferenceAlgorithm::Unknown,
-      PUBLIC_KEY: None,
-      VERSION: 0,
+    LCFArgs {
+      MESSAGE_TYPE: licensingConfigMessageType::Configure,
+      ROLE: licensingConfigRole::Provider,
+      PROVIDER_PEER_ID: None,
+      PROVIDER_SIGNING_KEY: None,
+      PROVIDER_WRAPPING_KEY: None,
+      REQUESTER_SIGNING_KEY: None,
+      ACTIVE_KEY_VERSION: 0,
       EXPIRES_AT: 0,
-      HOST_MANAGED: true,
+      MAX_CLOCK_SKEW_MS: 0,
+      CHALLENGE_TTL_MS: 0,
+      CAPABILITY_TOKEN: None,
+      INITIALIZED: false,
+      NEEDS_ROTATION: false,
+      STATUS_CODE: None,
+      STATUS_MESSAGE: None,
     }
   }
 }
 
-pub struct KRFBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct LCFBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> KRFBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> LCFBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_KEY_ID(&mut self, KEY_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(KRF::VT_KEY_ID, KEY_ID);
+  pub fn add_MESSAGE_TYPE(&mut self, MESSAGE_TYPE: licensingConfigMessageType) {
+    self.fbb_.push_slot::<licensingConfigMessageType>(LCF::VT_MESSAGE_TYPE, MESSAGE_TYPE, licensingConfigMessageType::Configure);
   }
   #[inline]
-  pub fn add_SLOT_ID(&mut self, SLOT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(KRF::VT_SLOT_ID, SLOT_ID);
+  pub fn add_ROLE(&mut self, ROLE: licensingConfigRole) {
+    self.fbb_.push_slot::<licensingConfigRole>(LCF::VT_ROLE, ROLE, licensingConfigRole::Provider);
   }
   #[inline]
-  pub fn add_ROLE(&mut self, ROLE: keyReferenceRole) {
-    self.fbb_.push_slot::<keyReferenceRole>(KRF::VT_ROLE, ROLE, keyReferenceRole::Unknown);
+  pub fn add_PROVIDER_PEER_ID(&mut self, PROVIDER_PEER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LCF::VT_PROVIDER_PEER_ID, PROVIDER_PEER_ID);
   }
   #[inline]
-  pub fn add_ALGORITHM(&mut self, ALGORITHM: keyReferenceAlgorithm) {
-    self.fbb_.push_slot::<keyReferenceAlgorithm>(KRF::VT_ALGORITHM, ALGORITHM, keyReferenceAlgorithm::Unknown);
+  pub fn add_PROVIDER_SIGNING_KEY(&mut self, PROVIDER_SIGNING_KEY: ::flatbuffers::WIPOffset<KRF<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<KRF>>(LCF::VT_PROVIDER_SIGNING_KEY, PROVIDER_SIGNING_KEY);
   }
   #[inline]
-  pub fn add_PUBLIC_KEY(&mut self, PUBLIC_KEY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(KRF::VT_PUBLIC_KEY, PUBLIC_KEY);
+  pub fn add_PROVIDER_WRAPPING_KEY(&mut self, PROVIDER_WRAPPING_KEY: ::flatbuffers::WIPOffset<KRF<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<KRF>>(LCF::VT_PROVIDER_WRAPPING_KEY, PROVIDER_WRAPPING_KEY);
   }
   #[inline]
-  pub fn add_VERSION(&mut self, VERSION: u32) {
-    self.fbb_.push_slot::<u32>(KRF::VT_VERSION, VERSION, 0);
+  pub fn add_REQUESTER_SIGNING_KEY(&mut self, REQUESTER_SIGNING_KEY: ::flatbuffers::WIPOffset<KRF<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<KRF>>(LCF::VT_REQUESTER_SIGNING_KEY, REQUESTER_SIGNING_KEY);
+  }
+  #[inline]
+  pub fn add_ACTIVE_KEY_VERSION(&mut self, ACTIVE_KEY_VERSION: u32) {
+    self.fbb_.push_slot::<u32>(LCF::VT_ACTIVE_KEY_VERSION, ACTIVE_KEY_VERSION, 0);
   }
   #[inline]
   pub fn add_EXPIRES_AT(&mut self, EXPIRES_AT: u64) {
-    self.fbb_.push_slot::<u64>(KRF::VT_EXPIRES_AT, EXPIRES_AT, 0);
+    self.fbb_.push_slot::<u64>(LCF::VT_EXPIRES_AT, EXPIRES_AT, 0);
   }
   #[inline]
-  pub fn add_HOST_MANAGED(&mut self, HOST_MANAGED: bool) {
-    self.fbb_.push_slot::<bool>(KRF::VT_HOST_MANAGED, HOST_MANAGED, true);
+  pub fn add_MAX_CLOCK_SKEW_MS(&mut self, MAX_CLOCK_SKEW_MS: u64) {
+    self.fbb_.push_slot::<u64>(LCF::VT_MAX_CLOCK_SKEW_MS, MAX_CLOCK_SKEW_MS, 0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> KRFBuilder<'a, 'b, A> {
+  pub fn add_CHALLENGE_TTL_MS(&mut self, CHALLENGE_TTL_MS: u64) {
+    self.fbb_.push_slot::<u64>(LCF::VT_CHALLENGE_TTL_MS, CHALLENGE_TTL_MS, 0);
+  }
+  #[inline]
+  pub fn add_CAPABILITY_TOKEN(&mut self, CAPABILITY_TOKEN: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LCF::VT_CAPABILITY_TOKEN, CAPABILITY_TOKEN);
+  }
+  #[inline]
+  pub fn add_INITIALIZED(&mut self, INITIALIZED: bool) {
+    self.fbb_.push_slot::<bool>(LCF::VT_INITIALIZED, INITIALIZED, false);
+  }
+  #[inline]
+  pub fn add_NEEDS_ROTATION(&mut self, NEEDS_ROTATION: bool) {
+    self.fbb_.push_slot::<bool>(LCF::VT_NEEDS_ROTATION, NEEDS_ROTATION, false);
+  }
+  #[inline]
+  pub fn add_STATUS_CODE(&mut self, STATUS_CODE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LCF::VT_STATUS_CODE, STATUS_CODE);
+  }
+  #[inline]
+  pub fn add_STATUS_MESSAGE(&mut self, STATUS_MESSAGE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LCF::VT_STATUS_MESSAGE, STATUS_MESSAGE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> LCFBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    KRFBuilder {
+    LCFBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<KRF<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<LCF<'a>> {
     let o = self.fbb_.end_table(self.start_);
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for KRF<'_> {
+impl ::core::fmt::Debug for LCF<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("KRF");
-      ds.field("KEY_ID", &self.KEY_ID());
-      ds.field("SLOT_ID", &self.SLOT_ID());
+    let mut ds = f.debug_struct("LCF");
+      ds.field("MESSAGE_TYPE", &self.MESSAGE_TYPE());
       ds.field("ROLE", &self.ROLE());
-      ds.field("ALGORITHM", &self.ALGORITHM());
-      ds.field("PUBLIC_KEY", &self.PUBLIC_KEY());
-      ds.field("VERSION", &self.VERSION());
+      ds.field("PROVIDER_PEER_ID", &self.PROVIDER_PEER_ID());
+      ds.field("PROVIDER_SIGNING_KEY", &self.PROVIDER_SIGNING_KEY());
+      ds.field("PROVIDER_WRAPPING_KEY", &self.PROVIDER_WRAPPING_KEY());
+      ds.field("REQUESTER_SIGNING_KEY", &self.REQUESTER_SIGNING_KEY());
+      ds.field("ACTIVE_KEY_VERSION", &self.ACTIVE_KEY_VERSION());
       ds.field("EXPIRES_AT", &self.EXPIRES_AT());
-      ds.field("HOST_MANAGED", &self.HOST_MANAGED());
+      ds.field("MAX_CLOCK_SKEW_MS", &self.MAX_CLOCK_SKEW_MS());
+      ds.field("CHALLENGE_TTL_MS", &self.CHALLENGE_TTL_MS());
+      ds.field("CAPABILITY_TOKEN", &self.CAPABILITY_TOKEN());
+      ds.field("INITIALIZED", &self.INITIALIZED());
+      ds.field("NEEDS_ROTATION", &self.NEEDS_ROTATION());
+      ds.field("STATUS_CODE", &self.STATUS_CODE());
+      ds.field("STATUS_MESSAGE", &self.STATUS_MESSAGE());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct KRFT {
-  pub KEY_ID: Option<alloc::string::String>,
-  pub SLOT_ID: Option<alloc::string::String>,
-  pub ROLE: keyReferenceRole,
-  pub ALGORITHM: keyReferenceAlgorithm,
-  pub PUBLIC_KEY: Option<alloc::vec::Vec<u8>>,
-  pub VERSION: u32,
+pub struct LCFT {
+  pub MESSAGE_TYPE: licensingConfigMessageType,
+  pub ROLE: licensingConfigRole,
+  pub PROVIDER_PEER_ID: Option<alloc::string::String>,
+  pub PROVIDER_SIGNING_KEY: Option<alloc::boxed::Box<KRFT>>,
+  pub PROVIDER_WRAPPING_KEY: Option<alloc::boxed::Box<KRFT>>,
+  pub REQUESTER_SIGNING_KEY: Option<alloc::boxed::Box<KRFT>>,
+  pub ACTIVE_KEY_VERSION: u32,
   pub EXPIRES_AT: u64,
-  pub HOST_MANAGED: bool,
+  pub MAX_CLOCK_SKEW_MS: u64,
+  pub CHALLENGE_TTL_MS: u64,
+  pub CAPABILITY_TOKEN: Option<alloc::vec::Vec<u8>>,
+  pub INITIALIZED: bool,
+  pub NEEDS_ROTATION: bool,
+  pub STATUS_CODE: Option<alloc::string::String>,
+  pub STATUS_MESSAGE: Option<alloc::string::String>,
 }
-impl Default for KRFT {
+impl Default for LCFT {
   fn default() -> Self {
     Self {
-      KEY_ID: None,
-      SLOT_ID: None,
-      ROLE: keyReferenceRole::Unknown,
-      ALGORITHM: keyReferenceAlgorithm::Unknown,
-      PUBLIC_KEY: None,
-      VERSION: 0,
+      MESSAGE_TYPE: licensingConfigMessageType::Configure,
+      ROLE: licensingConfigRole::Provider,
+      PROVIDER_PEER_ID: None,
+      PROVIDER_SIGNING_KEY: None,
+      PROVIDER_WRAPPING_KEY: None,
+      REQUESTER_SIGNING_KEY: None,
+      ACTIVE_KEY_VERSION: 0,
       EXPIRES_AT: 0,
-      HOST_MANAGED: true,
+      MAX_CLOCK_SKEW_MS: 0,
+      CHALLENGE_TTL_MS: 0,
+      CAPABILITY_TOKEN: None,
+      INITIALIZED: false,
+      NEEDS_ROTATION: false,
+      STATUS_CODE: None,
+      STATUS_MESSAGE: None,
     }
   }
 }
-impl KRFT {
+impl LCFT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<KRF<'b>> {
-    let KEY_ID = self.KEY_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SLOT_ID = self.SLOT_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+  ) -> ::flatbuffers::WIPOffset<LCF<'b>> {
+    let MESSAGE_TYPE = self.MESSAGE_TYPE;
     let ROLE = self.ROLE;
-    let ALGORITHM = self.ALGORITHM;
-    let PUBLIC_KEY = self.PUBLIC_KEY.as_ref().map(|x|{
+    let PROVIDER_PEER_ID = self.PROVIDER_PEER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PROVIDER_SIGNING_KEY = self.PROVIDER_SIGNING_KEY.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let PROVIDER_WRAPPING_KEY = self.PROVIDER_WRAPPING_KEY.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let REQUESTER_SIGNING_KEY = self.REQUESTER_SIGNING_KEY.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let ACTIVE_KEY_VERSION = self.ACTIVE_KEY_VERSION;
+    let EXPIRES_AT = self.EXPIRES_AT;
+    let MAX_CLOCK_SKEW_MS = self.MAX_CLOCK_SKEW_MS;
+    let CHALLENGE_TTL_MS = self.CHALLENGE_TTL_MS;
+    let CAPABILITY_TOKEN = self.CAPABILITY_TOKEN.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
-    let VERSION = self.VERSION;
-    let EXPIRES_AT = self.EXPIRES_AT;
-    let HOST_MANAGED = self.HOST_MANAGED;
-    KRF::create(_fbb, &KRFArgs{
-      KEY_ID,
-      SLOT_ID,
+    let INITIALIZED = self.INITIALIZED;
+    let NEEDS_ROTATION = self.NEEDS_ROTATION;
+    let STATUS_CODE = self.STATUS_CODE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let STATUS_MESSAGE = self.STATUS_MESSAGE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    LCF::create(_fbb, &LCFArgs{
+      MESSAGE_TYPE,
       ROLE,
-      ALGORITHM,
-      PUBLIC_KEY,
-      VERSION,
+      PROVIDER_PEER_ID,
+      PROVIDER_SIGNING_KEY,
+      PROVIDER_WRAPPING_KEY,
+      REQUESTER_SIGNING_KEY,
+      ACTIVE_KEY_VERSION,
       EXPIRES_AT,
-      HOST_MANAGED,
+      MAX_CLOCK_SKEW_MS,
+      CHALLENGE_TTL_MS,
+      CAPABILITY_TOKEN,
+      INITIALIZED,
+      NEEDS_ROTATION,
+      STATUS_CODE,
+      STATUS_MESSAGE,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `KRF`
+/// Verifies that a buffer of bytes contains a `LCF`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_krf_unchecked`.
-pub fn root_as_krf(buf: &[u8]) -> Result<KRF<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<KRF>(buf)
+/// `root_as_lcf_unchecked`.
+pub fn root_as_lcf(buf: &[u8]) -> Result<LCF<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<LCF>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `KRF` and returns it.
+/// `LCF` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_krf_unchecked`.
-pub fn size_prefixed_root_as_krf(buf: &[u8]) -> Result<KRF<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<KRF>(buf)
+/// `size_prefixed_root_as_lcf_unchecked`.
+pub fn size_prefixed_root_as_lcf(buf: &[u8]) -> Result<LCF<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<LCF>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `KRF` and returns it.
+/// contains a `LCF` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_krf_unchecked`.
-pub fn root_as_krf_with_opts<'b, 'o>(
+/// `root_as_lcf_unchecked`.
+pub fn root_as_lcf_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<KRF<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<KRF<'b>>(opts, buf)
+) -> Result<LCF<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<LCF<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `KRF` and returns
+/// bytes contains a size prefixed `LCF` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_krf_unchecked`.
-pub fn size_prefixed_root_as_krf_with_opts<'b, 'o>(
+/// `root_as_lcf_unchecked`.
+pub fn size_prefixed_root_as_lcf_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<KRF<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<KRF<'b>>(opts, buf)
+) -> Result<LCF<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<LCF<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a KRF and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a LCF and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `KRF`.
-pub unsafe fn root_as_krf_unchecked(buf: &[u8]) -> KRF<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<KRF>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `LCF`.
+pub unsafe fn root_as_lcf_unchecked(buf: &[u8]) -> LCF<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<LCF>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed KRF and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed LCF and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `KRF`.
-pub unsafe fn size_prefixed_root_as_krf_unchecked(buf: &[u8]) -> KRF<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<KRF>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `LCF`.
+pub unsafe fn size_prefixed_root_as_lcf_unchecked(buf: &[u8]) -> LCF<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<LCF>(buf) }
 }
-pub const KRF_IDENTIFIER: &str = "$KRF";
+pub const LCF_IDENTIFIER: &str = "$LCF";
 
 #[inline]
-pub fn krf_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, KRF_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn krf_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, KRF_IDENTIFIER, true)
+pub fn lcf_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, LCF_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_krf_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn lcf_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, LCF_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_lcf_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<KRF<'a>>) {
-  fbb.finish(root, Some(KRF_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<LCF<'a>>) {
+  fbb.finish(root, Some(LCF_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_krf_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<KRF<'a>>) {
-  fbb.finish_size_prefixed(root, Some(KRF_IDENTIFIER));
+pub fn finish_size_prefixed_lcf_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<LCF<'a>>) {
+  fbb.finish_size_prefixed(root, Some(LCF_IDENTIFIER));
 }

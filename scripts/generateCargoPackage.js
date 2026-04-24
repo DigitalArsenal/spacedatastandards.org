@@ -55,7 +55,7 @@ exclude = [
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
-flatbuffers = "24.3.25"
+flatbuffers = "25.12.19"
   `;
   fs.writeFileSync(
     path.join(directoryPath, "Cargo.toml"),

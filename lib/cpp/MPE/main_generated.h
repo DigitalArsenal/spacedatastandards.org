@@ -13,136 +13,226 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-struct MET;
-struct METBuilder;
+#include "main_generated.h"
 
-enum meanElementSource : int8_t {
-  /// Simplified General Perturbation Model 4
-  meanElementSource_SGP4 = 0,
-  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
-  meanElementSource_SGP4XP = 1,
-  /// Draper Semi-analytical Satellite Theory
-  meanElementSource_DSST = 2,
-  /// Universal Semianalytical Method
-  meanElementSource_USM = 3,
-  meanElementSource_MIN = meanElementSource_SGP4,
-  meanElementSource_MAX = meanElementSource_USM
-};
+struct MPE;
+struct MPEBuilder;
 
-inline const meanElementSource (&EnumValuesmeanElementSource())[4] {
-  static const meanElementSource values[] = {
-    meanElementSource_SGP4,
-    meanElementSource_SGP4XP,
-    meanElementSource_DSST,
-    meanElementSource_USM
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesmeanElementSource() {
-  static const char * const names[5] = {
-    "SGP4",
-    "SGP4XP",
-    "DSST",
-    "USM",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNamemeanElementSource(meanElementSource e) {
-  if (::flatbuffers::IsOutRange(e, meanElementSource_SGP4, meanElementSource_USM)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesmeanElementSource()[index];
-}
-
-/// Mean Element Theory
-struct MET FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef METBuilder Builder;
+/// Minimum Propagatable Element Set
+struct MPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef MPEBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_MEAN_ELEMENT_THEORY = 4
+    VT_ENTITY_ID = 4,
+    VT_EPOCH = 6,
+    VT_MEAN_MOTION = 8,
+    VT_ECCENTRICITY = 10,
+    VT_INCLINATION = 12,
+    VT_RA_OF_ASC_NODE = 14,
+    VT_ARG_OF_PERICENTER = 16,
+    VT_MEAN_ANOMALY = 18,
+    VT_BSTAR = 20,
+    VT_MEAN_ELEMENT_THEORY = 22
   };
+  /// Unique ID as a String [no units]
+  const ::flatbuffers::String *ENTITY_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ENTITY_ID);
+  }
+  /// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
+  double EPOCH() const {
+    return GetField<double>(VT_EPOCH, 0.0);
+  }
+  /// Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
+  double MEAN_MOTION() const {
+    return GetField<double>(VT_MEAN_MOTION, 0.0);
+  }
+  /// Eccentricity (unitless)
+  double ECCENTRICITY() const {
+    return GetField<double>(VT_ECCENTRICITY, 0.0);
+  }
+  /// Inclination in degrees
+  double INCLINATION() const {
+    return GetField<double>(VT_INCLINATION, 0.0);
+  }
+  /// Right ascension of ascending node in degrees
+  double RA_OF_ASC_NODE() const {
+    return GetField<double>(VT_RA_OF_ASC_NODE, 0.0);
+  }
+  /// Argument of pericenter in degrees
+  double ARG_OF_PERICENTER() const {
+    return GetField<double>(VT_ARG_OF_PERICENTER, 0.0);
+  }
+  /// Mean anomaly in degrees
+  double MEAN_ANOMALY() const {
+    return GetField<double>(VT_MEAN_ANOMALY, 0.0);
+  }
+  /// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
+  double BSTAR() const {
+    return GetField<double>(VT_BSTAR, 0.0);
+  }
+  /// Description of the Mean Element Theory (SGP4, DSST, USM)
   meanElementSource MEAN_ELEMENT_THEORY() const {
     return static_cast<meanElementSource>(GetField<int8_t>(VT_MEAN_ELEMENT_THEORY, 0));
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ENTITY_ID) &&
+           verifier.VerifyString(ENTITY_ID()) &&
+           VerifyField<double>(verifier, VT_EPOCH, 8) &&
+           VerifyField<double>(verifier, VT_MEAN_MOTION, 8) &&
+           VerifyField<double>(verifier, VT_ECCENTRICITY, 8) &&
+           VerifyField<double>(verifier, VT_INCLINATION, 8) &&
+           VerifyField<double>(verifier, VT_RA_OF_ASC_NODE, 8) &&
+           VerifyField<double>(verifier, VT_ARG_OF_PERICENTER, 8) &&
+           VerifyField<double>(verifier, VT_MEAN_ANOMALY, 8) &&
+           VerifyField<double>(verifier, VT_BSTAR, 8) &&
            VerifyField<int8_t>(verifier, VT_MEAN_ELEMENT_THEORY, 1) &&
            verifier.EndTable();
   }
 };
 
-struct METBuilder {
-  typedef MET Table;
+struct MPEBuilder {
+  typedef MPE Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_MEAN_ELEMENT_THEORY(meanElementSource MEAN_ELEMENT_THEORY) {
-    fbb_.AddElement<int8_t>(MET::VT_MEAN_ELEMENT_THEORY, static_cast<int8_t>(MEAN_ELEMENT_THEORY), 0);
+  void add_ENTITY_ID(::flatbuffers::Offset<::flatbuffers::String> ENTITY_ID) {
+    fbb_.AddOffset(MPE::VT_ENTITY_ID, ENTITY_ID);
   }
-  explicit METBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_EPOCH(double EPOCH) {
+    fbb_.AddElement<double>(MPE::VT_EPOCH, EPOCH, 0.0);
+  }
+  void add_MEAN_MOTION(double MEAN_MOTION) {
+    fbb_.AddElement<double>(MPE::VT_MEAN_MOTION, MEAN_MOTION, 0.0);
+  }
+  void add_ECCENTRICITY(double ECCENTRICITY) {
+    fbb_.AddElement<double>(MPE::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+  }
+  void add_INCLINATION(double INCLINATION) {
+    fbb_.AddElement<double>(MPE::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  void add_RA_OF_ASC_NODE(double RA_OF_ASC_NODE) {
+    fbb_.AddElement<double>(MPE::VT_RA_OF_ASC_NODE, RA_OF_ASC_NODE, 0.0);
+  }
+  void add_ARG_OF_PERICENTER(double ARG_OF_PERICENTER) {
+    fbb_.AddElement<double>(MPE::VT_ARG_OF_PERICENTER, ARG_OF_PERICENTER, 0.0);
+  }
+  void add_MEAN_ANOMALY(double MEAN_ANOMALY) {
+    fbb_.AddElement<double>(MPE::VT_MEAN_ANOMALY, MEAN_ANOMALY, 0.0);
+  }
+  void add_BSTAR(double BSTAR) {
+    fbb_.AddElement<double>(MPE::VT_BSTAR, BSTAR, 0.0);
+  }
+  void add_MEAN_ELEMENT_THEORY(meanElementSource MEAN_ELEMENT_THEORY) {
+    fbb_.AddElement<int8_t>(MPE::VT_MEAN_ELEMENT_THEORY, static_cast<int8_t>(MEAN_ELEMENT_THEORY), 0);
+  }
+  explicit MPEBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<MET> Finish() {
+  ::flatbuffers::Offset<MPE> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<MET>(end);
+    auto o = ::flatbuffers::Offset<MPE>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<MET> CreateMET(
+inline ::flatbuffers::Offset<MPE> CreateMPE(
     ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> ENTITY_ID = 0,
+    double EPOCH = 0.0,
+    double MEAN_MOTION = 0.0,
+    double ECCENTRICITY = 0.0,
+    double INCLINATION = 0.0,
+    double RA_OF_ASC_NODE = 0.0,
+    double ARG_OF_PERICENTER = 0.0,
+    double MEAN_ANOMALY = 0.0,
+    double BSTAR = 0.0,
     meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_SGP4) {
-  METBuilder builder_(_fbb);
+  MPEBuilder builder_(_fbb);
+  builder_.add_BSTAR(BSTAR);
+  builder_.add_MEAN_ANOMALY(MEAN_ANOMALY);
+  builder_.add_ARG_OF_PERICENTER(ARG_OF_PERICENTER);
+  builder_.add_RA_OF_ASC_NODE(RA_OF_ASC_NODE);
+  builder_.add_INCLINATION(INCLINATION);
+  builder_.add_ECCENTRICITY(ECCENTRICITY);
+  builder_.add_MEAN_MOTION(MEAN_MOTION);
+  builder_.add_EPOCH(EPOCH);
+  builder_.add_ENTITY_ID(ENTITY_ID);
   builder_.add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY);
   return builder_.Finish();
 }
 
-inline const MET *GetMET(const void *buf) {
-  return ::flatbuffers::GetRoot<MET>(buf);
+inline ::flatbuffers::Offset<MPE> CreateMPEDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *ENTITY_ID = nullptr,
+    double EPOCH = 0.0,
+    double MEAN_MOTION = 0.0,
+    double ECCENTRICITY = 0.0,
+    double INCLINATION = 0.0,
+    double RA_OF_ASC_NODE = 0.0,
+    double ARG_OF_PERICENTER = 0.0,
+    double MEAN_ANOMALY = 0.0,
+    double BSTAR = 0.0,
+    meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_SGP4) {
+  auto ENTITY_ID__ = ENTITY_ID ? _fbb.CreateString(ENTITY_ID) : 0;
+  return CreateMPE(
+      _fbb,
+      ENTITY_ID__,
+      EPOCH,
+      MEAN_MOTION,
+      ECCENTRICITY,
+      INCLINATION,
+      RA_OF_ASC_NODE,
+      ARG_OF_PERICENTER,
+      MEAN_ANOMALY,
+      BSTAR,
+      MEAN_ELEMENT_THEORY);
 }
 
-inline const MET *GetSizePrefixedMET(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<MET>(buf);
+inline const MPE *GetMPE(const void *buf) {
+  return ::flatbuffers::GetRoot<MPE>(buf);
 }
 
-inline const char *METIdentifier() {
-  return "$MET";
+inline const MPE *GetSizePrefixedMPE(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<MPE>(buf);
 }
 
-inline bool METBufferHasIdentifier(const void *buf) {
+inline const char *MPEIdentifier() {
+  return "$MPE";
+}
+
+inline bool MPEBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, METIdentifier());
+      buf, MPEIdentifier());
 }
 
-inline bool SizePrefixedMETBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedMPEBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, METIdentifier(), true);
+      buf, MPEIdentifier(), true);
 }
 
 template <bool B = false>
-inline bool VerifyMETBuffer(
+inline bool VerifyMPEBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<MET>(METIdentifier());
+  return verifier.template VerifyBuffer<MPE>(MPEIdentifier());
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedMETBuffer(
+inline bool VerifySizePrefixedMPEBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<MET>(METIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<MPE>(MPEIdentifier());
 }
 
-inline void FinishMETBuffer(
+inline void FinishMPEBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<MET> root) {
-  fbb.Finish(root, METIdentifier());
+    ::flatbuffers::Offset<MPE> root) {
+  fbb.Finish(root, MPEIdentifier());
 }
 
-inline void FinishSizePrefixedMETBuffer(
+inline void FinishSizePrefixedMPEBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<MET> root) {
-  fbb.FinishSizePrefixed(root, METIdentifier());
+    ::flatbuffers::Offset<MPE> root) {
+  fbb.FinishSizePrefixed(root, MPEIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

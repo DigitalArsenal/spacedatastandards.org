@@ -13,136 +13,1653 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-struct MET;
-struct METBuilder;
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
-enum meanElementSource : int8_t {
-  /// Simplified General Perturbation Model 4
-  meanElementSource_SGP4 = 0,
-  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
-  meanElementSource_SGP4XP = 1,
-  /// Draper Semi-analytical Satellite Theory
-  meanElementSource_DSST = 2,
-  /// Universal Semianalytical Method
-  meanElementSource_USM = 3,
-  meanElementSource_MIN = meanElementSource_SGP4,
-  meanElementSource_MAX = meanElementSource_USM
+struct propagatorConfig;
+struct propagatorConfigBuilder;
+
+struct VCMStateVector;
+struct VCMStateVectorBuilder;
+
+struct keplerianElements;
+struct keplerianElementsBuilder;
+
+struct equinoctialElements;
+struct equinoctialElementsBuilder;
+
+struct uvwSigmas;
+struct uvwSigmasBuilder;
+
+struct VCMAtmosphericModelData;
+struct VCMAtmosphericModelDataBuilder;
+
+struct VCM;
+struct VCMBuilder;
+
+enum elementType : int8_t {
+  elementType_OSCULATING = 0,
+  elementType_MEAN = 1,
+  elementType_MIN = elementType_OSCULATING,
+  elementType_MAX = elementType_MEAN
 };
 
-inline const meanElementSource (&EnumValuesmeanElementSource())[4] {
-  static const meanElementSource values[] = {
-    meanElementSource_SGP4,
-    meanElementSource_SGP4XP,
-    meanElementSource_DSST,
-    meanElementSource_USM
+inline const elementType (&EnumValueselementType())[2] {
+  static const elementType values[] = {
+    elementType_OSCULATING,
+    elementType_MEAN
   };
   return values;
 }
 
-inline const char * const *EnumNamesmeanElementSource() {
-  static const char * const names[5] = {
-    "SGP4",
-    "SGP4XP",
-    "DSST",
-    "USM",
+inline const char * const *EnumNameselementType() {
+  static const char * const names[3] = {
+    "OSCULATING",
+    "MEAN",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNamemeanElementSource(meanElementSource e) {
-  if (::flatbuffers::IsOutRange(e, meanElementSource_SGP4, meanElementSource_USM)) return "";
+inline const char *EnumNameelementType(elementType e) {
+  if (::flatbuffers::IsOutRange(e, elementType_OSCULATING, elementType_MEAN)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesmeanElementSource()[index];
+  return EnumNameselementType()[index];
 }
 
-/// Mean Element Theory
-struct MET FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef METBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_MEAN_ELEMENT_THEORY = 4
+enum anomalyConvention : int8_t {
+  anomalyConvention_TRUE_ANOMALY = 0,
+  anomalyConvention_MEAN_ANOMALY = 1,
+  anomalyConvention_MIN = anomalyConvention_TRUE_ANOMALY,
+  anomalyConvention_MAX = anomalyConvention_MEAN_ANOMALY
+};
+
+inline const anomalyConvention (&EnumValuesanomalyConvention())[2] {
+  static const anomalyConvention values[] = {
+    anomalyConvention_TRUE_ANOMALY,
+    anomalyConvention_MEAN_ANOMALY
   };
-  meanElementSource MEAN_ELEMENT_THEORY() const {
-    return static_cast<meanElementSource>(GetField<int8_t>(VT_MEAN_ELEMENT_THEORY, 0));
+  return values;
+}
+
+inline const char * const *EnumNamesanomalyConvention() {
+  static const char * const names[3] = {
+    "TRUE_ANOMALY",
+    "MEAN_ANOMALY",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameanomalyConvention(anomalyConvention e) {
+  if (::flatbuffers::IsOutRange(e, anomalyConvention_TRUE_ANOMALY, anomalyConvention_MEAN_ANOMALY)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesanomalyConvention()[index];
+}
+
+/// Enum to represent common atmospheric models
+enum atmosphericSource : int8_t {
+  atmosphericSource_NONE = 0,
+  atmosphericSource_JACCHIA_70 = 1,
+  atmosphericSource_JB2008 = 2,
+  atmosphericSource_NRLMSISE_00 = 3,
+  atmosphericSource_DTM_2000 = 4,
+  atmosphericSource_HWM14 = 5,
+  atmosphericSource_HASDM = 6,
+  atmosphericSource_MIN = atmosphericSource_NONE,
+  atmosphericSource_MAX = atmosphericSource_HASDM
+};
+
+inline const atmosphericSource (&EnumValuesatmosphericSource())[7] {
+  static const atmosphericSource values[] = {
+    atmosphericSource_NONE,
+    atmosphericSource_JACCHIA_70,
+    atmosphericSource_JB2008,
+    atmosphericSource_NRLMSISE_00,
+    atmosphericSource_DTM_2000,
+    atmosphericSource_HWM14,
+    atmosphericSource_HASDM
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesatmosphericSource() {
+  static const char * const names[8] = {
+    "NONE",
+    "JACCHIA_70",
+    "JB2008",
+    "NRLMSISE_00",
+    "DTM_2000",
+    "HWM14",
+    "HASDM",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameatmosphericSource(atmosphericSource e) {
+  if (::flatbuffers::IsOutRange(e, atmosphericSource_NONE, atmosphericSource_HASDM)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesatmosphericSource()[index];
+}
+
+/// Enum to represent common geopotential models
+enum geopotentialSource : int8_t {
+  geopotentialSource_NONE = 0,
+  geopotentialSource_EGM96 = 1,
+  geopotentialSource_WGS84 = 2,
+  geopotentialSource_JGM2 = 3,
+  geopotentialSource_GEMT3 = 4,
+  geopotentialSource_EGM96_J5 = 5,
+  geopotentialSource_MIN = geopotentialSource_NONE,
+  geopotentialSource_MAX = geopotentialSource_EGM96_J5
+};
+
+inline const geopotentialSource (&EnumValuesgeopotentialSource())[6] {
+  static const geopotentialSource values[] = {
+    geopotentialSource_NONE,
+    geopotentialSource_EGM96,
+    geopotentialSource_WGS84,
+    geopotentialSource_JGM2,
+    geopotentialSource_GEMT3,
+    geopotentialSource_EGM96_J5
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesgeopotentialSource() {
+  static const char * const names[7] = {
+    "NONE",
+    "EGM96",
+    "WGS84",
+    "JGM2",
+    "GEMT3",
+    "EGM96_J5",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamegeopotentialSource(geopotentialSource e) {
+  if (::flatbuffers::IsOutRange(e, geopotentialSource_NONE, geopotentialSource_EGM96_J5)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesgeopotentialSource()[index];
+}
+
+/// Enum to represent zonal harmonics
+enum zonalHarmonic : int8_t {
+  zonalHarmonic_NONE = 0,
+  zonalHarmonic_J2 = 1,
+  zonalHarmonic_J3 = 2,
+  zonalHarmonic_J4 = 3,
+  zonalHarmonic_J5 = 4,
+  zonalHarmonic_J6 = 5,
+  zonalHarmonic_J7 = 6,
+  zonalHarmonic_J8 = 7,
+  zonalHarmonic_J9 = 8,
+  zonalHarmonic_J10 = 9,
+  zonalHarmonic_J11 = 10,
+  zonalHarmonic_J12 = 11,
+  zonalHarmonic_MIN = zonalHarmonic_NONE,
+  zonalHarmonic_MAX = zonalHarmonic_J12
+};
+
+inline const zonalHarmonic (&EnumValueszonalHarmonic())[12] {
+  static const zonalHarmonic values[] = {
+    zonalHarmonic_NONE,
+    zonalHarmonic_J2,
+    zonalHarmonic_J3,
+    zonalHarmonic_J4,
+    zonalHarmonic_J5,
+    zonalHarmonic_J6,
+    zonalHarmonic_J7,
+    zonalHarmonic_J8,
+    zonalHarmonic_J9,
+    zonalHarmonic_J10,
+    zonalHarmonic_J11,
+    zonalHarmonic_J12
+  };
+  return values;
+}
+
+inline const char * const *EnumNameszonalHarmonic() {
+  static const char * const names[13] = {
+    "NONE",
+    "J2",
+    "J3",
+    "J4",
+    "J5",
+    "J6",
+    "J7",
+    "J8",
+    "J9",
+    "J10",
+    "J11",
+    "J12",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamezonalHarmonic(zonalHarmonic e) {
+  if (::flatbuffers::IsOutRange(e, zonalHarmonic_NONE, zonalHarmonic_J12)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameszonalHarmonic()[index];
+}
+
+/// Enum to represent solar radiation pressure models
+enum solarRadiationPressureModel : int8_t {
+  solarRadiationPressureModel_NONE = 0,
+  solarRadiationPressureModel_SPHERICAL_MODEL = 1,
+  solarRadiationPressureModel_FLAT_PLATE_MODEL = 2,
+  solarRadiationPressureModel_MIN = solarRadiationPressureModel_NONE,
+  solarRadiationPressureModel_MAX = solarRadiationPressureModel_FLAT_PLATE_MODEL
+};
+
+inline const solarRadiationPressureModel (&EnumValuessolarRadiationPressureModel())[3] {
+  static const solarRadiationPressureModel values[] = {
+    solarRadiationPressureModel_NONE,
+    solarRadiationPressureModel_SPHERICAL_MODEL,
+    solarRadiationPressureModel_FLAT_PLATE_MODEL
+  };
+  return values;
+}
+
+inline const char * const *EnumNamessolarRadiationPressureModel() {
+  static const char * const names[4] = {
+    "NONE",
+    "SPHERICAL_MODEL",
+    "FLAT_PLATE_MODEL",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamesolarRadiationPressureModel(solarRadiationPressureModel e) {
+  if (::flatbuffers::IsOutRange(e, solarRadiationPressureModel_NONE, solarRadiationPressureModel_FLAT_PLATE_MODEL)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamessolarRadiationPressureModel()[index];
+}
+
+/// Enum to represent common lunar perturbation models
+enum lunarPerturbationSource : int8_t {
+  lunarPerturbationSource_NONE = 0,
+  lunarPerturbationSource_DE430 = 1,
+  lunarPerturbationSource_DE431 = 2,
+  lunarPerturbationSource_LP150Q = 3,
+  lunarPerturbationSource_MIN = lunarPerturbationSource_NONE,
+  lunarPerturbationSource_MAX = lunarPerturbationSource_LP150Q
+};
+
+inline const lunarPerturbationSource (&EnumValueslunarPerturbationSource())[4] {
+  static const lunarPerturbationSource values[] = {
+    lunarPerturbationSource_NONE,
+    lunarPerturbationSource_DE430,
+    lunarPerturbationSource_DE431,
+    lunarPerturbationSource_LP150Q
+  };
+  return values;
+}
+
+inline const char * const *EnumNameslunarPerturbationSource() {
+  static const char * const names[5] = {
+    "NONE",
+    "DE430",
+    "DE431",
+    "LP150Q",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamelunarPerturbationSource(lunarPerturbationSource e) {
+  if (::flatbuffers::IsOutRange(e, lunarPerturbationSource_NONE, lunarPerturbationSource_LP150Q)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameslunarPerturbationSource()[index];
+}
+
+/// Enum to represent various solar perturbation models
+enum solarPerturbationSource : int8_t {
+  solarPerturbationSource_NONE = 0,
+  solarPerturbationSource_DE430 = 1,
+  solarPerturbationSource_DE431 = 2,
+  solarPerturbationSource_MIN = solarPerturbationSource_NONE,
+  solarPerturbationSource_MAX = solarPerturbationSource_DE431
+};
+
+inline const solarPerturbationSource (&EnumValuessolarPerturbationSource())[3] {
+  static const solarPerturbationSource values[] = {
+    solarPerturbationSource_NONE,
+    solarPerturbationSource_DE430,
+    solarPerturbationSource_DE431
+  };
+  return values;
+}
+
+inline const char * const *EnumNamessolarPerturbationSource() {
+  static const char * const names[4] = {
+    "NONE",
+    "DE430",
+    "DE431",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamesolarPerturbationSource(solarPerturbationSource e) {
+  if (::flatbuffers::IsOutRange(e, solarPerturbationSource_NONE, solarPerturbationSource_DE431)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamessolarPerturbationSource()[index];
+}
+
+/// Enum to represent resonance models
+enum resonanceSource : int8_t {
+  resonanceSource_NONE = 0,
+  resonanceSource_HIGH_ALTITUDE_RESONANCE = 1,
+  resonanceSource_LOW_ALTITUDE_RESONANCE = 2,
+  resonanceSource_LUNAR_RESONANCE = 3,
+  resonanceSource_SOLAR_RESONANCE = 4,
+  resonanceSource_MIN = resonanceSource_NONE,
+  resonanceSource_MAX = resonanceSource_SOLAR_RESONANCE
+};
+
+inline const resonanceSource (&EnumValuesresonanceSource())[5] {
+  static const resonanceSource values[] = {
+    resonanceSource_NONE,
+    resonanceSource_HIGH_ALTITUDE_RESONANCE,
+    resonanceSource_LOW_ALTITUDE_RESONANCE,
+    resonanceSource_LUNAR_RESONANCE,
+    resonanceSource_SOLAR_RESONANCE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesresonanceSource() {
+  static const char * const names[6] = {
+    "NONE",
+    "HIGH_ALTITUDE_RESONANCE",
+    "LOW_ALTITUDE_RESONANCE",
+    "LUNAR_RESONANCE",
+    "SOLAR_RESONANCE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameresonanceSource(resonanceSource e) {
+  if (::flatbuffers::IsOutRange(e, resonanceSource_NONE, resonanceSource_SOLAR_RESONANCE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesresonanceSource()[index];
+}
+
+/// Enum to represent the status of various perturbations (ON/OFF)
+enum perturbationStatus : int8_t {
+  perturbationStatus_OFF = 0,
+  perturbationStatus_ON = 1,
+  perturbationStatus_MIN = perturbationStatus_OFF,
+  perturbationStatus_MAX = perturbationStatus_ON
+};
+
+inline const perturbationStatus (&EnumValuesperturbationStatus())[2] {
+  static const perturbationStatus values[] = {
+    perturbationStatus_OFF,
+    perturbationStatus_ON
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesperturbationStatus() {
+  static const char * const names[3] = {
+    "OFF",
+    "ON",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameperturbationStatus(perturbationStatus e) {
+  if (::flatbuffers::IsOutRange(e, perturbationStatus_OFF, perturbationStatus_ON)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesperturbationStatus()[index];
+}
+
+/// Enum to represent propagator types
+enum propagatorFamily : int8_t {
+  propagatorFamily_NONE = 0,
+  propagatorFamily_SEMI_ANALYTICAL = 1,
+  propagatorFamily_VINTI = 2,
+  propagatorFamily_SGP4 = 3,
+  propagatorFamily_COWELL = 4,
+  propagatorFamily_RK4 = 5,
+  propagatorFamily_NYX = 6,
+  propagatorFamily_GMAT = 7,
+  propagatorFamily_SPICE = 8,
+  propagatorFamily_SGP = 9,
+  propagatorFamily_SDP4 = 10,
+  propagatorFamily_SGP8 = 11,
+  propagatorFamily_SDP8 = 12,
+  propagatorFamily_MIN = propagatorFamily_NONE,
+  propagatorFamily_MAX = propagatorFamily_SDP8
+};
+
+inline const propagatorFamily (&EnumValuespropagatorFamily())[13] {
+  static const propagatorFamily values[] = {
+    propagatorFamily_NONE,
+    propagatorFamily_SEMI_ANALYTICAL,
+    propagatorFamily_VINTI,
+    propagatorFamily_SGP4,
+    propagatorFamily_COWELL,
+    propagatorFamily_RK4,
+    propagatorFamily_NYX,
+    propagatorFamily_GMAT,
+    propagatorFamily_SPICE,
+    propagatorFamily_SGP,
+    propagatorFamily_SDP4,
+    propagatorFamily_SGP8,
+    propagatorFamily_SDP8
+  };
+  return values;
+}
+
+inline const char * const *EnumNamespropagatorFamily() {
+  static const char * const names[14] = {
+    "NONE",
+    "SEMI_ANALYTICAL",
+    "VINTI",
+    "SGP4",
+    "COWELL",
+    "RK4",
+    "NYX",
+    "GMAT",
+    "SPICE",
+    "SGP",
+    "SDP4",
+    "SGP8",
+    "SDP8",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamepropagatorFamily(propagatorFamily e) {
+  if (::flatbuffers::IsOutRange(e, propagatorFamily_NONE, propagatorFamily_SDP8)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamespropagatorFamily()[index];
+}
+
+/// Propagator configuration structure to describe propagation settings
+struct propagatorConfig FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef propagatorConfigBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PROPAGATOR_NAME = 4,
+    VT_PROPAGATOR_TYPE = 6,
+    VT_FORCE_MODELS = 8,
+    VT_EPOCH = 10,
+    VT_TIME_STEP = 12,
+    VT_ZONAL_HARMONIC_TERMS = 14
+  };
+  const ::flatbuffers::String *PROPAGATOR_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PROPAGATOR_NAME);
+  }
+  propagatorFamily PROPAGATOR_TYPE() const {
+    return static_cast<propagatorFamily>(GetField<int8_t>(VT_PROPAGATOR_TYPE, 0));
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *FORCE_MODELS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_FORCE_MODELS);
+  }
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  double TIME_STEP() const {
+    return GetField<double>(VT_TIME_STEP, 0.0);
+  }
+  const ::flatbuffers::Vector<int8_t> *ZONAL_HARMONIC_TERMS() const {
+    return GetPointer<const ::flatbuffers::Vector<int8_t> *>(VT_ZONAL_HARMONIC_TERMS);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<int8_t>(verifier, VT_MEAN_ELEMENT_THEORY, 1) &&
+           VerifyOffset(verifier, VT_PROPAGATOR_NAME) &&
+           verifier.VerifyString(PROPAGATOR_NAME()) &&
+           VerifyField<int8_t>(verifier, VT_PROPAGATOR_TYPE, 1) &&
+           VerifyOffset(verifier, VT_FORCE_MODELS) &&
+           verifier.VerifyVector(FORCE_MODELS()) &&
+           verifier.VerifyVectorOfStrings(FORCE_MODELS()) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<double>(verifier, VT_TIME_STEP, 8) &&
+           VerifyOffset(verifier, VT_ZONAL_HARMONIC_TERMS) &&
+           verifier.VerifyVector(ZONAL_HARMONIC_TERMS()) &&
            verifier.EndTable();
   }
 };
 
-struct METBuilder {
-  typedef MET Table;
+struct propagatorConfigBuilder {
+  typedef propagatorConfig Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_MEAN_ELEMENT_THEORY(meanElementSource MEAN_ELEMENT_THEORY) {
-    fbb_.AddElement<int8_t>(MET::VT_MEAN_ELEMENT_THEORY, static_cast<int8_t>(MEAN_ELEMENT_THEORY), 0);
+  void add_PROPAGATOR_NAME(::flatbuffers::Offset<::flatbuffers::String> PROPAGATOR_NAME) {
+    fbb_.AddOffset(propagatorConfig::VT_PROPAGATOR_NAME, PROPAGATOR_NAME);
   }
-  explicit METBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_PROPAGATOR_TYPE(propagatorFamily PROPAGATOR_TYPE) {
+    fbb_.AddElement<int8_t>(propagatorConfig::VT_PROPAGATOR_TYPE, static_cast<int8_t>(PROPAGATOR_TYPE), 0);
+  }
+  void add_FORCE_MODELS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> FORCE_MODELS) {
+    fbb_.AddOffset(propagatorConfig::VT_FORCE_MODELS, FORCE_MODELS);
+  }
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(propagatorConfig::VT_EPOCH, EPOCH);
+  }
+  void add_TIME_STEP(double TIME_STEP) {
+    fbb_.AddElement<double>(propagatorConfig::VT_TIME_STEP, TIME_STEP, 0.0);
+  }
+  void add_ZONAL_HARMONIC_TERMS(::flatbuffers::Offset<::flatbuffers::Vector<int8_t>> ZONAL_HARMONIC_TERMS) {
+    fbb_.AddOffset(propagatorConfig::VT_ZONAL_HARMONIC_TERMS, ZONAL_HARMONIC_TERMS);
+  }
+  explicit propagatorConfigBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<MET> Finish() {
+  ::flatbuffers::Offset<propagatorConfig> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<MET>(end);
+    auto o = ::flatbuffers::Offset<propagatorConfig>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<MET> CreateMET(
+inline ::flatbuffers::Offset<propagatorConfig> CreatepropagatorConfig(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_SGP4) {
-  METBuilder builder_(_fbb);
-  builder_.add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY);
+    ::flatbuffers::Offset<::flatbuffers::String> PROPAGATOR_NAME = 0,
+    propagatorFamily PROPAGATOR_TYPE = propagatorFamily_NONE,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> FORCE_MODELS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    double TIME_STEP = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<int8_t>> ZONAL_HARMONIC_TERMS = 0) {
+  propagatorConfigBuilder builder_(_fbb);
+  builder_.add_TIME_STEP(TIME_STEP);
+  builder_.add_ZONAL_HARMONIC_TERMS(ZONAL_HARMONIC_TERMS);
+  builder_.add_EPOCH(EPOCH);
+  builder_.add_FORCE_MODELS(FORCE_MODELS);
+  builder_.add_PROPAGATOR_NAME(PROPAGATOR_NAME);
+  builder_.add_PROPAGATOR_TYPE(PROPAGATOR_TYPE);
   return builder_.Finish();
 }
 
-inline const MET *GetMET(const void *buf) {
-  return ::flatbuffers::GetRoot<MET>(buf);
+inline ::flatbuffers::Offset<propagatorConfig> CreatepropagatorConfigDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *PROPAGATOR_NAME = nullptr,
+    propagatorFamily PROPAGATOR_TYPE = propagatorFamily_NONE,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *FORCE_MODELS = nullptr,
+    const char *EPOCH = nullptr,
+    double TIME_STEP = 0.0,
+    const std::vector<int8_t> *ZONAL_HARMONIC_TERMS = nullptr) {
+  auto PROPAGATOR_NAME__ = PROPAGATOR_NAME ? _fbb.CreateString(PROPAGATOR_NAME) : 0;
+  auto FORCE_MODELS__ = FORCE_MODELS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*FORCE_MODELS) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto ZONAL_HARMONIC_TERMS__ = ZONAL_HARMONIC_TERMS ? _fbb.CreateVector<int8_t>(*ZONAL_HARMONIC_TERMS) : 0;
+  return CreatepropagatorConfig(
+      _fbb,
+      PROPAGATOR_NAME__,
+      PROPAGATOR_TYPE,
+      FORCE_MODELS__,
+      EPOCH__,
+      TIME_STEP,
+      ZONAL_HARMONIC_TERMS__);
 }
 
-inline const MET *GetSizePrefixedMET(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<MET>(buf);
+/// VCM State Vector (position and velocity)
+struct VCMStateVector FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef VCMStateVectorBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EPOCH = 4,
+    VT_X = 6,
+    VT_Y = 8,
+    VT_Z = 10,
+    VT_X_DOT = 12,
+    VT_Y_DOT = 14,
+    VT_Z_DOT = 16
+  };
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  double X() const {
+    return GetField<double>(VT_X, 0.0);
+  }
+  double Y() const {
+    return GetField<double>(VT_Y, 0.0);
+  }
+  double Z() const {
+    return GetField<double>(VT_Z, 0.0);
+  }
+  double X_DOT() const {
+    return GetField<double>(VT_X_DOT, 0.0);
+  }
+  double Y_DOT() const {
+    return GetField<double>(VT_Y_DOT, 0.0);
+  }
+  double Z_DOT() const {
+    return GetField<double>(VT_Z_DOT, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<double>(verifier, VT_X, 8) &&
+           VerifyField<double>(verifier, VT_Y, 8) &&
+           VerifyField<double>(verifier, VT_Z, 8) &&
+           VerifyField<double>(verifier, VT_X_DOT, 8) &&
+           VerifyField<double>(verifier, VT_Y_DOT, 8) &&
+           VerifyField<double>(verifier, VT_Z_DOT, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct VCMStateVectorBuilder {
+  typedef VCMStateVector Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(VCMStateVector::VT_EPOCH, EPOCH);
+  }
+  void add_X(double X) {
+    fbb_.AddElement<double>(VCMStateVector::VT_X, X, 0.0);
+  }
+  void add_Y(double Y) {
+    fbb_.AddElement<double>(VCMStateVector::VT_Y, Y, 0.0);
+  }
+  void add_Z(double Z) {
+    fbb_.AddElement<double>(VCMStateVector::VT_Z, Z, 0.0);
+  }
+  void add_X_DOT(double X_DOT) {
+    fbb_.AddElement<double>(VCMStateVector::VT_X_DOT, X_DOT, 0.0);
+  }
+  void add_Y_DOT(double Y_DOT) {
+    fbb_.AddElement<double>(VCMStateVector::VT_Y_DOT, Y_DOT, 0.0);
+  }
+  void add_Z_DOT(double Z_DOT) {
+    fbb_.AddElement<double>(VCMStateVector::VT_Z_DOT, Z_DOT, 0.0);
+  }
+  explicit VCMStateVectorBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<VCMStateVector> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<VCMStateVector>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<VCMStateVector> CreateVCMStateVector(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    double X = 0.0,
+    double Y = 0.0,
+    double Z = 0.0,
+    double X_DOT = 0.0,
+    double Y_DOT = 0.0,
+    double Z_DOT = 0.0) {
+  VCMStateVectorBuilder builder_(_fbb);
+  builder_.add_Z_DOT(Z_DOT);
+  builder_.add_Y_DOT(Y_DOT);
+  builder_.add_X_DOT(X_DOT);
+  builder_.add_Z(Z);
+  builder_.add_Y(Y);
+  builder_.add_X(X);
+  builder_.add_EPOCH(EPOCH);
+  return builder_.Finish();
 }
 
-inline const char *METIdentifier() {
-  return "$MET";
+inline ::flatbuffers::Offset<VCMStateVector> CreateVCMStateVectorDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *EPOCH = nullptr,
+    double X = 0.0,
+    double Y = 0.0,
+    double Z = 0.0,
+    double X_DOT = 0.0,
+    double Y_DOT = 0.0,
+    double Z_DOT = 0.0) {
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  return CreateVCMStateVector(
+      _fbb,
+      EPOCH__,
+      X,
+      Y,
+      Z,
+      X_DOT,
+      Y_DOT,
+      Z_DOT);
 }
 
-inline bool METBufferHasIdentifier(const void *buf) {
-  return ::flatbuffers::BufferHasIdentifier(
-      buf, METIdentifier());
+/// Keplerian Elements
+struct keplerianElements FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef keplerianElementsBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SEMI_MAJOR_AXIS = 4,
+    VT_ECCENTRICITY = 6,
+    VT_INCLINATION = 8,
+    VT_RA_OF_ASC_NODE = 10,
+    VT_ARG_OF_PERICENTER = 12,
+    VT_ANOMALY_TYPE = 14,
+    VT_ANOMALY = 16
+  };
+  double SEMI_MAJOR_AXIS() const {
+    return GetField<double>(VT_SEMI_MAJOR_AXIS, 0.0);
+  }
+  double ECCENTRICITY() const {
+    return GetField<double>(VT_ECCENTRICITY, 0.0);
+  }
+  double INCLINATION() const {
+    return GetField<double>(VT_INCLINATION, 0.0);
+  }
+  double RA_OF_ASC_NODE() const {
+    return GetField<double>(VT_RA_OF_ASC_NODE, 0.0);
+  }
+  double ARG_OF_PERICENTER() const {
+    return GetField<double>(VT_ARG_OF_PERICENTER, 0.0);
+  }
+  anomalyConvention ANOMALY_TYPE() const {
+    return static_cast<anomalyConvention>(GetField<int8_t>(VT_ANOMALY_TYPE, 0));
+  }
+  double ANOMALY() const {
+    return GetField<double>(VT_ANOMALY, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_SEMI_MAJOR_AXIS, 8) &&
+           VerifyField<double>(verifier, VT_ECCENTRICITY, 8) &&
+           VerifyField<double>(verifier, VT_INCLINATION, 8) &&
+           VerifyField<double>(verifier, VT_RA_OF_ASC_NODE, 8) &&
+           VerifyField<double>(verifier, VT_ARG_OF_PERICENTER, 8) &&
+           VerifyField<int8_t>(verifier, VT_ANOMALY_TYPE, 1) &&
+           VerifyField<double>(verifier, VT_ANOMALY, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct keplerianElementsBuilder {
+  typedef keplerianElements Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SEMI_MAJOR_AXIS(double SEMI_MAJOR_AXIS) {
+    fbb_.AddElement<double>(keplerianElements::VT_SEMI_MAJOR_AXIS, SEMI_MAJOR_AXIS, 0.0);
+  }
+  void add_ECCENTRICITY(double ECCENTRICITY) {
+    fbb_.AddElement<double>(keplerianElements::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+  }
+  void add_INCLINATION(double INCLINATION) {
+    fbb_.AddElement<double>(keplerianElements::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  void add_RA_OF_ASC_NODE(double RA_OF_ASC_NODE) {
+    fbb_.AddElement<double>(keplerianElements::VT_RA_OF_ASC_NODE, RA_OF_ASC_NODE, 0.0);
+  }
+  void add_ARG_OF_PERICENTER(double ARG_OF_PERICENTER) {
+    fbb_.AddElement<double>(keplerianElements::VT_ARG_OF_PERICENTER, ARG_OF_PERICENTER, 0.0);
+  }
+  void add_ANOMALY_TYPE(anomalyConvention ANOMALY_TYPE) {
+    fbb_.AddElement<int8_t>(keplerianElements::VT_ANOMALY_TYPE, static_cast<int8_t>(ANOMALY_TYPE), 0);
+  }
+  void add_ANOMALY(double ANOMALY) {
+    fbb_.AddElement<double>(keplerianElements::VT_ANOMALY, ANOMALY, 0.0);
+  }
+  explicit keplerianElementsBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<keplerianElements> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<keplerianElements>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<keplerianElements> CreatekeplerianElements(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double SEMI_MAJOR_AXIS = 0.0,
+    double ECCENTRICITY = 0.0,
+    double INCLINATION = 0.0,
+    double RA_OF_ASC_NODE = 0.0,
+    double ARG_OF_PERICENTER = 0.0,
+    anomalyConvention ANOMALY_TYPE = anomalyConvention_TRUE_ANOMALY,
+    double ANOMALY = 0.0) {
+  keplerianElementsBuilder builder_(_fbb);
+  builder_.add_ANOMALY(ANOMALY);
+  builder_.add_ARG_OF_PERICENTER(ARG_OF_PERICENTER);
+  builder_.add_RA_OF_ASC_NODE(RA_OF_ASC_NODE);
+  builder_.add_INCLINATION(INCLINATION);
+  builder_.add_ECCENTRICITY(ECCENTRICITY);
+  builder_.add_SEMI_MAJOR_AXIS(SEMI_MAJOR_AXIS);
+  builder_.add_ANOMALY_TYPE(ANOMALY_TYPE);
+  return builder_.Finish();
 }
 
-inline bool SizePrefixedMETBufferHasIdentifier(const void *buf) {
-  return ::flatbuffers::BufferHasIdentifier(
-      buf, METIdentifier(), true);
+/// Equinoctial Elements
+struct equinoctialElements FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef equinoctialElementsBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_AF = 4,
+    VT_AG = 6,
+    VT_L = 8,
+    VT_N = 10,
+    VT_CHI = 12,
+    VT_PSI = 14
+  };
+  double AF() const {
+    return GetField<double>(VT_AF, 0.0);
+  }
+  double AG() const {
+    return GetField<double>(VT_AG, 0.0);
+  }
+  double L() const {
+    return GetField<double>(VT_L, 0.0);
+  }
+  double N() const {
+    return GetField<double>(VT_N, 0.0);
+  }
+  double CHI() const {
+    return GetField<double>(VT_CHI, 0.0);
+  }
+  double PSI() const {
+    return GetField<double>(VT_PSI, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_AF, 8) &&
+           VerifyField<double>(verifier, VT_AG, 8) &&
+           VerifyField<double>(verifier, VT_L, 8) &&
+           VerifyField<double>(verifier, VT_N, 8) &&
+           VerifyField<double>(verifier, VT_CHI, 8) &&
+           VerifyField<double>(verifier, VT_PSI, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct equinoctialElementsBuilder {
+  typedef equinoctialElements Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_AF(double AF) {
+    fbb_.AddElement<double>(equinoctialElements::VT_AF, AF, 0.0);
+  }
+  void add_AG(double AG) {
+    fbb_.AddElement<double>(equinoctialElements::VT_AG, AG, 0.0);
+  }
+  void add_L(double L) {
+    fbb_.AddElement<double>(equinoctialElements::VT_L, L, 0.0);
+  }
+  void add_N(double N) {
+    fbb_.AddElement<double>(equinoctialElements::VT_N, N, 0.0);
+  }
+  void add_CHI(double CHI) {
+    fbb_.AddElement<double>(equinoctialElements::VT_CHI, CHI, 0.0);
+  }
+  void add_PSI(double PSI) {
+    fbb_.AddElement<double>(equinoctialElements::VT_PSI, PSI, 0.0);
+  }
+  explicit equinoctialElementsBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<equinoctialElements> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<equinoctialElements>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<equinoctialElements> CreateequinoctialElements(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double AF = 0.0,
+    double AG = 0.0,
+    double L = 0.0,
+    double N = 0.0,
+    double CHI = 0.0,
+    double PSI = 0.0) {
+  equinoctialElementsBuilder builder_(_fbb);
+  builder_.add_PSI(PSI);
+  builder_.add_CHI(CHI);
+  builder_.add_N(N);
+  builder_.add_L(L);
+  builder_.add_AG(AG);
+  builder_.add_AF(AF);
+  return builder_.Finish();
+}
+
+/// UVW Sigmas (Covariance matrix in UVW frame)
+struct uvwSigmas FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef uvwSigmasBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_U_SIGMA = 4,
+    VT_V_SIGMA = 6,
+    VT_W_SIGMA = 8,
+    VT_UD_SIGMA = 10,
+    VT_VD_SIGMA = 12,
+    VT_WD_SIGMA = 14
+  };
+  double U_SIGMA() const {
+    return GetField<double>(VT_U_SIGMA, 0.0);
+  }
+  double V_SIGMA() const {
+    return GetField<double>(VT_V_SIGMA, 0.0);
+  }
+  double W_SIGMA() const {
+    return GetField<double>(VT_W_SIGMA, 0.0);
+  }
+  double UD_SIGMA() const {
+    return GetField<double>(VT_UD_SIGMA, 0.0);
+  }
+  double VD_SIGMA() const {
+    return GetField<double>(VT_VD_SIGMA, 0.0);
+  }
+  double WD_SIGMA() const {
+    return GetField<double>(VT_WD_SIGMA, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_U_SIGMA, 8) &&
+           VerifyField<double>(verifier, VT_V_SIGMA, 8) &&
+           VerifyField<double>(verifier, VT_W_SIGMA, 8) &&
+           VerifyField<double>(verifier, VT_UD_SIGMA, 8) &&
+           VerifyField<double>(verifier, VT_VD_SIGMA, 8) &&
+           VerifyField<double>(verifier, VT_WD_SIGMA, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct uvwSigmasBuilder {
+  typedef uvwSigmas Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_U_SIGMA(double U_SIGMA) {
+    fbb_.AddElement<double>(uvwSigmas::VT_U_SIGMA, U_SIGMA, 0.0);
+  }
+  void add_V_SIGMA(double V_SIGMA) {
+    fbb_.AddElement<double>(uvwSigmas::VT_V_SIGMA, V_SIGMA, 0.0);
+  }
+  void add_W_SIGMA(double W_SIGMA) {
+    fbb_.AddElement<double>(uvwSigmas::VT_W_SIGMA, W_SIGMA, 0.0);
+  }
+  void add_UD_SIGMA(double UD_SIGMA) {
+    fbb_.AddElement<double>(uvwSigmas::VT_UD_SIGMA, UD_SIGMA, 0.0);
+  }
+  void add_VD_SIGMA(double VD_SIGMA) {
+    fbb_.AddElement<double>(uvwSigmas::VT_VD_SIGMA, VD_SIGMA, 0.0);
+  }
+  void add_WD_SIGMA(double WD_SIGMA) {
+    fbb_.AddElement<double>(uvwSigmas::VT_WD_SIGMA, WD_SIGMA, 0.0);
+  }
+  explicit uvwSigmasBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<uvwSigmas> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<uvwSigmas>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<uvwSigmas> CreateuvwSigmas(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double U_SIGMA = 0.0,
+    double V_SIGMA = 0.0,
+    double W_SIGMA = 0.0,
+    double UD_SIGMA = 0.0,
+    double VD_SIGMA = 0.0,
+    double WD_SIGMA = 0.0) {
+  uvwSigmasBuilder builder_(_fbb);
+  builder_.add_WD_SIGMA(WD_SIGMA);
+  builder_.add_VD_SIGMA(VD_SIGMA);
+  builder_.add_UD_SIGMA(UD_SIGMA);
+  builder_.add_W_SIGMA(W_SIGMA);
+  builder_.add_V_SIGMA(V_SIGMA);
+  builder_.add_U_SIGMA(U_SIGMA);
+  return builder_.Finish();
+}
+
+/// VCM Atmospheric and Perturbation Model Data
+struct VCMAtmosphericModelData FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef VCMAtmosphericModelDataBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ATMOSPHERIC_MODEL = 4,
+    VT_GEOPOTENTIAL_MODEL = 6,
+    VT_LUNAR_SOLAR_PERTURBATION = 8,
+    VT_LUNAR_PERTURBATION_MODEL = 10,
+    VT_SOLAR_PERTURBATION_MODEL = 12,
+    VT_SOLAR_RADIATION_PRESSURE = 14,
+    VT_SRP_MODEL = 16,
+    VT_RESONANCE_MODEL = 18
+  };
+  atmosphericSource ATMOSPHERIC_MODEL() const {
+    return static_cast<atmosphericSource>(GetField<int8_t>(VT_ATMOSPHERIC_MODEL, 0));
+  }
+  geopotentialSource GEOPOTENTIAL_MODEL() const {
+    return static_cast<geopotentialSource>(GetField<int8_t>(VT_GEOPOTENTIAL_MODEL, 0));
+  }
+  perturbationStatus LUNAR_SOLAR_PERTURBATION() const {
+    return static_cast<perturbationStatus>(GetField<int8_t>(VT_LUNAR_SOLAR_PERTURBATION, 0));
+  }
+  lunarPerturbationSource LUNAR_PERTURBATION_MODEL() const {
+    return static_cast<lunarPerturbationSource>(GetField<int8_t>(VT_LUNAR_PERTURBATION_MODEL, 0));
+  }
+  solarPerturbationSource SOLAR_PERTURBATION_MODEL() const {
+    return static_cast<solarPerturbationSource>(GetField<int8_t>(VT_SOLAR_PERTURBATION_MODEL, 0));
+  }
+  perturbationStatus SOLAR_RADIATION_PRESSURE() const {
+    return static_cast<perturbationStatus>(GetField<int8_t>(VT_SOLAR_RADIATION_PRESSURE, 0));
+  }
+  solarRadiationPressureModel SRP_MODEL() const {
+    return static_cast<solarRadiationPressureModel>(GetField<int8_t>(VT_SRP_MODEL, 0));
+  }
+  resonanceSource RESONANCE_MODEL() const {
+    return static_cast<resonanceSource>(GetField<int8_t>(VT_RESONANCE_MODEL, 0));
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_ATMOSPHERIC_MODEL, 1) &&
+           VerifyField<int8_t>(verifier, VT_GEOPOTENTIAL_MODEL, 1) &&
+           VerifyField<int8_t>(verifier, VT_LUNAR_SOLAR_PERTURBATION, 1) &&
+           VerifyField<int8_t>(verifier, VT_LUNAR_PERTURBATION_MODEL, 1) &&
+           VerifyField<int8_t>(verifier, VT_SOLAR_PERTURBATION_MODEL, 1) &&
+           VerifyField<int8_t>(verifier, VT_SOLAR_RADIATION_PRESSURE, 1) &&
+           VerifyField<int8_t>(verifier, VT_SRP_MODEL, 1) &&
+           VerifyField<int8_t>(verifier, VT_RESONANCE_MODEL, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct VCMAtmosphericModelDataBuilder {
+  typedef VCMAtmosphericModelData Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ATMOSPHERIC_MODEL(atmosphericSource ATMOSPHERIC_MODEL) {
+    fbb_.AddElement<int8_t>(VCMAtmosphericModelData::VT_ATMOSPHERIC_MODEL, static_cast<int8_t>(ATMOSPHERIC_MODEL), 0);
+  }
+  void add_GEOPOTENTIAL_MODEL(geopotentialSource GEOPOTENTIAL_MODEL) {
+    fbb_.AddElement<int8_t>(VCMAtmosphericModelData::VT_GEOPOTENTIAL_MODEL, static_cast<int8_t>(GEOPOTENTIAL_MODEL), 0);
+  }
+  void add_LUNAR_SOLAR_PERTURBATION(perturbationStatus LUNAR_SOLAR_PERTURBATION) {
+    fbb_.AddElement<int8_t>(VCMAtmosphericModelData::VT_LUNAR_SOLAR_PERTURBATION, static_cast<int8_t>(LUNAR_SOLAR_PERTURBATION), 0);
+  }
+  void add_LUNAR_PERTURBATION_MODEL(lunarPerturbationSource LUNAR_PERTURBATION_MODEL) {
+    fbb_.AddElement<int8_t>(VCMAtmosphericModelData::VT_LUNAR_PERTURBATION_MODEL, static_cast<int8_t>(LUNAR_PERTURBATION_MODEL), 0);
+  }
+  void add_SOLAR_PERTURBATION_MODEL(solarPerturbationSource SOLAR_PERTURBATION_MODEL) {
+    fbb_.AddElement<int8_t>(VCMAtmosphericModelData::VT_SOLAR_PERTURBATION_MODEL, static_cast<int8_t>(SOLAR_PERTURBATION_MODEL), 0);
+  }
+  void add_SOLAR_RADIATION_PRESSURE(perturbationStatus SOLAR_RADIATION_PRESSURE) {
+    fbb_.AddElement<int8_t>(VCMAtmosphericModelData::VT_SOLAR_RADIATION_PRESSURE, static_cast<int8_t>(SOLAR_RADIATION_PRESSURE), 0);
+  }
+  void add_SRP_MODEL(solarRadiationPressureModel SRP_MODEL) {
+    fbb_.AddElement<int8_t>(VCMAtmosphericModelData::VT_SRP_MODEL, static_cast<int8_t>(SRP_MODEL), 0);
+  }
+  void add_RESONANCE_MODEL(resonanceSource RESONANCE_MODEL) {
+    fbb_.AddElement<int8_t>(VCMAtmosphericModelData::VT_RESONANCE_MODEL, static_cast<int8_t>(RESONANCE_MODEL), 0);
+  }
+  explicit VCMAtmosphericModelDataBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<VCMAtmosphericModelData> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<VCMAtmosphericModelData>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<VCMAtmosphericModelData> CreateVCMAtmosphericModelData(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    atmosphericSource ATMOSPHERIC_MODEL = atmosphericSource_NONE,
+    geopotentialSource GEOPOTENTIAL_MODEL = geopotentialSource_NONE,
+    perturbationStatus LUNAR_SOLAR_PERTURBATION = perturbationStatus_OFF,
+    lunarPerturbationSource LUNAR_PERTURBATION_MODEL = lunarPerturbationSource_NONE,
+    solarPerturbationSource SOLAR_PERTURBATION_MODEL = solarPerturbationSource_NONE,
+    perturbationStatus SOLAR_RADIATION_PRESSURE = perturbationStatus_OFF,
+    solarRadiationPressureModel SRP_MODEL = solarRadiationPressureModel_NONE,
+    resonanceSource RESONANCE_MODEL = resonanceSource_NONE) {
+  VCMAtmosphericModelDataBuilder builder_(_fbb);
+  builder_.add_RESONANCE_MODEL(RESONANCE_MODEL);
+  builder_.add_SRP_MODEL(SRP_MODEL);
+  builder_.add_SOLAR_RADIATION_PRESSURE(SOLAR_RADIATION_PRESSURE);
+  builder_.add_SOLAR_PERTURBATION_MODEL(SOLAR_PERTURBATION_MODEL);
+  builder_.add_LUNAR_PERTURBATION_MODEL(LUNAR_PERTURBATION_MODEL);
+  builder_.add_LUNAR_SOLAR_PERTURBATION(LUNAR_SOLAR_PERTURBATION);
+  builder_.add_GEOPOTENTIAL_MODEL(GEOPOTENTIAL_MODEL);
+  builder_.add_ATMOSPHERIC_MODEL(ATMOSPHERIC_MODEL);
+  return builder_.Finish();
+}
+
+/// Vector Covariance Message
+struct VCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef VCMBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CCSDS_OMM_VERS = 4,
+    VT_CREATION_DATE = 6,
+    VT_ORIGINATOR = 8,
+    VT_OBJECT_NAME = 10,
+    VT_OBJECT_ID = 12,
+    VT_CENTER_NAME = 14,
+    VT_REF_FRAME = 16,
+    VT_TIME_SYSTEM = 18,
+    VT_STATE_VECTOR = 20,
+    VT_KEPLERIAN_ELEMENTS = 22,
+    VT_EQUINOCTIAL_ELEMENTS = 24,
+    VT_GM = 26,
+    VT_ATMOSPHERIC_MODEL_DATA = 28,
+    VT_PROPAGATOR_SETTINGS = 30,
+    VT_UVW_SIGMAS = 32,
+    VT_MASS = 34,
+    VT_SOLAR_RAD_AREA = 36,
+    VT_SOLAR_RAD_COEFF = 38,
+    VT_DRAG_AREA = 40,
+    VT_DRAG_COEFF = 42,
+    VT_SRP = 44,
+    VT_CLASSIFICATION_TYPE = 46,
+    VT_NORAD_CAT_ID = 48,
+    VT_ELEMENT_SET_NO = 50,
+    VT_REV_AT_EPOCH = 52,
+    VT_BSTAR = 54,
+    VT_MEAN_MOTION_DOT = 56,
+    VT_MEAN_MOTION_DDOT = 58,
+    VT_COV_REFERENCE_FRAME = 60,
+    VT_COVARIANCE = 62,
+    VT_USER_DEFINED_BIP_0044_TYPE = 64,
+    VT_USER_DEFINED_OBJECT_DESIGNATOR = 66,
+    VT_USER_DEFINED_EARTH_MODEL = 68,
+    VT_USER_DEFINED_EPOCH_TIMESTAMP = 70,
+    VT_USER_DEFINED_MICROSECONDS = 72
+  };
+  double CCSDS_OMM_VERS() const {
+    return GetField<double>(VT_CCSDS_OMM_VERS, 0.0);
+  }
+  const ::flatbuffers::String *CREATION_DATE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CREATION_DATE);
+  }
+  const ::flatbuffers::String *ORIGINATOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIGINATOR);
+  }
+  const ::flatbuffers::String *OBJECT_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
+  }
+  const ::flatbuffers::String *OBJECT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
+  }
+  const ::flatbuffers::String *CENTER_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CENTER_NAME);
+  }
+  const ::flatbuffers::String *REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME);
+  }
+  const ::flatbuffers::String *TIME_SYSTEM() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TIME_SYSTEM);
+  }
+  const VCMStateVector *STATE_VECTOR() const {
+    return GetPointer<const VCMStateVector *>(VT_STATE_VECTOR);
+  }
+  const keplerianElements *KEPLERIAN_ELEMENTS() const {
+    return GetPointer<const keplerianElements *>(VT_KEPLERIAN_ELEMENTS);
+  }
+  const equinoctialElements *EQUINOCTIAL_ELEMENTS() const {
+    return GetPointer<const equinoctialElements *>(VT_EQUINOCTIAL_ELEMENTS);
+  }
+  double GM() const {
+    return GetField<double>(VT_GM, 0.0);
+  }
+  const VCMAtmosphericModelData *ATMOSPHERIC_MODEL_DATA() const {
+    return GetPointer<const VCMAtmosphericModelData *>(VT_ATMOSPHERIC_MODEL_DATA);
+  }
+  const propagatorConfig *PROPAGATOR_SETTINGS() const {
+    return GetPointer<const propagatorConfig *>(VT_PROPAGATOR_SETTINGS);
+  }
+  const uvwSigmas *UVW_SIGMAS() const {
+    return GetPointer<const uvwSigmas *>(VT_UVW_SIGMAS);
+  }
+  double MASS() const {
+    return GetField<double>(VT_MASS, 0.0);
+  }
+  double SOLAR_RAD_AREA() const {
+    return GetField<double>(VT_SOLAR_RAD_AREA, 0.0);
+  }
+  double SOLAR_RAD_COEFF() const {
+    return GetField<double>(VT_SOLAR_RAD_COEFF, 0.0);
+  }
+  double DRAG_AREA() const {
+    return GetField<double>(VT_DRAG_AREA, 0.0);
+  }
+  double DRAG_COEFF() const {
+    return GetField<double>(VT_DRAG_COEFF, 0.0);
+  }
+  perturbationStatus SRP() const {
+    return static_cast<perturbationStatus>(GetField<int8_t>(VT_SRP, 0));
+  }
+  const ::flatbuffers::String *CLASSIFICATION_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION_TYPE);
+  }
+  uint32_t NORAD_CAT_ID() const {
+    return GetField<uint32_t>(VT_NORAD_CAT_ID, 0);
+  }
+  uint32_t ELEMENT_SET_NO() const {
+    return GetField<uint32_t>(VT_ELEMENT_SET_NO, 0);
+  }
+  double REV_AT_EPOCH() const {
+    return GetField<double>(VT_REV_AT_EPOCH, 0.0);
+  }
+  double BSTAR() const {
+    return GetField<double>(VT_BSTAR, 0.0);
+  }
+  double MEAN_MOTION_DOT() const {
+    return GetField<double>(VT_MEAN_MOTION_DOT, 0.0);
+  }
+  double MEAN_MOTION_DDOT() const {
+    return GetField<double>(VT_MEAN_MOTION_DDOT, 0.0);
+  }
+  const ::flatbuffers::String *COV_REFERENCE_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_REFERENCE_FRAME);
+  }
+  /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  const ::flatbuffers::Vector<double> *COVARIANCE() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COVARIANCE);
+  }
+  uint32_t USER_DEFINED_BIP_0044_TYPE() const {
+    return GetField<uint32_t>(VT_USER_DEFINED_BIP_0044_TYPE, 0);
+  }
+  const ::flatbuffers::String *USER_DEFINED_OBJECT_DESIGNATOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_USER_DEFINED_OBJECT_DESIGNATOR);
+  }
+  const ::flatbuffers::String *USER_DEFINED_EARTH_MODEL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_USER_DEFINED_EARTH_MODEL);
+  }
+  double USER_DEFINED_EPOCH_TIMESTAMP() const {
+    return GetField<double>(VT_USER_DEFINED_EPOCH_TIMESTAMP, 0.0);
+  }
+  double USER_DEFINED_MICROSECONDS() const {
+    return GetField<double>(VT_USER_DEFINED_MICROSECONDS, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_CCSDS_OMM_VERS, 8) &&
+           VerifyOffset(verifier, VT_CREATION_DATE) &&
+           verifier.VerifyString(CREATION_DATE()) &&
+           VerifyOffset(verifier, VT_ORIGINATOR) &&
+           verifier.VerifyString(ORIGINATOR()) &&
+           VerifyOffset(verifier, VT_OBJECT_NAME) &&
+           verifier.VerifyString(OBJECT_NAME()) &&
+           VerifyOffset(verifier, VT_OBJECT_ID) &&
+           verifier.VerifyString(OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_CENTER_NAME) &&
+           verifier.VerifyString(CENTER_NAME()) &&
+           VerifyOffset(verifier, VT_REF_FRAME) &&
+           verifier.VerifyString(REF_FRAME()) &&
+           VerifyOffset(verifier, VT_TIME_SYSTEM) &&
+           verifier.VerifyString(TIME_SYSTEM()) &&
+           VerifyOffset(verifier, VT_STATE_VECTOR) &&
+           verifier.VerifyTable(STATE_VECTOR()) &&
+           VerifyOffset(verifier, VT_KEPLERIAN_ELEMENTS) &&
+           verifier.VerifyTable(KEPLERIAN_ELEMENTS()) &&
+           VerifyOffset(verifier, VT_EQUINOCTIAL_ELEMENTS) &&
+           verifier.VerifyTable(EQUINOCTIAL_ELEMENTS()) &&
+           VerifyField<double>(verifier, VT_GM, 8) &&
+           VerifyOffset(verifier, VT_ATMOSPHERIC_MODEL_DATA) &&
+           verifier.VerifyTable(ATMOSPHERIC_MODEL_DATA()) &&
+           VerifyOffset(verifier, VT_PROPAGATOR_SETTINGS) &&
+           verifier.VerifyTable(PROPAGATOR_SETTINGS()) &&
+           VerifyOffset(verifier, VT_UVW_SIGMAS) &&
+           verifier.VerifyTable(UVW_SIGMAS()) &&
+           VerifyField<double>(verifier, VT_MASS, 8) &&
+           VerifyField<double>(verifier, VT_SOLAR_RAD_AREA, 8) &&
+           VerifyField<double>(verifier, VT_SOLAR_RAD_COEFF, 8) &&
+           VerifyField<double>(verifier, VT_DRAG_AREA, 8) &&
+           VerifyField<double>(verifier, VT_DRAG_COEFF, 8) &&
+           VerifyField<int8_t>(verifier, VT_SRP, 1) &&
+           VerifyOffset(verifier, VT_CLASSIFICATION_TYPE) &&
+           verifier.VerifyString(CLASSIFICATION_TYPE()) &&
+           VerifyField<uint32_t>(verifier, VT_NORAD_CAT_ID, 4) &&
+           VerifyField<uint32_t>(verifier, VT_ELEMENT_SET_NO, 4) &&
+           VerifyField<double>(verifier, VT_REV_AT_EPOCH, 8) &&
+           VerifyField<double>(verifier, VT_BSTAR, 8) &&
+           VerifyField<double>(verifier, VT_MEAN_MOTION_DOT, 8) &&
+           VerifyField<double>(verifier, VT_MEAN_MOTION_DDOT, 8) &&
+           VerifyOffset(verifier, VT_COV_REFERENCE_FRAME) &&
+           verifier.VerifyString(COV_REFERENCE_FRAME()) &&
+           VerifyOffset(verifier, VT_COVARIANCE) &&
+           verifier.VerifyVector(COVARIANCE()) &&
+           VerifyField<uint32_t>(verifier, VT_USER_DEFINED_BIP_0044_TYPE, 4) &&
+           VerifyOffset(verifier, VT_USER_DEFINED_OBJECT_DESIGNATOR) &&
+           verifier.VerifyString(USER_DEFINED_OBJECT_DESIGNATOR()) &&
+           VerifyOffset(verifier, VT_USER_DEFINED_EARTH_MODEL) &&
+           verifier.VerifyString(USER_DEFINED_EARTH_MODEL()) &&
+           VerifyField<double>(verifier, VT_USER_DEFINED_EPOCH_TIMESTAMP, 8) &&
+           VerifyField<double>(verifier, VT_USER_DEFINED_MICROSECONDS, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct VCMBuilder {
+  typedef VCM Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_CCSDS_OMM_VERS(double CCSDS_OMM_VERS) {
+    fbb_.AddElement<double>(VCM::VT_CCSDS_OMM_VERS, CCSDS_OMM_VERS, 0.0);
+  }
+  void add_CREATION_DATE(::flatbuffers::Offset<::flatbuffers::String> CREATION_DATE) {
+    fbb_.AddOffset(VCM::VT_CREATION_DATE, CREATION_DATE);
+  }
+  void add_ORIGINATOR(::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR) {
+    fbb_.AddOffset(VCM::VT_ORIGINATOR, ORIGINATOR);
+  }
+  void add_OBJECT_NAME(::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME) {
+    fbb_.AddOffset(VCM::VT_OBJECT_NAME, OBJECT_NAME);
+  }
+  void add_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID) {
+    fbb_.AddOffset(VCM::VT_OBJECT_ID, OBJECT_ID);
+  }
+  void add_CENTER_NAME(::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME) {
+    fbb_.AddOffset(VCM::VT_CENTER_NAME, CENTER_NAME);
+  }
+  void add_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME) {
+    fbb_.AddOffset(VCM::VT_REF_FRAME, REF_FRAME);
+  }
+  void add_TIME_SYSTEM(::flatbuffers::Offset<::flatbuffers::String> TIME_SYSTEM) {
+    fbb_.AddOffset(VCM::VT_TIME_SYSTEM, TIME_SYSTEM);
+  }
+  void add_STATE_VECTOR(::flatbuffers::Offset<VCMStateVector> STATE_VECTOR) {
+    fbb_.AddOffset(VCM::VT_STATE_VECTOR, STATE_VECTOR);
+  }
+  void add_KEPLERIAN_ELEMENTS(::flatbuffers::Offset<keplerianElements> KEPLERIAN_ELEMENTS) {
+    fbb_.AddOffset(VCM::VT_KEPLERIAN_ELEMENTS, KEPLERIAN_ELEMENTS);
+  }
+  void add_EQUINOCTIAL_ELEMENTS(::flatbuffers::Offset<equinoctialElements> EQUINOCTIAL_ELEMENTS) {
+    fbb_.AddOffset(VCM::VT_EQUINOCTIAL_ELEMENTS, EQUINOCTIAL_ELEMENTS);
+  }
+  void add_GM(double GM) {
+    fbb_.AddElement<double>(VCM::VT_GM, GM, 0.0);
+  }
+  void add_ATMOSPHERIC_MODEL_DATA(::flatbuffers::Offset<VCMAtmosphericModelData> ATMOSPHERIC_MODEL_DATA) {
+    fbb_.AddOffset(VCM::VT_ATMOSPHERIC_MODEL_DATA, ATMOSPHERIC_MODEL_DATA);
+  }
+  void add_PROPAGATOR_SETTINGS(::flatbuffers::Offset<propagatorConfig> PROPAGATOR_SETTINGS) {
+    fbb_.AddOffset(VCM::VT_PROPAGATOR_SETTINGS, PROPAGATOR_SETTINGS);
+  }
+  void add_UVW_SIGMAS(::flatbuffers::Offset<uvwSigmas> UVW_SIGMAS) {
+    fbb_.AddOffset(VCM::VT_UVW_SIGMAS, UVW_SIGMAS);
+  }
+  void add_MASS(double MASS) {
+    fbb_.AddElement<double>(VCM::VT_MASS, MASS, 0.0);
+  }
+  void add_SOLAR_RAD_AREA(double SOLAR_RAD_AREA) {
+    fbb_.AddElement<double>(VCM::VT_SOLAR_RAD_AREA, SOLAR_RAD_AREA, 0.0);
+  }
+  void add_SOLAR_RAD_COEFF(double SOLAR_RAD_COEFF) {
+    fbb_.AddElement<double>(VCM::VT_SOLAR_RAD_COEFF, SOLAR_RAD_COEFF, 0.0);
+  }
+  void add_DRAG_AREA(double DRAG_AREA) {
+    fbb_.AddElement<double>(VCM::VT_DRAG_AREA, DRAG_AREA, 0.0);
+  }
+  void add_DRAG_COEFF(double DRAG_COEFF) {
+    fbb_.AddElement<double>(VCM::VT_DRAG_COEFF, DRAG_COEFF, 0.0);
+  }
+  void add_SRP(perturbationStatus SRP) {
+    fbb_.AddElement<int8_t>(VCM::VT_SRP, static_cast<int8_t>(SRP), 0);
+  }
+  void add_CLASSIFICATION_TYPE(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION_TYPE) {
+    fbb_.AddOffset(VCM::VT_CLASSIFICATION_TYPE, CLASSIFICATION_TYPE);
+  }
+  void add_NORAD_CAT_ID(uint32_t NORAD_CAT_ID) {
+    fbb_.AddElement<uint32_t>(VCM::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
+  }
+  void add_ELEMENT_SET_NO(uint32_t ELEMENT_SET_NO) {
+    fbb_.AddElement<uint32_t>(VCM::VT_ELEMENT_SET_NO, ELEMENT_SET_NO, 0);
+  }
+  void add_REV_AT_EPOCH(double REV_AT_EPOCH) {
+    fbb_.AddElement<double>(VCM::VT_REV_AT_EPOCH, REV_AT_EPOCH, 0.0);
+  }
+  void add_BSTAR(double BSTAR) {
+    fbb_.AddElement<double>(VCM::VT_BSTAR, BSTAR, 0.0);
+  }
+  void add_MEAN_MOTION_DOT(double MEAN_MOTION_DOT) {
+    fbb_.AddElement<double>(VCM::VT_MEAN_MOTION_DOT, MEAN_MOTION_DOT, 0.0);
+  }
+  void add_MEAN_MOTION_DDOT(double MEAN_MOTION_DDOT) {
+    fbb_.AddElement<double>(VCM::VT_MEAN_MOTION_DDOT, MEAN_MOTION_DDOT, 0.0);
+  }
+  void add_COV_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> COV_REFERENCE_FRAME) {
+    fbb_.AddOffset(VCM::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME);
+  }
+  void add_COVARIANCE(::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE) {
+    fbb_.AddOffset(VCM::VT_COVARIANCE, COVARIANCE);
+  }
+  void add_USER_DEFINED_BIP_0044_TYPE(uint32_t USER_DEFINED_BIP_0044_TYPE) {
+    fbb_.AddElement<uint32_t>(VCM::VT_USER_DEFINED_BIP_0044_TYPE, USER_DEFINED_BIP_0044_TYPE, 0);
+  }
+  void add_USER_DEFINED_OBJECT_DESIGNATOR(::flatbuffers::Offset<::flatbuffers::String> USER_DEFINED_OBJECT_DESIGNATOR) {
+    fbb_.AddOffset(VCM::VT_USER_DEFINED_OBJECT_DESIGNATOR, USER_DEFINED_OBJECT_DESIGNATOR);
+  }
+  void add_USER_DEFINED_EARTH_MODEL(::flatbuffers::Offset<::flatbuffers::String> USER_DEFINED_EARTH_MODEL) {
+    fbb_.AddOffset(VCM::VT_USER_DEFINED_EARTH_MODEL, USER_DEFINED_EARTH_MODEL);
+  }
+  void add_USER_DEFINED_EPOCH_TIMESTAMP(double USER_DEFINED_EPOCH_TIMESTAMP) {
+    fbb_.AddElement<double>(VCM::VT_USER_DEFINED_EPOCH_TIMESTAMP, USER_DEFINED_EPOCH_TIMESTAMP, 0.0);
+  }
+  void add_USER_DEFINED_MICROSECONDS(double USER_DEFINED_MICROSECONDS) {
+    fbb_.AddElement<double>(VCM::VT_USER_DEFINED_MICROSECONDS, USER_DEFINED_MICROSECONDS, 0.0);
+  }
+  explicit VCMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<VCM> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<VCM>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<VCM> CreateVCM(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double CCSDS_OMM_VERS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> CREATION_DATE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TIME_SYSTEM = 0,
+    ::flatbuffers::Offset<VCMStateVector> STATE_VECTOR = 0,
+    ::flatbuffers::Offset<keplerianElements> KEPLERIAN_ELEMENTS = 0,
+    ::flatbuffers::Offset<equinoctialElements> EQUINOCTIAL_ELEMENTS = 0,
+    double GM = 0.0,
+    ::flatbuffers::Offset<VCMAtmosphericModelData> ATMOSPHERIC_MODEL_DATA = 0,
+    ::flatbuffers::Offset<propagatorConfig> PROPAGATOR_SETTINGS = 0,
+    ::flatbuffers::Offset<uvwSigmas> UVW_SIGMAS = 0,
+    double MASS = 0.0,
+    double SOLAR_RAD_AREA = 0.0,
+    double SOLAR_RAD_COEFF = 0.0,
+    double DRAG_AREA = 0.0,
+    double DRAG_COEFF = 0.0,
+    perturbationStatus SRP = perturbationStatus_OFF,
+    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION_TYPE = 0,
+    uint32_t NORAD_CAT_ID = 0,
+    uint32_t ELEMENT_SET_NO = 0,
+    double REV_AT_EPOCH = 0.0,
+    double BSTAR = 0.0,
+    double MEAN_MOTION_DOT = 0.0,
+    double MEAN_MOTION_DDOT = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> COV_REFERENCE_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE = 0,
+    uint32_t USER_DEFINED_BIP_0044_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> USER_DEFINED_OBJECT_DESIGNATOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> USER_DEFINED_EARTH_MODEL = 0,
+    double USER_DEFINED_EPOCH_TIMESTAMP = 0.0,
+    double USER_DEFINED_MICROSECONDS = 0.0) {
+  VCMBuilder builder_(_fbb);
+  builder_.add_USER_DEFINED_MICROSECONDS(USER_DEFINED_MICROSECONDS);
+  builder_.add_USER_DEFINED_EPOCH_TIMESTAMP(USER_DEFINED_EPOCH_TIMESTAMP);
+  builder_.add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT);
+  builder_.add_MEAN_MOTION_DOT(MEAN_MOTION_DOT);
+  builder_.add_BSTAR(BSTAR);
+  builder_.add_REV_AT_EPOCH(REV_AT_EPOCH);
+  builder_.add_DRAG_COEFF(DRAG_COEFF);
+  builder_.add_DRAG_AREA(DRAG_AREA);
+  builder_.add_SOLAR_RAD_COEFF(SOLAR_RAD_COEFF);
+  builder_.add_SOLAR_RAD_AREA(SOLAR_RAD_AREA);
+  builder_.add_MASS(MASS);
+  builder_.add_GM(GM);
+  builder_.add_CCSDS_OMM_VERS(CCSDS_OMM_VERS);
+  builder_.add_USER_DEFINED_EARTH_MODEL(USER_DEFINED_EARTH_MODEL);
+  builder_.add_USER_DEFINED_OBJECT_DESIGNATOR(USER_DEFINED_OBJECT_DESIGNATOR);
+  builder_.add_USER_DEFINED_BIP_0044_TYPE(USER_DEFINED_BIP_0044_TYPE);
+  builder_.add_COVARIANCE(COVARIANCE);
+  builder_.add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME);
+  builder_.add_ELEMENT_SET_NO(ELEMENT_SET_NO);
+  builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
+  builder_.add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE);
+  builder_.add_UVW_SIGMAS(UVW_SIGMAS);
+  builder_.add_PROPAGATOR_SETTINGS(PROPAGATOR_SETTINGS);
+  builder_.add_ATMOSPHERIC_MODEL_DATA(ATMOSPHERIC_MODEL_DATA);
+  builder_.add_EQUINOCTIAL_ELEMENTS(EQUINOCTIAL_ELEMENTS);
+  builder_.add_KEPLERIAN_ELEMENTS(KEPLERIAN_ELEMENTS);
+  builder_.add_STATE_VECTOR(STATE_VECTOR);
+  builder_.add_TIME_SYSTEM(TIME_SYSTEM);
+  builder_.add_REF_FRAME(REF_FRAME);
+  builder_.add_CENTER_NAME(CENTER_NAME);
+  builder_.add_OBJECT_ID(OBJECT_ID);
+  builder_.add_OBJECT_NAME(OBJECT_NAME);
+  builder_.add_ORIGINATOR(ORIGINATOR);
+  builder_.add_CREATION_DATE(CREATION_DATE);
+  builder_.add_SRP(SRP);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<VCM> CreateVCMDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double CCSDS_OMM_VERS = 0.0,
+    const char *CREATION_DATE = nullptr,
+    const char *ORIGINATOR = nullptr,
+    const char *OBJECT_NAME = nullptr,
+    const char *OBJECT_ID = nullptr,
+    const char *CENTER_NAME = nullptr,
+    const char *REF_FRAME = nullptr,
+    const char *TIME_SYSTEM = nullptr,
+    ::flatbuffers::Offset<VCMStateVector> STATE_VECTOR = 0,
+    ::flatbuffers::Offset<keplerianElements> KEPLERIAN_ELEMENTS = 0,
+    ::flatbuffers::Offset<equinoctialElements> EQUINOCTIAL_ELEMENTS = 0,
+    double GM = 0.0,
+    ::flatbuffers::Offset<VCMAtmosphericModelData> ATMOSPHERIC_MODEL_DATA = 0,
+    ::flatbuffers::Offset<propagatorConfig> PROPAGATOR_SETTINGS = 0,
+    ::flatbuffers::Offset<uvwSigmas> UVW_SIGMAS = 0,
+    double MASS = 0.0,
+    double SOLAR_RAD_AREA = 0.0,
+    double SOLAR_RAD_COEFF = 0.0,
+    double DRAG_AREA = 0.0,
+    double DRAG_COEFF = 0.0,
+    perturbationStatus SRP = perturbationStatus_OFF,
+    const char *CLASSIFICATION_TYPE = nullptr,
+    uint32_t NORAD_CAT_ID = 0,
+    uint32_t ELEMENT_SET_NO = 0,
+    double REV_AT_EPOCH = 0.0,
+    double BSTAR = 0.0,
+    double MEAN_MOTION_DOT = 0.0,
+    double MEAN_MOTION_DDOT = 0.0,
+    const char *COV_REFERENCE_FRAME = nullptr,
+    const std::vector<double> *COVARIANCE = nullptr,
+    uint32_t USER_DEFINED_BIP_0044_TYPE = 0,
+    const char *USER_DEFINED_OBJECT_DESIGNATOR = nullptr,
+    const char *USER_DEFINED_EARTH_MODEL = nullptr,
+    double USER_DEFINED_EPOCH_TIMESTAMP = 0.0,
+    double USER_DEFINED_MICROSECONDS = 0.0) {
+  auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
+  auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
+  auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
+  auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
+  auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
+  auto REF_FRAME__ = REF_FRAME ? _fbb.CreateString(REF_FRAME) : 0;
+  auto TIME_SYSTEM__ = TIME_SYSTEM ? _fbb.CreateString(TIME_SYSTEM) : 0;
+  auto CLASSIFICATION_TYPE__ = CLASSIFICATION_TYPE ? _fbb.CreateString(CLASSIFICATION_TYPE) : 0;
+  auto COV_REFERENCE_FRAME__ = COV_REFERENCE_FRAME ? _fbb.CreateString(COV_REFERENCE_FRAME) : 0;
+  auto COVARIANCE__ = COVARIANCE ? _fbb.CreateVector<double>(*COVARIANCE) : 0;
+  auto USER_DEFINED_OBJECT_DESIGNATOR__ = USER_DEFINED_OBJECT_DESIGNATOR ? _fbb.CreateString(USER_DEFINED_OBJECT_DESIGNATOR) : 0;
+  auto USER_DEFINED_EARTH_MODEL__ = USER_DEFINED_EARTH_MODEL ? _fbb.CreateString(USER_DEFINED_EARTH_MODEL) : 0;
+  return CreateVCM(
+      _fbb,
+      CCSDS_OMM_VERS,
+      CREATION_DATE__,
+      ORIGINATOR__,
+      OBJECT_NAME__,
+      OBJECT_ID__,
+      CENTER_NAME__,
+      REF_FRAME__,
+      TIME_SYSTEM__,
+      STATE_VECTOR,
+      KEPLERIAN_ELEMENTS,
+      EQUINOCTIAL_ELEMENTS,
+      GM,
+      ATMOSPHERIC_MODEL_DATA,
+      PROPAGATOR_SETTINGS,
+      UVW_SIGMAS,
+      MASS,
+      SOLAR_RAD_AREA,
+      SOLAR_RAD_COEFF,
+      DRAG_AREA,
+      DRAG_COEFF,
+      SRP,
+      CLASSIFICATION_TYPE__,
+      NORAD_CAT_ID,
+      ELEMENT_SET_NO,
+      REV_AT_EPOCH,
+      BSTAR,
+      MEAN_MOTION_DOT,
+      MEAN_MOTION_DDOT,
+      COV_REFERENCE_FRAME__,
+      COVARIANCE__,
+      USER_DEFINED_BIP_0044_TYPE,
+      USER_DEFINED_OBJECT_DESIGNATOR__,
+      USER_DEFINED_EARTH_MODEL__,
+      USER_DEFINED_EPOCH_TIMESTAMP,
+      USER_DEFINED_MICROSECONDS);
+}
+
+inline const VCM *GetVCM(const void *buf) {
+  return ::flatbuffers::GetRoot<VCM>(buf);
+}
+
+inline const VCM *GetSizePrefixedVCM(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<VCM>(buf);
 }
 
 template <bool B = false>
-inline bool VerifyMETBuffer(
+inline bool VerifyVCMBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifyBuffer<MET>(METIdentifier());
+  return verifier.template VerifyBuffer<VCM>(nullptr);
 }
 
 template <bool B = false>
-inline bool VerifySizePrefixedMETBuffer(
+inline bool VerifySizePrefixedVCMBuffer(
     ::flatbuffers::VerifierTemplate<B> &verifier) {
-  return verifier.template VerifySizePrefixedBuffer<MET>(METIdentifier());
+  return verifier.template VerifySizePrefixedBuffer<VCM>(nullptr);
 }
 
-inline void FinishMETBuffer(
+inline void FinishVCMBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<MET> root) {
-  fbb.Finish(root, METIdentifier());
+    ::flatbuffers::Offset<VCM> root) {
+  fbb.Finish(root);
 }
 
-inline void FinishSizePrefixedMETBuffer(
+inline void FinishSizePrefixedVCMBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<MET> root) {
-  fbb.FinishSizePrefixed(root, METIdentifier());
+    ::flatbuffers::Offset<VCM> root) {
+  fbb.FinishSizePrefixed(root);
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

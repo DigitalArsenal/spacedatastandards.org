@@ -2,54 +2,62 @@
 // @generated
 extern crate alloc;
 
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_MEAN_ELEMENT_SOURCE: i8 = 0;
+pub const ENUM_MIN_EPHEMERIS_FORMAT: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_MEAN_ELEMENT_SOURCE: i8 = 3;
+pub const ENUM_MAX_EPHEMERIS_FORMAT: i8 = 4;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_MEAN_ELEMENT_SOURCE: [meanElementSource; 4] = [
-  meanElementSource::SGP4,
-  meanElementSource::SGP4XP,
-  meanElementSource::DSST,
-  meanElementSource::USM,
+pub const ENUM_VALUES_EPHEMERIS_FORMAT: [ephemerisFormat; 5] = [
+  ephemerisFormat::SGP,
+  ephemerisFormat::SGP4,
+  ephemerisFormat::SDP4,
+  ephemerisFormat::SGP8,
+  ephemerisFormat::SDP8,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct meanElementSource(pub i8);
+pub struct ephemerisFormat(pub i8);
 #[allow(non_upper_case_globals)]
-impl meanElementSource {
+impl ephemerisFormat {
+  /// Simplified General Perturbation Model
+  pub const SGP: Self = Self(0);
   /// Simplified General Perturbation Model 4
-  pub const SGP4: Self = Self(0);
-  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
-  pub const SGP4XP: Self = Self(1);
-  /// Draper Semi-analytical Satellite Theory
-  pub const DSST: Self = Self(2);
-  /// Universal Semianalytical Method
-  pub const USM: Self = Self(3);
+  pub const SGP4: Self = Self(1);
+  /// Simplified Deep Space Perturbation Model 4
+  pub const SDP4: Self = Self(2);
+  /// Simplified General Perturbation Model 8
+  pub const SGP8: Self = Self(3);
+  /// Simplified Deep Space Perturbation Model 8
+  pub const SDP8: Self = Self(4);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_MAX: i8 = 4;
   pub const ENUM_VALUES: &'static [Self] = &[
+    Self::SGP,
     Self::SGP4,
-    Self::SGP4XP,
-    Self::DSST,
-    Self::USM,
+    Self::SDP4,
+    Self::SGP8,
+    Self::SDP8,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
+      Self::SGP => Some("SGP"),
       Self::SGP4 => Some("SGP4"),
-      Self::SGP4XP => Some("SGP4XP"),
-      Self::DSST => Some("DSST"),
-      Self::USM => Some("USM"),
+      Self::SDP4 => Some("SDP4"),
+      Self::SGP8 => Some("SGP8"),
+      Self::SDP8 => Some("SDP8"),
       _ => None,
     }
   }
 }
-impl ::core::fmt::Debug for meanElementSource {
+impl ::core::fmt::Debug for ephemerisFormat {
   fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -58,7 +66,7 @@ impl ::core::fmt::Debug for meanElementSource {
     }
   }
 }
-impl<'a> ::flatbuffers::Follow<'a> for meanElementSource {
+impl<'a> ::flatbuffers::Follow<'a> for ephemerisFormat {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -67,15 +75,15 @@ impl<'a> ::flatbuffers::Follow<'a> for meanElementSource {
   }
 }
 
-impl ::flatbuffers::Push for meanElementSource {
-    type Output = meanElementSource;
+impl ::flatbuffers::Push for ephemerisFormat {
+    type Output = ephemerisFormat;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
     }
 }
 
-impl ::flatbuffers::EndianScalar for meanElementSource {
+impl ::flatbuffers::EndianScalar for ephemerisFormat {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -89,7 +97,7 @@ impl ::flatbuffers::EndianScalar for meanElementSource {
   }
 }
 
-impl<'a> ::flatbuffers::Verifiable for meanElementSource {
+impl<'a> ::flatbuffers::Verifiable for ephemerisFormat {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
@@ -98,213 +106,1215 @@ impl<'a> ::flatbuffers::Verifiable for meanElementSource {
   }
 }
 
-impl ::flatbuffers::SimpleToVerifyInSlice for meanElementSource {}
-pub enum METOffset {}
+impl ::flatbuffers::SimpleToVerifyInSlice for ephemerisFormat {}
+pub enum OMMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Mean Element Theory
-pub struct MET<'a> {
+/// Orbit Mean Elements Message
+pub struct OMM<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
 
-impl<'a> ::flatbuffers::Follow<'a> for MET<'a> {
-  type Inner = MET<'a>;
+impl<'a> ::flatbuffers::Follow<'a> for OMM<'a> {
+  type Inner = OMM<'a>;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
     Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
   }
 }
 
-impl<'a> MET<'a> {
-  pub const VT_MEAN_ELEMENT_THEORY: ::flatbuffers::VOffsetT = 4;
+impl<'a> OMM<'a> {
+  pub const VT_CCSDS_OMM_VERS: ::flatbuffers::VOffsetT = 4;
+  pub const VT_CREATION_DATE: ::flatbuffers::VOffsetT = 6;
+  pub const VT_ORIGINATOR: ::flatbuffers::VOffsetT = 8;
+  pub const VT_OBJECT_NAME: ::flatbuffers::VOffsetT = 10;
+  pub const VT_OBJECT_ID: ::flatbuffers::VOffsetT = 12;
+  pub const VT_CENTER_NAME: ::flatbuffers::VOffsetT = 14;
+  pub const VT_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 16;
+  pub const VT_REFERENCE_FRAME_EPOCH: ::flatbuffers::VOffsetT = 18;
+  pub const VT_TIME_SYSTEM: ::flatbuffers::VOffsetT = 20;
+  pub const VT_MEAN_ELEMENT_THEORY: ::flatbuffers::VOffsetT = 22;
+  pub const VT_COMMENT: ::flatbuffers::VOffsetT = 24;
+  pub const VT_EPOCH: ::flatbuffers::VOffsetT = 26;
+  pub const VT_SEMI_MAJOR_AXIS: ::flatbuffers::VOffsetT = 28;
+  pub const VT_MEAN_MOTION: ::flatbuffers::VOffsetT = 30;
+  pub const VT_ECCENTRICITY: ::flatbuffers::VOffsetT = 32;
+  pub const VT_INCLINATION: ::flatbuffers::VOffsetT = 34;
+  pub const VT_RA_OF_ASC_NODE: ::flatbuffers::VOffsetT = 36;
+  pub const VT_ARG_OF_PERICENTER: ::flatbuffers::VOffsetT = 38;
+  pub const VT_MEAN_ANOMALY: ::flatbuffers::VOffsetT = 40;
+  pub const VT_GM: ::flatbuffers::VOffsetT = 42;
+  pub const VT_MASS: ::flatbuffers::VOffsetT = 44;
+  pub const VT_SOLAR_RAD_AREA: ::flatbuffers::VOffsetT = 46;
+  pub const VT_SOLAR_RAD_COEFF: ::flatbuffers::VOffsetT = 48;
+  pub const VT_DRAG_AREA: ::flatbuffers::VOffsetT = 50;
+  pub const VT_DRAG_COEFF: ::flatbuffers::VOffsetT = 52;
+  pub const VT_EPHEMERIS_TYPE: ::flatbuffers::VOffsetT = 54;
+  pub const VT_CLASSIFICATION_TYPE: ::flatbuffers::VOffsetT = 56;
+  pub const VT_NORAD_CAT_ID: ::flatbuffers::VOffsetT = 58;
+  pub const VT_ELEMENT_SET_NO: ::flatbuffers::VOffsetT = 60;
+  pub const VT_REV_AT_EPOCH: ::flatbuffers::VOffsetT = 62;
+  pub const VT_BSTAR: ::flatbuffers::VOffsetT = 64;
+  pub const VT_MEAN_MOTION_DOT: ::flatbuffers::VOffsetT = 66;
+  pub const VT_MEAN_MOTION_DDOT: ::flatbuffers::VOffsetT = 68;
+  pub const VT_COV_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 70;
+  pub const VT_COVARIANCE: ::flatbuffers::VOffsetT = 72;
+  pub const VT_USER_DEFINED_BIP_0044_TYPE: ::flatbuffers::VOffsetT = 74;
+  pub const VT_USER_DEFINED_OBJECT_DESIGNATOR: ::flatbuffers::VOffsetT = 76;
+  pub const VT_USER_DEFINED_EARTH_MODEL: ::flatbuffers::VOffsetT = 78;
+  pub const VT_USER_DEFINED_EPOCH_TIMESTAMP: ::flatbuffers::VOffsetT = 80;
+  pub const VT_USER_DEFINED_MICROSECONDS: ::flatbuffers::VOffsetT = 82;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    MET { _tab: table }
+    OMM { _tab: table }
   }
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args METArgs
-  ) -> ::flatbuffers::WIPOffset<MET<'bldr>> {
-    let mut builder = METBuilder::new(_fbb);
+    args: &'args OMMArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<OMM<'bldr>> {
+    let mut builder = OMMBuilder::new(_fbb);
+    builder.add_USER_DEFINED_MICROSECONDS(args.USER_DEFINED_MICROSECONDS);
+    builder.add_USER_DEFINED_EPOCH_TIMESTAMP(args.USER_DEFINED_EPOCH_TIMESTAMP);
+    builder.add_MEAN_MOTION_DDOT(args.MEAN_MOTION_DDOT);
+    builder.add_MEAN_MOTION_DOT(args.MEAN_MOTION_DOT);
+    builder.add_BSTAR(args.BSTAR);
+    builder.add_REV_AT_EPOCH(args.REV_AT_EPOCH);
+    builder.add_DRAG_COEFF(args.DRAG_COEFF);
+    builder.add_DRAG_AREA(args.DRAG_AREA);
+    builder.add_SOLAR_RAD_COEFF(args.SOLAR_RAD_COEFF);
+    builder.add_SOLAR_RAD_AREA(args.SOLAR_RAD_AREA);
+    builder.add_MASS(args.MASS);
+    builder.add_GM(args.GM);
+    builder.add_MEAN_ANOMALY(args.MEAN_ANOMALY);
+    builder.add_ARG_OF_PERICENTER(args.ARG_OF_PERICENTER);
+    builder.add_RA_OF_ASC_NODE(args.RA_OF_ASC_NODE);
+    builder.add_INCLINATION(args.INCLINATION);
+    builder.add_ECCENTRICITY(args.ECCENTRICITY);
+    builder.add_MEAN_MOTION(args.MEAN_MOTION);
+    builder.add_SEMI_MAJOR_AXIS(args.SEMI_MAJOR_AXIS);
+    builder.add_CCSDS_OMM_VERS(args.CCSDS_OMM_VERS);
+    if let Some(x) = args.USER_DEFINED_EARTH_MODEL { builder.add_USER_DEFINED_EARTH_MODEL(x); }
+    if let Some(x) = args.USER_DEFINED_OBJECT_DESIGNATOR { builder.add_USER_DEFINED_OBJECT_DESIGNATOR(x); }
+    builder.add_USER_DEFINED_BIP_0044_TYPE(args.USER_DEFINED_BIP_0044_TYPE);
+    if let Some(x) = args.COVARIANCE { builder.add_COVARIANCE(x); }
+    if let Some(x) = args.COV_REFERENCE_FRAME { builder.add_COV_REFERENCE_FRAME(x); }
+    builder.add_ELEMENT_SET_NO(args.ELEMENT_SET_NO);
+    builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
+    if let Some(x) = args.CLASSIFICATION_TYPE { builder.add_CLASSIFICATION_TYPE(x); }
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+    if let Some(x) = args.REFERENCE_FRAME_EPOCH { builder.add_REFERENCE_FRAME_EPOCH(x); }
+    if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
+    if let Some(x) = args.CENTER_NAME { builder.add_CENTER_NAME(x); }
+    if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
+    if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
+    if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
+    if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
+    builder.add_EPHEMERIS_TYPE(args.EPHEMERIS_TYPE);
     builder.add_MEAN_ELEMENT_THEORY(args.MEAN_ELEMENT_THEORY);
+    builder.add_TIME_SYSTEM(args.TIME_SYSTEM);
     builder.finish()
   }
 
-  pub fn unpack(&self) -> METT {
+  pub fn unpack(&self) -> OMMT {
+    let CCSDS_OMM_VERS = self.CCSDS_OMM_VERS();
+    let CREATION_DATE = self.CREATION_DATE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ORIGINATOR = self.ORIGINATOR().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OBJECT_NAME = self.OBJECT_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OBJECT_ID = self.OBJECT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CENTER_NAME = self.CENTER_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let REFERENCE_FRAME_EPOCH = self.REFERENCE_FRAME_EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TIME_SYSTEM = self.TIME_SYSTEM();
     let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY();
-    METT {
+    let COMMENT = self.COMMENT().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPOCH = self.EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SEMI_MAJOR_AXIS = self.SEMI_MAJOR_AXIS();
+    let MEAN_MOTION = self.MEAN_MOTION();
+    let ECCENTRICITY = self.ECCENTRICITY();
+    let INCLINATION = self.INCLINATION();
+    let RA_OF_ASC_NODE = self.RA_OF_ASC_NODE();
+    let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER();
+    let MEAN_ANOMALY = self.MEAN_ANOMALY();
+    let GM = self.GM();
+    let MASS = self.MASS();
+    let SOLAR_RAD_AREA = self.SOLAR_RAD_AREA();
+    let SOLAR_RAD_COEFF = self.SOLAR_RAD_COEFF();
+    let DRAG_AREA = self.DRAG_AREA();
+    let DRAG_COEFF = self.DRAG_COEFF();
+    let EPHEMERIS_TYPE = self.EPHEMERIS_TYPE();
+    let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let NORAD_CAT_ID = self.NORAD_CAT_ID();
+    let ELEMENT_SET_NO = self.ELEMENT_SET_NO();
+    let REV_AT_EPOCH = self.REV_AT_EPOCH();
+    let BSTAR = self.BSTAR();
+    let MEAN_MOTION_DOT = self.MEAN_MOTION_DOT();
+    let MEAN_MOTION_DDOT = self.MEAN_MOTION_DDOT();
+    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let COVARIANCE = self.COVARIANCE().map(|x| {
+      x.into_iter().collect()
+    });
+    let USER_DEFINED_BIP_0044_TYPE = self.USER_DEFINED_BIP_0044_TYPE();
+    let USER_DEFINED_OBJECT_DESIGNATOR = self.USER_DEFINED_OBJECT_DESIGNATOR().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let USER_DEFINED_EARTH_MODEL = self.USER_DEFINED_EARTH_MODEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let USER_DEFINED_EPOCH_TIMESTAMP = self.USER_DEFINED_EPOCH_TIMESTAMP();
+    let USER_DEFINED_MICROSECONDS = self.USER_DEFINED_MICROSECONDS();
+    OMMT {
+      CCSDS_OMM_VERS,
+      CREATION_DATE,
+      ORIGINATOR,
+      OBJECT_NAME,
+      OBJECT_ID,
+      CENTER_NAME,
+      REFERENCE_FRAME,
+      REFERENCE_FRAME_EPOCH,
+      TIME_SYSTEM,
       MEAN_ELEMENT_THEORY,
+      COMMENT,
+      EPOCH,
+      SEMI_MAJOR_AXIS,
+      MEAN_MOTION,
+      ECCENTRICITY,
+      INCLINATION,
+      RA_OF_ASC_NODE,
+      ARG_OF_PERICENTER,
+      MEAN_ANOMALY,
+      GM,
+      MASS,
+      SOLAR_RAD_AREA,
+      SOLAR_RAD_COEFF,
+      DRAG_AREA,
+      DRAG_COEFF,
+      EPHEMERIS_TYPE,
+      CLASSIFICATION_TYPE,
+      NORAD_CAT_ID,
+      ELEMENT_SET_NO,
+      REV_AT_EPOCH,
+      BSTAR,
+      MEAN_MOTION_DOT,
+      MEAN_MOTION_DDOT,
+      COV_REFERENCE_FRAME,
+      COVARIANCE,
+      USER_DEFINED_BIP_0044_TYPE,
+      USER_DEFINED_OBJECT_DESIGNATOR,
+      USER_DEFINED_EARTH_MODEL,
+      USER_DEFINED_EPOCH_TIMESTAMP,
+      USER_DEFINED_MICROSECONDS,
     }
   }
 
+  /// CCSDS OMM Version
+  #[inline]
+  pub fn CCSDS_OMM_VERS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_CCSDS_OMM_VERS, Some(0.0)).unwrap()}
+  }
+  /// Creation Date (ISO 8601 UTC format)
+  #[inline]
+  pub fn CREATION_DATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_CREATION_DATE, None)}
+  }
+  /// Originator
+  #[inline]
+  pub fn ORIGINATOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_ORIGINATOR, None)}
+  }
+  /// Satellite Name(s)
+  #[inline]
+  pub fn OBJECT_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_OBJECT_NAME, None)}
+  }
+  /// International Designator (YYYY-NNNAAA)
+  #[inline]
+  pub fn OBJECT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_OBJECT_ID, None)}
+  }
+  /// Center Name (e.g. EARTH, MARS)
+  #[inline]
+  pub fn CENTER_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_CENTER_NAME, None)}
+  }
+  /// Reference Frame
+  /// Typically TEMEOFDATE
+  #[inline]
+  pub fn REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(OMM::VT_REFERENCE_FRAME, None)}
+  }
+  /// Reference Frame Epoch (ISO 8601 UTC format)
+  #[inline]
+  pub fn REFERENCE_FRAME_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_REFERENCE_FRAME_EPOCH, None)}
+  }
+  /// Time System [M, UTC]
+  #[inline]
+  pub fn TIME_SYSTEM(&self) -> timingStandard {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<timingStandard>(OMM::VT_TIME_SYSTEM, Some(timingStandard::UTC)).unwrap()}
+  }
+  /// Mean Element Theory
   #[inline]
   pub fn MEAN_ELEMENT_THEORY(&self) -> meanElementSource {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<meanElementSource>(MET::VT_MEAN_ELEMENT_THEORY, Some(meanElementSource::SGP4)).unwrap()}
+    unsafe { self._tab.get::<meanElementSource>(OMM::VT_MEAN_ELEMENT_THEORY, Some(meanElementSource::SGP4)).unwrap()}
+  }
+  /// COMMENT (O)
+  #[inline]
+  pub fn COMMENT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_COMMENT, None)}
+  }
+  /// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_EPOCH, None)}
+  }
+  /// Semi-major axis in km or Mean Motion in rev/day
+  #[inline]
+  pub fn SEMI_MAJOR_AXIS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_SEMI_MAJOR_AXIS, Some(0.0)).unwrap()}
+  }
+  /// Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
+  #[inline]
+  pub fn MEAN_MOTION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_MEAN_MOTION, Some(0.0)).unwrap()}
+  }
+  /// Eccentricity (unitless)
+  #[inline]
+  pub fn ECCENTRICITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_ECCENTRICITY, Some(0.0)).unwrap()}
+  }
+  /// Inclination in degrees
+  #[inline]
+  pub fn INCLINATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_INCLINATION, Some(0.0)).unwrap()}
+  }
+  /// RA_OF_ASC_NODE in degrees
+  #[inline]
+  pub fn RA_OF_ASC_NODE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_RA_OF_ASC_NODE, Some(0.0)).unwrap()}
+  }
+  /// ARG_OF_PERICENTER in degrees
+  #[inline]
+  pub fn ARG_OF_PERICENTER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_ARG_OF_PERICENTER, Some(0.0)).unwrap()}
+  }
+  /// MEAN_ANOMALY in degrees
+  #[inline]
+  pub fn MEAN_ANOMALY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_MEAN_ANOMALY, Some(0.0)).unwrap()}
+  }
+  /// GM in km**3/s**2
+  #[inline]
+  pub fn GM(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_GM, Some(0.0)).unwrap()}
+  }
+  /// MASS in kg
+  #[inline]
+  pub fn MASS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_MASS, Some(0.0)).unwrap()}
+  }
+  /// SOLAR_RAD_AREA in m**2
+  #[inline]
+  pub fn SOLAR_RAD_AREA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_SOLAR_RAD_AREA, Some(0.0)).unwrap()}
+  }
+  /// SOLAR_RAD_COEFF (unitless)
+  #[inline]
+  pub fn SOLAR_RAD_COEFF(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_SOLAR_RAD_COEFF, Some(0.0)).unwrap()}
+  }
+  /// DRAG_AREA in m**2
+  #[inline]
+  pub fn DRAG_AREA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_DRAG_AREA, Some(0.0)).unwrap()}
+  }
+  /// DRAG_COEFF (unitless)
+  #[inline]
+  pub fn DRAG_COEFF(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_DRAG_COEFF, Some(0.0)).unwrap()}
+  }
+  /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+  /// EPHEMERIS_TYPE Default=0
+  #[inline]
+  pub fn EPHEMERIS_TYPE(&self) -> ephemerisFormat {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<ephemerisFormat>(OMM::VT_EPHEMERIS_TYPE, Some(ephemerisFormat::SGP4)).unwrap()}
+  }
+  /// CLASSIFICATION_TYPE Default=U
+  #[inline]
+  pub fn CLASSIFICATION_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_CLASSIFICATION_TYPE, None)}
+  }
+  /// NORAD_CAT_ID (integer) [O if SGP/SGP4]
+  #[inline]
+  pub fn NORAD_CAT_ID(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(OMM::VT_NORAD_CAT_ID, Some(0)).unwrap()}
+  }
+  /// ELEMENT_SET_NO [O if SGP/SGP4]
+  #[inline]
+  pub fn ELEMENT_SET_NO(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(OMM::VT_ELEMENT_SET_NO, Some(0)).unwrap()}
+  }
+  /// REV_AT_EPOCH [O if SGP/SGP4]
+  #[inline]
+  pub fn REV_AT_EPOCH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_REV_AT_EPOCH, Some(0.0)).unwrap()}
+  }
+  /// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
+  #[inline]
+  pub fn BSTAR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_BSTAR, Some(0.0)).unwrap()}
+  }
+  /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
+  #[inline]
+  pub fn MEAN_MOTION_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_MEAN_MOTION_DOT, Some(0.0)).unwrap()}
+  }
+  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+  #[inline]
+  pub fn MEAN_MOTION_DDOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_MEAN_MOTION_DDOT, Some(0.0)).unwrap()}
+  }
+  /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+  /// COV_REF_FRAME reference frame for covariance [C if covariance given]
+  /// Typically RSW
+  #[inline]
+  pub fn COV_REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(OMM::VT_COV_REFERENCE_FRAME, None)}
+  }
+  /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  #[inline]
+  pub fn COVARIANCE(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OMM::VT_COVARIANCE, None)}
+  }
+  /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
+  #[inline]
+  pub fn USER_DEFINED_BIP_0044_TYPE(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(OMM::VT_USER_DEFINED_BIP_0044_TYPE, Some(0)).unwrap()}
+  }
+  /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
+  #[inline]
+  pub fn USER_DEFINED_OBJECT_DESIGNATOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_USER_DEFINED_OBJECT_DESIGNATOR, None)}
+  }
+  /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
+  #[inline]
+  pub fn USER_DEFINED_EARTH_MODEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_USER_DEFINED_EARTH_MODEL, None)}
+  }
+  /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
+  #[inline]
+  pub fn USER_DEFINED_EPOCH_TIMESTAMP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_USER_DEFINED_EPOCH_TIMESTAMP, Some(0.0)).unwrap()}
+  }
+  /// USER_DEFINED_MICROSECONDS [O, units per ICD]
+  #[inline]
+  pub fn USER_DEFINED_MICROSECONDS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OMM::VT_USER_DEFINED_MICROSECONDS, Some(0.0)).unwrap()}
   }
 }
 
-impl ::flatbuffers::Verifiable for MET<'_> {
+impl ::flatbuffers::Verifiable for OMM<'_> {
   #[inline]
   fn run_verifier(
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
+     .visit_field::<f64>("CCSDS_OMM_VERS", Self::VT_CCSDS_OMM_VERS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATION_DATE", Self::VT_CREATION_DATE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR", Self::VT_ORIGINATOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REFERENCE_FRAME_EPOCH", Self::VT_REFERENCE_FRAME_EPOCH, false)?
+     .visit_field::<timingStandard>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
      .visit_field::<meanElementSource>("MEAN_ELEMENT_THEORY", Self::VT_MEAN_ELEMENT_THEORY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<f64>("SEMI_MAJOR_AXIS", Self::VT_SEMI_MAJOR_AXIS, false)?
+     .visit_field::<f64>("MEAN_MOTION", Self::VT_MEAN_MOTION, false)?
+     .visit_field::<f64>("ECCENTRICITY", Self::VT_ECCENTRICITY, false)?
+     .visit_field::<f64>("INCLINATION", Self::VT_INCLINATION, false)?
+     .visit_field::<f64>("RA_OF_ASC_NODE", Self::VT_RA_OF_ASC_NODE, false)?
+     .visit_field::<f64>("ARG_OF_PERICENTER", Self::VT_ARG_OF_PERICENTER, false)?
+     .visit_field::<f64>("MEAN_ANOMALY", Self::VT_MEAN_ANOMALY, false)?
+     .visit_field::<f64>("GM", Self::VT_GM, false)?
+     .visit_field::<f64>("MASS", Self::VT_MASS, false)?
+     .visit_field::<f64>("SOLAR_RAD_AREA", Self::VT_SOLAR_RAD_AREA, false)?
+     .visit_field::<f64>("SOLAR_RAD_COEFF", Self::VT_SOLAR_RAD_COEFF, false)?
+     .visit_field::<f64>("DRAG_AREA", Self::VT_DRAG_AREA, false)?
+     .visit_field::<f64>("DRAG_COEFF", Self::VT_DRAG_COEFF, false)?
+     .visit_field::<ephemerisFormat>("EPHEMERIS_TYPE", Self::VT_EPHEMERIS_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION_TYPE", Self::VT_CLASSIFICATION_TYPE, false)?
+     .visit_field::<u32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
+     .visit_field::<u32>("ELEMENT_SET_NO", Self::VT_ELEMENT_SET_NO, false)?
+     .visit_field::<f64>("REV_AT_EPOCH", Self::VT_REV_AT_EPOCH, false)?
+     .visit_field::<f64>("BSTAR", Self::VT_BSTAR, false)?
+     .visit_field::<f64>("MEAN_MOTION_DOT", Self::VT_MEAN_MOTION_DOT, false)?
+     .visit_field::<f64>("MEAN_MOTION_DDOT", Self::VT_MEAN_MOTION_DDOT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COVARIANCE", Self::VT_COVARIANCE, false)?
+     .visit_field::<u32>("USER_DEFINED_BIP_0044_TYPE", Self::VT_USER_DEFINED_BIP_0044_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("USER_DEFINED_OBJECT_DESIGNATOR", Self::VT_USER_DEFINED_OBJECT_DESIGNATOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("USER_DEFINED_EARTH_MODEL", Self::VT_USER_DEFINED_EARTH_MODEL, false)?
+     .visit_field::<f64>("USER_DEFINED_EPOCH_TIMESTAMP", Self::VT_USER_DEFINED_EPOCH_TIMESTAMP, false)?
+     .visit_field::<f64>("USER_DEFINED_MICROSECONDS", Self::VT_USER_DEFINED_MICROSECONDS, false)?
      .finish();
     Ok(())
   }
 }
-pub struct METArgs {
+pub struct OMMArgs<'a> {
+    pub CCSDS_OMM_VERS: f64,
+    pub CREATION_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORIGINATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CENTER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
+    pub REFERENCE_FRAME_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TIME_SYSTEM: timingStandard,
     pub MEAN_ELEMENT_THEORY: meanElementSource,
+    pub COMMENT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SEMI_MAJOR_AXIS: f64,
+    pub MEAN_MOTION: f64,
+    pub ECCENTRICITY: f64,
+    pub INCLINATION: f64,
+    pub RA_OF_ASC_NODE: f64,
+    pub ARG_OF_PERICENTER: f64,
+    pub MEAN_ANOMALY: f64,
+    pub GM: f64,
+    pub MASS: f64,
+    pub SOLAR_RAD_AREA: f64,
+    pub SOLAR_RAD_COEFF: f64,
+    pub DRAG_AREA: f64,
+    pub DRAG_COEFF: f64,
+    pub EPHEMERIS_TYPE: ephemerisFormat,
+    pub CLASSIFICATION_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NORAD_CAT_ID: u32,
+    pub ELEMENT_SET_NO: u32,
+    pub REV_AT_EPOCH: f64,
+    pub BSTAR: f64,
+    pub MEAN_MOTION_DOT: f64,
+    pub MEAN_MOTION_DDOT: f64,
+    pub COV_REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
+    pub COVARIANCE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub USER_DEFINED_BIP_0044_TYPE: u32,
+    pub USER_DEFINED_OBJECT_DESIGNATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub USER_DEFINED_EARTH_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub USER_DEFINED_EPOCH_TIMESTAMP: f64,
+    pub USER_DEFINED_MICROSECONDS: f64,
 }
-impl<'a> Default for METArgs {
+impl<'a> Default for OMMArgs<'a> {
   #[inline]
   fn default() -> Self {
-    METArgs {
+    OMMArgs {
+      CCSDS_OMM_VERS: 0.0,
+      CREATION_DATE: None,
+      ORIGINATOR: None,
+      OBJECT_NAME: None,
+      OBJECT_ID: None,
+      CENTER_NAME: None,
+      REFERENCE_FRAME: None,
+      REFERENCE_FRAME_EPOCH: None,
+      TIME_SYSTEM: timingStandard::UTC,
       MEAN_ELEMENT_THEORY: meanElementSource::SGP4,
+      COMMENT: None,
+      EPOCH: None,
+      SEMI_MAJOR_AXIS: 0.0,
+      MEAN_MOTION: 0.0,
+      ECCENTRICITY: 0.0,
+      INCLINATION: 0.0,
+      RA_OF_ASC_NODE: 0.0,
+      ARG_OF_PERICENTER: 0.0,
+      MEAN_ANOMALY: 0.0,
+      GM: 0.0,
+      MASS: 0.0,
+      SOLAR_RAD_AREA: 0.0,
+      SOLAR_RAD_COEFF: 0.0,
+      DRAG_AREA: 0.0,
+      DRAG_COEFF: 0.0,
+      EPHEMERIS_TYPE: ephemerisFormat::SGP4,
+      CLASSIFICATION_TYPE: None,
+      NORAD_CAT_ID: 0,
+      ELEMENT_SET_NO: 0,
+      REV_AT_EPOCH: 0.0,
+      BSTAR: 0.0,
+      MEAN_MOTION_DOT: 0.0,
+      MEAN_MOTION_DDOT: 0.0,
+      COV_REFERENCE_FRAME: None,
+      COVARIANCE: None,
+      USER_DEFINED_BIP_0044_TYPE: 0,
+      USER_DEFINED_OBJECT_DESIGNATOR: None,
+      USER_DEFINED_EARTH_MODEL: None,
+      USER_DEFINED_EPOCH_TIMESTAMP: 0.0,
+      USER_DEFINED_MICROSECONDS: 0.0,
     }
   }
 }
 
-pub struct METBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+pub struct OMMBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
   fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
   start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
 }
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> METBuilder<'a, 'b, A> {
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OMMBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_MEAN_ELEMENT_THEORY(&mut self, MEAN_ELEMENT_THEORY: meanElementSource) {
-    self.fbb_.push_slot::<meanElementSource>(MET::VT_MEAN_ELEMENT_THEORY, MEAN_ELEMENT_THEORY, meanElementSource::SGP4);
+  pub fn add_CCSDS_OMM_VERS(&mut self, CCSDS_OMM_VERS: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_CCSDS_OMM_VERS, CCSDS_OMM_VERS, 0.0);
   }
   #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> METBuilder<'a, 'b, A> {
+  pub fn add_CREATION_DATE(&mut self, CREATION_DATE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_CREATION_DATE, CREATION_DATE);
+  }
+  #[inline]
+  pub fn add_ORIGINATOR(&mut self, ORIGINATOR: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_ORIGINATOR, ORIGINATOR);
+  }
+  #[inline]
+  pub fn add_OBJECT_NAME(&mut self, OBJECT_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_OBJECT_NAME, OBJECT_NAME);
+  }
+  #[inline]
+  pub fn add_OBJECT_ID(&mut self, OBJECT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_OBJECT_ID, OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_CENTER_NAME(&mut self, CENTER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_CENTER_NAME, CENTER_NAME);
+  }
+  #[inline]
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(OMM::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  #[inline]
+  pub fn add_REFERENCE_FRAME_EPOCH(&mut self, REFERENCE_FRAME_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_REFERENCE_FRAME_EPOCH, REFERENCE_FRAME_EPOCH);
+  }
+  #[inline]
+  pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timingStandard) {
+    self.fbb_.push_slot::<timingStandard>(OMM::VT_TIME_SYSTEM, TIME_SYSTEM, timingStandard::UTC);
+  }
+  #[inline]
+  pub fn add_MEAN_ELEMENT_THEORY(&mut self, MEAN_ELEMENT_THEORY: meanElementSource) {
+    self.fbb_.push_slot::<meanElementSource>(OMM::VT_MEAN_ELEMENT_THEORY, MEAN_ELEMENT_THEORY, meanElementSource::SGP4);
+  }
+  #[inline]
+  pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_COMMENT, COMMENT);
+  }
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_SEMI_MAJOR_AXIS(&mut self, SEMI_MAJOR_AXIS: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_SEMI_MAJOR_AXIS, SEMI_MAJOR_AXIS, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_MOTION(&mut self, MEAN_MOTION: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_MEAN_MOTION, MEAN_MOTION, 0.0);
+  }
+  #[inline]
+  pub fn add_ECCENTRICITY(&mut self, ECCENTRICITY: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+  }
+  #[inline]
+  pub fn add_INCLINATION(&mut self, INCLINATION: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  #[inline]
+  pub fn add_RA_OF_ASC_NODE(&mut self, RA_OF_ASC_NODE: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_RA_OF_ASC_NODE, RA_OF_ASC_NODE, 0.0);
+  }
+  #[inline]
+  pub fn add_ARG_OF_PERICENTER(&mut self, ARG_OF_PERICENTER: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_ARG_OF_PERICENTER, ARG_OF_PERICENTER, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_ANOMALY(&mut self, MEAN_ANOMALY: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_MEAN_ANOMALY, MEAN_ANOMALY, 0.0);
+  }
+  #[inline]
+  pub fn add_GM(&mut self, GM: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_GM, GM, 0.0);
+  }
+  #[inline]
+  pub fn add_MASS(&mut self, MASS: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_MASS, MASS, 0.0);
+  }
+  #[inline]
+  pub fn add_SOLAR_RAD_AREA(&mut self, SOLAR_RAD_AREA: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_SOLAR_RAD_AREA, SOLAR_RAD_AREA, 0.0);
+  }
+  #[inline]
+  pub fn add_SOLAR_RAD_COEFF(&mut self, SOLAR_RAD_COEFF: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_SOLAR_RAD_COEFF, SOLAR_RAD_COEFF, 0.0);
+  }
+  #[inline]
+  pub fn add_DRAG_AREA(&mut self, DRAG_AREA: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_DRAG_AREA, DRAG_AREA, 0.0);
+  }
+  #[inline]
+  pub fn add_DRAG_COEFF(&mut self, DRAG_COEFF: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_DRAG_COEFF, DRAG_COEFF, 0.0);
+  }
+  #[inline]
+  pub fn add_EPHEMERIS_TYPE(&mut self, EPHEMERIS_TYPE: ephemerisFormat) {
+    self.fbb_.push_slot::<ephemerisFormat>(OMM::VT_EPHEMERIS_TYPE, EPHEMERIS_TYPE, ephemerisFormat::SGP4);
+  }
+  #[inline]
+  pub fn add_CLASSIFICATION_TYPE(&mut self, CLASSIFICATION_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_CLASSIFICATION_TYPE, CLASSIFICATION_TYPE);
+  }
+  #[inline]
+  pub fn add_NORAD_CAT_ID(&mut self, NORAD_CAT_ID: u32) {
+    self.fbb_.push_slot::<u32>(OMM::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
+  }
+  #[inline]
+  pub fn add_ELEMENT_SET_NO(&mut self, ELEMENT_SET_NO: u32) {
+    self.fbb_.push_slot::<u32>(OMM::VT_ELEMENT_SET_NO, ELEMENT_SET_NO, 0);
+  }
+  #[inline]
+  pub fn add_REV_AT_EPOCH(&mut self, REV_AT_EPOCH: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_REV_AT_EPOCH, REV_AT_EPOCH, 0.0);
+  }
+  #[inline]
+  pub fn add_BSTAR(&mut self, BSTAR: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_BSTAR, BSTAR, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_MOTION_DOT(&mut self, MEAN_MOTION_DOT: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_MEAN_MOTION_DOT, MEAN_MOTION_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_MOTION_DDOT(&mut self, MEAN_MOTION_DDOT: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_MEAN_MOTION_DDOT, MEAN_MOTION_DDOT, 0.0);
+  }
+  #[inline]
+  pub fn add_COV_REFERENCE_FRAME(&mut self, COV_REFERENCE_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(OMM::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME);
+  }
+  #[inline]
+  pub fn add_COVARIANCE(&mut self, COVARIANCE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_COVARIANCE, COVARIANCE);
+  }
+  #[inline]
+  pub fn add_USER_DEFINED_BIP_0044_TYPE(&mut self, USER_DEFINED_BIP_0044_TYPE: u32) {
+    self.fbb_.push_slot::<u32>(OMM::VT_USER_DEFINED_BIP_0044_TYPE, USER_DEFINED_BIP_0044_TYPE, 0);
+  }
+  #[inline]
+  pub fn add_USER_DEFINED_OBJECT_DESIGNATOR(&mut self, USER_DEFINED_OBJECT_DESIGNATOR: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_USER_DEFINED_OBJECT_DESIGNATOR, USER_DEFINED_OBJECT_DESIGNATOR);
+  }
+  #[inline]
+  pub fn add_USER_DEFINED_EARTH_MODEL(&mut self, USER_DEFINED_EARTH_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_USER_DEFINED_EARTH_MODEL, USER_DEFINED_EARTH_MODEL);
+  }
+  #[inline]
+  pub fn add_USER_DEFINED_EPOCH_TIMESTAMP(&mut self, USER_DEFINED_EPOCH_TIMESTAMP: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_USER_DEFINED_EPOCH_TIMESTAMP, USER_DEFINED_EPOCH_TIMESTAMP, 0.0);
+  }
+  #[inline]
+  pub fn add_USER_DEFINED_MICROSECONDS(&mut self, USER_DEFINED_MICROSECONDS: f64) {
+    self.fbb_.push_slot::<f64>(OMM::VT_USER_DEFINED_MICROSECONDS, USER_DEFINED_MICROSECONDS, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OMMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
-    METBuilder {
+    OMMBuilder {
       fbb_: _fbb,
       start_: start,
     }
   }
   #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<MET<'a>> {
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<OMM<'a>> {
     let o = self.fbb_.end_table(self.start_);
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
 
-impl ::core::fmt::Debug for MET<'_> {
+impl ::core::fmt::Debug for OMM<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("MET");
+    let mut ds = f.debug_struct("OMM");
+      ds.field("CCSDS_OMM_VERS", &self.CCSDS_OMM_VERS());
+      ds.field("CREATION_DATE", &self.CREATION_DATE());
+      ds.field("ORIGINATOR", &self.ORIGINATOR());
+      ds.field("OBJECT_NAME", &self.OBJECT_NAME());
+      ds.field("OBJECT_ID", &self.OBJECT_ID());
+      ds.field("CENTER_NAME", &self.CENTER_NAME());
+      ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
+      ds.field("REFERENCE_FRAME_EPOCH", &self.REFERENCE_FRAME_EPOCH());
+      ds.field("TIME_SYSTEM", &self.TIME_SYSTEM());
       ds.field("MEAN_ELEMENT_THEORY", &self.MEAN_ELEMENT_THEORY());
+      ds.field("COMMENT", &self.COMMENT());
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("SEMI_MAJOR_AXIS", &self.SEMI_MAJOR_AXIS());
+      ds.field("MEAN_MOTION", &self.MEAN_MOTION());
+      ds.field("ECCENTRICITY", &self.ECCENTRICITY());
+      ds.field("INCLINATION", &self.INCLINATION());
+      ds.field("RA_OF_ASC_NODE", &self.RA_OF_ASC_NODE());
+      ds.field("ARG_OF_PERICENTER", &self.ARG_OF_PERICENTER());
+      ds.field("MEAN_ANOMALY", &self.MEAN_ANOMALY());
+      ds.field("GM", &self.GM());
+      ds.field("MASS", &self.MASS());
+      ds.field("SOLAR_RAD_AREA", &self.SOLAR_RAD_AREA());
+      ds.field("SOLAR_RAD_COEFF", &self.SOLAR_RAD_COEFF());
+      ds.field("DRAG_AREA", &self.DRAG_AREA());
+      ds.field("DRAG_COEFF", &self.DRAG_COEFF());
+      ds.field("EPHEMERIS_TYPE", &self.EPHEMERIS_TYPE());
+      ds.field("CLASSIFICATION_TYPE", &self.CLASSIFICATION_TYPE());
+      ds.field("NORAD_CAT_ID", &self.NORAD_CAT_ID());
+      ds.field("ELEMENT_SET_NO", &self.ELEMENT_SET_NO());
+      ds.field("REV_AT_EPOCH", &self.REV_AT_EPOCH());
+      ds.field("BSTAR", &self.BSTAR());
+      ds.field("MEAN_MOTION_DOT", &self.MEAN_MOTION_DOT());
+      ds.field("MEAN_MOTION_DDOT", &self.MEAN_MOTION_DDOT());
+      ds.field("COV_REFERENCE_FRAME", &self.COV_REFERENCE_FRAME());
+      ds.field("COVARIANCE", &self.COVARIANCE());
+      ds.field("USER_DEFINED_BIP_0044_TYPE", &self.USER_DEFINED_BIP_0044_TYPE());
+      ds.field("USER_DEFINED_OBJECT_DESIGNATOR", &self.USER_DEFINED_OBJECT_DESIGNATOR());
+      ds.field("USER_DEFINED_EARTH_MODEL", &self.USER_DEFINED_EARTH_MODEL());
+      ds.field("USER_DEFINED_EPOCH_TIMESTAMP", &self.USER_DEFINED_EPOCH_TIMESTAMP());
+      ds.field("USER_DEFINED_MICROSECONDS", &self.USER_DEFINED_MICROSECONDS());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
-pub struct METT {
+pub struct OMMT {
+  pub CCSDS_OMM_VERS: f64,
+  pub CREATION_DATE: Option<alloc::string::String>,
+  pub ORIGINATOR: Option<alloc::string::String>,
+  pub OBJECT_NAME: Option<alloc::string::String>,
+  pub OBJECT_ID: Option<alloc::string::String>,
+  pub CENTER_NAME: Option<alloc::string::String>,
+  pub REFERENCE_FRAME: Option<alloc::boxed::Box<RFMT>>,
+  pub REFERENCE_FRAME_EPOCH: Option<alloc::string::String>,
+  pub TIME_SYSTEM: timingStandard,
   pub MEAN_ELEMENT_THEORY: meanElementSource,
+  pub COMMENT: Option<alloc::string::String>,
+  pub EPOCH: Option<alloc::string::String>,
+  pub SEMI_MAJOR_AXIS: f64,
+  pub MEAN_MOTION: f64,
+  pub ECCENTRICITY: f64,
+  pub INCLINATION: f64,
+  pub RA_OF_ASC_NODE: f64,
+  pub ARG_OF_PERICENTER: f64,
+  pub MEAN_ANOMALY: f64,
+  pub GM: f64,
+  pub MASS: f64,
+  pub SOLAR_RAD_AREA: f64,
+  pub SOLAR_RAD_COEFF: f64,
+  pub DRAG_AREA: f64,
+  pub DRAG_COEFF: f64,
+  pub EPHEMERIS_TYPE: ephemerisFormat,
+  pub CLASSIFICATION_TYPE: Option<alloc::string::String>,
+  pub NORAD_CAT_ID: u32,
+  pub ELEMENT_SET_NO: u32,
+  pub REV_AT_EPOCH: f64,
+  pub BSTAR: f64,
+  pub MEAN_MOTION_DOT: f64,
+  pub MEAN_MOTION_DDOT: f64,
+  pub COV_REFERENCE_FRAME: Option<alloc::boxed::Box<RFMT>>,
+  pub COVARIANCE: Option<alloc::vec::Vec<f64>>,
+  pub USER_DEFINED_BIP_0044_TYPE: u32,
+  pub USER_DEFINED_OBJECT_DESIGNATOR: Option<alloc::string::String>,
+  pub USER_DEFINED_EARTH_MODEL: Option<alloc::string::String>,
+  pub USER_DEFINED_EPOCH_TIMESTAMP: f64,
+  pub USER_DEFINED_MICROSECONDS: f64,
 }
-impl Default for METT {
+impl Default for OMMT {
   fn default() -> Self {
     Self {
+      CCSDS_OMM_VERS: 0.0,
+      CREATION_DATE: None,
+      ORIGINATOR: None,
+      OBJECT_NAME: None,
+      OBJECT_ID: None,
+      CENTER_NAME: None,
+      REFERENCE_FRAME: None,
+      REFERENCE_FRAME_EPOCH: None,
+      TIME_SYSTEM: timingStandard::UTC,
       MEAN_ELEMENT_THEORY: meanElementSource::SGP4,
+      COMMENT: None,
+      EPOCH: None,
+      SEMI_MAJOR_AXIS: 0.0,
+      MEAN_MOTION: 0.0,
+      ECCENTRICITY: 0.0,
+      INCLINATION: 0.0,
+      RA_OF_ASC_NODE: 0.0,
+      ARG_OF_PERICENTER: 0.0,
+      MEAN_ANOMALY: 0.0,
+      GM: 0.0,
+      MASS: 0.0,
+      SOLAR_RAD_AREA: 0.0,
+      SOLAR_RAD_COEFF: 0.0,
+      DRAG_AREA: 0.0,
+      DRAG_COEFF: 0.0,
+      EPHEMERIS_TYPE: ephemerisFormat::SGP4,
+      CLASSIFICATION_TYPE: None,
+      NORAD_CAT_ID: 0,
+      ELEMENT_SET_NO: 0,
+      REV_AT_EPOCH: 0.0,
+      BSTAR: 0.0,
+      MEAN_MOTION_DOT: 0.0,
+      MEAN_MOTION_DDOT: 0.0,
+      COV_REFERENCE_FRAME: None,
+      COVARIANCE: None,
+      USER_DEFINED_BIP_0044_TYPE: 0,
+      USER_DEFINED_OBJECT_DESIGNATOR: None,
+      USER_DEFINED_EARTH_MODEL: None,
+      USER_DEFINED_EPOCH_TIMESTAMP: 0.0,
+      USER_DEFINED_MICROSECONDS: 0.0,
     }
   }
 }
-impl METT {
+impl OMMT {
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<MET<'b>> {
+  ) -> ::flatbuffers::WIPOffset<OMM<'b>> {
+    let CCSDS_OMM_VERS = self.CCSDS_OMM_VERS;
+    let CREATION_DATE = self.CREATION_DATE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIGINATOR = self.ORIGINATOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OBJECT_NAME = self.OBJECT_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OBJECT_ID = self.OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CENTER_NAME = self.CENTER_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let REFERENCE_FRAME_EPOCH = self.REFERENCE_FRAME_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TIME_SYSTEM = self.TIME_SYSTEM;
     let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY;
-    MET::create(_fbb, &METArgs{
+    let COMMENT = self.COMMENT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SEMI_MAJOR_AXIS = self.SEMI_MAJOR_AXIS;
+    let MEAN_MOTION = self.MEAN_MOTION;
+    let ECCENTRICITY = self.ECCENTRICITY;
+    let INCLINATION = self.INCLINATION;
+    let RA_OF_ASC_NODE = self.RA_OF_ASC_NODE;
+    let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER;
+    let MEAN_ANOMALY = self.MEAN_ANOMALY;
+    let GM = self.GM;
+    let MASS = self.MASS;
+    let SOLAR_RAD_AREA = self.SOLAR_RAD_AREA;
+    let SOLAR_RAD_COEFF = self.SOLAR_RAD_COEFF;
+    let DRAG_AREA = self.DRAG_AREA;
+    let DRAG_COEFF = self.DRAG_COEFF;
+    let EPHEMERIS_TYPE = self.EPHEMERIS_TYPE;
+    let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NORAD_CAT_ID = self.NORAD_CAT_ID;
+    let ELEMENT_SET_NO = self.ELEMENT_SET_NO;
+    let REV_AT_EPOCH = self.REV_AT_EPOCH;
+    let BSTAR = self.BSTAR;
+    let MEAN_MOTION_DOT = self.MEAN_MOTION_DOT;
+    let MEAN_MOTION_DDOT = self.MEAN_MOTION_DDOT;
+    let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let COVARIANCE = self.COVARIANCE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let USER_DEFINED_BIP_0044_TYPE = self.USER_DEFINED_BIP_0044_TYPE;
+    let USER_DEFINED_OBJECT_DESIGNATOR = self.USER_DEFINED_OBJECT_DESIGNATOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let USER_DEFINED_EARTH_MODEL = self.USER_DEFINED_EARTH_MODEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let USER_DEFINED_EPOCH_TIMESTAMP = self.USER_DEFINED_EPOCH_TIMESTAMP;
+    let USER_DEFINED_MICROSECONDS = self.USER_DEFINED_MICROSECONDS;
+    OMM::create(_fbb, &OMMArgs{
+      CCSDS_OMM_VERS,
+      CREATION_DATE,
+      ORIGINATOR,
+      OBJECT_NAME,
+      OBJECT_ID,
+      CENTER_NAME,
+      REFERENCE_FRAME,
+      REFERENCE_FRAME_EPOCH,
+      TIME_SYSTEM,
       MEAN_ELEMENT_THEORY,
+      COMMENT,
+      EPOCH,
+      SEMI_MAJOR_AXIS,
+      MEAN_MOTION,
+      ECCENTRICITY,
+      INCLINATION,
+      RA_OF_ASC_NODE,
+      ARG_OF_PERICENTER,
+      MEAN_ANOMALY,
+      GM,
+      MASS,
+      SOLAR_RAD_AREA,
+      SOLAR_RAD_COEFF,
+      DRAG_AREA,
+      DRAG_COEFF,
+      EPHEMERIS_TYPE,
+      CLASSIFICATION_TYPE,
+      NORAD_CAT_ID,
+      ELEMENT_SET_NO,
+      REV_AT_EPOCH,
+      BSTAR,
+      MEAN_MOTION_DOT,
+      MEAN_MOTION_DDOT,
+      COV_REFERENCE_FRAME,
+      COVARIANCE,
+      USER_DEFINED_BIP_0044_TYPE,
+      USER_DEFINED_OBJECT_DESIGNATOR,
+      USER_DEFINED_EARTH_MODEL,
+      USER_DEFINED_EPOCH_TIMESTAMP,
+      USER_DEFINED_MICROSECONDS,
     })
   }
 }
 #[inline]
-/// Verifies that a buffer of bytes contains a `MET`
+/// Verifies that a buffer of bytes contains a `OMM`
 /// and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_met_unchecked`.
-pub fn root_as_met(buf: &[u8]) -> Result<MET<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root::<MET>(buf)
+/// `root_as_omm_unchecked`.
+pub fn root_as_omm(buf: &[u8]) -> Result<OMM<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root::<OMM>(buf)
 }
 #[inline]
 /// Verifies that a buffer of bytes contains a size prefixed
-/// `MET` and returns it.
+/// `OMM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `size_prefixed_root_as_met_unchecked`.
-pub fn size_prefixed_root_as_met(buf: &[u8]) -> Result<MET<'_>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root::<MET>(buf)
+/// `size_prefixed_root_as_omm_unchecked`.
+pub fn size_prefixed_root_as_omm(buf: &[u8]) -> Result<OMM<'_>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root::<OMM>(buf)
 }
 #[inline]
 /// Verifies, with the given options, that a buffer of bytes
-/// contains a `MET` and returns it.
+/// contains a `OMM` and returns it.
 /// Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_met_unchecked`.
-pub fn root_as_met_with_opts<'b, 'o>(
+/// `root_as_omm_unchecked`.
+pub fn root_as_omm_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<MET<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::root_with_opts::<MET<'b>>(opts, buf)
+) -> Result<OMM<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::root_with_opts::<OMM<'b>>(opts, buf)
 }
 #[inline]
 /// Verifies, with the given verifier options, that a buffer of
-/// bytes contains a size prefixed `MET` and returns
+/// bytes contains a size prefixed `OMM` and returns
 /// it. Note that verification is still experimental and may not
 /// catch every error, or be maximally performant. For the
 /// previous, unchecked, behavior use
-/// `root_as_met_unchecked`.
-pub fn size_prefixed_root_as_met_with_opts<'b, 'o>(
+/// `root_as_omm_unchecked`.
+pub fn size_prefixed_root_as_omm_with_opts<'b, 'o>(
   opts: &'o ::flatbuffers::VerifierOptions,
   buf: &'b [u8],
-) -> Result<MET<'b>, ::flatbuffers::InvalidFlatbuffer> {
-  ::flatbuffers::size_prefixed_root_with_opts::<MET<'b>>(opts, buf)
+) -> Result<OMM<'b>, ::flatbuffers::InvalidFlatbuffer> {
+  ::flatbuffers::size_prefixed_root_with_opts::<OMM<'b>>(opts, buf)
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a MET and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a OMM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid `MET`.
-pub unsafe fn root_as_met_unchecked(buf: &[u8]) -> MET<'_> {
-  unsafe { ::flatbuffers::root_unchecked::<MET>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid `OMM`.
+pub unsafe fn root_as_omm_unchecked(buf: &[u8]) -> OMM<'_> {
+  unsafe { ::flatbuffers::root_unchecked::<OMM>(buf) }
 }
 #[inline]
-/// Assumes, without verification, that a buffer of bytes contains a size prefixed MET and returns it.
+/// Assumes, without verification, that a buffer of bytes contains a size prefixed OMM and returns it.
 /// # Safety
-/// Callers must trust the given bytes do indeed contain a valid size prefixed `MET`.
-pub unsafe fn size_prefixed_root_as_met_unchecked(buf: &[u8]) -> MET<'_> {
-  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<MET>(buf) }
+/// Callers must trust the given bytes do indeed contain a valid size prefixed `OMM`.
+pub unsafe fn size_prefixed_root_as_omm_unchecked(buf: &[u8]) -> OMM<'_> {
+  unsafe { ::flatbuffers::size_prefixed_root_unchecked::<OMM>(buf) }
 }
-pub const MET_IDENTIFIER: &str = "$MET";
+pub const OMM_IDENTIFIER: &str = "$OMM";
 
 #[inline]
-pub fn met_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, MET_IDENTIFIER, false)
-}
-
-#[inline]
-pub fn met_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
-  ::flatbuffers::buffer_has_identifier(buf, MET_IDENTIFIER, true)
+pub fn omm_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, OMM_IDENTIFIER, false)
 }
 
 #[inline]
-pub fn finish_met_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
+pub fn omm_size_prefixed_buffer_has_identifier(buf: &[u8]) -> bool {
+  ::flatbuffers::buffer_has_identifier(buf, OMM_IDENTIFIER, true)
+}
+
+#[inline]
+pub fn finish_omm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(
     fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    root: ::flatbuffers::WIPOffset<MET<'a>>) {
-  fbb.finish(root, Some(MET_IDENTIFIER));
+    root: ::flatbuffers::WIPOffset<OMM<'a>>) {
+  fbb.finish(root, Some(OMM_IDENTIFIER));
 }
 
 #[inline]
-pub fn finish_size_prefixed_met_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<MET<'a>>) {
-  fbb.finish_size_prefixed(root, Some(MET_IDENTIFIER));
+pub fn finish_size_prefixed_omm_buffer<'a, 'b, A: ::flatbuffers::Allocator + 'a>(fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>, root: ::flatbuffers::WIPOffset<OMM<'a>>) {
+  fbb.finish_size_prefixed(root, Some(OMM_IDENTIFIER));
 }
