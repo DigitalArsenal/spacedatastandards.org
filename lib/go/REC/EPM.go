@@ -383,8 +383,30 @@ func (rcv *EPM) ChainProofsLength() int {
 }
 
 /// Chain binding proofs linking blockchain keys to the same HD wallet
+/// Type of entity represented by this profile
+func (rcv *EPM) ENTITY_TYPE() EntityType {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return EntityType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *EPM) EntityType() EntityType {
+	return rcv.ENTITY_TYPE()
+}
+
+/// Type of entity represented by this profile
+func (rcv *EPM) MutateENTITY_TYPE(n EntityType) bool {
+	return rcv._tab.MutateInt8Slot(40, int8(n))
+}
+
+func (rcv *EPM) MutateEntityType(n EntityType) bool {
+	return rcv.MutateENTITY_TYPE(n)
+}
+
 func EPMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(18)
+	builder.StartObject(19)
 }
 func EPMAddDN(builder *flatbuffers.Builder, DN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DN), 0)
@@ -517,6 +539,12 @@ func EPMStartCHAIN_PROOFSVector(builder *flatbuffers.Builder, numElems int) flat
 }
 func EPMStartChainProofsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return EPMStartCHAIN_PROOFSVector(builder, numElems)
+}
+func EPMAddENTITY_TYPE(builder *flatbuffers.Builder, ENTITY_TYPE EntityType) {
+	builder.PrependInt8Slot(18, int8(ENTITY_TYPE), 0)
+}
+func EPMAddEntityType(builder *flatbuffers.Builder, ENTITY_TYPE EntityType) {
+	EPMAddENTITY_TYPE(builder, ENTITY_TYPE)
 }
 func EPMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

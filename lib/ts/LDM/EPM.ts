@@ -7,6 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 import { Address, AddressT } from './Address.js';
 import { ChainProof, ChainProofT } from './ChainProof.js';
 import { CryptoKey, CryptoKeyT } from './CryptoKey.js';
+import { EntityType } from './EntityType.js';
 
 
 /**
@@ -226,8 +227,16 @@ chainProofsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Type of entity represented by this profile
+ */
+ENTITY_TYPE():EntityType {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : EntityType.User;
+}
+
 static startEPM(builder:flatbuffers.Builder) {
-  builder.startObject(18);
+  builder.startObject(19);
 }
 
 static addDn(builder:flatbuffers.Builder, DNOffset:flatbuffers.Offset) {
@@ -350,6 +359,10 @@ static startChainProofsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addEntityType(builder:flatbuffers.Builder, ENTITY_TYPE:EntityType) {
+  builder.addFieldInt8(18, ENTITY_TYPE, EntityType.User);
+}
+
 static endEPM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -383,7 +396,8 @@ unpack(): EPMT {
     this.bb!.createScalarList<string>(this.MULTIFORMAT_ADDRESS.bind(this), this.multiformatAddressLength()),
     this.SIGNATURE(),
     this.SIGNATURE_TIMESTAMP(),
-    this.bb!.createObjList<ChainProof, ChainProofT>(this.CHAIN_PROOFS.bind(this), this.chainProofsLength())
+    this.bb!.createObjList<ChainProof, ChainProofT>(this.CHAIN_PROOFS.bind(this), this.chainProofsLength()),
+    this.ENTITY_TYPE()
   );
 }
 
@@ -407,6 +421,7 @@ unpackTo(_o: EPMT): void {
   _o.SIGNATURE = this.SIGNATURE();
   _o.SIGNATURE_TIMESTAMP = this.SIGNATURE_TIMESTAMP();
   _o.CHAIN_PROOFS = this.bb!.createObjList<ChainProof, ChainProofT>(this.CHAIN_PROOFS.bind(this), this.chainProofsLength());
+  _o.ENTITY_TYPE = this.ENTITY_TYPE();
 }
 }
 
@@ -429,7 +444,8 @@ constructor(
   public MULTIFORMAT_ADDRESS: (string)[] = [],
   public SIGNATURE: string|Uint8Array|null = null,
   public SIGNATURE_TIMESTAMP: bigint = BigInt('0'),
-  public CHAIN_PROOFS: (ChainProofT)[] = []
+  public CHAIN_PROOFS: (ChainProofT)[] = [],
+  public ENTITY_TYPE: EntityType = EntityType.User
 ){}
 
 
@@ -471,6 +487,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   EPM.addSignature(builder, SIGNATURE);
   EPM.addSignatureTimestamp(builder, this.SIGNATURE_TIMESTAMP);
   EPM.addChainProofs(builder, CHAIN_PROOFS);
+  EPM.addEntityType(builder, this.ENTITY_TYPE);
 
   return EPM.endEPM(builder);
 }

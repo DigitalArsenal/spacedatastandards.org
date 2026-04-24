@@ -7885,6 +7885,23 @@
                         }
                     }
                 },
+                "EntityType": {
+                    "type": "string",
+                    "enum": [
+                        "User",
+                        "Node"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "User": {
+                            "value": 0
+                        },
+                        "Node": {
+                            "value": 1
+                        }
+                    }
+                },
                 "CryptoKey": {
                     "type": "object",
                     "description": "Represents cryptographic key information",
@@ -8127,6 +8144,20 @@
                             },
                             "description": "Chain binding proofs linking blockchain keys to the same HD wallet",
                             "x-flatbuffer-type": "[ChainProof]"
+                        },
+                        "ENTITY_TYPE": {
+                            "$ref": "#/definitions/EntityType",
+                            "description": "Type of entity represented by this profile",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "User": {
+                                    "value": 0
+                                },
+                                "Node": {
+                                    "value": 1
+                                }
+                            }
                         }
                     },
                     "additionalProperties": false

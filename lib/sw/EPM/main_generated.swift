@@ -20,6 +20,18 @@ public enum KeyType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 }
 
 
+public enum EntityType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case user = 0
+  case node = 1
+
+  public static var max: EntityType { return .node }
+  public static var min: EntityType { return .user }
+}
+
+
 ///  Represents cryptographic key information
 public struct CryptoKey: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
@@ -314,6 +326,7 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     case SIGNATURE = 34
     case SIGNATURE_TIMESTAMP = 36
     case CHAIN_PROOFS = 38
+    case ENTITY_TYPE = 40
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -366,7 +379,9 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var SIGNATURE_TIMESTAMP: Int64 { let o = _accessor.offset(VTOFFSET.SIGNATURE_TIMESTAMP.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  Chain binding proofs linking blockchain keys to the same HD wallet
   public var CHAIN_PROOFS: FlatbufferVector<ChainProof> { return _accessor.vector(at: VTOFFSET.CHAIN_PROOFS.v, byteSize: 4) }
-  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
+  ///  Type of entity represented by this profile
+  public var ENTITY_TYPE: EntityType { let o = _accessor.offset(VTOFFSET.ENTITY_TYPE.v); return o == 0 ? .user : EntityType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .user }
+  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
   public static func add(DN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DN, at: VTOFFSET.DN.p) }
   public static func add(LEGAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEGAL_NAME, at: VTOFFSET.LEGAL_NAME.p) }
   public static func add(FAMILY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAMILY_NAME, at: VTOFFSET.FAMILY_NAME.p) }
@@ -385,6 +400,7 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VTOFFSET.SIGNATURE.p) }
   public static func add(SIGNATURE_TIMESTAMP: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGNATURE_TIMESTAMP, def: 0, at: VTOFFSET.SIGNATURE_TIMESTAMP.p) }
   public static func addVectorOf(CHAIN_PROOFS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHAIN_PROOFS, at: VTOFFSET.CHAIN_PROOFS.p) }
+  public static func add(ENTITY_TYPE: EntityType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_TYPE.rawValue, def: 0, at: VTOFFSET.ENTITY_TYPE.p) }
   public static func endEPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEPM(
     _ fbb: inout FlatBufferBuilder,
@@ -405,7 +421,8 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     MULTIFORMAT_ADDRESSVectorOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
     SIGNATUREOffset SIGNATURE: Offset = Offset(),
     SIGNATURE_TIMESTAMP: Int64 = 0,
-    CHAIN_PROOFSVectorOffset CHAIN_PROOFS: Offset = Offset()
+    CHAIN_PROOFSVectorOffset CHAIN_PROOFS: Offset = Offset(),
+    ENTITY_TYPE: EntityType = .user
   ) -> Offset {
     let __start = EPM.startEPM(&fbb)
     EPM.add(DN: DN, &fbb)
@@ -426,6 +443,7 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     EPM.add(SIGNATURE: SIGNATURE, &fbb)
     EPM.add(SIGNATURE_TIMESTAMP: SIGNATURE_TIMESTAMP, &fbb)
     EPM.addVectorOf(CHAIN_PROOFS: CHAIN_PROOFS, &fbb)
+    EPM.add(ENTITY_TYPE: ENTITY_TYPE, &fbb)
     return EPM.endEPM(&fbb, start: __start)
   }
 
@@ -449,6 +467,7 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VTOFFSET.SIGNATURE.p, fieldName: "SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.SIGNATURE_TIMESTAMP.p, fieldName: "SIGNATURE_TIMESTAMP", required: false, type: Int64.self)
     try _v.visit(field: VTOFFSET.CHAIN_PROOFS.p, fieldName: "CHAIN_PROOFS", required: false, type: ForwardOffset<Vector<ForwardOffset<ChainProof>, ChainProof>>.self)
+    try _v.visit(field: VTOFFSET.ENTITY_TYPE.p, fieldName: "ENTITY_TYPE", required: false, type: EntityType.self)
     _v.finish()
   }
 }

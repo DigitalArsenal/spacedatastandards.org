@@ -20,7 +20,7 @@ def create_go_mod(lib_go_path):
 
 go 1.21
 
-require github.com/google/flatbuffers/go v23.3.3+incompatible
+require github.com/google/flatbuffers v25.12.19+incompatible
 """
     go_mod_path = os.path.join(lib_go_path, "go.mod")
     with open(go_mod_path, "w") as f:

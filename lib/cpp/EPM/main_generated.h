@@ -55,6 +55,36 @@ inline const char *EnumNameKeyType(KeyType e) {
   return EnumNamesKeyType()[index];
 }
 
+enum EntityType : int8_t {
+  EntityType_User = 0,
+  EntityType_Node = 1,
+  EntityType_MIN = EntityType_User,
+  EntityType_MAX = EntityType_Node
+};
+
+inline const EntityType (&EnumValuesEntityType())[2] {
+  static const EntityType values[] = {
+    EntityType_User,
+    EntityType_Node
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesEntityType() {
+  static const char * const names[3] = {
+    "User",
+    "Node",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameEntityType(EntityType e) {
+  if (::flatbuffers::IsOutRange(e, EntityType_User, EntityType_Node)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesEntityType()[index];
+}
+
 /// Represents cryptographic key information
 struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CryptoKeyBuilder Builder;
@@ -506,7 +536,8 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MULTIFORMAT_ADDRESS = 32,
     VT_SIGNATURE = 34,
     VT_SIGNATURE_TIMESTAMP = 36,
-    VT_CHAIN_PROOFS = 38
+    VT_CHAIN_PROOFS = 38,
+    VT_ENTITY_TYPE = 40
   };
   /// Distinguished Name of the entity
   const ::flatbuffers::String *DN() const {
@@ -580,6 +611,10 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<ChainProof>> *CHAIN_PROOFS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ChainProof>> *>(VT_CHAIN_PROOFS);
   }
+  /// Type of entity represented by this profile
+  EntityType ENTITY_TYPE() const {
+    return static_cast<EntityType>(GetField<int8_t>(VT_ENTITY_TYPE, 0));
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -622,6 +657,7 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_CHAIN_PROOFS) &&
            verifier.VerifyVector(CHAIN_PROOFS()) &&
            verifier.VerifyVectorOfTables(CHAIN_PROOFS()) &&
+           VerifyField<int8_t>(verifier, VT_ENTITY_TYPE, 1) &&
            verifier.EndTable();
   }
 };
@@ -684,6 +720,9 @@ struct EPMBuilder {
   void add_CHAIN_PROOFS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ChainProof>>> CHAIN_PROOFS) {
     fbb_.AddOffset(EPM::VT_CHAIN_PROOFS, CHAIN_PROOFS);
   }
+  void add_ENTITY_TYPE(EntityType ENTITY_TYPE) {
+    fbb_.AddElement<int8_t>(EPM::VT_ENTITY_TYPE, static_cast<int8_t>(ENTITY_TYPE), 0);
+  }
   explicit EPMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -714,7 +753,8 @@ inline ::flatbuffers::Offset<EPM> CreateEPM(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MULTIFORMAT_ADDRESS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SIGNATURE = 0,
     int64_t SIGNATURE_TIMESTAMP = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ChainProof>>> CHAIN_PROOFS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ChainProof>>> CHAIN_PROOFS = 0,
+    EntityType ENTITY_TYPE = EntityType_User) {
   EPMBuilder builder_(_fbb);
   builder_.add_SIGNATURE_TIMESTAMP(SIGNATURE_TIMESTAMP);
   builder_.add_CHAIN_PROOFS(CHAIN_PROOFS);
@@ -734,6 +774,7 @@ inline ::flatbuffers::Offset<EPM> CreateEPM(
   builder_.add_FAMILY_NAME(FAMILY_NAME);
   builder_.add_LEGAL_NAME(LEGAL_NAME);
   builder_.add_DN(DN);
+  builder_.add_ENTITY_TYPE(ENTITY_TYPE);
   return builder_.Finish();
 }
 
@@ -756,7 +797,8 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MULTIFORMAT_ADDRESS = nullptr,
     const char *SIGNATURE = nullptr,
     int64_t SIGNATURE_TIMESTAMP = 0,
-    const std::vector<::flatbuffers::Offset<ChainProof>> *CHAIN_PROOFS = nullptr) {
+    const std::vector<::flatbuffers::Offset<ChainProof>> *CHAIN_PROOFS = nullptr,
+    EntityType ENTITY_TYPE = EntityType_User) {
   auto DN__ = DN ? _fbb.CreateString(DN) : 0;
   auto LEGAL_NAME__ = LEGAL_NAME ? _fbb.CreateString(LEGAL_NAME) : 0;
   auto FAMILY_NAME__ = FAMILY_NAME ? _fbb.CreateString(FAMILY_NAME) : 0;
@@ -792,7 +834,8 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
       MULTIFORMAT_ADDRESS__,
       SIGNATURE__,
       SIGNATURE_TIMESTAMP,
-      CHAIN_PROOFS__);
+      CHAIN_PROOFS__,
+      ENTITY_TYPE);
 }
 
 inline const EPM *GetEPM(const void *buf) {

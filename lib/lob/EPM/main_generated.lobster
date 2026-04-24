@@ -5,6 +5,10 @@ enum KeyType:
     KeyType_Signing = 0
     KeyType_Encryption = 1
 
+enum EntityType:
+    EntityType_User = 0
+    EntityType_Node = 1
+
 class CryptoKey
 
 class Address
@@ -243,13 +247,16 @@ class EPM : flatbuffers.handle
         return ChainProof { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 38) + i * 4) }
     def CHAIN_PROOFS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 38)
+    /// Type of entity represented by this profile
+    def ENTITY_TYPE() -> EntityType:
+        return EntityType(flatbuffers.field_int8(buf_, pos_, 40, 0))
 
 def GetRootAsEPM(buf:string): return EPM { buf, flatbuffers.indirect(buf, 0) }
 
 struct EPMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(18)
+        b_.StartObject(19)
         return this
     def add_DN(DN:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, DN)
@@ -304,6 +311,9 @@ struct EPMBuilder:
         return this
     def add_CHAIN_PROOFS(CHAIN_PROOFS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(17, CHAIN_PROOFS)
+        return this
+    def add_ENTITY_TYPE(ENTITY_TYPE:EntityType):
+        b_.PrependInt8Slot(18, ENTITY_TYPE, 0)
         return this
     def end():
         return b_.EndObject()

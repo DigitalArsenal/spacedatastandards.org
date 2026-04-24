@@ -139,6 +139,10 @@ public final class EPM extends com.google.flatbuffers.Table {
   public int CHAIN_PROOFSLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
   public ChainProof.Vector chainProofsVector() { return chainProofsVector(new ChainProof.Vector()); }
   public ChainProof.Vector chainProofsVector(ChainProof.Vector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Type of entity represented by this profile
+   */
+  public byte ENTITY_TYPE() { int o = __offset(40); return o != 0 ? bb.get(o + bb_pos) : 0; }
 
   public static int createEPM(FlatBufferBuilder builder,
       int DNOffset,
@@ -158,8 +162,9 @@ public final class EPM extends com.google.flatbuffers.Table {
       int MULTIFORMAT_ADDRESSOffset,
       int SIGNATUREOffset,
       long SIGNATURE_TIMESTAMP,
-      int CHAIN_PROOFSOffset) {
-    builder.startTable(18);
+      int CHAIN_PROOFSOffset,
+      byte ENTITY_TYPE) {
+    builder.startTable(19);
     EPM.addSignatureTimestamp(builder, SIGNATURE_TIMESTAMP);
     EPM.addChainProofs(builder, CHAIN_PROOFSOffset);
     EPM.addSignature(builder, SIGNATUREOffset);
@@ -178,10 +183,11 @@ public final class EPM extends com.google.flatbuffers.Table {
     EPM.addFamilyName(builder, FAMILY_NAMEOffset);
     EPM.addLegalName(builder, LEGAL_NAMEOffset);
     EPM.addDn(builder, DNOffset);
+    EPM.addEntityType(builder, ENTITY_TYPE);
     return EPM.endEPM(builder);
   }
 
-  public static void startEPM(FlatBufferBuilder builder) { builder.startTable(18); }
+  public static void startEPM(FlatBufferBuilder builder) { builder.startTable(19); }
   public static void addDn(FlatBufferBuilder builder, int DNOffset) { builder.addOffset(0, DNOffset, 0); }
   public static void addLegalName(FlatBufferBuilder builder, int LEGAL_NAMEOffset) { builder.addOffset(1, LEGAL_NAMEOffset, 0); }
   public static void addFamilyName(FlatBufferBuilder builder, int FAMILY_NAMEOffset) { builder.addOffset(2, FAMILY_NAMEOffset, 0); }
@@ -208,6 +214,7 @@ public final class EPM extends com.google.flatbuffers.Table {
   public static void addChainProofs(FlatBufferBuilder builder, int CHAIN_PROOFSOffset) { builder.addOffset(17, CHAIN_PROOFSOffset, 0); }
   public static int createChainProofsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startChainProofsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addEntityType(FlatBufferBuilder builder, byte ENTITY_TYPE) { builder.addByte(18, ENTITY_TYPE, 0); }
   public static int endEPM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

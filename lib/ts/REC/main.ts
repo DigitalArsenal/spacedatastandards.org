@@ -223,6 +223,7 @@ export * from './ENGINE_TYPE.js';
 export * from './ENGINE.js';
 export * from './EngineType.js';
 export * from './entityKind.js';
+export * from './EntityType.js';
 export * from './EntryFunction.js';
 export * from './EnumeratedArgumentType.js';
 export * from './EnumeratedParameterType.js';

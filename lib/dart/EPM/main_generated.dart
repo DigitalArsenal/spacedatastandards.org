@@ -40,6 +40,40 @@ class _KeyTypeReader extends fb.Reader<KeyType> {
       KeyType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+enum EntityType {
+  User(0),
+  Node(1);
+
+  final int value;
+  const EntityType(this.value);
+
+  factory EntityType.fromValue(int value) {
+    switch (value) {
+      case 0: return EntityType.User;
+      case 1: return EntityType.Node;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static EntityType? _createOrNull(int? value) =>
+      value == null ? null : EntityType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<EntityType> reader = _EntityTypeReader();
+}
+
+class _EntityTypeReader extends fb.Reader<EntityType> {
+  const _EntityTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  EntityType read(fb.BufferContext bc, int offset) =>
+      EntityType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Represents cryptographic key information
 class CryptoKey {
   CryptoKey._(this._bc, this._bcOffset);
@@ -559,10 +593,13 @@ class EPM {
   ///  Chain binding proofs linking blockchain keys to the same HD wallet
   List<ChainProof>? get CHAIN_PROOFS => const fb.ListReader<ChainProof>(ChainProof.reader).vTableGetNullable(_bc, _bcOffset, 38);
   List<ChainProof>? get chainProofs => CHAIN_PROOFS;
+  ///  Type of entity represented by this profile
+  EntityType get ENTITY_TYPE => EntityType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 40, 0));
+  EntityType get entityType => ENTITY_TYPE;
 
   @override
   String toString() {
-    return 'EPM{DN: ${DN}, legalName: ${legalName}, familyName: ${familyName}, givenName: ${givenName}, additionalName: ${additionalName}, honorificPrefix: ${honorificPrefix}, honorificSuffix: ${honorificSuffix}, jobTitle: ${jobTitle}, OCCUPATION: ${OCCUPATION}, ADDRESS: ${ADDRESS}, alternateNames: ${alternateNames}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, multiformatAddress: ${multiformatAddress}, SIGNATURE: ${SIGNATURE}, signatureTimestamp: ${signatureTimestamp}, chainProofs: ${chainProofs}}';
+    return 'EPM{DN: ${DN}, legalName: ${legalName}, familyName: ${familyName}, givenName: ${givenName}, additionalName: ${additionalName}, honorificPrefix: ${honorificPrefix}, honorificSuffix: ${honorificSuffix}, jobTitle: ${jobTitle}, OCCUPATION: ${OCCUPATION}, ADDRESS: ${ADDRESS}, alternateNames: ${alternateNames}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, multiformatAddress: ${multiformatAddress}, SIGNATURE: ${SIGNATURE}, signatureTimestamp: ${signatureTimestamp}, chainProofs: ${chainProofs}, entityType: ${entityType}}';
   }
 }
 
@@ -580,7 +617,7 @@ class EPMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(18);
+    fbBuilder.startTable(19);
   }
 
   int addDnOffset(int? offset) {
@@ -655,6 +692,10 @@ class EPMBuilder {
     fbBuilder.addOffset(17, offset);
     return fbBuilder.offset;
   }
+  int addEntityType(EntityType? ENTITY_TYPE) {
+    fbBuilder.addInt8(18, ENTITY_TYPE?.value);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -680,6 +721,7 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
   final String? _SIGNATURE;
   final int? _SIGNATURE_TIMESTAMP;
   final List<ChainProofObjectBuilder>? _CHAIN_PROOFS;
+  final EntityType? _ENTITY_TYPE;
 
   EPMObjectBuilder({
     String? DN,
@@ -711,6 +753,8 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
     int? signatureTimestamp,
     List<ChainProofObjectBuilder>? CHAIN_PROOFS,
     List<ChainProofObjectBuilder>? chainProofs,
+    EntityType? ENTITY_TYPE,
+    EntityType? entityType,
   })
       : _DN = DN,
         _LEGAL_NAME = legalName ?? LEGAL_NAME,
@@ -729,7 +773,8 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
         _MULTIFORMAT_ADDRESS = multiformatAddress ?? MULTIFORMAT_ADDRESS,
         _SIGNATURE = SIGNATURE,
         _SIGNATURE_TIMESTAMP = signatureTimestamp ?? SIGNATURE_TIMESTAMP,
-        _CHAIN_PROOFS = chainProofs ?? CHAIN_PROOFS;
+        _CHAIN_PROOFS = chainProofs ?? CHAIN_PROOFS,
+        _ENTITY_TYPE = entityType ?? ENTITY_TYPE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -767,7 +812,7 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SIGNATURE!);
     final int? CHAIN_PROOFSOffset = _CHAIN_PROOFS == null ? null
         : fbBuilder.writeList(_CHAIN_PROOFS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(18);
+    fbBuilder.startTable(19);
     fbBuilder.addOffset(0, DNOffset);
     fbBuilder.addOffset(1, LEGAL_NAMEOffset);
     fbBuilder.addOffset(2, FAMILY_NAMEOffset);
@@ -786,6 +831,7 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(15, SIGNATUREOffset);
     fbBuilder.addInt64(16, _SIGNATURE_TIMESTAMP);
     fbBuilder.addOffset(17, CHAIN_PROOFSOffset);
+    fbBuilder.addInt8(18, _ENTITY_TYPE?.value);
     return fbBuilder.endTable();
   }
 

@@ -279,6 +279,14 @@ class EPM : Table() {
         get() {
             val o = __offset(38); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Type of entity represented by this profile
+     */
+    val entityType : Byte
+        get() {
+            val o = __offset(40)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEPM(_bb: ByteBuffer): EPM = getRootAsEPM(_bb, EPM())
@@ -287,8 +295,8 @@ class EPM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EPMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EPM")
-        fun createEPM(builder: FlatBufferBuilder, dnOffset: Int, legalNameOffset: Int, familyNameOffset: Int, givenNameOffset: Int, additionalNameOffset: Int, honorificPrefixOffset: Int, honorificSuffixOffset: Int, jobTitleOffset: Int, occupationOffset: Int, addressOffset: Int, alternateNamesOffset: Int, emailOffset: Int, telephoneOffset: Int, keysOffset: Int, multiformatAddressOffset: Int, signatureOffset: Int, signatureTimestamp: Long, chainProofsOffset: Int) : Int {
-            builder.startTable(18)
+        fun createEPM(builder: FlatBufferBuilder, dnOffset: Int, legalNameOffset: Int, familyNameOffset: Int, givenNameOffset: Int, additionalNameOffset: Int, honorificPrefixOffset: Int, honorificSuffixOffset: Int, jobTitleOffset: Int, occupationOffset: Int, addressOffset: Int, alternateNamesOffset: Int, emailOffset: Int, telephoneOffset: Int, keysOffset: Int, multiformatAddressOffset: Int, signatureOffset: Int, signatureTimestamp: Long, chainProofsOffset: Int, entityType: Byte) : Int {
+            builder.startTable(19)
             addSIGNATURETIMESTAMP(builder, signatureTimestamp)
             addCHAINPROOFS(builder, chainProofsOffset)
             addSIGNATURE(builder, signatureOffset)
@@ -307,9 +315,10 @@ class EPM : Table() {
             addFAMILYNAME(builder, familyNameOffset)
             addLEGALNAME(builder, legalNameOffset)
             addDN(builder, dnOffset)
+            addENTITYTYPE(builder, entityType)
             return endEPM(builder)
         }
-        fun startEPM(builder: FlatBufferBuilder) = builder.startTable(18)
+        fun startEPM(builder: FlatBufferBuilder) = builder.startTable(19)
         fun addDN(builder: FlatBufferBuilder, dn: Int) = builder.addOffset(0, dn, 0)
         fun addLEGALNAME(builder: FlatBufferBuilder, legalName: Int) = builder.addOffset(1, legalName, 0)
         fun addFAMILYNAME(builder: FlatBufferBuilder, familyName: Int) = builder.addOffset(2, familyName, 0)
@@ -360,6 +369,7 @@ class EPM : Table() {
             return builder.endVector()
         }
         fun startChainProofsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addENTITYTYPE(builder: FlatBufferBuilder, entityType: Byte) = builder.addByte(18, entityType, 0)
         fun endEPM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

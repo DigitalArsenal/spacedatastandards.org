@@ -223,22 +223,32 @@ class EPM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Type of entity represented by this profile
+    /**
+     * @return sbyte
+     */
+    public function getENTITY_TYPE()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \EntityType::User;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startEPM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(18);
+        $builder->StartObject(19);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EPM
      */
-    public static function createEPM(FlatBufferBuilder $builder, $DN, $LEGAL_NAME, $FAMILY_NAME, $GIVEN_NAME, $ADDITIONAL_NAME, $HONORIFIC_PREFIX, $HONORIFIC_SUFFIX, $JOB_TITLE, $OCCUPATION, $ADDRESS, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS, $SIGNATURE, $SIGNATURE_TIMESTAMP, $CHAIN_PROOFS)
+    public static function createEPM(FlatBufferBuilder $builder, $DN, $LEGAL_NAME, $FAMILY_NAME, $GIVEN_NAME, $ADDITIONAL_NAME, $HONORIFIC_PREFIX, $HONORIFIC_SUFFIX, $JOB_TITLE, $OCCUPATION, $ADDRESS, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS, $SIGNATURE, $SIGNATURE_TIMESTAMP, $CHAIN_PROOFS, $ENTITY_TYPE)
     {
-        $builder->startObject(18);
+        $builder->startObject(19);
         self::addDN($builder, $DN);
         self::addLEGAL_NAME($builder, $LEGAL_NAME);
         self::addFAMILY_NAME($builder, $FAMILY_NAME);
@@ -257,6 +267,7 @@ class EPM extends Table
         self::addSIGNATURE($builder, $SIGNATURE);
         self::addSIGNATURE_TIMESTAMP($builder, $SIGNATURE_TIMESTAMP);
         self::addCHAIN_PROOFS($builder, $CHAIN_PROOFS);
+        self::addENTITY_TYPE($builder, $ENTITY_TYPE);
         $o = $builder->endObject();
         return $o;
     }
@@ -535,6 +546,16 @@ class EPM extends Table
     public static function startCHAIN_PROOFSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addENTITY_TYPE(FlatBufferBuilder $builder, $ENTITY_TYPE)
+    {
+        $builder->addSbyteX(18, $ENTITY_TYPE, 0);
     }
 
     /**

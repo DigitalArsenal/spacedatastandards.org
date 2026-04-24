@@ -87,6 +87,90 @@ impl<'a> ::flatbuffers::Verifiable for KeyType {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for KeyType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ENTITY_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ENTITY_TYPE: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ENTITY_TYPE: [EntityType; 2] = [
+  EntityType::User,
+  EntityType::Node,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct EntityType(pub i8);
+#[allow(non_upper_case_globals)]
+impl EntityType {
+  pub const User: Self = Self(0);
+  pub const Node: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::User,
+    Self::Node,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::User => Some("User"),
+      Self::Node => Some("Node"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for EntityType {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for EntityType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for EntityType {
+    type Output = EntityType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for EntityType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for EntityType {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for EntityType {}
 pub enum CryptoKeyOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1015,6 +1099,7 @@ impl<'a> EPM<'a> {
   pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 34;
   pub const VT_SIGNATURE_TIMESTAMP: ::flatbuffers::VOffsetT = 36;
   pub const VT_CHAIN_PROOFS: ::flatbuffers::VOffsetT = 38;
+  pub const VT_ENTITY_TYPE: ::flatbuffers::VOffsetT = 40;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1044,6 +1129,7 @@ impl<'a> EPM<'a> {
     if let Some(x) = args.FAMILY_NAME { builder.add_FAMILY_NAME(x); }
     if let Some(x) = args.LEGAL_NAME { builder.add_LEGAL_NAME(x); }
     if let Some(x) = args.DN { builder.add_DN(x); }
+    builder.add_ENTITY_TYPE(args.ENTITY_TYPE);
     builder.finish()
   }
 
@@ -1100,6 +1186,7 @@ impl<'a> EPM<'a> {
     let CHAIN_PROOFS = self.CHAIN_PROOFS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let ENTITY_TYPE = self.ENTITY_TYPE();
     EPMT {
       DN,
       LEGAL_NAME,
@@ -1119,6 +1206,7 @@ impl<'a> EPM<'a> {
       SIGNATURE,
       SIGNATURE_TIMESTAMP,
       CHAIN_PROOFS,
+      ENTITY_TYPE,
     }
   }
 
@@ -1266,6 +1354,14 @@ impl<'a> EPM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ChainProof>>>>(EPM::VT_CHAIN_PROOFS, None)}
   }
+  /// Type of entity represented by this profile
+  #[inline]
+  pub fn ENTITY_TYPE(&self) -> EntityType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<EntityType>(EPM::VT_ENTITY_TYPE, Some(EntityType::User)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for EPM<'_> {
@@ -1292,6 +1388,7 @@ impl ::flatbuffers::Verifiable for EPM<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIGNATURE", Self::VT_SIGNATURE, false)?
      .visit_field::<i64>("SIGNATURE_TIMESTAMP", Self::VT_SIGNATURE_TIMESTAMP, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ChainProof>>>>("CHAIN_PROOFS", Self::VT_CHAIN_PROOFS, false)?
+     .visit_field::<EntityType>("ENTITY_TYPE", Self::VT_ENTITY_TYPE, false)?
      .finish();
     Ok(())
   }
@@ -1315,6 +1412,7 @@ pub struct EPMArgs<'a> {
     pub SIGNATURE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SIGNATURE_TIMESTAMP: i64,
     pub CHAIN_PROOFS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ChainProof<'a>>>>>,
+    pub ENTITY_TYPE: EntityType,
 }
 impl<'a> Default for EPMArgs<'a> {
   #[inline]
@@ -1338,6 +1436,7 @@ impl<'a> Default for EPMArgs<'a> {
       SIGNATURE: None,
       SIGNATURE_TIMESTAMP: 0,
       CHAIN_PROOFS: None,
+      ENTITY_TYPE: EntityType::User,
     }
   }
 }
@@ -1420,6 +1519,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EPMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EPM::VT_CHAIN_PROOFS, CHAIN_PROOFS);
   }
   #[inline]
+  pub fn add_ENTITY_TYPE(&mut self, ENTITY_TYPE: EntityType) {
+    self.fbb_.push_slot::<EntityType>(EPM::VT_ENTITY_TYPE, ENTITY_TYPE, EntityType::User);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EPMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EPMBuilder {
@@ -1455,6 +1558,7 @@ impl ::core::fmt::Debug for EPM<'_> {
       ds.field("SIGNATURE", &self.SIGNATURE());
       ds.field("SIGNATURE_TIMESTAMP", &self.SIGNATURE_TIMESTAMP());
       ds.field("CHAIN_PROOFS", &self.CHAIN_PROOFS());
+      ds.field("ENTITY_TYPE", &self.ENTITY_TYPE());
       ds.finish()
   }
 }
@@ -1479,6 +1583,7 @@ pub struct EPMT {
   pub SIGNATURE: Option<alloc::string::String>,
   pub SIGNATURE_TIMESTAMP: i64,
   pub CHAIN_PROOFS: Option<alloc::vec::Vec<ChainProofT>>,
+  pub ENTITY_TYPE: EntityType,
 }
 impl Default for EPMT {
   fn default() -> Self {
@@ -1501,6 +1606,7 @@ impl Default for EPMT {
       SIGNATURE: None,
       SIGNATURE_TIMESTAMP: 0,
       CHAIN_PROOFS: None,
+      ENTITY_TYPE: EntityType::User,
     }
   }
 }
@@ -1561,6 +1667,7 @@ impl EPMT {
     let CHAIN_PROOFS = self.CHAIN_PROOFS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let ENTITY_TYPE = self.ENTITY_TYPE;
     EPM::create(_fbb, &EPMArgs{
       DN,
       LEGAL_NAME,
@@ -1580,6 +1687,7 @@ impl EPMT {
       SIGNATURE,
       SIGNATURE_TIMESTAMP,
       CHAIN_PROOFS,
+      ENTITY_TYPE,
     })
   }
 }

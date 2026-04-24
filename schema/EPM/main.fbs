@@ -1,9 +1,14 @@
-// Hash: 34c4722ba3c9770f7ca4b9611ee6df2e438198f7e2d23a5b57bec2fe17095e40
-// Version: 1.0.2
+// Hash: 34f31ad6a0518aeead9054b221dd5b1f20cc500a108552dda4914e6486833b6c
+// Version: 1.0.3
 // -----------------------------------END_HEADER
 enum KeyType : byte {
   Signing,
   Encryption
+}
+
+enum EntityType : byte {
+  User,
+  Node
 }
 
 /// Represents cryptographic key information
@@ -98,6 +103,8 @@ table EPM {
   SIGNATURE_TIMESTAMP: int64;
   /// Chain binding proofs linking blockchain keys to the same HD wallet
   CHAIN_PROOFS: [ChainProof];
+  /// Type of entity represented by this profile
+  ENTITY_TYPE: EntityType = User;
 }
 
 root_type EPM;

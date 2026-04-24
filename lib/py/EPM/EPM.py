@@ -239,8 +239,16 @@ class EPM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         return o == 0
 
+    # Type of entity represented by this profile
+    # EPM
+    def ENTITY_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
 def EPMStart(builder):
-    builder.StartObject(18)
+    builder.StartObject(19)
 
 def Start(builder):
     EPMStart(builder)
@@ -401,6 +409,12 @@ def EPMCreateCHAIN_PROOFSVector(builder, data):
 def CreateCHAIN_PROOFSVector(builder, data):
     EPMCreateCHAIN_PROOFSVector(builder, data)
 
+def EPMAddENTITY_TYPE(builder, ENTITY_TYPE):
+    builder.PrependInt8Slot(18, ENTITY_TYPE, 0)
+
+def AddENTITY_TYPE(builder, ENTITY_TYPE):
+    EPMAddENTITY_TYPE(builder, ENTITY_TYPE)
+
 def EPMEnd(builder):
     return builder.EndObject()
 
@@ -438,6 +452,7 @@ class EPMT(object):
         SIGNATURE = None,
         SIGNATURE_TIMESTAMP = 0,
         CHAIN_PROOFS = None,
+        ENTITY_TYPE = 0,
     ):
         self.DN = DN  # type: Optional[str]
         self.LEGAL_NAME = LEGAL_NAME  # type: Optional[str]
@@ -457,6 +472,7 @@ class EPMT(object):
         self.SIGNATURE = SIGNATURE  # type: Optional[str]
         self.SIGNATURE_TIMESTAMP = SIGNATURE_TIMESTAMP  # type: int
         self.CHAIN_PROOFS = CHAIN_PROOFS  # type: Optional[List[ChainProof.ChainProofT]]
+        self.ENTITY_TYPE = ENTITY_TYPE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -518,6 +534,7 @@ class EPMT(object):
                 else:
                     chainProof_ = ChainProof.ChainProofT.InitFromObj(EPM.CHAIN_PROOFS(i))
                     self.CHAIN_PROOFS.append(chainProof_)
+        self.ENTITY_TYPE = EPM.ENTITY_TYPE()
 
     # EPMT
     def Pack(self, builder):
@@ -615,5 +632,6 @@ class EPMT(object):
         EPMAddSIGNATURE_TIMESTAMP(builder, self.SIGNATURE_TIMESTAMP)
         if self.CHAIN_PROOFS is not None:
             EPMAddCHAIN_PROOFS(builder, CHAIN_PROOFS)
+        EPMAddENTITY_TYPE(builder, self.ENTITY_TYPE)
         EPM = EPMEnd(builder)
         return EPM

@@ -5,6 +5,10 @@
       "type" : "string",
       "enum": ["Signing", "Encryption"]
     },
+    "EntityType" : {
+      "type" : "string",
+      "enum": ["User", "Node"]
+    },
     "CryptoKey" : {
       "type" : "object",
       "description" : "Represents cryptographic key information",
@@ -185,6 +189,10 @@
         "CHAIN_PROOFS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ChainProof"},
                 "description" : "Chain binding proofs linking blockchain keys to the same HD wallet"
+              },
+        "ENTITY_TYPE" : {
+                "$ref" : "#/definitions/EntityType",
+                "description" : "Type of entity represented by this profile"
               }
       },
       "additionalProperties" : false

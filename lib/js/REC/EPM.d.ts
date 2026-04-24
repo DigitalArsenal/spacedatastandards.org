@@ -2,6 +2,7 @@ import * as flatbuffers from 'flatbuffers';
 import { Address, AddressT } from './Address.js';
 import { ChainProof, ChainProofT } from './ChainProof.js';
 import { CryptoKey, CryptoKeyT } from './CryptoKey.js';
+import { EntityType } from './EntityType.js';
 /**
  * Entity Profile Message
  */
@@ -102,6 +103,10 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
      */
     CHAIN_PROOFS(index: number, obj?: ChainProof): ChainProof | null;
     chainProofsLength(): number;
+    /**
+     * Type of entity represented by this profile
+     */
+    ENTITY_TYPE(): EntityType;
     static startEPM(builder: flatbuffers.Builder): void;
     static addDn(builder: flatbuffers.Builder, DNOffset: flatbuffers.Offset): void;
     static addLegalName(builder: flatbuffers.Builder, LEGAL_NAMEOffset: flatbuffers.Offset): void;
@@ -129,6 +134,7 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     static addChainProofs(builder: flatbuffers.Builder, CHAIN_PROOFSOffset: flatbuffers.Offset): void;
     static createChainProofsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startChainProofsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addEntityType(builder: flatbuffers.Builder, ENTITY_TYPE: EntityType): void;
     static endEPM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -154,7 +160,8 @@ export declare class EPMT implements flatbuffers.IGeneratedObject {
     SIGNATURE: string | Uint8Array | null;
     SIGNATURE_TIMESTAMP: bigint;
     CHAIN_PROOFS: (ChainProofT)[];
-    constructor(DN?: string | Uint8Array | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ADDRESS?: AddressT | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[], SIGNATURE?: string | Uint8Array | null, SIGNATURE_TIMESTAMP?: bigint, CHAIN_PROOFS?: (ChainProofT)[]);
+    ENTITY_TYPE: EntityType;
+    constructor(DN?: string | Uint8Array | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ADDRESS?: AddressT | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[], SIGNATURE?: string | Uint8Array | null, SIGNATURE_TIMESTAMP?: bigint, CHAIN_PROOFS?: (ChainProofT)[], ENTITY_TYPE?: EntityType);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EPM.d.ts.map

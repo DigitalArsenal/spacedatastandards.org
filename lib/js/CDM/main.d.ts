@@ -13,6 +13,7 @@ export * from './CustomFrameWrapper.js';
 export * from './dataAvailability.js';
 export * from './DataMode.js';
 export * from './DeviceType.js';
+export * from './EntityType.js';
 export * from './EPM.js';
 export * from './FrequencyRange.js';
 export * from './IDM.js';
