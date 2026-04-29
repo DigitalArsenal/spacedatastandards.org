@@ -2,39 +2,24 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
+import initHDWallet from 'hd-wallet-wasm';
+
 /**
  * FlatBuffers field-level encryption support using AES-256-CTR.
- * Uses Web Crypto API (SubtleCrypto) for constant-time, hardware-accelerated encryption.
- * Works in both browser and Node.js (>=15) environments.
+ * Uses hd-wallet-wasm so browser and Node.js callers share the same WASM/OpenSSL path.
  */
 
-// Get the SubtleCrypto instance - works in browser and Node.js
-function getSubtleCrypto(): SubtleCrypto {
-  // Browser or Node.js >= 19 with globalThis.crypto
-  if (typeof globalThis !== 'undefined' && globalThis.crypto?.subtle) {
-    return globalThis.crypto.subtle;
-  }
-  // Node.js >= 15 with webcrypto
-  if (typeof require !== 'undefined') {
-    try {
-      const nodeCrypto = require('crypto');
-      if (nodeCrypto.webcrypto?.subtle) {
-        return nodeCrypto.webcrypto.subtle;
-      }
-    } catch {
-      // Ignore require errors in non-Node environments
-    }
-  }
-  throw new Error('SubtleCrypto not available. Requires browser with Web Crypto API or Node.js >= 15.');
-}
+type HDWalletModule = {
+  aesCtr: {
+    encrypt(key: Uint8Array, plaintext: Uint8Array, iv: Uint8Array): Uint8Array;
+    decrypt(key: Uint8Array, ciphertext: Uint8Array, iv: Uint8Array): Uint8Array;
+  };
+};
 
-// Cache the SubtleCrypto instance
-let _subtle: SubtleCrypto | null = null;
-function subtle(): SubtleCrypto {
-  if (!_subtle) {
-    _subtle = getSubtleCrypto();
-  }
-  return _subtle;
+let _wallet: Promise<HDWalletModule> | null = null;
+function hdWallet(): Promise<HDWalletModule> {
+  if (!_wallet) _wallet = initHDWallet() as Promise<HDWalletModule>;
+  return _wallet;
 }
 
 // Derive a 16-byte counter/IV from encryption context and field offset
@@ -49,47 +34,24 @@ function deriveCounter(ctx: Uint8Array, fieldOffset: number): Uint8Array {
   return counter;
 }
 
-// Import a raw key for AES-CTR
-async function importKey(keyBytes: Uint8Array): Promise<CryptoKey> {
-  return subtle().importKey(
-    'raw',
-    keyBytes,
-    { name: 'AES-CTR' },
-    false,
-    ['encrypt', 'decrypt']
-  );
-}
-
-// Encrypt bytes using AES-256-CTR via SubtleCrypto
+// Encrypt bytes using AES-256-CTR via hd-wallet-wasm
 async function encryptBytes(data: Uint8Array, ctx: Uint8Array, fieldOffset: number): Promise<Uint8Array> {
   if (ctx.length < 32) {
     throw new Error('Encryption context must be at least 32 bytes');
   }
   const keyBytes = ctx.slice(0, 32);
   const counter = deriveCounter(ctx, fieldOffset);
-  const key = await importKey(keyBytes);
-  const encrypted = await subtle().encrypt(
-    { name: 'AES-CTR', counter: counter, length: 64 },
-    key,
-    data
-  );
-  return new Uint8Array(encrypted);
+  return (await hdWallet()).aesCtr.encrypt(keyBytes, data, counter);
 }
 
-// Decrypt bytes using AES-256-CTR via SubtleCrypto
+// Decrypt bytes using AES-256-CTR via hd-wallet-wasm
 async function decryptBytes(data: Uint8Array, ctx: Uint8Array, fieldOffset: number): Promise<Uint8Array> {
   if (ctx.length < 32) {
     throw new Error('Encryption context must be at least 32 bytes');
   }
   const keyBytes = ctx.slice(0, 32);
   const counter = deriveCounter(ctx, fieldOffset);
-  const key = await importKey(keyBytes);
-  const decrypted = await subtle().decrypt(
-    { name: 'AES-CTR', counter: counter, length: 64 },
-    key,
-    data
-  );
-  return new Uint8Array(decrypted);
+  return (await hdWallet()).aesCtr.decrypt(keyBytes, data, counter);
 }
 
 export class FlatbuffersEncryption {
