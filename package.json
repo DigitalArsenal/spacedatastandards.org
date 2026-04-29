@@ -129,7 +129,7 @@
         "buffer": "^6.0.3",
         "esbuild": "^0.20.2",
         "flatbuffers": "^25.9.23",
-        "flatc-wasm": "^26.1.31",
+        "flatc-wasm": "^26.1.32",
         "flatsql": "^0.4.2",
         "hd-wallet-wasm": "^2.0.4",
         "sdn-emception": "1.0.0"
