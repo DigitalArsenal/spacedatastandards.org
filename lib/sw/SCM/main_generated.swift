@@ -20,26 +20,24 @@ public struct SCHEMA_STANDARD: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case key = 4
-    case idl = 6
-    case files = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let key: VOffset = 4
+    static let idl: VOffset = 6
+    static let files: VOffset = 8
   }
 
   ///  Unique identifier for the standard
-  public var key: String? { let o = _accessor.offset(VTOFFSET.key.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var keySegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.key.v) }
+  public var key: String? { let o = _accessor.offset(VT.key); return o == 0 ? nil : _accessor.string(at: o) }
+  public var keySegmentArray: [UInt8]? { return _accessor.getVector(at: VT.key) }
   ///  IDL
-  public var idl: String? { let o = _accessor.offset(VTOFFSET.idl.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var idlSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.idl.v) }
+  public var idl: String? { let o = _accessor.offset(VT.idl); return o == 0 ? nil : _accessor.string(at: o) }
+  public var idlSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.idl) }
   ///  List Of File Paths
-  public var files: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.files.v, byteSize: 4) }
+  public var files: FlatbufferVector<String?> { return _accessor.vector(at: VT.files, byteSize: 4) }
   public static func startSCHEMA_STANDARD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(key: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: key, at: VTOFFSET.key.p) }
-  public static func add(idl: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: idl, at: VTOFFSET.idl.p) }
-  public static func addVectorOf(files: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: files, at: VTOFFSET.files.p) }
+  public static func add(key: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: key, at: VT.key) }
+  public static func add(idl: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: idl, at: VT.idl) }
+  public static func addVectorOf(files: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: files, at: VT.files) }
   public static func endSCHEMA_STANDARD(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCHEMA_STANDARD(
     _ fbb: inout FlatBufferBuilder,
@@ -56,9 +54,9 @@ public struct SCHEMA_STANDARD: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.key.p, fieldName: "key", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.idl.p, fieldName: "idl", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.files.p, fieldName: "files", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.key, fieldName: "key", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.idl, fieldName: "idl", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.files, fieldName: "files", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }
@@ -75,21 +73,19 @@ public struct SCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case version = 4
-    case RECORDS = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let version: VOffset = 4
+    static let RECORDS: VOffset = 6
   }
 
   ///  Version of Space Data Standards
-  public var version: String? { let o = _accessor.offset(VTOFFSET.version.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var versionSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.version.v) }
+  public var version: String? { let o = _accessor.offset(VT.version); return o == 0 ? nil : _accessor.string(at: o) }
+  public var versionSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.version) }
   ///  Standards Dictionary
-  public var RECORDS: FlatbufferVector<SCHEMA_STANDARD> { return _accessor.vector(at: VTOFFSET.RECORDS.v, byteSize: 4) }
+  public var RECORDS: FlatbufferVector<SCHEMA_STANDARD> { return _accessor.vector(at: VT.RECORDS, byteSize: 4) }
   public static func startSCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(version: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: version, at: VTOFFSET.version.p) }
-  public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VTOFFSET.RECORDS.p) }
+  public static func add(version: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: version, at: VT.version) }
+  public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VT.RECORDS) }
   public static func endSCM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCM(
     _ fbb: inout FlatBufferBuilder,
@@ -104,8 +100,8 @@ public struct SCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.version.p, fieldName: "version", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RECORDS.p, fieldName: "RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCHEMA_STANDARD>, SCHEMA_STANDARD>>.self)
+    try _v.visit(field: VT.version, fieldName: "version", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RECORDS, fieldName: "RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCHEMA_STANDARD>, SCHEMA_STANDARD>>.self)
     _v.finish()
   }
 }

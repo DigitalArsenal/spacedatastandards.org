@@ -83,51 +83,49 @@ public struct ENV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ATMOSPHERE = 4
-    case WEATHER = 6
-    case TIME_UTC = 8
-    case LATITUDE = 10
-    case LONGITUDE = 12
-    case SUN_AZIMUTH = 14
-    case SUN_ELEVATION = 16
-    case MOON_PHASE = 18
-    case ILLUMINATION = 20
-    case MAGNETIC_DECLINATION = 22
-    case MAGNETIC_INCLINATION = 24
-    case RESERVED = 26
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ATMOSPHERE: VOffset = 4
+    static let WEATHER: VOffset = 6
+    static let TIME_UTC: VOffset = 8
+    static let LATITUDE: VOffset = 10
+    static let LONGITUDE: VOffset = 12
+    static let SUN_AZIMUTH: VOffset = 14
+    static let SUN_ELEVATION: VOffset = 16
+    static let MOON_PHASE: VOffset = 18
+    static let ILLUMINATION: VOffset = 20
+    static let MAGNETIC_DECLINATION: VOffset = 22
+    static let MAGNETIC_INCLINATION: VOffset = 24
+    static let RESERVED: VOffset = 26
   }
 
-  public var ATMOSPHERE: String? { let o = _accessor.offset(VTOFFSET.ATMOSPHERE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ATMOSPHERESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ATMOSPHERE.v) }
-  public var WEATHER: String? { let o = _accessor.offset(VTOFFSET.WEATHER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var WEATHERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.WEATHER.v) }
-  public var TIME_UTC: Double { let o = _accessor.offset(VTOFFSET.TIME_UTC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SUN_AZIMUTH: Float32 { let o = _accessor.offset(VTOFFSET.SUN_AZIMUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var SUN_ELEVATION: Float32 { let o = _accessor.offset(VTOFFSET.SUN_ELEVATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var MOON_PHASE: Float32 { let o = _accessor.offset(VTOFFSET.MOON_PHASE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var ILLUMINATION: Float32 { let o = _accessor.offset(VTOFFSET.ILLUMINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var MAGNETIC_DECLINATION: Float32 { let o = _accessor.offset(VTOFFSET.MAGNETIC_DECLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var MAGNETIC_INCLINATION: Float32 { let o = _accessor.offset(VTOFFSET.MAGNETIC_INCLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
+  public var ATMOSPHERE: String? { let o = _accessor.offset(VT.ATMOSPHERE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATMOSPHERESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATMOSPHERE) }
+  public var WEATHER: String? { let o = _accessor.offset(VT.WEATHER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var WEATHERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.WEATHER) }
+  public var TIME_UTC: Double { let o = _accessor.offset(VT.TIME_UTC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LATITUDE: Double { let o = _accessor.offset(VT.LATITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE: Double { let o = _accessor.offset(VT.LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SUN_AZIMUTH: Float32 { let o = _accessor.offset(VT.SUN_AZIMUTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var SUN_ELEVATION: Float32 { let o = _accessor.offset(VT.SUN_ELEVATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var MOON_PHASE: Float32 { let o = _accessor.offset(VT.MOON_PHASE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var ILLUMINATION: Float32 { let o = _accessor.offset(VT.ILLUMINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var MAGNETIC_DECLINATION: Float32 { let o = _accessor.offset(VT.MAGNETIC_DECLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var MAGNETIC_INCLINATION: Float32 { let o = _accessor.offset(VT.MAGNETIC_INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
   public static func startENV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
-  public static func add(ATMOSPHERE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERE, at: VTOFFSET.ATMOSPHERE.p) }
-  public static func add(WEATHER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WEATHER, at: VTOFFSET.WEATHER.p) }
-  public static func add(TIME_UTC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_UTC, def: 0.0, at: VTOFFSET.TIME_UTC.p) }
-  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VTOFFSET.LATITUDE.p) }
-  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VTOFFSET.LONGITUDE.p) }
-  public static func add(SUN_AZIMUTH: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUN_AZIMUTH, def: 0.0, at: VTOFFSET.SUN_AZIMUTH.p) }
-  public static func add(SUN_ELEVATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUN_ELEVATION, def: 0.0, at: VTOFFSET.SUN_ELEVATION.p) }
-  public static func add(MOON_PHASE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOON_PHASE, def: 0.0, at: VTOFFSET.MOON_PHASE.p) }
-  public static func add(ILLUMINATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ILLUMINATION, def: 0.0, at: VTOFFSET.ILLUMINATION.p) }
-  public static func add(MAGNETIC_DECLINATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAGNETIC_DECLINATION, def: 0.0, at: VTOFFSET.MAGNETIC_DECLINATION.p) }
-  public static func add(MAGNETIC_INCLINATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAGNETIC_INCLINATION, def: 0.0, at: VTOFFSET.MAGNETIC_INCLINATION.p) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VTOFFSET.RESERVED.p) }
+  public static func add(ATMOSPHERE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERE, at: VT.ATMOSPHERE) }
+  public static func add(WEATHER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WEATHER, at: VT.WEATHER) }
+  public static func add(TIME_UTC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_UTC, def: 0.0, at: VT.TIME_UTC) }
+  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VT.LATITUDE) }
+  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VT.LONGITUDE) }
+  public static func add(SUN_AZIMUTH: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUN_AZIMUTH, def: 0.0, at: VT.SUN_AZIMUTH) }
+  public static func add(SUN_ELEVATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUN_ELEVATION, def: 0.0, at: VT.SUN_ELEVATION) }
+  public static func add(MOON_PHASE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOON_PHASE, def: 0.0, at: VT.MOON_PHASE) }
+  public static func add(ILLUMINATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ILLUMINATION, def: 0.0, at: VT.ILLUMINATION) }
+  public static func add(MAGNETIC_DECLINATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAGNETIC_DECLINATION, def: 0.0, at: VT.MAGNETIC_DECLINATION) }
+  public static func add(MAGNETIC_INCLINATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAGNETIC_INCLINATION, def: 0.0, at: VT.MAGNETIC_INCLINATION) }
+  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
   public static func endENV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createENV(
     _ fbb: inout FlatBufferBuilder,
@@ -162,18 +160,18 @@ public struct ENV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ATMOSPHERE.p, fieldName: "ATMOSPHERE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.WEATHER.p, fieldName: "WEATHER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TIME_UTC.p, fieldName: "TIME_UTC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LATITUDE.p, fieldName: "LATITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LONGITUDE.p, fieldName: "LONGITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SUN_AZIMUTH.p, fieldName: "SUN_AZIMUTH", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.SUN_ELEVATION.p, fieldName: "SUN_ELEVATION", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.MOON_PHASE.p, fieldName: "MOON_PHASE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.ILLUMINATION.p, fieldName: "ILLUMINATION", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.MAGNETIC_DECLINATION.p, fieldName: "MAGNETIC_DECLINATION", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.MAGNETIC_INCLINATION.p, fieldName: "MAGNETIC_INCLINATION", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.ATMOSPHERE, fieldName: "ATMOSPHERE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.WEATHER, fieldName: "WEATHER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_UTC, fieldName: "TIME_UTC", required: false, type: Double.self)
+    try _v.visit(field: VT.LATITUDE, fieldName: "LATITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE, fieldName: "LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.SUN_AZIMUTH, fieldName: "SUN_AZIMUTH", required: false, type: Float32.self)
+    try _v.visit(field: VT.SUN_ELEVATION, fieldName: "SUN_ELEVATION", required: false, type: Float32.self)
+    try _v.visit(field: VT.MOON_PHASE, fieldName: "MOON_PHASE", required: false, type: Float32.self)
+    try _v.visit(field: VT.ILLUMINATION, fieldName: "ILLUMINATION", required: false, type: Float32.self)
+    try _v.visit(field: VT.MAGNETIC_DECLINATION, fieldName: "MAGNETIC_DECLINATION", required: false, type: Float32.self)
+    try _v.visit(field: VT.MAGNETIC_INCLINATION, fieldName: "MAGNETIC_INCLINATION", required: false, type: Float32.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

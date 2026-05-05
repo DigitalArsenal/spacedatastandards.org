@@ -20,356 +20,354 @@ public struct CRM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case CLASSIFICATION = 6
-    case TYPE = 8
-    case ID_PLAN = 10
-    case PLAN_INDEX = 12
-    case TASK_ID = 14
-    case DWELL_ID = 16
-    case EXTERNAL_ID = 18
-    case ID_SENSOR = 20
-    case ORIG_SENSOR_ID = 22
-    case OB_TYPE = 24
-    case PRIORITY = 26
-    case TASK_CATEGORY = 28
-    case SUFFIX = 30
-    case UCT_FOLLOW_UP = 32
-    case START_TIME = 34
-    case END_TIME = 36
-    case NORAD_CAT_ID = 38
-    case ORIG_OBJECT_ID = 40
-    case TASK_GROUP = 42
-    case IRON = 44
-    case ORBIT_REGIME = 46
-    case TARGET_SIZE = 48
-    case RCS_MIN = 50
-    case RCS = 52
-    case RCS_MAX = 54
-    case FREQ_MIN = 56
-    case FREQ = 58
-    case FREQ_MAX = 60
-    case POLARIZATION = 62
-    case VIS_MAG_MIN = 64
-    case VIS_MAG = 66
-    case VIS_MAG_MAX = 68
-    case SPECTRAL_MODEL = 70
-    case REFLECTANCE = 72
-    case IRRADIANCE = 74
-    case NUM_FRAMES = 76
-    case FRAME_RATE = 78
-    case INTEGRATION_TIME = 80
-    case NUM_TRACKS = 82
-    case NUM_OBS = 84
-    case DURATION = 86
-    case SRCH_PATTERN = 88
-    case SCENARIO = 90
-    case ID_ELSET = 92
-    case ID_MANIFOLD = 94
-    case ID_STATE_VECTOR = 96
-    case ES_ID = 98
-    case EPOCH = 100
-    case SEMI_MAJOR_AXIS = 102
-    case ECCENTRICITY = 104
-    case INCLINATION = 106
-    case RAAN = 108
-    case ARG_OF_PERIGEE = 110
-    case MEAN_ANOMALY = 112
-    case RA = 114
-    case DEC = 116
-    case AZ = 118
-    case EL = 120
-    case RANGE = 122
-    case EXTENT_AZ = 124
-    case EXTENT_EL = 126
-    case EXTENT_RANGE = 128
-    case LAT = 130
-    case LON = 132
-    case ALT = 134
-    case STOP_LAT = 136
-    case STOP_LON = 138
-    case STOP_ALT = 140
-    case SRCH_INC = 142
-    case X_ANGLE = 144
-    case Y_ANGLE = 146
-    case ORIENT_ANGLE = 148
-    case CUSTOMER = 150
-    case NOTES = 152
-    case SOURCE = 154
-    case ORIGIN = 156
-    case DATA_MODE = 158
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let CLASSIFICATION: VOffset = 6
+    static let TYPE: VOffset = 8
+    static let ID_PLAN: VOffset = 10
+    static let PLAN_INDEX: VOffset = 12
+    static let TASK_ID: VOffset = 14
+    static let DWELL_ID: VOffset = 16
+    static let EXTERNAL_ID: VOffset = 18
+    static let ID_SENSOR: VOffset = 20
+    static let ORIG_SENSOR_ID: VOffset = 22
+    static let OB_TYPE: VOffset = 24
+    static let PRIORITY: VOffset = 26
+    static let TASK_CATEGORY: VOffset = 28
+    static let SUFFIX: VOffset = 30
+    static let UCT_FOLLOW_UP: VOffset = 32
+    static let START_TIME: VOffset = 34
+    static let END_TIME: VOffset = 36
+    static let NORAD_CAT_ID: VOffset = 38
+    static let ORIG_OBJECT_ID: VOffset = 40
+    static let TASK_GROUP: VOffset = 42
+    static let IRON: VOffset = 44
+    static let ORBIT_REGIME: VOffset = 46
+    static let TARGET_SIZE: VOffset = 48
+    static let RCS_MIN: VOffset = 50
+    static let RCS: VOffset = 52
+    static let RCS_MAX: VOffset = 54
+    static let FREQ_MIN: VOffset = 56
+    static let FREQ: VOffset = 58
+    static let FREQ_MAX: VOffset = 60
+    static let POLARIZATION: VOffset = 62
+    static let VIS_MAG_MIN: VOffset = 64
+    static let VIS_MAG: VOffset = 66
+    static let VIS_MAG_MAX: VOffset = 68
+    static let SPECTRAL_MODEL: VOffset = 70
+    static let REFLECTANCE: VOffset = 72
+    static let IRRADIANCE: VOffset = 74
+    static let NUM_FRAMES: VOffset = 76
+    static let FRAME_RATE: VOffset = 78
+    static let INTEGRATION_TIME: VOffset = 80
+    static let NUM_TRACKS: VOffset = 82
+    static let NUM_OBS: VOffset = 84
+    static let DURATION: VOffset = 86
+    static let SRCH_PATTERN: VOffset = 88
+    static let SCENARIO: VOffset = 90
+    static let ID_ELSET: VOffset = 92
+    static let ID_MANIFOLD: VOffset = 94
+    static let ID_STATE_VECTOR: VOffset = 96
+    static let ES_ID: VOffset = 98
+    static let EPOCH: VOffset = 100
+    static let SEMI_MAJOR_AXIS: VOffset = 102
+    static let ECCENTRICITY: VOffset = 104
+    static let INCLINATION: VOffset = 106
+    static let RAAN: VOffset = 108
+    static let ARG_OF_PERIGEE: VOffset = 110
+    static let MEAN_ANOMALY: VOffset = 112
+    static let RA: VOffset = 114
+    static let DEC: VOffset = 116
+    static let AZ: VOffset = 118
+    static let EL: VOffset = 120
+    static let RANGE: VOffset = 122
+    static let EXTENT_AZ: VOffset = 124
+    static let EXTENT_EL: VOffset = 126
+    static let EXTENT_RANGE: VOffset = 128
+    static let LAT: VOffset = 130
+    static let LON: VOffset = 132
+    static let ALT: VOffset = 134
+    static let STOP_LAT: VOffset = 136
+    static let STOP_LON: VOffset = 138
+    static let STOP_ALT: VOffset = 140
+    static let SRCH_INC: VOffset = 142
+    static let X_ANGLE: VOffset = 144
+    static let Y_ANGLE: VOffset = 146
+    static let ORIENT_ANGLE: VOffset = 148
+    static let CUSTOMER: VOffset = 150
+    static let NOTES: VOffset = 152
+    static let SOURCE: VOffset = 154
+    static let ORIGIN: VOffset = 156
+    static let DATA_MODE: VOffset = 158
   }
 
   ///  Unique identifier of the record, auto-generated by the system.
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Classification marking of the data in IC/CAPCO Portion-marked format.
-  public var CLASSIFICATION: String? { let o = _accessor.offset(VTOFFSET.CLASSIFICATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLASSIFICATION.v) }
+  public var CLASSIFICATION: String? { let o = _accessor.offset(VT.CLASSIFICATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION) }
   ///  The type of this collect or contact request.
-  public var TYPE: String? { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE.v) }
+  public var TYPE: String? { let o = _accessor.offset(VT.TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TYPE) }
   ///  Unique identifier of the parent plan or schedule associated with this request.
-  public var ID_PLAN: String? { let o = _accessor.offset(VTOFFSET.ID_PLAN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_PLANSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_PLAN.v) }
+  public var ID_PLAN: String? { let o = _accessor.offset(VT.ID_PLAN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_PLANSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_PLAN) }
   ///  Index number for records within a collection plan or schedule.
-  public var PLAN_INDEX: Int32 { let o = _accessor.offset(VTOFFSET.PLAN_INDEX.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var PLAN_INDEX: Int32 { let o = _accessor.offset(VT.PLAN_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Task ID associated with this request.
-  public var TASK_ID: String? { let o = _accessor.offset(VTOFFSET.TASK_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TASK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TASK_ID.v) }
+  public var TASK_ID: String? { let o = _accessor.offset(VT.TASK_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TASK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TASK_ID) }
   ///  The dwell ID associated with this request.
-  public var DWELL_ID: String? { let o = _accessor.offset(VTOFFSET.DWELL_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DWELL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DWELL_ID.v) }
+  public var DWELL_ID: String? { let o = _accessor.offset(VT.DWELL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DWELL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DWELL_ID) }
   ///  Optional ID from external systems.
-  public var EXTERNAL_ID: String? { let o = _accessor.offset(VTOFFSET.EXTERNAL_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EXTERNAL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXTERNAL_ID.v) }
+  public var EXTERNAL_ID: String? { let o = _accessor.offset(VT.EXTERNAL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXTERNAL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXTERNAL_ID) }
   ///  Unique identifier of the requested/scheduled/planned sensor associated with this request.
-  public var ID_SENSOR: String? { let o = _accessor.offset(VTOFFSET.ID_SENSOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_SENSOR.v) }
+  public var ID_SENSOR: String? { let o = _accessor.offset(VT.ID_SENSOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_SENSOR) }
   ///  Optional identifier provided by the source to indicate the sensor identifier requested/scheduled/planned for this request.
-  public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_SENSOR_ID.v) }
+  public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VT.ORIG_SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_SENSOR_ID) }
   ///  Optional type of observation requested.
-  public var OB_TYPE: String? { let o = _accessor.offset(VTOFFSET.OB_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OB_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_TYPE.v) }
+  public var OB_TYPE: String? { let o = _accessor.offset(VT.OB_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OB_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OB_TYPE) }
   ///  The priority of the collect request.
-  public var PRIORITY: String? { let o = _accessor.offset(VTOFFSET.PRIORITY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PRIORITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PRIORITY.v) }
+  public var PRIORITY: String? { let o = _accessor.offset(VT.PRIORITY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PRIORITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRIORITY) }
   ///  The tasking category associated with this request.
-  public var TASK_CATEGORY: Int32 { let o = _accessor.offset(VTOFFSET.TASK_CATEGORY.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var TASK_CATEGORY: Int32 { let o = _accessor.offset(VT.TASK_CATEGORY); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  The tasking suffix associated with this request.
-  public var SUFFIX: String? { let o = _accessor.offset(VTOFFSET.SUFFIX.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SUFFIXSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SUFFIX.v) }
+  public var SUFFIX: String? { let o = _accessor.offset(VT.SUFFIX); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SUFFIXSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SUFFIX) }
   ///  Boolean indicating that this collect request is UCT follow-up.
-  public var UCT_FOLLOW_UP: Bool { let o = _accessor.offset(VTOFFSET.UCT_FOLLOW_UP.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var UCT_FOLLOW_UP: Bool { let o = _accessor.offset(VT.UCT_FOLLOW_UP); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  The start time of the collect or contact request window, in ISO 8601 UTC format.
-  public var START_TIME: String? { let o = _accessor.offset(VTOFFSET.START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START_TIME.v) }
+  public var START_TIME: String? { let o = _accessor.offset(VT.START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_TIME) }
   ///  The end time of the collect or contact request window, in ISO 8601 UTC format.
-  public var END_TIME: String? { let o = _accessor.offset(VTOFFSET.END_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.END_TIME.v) }
+  public var END_TIME: String? { let o = _accessor.offset(VT.END_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.END_TIME) }
   ///  Satellite/catalog number of the target on-orbit object for this request.
-  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VTOFFSET.NORAD_CAT_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Optional identifier provided by the data source to indicate the target object of this request.
-  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
+  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VT.ORIG_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_OBJECT_ID) }
   ///  The tasking group to which the target object is assigned.
-  public var TASK_GROUP: String? { let o = _accessor.offset(VTOFFSET.TASK_GROUP.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TASK_GROUPSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TASK_GROUP.v) }
+  public var TASK_GROUP: String? { let o = _accessor.offset(VT.TASK_GROUP); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TASK_GROUPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TASK_GROUP) }
   ///  Inter-Range Operations Number.
-  public var IRON: Int32 { let o = _accessor.offset(VTOFFSET.IRON.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var IRON: Int32 { let o = _accessor.offset(VT.IRON); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  The orbit regime of the target.
-  public var ORBIT_REGIME: String? { let o = _accessor.offset(VTOFFSET.ORBIT_REGIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORBIT_REGIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORBIT_REGIME.v) }
+  public var ORBIT_REGIME: String? { let o = _accessor.offset(VT.ORBIT_REGIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORBIT_REGIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORBIT_REGIME) }
   ///  The minimum object (diameter) size, in meters, to be reported.
-  public var TARGET_SIZE: Double { let o = _accessor.offset(VTOFFSET.TARGET_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGET_SIZE: Double { let o = _accessor.offset(VT.TARGET_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The minimum Radar Cross-Section of the target, in m^2.
-  public var RCS_MIN: Double { let o = _accessor.offset(VTOFFSET.RCS_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RCS_MIN: Double { let o = _accessor.offset(VT.RCS_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The Radar Cross-Section of the target, in m^2.
-  public var RCS: Double { let o = _accessor.offset(VTOFFSET.RCS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RCS: Double { let o = _accessor.offset(VT.RCS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The maximum Radar Cross-Section of the target, in m^2.
-  public var RCS_MAX: Double { let o = _accessor.offset(VTOFFSET.RCS_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RCS_MAX: Double { let o = _accessor.offset(VT.RCS_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The minimum frequency of interest, in MHz.
-  public var FREQ_MIN: Double { let o = _accessor.offset(VTOFFSET.FREQ_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FREQ_MIN: Double { let o = _accessor.offset(VT.FREQ_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The estimated or expected emission frequency of the target, in MHz.
-  public var FREQ: Double { let o = _accessor.offset(VTOFFSET.FREQ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FREQ: Double { let o = _accessor.offset(VT.FREQ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The maximum frequency of interest, in MHz.
-  public var FREQ_MAX: Double { let o = _accessor.offset(VTOFFSET.FREQ_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FREQ_MAX: Double { let o = _accessor.offset(VT.FREQ_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The RF polarization.
-  public var POLARIZATION: String? { let o = _accessor.offset(VTOFFSET.POLARIZATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var POLARIZATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POLARIZATION.v) }
+  public var POLARIZATION: String? { let o = _accessor.offset(VT.POLARIZATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var POLARIZATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.POLARIZATION) }
   ///  The minimum estimated or expected visual magnitude of the target, in Magnitudes (M).
-  public var VIS_MAG_MIN: Double { let o = _accessor.offset(VTOFFSET.VIS_MAG_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VIS_MAG_MIN: Double { let o = _accessor.offset(VT.VIS_MAG_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The estimated or expected visual magnitude of the target, in Magnitudes (M).
-  public var VIS_MAG: Double { let o = _accessor.offset(VTOFFSET.VIS_MAG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VIS_MAG: Double { let o = _accessor.offset(VT.VIS_MAG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The maximum estimated or expected visual magnitude of the target, in Magnitudes (M).
-  public var VIS_MAG_MAX: Double { let o = _accessor.offset(VTOFFSET.VIS_MAG_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VIS_MAG_MAX: Double { let o = _accessor.offset(VT.VIS_MAG_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The spectral model used for the irradiance calculation.
-  public var SPECTRAL_MODEL: String? { let o = _accessor.offset(VTOFFSET.SPECTRAL_MODEL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SPECTRAL_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SPECTRAL_MODEL.v) }
+  public var SPECTRAL_MODEL: String? { let o = _accessor.offset(VT.SPECTRAL_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SPECTRAL_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SPECTRAL_MODEL) }
   ///  The fraction of solar energy reflected from target.
-  public var REFLECTANCE: Double { let o = _accessor.offset(VTOFFSET.REFLECTANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REFLECTANCE: Double { let o = _accessor.offset(VT.REFLECTANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The target object irradiance value.
-  public var IRRADIANCE: Double { let o = _accessor.offset(VTOFFSET.IRRADIANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var IRRADIANCE: Double { let o = _accessor.offset(VT.IRRADIANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  For optical sensors, the requested number of frames to capture at each sensor step.
-  public var NUM_FRAMES: Int32 { let o = _accessor.offset(VTOFFSET.NUM_FRAMES.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var NUM_FRAMES: Int32 { let o = _accessor.offset(VT.NUM_FRAMES); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  For optical sensors, the frame rate of the camera, in Hz.
-  public var FRAME_RATE: Double { let o = _accessor.offset(VTOFFSET.FRAME_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FRAME_RATE: Double { let o = _accessor.offset(VT.FRAME_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  For optical sensors, the integration time per camera frame, in milliseconds.
-  public var INTEGRATION_TIME: Double { let o = _accessor.offset(VTOFFSET.INTEGRATION_TIME.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INTEGRATION_TIME: Double { let o = _accessor.offset(VT.INTEGRATION_TIME); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The number of requested tracks on the target.
-  public var NUM_TRACKS: Int32 { let o = _accessor.offset(VTOFFSET.NUM_TRACKS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var NUM_TRACKS: Int32 { let o = _accessor.offset(VT.NUM_TRACKS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  The number of requested observations on the target.
-  public var NUM_OBS: Int32 { let o = _accessor.offset(VTOFFSET.NUM_OBS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var NUM_OBS: Int32 { let o = _accessor.offset(VT.NUM_OBS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  The duration of the collect request, in seconds.
-  public var DURATION: Int32 { let o = _accessor.offset(VTOFFSET.DURATION.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var DURATION: Int32 { let o = _accessor.offset(VT.DURATION); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  The search pattern to be executed for this request.
-  public var SRCH_PATTERN: String? { let o = _accessor.offset(VTOFFSET.SRCH_PATTERN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SRCH_PATTERNSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SRCH_PATTERN.v) }
+  public var SRCH_PATTERN: String? { let o = _accessor.offset(VT.SRCH_PATTERN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SRCH_PATTERNSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SRCH_PATTERN) }
   ///  Pre-coordinated code, direction, or configuration to be executed by the sensor or site for this collect or contact.
-  public var SCENARIO: String? { let o = _accessor.offset(VTOFFSET.SCENARIO.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SCENARIOSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SCENARIO.v) }
+  public var SCENARIO: String? { let o = _accessor.offset(VT.SCENARIO); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCENARIOSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCENARIO) }
   ///  ID of the Elset of the object associated with this request.
-  public var ID_ELSET: String? { let o = _accessor.offset(VTOFFSET.ID_ELSET.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_ELSETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_ELSET.v) }
+  public var ID_ELSET: String? { let o = _accessor.offset(VT.ID_ELSET); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_ELSETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_ELSET) }
   ///  ID of the Manifold Elset of the object associated with this request.
-  public var ID_MANIFOLD: String? { let o = _accessor.offset(VTOFFSET.ID_MANIFOLD.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_MANIFOLDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_MANIFOLD.v) }
+  public var ID_MANIFOLD: String? { let o = _accessor.offset(VT.ID_MANIFOLD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_MANIFOLDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_MANIFOLD) }
   ///  ID of the State Vector of the object or central vector associated with this request.
-  public var ID_STATE_VECTOR: String? { let o = _accessor.offset(VTOFFSET.ID_STATE_VECTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_STATE_VECTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_STATE_VECTOR.v) }
+  public var ID_STATE_VECTOR: String? { let o = _accessor.offset(VT.ID_STATE_VECTOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_STATE_VECTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_STATE_VECTOR) }
   ///  ID of the Ephemeris Set of the object associated with this request.
-  public var ES_ID: String? { let o = _accessor.offset(VTOFFSET.ES_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ES_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ES_ID.v) }
+  public var ES_ID: String? { let o = _accessor.offset(VT.ES_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ES_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ES_ID) }
   ///  Epoch time, in ISO 8601 UTC format, of the orbital elements.
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
   ///  The average of the periapsis and apoapsis distances, in kilometers.
-  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VTOFFSET.SEMI_MAJOR_AXIS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VT.SEMI_MAJOR_AXIS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The orbital eccentricity of an astronomical object.
-  public var ECCENTRICITY: Double { let o = _accessor.offset(VTOFFSET.ECCENTRICITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The angle, in degrees, between the equator and the orbit plane.
-  public var INCLINATION: Double { let o = _accessor.offset(VTOFFSET.INCLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Right ascension of the ascending node, in degrees.
-  public var RAAN: Double { let o = _accessor.offset(VTOFFSET.RAAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RAAN: Double { let o = _accessor.offset(VT.RAAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The argument of perigee, in degrees.
-  public var ARG_OF_PERIGEE: Double { let o = _accessor.offset(VTOFFSET.ARG_OF_PERIGEE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ARG_OF_PERIGEE: Double { let o = _accessor.offset(VT.ARG_OF_PERIGEE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The mean anomaly defines the angular position, in degrees, of the object on its orbital path.
-  public var MEAN_ANOMALY: Double { let o = _accessor.offset(VTOFFSET.MEAN_ANOMALY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MEAN_ANOMALY: Double { let o = _accessor.offset(VT.MEAN_ANOMALY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The expected or directed right ascension angle, in degrees.
-  public var RA: Double { let o = _accessor.offset(VTOFFSET.RA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RA: Double { let o = _accessor.offset(VT.RA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The expected or directed declination angle, in degrees.
-  public var DEC: Double { let o = _accessor.offset(VTOFFSET.DEC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DEC: Double { let o = _accessor.offset(VT.DEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The expected or directed azimuth angle, in degrees.
-  public var AZ: Double { let o = _accessor.offset(VTOFFSET.AZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var AZ: Double { let o = _accessor.offset(VT.AZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The expected or directed elevation angle, in degrees.
-  public var EL: Double { let o = _accessor.offset(VTOFFSET.EL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EL: Double { let o = _accessor.offset(VT.EL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The expected acquisition range or defined center range, in km.
-  public var RANGE: Double { let o = _accessor.offset(VTOFFSET.RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RANGE: Double { let o = _accessor.offset(VT.RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The extent of the azimuth angle, in degrees, from center azimuth.
-  public var EXTENT_AZ: Double { let o = _accessor.offset(VTOFFSET.EXTENT_AZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EXTENT_AZ: Double { let o = _accessor.offset(VT.EXTENT_AZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The extent of the elevation angle, in degrees, from center elevation.
-  public var EXTENT_EL: Double { let o = _accessor.offset(VTOFFSET.EXTENT_EL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EXTENT_EL: Double { let o = _accessor.offset(VT.EXTENT_EL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The extent of the range, in km, from center range.
-  public var EXTENT_RANGE: Double { let o = _accessor.offset(VTOFFSET.EXTENT_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EXTENT_RANGE: Double { let o = _accessor.offset(VT.EXTENT_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  WGS-84 latitude, in degrees.
-  public var LAT: Double { let o = _accessor.offset(VTOFFSET.LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LAT: Double { let o = _accessor.offset(VT.LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  WGS-84 longitude, in degrees.
-  public var LON: Double { let o = _accessor.offset(VTOFFSET.LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LON: Double { let o = _accessor.offset(VT.LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height above WGS-84 ellipsoid (HAE), in kilometers.
-  public var ALT: Double { let o = _accessor.offset(VTOFFSET.ALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ALT: Double { let o = _accessor.offset(VT.ALT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The stopping WGS-84 latitude of a volume definition, in degrees.
-  public var STOP_LAT: Double { let o = _accessor.offset(VTOFFSET.STOP_LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STOP_LAT: Double { let o = _accessor.offset(VT.STOP_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The stopping WGS-84 longitude of a volume definition, in degrees.
-  public var STOP_LON: Double { let o = _accessor.offset(VTOFFSET.STOP_LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STOP_LON: Double { let o = _accessor.offset(VT.STOP_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The stopping HAE WGS-84 height above ellipsoid (HAE), in kilometers.
-  public var STOP_ALT: Double { let o = _accessor.offset(VTOFFSET.STOP_ALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STOP_ALT: Double { let o = _accessor.offset(VT.STOP_ALT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The maximum inclination, in degrees, to be used in search operations.
-  public var SRCH_INC: Double { let o = _accessor.offset(VTOFFSET.SRCH_INC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SRCH_INC: Double { let o = _accessor.offset(VT.SRCH_INC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The angular distance, in degrees, in the sensor-x direction from scan center.
-  public var X_ANGLE: Double { let o = _accessor.offset(VTOFFSET.X_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var X_ANGLE: Double { let o = _accessor.offset(VT.X_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The angular distance, in degrees, in the sensor-y direction from scan center.
-  public var Y_ANGLE: Double { let o = _accessor.offset(VTOFFSET.Y_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y_ANGLE: Double { let o = _accessor.offset(VT.Y_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The magnitude of rotation, in degrees, between the xAngle direction and locally defined equinoctial plane.
-  public var ORIENT_ANGLE: Double { let o = _accessor.offset(VTOFFSET.ORIENT_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ORIENT_ANGLE: Double { let o = _accessor.offset(VT.ORIENT_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The customer for this request.
-  public var CUSTOMER: String? { let o = _accessor.offset(VTOFFSET.CUSTOMER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CUSTOMERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CUSTOMER.v) }
+  public var CUSTOMER: String? { let o = _accessor.offset(VT.CUSTOMER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CUSTOMERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CUSTOMER) }
   ///  Notes or comments associated with this request.
-  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
   ///   Source of the data.
-  public var SOURCE: String? { let o = _accessor.offset(VTOFFSET.SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCE.v) }
+  public var SOURCE: String? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE) }
   ///   Originating system or organization which produced the data, if different from the source.
-  public var ORIGIN: String? { let o = _accessor.offset(VTOFFSET.ORIGIN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIGINSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIGIN.v) }
+  public var ORIGIN: String? { let o = _accessor.offset(VT.ORIGIN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGIN) }
   ///   Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST data.
-  public var DATA_MODE: String? { let o = _accessor.offset(VTOFFSET.DATA_MODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DATA_MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DATA_MODE.v) }
+  public var DATA_MODE: String? { let o = _accessor.offset(VT.DATA_MODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATA_MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATA_MODE) }
   public static func startCRM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 78) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VTOFFSET.CLASSIFICATION.p) }
-  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VTOFFSET.TYPE.p) }
-  public static func add(ID_PLAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_PLAN, at: VTOFFSET.ID_PLAN.p) }
-  public static func add(PLAN_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLAN_INDEX, def: 0, at: VTOFFSET.PLAN_INDEX.p) }
-  public static func add(TASK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TASK_ID, at: VTOFFSET.TASK_ID.p) }
-  public static func add(DWELL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DWELL_ID, at: VTOFFSET.DWELL_ID.p) }
-  public static func add(EXTERNAL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTERNAL_ID, at: VTOFFSET.EXTERNAL_ID.p) }
-  public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VTOFFSET.ID_SENSOR.p) }
-  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
-  public static func add(OB_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TYPE, at: VTOFFSET.OB_TYPE.p) }
-  public static func add(PRIORITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIORITY, at: VTOFFSET.PRIORITY.p) }
-  public static func add(TASK_CATEGORY: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TASK_CATEGORY, def: 0, at: VTOFFSET.TASK_CATEGORY.p) }
-  public static func add(SUFFIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUFFIX, at: VTOFFSET.SUFFIX.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VT.CLASSIFICATION) }
+  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VT.TYPE) }
+  public static func add(ID_PLAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_PLAN, at: VT.ID_PLAN) }
+  public static func add(PLAN_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLAN_INDEX, def: 0, at: VT.PLAN_INDEX) }
+  public static func add(TASK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TASK_ID, at: VT.TASK_ID) }
+  public static func add(DWELL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DWELL_ID, at: VT.DWELL_ID) }
+  public static func add(EXTERNAL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTERNAL_ID, at: VT.EXTERNAL_ID) }
+  public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VT.ID_SENSOR) }
+  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VT.ORIG_SENSOR_ID) }
+  public static func add(OB_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TYPE, at: VT.OB_TYPE) }
+  public static func add(PRIORITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIORITY, at: VT.PRIORITY) }
+  public static func add(TASK_CATEGORY: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TASK_CATEGORY, def: 0, at: VT.TASK_CATEGORY) }
+  public static func add(SUFFIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUFFIX, at: VT.SUFFIX) }
   public static func add(UCT_FOLLOW_UP: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UCT_FOLLOW_UP, def: false,
-   at: VTOFFSET.UCT_FOLLOW_UP.p) }
-  public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VTOFFSET.START_TIME.p) }
-  public static func add(END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_TIME, at: VTOFFSET.END_TIME.p) }
-  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VTOFFSET.NORAD_CAT_ID.p) }
-  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
-  public static func add(TASK_GROUP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TASK_GROUP, at: VTOFFSET.TASK_GROUP.p) }
-  public static func add(IRON: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IRON, def: 0, at: VTOFFSET.IRON.p) }
-  public static func add(ORBIT_REGIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_REGIME, at: VTOFFSET.ORBIT_REGIME.p) }
-  public static func add(TARGET_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_SIZE, def: 0.0, at: VTOFFSET.TARGET_SIZE.p) }
-  public static func add(RCS_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS_MIN, def: 0.0, at: VTOFFSET.RCS_MIN.p) }
-  public static func add(RCS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS, def: 0.0, at: VTOFFSET.RCS.p) }
-  public static func add(RCS_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS_MAX, def: 0.0, at: VTOFFSET.RCS_MAX.p) }
-  public static func add(FREQ_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_MIN, def: 0.0, at: VTOFFSET.FREQ_MIN.p) }
-  public static func add(FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ, def: 0.0, at: VTOFFSET.FREQ.p) }
-  public static func add(FREQ_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_MAX, def: 0.0, at: VTOFFSET.FREQ_MAX.p) }
-  public static func add(POLARIZATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLARIZATION, at: VTOFFSET.POLARIZATION.p) }
-  public static func add(VIS_MAG_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIS_MAG_MIN, def: 0.0, at: VTOFFSET.VIS_MAG_MIN.p) }
-  public static func add(VIS_MAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIS_MAG, def: 0.0, at: VTOFFSET.VIS_MAG.p) }
-  public static func add(VIS_MAG_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIS_MAG_MAX, def: 0.0, at: VTOFFSET.VIS_MAG_MAX.p) }
-  public static func add(SPECTRAL_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPECTRAL_MODEL, at: VTOFFSET.SPECTRAL_MODEL.p) }
-  public static func add(REFLECTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFLECTANCE, def: 0.0, at: VTOFFSET.REFLECTANCE.p) }
-  public static func add(IRRADIANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IRRADIANCE, def: 0.0, at: VTOFFSET.IRRADIANCE.p) }
-  public static func add(NUM_FRAMES: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_FRAMES, def: 0, at: VTOFFSET.NUM_FRAMES.p) }
-  public static func add(FRAME_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_RATE, def: 0.0, at: VTOFFSET.FRAME_RATE.p) }
-  public static func add(INTEGRATION_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTEGRATION_TIME, def: 0.0, at: VTOFFSET.INTEGRATION_TIME.p) }
-  public static func add(NUM_TRACKS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_TRACKS, def: 0, at: VTOFFSET.NUM_TRACKS.p) }
-  public static func add(NUM_OBS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_OBS, def: 0, at: VTOFFSET.NUM_OBS.p) }
-  public static func add(DURATION: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION, def: 0, at: VTOFFSET.DURATION.p) }
-  public static func add(SRCH_PATTERN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRCH_PATTERN, at: VTOFFSET.SRCH_PATTERN.p) }
-  public static func add(SCENARIO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO, at: VTOFFSET.SCENARIO.p) }
-  public static func add(ID_ELSET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ELSET, at: VTOFFSET.ID_ELSET.p) }
-  public static func add(ID_MANIFOLD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_MANIFOLD, at: VTOFFSET.ID_MANIFOLD.p) }
-  public static func add(ID_STATE_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_STATE_VECTOR, at: VTOFFSET.ID_STATE_VECTOR.p) }
-  public static func add(ES_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ES_ID, at: VTOFFSET.ES_ID.p) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VTOFFSET.SEMI_MAJOR_AXIS.p) }
-  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VTOFFSET.ECCENTRICITY.p) }
-  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VTOFFSET.INCLINATION.p) }
-  public static func add(RAAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RAAN, def: 0.0, at: VTOFFSET.RAAN.p) }
-  public static func add(ARG_OF_PERIGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_OF_PERIGEE, def: 0.0, at: VTOFFSET.ARG_OF_PERIGEE.p) }
-  public static func add(MEAN_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ANOMALY, def: 0.0, at: VTOFFSET.MEAN_ANOMALY.p) }
-  public static func add(RA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA, def: 0.0, at: VTOFFSET.RA.p) }
-  public static func add(DEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEC, def: 0.0, at: VTOFFSET.DEC.p) }
-  public static func add(AZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZ, def: 0.0, at: VTOFFSET.AZ.p) }
-  public static func add(EL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EL, def: 0.0, at: VTOFFSET.EL.p) }
-  public static func add(RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE, def: 0.0, at: VTOFFSET.RANGE.p) }
-  public static func add(EXTENT_AZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTENT_AZ, def: 0.0, at: VTOFFSET.EXTENT_AZ.p) }
-  public static func add(EXTENT_EL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTENT_EL, def: 0.0, at: VTOFFSET.EXTENT_EL.p) }
-  public static func add(EXTENT_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTENT_RANGE, def: 0.0, at: VTOFFSET.EXTENT_RANGE.p) }
-  public static func add(LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAT, def: 0.0, at: VTOFFSET.LAT.p) }
-  public static func add(LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LON, def: 0.0, at: VTOFFSET.LON.p) }
-  public static func add(ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALT, def: 0.0, at: VTOFFSET.ALT.p) }
-  public static func add(STOP_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOP_LAT, def: 0.0, at: VTOFFSET.STOP_LAT.p) }
-  public static func add(STOP_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOP_LON, def: 0.0, at: VTOFFSET.STOP_LON.p) }
-  public static func add(STOP_ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOP_ALT, def: 0.0, at: VTOFFSET.STOP_ALT.p) }
-  public static func add(SRCH_INC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRCH_INC, def: 0.0, at: VTOFFSET.SRCH_INC.p) }
-  public static func add(X_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_ANGLE, def: 0.0, at: VTOFFSET.X_ANGLE.p) }
-  public static func add(Y_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_ANGLE, def: 0.0, at: VTOFFSET.Y_ANGLE.p) }
-  public static func add(ORIENT_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENT_ANGLE, def: 0.0, at: VTOFFSET.ORIENT_ANGLE.p) }
-  public static func add(CUSTOMER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CUSTOMER, at: VTOFFSET.CUSTOMER.p) }
-  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
-  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VTOFFSET.SOURCE.p) }
-  public static func add(ORIGIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGIN, at: VTOFFSET.ORIGIN.p) }
-  public static func add(DATA_MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_MODE, at: VTOFFSET.DATA_MODE.p) }
+   at: VT.UCT_FOLLOW_UP) }
+  public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VT.START_TIME) }
+  public static func add(END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_TIME, at: VT.END_TIME) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VT.ORIG_OBJECT_ID) }
+  public static func add(TASK_GROUP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TASK_GROUP, at: VT.TASK_GROUP) }
+  public static func add(IRON: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IRON, def: 0, at: VT.IRON) }
+  public static func add(ORBIT_REGIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_REGIME, at: VT.ORBIT_REGIME) }
+  public static func add(TARGET_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_SIZE, def: 0.0, at: VT.TARGET_SIZE) }
+  public static func add(RCS_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS_MIN, def: 0.0, at: VT.RCS_MIN) }
+  public static func add(RCS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS, def: 0.0, at: VT.RCS) }
+  public static func add(RCS_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS_MAX, def: 0.0, at: VT.RCS_MAX) }
+  public static func add(FREQ_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_MIN, def: 0.0, at: VT.FREQ_MIN) }
+  public static func add(FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ, def: 0.0, at: VT.FREQ) }
+  public static func add(FREQ_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_MAX, def: 0.0, at: VT.FREQ_MAX) }
+  public static func add(POLARIZATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLARIZATION, at: VT.POLARIZATION) }
+  public static func add(VIS_MAG_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIS_MAG_MIN, def: 0.0, at: VT.VIS_MAG_MIN) }
+  public static func add(VIS_MAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIS_MAG, def: 0.0, at: VT.VIS_MAG) }
+  public static func add(VIS_MAG_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIS_MAG_MAX, def: 0.0, at: VT.VIS_MAG_MAX) }
+  public static func add(SPECTRAL_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPECTRAL_MODEL, at: VT.SPECTRAL_MODEL) }
+  public static func add(REFLECTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFLECTANCE, def: 0.0, at: VT.REFLECTANCE) }
+  public static func add(IRRADIANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IRRADIANCE, def: 0.0, at: VT.IRRADIANCE) }
+  public static func add(NUM_FRAMES: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_FRAMES, def: 0, at: VT.NUM_FRAMES) }
+  public static func add(FRAME_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_RATE, def: 0.0, at: VT.FRAME_RATE) }
+  public static func add(INTEGRATION_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTEGRATION_TIME, def: 0.0, at: VT.INTEGRATION_TIME) }
+  public static func add(NUM_TRACKS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_TRACKS, def: 0, at: VT.NUM_TRACKS) }
+  public static func add(NUM_OBS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_OBS, def: 0, at: VT.NUM_OBS) }
+  public static func add(DURATION: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION, def: 0, at: VT.DURATION) }
+  public static func add(SRCH_PATTERN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRCH_PATTERN, at: VT.SRCH_PATTERN) }
+  public static func add(SCENARIO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO, at: VT.SCENARIO) }
+  public static func add(ID_ELSET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ELSET, at: VT.ID_ELSET) }
+  public static func add(ID_MANIFOLD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_MANIFOLD, at: VT.ID_MANIFOLD) }
+  public static func add(ID_STATE_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_STATE_VECTOR, at: VT.ID_STATE_VECTOR) }
+  public static func add(ES_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ES_ID, at: VT.ES_ID) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VT.SEMI_MAJOR_AXIS) }
+  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
+  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
+  public static func add(RAAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RAAN, def: 0.0, at: VT.RAAN) }
+  public static func add(ARG_OF_PERIGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_OF_PERIGEE, def: 0.0, at: VT.ARG_OF_PERIGEE) }
+  public static func add(MEAN_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ANOMALY, def: 0.0, at: VT.MEAN_ANOMALY) }
+  public static func add(RA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA, def: 0.0, at: VT.RA) }
+  public static func add(DEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEC, def: 0.0, at: VT.DEC) }
+  public static func add(AZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZ, def: 0.0, at: VT.AZ) }
+  public static func add(EL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EL, def: 0.0, at: VT.EL) }
+  public static func add(RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE, def: 0.0, at: VT.RANGE) }
+  public static func add(EXTENT_AZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTENT_AZ, def: 0.0, at: VT.EXTENT_AZ) }
+  public static func add(EXTENT_EL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTENT_EL, def: 0.0, at: VT.EXTENT_EL) }
+  public static func add(EXTENT_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTENT_RANGE, def: 0.0, at: VT.EXTENT_RANGE) }
+  public static func add(LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAT, def: 0.0, at: VT.LAT) }
+  public static func add(LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LON, def: 0.0, at: VT.LON) }
+  public static func add(ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALT, def: 0.0, at: VT.ALT) }
+  public static func add(STOP_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOP_LAT, def: 0.0, at: VT.STOP_LAT) }
+  public static func add(STOP_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOP_LON, def: 0.0, at: VT.STOP_LON) }
+  public static func add(STOP_ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOP_ALT, def: 0.0, at: VT.STOP_ALT) }
+  public static func add(SRCH_INC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRCH_INC, def: 0.0, at: VT.SRCH_INC) }
+  public static func add(X_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_ANGLE, def: 0.0, at: VT.X_ANGLE) }
+  public static func add(Y_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_ANGLE, def: 0.0, at: VT.Y_ANGLE) }
+  public static func add(ORIENT_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENT_ANGLE, def: 0.0, at: VT.ORIENT_ANGLE) }
+  public static func add(CUSTOMER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CUSTOMER, at: VT.CUSTOMER) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
+  public static func add(ORIGIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGIN, at: VT.ORIGIN) }
+  public static func add(DATA_MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_MODE, at: VT.DATA_MODE) }
   public static func endCRM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCRM(
     _ fbb: inout FlatBufferBuilder,
@@ -536,84 +534,84 @@ public struct CRM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CLASSIFICATION.p, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_PLAN.p, fieldName: "ID_PLAN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PLAN_INDEX.p, fieldName: "PLAN_INDEX", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.TASK_ID.p, fieldName: "TASK_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DWELL_ID.p, fieldName: "DWELL_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EXTERNAL_ID.p, fieldName: "EXTERNAL_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_SENSOR.p, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID.p, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OB_TYPE.p, fieldName: "OB_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PRIORITY.p, fieldName: "PRIORITY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TASK_CATEGORY.p, fieldName: "TASK_CATEGORY", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.SUFFIX.p, fieldName: "SUFFIX", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UCT_FOLLOW_UP.p, fieldName: "UCT_FOLLOW_UP", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.START_TIME.p, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.END_TIME.p, fieldName: "END_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NORAD_CAT_ID.p, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TASK_GROUP.p, fieldName: "TASK_GROUP", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.IRON.p, fieldName: "IRON", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.ORBIT_REGIME.p, fieldName: "ORBIT_REGIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TARGET_SIZE.p, fieldName: "TARGET_SIZE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RCS_MIN.p, fieldName: "RCS_MIN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RCS.p, fieldName: "RCS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RCS_MAX.p, fieldName: "RCS_MAX", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FREQ_MIN.p, fieldName: "FREQ_MIN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FREQ.p, fieldName: "FREQ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FREQ_MAX.p, fieldName: "FREQ_MAX", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POLARIZATION.p, fieldName: "POLARIZATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VIS_MAG_MIN.p, fieldName: "VIS_MAG_MIN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VIS_MAG.p, fieldName: "VIS_MAG", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VIS_MAG_MAX.p, fieldName: "VIS_MAG_MAX", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SPECTRAL_MODEL.p, fieldName: "SPECTRAL_MODEL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REFLECTANCE.p, fieldName: "REFLECTANCE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.IRRADIANCE.p, fieldName: "IRRADIANCE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NUM_FRAMES.p, fieldName: "NUM_FRAMES", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.FRAME_RATE.p, fieldName: "FRAME_RATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INTEGRATION_TIME.p, fieldName: "INTEGRATION_TIME", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NUM_TRACKS.p, fieldName: "NUM_TRACKS", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.NUM_OBS.p, fieldName: "NUM_OBS", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.DURATION.p, fieldName: "DURATION", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.SRCH_PATTERN.p, fieldName: "SRCH_PATTERN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SCENARIO.p, fieldName: "SCENARIO", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_ELSET.p, fieldName: "ID_ELSET", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_MANIFOLD.p, fieldName: "ID_MANIFOLD", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_STATE_VECTOR.p, fieldName: "ID_STATE_VECTOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ES_ID.p, fieldName: "ES_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SEMI_MAJOR_AXIS.p, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ECCENTRICITY.p, fieldName: "ECCENTRICITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INCLINATION.p, fieldName: "INCLINATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RAAN.p, fieldName: "RAAN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ARG_OF_PERIGEE.p, fieldName: "ARG_OF_PERIGEE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MEAN_ANOMALY.p, fieldName: "MEAN_ANOMALY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RA.p, fieldName: "RA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DEC.p, fieldName: "DEC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.AZ.p, fieldName: "AZ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EL.p, fieldName: "EL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RANGE.p, fieldName: "RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EXTENT_AZ.p, fieldName: "EXTENT_AZ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EXTENT_EL.p, fieldName: "EXTENT_EL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EXTENT_RANGE.p, fieldName: "EXTENT_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LAT.p, fieldName: "LAT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LON.p, fieldName: "LON", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ALT.p, fieldName: "ALT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STOP_LAT.p, fieldName: "STOP_LAT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STOP_LON.p, fieldName: "STOP_LON", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STOP_ALT.p, fieldName: "STOP_ALT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SRCH_INC.p, fieldName: "SRCH_INC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.X_ANGLE.p, fieldName: "X_ANGLE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Y_ANGLE.p, fieldName: "Y_ANGLE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ORIENT_ANGLE.p, fieldName: "ORIENT_ANGLE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CUSTOMER.p, fieldName: "CUSTOMER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SOURCE.p, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIGIN.p, fieldName: "ORIGIN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATA_MODE.p, fieldName: "DATA_MODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLASSIFICATION, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_PLAN, fieldName: "ID_PLAN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PLAN_INDEX, fieldName: "PLAN_INDEX", required: false, type: Int32.self)
+    try _v.visit(field: VT.TASK_ID, fieldName: "TASK_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DWELL_ID, fieldName: "DWELL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXTERNAL_ID, fieldName: "EXTERNAL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_SENSOR, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIG_SENSOR_ID, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OB_TYPE, fieldName: "OB_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PRIORITY, fieldName: "PRIORITY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TASK_CATEGORY, fieldName: "TASK_CATEGORY", required: false, type: Int32.self)
+    try _v.visit(field: VT.SUFFIX, fieldName: "SUFFIX", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UCT_FOLLOW_UP, fieldName: "UCT_FOLLOW_UP", required: false, type: Bool.self)
+    try _v.visit(field: VT.START_TIME, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.END_TIME, fieldName: "END_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ORIG_OBJECT_ID, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TASK_GROUP, fieldName: "TASK_GROUP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IRON, fieldName: "IRON", required: false, type: Int32.self)
+    try _v.visit(field: VT.ORBIT_REGIME, fieldName: "ORBIT_REGIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET_SIZE, fieldName: "TARGET_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VT.RCS_MIN, fieldName: "RCS_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.RCS, fieldName: "RCS", required: false, type: Double.self)
+    try _v.visit(field: VT.RCS_MAX, fieldName: "RCS_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.FREQ_MIN, fieldName: "FREQ_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.FREQ, fieldName: "FREQ", required: false, type: Double.self)
+    try _v.visit(field: VT.FREQ_MAX, fieldName: "FREQ_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.POLARIZATION, fieldName: "POLARIZATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VIS_MAG_MIN, fieldName: "VIS_MAG_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.VIS_MAG, fieldName: "VIS_MAG", required: false, type: Double.self)
+    try _v.visit(field: VT.VIS_MAG_MAX, fieldName: "VIS_MAG_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.SPECTRAL_MODEL, fieldName: "SPECTRAL_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REFLECTANCE, fieldName: "REFLECTANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.IRRADIANCE, fieldName: "IRRADIANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.NUM_FRAMES, fieldName: "NUM_FRAMES", required: false, type: Int32.self)
+    try _v.visit(field: VT.FRAME_RATE, fieldName: "FRAME_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.INTEGRATION_TIME, fieldName: "INTEGRATION_TIME", required: false, type: Double.self)
+    try _v.visit(field: VT.NUM_TRACKS, fieldName: "NUM_TRACKS", required: false, type: Int32.self)
+    try _v.visit(field: VT.NUM_OBS, fieldName: "NUM_OBS", required: false, type: Int32.self)
+    try _v.visit(field: VT.DURATION, fieldName: "DURATION", required: false, type: Int32.self)
+    try _v.visit(field: VT.SRCH_PATTERN, fieldName: "SRCH_PATTERN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCENARIO, fieldName: "SCENARIO", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_ELSET, fieldName: "ID_ELSET", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_MANIFOLD, fieldName: "ID_MANIFOLD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_STATE_VECTOR, fieldName: "ID_STATE_VECTOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ES_ID, fieldName: "ES_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SEMI_MAJOR_AXIS, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VT.RAAN, fieldName: "RAAN", required: false, type: Double.self)
+    try _v.visit(field: VT.ARG_OF_PERIGEE, fieldName: "ARG_OF_PERIGEE", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_ANOMALY, fieldName: "MEAN_ANOMALY", required: false, type: Double.self)
+    try _v.visit(field: VT.RA, fieldName: "RA", required: false, type: Double.self)
+    try _v.visit(field: VT.DEC, fieldName: "DEC", required: false, type: Double.self)
+    try _v.visit(field: VT.AZ, fieldName: "AZ", required: false, type: Double.self)
+    try _v.visit(field: VT.EL, fieldName: "EL", required: false, type: Double.self)
+    try _v.visit(field: VT.RANGE, fieldName: "RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.EXTENT_AZ, fieldName: "EXTENT_AZ", required: false, type: Double.self)
+    try _v.visit(field: VT.EXTENT_EL, fieldName: "EXTENT_EL", required: false, type: Double.self)
+    try _v.visit(field: VT.EXTENT_RANGE, fieldName: "EXTENT_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.LAT, fieldName: "LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.LON, fieldName: "LON", required: false, type: Double.self)
+    try _v.visit(field: VT.ALT, fieldName: "ALT", required: false, type: Double.self)
+    try _v.visit(field: VT.STOP_LAT, fieldName: "STOP_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.STOP_LON, fieldName: "STOP_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.STOP_ALT, fieldName: "STOP_ALT", required: false, type: Double.self)
+    try _v.visit(field: VT.SRCH_INC, fieldName: "SRCH_INC", required: false, type: Double.self)
+    try _v.visit(field: VT.X_ANGLE, fieldName: "X_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.Y_ANGLE, fieldName: "Y_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIENT_ANGLE, fieldName: "ORIENT_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.CUSTOMER, fieldName: "CUSTOMER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGIN, fieldName: "ORIGIN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_MODE, fieldName: "DATA_MODE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

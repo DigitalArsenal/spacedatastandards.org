@@ -22,59 +22,57 @@ public struct ESL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case LINK_KEY = 4
-    case ENTITY_ID = 6
-    case ENTITY_RECORD_KEY = 8
-    case ENTITY_ROWID = 10
-    case RECORD_KEY = 12
-    case SCHEMA_NAME = 14
-    case RECORD_ROWID = 16
-    case CASCADE_DELETE = 18
-    case UPDATED_AT_MS = 20
-    case RESERVED = 22
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let LINK_KEY: VOffset = 4
+    static let ENTITY_ID: VOffset = 6
+    static let ENTITY_RECORD_KEY: VOffset = 8
+    static let ENTITY_ROWID: VOffset = 10
+    static let RECORD_KEY: VOffset = 12
+    static let SCHEMA_NAME: VOffset = 14
+    static let RECORD_ROWID: VOffset = 16
+    static let CASCADE_DELETE: VOffset = 18
+    static let UPDATED_AT_MS: VOffset = 20
+    static let RESERVED: VOffset = 22
   }
 
   ///  Stable local link key for one entity / record association.
-  public var LINK_KEY: String? { let o = _accessor.offset(VTOFFSET.LINK_KEY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_KEY.v) }
+  public var LINK_KEY: String? { let o = _accessor.offset(VT.LINK_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_KEY) }
   ///  Stable host-local entity id on the entity side of the association.
-  public var ENTITY_ID: String? { let o = _accessor.offset(VTOFFSET.ENTITY_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ENTITY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENTITY_ID.v) }
+  public var ENTITY_ID: String? { let o = _accessor.offset(VT.ENTITY_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENTITY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENTITY_ID) }
   ///  Stable local entity metadata record key (for example `ENTITY:<id>`).
-  public var ENTITY_RECORD_KEY: String? { let o = _accessor.offset(VTOFFSET.ENTITY_RECORD_KEY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ENTITY_RECORD_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENTITY_RECORD_KEY.v) }
+  public var ENTITY_RECORD_KEY: String? { let o = _accessor.offset(VT.ENTITY_RECORD_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENTITY_RECORD_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENTITY_RECORD_KEY) }
   ///  FlatSQL row id for the linked entity metadata row when known.
-  public var ENTITY_ROWID: Double { let o = _accessor.offset(VTOFFSET.ENTITY_ROWID.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ENTITY_ROWID: Double { let o = _accessor.offset(VT.ENTITY_ROWID); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Stable local standards record key on the record side of the association.
-  public var RECORD_KEY: String? { let o = _accessor.offset(VTOFFSET.RECORD_KEY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RECORD_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RECORD_KEY.v) }
+  public var RECORD_KEY: String? { let o = _accessor.offset(VT.RECORD_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RECORD_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RECORD_KEY) }
   ///  SDS schema family for the linked record (`OMM`, `CAT`, `OEM`, `CDM`, etc.).
-  public var SCHEMA_NAME: String? { let o = _accessor.offset(VTOFFSET.SCHEMA_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SCHEMA_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SCHEMA_NAME.v) }
+  public var SCHEMA_NAME: String? { let o = _accessor.offset(VT.SCHEMA_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCHEMA_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_NAME) }
   ///  FlatSQL row id for the linked standards record row when known.
-  public var RECORD_ROWID: Double { let o = _accessor.offset(VTOFFSET.RECORD_ROWID.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RECORD_ROWID: Double { let o = _accessor.offset(VT.RECORD_ROWID); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Whether entity deletion should cascade to the linked standards record.
-  public var CASCADE_DELETE: Bool { let o = _accessor.offset(VTOFFSET.CASCADE_DELETE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var CASCADE_DELETE: Bool { let o = _accessor.offset(VT.CASCADE_DELETE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Milliseconds since epoch when the association was last refreshed.
-  public var UPDATED_AT_MS: Double { let o = _accessor.offset(VTOFFSET.UPDATED_AT_MS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var UPDATED_AT_MS: Double { let o = _accessor.offset(VT.UPDATED_AT_MS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Reserved for forward-compatible growth.
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
   public static func startESL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(LINK_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_KEY, at: VTOFFSET.LINK_KEY.p) }
-  public static func add(ENTITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_ID, at: VTOFFSET.ENTITY_ID.p) }
-  public static func add(ENTITY_RECORD_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_RECORD_KEY, at: VTOFFSET.ENTITY_RECORD_KEY.p) }
-  public static func add(ENTITY_ROWID: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_ROWID, def: 0.0, at: VTOFFSET.ENTITY_ROWID.p) }
-  public static func add(RECORD_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORD_KEY, at: VTOFFSET.RECORD_KEY.p) }
-  public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VTOFFSET.SCHEMA_NAME.p) }
-  public static func add(RECORD_ROWID: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECORD_ROWID, def: 0.0, at: VTOFFSET.RECORD_ROWID.p) }
+  public static func add(LINK_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_KEY, at: VT.LINK_KEY) }
+  public static func add(ENTITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_ID, at: VT.ENTITY_ID) }
+  public static func add(ENTITY_RECORD_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_RECORD_KEY, at: VT.ENTITY_RECORD_KEY) }
+  public static func add(ENTITY_ROWID: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_ROWID, def: 0.0, at: VT.ENTITY_ROWID) }
+  public static func add(RECORD_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORD_KEY, at: VT.RECORD_KEY) }
+  public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VT.SCHEMA_NAME) }
+  public static func add(RECORD_ROWID: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECORD_ROWID, def: 0.0, at: VT.RECORD_ROWID) }
   public static func add(CASCADE_DELETE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CASCADE_DELETE, def: false,
-   at: VTOFFSET.CASCADE_DELETE.p) }
-  public static func add(UPDATED_AT_MS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATED_AT_MS, def: 0.0, at: VTOFFSET.UPDATED_AT_MS.p) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VTOFFSET.RESERVED.p) }
+   at: VT.CASCADE_DELETE) }
+  public static func add(UPDATED_AT_MS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATED_AT_MS, def: 0.0, at: VT.UPDATED_AT_MS) }
+  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
   public static func endESL(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createESL(
     _ fbb: inout FlatBufferBuilder,
@@ -105,16 +103,16 @@ public struct ESL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LINK_KEY.p, fieldName: "LINK_KEY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ENTITY_ID.p, fieldName: "ENTITY_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ENTITY_RECORD_KEY.p, fieldName: "ENTITY_RECORD_KEY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ENTITY_ROWID.p, fieldName: "ENTITY_ROWID", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RECORD_KEY.p, fieldName: "RECORD_KEY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SCHEMA_NAME.p, fieldName: "SCHEMA_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RECORD_ROWID.p, fieldName: "RECORD_ROWID", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CASCADE_DELETE.p, fieldName: "CASCADE_DELETE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.UPDATED_AT_MS.p, fieldName: "UPDATED_AT_MS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.LINK_KEY, fieldName: "LINK_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENTITY_ID, fieldName: "ENTITY_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENTITY_RECORD_KEY, fieldName: "ENTITY_RECORD_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENTITY_ROWID, fieldName: "ENTITY_ROWID", required: false, type: Double.self)
+    try _v.visit(field: VT.RECORD_KEY, fieldName: "RECORD_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCHEMA_NAME, fieldName: "SCHEMA_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RECORD_ROWID, fieldName: "RECORD_ROWID", required: false, type: Double.self)
+    try _v.visit(field: VT.CASCADE_DELETE, fieldName: "CASCADE_DELETE", required: false, type: Bool.self)
+    try _v.visit(field: VT.UPDATED_AT_MS, fieldName: "UPDATED_AT_MS", required: false, type: Double.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

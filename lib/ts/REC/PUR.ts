@@ -35,41 +35,41 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 /**
  * Unique identifier for this purchase request
  */
-REQUEST_ID():string|null
-REQUEST_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-REQUEST_ID(optionalEncoding?:any):string|Uint8Array|null {
+REQUEST_ID():string
+REQUEST_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+REQUEST_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
  * ID of the listing being purchased
  */
-LISTING_ID():string|null
-LISTING_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LISTING_ID(optionalEncoding?:any):string|Uint8Array|null {
+LISTING_ID():string
+LISTING_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+LISTING_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
  * Name of the pricing tier selected
  */
-TIER_NAME():string|null
-TIER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TIER_NAME(optionalEncoding?:any):string|Uint8Array|null {
+TIER_NAME():string
+TIER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+TIER_NAME(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
  * Peer ID of the buyer
  */
-BUYER_PEER_ID():string|null
-BUYER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-BUYER_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
+BUYER_PEER_ID():string
+BUYER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+BUYER_PEER_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**

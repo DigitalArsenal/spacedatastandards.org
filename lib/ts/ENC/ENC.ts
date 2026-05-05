@@ -79,9 +79,9 @@ ephemeralPublicKeyLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-ephemeralPublicKeyArray():Uint8Array|null {
+ephemeralPublicKeyArray():Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+  return new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset));
 }
 
 /**
@@ -97,9 +97,9 @@ nonceStartLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-nonceStartArray():Uint8Array|null {
+nonceStartArray():Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+  return new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset));
 }
 
 /**

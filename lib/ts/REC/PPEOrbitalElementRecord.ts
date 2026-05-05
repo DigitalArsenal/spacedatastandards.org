@@ -43,11 +43,11 @@ static getSizePrefixedRootAsPPEOrbitalElementRecord(bb:flatbuffers.ByteBuffer, o
 /**
  * Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
  */
-EPOCH_MID():string|null
-EPOCH_MID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EPOCH_MID(optionalEncoding?:any):string|Uint8Array|null {
+EPOCH_MID():string
+EPOCH_MID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+EPOCH_MID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
@@ -104,9 +104,9 @@ coeffSizeShapeLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-coeffSizeShapeArray():Float64Array|null {
+coeffSizeShapeArray():Float64Array {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+  return new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset));
 }
 
 /**
@@ -123,9 +123,9 @@ coeffEccentricityLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-coeffEccentricityArray():Float64Array|null {
+coeffEccentricityArray():Float64Array {
   const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+  return new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset));
 }
 
 /**
@@ -142,9 +142,9 @@ coeffInclinationLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-coeffInclinationArray():Float64Array|null {
+coeffInclinationArray():Float64Array {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+  return new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset));
 }
 
 /**
@@ -161,9 +161,9 @@ coeffRaanLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-coeffRaanArray():Float64Array|null {
+coeffRaanArray():Float64Array {
   const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+  return new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset));
 }
 
 /**
@@ -180,9 +180,9 @@ coeffArgPeriapsisLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-coeffArgPeriapsisArray():Float64Array|null {
+coeffArgPeriapsisArray():Float64Array {
   const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+  return new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset));
 }
 
 /**
@@ -199,9 +199,9 @@ coeffAnomalyLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-coeffAnomalyArray():Float64Array|null {
+coeffAnomalyArray():Float64Array {
   const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+  return new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset));
 }
 
 /**

@@ -12,18 +12,18 @@ export declare class REV implements flatbuffers.IUnpackableObject<REVT> {
     /**
      * Unique identifier for this review
      */
-    REVIEW_ID(): string | null;
-    REVIEW_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    REVIEW_ID(): string;
+    REVIEW_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * ID of the listing being reviewed
      */
-    LISTING_ID(): string | null;
-    LISTING_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    LISTING_ID(): string;
+    LISTING_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Peer ID of the reviewer
      */
-    REVIEWER_PEER_ID(): string | null;
-    REVIEWER_PEER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    REVIEWER_PEER_ID(): string;
+    REVIEWER_PEER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Rating from 1-5 stars
      */

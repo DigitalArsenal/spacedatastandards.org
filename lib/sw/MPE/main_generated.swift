@@ -38,15 +38,13 @@ public struct MET: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case MEAN_ELEMENT_THEORY = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let MEAN_ELEMENT_THEORY: VOffset = 4
   }
 
-  public var MEAN_ELEMENT_THEORY: meanElementSource { let o = _accessor.offset(VTOFFSET.MEAN_ELEMENT_THEORY.v); return o == 0 ? .sgp4 : meanElementSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sgp4 }
+  public var MEAN_ELEMENT_THEORY: meanElementSource { let o = _accessor.offset(VT.MEAN_ELEMENT_THEORY); return o == 0 ? .sgp4 : meanElementSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sgp4 }
   public static func startMET(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(MEAN_ELEMENT_THEORY: meanElementSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 0, at: VTOFFSET.MEAN_ELEMENT_THEORY.p) }
+  public static func add(MEAN_ELEMENT_THEORY: meanElementSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 0, at: VT.MEAN_ELEMENT_THEORY) }
   public static func endMET(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMET(
     _ fbb: inout FlatBufferBuilder,
@@ -59,7 +57,7 @@ public struct MET: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.MEAN_ELEMENT_THEORY.p, fieldName: "MEAN_ELEMENT_THEORY", required: false, type: meanElementSource.self)
+    try _v.visit(field: VT.MEAN_ELEMENT_THEORY, fieldName: "MEAN_ELEMENT_THEORY", required: false, type: meanElementSource.self)
     _v.finish()
   }
 }

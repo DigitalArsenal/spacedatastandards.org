@@ -24,8 +24,8 @@ export declare class PPEOrbitalElementRecord implements flatbuffers.IUnpackableO
     /**
      * Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
      */
-    EPOCH_MID(): string | null;
-    EPOCH_MID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    EPOCH_MID(): string;
+    EPOCH_MID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Half-span of the validity window in seconds.
      */
@@ -52,42 +52,42 @@ export declare class PPEOrbitalElementRecord implements flatbuffers.IUnpackableO
      */
     COEFF_SIZE_SHAPE(index: number): number | null;
     coeffSizeShapeLength(): number;
-    coeffSizeShapeArray(): Float64Array | null;
+    coeffSizeShapeArray(): Float64Array;
     /**
      * Coefficients for eccentricity (dimensionless).
      * Length must equal NUM_COEFFICIENTS.
      */
     COEFF_ECCENTRICITY(index: number): number | null;
     coeffEccentricityLength(): number;
-    coeffEccentricityArray(): Float64Array | null;
+    coeffEccentricityArray(): Float64Array;
     /**
      * Coefficients for inclination (degrees).
      * Length must equal NUM_COEFFICIENTS.
      */
     COEFF_INCLINATION(index: number): number | null;
     coeffInclinationLength(): number;
-    coeffInclinationArray(): Float64Array | null;
+    coeffInclinationArray(): Float64Array;
     /**
      * Coefficients for RAAN (degrees).
      * Length must equal NUM_COEFFICIENTS.
      */
     COEFF_RAAN(index: number): number | null;
     coeffRaanLength(): number;
-    coeffRaanArray(): Float64Array | null;
+    coeffRaanArray(): Float64Array;
     /**
      * Coefficients for argument of periapsis (degrees).
      * Length must equal NUM_COEFFICIENTS.
      */
     COEFF_ARG_PERIAPSIS(index: number): number | null;
     coeffArgPeriapsisLength(): number;
-    coeffArgPeriapsisArray(): Float64Array | null;
+    coeffArgPeriapsisArray(): Float64Array;
     /**
      * Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.
      * Length must equal NUM_COEFFICIENTS.
      */
     COEFF_ANOMALY(index: number): number | null;
     coeffAnomalyLength(): number;
-    coeffAnomalyArray(): Float64Array | null;
+    coeffAnomalyArray(): Float64Array;
     /**
      * Maximum element fit residual over this segment. Optional quality metric.
      * Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).

@@ -20,52 +20,50 @@ public struct CTR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case NAME = 6
-    case GENC_CODE = 8
-    case ALPHA_2_CODE = 10
-    case ALPHA_3_CODE = 12
-    case STANAG_CODE = 14
-    case INTERNET_CCTLD = 16
-    case COMMENT = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let GENC_CODE: VOffset = 8
+    static let ALPHA_2_CODE: VOffset = 10
+    static let ALPHA_3_CODE: VOffset = 12
+    static let STANAG_CODE: VOffset = 14
+    static let INTERNET_CCTLD: VOffset = 16
+    static let COMMENT: VOffset = 18
   }
 
   ///  ISO 3166 Numeric code
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Country name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  GENC code
-  public var GENC_CODE: String? { let o = _accessor.offset(VTOFFSET.GENC_CODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GENC_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GENC_CODE.v) }
+  public var GENC_CODE: String? { let o = _accessor.offset(VT.GENC_CODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GENC_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GENC_CODE) }
   ///  ISO 3166 Alpha-2 code
-  public var ALPHA_2_CODE: String? { let o = _accessor.offset(VTOFFSET.ALPHA_2_CODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ALPHA_2_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALPHA_2_CODE.v) }
+  public var ALPHA_2_CODE: String? { let o = _accessor.offset(VT.ALPHA_2_CODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALPHA_2_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALPHA_2_CODE) }
   ///  ISO 3166 Alpha-3 code
-  public var ALPHA_3_CODE: String? { let o = _accessor.offset(VTOFFSET.ALPHA_3_CODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ALPHA_3_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALPHA_3_CODE.v) }
+  public var ALPHA_3_CODE: String? { let o = _accessor.offset(VT.ALPHA_3_CODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALPHA_3_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALPHA_3_CODE) }
   ///  Stanag code
-  public var STANAG_CODE: String? { let o = _accessor.offset(VTOFFSET.STANAG_CODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STANAG_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STANAG_CODE.v) }
+  public var STANAG_CODE: String? { let o = _accessor.offset(VT.STANAG_CODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STANAG_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STANAG_CODE) }
   ///  Internet country code top-level domain (ccTLD)
-  public var INTERNET_CCTLD: String? { let o = _accessor.offset(VTOFFSET.INTERNET_CCTLD.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INTERNET_CCTLDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INTERNET_CCTLD.v) }
+  public var INTERNET_CCTLD: String? { let o = _accessor.offset(VT.INTERNET_CCTLD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INTERNET_CCTLDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INTERNET_CCTLD) }
   ///  Additional comments
-  public var COMMENT: String? { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMENT.v) }
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
   public static func startCTR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(GENC_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GENC_CODE, at: VTOFFSET.GENC_CODE.p) }
-  public static func add(ALPHA_2_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALPHA_2_CODE, at: VTOFFSET.ALPHA_2_CODE.p) }
-  public static func add(ALPHA_3_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALPHA_3_CODE, at: VTOFFSET.ALPHA_3_CODE.p) }
-  public static func add(STANAG_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STANAG_CODE, at: VTOFFSET.STANAG_CODE.p) }
-  public static func add(INTERNET_CCTLD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERNET_CCTLD, at: VTOFFSET.INTERNET_CCTLD.p) }
-  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(GENC_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GENC_CODE, at: VT.GENC_CODE) }
+  public static func add(ALPHA_2_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALPHA_2_CODE, at: VT.ALPHA_2_CODE) }
+  public static func add(ALPHA_3_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALPHA_3_CODE, at: VT.ALPHA_3_CODE) }
+  public static func add(STANAG_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STANAG_CODE, at: VT.STANAG_CODE) }
+  public static func add(INTERNET_CCTLD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERNET_CCTLD, at: VT.INTERNET_CCTLD) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
   public static func endCTR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCTR(
     _ fbb: inout FlatBufferBuilder,
@@ -92,14 +90,14 @@ public struct CTR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GENC_CODE.p, fieldName: "GENC_CODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ALPHA_2_CODE.p, fieldName: "ALPHA_2_CODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ALPHA_3_CODE.p, fieldName: "ALPHA_3_CODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STANAG_CODE.p, fieldName: "STANAG_CODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INTERNET_CCTLD.p, fieldName: "INTERNET_CCTLD", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GENC_CODE, fieldName: "GENC_CODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALPHA_2_CODE, fieldName: "ALPHA_2_CODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALPHA_3_CODE, fieldName: "ALPHA_3_CODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STANAG_CODE, fieldName: "STANAG_CODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTERNET_CCTLD, fieldName: "INTERNET_CCTLD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

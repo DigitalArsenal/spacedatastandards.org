@@ -100,68 +100,66 @@ public struct PHY: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COMMAND = 4
-    case SIMULATION_STEP = 6
-    case RIGID_BODY = 8
-    case INTEGRATION_CONFIG = 10
-    case COLLISION_QUERY_A = 12
-    case COLLISION_QUERY_B = 14
-    case TRANSFORM_A = 16
-    case TRANSFORM_B = 18
-    case POSITION_A = 20
-    case POSITION_B = 22
-    case FLUID = 24
-    case AERO_QUERY = 26
-    case DRAG_MODEL = 28
-    case THERMAL_STATE = 30
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COMMAND: VOffset = 4
+    static let SIMULATION_STEP: VOffset = 6
+    static let RIGID_BODY: VOffset = 8
+    static let INTEGRATION_CONFIG: VOffset = 10
+    static let COLLISION_QUERY_A: VOffset = 12
+    static let COLLISION_QUERY_B: VOffset = 14
+    static let TRANSFORM_A: VOffset = 16
+    static let TRANSFORM_B: VOffset = 18
+    static let POSITION_A: VOffset = 20
+    static let POSITION_B: VOffset = 22
+    static let FLUID: VOffset = 24
+    static let AERO_QUERY: VOffset = 26
+    static let DRAG_MODEL: VOffset = 28
+    static let THERMAL_STATE: VOffset = 30
   }
 
-  public var COMMAND: String? { let o = _accessor.offset(VTOFFSET.COMMAND.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COMMANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMAND.v) }
-  public var SIMULATION_STEP: String? { let o = _accessor.offset(VTOFFSET.SIMULATION_STEP.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SIMULATION_STEPSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SIMULATION_STEP.v) }
-  public var RIGID_BODY: String? { let o = _accessor.offset(VTOFFSET.RIGID_BODY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RIGID_BODYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RIGID_BODY.v) }
-  public var INTEGRATION_CONFIG: String? { let o = _accessor.offset(VTOFFSET.INTEGRATION_CONFIG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INTEGRATION_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INTEGRATION_CONFIG.v) }
-  public var COLLISION_QUERY_A: String? { let o = _accessor.offset(VTOFFSET.COLLISION_QUERY_A.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLLISION_QUERY_ASegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLLISION_QUERY_A.v) }
-  public var COLLISION_QUERY_B: String? { let o = _accessor.offset(VTOFFSET.COLLISION_QUERY_B.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLLISION_QUERY_BSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLLISION_QUERY_B.v) }
-  public var TRANSFORM_A: String? { let o = _accessor.offset(VTOFFSET.TRANSFORM_A.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRANSFORM_ASegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSFORM_A.v) }
-  public var TRANSFORM_B: String? { let o = _accessor.offset(VTOFFSET.TRANSFORM_B.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRANSFORM_BSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSFORM_B.v) }
-  public var POSITION_A: String? { let o = _accessor.offset(VTOFFSET.POSITION_A.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var POSITION_ASegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POSITION_A.v) }
-  public var POSITION_B: String? { let o = _accessor.offset(VTOFFSET.POSITION_B.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var POSITION_BSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POSITION_B.v) }
-  public var FLUID: String? { let o = _accessor.offset(VTOFFSET.FLUID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FLUIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FLUID.v) }
-  public var AERO_QUERY: String? { let o = _accessor.offset(VTOFFSET.AERO_QUERY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AERO_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AERO_QUERY.v) }
-  public var DRAG_MODEL: String? { let o = _accessor.offset(VTOFFSET.DRAG_MODEL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DRAG_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DRAG_MODEL.v) }
-  public var THERMAL_STATE: String? { let o = _accessor.offset(VTOFFSET.THERMAL_STATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var THERMAL_STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.THERMAL_STATE.v) }
+  public var COMMAND: String? { let o = _accessor.offset(VT.COMMAND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMAND) }
+  public var SIMULATION_STEP: String? { let o = _accessor.offset(VT.SIMULATION_STEP); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIMULATION_STEPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIMULATION_STEP) }
+  public var RIGID_BODY: String? { let o = _accessor.offset(VT.RIGID_BODY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RIGID_BODYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RIGID_BODY) }
+  public var INTEGRATION_CONFIG: String? { let o = _accessor.offset(VT.INTEGRATION_CONFIG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INTEGRATION_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INTEGRATION_CONFIG) }
+  public var COLLISION_QUERY_A: String? { let o = _accessor.offset(VT.COLLISION_QUERY_A); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLLISION_QUERY_ASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLLISION_QUERY_A) }
+  public var COLLISION_QUERY_B: String? { let o = _accessor.offset(VT.COLLISION_QUERY_B); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLLISION_QUERY_BSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLLISION_QUERY_B) }
+  public var TRANSFORM_A: String? { let o = _accessor.offset(VT.TRANSFORM_A); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRANSFORM_ASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRANSFORM_A) }
+  public var TRANSFORM_B: String? { let o = _accessor.offset(VT.TRANSFORM_B); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRANSFORM_BSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRANSFORM_B) }
+  public var POSITION_A: String? { let o = _accessor.offset(VT.POSITION_A); return o == 0 ? nil : _accessor.string(at: o) }
+  public var POSITION_ASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.POSITION_A) }
+  public var POSITION_B: String? { let o = _accessor.offset(VT.POSITION_B); return o == 0 ? nil : _accessor.string(at: o) }
+  public var POSITION_BSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.POSITION_B) }
+  public var FLUID: String? { let o = _accessor.offset(VT.FLUID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FLUIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FLUID) }
+  public var AERO_QUERY: String? { let o = _accessor.offset(VT.AERO_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AERO_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AERO_QUERY) }
+  public var DRAG_MODEL: String? { let o = _accessor.offset(VT.DRAG_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DRAG_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DRAG_MODEL) }
+  public var THERMAL_STATE: String? { let o = _accessor.offset(VT.THERMAL_STATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var THERMAL_STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.THERMAL_STATE) }
   public static func startPHY(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
-  public static func add(COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND, at: VTOFFSET.COMMAND.p) }
-  public static func add(SIMULATION_STEP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIMULATION_STEP, at: VTOFFSET.SIMULATION_STEP.p) }
-  public static func add(RIGID_BODY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RIGID_BODY, at: VTOFFSET.RIGID_BODY.p) }
-  public static func add(INTEGRATION_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGRATION_CONFIG, at: VTOFFSET.INTEGRATION_CONFIG.p) }
-  public static func add(COLLISION_QUERY_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLISION_QUERY_A, at: VTOFFSET.COLLISION_QUERY_A.p) }
-  public static func add(COLLISION_QUERY_B: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLISION_QUERY_B, at: VTOFFSET.COLLISION_QUERY_B.p) }
-  public static func add(TRANSFORM_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSFORM_A, at: VTOFFSET.TRANSFORM_A.p) }
-  public static func add(TRANSFORM_B: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSFORM_B, at: VTOFFSET.TRANSFORM_B.p) }
-  public static func add(POSITION_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_A, at: VTOFFSET.POSITION_A.p) }
-  public static func add(POSITION_B: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_B, at: VTOFFSET.POSITION_B.p) }
-  public static func add(FLUID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLUID, at: VTOFFSET.FLUID.p) }
-  public static func add(AERO_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AERO_QUERY, at: VTOFFSET.AERO_QUERY.p) }
-  public static func add(DRAG_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DRAG_MODEL, at: VTOFFSET.DRAG_MODEL.p) }
-  public static func add(THERMAL_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THERMAL_STATE, at: VTOFFSET.THERMAL_STATE.p) }
+  public static func add(COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND, at: VT.COMMAND) }
+  public static func add(SIMULATION_STEP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIMULATION_STEP, at: VT.SIMULATION_STEP) }
+  public static func add(RIGID_BODY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RIGID_BODY, at: VT.RIGID_BODY) }
+  public static func add(INTEGRATION_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGRATION_CONFIG, at: VT.INTEGRATION_CONFIG) }
+  public static func add(COLLISION_QUERY_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLISION_QUERY_A, at: VT.COLLISION_QUERY_A) }
+  public static func add(COLLISION_QUERY_B: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLISION_QUERY_B, at: VT.COLLISION_QUERY_B) }
+  public static func add(TRANSFORM_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSFORM_A, at: VT.TRANSFORM_A) }
+  public static func add(TRANSFORM_B: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSFORM_B, at: VT.TRANSFORM_B) }
+  public static func add(POSITION_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_A, at: VT.POSITION_A) }
+  public static func add(POSITION_B: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_B, at: VT.POSITION_B) }
+  public static func add(FLUID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLUID, at: VT.FLUID) }
+  public static func add(AERO_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AERO_QUERY, at: VT.AERO_QUERY) }
+  public static func add(DRAG_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DRAG_MODEL, at: VT.DRAG_MODEL) }
+  public static func add(THERMAL_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THERMAL_STATE, at: VT.THERMAL_STATE) }
   public static func endPHY(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPHY(
     _ fbb: inout FlatBufferBuilder,
@@ -200,20 +198,20 @@ public struct PHY: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COMMAND.p, fieldName: "COMMAND", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SIMULATION_STEP.p, fieldName: "SIMULATION_STEP", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RIGID_BODY.p, fieldName: "RIGID_BODY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INTEGRATION_CONFIG.p, fieldName: "INTEGRATION_CONFIG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLLISION_QUERY_A.p, fieldName: "COLLISION_QUERY_A", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLLISION_QUERY_B.p, fieldName: "COLLISION_QUERY_B", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRANSFORM_A.p, fieldName: "TRANSFORM_A", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRANSFORM_B.p, fieldName: "TRANSFORM_B", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.POSITION_A.p, fieldName: "POSITION_A", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.POSITION_B.p, fieldName: "POSITION_B", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FLUID.p, fieldName: "FLUID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.AERO_QUERY.p, fieldName: "AERO_QUERY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DRAG_MODEL.p, fieldName: "DRAG_MODEL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.THERMAL_STATE.p, fieldName: "THERMAL_STATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMAND, fieldName: "COMMAND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIMULATION_STEP, fieldName: "SIMULATION_STEP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RIGID_BODY, fieldName: "RIGID_BODY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTEGRATION_CONFIG, fieldName: "INTEGRATION_CONFIG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLLISION_QUERY_A, fieldName: "COLLISION_QUERY_A", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLLISION_QUERY_B, fieldName: "COLLISION_QUERY_B", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRANSFORM_A, fieldName: "TRANSFORM_A", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRANSFORM_B, fieldName: "TRANSFORM_B", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POSITION_A, fieldName: "POSITION_A", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POSITION_B, fieldName: "POSITION_B", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FLUID, fieldName: "FLUID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AERO_QUERY, fieldName: "AERO_QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DRAG_MODEL, fieldName: "DRAG_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.THERMAL_STATE, fieldName: "THERMAL_STATE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

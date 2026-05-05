@@ -95,29 +95,27 @@ public struct SHWUniform: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case UNIFORM_NAME = 4
-    case UNIFORM_TYPE = 6
-    case UNIFORM_DESCRIPTION = 8
-    case UNIFORM_DEFAULT_VALUE = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let UNIFORM_NAME: VOffset = 4
+    static let UNIFORM_TYPE: VOffset = 6
+    static let UNIFORM_DESCRIPTION: VOffset = 8
+    static let UNIFORM_DEFAULT_VALUE: VOffset = 10
   }
 
-  public var UNIFORM_NAME: String? { let o = _accessor.offset(VTOFFSET.UNIFORM_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var UNIFORM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.UNIFORM_NAME.v) }
-  public var UNIFORM_TYPE: shaderUniformType { let o = _accessor.offset(VTOFFSET.UNIFORM_TYPE.v); return o == 0 ? .float : shaderUniformType(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .float }
+  public var UNIFORM_NAME: String? { let o = _accessor.offset(VT.UNIFORM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UNIFORM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UNIFORM_NAME) }
+  public var UNIFORM_TYPE: shaderUniformType { let o = _accessor.offset(VT.UNIFORM_TYPE); return o == 0 ? .float : shaderUniformType(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .float }
   ///  Optional human-readable description.
-  public var UNIFORM_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.UNIFORM_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var UNIFORM_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.UNIFORM_DESCRIPTION.v) }
+  public var UNIFORM_DESCRIPTION: String? { let o = _accessor.offset(VT.UNIFORM_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UNIFORM_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UNIFORM_DESCRIPTION) }
   ///  Optional default value encoded as bytes in the native type layout.
-  public var UNIFORM_DEFAULT_VALUE: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.UNIFORM_DEFAULT_VALUE.v, byteSize: 1) }
-  public func withUnsafePointerToUniformDefaultValue<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.UNIFORM_DEFAULT_VALUE.v, body: body) }
+  public var UNIFORM_DEFAULT_VALUE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.UNIFORM_DEFAULT_VALUE, byteSize: 1) }
+  public func withUnsafePointerToUniformDefaultValue<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.UNIFORM_DEFAULT_VALUE, body: body) }
   public static func startSHWUniform(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(UNIFORM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNIFORM_NAME, at: VTOFFSET.UNIFORM_NAME.p) }
-  public static func add(UNIFORM_TYPE: shaderUniformType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNIFORM_TYPE.rawValue, def: 0, at: VTOFFSET.UNIFORM_TYPE.p) }
-  public static func add(UNIFORM_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNIFORM_DESCRIPTION, at: VTOFFSET.UNIFORM_DESCRIPTION.p) }
-  public static func addVectorOf(UNIFORM_DEFAULT_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNIFORM_DEFAULT_VALUE, at: VTOFFSET.UNIFORM_DEFAULT_VALUE.p) }
+  public static func add(UNIFORM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNIFORM_NAME, at: VT.UNIFORM_NAME) }
+  public static func add(UNIFORM_TYPE: shaderUniformType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNIFORM_TYPE.rawValue, def: 0, at: VT.UNIFORM_TYPE) }
+  public static func add(UNIFORM_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNIFORM_DESCRIPTION, at: VT.UNIFORM_DESCRIPTION) }
+  public static func addVectorOf(UNIFORM_DEFAULT_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNIFORM_DEFAULT_VALUE, at: VT.UNIFORM_DEFAULT_VALUE) }
   public static func endSHWUniform(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSHWUniform(
     _ fbb: inout FlatBufferBuilder,
@@ -136,10 +134,10 @@ public struct SHWUniform: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.UNIFORM_NAME.p, fieldName: "UNIFORM_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UNIFORM_TYPE.p, fieldName: "UNIFORM_TYPE", required: false, type: shaderUniformType.self)
-    try _v.visit(field: VTOFFSET.UNIFORM_DESCRIPTION.p, fieldName: "UNIFORM_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UNIFORM_DEFAULT_VALUE.p, fieldName: "UNIFORM_DEFAULT_VALUE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.UNIFORM_NAME, fieldName: "UNIFORM_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UNIFORM_TYPE, fieldName: "UNIFORM_TYPE", required: false, type: shaderUniformType.self)
+    try _v.visit(field: VT.UNIFORM_DESCRIPTION, fieldName: "UNIFORM_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UNIFORM_DEFAULT_VALUE, fieldName: "UNIFORM_DEFAULT_VALUE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }
@@ -157,39 +155,37 @@ public struct SHWCompileRequest: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHADER_NAME = 4
-    case SHADER_STAGE = 6
-    case SHADER_INJECTION_POINT = 8
-    case SHADER_SOURCE = 10
-    case GLSL_VERSION = 12
-    case SHADER_UNIFORMS = 14
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHADER_NAME: VOffset = 4
+    static let SHADER_STAGE: VOffset = 6
+    static let SHADER_INJECTION_POINT: VOffset = 8
+    static let SHADER_SOURCE: VOffset = 10
+    static let GLSL_VERSION: VOffset = 12
+    static let SHADER_UNIFORMS: VOffset = 14
   }
 
   ///  Logical shader name (used in logs and uniform prefixing).
-  public var SHADER_NAME: String? { let o = _accessor.offset(VTOFFSET.SHADER_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADER_NAME.v) }
+  public var SHADER_NAME: String? { let o = _accessor.offset(VT.SHADER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADER_NAME) }
   ///  Target GLSL stage.
-  public var SHADER_STAGE: glslStage { let o = _accessor.offset(VTOFFSET.SHADER_STAGE.v); return o == 0 ? .vertex : glslStage(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .vertex }
+  public var SHADER_STAGE: glslStage { let o = _accessor.offset(VT.SHADER_STAGE); return o == 0 ? .vertex : glslStage(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .vertex }
   ///  Intended injection point in the host pipeline.
-  public var SHADER_INJECTION_POINT: shaderHookPoint { let o = _accessor.offset(VTOFFSET.SHADER_INJECTION_POINT.v); return o == 0 ? .none_ : shaderHookPoint(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  public var SHADER_INJECTION_POINT: shaderHookPoint { let o = _accessor.offset(VT.SHADER_INJECTION_POINT); return o == 0 ? .none_ : shaderHookPoint(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
   ///  GLSL source (or preprocessed chunk).
-  public var SHADER_SOURCE: String? { let o = _accessor.offset(VTOFFSET.SHADER_SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADER_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADER_SOURCE.v) }
+  public var SHADER_SOURCE: String? { let o = _accessor.offset(VT.SHADER_SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADER_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADER_SOURCE) }
   ///  GLSL version string (for example `300 es`).
-  public var GLSL_VERSION: String? { let o = _accessor.offset(VTOFFSET.GLSL_VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GLSL_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GLSL_VERSION.v) }
+  public var GLSL_VERSION: String? { let o = _accessor.offset(VT.GLSL_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GLSL_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GLSL_VERSION) }
   ///  Expected uniforms declared by the source.
-  public var SHADER_UNIFORMS: FlatbufferVector<SHWUniform> { return _accessor.vector(at: VTOFFSET.SHADER_UNIFORMS.v, byteSize: 4) }
+  public var SHADER_UNIFORMS: FlatbufferVector<SHWUniform> { return _accessor.vector(at: VT.SHADER_UNIFORMS, byteSize: 4) }
   public static func startSHWCompileRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(SHADER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADER_NAME, at: VTOFFSET.SHADER_NAME.p) }
-  public static func add(SHADER_STAGE: glslStage, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHADER_STAGE.rawValue, def: 0, at: VTOFFSET.SHADER_STAGE.p) }
-  public static func add(SHADER_INJECTION_POINT: shaderHookPoint, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHADER_INJECTION_POINT.rawValue, def: 0, at: VTOFFSET.SHADER_INJECTION_POINT.p) }
-  public static func add(SHADER_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADER_SOURCE, at: VTOFFSET.SHADER_SOURCE.p) }
-  public static func add(GLSL_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GLSL_VERSION, at: VTOFFSET.GLSL_VERSION.p) }
-  public static func addVectorOf(SHADER_UNIFORMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADER_UNIFORMS, at: VTOFFSET.SHADER_UNIFORMS.p) }
+  public static func add(SHADER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADER_NAME, at: VT.SHADER_NAME) }
+  public static func add(SHADER_STAGE: glslStage, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHADER_STAGE.rawValue, def: 0, at: VT.SHADER_STAGE) }
+  public static func add(SHADER_INJECTION_POINT: shaderHookPoint, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHADER_INJECTION_POINT.rawValue, def: 0, at: VT.SHADER_INJECTION_POINT) }
+  public static func add(SHADER_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADER_SOURCE, at: VT.SHADER_SOURCE) }
+  public static func add(GLSL_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GLSL_VERSION, at: VT.GLSL_VERSION) }
+  public static func addVectorOf(SHADER_UNIFORMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADER_UNIFORMS, at: VT.SHADER_UNIFORMS) }
   public static func endSHWCompileRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSHWCompileRequest(
     _ fbb: inout FlatBufferBuilder,
@@ -212,12 +208,12 @@ public struct SHWCompileRequest: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHADER_NAME.p, fieldName: "SHADER_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHADER_STAGE.p, fieldName: "SHADER_STAGE", required: false, type: glslStage.self)
-    try _v.visit(field: VTOFFSET.SHADER_INJECTION_POINT.p, fieldName: "SHADER_INJECTION_POINT", required: false, type: shaderHookPoint.self)
-    try _v.visit(field: VTOFFSET.SHADER_SOURCE.p, fieldName: "SHADER_SOURCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GLSL_VERSION.p, fieldName: "GLSL_VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHADER_UNIFORMS.p, fieldName: "SHADER_UNIFORMS", required: false, type: ForwardOffset<Vector<ForwardOffset<SHWUniform>, SHWUniform>>.self)
+    try _v.visit(field: VT.SHADER_NAME, fieldName: "SHADER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHADER_STAGE, fieldName: "SHADER_STAGE", required: false, type: glslStage.self)
+    try _v.visit(field: VT.SHADER_INJECTION_POINT, fieldName: "SHADER_INJECTION_POINT", required: false, type: shaderHookPoint.self)
+    try _v.visit(field: VT.SHADER_SOURCE, fieldName: "SHADER_SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GLSL_VERSION, fieldName: "GLSL_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHADER_UNIFORMS, fieldName: "SHADER_UNIFORMS", required: false, type: ForwardOffset<Vector<ForwardOffset<SHWUniform>, SHWUniform>>.self)
     _v.finish()
   }
 }
@@ -234,35 +230,33 @@ public struct SHWCompileResponse: FlatBufferTable, FlatbuffersVectorInitializabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHADER_NAME = 4
-    case COMPILE_SUCCESS = 6
-    case INFO_LOG = 8
-    case COMPILED_BINARY = 10
-    case LINKED_UNIFORMS = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHADER_NAME: VOffset = 4
+    static let COMPILE_SUCCESS: VOffset = 6
+    static let INFO_LOG: VOffset = 8
+    static let COMPILED_BINARY: VOffset = 10
+    static let LINKED_UNIFORMS: VOffset = 12
   }
 
-  public var SHADER_NAME: String? { let o = _accessor.offset(VTOFFSET.SHADER_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADER_NAME.v) }
+  public var SHADER_NAME: String? { let o = _accessor.offset(VT.SHADER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADER_NAME) }
   ///  Whether compilation succeeded.
-  public var COMPILE_SUCCESS: Bool { let o = _accessor.offset(VTOFFSET.COMPILE_SUCCESS.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var COMPILE_SUCCESS: Bool { let o = _accessor.offset(VT.COMPILE_SUCCESS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Optional GLSL info log.
-  public var INFO_LOG: String? { let o = _accessor.offset(VTOFFSET.INFO_LOG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INFO_LOGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INFO_LOG.v) }
+  public var INFO_LOG: String? { let o = _accessor.offset(VT.INFO_LOG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INFO_LOGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INFO_LOG) }
   ///  Optional compiled binary (if the compiler emits one).
-  public var COMPILED_BINARY: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.COMPILED_BINARY.v, byteSize: 1) }
-  public func withUnsafePointerToCompiledBinary<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COMPILED_BINARY.v, body: body) }
+  public var COMPILED_BINARY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.COMPILED_BINARY, byteSize: 1) }
+  public func withUnsafePointerToCompiledBinary<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COMPILED_BINARY, body: body) }
   ///  Echo of the uniforms the compiler actually linked.
-  public var LINKED_UNIFORMS: FlatbufferVector<SHWUniform> { return _accessor.vector(at: VTOFFSET.LINKED_UNIFORMS.v, byteSize: 4) }
+  public var LINKED_UNIFORMS: FlatbufferVector<SHWUniform> { return _accessor.vector(at: VT.LINKED_UNIFORMS, byteSize: 4) }
   public static func startSHWCompileResponse(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(SHADER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADER_NAME, at: VTOFFSET.SHADER_NAME.p) }
+  public static func add(SHADER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADER_NAME, at: VT.SHADER_NAME) }
   public static func add(COMPILE_SUCCESS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPILE_SUCCESS, def: false,
-   at: VTOFFSET.COMPILE_SUCCESS.p) }
-  public static func add(INFO_LOG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INFO_LOG, at: VTOFFSET.INFO_LOG.p) }
-  public static func addVectorOf(COMPILED_BINARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPILED_BINARY, at: VTOFFSET.COMPILED_BINARY.p) }
-  public static func addVectorOf(LINKED_UNIFORMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINKED_UNIFORMS, at: VTOFFSET.LINKED_UNIFORMS.p) }
+   at: VT.COMPILE_SUCCESS) }
+  public static func add(INFO_LOG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INFO_LOG, at: VT.INFO_LOG) }
+  public static func addVectorOf(COMPILED_BINARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPILED_BINARY, at: VT.COMPILED_BINARY) }
+  public static func addVectorOf(LINKED_UNIFORMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINKED_UNIFORMS, at: VT.LINKED_UNIFORMS) }
   public static func endSHWCompileResponse(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSHWCompileResponse(
     _ fbb: inout FlatBufferBuilder,
@@ -283,11 +277,11 @@ public struct SHWCompileResponse: FlatBufferTable, FlatbuffersVectorInitializabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHADER_NAME.p, fieldName: "SHADER_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COMPILE_SUCCESS.p, fieldName: "COMPILE_SUCCESS", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.INFO_LOG.p, fieldName: "INFO_LOG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COMPILED_BINARY.p, fieldName: "COMPILED_BINARY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.LINKED_UNIFORMS.p, fieldName: "LINKED_UNIFORMS", required: false, type: ForwardOffset<Vector<ForwardOffset<SHWUniform>, SHWUniform>>.self)
+    try _v.visit(field: VT.SHADER_NAME, fieldName: "SHADER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMPILE_SUCCESS, fieldName: "COMPILE_SUCCESS", required: false, type: Bool.self)
+    try _v.visit(field: VT.INFO_LOG, fieldName: "INFO_LOG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMPILED_BINARY, fieldName: "COMPILED_BINARY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.LINKED_UNIFORMS, fieldName: "LINKED_UNIFORMS", required: false, type: ForwardOffset<Vector<ForwardOffset<SHWUniform>, SHWUniform>>.self)
     _v.finish()
   }
 }
@@ -305,18 +299,16 @@ public struct SHW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COMPILE_REQUEST = 4
-    case COMPILE_RESPONSE = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COMPILE_REQUEST: VOffset = 4
+    static let COMPILE_RESPONSE: VOffset = 6
   }
 
-  public var COMPILE_REQUEST: SHWCompileRequest? { let o = _accessor.offset(VTOFFSET.COMPILE_REQUEST.v); return o == 0 ? nil : SHWCompileRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var COMPILE_RESPONSE: SHWCompileResponse? { let o = _accessor.offset(VTOFFSET.COMPILE_RESPONSE.v); return o == 0 ? nil : SHWCompileResponse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COMPILE_REQUEST: SHWCompileRequest? { let o = _accessor.offset(VT.COMPILE_REQUEST); return o == 0 ? nil : SHWCompileRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COMPILE_RESPONSE: SHWCompileResponse? { let o = _accessor.offset(VT.COMPILE_RESPONSE); return o == 0 ? nil : SHWCompileResponse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startSHW(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(COMPILE_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPILE_REQUEST, at: VTOFFSET.COMPILE_REQUEST.p) }
-  public static func add(COMPILE_RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPILE_RESPONSE, at: VTOFFSET.COMPILE_RESPONSE.p) }
+  public static func add(COMPILE_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPILE_REQUEST, at: VT.COMPILE_REQUEST) }
+  public static func add(COMPILE_RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPILE_RESPONSE, at: VT.COMPILE_RESPONSE) }
   public static func endSHW(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSHW(
     _ fbb: inout FlatBufferBuilder,
@@ -331,8 +323,8 @@ public struct SHW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COMPILE_REQUEST.p, fieldName: "COMPILE_REQUEST", required: false, type: ForwardOffset<SHWCompileRequest>.self)
-    try _v.visit(field: VTOFFSET.COMPILE_RESPONSE.p, fieldName: "COMPILE_RESPONSE", required: false, type: ForwardOffset<SHWCompileResponse>.self)
+    try _v.visit(field: VT.COMPILE_REQUEST, fieldName: "COMPILE_REQUEST", required: false, type: ForwardOffset<SHWCompileRequest>.self)
+    try _v.visit(field: VT.COMPILE_RESPONSE, fieldName: "COMPILE_RESPONSE", required: false, type: ForwardOffset<SHWCompileResponse>.self)
     _v.finish()
   }
 }

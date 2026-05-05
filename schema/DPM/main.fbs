@@ -1,0 +1,130 @@
+// Hash: 255bed9c598577692f98a238959d02e4ee9f3b023fcea87d49043da4a1a797fa
+// Version: 1.0.1
+// -----------------------------------END_HEADER
+/// Dataset Publication Manifest
+
+/// Published artifact role within a dataset update.
+enum publicationAssetKind : byte {
+  DATA_SHARD,
+  QUERY_INDEX,
+  MANIFEST,
+  OTHER
+}
+
+/// One immutable content-addressed object published for a dataset update.
+table DPMAsset {
+  /// Asset role.
+  ASSET_KIND: publicationAssetKind = OTHER;
+  /// IPFS CIDv1/multihash content identifier.
+  CID: string (required);
+  /// Multiformat address, usually /ipfs/{CID}.
+  MULTIFORMAT_ADDRESS: string;
+  /// File name or logical artifact name.
+  FILE_NAME: string;
+  /// Byte length of the published object.
+  BYTE_LENGTH: uint64;
+  /// SHA-256 hash of the exact published bytes, lowercase hex.
+  BYTE_SHA256: string;
+  /// SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
+  SCHEMA_NAME: string;
+  /// Hash of the SDS schema used to encode this object.
+  SCHEMA_HASH: string;
+  /// Optional content-key identifier for encrypted artifacts.
+  CONTENT_KEY_ID: string;
+}
+
+/// Source batch metadata bound into the dataset publication.
+table DPMSourceBatch {
+  /// Provider-controlled source name.
+  SOURCE_NAME: string;
+  /// Original source URL.
+  SOURCE_URL: string;
+  /// SHA-256 hash of raw source bytes, lowercase hex.
+  SOURCE_SHA256: string;
+  /// HTTP ETag observed during retrieval.
+  HTTP_ETAG: string;
+  /// HTTP Last-Modified value observed during retrieval.
+  HTTP_LAST_MODIFIED: string;
+  /// Retrieval timestamp in ISO 8601 UTC.
+  RETRIEVED_AT: string;
+  /// Parser or transform version.
+  PARSER_VERSION: string;
+  /// Number of normalized records emitted from this source.
+  RECORD_COUNT: uint64;
+  /// Warnings or policy notes produced during normalization.
+  WARNINGS: [string];
+}
+
+/// Canonical query metadata that can replay the dataset selection.
+table DPMQueryBinding {
+  /// Canonical query text or canonical JSON representation.
+  CANONICAL_QUERY: string (required);
+  /// SHA-256 hash of CANONICAL_QUERY, lowercase hex.
+  QUERY_SHA256: string (required);
+  /// SHA-256 hash of the ordered result bytes, lowercase hex.
+  RESULT_SHA256: string (required);
+  /// Query engine or profile name, e.g. FlatSQL.
+  QUERY_ENGINE: string;
+  /// Query engine version or profile version.
+  QUERY_ENGINE_VERSION: string;
+  /// SDS schema names selected by the query.
+  SCHEMA_NAMES: [string];
+  /// Provider peer IDs selected by the query.
+  PROVIDER_IDS: [string];
+  /// Source names selected by the query.
+  SOURCE_NAMES: [string];
+  /// Batch IDs selected by the query.
+  BATCH_IDS: [string];
+  /// Inclusive query window start in ISO 8601 UTC.
+  WINDOW_START: string;
+  /// Inclusive query window end in ISO 8601 UTC.
+  WINDOW_END: string;
+}
+
+/// Encryption metadata for protected dataset artifacts.
+table DPMEncryptionBinding {
+  /// Whether any artifact in this manifest is encrypted.
+  ENCRYPTED: bool;
+  /// Encryption algorithm, e.g. AES-256-GCM.
+  ALGORITHM: string;
+  /// Content-key identifier.
+  CONTENT_KEY_ID: string;
+  /// Key epoch or rotation label.
+  KEY_EPOCH: string;
+  /// Policy or listing identifier bound as AAD.
+  POLICY_ID: string;
+  /// SHA-256 hash of canonical encryption AAD, lowercase hex.
+  AAD_SHA256: string;
+}
+
+/// Dataset Publication Manifest binding data/index CIDs, query replay,
+/// source hashes, schema hashes, encryption metadata, and provider signature.
+table DPM {
+  /// Manifest format version.
+  VERSION: string;
+  /// Stable dataset identifier.
+  DATASET_ID: string (required);
+  /// Dataset update or batch identifier.
+  UPDATE_ID: string (required);
+  /// Provider peer ID.
+  PROVIDER_PEER_ID: string (required);
+  /// Provider EPM CID.
+  PROVIDER_EPM_CID: string;
+  /// Publication timestamp in ISO 8601 UTC.
+  PUBLISH_TIMESTAMP: string (required);
+  /// Published shard, index, and auxiliary artifacts.
+  ASSETS: [DPMAsset];
+  /// Source batches used to build the dataset.
+  SOURCES: [DPMSourceBatch];
+  /// Replayable query binding.
+  QUERY: DPMQueryBinding;
+  /// Encryption/key metadata.
+  ENCRYPTION: DPMEncryptionBinding;
+  /// Provider signature over the canonical manifest bytes or manifest digest.
+  PROVIDER_SIGNATURE: [ubyte];
+  /// Signature algorithm, e.g. Ed25519.
+  SIGNATURE_TYPE: string;
+}
+
+root_type DPM;
+file_identifier "$DPM";

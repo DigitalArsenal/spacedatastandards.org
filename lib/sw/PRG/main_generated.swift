@@ -20,30 +20,28 @@ public struct PRG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case HD_KEY_PATH = 6
-    case MESSAGE_TYPES = 8
-    case USERS = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let HD_KEY_PATH: VOffset = 6
+    static let MESSAGE_TYPES: VOffset = 8
+    static let USERS: VOffset = 10
   }
 
   ///  The name of the program
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Hierarchical Deterministic (HD) derivation path for the program's key, used in cryptocurrency wallets
-  public var HD_KEY_PATH: String? { let o = _accessor.offset(VTOFFSET.HD_KEY_PATH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HD_KEY_PATHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HD_KEY_PATH.v) }
+  public var HD_KEY_PATH: String? { let o = _accessor.offset(VT.HD_KEY_PATH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HD_KEY_PATHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HD_KEY_PATH) }
   ///  Vector of standard message types used by the program
-  public var MESSAGE_TYPES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MESSAGE_TYPES.v, byteSize: 4) }
+  public var MESSAGE_TYPES: FlatbufferVector<String?> { return _accessor.vector(at: VT.MESSAGE_TYPES, byteSize: 4) }
   ///  Vector of users associated with the program, each user can have assigned message types
-  public var USERS: FlatbufferVector<USR> { return _accessor.vector(at: VTOFFSET.USERS.v, byteSize: 4) }
+  public var USERS: FlatbufferVector<USR> { return _accessor.vector(at: VT.USERS, byteSize: 4) }
   public static func startPRG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(HD_KEY_PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HD_KEY_PATH, at: VTOFFSET.HD_KEY_PATH.p) }
-  public static func addVectorOf(MESSAGE_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_TYPES, at: VTOFFSET.MESSAGE_TYPES.p) }
-  public static func addVectorOf(USERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USERS, at: VTOFFSET.USERS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(HD_KEY_PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HD_KEY_PATH, at: VT.HD_KEY_PATH) }
+  public static func addVectorOf(MESSAGE_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_TYPES, at: VT.MESSAGE_TYPES) }
+  public static func addVectorOf(USERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USERS, at: VT.USERS) }
   public static func endPRG(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPRG(
     _ fbb: inout FlatBufferBuilder,
@@ -62,10 +60,10 @@ public struct PRG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.HD_KEY_PATH.p, fieldName: "HD_KEY_PATH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MESSAGE_TYPES.p, fieldName: "MESSAGE_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.USERS.p, fieldName: "USERS", required: false, type: ForwardOffset<Vector<ForwardOffset<USR>, USR>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HD_KEY_PATH, fieldName: "HD_KEY_PATH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MESSAGE_TYPES, fieldName: "MESSAGE_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.USERS, fieldName: "USERS", required: false, type: ForwardOffset<Vector<ForwardOffset<USR>, USR>>.self)
     _v.finish()
   }
 }
@@ -81,19 +79,17 @@ public struct USR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case MESSAGE_TYPES = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let MESSAGE_TYPES: VOffset = 6
   }
 
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
-  public var MESSAGE_TYPES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MESSAGE_TYPES.v, byteSize: 4) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
+  public var MESSAGE_TYPES: FlatbufferVector<String?> { return _accessor.vector(at: VT.MESSAGE_TYPES, byteSize: 4) }
   public static func startUSR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func addVectorOf(MESSAGE_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_TYPES, at: VTOFFSET.MESSAGE_TYPES.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func addVectorOf(MESSAGE_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_TYPES, at: VT.MESSAGE_TYPES) }
   public static func endUSR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createUSR(
     _ fbb: inout FlatBufferBuilder,
@@ -108,8 +104,8 @@ public struct USR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MESSAGE_TYPES.p, fieldName: "MESSAGE_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MESSAGE_TYPES, fieldName: "MESSAGE_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

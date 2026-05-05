@@ -20,156 +20,154 @@ public struct WTH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case ID_SENSOR = 6
-    case ORIG_SENSOR_ID = 8
-    case OB_TIME = 10
-    case FILE_CREATION = 12
-    case QC_VALUE = 14
-    case TERM_ALT = 16
-    case AVG_TX_PWR = 18
-    case AVG_REF_PWR = 20
-    case SECTOR_NUM = 22
-    case NUM_ELEMENTS = 24
-    case CHECKSUM = 26
-    case SIG_PWRS = 28
-    case NOISE_LVLS = 30
-    case SPEC_WIDTHS = 32
-    case FIRST_GUESS_AVGS = 34
-    case TD_AVG_SAMPLE_NUMS = 36
-    case CO_INTEGS = 38
-    case SPEC_AVGS = 40
-    case INTERPULSE_PERIODS = 42
-    case DOPP_VELS = 44
-    case CONS_RECS = 46
-    case SNRS = 48
-    case SIG_STRENGTH = 50
-    case SEMI_MAJOR_AXIS = 52
-    case SEMI_MINOR_AXIS = 54
-    case ANGLE_ORIENTATION = 56
-    case LIGHT_EVENT_NUM = 58
-    case LIGHT_DET_SENSORS = 60
-    case POS_CONFIDENCE = 62
-    case SRC_TYPS = 64
-    case SRC_IDS = 66
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let ID_SENSOR: VOffset = 6
+    static let ORIG_SENSOR_ID: VOffset = 8
+    static let OB_TIME: VOffset = 10
+    static let FILE_CREATION: VOffset = 12
+    static let QC_VALUE: VOffset = 14
+    static let TERM_ALT: VOffset = 16
+    static let AVG_TX_PWR: VOffset = 18
+    static let AVG_REF_PWR: VOffset = 20
+    static let SECTOR_NUM: VOffset = 22
+    static let NUM_ELEMENTS: VOffset = 24
+    static let CHECKSUM: VOffset = 26
+    static let SIG_PWRS: VOffset = 28
+    static let NOISE_LVLS: VOffset = 30
+    static let SPEC_WIDTHS: VOffset = 32
+    static let FIRST_GUESS_AVGS: VOffset = 34
+    static let TD_AVG_SAMPLE_NUMS: VOffset = 36
+    static let CO_INTEGS: VOffset = 38
+    static let SPEC_AVGS: VOffset = 40
+    static let INTERPULSE_PERIODS: VOffset = 42
+    static let DOPP_VELS: VOffset = 44
+    static let CONS_RECS: VOffset = 46
+    static let SNRS: VOffset = 48
+    static let SIG_STRENGTH: VOffset = 50
+    static let SEMI_MAJOR_AXIS: VOffset = 52
+    static let SEMI_MINOR_AXIS: VOffset = 54
+    static let ANGLE_ORIENTATION: VOffset = 56
+    static let LIGHT_EVENT_NUM: VOffset = 58
+    static let LIGHT_DET_SENSORS: VOffset = 60
+    static let POS_CONFIDENCE: VOffset = 62
+    static let SRC_TYPS: VOffset = 64
+    static let SRC_IDS: VOffset = 66
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Sensor identifier
-  public var ID_SENSOR: String? { let o = _accessor.offset(VTOFFSET.ID_SENSOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_SENSOR.v) }
+  public var ID_SENSOR: String? { let o = _accessor.offset(VT.ID_SENSOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_SENSOR) }
   ///  Original sensor identifier
-  public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_SENSOR_ID.v) }
+  public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VT.ORIG_SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_SENSOR_ID) }
   ///  Observation time (ISO 8601)
-  public var OB_TIME: String? { let o = _accessor.offset(VTOFFSET.OB_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OB_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_TIME.v) }
+  public var OB_TIME: String? { let o = _accessor.offset(VT.OB_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OB_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OB_TIME) }
   ///  File creation time (ISO 8601)
-  public var FILE_CREATION: String? { let o = _accessor.offset(VTOFFSET.FILE_CREATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FILE_CREATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FILE_CREATION.v) }
+  public var FILE_CREATION: String? { let o = _accessor.offset(VT.FILE_CREATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_CREATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_CREATION) }
   ///  Quality control value
-  public var QC_VALUE: UInt8 { let o = _accessor.offset(VTOFFSET.QC_VALUE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var QC_VALUE: UInt8 { let o = _accessor.offset(VT.QC_VALUE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Terminal altitude (km)
-  public var TERM_ALT: Double { let o = _accessor.offset(VTOFFSET.TERM_ALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TERM_ALT: Double { let o = _accessor.offset(VT.TERM_ALT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Average transmit power (dBm)
-  public var AVG_TX_PWR: Double { let o = _accessor.offset(VTOFFSET.AVG_TX_PWR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var AVG_TX_PWR: Double { let o = _accessor.offset(VT.AVG_TX_PWR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Average reflected power (dBm)
-  public var AVG_REF_PWR: Double { let o = _accessor.offset(VTOFFSET.AVG_REF_PWR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var AVG_REF_PWR: Double { let o = _accessor.offset(VT.AVG_REF_PWR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sector number
-  public var SECTOR_NUM: UInt16 { let o = _accessor.offset(VTOFFSET.SECTOR_NUM.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SECTOR_NUM: UInt16 { let o = _accessor.offset(VT.SECTOR_NUM); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Number of data elements
-  public var NUM_ELEMENTS: UInt16 { let o = _accessor.offset(VTOFFSET.NUM_ELEMENTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var NUM_ELEMENTS: UInt16 { let o = _accessor.offset(VT.NUM_ELEMENTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Checksum
-  public var CHECKSUM: UInt32 { let o = _accessor.offset(VTOFFSET.CHECKSUM.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var CHECKSUM: UInt32 { let o = _accessor.offset(VT.CHECKSUM); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Signal power values (dBm)
-  public var SIG_PWRS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SIG_PWRS.v, byteSize: 8) }
-  public func withUnsafePointerToSigPwrs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SIG_PWRS.v, body: body) }
+  public var SIG_PWRS: FlatbufferVector<Double> { return _accessor.vector(at: VT.SIG_PWRS, byteSize: 8) }
+  public func withUnsafePointerToSigPwrs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIG_PWRS, body: body) }
   ///  Noise level values (dBm)
-  public var NOISE_LVLS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.NOISE_LVLS.v, byteSize: 8) }
-  public func withUnsafePointerToNoiseLvls<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.NOISE_LVLS.v, body: body) }
+  public var NOISE_LVLS: FlatbufferVector<Double> { return _accessor.vector(at: VT.NOISE_LVLS, byteSize: 8) }
+  public func withUnsafePointerToNoiseLvls<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.NOISE_LVLS, body: body) }
   ///  Spectral width values (m/s)
-  public var SPEC_WIDTHS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SPEC_WIDTHS.v, byteSize: 8) }
-  public func withUnsafePointerToSpecWidths<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SPEC_WIDTHS.v, body: body) }
+  public var SPEC_WIDTHS: FlatbufferVector<Double> { return _accessor.vector(at: VT.SPEC_WIDTHS, byteSize: 8) }
+  public func withUnsafePointerToSpecWidths<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SPEC_WIDTHS, body: body) }
   ///  First guess average values
-  public var FIRST_GUESS_AVGS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.FIRST_GUESS_AVGS.v, byteSize: 8) }
-  public func withUnsafePointerToFirstGuessAvgs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.FIRST_GUESS_AVGS.v, body: body) }
+  public var FIRST_GUESS_AVGS: FlatbufferVector<Double> { return _accessor.vector(at: VT.FIRST_GUESS_AVGS, byteSize: 8) }
+  public func withUnsafePointerToFirstGuessAvgs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.FIRST_GUESS_AVGS, body: body) }
   ///  Time domain average sample numbers
-  public var TD_AVG_SAMPLE_NUMS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.TD_AVG_SAMPLE_NUMS.v, byteSize: 8) }
-  public func withUnsafePointerToTdAvgSampleNums<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.TD_AVG_SAMPLE_NUMS.v, body: body) }
+  public var TD_AVG_SAMPLE_NUMS: FlatbufferVector<Double> { return _accessor.vector(at: VT.TD_AVG_SAMPLE_NUMS, byteSize: 8) }
+  public func withUnsafePointerToTdAvgSampleNums<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TD_AVG_SAMPLE_NUMS, body: body) }
   ///  Co-integration values
-  public var CO_INTEGS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.CO_INTEGS.v, byteSize: 8) }
-  public func withUnsafePointerToCoIntegs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.CO_INTEGS.v, body: body) }
+  public var CO_INTEGS: FlatbufferVector<Double> { return _accessor.vector(at: VT.CO_INTEGS, byteSize: 8) }
+  public func withUnsafePointerToCoIntegs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CO_INTEGS, body: body) }
   ///  Spectral average values
-  public var SPEC_AVGS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SPEC_AVGS.v, byteSize: 8) }
-  public func withUnsafePointerToSpecAvgs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SPEC_AVGS.v, body: body) }
+  public var SPEC_AVGS: FlatbufferVector<Double> { return _accessor.vector(at: VT.SPEC_AVGS, byteSize: 8) }
+  public func withUnsafePointerToSpecAvgs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SPEC_AVGS, body: body) }
   ///  Interpulse periods (microseconds)
-  public var INTERPULSE_PERIODS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.INTERPULSE_PERIODS.v, byteSize: 8) }
-  public func withUnsafePointerToInterpulsePeriods<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.INTERPULSE_PERIODS.v, body: body) }
+  public var INTERPULSE_PERIODS: FlatbufferVector<Double> { return _accessor.vector(at: VT.INTERPULSE_PERIODS, byteSize: 8) }
+  public func withUnsafePointerToInterpulsePeriods<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.INTERPULSE_PERIODS, body: body) }
   ///  Doppler velocities (m/s)
-  public var DOPP_VELS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.DOPP_VELS.v, byteSize: 8) }
-  public func withUnsafePointerToDoppVels<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DOPP_VELS.v, body: body) }
+  public var DOPP_VELS: FlatbufferVector<Double> { return _accessor.vector(at: VT.DOPP_VELS, byteSize: 8) }
+  public func withUnsafePointerToDoppVels<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DOPP_VELS, body: body) }
   ///  Consecutive records count
-  public var CONS_RECS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.CONS_RECS.v, byteSize: 8) }
-  public func withUnsafePointerToConsRecs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.CONS_RECS.v, body: body) }
+  public var CONS_RECS: FlatbufferVector<Double> { return _accessor.vector(at: VT.CONS_RECS, byteSize: 8) }
+  public func withUnsafePointerToConsRecs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CONS_RECS, body: body) }
   ///  Signal-to-noise ratios (dB)
-  public var SNRS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SNRS.v, byteSize: 8) }
-  public func withUnsafePointerToSnrs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SNRS.v, body: body) }
+  public var SNRS: FlatbufferVector<Double> { return _accessor.vector(at: VT.SNRS, byteSize: 8) }
+  public func withUnsafePointerToSnrs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SNRS, body: body) }
   ///  Signal strength (dBm)
-  public var SIG_STRENGTH: Double { let o = _accessor.offset(VTOFFSET.SIG_STRENGTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SIG_STRENGTH: Double { let o = _accessor.offset(VT.SIG_STRENGTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Error ellipse semi-major axis (km)
-  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VTOFFSET.SEMI_MAJOR_AXIS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VT.SEMI_MAJOR_AXIS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Error ellipse semi-minor axis (km)
-  public var SEMI_MINOR_AXIS: Double { let o = _accessor.offset(VTOFFSET.SEMI_MINOR_AXIS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEMI_MINOR_AXIS: Double { let o = _accessor.offset(VT.SEMI_MINOR_AXIS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Error ellipse orientation angle (degrees)
-  public var ANGLE_ORIENTATION: Double { let o = _accessor.offset(VTOFFSET.ANGLE_ORIENTATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ANGLE_ORIENTATION: Double { let o = _accessor.offset(VT.ANGLE_ORIENTATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Lightning event number
-  public var LIGHT_EVENT_NUM: UInt32 { let o = _accessor.offset(VTOFFSET.LIGHT_EVENT_NUM.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var LIGHT_EVENT_NUM: UInt32 { let o = _accessor.offset(VT.LIGHT_EVENT_NUM); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Lightning detection sensor identifiers
-  public var LIGHT_DET_SENSORS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.LIGHT_DET_SENSORS.v, byteSize: 4) }
+  public var LIGHT_DET_SENSORS: FlatbufferVector<String?> { return _accessor.vector(at: VT.LIGHT_DET_SENSORS, byteSize: 4) }
   ///  Position confidence (0-1)
-  public var POS_CONFIDENCE: Double { let o = _accessor.offset(VTOFFSET.POS_CONFIDENCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POS_CONFIDENCE: Double { let o = _accessor.offset(VT.POS_CONFIDENCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Source types
-  public var SRC_TYPS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SRC_TYPS.v, byteSize: 4) }
+  public var SRC_TYPS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SRC_TYPS, byteSize: 4) }
   ///  Source identifiers
-  public var SRC_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SRC_IDS.v, byteSize: 4) }
+  public var SRC_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SRC_IDS, byteSize: 4) }
   public static func startWTH(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 32) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VTOFFSET.ID_SENSOR.p) }
-  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
-  public static func add(OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TIME, at: VTOFFSET.OB_TIME.p) }
-  public static func add(FILE_CREATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_CREATION, at: VTOFFSET.FILE_CREATION.p) }
-  public static func add(QC_VALUE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC_VALUE, def: 0, at: VTOFFSET.QC_VALUE.p) }
-  public static func add(TERM_ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TERM_ALT, def: 0.0, at: VTOFFSET.TERM_ALT.p) }
-  public static func add(AVG_TX_PWR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AVG_TX_PWR, def: 0.0, at: VTOFFSET.AVG_TX_PWR.p) }
-  public static func add(AVG_REF_PWR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AVG_REF_PWR, def: 0.0, at: VTOFFSET.AVG_REF_PWR.p) }
-  public static func add(SECTOR_NUM: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECTOR_NUM, def: 0, at: VTOFFSET.SECTOR_NUM.p) }
-  public static func add(NUM_ELEMENTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_ELEMENTS, def: 0, at: VTOFFSET.NUM_ELEMENTS.p) }
-  public static func add(CHECKSUM: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHECKSUM, def: 0, at: VTOFFSET.CHECKSUM.p) }
-  public static func addVectorOf(SIG_PWRS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIG_PWRS, at: VTOFFSET.SIG_PWRS.p) }
-  public static func addVectorOf(NOISE_LVLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOISE_LVLS, at: VTOFFSET.NOISE_LVLS.p) }
-  public static func addVectorOf(SPEC_WIDTHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPEC_WIDTHS, at: VTOFFSET.SPEC_WIDTHS.p) }
-  public static func addVectorOf(FIRST_GUESS_AVGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIRST_GUESS_AVGS, at: VTOFFSET.FIRST_GUESS_AVGS.p) }
-  public static func addVectorOf(TD_AVG_SAMPLE_NUMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TD_AVG_SAMPLE_NUMS, at: VTOFFSET.TD_AVG_SAMPLE_NUMS.p) }
-  public static func addVectorOf(CO_INTEGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CO_INTEGS, at: VTOFFSET.CO_INTEGS.p) }
-  public static func addVectorOf(SPEC_AVGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPEC_AVGS, at: VTOFFSET.SPEC_AVGS.p) }
-  public static func addVectorOf(INTERPULSE_PERIODS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERPULSE_PERIODS, at: VTOFFSET.INTERPULSE_PERIODS.p) }
-  public static func addVectorOf(DOPP_VELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOPP_VELS, at: VTOFFSET.DOPP_VELS.p) }
-  public static func addVectorOf(CONS_RECS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONS_RECS, at: VTOFFSET.CONS_RECS.p) }
-  public static func addVectorOf(SNRS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SNRS, at: VTOFFSET.SNRS.p) }
-  public static func add(SIG_STRENGTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIG_STRENGTH, def: 0.0, at: VTOFFSET.SIG_STRENGTH.p) }
-  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VTOFFSET.SEMI_MAJOR_AXIS.p) }
-  public static func add(SEMI_MINOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MINOR_AXIS, def: 0.0, at: VTOFFSET.SEMI_MINOR_AXIS.p) }
-  public static func add(ANGLE_ORIENTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_ORIENTATION, def: 0.0, at: VTOFFSET.ANGLE_ORIENTATION.p) }
-  public static func add(LIGHT_EVENT_NUM: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIGHT_EVENT_NUM, def: 0, at: VTOFFSET.LIGHT_EVENT_NUM.p) }
-  public static func addVectorOf(LIGHT_DET_SENSORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LIGHT_DET_SENSORS, at: VTOFFSET.LIGHT_DET_SENSORS.p) }
-  public static func add(POS_CONFIDENCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_CONFIDENCE, def: 0.0, at: VTOFFSET.POS_CONFIDENCE.p) }
-  public static func addVectorOf(SRC_TYPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRC_TYPS, at: VTOFFSET.SRC_TYPS.p) }
-  public static func addVectorOf(SRC_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRC_IDS, at: VTOFFSET.SRC_IDS.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VT.ID_SENSOR) }
+  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VT.ORIG_SENSOR_ID) }
+  public static func add(OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TIME, at: VT.OB_TIME) }
+  public static func add(FILE_CREATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_CREATION, at: VT.FILE_CREATION) }
+  public static func add(QC_VALUE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC_VALUE, def: 0, at: VT.QC_VALUE) }
+  public static func add(TERM_ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TERM_ALT, def: 0.0, at: VT.TERM_ALT) }
+  public static func add(AVG_TX_PWR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AVG_TX_PWR, def: 0.0, at: VT.AVG_TX_PWR) }
+  public static func add(AVG_REF_PWR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AVG_REF_PWR, def: 0.0, at: VT.AVG_REF_PWR) }
+  public static func add(SECTOR_NUM: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECTOR_NUM, def: 0, at: VT.SECTOR_NUM) }
+  public static func add(NUM_ELEMENTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_ELEMENTS, def: 0, at: VT.NUM_ELEMENTS) }
+  public static func add(CHECKSUM: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHECKSUM, def: 0, at: VT.CHECKSUM) }
+  public static func addVectorOf(SIG_PWRS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIG_PWRS, at: VT.SIG_PWRS) }
+  public static func addVectorOf(NOISE_LVLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOISE_LVLS, at: VT.NOISE_LVLS) }
+  public static func addVectorOf(SPEC_WIDTHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPEC_WIDTHS, at: VT.SPEC_WIDTHS) }
+  public static func addVectorOf(FIRST_GUESS_AVGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIRST_GUESS_AVGS, at: VT.FIRST_GUESS_AVGS) }
+  public static func addVectorOf(TD_AVG_SAMPLE_NUMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TD_AVG_SAMPLE_NUMS, at: VT.TD_AVG_SAMPLE_NUMS) }
+  public static func addVectorOf(CO_INTEGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CO_INTEGS, at: VT.CO_INTEGS) }
+  public static func addVectorOf(SPEC_AVGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPEC_AVGS, at: VT.SPEC_AVGS) }
+  public static func addVectorOf(INTERPULSE_PERIODS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERPULSE_PERIODS, at: VT.INTERPULSE_PERIODS) }
+  public static func addVectorOf(DOPP_VELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOPP_VELS, at: VT.DOPP_VELS) }
+  public static func addVectorOf(CONS_RECS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONS_RECS, at: VT.CONS_RECS) }
+  public static func addVectorOf(SNRS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SNRS, at: VT.SNRS) }
+  public static func add(SIG_STRENGTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIG_STRENGTH, def: 0.0, at: VT.SIG_STRENGTH) }
+  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VT.SEMI_MAJOR_AXIS) }
+  public static func add(SEMI_MINOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MINOR_AXIS, def: 0.0, at: VT.SEMI_MINOR_AXIS) }
+  public static func add(ANGLE_ORIENTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_ORIENTATION, def: 0.0, at: VT.ANGLE_ORIENTATION) }
+  public static func add(LIGHT_EVENT_NUM: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIGHT_EVENT_NUM, def: 0, at: VT.LIGHT_EVENT_NUM) }
+  public static func addVectorOf(LIGHT_DET_SENSORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LIGHT_DET_SENSORS, at: VT.LIGHT_DET_SENSORS) }
+  public static func add(POS_CONFIDENCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_CONFIDENCE, def: 0.0, at: VT.POS_CONFIDENCE) }
+  public static func addVectorOf(SRC_TYPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRC_TYPS, at: VT.SRC_TYPS) }
+  public static func addVectorOf(SRC_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRC_IDS, at: VT.SRC_IDS) }
   public static func endWTH(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createWTH(
     _ fbb: inout FlatBufferBuilder,
@@ -244,38 +242,38 @@ public struct WTH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_SENSOR.p, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID.p, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OB_TIME.p, fieldName: "OB_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FILE_CREATION.p, fieldName: "FILE_CREATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.QC_VALUE.p, fieldName: "QC_VALUE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.TERM_ALT.p, fieldName: "TERM_ALT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.AVG_TX_PWR.p, fieldName: "AVG_TX_PWR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.AVG_REF_PWR.p, fieldName: "AVG_REF_PWR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SECTOR_NUM.p, fieldName: "SECTOR_NUM", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.NUM_ELEMENTS.p, fieldName: "NUM_ELEMENTS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.CHECKSUM.p, fieldName: "CHECKSUM", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.SIG_PWRS.p, fieldName: "SIG_PWRS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.NOISE_LVLS.p, fieldName: "NOISE_LVLS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.SPEC_WIDTHS.p, fieldName: "SPEC_WIDTHS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.FIRST_GUESS_AVGS.p, fieldName: "FIRST_GUESS_AVGS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.TD_AVG_SAMPLE_NUMS.p, fieldName: "TD_AVG_SAMPLE_NUMS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.CO_INTEGS.p, fieldName: "CO_INTEGS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.SPEC_AVGS.p, fieldName: "SPEC_AVGS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.INTERPULSE_PERIODS.p, fieldName: "INTERPULSE_PERIODS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.DOPP_VELS.p, fieldName: "DOPP_VELS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.CONS_RECS.p, fieldName: "CONS_RECS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.SNRS.p, fieldName: "SNRS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.SIG_STRENGTH.p, fieldName: "SIG_STRENGTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SEMI_MAJOR_AXIS.p, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SEMI_MINOR_AXIS.p, fieldName: "SEMI_MINOR_AXIS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ANGLE_ORIENTATION.p, fieldName: "ANGLE_ORIENTATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LIGHT_EVENT_NUM.p, fieldName: "LIGHT_EVENT_NUM", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.LIGHT_DET_SENSORS.p, fieldName: "LIGHT_DET_SENSORS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.POS_CONFIDENCE.p, fieldName: "POS_CONFIDENCE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SRC_TYPS.p, fieldName: "SRC_TYPS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.SRC_IDS.p, fieldName: "SRC_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_SENSOR, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIG_SENSOR_ID, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OB_TIME, fieldName: "OB_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILE_CREATION, fieldName: "FILE_CREATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.QC_VALUE, fieldName: "QC_VALUE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.TERM_ALT, fieldName: "TERM_ALT", required: false, type: Double.self)
+    try _v.visit(field: VT.AVG_TX_PWR, fieldName: "AVG_TX_PWR", required: false, type: Double.self)
+    try _v.visit(field: VT.AVG_REF_PWR, fieldName: "AVG_REF_PWR", required: false, type: Double.self)
+    try _v.visit(field: VT.SECTOR_NUM, fieldName: "SECTOR_NUM", required: false, type: UInt16.self)
+    try _v.visit(field: VT.NUM_ELEMENTS, fieldName: "NUM_ELEMENTS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.CHECKSUM, fieldName: "CHECKSUM", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SIG_PWRS, fieldName: "SIG_PWRS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.NOISE_LVLS, fieldName: "NOISE_LVLS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SPEC_WIDTHS, fieldName: "SPEC_WIDTHS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.FIRST_GUESS_AVGS, fieldName: "FIRST_GUESS_AVGS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.TD_AVG_SAMPLE_NUMS, fieldName: "TD_AVG_SAMPLE_NUMS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.CO_INTEGS, fieldName: "CO_INTEGS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SPEC_AVGS, fieldName: "SPEC_AVGS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.INTERPULSE_PERIODS, fieldName: "INTERPULSE_PERIODS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.DOPP_VELS, fieldName: "DOPP_VELS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.CONS_RECS, fieldName: "CONS_RECS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SNRS, fieldName: "SNRS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SIG_STRENGTH, fieldName: "SIG_STRENGTH", required: false, type: Double.self)
+    try _v.visit(field: VT.SEMI_MAJOR_AXIS, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
+    try _v.visit(field: VT.SEMI_MINOR_AXIS, fieldName: "SEMI_MINOR_AXIS", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLE_ORIENTATION, fieldName: "ANGLE_ORIENTATION", required: false, type: Double.self)
+    try _v.visit(field: VT.LIGHT_EVENT_NUM, fieldName: "LIGHT_EVENT_NUM", required: false, type: UInt32.self)
+    try _v.visit(field: VT.LIGHT_DET_SENSORS, fieldName: "LIGHT_DET_SENSORS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.POS_CONFIDENCE, fieldName: "POS_CONFIDENCE", required: false, type: Double.self)
+    try _v.visit(field: VT.SRC_TYPS, fieldName: "SRC_TYPS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SRC_IDS, fieldName: "SRC_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

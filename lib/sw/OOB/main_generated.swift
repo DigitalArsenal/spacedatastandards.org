@@ -20,74 +20,72 @@ public struct OOB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case ID_ON_ORBIT = 6
-    case ID_BATTERY = 8
-    case NAME = 10
-    case CHEMISTRY = 12
-    case QUANTITY = 14
-    case VOLTAGE = 16
-    case CAPACITY_AH = 18
-    case ENERGY_WH = 20
-    case MAX_DOD = 22
-    case CYCLE_LIFE = 24
-    case MASS = 26
-    case STATE_OF_HEALTH = 28
-    case NOTES = 30
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let ID_ON_ORBIT: VOffset = 6
+    static let ID_BATTERY: VOffset = 8
+    static let NAME: VOffset = 10
+    static let CHEMISTRY: VOffset = 12
+    static let QUANTITY: VOffset = 14
+    static let VOLTAGE: VOffset = 16
+    static let CAPACITY_AH: VOffset = 18
+    static let ENERGY_WH: VOffset = 20
+    static let MAX_DOD: VOffset = 22
+    static let CYCLE_LIFE: VOffset = 24
+    static let MASS: VOffset = 26
+    static let STATE_OF_HEALTH: VOffset = 28
+    static let NOTES: VOffset = 30
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Reference to parent on-orbit object
-  public var ID_ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ID_ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_ON_ORBIT.v) }
+  public var ID_ON_ORBIT: String? { let o = _accessor.offset(VT.ID_ON_ORBIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_ON_ORBIT) }
   ///  Reference to battery specification
-  public var ID_BATTERY: String? { let o = _accessor.offset(VTOFFSET.ID_BATTERY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_BATTERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_BATTERY.v) }
+  public var ID_BATTERY: String? { let o = _accessor.offset(VT.ID_BATTERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_BATTERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_BATTERY) }
   ///  Battery name or designation
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Battery chemistry (e.g., LI_ION, NICD, NIMH, LIPO, SILVER_ZINC)
-  public var CHEMISTRY: String? { let o = _accessor.offset(VTOFFSET.CHEMISTRY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CHEMISTRYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CHEMISTRY.v) }
+  public var CHEMISTRY: String? { let o = _accessor.offset(VT.CHEMISTRY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHEMISTRYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHEMISTRY) }
   ///  Number of batteries of this type
-  public var QUANTITY: UInt32 { let o = _accessor.offset(VTOFFSET.QUANTITY.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var QUANTITY: UInt32 { let o = _accessor.offset(VT.QUANTITY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Nominal voltage in Volts
-  public var VOLTAGE: Double { let o = _accessor.offset(VTOFFSET.VOLTAGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VOLTAGE: Double { let o = _accessor.offset(VT.VOLTAGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Capacity in Amp-hours
-  public var CAPACITY_AH: Double { let o = _accessor.offset(VTOFFSET.CAPACITY_AH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CAPACITY_AH: Double { let o = _accessor.offset(VT.CAPACITY_AH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Energy capacity in Watt-hours
-  public var ENERGY_WH: Double { let o = _accessor.offset(VTOFFSET.ENERGY_WH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ENERGY_WH: Double { let o = _accessor.offset(VT.ENERGY_WH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum depth of discharge as fraction (0.0-1.0)
-  public var MAX_DOD: Double { let o = _accessor.offset(VTOFFSET.MAX_DOD.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_DOD: Double { let o = _accessor.offset(VT.MAX_DOD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of charge/discharge cycles rated
-  public var CYCLE_LIFE: UInt32 { let o = _accessor.offset(VTOFFSET.CYCLE_LIFE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var CYCLE_LIFE: UInt32 { let o = _accessor.offset(VT.CYCLE_LIFE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Battery mass in kg
-  public var MASS: Double { let o = _accessor.offset(VTOFFSET.MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MASS: Double { let o = _accessor.offset(VT.MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Current state of health as fraction (0.0-1.0)
-  public var STATE_OF_HEALTH: Double { let o = _accessor.offset(VTOFFSET.STATE_OF_HEALTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STATE_OF_HEALTH: Double { let o = _accessor.offset(VT.STATE_OF_HEALTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Additional notes
-  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
   public static func startOOB(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(ID_ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ON_ORBIT, at: VTOFFSET.ID_ON_ORBIT.p) }
-  public static func add(ID_BATTERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_BATTERY, at: VTOFFSET.ID_BATTERY.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(CHEMISTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHEMISTRY, at: VTOFFSET.CHEMISTRY.p) }
-  public static func add(QUANTITY: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUANTITY, def: 0, at: VTOFFSET.QUANTITY.p) }
-  public static func add(VOLTAGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VOLTAGE, def: 0.0, at: VTOFFSET.VOLTAGE.p) }
-  public static func add(CAPACITY_AH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CAPACITY_AH, def: 0.0, at: VTOFFSET.CAPACITY_AH.p) }
-  public static func add(ENERGY_WH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENERGY_WH, def: 0.0, at: VTOFFSET.ENERGY_WH.p) }
-  public static func add(MAX_DOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_DOD, def: 0.0, at: VTOFFSET.MAX_DOD.p) }
-  public static func add(CYCLE_LIFE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CYCLE_LIFE, def: 0, at: VTOFFSET.CYCLE_LIFE.p) }
-  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VTOFFSET.MASS.p) }
-  public static func add(STATE_OF_HEALTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE_OF_HEALTH, def: 0.0, at: VTOFFSET.STATE_OF_HEALTH.p) }
-  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(ID_ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ON_ORBIT, at: VT.ID_ON_ORBIT) }
+  public static func add(ID_BATTERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_BATTERY, at: VT.ID_BATTERY) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(CHEMISTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHEMISTRY, at: VT.CHEMISTRY) }
+  public static func add(QUANTITY: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUANTITY, def: 0, at: VT.QUANTITY) }
+  public static func add(VOLTAGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VOLTAGE, def: 0.0, at: VT.VOLTAGE) }
+  public static func add(CAPACITY_AH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CAPACITY_AH, def: 0.0, at: VT.CAPACITY_AH) }
+  public static func add(ENERGY_WH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENERGY_WH, def: 0.0, at: VT.ENERGY_WH) }
+  public static func add(MAX_DOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_DOD, def: 0.0, at: VT.MAX_DOD) }
+  public static func add(CYCLE_LIFE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CYCLE_LIFE, def: 0, at: VT.CYCLE_LIFE) }
+  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VT.MASS) }
+  public static func add(STATE_OF_HEALTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE_OF_HEALTH, def: 0.0, at: VT.STATE_OF_HEALTH) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
   public static func endOOB(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOOB(
     _ fbb: inout FlatBufferBuilder,
@@ -126,20 +124,20 @@ public struct OOB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_ON_ORBIT.p, fieldName: "ID_ON_ORBIT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_BATTERY.p, fieldName: "ID_BATTERY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CHEMISTRY.p, fieldName: "CHEMISTRY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.QUANTITY.p, fieldName: "QUANTITY", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.VOLTAGE.p, fieldName: "VOLTAGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CAPACITY_AH.p, fieldName: "CAPACITY_AH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ENERGY_WH.p, fieldName: "ENERGY_WH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_DOD.p, fieldName: "MAX_DOD", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CYCLE_LIFE.p, fieldName: "CYCLE_LIFE", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.MASS.p, fieldName: "MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STATE_OF_HEALTH.p, fieldName: "STATE_OF_HEALTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_ON_ORBIT, fieldName: "ID_ON_ORBIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_BATTERY, fieldName: "ID_BATTERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CHEMISTRY, fieldName: "CHEMISTRY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.QUANTITY, fieldName: "QUANTITY", required: false, type: UInt32.self)
+    try _v.visit(field: VT.VOLTAGE, fieldName: "VOLTAGE", required: false, type: Double.self)
+    try _v.visit(field: VT.CAPACITY_AH, fieldName: "CAPACITY_AH", required: false, type: Double.self)
+    try _v.visit(field: VT.ENERGY_WH, fieldName: "ENERGY_WH", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_DOD, fieldName: "MAX_DOD", required: false, type: Double.self)
+    try _v.visit(field: VT.CYCLE_LIFE, fieldName: "CYCLE_LIFE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MASS, fieldName: "MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.STATE_OF_HEALTH, fieldName: "STATE_OF_HEALTH", required: false, type: Double.self)
+    try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

@@ -34,31 +34,31 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 /**
  * Unique identifier for this review
  */
-REVIEW_ID():string|null
-REVIEW_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-REVIEW_ID(optionalEncoding?:any):string|Uint8Array|null {
+REVIEW_ID():string
+REVIEW_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+REVIEW_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
  * ID of the listing being reviewed
  */
-LISTING_ID():string|null
-LISTING_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LISTING_ID(optionalEncoding?:any):string|Uint8Array|null {
+LISTING_ID():string
+LISTING_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+LISTING_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
  * Peer ID of the reviewer
  */
-REVIEWER_PEER_ID():string|null
-REVIEWER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-REVIEWER_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
+REVIEWER_PEER_ID():string
+REVIEWER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+REVIEWER_PEER_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**

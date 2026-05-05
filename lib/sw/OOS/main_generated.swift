@@ -20,84 +20,82 @@ public struct OOS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case ID_ON_ORBIT = 6
-    case ID_SOLAR_ARRAY = 8
-    case NAME = 10
-    case CELL_TYPE = 12
-    case QUANTITY = 14
-    case AREA = 16
-    case POWER_BOL = 18
-    case POWER_EOL = 20
-    case EFFICIENCY = 22
-    case DEGRADATION_RATE = 24
-    case NUM_PANELS = 26
-    case DEPLOYABLE = 28
-    case TRACKING = 30
-    case MASS = 32
-    case NOTES = 34
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let ID_ON_ORBIT: VOffset = 6
+    static let ID_SOLAR_ARRAY: VOffset = 8
+    static let NAME: VOffset = 10
+    static let CELL_TYPE: VOffset = 12
+    static let QUANTITY: VOffset = 14
+    static let AREA: VOffset = 16
+    static let POWER_BOL: VOffset = 18
+    static let POWER_EOL: VOffset = 20
+    static let EFFICIENCY: VOffset = 22
+    static let DEGRADATION_RATE: VOffset = 24
+    static let NUM_PANELS: VOffset = 26
+    static let DEPLOYABLE: VOffset = 28
+    static let TRACKING: VOffset = 30
+    static let MASS: VOffset = 32
+    static let NOTES: VOffset = 34
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Reference to parent on-orbit object
-  public var ID_ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ID_ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_ON_ORBIT.v) }
+  public var ID_ON_ORBIT: String? { let o = _accessor.offset(VT.ID_ON_ORBIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_ON_ORBIT) }
   ///  Reference to solar array specification
-  public var ID_SOLAR_ARRAY: String? { let o = _accessor.offset(VTOFFSET.ID_SOLAR_ARRAY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_SOLAR_ARRAYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_SOLAR_ARRAY.v) }
+  public var ID_SOLAR_ARRAY: String? { let o = _accessor.offset(VT.ID_SOLAR_ARRAY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_SOLAR_ARRAYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_SOLAR_ARRAY) }
   ///  Solar array name or designation
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Solar cell type (e.g., SILICON, GAAS, MULTI_JUNCTION, THIN_FILM, PEROVSKITE)
-  public var CELL_TYPE: String? { let o = _accessor.offset(VTOFFSET.CELL_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CELL_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CELL_TYPE.v) }
+  public var CELL_TYPE: String? { let o = _accessor.offset(VT.CELL_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CELL_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CELL_TYPE) }
   ///  Number of solar arrays of this type
-  public var QUANTITY: UInt32 { let o = _accessor.offset(VTOFFSET.QUANTITY.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var QUANTITY: UInt32 { let o = _accessor.offset(VT.QUANTITY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Total array area in square meters
-  public var AREA: Double { let o = _accessor.offset(VTOFFSET.AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var AREA: Double { let o = _accessor.offset(VT.AREA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Beginning of life power output in Watts
-  public var POWER_BOL: Double { let o = _accessor.offset(VTOFFSET.POWER_BOL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POWER_BOL: Double { let o = _accessor.offset(VT.POWER_BOL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  End of life power output in Watts
-  public var POWER_EOL: Double { let o = _accessor.offset(VTOFFSET.POWER_EOL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POWER_EOL: Double { let o = _accessor.offset(VT.POWER_EOL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Conversion efficiency as fraction (0.0-1.0)
-  public var EFFICIENCY: Double { let o = _accessor.offset(VTOFFSET.EFFICIENCY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EFFICIENCY: Double { let o = _accessor.offset(VT.EFFICIENCY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Degradation rate per year as fraction
-  public var DEGRADATION_RATE: Double { let o = _accessor.offset(VTOFFSET.DEGRADATION_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DEGRADATION_RATE: Double { let o = _accessor.offset(VT.DEGRADATION_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of panels per array
-  public var NUM_PANELS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_PANELS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var NUM_PANELS: UInt32 { let o = _accessor.offset(VT.NUM_PANELS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Whether the array is deployable
-  public var DEPLOYABLE: Bool { let o = _accessor.offset(VTOFFSET.DEPLOYABLE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var DEPLOYABLE: Bool { let o = _accessor.offset(VT.DEPLOYABLE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether the array is articulable/tracking
-  public var TRACKING: Bool { let o = _accessor.offset(VTOFFSET.TRACKING.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var TRACKING: Bool { let o = _accessor.offset(VT.TRACKING); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Array mass in kg
-  public var MASS: Double { let o = _accessor.offset(VTOFFSET.MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MASS: Double { let o = _accessor.offset(VT.MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Additional notes
-  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
   public static func startOOS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(ID_ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ON_ORBIT, at: VTOFFSET.ID_ON_ORBIT.p) }
-  public static func add(ID_SOLAR_ARRAY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SOLAR_ARRAY, at: VTOFFSET.ID_SOLAR_ARRAY.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(CELL_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CELL_TYPE, at: VTOFFSET.CELL_TYPE.p) }
-  public static func add(QUANTITY: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUANTITY, def: 0, at: VTOFFSET.QUANTITY.p) }
-  public static func add(AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA, def: 0.0, at: VTOFFSET.AREA.p) }
-  public static func add(POWER_BOL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER_BOL, def: 0.0, at: VTOFFSET.POWER_BOL.p) }
-  public static func add(POWER_EOL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER_EOL, def: 0.0, at: VTOFFSET.POWER_EOL.p) }
-  public static func add(EFFICIENCY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EFFICIENCY, def: 0.0, at: VTOFFSET.EFFICIENCY.p) }
-  public static func add(DEGRADATION_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEGRADATION_RATE, def: 0.0, at: VTOFFSET.DEGRADATION_RATE.p) }
-  public static func add(NUM_PANELS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_PANELS, def: 0, at: VTOFFSET.NUM_PANELS.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(ID_ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ON_ORBIT, at: VT.ID_ON_ORBIT) }
+  public static func add(ID_SOLAR_ARRAY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SOLAR_ARRAY, at: VT.ID_SOLAR_ARRAY) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(CELL_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CELL_TYPE, at: VT.CELL_TYPE) }
+  public static func add(QUANTITY: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUANTITY, def: 0, at: VT.QUANTITY) }
+  public static func add(AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA, def: 0.0, at: VT.AREA) }
+  public static func add(POWER_BOL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER_BOL, def: 0.0, at: VT.POWER_BOL) }
+  public static func add(POWER_EOL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER_EOL, def: 0.0, at: VT.POWER_EOL) }
+  public static func add(EFFICIENCY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EFFICIENCY, def: 0.0, at: VT.EFFICIENCY) }
+  public static func add(DEGRADATION_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEGRADATION_RATE, def: 0.0, at: VT.DEGRADATION_RATE) }
+  public static func add(NUM_PANELS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_PANELS, def: 0, at: VT.NUM_PANELS) }
   public static func add(DEPLOYABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEPLOYABLE, def: false,
-   at: VTOFFSET.DEPLOYABLE.p) }
+   at: VT.DEPLOYABLE) }
   public static func add(TRACKING: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACKING, def: false,
-   at: VTOFFSET.TRACKING.p) }
-  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VTOFFSET.MASS.p) }
-  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
+   at: VT.TRACKING) }
+  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VT.MASS) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
   public static func endOOS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOOS(
     _ fbb: inout FlatBufferBuilder,
@@ -140,22 +138,22 @@ public struct OOS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_ON_ORBIT.p, fieldName: "ID_ON_ORBIT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_SOLAR_ARRAY.p, fieldName: "ID_SOLAR_ARRAY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CELL_TYPE.p, fieldName: "CELL_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.QUANTITY.p, fieldName: "QUANTITY", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.AREA.p, fieldName: "AREA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POWER_BOL.p, fieldName: "POWER_BOL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POWER_EOL.p, fieldName: "POWER_EOL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EFFICIENCY.p, fieldName: "EFFICIENCY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DEGRADATION_RATE.p, fieldName: "DEGRADATION_RATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NUM_PANELS.p, fieldName: "NUM_PANELS", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.DEPLOYABLE.p, fieldName: "DEPLOYABLE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.TRACKING.p, fieldName: "TRACKING", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.MASS.p, fieldName: "MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_ON_ORBIT, fieldName: "ID_ON_ORBIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_SOLAR_ARRAY, fieldName: "ID_SOLAR_ARRAY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CELL_TYPE, fieldName: "CELL_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.QUANTITY, fieldName: "QUANTITY", required: false, type: UInt32.self)
+    try _v.visit(field: VT.AREA, fieldName: "AREA", required: false, type: Double.self)
+    try _v.visit(field: VT.POWER_BOL, fieldName: "POWER_BOL", required: false, type: Double.self)
+    try _v.visit(field: VT.POWER_EOL, fieldName: "POWER_EOL", required: false, type: Double.self)
+    try _v.visit(field: VT.EFFICIENCY, fieldName: "EFFICIENCY", required: false, type: Double.self)
+    try _v.visit(field: VT.DEGRADATION_RATE, fieldName: "DEGRADATION_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.NUM_PANELS, fieldName: "NUM_PANELS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.DEPLOYABLE, fieldName: "DEPLOYABLE", required: false, type: Bool.self)
+    try _v.visit(field: VT.TRACKING, fieldName: "TRACKING", required: false, type: Bool.self)
+    try _v.visit(field: VT.MASS, fieldName: "MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

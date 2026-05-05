@@ -38,11 +38,11 @@ static getSizePrefixedRootAsPLGAcceptedTypeSet(bb:flatbuffers.ByteBuffer, obj?:P
 /**
  * Stable type-set identifier within the port.
  */
-SET_ID():string|null
-SET_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SET_ID(optionalEncoding?:any):string|Uint8Array|null {
+SET_ID():string
+SET_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+SET_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**

@@ -27,11 +27,11 @@ static getSizePrefixedRootAsPLGBuildArtifact(bb:flatbuffers.ByteBuffer, obj?:PLG
   return (obj || new PLGBuildArtifact()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-ARTIFACT_ID():string|null
-ARTIFACT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ARTIFACT_ID(optionalEncoding?:any):string|Uint8Array|null {
+ARTIFACT_ID():string
+ARTIFACT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+ARTIFACT_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 KIND():string|null
@@ -41,11 +41,11 @@ KIND(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-PATH():string|null
-PATH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-PATH(optionalEncoding?:any):string|Uint8Array|null {
+PATH():string
+PATH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+PATH(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 TARGET():string|null

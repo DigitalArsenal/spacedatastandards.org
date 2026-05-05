@@ -20,94 +20,92 @@ public struct SWR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case ON_ORBIT = 6
-    case ORIG_OBJECT_ID = 8
-    case SAT_NO = 10
-    case TS = 12
-    case SOLAR_PHASE_ANGLE = 14
-    case LAT = 16
-    case LON = 18
-    case LOCATION_NAME = 20
-    case BAD_WAVE = 22
-    case WAVELENGTHS = 24
-    case ABS_FLUXES = 26
-    case RATIO_WAVELENGTHS = 28
-    case FLUX_RATIOS = 30
-    case TEMPERATURE = 32
-    case SIGNAL_NOISE_RATIO = 34
-    case INTEGRATION_TIME = 36
-    case QUALITY = 38
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let ON_ORBIT: VOffset = 6
+    static let ORIG_OBJECT_ID: VOffset = 8
+    static let SAT_NO: VOffset = 10
+    static let TS: VOffset = 12
+    static let SOLAR_PHASE_ANGLE: VOffset = 14
+    static let LAT: VOffset = 16
+    static let LON: VOffset = 18
+    static let LOCATION_NAME: VOffset = 20
+    static let BAD_WAVE: VOffset = 22
+    static let WAVELENGTHS: VOffset = 24
+    static let ABS_FLUXES: VOffset = 26
+    static let RATIO_WAVELENGTHS: VOffset = 28
+    static let FLUX_RATIOS: VOffset = 30
+    static let TEMPERATURE: VOffset = 32
+    static let SIGNAL_NOISE_RATIO: VOffset = 34
+    static let INTEGRATION_TIME: VOffset = 36
+    static let QUALITY: VOffset = 38
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  On-orbit reference
-  public var ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ON_ORBIT.v) }
+  public var ON_ORBIT: String? { let o = _accessor.offset(VT.ON_ORBIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ON_ORBIT) }
   ///  International designator
-  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
+  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VT.ORIG_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_OBJECT_ID) }
   ///  Satellite catalog number
-  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VT.SAT_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Observation timestamp (ISO 8601)
-  public var TS: String? { let o = _accessor.offset(VTOFFSET.TS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TS.v) }
+  public var TS: String? { let o = _accessor.offset(VT.TS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TS) }
   ///  Solar phase angle (degrees)
-  public var SOLAR_PHASE_ANGLE: Double { let o = _accessor.offset(VTOFFSET.SOLAR_PHASE_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SOLAR_PHASE_ANGLE: Double { let o = _accessor.offset(VT.SOLAR_PHASE_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sub-observer latitude (degrees)
-  public var LAT: Double { let o = _accessor.offset(VTOFFSET.LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LAT: Double { let o = _accessor.offset(VT.LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sub-observer longitude (degrees)
-  public var LON: Double { let o = _accessor.offset(VTOFFSET.LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LON: Double { let o = _accessor.offset(VT.LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Location name
-  public var LOCATION_NAME: String? { let o = _accessor.offset(VTOFFSET.LOCATION_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LOCATION_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LOCATION_NAME.v) }
+  public var LOCATION_NAME: String? { let o = _accessor.offset(VT.LOCATION_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LOCATION_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LOCATION_NAME) }
   ///  Bad wavelength flag or identifier
-  public var BAD_WAVE: String? { let o = _accessor.offset(VTOFFSET.BAD_WAVE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BAD_WAVESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BAD_WAVE.v) }
+  public var BAD_WAVE: String? { let o = _accessor.offset(VT.BAD_WAVE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BAD_WAVESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BAD_WAVE) }
   ///  Measured wavelengths (micrometers)
-  public var WAVELENGTHS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.WAVELENGTHS.v, byteSize: 8) }
-  public func withUnsafePointerToWavelengths<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.WAVELENGTHS.v, body: body) }
+  public var WAVELENGTHS: FlatbufferVector<Double> { return _accessor.vector(at: VT.WAVELENGTHS, byteSize: 8) }
+  public func withUnsafePointerToWavelengths<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.WAVELENGTHS, body: body) }
   ///  Absolute flux values (W/m^2/um)
-  public var ABS_FLUXES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.ABS_FLUXES.v, byteSize: 8) }
-  public func withUnsafePointerToAbsFluxes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ABS_FLUXES.v, body: body) }
+  public var ABS_FLUXES: FlatbufferVector<Double> { return _accessor.vector(at: VT.ABS_FLUXES, byteSize: 8) }
+  public func withUnsafePointerToAbsFluxes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ABS_FLUXES, body: body) }
   ///  Ratio reference wavelengths (micrometers)
-  public var RATIO_WAVELENGTHS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.RATIO_WAVELENGTHS.v, byteSize: 8) }
-  public func withUnsafePointerToRatioWavelengths<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RATIO_WAVELENGTHS.v, body: body) }
+  public var RATIO_WAVELENGTHS: FlatbufferVector<Double> { return _accessor.vector(at: VT.RATIO_WAVELENGTHS, byteSize: 8) }
+  public func withUnsafePointerToRatioWavelengths<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RATIO_WAVELENGTHS, body: body) }
   ///  Flux ratios (normalized)
-  public var FLUX_RATIOS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.FLUX_RATIOS.v, byteSize: 8) }
-  public func withUnsafePointerToFluxRatios<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.FLUX_RATIOS.v, body: body) }
+  public var FLUX_RATIOS: FlatbufferVector<Double> { return _accessor.vector(at: VT.FLUX_RATIOS, byteSize: 8) }
+  public func withUnsafePointerToFluxRatios<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.FLUX_RATIOS, body: body) }
   ///  Effective temperature (Kelvin)
-  public var TEMPERATURE: Double { let o = _accessor.offset(VTOFFSET.TEMPERATURE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TEMPERATURE: Double { let o = _accessor.offset(VT.TEMPERATURE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Signal-to-noise ratio
-  public var SIGNAL_NOISE_RATIO: Double { let o = _accessor.offset(VTOFFSET.SIGNAL_NOISE_RATIO.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SIGNAL_NOISE_RATIO: Double { let o = _accessor.offset(VT.SIGNAL_NOISE_RATIO); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Integration time (seconds)
-  public var INTEGRATION_TIME: Double { let o = _accessor.offset(VTOFFSET.INTEGRATION_TIME.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INTEGRATION_TIME: Double { let o = _accessor.offset(VT.INTEGRATION_TIME); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Data quality (0-9, 9=best)
-  public var QUALITY: UInt8 { let o = _accessor.offset(VTOFFSET.QUALITY.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var QUALITY: UInt8 { let o = _accessor.offset(VT.QUALITY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   public static func startSWR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VTOFFSET.ON_ORBIT.p) }
-  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
-  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
-  public static func add(TS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TS, at: VTOFFSET.TS.p) }
-  public static func add(SOLAR_PHASE_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_PHASE_ANGLE, def: 0.0, at: VTOFFSET.SOLAR_PHASE_ANGLE.p) }
-  public static func add(LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAT, def: 0.0, at: VTOFFSET.LAT.p) }
-  public static func add(LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LON, def: 0.0, at: VTOFFSET.LON.p) }
-  public static func add(LOCATION_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION_NAME, at: VTOFFSET.LOCATION_NAME.p) }
-  public static func add(BAD_WAVE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAD_WAVE, at: VTOFFSET.BAD_WAVE.p) }
-  public static func addVectorOf(WAVELENGTHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WAVELENGTHS, at: VTOFFSET.WAVELENGTHS.p) }
-  public static func addVectorOf(ABS_FLUXES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ABS_FLUXES, at: VTOFFSET.ABS_FLUXES.p) }
-  public static func addVectorOf(RATIO_WAVELENGTHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RATIO_WAVELENGTHS, at: VTOFFSET.RATIO_WAVELENGTHS.p) }
-  public static func addVectorOf(FLUX_RATIOS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLUX_RATIOS, at: VTOFFSET.FLUX_RATIOS.p) }
-  public static func add(TEMPERATURE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEMPERATURE, def: 0.0, at: VTOFFSET.TEMPERATURE.p) }
-  public static func add(SIGNAL_NOISE_RATIO: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGNAL_NOISE_RATIO, def: 0.0, at: VTOFFSET.SIGNAL_NOISE_RATIO.p) }
-  public static func add(INTEGRATION_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTEGRATION_TIME, def: 0.0, at: VTOFFSET.INTEGRATION_TIME.p) }
-  public static func add(QUALITY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUALITY, def: 0, at: VTOFFSET.QUALITY.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VT.ON_ORBIT) }
+  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VT.ORIG_OBJECT_ID) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VT.SAT_NO) }
+  public static func add(TS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TS, at: VT.TS) }
+  public static func add(SOLAR_PHASE_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_PHASE_ANGLE, def: 0.0, at: VT.SOLAR_PHASE_ANGLE) }
+  public static func add(LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAT, def: 0.0, at: VT.LAT) }
+  public static func add(LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LON, def: 0.0, at: VT.LON) }
+  public static func add(LOCATION_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION_NAME, at: VT.LOCATION_NAME) }
+  public static func add(BAD_WAVE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAD_WAVE, at: VT.BAD_WAVE) }
+  public static func addVectorOf(WAVELENGTHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WAVELENGTHS, at: VT.WAVELENGTHS) }
+  public static func addVectorOf(ABS_FLUXES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ABS_FLUXES, at: VT.ABS_FLUXES) }
+  public static func addVectorOf(RATIO_WAVELENGTHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RATIO_WAVELENGTHS, at: VT.RATIO_WAVELENGTHS) }
+  public static func addVectorOf(FLUX_RATIOS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLUX_RATIOS, at: VT.FLUX_RATIOS) }
+  public static func add(TEMPERATURE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEMPERATURE, def: 0.0, at: VT.TEMPERATURE) }
+  public static func add(SIGNAL_NOISE_RATIO: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGNAL_NOISE_RATIO, def: 0.0, at: VT.SIGNAL_NOISE_RATIO) }
+  public static func add(INTEGRATION_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTEGRATION_TIME, def: 0.0, at: VT.INTEGRATION_TIME) }
+  public static func add(QUALITY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUALITY, def: 0, at: VT.QUALITY) }
   public static func endSWR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSWR(
     _ fbb: inout FlatBufferBuilder,
@@ -154,24 +152,24 @@ public struct SWR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ON_ORBIT.p, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.TS.p, fieldName: "TS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SOLAR_PHASE_ANGLE.p, fieldName: "SOLAR_PHASE_ANGLE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LAT.p, fieldName: "LAT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LON.p, fieldName: "LON", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LOCATION_NAME.p, fieldName: "LOCATION_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BAD_WAVE.p, fieldName: "BAD_WAVE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.WAVELENGTHS.p, fieldName: "WAVELENGTHS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.ABS_FLUXES.p, fieldName: "ABS_FLUXES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.RATIO_WAVELENGTHS.p, fieldName: "RATIO_WAVELENGTHS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.FLUX_RATIOS.p, fieldName: "FLUX_RATIOS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.TEMPERATURE.p, fieldName: "TEMPERATURE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SIGNAL_NOISE_RATIO.p, fieldName: "SIGNAL_NOISE_RATIO", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INTEGRATION_TIME.p, fieldName: "INTEGRATION_TIME", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.QUALITY.p, fieldName: "QUALITY", required: false, type: UInt8.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ON_ORBIT, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIG_OBJECT_ID, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAT_NO, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TS, fieldName: "TS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOLAR_PHASE_ANGLE, fieldName: "SOLAR_PHASE_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.LAT, fieldName: "LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.LON, fieldName: "LON", required: false, type: Double.self)
+    try _v.visit(field: VT.LOCATION_NAME, fieldName: "LOCATION_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BAD_WAVE, fieldName: "BAD_WAVE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.WAVELENGTHS, fieldName: "WAVELENGTHS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ABS_FLUXES, fieldName: "ABS_FLUXES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.RATIO_WAVELENGTHS, fieldName: "RATIO_WAVELENGTHS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.FLUX_RATIOS, fieldName: "FLUX_RATIOS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.TEMPERATURE, fieldName: "TEMPERATURE", required: false, type: Double.self)
+    try _v.visit(field: VT.SIGNAL_NOISE_RATIO, fieldName: "SIGNAL_NOISE_RATIO", required: false, type: Double.self)
+    try _v.visit(field: VT.INTEGRATION_TIME, fieldName: "INTEGRATION_TIME", required: false, type: Double.self)
+    try _v.visit(field: VT.QUALITY, fieldName: "QUALITY", required: false, type: UInt8.self)
     _v.finish()
   }
 }

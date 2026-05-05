@@ -80,61 +80,59 @@ public struct SNR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case TYPE = 4
-    case MODE = 6
-    case RESERVED1 = 8
-    case MAX_RANGE = 10
-    case MIN_RANGE = 12
-    case FOV_AZIMUTH = 14
-    case FOV_ELEVATION = 16
-    case ANGULAR_RESOLUTION = 18
-    case RANGE_RESOLUTION = 20
-    case UPDATE_RATE = 22
-    case DETECTION_THRESHOLD = 24
-    case AZIMUTH_SCAN_RATE = 26
-    case ELEVATION_SCAN_RATE = 28
-    case POWER = 30
-    case FREQUENCY = 32
-    case RESERVED = 34
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let TYPE: VOffset = 4
+    static let MODE: VOffset = 6
+    static let RESERVED1: VOffset = 8
+    static let MAX_RANGE: VOffset = 10
+    static let MIN_RANGE: VOffset = 12
+    static let FOV_AZIMUTH: VOffset = 14
+    static let FOV_ELEVATION: VOffset = 16
+    static let ANGULAR_RESOLUTION: VOffset = 18
+    static let RANGE_RESOLUTION: VOffset = 20
+    static let UPDATE_RATE: VOffset = 22
+    static let DETECTION_THRESHOLD: VOffset = 24
+    static let AZIMUTH_SCAN_RATE: VOffset = 26
+    static let ELEVATION_SCAN_RATE: VOffset = 28
+    static let POWER: VOffset = 30
+    static let FREQUENCY: VOffset = 32
+    static let RESERVED: VOffset = 34
   }
 
-  public var TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var MODE: UInt8 { let o = _accessor.offset(VTOFFSET.MODE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var RESERVED1: UInt16 { let o = _accessor.offset(VTOFFSET.RESERVED1.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var MAX_RANGE: Double { let o = _accessor.offset(VTOFFSET.MAX_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MIN_RANGE: Double { let o = _accessor.offset(VTOFFSET.MIN_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var FOV_AZIMUTH: Float32 { let o = _accessor.offset(VTOFFSET.FOV_AZIMUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var FOV_ELEVATION: Float32 { let o = _accessor.offset(VTOFFSET.FOV_ELEVATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var ANGULAR_RESOLUTION: Float32 { let o = _accessor.offset(VTOFFSET.ANGULAR_RESOLUTION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var RANGE_RESOLUTION: Float32 { let o = _accessor.offset(VTOFFSET.RANGE_RESOLUTION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var UPDATE_RATE: Float32 { let o = _accessor.offset(VTOFFSET.UPDATE_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var DETECTION_THRESHOLD: Float32 { let o = _accessor.offset(VTOFFSET.DETECTION_THRESHOLD.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var AZIMUTH_SCAN_RATE: Float32 { let o = _accessor.offset(VTOFFSET.AZIMUTH_SCAN_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var ELEVATION_SCAN_RATE: Float32 { let o = _accessor.offset(VTOFFSET.ELEVATION_SCAN_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var POWER: Float32 { let o = _accessor.offset(VTOFFSET.POWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var FREQUENCY: Float32 { let o = _accessor.offset(VTOFFSET.FREQUENCY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
+  public var TYPE: UInt8 { let o = _accessor.offset(VT.TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var MODE: UInt8 { let o = _accessor.offset(VT.MODE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var RESERVED1: UInt16 { let o = _accessor.offset(VT.RESERVED1); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var MAX_RANGE: Double { let o = _accessor.offset(VT.MAX_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MIN_RANGE: Double { let o = _accessor.offset(VT.MIN_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FOV_AZIMUTH: Float32 { let o = _accessor.offset(VT.FOV_AZIMUTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var FOV_ELEVATION: Float32 { let o = _accessor.offset(VT.FOV_ELEVATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var ANGULAR_RESOLUTION: Float32 { let o = _accessor.offset(VT.ANGULAR_RESOLUTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var RANGE_RESOLUTION: Float32 { let o = _accessor.offset(VT.RANGE_RESOLUTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var UPDATE_RATE: Float32 { let o = _accessor.offset(VT.UPDATE_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var DETECTION_THRESHOLD: Float32 { let o = _accessor.offset(VT.DETECTION_THRESHOLD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var AZIMUTH_SCAN_RATE: Float32 { let o = _accessor.offset(VT.AZIMUTH_SCAN_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var ELEVATION_SCAN_RATE: Float32 { let o = _accessor.offset(VT.ELEVATION_SCAN_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var POWER: Float32 { let o = _accessor.offset(VT.POWER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var FREQUENCY: Float32 { let o = _accessor.offset(VT.FREQUENCY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
   public static func startSNR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
-  public static func add(TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE, def: 0, at: VTOFFSET.TYPE.p) }
-  public static func add(MODE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODE, def: 0, at: VTOFFSET.MODE.p) }
-  public static func add(RESERVED1: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESERVED1, def: 0, at: VTOFFSET.RESERVED1.p) }
-  public static func add(MAX_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE, def: 0.0, at: VTOFFSET.MAX_RANGE.p) }
-  public static func add(MIN_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_RANGE, def: 0.0, at: VTOFFSET.MIN_RANGE.p) }
-  public static func add(FOV_AZIMUTH: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOV_AZIMUTH, def: 0.0, at: VTOFFSET.FOV_AZIMUTH.p) }
-  public static func add(FOV_ELEVATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOV_ELEVATION, def: 0.0, at: VTOFFSET.FOV_ELEVATION.p) }
-  public static func add(ANGULAR_RESOLUTION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGULAR_RESOLUTION, def: 0.0, at: VTOFFSET.ANGULAR_RESOLUTION.p) }
-  public static func add(RANGE_RESOLUTION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_RESOLUTION, def: 0.0, at: VTOFFSET.RANGE_RESOLUTION.p) }
-  public static func add(UPDATE_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATE_RATE, def: 0.0, at: VTOFFSET.UPDATE_RATE.p) }
-  public static func add(DETECTION_THRESHOLD: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DETECTION_THRESHOLD, def: 0.0, at: VTOFFSET.DETECTION_THRESHOLD.p) }
-  public static func add(AZIMUTH_SCAN_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_SCAN_RATE, def: 0.0, at: VTOFFSET.AZIMUTH_SCAN_RATE.p) }
-  public static func add(ELEVATION_SCAN_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_SCAN_RATE, def: 0.0, at: VTOFFSET.ELEVATION_SCAN_RATE.p) }
-  public static func add(POWER: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER, def: 0.0, at: VTOFFSET.POWER.p) }
-  public static func add(FREQUENCY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY, def: 0.0, at: VTOFFSET.FREQUENCY.p) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VTOFFSET.RESERVED.p) }
+  public static func add(TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE, def: 0, at: VT.TYPE) }
+  public static func add(MODE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODE, def: 0, at: VT.MODE) }
+  public static func add(RESERVED1: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESERVED1, def: 0, at: VT.RESERVED1) }
+  public static func add(MAX_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE, def: 0.0, at: VT.MAX_RANGE) }
+  public static func add(MIN_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_RANGE, def: 0.0, at: VT.MIN_RANGE) }
+  public static func add(FOV_AZIMUTH: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOV_AZIMUTH, def: 0.0, at: VT.FOV_AZIMUTH) }
+  public static func add(FOV_ELEVATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOV_ELEVATION, def: 0.0, at: VT.FOV_ELEVATION) }
+  public static func add(ANGULAR_RESOLUTION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGULAR_RESOLUTION, def: 0.0, at: VT.ANGULAR_RESOLUTION) }
+  public static func add(RANGE_RESOLUTION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_RESOLUTION, def: 0.0, at: VT.RANGE_RESOLUTION) }
+  public static func add(UPDATE_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATE_RATE, def: 0.0, at: VT.UPDATE_RATE) }
+  public static func add(DETECTION_THRESHOLD: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DETECTION_THRESHOLD, def: 0.0, at: VT.DETECTION_THRESHOLD) }
+  public static func add(AZIMUTH_SCAN_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_SCAN_RATE, def: 0.0, at: VT.AZIMUTH_SCAN_RATE) }
+  public static func add(ELEVATION_SCAN_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_SCAN_RATE, def: 0.0, at: VT.ELEVATION_SCAN_RATE) }
+  public static func add(POWER: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER, def: 0.0, at: VT.POWER) }
+  public static func add(FREQUENCY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY, def: 0.0, at: VT.FREQUENCY) }
+  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
   public static func endSNR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSNR(
     _ fbb: inout FlatBufferBuilder,
@@ -177,22 +175,22 @@ public struct SNR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.MODE.p, fieldName: "MODE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.RESERVED1.p, fieldName: "RESERVED1", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.MAX_RANGE.p, fieldName: "MAX_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MIN_RANGE.p, fieldName: "MIN_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FOV_AZIMUTH.p, fieldName: "FOV_AZIMUTH", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.FOV_ELEVATION.p, fieldName: "FOV_ELEVATION", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.ANGULAR_RESOLUTION.p, fieldName: "ANGULAR_RESOLUTION", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.RANGE_RESOLUTION.p, fieldName: "RANGE_RESOLUTION", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.UPDATE_RATE.p, fieldName: "UPDATE_RATE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.DETECTION_THRESHOLD.p, fieldName: "DETECTION_THRESHOLD", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.AZIMUTH_SCAN_RATE.p, fieldName: "AZIMUTH_SCAN_RATE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.ELEVATION_SCAN_RATE.p, fieldName: "ELEVATION_SCAN_RATE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.POWER.p, fieldName: "POWER", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.FREQUENCY.p, fieldName: "FREQUENCY", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.MODE, fieldName: "MODE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RESERVED1, fieldName: "RESERVED1", required: false, type: UInt16.self)
+    try _v.visit(field: VT.MAX_RANGE, fieldName: "MAX_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_RANGE, fieldName: "MIN_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.FOV_AZIMUTH, fieldName: "FOV_AZIMUTH", required: false, type: Float32.self)
+    try _v.visit(field: VT.FOV_ELEVATION, fieldName: "FOV_ELEVATION", required: false, type: Float32.self)
+    try _v.visit(field: VT.ANGULAR_RESOLUTION, fieldName: "ANGULAR_RESOLUTION", required: false, type: Float32.self)
+    try _v.visit(field: VT.RANGE_RESOLUTION, fieldName: "RANGE_RESOLUTION", required: false, type: Float32.self)
+    try _v.visit(field: VT.UPDATE_RATE, fieldName: "UPDATE_RATE", required: false, type: Float32.self)
+    try _v.visit(field: VT.DETECTION_THRESHOLD, fieldName: "DETECTION_THRESHOLD", required: false, type: Float32.self)
+    try _v.visit(field: VT.AZIMUTH_SCAN_RATE, fieldName: "AZIMUTH_SCAN_RATE", required: false, type: Float32.self)
+    try _v.visit(field: VT.ELEVATION_SCAN_RATE, fieldName: "ELEVATION_SCAN_RATE", required: false, type: Float32.self)
+    try _v.visit(field: VT.POWER, fieldName: "POWER", required: false, type: Float32.self)
+    try _v.visit(field: VT.FREQUENCY, fieldName: "FREQUENCY", required: false, type: Float32.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

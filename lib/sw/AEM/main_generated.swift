@@ -19,66 +19,64 @@ public struct AEMSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case OBJECT_NAME = 4
-    case OBJECT_ID = 6
-    case REF_FRAME_A = 8
-    case REF_FRAME_B = 10
-    case ATTITUDE_DIR = 12
-    case TIME_SYSTEM = 14
-    case ATTITUDE_TYPE = 16
-    case START_TIME = 18
-    case STOP_TIME = 20
-    case STEP_SIZE = 22
-    case ATTITUDE_COMPONENTS = 24
-    case ATTITUDE_DATA = 26
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let OBJECT_NAME: VOffset = 4
+    static let OBJECT_ID: VOffset = 6
+    static let REF_FRAME_A: VOffset = 8
+    static let REF_FRAME_B: VOffset = 10
+    static let ATTITUDE_DIR: VOffset = 12
+    static let TIME_SYSTEM: VOffset = 14
+    static let ATTITUDE_TYPE: VOffset = 16
+    static let START_TIME: VOffset = 18
+    static let STOP_TIME: VOffset = 20
+    static let STEP_SIZE: VOffset = 22
+    static let ATTITUDE_COMPONENTS: VOffset = 24
+    static let ATTITUDE_DATA: VOffset = 26
   }
 
-  public var OBJECT_NAME: String? { let o = _accessor.offset(VTOFFSET.OBJECT_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_NAME.v) }
-  public var OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_ID.v) }
-  public var REF_FRAME_A: String? { let o = _accessor.offset(VTOFFSET.REF_FRAME_A.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REF_FRAME_ASegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REF_FRAME_A.v) }
-  public var REF_FRAME_B: String? { let o = _accessor.offset(VTOFFSET.REF_FRAME_B.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REF_FRAME_BSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REF_FRAME_B.v) }
-  public var ATTITUDE_DIR: String? { let o = _accessor.offset(VTOFFSET.ATTITUDE_DIR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ATTITUDE_DIRSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ATTITUDE_DIR.v) }
-  public var TIME_SYSTEM: String? { let o = _accessor.offset(VTOFFSET.TIME_SYSTEM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIME_SYSTEM.v) }
-  public var ATTITUDE_TYPE: String? { let o = _accessor.offset(VTOFFSET.ATTITUDE_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ATTITUDE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ATTITUDE_TYPE.v) }
-  public var START_TIME: String? { let o = _accessor.offset(VTOFFSET.START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START_TIME.v) }
-  public var STOP_TIME: String? { let o = _accessor.offset(VTOFFSET.STOP_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STOP_TIME.v) }
+  public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_NAME) }
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  public var REF_FRAME_A: String? { let o = _accessor.offset(VT.REF_FRAME_A); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAME_ASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME_A) }
+  public var REF_FRAME_B: String? { let o = _accessor.offset(VT.REF_FRAME_B); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAME_BSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME_B) }
+  public var ATTITUDE_DIR: String? { let o = _accessor.offset(VT.ATTITUDE_DIR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATTITUDE_DIRSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATTITUDE_DIR) }
+  public var TIME_SYSTEM: String? { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_SYSTEM) }
+  public var ATTITUDE_TYPE: String? { let o = _accessor.offset(VT.ATTITUDE_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATTITUDE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATTITUDE_TYPE) }
+  public var START_TIME: String? { let o = _accessor.offset(VT.START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_TIME) }
+  public var STOP_TIME: String? { let o = _accessor.offset(VT.STOP_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STOP_TIME) }
   ///  Time interval between attitude states in seconds (required).
-  public var STEP_SIZE: Double { let o = _accessor.offset(VTOFFSET.STEP_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STEP_SIZE: Double { let o = _accessor.offset(VT.STEP_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of components per attitude state.
   ///  7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
   ///  4 = quaternion only (Q1, Q2, Q3, QC)
-  public var ATTITUDE_COMPONENTS: UInt8 { let o = _accessor.offset(VTOFFSET.ATTITUDE_COMPONENTS.v); return o == 0 ? 7 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var ATTITUDE_COMPONENTS: UInt8 { let o = _accessor.offset(VT.ATTITUDE_COMPONENTS); return o == 0 ? 7 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Attitude data as row-major array of doubles.
   ///  Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
   ///  Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
   ///  Length must be divisible by ATTITUDE_COMPONENTS.
-  public var ATTITUDE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.ATTITUDE_DATA.v, byteSize: 8) }
-  public func withUnsafePointerToAttitudeData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ATTITUDE_DATA.v, body: body) }
+  public var ATTITUDE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VT.ATTITUDE_DATA, byteSize: 8) }
+  public func withUnsafePointerToAttitudeData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ATTITUDE_DATA, body: body) }
   public static func startAEMSegment(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
-  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VTOFFSET.OBJECT_NAME.p) }
-  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VTOFFSET.OBJECT_ID.p) }
-  public static func add(REF_FRAME_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_A, at: VTOFFSET.REF_FRAME_A.p) }
-  public static func add(REF_FRAME_B: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_B, at: VTOFFSET.REF_FRAME_B.p) }
-  public static func add(ATTITUDE_DIR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTITUDE_DIR, at: VTOFFSET.ATTITUDE_DIR.p) }
-  public static func add(TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM, at: VTOFFSET.TIME_SYSTEM.p) }
-  public static func add(ATTITUDE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTITUDE_TYPE, at: VTOFFSET.ATTITUDE_TYPE.p) }
-  public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VTOFFSET.START_TIME.p) }
-  public static func add(STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_TIME, at: VTOFFSET.STOP_TIME.p) }
-  public static func add(STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SIZE, def: 0.0, at: VTOFFSET.STEP_SIZE.p) }
-  public static func add(ATTITUDE_COMPONENTS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_COMPONENTS, def: 7, at: VTOFFSET.ATTITUDE_COMPONENTS.p) }
-  public static func addVectorOf(ATTITUDE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTITUDE_DATA, at: VTOFFSET.ATTITUDE_DATA.p) }
+  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(REF_FRAME_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_A, at: VT.REF_FRAME_A) }
+  public static func add(REF_FRAME_B: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_B, at: VT.REF_FRAME_B) }
+  public static func add(ATTITUDE_DIR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTITUDE_DIR, at: VT.ATTITUDE_DIR) }
+  public static func add(TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM, at: VT.TIME_SYSTEM) }
+  public static func add(ATTITUDE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTITUDE_TYPE, at: VT.ATTITUDE_TYPE) }
+  public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VT.START_TIME) }
+  public static func add(STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_TIME, at: VT.STOP_TIME) }
+  public static func add(STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SIZE, def: 0.0, at: VT.STEP_SIZE) }
+  public static func add(ATTITUDE_COMPONENTS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_COMPONENTS, def: 7, at: VT.ATTITUDE_COMPONENTS) }
+  public static func addVectorOf(ATTITUDE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTITUDE_DATA, at: VT.ATTITUDE_DATA) }
   public static func endAEMSegment(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAEMSegment(
     _ fbb: inout FlatBufferBuilder,
@@ -113,18 +111,18 @@ public struct AEMSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.OBJECT_NAME.p, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJECT_ID.p, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REF_FRAME_A.p, fieldName: "REF_FRAME_A", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REF_FRAME_B.p, fieldName: "REF_FRAME_B", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_DIR.p, fieldName: "ATTITUDE_DIR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TIME_SYSTEM.p, fieldName: "TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_TYPE.p, fieldName: "ATTITUDE_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.START_TIME.p, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STOP_TIME.p, fieldName: "STOP_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STEP_SIZE.p, fieldName: "STEP_SIZE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_COMPONENTS.p, fieldName: "ATTITUDE_COMPONENTS", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_DATA.p, fieldName: "ATTITUDE_DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OBJECT_NAME, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME_A, fieldName: "REF_FRAME_A", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME_B, fieldName: "REF_FRAME_B", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATTITUDE_DIR, fieldName: "ATTITUDE_DIR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATTITUDE_TYPE, fieldName: "ATTITUDE_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.START_TIME, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STOP_TIME, fieldName: "STOP_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STEP_SIZE, fieldName: "STEP_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VT.ATTITUDE_COMPONENTS, fieldName: "ATTITUDE_COMPONENTS", required: false, type: UInt8.self)
+    try _v.visit(field: VT.ATTITUDE_DATA, fieldName: "ATTITUDE_DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
@@ -141,27 +139,25 @@ public struct AEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CCSDS_AEM_VERS = 4
-    case CREATION_DATE = 6
-    case ORIGINATOR = 8
-    case SEGMENTS = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CCSDS_AEM_VERS: VOffset = 4
+    static let CREATION_DATE: VOffset = 6
+    static let ORIGINATOR: VOffset = 8
+    static let SEGMENTS: VOffset = 10
   }
 
-  public var CCSDS_AEM_VERS: String? { let o = _accessor.offset(VTOFFSET.CCSDS_AEM_VERS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CCSDS_AEM_VERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CCSDS_AEM_VERS.v) }
-  public var CREATION_DATE: String? { let o = _accessor.offset(VTOFFSET.CREATION_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CREATION_DATE.v) }
-  public var ORIGINATOR: String? { let o = _accessor.offset(VTOFFSET.ORIGINATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIGINATOR.v) }
-  public var SEGMENTS: FlatbufferVector<AEMSegment> { return _accessor.vector(at: VTOFFSET.SEGMENTS.v, byteSize: 4) }
+  public var CCSDS_AEM_VERS: String? { let o = _accessor.offset(VT.CCSDS_AEM_VERS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CCSDS_AEM_VERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CCSDS_AEM_VERS) }
+  public var CREATION_DATE: String? { let o = _accessor.offset(VT.CREATION_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATION_DATE) }
+  public var ORIGINATOR: String? { let o = _accessor.offset(VT.ORIGINATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR) }
+  public var SEGMENTS: FlatbufferVector<AEMSegment> { return _accessor.vector(at: VT.SEGMENTS, byteSize: 4) }
   public static func startAEM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(CCSDS_AEM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_AEM_VERS, at: VTOFFSET.CCSDS_AEM_VERS.p) }
-  public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VTOFFSET.CREATION_DATE.p) }
-  public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VTOFFSET.ORIGINATOR.p) }
-  public static func addVectorOf(SEGMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENTS, at: VTOFFSET.SEGMENTS.p) }
+  public static func add(CCSDS_AEM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_AEM_VERS, at: VT.CCSDS_AEM_VERS) }
+  public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
+  public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
+  public static func addVectorOf(SEGMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENTS, at: VT.SEGMENTS) }
   public static func endAEM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAEM(
     _ fbb: inout FlatBufferBuilder,
@@ -180,10 +176,10 @@ public struct AEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CCSDS_AEM_VERS.p, fieldName: "CCSDS_AEM_VERS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CREATION_DATE.p, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIGINATOR.p, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SEGMENTS.p, fieldName: "SEGMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<AEMSegment>, AEMSegment>>.self)
+    try _v.visit(field: VT.CCSDS_AEM_VERS, fieldName: "CCSDS_AEM_VERS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREATION_DATE, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGINATOR, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SEGMENTS, fieldName: "SEGMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<AEMSegment>, AEMSegment>>.self)
     _v.finish()
   }
 }

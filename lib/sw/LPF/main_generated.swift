@@ -34,93 +34,91 @@ public struct LPF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case MESSAGE_TYPE = 4
-    case REQUEST_ID = 6
-    case MODULE_ID = 8
-    case MODULE_VERSION = 10
-    case REQUESTER_PEER_ID = 12
-    case REQUESTER_XPUB = 14
-    case REQUESTED_DOMAIN = 16
-    case REQUESTED_TIMEOUT_MS = 18
-    case REQUESTER_EPHEMERAL_PUBKEY = 20
-    case CHALLENGE_NONCE = 22
-    case CHALLENGE_EXPIRES_AT = 24
-    case PROVIDER_PEER_ID = 26
-    case SIGNATURE = 28
-    case SIGNING_PUBKEY = 30
-    case TIMESTAMP_MS = 32
-    case REJECTION_CODE = 34
-    case REJECTION_MESSAGE = 36
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let MESSAGE_TYPE: VOffset = 4
+    static let REQUEST_ID: VOffset = 6
+    static let MODULE_ID: VOffset = 8
+    static let MODULE_VERSION: VOffset = 10
+    static let REQUESTER_PEER_ID: VOffset = 12
+    static let REQUESTER_XPUB: VOffset = 14
+    static let REQUESTED_DOMAIN: VOffset = 16
+    static let REQUESTED_TIMEOUT_MS: VOffset = 18
+    static let REQUESTER_EPHEMERAL_PUBKEY: VOffset = 20
+    static let CHALLENGE_NONCE: VOffset = 22
+    static let CHALLENGE_EXPIRES_AT: VOffset = 24
+    static let PROVIDER_PEER_ID: VOffset = 26
+    static let SIGNATURE: VOffset = 28
+    static let SIGNING_PUBKEY: VOffset = 30
+    static let TIMESTAMP_MS: VOffset = 32
+    static let REJECTION_CODE: VOffset = 34
+    static let REJECTION_MESSAGE: VOffset = 36
   }
 
   ///  Message type
-  public var MESSAGE_TYPE: licensingProofMessageType { let o = _accessor.offset(VTOFFSET.MESSAGE_TYPE.v); return o == 0 ? .proofrequest : licensingProofMessageType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .proofrequest }
+  public var MESSAGE_TYPE: licensingProofMessageType { let o = _accessor.offset(VT.MESSAGE_TYPE); return o == 0 ? .proofrequest : licensingProofMessageType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .proofrequest }
   ///  Unique request identifier
-  public var REQUEST_ID: String! { let o = _accessor.offset(VTOFFSET.REQUEST_ID.v); return _accessor.string(at: o) }
-  public var REQUEST_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.REQUEST_ID.v) }
+  public var REQUEST_ID: String! { let o = _accessor.offset(VT.REQUEST_ID); return _accessor.string(at: o) }
+  public var REQUEST_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.REQUEST_ID) }
   ///  Canonical module identifier
-  public var MODULE_ID: String! { let o = _accessor.offset(VTOFFSET.MODULE_ID.v); return _accessor.string(at: o) }
-  public var MODULE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.MODULE_ID.v) }
+  public var MODULE_ID: String! { let o = _accessor.offset(VT.MODULE_ID); return _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MODULE_ID) }
   ///  Optional requested module version
-  public var MODULE_VERSION: String? { let o = _accessor.offset(VTOFFSET.MODULE_VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MODULE_VERSION.v) }
+  public var MODULE_VERSION: String? { let o = _accessor.offset(VT.MODULE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_VERSION) }
   ///  Requester peer identifier
-  public var REQUESTER_PEER_ID: String? { let o = _accessor.offset(VTOFFSET.REQUESTER_PEER_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REQUESTER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REQUESTER_PEER_ID.v) }
+  public var REQUESTER_PEER_ID: String? { let o = _accessor.offset(VT.REQUESTER_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REQUESTER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REQUESTER_PEER_ID) }
   ///  Requester account identity or wallet xpub
-  public var REQUESTER_XPUB: String? { let o = _accessor.offset(VTOFFSET.REQUESTER_XPUB.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REQUESTER_XPUBSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REQUESTER_XPUB.v) }
+  public var REQUESTER_XPUB: String? { let o = _accessor.offset(VT.REQUESTER_XPUB); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REQUESTER_XPUBSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REQUESTER_XPUB) }
   ///  Requested domain proved for policy evaluation
-  public var REQUESTED_DOMAIN: String? { let o = _accessor.offset(VTOFFSET.REQUESTED_DOMAIN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REQUESTED_DOMAINSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REQUESTED_DOMAIN.v) }
+  public var REQUESTED_DOMAIN: String? { let o = _accessor.offset(VT.REQUESTED_DOMAIN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REQUESTED_DOMAINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REQUESTED_DOMAIN) }
   ///  Requested timeout in milliseconds
-  public var REQUESTED_TIMEOUT_MS: UInt64 { let o = _accessor.offset(VTOFFSET.REQUESTED_TIMEOUT_MS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var REQUESTED_TIMEOUT_MS: UInt64 { let o = _accessor.offset(VT.REQUESTED_TIMEOUT_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Requester ephemeral X25519 public key
-  public var REQUESTER_EPHEMERAL_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.REQUESTER_EPHEMERAL_PUBKEY.v, byteSize: 1) }
-  public func withUnsafePointerToRequesterEphemeralPubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.REQUESTER_EPHEMERAL_PUBKEY.v, body: body) }
+  public var REQUESTER_EPHEMERAL_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.REQUESTER_EPHEMERAL_PUBKEY, byteSize: 1) }
+  public func withUnsafePointerToRequesterEphemeralPubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.REQUESTER_EPHEMERAL_PUBKEY, body: body) }
   ///  Provider-issued challenge nonce being proved
-  public var CHALLENGE_NONCE: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.CHALLENGE_NONCE.v, byteSize: 1) }
-  public func withUnsafePointerToChallengeNonce<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.CHALLENGE_NONCE.v, body: body) }
+  public var CHALLENGE_NONCE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.CHALLENGE_NONCE, byteSize: 1) }
+  public func withUnsafePointerToChallengeNonce<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CHALLENGE_NONCE, body: body) }
   ///  Challenge expiration time being acknowledged
-  public var CHALLENGE_EXPIRES_AT: UInt64 { let o = _accessor.offset(VTOFFSET.CHALLENGE_EXPIRES_AT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var CHALLENGE_EXPIRES_AT: UInt64 { let o = _accessor.offset(VT.CHALLENGE_EXPIRES_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Provider peer identifier that issued the challenge
-  public var PROVIDER_PEER_ID: String? { let o = _accessor.offset(VTOFFSET.PROVIDER_PEER_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PROVIDER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PROVIDER_PEER_ID.v) }
+  public var PROVIDER_PEER_ID: String? { let o = _accessor.offset(VT.PROVIDER_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_PEER_ID) }
   ///  Detached requester signature over the challenge payload
-  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.SIGNATURE.v, byteSize: 1) }
-  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SIGNATURE.v, body: body) }
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
   ///  Requester signing public key
-  public var SIGNING_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.SIGNING_PUBKEY.v, byteSize: 1) }
-  public func withUnsafePointerToSigningPubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SIGNING_PUBKEY.v, body: body) }
+  public var SIGNING_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNING_PUBKEY, byteSize: 1) }
+  public func withUnsafePointerToSigningPubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNING_PUBKEY, body: body) }
   ///  Proof timestamp in milliseconds since epoch
-  public var TIMESTAMP_MS: UInt64 { let o = _accessor.offset(VTOFFSET.TIMESTAMP_MS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var TIMESTAMP_MS: UInt64 { let o = _accessor.offset(VT.TIMESTAMP_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Structured rejection code
-  public var REJECTION_CODE: String? { let o = _accessor.offset(VTOFFSET.REJECTION_CODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REJECTION_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REJECTION_CODE.v) }
+  public var REJECTION_CODE: String? { let o = _accessor.offset(VT.REJECTION_CODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REJECTION_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REJECTION_CODE) }
   ///  Structured rejection message
-  public var REJECTION_MESSAGE: String? { let o = _accessor.offset(VTOFFSET.REJECTION_MESSAGE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REJECTION_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REJECTION_MESSAGE.v) }
+  public var REJECTION_MESSAGE: String? { let o = _accessor.offset(VT.REJECTION_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REJECTION_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REJECTION_MESSAGE) }
   public static func startLPF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
-  public static func add(MESSAGE_TYPE: licensingProofMessageType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGE_TYPE.rawValue, def: 0, at: VTOFFSET.MESSAGE_TYPE.p) }
-  public static func add(REQUEST_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_ID, at: VTOFFSET.REQUEST_ID.p) }
-  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VTOFFSET.MODULE_ID.p) }
-  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VTOFFSET.MODULE_VERSION.p) }
-  public static func add(REQUESTER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTER_PEER_ID, at: VTOFFSET.REQUESTER_PEER_ID.p) }
-  public static func add(REQUESTER_XPUB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTER_XPUB, at: VTOFFSET.REQUESTER_XPUB.p) }
-  public static func add(REQUESTED_DOMAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTED_DOMAIN, at: VTOFFSET.REQUESTED_DOMAIN.p) }
-  public static func add(REQUESTED_TIMEOUT_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUESTED_TIMEOUT_MS, def: 0, at: VTOFFSET.REQUESTED_TIMEOUT_MS.p) }
-  public static func addVectorOf(REQUESTER_EPHEMERAL_PUBKEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTER_EPHEMERAL_PUBKEY, at: VTOFFSET.REQUESTER_EPHEMERAL_PUBKEY.p) }
-  public static func addVectorOf(CHALLENGE_NONCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHALLENGE_NONCE, at: VTOFFSET.CHALLENGE_NONCE.p) }
-  public static func add(CHALLENGE_EXPIRES_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHALLENGE_EXPIRES_AT, def: 0, at: VTOFFSET.CHALLENGE_EXPIRES_AT.p) }
-  public static func add(PROVIDER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_PEER_ID, at: VTOFFSET.PROVIDER_PEER_ID.p) }
-  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VTOFFSET.SIGNATURE.p) }
-  public static func addVectorOf(SIGNING_PUBKEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNING_PUBKEY, at: VTOFFSET.SIGNING_PUBKEY.p) }
-  public static func add(TIMESTAMP_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMESTAMP_MS, def: 0, at: VTOFFSET.TIMESTAMP_MS.p) }
-  public static func add(REJECTION_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REJECTION_CODE, at: VTOFFSET.REJECTION_CODE.p) }
-  public static func add(REJECTION_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REJECTION_MESSAGE, at: VTOFFSET.REJECTION_MESSAGE.p) }
+  public static func add(MESSAGE_TYPE: licensingProofMessageType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGE_TYPE.rawValue, def: 0, at: VT.MESSAGE_TYPE) }
+  public static func add(REQUEST_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_ID, at: VT.REQUEST_ID) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VT.MODULE_VERSION) }
+  public static func add(REQUESTER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTER_PEER_ID, at: VT.REQUESTER_PEER_ID) }
+  public static func add(REQUESTER_XPUB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTER_XPUB, at: VT.REQUESTER_XPUB) }
+  public static func add(REQUESTED_DOMAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTED_DOMAIN, at: VT.REQUESTED_DOMAIN) }
+  public static func add(REQUESTED_TIMEOUT_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUESTED_TIMEOUT_MS, def: 0, at: VT.REQUESTED_TIMEOUT_MS) }
+  public static func addVectorOf(REQUESTER_EPHEMERAL_PUBKEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTER_EPHEMERAL_PUBKEY, at: VT.REQUESTER_EPHEMERAL_PUBKEY) }
+  public static func addVectorOf(CHALLENGE_NONCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHALLENGE_NONCE, at: VT.CHALLENGE_NONCE) }
+  public static func add(CHALLENGE_EXPIRES_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHALLENGE_EXPIRES_AT, def: 0, at: VT.CHALLENGE_EXPIRES_AT) }
+  public static func add(PROVIDER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_PEER_ID, at: VT.PROVIDER_PEER_ID) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func addVectorOf(SIGNING_PUBKEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNING_PUBKEY, at: VT.SIGNING_PUBKEY) }
+  public static func add(TIMESTAMP_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMESTAMP_MS, def: 0, at: VT.TIMESTAMP_MS) }
+  public static func add(REJECTION_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REJECTION_CODE, at: VT.REJECTION_CODE) }
+  public static func add(REJECTION_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REJECTION_MESSAGE, at: VT.REJECTION_MESSAGE) }
   public static func endLPF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 8]); return end }
   public static func createLPF(
     _ fbb: inout FlatBufferBuilder,
@@ -165,23 +163,23 @@ public struct LPF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.MESSAGE_TYPE.p, fieldName: "MESSAGE_TYPE", required: false, type: licensingProofMessageType.self)
-    try _v.visit(field: VTOFFSET.REQUEST_ID.p, fieldName: "REQUEST_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MODULE_ID.p, fieldName: "MODULE_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MODULE_VERSION.p, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REQUESTER_PEER_ID.p, fieldName: "REQUESTER_PEER_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REQUESTER_XPUB.p, fieldName: "REQUESTER_XPUB", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REQUESTED_DOMAIN.p, fieldName: "REQUESTED_DOMAIN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REQUESTED_TIMEOUT_MS.p, fieldName: "REQUESTED_TIMEOUT_MS", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.REQUESTER_EPHEMERAL_PUBKEY.p, fieldName: "REQUESTER_EPHEMERAL_PUBKEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.CHALLENGE_NONCE.p, fieldName: "CHALLENGE_NONCE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.CHALLENGE_EXPIRES_AT.p, fieldName: "CHALLENGE_EXPIRES_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.PROVIDER_PEER_ID.p, fieldName: "PROVIDER_PEER_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SIGNATURE.p, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.SIGNING_PUBKEY.p, fieldName: "SIGNING_PUBKEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.TIMESTAMP_MS.p, fieldName: "TIMESTAMP_MS", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.REJECTION_CODE.p, fieldName: "REJECTION_CODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REJECTION_MESSAGE.p, fieldName: "REJECTION_MESSAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MESSAGE_TYPE, fieldName: "MESSAGE_TYPE", required: false, type: licensingProofMessageType.self)
+    try _v.visit(field: VT.REQUEST_ID, fieldName: "REQUEST_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_VERSION, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUESTER_PEER_ID, fieldName: "REQUESTER_PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUESTER_XPUB, fieldName: "REQUESTER_XPUB", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUESTED_DOMAIN, fieldName: "REQUESTED_DOMAIN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUESTED_TIMEOUT_MS, fieldName: "REQUESTED_TIMEOUT_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.REQUESTER_EPHEMERAL_PUBKEY, fieldName: "REQUESTER_EPHEMERAL_PUBKEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CHALLENGE_NONCE, fieldName: "CHALLENGE_NONCE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CHALLENGE_EXPIRES_AT, fieldName: "CHALLENGE_EXPIRES_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PROVIDER_PEER_ID, fieldName: "PROVIDER_PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.SIGNING_PUBKEY, fieldName: "SIGNING_PUBKEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.TIMESTAMP_MS, fieldName: "TIMESTAMP_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.REJECTION_CODE, fieldName: "REJECTION_CODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REJECTION_MESSAGE, fieldName: "REJECTION_MESSAGE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

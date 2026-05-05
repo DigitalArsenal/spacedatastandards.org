@@ -301,15 +301,13 @@ public struct CelestialFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializ
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case frame = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let frame: VOffset = 4
   }
 
-  public var frame: CelestialFrame { let o = _accessor.offset(VTOFFSET.frame.v); return o == 0 ? .gcrf : CelestialFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gcrf }
+  public var frame: CelestialFrame { let o = _accessor.offset(VT.frame); return o == 0 ? .gcrf : CelestialFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gcrf }
   public static func startCelestialFrameWrapper(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(frame: CelestialFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VTOFFSET.frame.p) }
+  public static func add(frame: CelestialFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VT.frame) }
   public static func endCelestialFrameWrapper(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCelestialFrameWrapper(
     _ fbb: inout FlatBufferBuilder,
@@ -322,7 +320,7 @@ public struct CelestialFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializ
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.frame.p, fieldName: "frame", required: false, type: CelestialFrame.self)
+    try _v.visit(field: VT.frame, fieldName: "frame", required: false, type: CelestialFrame.self)
     _v.finish()
   }
 }
@@ -338,15 +336,13 @@ public struct SpacecraftFrameWrapper: FlatBufferTable, FlatbuffersVectorInitiali
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case frame = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let frame: VOffset = 4
   }
 
-  public var frame: SpacecraftFrame { let o = _accessor.offset(VTOFFSET.frame.v); return o == 0 ? .accI : SpacecraftFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .accI }
+  public var frame: SpacecraftFrame { let o = _accessor.offset(VT.frame); return o == 0 ? .accI : SpacecraftFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .accI }
   public static func startSpacecraftFrameWrapper(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(frame: SpacecraftFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VTOFFSET.frame.p) }
+  public static func add(frame: SpacecraftFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VT.frame) }
   public static func endSpacecraftFrameWrapper(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSpacecraftFrameWrapper(
     _ fbb: inout FlatBufferBuilder,
@@ -359,7 +355,7 @@ public struct SpacecraftFrameWrapper: FlatBufferTable, FlatbuffersVectorInitiali
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.frame.p, fieldName: "frame", required: false, type: SpacecraftFrame.self)
+    try _v.visit(field: VT.frame, fieldName: "frame", required: false, type: SpacecraftFrame.self)
     _v.finish()
   }
 }
@@ -375,15 +371,13 @@ public struct OrbitFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case frame = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let frame: VOffset = 4
   }
 
-  public var frame: OrbitFrame { let o = _accessor.offset(VTOFFSET.frame.v); return o == 0 ? .eqwInertial : OrbitFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .eqwInertial }
+  public var frame: OrbitFrame { let o = _accessor.offset(VT.frame); return o == 0 ? .eqwInertial : OrbitFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .eqwInertial }
   public static func startOrbitFrameWrapper(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(frame: OrbitFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VTOFFSET.frame.p) }
+  public static func add(frame: OrbitFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VT.frame) }
   public static func endOrbitFrameWrapper(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOrbitFrameWrapper(
     _ fbb: inout FlatBufferBuilder,
@@ -396,7 +390,7 @@ public struct OrbitFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.frame.p, fieldName: "frame", required: false, type: OrbitFrame.self)
+    try _v.visit(field: VT.frame, fieldName: "frame", required: false, type: OrbitFrame.self)
     _v.finish()
   }
 }
@@ -412,15 +406,13 @@ public struct CustomFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case frame = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let frame: VOffset = 4
   }
 
-  public var frame: CustomFrame { let o = _accessor.offset(VTOFFSET.frame.v); return o == 0 ? .ecef : CustomFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
+  public var frame: CustomFrame { let o = _accessor.offset(VT.frame); return o == 0 ? .ecef : CustomFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ecef }
   public static func startCustomFrameWrapper(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(frame: CustomFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VTOFFSET.frame.p) }
+  public static func add(frame: CustomFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: frame.rawValue, def: 0, at: VT.frame) }
   public static func endCustomFrameWrapper(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCustomFrameWrapper(
     _ fbb: inout FlatBufferBuilder,
@@ -433,7 +425,7 @@ public struct CustomFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.frame.p, fieldName: "frame", required: false, type: CustomFrame.self)
+    try _v.visit(field: VT.frame, fieldName: "frame", required: false, type: CustomFrame.self)
     _v.finish()
   }
 }
@@ -450,25 +442,23 @@ public struct RFM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case REFERENCE_FRAME_type = 4
-    case REFERENCE_FRAME = 6
-    case INDEX = 8
-    case NAME = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let REFERENCE_FRAME_type: VOffset = 4
+    static let REFERENCE_FRAME: VOffset = 6
+    static let INDEX: VOffset = 8
+    static let NAME: VOffset = 10
   }
 
-  public var REFERENCE_FRAME_type: RFMUnion { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME_type.v); return o == 0 ? .none_ : RFMUnion(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
-  public func REFERENCE_FRAME<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.union(o) }
-  public var INDEX: Int32 { let o = _accessor.offset(VTOFFSET.INDEX.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var REFERENCE_FRAME_type: RFMUnion { let o = _accessor.offset(VT.REFERENCE_FRAME_type); return o == 0 ? .none_ : RFMUnion(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  public func REFERENCE_FRAME<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VT.REFERENCE_FRAME); return o == 0 ? nil : _accessor.union(o) }
+  public var INDEX: Int32 { let o = _accessor.offset(VT.INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   public static func startRFM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(REFERENCE_FRAME_type: RFMUnion, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME_type.rawValue, def: 0, at: VTOFFSET.REFERENCE_FRAME_type.p) }
-  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VTOFFSET.REFERENCE_FRAME.p) }
-  public static func add(INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INDEX, def: 0, at: VTOFFSET.INDEX.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
+  public static func add(REFERENCE_FRAME_type: RFMUnion, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME_type.rawValue, def: 0, at: VT.REFERENCE_FRAME_type) }
+  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VT.REFERENCE_FRAME) }
+  public static func add(INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INDEX, def: 0, at: VT.INDEX) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func endRFM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRFM(
     _ fbb: inout FlatBufferBuilder,
@@ -487,7 +477,7 @@ public struct RFM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(unionKey: VTOFFSET.REFERENCE_FRAMEType.p, unionField: VTOFFSET.REFERENCE_FRAME.p, unionKeyName: "REFERENCE_FRAMEType", fieldName: "REFERENCE_FRAME", required: false, completion: { (verifier, key: RFMUnion, pos) in
+    try _v.visit(unionKey: VT.REFERENCE_FRAMEType, unionField: VT.REFERENCE_FRAME, unionKeyName: "REFERENCE_FRAMEType", fieldName: "REFERENCE_FRAME", required: false, completion: { (verifier, key: RFMUnion, pos) in
       switch key {
       case .none_:
         break // NOTE - SWIFT doesnt support none
@@ -501,8 +491,8 @@ public struct RFM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
         try ForwardOffset<CustomFrameWrapper>.verify(&verifier, at: pos, of: CustomFrameWrapper.self)
       }
     })
-    try _v.visit(field: VTOFFSET.INDEX.p, fieldName: "INDEX", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INDEX, fieldName: "INDEX", required: false, type: Int32.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

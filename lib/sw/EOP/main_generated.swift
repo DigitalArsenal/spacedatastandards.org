@@ -32,53 +32,51 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case DATE = 4
-    case MJD = 6
-    case X_POLE_WANDER_RADIANS = 8
-    case Y_POLE_WANDER_RADIANS = 10
-    case X_CELESTIAL_POLE_OFFSET_RADIANS = 12
-    case Y_CELESTIAL_POLE_OFFSET_RADIANS = 14
-    case UT1_MINUS_UTC_SECONDS = 16
-    case TAI_MINUS_UTC_SECONDS = 18
-    case LENGTH_OF_DAY_CORRECTION_SECONDS = 20
-    case DATA_TYPE = 22
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let DATE: VOffset = 4
+    static let MJD: VOffset = 6
+    static let X_POLE_WANDER_RADIANS: VOffset = 8
+    static let Y_POLE_WANDER_RADIANS: VOffset = 10
+    static let X_CELESTIAL_POLE_OFFSET_RADIANS: VOffset = 12
+    static let Y_CELESTIAL_POLE_OFFSET_RADIANS: VOffset = 14
+    static let UT1_MINUS_UTC_SECONDS: VOffset = 16
+    static let TAI_MINUS_UTC_SECONDS: VOffset = 18
+    static let LENGTH_OF_DAY_CORRECTION_SECONDS: VOffset = 20
+    static let DATA_TYPE: VOffset = 22
   }
 
   ///   Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
-  public var DATE: String? { let o = _accessor.offset(VTOFFSET.DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DATE.v) }
+  public var DATE: String? { let o = _accessor.offset(VT.DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATE) }
   ///   Modified Julian Date in UTC, e.g., 58119
-  public var MJD: UInt32 { let o = _accessor.offset(VTOFFSET.MJD.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var MJD: UInt32 { let o = _accessor.offset(VT.MJD); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///   x component of Pole Wander in radians, e.g., 2.872908911518888E-7
-  public var X_POLE_WANDER_RADIANS: Float32 { let o = _accessor.offset(VTOFFSET.X_POLE_WANDER_RADIANS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var X_POLE_WANDER_RADIANS: Float32 { let o = _accessor.offset(VT.X_POLE_WANDER_RADIANS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///   y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
-  public var Y_POLE_WANDER_RADIANS: Float32 { let o = _accessor.offset(VTOFFSET.Y_POLE_WANDER_RADIANS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var Y_POLE_WANDER_RADIANS: Float32 { let o = _accessor.offset(VT.Y_POLE_WANDER_RADIANS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///   x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
-  public var X_CELESTIAL_POLE_OFFSET_RADIANS: Float32 { let o = _accessor.offset(VTOFFSET.X_CELESTIAL_POLE_OFFSET_RADIANS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var X_CELESTIAL_POLE_OFFSET_RADIANS: Float32 { let o = _accessor.offset(VT.X_CELESTIAL_POLE_OFFSET_RADIANS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///   y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
-  public var Y_CELESTIAL_POLE_OFFSET_RADIANS: Float32 { let o = _accessor.offset(VTOFFSET.Y_CELESTIAL_POLE_OFFSET_RADIANS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var Y_CELESTIAL_POLE_OFFSET_RADIANS: Float32 { let o = _accessor.offset(VT.Y_CELESTIAL_POLE_OFFSET_RADIANS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///   UT1 minus UTC in seconds, e.g., 0.2163567
-  public var UT1_MINUS_UTC_SECONDS: Float32 { let o = _accessor.offset(VTOFFSET.UT1_MINUS_UTC_SECONDS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var UT1_MINUS_UTC_SECONDS: Float32 { let o = _accessor.offset(VT.UT1_MINUS_UTC_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///   TAI minus UTC in seconds, e.g., 37
-  public var TAI_MINUS_UTC_SECONDS: UInt16 { let o = _accessor.offset(VTOFFSET.TAI_MINUS_UTC_SECONDS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var TAI_MINUS_UTC_SECONDS: UInt16 { let o = _accessor.offset(VT.TAI_MINUS_UTC_SECONDS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///   Correction to Length of Day in seconds, e.g., 8.094E-4
-  public var LENGTH_OF_DAY_CORRECTION_SECONDS: Float32 { let o = _accessor.offset(VTOFFSET.LENGTH_OF_DAY_CORRECTION_SECONDS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var LENGTH_OF_DAY_CORRECTION_SECONDS: Float32 { let o = _accessor.offset(VT.LENGTH_OF_DAY_CORRECTION_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///   Data type (O = Observed, P = Predicted)
-  public var DATA_TYPE: DataType { let o = _accessor.offset(VTOFFSET.DATA_TYPE.v); return o == 0 ? .observed : DataType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .observed }
+  public var DATA_TYPE: DataType { let o = _accessor.offset(VT.DATA_TYPE); return o == 0 ? .observed : DataType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .observed }
   public static func startEOP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATE, at: VTOFFSET.DATE.p) }
-  public static func add(MJD: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MJD, def: 0, at: VTOFFSET.MJD.p) }
-  public static func add(X_POLE_WANDER_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_POLE_WANDER_RADIANS, def: 0.0, at: VTOFFSET.X_POLE_WANDER_RADIANS.p) }
-  public static func add(Y_POLE_WANDER_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_POLE_WANDER_RADIANS, def: 0.0, at: VTOFFSET.Y_POLE_WANDER_RADIANS.p) }
-  public static func add(X_CELESTIAL_POLE_OFFSET_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_CELESTIAL_POLE_OFFSET_RADIANS, def: 0.0, at: VTOFFSET.X_CELESTIAL_POLE_OFFSET_RADIANS.p) }
-  public static func add(Y_CELESTIAL_POLE_OFFSET_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_CELESTIAL_POLE_OFFSET_RADIANS, def: 0.0, at: VTOFFSET.Y_CELESTIAL_POLE_OFFSET_RADIANS.p) }
-  public static func add(UT1_MINUS_UTC_SECONDS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UT1_MINUS_UTC_SECONDS, def: 0.0, at: VTOFFSET.UT1_MINUS_UTC_SECONDS.p) }
-  public static func add(TAI_MINUS_UTC_SECONDS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAI_MINUS_UTC_SECONDS, def: 0, at: VTOFFSET.TAI_MINUS_UTC_SECONDS.p) }
-  public static func add(LENGTH_OF_DAY_CORRECTION_SECONDS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LENGTH_OF_DAY_CORRECTION_SECONDS, def: 0.0, at: VTOFFSET.LENGTH_OF_DAY_CORRECTION_SECONDS.p) }
-  public static func add(DATA_TYPE: DataType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_TYPE.rawValue, def: 0, at: VTOFFSET.DATA_TYPE.p) }
+  public static func add(DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATE, at: VT.DATE) }
+  public static func add(MJD: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MJD, def: 0, at: VT.MJD) }
+  public static func add(X_POLE_WANDER_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_POLE_WANDER_RADIANS, def: 0.0, at: VT.X_POLE_WANDER_RADIANS) }
+  public static func add(Y_POLE_WANDER_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_POLE_WANDER_RADIANS, def: 0.0, at: VT.Y_POLE_WANDER_RADIANS) }
+  public static func add(X_CELESTIAL_POLE_OFFSET_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_CELESTIAL_POLE_OFFSET_RADIANS, def: 0.0, at: VT.X_CELESTIAL_POLE_OFFSET_RADIANS) }
+  public static func add(Y_CELESTIAL_POLE_OFFSET_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_CELESTIAL_POLE_OFFSET_RADIANS, def: 0.0, at: VT.Y_CELESTIAL_POLE_OFFSET_RADIANS) }
+  public static func add(UT1_MINUS_UTC_SECONDS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UT1_MINUS_UTC_SECONDS, def: 0.0, at: VT.UT1_MINUS_UTC_SECONDS) }
+  public static func add(TAI_MINUS_UTC_SECONDS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAI_MINUS_UTC_SECONDS, def: 0, at: VT.TAI_MINUS_UTC_SECONDS) }
+  public static func add(LENGTH_OF_DAY_CORRECTION_SECONDS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LENGTH_OF_DAY_CORRECTION_SECONDS, def: 0.0, at: VT.LENGTH_OF_DAY_CORRECTION_SECONDS) }
+  public static func add(DATA_TYPE: DataType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_TYPE.rawValue, def: 0, at: VT.DATA_TYPE) }
   public static func endEOP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEOP(
     _ fbb: inout FlatBufferBuilder,
@@ -109,16 +107,16 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.DATE.p, fieldName: "DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MJD.p, fieldName: "MJD", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.X_POLE_WANDER_RADIANS.p, fieldName: "X_POLE_WANDER_RADIANS", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.Y_POLE_WANDER_RADIANS.p, fieldName: "Y_POLE_WANDER_RADIANS", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.X_CELESTIAL_POLE_OFFSET_RADIANS.p, fieldName: "X_CELESTIAL_POLE_OFFSET_RADIANS", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.Y_CELESTIAL_POLE_OFFSET_RADIANS.p, fieldName: "Y_CELESTIAL_POLE_OFFSET_RADIANS", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.UT1_MINUS_UTC_SECONDS.p, fieldName: "UT1_MINUS_UTC_SECONDS", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.TAI_MINUS_UTC_SECONDS.p, fieldName: "TAI_MINUS_UTC_SECONDS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.LENGTH_OF_DAY_CORRECTION_SECONDS.p, fieldName: "LENGTH_OF_DAY_CORRECTION_SECONDS", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.DATA_TYPE.p, fieldName: "DATA_TYPE", required: false, type: DataType.self)
+    try _v.visit(field: VT.DATE, fieldName: "DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MJD, fieldName: "MJD", required: false, type: UInt32.self)
+    try _v.visit(field: VT.X_POLE_WANDER_RADIANS, fieldName: "X_POLE_WANDER_RADIANS", required: false, type: Float32.self)
+    try _v.visit(field: VT.Y_POLE_WANDER_RADIANS, fieldName: "Y_POLE_WANDER_RADIANS", required: false, type: Float32.self)
+    try _v.visit(field: VT.X_CELESTIAL_POLE_OFFSET_RADIANS, fieldName: "X_CELESTIAL_POLE_OFFSET_RADIANS", required: false, type: Float32.self)
+    try _v.visit(field: VT.Y_CELESTIAL_POLE_OFFSET_RADIANS, fieldName: "Y_CELESTIAL_POLE_OFFSET_RADIANS", required: false, type: Float32.self)
+    try _v.visit(field: VT.UT1_MINUS_UTC_SECONDS, fieldName: "UT1_MINUS_UTC_SECONDS", required: false, type: Float32.self)
+    try _v.visit(field: VT.TAI_MINUS_UTC_SECONDS, fieldName: "TAI_MINUS_UTC_SECONDS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.LENGTH_OF_DAY_CORRECTION_SECONDS, fieldName: "LENGTH_OF_DAY_CORRECTION_SECONDS", required: false, type: Float32.self)
+    try _v.visit(field: VT.DATA_TYPE, fieldName: "DATA_TYPE", required: false, type: DataType.self)
     _v.finish()
   }
 }

@@ -131,51 +131,49 @@ public struct TKG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COMMAND = 4
-    case FILTER_CONFIG = 6
-    case IMM_CONFIG = 8
-    case MHT_CONFIG = 10
-    case JPDA_CONFIG = 12
-    case FUSION_CONFIG = 14
-    case MEASUREMENTS = 16
-    case INITIAL_STATE = 18
-    case TRACK_TO_UPDATE = 20
-    case TRACKS_TO_CORRELATE = 22
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COMMAND: VOffset = 4
+    static let FILTER_CONFIG: VOffset = 6
+    static let IMM_CONFIG: VOffset = 8
+    static let MHT_CONFIG: VOffset = 10
+    static let JPDA_CONFIG: VOffset = 12
+    static let FUSION_CONFIG: VOffset = 14
+    static let MEASUREMENTS: VOffset = 16
+    static let INITIAL_STATE: VOffset = 18
+    static let TRACK_TO_UPDATE: VOffset = 20
+    static let TRACKS_TO_CORRELATE: VOffset = 22
   }
 
-  public var COMMAND: String? { let o = _accessor.offset(VTOFFSET.COMMAND.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COMMANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMAND.v) }
-  public var FILTER_CONFIG: String? { let o = _accessor.offset(VTOFFSET.FILTER_CONFIG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FILTER_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FILTER_CONFIG.v) }
-  public var IMM_CONFIG: String? { let o = _accessor.offset(VTOFFSET.IMM_CONFIG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IMM_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMM_CONFIG.v) }
-  public var MHT_CONFIG: String? { let o = _accessor.offset(VTOFFSET.MHT_CONFIG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MHT_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MHT_CONFIG.v) }
-  public var JPDA_CONFIG: String? { let o = _accessor.offset(VTOFFSET.JPDA_CONFIG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var JPDA_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.JPDA_CONFIG.v) }
-  public var FUSION_CONFIG: String? { let o = _accessor.offset(VTOFFSET.FUSION_CONFIG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FUSION_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FUSION_CONFIG.v) }
-  public var MEASUREMENTS: String? { let o = _accessor.offset(VTOFFSET.MEASUREMENTS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MEASUREMENTSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MEASUREMENTS.v) }
-  public var INITIAL_STATE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_STATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INITIAL_STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_STATE.v) }
-  public var TRACK_TO_UPDATE: String? { let o = _accessor.offset(VTOFFSET.TRACK_TO_UPDATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACK_TO_UPDATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRACK_TO_UPDATE.v) }
-  public var TRACKS_TO_CORRELATE: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TRACKS_TO_CORRELATE.v, byteSize: 4) }
+  public var COMMAND: String? { let o = _accessor.offset(VT.COMMAND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMAND) }
+  public var FILTER_CONFIG: String? { let o = _accessor.offset(VT.FILTER_CONFIG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILTER_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILTER_CONFIG) }
+  public var IMM_CONFIG: String? { let o = _accessor.offset(VT.IMM_CONFIG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMM_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IMM_CONFIG) }
+  public var MHT_CONFIG: String? { let o = _accessor.offset(VT.MHT_CONFIG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MHT_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MHT_CONFIG) }
+  public var JPDA_CONFIG: String? { let o = _accessor.offset(VT.JPDA_CONFIG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var JPDA_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.JPDA_CONFIG) }
+  public var FUSION_CONFIG: String? { let o = _accessor.offset(VT.FUSION_CONFIG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FUSION_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FUSION_CONFIG) }
+  public var MEASUREMENTS: String? { let o = _accessor.offset(VT.MEASUREMENTS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MEASUREMENTSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MEASUREMENTS) }
+  public var INITIAL_STATE: String? { let o = _accessor.offset(VT.INITIAL_STATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INITIAL_STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INITIAL_STATE) }
+  public var TRACK_TO_UPDATE: String? { let o = _accessor.offset(VT.TRACK_TO_UPDATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRACK_TO_UPDATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACK_TO_UPDATE) }
+  public var TRACKS_TO_CORRELATE: FlatbufferVector<String?> { return _accessor.vector(at: VT.TRACKS_TO_CORRELATE, byteSize: 4) }
   public static func startTKG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND, at: VTOFFSET.COMMAND.p) }
-  public static func add(FILTER_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILTER_CONFIG, at: VTOFFSET.FILTER_CONFIG.p) }
-  public static func add(IMM_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMM_CONFIG, at: VTOFFSET.IMM_CONFIG.p) }
-  public static func add(MHT_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MHT_CONFIG, at: VTOFFSET.MHT_CONFIG.p) }
-  public static func add(JPDA_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JPDA_CONFIG, at: VTOFFSET.JPDA_CONFIG.p) }
-  public static func add(FUSION_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FUSION_CONFIG, at: VTOFFSET.FUSION_CONFIG.p) }
-  public static func add(MEASUREMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEASUREMENTS, at: VTOFFSET.MEASUREMENTS.p) }
-  public static func add(INITIAL_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_STATE, at: VTOFFSET.INITIAL_STATE.p) }
-  public static func add(TRACK_TO_UPDATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACK_TO_UPDATE, at: VTOFFSET.TRACK_TO_UPDATE.p) }
-  public static func addVectorOf(TRACKS_TO_CORRELATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACKS_TO_CORRELATE, at: VTOFFSET.TRACKS_TO_CORRELATE.p) }
+  public static func add(COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND, at: VT.COMMAND) }
+  public static func add(FILTER_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILTER_CONFIG, at: VT.FILTER_CONFIG) }
+  public static func add(IMM_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMM_CONFIG, at: VT.IMM_CONFIG) }
+  public static func add(MHT_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MHT_CONFIG, at: VT.MHT_CONFIG) }
+  public static func add(JPDA_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JPDA_CONFIG, at: VT.JPDA_CONFIG) }
+  public static func add(FUSION_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FUSION_CONFIG, at: VT.FUSION_CONFIG) }
+  public static func add(MEASUREMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEASUREMENTS, at: VT.MEASUREMENTS) }
+  public static func add(INITIAL_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_STATE, at: VT.INITIAL_STATE) }
+  public static func add(TRACK_TO_UPDATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACK_TO_UPDATE, at: VT.TRACK_TO_UPDATE) }
+  public static func addVectorOf(TRACKS_TO_CORRELATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACKS_TO_CORRELATE, at: VT.TRACKS_TO_CORRELATE) }
   public static func endTKG(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTKG(
     _ fbb: inout FlatBufferBuilder,
@@ -206,16 +204,16 @@ public struct TKG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COMMAND.p, fieldName: "COMMAND", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FILTER_CONFIG.p, fieldName: "FILTER_CONFIG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.IMM_CONFIG.p, fieldName: "IMM_CONFIG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MHT_CONFIG.p, fieldName: "MHT_CONFIG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.JPDA_CONFIG.p, fieldName: "JPDA_CONFIG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FUSION_CONFIG.p, fieldName: "FUSION_CONFIG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MEASUREMENTS.p, fieldName: "MEASUREMENTS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_STATE.p, fieldName: "INITIAL_STATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRACK_TO_UPDATE.p, fieldName: "TRACK_TO_UPDATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRACKS_TO_CORRELATE.p, fieldName: "TRACKS_TO_CORRELATE", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COMMAND, fieldName: "COMMAND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILTER_CONFIG, fieldName: "FILTER_CONFIG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IMM_CONFIG, fieldName: "IMM_CONFIG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MHT_CONFIG, fieldName: "MHT_CONFIG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.JPDA_CONFIG, fieldName: "JPDA_CONFIG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FUSION_CONFIG, fieldName: "FUSION_CONFIG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MEASUREMENTS, fieldName: "MEASUREMENTS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INITIAL_STATE, fieldName: "INITIAL_STATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRACK_TO_UPDATE, fieldName: "TRACK_TO_UPDATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRACKS_TO_CORRELATE, fieldName: "TRACKS_TO_CORRELATE", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

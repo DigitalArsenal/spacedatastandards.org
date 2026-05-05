@@ -30,11 +30,11 @@ static getSizePrefixedRootAsEntryFunction(bb:flatbuffers.ByteBuffer, obj?:EntryF
 /**
  * Function name as exported from WASM
  */
-NAME():string|null
-NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-NAME(optionalEncoding?:any):string|Uint8Array|null {
+NAME():string
+NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+NAME(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**

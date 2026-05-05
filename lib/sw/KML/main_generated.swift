@@ -167,24 +167,22 @@ public struct KMLCoordinate: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case LONGITUDE = 4
-    case LATITUDE = 6
-    case ALTITUDE = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let LONGITUDE: VOffset = 4
+    static let LATITUDE: VOffset = 6
+    static let ALTITUDE: VOffset = 8
   }
 
   ///  Longitude in decimal degrees
-  public var LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE: Double { let o = _accessor.offset(VT.LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Latitude in decimal degrees
-  public var LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LATITUDE: Double { let o = _accessor.offset(VT.LATITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Altitude in meters
-  public var ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ALTITUDE: Double { let o = _accessor.offset(VT.ALTITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startKMLCoordinate(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VTOFFSET.LONGITUDE.p) }
-  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VTOFFSET.LATITUDE.p) }
-  public static func add(ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VTOFFSET.ALTITUDE.p) }
+  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VT.LONGITUDE) }
+  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VT.LATITUDE) }
+  public static func add(ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VT.ALTITUDE) }
   public static func endKMLCoordinate(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLCoordinate(
     _ fbb: inout FlatBufferBuilder,
@@ -201,9 +199,9 @@ public struct KMLCoordinate: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LONGITUDE.p, fieldName: "LONGITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LATITUDE.p, fieldName: "LATITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE.p, fieldName: "ALTITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE, fieldName: "LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.LATITUDE, fieldName: "LATITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE, fieldName: "ALTITUDE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -220,40 +218,38 @@ public struct KMLLookAt: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case LONGITUDE = 4
-    case LATITUDE = 6
-    case ALTITUDE = 8
-    case HEADING = 10
-    case TILT = 12
-    case RANGE = 14
-    case ALTITUDE_MODE = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let LONGITUDE: VOffset = 4
+    static let LATITUDE: VOffset = 6
+    static let ALTITUDE: VOffset = 8
+    static let HEADING: VOffset = 10
+    static let TILT: VOffset = 12
+    static let RANGE: VOffset = 14
+    static let ALTITUDE_MODE: VOffset = 16
   }
 
   ///  Longitude of the point being looked at
-  public var LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE: Double { let o = _accessor.offset(VT.LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Latitude of the point being looked at
-  public var LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LATITUDE: Double { let o = _accessor.offset(VT.LATITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Altitude of the point being looked at
-  public var ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ALTITUDE: Double { let o = _accessor.offset(VT.ALTITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Heading in degrees (0=North)
-  public var HEADING: Double { let o = _accessor.offset(VTOFFSET.HEADING.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HEADING: Double { let o = _accessor.offset(VT.HEADING); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Tilt in degrees from vertical (0=straight down)
-  public var TILT: Double { let o = _accessor.offset(VTOFFSET.TILT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TILT: Double { let o = _accessor.offset(VT.TILT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Range in meters from the point
-  public var RANGE: Double { let o = _accessor.offset(VTOFFSET.RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RANGE: Double { let o = _accessor.offset(VT.RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Altitude mode
-  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
+  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VT.ALTITUDE_MODE); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   public static func startKMLLookAt(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VTOFFSET.LONGITUDE.p) }
-  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VTOFFSET.LATITUDE.p) }
-  public static func add(ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VTOFFSET.ALTITUDE.p) }
-  public static func add(HEADING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEADING, def: 0.0, at: VTOFFSET.HEADING.p) }
-  public static func add(TILT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TILT, def: 0.0, at: VTOFFSET.TILT.p) }
-  public static func add(RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE, def: 0.0, at: VTOFFSET.RANGE.p) }
-  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VTOFFSET.ALTITUDE_MODE.p) }
+  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VT.LONGITUDE) }
+  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VT.LATITUDE) }
+  public static func add(ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VT.ALTITUDE) }
+  public static func add(HEADING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEADING, def: 0.0, at: VT.HEADING) }
+  public static func add(TILT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TILT, def: 0.0, at: VT.TILT) }
+  public static func add(RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE, def: 0.0, at: VT.RANGE) }
+  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VT.ALTITUDE_MODE) }
   public static func endKMLLookAt(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLLookAt(
     _ fbb: inout FlatBufferBuilder,
@@ -278,13 +274,13 @@ public struct KMLLookAt: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LONGITUDE.p, fieldName: "LONGITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LATITUDE.p, fieldName: "LATITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE.p, fieldName: "ALTITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEADING.p, fieldName: "HEADING", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TILT.p, fieldName: "TILT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RANGE.p, fieldName: "RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE_MODE.p, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
+    try _v.visit(field: VT.LONGITUDE, fieldName: "LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.LATITUDE, fieldName: "LATITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE, fieldName: "ALTITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.HEADING, fieldName: "HEADING", required: false, type: Double.self)
+    try _v.visit(field: VT.TILT, fieldName: "TILT", required: false, type: Double.self)
+    try _v.visit(field: VT.RANGE, fieldName: "RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE_MODE, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
     _v.finish()
   }
 }
@@ -301,40 +297,38 @@ public struct KMLCamera: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case LONGITUDE = 4
-    case LATITUDE = 6
-    case ALTITUDE = 8
-    case HEADING = 10
-    case TILT = 12
-    case ROLL = 14
-    case ALTITUDE_MODE = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let LONGITUDE: VOffset = 4
+    static let LATITUDE: VOffset = 6
+    static let ALTITUDE: VOffset = 8
+    static let HEADING: VOffset = 10
+    static let TILT: VOffset = 12
+    static let ROLL: VOffset = 14
+    static let ALTITUDE_MODE: VOffset = 16
   }
 
   ///  Camera longitude
-  public var LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE: Double { let o = _accessor.offset(VT.LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Camera latitude
-  public var LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LATITUDE: Double { let o = _accessor.offset(VT.LATITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Camera altitude
-  public var ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ALTITUDE: Double { let o = _accessor.offset(VT.ALTITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Heading in degrees (0=North)
-  public var HEADING: Double { let o = _accessor.offset(VTOFFSET.HEADING.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HEADING: Double { let o = _accessor.offset(VT.HEADING); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Tilt in degrees from vertical
-  public var TILT: Double { let o = _accessor.offset(VTOFFSET.TILT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TILT: Double { let o = _accessor.offset(VT.TILT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Roll in degrees
-  public var ROLL: Double { let o = _accessor.offset(VTOFFSET.ROLL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ROLL: Double { let o = _accessor.offset(VT.ROLL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Altitude mode
-  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
+  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VT.ALTITUDE_MODE); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   public static func startKMLCamera(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VTOFFSET.LONGITUDE.p) }
-  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VTOFFSET.LATITUDE.p) }
-  public static func add(ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VTOFFSET.ALTITUDE.p) }
-  public static func add(HEADING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEADING, def: 0.0, at: VTOFFSET.HEADING.p) }
-  public static func add(TILT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TILT, def: 0.0, at: VTOFFSET.TILT.p) }
-  public static func add(ROLL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLL, def: 0.0, at: VTOFFSET.ROLL.p) }
-  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VTOFFSET.ALTITUDE_MODE.p) }
+  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VT.LONGITUDE) }
+  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VT.LATITUDE) }
+  public static func add(ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VT.ALTITUDE) }
+  public static func add(HEADING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEADING, def: 0.0, at: VT.HEADING) }
+  public static func add(TILT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TILT, def: 0.0, at: VT.TILT) }
+  public static func add(ROLL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLL, def: 0.0, at: VT.ROLL) }
+  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VT.ALTITUDE_MODE) }
   public static func endKMLCamera(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLCamera(
     _ fbb: inout FlatBufferBuilder,
@@ -359,13 +353,13 @@ public struct KMLCamera: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LONGITUDE.p, fieldName: "LONGITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LATITUDE.p, fieldName: "LATITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE.p, fieldName: "ALTITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEADING.p, fieldName: "HEADING", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TILT.p, fieldName: "TILT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ROLL.p, fieldName: "ROLL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE_MODE.p, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
+    try _v.visit(field: VT.LONGITUDE, fieldName: "LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.LATITUDE, fieldName: "LATITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE, fieldName: "ALTITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.HEADING, fieldName: "HEADING", required: false, type: Double.self)
+    try _v.visit(field: VT.TILT, fieldName: "TILT", required: false, type: Double.self)
+    try _v.visit(field: VT.ROLL, fieldName: "ROLL", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE_MODE, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
     _v.finish()
   }
 }
@@ -382,50 +376,48 @@ public struct KMLIconStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COLOR = 4
-    case COLOR_MODE = 6
-    case SCALE = 8
-    case HEADING = 10
-    case ICON_HREF = 12
-    case HOTSPOT_X = 14
-    case HOTSPOT_Y = 16
-    case HOTSPOT_X_UNITS = 18
-    case HOTSPOT_Y_UNITS = 20
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COLOR: VOffset = 4
+    static let COLOR_MODE: VOffset = 6
+    static let SCALE: VOffset = 8
+    static let HEADING: VOffset = 10
+    static let ICON_HREF: VOffset = 12
+    static let HOTSPOT_X: VOffset = 14
+    static let HOTSPOT_Y: VOffset = 16
+    static let HOTSPOT_X_UNITS: VOffset = 18
+    static let HOTSPOT_Y_UNITS: VOffset = 20
   }
 
   ///  KML color in aabbggrr hex format
-  public var COLOR: String? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLOR.v) }
+  public var COLOR: String? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR) }
   ///  Color mode
-  public var COLOR_MODE: KMLColorMode { let o = _accessor.offset(VTOFFSET.COLOR_MODE.v); return o == 0 ? .normal : KMLColorMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .normal }
+  public var COLOR_MODE: KMLColorMode { let o = _accessor.offset(VT.COLOR_MODE); return o == 0 ? .normal : KMLColorMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .normal }
   ///  Scale factor
-  public var SCALE: Double { let o = _accessor.offset(VTOFFSET.SCALE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCALE: Double { let o = _accessor.offset(VT.SCALE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Heading in degrees
-  public var HEADING: Double { let o = _accessor.offset(VTOFFSET.HEADING.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HEADING: Double { let o = _accessor.offset(VT.HEADING); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Icon href (URL)
-  public var ICON_HREF: String? { let o = _accessor.offset(VTOFFSET.ICON_HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ICON_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ICON_HREF.v) }
+  public var ICON_HREF: String? { let o = _accessor.offset(VT.ICON_HREF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ICON_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ICON_HREF) }
   ///  Hot spot X value
-  public var HOTSPOT_X: Double { let o = _accessor.offset(VTOFFSET.HOTSPOT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HOTSPOT_X: Double { let o = _accessor.offset(VT.HOTSPOT_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Hot spot Y value
-  public var HOTSPOT_Y: Double { let o = _accessor.offset(VTOFFSET.HOTSPOT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HOTSPOT_Y: Double { let o = _accessor.offset(VT.HOTSPOT_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Hot spot X units
-  public var HOTSPOT_X_UNITS: KMLUnits { let o = _accessor.offset(VTOFFSET.HOTSPOT_X_UNITS.v); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
+  public var HOTSPOT_X_UNITS: KMLUnits { let o = _accessor.offset(VT.HOTSPOT_X_UNITS); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
   ///  Hot spot Y units
-  public var HOTSPOT_Y_UNITS: KMLUnits { let o = _accessor.offset(VTOFFSET.HOTSPOT_Y_UNITS.v); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
+  public var HOTSPOT_Y_UNITS: KMLUnits { let o = _accessor.offset(VT.HOTSPOT_Y_UNITS); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
   public static func startKMLIconStyle(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(COLOR_MODE: KMLColorMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLOR_MODE.rawValue, def: 0, at: VTOFFSET.COLOR_MODE.p) }
-  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 0.0, at: VTOFFSET.SCALE.p) }
-  public static func add(HEADING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEADING, def: 0.0, at: VTOFFSET.HEADING.p) }
-  public static func add(ICON_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_HREF, at: VTOFFSET.ICON_HREF.p) }
-  public static func add(HOTSPOT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOTSPOT_X, def: 0.0, at: VTOFFSET.HOTSPOT_X.p) }
-  public static func add(HOTSPOT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOTSPOT_Y, def: 0.0, at: VTOFFSET.HOTSPOT_Y.p) }
-  public static func add(HOTSPOT_X_UNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOTSPOT_X_UNITS.rawValue, def: 0, at: VTOFFSET.HOTSPOT_X_UNITS.p) }
-  public static func add(HOTSPOT_Y_UNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOTSPOT_Y_UNITS.rawValue, def: 0, at: VTOFFSET.HOTSPOT_Y_UNITS.p) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(COLOR_MODE: KMLColorMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLOR_MODE.rawValue, def: 0, at: VT.COLOR_MODE) }
+  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 0.0, at: VT.SCALE) }
+  public static func add(HEADING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEADING, def: 0.0, at: VT.HEADING) }
+  public static func add(ICON_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_HREF, at: VT.ICON_HREF) }
+  public static func add(HOTSPOT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOTSPOT_X, def: 0.0, at: VT.HOTSPOT_X) }
+  public static func add(HOTSPOT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOTSPOT_Y, def: 0.0, at: VT.HOTSPOT_Y) }
+  public static func add(HOTSPOT_X_UNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOTSPOT_X_UNITS.rawValue, def: 0, at: VT.HOTSPOT_X_UNITS) }
+  public static func add(HOTSPOT_Y_UNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOTSPOT_Y_UNITS.rawValue, def: 0, at: VT.HOTSPOT_Y_UNITS) }
   public static func endKMLIconStyle(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLIconStyle(
     _ fbb: inout FlatBufferBuilder,
@@ -454,15 +446,15 @@ public struct KMLIconStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLOR_MODE.p, fieldName: "COLOR_MODE", required: false, type: KMLColorMode.self)
-    try _v.visit(field: VTOFFSET.SCALE.p, fieldName: "SCALE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEADING.p, fieldName: "HEADING", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ICON_HREF.p, fieldName: "ICON_HREF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.HOTSPOT_X.p, fieldName: "HOTSPOT_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HOTSPOT_Y.p, fieldName: "HOTSPOT_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HOTSPOT_X_UNITS.p, fieldName: "HOTSPOT_X_UNITS", required: false, type: KMLUnits.self)
-    try _v.visit(field: VTOFFSET.HOTSPOT_Y_UNITS.p, fieldName: "HOTSPOT_Y_UNITS", required: false, type: KMLUnits.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLOR_MODE, fieldName: "COLOR_MODE", required: false, type: KMLColorMode.self)
+    try _v.visit(field: VT.SCALE, fieldName: "SCALE", required: false, type: Double.self)
+    try _v.visit(field: VT.HEADING, fieldName: "HEADING", required: false, type: Double.self)
+    try _v.visit(field: VT.ICON_HREF, fieldName: "ICON_HREF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HOTSPOT_X, fieldName: "HOTSPOT_X", required: false, type: Double.self)
+    try _v.visit(field: VT.HOTSPOT_Y, fieldName: "HOTSPOT_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.HOTSPOT_X_UNITS, fieldName: "HOTSPOT_X_UNITS", required: false, type: KMLUnits.self)
+    try _v.visit(field: VT.HOTSPOT_Y_UNITS, fieldName: "HOTSPOT_Y_UNITS", required: false, type: KMLUnits.self)
     _v.finish()
   }
 }
@@ -479,43 +471,41 @@ public struct KMLLineStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COLOR = 4
-    case COLOR_MODE = 6
-    case WIDTH = 8
-    case GX_OUTER_COLOR = 10
-    case GX_OUTER_WIDTH = 12
-    case GX_PHYSICAL_WIDTH = 14
-    case GX_LABEL_VISIBILITY = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COLOR: VOffset = 4
+    static let COLOR_MODE: VOffset = 6
+    static let WIDTH: VOffset = 8
+    static let GX_OUTER_COLOR: VOffset = 10
+    static let GX_OUTER_WIDTH: VOffset = 12
+    static let GX_PHYSICAL_WIDTH: VOffset = 14
+    static let GX_LABEL_VISIBILITY: VOffset = 16
   }
 
   ///  KML color in aabbggrr hex format
-  public var COLOR: String? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLOR.v) }
+  public var COLOR: String? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR) }
   ///  Color mode
-  public var COLOR_MODE: KMLColorMode { let o = _accessor.offset(VTOFFSET.COLOR_MODE.v); return o == 0 ? .normal : KMLColorMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .normal }
+  public var COLOR_MODE: KMLColorMode { let o = _accessor.offset(VT.COLOR_MODE); return o == 0 ? .normal : KMLColorMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .normal }
   ///  Width in pixels
-  public var WIDTH: Double { let o = _accessor.offset(VTOFFSET.WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var WIDTH: Double { let o = _accessor.offset(VT.WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  gx:outerColor
-  public var GX_OUTER_COLOR: String? { let o = _accessor.offset(VTOFFSET.GX_OUTER_COLOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GX_OUTER_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GX_OUTER_COLOR.v) }
+  public var GX_OUTER_COLOR: String? { let o = _accessor.offset(VT.GX_OUTER_COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GX_OUTER_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GX_OUTER_COLOR) }
   ///  gx:outerWidth
-  public var GX_OUTER_WIDTH: Double { let o = _accessor.offset(VTOFFSET.GX_OUTER_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GX_OUTER_WIDTH: Double { let o = _accessor.offset(VT.GX_OUTER_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  gx:physicalWidth
-  public var GX_PHYSICAL_WIDTH: Double { let o = _accessor.offset(VTOFFSET.GX_PHYSICAL_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GX_PHYSICAL_WIDTH: Double { let o = _accessor.offset(VT.GX_PHYSICAL_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  gx:labelVisibility
-  public var GX_LABEL_VISIBILITY: Bool { let o = _accessor.offset(VTOFFSET.GX_LABEL_VISIBILITY.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var GX_LABEL_VISIBILITY: Bool { let o = _accessor.offset(VT.GX_LABEL_VISIBILITY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startKMLLineStyle(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(COLOR_MODE: KMLColorMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLOR_MODE.rawValue, def: 0, at: VTOFFSET.COLOR_MODE.p) }
-  public static func add(WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIDTH, def: 0.0, at: VTOFFSET.WIDTH.p) }
-  public static func add(GX_OUTER_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GX_OUTER_COLOR, at: VTOFFSET.GX_OUTER_COLOR.p) }
-  public static func add(GX_OUTER_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GX_OUTER_WIDTH, def: 0.0, at: VTOFFSET.GX_OUTER_WIDTH.p) }
-  public static func add(GX_PHYSICAL_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GX_PHYSICAL_WIDTH, def: 0.0, at: VTOFFSET.GX_PHYSICAL_WIDTH.p) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(COLOR_MODE: KMLColorMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLOR_MODE.rawValue, def: 0, at: VT.COLOR_MODE) }
+  public static func add(WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIDTH, def: 0.0, at: VT.WIDTH) }
+  public static func add(GX_OUTER_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GX_OUTER_COLOR, at: VT.GX_OUTER_COLOR) }
+  public static func add(GX_OUTER_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GX_OUTER_WIDTH, def: 0.0, at: VT.GX_OUTER_WIDTH) }
+  public static func add(GX_PHYSICAL_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GX_PHYSICAL_WIDTH, def: 0.0, at: VT.GX_PHYSICAL_WIDTH) }
   public static func add(GX_LABEL_VISIBILITY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GX_LABEL_VISIBILITY, def: false,
-   at: VTOFFSET.GX_LABEL_VISIBILITY.p) }
+   at: VT.GX_LABEL_VISIBILITY) }
   public static func endKMLLineStyle(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLLineStyle(
     _ fbb: inout FlatBufferBuilder,
@@ -540,13 +530,13 @@ public struct KMLLineStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLOR_MODE.p, fieldName: "COLOR_MODE", required: false, type: KMLColorMode.self)
-    try _v.visit(field: VTOFFSET.WIDTH.p, fieldName: "WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.GX_OUTER_COLOR.p, fieldName: "GX_OUTER_COLOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GX_OUTER_WIDTH.p, fieldName: "GX_OUTER_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.GX_PHYSICAL_WIDTH.p, fieldName: "GX_PHYSICAL_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.GX_LABEL_VISIBILITY.p, fieldName: "GX_LABEL_VISIBILITY", required: false, type: Bool.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLOR_MODE, fieldName: "COLOR_MODE", required: false, type: KMLColorMode.self)
+    try _v.visit(field: VT.WIDTH, fieldName: "WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.GX_OUTER_COLOR, fieldName: "GX_OUTER_COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GX_OUTER_WIDTH, fieldName: "GX_OUTER_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.GX_PHYSICAL_WIDTH, fieldName: "GX_PHYSICAL_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.GX_LABEL_VISIBILITY, fieldName: "GX_LABEL_VISIBILITY", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -563,31 +553,29 @@ public struct KMLPolyStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COLOR = 4
-    case COLOR_MODE = 6
-    case FILL = 8
-    case OUTLINE = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COLOR: VOffset = 4
+    static let COLOR_MODE: VOffset = 6
+    static let FILL: VOffset = 8
+    static let OUTLINE: VOffset = 10
   }
 
   ///  KML color in aabbggrr hex format
-  public var COLOR: String? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLOR.v) }
+  public var COLOR: String? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR) }
   ///  Color mode
-  public var COLOR_MODE: KMLColorMode { let o = _accessor.offset(VTOFFSET.COLOR_MODE.v); return o == 0 ? .normal : KMLColorMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .normal }
+  public var COLOR_MODE: KMLColorMode { let o = _accessor.offset(VT.COLOR_MODE); return o == 0 ? .normal : KMLColorMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .normal }
   ///  Whether to fill
-  public var FILL: Bool { let o = _accessor.offset(VTOFFSET.FILL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FILL: Bool { let o = _accessor.offset(VT.FILL); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether to outline
-  public var OUTLINE: Bool { let o = _accessor.offset(VTOFFSET.OUTLINE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OUTLINE: Bool { let o = _accessor.offset(VT.OUTLINE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startKMLPolyStyle(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(COLOR_MODE: KMLColorMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLOR_MODE.rawValue, def: 0, at: VTOFFSET.COLOR_MODE.p) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(COLOR_MODE: KMLColorMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLOR_MODE.rawValue, def: 0, at: VT.COLOR_MODE) }
   public static func add(FILL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILL, def: false,
-   at: VTOFFSET.FILL.p) }
+   at: VT.FILL) }
   public static func add(OUTLINE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE, def: false,
-   at: VTOFFSET.OUTLINE.p) }
+   at: VT.OUTLINE) }
   public static func endKMLPolyStyle(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLPolyStyle(
     _ fbb: inout FlatBufferBuilder,
@@ -606,10 +594,10 @@ public struct KMLPolyStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLOR_MODE.p, fieldName: "COLOR_MODE", required: false, type: KMLColorMode.self)
-    try _v.visit(field: VTOFFSET.FILL.p, fieldName: "FILL", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OUTLINE.p, fieldName: "OUTLINE", required: false, type: Bool.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLOR_MODE, fieldName: "COLOR_MODE", required: false, type: KMLColorMode.self)
+    try _v.visit(field: VT.FILL, fieldName: "FILL", required: false, type: Bool.self)
+    try _v.visit(field: VT.OUTLINE, fieldName: "OUTLINE", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -626,25 +614,23 @@ public struct KMLLabelStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COLOR = 4
-    case COLOR_MODE = 6
-    case SCALE = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COLOR: VOffset = 4
+    static let COLOR_MODE: VOffset = 6
+    static let SCALE: VOffset = 8
   }
 
   ///  KML color in aabbggrr hex format
-  public var COLOR: String? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLOR.v) }
+  public var COLOR: String? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR) }
   ///  Color mode
-  public var COLOR_MODE: KMLColorMode { let o = _accessor.offset(VTOFFSET.COLOR_MODE.v); return o == 0 ? .normal : KMLColorMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .normal }
+  public var COLOR_MODE: KMLColorMode { let o = _accessor.offset(VT.COLOR_MODE); return o == 0 ? .normal : KMLColorMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .normal }
   ///  Scale factor
-  public var SCALE: Double { let o = _accessor.offset(VTOFFSET.SCALE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCALE: Double { let o = _accessor.offset(VT.SCALE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startKMLLabelStyle(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(COLOR_MODE: KMLColorMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLOR_MODE.rawValue, def: 0, at: VTOFFSET.COLOR_MODE.p) }
-  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 0.0, at: VTOFFSET.SCALE.p) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(COLOR_MODE: KMLColorMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLOR_MODE.rawValue, def: 0, at: VT.COLOR_MODE) }
+  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 0.0, at: VT.SCALE) }
   public static func endKMLLabelStyle(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLLabelStyle(
     _ fbb: inout FlatBufferBuilder,
@@ -661,9 +647,9 @@ public struct KMLLabelStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLOR_MODE.p, fieldName: "COLOR_MODE", required: false, type: KMLColorMode.self)
-    try _v.visit(field: VTOFFSET.SCALE.p, fieldName: "SCALE", required: false, type: Double.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLOR_MODE, fieldName: "COLOR_MODE", required: false, type: KMLColorMode.self)
+    try _v.visit(field: VT.SCALE, fieldName: "SCALE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -680,31 +666,29 @@ public struct KMLBalloonStyle: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case BG_COLOR = 4
-    case TEXT_COLOR = 6
-    case TEXT = 8
-    case DISPLAY_MODE = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let BG_COLOR: VOffset = 4
+    static let TEXT_COLOR: VOffset = 6
+    static let TEXT: VOffset = 8
+    static let DISPLAY_MODE: VOffset = 10
   }
 
   ///  Background color in aabbggrr hex format
-  public var BG_COLOR: String? { let o = _accessor.offset(VTOFFSET.BG_COLOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BG_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BG_COLOR.v) }
+  public var BG_COLOR: String? { let o = _accessor.offset(VT.BG_COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BG_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BG_COLOR) }
   ///  Text color in aabbggrr hex format
-  public var TEXT_COLOR: String? { let o = _accessor.offset(VTOFFSET.TEXT_COLOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TEXT_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TEXT_COLOR.v) }
+  public var TEXT_COLOR: String? { let o = _accessor.offset(VT.TEXT_COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TEXT_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TEXT_COLOR) }
   ///  Balloon text template (supports $[name], $[description])
-  public var TEXT: String? { let o = _accessor.offset(VTOFFSET.TEXT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TEXT.v) }
+  public var TEXT: String? { let o = _accessor.offset(VT.TEXT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TEXT) }
   ///  Display mode
-  public var DISPLAY_MODE: KMLDisplayMode { let o = _accessor.offset(VTOFFSET.DISPLAY_MODE.v); return o == 0 ? .default_ : KMLDisplayMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .default_ }
+  public var DISPLAY_MODE: KMLDisplayMode { let o = _accessor.offset(VT.DISPLAY_MODE); return o == 0 ? .default_ : KMLDisplayMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .default_ }
   public static func startKMLBalloonStyle(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(BG_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BG_COLOR, at: VTOFFSET.BG_COLOR.p) }
-  public static func add(TEXT_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TEXT_COLOR, at: VTOFFSET.TEXT_COLOR.p) }
-  public static func add(TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TEXT, at: VTOFFSET.TEXT.p) }
-  public static func add(DISPLAY_MODE: KMLDisplayMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISPLAY_MODE.rawValue, def: 0, at: VTOFFSET.DISPLAY_MODE.p) }
+  public static func add(BG_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BG_COLOR, at: VT.BG_COLOR) }
+  public static func add(TEXT_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TEXT_COLOR, at: VT.TEXT_COLOR) }
+  public static func add(TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TEXT, at: VT.TEXT) }
+  public static func add(DISPLAY_MODE: KMLDisplayMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISPLAY_MODE.rawValue, def: 0, at: VT.DISPLAY_MODE) }
   public static func endKMLBalloonStyle(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLBalloonStyle(
     _ fbb: inout FlatBufferBuilder,
@@ -723,10 +707,10 @@ public struct KMLBalloonStyle: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.BG_COLOR.p, fieldName: "BG_COLOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TEXT_COLOR.p, fieldName: "TEXT_COLOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TEXT.p, fieldName: "TEXT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DISPLAY_MODE.p, fieldName: "DISPLAY_MODE", required: false, type: KMLDisplayMode.self)
+    try _v.visit(field: VT.BG_COLOR, fieldName: "BG_COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TEXT_COLOR, fieldName: "TEXT_COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TEXT, fieldName: "TEXT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DISPLAY_MODE, fieldName: "DISPLAY_MODE", required: false, type: KMLDisplayMode.self)
     _v.finish()
   }
 }
@@ -743,22 +727,20 @@ public struct KMLItemIcon: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case STATE = 4
-    case HREF = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let STATE: VOffset = 4
+    static let HREF: VOffset = 6
   }
 
   ///  State (open, closed, error, fetching0-2)
-  public var STATE: String? { let o = _accessor.offset(VTOFFSET.STATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STATE.v) }
+  public var STATE: String? { let o = _accessor.offset(VT.STATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STATE) }
   ///  Icon URL
-  public var HREF: String? { let o = _accessor.offset(VTOFFSET.HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HREF.v) }
+  public var HREF: String? { let o = _accessor.offset(VT.HREF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HREF) }
   public static func startKMLItemIcon(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE, at: VTOFFSET.STATE.p) }
-  public static func add(HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HREF, at: VTOFFSET.HREF.p) }
+  public static func add(STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE, at: VT.STATE) }
+  public static func add(HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HREF, at: VT.HREF) }
   public static func endKMLItemIcon(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLItemIcon(
     _ fbb: inout FlatBufferBuilder,
@@ -773,8 +755,8 @@ public struct KMLItemIcon: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.STATE.p, fieldName: "STATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.HREF.p, fieldName: "HREF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATE, fieldName: "STATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HREF, fieldName: "HREF", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -791,29 +773,27 @@ public struct KMLListStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case LIST_ITEM_TYPE = 4
-    case BG_COLOR = 6
-    case ITEM_ICONS = 8
-    case MAX_SNIPPET_LINES = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let LIST_ITEM_TYPE: VOffset = 4
+    static let BG_COLOR: VOffset = 6
+    static let ITEM_ICONS: VOffset = 8
+    static let MAX_SNIPPET_LINES: VOffset = 10
   }
 
   ///  List item type
-  public var LIST_ITEM_TYPE: KMLListItemType { let o = _accessor.offset(VTOFFSET.LIST_ITEM_TYPE.v); return o == 0 ? .check : KMLListItemType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .check }
+  public var LIST_ITEM_TYPE: KMLListItemType { let o = _accessor.offset(VT.LIST_ITEM_TYPE); return o == 0 ? .check : KMLListItemType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .check }
   ///  Background color
-  public var BG_COLOR: String? { let o = _accessor.offset(VTOFFSET.BG_COLOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BG_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BG_COLOR.v) }
+  public var BG_COLOR: String? { let o = _accessor.offset(VT.BG_COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BG_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BG_COLOR) }
   ///  Item icons
-  public var ITEM_ICONS: FlatbufferVector<KMLItemIcon> { return _accessor.vector(at: VTOFFSET.ITEM_ICONS.v, byteSize: 4) }
+  public var ITEM_ICONS: FlatbufferVector<KMLItemIcon> { return _accessor.vector(at: VT.ITEM_ICONS, byteSize: 4) }
   ///  Maximum snippet lines
-  public var MAX_SNIPPET_LINES: Int32 { let o = _accessor.offset(VTOFFSET.MAX_SNIPPET_LINES.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var MAX_SNIPPET_LINES: Int32 { let o = _accessor.offset(VT.MAX_SNIPPET_LINES); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startKMLListStyle(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(LIST_ITEM_TYPE: KMLListItemType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIST_ITEM_TYPE.rawValue, def: 0, at: VTOFFSET.LIST_ITEM_TYPE.p) }
-  public static func add(BG_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BG_COLOR, at: VTOFFSET.BG_COLOR.p) }
-  public static func addVectorOf(ITEM_ICONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ITEM_ICONS, at: VTOFFSET.ITEM_ICONS.p) }
-  public static func add(MAX_SNIPPET_LINES: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_SNIPPET_LINES, def: 0, at: VTOFFSET.MAX_SNIPPET_LINES.p) }
+  public static func add(LIST_ITEM_TYPE: KMLListItemType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIST_ITEM_TYPE.rawValue, def: 0, at: VT.LIST_ITEM_TYPE) }
+  public static func add(BG_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BG_COLOR, at: VT.BG_COLOR) }
+  public static func addVectorOf(ITEM_ICONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ITEM_ICONS, at: VT.ITEM_ICONS) }
+  public static func add(MAX_SNIPPET_LINES: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_SNIPPET_LINES, def: 0, at: VT.MAX_SNIPPET_LINES) }
   public static func endKMLListStyle(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLListStyle(
     _ fbb: inout FlatBufferBuilder,
@@ -832,10 +812,10 @@ public struct KMLListStyle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LIST_ITEM_TYPE.p, fieldName: "LIST_ITEM_TYPE", required: false, type: KMLListItemType.self)
-    try _v.visit(field: VTOFFSET.BG_COLOR.p, fieldName: "BG_COLOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ITEM_ICONS.p, fieldName: "ITEM_ICONS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLItemIcon>, KMLItemIcon>>.self)
-    try _v.visit(field: VTOFFSET.MAX_SNIPPET_LINES.p, fieldName: "MAX_SNIPPET_LINES", required: false, type: Int32.self)
+    try _v.visit(field: VT.LIST_ITEM_TYPE, fieldName: "LIST_ITEM_TYPE", required: false, type: KMLListItemType.self)
+    try _v.visit(field: VT.BG_COLOR, fieldName: "BG_COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ITEM_ICONS, fieldName: "ITEM_ICONS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLItemIcon>, KMLItemIcon>>.self)
+    try _v.visit(field: VT.MAX_SNIPPET_LINES, fieldName: "MAX_SNIPPET_LINES", required: false, type: Int32.self)
     _v.finish()
   }
 }
@@ -852,41 +832,39 @@ public struct KMLStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case ICON_STYLE = 6
-    case LABEL_STYLE = 8
-    case LINE_STYLE = 10
-    case POLY_STYLE = 12
-    case BALLOON_STYLE = 14
-    case LIST_STYLE = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let ICON_STYLE: VOffset = 6
+    static let LABEL_STYLE: VOffset = 8
+    static let LINE_STYLE: VOffset = 10
+    static let POLY_STYLE: VOffset = 12
+    static let BALLOON_STYLE: VOffset = 14
+    static let LIST_STYLE: VOffset = 16
   }
 
   ///  Style identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Icon style
-  public var ICON_STYLE: KMLIconStyle? { let o = _accessor.offset(VTOFFSET.ICON_STYLE.v); return o == 0 ? nil : KMLIconStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ICON_STYLE: KMLIconStyle? { let o = _accessor.offset(VT.ICON_STYLE); return o == 0 ? nil : KMLIconStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Label style
-  public var LABEL_STYLE: KMLLabelStyle? { let o = _accessor.offset(VTOFFSET.LABEL_STYLE.v); return o == 0 ? nil : KMLLabelStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LABEL_STYLE: KMLLabelStyle? { let o = _accessor.offset(VT.LABEL_STYLE); return o == 0 ? nil : KMLLabelStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Line style
-  public var LINE_STYLE: KMLLineStyle? { let o = _accessor.offset(VTOFFSET.LINE_STYLE.v); return o == 0 ? nil : KMLLineStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LINE_STYLE: KMLLineStyle? { let o = _accessor.offset(VT.LINE_STYLE); return o == 0 ? nil : KMLLineStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Polygon style
-  public var POLY_STYLE: KMLPolyStyle? { let o = _accessor.offset(VTOFFSET.POLY_STYLE.v); return o == 0 ? nil : KMLPolyStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POLY_STYLE: KMLPolyStyle? { let o = _accessor.offset(VT.POLY_STYLE); return o == 0 ? nil : KMLPolyStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Balloon style
-  public var BALLOON_STYLE: KMLBalloonStyle? { let o = _accessor.offset(VTOFFSET.BALLOON_STYLE.v); return o == 0 ? nil : KMLBalloonStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BALLOON_STYLE: KMLBalloonStyle? { let o = _accessor.offset(VT.BALLOON_STYLE); return o == 0 ? nil : KMLBalloonStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  List style
-  public var LIST_STYLE: KMLListStyle? { let o = _accessor.offset(VTOFFSET.LIST_STYLE.v); return o == 0 ? nil : KMLListStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LIST_STYLE: KMLListStyle? { let o = _accessor.offset(VT.LIST_STYLE); return o == 0 ? nil : KMLListStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLStyle(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(ICON_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_STYLE, at: VTOFFSET.ICON_STYLE.p) }
-  public static func add(LABEL_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL_STYLE, at: VTOFFSET.LABEL_STYLE.p) }
-  public static func add(LINE_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE_STYLE, at: VTOFFSET.LINE_STYLE.p) }
-  public static func add(POLY_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLY_STYLE, at: VTOFFSET.POLY_STYLE.p) }
-  public static func add(BALLOON_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BALLOON_STYLE, at: VTOFFSET.BALLOON_STYLE.p) }
-  public static func add(LIST_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LIST_STYLE, at: VTOFFSET.LIST_STYLE.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(ICON_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_STYLE, at: VT.ICON_STYLE) }
+  public static func add(LABEL_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL_STYLE, at: VT.LABEL_STYLE) }
+  public static func add(LINE_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE_STYLE, at: VT.LINE_STYLE) }
+  public static func add(POLY_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLY_STYLE, at: VT.POLY_STYLE) }
+  public static func add(BALLOON_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BALLOON_STYLE, at: VT.BALLOON_STYLE) }
+  public static func add(LIST_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LIST_STYLE, at: VT.LIST_STYLE) }
   public static func endKMLStyle(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLStyle(
     _ fbb: inout FlatBufferBuilder,
@@ -911,13 +889,13 @@ public struct KMLStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ICON_STYLE.p, fieldName: "ICON_STYLE", required: false, type: ForwardOffset<KMLIconStyle>.self)
-    try _v.visit(field: VTOFFSET.LABEL_STYLE.p, fieldName: "LABEL_STYLE", required: false, type: ForwardOffset<KMLLabelStyle>.self)
-    try _v.visit(field: VTOFFSET.LINE_STYLE.p, fieldName: "LINE_STYLE", required: false, type: ForwardOffset<KMLLineStyle>.self)
-    try _v.visit(field: VTOFFSET.POLY_STYLE.p, fieldName: "POLY_STYLE", required: false, type: ForwardOffset<KMLPolyStyle>.self)
-    try _v.visit(field: VTOFFSET.BALLOON_STYLE.p, fieldName: "BALLOON_STYLE", required: false, type: ForwardOffset<KMLBalloonStyle>.self)
-    try _v.visit(field: VTOFFSET.LIST_STYLE.p, fieldName: "LIST_STYLE", required: false, type: ForwardOffset<KMLListStyle>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ICON_STYLE, fieldName: "ICON_STYLE", required: false, type: ForwardOffset<KMLIconStyle>.self)
+    try _v.visit(field: VT.LABEL_STYLE, fieldName: "LABEL_STYLE", required: false, type: ForwardOffset<KMLLabelStyle>.self)
+    try _v.visit(field: VT.LINE_STYLE, fieldName: "LINE_STYLE", required: false, type: ForwardOffset<KMLLineStyle>.self)
+    try _v.visit(field: VT.POLY_STYLE, fieldName: "POLY_STYLE", required: false, type: ForwardOffset<KMLPolyStyle>.self)
+    try _v.visit(field: VT.BALLOON_STYLE, fieldName: "BALLOON_STYLE", required: false, type: ForwardOffset<KMLBalloonStyle>.self)
+    try _v.visit(field: VT.LIST_STYLE, fieldName: "LIST_STYLE", required: false, type: ForwardOffset<KMLListStyle>.self)
     _v.finish()
   }
 }
@@ -934,21 +912,19 @@ public struct KMLStyleMapPair: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case STATE = 4
-    case STYLE_URL = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let STATE: VOffset = 4
+    static let STYLE_URL: VOffset = 6
   }
 
   ///  State (normal or highlight)
-  public var STATE: KMLStyleState { let o = _accessor.offset(VTOFFSET.STATE.v); return o == 0 ? .normal : KMLStyleState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .normal }
+  public var STATE: KMLStyleState { let o = _accessor.offset(VT.STATE); return o == 0 ? .normal : KMLStyleState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .normal }
   ///  Style URL or inline style ID
-  public var STYLE_URL: String? { let o = _accessor.offset(VTOFFSET.STYLE_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STYLE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STYLE_URL.v) }
+  public var STYLE_URL: String? { let o = _accessor.offset(VT.STYLE_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STYLE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STYLE_URL) }
   public static func startKMLStyleMapPair(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(STATE: KMLStyleState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE.rawValue, def: 0, at: VTOFFSET.STATE.p) }
-  public static func add(STYLE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_URL, at: VTOFFSET.STYLE_URL.p) }
+  public static func add(STATE: KMLStyleState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE.rawValue, def: 0, at: VT.STATE) }
+  public static func add(STYLE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_URL, at: VT.STYLE_URL) }
   public static func endKMLStyleMapPair(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLStyleMapPair(
     _ fbb: inout FlatBufferBuilder,
@@ -963,8 +939,8 @@ public struct KMLStyleMapPair: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.STATE.p, fieldName: "STATE", required: false, type: KMLStyleState.self)
-    try _v.visit(field: VTOFFSET.STYLE_URL.p, fieldName: "STYLE_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATE, fieldName: "STATE", required: false, type: KMLStyleState.self)
+    try _v.visit(field: VT.STYLE_URL, fieldName: "STYLE_URL", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -981,21 +957,19 @@ public struct KMLStyleMap: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case PAIRS = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let PAIRS: VOffset = 6
   }
 
   ///  Style map identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Pairs
-  public var PAIRS: FlatbufferVector<KMLStyleMapPair> { return _accessor.vector(at: VTOFFSET.PAIRS.v, byteSize: 4) }
+  public var PAIRS: FlatbufferVector<KMLStyleMapPair> { return _accessor.vector(at: VT.PAIRS, byteSize: 4) }
   public static func startKMLStyleMap(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func addVectorOf(PAIRS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAIRS, at: VTOFFSET.PAIRS.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func addVectorOf(PAIRS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAIRS, at: VT.PAIRS) }
   public static func endKMLStyleMap(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLStyleMap(
     _ fbb: inout FlatBufferBuilder,
@@ -1010,8 +984,8 @@ public struct KMLStyleMap: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PAIRS.p, fieldName: "PAIRS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLStyleMapPair>, KMLStyleMapPair>>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PAIRS, fieldName: "PAIRS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLStyleMapPair>, KMLStyleMapPair>>.self)
     _v.finish()
   }
 }
@@ -1028,25 +1002,23 @@ public struct KMLPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COORDINATES = 4
-    case ALTITUDE_MODE = 6
-    case EXTRUDE = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COORDINATES: VOffset = 4
+    static let ALTITUDE_MODE: VOffset = 6
+    static let EXTRUDE: VOffset = 8
   }
 
   ///  Coordinate
-  public var COORDINATES: KMLCoordinate? { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? nil : KMLCoordinate(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COORDINATES: KMLCoordinate? { let o = _accessor.offset(VT.COORDINATES); return o == 0 ? nil : KMLCoordinate(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Altitude mode
-  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
+  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VT.ALTITUDE_MODE); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   ///  Whether to extrude to ground
-  public var EXTRUDE: Bool { let o = _accessor.offset(VTOFFSET.EXTRUDE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var EXTRUDE: Bool { let o = _accessor.offset(VT.EXTRUDE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startKMLPoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(COORDINATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATES, at: VTOFFSET.COORDINATES.p) }
-  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VTOFFSET.ALTITUDE_MODE.p) }
+  public static func add(COORDINATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATES, at: VT.COORDINATES) }
+  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VT.ALTITUDE_MODE) }
   public static func add(EXTRUDE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDE, def: false,
-   at: VTOFFSET.EXTRUDE.p) }
+   at: VT.EXTRUDE) }
   public static func endKMLPoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLPoint(
     _ fbb: inout FlatBufferBuilder,
@@ -1063,9 +1035,9 @@ public struct KMLPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COORDINATES.p, fieldName: "COORDINATES", required: false, type: ForwardOffset<KMLCoordinate>.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE_MODE.p, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
-    try _v.visit(field: VTOFFSET.EXTRUDE.p, fieldName: "EXTRUDE", required: false, type: Bool.self)
+    try _v.visit(field: VT.COORDINATES, fieldName: "COORDINATES", required: false, type: ForwardOffset<KMLCoordinate>.self)
+    try _v.visit(field: VT.ALTITUDE_MODE, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
+    try _v.visit(field: VT.EXTRUDE, fieldName: "EXTRUDE", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -1082,34 +1054,32 @@ public struct KMLLineString: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COORDINATES = 4
-    case ALTITUDE_MODE = 6
-    case EXTRUDE = 8
-    case TESSELLATE = 10
-    case GX_DRAW_ORDER = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COORDINATES: VOffset = 4
+    static let ALTITUDE_MODE: VOffset = 6
+    static let EXTRUDE: VOffset = 8
+    static let TESSELLATE: VOffset = 10
+    static let GX_DRAW_ORDER: VOffset = 12
   }
 
   ///  Coordinates
-  public var COORDINATES: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VTOFFSET.COORDINATES.v, byteSize: 4) }
+  public var COORDINATES: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VT.COORDINATES, byteSize: 4) }
   ///  Altitude mode
-  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
+  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VT.ALTITUDE_MODE); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   ///  Whether to extrude to ground
-  public var EXTRUDE: Bool { let o = _accessor.offset(VTOFFSET.EXTRUDE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var EXTRUDE: Bool { let o = _accessor.offset(VT.EXTRUDE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether to tessellate (follow terrain)
-  public var TESSELLATE: Bool { let o = _accessor.offset(VTOFFSET.TESSELLATE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var TESSELLATE: Bool { let o = _accessor.offset(VT.TESSELLATE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  gx:drawOrder
-  public var GX_DRAW_ORDER: Int32 { let o = _accessor.offset(VTOFFSET.GX_DRAW_ORDER.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var GX_DRAW_ORDER: Int32 { let o = _accessor.offset(VT.GX_DRAW_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startKMLLineString(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func addVectorOf(COORDINATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATES, at: VTOFFSET.COORDINATES.p) }
-  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VTOFFSET.ALTITUDE_MODE.p) }
+  public static func addVectorOf(COORDINATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATES, at: VT.COORDINATES) }
+  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VT.ALTITUDE_MODE) }
   public static func add(EXTRUDE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDE, def: false,
-   at: VTOFFSET.EXTRUDE.p) }
+   at: VT.EXTRUDE) }
   public static func add(TESSELLATE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TESSELLATE, def: false,
-   at: VTOFFSET.TESSELLATE.p) }
-  public static func add(GX_DRAW_ORDER: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GX_DRAW_ORDER, def: 0, at: VTOFFSET.GX_DRAW_ORDER.p) }
+   at: VT.TESSELLATE) }
+  public static func add(GX_DRAW_ORDER: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GX_DRAW_ORDER, def: 0, at: VT.GX_DRAW_ORDER) }
   public static func endKMLLineString(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLLineString(
     _ fbb: inout FlatBufferBuilder,
@@ -1130,11 +1100,11 @@ public struct KMLLineString: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COORDINATES.p, fieldName: "COORDINATES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLCoordinate>, KMLCoordinate>>.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE_MODE.p, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
-    try _v.visit(field: VTOFFSET.EXTRUDE.p, fieldName: "EXTRUDE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.TESSELLATE.p, fieldName: "TESSELLATE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.GX_DRAW_ORDER.p, fieldName: "GX_DRAW_ORDER", required: false, type: Int32.self)
+    try _v.visit(field: VT.COORDINATES, fieldName: "COORDINATES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLCoordinate>, KMLCoordinate>>.self)
+    try _v.visit(field: VT.ALTITUDE_MODE, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
+    try _v.visit(field: VT.EXTRUDE, fieldName: "EXTRUDE", required: false, type: Bool.self)
+    try _v.visit(field: VT.TESSELLATE, fieldName: "TESSELLATE", required: false, type: Bool.self)
+    try _v.visit(field: VT.GX_DRAW_ORDER, fieldName: "GX_DRAW_ORDER", required: false, type: Int32.self)
     _v.finish()
   }
 }
@@ -1151,30 +1121,28 @@ public struct KMLLinearRing: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COORDINATES = 4
-    case EXTRUDE = 6
-    case TESSELLATE = 8
-    case ALTITUDE_MODE = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COORDINATES: VOffset = 4
+    static let EXTRUDE: VOffset = 6
+    static let TESSELLATE: VOffset = 8
+    static let ALTITUDE_MODE: VOffset = 10
   }
 
   ///  Coordinates (first = last to close the ring)
-  public var COORDINATES: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VTOFFSET.COORDINATES.v, byteSize: 4) }
+  public var COORDINATES: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VT.COORDINATES, byteSize: 4) }
   ///  Whether to extrude to ground
-  public var EXTRUDE: Bool { let o = _accessor.offset(VTOFFSET.EXTRUDE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var EXTRUDE: Bool { let o = _accessor.offset(VT.EXTRUDE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether to tessellate
-  public var TESSELLATE: Bool { let o = _accessor.offset(VTOFFSET.TESSELLATE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var TESSELLATE: Bool { let o = _accessor.offset(VT.TESSELLATE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Altitude mode
-  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
+  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VT.ALTITUDE_MODE); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   public static func startKMLLinearRing(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func addVectorOf(COORDINATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATES, at: VTOFFSET.COORDINATES.p) }
+  public static func addVectorOf(COORDINATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATES, at: VT.COORDINATES) }
   public static func add(EXTRUDE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDE, def: false,
-   at: VTOFFSET.EXTRUDE.p) }
+   at: VT.EXTRUDE) }
   public static func add(TESSELLATE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TESSELLATE, def: false,
-   at: VTOFFSET.TESSELLATE.p) }
-  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VTOFFSET.ALTITUDE_MODE.p) }
+   at: VT.TESSELLATE) }
+  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VT.ALTITUDE_MODE) }
   public static func endKMLLinearRing(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLLinearRing(
     _ fbb: inout FlatBufferBuilder,
@@ -1193,10 +1161,10 @@ public struct KMLLinearRing: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COORDINATES.p, fieldName: "COORDINATES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLCoordinate>, KMLCoordinate>>.self)
-    try _v.visit(field: VTOFFSET.EXTRUDE.p, fieldName: "EXTRUDE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.TESSELLATE.p, fieldName: "TESSELLATE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE_MODE.p, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
+    try _v.visit(field: VT.COORDINATES, fieldName: "COORDINATES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLCoordinate>, KMLCoordinate>>.self)
+    try _v.visit(field: VT.EXTRUDE, fieldName: "EXTRUDE", required: false, type: Bool.self)
+    try _v.visit(field: VT.TESSELLATE, fieldName: "TESSELLATE", required: false, type: Bool.self)
+    try _v.visit(field: VT.ALTITUDE_MODE, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
     _v.finish()
   }
 }
@@ -1213,34 +1181,32 @@ public struct KMLPolygon: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case OUTER_BOUNDARY = 4
-    case INNER_BOUNDARIES = 6
-    case ALTITUDE_MODE = 8
-    case EXTRUDE = 10
-    case TESSELLATE = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let OUTER_BOUNDARY: VOffset = 4
+    static let INNER_BOUNDARIES: VOffset = 6
+    static let ALTITUDE_MODE: VOffset = 8
+    static let EXTRUDE: VOffset = 10
+    static let TESSELLATE: VOffset = 12
   }
 
   ///  Outer boundary
-  public var OUTER_BOUNDARY: KMLLinearRing? { let o = _accessor.offset(VTOFFSET.OUTER_BOUNDARY.v); return o == 0 ? nil : KMLLinearRing(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OUTER_BOUNDARY: KMLLinearRing? { let o = _accessor.offset(VT.OUTER_BOUNDARY); return o == 0 ? nil : KMLLinearRing(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Inner boundaries (holes)
-  public var INNER_BOUNDARIES: FlatbufferVector<KMLLinearRing> { return _accessor.vector(at: VTOFFSET.INNER_BOUNDARIES.v, byteSize: 4) }
+  public var INNER_BOUNDARIES: FlatbufferVector<KMLLinearRing> { return _accessor.vector(at: VT.INNER_BOUNDARIES, byteSize: 4) }
   ///  Altitude mode
-  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
+  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VT.ALTITUDE_MODE); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   ///  Whether to extrude to ground
-  public var EXTRUDE: Bool { let o = _accessor.offset(VTOFFSET.EXTRUDE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var EXTRUDE: Bool { let o = _accessor.offset(VT.EXTRUDE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether to tessellate
-  public var TESSELLATE: Bool { let o = _accessor.offset(VTOFFSET.TESSELLATE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var TESSELLATE: Bool { let o = _accessor.offset(VT.TESSELLATE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startKMLPolygon(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(OUTER_BOUNDARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTER_BOUNDARY, at: VTOFFSET.OUTER_BOUNDARY.p) }
-  public static func addVectorOf(INNER_BOUNDARIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INNER_BOUNDARIES, at: VTOFFSET.INNER_BOUNDARIES.p) }
-  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VTOFFSET.ALTITUDE_MODE.p) }
+  public static func add(OUTER_BOUNDARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTER_BOUNDARY, at: VT.OUTER_BOUNDARY) }
+  public static func addVectorOf(INNER_BOUNDARIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INNER_BOUNDARIES, at: VT.INNER_BOUNDARIES) }
+  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VT.ALTITUDE_MODE) }
   public static func add(EXTRUDE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDE, def: false,
-   at: VTOFFSET.EXTRUDE.p) }
+   at: VT.EXTRUDE) }
   public static func add(TESSELLATE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TESSELLATE, def: false,
-   at: VTOFFSET.TESSELLATE.p) }
+   at: VT.TESSELLATE) }
   public static func endKMLPolygon(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLPolygon(
     _ fbb: inout FlatBufferBuilder,
@@ -1261,11 +1227,11 @@ public struct KMLPolygon: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.OUTER_BOUNDARY.p, fieldName: "OUTER_BOUNDARY", required: false, type: ForwardOffset<KMLLinearRing>.self)
-    try _v.visit(field: VTOFFSET.INNER_BOUNDARIES.p, fieldName: "INNER_BOUNDARIES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLLinearRing>, KMLLinearRing>>.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE_MODE.p, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
-    try _v.visit(field: VTOFFSET.EXTRUDE.p, fieldName: "EXTRUDE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.TESSELLATE.p, fieldName: "TESSELLATE", required: false, type: Bool.self)
+    try _v.visit(field: VT.OUTER_BOUNDARY, fieldName: "OUTER_BOUNDARY", required: false, type: ForwardOffset<KMLLinearRing>.self)
+    try _v.visit(field: VT.INNER_BOUNDARIES, fieldName: "INNER_BOUNDARIES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLLinearRing>, KMLLinearRing>>.self)
+    try _v.visit(field: VT.ALTITUDE_MODE, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
+    try _v.visit(field: VT.EXTRUDE, fieldName: "EXTRUDE", required: false, type: Bool.self)
+    try _v.visit(field: VT.TESSELLATE, fieldName: "TESSELLATE", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -1282,22 +1248,20 @@ public struct KMLResourceMapAlias: FlatBufferTable, FlatbuffersVectorInitializab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case TARGET_HREF = 4
-    case SOURCE_HREF = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let TARGET_HREF: VOffset = 4
+    static let SOURCE_HREF: VOffset = 6
   }
 
   ///  Target href
-  public var TARGET_HREF: String? { let o = _accessor.offset(VTOFFSET.TARGET_HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TARGET_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TARGET_HREF.v) }
+  public var TARGET_HREF: String? { let o = _accessor.offset(VT.TARGET_HREF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGET_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET_HREF) }
   ///  Source href
-  public var SOURCE_HREF: String? { let o = _accessor.offset(VTOFFSET.SOURCE_HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCE_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCE_HREF.v) }
+  public var SOURCE_HREF: String? { let o = _accessor.offset(VT.SOURCE_HREF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_HREF) }
   public static func startKMLResourceMapAlias(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(TARGET_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_HREF, at: VTOFFSET.TARGET_HREF.p) }
-  public static func add(SOURCE_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_HREF, at: VTOFFSET.SOURCE_HREF.p) }
+  public static func add(TARGET_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_HREF, at: VT.TARGET_HREF) }
+  public static func add(SOURCE_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_HREF, at: VT.SOURCE_HREF) }
   public static func endKMLResourceMapAlias(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLResourceMapAlias(
     _ fbb: inout FlatBufferBuilder,
@@ -1312,8 +1276,8 @@ public struct KMLResourceMapAlias: FlatBufferTable, FlatbuffersVectorInitializab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.TARGET_HREF.p, fieldName: "TARGET_HREF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SOURCE_HREF.p, fieldName: "SOURCE_HREF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET_HREF, fieldName: "TARGET_HREF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_HREF, fieldName: "SOURCE_HREF", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -1330,61 +1294,59 @@ public struct KMLModel: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ALTITUDE_MODE = 4
-    case LOCATION_LON = 6
-    case LOCATION_LAT = 8
-    case LOCATION_ALT = 10
-    case ORIENTATION_HEADING = 12
-    case ORIENTATION_TILT = 14
-    case ORIENTATION_ROLL = 16
-    case SCALE_X = 18
-    case SCALE_Y = 20
-    case SCALE_Z = 22
-    case LINK_HREF = 24
-    case RESOURCE_MAP = 26
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ALTITUDE_MODE: VOffset = 4
+    static let LOCATION_LON: VOffset = 6
+    static let LOCATION_LAT: VOffset = 8
+    static let LOCATION_ALT: VOffset = 10
+    static let ORIENTATION_HEADING: VOffset = 12
+    static let ORIENTATION_TILT: VOffset = 14
+    static let ORIENTATION_ROLL: VOffset = 16
+    static let SCALE_X: VOffset = 18
+    static let SCALE_Y: VOffset = 20
+    static let SCALE_Z: VOffset = 22
+    static let LINK_HREF: VOffset = 24
+    static let RESOURCE_MAP: VOffset = 26
   }
 
   ///  Altitude mode
-  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
+  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VT.ALTITUDE_MODE); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   ///  Location longitude
-  public var LOCATION_LON: Double { let o = _accessor.offset(VTOFFSET.LOCATION_LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LOCATION_LON: Double { let o = _accessor.offset(VT.LOCATION_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Location latitude
-  public var LOCATION_LAT: Double { let o = _accessor.offset(VTOFFSET.LOCATION_LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LOCATION_LAT: Double { let o = _accessor.offset(VT.LOCATION_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Location altitude
-  public var LOCATION_ALT: Double { let o = _accessor.offset(VTOFFSET.LOCATION_ALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LOCATION_ALT: Double { let o = _accessor.offset(VT.LOCATION_ALT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Orientation heading
-  public var ORIENTATION_HEADING: Double { let o = _accessor.offset(VTOFFSET.ORIENTATION_HEADING.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ORIENTATION_HEADING: Double { let o = _accessor.offset(VT.ORIENTATION_HEADING); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Orientation tilt
-  public var ORIENTATION_TILT: Double { let o = _accessor.offset(VTOFFSET.ORIENTATION_TILT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ORIENTATION_TILT: Double { let o = _accessor.offset(VT.ORIENTATION_TILT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Orientation roll
-  public var ORIENTATION_ROLL: Double { let o = _accessor.offset(VTOFFSET.ORIENTATION_ROLL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ORIENTATION_ROLL: Double { let o = _accessor.offset(VT.ORIENTATION_ROLL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Scale X
-  public var SCALE_X: Double { let o = _accessor.offset(VTOFFSET.SCALE_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCALE_X: Double { let o = _accessor.offset(VT.SCALE_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Scale Y
-  public var SCALE_Y: Double { let o = _accessor.offset(VTOFFSET.SCALE_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCALE_Y: Double { let o = _accessor.offset(VT.SCALE_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Scale Z
-  public var SCALE_Z: Double { let o = _accessor.offset(VTOFFSET.SCALE_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCALE_Z: Double { let o = _accessor.offset(VT.SCALE_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Link to 3D model file
-  public var LINK_HREF: String? { let o = _accessor.offset(VTOFFSET.LINK_HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_HREF.v) }
+  public var LINK_HREF: String? { let o = _accessor.offset(VT.LINK_HREF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_HREF) }
   ///  Resource map aliases
-  public var RESOURCE_MAP: FlatbufferVector<KMLResourceMapAlias> { return _accessor.vector(at: VTOFFSET.RESOURCE_MAP.v, byteSize: 4) }
+  public var RESOURCE_MAP: FlatbufferVector<KMLResourceMapAlias> { return _accessor.vector(at: VT.RESOURCE_MAP, byteSize: 4) }
   public static func startKMLModel(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
-  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VTOFFSET.ALTITUDE_MODE.p) }
-  public static func add(LOCATION_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOCATION_LON, def: 0.0, at: VTOFFSET.LOCATION_LON.p) }
-  public static func add(LOCATION_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOCATION_LAT, def: 0.0, at: VTOFFSET.LOCATION_LAT.p) }
-  public static func add(LOCATION_ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOCATION_ALT, def: 0.0, at: VTOFFSET.LOCATION_ALT.p) }
-  public static func add(ORIENTATION_HEADING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENTATION_HEADING, def: 0.0, at: VTOFFSET.ORIENTATION_HEADING.p) }
-  public static func add(ORIENTATION_TILT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENTATION_TILT, def: 0.0, at: VTOFFSET.ORIENTATION_TILT.p) }
-  public static func add(ORIENTATION_ROLL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENTATION_ROLL, def: 0.0, at: VTOFFSET.ORIENTATION_ROLL.p) }
-  public static func add(SCALE_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE_X, def: 0.0, at: VTOFFSET.SCALE_X.p) }
-  public static func add(SCALE_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE_Y, def: 0.0, at: VTOFFSET.SCALE_Y.p) }
-  public static func add(SCALE_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE_Z, def: 0.0, at: VTOFFSET.SCALE_Z.p) }
-  public static func add(LINK_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_HREF, at: VTOFFSET.LINK_HREF.p) }
-  public static func addVectorOf(RESOURCE_MAP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESOURCE_MAP, at: VTOFFSET.RESOURCE_MAP.p) }
+  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VT.ALTITUDE_MODE) }
+  public static func add(LOCATION_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOCATION_LON, def: 0.0, at: VT.LOCATION_LON) }
+  public static func add(LOCATION_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOCATION_LAT, def: 0.0, at: VT.LOCATION_LAT) }
+  public static func add(LOCATION_ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOCATION_ALT, def: 0.0, at: VT.LOCATION_ALT) }
+  public static func add(ORIENTATION_HEADING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENTATION_HEADING, def: 0.0, at: VT.ORIENTATION_HEADING) }
+  public static func add(ORIENTATION_TILT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENTATION_TILT, def: 0.0, at: VT.ORIENTATION_TILT) }
+  public static func add(ORIENTATION_ROLL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENTATION_ROLL, def: 0.0, at: VT.ORIENTATION_ROLL) }
+  public static func add(SCALE_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE_X, def: 0.0, at: VT.SCALE_X) }
+  public static func add(SCALE_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE_Y, def: 0.0, at: VT.SCALE_Y) }
+  public static func add(SCALE_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE_Z, def: 0.0, at: VT.SCALE_Z) }
+  public static func add(LINK_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_HREF, at: VT.LINK_HREF) }
+  public static func addVectorOf(RESOURCE_MAP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESOURCE_MAP, at: VT.RESOURCE_MAP) }
   public static func endKMLModel(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLModel(
     _ fbb: inout FlatBufferBuilder,
@@ -1419,18 +1381,18 @@ public struct KMLModel: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ALTITUDE_MODE.p, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
-    try _v.visit(field: VTOFFSET.LOCATION_LON.p, fieldName: "LOCATION_LON", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LOCATION_LAT.p, fieldName: "LOCATION_LAT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LOCATION_ALT.p, fieldName: "LOCATION_ALT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ORIENTATION_HEADING.p, fieldName: "ORIENTATION_HEADING", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ORIENTATION_TILT.p, fieldName: "ORIENTATION_TILT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ORIENTATION_ROLL.p, fieldName: "ORIENTATION_ROLL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SCALE_X.p, fieldName: "SCALE_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SCALE_Y.p, fieldName: "SCALE_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SCALE_Z.p, fieldName: "SCALE_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LINK_HREF.p, fieldName: "LINK_HREF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RESOURCE_MAP.p, fieldName: "RESOURCE_MAP", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLResourceMapAlias>, KMLResourceMapAlias>>.self)
+    try _v.visit(field: VT.ALTITUDE_MODE, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
+    try _v.visit(field: VT.LOCATION_LON, fieldName: "LOCATION_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.LOCATION_LAT, fieldName: "LOCATION_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.LOCATION_ALT, fieldName: "LOCATION_ALT", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIENTATION_HEADING, fieldName: "ORIENTATION_HEADING", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIENTATION_TILT, fieldName: "ORIENTATION_TILT", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIENTATION_ROLL, fieldName: "ORIENTATION_ROLL", required: false, type: Double.self)
+    try _v.visit(field: VT.SCALE_X, fieldName: "SCALE_X", required: false, type: Double.self)
+    try _v.visit(field: VT.SCALE_Y, fieldName: "SCALE_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.SCALE_Z, fieldName: "SCALE_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.LINK_HREF, fieldName: "LINK_HREF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RESOURCE_MAP, fieldName: "RESOURCE_MAP", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLResourceMapAlias>, KMLResourceMapAlias>>.self)
     _v.finish()
   }
 }
@@ -1447,42 +1409,40 @@ public struct KMLTrack: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case EXTRUDE = 4
-    case TESSELLATE = 6
-    case ALTITUDE_MODE = 8
-    case WHEN = 10
-    case COORDS = 12
-    case ANGLES = 14
-    case MODEL = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let EXTRUDE: VOffset = 4
+    static let TESSELLATE: VOffset = 6
+    static let ALTITUDE_MODE: VOffset = 8
+    static let WHEN: VOffset = 10
+    static let COORDS: VOffset = 12
+    static let ANGLES: VOffset = 14
+    static let MODEL: VOffset = 16
   }
 
   ///  Whether to extrude
-  public var EXTRUDE: Bool { let o = _accessor.offset(VTOFFSET.EXTRUDE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var EXTRUDE: Bool { let o = _accessor.offset(VT.EXTRUDE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether to tessellate
-  public var TESSELLATE: Bool { let o = _accessor.offset(VTOFFSET.TESSELLATE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var TESSELLATE: Bool { let o = _accessor.offset(VT.TESSELLATE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Altitude mode
-  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
+  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VT.ALTITUDE_MODE); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   ///  Time stamps (ISO 8601)
-  public var WHEN: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.WHEN.v, byteSize: 4) }
+  public var WHEN: FlatbufferVector<String?> { return _accessor.vector(at: VT.WHEN, byteSize: 4) }
   ///  Coordinates (lon lat alt per entry)
-  public var COORDS: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VTOFFSET.COORDS.v, byteSize: 4) }
+  public var COORDS: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VT.COORDS, byteSize: 4) }
   ///  Angles (heading tilt roll per entry)
-  public var ANGLES: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VTOFFSET.ANGLES.v, byteSize: 4) }
+  public var ANGLES: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VT.ANGLES, byteSize: 4) }
   ///  Model for track visualization
-  public var MODEL: KMLModel? { let o = _accessor.offset(VTOFFSET.MODEL.v); return o == 0 ? nil : KMLModel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MODEL: KMLModel? { let o = _accessor.offset(VT.MODEL); return o == 0 ? nil : KMLModel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLTrack(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(EXTRUDE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDE, def: false,
-   at: VTOFFSET.EXTRUDE.p) }
+   at: VT.EXTRUDE) }
   public static func add(TESSELLATE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TESSELLATE, def: false,
-   at: VTOFFSET.TESSELLATE.p) }
-  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VTOFFSET.ALTITUDE_MODE.p) }
-  public static func addVectorOf(WHEN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WHEN, at: VTOFFSET.WHEN.p) }
-  public static func addVectorOf(COORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDS, at: VTOFFSET.COORDS.p) }
-  public static func addVectorOf(ANGLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANGLES, at: VTOFFSET.ANGLES.p) }
-  public static func add(MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL, at: VTOFFSET.MODEL.p) }
+   at: VT.TESSELLATE) }
+  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VT.ALTITUDE_MODE) }
+  public static func addVectorOf(WHEN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WHEN, at: VT.WHEN) }
+  public static func addVectorOf(COORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDS, at: VT.COORDS) }
+  public static func addVectorOf(ANGLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANGLES, at: VT.ANGLES) }
+  public static func add(MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL, at: VT.MODEL) }
   public static func endKMLTrack(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLTrack(
     _ fbb: inout FlatBufferBuilder,
@@ -1507,13 +1467,13 @@ public struct KMLTrack: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.EXTRUDE.p, fieldName: "EXTRUDE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.TESSELLATE.p, fieldName: "TESSELLATE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE_MODE.p, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
-    try _v.visit(field: VTOFFSET.WHEN.p, fieldName: "WHEN", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.COORDS.p, fieldName: "COORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLCoordinate>, KMLCoordinate>>.self)
-    try _v.visit(field: VTOFFSET.ANGLES.p, fieldName: "ANGLES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLCoordinate>, KMLCoordinate>>.self)
-    try _v.visit(field: VTOFFSET.MODEL.p, fieldName: "MODEL", required: false, type: ForwardOffset<KMLModel>.self)
+    try _v.visit(field: VT.EXTRUDE, fieldName: "EXTRUDE", required: false, type: Bool.self)
+    try _v.visit(field: VT.TESSELLATE, fieldName: "TESSELLATE", required: false, type: Bool.self)
+    try _v.visit(field: VT.ALTITUDE_MODE, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
+    try _v.visit(field: VT.WHEN, fieldName: "WHEN", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COORDS, fieldName: "COORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLCoordinate>, KMLCoordinate>>.self)
+    try _v.visit(field: VT.ANGLES, fieldName: "ANGLES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLCoordinate>, KMLCoordinate>>.self)
+    try _v.visit(field: VT.MODEL, fieldName: "MODEL", required: false, type: ForwardOffset<KMLModel>.self)
     _v.finish()
   }
 }
@@ -1530,25 +1490,23 @@ public struct KMLMultiTrack: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ALTITUDE_MODE = 4
-    case INTERPOLATE = 6
-    case TRACKS = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ALTITUDE_MODE: VOffset = 4
+    static let INTERPOLATE: VOffset = 6
+    static let TRACKS: VOffset = 8
   }
 
   ///  Altitude mode
-  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
+  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VT.ALTITUDE_MODE); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   ///  Whether to interpolate between tracks
-  public var INTERPOLATE: Bool { let o = _accessor.offset(VTOFFSET.INTERPOLATE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var INTERPOLATE: Bool { let o = _accessor.offset(VT.INTERPOLATE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Child tracks
-  public var TRACKS: FlatbufferVector<KMLTrack> { return _accessor.vector(at: VTOFFSET.TRACKS.v, byteSize: 4) }
+  public var TRACKS: FlatbufferVector<KMLTrack> { return _accessor.vector(at: VT.TRACKS, byteSize: 4) }
   public static func startKMLMultiTrack(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VTOFFSET.ALTITUDE_MODE.p) }
+  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VT.ALTITUDE_MODE) }
   public static func add(INTERPOLATE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERPOLATE, def: false,
-   at: VTOFFSET.INTERPOLATE.p) }
-  public static func addVectorOf(TRACKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACKS, at: VTOFFSET.TRACKS.p) }
+   at: VT.INTERPOLATE) }
+  public static func addVectorOf(TRACKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACKS, at: VT.TRACKS) }
   public static func endKMLMultiTrack(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLMultiTrack(
     _ fbb: inout FlatBufferBuilder,
@@ -1565,9 +1523,9 @@ public struct KMLMultiTrack: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ALTITUDE_MODE.p, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
-    try _v.visit(field: VTOFFSET.INTERPOLATE.p, fieldName: "INTERPOLATE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.TRACKS.p, fieldName: "TRACKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLTrack>, KMLTrack>>.self)
+    try _v.visit(field: VT.ALTITUDE_MODE, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
+    try _v.visit(field: VT.INTERPOLATE, fieldName: "INTERPOLATE", required: false, type: Bool.self)
+    try _v.visit(field: VT.TRACKS, fieldName: "TRACKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLTrack>, KMLTrack>>.self)
     _v.finish()
   }
 }
@@ -1584,44 +1542,42 @@ public struct KMLMultiGeometry: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case POINTS = 4
-    case LINE_STRINGS = 6
-    case POLYGONS = 8
-    case MULTI_GEOMETRIES = 10
-    case LINEAR_RINGS = 12
-    case MODELS = 14
-    case TRACKS = 16
-    case MULTI_TRACKS = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let POINTS: VOffset = 4
+    static let LINE_STRINGS: VOffset = 6
+    static let POLYGONS: VOffset = 8
+    static let MULTI_GEOMETRIES: VOffset = 10
+    static let LINEAR_RINGS: VOffset = 12
+    static let MODELS: VOffset = 14
+    static let TRACKS: VOffset = 16
+    static let MULTI_TRACKS: VOffset = 18
   }
 
   ///  Child points
-  public var POINTS: FlatbufferVector<KMLPoint> { return _accessor.vector(at: VTOFFSET.POINTS.v, byteSize: 4) }
+  public var POINTS: FlatbufferVector<KMLPoint> { return _accessor.vector(at: VT.POINTS, byteSize: 4) }
   ///  Child line strings
-  public var LINE_STRINGS: FlatbufferVector<KMLLineString> { return _accessor.vector(at: VTOFFSET.LINE_STRINGS.v, byteSize: 4) }
+  public var LINE_STRINGS: FlatbufferVector<KMLLineString> { return _accessor.vector(at: VT.LINE_STRINGS, byteSize: 4) }
   ///  Child polygons
-  public var POLYGONS: FlatbufferVector<KMLPolygon> { return _accessor.vector(at: VTOFFSET.POLYGONS.v, byteSize: 4) }
+  public var POLYGONS: FlatbufferVector<KMLPolygon> { return _accessor.vector(at: VT.POLYGONS, byteSize: 4) }
   ///  Nested multi-geometries
-  public var MULTI_GEOMETRIES: FlatbufferVector<KMLMultiGeometry> { return _accessor.vector(at: VTOFFSET.MULTI_GEOMETRIES.v, byteSize: 4) }
+  public var MULTI_GEOMETRIES: FlatbufferVector<KMLMultiGeometry> { return _accessor.vector(at: VT.MULTI_GEOMETRIES, byteSize: 4) }
   ///  Child linear rings (standalone)
-  public var LINEAR_RINGS: FlatbufferVector<KMLLinearRing> { return _accessor.vector(at: VTOFFSET.LINEAR_RINGS.v, byteSize: 4) }
+  public var LINEAR_RINGS: FlatbufferVector<KMLLinearRing> { return _accessor.vector(at: VT.LINEAR_RINGS, byteSize: 4) }
   ///  Child 3D models
-  public var MODELS: FlatbufferVector<KMLModel> { return _accessor.vector(at: VTOFFSET.MODELS.v, byteSize: 4) }
+  public var MODELS: FlatbufferVector<KMLModel> { return _accessor.vector(at: VT.MODELS, byteSize: 4) }
   ///  Child tracks
-  public var TRACKS: FlatbufferVector<KMLTrack> { return _accessor.vector(at: VTOFFSET.TRACKS.v, byteSize: 4) }
+  public var TRACKS: FlatbufferVector<KMLTrack> { return _accessor.vector(at: VT.TRACKS, byteSize: 4) }
   ///  Child multi-tracks
-  public var MULTI_TRACKS: FlatbufferVector<KMLMultiTrack> { return _accessor.vector(at: VTOFFSET.MULTI_TRACKS.v, byteSize: 4) }
+  public var MULTI_TRACKS: FlatbufferVector<KMLMultiTrack> { return _accessor.vector(at: VT.MULTI_TRACKS, byteSize: 4) }
   public static func startKMLMultiGeometry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func addVectorOf(POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTS, at: VTOFFSET.POINTS.p) }
-  public static func addVectorOf(LINE_STRINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE_STRINGS, at: VTOFFSET.LINE_STRINGS.p) }
-  public static func addVectorOf(POLYGONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGONS, at: VTOFFSET.POLYGONS.p) }
-  public static func addVectorOf(MULTI_GEOMETRIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTI_GEOMETRIES, at: VTOFFSET.MULTI_GEOMETRIES.p) }
-  public static func addVectorOf(LINEAR_RINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINEAR_RINGS, at: VTOFFSET.LINEAR_RINGS.p) }
-  public static func addVectorOf(MODELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODELS, at: VTOFFSET.MODELS.p) }
-  public static func addVectorOf(TRACKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACKS, at: VTOFFSET.TRACKS.p) }
-  public static func addVectorOf(MULTI_TRACKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTI_TRACKS, at: VTOFFSET.MULTI_TRACKS.p) }
+  public static func addVectorOf(POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTS, at: VT.POINTS) }
+  public static func addVectorOf(LINE_STRINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE_STRINGS, at: VT.LINE_STRINGS) }
+  public static func addVectorOf(POLYGONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGONS, at: VT.POLYGONS) }
+  public static func addVectorOf(MULTI_GEOMETRIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTI_GEOMETRIES, at: VT.MULTI_GEOMETRIES) }
+  public static func addVectorOf(LINEAR_RINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINEAR_RINGS, at: VT.LINEAR_RINGS) }
+  public static func addVectorOf(MODELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODELS, at: VT.MODELS) }
+  public static func addVectorOf(TRACKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACKS, at: VT.TRACKS) }
+  public static func addVectorOf(MULTI_TRACKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTI_TRACKS, at: VT.MULTI_TRACKS) }
   public static func endKMLMultiGeometry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLMultiGeometry(
     _ fbb: inout FlatBufferBuilder,
@@ -1648,14 +1604,14 @@ public struct KMLMultiGeometry: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.POINTS.p, fieldName: "POINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLPoint>, KMLPoint>>.self)
-    try _v.visit(field: VTOFFSET.LINE_STRINGS.p, fieldName: "LINE_STRINGS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLLineString>, KMLLineString>>.self)
-    try _v.visit(field: VTOFFSET.POLYGONS.p, fieldName: "POLYGONS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLPolygon>, KMLPolygon>>.self)
-    try _v.visit(field: VTOFFSET.MULTI_GEOMETRIES.p, fieldName: "MULTI_GEOMETRIES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLMultiGeometry>, KMLMultiGeometry>>.self)
-    try _v.visit(field: VTOFFSET.LINEAR_RINGS.p, fieldName: "LINEAR_RINGS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLLinearRing>, KMLLinearRing>>.self)
-    try _v.visit(field: VTOFFSET.MODELS.p, fieldName: "MODELS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLModel>, KMLModel>>.self)
-    try _v.visit(field: VTOFFSET.TRACKS.p, fieldName: "TRACKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLTrack>, KMLTrack>>.self)
-    try _v.visit(field: VTOFFSET.MULTI_TRACKS.p, fieldName: "MULTI_TRACKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLMultiTrack>, KMLMultiTrack>>.self)
+    try _v.visit(field: VT.POINTS, fieldName: "POINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLPoint>, KMLPoint>>.self)
+    try _v.visit(field: VT.LINE_STRINGS, fieldName: "LINE_STRINGS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLLineString>, KMLLineString>>.self)
+    try _v.visit(field: VT.POLYGONS, fieldName: "POLYGONS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLPolygon>, KMLPolygon>>.self)
+    try _v.visit(field: VT.MULTI_GEOMETRIES, fieldName: "MULTI_GEOMETRIES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLMultiGeometry>, KMLMultiGeometry>>.self)
+    try _v.visit(field: VT.LINEAR_RINGS, fieldName: "LINEAR_RINGS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLLinearRing>, KMLLinearRing>>.self)
+    try _v.visit(field: VT.MODELS, fieldName: "MODELS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLModel>, KMLModel>>.self)
+    try _v.visit(field: VT.TRACKS, fieldName: "TRACKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLTrack>, KMLTrack>>.self)
+    try _v.visit(field: VT.MULTI_TRACKS, fieldName: "MULTI_TRACKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLMultiTrack>, KMLMultiTrack>>.self)
     _v.finish()
   }
 }
@@ -1672,22 +1628,20 @@ public struct KMLTimeSpan: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case BEGIN = 4
-    case END = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let BEGIN: VOffset = 4
+    static let END: VOffset = 6
   }
 
   ///  Begin time (ISO 8601)
-  public var BEGIN: String? { let o = _accessor.offset(VTOFFSET.BEGIN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BEGINSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BEGIN.v) }
+  public var BEGIN: String? { let o = _accessor.offset(VT.BEGIN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BEGINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BEGIN) }
   ///  End time (ISO 8601)
-  public var END: String? { let o = _accessor.offset(VTOFFSET.END.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.END.v) }
+  public var END: String? { let o = _accessor.offset(VT.END); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.END) }
   public static func startKMLTimeSpan(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(BEGIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEGIN, at: VTOFFSET.BEGIN.p) }
-  public static func add(END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END, at: VTOFFSET.END.p) }
+  public static func add(BEGIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEGIN, at: VT.BEGIN) }
+  public static func add(END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END, at: VT.END) }
   public static func endKMLTimeSpan(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLTimeSpan(
     _ fbb: inout FlatBufferBuilder,
@@ -1702,8 +1656,8 @@ public struct KMLTimeSpan: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.BEGIN.p, fieldName: "BEGIN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.END.p, fieldName: "END", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BEGIN, fieldName: "BEGIN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.END, fieldName: "END", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -1720,17 +1674,15 @@ public struct KMLTimeStamp: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case WHEN = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let WHEN: VOffset = 4
   }
 
   ///  Time (ISO 8601)
-  public var WHEN: String? { let o = _accessor.offset(VTOFFSET.WHEN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var WHENSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.WHEN.v) }
+  public var WHEN: String? { let o = _accessor.offset(VT.WHEN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var WHENSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.WHEN) }
   public static func startKMLTimeStamp(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(WHEN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WHEN, at: VTOFFSET.WHEN.p) }
+  public static func add(WHEN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WHEN, at: VT.WHEN) }
   public static func endKMLTimeStamp(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLTimeStamp(
     _ fbb: inout FlatBufferBuilder,
@@ -1743,7 +1695,7 @@ public struct KMLTimeStamp: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.WHEN.p, fieldName: "WHEN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.WHEN, fieldName: "WHEN", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -1760,27 +1712,25 @@ public struct KMLData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case DISPLAY_NAME = 6
-    case VALUE = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let DISPLAY_NAME: VOffset = 6
+    static let VALUE: VOffset = 8
   }
 
   ///  Data name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Display name
-  public var DISPLAY_NAME: String? { let o = _accessor.offset(VTOFFSET.DISPLAY_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DISPLAY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DISPLAY_NAME.v) }
+  public var DISPLAY_NAME: String? { let o = _accessor.offset(VT.DISPLAY_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DISPLAY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DISPLAY_NAME) }
   ///  Data value
-  public var VALUE: String? { let o = _accessor.offset(VTOFFSET.VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VALUE.v) }
+  public var VALUE: String? { let o = _accessor.offset(VT.VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VALUE) }
   public static func startKMLData(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(DISPLAY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_NAME, at: VTOFFSET.DISPLAY_NAME.p) }
-  public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VTOFFSET.VALUE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DISPLAY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_NAME, at: VT.DISPLAY_NAME) }
+  public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VT.VALUE) }
   public static func endKMLData(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLData(
     _ fbb: inout FlatBufferBuilder,
@@ -1797,9 +1747,9 @@ public struct KMLData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DISPLAY_NAME.p, fieldName: "DISPLAY_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VALUE.p, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DISPLAY_NAME, fieldName: "DISPLAY_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -1816,27 +1766,25 @@ public struct KMLSimpleField: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case FIELD_TYPE = 6
-    case DISPLAY_NAME = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let FIELD_TYPE: VOffset = 6
+    static let DISPLAY_NAME: VOffset = 8
   }
 
   ///  Field name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Field type (xsd:string, xsd:int, xsd:float, etc.)
-  public var FIELD_TYPE: String? { let o = _accessor.offset(VTOFFSET.FIELD_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FIELD_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FIELD_TYPE.v) }
+  public var FIELD_TYPE: String? { let o = _accessor.offset(VT.FIELD_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FIELD_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FIELD_TYPE) }
   ///  Display name
-  public var DISPLAY_NAME: String? { let o = _accessor.offset(VTOFFSET.DISPLAY_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DISPLAY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DISPLAY_NAME.v) }
+  public var DISPLAY_NAME: String? { let o = _accessor.offset(VT.DISPLAY_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DISPLAY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DISPLAY_NAME) }
   public static func startKMLSimpleField(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(FIELD_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIELD_TYPE, at: VTOFFSET.FIELD_TYPE.p) }
-  public static func add(DISPLAY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_NAME, at: VTOFFSET.DISPLAY_NAME.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(FIELD_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIELD_TYPE, at: VT.FIELD_TYPE) }
+  public static func add(DISPLAY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_NAME, at: VT.DISPLAY_NAME) }
   public static func endKMLSimpleField(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLSimpleField(
     _ fbb: inout FlatBufferBuilder,
@@ -1853,9 +1801,9 @@ public struct KMLSimpleField: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FIELD_TYPE.p, fieldName: "FIELD_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DISPLAY_NAME.p, fieldName: "DISPLAY_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FIELD_TYPE, fieldName: "FIELD_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DISPLAY_NAME, fieldName: "DISPLAY_NAME", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -1872,26 +1820,24 @@ public struct KMLSchema: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case ID = 6
-    case SIMPLE_FIELDS = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let ID: VOffset = 6
+    static let SIMPLE_FIELDS: VOffset = 8
   }
 
   ///  Schema name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Schema ID
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Simple field definitions
-  public var SIMPLE_FIELDS: FlatbufferVector<KMLSimpleField> { return _accessor.vector(at: VTOFFSET.SIMPLE_FIELDS.v, byteSize: 4) }
+  public var SIMPLE_FIELDS: FlatbufferVector<KMLSimpleField> { return _accessor.vector(at: VT.SIMPLE_FIELDS, byteSize: 4) }
   public static func startKMLSchema(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func addVectorOf(SIMPLE_FIELDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIMPLE_FIELDS, at: VTOFFSET.SIMPLE_FIELDS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func addVectorOf(SIMPLE_FIELDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIMPLE_FIELDS, at: VT.SIMPLE_FIELDS) }
   public static func endKMLSchema(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLSchema(
     _ fbb: inout FlatBufferBuilder,
@@ -1908,9 +1854,9 @@ public struct KMLSchema: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SIMPLE_FIELDS.p, fieldName: "SIMPLE_FIELDS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLSimpleField>, KMLSimpleField>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIMPLE_FIELDS, fieldName: "SIMPLE_FIELDS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLSimpleField>, KMLSimpleField>>.self)
     _v.finish()
   }
 }
@@ -1927,22 +1873,20 @@ public struct KMLSimpleData: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case VALUE = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let VALUE: VOffset = 6
   }
 
   ///  Field name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Field value
-  public var VALUE: String? { let o = _accessor.offset(VTOFFSET.VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VALUE.v) }
+  public var VALUE: String? { let o = _accessor.offset(VT.VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VALUE) }
   public static func startKMLSimpleData(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VTOFFSET.VALUE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VT.VALUE) }
   public static func endKMLSimpleData(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLSimpleData(
     _ fbb: inout FlatBufferBuilder,
@@ -1957,8 +1901,8 @@ public struct KMLSimpleData: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VALUE.p, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -1975,21 +1919,19 @@ public struct KMLSchemaData: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SCHEMA_URL = 4
-    case SIMPLE_DATA = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SCHEMA_URL: VOffset = 4
+    static let SIMPLE_DATA: VOffset = 6
   }
 
   ///  Schema URL reference
-  public var SCHEMA_URL: String? { let o = _accessor.offset(VTOFFSET.SCHEMA_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SCHEMA_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SCHEMA_URL.v) }
+  public var SCHEMA_URL: String? { let o = _accessor.offset(VT.SCHEMA_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCHEMA_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_URL) }
   ///  Simple data values
-  public var SIMPLE_DATA: FlatbufferVector<KMLSimpleData> { return _accessor.vector(at: VTOFFSET.SIMPLE_DATA.v, byteSize: 4) }
+  public var SIMPLE_DATA: FlatbufferVector<KMLSimpleData> { return _accessor.vector(at: VT.SIMPLE_DATA, byteSize: 4) }
   public static func startKMLSchemaData(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(SCHEMA_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_URL, at: VTOFFSET.SCHEMA_URL.p) }
-  public static func addVectorOf(SIMPLE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIMPLE_DATA, at: VTOFFSET.SIMPLE_DATA.p) }
+  public static func add(SCHEMA_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_URL, at: VT.SCHEMA_URL) }
+  public static func addVectorOf(SIMPLE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIMPLE_DATA, at: VT.SIMPLE_DATA) }
   public static func endKMLSchemaData(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLSchemaData(
     _ fbb: inout FlatBufferBuilder,
@@ -2004,8 +1946,8 @@ public struct KMLSchemaData: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SCHEMA_URL.p, fieldName: "SCHEMA_URL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SIMPLE_DATA.p, fieldName: "SIMPLE_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLSimpleData>, KMLSimpleData>>.self)
+    try _v.visit(field: VT.SCHEMA_URL, fieldName: "SCHEMA_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIMPLE_DATA, fieldName: "SIMPLE_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLSimpleData>, KMLSimpleData>>.self)
     _v.finish()
   }
 }
@@ -2022,16 +1964,14 @@ public struct KMLLatLonQuad: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COORDINATES = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COORDINATES: VOffset = 4
   }
 
   ///  Four corner coordinates
-  public var COORDINATES: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VTOFFSET.COORDINATES.v, byteSize: 4) }
+  public var COORDINATES: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VT.COORDINATES, byteSize: 4) }
   public static func startKMLLatLonQuad(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func addVectorOf(COORDINATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATES, at: VTOFFSET.COORDINATES.p) }
+  public static func addVectorOf(COORDINATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATES, at: VT.COORDINATES) }
   public static func endKMLLatLonQuad(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLLatLonQuad(
     _ fbb: inout FlatBufferBuilder,
@@ -2044,7 +1984,7 @@ public struct KMLLatLonQuad: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COORDINATES.p, fieldName: "COORDINATES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLCoordinate>, KMLCoordinate>>.self)
+    try _v.visit(field: VT.COORDINATES, fieldName: "COORDINATES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLCoordinate>, KMLCoordinate>>.self)
     _v.finish()
   }
 }
@@ -2061,20 +2001,18 @@ public struct KMLRegion: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case LAT_LON_ALT_BOX = 4
-    case LOD = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let LAT_LON_ALT_BOX: VOffset = 4
+    static let LOD: VOffset = 6
   }
 
   ///  LatLonAltBox
-  public var LAT_LON_ALT_BOX: KMLLatLonAltBox? { let o = _accessor.offset(VTOFFSET.LAT_LON_ALT_BOX.v); return o == 0 ? nil : KMLLatLonAltBox(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LAT_LON_ALT_BOX: KMLLatLonAltBox? { let o = _accessor.offset(VT.LAT_LON_ALT_BOX); return o == 0 ? nil : KMLLatLonAltBox(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Level of detail
-  public var LOD: KMLLod? { let o = _accessor.offset(VTOFFSET.LOD.v); return o == 0 ? nil : KMLLod(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LOD: KMLLod? { let o = _accessor.offset(VT.LOD); return o == 0 ? nil : KMLLod(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLRegion(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(LAT_LON_ALT_BOX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAT_LON_ALT_BOX, at: VTOFFSET.LAT_LON_ALT_BOX.p) }
-  public static func add(LOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOD, at: VTOFFSET.LOD.p) }
+  public static func add(LAT_LON_ALT_BOX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAT_LON_ALT_BOX, at: VT.LAT_LON_ALT_BOX) }
+  public static func add(LOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOD, at: VT.LOD) }
   public static func endKMLRegion(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLRegion(
     _ fbb: inout FlatBufferBuilder,
@@ -2089,8 +2027,8 @@ public struct KMLRegion: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LAT_LON_ALT_BOX.p, fieldName: "LAT_LON_ALT_BOX", required: false, type: ForwardOffset<KMLLatLonAltBox>.self)
-    try _v.visit(field: VTOFFSET.LOD.p, fieldName: "LOD", required: false, type: ForwardOffset<KMLLod>.self)
+    try _v.visit(field: VT.LAT_LON_ALT_BOX, fieldName: "LAT_LON_ALT_BOX", required: false, type: ForwardOffset<KMLLatLonAltBox>.self)
+    try _v.visit(field: VT.LOD, fieldName: "LOD", required: false, type: ForwardOffset<KMLLod>.self)
     _v.finish()
   }
 }
@@ -2107,40 +2045,38 @@ public struct KMLLatLonAltBox: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NORTH = 4
-    case SOUTH = 6
-    case EAST = 8
-    case WEST = 10
-    case MIN_ALTITUDE = 12
-    case MAX_ALTITUDE = 14
-    case ALTITUDE_MODE = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NORTH: VOffset = 4
+    static let SOUTH: VOffset = 6
+    static let EAST: VOffset = 8
+    static let WEST: VOffset = 10
+    static let MIN_ALTITUDE: VOffset = 12
+    static let MAX_ALTITUDE: VOffset = 14
+    static let ALTITUDE_MODE: VOffset = 16
   }
 
   ///  North latitude
-  public var NORTH: Double { let o = _accessor.offset(VTOFFSET.NORTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NORTH: Double { let o = _accessor.offset(VT.NORTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  South latitude
-  public var SOUTH: Double { let o = _accessor.offset(VTOFFSET.SOUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SOUTH: Double { let o = _accessor.offset(VT.SOUTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  East longitude
-  public var EAST: Double { let o = _accessor.offset(VTOFFSET.EAST.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EAST: Double { let o = _accessor.offset(VT.EAST); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  West longitude
-  public var WEST: Double { let o = _accessor.offset(VTOFFSET.WEST.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var WEST: Double { let o = _accessor.offset(VT.WEST); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Minimum altitude
-  public var MIN_ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.MIN_ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MIN_ALTITUDE: Double { let o = _accessor.offset(VT.MIN_ALTITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum altitude
-  public var MAX_ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.MAX_ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_ALTITUDE: Double { let o = _accessor.offset(VT.MAX_ALTITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Altitude mode
-  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
+  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VT.ALTITUDE_MODE); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   public static func startKMLLatLonAltBox(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(NORTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORTH, def: 0.0, at: VTOFFSET.NORTH.p) }
-  public static func add(SOUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOUTH, def: 0.0, at: VTOFFSET.SOUTH.p) }
-  public static func add(EAST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EAST, def: 0.0, at: VTOFFSET.EAST.p) }
-  public static func add(WEST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEST, def: 0.0, at: VTOFFSET.WEST.p) }
-  public static func add(MIN_ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_ALTITUDE, def: 0.0, at: VTOFFSET.MIN_ALTITUDE.p) }
-  public static func add(MAX_ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ALTITUDE, def: 0.0, at: VTOFFSET.MAX_ALTITUDE.p) }
-  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VTOFFSET.ALTITUDE_MODE.p) }
+  public static func add(NORTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORTH, def: 0.0, at: VT.NORTH) }
+  public static func add(SOUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOUTH, def: 0.0, at: VT.SOUTH) }
+  public static func add(EAST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EAST, def: 0.0, at: VT.EAST) }
+  public static func add(WEST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEST, def: 0.0, at: VT.WEST) }
+  public static func add(MIN_ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_ALTITUDE, def: 0.0, at: VT.MIN_ALTITUDE) }
+  public static func add(MAX_ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ALTITUDE, def: 0.0, at: VT.MAX_ALTITUDE) }
+  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VT.ALTITUDE_MODE) }
   public static func endKMLLatLonAltBox(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLLatLonAltBox(
     _ fbb: inout FlatBufferBuilder,
@@ -2165,13 +2101,13 @@ public struct KMLLatLonAltBox: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NORTH.p, fieldName: "NORTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SOUTH.p, fieldName: "SOUTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EAST.p, fieldName: "EAST", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.WEST.p, fieldName: "WEST", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MIN_ALTITUDE.p, fieldName: "MIN_ALTITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_ALTITUDE.p, fieldName: "MAX_ALTITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE_MODE.p, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
+    try _v.visit(field: VT.NORTH, fieldName: "NORTH", required: false, type: Double.self)
+    try _v.visit(field: VT.SOUTH, fieldName: "SOUTH", required: false, type: Double.self)
+    try _v.visit(field: VT.EAST, fieldName: "EAST", required: false, type: Double.self)
+    try _v.visit(field: VT.WEST, fieldName: "WEST", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_ALTITUDE, fieldName: "MIN_ALTITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_ALTITUDE, fieldName: "MAX_ALTITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE_MODE, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
     _v.finish()
   }
 }
@@ -2188,28 +2124,26 @@ public struct KMLLod: FlatBufferTable, FlatbuffersVectorInitializable, Verifiabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case MIN_LOD_PIXELS = 4
-    case MAX_LOD_PIXELS = 6
-    case MIN_FADE_EXTENT = 8
-    case MAX_FADE_EXTENT = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let MIN_LOD_PIXELS: VOffset = 4
+    static let MAX_LOD_PIXELS: VOffset = 6
+    static let MIN_FADE_EXTENT: VOffset = 8
+    static let MAX_FADE_EXTENT: VOffset = 10
   }
 
   ///  Minimum LOD pixels
-  public var MIN_LOD_PIXELS: Double { let o = _accessor.offset(VTOFFSET.MIN_LOD_PIXELS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MIN_LOD_PIXELS: Double { let o = _accessor.offset(VT.MIN_LOD_PIXELS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum LOD pixels (-1 = infinite)
-  public var MAX_LOD_PIXELS: Double { let o = _accessor.offset(VTOFFSET.MAX_LOD_PIXELS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_LOD_PIXELS: Double { let o = _accessor.offset(VT.MAX_LOD_PIXELS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Minimum fade extent
-  public var MIN_FADE_EXTENT: Double { let o = _accessor.offset(VTOFFSET.MIN_FADE_EXTENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MIN_FADE_EXTENT: Double { let o = _accessor.offset(VT.MIN_FADE_EXTENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum fade extent
-  public var MAX_FADE_EXTENT: Double { let o = _accessor.offset(VTOFFSET.MAX_FADE_EXTENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_FADE_EXTENT: Double { let o = _accessor.offset(VT.MAX_FADE_EXTENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startKMLLod(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(MIN_LOD_PIXELS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_LOD_PIXELS, def: 0.0, at: VTOFFSET.MIN_LOD_PIXELS.p) }
-  public static func add(MAX_LOD_PIXELS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_LOD_PIXELS, def: 0.0, at: VTOFFSET.MAX_LOD_PIXELS.p) }
-  public static func add(MIN_FADE_EXTENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_FADE_EXTENT, def: 0.0, at: VTOFFSET.MIN_FADE_EXTENT.p) }
-  public static func add(MAX_FADE_EXTENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_FADE_EXTENT, def: 0.0, at: VTOFFSET.MAX_FADE_EXTENT.p) }
+  public static func add(MIN_LOD_PIXELS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_LOD_PIXELS, def: 0.0, at: VT.MIN_LOD_PIXELS) }
+  public static func add(MAX_LOD_PIXELS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_LOD_PIXELS, def: 0.0, at: VT.MAX_LOD_PIXELS) }
+  public static func add(MIN_FADE_EXTENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_FADE_EXTENT, def: 0.0, at: VT.MIN_FADE_EXTENT) }
+  public static func add(MAX_FADE_EXTENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_FADE_EXTENT, def: 0.0, at: VT.MAX_FADE_EXTENT) }
   public static func endKMLLod(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLLod(
     _ fbb: inout FlatBufferBuilder,
@@ -2228,10 +2162,10 @@ public struct KMLLod: FlatBufferTable, FlatbuffersVectorInitializable, Verifiabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.MIN_LOD_PIXELS.p, fieldName: "MIN_LOD_PIXELS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_LOD_PIXELS.p, fieldName: "MAX_LOD_PIXELS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MIN_FADE_EXTENT.p, fieldName: "MIN_FADE_EXTENT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_FADE_EXTENT.p, fieldName: "MAX_FADE_EXTENT", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_LOD_PIXELS, fieldName: "MIN_LOD_PIXELS", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_LOD_PIXELS, fieldName: "MAX_LOD_PIXELS", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_FADE_EXTENT, fieldName: "MIN_FADE_EXTENT", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_FADE_EXTENT, fieldName: "MAX_FADE_EXTENT", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -2248,47 +2182,45 @@ public struct KMLLink: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case HREF = 4
-    case REFRESH_MODE = 6
-    case REFRESH_INTERVAL = 8
-    case VIEW_REFRESH_MODE = 10
-    case VIEW_REFRESH_TIME = 12
-    case VIEW_BOUND_SCALE = 14
-    case VIEW_FORMAT = 16
-    case HTTP_QUERY = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let HREF: VOffset = 4
+    static let REFRESH_MODE: VOffset = 6
+    static let REFRESH_INTERVAL: VOffset = 8
+    static let VIEW_REFRESH_MODE: VOffset = 10
+    static let VIEW_REFRESH_TIME: VOffset = 12
+    static let VIEW_BOUND_SCALE: VOffset = 14
+    static let VIEW_FORMAT: VOffset = 16
+    static let HTTP_QUERY: VOffset = 18
   }
 
   ///  URL
-  public var HREF: String? { let o = _accessor.offset(VTOFFSET.HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HREF.v) }
+  public var HREF: String? { let o = _accessor.offset(VT.HREF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HREF) }
   ///  Refresh mode
-  public var REFRESH_MODE: KMLRefreshMode { let o = _accessor.offset(VTOFFSET.REFRESH_MODE.v); return o == 0 ? .onChange : KMLRefreshMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .onChange }
+  public var REFRESH_MODE: KMLRefreshMode { let o = _accessor.offset(VT.REFRESH_MODE); return o == 0 ? .onChange : KMLRefreshMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .onChange }
   ///  Refresh interval in seconds
-  public var REFRESH_INTERVAL: Double { let o = _accessor.offset(VTOFFSET.REFRESH_INTERVAL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REFRESH_INTERVAL: Double { let o = _accessor.offset(VT.REFRESH_INTERVAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  View refresh mode
-  public var VIEW_REFRESH_MODE: KMLViewRefreshMode { let o = _accessor.offset(VTOFFSET.VIEW_REFRESH_MODE.v); return o == 0 ? .never : KMLViewRefreshMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .never }
+  public var VIEW_REFRESH_MODE: KMLViewRefreshMode { let o = _accessor.offset(VT.VIEW_REFRESH_MODE); return o == 0 ? .never : KMLViewRefreshMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .never }
   ///  View refresh time in seconds
-  public var VIEW_REFRESH_TIME: Double { let o = _accessor.offset(VTOFFSET.VIEW_REFRESH_TIME.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VIEW_REFRESH_TIME: Double { let o = _accessor.offset(VT.VIEW_REFRESH_TIME); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  View bound scale
-  public var VIEW_BOUND_SCALE: Double { let o = _accessor.offset(VTOFFSET.VIEW_BOUND_SCALE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VIEW_BOUND_SCALE: Double { let o = _accessor.offset(VT.VIEW_BOUND_SCALE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  View format string
-  public var VIEW_FORMAT: String? { let o = _accessor.offset(VTOFFSET.VIEW_FORMAT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VIEW_FORMATSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VIEW_FORMAT.v) }
+  public var VIEW_FORMAT: String? { let o = _accessor.offset(VT.VIEW_FORMAT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VIEW_FORMATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VIEW_FORMAT) }
   ///  HTTP query string
-  public var HTTP_QUERY: String? { let o = _accessor.offset(VTOFFSET.HTTP_QUERY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HTTP_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HTTP_QUERY.v) }
+  public var HTTP_QUERY: String? { let o = _accessor.offset(VT.HTTP_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HTTP_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HTTP_QUERY) }
   public static func startKMLLink(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HREF, at: VTOFFSET.HREF.p) }
-  public static func add(REFRESH_MODE: KMLRefreshMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFRESH_MODE.rawValue, def: 0, at: VTOFFSET.REFRESH_MODE.p) }
-  public static func add(REFRESH_INTERVAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFRESH_INTERVAL, def: 0.0, at: VTOFFSET.REFRESH_INTERVAL.p) }
-  public static func add(VIEW_REFRESH_MODE: KMLViewRefreshMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_REFRESH_MODE.rawValue, def: 0, at: VTOFFSET.VIEW_REFRESH_MODE.p) }
-  public static func add(VIEW_REFRESH_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_REFRESH_TIME, def: 0.0, at: VTOFFSET.VIEW_REFRESH_TIME.p) }
-  public static func add(VIEW_BOUND_SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_BOUND_SCALE, def: 0.0, at: VTOFFSET.VIEW_BOUND_SCALE.p) }
-  public static func add(VIEW_FORMAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VIEW_FORMAT, at: VTOFFSET.VIEW_FORMAT.p) }
-  public static func add(HTTP_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HTTP_QUERY, at: VTOFFSET.HTTP_QUERY.p) }
+  public static func add(HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HREF, at: VT.HREF) }
+  public static func add(REFRESH_MODE: KMLRefreshMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFRESH_MODE.rawValue, def: 0, at: VT.REFRESH_MODE) }
+  public static func add(REFRESH_INTERVAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFRESH_INTERVAL, def: 0.0, at: VT.REFRESH_INTERVAL) }
+  public static func add(VIEW_REFRESH_MODE: KMLViewRefreshMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_REFRESH_MODE.rawValue, def: 0, at: VT.VIEW_REFRESH_MODE) }
+  public static func add(VIEW_REFRESH_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_REFRESH_TIME, def: 0.0, at: VT.VIEW_REFRESH_TIME) }
+  public static func add(VIEW_BOUND_SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_BOUND_SCALE, def: 0.0, at: VT.VIEW_BOUND_SCALE) }
+  public static func add(VIEW_FORMAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VIEW_FORMAT, at: VT.VIEW_FORMAT) }
+  public static func add(HTTP_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HTTP_QUERY, at: VT.HTTP_QUERY) }
   public static func endKMLLink(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLLink(
     _ fbb: inout FlatBufferBuilder,
@@ -2315,14 +2247,14 @@ public struct KMLLink: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.HREF.p, fieldName: "HREF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REFRESH_MODE.p, fieldName: "REFRESH_MODE", required: false, type: KMLRefreshMode.self)
-    try _v.visit(field: VTOFFSET.REFRESH_INTERVAL.p, fieldName: "REFRESH_INTERVAL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VIEW_REFRESH_MODE.p, fieldName: "VIEW_REFRESH_MODE", required: false, type: KMLViewRefreshMode.self)
-    try _v.visit(field: VTOFFSET.VIEW_REFRESH_TIME.p, fieldName: "VIEW_REFRESH_TIME", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VIEW_BOUND_SCALE.p, fieldName: "VIEW_BOUND_SCALE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VIEW_FORMAT.p, fieldName: "VIEW_FORMAT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.HTTP_QUERY.p, fieldName: "HTTP_QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HREF, fieldName: "HREF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REFRESH_MODE, fieldName: "REFRESH_MODE", required: false, type: KMLRefreshMode.self)
+    try _v.visit(field: VT.REFRESH_INTERVAL, fieldName: "REFRESH_INTERVAL", required: false, type: Double.self)
+    try _v.visit(field: VT.VIEW_REFRESH_MODE, fieldName: "VIEW_REFRESH_MODE", required: false, type: KMLViewRefreshMode.self)
+    try _v.visit(field: VT.VIEW_REFRESH_TIME, fieldName: "VIEW_REFRESH_TIME", required: false, type: Double.self)
+    try _v.visit(field: VT.VIEW_BOUND_SCALE, fieldName: "VIEW_BOUND_SCALE", required: false, type: Double.self)
+    try _v.visit(field: VT.VIEW_FORMAT, fieldName: "VIEW_FORMAT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HTTP_QUERY, fieldName: "HTTP_QUERY", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -2339,32 +2271,30 @@ public struct KMLViewVolume: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case LEFT_FOV = 4
-    case RIGHT_FOV = 6
-    case BOTTOM_FOV = 8
-    case TOP_FOV = 10
-    case NEAR = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let LEFT_FOV: VOffset = 4
+    static let RIGHT_FOV: VOffset = 6
+    static let BOTTOM_FOV: VOffset = 8
+    static let TOP_FOV: VOffset = 10
+    static let NEAR: VOffset = 12
   }
 
   ///  Left field of view angle
-  public var LEFT_FOV: Double { let o = _accessor.offset(VTOFFSET.LEFT_FOV.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LEFT_FOV: Double { let o = _accessor.offset(VT.LEFT_FOV); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Right field of view angle
-  public var RIGHT_FOV: Double { let o = _accessor.offset(VTOFFSET.RIGHT_FOV.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RIGHT_FOV: Double { let o = _accessor.offset(VT.RIGHT_FOV); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Bottom field of view angle
-  public var BOTTOM_FOV: Double { let o = _accessor.offset(VTOFFSET.BOTTOM_FOV.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BOTTOM_FOV: Double { let o = _accessor.offset(VT.BOTTOM_FOV); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Top field of view angle
-  public var TOP_FOV: Double { let o = _accessor.offset(VTOFFSET.TOP_FOV.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TOP_FOV: Double { let o = _accessor.offset(VT.TOP_FOV); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Near clipping plane
-  public var NEAR: Double { let o = _accessor.offset(VTOFFSET.NEAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NEAR: Double { let o = _accessor.offset(VT.NEAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startKMLViewVolume(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(LEFT_FOV: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEFT_FOV, def: 0.0, at: VTOFFSET.LEFT_FOV.p) }
-  public static func add(RIGHT_FOV: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RIGHT_FOV, def: 0.0, at: VTOFFSET.RIGHT_FOV.p) }
-  public static func add(BOTTOM_FOV: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOTTOM_FOV, def: 0.0, at: VTOFFSET.BOTTOM_FOV.p) }
-  public static func add(TOP_FOV: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOP_FOV, def: 0.0, at: VTOFFSET.TOP_FOV.p) }
-  public static func add(NEAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEAR, def: 0.0, at: VTOFFSET.NEAR.p) }
+  public static func add(LEFT_FOV: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEFT_FOV, def: 0.0, at: VT.LEFT_FOV) }
+  public static func add(RIGHT_FOV: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RIGHT_FOV, def: 0.0, at: VT.RIGHT_FOV) }
+  public static func add(BOTTOM_FOV: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOTTOM_FOV, def: 0.0, at: VT.BOTTOM_FOV) }
+  public static func add(TOP_FOV: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOP_FOV, def: 0.0, at: VT.TOP_FOV) }
+  public static func add(NEAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEAR, def: 0.0, at: VT.NEAR) }
   public static func endKMLViewVolume(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLViewVolume(
     _ fbb: inout FlatBufferBuilder,
@@ -2385,11 +2315,11 @@ public struct KMLViewVolume: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LEFT_FOV.p, fieldName: "LEFT_FOV", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RIGHT_FOV.p, fieldName: "RIGHT_FOV", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BOTTOM_FOV.p, fieldName: "BOTTOM_FOV", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TOP_FOV.p, fieldName: "TOP_FOV", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NEAR.p, fieldName: "NEAR", required: false, type: Double.self)
+    try _v.visit(field: VT.LEFT_FOV, fieldName: "LEFT_FOV", required: false, type: Double.self)
+    try _v.visit(field: VT.RIGHT_FOV, fieldName: "RIGHT_FOV", required: false, type: Double.self)
+    try _v.visit(field: VT.BOTTOM_FOV, fieldName: "BOTTOM_FOV", required: false, type: Double.self)
+    try _v.visit(field: VT.TOP_FOV, fieldName: "TOP_FOV", required: false, type: Double.self)
+    try _v.visit(field: VT.NEAR, fieldName: "NEAR", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -2406,28 +2336,26 @@ public struct KMLImagePyramid: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case TILE_SIZE = 4
-    case MAX_WIDTH = 6
-    case MAX_HEIGHT = 8
-    case GRID_ORIGIN = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let TILE_SIZE: VOffset = 4
+    static let MAX_WIDTH: VOffset = 6
+    static let MAX_HEIGHT: VOffset = 8
+    static let GRID_ORIGIN: VOffset = 10
   }
 
   ///  Tile size in pixels
-  public var TILE_SIZE: Int32 { let o = _accessor.offset(VTOFFSET.TILE_SIZE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var TILE_SIZE: Int32 { let o = _accessor.offset(VT.TILE_SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Maximum image width
-  public var MAX_WIDTH: Int32 { let o = _accessor.offset(VTOFFSET.MAX_WIDTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var MAX_WIDTH: Int32 { let o = _accessor.offset(VT.MAX_WIDTH); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Maximum image height
-  public var MAX_HEIGHT: Int32 { let o = _accessor.offset(VTOFFSET.MAX_HEIGHT.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var MAX_HEIGHT: Int32 { let o = _accessor.offset(VT.MAX_HEIGHT); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Grid origin
-  public var GRID_ORIGIN: KMLGridOrigin { let o = _accessor.offset(VTOFFSET.GRID_ORIGIN.v); return o == 0 ? .lowerLeft : KMLGridOrigin(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .lowerLeft }
+  public var GRID_ORIGIN: KMLGridOrigin { let o = _accessor.offset(VT.GRID_ORIGIN); return o == 0 ? .lowerLeft : KMLGridOrigin(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .lowerLeft }
   public static func startKMLImagePyramid(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(TILE_SIZE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TILE_SIZE, def: 0, at: VTOFFSET.TILE_SIZE.p) }
-  public static func add(MAX_WIDTH: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_WIDTH, def: 0, at: VTOFFSET.MAX_WIDTH.p) }
-  public static func add(MAX_HEIGHT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_HEIGHT, def: 0, at: VTOFFSET.MAX_HEIGHT.p) }
-  public static func add(GRID_ORIGIN: KMLGridOrigin, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRID_ORIGIN.rawValue, def: 0, at: VTOFFSET.GRID_ORIGIN.p) }
+  public static func add(TILE_SIZE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TILE_SIZE, def: 0, at: VT.TILE_SIZE) }
+  public static func add(MAX_WIDTH: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_WIDTH, def: 0, at: VT.MAX_WIDTH) }
+  public static func add(MAX_HEIGHT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_HEIGHT, def: 0, at: VT.MAX_HEIGHT) }
+  public static func add(GRID_ORIGIN: KMLGridOrigin, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRID_ORIGIN.rawValue, def: 0, at: VT.GRID_ORIGIN) }
   public static func endKMLImagePyramid(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLImagePyramid(
     _ fbb: inout FlatBufferBuilder,
@@ -2446,10 +2374,10 @@ public struct KMLImagePyramid: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.TILE_SIZE.p, fieldName: "TILE_SIZE", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.MAX_WIDTH.p, fieldName: "MAX_WIDTH", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.MAX_HEIGHT.p, fieldName: "MAX_HEIGHT", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.GRID_ORIGIN.p, fieldName: "GRID_ORIGIN", required: false, type: KMLGridOrigin.self)
+    try _v.visit(field: VT.TILE_SIZE, fieldName: "TILE_SIZE", required: false, type: Int32.self)
+    try _v.visit(field: VT.MAX_WIDTH, fieldName: "MAX_WIDTH", required: false, type: Int32.self)
+    try _v.visit(field: VT.MAX_HEIGHT, fieldName: "MAX_HEIGHT", required: false, type: Int32.self)
+    try _v.visit(field: VT.GRID_ORIGIN, fieldName: "GRID_ORIGIN", required: false, type: KMLGridOrigin.self)
     _v.finish()
   }
 }
@@ -2466,67 +2394,65 @@ public struct KMLNetworkLink: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case DESCRIPTION = 6
-    case VISIBILITY = 8
-    case OPEN = 10
-    case HREF = 12
-    case REFRESH_MODE = 14
-    case REFRESH_INTERVAL = 16
-    case VIEW_REFRESH_MODE = 18
-    case VIEW_REFRESH_TIME = 20
-    case REFRESH_VISIBILITY = 22
-    case FLY_TO_VIEW = 24
-    case LINK = 26
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let DESCRIPTION: VOffset = 6
+    static let VISIBILITY: VOffset = 8
+    static let OPEN: VOffset = 10
+    static let HREF: VOffset = 12
+    static let REFRESH_MODE: VOffset = 14
+    static let REFRESH_INTERVAL: VOffset = 16
+    static let VIEW_REFRESH_MODE: VOffset = 18
+    static let VIEW_REFRESH_TIME: VOffset = 20
+    static let REFRESH_VISIBILITY: VOffset = 22
+    static let FLY_TO_VIEW: VOffset = 24
+    static let LINK: VOffset = 26
   }
 
   ///  Name of the network link
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Description
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Whether the link is visible
-  public var VISIBILITY: Bool { let o = _accessor.offset(VTOFFSET.VISIBILITY.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var VISIBILITY: Bool { let o = _accessor.offset(VT.VISIBILITY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether open in tree view
-  public var OPEN: Bool { let o = _accessor.offset(VTOFFSET.OPEN.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OPEN: Bool { let o = _accessor.offset(VT.OPEN); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Link URL
-  public var HREF: String? { let o = _accessor.offset(VTOFFSET.HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HREF.v) }
+  public var HREF: String? { let o = _accessor.offset(VT.HREF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HREF) }
   ///  Refresh mode
-  public var REFRESH_MODE: KMLRefreshMode { let o = _accessor.offset(VTOFFSET.REFRESH_MODE.v); return o == 0 ? .onChange : KMLRefreshMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .onChange }
+  public var REFRESH_MODE: KMLRefreshMode { let o = _accessor.offset(VT.REFRESH_MODE); return o == 0 ? .onChange : KMLRefreshMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .onChange }
   ///  Refresh interval in seconds
-  public var REFRESH_INTERVAL: Double { let o = _accessor.offset(VTOFFSET.REFRESH_INTERVAL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REFRESH_INTERVAL: Double { let o = _accessor.offset(VT.REFRESH_INTERVAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  View refresh mode
-  public var VIEW_REFRESH_MODE: KMLViewRefreshMode { let o = _accessor.offset(VTOFFSET.VIEW_REFRESH_MODE.v); return o == 0 ? .never : KMLViewRefreshMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .never }
+  public var VIEW_REFRESH_MODE: KMLViewRefreshMode { let o = _accessor.offset(VT.VIEW_REFRESH_MODE); return o == 0 ? .never : KMLViewRefreshMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .never }
   ///  View refresh time in seconds
-  public var VIEW_REFRESH_TIME: Double { let o = _accessor.offset(VTOFFSET.VIEW_REFRESH_TIME.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VIEW_REFRESH_TIME: Double { let o = _accessor.offset(VT.VIEW_REFRESH_TIME); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Whether to refresh on visibility change
-  public var REFRESH_VISIBILITY: Bool { let o = _accessor.offset(VTOFFSET.REFRESH_VISIBILITY.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var REFRESH_VISIBILITY: Bool { let o = _accessor.offset(VT.REFRESH_VISIBILITY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether to fly to view on refresh
-  public var FLY_TO_VIEW: Bool { let o = _accessor.offset(VTOFFSET.FLY_TO_VIEW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FLY_TO_VIEW: Bool { let o = _accessor.offset(VT.FLY_TO_VIEW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Full link element
-  public var LINK: KMLLink? { let o = _accessor.offset(VTOFFSET.LINK.v); return o == 0 ? nil : KMLLink(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LINK: KMLLink? { let o = _accessor.offset(VT.LINK); return o == 0 ? nil : KMLLink(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLNetworkLink(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
   public static func add(VISIBILITY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISIBILITY, def: false,
-   at: VTOFFSET.VISIBILITY.p) }
+   at: VT.VISIBILITY) }
   public static func add(OPEN: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPEN, def: false,
-   at: VTOFFSET.OPEN.p) }
-  public static func add(HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HREF, at: VTOFFSET.HREF.p) }
-  public static func add(REFRESH_MODE: KMLRefreshMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFRESH_MODE.rawValue, def: 0, at: VTOFFSET.REFRESH_MODE.p) }
-  public static func add(REFRESH_INTERVAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFRESH_INTERVAL, def: 0.0, at: VTOFFSET.REFRESH_INTERVAL.p) }
-  public static func add(VIEW_REFRESH_MODE: KMLViewRefreshMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_REFRESH_MODE.rawValue, def: 0, at: VTOFFSET.VIEW_REFRESH_MODE.p) }
-  public static func add(VIEW_REFRESH_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_REFRESH_TIME, def: 0.0, at: VTOFFSET.VIEW_REFRESH_TIME.p) }
+   at: VT.OPEN) }
+  public static func add(HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HREF, at: VT.HREF) }
+  public static func add(REFRESH_MODE: KMLRefreshMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFRESH_MODE.rawValue, def: 0, at: VT.REFRESH_MODE) }
+  public static func add(REFRESH_INTERVAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFRESH_INTERVAL, def: 0.0, at: VT.REFRESH_INTERVAL) }
+  public static func add(VIEW_REFRESH_MODE: KMLViewRefreshMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_REFRESH_MODE.rawValue, def: 0, at: VT.VIEW_REFRESH_MODE) }
+  public static func add(VIEW_REFRESH_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIEW_REFRESH_TIME, def: 0.0, at: VT.VIEW_REFRESH_TIME) }
   public static func add(REFRESH_VISIBILITY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFRESH_VISIBILITY, def: false,
-   at: VTOFFSET.REFRESH_VISIBILITY.p) }
+   at: VT.REFRESH_VISIBILITY) }
   public static func add(FLY_TO_VIEW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLY_TO_VIEW, def: false,
-   at: VTOFFSET.FLY_TO_VIEW.p) }
-  public static func add(LINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK, at: VTOFFSET.LINK.p) }
+   at: VT.FLY_TO_VIEW) }
+  public static func add(LINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK, at: VT.LINK) }
   public static func endKMLNetworkLink(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLNetworkLink(
     _ fbb: inout FlatBufferBuilder,
@@ -2561,18 +2487,18 @@ public struct KMLNetworkLink: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VISIBILITY.p, fieldName: "VISIBILITY", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OPEN.p, fieldName: "OPEN", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.HREF.p, fieldName: "HREF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REFRESH_MODE.p, fieldName: "REFRESH_MODE", required: false, type: KMLRefreshMode.self)
-    try _v.visit(field: VTOFFSET.REFRESH_INTERVAL.p, fieldName: "REFRESH_INTERVAL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VIEW_REFRESH_MODE.p, fieldName: "VIEW_REFRESH_MODE", required: false, type: KMLViewRefreshMode.self)
-    try _v.visit(field: VTOFFSET.VIEW_REFRESH_TIME.p, fieldName: "VIEW_REFRESH_TIME", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.REFRESH_VISIBILITY.p, fieldName: "REFRESH_VISIBILITY", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.FLY_TO_VIEW.p, fieldName: "FLY_TO_VIEW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.LINK.p, fieldName: "LINK", required: false, type: ForwardOffset<KMLLink>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VISIBILITY, fieldName: "VISIBILITY", required: false, type: Bool.self)
+    try _v.visit(field: VT.OPEN, fieldName: "OPEN", required: false, type: Bool.self)
+    try _v.visit(field: VT.HREF, fieldName: "HREF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REFRESH_MODE, fieldName: "REFRESH_MODE", required: false, type: KMLRefreshMode.self)
+    try _v.visit(field: VT.REFRESH_INTERVAL, fieldName: "REFRESH_INTERVAL", required: false, type: Double.self)
+    try _v.visit(field: VT.VIEW_REFRESH_MODE, fieldName: "VIEW_REFRESH_MODE", required: false, type: KMLViewRefreshMode.self)
+    try _v.visit(field: VT.VIEW_REFRESH_TIME, fieldName: "VIEW_REFRESH_TIME", required: false, type: Double.self)
+    try _v.visit(field: VT.REFRESH_VISIBILITY, fieldName: "REFRESH_VISIBILITY", required: false, type: Bool.self)
+    try _v.visit(field: VT.FLY_TO_VIEW, fieldName: "FLY_TO_VIEW", required: false, type: Bool.self)
+    try _v.visit(field: VT.LINK, fieldName: "LINK", required: false, type: ForwardOffset<KMLLink>.self)
     _v.finish()
   }
 }
@@ -2589,109 +2515,107 @@ public struct KMLScreenOverlay: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case DESCRIPTION = 6
-    case VISIBILITY = 8
-    case ICON_HREF = 10
-    case COLOR = 12
-    case DRAW_ORDER = 14
-    case OVERLAY_XY_X = 16
-    case OVERLAY_XY_Y = 18
-    case OVERLAY_XY_XUNITS = 20
-    case OVERLAY_XY_YUNITS = 22
-    case SCREEN_XY_X = 24
-    case SCREEN_XY_Y = 26
-    case SCREEN_XY_XUNITS = 28
-    case SCREEN_XY_YUNITS = 30
-    case ROTATION_XY_X = 32
-    case ROTATION_XY_Y = 34
-    case ROTATION_XY_XUNITS = 36
-    case ROTATION_XY_YUNITS = 38
-    case SIZE_X = 40
-    case SIZE_Y = 42
-    case SIZE_XUNITS = 44
-    case SIZE_YUNITS = 46
-    case ROTATION = 48
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let DESCRIPTION: VOffset = 6
+    static let VISIBILITY: VOffset = 8
+    static let ICON_HREF: VOffset = 10
+    static let COLOR: VOffset = 12
+    static let DRAW_ORDER: VOffset = 14
+    static let OVERLAY_XY_X: VOffset = 16
+    static let OVERLAY_XY_Y: VOffset = 18
+    static let OVERLAY_XY_XUNITS: VOffset = 20
+    static let OVERLAY_XY_YUNITS: VOffset = 22
+    static let SCREEN_XY_X: VOffset = 24
+    static let SCREEN_XY_Y: VOffset = 26
+    static let SCREEN_XY_XUNITS: VOffset = 28
+    static let SCREEN_XY_YUNITS: VOffset = 30
+    static let ROTATION_XY_X: VOffset = 32
+    static let ROTATION_XY_Y: VOffset = 34
+    static let ROTATION_XY_XUNITS: VOffset = 36
+    static let ROTATION_XY_YUNITS: VOffset = 38
+    static let SIZE_X: VOffset = 40
+    static let SIZE_Y: VOffset = 42
+    static let SIZE_XUNITS: VOffset = 44
+    static let SIZE_YUNITS: VOffset = 46
+    static let ROTATION: VOffset = 48
   }
 
   ///  Name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Description
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Visibility
-  public var VISIBILITY: Bool { let o = _accessor.offset(VTOFFSET.VISIBILITY.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var VISIBILITY: Bool { let o = _accessor.offset(VT.VISIBILITY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Icon/image URL
-  public var ICON_HREF: String? { let o = _accessor.offset(VTOFFSET.ICON_HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ICON_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ICON_HREF.v) }
+  public var ICON_HREF: String? { let o = _accessor.offset(VT.ICON_HREF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ICON_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ICON_HREF) }
   ///  Color
-  public var COLOR: String? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLOR.v) }
+  public var COLOR: String? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR) }
   ///  Draw order
-  public var DRAW_ORDER: Int32 { let o = _accessor.offset(VTOFFSET.DRAW_ORDER.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var DRAW_ORDER: Int32 { let o = _accessor.offset(VT.DRAW_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Overlay X position
-  public var OVERLAY_XY_X: Double { let o = _accessor.offset(VTOFFSET.OVERLAY_XY_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OVERLAY_XY_X: Double { let o = _accessor.offset(VT.OVERLAY_XY_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Overlay Y position
-  public var OVERLAY_XY_Y: Double { let o = _accessor.offset(VTOFFSET.OVERLAY_XY_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OVERLAY_XY_Y: Double { let o = _accessor.offset(VT.OVERLAY_XY_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Overlay X units
-  public var OVERLAY_XY_XUNITS: KMLUnits { let o = _accessor.offset(VTOFFSET.OVERLAY_XY_XUNITS.v); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
+  public var OVERLAY_XY_XUNITS: KMLUnits { let o = _accessor.offset(VT.OVERLAY_XY_XUNITS); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
   ///  Overlay Y units
-  public var OVERLAY_XY_YUNITS: KMLUnits { let o = _accessor.offset(VTOFFSET.OVERLAY_XY_YUNITS.v); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
+  public var OVERLAY_XY_YUNITS: KMLUnits { let o = _accessor.offset(VT.OVERLAY_XY_YUNITS); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
   ///  Screen X position
-  public var SCREEN_XY_X: Double { let o = _accessor.offset(VTOFFSET.SCREEN_XY_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCREEN_XY_X: Double { let o = _accessor.offset(VT.SCREEN_XY_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Screen Y position
-  public var SCREEN_XY_Y: Double { let o = _accessor.offset(VTOFFSET.SCREEN_XY_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCREEN_XY_Y: Double { let o = _accessor.offset(VT.SCREEN_XY_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Screen X units
-  public var SCREEN_XY_XUNITS: KMLUnits { let o = _accessor.offset(VTOFFSET.SCREEN_XY_XUNITS.v); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
+  public var SCREEN_XY_XUNITS: KMLUnits { let o = _accessor.offset(VT.SCREEN_XY_XUNITS); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
   ///  Screen Y units
-  public var SCREEN_XY_YUNITS: KMLUnits { let o = _accessor.offset(VTOFFSET.SCREEN_XY_YUNITS.v); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
+  public var SCREEN_XY_YUNITS: KMLUnits { let o = _accessor.offset(VT.SCREEN_XY_YUNITS); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
   ///  Rotation X
-  public var ROTATION_XY_X: Double { let o = _accessor.offset(VTOFFSET.ROTATION_XY_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ROTATION_XY_X: Double { let o = _accessor.offset(VT.ROTATION_XY_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Rotation Y
-  public var ROTATION_XY_Y: Double { let o = _accessor.offset(VTOFFSET.ROTATION_XY_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ROTATION_XY_Y: Double { let o = _accessor.offset(VT.ROTATION_XY_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Rotation X units
-  public var ROTATION_XY_XUNITS: KMLUnits { let o = _accessor.offset(VTOFFSET.ROTATION_XY_XUNITS.v); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
+  public var ROTATION_XY_XUNITS: KMLUnits { let o = _accessor.offset(VT.ROTATION_XY_XUNITS); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
   ///  Rotation Y units
-  public var ROTATION_XY_YUNITS: KMLUnits { let o = _accessor.offset(VTOFFSET.ROTATION_XY_YUNITS.v); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
+  public var ROTATION_XY_YUNITS: KMLUnits { let o = _accessor.offset(VT.ROTATION_XY_YUNITS); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
   ///  Size X
-  public var SIZE_X: Double { let o = _accessor.offset(VTOFFSET.SIZE_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SIZE_X: Double { let o = _accessor.offset(VT.SIZE_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Size Y
-  public var SIZE_Y: Double { let o = _accessor.offset(VTOFFSET.SIZE_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SIZE_Y: Double { let o = _accessor.offset(VT.SIZE_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Size X units
-  public var SIZE_XUNITS: KMLUnits { let o = _accessor.offset(VTOFFSET.SIZE_XUNITS.v); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
+  public var SIZE_XUNITS: KMLUnits { let o = _accessor.offset(VT.SIZE_XUNITS); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
   ///  Size Y units
-  public var SIZE_YUNITS: KMLUnits { let o = _accessor.offset(VTOFFSET.SIZE_YUNITS.v); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
+  public var SIZE_YUNITS: KMLUnits { let o = _accessor.offset(VT.SIZE_YUNITS); return o == 0 ? .pixels : KMLUnits(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pixels }
   ///  Rotation in degrees
-  public var ROTATION: Double { let o = _accessor.offset(VTOFFSET.ROTATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ROTATION: Double { let o = _accessor.offset(VT.ROTATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startKMLScreenOverlay(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
   public static func add(VISIBILITY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISIBILITY, def: false,
-   at: VTOFFSET.VISIBILITY.p) }
-  public static func add(ICON_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_HREF, at: VTOFFSET.ICON_HREF.p) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(DRAW_ORDER: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAW_ORDER, def: 0, at: VTOFFSET.DRAW_ORDER.p) }
-  public static func add(OVERLAY_XY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OVERLAY_XY_X, def: 0.0, at: VTOFFSET.OVERLAY_XY_X.p) }
-  public static func add(OVERLAY_XY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OVERLAY_XY_Y, def: 0.0, at: VTOFFSET.OVERLAY_XY_Y.p) }
-  public static func add(OVERLAY_XY_XUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OVERLAY_XY_XUNITS.rawValue, def: 0, at: VTOFFSET.OVERLAY_XY_XUNITS.p) }
-  public static func add(OVERLAY_XY_YUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OVERLAY_XY_YUNITS.rawValue, def: 0, at: VTOFFSET.OVERLAY_XY_YUNITS.p) }
-  public static func add(SCREEN_XY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_XY_X, def: 0.0, at: VTOFFSET.SCREEN_XY_X.p) }
-  public static func add(SCREEN_XY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_XY_Y, def: 0.0, at: VTOFFSET.SCREEN_XY_Y.p) }
-  public static func add(SCREEN_XY_XUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_XY_XUNITS.rawValue, def: 0, at: VTOFFSET.SCREEN_XY_XUNITS.p) }
-  public static func add(SCREEN_XY_YUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_XY_YUNITS.rawValue, def: 0, at: VTOFFSET.SCREEN_XY_YUNITS.p) }
-  public static func add(ROTATION_XY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION_XY_X, def: 0.0, at: VTOFFSET.ROTATION_XY_X.p) }
-  public static func add(ROTATION_XY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION_XY_Y, def: 0.0, at: VTOFFSET.ROTATION_XY_Y.p) }
-  public static func add(ROTATION_XY_XUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION_XY_XUNITS.rawValue, def: 0, at: VTOFFSET.ROTATION_XY_XUNITS.p) }
-  public static func add(ROTATION_XY_YUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION_XY_YUNITS.rawValue, def: 0, at: VTOFFSET.ROTATION_XY_YUNITS.p) }
-  public static func add(SIZE_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_X, def: 0.0, at: VTOFFSET.SIZE_X.p) }
-  public static func add(SIZE_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_Y, def: 0.0, at: VTOFFSET.SIZE_Y.p) }
-  public static func add(SIZE_XUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_XUNITS.rawValue, def: 0, at: VTOFFSET.SIZE_XUNITS.p) }
-  public static func add(SIZE_YUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_YUNITS.rawValue, def: 0, at: VTOFFSET.SIZE_YUNITS.p) }
-  public static func add(ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION, def: 0.0, at: VTOFFSET.ROTATION.p) }
+   at: VT.VISIBILITY) }
+  public static func add(ICON_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_HREF, at: VT.ICON_HREF) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(DRAW_ORDER: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAW_ORDER, def: 0, at: VT.DRAW_ORDER) }
+  public static func add(OVERLAY_XY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OVERLAY_XY_X, def: 0.0, at: VT.OVERLAY_XY_X) }
+  public static func add(OVERLAY_XY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OVERLAY_XY_Y, def: 0.0, at: VT.OVERLAY_XY_Y) }
+  public static func add(OVERLAY_XY_XUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OVERLAY_XY_XUNITS.rawValue, def: 0, at: VT.OVERLAY_XY_XUNITS) }
+  public static func add(OVERLAY_XY_YUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OVERLAY_XY_YUNITS.rawValue, def: 0, at: VT.OVERLAY_XY_YUNITS) }
+  public static func add(SCREEN_XY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_XY_X, def: 0.0, at: VT.SCREEN_XY_X) }
+  public static func add(SCREEN_XY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_XY_Y, def: 0.0, at: VT.SCREEN_XY_Y) }
+  public static func add(SCREEN_XY_XUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_XY_XUNITS.rawValue, def: 0, at: VT.SCREEN_XY_XUNITS) }
+  public static func add(SCREEN_XY_YUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREEN_XY_YUNITS.rawValue, def: 0, at: VT.SCREEN_XY_YUNITS) }
+  public static func add(ROTATION_XY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION_XY_X, def: 0.0, at: VT.ROTATION_XY_X) }
+  public static func add(ROTATION_XY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION_XY_Y, def: 0.0, at: VT.ROTATION_XY_Y) }
+  public static func add(ROTATION_XY_XUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION_XY_XUNITS.rawValue, def: 0, at: VT.ROTATION_XY_XUNITS) }
+  public static func add(ROTATION_XY_YUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION_XY_YUNITS.rawValue, def: 0, at: VT.ROTATION_XY_YUNITS) }
+  public static func add(SIZE_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_X, def: 0.0, at: VT.SIZE_X) }
+  public static func add(SIZE_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_Y, def: 0.0, at: VT.SIZE_Y) }
+  public static func add(SIZE_XUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_XUNITS.rawValue, def: 0, at: VT.SIZE_XUNITS) }
+  public static func add(SIZE_YUNITS: KMLUnits, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_YUNITS.rawValue, def: 0, at: VT.SIZE_YUNITS) }
+  public static func add(ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION, def: 0.0, at: VT.ROTATION) }
   public static func endKMLScreenOverlay(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLScreenOverlay(
     _ fbb: inout FlatBufferBuilder,
@@ -2748,29 +2672,29 @@ public struct KMLScreenOverlay: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VISIBILITY.p, fieldName: "VISIBILITY", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.ICON_HREF.p, fieldName: "ICON_HREF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DRAW_ORDER.p, fieldName: "DRAW_ORDER", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.OVERLAY_XY_X.p, fieldName: "OVERLAY_XY_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OVERLAY_XY_Y.p, fieldName: "OVERLAY_XY_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OVERLAY_XY_XUNITS.p, fieldName: "OVERLAY_XY_XUNITS", required: false, type: KMLUnits.self)
-    try _v.visit(field: VTOFFSET.OVERLAY_XY_YUNITS.p, fieldName: "OVERLAY_XY_YUNITS", required: false, type: KMLUnits.self)
-    try _v.visit(field: VTOFFSET.SCREEN_XY_X.p, fieldName: "SCREEN_XY_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SCREEN_XY_Y.p, fieldName: "SCREEN_XY_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SCREEN_XY_XUNITS.p, fieldName: "SCREEN_XY_XUNITS", required: false, type: KMLUnits.self)
-    try _v.visit(field: VTOFFSET.SCREEN_XY_YUNITS.p, fieldName: "SCREEN_XY_YUNITS", required: false, type: KMLUnits.self)
-    try _v.visit(field: VTOFFSET.ROTATION_XY_X.p, fieldName: "ROTATION_XY_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ROTATION_XY_Y.p, fieldName: "ROTATION_XY_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ROTATION_XY_XUNITS.p, fieldName: "ROTATION_XY_XUNITS", required: false, type: KMLUnits.self)
-    try _v.visit(field: VTOFFSET.ROTATION_XY_YUNITS.p, fieldName: "ROTATION_XY_YUNITS", required: false, type: KMLUnits.self)
-    try _v.visit(field: VTOFFSET.SIZE_X.p, fieldName: "SIZE_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SIZE_Y.p, fieldName: "SIZE_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SIZE_XUNITS.p, fieldName: "SIZE_XUNITS", required: false, type: KMLUnits.self)
-    try _v.visit(field: VTOFFSET.SIZE_YUNITS.p, fieldName: "SIZE_YUNITS", required: false, type: KMLUnits.self)
-    try _v.visit(field: VTOFFSET.ROTATION.p, fieldName: "ROTATION", required: false, type: Double.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VISIBILITY, fieldName: "VISIBILITY", required: false, type: Bool.self)
+    try _v.visit(field: VT.ICON_HREF, fieldName: "ICON_HREF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DRAW_ORDER, fieldName: "DRAW_ORDER", required: false, type: Int32.self)
+    try _v.visit(field: VT.OVERLAY_XY_X, fieldName: "OVERLAY_XY_X", required: false, type: Double.self)
+    try _v.visit(field: VT.OVERLAY_XY_Y, fieldName: "OVERLAY_XY_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.OVERLAY_XY_XUNITS, fieldName: "OVERLAY_XY_XUNITS", required: false, type: KMLUnits.self)
+    try _v.visit(field: VT.OVERLAY_XY_YUNITS, fieldName: "OVERLAY_XY_YUNITS", required: false, type: KMLUnits.self)
+    try _v.visit(field: VT.SCREEN_XY_X, fieldName: "SCREEN_XY_X", required: false, type: Double.self)
+    try _v.visit(field: VT.SCREEN_XY_Y, fieldName: "SCREEN_XY_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.SCREEN_XY_XUNITS, fieldName: "SCREEN_XY_XUNITS", required: false, type: KMLUnits.self)
+    try _v.visit(field: VT.SCREEN_XY_YUNITS, fieldName: "SCREEN_XY_YUNITS", required: false, type: KMLUnits.self)
+    try _v.visit(field: VT.ROTATION_XY_X, fieldName: "ROTATION_XY_X", required: false, type: Double.self)
+    try _v.visit(field: VT.ROTATION_XY_Y, fieldName: "ROTATION_XY_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.ROTATION_XY_XUNITS, fieldName: "ROTATION_XY_XUNITS", required: false, type: KMLUnits.self)
+    try _v.visit(field: VT.ROTATION_XY_YUNITS, fieldName: "ROTATION_XY_YUNITS", required: false, type: KMLUnits.self)
+    try _v.visit(field: VT.SIZE_X, fieldName: "SIZE_X", required: false, type: Double.self)
+    try _v.visit(field: VT.SIZE_Y, fieldName: "SIZE_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.SIZE_XUNITS, fieldName: "SIZE_XUNITS", required: false, type: KMLUnits.self)
+    try _v.visit(field: VT.SIZE_YUNITS, fieldName: "SIZE_YUNITS", required: false, type: KMLUnits.self)
+    try _v.visit(field: VT.ROTATION, fieldName: "ROTATION", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -2787,61 +2711,59 @@ public struct KMLPhotoOverlay: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case DESCRIPTION = 6
-    case VISIBILITY = 8
-    case ICON_HREF = 10
-    case COLOR = 12
-    case DRAW_ORDER = 14
-    case ROTATION = 16
-    case VIEW_VOLUME = 18
-    case IMAGE_PYRAMID = 20
-    case POINT = 22
-    case SHAPE = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let DESCRIPTION: VOffset = 6
+    static let VISIBILITY: VOffset = 8
+    static let ICON_HREF: VOffset = 10
+    static let COLOR: VOffset = 12
+    static let DRAW_ORDER: VOffset = 14
+    static let ROTATION: VOffset = 16
+    static let VIEW_VOLUME: VOffset = 18
+    static let IMAGE_PYRAMID: VOffset = 20
+    static let POINT: VOffset = 22
+    static let SHAPE: VOffset = 24
   }
 
   ///  Name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Description
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Visibility
-  public var VISIBILITY: Bool { let o = _accessor.offset(VTOFFSET.VISIBILITY.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var VISIBILITY: Bool { let o = _accessor.offset(VT.VISIBILITY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Icon/image URL
-  public var ICON_HREF: String? { let o = _accessor.offset(VTOFFSET.ICON_HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ICON_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ICON_HREF.v) }
+  public var ICON_HREF: String? { let o = _accessor.offset(VT.ICON_HREF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ICON_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ICON_HREF) }
   ///  Color
-  public var COLOR: String? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLOR.v) }
+  public var COLOR: String? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR) }
   ///  Draw order
-  public var DRAW_ORDER: Int32 { let o = _accessor.offset(VTOFFSET.DRAW_ORDER.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var DRAW_ORDER: Int32 { let o = _accessor.offset(VT.DRAW_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Rotation
-  public var ROTATION: Double { let o = _accessor.offset(VTOFFSET.ROTATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ROTATION: Double { let o = _accessor.offset(VT.ROTATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  View volume
-  public var VIEW_VOLUME: KMLViewVolume? { let o = _accessor.offset(VTOFFSET.VIEW_VOLUME.v); return o == 0 ? nil : KMLViewVolume(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var VIEW_VOLUME: KMLViewVolume? { let o = _accessor.offset(VT.VIEW_VOLUME); return o == 0 ? nil : KMLViewVolume(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Image pyramid
-  public var IMAGE_PYRAMID: KMLImagePyramid? { let o = _accessor.offset(VTOFFSET.IMAGE_PYRAMID.v); return o == 0 ? nil : KMLImagePyramid(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var IMAGE_PYRAMID: KMLImagePyramid? { let o = _accessor.offset(VT.IMAGE_PYRAMID); return o == 0 ? nil : KMLImagePyramid(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Point for position
-  public var POINT: KMLPoint? { let o = _accessor.offset(VTOFFSET.POINT.v); return o == 0 ? nil : KMLPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POINT: KMLPoint? { let o = _accessor.offset(VT.POINT); return o == 0 ? nil : KMLPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Shape
-  public var SHAPE: KMLShape { let o = _accessor.offset(VTOFFSET.SHAPE.v); return o == 0 ? .rectangle : KMLShape(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .rectangle }
+  public var SHAPE: KMLShape { let o = _accessor.offset(VT.SHAPE); return o == 0 ? .rectangle : KMLShape(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .rectangle }
   public static func startKMLPhotoOverlay(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
   public static func add(VISIBILITY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISIBILITY, def: false,
-   at: VTOFFSET.VISIBILITY.p) }
-  public static func add(ICON_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_HREF, at: VTOFFSET.ICON_HREF.p) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(DRAW_ORDER: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAW_ORDER, def: 0, at: VTOFFSET.DRAW_ORDER.p) }
-  public static func add(ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION, def: 0.0, at: VTOFFSET.ROTATION.p) }
-  public static func add(VIEW_VOLUME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VIEW_VOLUME, at: VTOFFSET.VIEW_VOLUME.p) }
-  public static func add(IMAGE_PYRAMID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE_PYRAMID, at: VTOFFSET.IMAGE_PYRAMID.p) }
-  public static func add(POINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINT, at: VTOFFSET.POINT.p) }
-  public static func add(SHAPE: KMLShape, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHAPE.rawValue, def: 0, at: VTOFFSET.SHAPE.p) }
+   at: VT.VISIBILITY) }
+  public static func add(ICON_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_HREF, at: VT.ICON_HREF) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(DRAW_ORDER: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAW_ORDER, def: 0, at: VT.DRAW_ORDER) }
+  public static func add(ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION, def: 0.0, at: VT.ROTATION) }
+  public static func add(VIEW_VOLUME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VIEW_VOLUME, at: VT.VIEW_VOLUME) }
+  public static func add(IMAGE_PYRAMID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE_PYRAMID, at: VT.IMAGE_PYRAMID) }
+  public static func add(POINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINT, at: VT.POINT) }
+  public static func add(SHAPE: KMLShape, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHAPE.rawValue, def: 0, at: VT.SHAPE) }
   public static func endKMLPhotoOverlay(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLPhotoOverlay(
     _ fbb: inout FlatBufferBuilder,
@@ -2874,17 +2796,17 @@ public struct KMLPhotoOverlay: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VISIBILITY.p, fieldName: "VISIBILITY", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.ICON_HREF.p, fieldName: "ICON_HREF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DRAW_ORDER.p, fieldName: "DRAW_ORDER", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.ROTATION.p, fieldName: "ROTATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VIEW_VOLUME.p, fieldName: "VIEW_VOLUME", required: false, type: ForwardOffset<KMLViewVolume>.self)
-    try _v.visit(field: VTOFFSET.IMAGE_PYRAMID.p, fieldName: "IMAGE_PYRAMID", required: false, type: ForwardOffset<KMLImagePyramid>.self)
-    try _v.visit(field: VTOFFSET.POINT.p, fieldName: "POINT", required: false, type: ForwardOffset<KMLPoint>.self)
-    try _v.visit(field: VTOFFSET.SHAPE.p, fieldName: "SHAPE", required: false, type: KMLShape.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VISIBILITY, fieldName: "VISIBILITY", required: false, type: Bool.self)
+    try _v.visit(field: VT.ICON_HREF, fieldName: "ICON_HREF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DRAW_ORDER, fieldName: "DRAW_ORDER", required: false, type: Int32.self)
+    try _v.visit(field: VT.ROTATION, fieldName: "ROTATION", required: false, type: Double.self)
+    try _v.visit(field: VT.VIEW_VOLUME, fieldName: "VIEW_VOLUME", required: false, type: ForwardOffset<KMLViewVolume>.self)
+    try _v.visit(field: VT.IMAGE_PYRAMID, fieldName: "IMAGE_PYRAMID", required: false, type: ForwardOffset<KMLImagePyramid>.self)
+    try _v.visit(field: VT.POINT, fieldName: "POINT", required: false, type: ForwardOffset<KMLPoint>.self)
+    try _v.visit(field: VT.SHAPE, fieldName: "SHAPE", required: false, type: KMLShape.self)
     _v.finish()
   }
 }
@@ -2901,87 +2823,85 @@ public struct KMLGroundOverlay: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case DESCRIPTION = 6
-    case VISIBILITY = 8
-    case OPEN = 10
-    case ICON_HREF = 12
-    case COLOR = 14
-    case NORTH = 16
-    case SOUTH = 18
-    case EAST = 20
-    case WEST = 22
-    case ROTATION = 24
-    case ALTITUDE = 26
-    case ALTITUDE_MODE = 28
-    case DRAW_ORDER = 30
-    case LAT_LON_QUAD = 32
-    case STYLE_URL = 34
-    case REGION = 36
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let DESCRIPTION: VOffset = 6
+    static let VISIBILITY: VOffset = 8
+    static let OPEN: VOffset = 10
+    static let ICON_HREF: VOffset = 12
+    static let COLOR: VOffset = 14
+    static let NORTH: VOffset = 16
+    static let SOUTH: VOffset = 18
+    static let EAST: VOffset = 20
+    static let WEST: VOffset = 22
+    static let ROTATION: VOffset = 24
+    static let ALTITUDE: VOffset = 26
+    static let ALTITUDE_MODE: VOffset = 28
+    static let DRAW_ORDER: VOffset = 30
+    static let LAT_LON_QUAD: VOffset = 32
+    static let STYLE_URL: VOffset = 34
+    static let REGION: VOffset = 36
   }
 
   ///  Name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Description
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Visibility
-  public var VISIBILITY: Bool { let o = _accessor.offset(VTOFFSET.VISIBILITY.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var VISIBILITY: Bool { let o = _accessor.offset(VT.VISIBILITY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether open in tree view
-  public var OPEN: Bool { let o = _accessor.offset(VTOFFSET.OPEN.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OPEN: Bool { let o = _accessor.offset(VT.OPEN); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Icon/image URL
-  public var ICON_HREF: String? { let o = _accessor.offset(VTOFFSET.ICON_HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ICON_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ICON_HREF.v) }
+  public var ICON_HREF: String? { let o = _accessor.offset(VT.ICON_HREF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ICON_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ICON_HREF) }
   ///  Color in aabbggrr hex format
-  public var COLOR: String? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLOR.v) }
+  public var COLOR: String? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR) }
   ///  North latitude of bounding box
-  public var NORTH: Double { let o = _accessor.offset(VTOFFSET.NORTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NORTH: Double { let o = _accessor.offset(VT.NORTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  South latitude of bounding box
-  public var SOUTH: Double { let o = _accessor.offset(VTOFFSET.SOUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SOUTH: Double { let o = _accessor.offset(VT.SOUTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  East longitude of bounding box
-  public var EAST: Double { let o = _accessor.offset(VTOFFSET.EAST.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EAST: Double { let o = _accessor.offset(VT.EAST); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  West longitude of bounding box
-  public var WEST: Double { let o = _accessor.offset(VTOFFSET.WEST.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var WEST: Double { let o = _accessor.offset(VT.WEST); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Rotation in degrees
-  public var ROTATION: Double { let o = _accessor.offset(VTOFFSET.ROTATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ROTATION: Double { let o = _accessor.offset(VT.ROTATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Altitude in meters
-  public var ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ALTITUDE: Double { let o = _accessor.offset(VT.ALTITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Altitude mode
-  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
+  public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VT.ALTITUDE_MODE); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   ///  Draw order
-  public var DRAW_ORDER: Int32 { let o = _accessor.offset(VTOFFSET.DRAW_ORDER.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var DRAW_ORDER: Int32 { let o = _accessor.offset(VT.DRAW_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  LatLonQuad (non-rectangular overlay)
-  public var LAT_LON_QUAD: KMLLatLonQuad? { let o = _accessor.offset(VTOFFSET.LAT_LON_QUAD.v); return o == 0 ? nil : KMLLatLonQuad(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LAT_LON_QUAD: KMLLatLonQuad? { let o = _accessor.offset(VT.LAT_LON_QUAD); return o == 0 ? nil : KMLLatLonQuad(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Style URL reference
-  public var STYLE_URL: String? { let o = _accessor.offset(VTOFFSET.STYLE_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STYLE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STYLE_URL.v) }
+  public var STYLE_URL: String? { let o = _accessor.offset(VT.STYLE_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STYLE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STYLE_URL) }
   ///  Region
-  public var REGION: KMLRegion? { let o = _accessor.offset(VTOFFSET.REGION.v); return o == 0 ? nil : KMLRegion(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var REGION: KMLRegion? { let o = _accessor.offset(VT.REGION); return o == 0 ? nil : KMLRegion(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLGroundOverlay(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
   public static func add(VISIBILITY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISIBILITY, def: false,
-   at: VTOFFSET.VISIBILITY.p) }
+   at: VT.VISIBILITY) }
   public static func add(OPEN: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPEN, def: false,
-   at: VTOFFSET.OPEN.p) }
-  public static func add(ICON_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_HREF, at: VTOFFSET.ICON_HREF.p) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(NORTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORTH, def: 0.0, at: VTOFFSET.NORTH.p) }
-  public static func add(SOUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOUTH, def: 0.0, at: VTOFFSET.SOUTH.p) }
-  public static func add(EAST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EAST, def: 0.0, at: VTOFFSET.EAST.p) }
-  public static func add(WEST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEST, def: 0.0, at: VTOFFSET.WEST.p) }
-  public static func add(ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION, def: 0.0, at: VTOFFSET.ROTATION.p) }
-  public static func add(ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VTOFFSET.ALTITUDE.p) }
-  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VTOFFSET.ALTITUDE_MODE.p) }
-  public static func add(DRAW_ORDER: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAW_ORDER, def: 0, at: VTOFFSET.DRAW_ORDER.p) }
-  public static func add(LAT_LON_QUAD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAT_LON_QUAD, at: VTOFFSET.LAT_LON_QUAD.p) }
-  public static func add(STYLE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_URL, at: VTOFFSET.STYLE_URL.p) }
-  public static func add(REGION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION, at: VTOFFSET.REGION.p) }
+   at: VT.OPEN) }
+  public static func add(ICON_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_HREF, at: VT.ICON_HREF) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(NORTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORTH, def: 0.0, at: VT.NORTH) }
+  public static func add(SOUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOUTH, def: 0.0, at: VT.SOUTH) }
+  public static func add(EAST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EAST, def: 0.0, at: VT.EAST) }
+  public static func add(WEST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEST, def: 0.0, at: VT.WEST) }
+  public static func add(ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION, def: 0.0, at: VT.ROTATION) }
+  public static func add(ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VT.ALTITUDE) }
+  public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VT.ALTITUDE_MODE) }
+  public static func add(DRAW_ORDER: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAW_ORDER, def: 0, at: VT.DRAW_ORDER) }
+  public static func add(LAT_LON_QUAD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAT_LON_QUAD, at: VT.LAT_LON_QUAD) }
+  public static func add(STYLE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_URL, at: VT.STYLE_URL) }
+  public static func add(REGION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION, at: VT.REGION) }
   public static func endKMLGroundOverlay(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLGroundOverlay(
     _ fbb: inout FlatBufferBuilder,
@@ -3026,23 +2946,23 @@ public struct KMLGroundOverlay: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VISIBILITY.p, fieldName: "VISIBILITY", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OPEN.p, fieldName: "OPEN", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.ICON_HREF.p, fieldName: "ICON_HREF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NORTH.p, fieldName: "NORTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SOUTH.p, fieldName: "SOUTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EAST.p, fieldName: "EAST", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.WEST.p, fieldName: "WEST", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ROTATION.p, fieldName: "ROTATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE.p, fieldName: "ALTITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE_MODE.p, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
-    try _v.visit(field: VTOFFSET.DRAW_ORDER.p, fieldName: "DRAW_ORDER", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.LAT_LON_QUAD.p, fieldName: "LAT_LON_QUAD", required: false, type: ForwardOffset<KMLLatLonQuad>.self)
-    try _v.visit(field: VTOFFSET.STYLE_URL.p, fieldName: "STYLE_URL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REGION.p, fieldName: "REGION", required: false, type: ForwardOffset<KMLRegion>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VISIBILITY, fieldName: "VISIBILITY", required: false, type: Bool.self)
+    try _v.visit(field: VT.OPEN, fieldName: "OPEN", required: false, type: Bool.self)
+    try _v.visit(field: VT.ICON_HREF, fieldName: "ICON_HREF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORTH, fieldName: "NORTH", required: false, type: Double.self)
+    try _v.visit(field: VT.SOUTH, fieldName: "SOUTH", required: false, type: Double.self)
+    try _v.visit(field: VT.EAST, fieldName: "EAST", required: false, type: Double.self)
+    try _v.visit(field: VT.WEST, fieldName: "WEST", required: false, type: Double.self)
+    try _v.visit(field: VT.ROTATION, fieldName: "ROTATION", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE, fieldName: "ALTITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE_MODE, fieldName: "ALTITUDE_MODE", required: false, type: KMLAltitudeMode.self)
+    try _v.visit(field: VT.DRAW_ORDER, fieldName: "DRAW_ORDER", required: false, type: Int32.self)
+    try _v.visit(field: VT.LAT_LON_QUAD, fieldName: "LAT_LON_QUAD", required: false, type: ForwardOffset<KMLLatLonQuad>.self)
+    try _v.visit(field: VT.STYLE_URL, fieldName: "STYLE_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REGION, fieldName: "REGION", required: false, type: ForwardOffset<KMLRegion>.self)
     _v.finish()
   }
 }
@@ -3059,32 +2979,30 @@ public struct KMLUpdate: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case TARGET_HREF = 4
-    case CHANGE_KML = 6
-    case CREATE_KML = 8
-    case DELETE_KML = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let TARGET_HREF: VOffset = 4
+    static let CHANGE_KML: VOffset = 6
+    static let CREATE_KML: VOffset = 8
+    static let DELETE_KML: VOffset = 10
   }
 
   ///  Target href
-  public var TARGET_HREF: String? { let o = _accessor.offset(VTOFFSET.TARGET_HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TARGET_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TARGET_HREF.v) }
+  public var TARGET_HREF: String? { let o = _accessor.offset(VT.TARGET_HREF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGET_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET_HREF) }
   ///  Change KML (raw)
-  public var CHANGE_KML: String? { let o = _accessor.offset(VTOFFSET.CHANGE_KML.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CHANGE_KMLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CHANGE_KML.v) }
+  public var CHANGE_KML: String? { let o = _accessor.offset(VT.CHANGE_KML); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHANGE_KMLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHANGE_KML) }
   ///  Create KML (raw)
-  public var CREATE_KML: String? { let o = _accessor.offset(VTOFFSET.CREATE_KML.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CREATE_KMLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CREATE_KML.v) }
+  public var CREATE_KML: String? { let o = _accessor.offset(VT.CREATE_KML); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATE_KMLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATE_KML) }
   ///  Delete KML (raw)
-  public var DELETE_KML: String? { let o = _accessor.offset(VTOFFSET.DELETE_KML.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DELETE_KMLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DELETE_KML.v) }
+  public var DELETE_KML: String? { let o = _accessor.offset(VT.DELETE_KML); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DELETE_KMLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DELETE_KML) }
   public static func startKMLUpdate(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(TARGET_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_HREF, at: VTOFFSET.TARGET_HREF.p) }
-  public static func add(CHANGE_KML: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANGE_KML, at: VTOFFSET.CHANGE_KML.p) }
-  public static func add(CREATE_KML: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATE_KML, at: VTOFFSET.CREATE_KML.p) }
-  public static func add(DELETE_KML: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DELETE_KML, at: VTOFFSET.DELETE_KML.p) }
+  public static func add(TARGET_HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_HREF, at: VT.TARGET_HREF) }
+  public static func add(CHANGE_KML: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANGE_KML, at: VT.CHANGE_KML) }
+  public static func add(CREATE_KML: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATE_KML, at: VT.CREATE_KML) }
+  public static func add(DELETE_KML: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DELETE_KML, at: VT.DELETE_KML) }
   public static func endKMLUpdate(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLUpdate(
     _ fbb: inout FlatBufferBuilder,
@@ -3103,10 +3021,10 @@ public struct KMLUpdate: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.TARGET_HREF.p, fieldName: "TARGET_HREF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CHANGE_KML.p, fieldName: "CHANGE_KML", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CREATE_KML.p, fieldName: "CREATE_KML", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DELETE_KML.p, fieldName: "DELETE_KML", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET_HREF, fieldName: "TARGET_HREF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CHANGE_KML, fieldName: "CHANGE_KML", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREATE_KML, fieldName: "CREATE_KML", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DELETE_KML, fieldName: "DELETE_KML", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -3123,62 +3041,60 @@ public struct KMLNetworkLinkControl: FlatBufferTable, FlatbuffersVectorInitializ
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case MIN_REFRESH_PERIOD = 4
-    case MAX_SESSION_LENGTH = 6
-    case COOKIE = 8
-    case MESSAGE = 10
-    case LINK_NAME = 12
-    case LINK_DESCRIPTION = 14
-    case LINK_SNIPPET = 16
-    case EXPIRES = 18
-    case UPDATE = 20
-    case LOOK_AT = 22
-    case CAMERA = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let MIN_REFRESH_PERIOD: VOffset = 4
+    static let MAX_SESSION_LENGTH: VOffset = 6
+    static let COOKIE: VOffset = 8
+    static let MESSAGE: VOffset = 10
+    static let LINK_NAME: VOffset = 12
+    static let LINK_DESCRIPTION: VOffset = 14
+    static let LINK_SNIPPET: VOffset = 16
+    static let EXPIRES: VOffset = 18
+    static let UPDATE: VOffset = 20
+    static let LOOK_AT: VOffset = 22
+    static let CAMERA: VOffset = 24
   }
 
   ///  Minimum refresh period in seconds
-  public var MIN_REFRESH_PERIOD: Double { let o = _accessor.offset(VTOFFSET.MIN_REFRESH_PERIOD.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MIN_REFRESH_PERIOD: Double { let o = _accessor.offset(VT.MIN_REFRESH_PERIOD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum session length in seconds
-  public var MAX_SESSION_LENGTH: Double { let o = _accessor.offset(VTOFFSET.MAX_SESSION_LENGTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_SESSION_LENGTH: Double { let o = _accessor.offset(VT.MAX_SESSION_LENGTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Cookie
-  public var COOKIE: String? { let o = _accessor.offset(VTOFFSET.COOKIE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COOKIESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COOKIE.v) }
+  public var COOKIE: String? { let o = _accessor.offset(VT.COOKIE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COOKIESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COOKIE) }
   ///  Message to display
-  public var MESSAGE: String? { let o = _accessor.offset(VTOFFSET.MESSAGE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MESSAGE.v) }
+  public var MESSAGE: String? { let o = _accessor.offset(VT.MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE) }
   ///  Link name override
-  public var LINK_NAME: String? { let o = _accessor.offset(VTOFFSET.LINK_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_NAME.v) }
+  public var LINK_NAME: String? { let o = _accessor.offset(VT.LINK_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_NAME) }
   ///  Link description override
-  public var LINK_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LINK_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_DESCRIPTION.v) }
+  public var LINK_DESCRIPTION: String? { let o = _accessor.offset(VT.LINK_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_DESCRIPTION) }
   ///  Link snippet override
-  public var LINK_SNIPPET: String? { let o = _accessor.offset(VTOFFSET.LINK_SNIPPET.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_SNIPPETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_SNIPPET.v) }
+  public var LINK_SNIPPET: String? { let o = _accessor.offset(VT.LINK_SNIPPET); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_SNIPPETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_SNIPPET) }
   ///  Expiration time (ISO 8601)
-  public var EXPIRES: String? { let o = _accessor.offset(VTOFFSET.EXPIRES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EXPIRESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXPIRES.v) }
+  public var EXPIRES: String? { let o = _accessor.offset(VT.EXPIRES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXPIRESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXPIRES) }
   ///  Update
-  public var UPDATE: KMLUpdate? { let o = _accessor.offset(VTOFFSET.UPDATE.v); return o == 0 ? nil : KMLUpdate(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var UPDATE: KMLUpdate? { let o = _accessor.offset(VT.UPDATE); return o == 0 ? nil : KMLUpdate(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  LookAt
-  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VTOFFSET.LOOK_AT.v); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VT.LOOK_AT); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Camera
-  public var CAMERA: KMLCamera? { let o = _accessor.offset(VTOFFSET.CAMERA.v); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CAMERA: KMLCamera? { let o = _accessor.offset(VT.CAMERA); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLNetworkLinkControl(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(MIN_REFRESH_PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_REFRESH_PERIOD, def: 0.0, at: VTOFFSET.MIN_REFRESH_PERIOD.p) }
-  public static func add(MAX_SESSION_LENGTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_SESSION_LENGTH, def: 0.0, at: VTOFFSET.MAX_SESSION_LENGTH.p) }
-  public static func add(COOKIE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COOKIE, at: VTOFFSET.COOKIE.p) }
-  public static func add(MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE, at: VTOFFSET.MESSAGE.p) }
-  public static func add(LINK_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_NAME, at: VTOFFSET.LINK_NAME.p) }
-  public static func add(LINK_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_DESCRIPTION, at: VTOFFSET.LINK_DESCRIPTION.p) }
-  public static func add(LINK_SNIPPET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_SNIPPET, at: VTOFFSET.LINK_SNIPPET.p) }
-  public static func add(EXPIRES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXPIRES, at: VTOFFSET.EXPIRES.p) }
-  public static func add(UPDATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATE, at: VTOFFSET.UPDATE.p) }
-  public static func add(LOOK_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOOK_AT, at: VTOFFSET.LOOK_AT.p) }
-  public static func add(CAMERA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAMERA, at: VTOFFSET.CAMERA.p) }
+  public static func add(MIN_REFRESH_PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_REFRESH_PERIOD, def: 0.0, at: VT.MIN_REFRESH_PERIOD) }
+  public static func add(MAX_SESSION_LENGTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_SESSION_LENGTH, def: 0.0, at: VT.MAX_SESSION_LENGTH) }
+  public static func add(COOKIE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COOKIE, at: VT.COOKIE) }
+  public static func add(MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE, at: VT.MESSAGE) }
+  public static func add(LINK_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_NAME, at: VT.LINK_NAME) }
+  public static func add(LINK_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_DESCRIPTION, at: VT.LINK_DESCRIPTION) }
+  public static func add(LINK_SNIPPET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_SNIPPET, at: VT.LINK_SNIPPET) }
+  public static func add(EXPIRES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXPIRES, at: VT.EXPIRES) }
+  public static func add(UPDATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATE, at: VT.UPDATE) }
+  public static func add(LOOK_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOOK_AT, at: VT.LOOK_AT) }
+  public static func add(CAMERA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAMERA, at: VT.CAMERA) }
   public static func endKMLNetworkLinkControl(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLNetworkLinkControl(
     _ fbb: inout FlatBufferBuilder,
@@ -3211,17 +3127,17 @@ public struct KMLNetworkLinkControl: FlatBufferTable, FlatbuffersVectorInitializ
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.MIN_REFRESH_PERIOD.p, fieldName: "MIN_REFRESH_PERIOD", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_SESSION_LENGTH.p, fieldName: "MAX_SESSION_LENGTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.COOKIE.p, fieldName: "COOKIE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MESSAGE.p, fieldName: "MESSAGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINK_NAME.p, fieldName: "LINK_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINK_DESCRIPTION.p, fieldName: "LINK_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINK_SNIPPET.p, fieldName: "LINK_SNIPPET", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EXPIRES.p, fieldName: "EXPIRES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UPDATE.p, fieldName: "UPDATE", required: false, type: ForwardOffset<KMLUpdate>.self)
-    try _v.visit(field: VTOFFSET.LOOK_AT.p, fieldName: "LOOK_AT", required: false, type: ForwardOffset<KMLLookAt>.self)
-    try _v.visit(field: VTOFFSET.CAMERA.p, fieldName: "CAMERA", required: false, type: ForwardOffset<KMLCamera>.self)
+    try _v.visit(field: VT.MIN_REFRESH_PERIOD, fieldName: "MIN_REFRESH_PERIOD", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_SESSION_LENGTH, fieldName: "MAX_SESSION_LENGTH", required: false, type: Double.self)
+    try _v.visit(field: VT.COOKIE, fieldName: "COOKIE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MESSAGE, fieldName: "MESSAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINK_NAME, fieldName: "LINK_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINK_DESCRIPTION, fieldName: "LINK_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINK_SNIPPET, fieldName: "LINK_SNIPPET", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXPIRES, fieldName: "EXPIRES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UPDATE, fieldName: "UPDATE", required: false, type: ForwardOffset<KMLUpdate>.self)
+    try _v.visit(field: VT.LOOK_AT, fieldName: "LOOK_AT", required: false, type: ForwardOffset<KMLLookAt>.self)
+    try _v.visit(field: VT.CAMERA, fieldName: "CAMERA", required: false, type: ForwardOffset<KMLCamera>.self)
     _v.finish()
   }
 }
@@ -3238,28 +3154,26 @@ public struct KMLFlyTo: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case DURATION = 4
-    case FLY_TO_MODE = 6
-    case LOOK_AT = 8
-    case CAMERA = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let DURATION: VOffset = 4
+    static let FLY_TO_MODE: VOffset = 6
+    static let LOOK_AT: VOffset = 8
+    static let CAMERA: VOffset = 10
   }
 
   ///  Duration in seconds
-  public var DURATION: Double { let o = _accessor.offset(VTOFFSET.DURATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DURATION: Double { let o = _accessor.offset(VT.DURATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Fly-to mode
-  public var FLY_TO_MODE: KMLFlyToMode { let o = _accessor.offset(VTOFFSET.FLY_TO_MODE.v); return o == 0 ? .bounce : KMLFlyToMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bounce }
+  public var FLY_TO_MODE: KMLFlyToMode { let o = _accessor.offset(VT.FLY_TO_MODE); return o == 0 ? .bounce : KMLFlyToMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bounce }
   ///  LookAt viewpoint
-  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VTOFFSET.LOOK_AT.v); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VT.LOOK_AT); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Camera viewpoint
-  public var CAMERA: KMLCamera? { let o = _accessor.offset(VTOFFSET.CAMERA.v); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CAMERA: KMLCamera? { let o = _accessor.offset(VT.CAMERA); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLFlyTo(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION, def: 0.0, at: VTOFFSET.DURATION.p) }
-  public static func add(FLY_TO_MODE: KMLFlyToMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLY_TO_MODE.rawValue, def: 0, at: VTOFFSET.FLY_TO_MODE.p) }
-  public static func add(LOOK_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOOK_AT, at: VTOFFSET.LOOK_AT.p) }
-  public static func add(CAMERA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAMERA, at: VTOFFSET.CAMERA.p) }
+  public static func add(DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION, def: 0.0, at: VT.DURATION) }
+  public static func add(FLY_TO_MODE: KMLFlyToMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLY_TO_MODE.rawValue, def: 0, at: VT.FLY_TO_MODE) }
+  public static func add(LOOK_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOOK_AT, at: VT.LOOK_AT) }
+  public static func add(CAMERA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAMERA, at: VT.CAMERA) }
   public static func endKMLFlyTo(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLFlyTo(
     _ fbb: inout FlatBufferBuilder,
@@ -3278,10 +3192,10 @@ public struct KMLFlyTo: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.DURATION.p, fieldName: "DURATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FLY_TO_MODE.p, fieldName: "FLY_TO_MODE", required: false, type: KMLFlyToMode.self)
-    try _v.visit(field: VTOFFSET.LOOK_AT.p, fieldName: "LOOK_AT", required: false, type: ForwardOffset<KMLLookAt>.self)
-    try _v.visit(field: VTOFFSET.CAMERA.p, fieldName: "CAMERA", required: false, type: ForwardOffset<KMLCamera>.self)
+    try _v.visit(field: VT.DURATION, fieldName: "DURATION", required: false, type: Double.self)
+    try _v.visit(field: VT.FLY_TO_MODE, fieldName: "FLY_TO_MODE", required: false, type: KMLFlyToMode.self)
+    try _v.visit(field: VT.LOOK_AT, fieldName: "LOOK_AT", required: false, type: ForwardOffset<KMLLookAt>.self)
+    try _v.visit(field: VT.CAMERA, fieldName: "CAMERA", required: false, type: ForwardOffset<KMLCamera>.self)
     _v.finish()
   }
 }
@@ -3298,16 +3212,14 @@ public struct KMLWait: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case DURATION = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let DURATION: VOffset = 4
   }
 
   ///  Duration in seconds
-  public var DURATION: Double { let o = _accessor.offset(VTOFFSET.DURATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DURATION: Double { let o = _accessor.offset(VT.DURATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startKMLWait(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION, def: 0.0, at: VTOFFSET.DURATION.p) }
+  public static func add(DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION, def: 0.0, at: VT.DURATION) }
   public static func endKMLWait(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLWait(
     _ fbb: inout FlatBufferBuilder,
@@ -3320,7 +3232,7 @@ public struct KMLWait: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.DURATION.p, fieldName: "DURATION", required: false, type: Double.self)
+    try _v.visit(field: VT.DURATION, fieldName: "DURATION", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -3337,24 +3249,22 @@ public struct KMLAnimatedUpdate: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case DURATION = 4
-    case DELAYED_START = 6
-    case UPDATE = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let DURATION: VOffset = 4
+    static let DELAYED_START: VOffset = 6
+    static let UPDATE: VOffset = 8
   }
 
   ///  Duration in seconds
-  public var DURATION: Double { let o = _accessor.offset(VTOFFSET.DURATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DURATION: Double { let o = _accessor.offset(VT.DURATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Delayed start in seconds
-  public var DELAYED_START: Double { let o = _accessor.offset(VTOFFSET.DELAYED_START.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELAYED_START: Double { let o = _accessor.offset(VT.DELAYED_START); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Update
-  public var UPDATE: KMLUpdate? { let o = _accessor.offset(VTOFFSET.UPDATE.v); return o == 0 ? nil : KMLUpdate(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var UPDATE: KMLUpdate? { let o = _accessor.offset(VT.UPDATE); return o == 0 ? nil : KMLUpdate(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLAnimatedUpdate(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION, def: 0.0, at: VTOFFSET.DURATION.p) }
-  public static func add(DELAYED_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELAYED_START, def: 0.0, at: VTOFFSET.DELAYED_START.p) }
-  public static func add(UPDATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATE, at: VTOFFSET.UPDATE.p) }
+  public static func add(DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION, def: 0.0, at: VT.DURATION) }
+  public static func add(DELAYED_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELAYED_START, def: 0.0, at: VT.DELAYED_START) }
+  public static func add(UPDATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATE, at: VT.UPDATE) }
   public static func endKMLAnimatedUpdate(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLAnimatedUpdate(
     _ fbb: inout FlatBufferBuilder,
@@ -3371,9 +3281,9 @@ public struct KMLAnimatedUpdate: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.DURATION.p, fieldName: "DURATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELAYED_START.p, fieldName: "DELAYED_START", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.UPDATE.p, fieldName: "UPDATE", required: false, type: ForwardOffset<KMLUpdate>.self)
+    try _v.visit(field: VT.DURATION, fieldName: "DURATION", required: false, type: Double.self)
+    try _v.visit(field: VT.DELAYED_START, fieldName: "DELAYED_START", required: false, type: Double.self)
+    try _v.visit(field: VT.UPDATE, fieldName: "UPDATE", required: false, type: ForwardOffset<KMLUpdate>.self)
     _v.finish()
   }
 }
@@ -3390,17 +3300,15 @@ public struct KMLTourControl: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PLAY_MODE = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PLAY_MODE: VOffset = 4
   }
 
   ///  Play mode (pause)
-  public var PLAY_MODE: String? { let o = _accessor.offset(VTOFFSET.PLAY_MODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PLAY_MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PLAY_MODE.v) }
+  public var PLAY_MODE: String? { let o = _accessor.offset(VT.PLAY_MODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PLAY_MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PLAY_MODE) }
   public static func startKMLTourControl(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(PLAY_MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLAY_MODE, at: VTOFFSET.PLAY_MODE.p) }
+  public static func add(PLAY_MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLAY_MODE, at: VT.PLAY_MODE) }
   public static func endKMLTourControl(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLTourControl(
     _ fbb: inout FlatBufferBuilder,
@@ -3413,7 +3321,7 @@ public struct KMLTourControl: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PLAY_MODE.p, fieldName: "PLAY_MODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PLAY_MODE, fieldName: "PLAY_MODE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -3430,21 +3338,19 @@ public struct KMLSoundCue: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case HREF = 4
-    case DELAYED_START = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let HREF: VOffset = 4
+    static let DELAYED_START: VOffset = 6
   }
 
   ///  Audio file URL
-  public var HREF: String? { let o = _accessor.offset(VTOFFSET.HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HREF.v) }
+  public var HREF: String? { let o = _accessor.offset(VT.HREF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HREF) }
   ///  Delayed start in seconds
-  public var DELAYED_START: Double { let o = _accessor.offset(VTOFFSET.DELAYED_START.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELAYED_START: Double { let o = _accessor.offset(VT.DELAYED_START); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startKMLSoundCue(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HREF, at: VTOFFSET.HREF.p) }
-  public static func add(DELAYED_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELAYED_START, def: 0.0, at: VTOFFSET.DELAYED_START.p) }
+  public static func add(HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HREF, at: VT.HREF) }
+  public static func add(DELAYED_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELAYED_START, def: 0.0, at: VT.DELAYED_START) }
   public static func endKMLSoundCue(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLSoundCue(
     _ fbb: inout FlatBufferBuilder,
@@ -3459,8 +3365,8 @@ public struct KMLSoundCue: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.HREF.p, fieldName: "HREF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DELAYED_START.p, fieldName: "DELAYED_START", required: false, type: Double.self)
+    try _v.visit(field: VT.HREF, fieldName: "HREF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DELAYED_START, fieldName: "DELAYED_START", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -3477,32 +3383,30 @@ public struct KMLTourPrimitive: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case FLY_TO = 4
-    case WAIT = 6
-    case ANIMATED_UPDATE = 8
-    case TOUR_CONTROL = 10
-    case SOUND_CUE = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let FLY_TO: VOffset = 4
+    static let WAIT: VOffset = 6
+    static let ANIMATED_UPDATE: VOffset = 8
+    static let TOUR_CONTROL: VOffset = 10
+    static let SOUND_CUE: VOffset = 12
   }
 
   ///  FlyTo
-  public var FLY_TO: KMLFlyTo? { let o = _accessor.offset(VTOFFSET.FLY_TO.v); return o == 0 ? nil : KMLFlyTo(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var FLY_TO: KMLFlyTo? { let o = _accessor.offset(VT.FLY_TO); return o == 0 ? nil : KMLFlyTo(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Wait
-  public var WAIT: KMLWait? { let o = _accessor.offset(VTOFFSET.WAIT.v); return o == 0 ? nil : KMLWait(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var WAIT: KMLWait? { let o = _accessor.offset(VT.WAIT); return o == 0 ? nil : KMLWait(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  AnimatedUpdate
-  public var ANIMATED_UPDATE: KMLAnimatedUpdate? { let o = _accessor.offset(VTOFFSET.ANIMATED_UPDATE.v); return o == 0 ? nil : KMLAnimatedUpdate(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ANIMATED_UPDATE: KMLAnimatedUpdate? { let o = _accessor.offset(VT.ANIMATED_UPDATE); return o == 0 ? nil : KMLAnimatedUpdate(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  TourControl
-  public var TOUR_CONTROL: KMLTourControl? { let o = _accessor.offset(VTOFFSET.TOUR_CONTROL.v); return o == 0 ? nil : KMLTourControl(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TOUR_CONTROL: KMLTourControl? { let o = _accessor.offset(VT.TOUR_CONTROL); return o == 0 ? nil : KMLTourControl(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  SoundCue
-  public var SOUND_CUE: KMLSoundCue? { let o = _accessor.offset(VTOFFSET.SOUND_CUE.v); return o == 0 ? nil : KMLSoundCue(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SOUND_CUE: KMLSoundCue? { let o = _accessor.offset(VT.SOUND_CUE); return o == 0 ? nil : KMLSoundCue(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLTourPrimitive(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(FLY_TO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLY_TO, at: VTOFFSET.FLY_TO.p) }
-  public static func add(WAIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WAIT, at: VTOFFSET.WAIT.p) }
-  public static func add(ANIMATED_UPDATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANIMATED_UPDATE, at: VTOFFSET.ANIMATED_UPDATE.p) }
-  public static func add(TOUR_CONTROL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOUR_CONTROL, at: VTOFFSET.TOUR_CONTROL.p) }
-  public static func add(SOUND_CUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOUND_CUE, at: VTOFFSET.SOUND_CUE.p) }
+  public static func add(FLY_TO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLY_TO, at: VT.FLY_TO) }
+  public static func add(WAIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WAIT, at: VT.WAIT) }
+  public static func add(ANIMATED_UPDATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANIMATED_UPDATE, at: VT.ANIMATED_UPDATE) }
+  public static func add(TOUR_CONTROL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOUR_CONTROL, at: VT.TOUR_CONTROL) }
+  public static func add(SOUND_CUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOUND_CUE, at: VT.SOUND_CUE) }
   public static func endKMLTourPrimitive(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLTourPrimitive(
     _ fbb: inout FlatBufferBuilder,
@@ -3523,11 +3427,11 @@ public struct KMLTourPrimitive: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.FLY_TO.p, fieldName: "FLY_TO", required: false, type: ForwardOffset<KMLFlyTo>.self)
-    try _v.visit(field: VTOFFSET.WAIT.p, fieldName: "WAIT", required: false, type: ForwardOffset<KMLWait>.self)
-    try _v.visit(field: VTOFFSET.ANIMATED_UPDATE.p, fieldName: "ANIMATED_UPDATE", required: false, type: ForwardOffset<KMLAnimatedUpdate>.self)
-    try _v.visit(field: VTOFFSET.TOUR_CONTROL.p, fieldName: "TOUR_CONTROL", required: false, type: ForwardOffset<KMLTourControl>.self)
-    try _v.visit(field: VTOFFSET.SOUND_CUE.p, fieldName: "SOUND_CUE", required: false, type: ForwardOffset<KMLSoundCue>.self)
+    try _v.visit(field: VT.FLY_TO, fieldName: "FLY_TO", required: false, type: ForwardOffset<KMLFlyTo>.self)
+    try _v.visit(field: VT.WAIT, fieldName: "WAIT", required: false, type: ForwardOffset<KMLWait>.self)
+    try _v.visit(field: VT.ANIMATED_UPDATE, fieldName: "ANIMATED_UPDATE", required: false, type: ForwardOffset<KMLAnimatedUpdate>.self)
+    try _v.visit(field: VT.TOUR_CONTROL, fieldName: "TOUR_CONTROL", required: false, type: ForwardOffset<KMLTourControl>.self)
+    try _v.visit(field: VT.SOUND_CUE, fieldName: "SOUND_CUE", required: false, type: ForwardOffset<KMLSoundCue>.self)
     _v.finish()
   }
 }
@@ -3544,16 +3448,14 @@ public struct KMLPlaylist: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PRIMITIVES = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PRIMITIVES: VOffset = 4
   }
 
   ///  Tour primitives
-  public var PRIMITIVES: FlatbufferVector<KMLTourPrimitive> { return _accessor.vector(at: VTOFFSET.PRIMITIVES.v, byteSize: 4) }
+  public var PRIMITIVES: FlatbufferVector<KMLTourPrimitive> { return _accessor.vector(at: VT.PRIMITIVES, byteSize: 4) }
   public static func startKMLPlaylist(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func addVectorOf(PRIMITIVES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIMITIVES, at: VTOFFSET.PRIMITIVES.p) }
+  public static func addVectorOf(PRIMITIVES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIMITIVES, at: VT.PRIMITIVES) }
   public static func endKMLPlaylist(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLPlaylist(
     _ fbb: inout FlatBufferBuilder,
@@ -3566,7 +3468,7 @@ public struct KMLPlaylist: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PRIMITIVES.p, fieldName: "PRIMITIVES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLTourPrimitive>, KMLTourPrimitive>>.self)
+    try _v.visit(field: VT.PRIMITIVES, fieldName: "PRIMITIVES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLTourPrimitive>, KMLTourPrimitive>>.self)
     _v.finish()
   }
 }
@@ -3583,31 +3485,29 @@ public struct KMLTour: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case DESCRIPTION = 6
-    case VISIBILITY = 8
-    case PLAYLIST = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let DESCRIPTION: VOffset = 6
+    static let VISIBILITY: VOffset = 8
+    static let PLAYLIST: VOffset = 10
   }
 
   ///  Tour name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Description
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Visibility
-  public var VISIBILITY: Bool { let o = _accessor.offset(VTOFFSET.VISIBILITY.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var VISIBILITY: Bool { let o = _accessor.offset(VT.VISIBILITY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Playlist
-  public var PLAYLIST: KMLPlaylist? { let o = _accessor.offset(VTOFFSET.PLAYLIST.v); return o == 0 ? nil : KMLPlaylist(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PLAYLIST: KMLPlaylist? { let o = _accessor.offset(VT.PLAYLIST); return o == 0 ? nil : KMLPlaylist(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLTour(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
   public static func add(VISIBILITY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISIBILITY, def: false,
-   at: VTOFFSET.VISIBILITY.p) }
-  public static func add(PLAYLIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLAYLIST, at: VTOFFSET.PLAYLIST.p) }
+   at: VT.VISIBILITY) }
+  public static func add(PLAYLIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLAYLIST, at: VT.PLAYLIST) }
   public static func endKMLTour(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLTour(
     _ fbb: inout FlatBufferBuilder,
@@ -3626,10 +3526,10 @@ public struct KMLTour: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VISIBILITY.p, fieldName: "VISIBILITY", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.PLAYLIST.p, fieldName: "PLAYLIST", required: false, type: ForwardOffset<KMLPlaylist>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VISIBILITY, fieldName: "VISIBILITY", required: false, type: Bool.self)
+    try _v.visit(field: VT.PLAYLIST, fieldName: "PLAYLIST", required: false, type: ForwardOffset<KMLPlaylist>.self)
     _v.finish()
   }
 }
@@ -3646,115 +3546,113 @@ public struct KMLPlacemark: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case DESCRIPTION = 6
-    case VISIBILITY = 8
-    case STYLE_URL = 10
-    case STYLE = 12
-    case SNIPPET = 14
-    case OPEN = 16
-    case ADDRESS = 18
-    case POINT = 20
-    case LINE_STRING = 22
-    case POLYGON = 24
-    case LINEAR_RING = 26
-    case MULTI_GEOMETRY = 28
-    case MODEL = 30
-    case TRACK = 32
-    case MULTI_TRACK = 34
-    case LOOK_AT = 36
-    case CAMERA = 38
-    case TIME_SPAN = 40
-    case TIME_STAMP = 42
-    case EXTENDED_DATA = 44
-    case SCHEMA_DATA = 46
-    case REGION = 48
-    case STYLE_MAP = 50
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let DESCRIPTION: VOffset = 6
+    static let VISIBILITY: VOffset = 8
+    static let STYLE_URL: VOffset = 10
+    static let STYLE: VOffset = 12
+    static let SNIPPET: VOffset = 14
+    static let OPEN: VOffset = 16
+    static let ADDRESS: VOffset = 18
+    static let POINT: VOffset = 20
+    static let LINE_STRING: VOffset = 22
+    static let POLYGON: VOffset = 24
+    static let LINEAR_RING: VOffset = 26
+    static let MULTI_GEOMETRY: VOffset = 28
+    static let MODEL: VOffset = 30
+    static let TRACK: VOffset = 32
+    static let MULTI_TRACK: VOffset = 34
+    static let LOOK_AT: VOffset = 36
+    static let CAMERA: VOffset = 38
+    static let TIME_SPAN: VOffset = 40
+    static let TIME_STAMP: VOffset = 42
+    static let EXTENDED_DATA: VOffset = 44
+    static let SCHEMA_DATA: VOffset = 46
+    static let REGION: VOffset = 48
+    static let STYLE_MAP: VOffset = 50
   }
 
   ///  Placemark name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Description (may contain HTML)
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Visibility flag
-  public var VISIBILITY: Bool { let o = _accessor.offset(VTOFFSET.VISIBILITY.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var VISIBILITY: Bool { let o = _accessor.offset(VT.VISIBILITY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Style URL reference
-  public var STYLE_URL: String? { let o = _accessor.offset(VTOFFSET.STYLE_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STYLE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STYLE_URL.v) }
+  public var STYLE_URL: String? { let o = _accessor.offset(VT.STYLE_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STYLE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STYLE_URL) }
   ///  Inline style
-  public var STYLE: KMLStyle? { let o = _accessor.offset(VTOFFSET.STYLE.v); return o == 0 ? nil : KMLStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var STYLE: KMLStyle? { let o = _accessor.offset(VT.STYLE); return o == 0 ? nil : KMLStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Snippet (short description)
-  public var SNIPPET: String? { let o = _accessor.offset(VTOFFSET.SNIPPET.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SNIPPETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SNIPPET.v) }
+  public var SNIPPET: String? { let o = _accessor.offset(VT.SNIPPET); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SNIPPETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SNIPPET) }
   ///  Whether open in tree view
-  public var OPEN: Bool { let o = _accessor.offset(VTOFFSET.OPEN.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OPEN: Bool { let o = _accessor.offset(VT.OPEN); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Address
-  public var ADDRESS: String? { let o = _accessor.offset(VTOFFSET.ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADDRESS.v) }
+  public var ADDRESS: String? { let o = _accessor.offset(VT.ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ADDRESS) }
   ///  Point geometry
-  public var POINT: KMLPoint? { let o = _accessor.offset(VTOFFSET.POINT.v); return o == 0 ? nil : KMLPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POINT: KMLPoint? { let o = _accessor.offset(VT.POINT); return o == 0 ? nil : KMLPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  LineString geometry
-  public var LINE_STRING: KMLLineString? { let o = _accessor.offset(VTOFFSET.LINE_STRING.v); return o == 0 ? nil : KMLLineString(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LINE_STRING: KMLLineString? { let o = _accessor.offset(VT.LINE_STRING); return o == 0 ? nil : KMLLineString(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Polygon geometry
-  public var POLYGON: KMLPolygon? { let o = _accessor.offset(VTOFFSET.POLYGON.v); return o == 0 ? nil : KMLPolygon(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POLYGON: KMLPolygon? { let o = _accessor.offset(VT.POLYGON); return o == 0 ? nil : KMLPolygon(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  LinearRing geometry (standalone)
-  public var LINEAR_RING: KMLLinearRing? { let o = _accessor.offset(VTOFFSET.LINEAR_RING.v); return o == 0 ? nil : KMLLinearRing(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LINEAR_RING: KMLLinearRing? { let o = _accessor.offset(VT.LINEAR_RING); return o == 0 ? nil : KMLLinearRing(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  MultiGeometry
-  public var MULTI_GEOMETRY: KMLMultiGeometry? { let o = _accessor.offset(VTOFFSET.MULTI_GEOMETRY.v); return o == 0 ? nil : KMLMultiGeometry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MULTI_GEOMETRY: KMLMultiGeometry? { let o = _accessor.offset(VT.MULTI_GEOMETRY); return o == 0 ? nil : KMLMultiGeometry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  3D Model
-  public var MODEL: KMLModel? { let o = _accessor.offset(VTOFFSET.MODEL.v); return o == 0 ? nil : KMLModel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MODEL: KMLModel? { let o = _accessor.offset(VT.MODEL); return o == 0 ? nil : KMLModel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  gx:Track
-  public var TRACK: KMLTrack? { let o = _accessor.offset(VTOFFSET.TRACK.v); return o == 0 ? nil : KMLTrack(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TRACK: KMLTrack? { let o = _accessor.offset(VT.TRACK); return o == 0 ? nil : KMLTrack(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  gx:MultiTrack
-  public var MULTI_TRACK: KMLMultiTrack? { let o = _accessor.offset(VTOFFSET.MULTI_TRACK.v); return o == 0 ? nil : KMLMultiTrack(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MULTI_TRACK: KMLMultiTrack? { let o = _accessor.offset(VT.MULTI_TRACK); return o == 0 ? nil : KMLMultiTrack(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  LookAt viewpoint
-  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VTOFFSET.LOOK_AT.v); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VT.LOOK_AT); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Camera viewpoint
-  public var CAMERA: KMLCamera? { let o = _accessor.offset(VTOFFSET.CAMERA.v); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CAMERA: KMLCamera? { let o = _accessor.offset(VT.CAMERA); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  TimeSpan
-  public var TIME_SPAN: KMLTimeSpan? { let o = _accessor.offset(VTOFFSET.TIME_SPAN.v); return o == 0 ? nil : KMLTimeSpan(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TIME_SPAN: KMLTimeSpan? { let o = _accessor.offset(VT.TIME_SPAN); return o == 0 ? nil : KMLTimeSpan(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  TimeStamp
-  public var TIME_STAMP: KMLTimeStamp? { let o = _accessor.offset(VTOFFSET.TIME_STAMP.v); return o == 0 ? nil : KMLTimeStamp(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TIME_STAMP: KMLTimeStamp? { let o = _accessor.offset(VT.TIME_STAMP); return o == 0 ? nil : KMLTimeStamp(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Extended data
-  public var EXTENDED_DATA: FlatbufferVector<KMLData> { return _accessor.vector(at: VTOFFSET.EXTENDED_DATA.v, byteSize: 4) }
+  public var EXTENDED_DATA: FlatbufferVector<KMLData> { return _accessor.vector(at: VT.EXTENDED_DATA, byteSize: 4) }
   ///  Schema data
-  public var SCHEMA_DATA: KMLSchemaData? { let o = _accessor.offset(VTOFFSET.SCHEMA_DATA.v); return o == 0 ? nil : KMLSchemaData(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SCHEMA_DATA: KMLSchemaData? { let o = _accessor.offset(VT.SCHEMA_DATA); return o == 0 ? nil : KMLSchemaData(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Region
-  public var REGION: KMLRegion? { let o = _accessor.offset(VTOFFSET.REGION.v); return o == 0 ? nil : KMLRegion(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var REGION: KMLRegion? { let o = _accessor.offset(VT.REGION); return o == 0 ? nil : KMLRegion(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  StyleMap (inline)
-  public var STYLE_MAP: KMLStyleMap? { let o = _accessor.offset(VTOFFSET.STYLE_MAP.v); return o == 0 ? nil : KMLStyleMap(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var STYLE_MAP: KMLStyleMap? { let o = _accessor.offset(VT.STYLE_MAP); return o == 0 ? nil : KMLStyleMap(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLPlacemark(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
   public static func add(VISIBILITY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISIBILITY, def: false,
-   at: VTOFFSET.VISIBILITY.p) }
-  public static func add(STYLE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_URL, at: VTOFFSET.STYLE_URL.p) }
-  public static func add(STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE, at: VTOFFSET.STYLE.p) }
-  public static func add(SNIPPET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SNIPPET, at: VTOFFSET.SNIPPET.p) }
+   at: VT.VISIBILITY) }
+  public static func add(STYLE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_URL, at: VT.STYLE_URL) }
+  public static func add(STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE, at: VT.STYLE) }
+  public static func add(SNIPPET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SNIPPET, at: VT.SNIPPET) }
   public static func add(OPEN: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPEN, def: false,
-   at: VTOFFSET.OPEN.p) }
-  public static func add(ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS, at: VTOFFSET.ADDRESS.p) }
-  public static func add(POINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINT, at: VTOFFSET.POINT.p) }
-  public static func add(LINE_STRING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE_STRING, at: VTOFFSET.LINE_STRING.p) }
-  public static func add(POLYGON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGON, at: VTOFFSET.POLYGON.p) }
-  public static func add(LINEAR_RING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINEAR_RING, at: VTOFFSET.LINEAR_RING.p) }
-  public static func add(MULTI_GEOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTI_GEOMETRY, at: VTOFFSET.MULTI_GEOMETRY.p) }
-  public static func add(MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL, at: VTOFFSET.MODEL.p) }
-  public static func add(TRACK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACK, at: VTOFFSET.TRACK.p) }
-  public static func add(MULTI_TRACK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTI_TRACK, at: VTOFFSET.MULTI_TRACK.p) }
-  public static func add(LOOK_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOOK_AT, at: VTOFFSET.LOOK_AT.p) }
-  public static func add(CAMERA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAMERA, at: VTOFFSET.CAMERA.p) }
-  public static func add(TIME_SPAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SPAN, at: VTOFFSET.TIME_SPAN.p) }
-  public static func add(TIME_STAMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_STAMP, at: VTOFFSET.TIME_STAMP.p) }
-  public static func addVectorOf(EXTENDED_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTENDED_DATA, at: VTOFFSET.EXTENDED_DATA.p) }
-  public static func add(SCHEMA_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_DATA, at: VTOFFSET.SCHEMA_DATA.p) }
-  public static func add(REGION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION, at: VTOFFSET.REGION.p) }
-  public static func add(STYLE_MAP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_MAP, at: VTOFFSET.STYLE_MAP.p) }
+   at: VT.OPEN) }
+  public static func add(ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS, at: VT.ADDRESS) }
+  public static func add(POINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINT, at: VT.POINT) }
+  public static func add(LINE_STRING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE_STRING, at: VT.LINE_STRING) }
+  public static func add(POLYGON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGON, at: VT.POLYGON) }
+  public static func add(LINEAR_RING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINEAR_RING, at: VT.LINEAR_RING) }
+  public static func add(MULTI_GEOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTI_GEOMETRY, at: VT.MULTI_GEOMETRY) }
+  public static func add(MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL, at: VT.MODEL) }
+  public static func add(TRACK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACK, at: VT.TRACK) }
+  public static func add(MULTI_TRACK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTI_TRACK, at: VT.MULTI_TRACK) }
+  public static func add(LOOK_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOOK_AT, at: VT.LOOK_AT) }
+  public static func add(CAMERA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAMERA, at: VT.CAMERA) }
+  public static func add(TIME_SPAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SPAN, at: VT.TIME_SPAN) }
+  public static func add(TIME_STAMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_STAMP, at: VT.TIME_STAMP) }
+  public static func addVectorOf(EXTENDED_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTENDED_DATA, at: VT.EXTENDED_DATA) }
+  public static func add(SCHEMA_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_DATA, at: VT.SCHEMA_DATA) }
+  public static func add(REGION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION, at: VT.REGION) }
+  public static func add(STYLE_MAP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_MAP, at: VT.STYLE_MAP) }
   public static func endKMLPlacemark(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLPlacemark(
     _ fbb: inout FlatBufferBuilder,
@@ -3813,30 +3711,30 @@ public struct KMLPlacemark: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VISIBILITY.p, fieldName: "VISIBILITY", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.STYLE_URL.p, fieldName: "STYLE_URL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STYLE.p, fieldName: "STYLE", required: false, type: ForwardOffset<KMLStyle>.self)
-    try _v.visit(field: VTOFFSET.SNIPPET.p, fieldName: "SNIPPET", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OPEN.p, fieldName: "OPEN", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.ADDRESS.p, fieldName: "ADDRESS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.POINT.p, fieldName: "POINT", required: false, type: ForwardOffset<KMLPoint>.self)
-    try _v.visit(field: VTOFFSET.LINE_STRING.p, fieldName: "LINE_STRING", required: false, type: ForwardOffset<KMLLineString>.self)
-    try _v.visit(field: VTOFFSET.POLYGON.p, fieldName: "POLYGON", required: false, type: ForwardOffset<KMLPolygon>.self)
-    try _v.visit(field: VTOFFSET.LINEAR_RING.p, fieldName: "LINEAR_RING", required: false, type: ForwardOffset<KMLLinearRing>.self)
-    try _v.visit(field: VTOFFSET.MULTI_GEOMETRY.p, fieldName: "MULTI_GEOMETRY", required: false, type: ForwardOffset<KMLMultiGeometry>.self)
-    try _v.visit(field: VTOFFSET.MODEL.p, fieldName: "MODEL", required: false, type: ForwardOffset<KMLModel>.self)
-    try _v.visit(field: VTOFFSET.TRACK.p, fieldName: "TRACK", required: false, type: ForwardOffset<KMLTrack>.self)
-    try _v.visit(field: VTOFFSET.MULTI_TRACK.p, fieldName: "MULTI_TRACK", required: false, type: ForwardOffset<KMLMultiTrack>.self)
-    try _v.visit(field: VTOFFSET.LOOK_AT.p, fieldName: "LOOK_AT", required: false, type: ForwardOffset<KMLLookAt>.self)
-    try _v.visit(field: VTOFFSET.CAMERA.p, fieldName: "CAMERA", required: false, type: ForwardOffset<KMLCamera>.self)
-    try _v.visit(field: VTOFFSET.TIME_SPAN.p, fieldName: "TIME_SPAN", required: false, type: ForwardOffset<KMLTimeSpan>.self)
-    try _v.visit(field: VTOFFSET.TIME_STAMP.p, fieldName: "TIME_STAMP", required: false, type: ForwardOffset<KMLTimeStamp>.self)
-    try _v.visit(field: VTOFFSET.EXTENDED_DATA.p, fieldName: "EXTENDED_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLData>, KMLData>>.self)
-    try _v.visit(field: VTOFFSET.SCHEMA_DATA.p, fieldName: "SCHEMA_DATA", required: false, type: ForwardOffset<KMLSchemaData>.self)
-    try _v.visit(field: VTOFFSET.REGION.p, fieldName: "REGION", required: false, type: ForwardOffset<KMLRegion>.self)
-    try _v.visit(field: VTOFFSET.STYLE_MAP.p, fieldName: "STYLE_MAP", required: false, type: ForwardOffset<KMLStyleMap>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VISIBILITY, fieldName: "VISIBILITY", required: false, type: Bool.self)
+    try _v.visit(field: VT.STYLE_URL, fieldName: "STYLE_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STYLE, fieldName: "STYLE", required: false, type: ForwardOffset<KMLStyle>.self)
+    try _v.visit(field: VT.SNIPPET, fieldName: "SNIPPET", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OPEN, fieldName: "OPEN", required: false, type: Bool.self)
+    try _v.visit(field: VT.ADDRESS, fieldName: "ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POINT, fieldName: "POINT", required: false, type: ForwardOffset<KMLPoint>.self)
+    try _v.visit(field: VT.LINE_STRING, fieldName: "LINE_STRING", required: false, type: ForwardOffset<KMLLineString>.self)
+    try _v.visit(field: VT.POLYGON, fieldName: "POLYGON", required: false, type: ForwardOffset<KMLPolygon>.self)
+    try _v.visit(field: VT.LINEAR_RING, fieldName: "LINEAR_RING", required: false, type: ForwardOffset<KMLLinearRing>.self)
+    try _v.visit(field: VT.MULTI_GEOMETRY, fieldName: "MULTI_GEOMETRY", required: false, type: ForwardOffset<KMLMultiGeometry>.self)
+    try _v.visit(field: VT.MODEL, fieldName: "MODEL", required: false, type: ForwardOffset<KMLModel>.self)
+    try _v.visit(field: VT.TRACK, fieldName: "TRACK", required: false, type: ForwardOffset<KMLTrack>.self)
+    try _v.visit(field: VT.MULTI_TRACK, fieldName: "MULTI_TRACK", required: false, type: ForwardOffset<KMLMultiTrack>.self)
+    try _v.visit(field: VT.LOOK_AT, fieldName: "LOOK_AT", required: false, type: ForwardOffset<KMLLookAt>.self)
+    try _v.visit(field: VT.CAMERA, fieldName: "CAMERA", required: false, type: ForwardOffset<KMLCamera>.self)
+    try _v.visit(field: VT.TIME_SPAN, fieldName: "TIME_SPAN", required: false, type: ForwardOffset<KMLTimeSpan>.self)
+    try _v.visit(field: VT.TIME_STAMP, fieldName: "TIME_STAMP", required: false, type: ForwardOffset<KMLTimeStamp>.self)
+    try _v.visit(field: VT.EXTENDED_DATA, fieldName: "EXTENDED_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLData>, KMLData>>.self)
+    try _v.visit(field: VT.SCHEMA_DATA, fieldName: "SCHEMA_DATA", required: false, type: ForwardOffset<KMLSchemaData>.self)
+    try _v.visit(field: VT.REGION, fieldName: "REGION", required: false, type: ForwardOffset<KMLRegion>.self)
+    try _v.visit(field: VT.STYLE_MAP, fieldName: "STYLE_MAP", required: false, type: ForwardOffset<KMLStyleMap>.self)
     _v.finish()
   }
 }
@@ -3853,97 +3751,95 @@ public struct KMLFolder: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case DESCRIPTION = 6
-    case VISIBILITY = 8
-    case OPEN = 10
-    case PLACEMARKS = 12
-    case FOLDERS = 14
-    case NETWORK_LINKS = 16
-    case GROUND_OVERLAYS = 18
-    case STYLES = 20
-    case STYLE_MAPS = 22
-    case SCREEN_OVERLAYS = 24
-    case PHOTO_OVERLAYS = 26
-    case TOURS = 28
-    case STYLE_URL = 30
-    case REGION = 32
-    case EXTENDED_DATA = 34
-    case LOOK_AT = 36
-    case CAMERA = 38
-    case TIME_SPAN = 40
-    case TIME_STAMP = 42
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let DESCRIPTION: VOffset = 6
+    static let VISIBILITY: VOffset = 8
+    static let OPEN: VOffset = 10
+    static let PLACEMARKS: VOffset = 12
+    static let FOLDERS: VOffset = 14
+    static let NETWORK_LINKS: VOffset = 16
+    static let GROUND_OVERLAYS: VOffset = 18
+    static let STYLES: VOffset = 20
+    static let STYLE_MAPS: VOffset = 22
+    static let SCREEN_OVERLAYS: VOffset = 24
+    static let PHOTO_OVERLAYS: VOffset = 26
+    static let TOURS: VOffset = 28
+    static let STYLE_URL: VOffset = 30
+    static let REGION: VOffset = 32
+    static let EXTENDED_DATA: VOffset = 34
+    static let LOOK_AT: VOffset = 36
+    static let CAMERA: VOffset = 38
+    static let TIME_SPAN: VOffset = 40
+    static let TIME_STAMP: VOffset = 42
   }
 
   ///  Folder name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Description
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Visibility flag
-  public var VISIBILITY: Bool { let o = _accessor.offset(VTOFFSET.VISIBILITY.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var VISIBILITY: Bool { let o = _accessor.offset(VT.VISIBILITY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether folder is open in tree view
-  public var OPEN: Bool { let o = _accessor.offset(VTOFFSET.OPEN.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OPEN: Bool { let o = _accessor.offset(VT.OPEN); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Placemarks in this folder
-  public var PLACEMARKS: FlatbufferVector<KMLPlacemark> { return _accessor.vector(at: VTOFFSET.PLACEMARKS.v, byteSize: 4) }
+  public var PLACEMARKS: FlatbufferVector<KMLPlacemark> { return _accessor.vector(at: VT.PLACEMARKS, byteSize: 4) }
   ///  Sub-folders
-  public var FOLDERS: FlatbufferVector<KMLFolder> { return _accessor.vector(at: VTOFFSET.FOLDERS.v, byteSize: 4) }
+  public var FOLDERS: FlatbufferVector<KMLFolder> { return _accessor.vector(at: VT.FOLDERS, byteSize: 4) }
   ///  Network links
-  public var NETWORK_LINKS: FlatbufferVector<KMLNetworkLink> { return _accessor.vector(at: VTOFFSET.NETWORK_LINKS.v, byteSize: 4) }
+  public var NETWORK_LINKS: FlatbufferVector<KMLNetworkLink> { return _accessor.vector(at: VT.NETWORK_LINKS, byteSize: 4) }
   ///  Ground overlays
-  public var GROUND_OVERLAYS: FlatbufferVector<KMLGroundOverlay> { return _accessor.vector(at: VTOFFSET.GROUND_OVERLAYS.v, byteSize: 4) }
+  public var GROUND_OVERLAYS: FlatbufferVector<KMLGroundOverlay> { return _accessor.vector(at: VT.GROUND_OVERLAYS, byteSize: 4) }
   ///  Shared styles
-  public var STYLES: FlatbufferVector<KMLStyle> { return _accessor.vector(at: VTOFFSET.STYLES.v, byteSize: 4) }
+  public var STYLES: FlatbufferVector<KMLStyle> { return _accessor.vector(at: VT.STYLES, byteSize: 4) }
   ///  Style maps
-  public var STYLE_MAPS: FlatbufferVector<KMLStyleMap> { return _accessor.vector(at: VTOFFSET.STYLE_MAPS.v, byteSize: 4) }
+  public var STYLE_MAPS: FlatbufferVector<KMLStyleMap> { return _accessor.vector(at: VT.STYLE_MAPS, byteSize: 4) }
   ///  Screen overlays
-  public var SCREEN_OVERLAYS: FlatbufferVector<KMLScreenOverlay> { return _accessor.vector(at: VTOFFSET.SCREEN_OVERLAYS.v, byteSize: 4) }
+  public var SCREEN_OVERLAYS: FlatbufferVector<KMLScreenOverlay> { return _accessor.vector(at: VT.SCREEN_OVERLAYS, byteSize: 4) }
   ///  Photo overlays
-  public var PHOTO_OVERLAYS: FlatbufferVector<KMLPhotoOverlay> { return _accessor.vector(at: VTOFFSET.PHOTO_OVERLAYS.v, byteSize: 4) }
+  public var PHOTO_OVERLAYS: FlatbufferVector<KMLPhotoOverlay> { return _accessor.vector(at: VT.PHOTO_OVERLAYS, byteSize: 4) }
   ///  Tours
-  public var TOURS: FlatbufferVector<KMLTour> { return _accessor.vector(at: VTOFFSET.TOURS.v, byteSize: 4) }
+  public var TOURS: FlatbufferVector<KMLTour> { return _accessor.vector(at: VT.TOURS, byteSize: 4) }
   ///  Style URL reference
-  public var STYLE_URL: String? { let o = _accessor.offset(VTOFFSET.STYLE_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STYLE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STYLE_URL.v) }
+  public var STYLE_URL: String? { let o = _accessor.offset(VT.STYLE_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STYLE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STYLE_URL) }
   ///  Region
-  public var REGION: KMLRegion? { let o = _accessor.offset(VTOFFSET.REGION.v); return o == 0 ? nil : KMLRegion(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var REGION: KMLRegion? { let o = _accessor.offset(VT.REGION); return o == 0 ? nil : KMLRegion(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Extended data
-  public var EXTENDED_DATA: FlatbufferVector<KMLData> { return _accessor.vector(at: VTOFFSET.EXTENDED_DATA.v, byteSize: 4) }
+  public var EXTENDED_DATA: FlatbufferVector<KMLData> { return _accessor.vector(at: VT.EXTENDED_DATA, byteSize: 4) }
   ///  LookAt viewpoint
-  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VTOFFSET.LOOK_AT.v); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VT.LOOK_AT); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Camera viewpoint
-  public var CAMERA: KMLCamera? { let o = _accessor.offset(VTOFFSET.CAMERA.v); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CAMERA: KMLCamera? { let o = _accessor.offset(VT.CAMERA); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  TimeSpan
-  public var TIME_SPAN: KMLTimeSpan? { let o = _accessor.offset(VTOFFSET.TIME_SPAN.v); return o == 0 ? nil : KMLTimeSpan(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TIME_SPAN: KMLTimeSpan? { let o = _accessor.offset(VT.TIME_SPAN); return o == 0 ? nil : KMLTimeSpan(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  TimeStamp
-  public var TIME_STAMP: KMLTimeStamp? { let o = _accessor.offset(VTOFFSET.TIME_STAMP.v); return o == 0 ? nil : KMLTimeStamp(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TIME_STAMP: KMLTimeStamp? { let o = _accessor.offset(VT.TIME_STAMP); return o == 0 ? nil : KMLTimeStamp(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLFolder(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
   public static func add(VISIBILITY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISIBILITY, def: false,
-   at: VTOFFSET.VISIBILITY.p) }
+   at: VT.VISIBILITY) }
   public static func add(OPEN: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPEN, def: false,
-   at: VTOFFSET.OPEN.p) }
-  public static func addVectorOf(PLACEMARKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLACEMARKS, at: VTOFFSET.PLACEMARKS.p) }
-  public static func addVectorOf(FOLDERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FOLDERS, at: VTOFFSET.FOLDERS.p) }
-  public static func addVectorOf(NETWORK_LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NETWORK_LINKS, at: VTOFFSET.NETWORK_LINKS.p) }
-  public static func addVectorOf(GROUND_OVERLAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUND_OVERLAYS, at: VTOFFSET.GROUND_OVERLAYS.p) }
-  public static func addVectorOf(STYLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLES, at: VTOFFSET.STYLES.p) }
-  public static func addVectorOf(STYLE_MAPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_MAPS, at: VTOFFSET.STYLE_MAPS.p) }
-  public static func addVectorOf(SCREEN_OVERLAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCREEN_OVERLAYS, at: VTOFFSET.SCREEN_OVERLAYS.p) }
-  public static func addVectorOf(PHOTO_OVERLAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHOTO_OVERLAYS, at: VTOFFSET.PHOTO_OVERLAYS.p) }
-  public static func addVectorOf(TOURS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOURS, at: VTOFFSET.TOURS.p) }
-  public static func add(STYLE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_URL, at: VTOFFSET.STYLE_URL.p) }
-  public static func add(REGION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION, at: VTOFFSET.REGION.p) }
-  public static func addVectorOf(EXTENDED_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTENDED_DATA, at: VTOFFSET.EXTENDED_DATA.p) }
-  public static func add(LOOK_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOOK_AT, at: VTOFFSET.LOOK_AT.p) }
-  public static func add(CAMERA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAMERA, at: VTOFFSET.CAMERA.p) }
-  public static func add(TIME_SPAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SPAN, at: VTOFFSET.TIME_SPAN.p) }
-  public static func add(TIME_STAMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_STAMP, at: VTOFFSET.TIME_STAMP.p) }
+   at: VT.OPEN) }
+  public static func addVectorOf(PLACEMARKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLACEMARKS, at: VT.PLACEMARKS) }
+  public static func addVectorOf(FOLDERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FOLDERS, at: VT.FOLDERS) }
+  public static func addVectorOf(NETWORK_LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NETWORK_LINKS, at: VT.NETWORK_LINKS) }
+  public static func addVectorOf(GROUND_OVERLAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUND_OVERLAYS, at: VT.GROUND_OVERLAYS) }
+  public static func addVectorOf(STYLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLES, at: VT.STYLES) }
+  public static func addVectorOf(STYLE_MAPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_MAPS, at: VT.STYLE_MAPS) }
+  public static func addVectorOf(SCREEN_OVERLAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCREEN_OVERLAYS, at: VT.SCREEN_OVERLAYS) }
+  public static func addVectorOf(PHOTO_OVERLAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHOTO_OVERLAYS, at: VT.PHOTO_OVERLAYS) }
+  public static func addVectorOf(TOURS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOURS, at: VT.TOURS) }
+  public static func add(STYLE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_URL, at: VT.STYLE_URL) }
+  public static func add(REGION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION, at: VT.REGION) }
+  public static func addVectorOf(EXTENDED_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTENDED_DATA, at: VT.EXTENDED_DATA) }
+  public static func add(LOOK_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOOK_AT, at: VT.LOOK_AT) }
+  public static func add(CAMERA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAMERA, at: VT.CAMERA) }
+  public static func add(TIME_SPAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SPAN, at: VT.TIME_SPAN) }
+  public static func add(TIME_STAMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_STAMP, at: VT.TIME_STAMP) }
   public static func endKMLFolder(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMLFolder(
     _ fbb: inout FlatBufferBuilder,
@@ -3994,26 +3890,26 @@ public struct KMLFolder: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VISIBILITY.p, fieldName: "VISIBILITY", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OPEN.p, fieldName: "OPEN", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.PLACEMARKS.p, fieldName: "PLACEMARKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLPlacemark>, KMLPlacemark>>.self)
-    try _v.visit(field: VTOFFSET.FOLDERS.p, fieldName: "FOLDERS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLFolder>, KMLFolder>>.self)
-    try _v.visit(field: VTOFFSET.NETWORK_LINKS.p, fieldName: "NETWORK_LINKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLNetworkLink>, KMLNetworkLink>>.self)
-    try _v.visit(field: VTOFFSET.GROUND_OVERLAYS.p, fieldName: "GROUND_OVERLAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLGroundOverlay>, KMLGroundOverlay>>.self)
-    try _v.visit(field: VTOFFSET.STYLES.p, fieldName: "STYLES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLStyle>, KMLStyle>>.self)
-    try _v.visit(field: VTOFFSET.STYLE_MAPS.p, fieldName: "STYLE_MAPS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLStyleMap>, KMLStyleMap>>.self)
-    try _v.visit(field: VTOFFSET.SCREEN_OVERLAYS.p, fieldName: "SCREEN_OVERLAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLScreenOverlay>, KMLScreenOverlay>>.self)
-    try _v.visit(field: VTOFFSET.PHOTO_OVERLAYS.p, fieldName: "PHOTO_OVERLAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLPhotoOverlay>, KMLPhotoOverlay>>.self)
-    try _v.visit(field: VTOFFSET.TOURS.p, fieldName: "TOURS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLTour>, KMLTour>>.self)
-    try _v.visit(field: VTOFFSET.STYLE_URL.p, fieldName: "STYLE_URL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REGION.p, fieldName: "REGION", required: false, type: ForwardOffset<KMLRegion>.self)
-    try _v.visit(field: VTOFFSET.EXTENDED_DATA.p, fieldName: "EXTENDED_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLData>, KMLData>>.self)
-    try _v.visit(field: VTOFFSET.LOOK_AT.p, fieldName: "LOOK_AT", required: false, type: ForwardOffset<KMLLookAt>.self)
-    try _v.visit(field: VTOFFSET.CAMERA.p, fieldName: "CAMERA", required: false, type: ForwardOffset<KMLCamera>.self)
-    try _v.visit(field: VTOFFSET.TIME_SPAN.p, fieldName: "TIME_SPAN", required: false, type: ForwardOffset<KMLTimeSpan>.self)
-    try _v.visit(field: VTOFFSET.TIME_STAMP.p, fieldName: "TIME_STAMP", required: false, type: ForwardOffset<KMLTimeStamp>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VISIBILITY, fieldName: "VISIBILITY", required: false, type: Bool.self)
+    try _v.visit(field: VT.OPEN, fieldName: "OPEN", required: false, type: Bool.self)
+    try _v.visit(field: VT.PLACEMARKS, fieldName: "PLACEMARKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLPlacemark>, KMLPlacemark>>.self)
+    try _v.visit(field: VT.FOLDERS, fieldName: "FOLDERS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLFolder>, KMLFolder>>.self)
+    try _v.visit(field: VT.NETWORK_LINKS, fieldName: "NETWORK_LINKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLNetworkLink>, KMLNetworkLink>>.self)
+    try _v.visit(field: VT.GROUND_OVERLAYS, fieldName: "GROUND_OVERLAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLGroundOverlay>, KMLGroundOverlay>>.self)
+    try _v.visit(field: VT.STYLES, fieldName: "STYLES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLStyle>, KMLStyle>>.self)
+    try _v.visit(field: VT.STYLE_MAPS, fieldName: "STYLE_MAPS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLStyleMap>, KMLStyleMap>>.self)
+    try _v.visit(field: VT.SCREEN_OVERLAYS, fieldName: "SCREEN_OVERLAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLScreenOverlay>, KMLScreenOverlay>>.self)
+    try _v.visit(field: VT.PHOTO_OVERLAYS, fieldName: "PHOTO_OVERLAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLPhotoOverlay>, KMLPhotoOverlay>>.self)
+    try _v.visit(field: VT.TOURS, fieldName: "TOURS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLTour>, KMLTour>>.self)
+    try _v.visit(field: VT.STYLE_URL, fieldName: "STYLE_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REGION, fieldName: "REGION", required: false, type: ForwardOffset<KMLRegion>.self)
+    try _v.visit(field: VT.EXTENDED_DATA, fieldName: "EXTENDED_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLData>, KMLData>>.self)
+    try _v.visit(field: VT.LOOK_AT, fieldName: "LOOK_AT", required: false, type: ForwardOffset<KMLLookAt>.self)
+    try _v.visit(field: VT.CAMERA, fieldName: "CAMERA", required: false, type: ForwardOffset<KMLCamera>.self)
+    try _v.visit(field: VT.TIME_SPAN, fieldName: "TIME_SPAN", required: false, type: ForwardOffset<KMLTimeSpan>.self)
+    try _v.visit(field: VT.TIME_STAMP, fieldName: "TIME_STAMP", required: false, type: ForwardOffset<KMLTimeStamp>.self)
     _v.finish()
   }
 }
@@ -4030,76 +3926,74 @@ public struct KML: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case DESCRIPTION = 6
-    case VISIBILITY = 8
-    case OPEN = 10
-    case STYLES = 12
-    case STYLE_MAPS = 14
-    case PLACEMARKS = 16
-    case FOLDERS = 18
-    case NETWORK_LINKS = 20
-    case GROUND_OVERLAYS = 22
-    case SCHEMAS = 24
-    case SCREEN_OVERLAYS = 26
-    case PHOTO_OVERLAYS = 28
-    case TOURS = 30
-    case NETWORK_LINK_CONTROL = 32
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let DESCRIPTION: VOffset = 6
+    static let VISIBILITY: VOffset = 8
+    static let OPEN: VOffset = 10
+    static let STYLES: VOffset = 12
+    static let STYLE_MAPS: VOffset = 14
+    static let PLACEMARKS: VOffset = 16
+    static let FOLDERS: VOffset = 18
+    static let NETWORK_LINKS: VOffset = 20
+    static let GROUND_OVERLAYS: VOffset = 22
+    static let SCHEMAS: VOffset = 24
+    static let SCREEN_OVERLAYS: VOffset = 26
+    static let PHOTO_OVERLAYS: VOffset = 28
+    static let TOURS: VOffset = 30
+    static let NETWORK_LINK_CONTROL: VOffset = 32
   }
 
   ///  Document name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Document description
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Whether document is visible
-  public var VISIBILITY: Bool { let o = _accessor.offset(VTOFFSET.VISIBILITY.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var VISIBILITY: Bool { let o = _accessor.offset(VT.VISIBILITY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether document is open in tree view
-  public var OPEN: Bool { let o = _accessor.offset(VTOFFSET.OPEN.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OPEN: Bool { let o = _accessor.offset(VT.OPEN); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Shared styles
-  public var STYLES: FlatbufferVector<KMLStyle> { return _accessor.vector(at: VTOFFSET.STYLES.v, byteSize: 4) }
+  public var STYLES: FlatbufferVector<KMLStyle> { return _accessor.vector(at: VT.STYLES, byteSize: 4) }
   ///  Style maps
-  public var STYLE_MAPS: FlatbufferVector<KMLStyleMap> { return _accessor.vector(at: VTOFFSET.STYLE_MAPS.v, byteSize: 4) }
+  public var STYLE_MAPS: FlatbufferVector<KMLStyleMap> { return _accessor.vector(at: VT.STYLE_MAPS, byteSize: 4) }
   ///  Top-level placemarks
-  public var PLACEMARKS: FlatbufferVector<KMLPlacemark> { return _accessor.vector(at: VTOFFSET.PLACEMARKS.v, byteSize: 4) }
+  public var PLACEMARKS: FlatbufferVector<KMLPlacemark> { return _accessor.vector(at: VT.PLACEMARKS, byteSize: 4) }
   ///  Top-level folders
-  public var FOLDERS: FlatbufferVector<KMLFolder> { return _accessor.vector(at: VTOFFSET.FOLDERS.v, byteSize: 4) }
+  public var FOLDERS: FlatbufferVector<KMLFolder> { return _accessor.vector(at: VT.FOLDERS, byteSize: 4) }
   ///  Network links
-  public var NETWORK_LINKS: FlatbufferVector<KMLNetworkLink> { return _accessor.vector(at: VTOFFSET.NETWORK_LINKS.v, byteSize: 4) }
+  public var NETWORK_LINKS: FlatbufferVector<KMLNetworkLink> { return _accessor.vector(at: VT.NETWORK_LINKS, byteSize: 4) }
   ///  Ground overlays
-  public var GROUND_OVERLAYS: FlatbufferVector<KMLGroundOverlay> { return _accessor.vector(at: VTOFFSET.GROUND_OVERLAYS.v, byteSize: 4) }
+  public var GROUND_OVERLAYS: FlatbufferVector<KMLGroundOverlay> { return _accessor.vector(at: VT.GROUND_OVERLAYS, byteSize: 4) }
   ///  Schemas
-  public var SCHEMAS: FlatbufferVector<KMLSchema> { return _accessor.vector(at: VTOFFSET.SCHEMAS.v, byteSize: 4) }
+  public var SCHEMAS: FlatbufferVector<KMLSchema> { return _accessor.vector(at: VT.SCHEMAS, byteSize: 4) }
   ///  Screen overlays
-  public var SCREEN_OVERLAYS: FlatbufferVector<KMLScreenOverlay> { return _accessor.vector(at: VTOFFSET.SCREEN_OVERLAYS.v, byteSize: 4) }
+  public var SCREEN_OVERLAYS: FlatbufferVector<KMLScreenOverlay> { return _accessor.vector(at: VT.SCREEN_OVERLAYS, byteSize: 4) }
   ///  Photo overlays
-  public var PHOTO_OVERLAYS: FlatbufferVector<KMLPhotoOverlay> { return _accessor.vector(at: VTOFFSET.PHOTO_OVERLAYS.v, byteSize: 4) }
+  public var PHOTO_OVERLAYS: FlatbufferVector<KMLPhotoOverlay> { return _accessor.vector(at: VT.PHOTO_OVERLAYS, byteSize: 4) }
   ///  Tours
-  public var TOURS: FlatbufferVector<KMLTour> { return _accessor.vector(at: VTOFFSET.TOURS.v, byteSize: 4) }
+  public var TOURS: FlatbufferVector<KMLTour> { return _accessor.vector(at: VT.TOURS, byteSize: 4) }
   ///  NetworkLinkControl
-  public var NETWORK_LINK_CONTROL: KMLNetworkLinkControl? { let o = _accessor.offset(VTOFFSET.NETWORK_LINK_CONTROL.v); return o == 0 ? nil : KMLNetworkLinkControl(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var NETWORK_LINK_CONTROL: KMLNetworkLinkControl? { let o = _accessor.offset(VT.NETWORK_LINK_CONTROL); return o == 0 ? nil : KMLNetworkLinkControl(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKML(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
   public static func add(VISIBILITY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISIBILITY, def: false,
-   at: VTOFFSET.VISIBILITY.p) }
+   at: VT.VISIBILITY) }
   public static func add(OPEN: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPEN, def: false,
-   at: VTOFFSET.OPEN.p) }
-  public static func addVectorOf(STYLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLES, at: VTOFFSET.STYLES.p) }
-  public static func addVectorOf(STYLE_MAPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_MAPS, at: VTOFFSET.STYLE_MAPS.p) }
-  public static func addVectorOf(PLACEMARKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLACEMARKS, at: VTOFFSET.PLACEMARKS.p) }
-  public static func addVectorOf(FOLDERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FOLDERS, at: VTOFFSET.FOLDERS.p) }
-  public static func addVectorOf(NETWORK_LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NETWORK_LINKS, at: VTOFFSET.NETWORK_LINKS.p) }
-  public static func addVectorOf(GROUND_OVERLAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUND_OVERLAYS, at: VTOFFSET.GROUND_OVERLAYS.p) }
-  public static func addVectorOf(SCHEMAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMAS, at: VTOFFSET.SCHEMAS.p) }
-  public static func addVectorOf(SCREEN_OVERLAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCREEN_OVERLAYS, at: VTOFFSET.SCREEN_OVERLAYS.p) }
-  public static func addVectorOf(PHOTO_OVERLAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHOTO_OVERLAYS, at: VTOFFSET.PHOTO_OVERLAYS.p) }
-  public static func addVectorOf(TOURS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOURS, at: VTOFFSET.TOURS.p) }
-  public static func add(NETWORK_LINK_CONTROL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NETWORK_LINK_CONTROL, at: VTOFFSET.NETWORK_LINK_CONTROL.p) }
+   at: VT.OPEN) }
+  public static func addVectorOf(STYLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLES, at: VT.STYLES) }
+  public static func addVectorOf(STYLE_MAPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STYLE_MAPS, at: VT.STYLE_MAPS) }
+  public static func addVectorOf(PLACEMARKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLACEMARKS, at: VT.PLACEMARKS) }
+  public static func addVectorOf(FOLDERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FOLDERS, at: VT.FOLDERS) }
+  public static func addVectorOf(NETWORK_LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NETWORK_LINKS, at: VT.NETWORK_LINKS) }
+  public static func addVectorOf(GROUND_OVERLAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUND_OVERLAYS, at: VT.GROUND_OVERLAYS) }
+  public static func addVectorOf(SCHEMAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMAS, at: VT.SCHEMAS) }
+  public static func addVectorOf(SCREEN_OVERLAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCREEN_OVERLAYS, at: VT.SCREEN_OVERLAYS) }
+  public static func addVectorOf(PHOTO_OVERLAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHOTO_OVERLAYS, at: VT.PHOTO_OVERLAYS) }
+  public static func addVectorOf(TOURS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TOURS, at: VT.TOURS) }
+  public static func add(NETWORK_LINK_CONTROL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NETWORK_LINK_CONTROL, at: VT.NETWORK_LINK_CONTROL) }
   public static func endKML(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKML(
     _ fbb: inout FlatBufferBuilder,
@@ -4140,21 +4034,21 @@ public struct KML: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VISIBILITY.p, fieldName: "VISIBILITY", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OPEN.p, fieldName: "OPEN", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.STYLES.p, fieldName: "STYLES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLStyle>, KMLStyle>>.self)
-    try _v.visit(field: VTOFFSET.STYLE_MAPS.p, fieldName: "STYLE_MAPS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLStyleMap>, KMLStyleMap>>.self)
-    try _v.visit(field: VTOFFSET.PLACEMARKS.p, fieldName: "PLACEMARKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLPlacemark>, KMLPlacemark>>.self)
-    try _v.visit(field: VTOFFSET.FOLDERS.p, fieldName: "FOLDERS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLFolder>, KMLFolder>>.self)
-    try _v.visit(field: VTOFFSET.NETWORK_LINKS.p, fieldName: "NETWORK_LINKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLNetworkLink>, KMLNetworkLink>>.self)
-    try _v.visit(field: VTOFFSET.GROUND_OVERLAYS.p, fieldName: "GROUND_OVERLAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLGroundOverlay>, KMLGroundOverlay>>.self)
-    try _v.visit(field: VTOFFSET.SCHEMAS.p, fieldName: "SCHEMAS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLSchema>, KMLSchema>>.self)
-    try _v.visit(field: VTOFFSET.SCREEN_OVERLAYS.p, fieldName: "SCREEN_OVERLAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLScreenOverlay>, KMLScreenOverlay>>.self)
-    try _v.visit(field: VTOFFSET.PHOTO_OVERLAYS.p, fieldName: "PHOTO_OVERLAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLPhotoOverlay>, KMLPhotoOverlay>>.self)
-    try _v.visit(field: VTOFFSET.TOURS.p, fieldName: "TOURS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLTour>, KMLTour>>.self)
-    try _v.visit(field: VTOFFSET.NETWORK_LINK_CONTROL.p, fieldName: "NETWORK_LINK_CONTROL", required: false, type: ForwardOffset<KMLNetworkLinkControl>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VISIBILITY, fieldName: "VISIBILITY", required: false, type: Bool.self)
+    try _v.visit(field: VT.OPEN, fieldName: "OPEN", required: false, type: Bool.self)
+    try _v.visit(field: VT.STYLES, fieldName: "STYLES", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLStyle>, KMLStyle>>.self)
+    try _v.visit(field: VT.STYLE_MAPS, fieldName: "STYLE_MAPS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLStyleMap>, KMLStyleMap>>.self)
+    try _v.visit(field: VT.PLACEMARKS, fieldName: "PLACEMARKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLPlacemark>, KMLPlacemark>>.self)
+    try _v.visit(field: VT.FOLDERS, fieldName: "FOLDERS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLFolder>, KMLFolder>>.self)
+    try _v.visit(field: VT.NETWORK_LINKS, fieldName: "NETWORK_LINKS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLNetworkLink>, KMLNetworkLink>>.self)
+    try _v.visit(field: VT.GROUND_OVERLAYS, fieldName: "GROUND_OVERLAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLGroundOverlay>, KMLGroundOverlay>>.self)
+    try _v.visit(field: VT.SCHEMAS, fieldName: "SCHEMAS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLSchema>, KMLSchema>>.self)
+    try _v.visit(field: VT.SCREEN_OVERLAYS, fieldName: "SCREEN_OVERLAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLScreenOverlay>, KMLScreenOverlay>>.self)
+    try _v.visit(field: VT.PHOTO_OVERLAYS, fieldName: "PHOTO_OVERLAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLPhotoOverlay>, KMLPhotoOverlay>>.self)
+    try _v.visit(field: VT.TOURS, fieldName: "TOURS", required: false, type: ForwardOffset<Vector<ForwardOffset<KMLTour>, KMLTour>>.self)
+    try _v.visit(field: VT.NETWORK_LINK_CONTROL, fieldName: "NETWORK_LINK_CONTROL", required: false, type: ForwardOffset<KMLNetworkLinkControl>.self)
     _v.finish()
   }
 }

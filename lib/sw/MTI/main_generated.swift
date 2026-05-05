@@ -34,77 +34,75 @@ public struct MTI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case STANDARD = 6
-    case P3 = 8
-    case P6 = 10
-    case P7 = 12
-    case P8 = 14
-    case P9 = 16
-    case P10 = 18
-    case MISSIONS = 20
-    case DWELLS = 22
-    case HRRS = 24
-    case JOB_DEFS = 26
-    case FREE_TEXTS = 28
-    case PLATFORM_LOCS = 30
-    case JOB_REQUESTS = 32
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let STANDARD: VOffset = 6
+    static let P3: VOffset = 8
+    static let P6: VOffset = 10
+    static let P7: VOffset = 12
+    static let P8: VOffset = 14
+    static let P9: VOffset = 16
+    static let P10: VOffset = 18
+    static let MISSIONS: VOffset = 20
+    static let DWELLS: VOffset = 22
+    static let HRRS: VOffset = 24
+    static let JOB_DEFS: VOffset = 26
+    static let FREE_TEXTS: VOffset = 28
+    static let PLATFORM_LOCS: VOffset = 30
+    static let JOB_REQUESTS: VOffset = 32
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  MTI standard (e.g., STANAG 4607)
-  public var STANDARD: mtiStandard { let o = _accessor.offset(VTOFFSET.STANDARD.v); return o == 0 ? .stanag4607 : mtiStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .stanag4607 }
+  public var STANDARD: mtiStandard { let o = _accessor.offset(VT.STANDARD); return o == 0 ? .stanag4607 : mtiStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .stanag4607 }
   ///  Platform type (P3 field)
-  public var P3: String? { let o = _accessor.offset(VTOFFSET.P3.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var P3SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.P3.v) }
+  public var P3: String? { let o = _accessor.offset(VT.P3); return o == 0 ? nil : _accessor.string(at: o) }
+  public var P3SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.P3) }
   ///  Platform activity (P6 field)
-  public var P6: String? { let o = _accessor.offset(VTOFFSET.P6.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var P6SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.P6.v) }
+  public var P6: String? { let o = _accessor.offset(VT.P6); return o == 0 ? nil : _accessor.string(at: o) }
+  public var P6SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.P6) }
   ///  Sensor type (P7 field)
-  public var P7: String? { let o = _accessor.offset(VTOFFSET.P7.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var P7SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.P7.v) }
+  public var P7: String? { let o = _accessor.offset(VT.P7); return o == 0 ? nil : _accessor.string(at: o) }
+  public var P7SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.P7) }
   ///  Sensor model (P8 field)
-  public var P8: String? { let o = _accessor.offset(VTOFFSET.P8.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var P8SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.P8.v) }
+  public var P8: String? { let o = _accessor.offset(VT.P8); return o == 0 ? nil : _accessor.string(at: o) }
+  public var P8SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.P8) }
   ///  Reference time code (P9)
-  public var P9: UInt32 { let o = _accessor.offset(VTOFFSET.P9.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var P9: UInt32 { let o = _accessor.offset(VT.P9); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Security classification (P10)
-  public var P10: UInt16 { let o = _accessor.offset(VTOFFSET.P10.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var P10: UInt16 { let o = _accessor.offset(VT.P10); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Mission segment identifiers
-  public var MISSIONS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MISSIONS.v, byteSize: 4) }
+  public var MISSIONS: FlatbufferVector<String?> { return _accessor.vector(at: VT.MISSIONS, byteSize: 4) }
   ///  Dwell segment data references
-  public var DWELLS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.DWELLS.v, byteSize: 4) }
+  public var DWELLS: FlatbufferVector<String?> { return _accessor.vector(at: VT.DWELLS, byteSize: 4) }
   ///  High range resolution profile references
-  public var HRRS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.HRRS.v, byteSize: 4) }
+  public var HRRS: FlatbufferVector<String?> { return _accessor.vector(at: VT.HRRS, byteSize: 4) }
   ///  Job definition references
-  public var JOB_DEFS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.JOB_DEFS.v, byteSize: 4) }
+  public var JOB_DEFS: FlatbufferVector<String?> { return _accessor.vector(at: VT.JOB_DEFS, byteSize: 4) }
   ///  Free text entries
-  public var FREE_TEXTS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.FREE_TEXTS.v, byteSize: 4) }
+  public var FREE_TEXTS: FlatbufferVector<String?> { return _accessor.vector(at: VT.FREE_TEXTS, byteSize: 4) }
   ///  Platform location data references
-  public var PLATFORM_LOCS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.PLATFORM_LOCS.v, byteSize: 4) }
+  public var PLATFORM_LOCS: FlatbufferVector<String?> { return _accessor.vector(at: VT.PLATFORM_LOCS, byteSize: 4) }
   ///  Job request references
-  public var JOB_REQUESTS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.JOB_REQUESTS.v, byteSize: 4) }
+  public var JOB_REQUESTS: FlatbufferVector<String?> { return _accessor.vector(at: VT.JOB_REQUESTS, byteSize: 4) }
   public static func startMTI(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(STANDARD: mtiStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STANDARD.rawValue, def: 0, at: VTOFFSET.STANDARD.p) }
-  public static func add(P3: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: P3, at: VTOFFSET.P3.p) }
-  public static func add(P6: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: P6, at: VTOFFSET.P6.p) }
-  public static func add(P7: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: P7, at: VTOFFSET.P7.p) }
-  public static func add(P8: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: P8, at: VTOFFSET.P8.p) }
-  public static func add(P9: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: P9, def: 0, at: VTOFFSET.P9.p) }
-  public static func add(P10: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: P10, def: 0, at: VTOFFSET.P10.p) }
-  public static func addVectorOf(MISSIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSIONS, at: VTOFFSET.MISSIONS.p) }
-  public static func addVectorOf(DWELLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DWELLS, at: VTOFFSET.DWELLS.p) }
-  public static func addVectorOf(HRRS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HRRS, at: VTOFFSET.HRRS.p) }
-  public static func addVectorOf(JOB_DEFS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_DEFS, at: VTOFFSET.JOB_DEFS.p) }
-  public static func addVectorOf(FREE_TEXTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FREE_TEXTS, at: VTOFFSET.FREE_TEXTS.p) }
-  public static func addVectorOf(PLATFORM_LOCS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLATFORM_LOCS, at: VTOFFSET.PLATFORM_LOCS.p) }
-  public static func addVectorOf(JOB_REQUESTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_REQUESTS, at: VTOFFSET.JOB_REQUESTS.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(STANDARD: mtiStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STANDARD.rawValue, def: 0, at: VT.STANDARD) }
+  public static func add(P3: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: P3, at: VT.P3) }
+  public static func add(P6: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: P6, at: VT.P6) }
+  public static func add(P7: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: P7, at: VT.P7) }
+  public static func add(P8: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: P8, at: VT.P8) }
+  public static func add(P9: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: P9, def: 0, at: VT.P9) }
+  public static func add(P10: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: P10, def: 0, at: VT.P10) }
+  public static func addVectorOf(MISSIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSIONS, at: VT.MISSIONS) }
+  public static func addVectorOf(DWELLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DWELLS, at: VT.DWELLS) }
+  public static func addVectorOf(HRRS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HRRS, at: VT.HRRS) }
+  public static func addVectorOf(JOB_DEFS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_DEFS, at: VT.JOB_DEFS) }
+  public static func addVectorOf(FREE_TEXTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FREE_TEXTS, at: VT.FREE_TEXTS) }
+  public static func addVectorOf(PLATFORM_LOCS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLATFORM_LOCS, at: VT.PLATFORM_LOCS) }
+  public static func addVectorOf(JOB_REQUESTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_REQUESTS, at: VT.JOB_REQUESTS) }
   public static func endMTI(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMTI(
     _ fbb: inout FlatBufferBuilder,
@@ -145,21 +143,21 @@ public struct MTI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STANDARD.p, fieldName: "STANDARD", required: false, type: mtiStandard.self)
-    try _v.visit(field: VTOFFSET.P3.p, fieldName: "P3", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.P6.p, fieldName: "P6", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.P7.p, fieldName: "P7", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.P8.p, fieldName: "P8", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.P9.p, fieldName: "P9", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.P10.p, fieldName: "P10", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.MISSIONS.p, fieldName: "MISSIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.DWELLS.p, fieldName: "DWELLS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.HRRS.p, fieldName: "HRRS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.JOB_DEFS.p, fieldName: "JOB_DEFS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.FREE_TEXTS.p, fieldName: "FREE_TEXTS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.PLATFORM_LOCS.p, fieldName: "PLATFORM_LOCS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.JOB_REQUESTS.p, fieldName: "JOB_REQUESTS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STANDARD, fieldName: "STANDARD", required: false, type: mtiStandard.self)
+    try _v.visit(field: VT.P3, fieldName: "P3", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.P6, fieldName: "P6", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.P7, fieldName: "P7", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.P8, fieldName: "P8", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.P9, fieldName: "P9", required: false, type: UInt32.self)
+    try _v.visit(field: VT.P10, fieldName: "P10", required: false, type: UInt16.self)
+    try _v.visit(field: VT.MISSIONS, fieldName: "MISSIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.DWELLS, fieldName: "DWELLS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.HRRS, fieldName: "HRRS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.JOB_DEFS, fieldName: "JOB_DEFS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.FREE_TEXTS, fieldName: "FREE_TEXTS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.PLATFORM_LOCS, fieldName: "PLATFORM_LOCS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.JOB_REQUESTS, fieldName: "JOB_REQUESTS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

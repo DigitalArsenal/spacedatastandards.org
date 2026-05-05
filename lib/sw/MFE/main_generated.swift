@@ -20,73 +20,71 @@ public struct MFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case TMP_SAT_NO = 6
-    case EPOCH = 8
-    case MEAN_MOTION = 10
-    case ECCENTRICITY = 12
-    case INCLINATION = 14
-    case RAAN = 16
-    case ARG_OF_PERIGEE = 18
-    case MEAN_ANOMALY = 20
-    case REV_NO = 22
-    case B_STAR = 24
-    case MEAN_MOTION_DOT = 26
-    case MEAN_MOTION_DDOT = 28
-    case SEMI_MAJOR_AXIS = 30
-    case PERIOD = 32
-    case APOGEE = 34
-    case PERIGEE = 36
-    case LINE1 = 38
-    case LINE2 = 40
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let TMP_SAT_NO: VOffset = 6
+    static let EPOCH: VOffset = 8
+    static let MEAN_MOTION: VOffset = 10
+    static let ECCENTRICITY: VOffset = 12
+    static let INCLINATION: VOffset = 14
+    static let RAAN: VOffset = 16
+    static let ARG_OF_PERIGEE: VOffset = 18
+    static let MEAN_ANOMALY: VOffset = 20
+    static let REV_NO: VOffset = 22
+    static let B_STAR: VOffset = 24
+    static let MEAN_MOTION_DOT: VOffset = 26
+    static let MEAN_MOTION_DDOT: VOffset = 28
+    static let SEMI_MAJOR_AXIS: VOffset = 30
+    static let PERIOD: VOffset = 32
+    static let APOGEE: VOffset = 34
+    static let PERIGEE: VOffset = 36
+    static let LINE1: VOffset = 38
+    static let LINE2: VOffset = 40
   }
 
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
-  public var TMP_SAT_NO: Int32 { let o = _accessor.offset(VTOFFSET.TMP_SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
-  public var MEAN_MOTION: Double { let o = _accessor.offset(VTOFFSET.MEAN_MOTION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ECCENTRICITY: Double { let o = _accessor.offset(VTOFFSET.ECCENTRICITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var INCLINATION: Double { let o = _accessor.offset(VTOFFSET.INCLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RAAN: Double { let o = _accessor.offset(VTOFFSET.RAAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ARG_OF_PERIGEE: Double { let o = _accessor.offset(VTOFFSET.ARG_OF_PERIGEE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MEAN_ANOMALY: Double { let o = _accessor.offset(VTOFFSET.MEAN_ANOMALY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var REV_NO: Int32 { let o = _accessor.offset(VTOFFSET.REV_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var B_STAR: Double { let o = _accessor.offset(VTOFFSET.B_STAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MEAN_MOTION_DOT: Double { let o = _accessor.offset(VTOFFSET.MEAN_MOTION_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MEAN_MOTION_DDOT: Double { let o = _accessor.offset(VTOFFSET.MEAN_MOTION_DDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VTOFFSET.SEMI_MAJOR_AXIS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var PERIOD: Double { let o = _accessor.offset(VTOFFSET.PERIOD.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var APOGEE: Double { let o = _accessor.offset(VTOFFSET.APOGEE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var PERIGEE: Double { let o = _accessor.offset(VTOFFSET.PERIGEE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var LINE1: String? { let o = _accessor.offset(VTOFFSET.LINE1.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINE1SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINE1.v) }
-  public var LINE2: String? { let o = _accessor.offset(VTOFFSET.LINE2.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINE2SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINE2.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
+  public var TMP_SAT_NO: Int32 { let o = _accessor.offset(VT.TMP_SAT_NO); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  public var MEAN_MOTION: Double { let o = _accessor.offset(VT.MEAN_MOTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RAAN: Double { let o = _accessor.offset(VT.RAAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ARG_OF_PERIGEE: Double { let o = _accessor.offset(VT.ARG_OF_PERIGEE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MEAN_ANOMALY: Double { let o = _accessor.offset(VT.MEAN_ANOMALY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REV_NO: Int32 { let o = _accessor.offset(VT.REV_NO); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var B_STAR: Double { let o = _accessor.offset(VT.B_STAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MEAN_MOTION_DOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MEAN_MOTION_DDOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DDOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VT.SEMI_MAJOR_AXIS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PERIOD: Double { let o = _accessor.offset(VT.PERIOD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var APOGEE: Double { let o = _accessor.offset(VT.APOGEE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PERIGEE: Double { let o = _accessor.offset(VT.PERIGEE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LINE1: String? { let o = _accessor.offset(VT.LINE1); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINE1SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINE1) }
+  public var LINE2: String? { let o = _accessor.offset(VT.LINE2); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINE2SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINE2) }
   public static func startMFE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(TMP_SAT_NO: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TMP_SAT_NO, def: 0, at: VTOFFSET.TMP_SAT_NO.p) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(MEAN_MOTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION, def: 0.0, at: VTOFFSET.MEAN_MOTION.p) }
-  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VTOFFSET.ECCENTRICITY.p) }
-  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VTOFFSET.INCLINATION.p) }
-  public static func add(RAAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RAAN, def: 0.0, at: VTOFFSET.RAAN.p) }
-  public static func add(ARG_OF_PERIGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_OF_PERIGEE, def: 0.0, at: VTOFFSET.ARG_OF_PERIGEE.p) }
-  public static func add(MEAN_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ANOMALY, def: 0.0, at: VTOFFSET.MEAN_ANOMALY.p) }
-  public static func add(REV_NO: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REV_NO, def: 0, at: VTOFFSET.REV_NO.p) }
-  public static func add(B_STAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: B_STAR, def: 0.0, at: VTOFFSET.B_STAR.p) }
-  public static func add(MEAN_MOTION_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DOT, def: 0.0, at: VTOFFSET.MEAN_MOTION_DOT.p) }
-  public static func add(MEAN_MOTION_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DDOT, def: 0.0, at: VTOFFSET.MEAN_MOTION_DDOT.p) }
-  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VTOFFSET.SEMI_MAJOR_AXIS.p) }
-  public static func add(PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIOD, def: 0.0, at: VTOFFSET.PERIOD.p) }
-  public static func add(APOGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOGEE, def: 0.0, at: VTOFFSET.APOGEE.p) }
-  public static func add(PERIGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIGEE, def: 0.0, at: VTOFFSET.PERIGEE.p) }
-  public static func add(LINE1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE1, at: VTOFFSET.LINE1.p) }
-  public static func add(LINE2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE2, at: VTOFFSET.LINE2.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(TMP_SAT_NO: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TMP_SAT_NO, def: 0, at: VT.TMP_SAT_NO) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(MEAN_MOTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION, def: 0.0, at: VT.MEAN_MOTION) }
+  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
+  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
+  public static func add(RAAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RAAN, def: 0.0, at: VT.RAAN) }
+  public static func add(ARG_OF_PERIGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_OF_PERIGEE, def: 0.0, at: VT.ARG_OF_PERIGEE) }
+  public static func add(MEAN_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ANOMALY, def: 0.0, at: VT.MEAN_ANOMALY) }
+  public static func add(REV_NO: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REV_NO, def: 0, at: VT.REV_NO) }
+  public static func add(B_STAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: B_STAR, def: 0.0, at: VT.B_STAR) }
+  public static func add(MEAN_MOTION_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DOT, def: 0.0, at: VT.MEAN_MOTION_DOT) }
+  public static func add(MEAN_MOTION_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DDOT, def: 0.0, at: VT.MEAN_MOTION_DDOT) }
+  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VT.SEMI_MAJOR_AXIS) }
+  public static func add(PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIOD, def: 0.0, at: VT.PERIOD) }
+  public static func add(APOGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOGEE, def: 0.0, at: VT.APOGEE) }
+  public static func add(PERIGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIGEE, def: 0.0, at: VT.PERIGEE) }
+  public static func add(LINE1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE1, at: VT.LINE1) }
+  public static func add(LINE2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE2, at: VT.LINE2) }
   public static func endMFE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMFE(
     _ fbb: inout FlatBufferBuilder,
@@ -135,25 +133,25 @@ public struct MFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TMP_SAT_NO.p, fieldName: "TMP_SAT_NO", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MEAN_MOTION.p, fieldName: "MEAN_MOTION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ECCENTRICITY.p, fieldName: "ECCENTRICITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INCLINATION.p, fieldName: "INCLINATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RAAN.p, fieldName: "RAAN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ARG_OF_PERIGEE.p, fieldName: "ARG_OF_PERIGEE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MEAN_ANOMALY.p, fieldName: "MEAN_ANOMALY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.REV_NO.p, fieldName: "REV_NO", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.B_STAR.p, fieldName: "B_STAR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MEAN_MOTION_DOT.p, fieldName: "MEAN_MOTION_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MEAN_MOTION_DDOT.p, fieldName: "MEAN_MOTION_DDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SEMI_MAJOR_AXIS.p, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PERIOD.p, fieldName: "PERIOD", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.APOGEE.p, fieldName: "APOGEE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PERIGEE.p, fieldName: "PERIGEE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LINE1.p, fieldName: "LINE1", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINE2.p, fieldName: "LINE2", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TMP_SAT_NO, fieldName: "TMP_SAT_NO", required: false, type: Int32.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MEAN_MOTION, fieldName: "MEAN_MOTION", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VT.RAAN, fieldName: "RAAN", required: false, type: Double.self)
+    try _v.visit(field: VT.ARG_OF_PERIGEE, fieldName: "ARG_OF_PERIGEE", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_ANOMALY, fieldName: "MEAN_ANOMALY", required: false, type: Double.self)
+    try _v.visit(field: VT.REV_NO, fieldName: "REV_NO", required: false, type: Int32.self)
+    try _v.visit(field: VT.B_STAR, fieldName: "B_STAR", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_MOTION_DOT, fieldName: "MEAN_MOTION_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_MOTION_DDOT, fieldName: "MEAN_MOTION_DDOT", required: false, type: Double.self)
+    try _v.visit(field: VT.SEMI_MAJOR_AXIS, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
+    try _v.visit(field: VT.PERIOD, fieldName: "PERIOD", required: false, type: Double.self)
+    try _v.visit(field: VT.APOGEE, fieldName: "APOGEE", required: false, type: Double.self)
+    try _v.visit(field: VT.PERIGEE, fieldName: "PERIGEE", required: false, type: Double.self)
+    try _v.visit(field: VT.LINE1, fieldName: "LINE1", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINE2, fieldName: "LINE2", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

@@ -13,8 +13,8 @@ export declare class ModuleBundleEntry implements flatbuffers.IUnpackableObject<
     /**
      * Stable bundle-local identifier.
      */
-    entry_id(): string | null;
-    entry_id(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    entry_id(): string;
+    entry_id(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * High-level semantic role of the payload.
      */

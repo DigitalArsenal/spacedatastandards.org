@@ -72,32 +72,30 @@ public struct FlatBufferTypeRef: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SCHEMA_NAME = 4
-    case FILE_IDENTIFIER = 6
-    case SCHEMA_VERSION = 8
-    case ROOT_TYPE = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SCHEMA_NAME: VOffset = 4
+    static let FILE_IDENTIFIER: VOffset = 6
+    static let SCHEMA_VERSION: VOffset = 8
+    static let ROOT_TYPE: VOffset = 10
   }
 
   ///  Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
-  public var SCHEMA_NAME: String? { let o = _accessor.offset(VTOFFSET.SCHEMA_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SCHEMA_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SCHEMA_NAME.v) }
+  public var SCHEMA_NAME: String? { let o = _accessor.offset(VT.SCHEMA_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCHEMA_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_NAME) }
   ///  Optional 4-byte FlatBuffer file identifier.
-  public var FILE_IDENTIFIER: String? { let o = _accessor.offset(VTOFFSET.FILE_IDENTIFIER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FILE_IDENTIFIERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FILE_IDENTIFIER.v) }
+  public var FILE_IDENTIFIER: String? { let o = _accessor.offset(VT.FILE_IDENTIFIER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_IDENTIFIERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_IDENTIFIER) }
   ///  Optional semver or schema revision string.
-  public var SCHEMA_VERSION: String? { let o = _accessor.offset(VTOFFSET.SCHEMA_VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SCHEMA_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SCHEMA_VERSION.v) }
+  public var SCHEMA_VERSION: String? { let o = _accessor.offset(VT.SCHEMA_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCHEMA_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_VERSION) }
   ///  Optional root type name within the schema.
-  public var ROOT_TYPE: String? { let o = _accessor.offset(VTOFFSET.ROOT_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ROOT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ROOT_TYPE.v) }
+  public var ROOT_TYPE: String? { let o = _accessor.offset(VT.ROOT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ROOT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ROOT_TYPE) }
   public static func startFlatBufferTypeRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VTOFFSET.SCHEMA_NAME.p) }
-  public static func add(FILE_IDENTIFIER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_IDENTIFIER, at: VTOFFSET.FILE_IDENTIFIER.p) }
-  public static func add(SCHEMA_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_VERSION, at: VTOFFSET.SCHEMA_VERSION.p) }
-  public static func add(ROOT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROOT_TYPE, at: VTOFFSET.ROOT_TYPE.p) }
+  public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VT.SCHEMA_NAME) }
+  public static func add(FILE_IDENTIFIER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_IDENTIFIER, at: VT.FILE_IDENTIFIER) }
+  public static func add(SCHEMA_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_VERSION, at: VT.SCHEMA_VERSION) }
+  public static func add(ROOT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROOT_TYPE, at: VT.ROOT_TYPE) }
   public static func endFlatBufferTypeRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFlatBufferTypeRef(
     _ fbb: inout FlatBufferBuilder,
@@ -116,10 +114,10 @@ public struct FlatBufferTypeRef: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SCHEMA_NAME.p, fieldName: "SCHEMA_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FILE_IDENTIFIER.p, fieldName: "FILE_IDENTIFIER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SCHEMA_VERSION.p, fieldName: "SCHEMA_VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ROOT_TYPE.p, fieldName: "ROOT_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCHEMA_NAME, fieldName: "SCHEMA_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILE_IDENTIFIER, fieldName: "FILE_IDENTIFIER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCHEMA_VERSION, fieldName: "SCHEMA_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ROOT_TYPE, fieldName: "ROOT_TYPE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -136,52 +134,50 @@ public struct TAB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case OFFSET = 4
-    case SIZE = 6
-    case ALIGNMENT = 8
-    case WIRE_FORMAT = 10
-    case TYPE_REF = 12
-    case MUTABILITY = 14
-    case OWNERSHIP = 16
-    case FRAME_ID = 18
-    case PORT_ID = 20
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let OFFSET: VOffset = 4
+    static let SIZE: VOffset = 6
+    static let ALIGNMENT: VOffset = 8
+    static let WIRE_FORMAT: VOffset = 10
+    static let TYPE_REF: VOffset = 12
+    static let MUTABILITY: VOffset = 14
+    static let OWNERSHIP: VOffset = 16
+    static let FRAME_ID: VOffset = 18
+    static let PORT_ID: VOffset = 20
   }
 
   ///  Byte offset of the payload body within the arena.
-  public var OFFSET: UInt32 { let o = _accessor.offset(VTOFFSET.OFFSET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OFFSET: UInt32 { let o = _accessor.offset(VT.OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Byte length of the payload body.
-  public var SIZE: UInt32 { let o = _accessor.offset(VTOFFSET.SIZE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SIZE: UInt32 { let o = _accessor.offset(VT.SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Required start alignment of the payload body (in bytes).
-  public var ALIGNMENT: UInt32 { let o = _accessor.offset(VTOFFSET.ALIGNMENT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var ALIGNMENT: UInt32 { let o = _accessor.offset(VT.ALIGNMENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Wire format for the body.
-  public var WIRE_FORMAT: payloadWireFormat { let o = _accessor.offset(VTOFFSET.WIRE_FORMAT.v); return o == 0 ? .flatbuffer : payloadWireFormat(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .flatbuffer }
+  public var WIRE_FORMAT: payloadWireFormat { let o = _accessor.offset(VT.WIRE_FORMAT); return o == 0 ? .flatbuffer : payloadWireFormat(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .flatbuffer }
   ///  Optional payload schema identity.
-  public var TYPE_REF: FlatBufferTypeRef? { let o = _accessor.offset(VTOFFSET.TYPE_REF.v); return o == 0 ? nil : FlatBufferTypeRef(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TYPE_REF: FlatBufferTypeRef? { let o = _accessor.offset(VT.TYPE_REF); return o == 0 ? nil : FlatBufferTypeRef(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Mutability contract for the slot.
-  public var MUTABILITY: bufferMutability { let o = _accessor.offset(VTOFFSET.MUTABILITY.v); return o == 0 ? .immutable : bufferMutability(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .immutable }
+  public var MUTABILITY: bufferMutability { let o = _accessor.offset(VT.MUTABILITY); return o == 0 ? .immutable : bufferMutability(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .immutable }
   ///  Ownership contract for the slot.
-  public var OWNERSHIP: bufferOwnership { let o = _accessor.offset(VTOFFSET.OWNERSHIP.v); return o == 0 ? .hostOwned : bufferOwnership(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .hostOwned }
+  public var OWNERSHIP: bufferOwnership { let o = _accessor.offset(VT.OWNERSHIP); return o == 0 ? .hostOwned : bufferOwnership(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .hostOwned }
   ///  Optional opaque frame identifier for stream bookkeeping.
-  public var FRAME_ID: UInt64 { let o = _accessor.offset(VTOFFSET.FRAME_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var FRAME_ID: UInt64 { let o = _accessor.offset(VT.FRAME_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Optional port identifier for frames that route to/from a named
   ///  input or output port on a method (maps to
   ///  `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
   ///  no port routing hint.
-  public var PORT_ID: String? { let o = _accessor.offset(VTOFFSET.PORT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PORT_ID.v) }
+  public var PORT_ID: String? { let o = _accessor.offset(VT.PORT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PORT_ID) }
   public static func startTAB(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET, def: 0, at: VTOFFSET.OFFSET.p) }
-  public static func add(SIZE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE, def: 0, at: VTOFFSET.SIZE.p) }
-  public static func add(ALIGNMENT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALIGNMENT, def: 0, at: VTOFFSET.ALIGNMENT.p) }
-  public static func add(WIRE_FORMAT: payloadWireFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIRE_FORMAT.rawValue, def: 0, at: VTOFFSET.WIRE_FORMAT.p) }
-  public static func add(TYPE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE_REF, at: VTOFFSET.TYPE_REF.p) }
-  public static func add(MUTABILITY: bufferMutability, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MUTABILITY.rawValue, def: 0, at: VTOFFSET.MUTABILITY.p) }
-  public static func add(OWNERSHIP: bufferOwnership, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNERSHIP.rawValue, def: 0, at: VTOFFSET.OWNERSHIP.p) }
-  public static func add(FRAME_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_ID, def: 0, at: VTOFFSET.FRAME_ID.p) }
-  public static func add(PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PORT_ID, at: VTOFFSET.PORT_ID.p) }
+  public static func add(OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET, def: 0, at: VT.OFFSET) }
+  public static func add(SIZE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE, def: 0, at: VT.SIZE) }
+  public static func add(ALIGNMENT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALIGNMENT, def: 0, at: VT.ALIGNMENT) }
+  public static func add(WIRE_FORMAT: payloadWireFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIRE_FORMAT.rawValue, def: 0, at: VT.WIRE_FORMAT) }
+  public static func add(TYPE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE_REF, at: VT.TYPE_REF) }
+  public static func add(MUTABILITY: bufferMutability, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MUTABILITY.rawValue, def: 0, at: VT.MUTABILITY) }
+  public static func add(OWNERSHIP: bufferOwnership, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNERSHIP.rawValue, def: 0, at: VT.OWNERSHIP) }
+  public static func add(FRAME_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_ID, def: 0, at: VT.FRAME_ID) }
+  public static func add(PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PORT_ID, at: VT.PORT_ID) }
   public static func endTAB(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTAB(
     _ fbb: inout FlatBufferBuilder,
@@ -210,15 +206,15 @@ public struct TAB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.OFFSET.p, fieldName: "OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.SIZE.p, fieldName: "SIZE", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ALIGNMENT.p, fieldName: "ALIGNMENT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.WIRE_FORMAT.p, fieldName: "WIRE_FORMAT", required: false, type: payloadWireFormat.self)
-    try _v.visit(field: VTOFFSET.TYPE_REF.p, fieldName: "TYPE_REF", required: false, type: ForwardOffset<FlatBufferTypeRef>.self)
-    try _v.visit(field: VTOFFSET.MUTABILITY.p, fieldName: "MUTABILITY", required: false, type: bufferMutability.self)
-    try _v.visit(field: VTOFFSET.OWNERSHIP.p, fieldName: "OWNERSHIP", required: false, type: bufferOwnership.self)
-    try _v.visit(field: VTOFFSET.FRAME_ID.p, fieldName: "FRAME_ID", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.PORT_ID.p, fieldName: "PORT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OFFSET, fieldName: "OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SIZE, fieldName: "SIZE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ALIGNMENT, fieldName: "ALIGNMENT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.WIRE_FORMAT, fieldName: "WIRE_FORMAT", required: false, type: payloadWireFormat.self)
+    try _v.visit(field: VT.TYPE_REF, fieldName: "TYPE_REF", required: false, type: ForwardOffset<FlatBufferTypeRef>.self)
+    try _v.visit(field: VT.MUTABILITY, fieldName: "MUTABILITY", required: false, type: bufferMutability.self)
+    try _v.visit(field: VT.OWNERSHIP, fieldName: "OWNERSHIP", required: false, type: bufferOwnership.self)
+    try _v.visit(field: VT.FRAME_ID, fieldName: "FRAME_ID", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PORT_ID, fieldName: "PORT_ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

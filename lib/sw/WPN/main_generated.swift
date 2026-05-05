@@ -77,64 +77,62 @@ public struct WPN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CALIBER = 4
-    case MUZZLE_VELOCITY = 6
-    case RATE_OF_FIRE = 8
-    case DISPERSION = 10
-    case AMMO_CAPACITY = 12
-    case BURST_LENGTH = 14
-    case RELOAD_TIME = 16
-    case OVERHEAT_ROUNDS = 18
-    case COOLDOWN_RATE = 20
-    case ELEVATION_MIN = 22
-    case ELEVATION_MAX = 24
-    case TRAVERSE_MIN = 26
-    case TRAVERSE_MAX = 28
-    case SLEW_RATE = 30
-    case WEAPON_TYPE = 32
-    case FUZE_TYPE = 34
-    case RESERVED = 36
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CALIBER: VOffset = 4
+    static let MUZZLE_VELOCITY: VOffset = 6
+    static let RATE_OF_FIRE: VOffset = 8
+    static let DISPERSION: VOffset = 10
+    static let AMMO_CAPACITY: VOffset = 12
+    static let BURST_LENGTH: VOffset = 14
+    static let RELOAD_TIME: VOffset = 16
+    static let OVERHEAT_ROUNDS: VOffset = 18
+    static let COOLDOWN_RATE: VOffset = 20
+    static let ELEVATION_MIN: VOffset = 22
+    static let ELEVATION_MAX: VOffset = 24
+    static let TRAVERSE_MIN: VOffset = 26
+    static let TRAVERSE_MAX: VOffset = 28
+    static let SLEW_RATE: VOffset = 30
+    static let WEAPON_TYPE: VOffset = 32
+    static let FUZE_TYPE: VOffset = 34
+    static let RESERVED: VOffset = 36
   }
 
-  public var CALIBER: Float32 { let o = _accessor.offset(VTOFFSET.CALIBER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var MUZZLE_VELOCITY: Float32 { let o = _accessor.offset(VTOFFSET.MUZZLE_VELOCITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var RATE_OF_FIRE: Float32 { let o = _accessor.offset(VTOFFSET.RATE_OF_FIRE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var DISPERSION: Float32 { let o = _accessor.offset(VTOFFSET.DISPERSION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var AMMO_CAPACITY: UInt16 { let o = _accessor.offset(VTOFFSET.AMMO_CAPACITY.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var BURST_LENGTH: UInt16 { let o = _accessor.offset(VTOFFSET.BURST_LENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var RELOAD_TIME: Float32 { let o = _accessor.offset(VTOFFSET.RELOAD_TIME.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var OVERHEAT_ROUNDS: UInt16 { let o = _accessor.offset(VTOFFSET.OVERHEAT_ROUNDS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var COOLDOWN_RATE: Float32 { let o = _accessor.offset(VTOFFSET.COOLDOWN_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var ELEVATION_MIN: Float32 { let o = _accessor.offset(VTOFFSET.ELEVATION_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var ELEVATION_MAX: Float32 { let o = _accessor.offset(VTOFFSET.ELEVATION_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var TRAVERSE_MIN: Float32 { let o = _accessor.offset(VTOFFSET.TRAVERSE_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var TRAVERSE_MAX: Float32 { let o = _accessor.offset(VTOFFSET.TRAVERSE_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var SLEW_RATE: Float32 { let o = _accessor.offset(VTOFFSET.SLEW_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var WEAPON_TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.WEAPON_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var FUZE_TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.FUZE_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
+  public var CALIBER: Float32 { let o = _accessor.offset(VT.CALIBER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var MUZZLE_VELOCITY: Float32 { let o = _accessor.offset(VT.MUZZLE_VELOCITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var RATE_OF_FIRE: Float32 { let o = _accessor.offset(VT.RATE_OF_FIRE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var DISPERSION: Float32 { let o = _accessor.offset(VT.DISPERSION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var AMMO_CAPACITY: UInt16 { let o = _accessor.offset(VT.AMMO_CAPACITY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var BURST_LENGTH: UInt16 { let o = _accessor.offset(VT.BURST_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var RELOAD_TIME: Float32 { let o = _accessor.offset(VT.RELOAD_TIME); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var OVERHEAT_ROUNDS: UInt16 { let o = _accessor.offset(VT.OVERHEAT_ROUNDS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var COOLDOWN_RATE: Float32 { let o = _accessor.offset(VT.COOLDOWN_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var ELEVATION_MIN: Float32 { let o = _accessor.offset(VT.ELEVATION_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var ELEVATION_MAX: Float32 { let o = _accessor.offset(VT.ELEVATION_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var TRAVERSE_MIN: Float32 { let o = _accessor.offset(VT.TRAVERSE_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var TRAVERSE_MAX: Float32 { let o = _accessor.offset(VT.TRAVERSE_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var SLEW_RATE: Float32 { let o = _accessor.offset(VT.SLEW_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var WEAPON_TYPE: UInt8 { let o = _accessor.offset(VT.WEAPON_TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var FUZE_TYPE: UInt8 { let o = _accessor.offset(VT.FUZE_TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
   public static func startWPN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
-  public static func add(CALIBER: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CALIBER, def: 0.0, at: VTOFFSET.CALIBER.p) }
-  public static func add(MUZZLE_VELOCITY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MUZZLE_VELOCITY, def: 0.0, at: VTOFFSET.MUZZLE_VELOCITY.p) }
-  public static func add(RATE_OF_FIRE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RATE_OF_FIRE, def: 0.0, at: VTOFFSET.RATE_OF_FIRE.p) }
-  public static func add(DISPERSION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISPERSION, def: 0.0, at: VTOFFSET.DISPERSION.p) }
-  public static func add(AMMO_CAPACITY: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AMMO_CAPACITY, def: 0, at: VTOFFSET.AMMO_CAPACITY.p) }
-  public static func add(BURST_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BURST_LENGTH, def: 0, at: VTOFFSET.BURST_LENGTH.p) }
-  public static func add(RELOAD_TIME: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELOAD_TIME, def: 0.0, at: VTOFFSET.RELOAD_TIME.p) }
-  public static func add(OVERHEAT_ROUNDS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OVERHEAT_ROUNDS, def: 0, at: VTOFFSET.OVERHEAT_ROUNDS.p) }
-  public static func add(COOLDOWN_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COOLDOWN_RATE, def: 0.0, at: VTOFFSET.COOLDOWN_RATE.p) }
-  public static func add(ELEVATION_MIN: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_MIN, def: 0.0, at: VTOFFSET.ELEVATION_MIN.p) }
-  public static func add(ELEVATION_MAX: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_MAX, def: 0.0, at: VTOFFSET.ELEVATION_MAX.p) }
-  public static func add(TRAVERSE_MIN: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAVERSE_MIN, def: 0.0, at: VTOFFSET.TRAVERSE_MIN.p) }
-  public static func add(TRAVERSE_MAX: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAVERSE_MAX, def: 0.0, at: VTOFFSET.TRAVERSE_MAX.p) }
-  public static func add(SLEW_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SLEW_RATE, def: 0.0, at: VTOFFSET.SLEW_RATE.p) }
-  public static func add(WEAPON_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEAPON_TYPE, def: 0, at: VTOFFSET.WEAPON_TYPE.p) }
-  public static func add(FUZE_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FUZE_TYPE, def: 0, at: VTOFFSET.FUZE_TYPE.p) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VTOFFSET.RESERVED.p) }
+  public static func add(CALIBER: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CALIBER, def: 0.0, at: VT.CALIBER) }
+  public static func add(MUZZLE_VELOCITY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MUZZLE_VELOCITY, def: 0.0, at: VT.MUZZLE_VELOCITY) }
+  public static func add(RATE_OF_FIRE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RATE_OF_FIRE, def: 0.0, at: VT.RATE_OF_FIRE) }
+  public static func add(DISPERSION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISPERSION, def: 0.0, at: VT.DISPERSION) }
+  public static func add(AMMO_CAPACITY: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AMMO_CAPACITY, def: 0, at: VT.AMMO_CAPACITY) }
+  public static func add(BURST_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BURST_LENGTH, def: 0, at: VT.BURST_LENGTH) }
+  public static func add(RELOAD_TIME: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELOAD_TIME, def: 0.0, at: VT.RELOAD_TIME) }
+  public static func add(OVERHEAT_ROUNDS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OVERHEAT_ROUNDS, def: 0, at: VT.OVERHEAT_ROUNDS) }
+  public static func add(COOLDOWN_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COOLDOWN_RATE, def: 0.0, at: VT.COOLDOWN_RATE) }
+  public static func add(ELEVATION_MIN: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_MIN, def: 0.0, at: VT.ELEVATION_MIN) }
+  public static func add(ELEVATION_MAX: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_MAX, def: 0.0, at: VT.ELEVATION_MAX) }
+  public static func add(TRAVERSE_MIN: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAVERSE_MIN, def: 0.0, at: VT.TRAVERSE_MIN) }
+  public static func add(TRAVERSE_MAX: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAVERSE_MAX, def: 0.0, at: VT.TRAVERSE_MAX) }
+  public static func add(SLEW_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SLEW_RATE, def: 0.0, at: VT.SLEW_RATE) }
+  public static func add(WEAPON_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEAPON_TYPE, def: 0, at: VT.WEAPON_TYPE) }
+  public static func add(FUZE_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FUZE_TYPE, def: 0, at: VT.FUZE_TYPE) }
+  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
   public static func endWPN(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createWPN(
     _ fbb: inout FlatBufferBuilder,
@@ -179,23 +177,23 @@ public struct WPN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CALIBER.p, fieldName: "CALIBER", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.MUZZLE_VELOCITY.p, fieldName: "MUZZLE_VELOCITY", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.RATE_OF_FIRE.p, fieldName: "RATE_OF_FIRE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.DISPERSION.p, fieldName: "DISPERSION", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.AMMO_CAPACITY.p, fieldName: "AMMO_CAPACITY", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.BURST_LENGTH.p, fieldName: "BURST_LENGTH", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.RELOAD_TIME.p, fieldName: "RELOAD_TIME", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.OVERHEAT_ROUNDS.p, fieldName: "OVERHEAT_ROUNDS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.COOLDOWN_RATE.p, fieldName: "COOLDOWN_RATE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.ELEVATION_MIN.p, fieldName: "ELEVATION_MIN", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.ELEVATION_MAX.p, fieldName: "ELEVATION_MAX", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.TRAVERSE_MIN.p, fieldName: "TRAVERSE_MIN", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.TRAVERSE_MAX.p, fieldName: "TRAVERSE_MAX", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.SLEW_RATE.p, fieldName: "SLEW_RATE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.WEAPON_TYPE.p, fieldName: "WEAPON_TYPE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.FUZE_TYPE.p, fieldName: "FUZE_TYPE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CALIBER, fieldName: "CALIBER", required: false, type: Float32.self)
+    try _v.visit(field: VT.MUZZLE_VELOCITY, fieldName: "MUZZLE_VELOCITY", required: false, type: Float32.self)
+    try _v.visit(field: VT.RATE_OF_FIRE, fieldName: "RATE_OF_FIRE", required: false, type: Float32.self)
+    try _v.visit(field: VT.DISPERSION, fieldName: "DISPERSION", required: false, type: Float32.self)
+    try _v.visit(field: VT.AMMO_CAPACITY, fieldName: "AMMO_CAPACITY", required: false, type: UInt16.self)
+    try _v.visit(field: VT.BURST_LENGTH, fieldName: "BURST_LENGTH", required: false, type: UInt16.self)
+    try _v.visit(field: VT.RELOAD_TIME, fieldName: "RELOAD_TIME", required: false, type: Float32.self)
+    try _v.visit(field: VT.OVERHEAT_ROUNDS, fieldName: "OVERHEAT_ROUNDS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.COOLDOWN_RATE, fieldName: "COOLDOWN_RATE", required: false, type: Float32.self)
+    try _v.visit(field: VT.ELEVATION_MIN, fieldName: "ELEVATION_MIN", required: false, type: Float32.self)
+    try _v.visit(field: VT.ELEVATION_MAX, fieldName: "ELEVATION_MAX", required: false, type: Float32.self)
+    try _v.visit(field: VT.TRAVERSE_MIN, fieldName: "TRAVERSE_MIN", required: false, type: Float32.self)
+    try _v.visit(field: VT.TRAVERSE_MAX, fieldName: "TRAVERSE_MAX", required: false, type: Float32.self)
+    try _v.visit(field: VT.SLEW_RATE, fieldName: "SLEW_RATE", required: false, type: Float32.self)
+    try _v.visit(field: VT.WEAPON_TYPE, fieldName: "WEAPON_TYPE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.FUZE_TYPE, fieldName: "FUZE_TYPE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

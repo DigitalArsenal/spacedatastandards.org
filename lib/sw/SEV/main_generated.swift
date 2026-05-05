@@ -20,42 +20,40 @@ public struct SEV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case OB_TYPE = 4
-    case OB_UO_M = 6
-    case OB_VALUE = 8
-    case OB_STRING = 10
-    case OB_ARRAY = 12
-    case OB_BOOL = 14
-    case OB_QUALITY = 16
-    case OB_DESCRIPTION = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let OB_TYPE: VOffset = 4
+    static let OB_UO_M: VOffset = 6
+    static let OB_VALUE: VOffset = 8
+    static let OB_STRING: VOffset = 10
+    static let OB_ARRAY: VOffset = 12
+    static let OB_BOOL: VOffset = 14
+    static let OB_QUALITY: VOffset = 16
+    static let OB_DESCRIPTION: VOffset = 18
   }
 
-  public var OB_TYPE: String? { let o = _accessor.offset(VTOFFSET.OB_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OB_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_TYPE.v) }
-  public var OB_UO_M: String? { let o = _accessor.offset(VTOFFSET.OB_UO_M.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OB_UO_MSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_UO_M.v) }
-  public var OB_VALUE: Double { let o = _accessor.offset(VTOFFSET.OB_VALUE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var OB_STRING: String? { let o = _accessor.offset(VTOFFSET.OB_STRING.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OB_STRINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_STRING.v) }
-  public var OB_ARRAY: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.OB_ARRAY.v, byteSize: 4) }
-  public var OB_BOOL: Bool { let o = _accessor.offset(VTOFFSET.OB_BOOL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var OB_QUALITY: String? { let o = _accessor.offset(VTOFFSET.OB_QUALITY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OB_QUALITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_QUALITY.v) }
-  public var OB_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.OB_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OB_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_DESCRIPTION.v) }
+  public var OB_TYPE: String? { let o = _accessor.offset(VT.OB_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OB_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OB_TYPE) }
+  public var OB_UO_M: String? { let o = _accessor.offset(VT.OB_UO_M); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OB_UO_MSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OB_UO_M) }
+  public var OB_VALUE: Double { let o = _accessor.offset(VT.OB_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OB_STRING: String? { let o = _accessor.offset(VT.OB_STRING); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OB_STRINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OB_STRING) }
+  public var OB_ARRAY: FlatbufferVector<String?> { return _accessor.vector(at: VT.OB_ARRAY, byteSize: 4) }
+  public var OB_BOOL: Bool { let o = _accessor.offset(VT.OB_BOOL); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OB_QUALITY: String? { let o = _accessor.offset(VT.OB_QUALITY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OB_QUALITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OB_QUALITY) }
+  public var OB_DESCRIPTION: String? { let o = _accessor.offset(VT.OB_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OB_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OB_DESCRIPTION) }
   public static func startSEV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(OB_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TYPE, at: VTOFFSET.OB_TYPE.p) }
-  public static func add(OB_UO_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_UO_M, at: VTOFFSET.OB_UO_M.p) }
-  public static func add(OB_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OB_VALUE, def: 0.0, at: VTOFFSET.OB_VALUE.p) }
-  public static func add(OB_STRING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_STRING, at: VTOFFSET.OB_STRING.p) }
-  public static func addVectorOf(OB_ARRAY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_ARRAY, at: VTOFFSET.OB_ARRAY.p) }
+  public static func add(OB_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TYPE, at: VT.OB_TYPE) }
+  public static func add(OB_UO_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_UO_M, at: VT.OB_UO_M) }
+  public static func add(OB_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OB_VALUE, def: 0.0, at: VT.OB_VALUE) }
+  public static func add(OB_STRING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_STRING, at: VT.OB_STRING) }
+  public static func addVectorOf(OB_ARRAY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_ARRAY, at: VT.OB_ARRAY) }
   public static func add(OB_BOOL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OB_BOOL, def: false,
-   at: VTOFFSET.OB_BOOL.p) }
-  public static func add(OB_QUALITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_QUALITY, at: VTOFFSET.OB_QUALITY.p) }
-  public static func add(OB_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_DESCRIPTION, at: VTOFFSET.OB_DESCRIPTION.p) }
+   at: VT.OB_BOOL) }
+  public static func add(OB_QUALITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_QUALITY, at: VT.OB_QUALITY) }
+  public static func add(OB_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_DESCRIPTION, at: VT.OB_DESCRIPTION) }
   public static func endSEV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSEV(
     _ fbb: inout FlatBufferBuilder,
@@ -82,14 +80,14 @@ public struct SEV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.OB_TYPE.p, fieldName: "OB_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OB_UO_M.p, fieldName: "OB_UO_M", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OB_VALUE.p, fieldName: "OB_VALUE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OB_STRING.p, fieldName: "OB_STRING", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OB_ARRAY.p, fieldName: "OB_ARRAY", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.OB_BOOL.p, fieldName: "OB_BOOL", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OB_QUALITY.p, fieldName: "OB_QUALITY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OB_DESCRIPTION.p, fieldName: "OB_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OB_TYPE, fieldName: "OB_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OB_UO_M, fieldName: "OB_UO_M", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OB_VALUE, fieldName: "OB_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.OB_STRING, fieldName: "OB_STRING", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OB_ARRAY, fieldName: "OB_ARRAY", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.OB_BOOL, fieldName: "OB_BOOL", required: false, type: Bool.self)
+    try _v.visit(field: VT.OB_QUALITY, fieldName: "OB_QUALITY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OB_DESCRIPTION, fieldName: "OB_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

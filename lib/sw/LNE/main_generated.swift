@@ -35,119 +35,117 @@ public struct LNE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case SAT_NO = 6
-    case ORIG_OBJECT_ID = 8
-    case DERIVED_FROM = 10
-    case DECLASSIFICATION_DATE = 12
-    case DECLASSIFICATION_STRING = 14
-    case MSG_CREATE_DATE = 16
-    case LAUNCH_DATE = 18
-    case OUTCOME = 20
-    case LAUNCH_FAILURE_CODE = 22
-    case BE_NUMBER = 24
-    case O_SUFFIX = 26
-    case LAUNCH_FACILITY_NAME = 28
-    case LAUNCH_FACILITY_CODE = 30
-    case LAUNCH_VEHICLE = 32
-    case LAUNCH_VEHICLE_CONFIG = 34
-    case TARGET_ORBIT = 36
-    case OBJECTS_ON_ORBIT = 38
-    case ON_ORBIT = 40
-    case LAUNCH_COUNTRY = 42
-    case MISSION_NAME = 44
-    case REMARKS = 46
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let SAT_NO: VOffset = 6
+    static let ORIG_OBJECT_ID: VOffset = 8
+    static let DERIVED_FROM: VOffset = 10
+    static let DECLASSIFICATION_DATE: VOffset = 12
+    static let DECLASSIFICATION_STRING: VOffset = 14
+    static let MSG_CREATE_DATE: VOffset = 16
+    static let LAUNCH_DATE: VOffset = 18
+    static let OUTCOME: VOffset = 20
+    static let LAUNCH_FAILURE_CODE: VOffset = 22
+    static let BE_NUMBER: VOffset = 24
+    static let O_SUFFIX: VOffset = 26
+    static let LAUNCH_FACILITY_NAME: VOffset = 28
+    static let LAUNCH_FACILITY_CODE: VOffset = 30
+    static let LAUNCH_VEHICLE: VOffset = 32
+    static let LAUNCH_VEHICLE_CONFIG: VOffset = 34
+    static let TARGET_ORBIT: VOffset = 36
+    static let OBJECTS_ON_ORBIT: VOffset = 38
+    static let ON_ORBIT: VOffset = 40
+    static let LAUNCH_COUNTRY: VOffset = 42
+    static let MISSION_NAME: VOffset = 44
+    static let REMARKS: VOffset = 46
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Satellite catalog number of launched object
-  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VT.SAT_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  International designator (YYYY-NNNP)
-  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
+  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VT.ORIG_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_OBJECT_ID) }
   ///  Source record this event was derived from
-  public var DERIVED_FROM: String? { let o = _accessor.offset(VTOFFSET.DERIVED_FROM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DERIVED_FROMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DERIVED_FROM.v) }
+  public var DERIVED_FROM: String? { let o = _accessor.offset(VT.DERIVED_FROM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DERIVED_FROMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DERIVED_FROM) }
   ///  Classification date (ISO 8601)
-  public var DECLASSIFICATION_DATE: String? { let o = _accessor.offset(VTOFFSET.DECLASSIFICATION_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DECLASSIFICATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DECLASSIFICATION_DATE.v) }
+  public var DECLASSIFICATION_DATE: String? { let o = _accessor.offset(VT.DECLASSIFICATION_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DECLASSIFICATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DECLASSIFICATION_DATE) }
   ///  Classification marking
-  public var DECLASSIFICATION_STRING: String? { let o = _accessor.offset(VTOFFSET.DECLASSIFICATION_STRING.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DECLASSIFICATION_STRINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DECLASSIFICATION_STRING.v) }
+  public var DECLASSIFICATION_STRING: String? { let o = _accessor.offset(VT.DECLASSIFICATION_STRING); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DECLASSIFICATION_STRINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DECLASSIFICATION_STRING) }
   ///  Message creation time (ISO 8601)
-  public var MSG_CREATE_DATE: String? { let o = _accessor.offset(VTOFFSET.MSG_CREATE_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MSG_CREATE_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MSG_CREATE_DATE.v) }
+  public var MSG_CREATE_DATE: String? { let o = _accessor.offset(VT.MSG_CREATE_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MSG_CREATE_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MSG_CREATE_DATE) }
   ///  Launch date and time (ISO 8601)
-  public var LAUNCH_DATE: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_DATE.v) }
+  public var LAUNCH_DATE: String? { let o = _accessor.offset(VT.LAUNCH_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_DATE) }
   ///  Launch outcome
-  public var OUTCOME: launchOutcome { let o = _accessor.offset(VTOFFSET.OUTCOME.v); return o == 0 ? .success : launchOutcome(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .success }
+  public var OUTCOME: launchOutcome { let o = _accessor.offset(VT.OUTCOME); return o == 0 ? .success : launchOutcome(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .success }
   ///  Launch failure code (if applicable)
-  public var LAUNCH_FAILURE_CODE: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_FAILURE_CODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_FAILURE_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_FAILURE_CODE.v) }
+  public var LAUNCH_FAILURE_CODE: String? { let o = _accessor.offset(VT.LAUNCH_FAILURE_CODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_FAILURE_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_FAILURE_CODE) }
   ///  Basic encyclopedia number
-  public var BE_NUMBER: String? { let o = _accessor.offset(VTOFFSET.BE_NUMBER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BE_NUMBERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BE_NUMBER.v) }
+  public var BE_NUMBER: String? { let o = _accessor.offset(VT.BE_NUMBER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BE_NUMBERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BE_NUMBER) }
   ///  Object suffix identifier
-  public var O_SUFFIX: String? { let o = _accessor.offset(VTOFFSET.O_SUFFIX.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var O_SUFFIXSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.O_SUFFIX.v) }
+  public var O_SUFFIX: String? { let o = _accessor.offset(VT.O_SUFFIX); return o == 0 ? nil : _accessor.string(at: o) }
+  public var O_SUFFIXSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.O_SUFFIX) }
   ///  Launch facility name
-  public var LAUNCH_FACILITY_NAME: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_FACILITY_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_FACILITY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_FACILITY_NAME.v) }
+  public var LAUNCH_FACILITY_NAME: String? { let o = _accessor.offset(VT.LAUNCH_FACILITY_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_FACILITY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_FACILITY_NAME) }
   ///  Launch facility code
-  public var LAUNCH_FACILITY_CODE: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_FACILITY_CODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_FACILITY_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_FACILITY_CODE.v) }
+  public var LAUNCH_FACILITY_CODE: String? { let o = _accessor.offset(VT.LAUNCH_FACILITY_CODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_FACILITY_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_FACILITY_CODE) }
   ///  Launch vehicle type
-  public var LAUNCH_VEHICLE: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_VEHICLE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_VEHICLESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_VEHICLE.v) }
+  public var LAUNCH_VEHICLE: String? { let o = _accessor.offset(VT.LAUNCH_VEHICLE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_VEHICLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_VEHICLE) }
   ///  Launch vehicle configuration
-  public var LAUNCH_VEHICLE_CONFIG: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_VEHICLE_CONFIG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_VEHICLE_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_VEHICLE_CONFIG.v) }
+  public var LAUNCH_VEHICLE_CONFIG: String? { let o = _accessor.offset(VT.LAUNCH_VEHICLE_CONFIG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_VEHICLE_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_VEHICLE_CONFIG) }
   ///  Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)
-  public var TARGET_ORBIT: String? { let o = _accessor.offset(VTOFFSET.TARGET_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TARGET_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TARGET_ORBIT.v) }
+  public var TARGET_ORBIT: String? { let o = _accessor.offset(VT.TARGET_ORBIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGET_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET_ORBIT) }
   ///  Number of objects placed on orbit
-  public var OBJECTS_ON_ORBIT: UInt16 { let o = _accessor.offset(VTOFFSET.OBJECTS_ON_ORBIT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var OBJECTS_ON_ORBIT: UInt16 { let o = _accessor.offset(VT.OBJECTS_ON_ORBIT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  On-orbit reference identifier
-  public var ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ON_ORBIT.v) }
+  public var ON_ORBIT: String? { let o = _accessor.offset(VT.ON_ORBIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ON_ORBIT) }
   ///  Launch country or operator
-  public var LAUNCH_COUNTRY: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_COUNTRY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_COUNTRYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_COUNTRY.v) }
+  public var LAUNCH_COUNTRY: String? { let o = _accessor.offset(VT.LAUNCH_COUNTRY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_COUNTRYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_COUNTRY) }
   ///  Mission name or payload description
-  public var MISSION_NAME: String? { let o = _accessor.offset(VTOFFSET.MISSION_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MISSION_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MISSION_NAME.v) }
+  public var MISSION_NAME: String? { let o = _accessor.offset(VT.MISSION_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MISSION_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MISSION_NAME) }
   ///  Additional remarks
-  public var REMARKS: String? { let o = _accessor.offset(VTOFFSET.REMARKS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REMARKSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REMARKS.v) }
+  public var REMARKS: String? { let o = _accessor.offset(VT.REMARKS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REMARKSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REMARKS) }
   public static func startLNE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 22) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
-  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
-  public static func add(DERIVED_FROM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DERIVED_FROM, at: VTOFFSET.DERIVED_FROM.p) }
-  public static func add(DECLASSIFICATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DECLASSIFICATION_DATE, at: VTOFFSET.DECLASSIFICATION_DATE.p) }
-  public static func add(DECLASSIFICATION_STRING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DECLASSIFICATION_STRING, at: VTOFFSET.DECLASSIFICATION_STRING.p) }
-  public static func add(MSG_CREATE_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_CREATE_DATE, at: VTOFFSET.MSG_CREATE_DATE.p) }
-  public static func add(LAUNCH_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_DATE, at: VTOFFSET.LAUNCH_DATE.p) }
-  public static func add(OUTCOME: launchOutcome, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTCOME.rawValue, def: 0, at: VTOFFSET.OUTCOME.p) }
-  public static func add(LAUNCH_FAILURE_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_FAILURE_CODE, at: VTOFFSET.LAUNCH_FAILURE_CODE.p) }
-  public static func add(BE_NUMBER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BE_NUMBER, at: VTOFFSET.BE_NUMBER.p) }
-  public static func add(O_SUFFIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: O_SUFFIX, at: VTOFFSET.O_SUFFIX.p) }
-  public static func add(LAUNCH_FACILITY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_FACILITY_NAME, at: VTOFFSET.LAUNCH_FACILITY_NAME.p) }
-  public static func add(LAUNCH_FACILITY_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_FACILITY_CODE, at: VTOFFSET.LAUNCH_FACILITY_CODE.p) }
-  public static func add(LAUNCH_VEHICLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_VEHICLE, at: VTOFFSET.LAUNCH_VEHICLE.p) }
-  public static func add(LAUNCH_VEHICLE_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_VEHICLE_CONFIG, at: VTOFFSET.LAUNCH_VEHICLE_CONFIG.p) }
-  public static func add(TARGET_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_ORBIT, at: VTOFFSET.TARGET_ORBIT.p) }
-  public static func add(OBJECTS_ON_ORBIT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECTS_ON_ORBIT, def: 0, at: VTOFFSET.OBJECTS_ON_ORBIT.p) }
-  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VTOFFSET.ON_ORBIT.p) }
-  public static func add(LAUNCH_COUNTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_COUNTRY, at: VTOFFSET.LAUNCH_COUNTRY.p) }
-  public static func add(MISSION_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION_NAME, at: VTOFFSET.MISSION_NAME.p) }
-  public static func add(REMARKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REMARKS, at: VTOFFSET.REMARKS.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VT.SAT_NO) }
+  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VT.ORIG_OBJECT_ID) }
+  public static func add(DERIVED_FROM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DERIVED_FROM, at: VT.DERIVED_FROM) }
+  public static func add(DECLASSIFICATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DECLASSIFICATION_DATE, at: VT.DECLASSIFICATION_DATE) }
+  public static func add(DECLASSIFICATION_STRING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DECLASSIFICATION_STRING, at: VT.DECLASSIFICATION_STRING) }
+  public static func add(MSG_CREATE_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_CREATE_DATE, at: VT.MSG_CREATE_DATE) }
+  public static func add(LAUNCH_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_DATE, at: VT.LAUNCH_DATE) }
+  public static func add(OUTCOME: launchOutcome, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTCOME.rawValue, def: 0, at: VT.OUTCOME) }
+  public static func add(LAUNCH_FAILURE_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_FAILURE_CODE, at: VT.LAUNCH_FAILURE_CODE) }
+  public static func add(BE_NUMBER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BE_NUMBER, at: VT.BE_NUMBER) }
+  public static func add(O_SUFFIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: O_SUFFIX, at: VT.O_SUFFIX) }
+  public static func add(LAUNCH_FACILITY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_FACILITY_NAME, at: VT.LAUNCH_FACILITY_NAME) }
+  public static func add(LAUNCH_FACILITY_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_FACILITY_CODE, at: VT.LAUNCH_FACILITY_CODE) }
+  public static func add(LAUNCH_VEHICLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_VEHICLE, at: VT.LAUNCH_VEHICLE) }
+  public static func add(LAUNCH_VEHICLE_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_VEHICLE_CONFIG, at: VT.LAUNCH_VEHICLE_CONFIG) }
+  public static func add(TARGET_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_ORBIT, at: VT.TARGET_ORBIT) }
+  public static func add(OBJECTS_ON_ORBIT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECTS_ON_ORBIT, def: 0, at: VT.OBJECTS_ON_ORBIT) }
+  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VT.ON_ORBIT) }
+  public static func add(LAUNCH_COUNTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_COUNTRY, at: VT.LAUNCH_COUNTRY) }
+  public static func add(MISSION_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION_NAME, at: VT.MISSION_NAME) }
+  public static func add(REMARKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REMARKS, at: VT.REMARKS) }
   public static func endLNE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createLNE(
     _ fbb: inout FlatBufferBuilder,
@@ -202,28 +200,28 @@ public struct LNE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DERIVED_FROM.p, fieldName: "DERIVED_FROM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DECLASSIFICATION_DATE.p, fieldName: "DECLASSIFICATION_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DECLASSIFICATION_STRING.p, fieldName: "DECLASSIFICATION_STRING", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MSG_CREATE_DATE.p, fieldName: "MSG_CREATE_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_DATE.p, fieldName: "LAUNCH_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OUTCOME.p, fieldName: "OUTCOME", required: false, type: launchOutcome.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_FAILURE_CODE.p, fieldName: "LAUNCH_FAILURE_CODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BE_NUMBER.p, fieldName: "BE_NUMBER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.O_SUFFIX.p, fieldName: "O_SUFFIX", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_FACILITY_NAME.p, fieldName: "LAUNCH_FACILITY_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_FACILITY_CODE.p, fieldName: "LAUNCH_FACILITY_CODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_VEHICLE.p, fieldName: "LAUNCH_VEHICLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_VEHICLE_CONFIG.p, fieldName: "LAUNCH_VEHICLE_CONFIG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TARGET_ORBIT.p, fieldName: "TARGET_ORBIT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJECTS_ON_ORBIT.p, fieldName: "OBJECTS_ON_ORBIT", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.ON_ORBIT.p, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_COUNTRY.p, fieldName: "LAUNCH_COUNTRY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MISSION_NAME.p, fieldName: "MISSION_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REMARKS.p, fieldName: "REMARKS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAT_NO, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ORIG_OBJECT_ID, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DERIVED_FROM, fieldName: "DERIVED_FROM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DECLASSIFICATION_DATE, fieldName: "DECLASSIFICATION_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DECLASSIFICATION_STRING, fieldName: "DECLASSIFICATION_STRING", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MSG_CREATE_DATE, fieldName: "MSG_CREATE_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAUNCH_DATE, fieldName: "LAUNCH_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OUTCOME, fieldName: "OUTCOME", required: false, type: launchOutcome.self)
+    try _v.visit(field: VT.LAUNCH_FAILURE_CODE, fieldName: "LAUNCH_FAILURE_CODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BE_NUMBER, fieldName: "BE_NUMBER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.O_SUFFIX, fieldName: "O_SUFFIX", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAUNCH_FACILITY_NAME, fieldName: "LAUNCH_FACILITY_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAUNCH_FACILITY_CODE, fieldName: "LAUNCH_FACILITY_CODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAUNCH_VEHICLE, fieldName: "LAUNCH_VEHICLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAUNCH_VEHICLE_CONFIG, fieldName: "LAUNCH_VEHICLE_CONFIG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET_ORBIT, fieldName: "TARGET_ORBIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECTS_ON_ORBIT, fieldName: "OBJECTS_ON_ORBIT", required: false, type: UInt16.self)
+    try _v.visit(field: VT.ON_ORBIT, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAUNCH_COUNTRY, fieldName: "LAUNCH_COUNTRY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MISSION_NAME, fieldName: "MISSION_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REMARKS, fieldName: "REMARKS", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

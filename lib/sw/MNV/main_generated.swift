@@ -57,112 +57,110 @@ public struct mnvOrbitalState: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID_ELSET = 4
-    case ELSET = 6
-    case ID_STATE_VECTOR = 8
-    case STATE_VECTOR = 10
-    case POS_X = 12
-    case POS_Y = 14
-    case POS_Z = 16
-    case VEL_X = 18
-    case VEL_Y = 20
-    case VEL_Z = 22
-    case RADIATION_PRESS_COEFF = 24
-    case BALLISTIC_COEFF = 26
-    case APOGEE = 28
-    case PERIGEE = 30
-    case INCLINATION = 32
-    case ECCENTRICITY = 34
-    case PERIOD = 36
-    case RAAN = 38
-    case SMA = 40
-    case GEO_LONGITUDE = 42
-    case DRIFT_RATE = 44
-    case SIGMA_U = 46
-    case SIGMA_V = 48
-    case SIGMA_W = 50
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID_ELSET: VOffset = 4
+    static let ELSET: VOffset = 6
+    static let ID_STATE_VECTOR: VOffset = 8
+    static let STATE_VECTOR: VOffset = 10
+    static let POS_X: VOffset = 12
+    static let POS_Y: VOffset = 14
+    static let POS_Z: VOffset = 16
+    static let VEL_X: VOffset = 18
+    static let VEL_Y: VOffset = 20
+    static let VEL_Z: VOffset = 22
+    static let RADIATION_PRESS_COEFF: VOffset = 24
+    static let BALLISTIC_COEFF: VOffset = 26
+    static let APOGEE: VOffset = 28
+    static let PERIGEE: VOffset = 30
+    static let INCLINATION: VOffset = 32
+    static let ECCENTRICITY: VOffset = 34
+    static let PERIOD: VOffset = 36
+    static let RAAN: VOffset = 38
+    static let SMA: VOffset = 40
+    static let GEO_LONGITUDE: VOffset = 42
+    static let DRIFT_RATE: VOffset = 44
+    static let SIGMA_U: VOffset = 46
+    static let SIGMA_V: VOffset = 48
+    static let SIGMA_W: VOffset = 50
   }
 
   ///  Element set identifier
-  public var ID_ELSET: String? { let o = _accessor.offset(VTOFFSET.ID_ELSET.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_ELSETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_ELSET.v) }
+  public var ID_ELSET: String? { let o = _accessor.offset(VT.ID_ELSET); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_ELSETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_ELSET) }
   ///  Element set data reference
-  public var ELSET: String? { let o = _accessor.offset(VTOFFSET.ELSET.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ELSETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ELSET.v) }
+  public var ELSET: String? { let o = _accessor.offset(VT.ELSET); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ELSETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ELSET) }
   ///  State vector identifier
-  public var ID_STATE_VECTOR: String? { let o = _accessor.offset(VTOFFSET.ID_STATE_VECTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_STATE_VECTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_STATE_VECTOR.v) }
+  public var ID_STATE_VECTOR: String? { let o = _accessor.offset(VT.ID_STATE_VECTOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_STATE_VECTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_STATE_VECTOR) }
   ///  State vector data reference
-  public var STATE_VECTOR: String? { let o = _accessor.offset(VTOFFSET.STATE_VECTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STATE_VECTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STATE_VECTOR.v) }
+  public var STATE_VECTOR: String? { let o = _accessor.offset(VT.STATE_VECTOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STATE_VECTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STATE_VECTOR) }
   ///  Position X (km)
-  public var POS_X: Double { let o = _accessor.offset(VTOFFSET.POS_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POS_X: Double { let o = _accessor.offset(VT.POS_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Position Y (km)
-  public var POS_Y: Double { let o = _accessor.offset(VTOFFSET.POS_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POS_Y: Double { let o = _accessor.offset(VT.POS_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Position Z (km)
-  public var POS_Z: Double { let o = _accessor.offset(VTOFFSET.POS_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POS_Z: Double { let o = _accessor.offset(VT.POS_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Velocity X (km/s)
-  public var VEL_X: Double { let o = _accessor.offset(VTOFFSET.VEL_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VEL_X: Double { let o = _accessor.offset(VT.VEL_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Velocity Y (km/s)
-  public var VEL_Y: Double { let o = _accessor.offset(VTOFFSET.VEL_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VEL_Y: Double { let o = _accessor.offset(VT.VEL_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Velocity Z (km/s)
-  public var VEL_Z: Double { let o = _accessor.offset(VTOFFSET.VEL_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VEL_Z: Double { let o = _accessor.offset(VT.VEL_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Radiation pressure coefficient (Cr)
-  public var RADIATION_PRESS_COEFF: Double { let o = _accessor.offset(VTOFFSET.RADIATION_PRESS_COEFF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RADIATION_PRESS_COEFF: Double { let o = _accessor.offset(VT.RADIATION_PRESS_COEFF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Ballistic coefficient (m^2/kg)
-  public var BALLISTIC_COEFF: Double { let o = _accessor.offset(VTOFFSET.BALLISTIC_COEFF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BALLISTIC_COEFF: Double { let o = _accessor.offset(VT.BALLISTIC_COEFF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Apogee altitude (km)
-  public var APOGEE: Double { let o = _accessor.offset(VTOFFSET.APOGEE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var APOGEE: Double { let o = _accessor.offset(VT.APOGEE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Perigee altitude (km)
-  public var PERIGEE: Double { let o = _accessor.offset(VTOFFSET.PERIGEE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PERIGEE: Double { let o = _accessor.offset(VT.PERIGEE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Inclination (degrees)
-  public var INCLINATION: Double { let o = _accessor.offset(VTOFFSET.INCLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Eccentricity
-  public var ECCENTRICITY: Double { let o = _accessor.offset(VTOFFSET.ECCENTRICITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Orbital period (minutes)
-  public var PERIOD: Double { let o = _accessor.offset(VTOFFSET.PERIOD.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PERIOD: Double { let o = _accessor.offset(VT.PERIOD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Right ascension of ascending node (degrees)
-  public var RAAN: Double { let o = _accessor.offset(VTOFFSET.RAAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RAAN: Double { let o = _accessor.offset(VT.RAAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Semi-major axis (km)
-  public var SMA: Double { let o = _accessor.offset(VTOFFSET.SMA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SMA: Double { let o = _accessor.offset(VT.SMA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  GEO longitude (degrees east)
-  public var GEO_LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.GEO_LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GEO_LONGITUDE: Double { let o = _accessor.offset(VT.GEO_LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Longitude drift rate (degrees/day)
-  public var DRIFT_RATE: Double { let o = _accessor.offset(VTOFFSET.DRIFT_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DRIFT_RATE: Double { let o = _accessor.offset(VT.DRIFT_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Position uncertainty U (km, 1-sigma)
-  public var SIGMA_U: Double { let o = _accessor.offset(VTOFFSET.SIGMA_U.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SIGMA_U: Double { let o = _accessor.offset(VT.SIGMA_U); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Position uncertainty V (km, 1-sigma)
-  public var SIGMA_V: Double { let o = _accessor.offset(VTOFFSET.SIGMA_V.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SIGMA_V: Double { let o = _accessor.offset(VT.SIGMA_V); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Position uncertainty W (km, 1-sigma)
-  public var SIGMA_W: Double { let o = _accessor.offset(VTOFFSET.SIGMA_W.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SIGMA_W: Double { let o = _accessor.offset(VT.SIGMA_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startmnvOrbitalState(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
-  public static func add(ID_ELSET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ELSET, at: VTOFFSET.ID_ELSET.p) }
-  public static func add(ELSET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELSET, at: VTOFFSET.ELSET.p) }
-  public static func add(ID_STATE_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_STATE_VECTOR, at: VTOFFSET.ID_STATE_VECTOR.p) }
-  public static func add(STATE_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE_VECTOR, at: VTOFFSET.STATE_VECTOR.p) }
-  public static func add(POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_X, def: 0.0, at: VTOFFSET.POS_X.p) }
-  public static func add(POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_Y, def: 0.0, at: VTOFFSET.POS_Y.p) }
-  public static func add(POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_Z, def: 0.0, at: VTOFFSET.POS_Z.p) }
-  public static func add(VEL_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VEL_X, def: 0.0, at: VTOFFSET.VEL_X.p) }
-  public static func add(VEL_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VEL_Y, def: 0.0, at: VTOFFSET.VEL_Y.p) }
-  public static func add(VEL_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VEL_Z, def: 0.0, at: VTOFFSET.VEL_Z.p) }
-  public static func add(RADIATION_PRESS_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIATION_PRESS_COEFF, def: 0.0, at: VTOFFSET.RADIATION_PRESS_COEFF.p) }
-  public static func add(BALLISTIC_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BALLISTIC_COEFF, def: 0.0, at: VTOFFSET.BALLISTIC_COEFF.p) }
-  public static func add(APOGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOGEE, def: 0.0, at: VTOFFSET.APOGEE.p) }
-  public static func add(PERIGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIGEE, def: 0.0, at: VTOFFSET.PERIGEE.p) }
-  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VTOFFSET.INCLINATION.p) }
-  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VTOFFSET.ECCENTRICITY.p) }
-  public static func add(PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIOD, def: 0.0, at: VTOFFSET.PERIOD.p) }
-  public static func add(RAAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RAAN, def: 0.0, at: VTOFFSET.RAAN.p) }
-  public static func add(SMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SMA, def: 0.0, at: VTOFFSET.SMA.p) }
-  public static func add(GEO_LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEO_LONGITUDE, def: 0.0, at: VTOFFSET.GEO_LONGITUDE.p) }
-  public static func add(DRIFT_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRIFT_RATE, def: 0.0, at: VTOFFSET.DRIFT_RATE.p) }
-  public static func add(SIGMA_U: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGMA_U, def: 0.0, at: VTOFFSET.SIGMA_U.p) }
-  public static func add(SIGMA_V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGMA_V, def: 0.0, at: VTOFFSET.SIGMA_V.p) }
-  public static func add(SIGMA_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGMA_W, def: 0.0, at: VTOFFSET.SIGMA_W.p) }
+  public static func add(ID_ELSET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ELSET, at: VT.ID_ELSET) }
+  public static func add(ELSET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELSET, at: VT.ELSET) }
+  public static func add(ID_STATE_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_STATE_VECTOR, at: VT.ID_STATE_VECTOR) }
+  public static func add(STATE_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE_VECTOR, at: VT.STATE_VECTOR) }
+  public static func add(POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_X, def: 0.0, at: VT.POS_X) }
+  public static func add(POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_Y, def: 0.0, at: VT.POS_Y) }
+  public static func add(POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_Z, def: 0.0, at: VT.POS_Z) }
+  public static func add(VEL_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VEL_X, def: 0.0, at: VT.VEL_X) }
+  public static func add(VEL_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VEL_Y, def: 0.0, at: VT.VEL_Y) }
+  public static func add(VEL_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VEL_Z, def: 0.0, at: VT.VEL_Z) }
+  public static func add(RADIATION_PRESS_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIATION_PRESS_COEFF, def: 0.0, at: VT.RADIATION_PRESS_COEFF) }
+  public static func add(BALLISTIC_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BALLISTIC_COEFF, def: 0.0, at: VT.BALLISTIC_COEFF) }
+  public static func add(APOGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOGEE, def: 0.0, at: VT.APOGEE) }
+  public static func add(PERIGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIGEE, def: 0.0, at: VT.PERIGEE) }
+  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
+  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
+  public static func add(PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIOD, def: 0.0, at: VT.PERIOD) }
+  public static func add(RAAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RAAN, def: 0.0, at: VT.RAAN) }
+  public static func add(SMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SMA, def: 0.0, at: VT.SMA) }
+  public static func add(GEO_LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEO_LONGITUDE, def: 0.0, at: VT.GEO_LONGITUDE) }
+  public static func add(DRIFT_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRIFT_RATE, def: 0.0, at: VT.DRIFT_RATE) }
+  public static func add(SIGMA_U: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGMA_U, def: 0.0, at: VT.SIGMA_U) }
+  public static func add(SIGMA_V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGMA_V, def: 0.0, at: VT.SIGMA_V) }
+  public static func add(SIGMA_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGMA_W, def: 0.0, at: VT.SIGMA_W) }
   public static func endmnvOrbitalState(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createmnvOrbitalState(
     _ fbb: inout FlatBufferBuilder,
@@ -221,30 +219,30 @@ public struct mnvOrbitalState: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID_ELSET.p, fieldName: "ID_ELSET", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ELSET.p, fieldName: "ELSET", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_STATE_VECTOR.p, fieldName: "ID_STATE_VECTOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STATE_VECTOR.p, fieldName: "STATE_VECTOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.POS_X.p, fieldName: "POS_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POS_Y.p, fieldName: "POS_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POS_Z.p, fieldName: "POS_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VEL_X.p, fieldName: "VEL_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VEL_Y.p, fieldName: "VEL_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VEL_Z.p, fieldName: "VEL_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RADIATION_PRESS_COEFF.p, fieldName: "RADIATION_PRESS_COEFF", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BALLISTIC_COEFF.p, fieldName: "BALLISTIC_COEFF", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.APOGEE.p, fieldName: "APOGEE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PERIGEE.p, fieldName: "PERIGEE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INCLINATION.p, fieldName: "INCLINATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ECCENTRICITY.p, fieldName: "ECCENTRICITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PERIOD.p, fieldName: "PERIOD", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RAAN.p, fieldName: "RAAN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SMA.p, fieldName: "SMA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.GEO_LONGITUDE.p, fieldName: "GEO_LONGITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DRIFT_RATE.p, fieldName: "DRIFT_RATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SIGMA_U.p, fieldName: "SIGMA_U", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SIGMA_V.p, fieldName: "SIGMA_V", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SIGMA_W.p, fieldName: "SIGMA_W", required: false, type: Double.self)
+    try _v.visit(field: VT.ID_ELSET, fieldName: "ID_ELSET", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ELSET, fieldName: "ELSET", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_STATE_VECTOR, fieldName: "ID_STATE_VECTOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATE_VECTOR, fieldName: "STATE_VECTOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POS_X, fieldName: "POS_X", required: false, type: Double.self)
+    try _v.visit(field: VT.POS_Y, fieldName: "POS_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.POS_Z, fieldName: "POS_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.VEL_X, fieldName: "VEL_X", required: false, type: Double.self)
+    try _v.visit(field: VT.VEL_Y, fieldName: "VEL_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.VEL_Z, fieldName: "VEL_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.RADIATION_PRESS_COEFF, fieldName: "RADIATION_PRESS_COEFF", required: false, type: Double.self)
+    try _v.visit(field: VT.BALLISTIC_COEFF, fieldName: "BALLISTIC_COEFF", required: false, type: Double.self)
+    try _v.visit(field: VT.APOGEE, fieldName: "APOGEE", required: false, type: Double.self)
+    try _v.visit(field: VT.PERIGEE, fieldName: "PERIGEE", required: false, type: Double.self)
+    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.PERIOD, fieldName: "PERIOD", required: false, type: Double.self)
+    try _v.visit(field: VT.RAAN, fieldName: "RAAN", required: false, type: Double.self)
+    try _v.visit(field: VT.SMA, fieldName: "SMA", required: false, type: Double.self)
+    try _v.visit(field: VT.GEO_LONGITUDE, fieldName: "GEO_LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.DRIFT_RATE, fieldName: "DRIFT_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.SIGMA_U, fieldName: "SIGMA_U", required: false, type: Double.self)
+    try _v.visit(field: VT.SIGMA_V, fieldName: "SIGMA_V", required: false, type: Double.self)
+    try _v.visit(field: VT.SIGMA_W, fieldName: "SIGMA_W", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -261,212 +259,210 @@ public struct MNV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case SAT_NO = 6
-    case ORIG_OBJECT_ID = 8
-    case ON_ORBIT = 10
-    case STATUS = 12
-    case CHARACTERIZATION = 14
-    case CHARACTERIZATION_UNC = 16
-    case REPORT_TIME = 18
-    case EVENT_START_TIME = 20
-    case EVENT_END_TIME = 22
-    case TOTAL_BURN_TIME = 24
-    case OD_FIT_END_TIME = 26
-    case ID_SENSOR = 28
-    case ORIG_SENSOR_ID = 30
-    case EVENT_ID = 32
-    case UCT = 34
-    case MANEUVER_UNC = 36
-    case DELTA_VEL = 38
-    case DELTA_VEL_U = 40
-    case DELTA_VEL_V = 42
-    case DELTA_VEL_W = 44
-    case DELTA_POS = 46
-    case DELTA_POS_U = 48
-    case DELTA_POS_V = 50
-    case DELTA_POS_W = 52
-    case DELTA_MASS = 54
-    case PRE_EVENT = 56
-    case POST_EVENT = 58
-    case POST_MASS = 60
-    case POST_AREA = 62
-    case COV = 64
-    case NUM_OBS = 66
-    case STATE_MODEL = 68
-    case STATE_MODEL_VERSION = 70
-    case NUM_ACCEL_POINTS = 72
-    case MNVR_ACCEL_TIMES = 74
-    case MNVR_ACCELS = 76
-    case MNVR_ACCEL_UNCS = 78
-    case DESCRIPTION = 80
-    case DESCRIPTOR = 82
-    case ALGORITHM = 84
-    case TAGS = 86
-    case SOURCED_DATA = 88
-    case SOURCED_DATA_TYPES = 90
-    case TRANSACTION_ID = 92
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let SAT_NO: VOffset = 6
+    static let ORIG_OBJECT_ID: VOffset = 8
+    static let ON_ORBIT: VOffset = 10
+    static let STATUS: VOffset = 12
+    static let CHARACTERIZATION: VOffset = 14
+    static let CHARACTERIZATION_UNC: VOffset = 16
+    static let REPORT_TIME: VOffset = 18
+    static let EVENT_START_TIME: VOffset = 20
+    static let EVENT_END_TIME: VOffset = 22
+    static let TOTAL_BURN_TIME: VOffset = 24
+    static let OD_FIT_END_TIME: VOffset = 26
+    static let ID_SENSOR: VOffset = 28
+    static let ORIG_SENSOR_ID: VOffset = 30
+    static let EVENT_ID: VOffset = 32
+    static let UCT: VOffset = 34
+    static let MANEUVER_UNC: VOffset = 36
+    static let DELTA_VEL: VOffset = 38
+    static let DELTA_VEL_U: VOffset = 40
+    static let DELTA_VEL_V: VOffset = 42
+    static let DELTA_VEL_W: VOffset = 44
+    static let DELTA_POS: VOffset = 46
+    static let DELTA_POS_U: VOffset = 48
+    static let DELTA_POS_V: VOffset = 50
+    static let DELTA_POS_W: VOffset = 52
+    static let DELTA_MASS: VOffset = 54
+    static let PRE_EVENT: VOffset = 56
+    static let POST_EVENT: VOffset = 58
+    static let POST_MASS: VOffset = 60
+    static let POST_AREA: VOffset = 62
+    static let COV: VOffset = 64
+    static let NUM_OBS: VOffset = 66
+    static let STATE_MODEL: VOffset = 68
+    static let STATE_MODEL_VERSION: VOffset = 70
+    static let NUM_ACCEL_POINTS: VOffset = 72
+    static let MNVR_ACCEL_TIMES: VOffset = 74
+    static let MNVR_ACCELS: VOffset = 76
+    static let MNVR_ACCEL_UNCS: VOffset = 78
+    static let DESCRIPTION: VOffset = 80
+    static let DESCRIPTOR: VOffset = 82
+    static let ALGORITHM: VOffset = 84
+    static let TAGS: VOffset = 86
+    static let SOURCED_DATA: VOffset = 88
+    static let SOURCED_DATA_TYPES: VOffset = 90
+    static let TRANSACTION_ID: VOffset = 92
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Satellite catalog number
-  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VT.SAT_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  International designator
-  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
+  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VT.ORIG_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_OBJECT_ID) }
   ///  On-orbit reference
-  public var ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ON_ORBIT.v) }
+  public var ON_ORBIT: String? { let o = _accessor.offset(VT.ON_ORBIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ON_ORBIT) }
   ///  Maneuver status
-  public var STATUS: maneuverStatus { let o = _accessor.offset(VTOFFSET.STATUS.v); return o == 0 ? .detected : maneuverStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .detected }
+  public var STATUS: maneuverStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .detected : maneuverStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .detected }
   ///  Maneuver characterization
-  public var CHARACTERIZATION: maneuverCharacterization { let o = _accessor.offset(VTOFFSET.CHARACTERIZATION.v); return o == 0 ? .inPlane : maneuverCharacterization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .inPlane }
+  public var CHARACTERIZATION: maneuverCharacterization { let o = _accessor.offset(VT.CHARACTERIZATION); return o == 0 ? .inPlane : maneuverCharacterization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .inPlane }
   ///  Characterization uncertainty (0-1)
-  public var CHARACTERIZATION_UNC: Double { let o = _accessor.offset(VTOFFSET.CHARACTERIZATION_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CHARACTERIZATION_UNC: Double { let o = _accessor.offset(VT.CHARACTERIZATION_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Detection report time (ISO 8601)
-  public var REPORT_TIME: String? { let o = _accessor.offset(VTOFFSET.REPORT_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REPORT_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REPORT_TIME.v) }
+  public var REPORT_TIME: String? { let o = _accessor.offset(VT.REPORT_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REPORT_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REPORT_TIME) }
   ///  Maneuver start time (ISO 8601)
-  public var EVENT_START_TIME: String? { let o = _accessor.offset(VTOFFSET.EVENT_START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EVENT_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EVENT_START_TIME.v) }
+  public var EVENT_START_TIME: String? { let o = _accessor.offset(VT.EVENT_START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EVENT_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EVENT_START_TIME) }
   ///  Maneuver end time (ISO 8601)
-  public var EVENT_END_TIME: String? { let o = _accessor.offset(VTOFFSET.EVENT_END_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EVENT_END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EVENT_END_TIME.v) }
+  public var EVENT_END_TIME: String? { let o = _accessor.offset(VT.EVENT_END_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EVENT_END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EVENT_END_TIME) }
   ///  Total burn time (seconds)
-  public var TOTAL_BURN_TIME: Double { let o = _accessor.offset(VTOFFSET.TOTAL_BURN_TIME.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TOTAL_BURN_TIME: Double { let o = _accessor.offset(VT.TOTAL_BURN_TIME); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  OD fit end time (ISO 8601)
-  public var OD_FIT_END_TIME: String? { let o = _accessor.offset(VTOFFSET.OD_FIT_END_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OD_FIT_END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OD_FIT_END_TIME.v) }
+  public var OD_FIT_END_TIME: String? { let o = _accessor.offset(VT.OD_FIT_END_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_FIT_END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_FIT_END_TIME) }
   ///  Detecting sensor identifier
-  public var ID_SENSOR: String? { let o = _accessor.offset(VTOFFSET.ID_SENSOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_SENSOR.v) }
+  public var ID_SENSOR: String? { let o = _accessor.offset(VT.ID_SENSOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_SENSOR) }
   ///  Original sensor identifier
-  public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_SENSOR_ID.v) }
+  public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VT.ORIG_SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_SENSOR_ID) }
   ///  Maneuver event identifier
-  public var EVENT_ID: String? { let o = _accessor.offset(VTOFFSET.EVENT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EVENT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EVENT_ID.v) }
+  public var EVENT_ID: String? { let o = _accessor.offset(VT.EVENT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EVENT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EVENT_ID) }
   ///  True if object is uncorrelated
-  public var UCT: Bool { let o = _accessor.offset(VTOFFSET.UCT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var UCT: Bool { let o = _accessor.offset(VT.UCT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Maneuver detection uncertainty (km)
-  public var MANEUVER_UNC: Double { let o = _accessor.offset(VTOFFSET.MANEUVER_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MANEUVER_UNC: Double { let o = _accessor.offset(VT.MANEUVER_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Total delta-V magnitude (km/s)
-  public var DELTA_VEL: Double { let o = _accessor.offset(VTOFFSET.DELTA_VEL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_VEL: Double { let o = _accessor.offset(VT.DELTA_VEL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Delta-V along-track/U component (km/s)
-  public var DELTA_VEL_U: Double { let o = _accessor.offset(VTOFFSET.DELTA_VEL_U.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_VEL_U: Double { let o = _accessor.offset(VT.DELTA_VEL_U); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Delta-V cross-track/V component (km/s)
-  public var DELTA_VEL_V: Double { let o = _accessor.offset(VTOFFSET.DELTA_VEL_V.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_VEL_V: Double { let o = _accessor.offset(VT.DELTA_VEL_V); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Delta-V radial/W component (km/s)
-  public var DELTA_VEL_W: Double { let o = _accessor.offset(VTOFFSET.DELTA_VEL_W.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_VEL_W: Double { let o = _accessor.offset(VT.DELTA_VEL_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Total delta position (km)
-  public var DELTA_POS: Double { let o = _accessor.offset(VTOFFSET.DELTA_POS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_POS: Double { let o = _accessor.offset(VT.DELTA_POS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Delta position U component (km)
-  public var DELTA_POS_U: Double { let o = _accessor.offset(VTOFFSET.DELTA_POS_U.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_POS_U: Double { let o = _accessor.offset(VT.DELTA_POS_U); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Delta position V component (km)
-  public var DELTA_POS_V: Double { let o = _accessor.offset(VTOFFSET.DELTA_POS_V.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_POS_V: Double { let o = _accessor.offset(VT.DELTA_POS_V); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Delta position W component (km)
-  public var DELTA_POS_W: Double { let o = _accessor.offset(VTOFFSET.DELTA_POS_W.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_POS_W: Double { let o = _accessor.offset(VT.DELTA_POS_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Propellant mass consumed (kg)
-  public var DELTA_MASS: Double { let o = _accessor.offset(VTOFFSET.DELTA_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_MASS: Double { let o = _accessor.offset(VT.DELTA_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pre-maneuver orbital state
-  public var PRE_EVENT: mnvOrbitalState? { let o = _accessor.offset(VTOFFSET.PRE_EVENT.v); return o == 0 ? nil : mnvOrbitalState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PRE_EVENT: mnvOrbitalState? { let o = _accessor.offset(VT.PRE_EVENT); return o == 0 ? nil : mnvOrbitalState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Post-maneuver orbital state
-  public var POST_EVENT: mnvOrbitalState? { let o = _accessor.offset(VTOFFSET.POST_EVENT.v); return o == 0 ? nil : mnvOrbitalState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POST_EVENT: mnvOrbitalState? { let o = _accessor.offset(VT.POST_EVENT); return o == 0 ? nil : mnvOrbitalState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Post-maneuver mass (kg)
-  public var POST_MASS: Double { let o = _accessor.offset(VTOFFSET.POST_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POST_MASS: Double { let o = _accessor.offset(VT.POST_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Post-maneuver cross-sectional area (m^2)
-  public var POST_AREA: Double { let o = _accessor.offset(VTOFFSET.POST_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POST_AREA: Double { let o = _accessor.offset(VT.POST_AREA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  6x6 covariance matrix (upper triangle, row-major)
-  public var COV: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.COV.v, byteSize: 8) }
-  public func withUnsafePointerToCov<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COV.v, body: body) }
+  public var COV: FlatbufferVector<Double> { return _accessor.vector(at: VT.COV, byteSize: 8) }
+  public func withUnsafePointerToCov<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COV, body: body) }
   ///  Number of observations used
-  public var NUM_OBS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_OBS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var NUM_OBS: UInt32 { let o = _accessor.offset(VT.NUM_OBS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  State model used
-  public var STATE_MODEL: String? { let o = _accessor.offset(VTOFFSET.STATE_MODEL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STATE_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STATE_MODEL.v) }
+  public var STATE_MODEL: String? { let o = _accessor.offset(VT.STATE_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STATE_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STATE_MODEL) }
   ///  State model version
-  public var STATE_MODEL_VERSION: Double { let o = _accessor.offset(VTOFFSET.STATE_MODEL_VERSION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STATE_MODEL_VERSION: Double { let o = _accessor.offset(VT.STATE_MODEL_VERSION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of acceleration profile points
-  public var NUM_ACCEL_POINTS: UInt16 { let o = _accessor.offset(VTOFFSET.NUM_ACCEL_POINTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var NUM_ACCEL_POINTS: UInt16 { let o = _accessor.offset(VT.NUM_ACCEL_POINTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Acceleration profile times (ISO 8601)
-  public var MNVR_ACCEL_TIMES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MNVR_ACCEL_TIMES.v, byteSize: 4) }
+  public var MNVR_ACCEL_TIMES: FlatbufferVector<String?> { return _accessor.vector(at: VT.MNVR_ACCEL_TIMES, byteSize: 4) }
   ///  Acceleration values (km/s^2, 3 components per point)
-  public var MNVR_ACCELS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.MNVR_ACCELS.v, byteSize: 8) }
-  public func withUnsafePointerToMnvrAccels<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.MNVR_ACCELS.v, body: body) }
+  public var MNVR_ACCELS: FlatbufferVector<Double> { return _accessor.vector(at: VT.MNVR_ACCELS, byteSize: 8) }
+  public func withUnsafePointerToMnvrAccels<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.MNVR_ACCELS, body: body) }
   ///  Acceleration uncertainties (km/s^2)
-  public var MNVR_ACCEL_UNCS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.MNVR_ACCEL_UNCS.v, byteSize: 8) }
-  public func withUnsafePointerToMnvrAccelUncs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.MNVR_ACCEL_UNCS.v, body: body) }
+  public var MNVR_ACCEL_UNCS: FlatbufferVector<Double> { return _accessor.vector(at: VT.MNVR_ACCEL_UNCS, byteSize: 8) }
+  public func withUnsafePointerToMnvrAccelUncs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.MNVR_ACCEL_UNCS, body: body) }
   ///  Description
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Event descriptor
-  public var DESCRIPTOR: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTOR.v) }
+  public var DESCRIPTOR: String? { let o = _accessor.offset(VT.DESCRIPTOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTOR) }
   ///  Algorithm used for detection
-  public var ALGORITHM: String? { let o = _accessor.offset(VTOFFSET.ALGORITHM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALGORITHM.v) }
+  public var ALGORITHM: String? { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALGORITHM) }
   ///  Associated tags
-  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TAGS.v, byteSize: 4) }
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VT.TAGS, byteSize: 4) }
   ///  Sourced data references
-  public var SOURCED_DATA: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SOURCED_DATA.v, byteSize: 4) }
+  public var SOURCED_DATA: FlatbufferVector<String?> { return _accessor.vector(at: VT.SOURCED_DATA, byteSize: 4) }
   ///  Sourced data types
-  public var SOURCED_DATA_TYPES: String? { let o = _accessor.offset(VTOFFSET.SOURCED_DATA_TYPES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCED_DATA_TYPESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCED_DATA_TYPES.v) }
+  public var SOURCED_DATA_TYPES: String? { let o = _accessor.offset(VT.SOURCED_DATA_TYPES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCED_DATA_TYPESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCED_DATA_TYPES) }
   ///  Transaction identifier
-  public var TRANSACTION_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSACTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSACTION_ID.v) }
+  public var TRANSACTION_ID: String? { let o = _accessor.offset(VT.TRANSACTION_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRANSACTION_ID) }
   public static func startMNV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 45) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
-  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
-  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VTOFFSET.ON_ORBIT.p) }
-  public static func add(STATUS: maneuverStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VTOFFSET.STATUS.p) }
-  public static func add(CHARACTERIZATION: maneuverCharacterization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHARACTERIZATION.rawValue, def: 0, at: VTOFFSET.CHARACTERIZATION.p) }
-  public static func add(CHARACTERIZATION_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHARACTERIZATION_UNC, def: 0.0, at: VTOFFSET.CHARACTERIZATION_UNC.p) }
-  public static func add(REPORT_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPORT_TIME, at: VTOFFSET.REPORT_TIME.p) }
-  public static func add(EVENT_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_START_TIME, at: VTOFFSET.EVENT_START_TIME.p) }
-  public static func add(EVENT_END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_END_TIME, at: VTOFFSET.EVENT_END_TIME.p) }
-  public static func add(TOTAL_BURN_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_BURN_TIME, def: 0.0, at: VTOFFSET.TOTAL_BURN_TIME.p) }
-  public static func add(OD_FIT_END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_FIT_END_TIME, at: VTOFFSET.OD_FIT_END_TIME.p) }
-  public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VTOFFSET.ID_SENSOR.p) }
-  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
-  public static func add(EVENT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_ID, at: VTOFFSET.EVENT_ID.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VT.SAT_NO) }
+  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VT.ORIG_OBJECT_ID) }
+  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VT.ON_ORBIT) }
+  public static func add(STATUS: maneuverStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
+  public static func add(CHARACTERIZATION: maneuverCharacterization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHARACTERIZATION.rawValue, def: 0, at: VT.CHARACTERIZATION) }
+  public static func add(CHARACTERIZATION_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHARACTERIZATION_UNC, def: 0.0, at: VT.CHARACTERIZATION_UNC) }
+  public static func add(REPORT_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPORT_TIME, at: VT.REPORT_TIME) }
+  public static func add(EVENT_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_START_TIME, at: VT.EVENT_START_TIME) }
+  public static func add(EVENT_END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_END_TIME, at: VT.EVENT_END_TIME) }
+  public static func add(TOTAL_BURN_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_BURN_TIME, def: 0.0, at: VT.TOTAL_BURN_TIME) }
+  public static func add(OD_FIT_END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_FIT_END_TIME, at: VT.OD_FIT_END_TIME) }
+  public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VT.ID_SENSOR) }
+  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VT.ORIG_SENSOR_ID) }
+  public static func add(EVENT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_ID, at: VT.EVENT_ID) }
   public static func add(UCT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UCT, def: false,
-   at: VTOFFSET.UCT.p) }
-  public static func add(MANEUVER_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MANEUVER_UNC, def: 0.0, at: VTOFFSET.MANEUVER_UNC.p) }
-  public static func add(DELTA_VEL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_VEL, def: 0.0, at: VTOFFSET.DELTA_VEL.p) }
-  public static func add(DELTA_VEL_U: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_VEL_U, def: 0.0, at: VTOFFSET.DELTA_VEL_U.p) }
-  public static func add(DELTA_VEL_V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_VEL_V, def: 0.0, at: VTOFFSET.DELTA_VEL_V.p) }
-  public static func add(DELTA_VEL_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_VEL_W, def: 0.0, at: VTOFFSET.DELTA_VEL_W.p) }
-  public static func add(DELTA_POS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_POS, def: 0.0, at: VTOFFSET.DELTA_POS.p) }
-  public static func add(DELTA_POS_U: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_POS_U, def: 0.0, at: VTOFFSET.DELTA_POS_U.p) }
-  public static func add(DELTA_POS_V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_POS_V, def: 0.0, at: VTOFFSET.DELTA_POS_V.p) }
-  public static func add(DELTA_POS_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_POS_W, def: 0.0, at: VTOFFSET.DELTA_POS_W.p) }
-  public static func add(DELTA_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_MASS, def: 0.0, at: VTOFFSET.DELTA_MASS.p) }
-  public static func add(PRE_EVENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRE_EVENT, at: VTOFFSET.PRE_EVENT.p) }
-  public static func add(POST_EVENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POST_EVENT, at: VTOFFSET.POST_EVENT.p) }
-  public static func add(POST_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POST_MASS, def: 0.0, at: VTOFFSET.POST_MASS.p) }
-  public static func add(POST_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POST_AREA, def: 0.0, at: VTOFFSET.POST_AREA.p) }
-  public static func addVectorOf(COV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV, at: VTOFFSET.COV.p) }
-  public static func add(NUM_OBS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_OBS, def: 0, at: VTOFFSET.NUM_OBS.p) }
-  public static func add(STATE_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE_MODEL, at: VTOFFSET.STATE_MODEL.p) }
-  public static func add(STATE_MODEL_VERSION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE_MODEL_VERSION, def: 0.0, at: VTOFFSET.STATE_MODEL_VERSION.p) }
-  public static func add(NUM_ACCEL_POINTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_ACCEL_POINTS, def: 0, at: VTOFFSET.NUM_ACCEL_POINTS.p) }
-  public static func addVectorOf(MNVR_ACCEL_TIMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MNVR_ACCEL_TIMES, at: VTOFFSET.MNVR_ACCEL_TIMES.p) }
-  public static func addVectorOf(MNVR_ACCELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MNVR_ACCELS, at: VTOFFSET.MNVR_ACCELS.p) }
-  public static func addVectorOf(MNVR_ACCEL_UNCS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MNVR_ACCEL_UNCS, at: VTOFFSET.MNVR_ACCEL_UNCS.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
-  public static func add(DESCRIPTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTOR, at: VTOFFSET.DESCRIPTOR.p) }
-  public static func add(ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM, at: VTOFFSET.ALGORITHM.p) }
-  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VTOFFSET.TAGS.p) }
-  public static func addVectorOf(SOURCED_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCED_DATA, at: VTOFFSET.SOURCED_DATA.p) }
-  public static func add(SOURCED_DATA_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCED_DATA_TYPES, at: VTOFFSET.SOURCED_DATA_TYPES.p) }
-  public static func add(TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSACTION_ID, at: VTOFFSET.TRANSACTION_ID.p) }
+   at: VT.UCT) }
+  public static func add(MANEUVER_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MANEUVER_UNC, def: 0.0, at: VT.MANEUVER_UNC) }
+  public static func add(DELTA_VEL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_VEL, def: 0.0, at: VT.DELTA_VEL) }
+  public static func add(DELTA_VEL_U: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_VEL_U, def: 0.0, at: VT.DELTA_VEL_U) }
+  public static func add(DELTA_VEL_V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_VEL_V, def: 0.0, at: VT.DELTA_VEL_V) }
+  public static func add(DELTA_VEL_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_VEL_W, def: 0.0, at: VT.DELTA_VEL_W) }
+  public static func add(DELTA_POS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_POS, def: 0.0, at: VT.DELTA_POS) }
+  public static func add(DELTA_POS_U: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_POS_U, def: 0.0, at: VT.DELTA_POS_U) }
+  public static func add(DELTA_POS_V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_POS_V, def: 0.0, at: VT.DELTA_POS_V) }
+  public static func add(DELTA_POS_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_POS_W, def: 0.0, at: VT.DELTA_POS_W) }
+  public static func add(DELTA_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_MASS, def: 0.0, at: VT.DELTA_MASS) }
+  public static func add(PRE_EVENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRE_EVENT, at: VT.PRE_EVENT) }
+  public static func add(POST_EVENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POST_EVENT, at: VT.POST_EVENT) }
+  public static func add(POST_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POST_MASS, def: 0.0, at: VT.POST_MASS) }
+  public static func add(POST_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POST_AREA, def: 0.0, at: VT.POST_AREA) }
+  public static func addVectorOf(COV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV, at: VT.COV) }
+  public static func add(NUM_OBS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_OBS, def: 0, at: VT.NUM_OBS) }
+  public static func add(STATE_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE_MODEL, at: VT.STATE_MODEL) }
+  public static func add(STATE_MODEL_VERSION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE_MODEL_VERSION, def: 0.0, at: VT.STATE_MODEL_VERSION) }
+  public static func add(NUM_ACCEL_POINTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_ACCEL_POINTS, def: 0, at: VT.NUM_ACCEL_POINTS) }
+  public static func addVectorOf(MNVR_ACCEL_TIMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MNVR_ACCEL_TIMES, at: VT.MNVR_ACCEL_TIMES) }
+  public static func addVectorOf(MNVR_ACCELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MNVR_ACCELS, at: VT.MNVR_ACCELS) }
+  public static func addVectorOf(MNVR_ACCEL_UNCS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MNVR_ACCEL_UNCS, at: VT.MNVR_ACCEL_UNCS) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(DESCRIPTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTOR, at: VT.DESCRIPTOR) }
+  public static func add(ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM, at: VT.ALGORITHM) }
+  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VT.TAGS) }
+  public static func addVectorOf(SOURCED_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCED_DATA, at: VT.SOURCED_DATA) }
+  public static func add(SOURCED_DATA_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCED_DATA_TYPES, at: VT.SOURCED_DATA_TYPES) }
+  public static func add(TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSACTION_ID, at: VT.TRANSACTION_ID) }
   public static func endMNV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMNV(
     _ fbb: inout FlatBufferBuilder,
@@ -567,51 +563,51 @@ public struct MNV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ON_ORBIT.p, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STATUS.p, fieldName: "STATUS", required: false, type: maneuverStatus.self)
-    try _v.visit(field: VTOFFSET.CHARACTERIZATION.p, fieldName: "CHARACTERIZATION", required: false, type: maneuverCharacterization.self)
-    try _v.visit(field: VTOFFSET.CHARACTERIZATION_UNC.p, fieldName: "CHARACTERIZATION_UNC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.REPORT_TIME.p, fieldName: "REPORT_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EVENT_START_TIME.p, fieldName: "EVENT_START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EVENT_END_TIME.p, fieldName: "EVENT_END_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TOTAL_BURN_TIME.p, fieldName: "TOTAL_BURN_TIME", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OD_FIT_END_TIME.p, fieldName: "OD_FIT_END_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_SENSOR.p, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID.p, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EVENT_ID.p, fieldName: "EVENT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UCT.p, fieldName: "UCT", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.MANEUVER_UNC.p, fieldName: "MANEUVER_UNC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_VEL.p, fieldName: "DELTA_VEL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_VEL_U.p, fieldName: "DELTA_VEL_U", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_VEL_V.p, fieldName: "DELTA_VEL_V", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_VEL_W.p, fieldName: "DELTA_VEL_W", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_POS.p, fieldName: "DELTA_POS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_POS_U.p, fieldName: "DELTA_POS_U", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_POS_V.p, fieldName: "DELTA_POS_V", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_POS_W.p, fieldName: "DELTA_POS_W", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_MASS.p, fieldName: "DELTA_MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PRE_EVENT.p, fieldName: "PRE_EVENT", required: false, type: ForwardOffset<mnvOrbitalState>.self)
-    try _v.visit(field: VTOFFSET.POST_EVENT.p, fieldName: "POST_EVENT", required: false, type: ForwardOffset<mnvOrbitalState>.self)
-    try _v.visit(field: VTOFFSET.POST_MASS.p, fieldName: "POST_MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POST_AREA.p, fieldName: "POST_AREA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.COV.p, fieldName: "COV", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.NUM_OBS.p, fieldName: "NUM_OBS", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.STATE_MODEL.p, fieldName: "STATE_MODEL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STATE_MODEL_VERSION.p, fieldName: "STATE_MODEL_VERSION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NUM_ACCEL_POINTS.p, fieldName: "NUM_ACCEL_POINTS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.MNVR_ACCEL_TIMES.p, fieldName: "MNVR_ACCEL_TIMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.MNVR_ACCELS.p, fieldName: "MNVR_ACCELS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.MNVR_ACCEL_UNCS.p, fieldName: "MNVR_ACCEL_UNCS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTOR.p, fieldName: "DESCRIPTOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ALGORITHM.p, fieldName: "ALGORITHM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TAGS.p, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.SOURCED_DATA.p, fieldName: "SOURCED_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.SOURCED_DATA_TYPES.p, fieldName: "SOURCED_DATA_TYPES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRANSACTION_ID.p, fieldName: "TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAT_NO, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ORIG_OBJECT_ID, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ON_ORBIT, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: maneuverStatus.self)
+    try _v.visit(field: VT.CHARACTERIZATION, fieldName: "CHARACTERIZATION", required: false, type: maneuverCharacterization.self)
+    try _v.visit(field: VT.CHARACTERIZATION_UNC, fieldName: "CHARACTERIZATION_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.REPORT_TIME, fieldName: "REPORT_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EVENT_START_TIME, fieldName: "EVENT_START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EVENT_END_TIME, fieldName: "EVENT_END_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TOTAL_BURN_TIME, fieldName: "TOTAL_BURN_TIME", required: false, type: Double.self)
+    try _v.visit(field: VT.OD_FIT_END_TIME, fieldName: "OD_FIT_END_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_SENSOR, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIG_SENSOR_ID, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EVENT_ID, fieldName: "EVENT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UCT, fieldName: "UCT", required: false, type: Bool.self)
+    try _v.visit(field: VT.MANEUVER_UNC, fieldName: "MANEUVER_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_VEL, fieldName: "DELTA_VEL", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_VEL_U, fieldName: "DELTA_VEL_U", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_VEL_V, fieldName: "DELTA_VEL_V", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_VEL_W, fieldName: "DELTA_VEL_W", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_POS, fieldName: "DELTA_POS", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_POS_U, fieldName: "DELTA_POS_U", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_POS_V, fieldName: "DELTA_POS_V", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_POS_W, fieldName: "DELTA_POS_W", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_MASS, fieldName: "DELTA_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.PRE_EVENT, fieldName: "PRE_EVENT", required: false, type: ForwardOffset<mnvOrbitalState>.self)
+    try _v.visit(field: VT.POST_EVENT, fieldName: "POST_EVENT", required: false, type: ForwardOffset<mnvOrbitalState>.self)
+    try _v.visit(field: VT.POST_MASS, fieldName: "POST_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.POST_AREA, fieldName: "POST_AREA", required: false, type: Double.self)
+    try _v.visit(field: VT.COV, fieldName: "COV", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.NUM_OBS, fieldName: "NUM_OBS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.STATE_MODEL, fieldName: "STATE_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATE_MODEL_VERSION, fieldName: "STATE_MODEL_VERSION", required: false, type: Double.self)
+    try _v.visit(field: VT.NUM_ACCEL_POINTS, fieldName: "NUM_ACCEL_POINTS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.MNVR_ACCEL_TIMES, fieldName: "MNVR_ACCEL_TIMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.MNVR_ACCELS, fieldName: "MNVR_ACCELS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.MNVR_ACCEL_UNCS, fieldName: "MNVR_ACCEL_UNCS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTOR, fieldName: "DESCRIPTOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TAGS, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SOURCED_DATA, fieldName: "SOURCED_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SOURCED_DATA_TYPES, fieldName: "SOURCED_DATA_TYPES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRANSACTION_ID, fieldName: "TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

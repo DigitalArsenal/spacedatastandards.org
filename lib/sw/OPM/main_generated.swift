@@ -20,105 +20,103 @@ public struct OPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CCSDS_OPM_VERS = 4
-    case CREATION_DATE = 6
-    case ORIGINATOR = 8
-    case OBJECT_NAME = 10
-    case OBJECT_ID = 12
-    case CENTER_NAME = 14
-    case REF_FRAME = 16
-    case TIME_SYSTEM = 18
-    case EPOCH = 20
-    case X = 22
-    case Y = 24
-    case Z = 26
-    case X_DOT = 28
-    case Y_DOT = 30
-    case Z_DOT = 32
-    case SEMI_MAJOR_AXIS = 34
-    case ECCENTRICITY = 36
-    case INCLINATION = 38
-    case RA_OF_ASC_NODE = 40
-    case ARG_OF_PERICENTER = 42
-    case TRUE_ANOMALY = 44
-    case MEAN_ANOMALY = 46
-    case GM = 48
-    case MASS = 50
-    case SOLAR_RAD_AREA = 52
-    case SOLAR_RAD_COEFF = 54
-    case DRAG_AREA = 56
-    case DRAG_COEFF = 58
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CCSDS_OPM_VERS: VOffset = 4
+    static let CREATION_DATE: VOffset = 6
+    static let ORIGINATOR: VOffset = 8
+    static let OBJECT_NAME: VOffset = 10
+    static let OBJECT_ID: VOffset = 12
+    static let CENTER_NAME: VOffset = 14
+    static let REF_FRAME: VOffset = 16
+    static let TIME_SYSTEM: VOffset = 18
+    static let EPOCH: VOffset = 20
+    static let X: VOffset = 22
+    static let Y: VOffset = 24
+    static let Z: VOffset = 26
+    static let X_DOT: VOffset = 28
+    static let Y_DOT: VOffset = 30
+    static let Z_DOT: VOffset = 32
+    static let SEMI_MAJOR_AXIS: VOffset = 34
+    static let ECCENTRICITY: VOffset = 36
+    static let INCLINATION: VOffset = 38
+    static let RA_OF_ASC_NODE: VOffset = 40
+    static let ARG_OF_PERICENTER: VOffset = 42
+    static let TRUE_ANOMALY: VOffset = 44
+    static let MEAN_ANOMALY: VOffset = 46
+    static let GM: VOffset = 48
+    static let MASS: VOffset = 50
+    static let SOLAR_RAD_AREA: VOffset = 52
+    static let SOLAR_RAD_COEFF: VOffset = 54
+    static let DRAG_AREA: VOffset = 56
+    static let DRAG_COEFF: VOffset = 58
   }
 
-  public var CCSDS_OPM_VERS: String? { let o = _accessor.offset(VTOFFSET.CCSDS_OPM_VERS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CCSDS_OPM_VERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CCSDS_OPM_VERS.v) }
-  public var CREATION_DATE: String? { let o = _accessor.offset(VTOFFSET.CREATION_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CREATION_DATE.v) }
-  public var ORIGINATOR: String? { let o = _accessor.offset(VTOFFSET.ORIGINATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIGINATOR.v) }
-  public var OBJECT_NAME: String? { let o = _accessor.offset(VTOFFSET.OBJECT_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_NAME.v) }
-  public var OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_ID.v) }
-  public var CENTER_NAME: String? { let o = _accessor.offset(VTOFFSET.CENTER_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CENTER_NAME.v) }
-  public var REF_FRAME: String? { let o = _accessor.offset(VTOFFSET.REF_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REF_FRAME.v) }
-  public var TIME_SYSTEM: String? { let o = _accessor.offset(VTOFFSET.TIME_SYSTEM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIME_SYSTEM.v) }
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
-  public var X: Double { let o = _accessor.offset(VTOFFSET.X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Y: Double { let o = _accessor.offset(VTOFFSET.Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Z: Double { let o = _accessor.offset(VTOFFSET.Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var X_DOT: Double { let o = _accessor.offset(VTOFFSET.X_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Y_DOT: Double { let o = _accessor.offset(VTOFFSET.Y_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Z_DOT: Double { let o = _accessor.offset(VTOFFSET.Z_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VTOFFSET.SEMI_MAJOR_AXIS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ECCENTRICITY: Double { let o = _accessor.offset(VTOFFSET.ECCENTRICITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var INCLINATION: Double { let o = _accessor.offset(VTOFFSET.INCLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RA_OF_ASC_NODE: Double { let o = _accessor.offset(VTOFFSET.RA_OF_ASC_NODE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ARG_OF_PERICENTER: Double { let o = _accessor.offset(VTOFFSET.ARG_OF_PERICENTER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var TRUE_ANOMALY: Double { let o = _accessor.offset(VTOFFSET.TRUE_ANOMALY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MEAN_ANOMALY: Double { let o = _accessor.offset(VTOFFSET.MEAN_ANOMALY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var GM: Double { let o = _accessor.offset(VTOFFSET.GM.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MASS: Double { let o = _accessor.offset(VTOFFSET.MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SOLAR_RAD_AREA: Double { let o = _accessor.offset(VTOFFSET.SOLAR_RAD_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SOLAR_RAD_COEFF: Double { let o = _accessor.offset(VTOFFSET.SOLAR_RAD_COEFF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var DRAG_AREA: Double { let o = _accessor.offset(VTOFFSET.DRAG_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var DRAG_COEFF: Double { let o = _accessor.offset(VTOFFSET.DRAG_COEFF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CCSDS_OPM_VERS: String? { let o = _accessor.offset(VT.CCSDS_OPM_VERS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CCSDS_OPM_VERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CCSDS_OPM_VERS) }
+  public var CREATION_DATE: String? { let o = _accessor.offset(VT.CREATION_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATION_DATE) }
+  public var ORIGINATOR: String? { let o = _accessor.offset(VT.ORIGINATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR) }
+  public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_NAME) }
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  public var CENTER_NAME: String? { let o = _accessor.offset(VT.CENTER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_NAME) }
+  public var REF_FRAME: String? { let o = _accessor.offset(VT.REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME) }
+  public var TIME_SYSTEM: String? { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_SYSTEM) }
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  public var X: Double { let o = _accessor.offset(VT.X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y: Double { let o = _accessor.offset(VT.Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Z: Double { let o = _accessor.offset(VT.Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var X_DOT: Double { let o = _accessor.offset(VT.X_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y_DOT: Double { let o = _accessor.offset(VT.Y_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Z_DOT: Double { let o = _accessor.offset(VT.Z_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VT.SEMI_MAJOR_AXIS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RA_OF_ASC_NODE: Double { let o = _accessor.offset(VT.RA_OF_ASC_NODE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ARG_OF_PERICENTER: Double { let o = _accessor.offset(VT.ARG_OF_PERICENTER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TRUE_ANOMALY: Double { let o = _accessor.offset(VT.TRUE_ANOMALY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MEAN_ANOMALY: Double { let o = _accessor.offset(VT.MEAN_ANOMALY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GM: Double { let o = _accessor.offset(VT.GM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MASS: Double { let o = _accessor.offset(VT.MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SOLAR_RAD_AREA: Double { let o = _accessor.offset(VT.SOLAR_RAD_AREA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SOLAR_RAD_COEFF: Double { let o = _accessor.offset(VT.SOLAR_RAD_COEFF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DRAG_AREA: Double { let o = _accessor.offset(VT.DRAG_AREA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DRAG_COEFF: Double { let o = _accessor.offset(VT.DRAG_COEFF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startOPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 28) }
-  public static func add(CCSDS_OPM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_OPM_VERS, at: VTOFFSET.CCSDS_OPM_VERS.p) }
-  public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VTOFFSET.CREATION_DATE.p) }
-  public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VTOFFSET.ORIGINATOR.p) }
-  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VTOFFSET.OBJECT_NAME.p) }
-  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VTOFFSET.OBJECT_ID.p) }
-  public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VTOFFSET.CENTER_NAME.p) }
-  public static func add(REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME, at: VTOFFSET.REF_FRAME.p) }
-  public static func add(TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM, at: VTOFFSET.TIME_SYSTEM.p) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VTOFFSET.X.p) }
-  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VTOFFSET.Y.p) }
-  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VTOFFSET.Z.p) }
-  public static func add(X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_DOT, def: 0.0, at: VTOFFSET.X_DOT.p) }
-  public static func add(Y_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_DOT, def: 0.0, at: VTOFFSET.Y_DOT.p) }
-  public static func add(Z_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_DOT, def: 0.0, at: VTOFFSET.Z_DOT.p) }
-  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VTOFFSET.SEMI_MAJOR_AXIS.p) }
-  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VTOFFSET.ECCENTRICITY.p) }
-  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VTOFFSET.INCLINATION.p) }
-  public static func add(RA_OF_ASC_NODE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_OF_ASC_NODE, def: 0.0, at: VTOFFSET.RA_OF_ASC_NODE.p) }
-  public static func add(ARG_OF_PERICENTER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_OF_PERICENTER, def: 0.0, at: VTOFFSET.ARG_OF_PERICENTER.p) }
-  public static func add(TRUE_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRUE_ANOMALY, def: 0.0, at: VTOFFSET.TRUE_ANOMALY.p) }
-  public static func add(MEAN_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ANOMALY, def: 0.0, at: VTOFFSET.MEAN_ANOMALY.p) }
-  public static func add(GM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GM, def: 0.0, at: VTOFFSET.GM.p) }
-  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VTOFFSET.MASS.p) }
-  public static func add(SOLAR_RAD_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_AREA, def: 0.0, at: VTOFFSET.SOLAR_RAD_AREA.p) }
-  public static func add(SOLAR_RAD_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_COEFF, def: 0.0, at: VTOFFSET.SOLAR_RAD_COEFF.p) }
-  public static func add(DRAG_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_AREA, def: 0.0, at: VTOFFSET.DRAG_AREA.p) }
-  public static func add(DRAG_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_COEFF, def: 0.0, at: VTOFFSET.DRAG_COEFF.p) }
+  public static func add(CCSDS_OPM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_OPM_VERS, at: VT.CCSDS_OPM_VERS) }
+  public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
+  public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
+  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
+  public static func add(REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME, at: VT.REF_FRAME) }
+  public static func add(TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM, at: VT.TIME_SYSTEM) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VT.X) }
+  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VT.Y) }
+  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VT.Z) }
+  public static func add(X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_DOT, def: 0.0, at: VT.X_DOT) }
+  public static func add(Y_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_DOT, def: 0.0, at: VT.Y_DOT) }
+  public static func add(Z_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_DOT, def: 0.0, at: VT.Z_DOT) }
+  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VT.SEMI_MAJOR_AXIS) }
+  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
+  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
+  public static func add(RA_OF_ASC_NODE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_OF_ASC_NODE, def: 0.0, at: VT.RA_OF_ASC_NODE) }
+  public static func add(ARG_OF_PERICENTER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_OF_PERICENTER, def: 0.0, at: VT.ARG_OF_PERICENTER) }
+  public static func add(TRUE_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRUE_ANOMALY, def: 0.0, at: VT.TRUE_ANOMALY) }
+  public static func add(MEAN_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ANOMALY, def: 0.0, at: VT.MEAN_ANOMALY) }
+  public static func add(GM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GM, def: 0.0, at: VT.GM) }
+  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VT.MASS) }
+  public static func add(SOLAR_RAD_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_AREA, def: 0.0, at: VT.SOLAR_RAD_AREA) }
+  public static func add(SOLAR_RAD_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_COEFF, def: 0.0, at: VT.SOLAR_RAD_COEFF) }
+  public static func add(DRAG_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_AREA, def: 0.0, at: VT.DRAG_AREA) }
+  public static func add(DRAG_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_COEFF, def: 0.0, at: VT.DRAG_COEFF) }
   public static func endOPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOPM(
     _ fbb: inout FlatBufferBuilder,
@@ -185,34 +183,34 @@ public struct OPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CCSDS_OPM_VERS.p, fieldName: "CCSDS_OPM_VERS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CREATION_DATE.p, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIGINATOR.p, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJECT_NAME.p, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJECT_ID.p, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CENTER_NAME.p, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REF_FRAME.p, fieldName: "REF_FRAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TIME_SYSTEM.p, fieldName: "TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.X.p, fieldName: "X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Y.p, fieldName: "Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Z.p, fieldName: "Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.X_DOT.p, fieldName: "X_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Y_DOT.p, fieldName: "Y_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Z_DOT.p, fieldName: "Z_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SEMI_MAJOR_AXIS.p, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ECCENTRICITY.p, fieldName: "ECCENTRICITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INCLINATION.p, fieldName: "INCLINATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RA_OF_ASC_NODE.p, fieldName: "RA_OF_ASC_NODE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ARG_OF_PERICENTER.p, fieldName: "ARG_OF_PERICENTER", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TRUE_ANOMALY.p, fieldName: "TRUE_ANOMALY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MEAN_ANOMALY.p, fieldName: "MEAN_ANOMALY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.GM.p, fieldName: "GM", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MASS.p, fieldName: "MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SOLAR_RAD_AREA.p, fieldName: "SOLAR_RAD_AREA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SOLAR_RAD_COEFF.p, fieldName: "SOLAR_RAD_COEFF", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DRAG_AREA.p, fieldName: "DRAG_AREA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DRAG_COEFF.p, fieldName: "DRAG_COEFF", required: false, type: Double.self)
+    try _v.visit(field: VT.CCSDS_OPM_VERS, fieldName: "CCSDS_OPM_VERS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREATION_DATE, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGINATOR, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_NAME, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CENTER_NAME, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME, fieldName: "REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.X, fieldName: "X", required: false, type: Double.self)
+    try _v.visit(field: VT.Y, fieldName: "Y", required: false, type: Double.self)
+    try _v.visit(field: VT.Z, fieldName: "Z", required: false, type: Double.self)
+    try _v.visit(field: VT.X_DOT, fieldName: "X_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Y_DOT, fieldName: "Y_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Z_DOT, fieldName: "Z_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.SEMI_MAJOR_AXIS, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VT.RA_OF_ASC_NODE, fieldName: "RA_OF_ASC_NODE", required: false, type: Double.self)
+    try _v.visit(field: VT.ARG_OF_PERICENTER, fieldName: "ARG_OF_PERICENTER", required: false, type: Double.self)
+    try _v.visit(field: VT.TRUE_ANOMALY, fieldName: "TRUE_ANOMALY", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_ANOMALY, fieldName: "MEAN_ANOMALY", required: false, type: Double.self)
+    try _v.visit(field: VT.GM, fieldName: "GM", required: false, type: Double.self)
+    try _v.visit(field: VT.MASS, fieldName: "MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.SOLAR_RAD_AREA, fieldName: "SOLAR_RAD_AREA", required: false, type: Double.self)
+    try _v.visit(field: VT.SOLAR_RAD_COEFF, fieldName: "SOLAR_RAD_COEFF", required: false, type: Double.self)
+    try _v.visit(field: VT.DRAG_AREA, fieldName: "DRAG_AREA", required: false, type: Double.self)
+    try _v.visit(field: VT.DRAG_COEFF, fieldName: "DRAG_COEFF", required: false, type: Double.self)
     _v.finish()
   }
 }

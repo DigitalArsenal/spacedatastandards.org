@@ -47,31 +47,31 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 /**
  * Unique identifier for the plugin
  */
-PLUGIN_ID():string|null
-PLUGIN_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-PLUGIN_ID(optionalEncoding?:any):string|Uint8Array|null {
+PLUGIN_ID():string
+PLUGIN_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+PLUGIN_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
  * Human-readable plugin name
  */
-NAME():string|null
-NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-NAME(optionalEncoding?:any):string|Uint8Array|null {
+NAME():string
+NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+NAME(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
  * Plugin version (semver format)
  */
-VERSION():string|null
-VERSION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-VERSION(optionalEncoding?:any):string|Uint8Array|null {
+VERSION():string
+VERSION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+VERSION(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**

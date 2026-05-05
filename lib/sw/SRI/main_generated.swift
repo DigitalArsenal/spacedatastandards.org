@@ -22,46 +22,44 @@ public struct SRI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case RECORD_KEY = 4
-    case SCHEMA_NAME = 6
-    case ROLE = 8
-    case ATTACHED_VIA = 10
-    case PAYLOAD_KIND = 12
-    case UPDATED_AT_MS = 14
-    case RESERVED = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let RECORD_KEY: VOffset = 4
+    static let SCHEMA_NAME: VOffset = 6
+    static let ROLE: VOffset = 8
+    static let ATTACHED_VIA: VOffset = 10
+    static let PAYLOAD_KIND: VOffset = 12
+    static let UPDATED_AT_MS: VOffset = 14
+    static let RESERVED: VOffset = 16
   }
 
   ///  Stable host-local record key for one standards payload.
-  public var RECORD_KEY: String? { let o = _accessor.offset(VTOFFSET.RECORD_KEY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RECORD_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RECORD_KEY.v) }
+  public var RECORD_KEY: String? { let o = _accessor.offset(VT.RECORD_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RECORD_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RECORD_KEY) }
   ///  SDS schema family for the record (`OMM`, `CAT`, `OEM`, `CDM`, etc.).
-  public var SCHEMA_NAME: String? { let o = _accessor.offset(VTOFFSET.SCHEMA_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SCHEMA_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SCHEMA_NAME.v) }
+  public var SCHEMA_NAME: String? { let o = _accessor.offset(VT.SCHEMA_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCHEMA_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_NAME) }
   ///  Attachment role when one standards message produces multiple entity records.
-  public var ROLE: String? { let o = _accessor.offset(VTOFFSET.ROLE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ROLESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ROLE.v) }
+  public var ROLE: String? { let o = _accessor.offset(VT.ROLE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ROLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ROLE) }
   ///  Ingest path that registered this record (`stream-*`, `manual-api`, etc.).
-  public var ATTACHED_VIA: String? { let o = _accessor.offset(VTOFFSET.ATTACHED_VIA.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ATTACHED_VIASegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ATTACHED_VIA.v) }
+  public var ATTACHED_VIA: String? { let o = _accessor.offset(VT.ATTACHED_VIA); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATTACHED_VIASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATTACHED_VIA) }
   ///  High-level payload representation retained by the mutation registry.
-  public var PAYLOAD_KIND: String? { let o = _accessor.offset(VTOFFSET.PAYLOAD_KIND.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PAYLOAD_KINDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PAYLOAD_KIND.v) }
+  public var PAYLOAD_KIND: String? { let o = _accessor.offset(VT.PAYLOAD_KIND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PAYLOAD_KINDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PAYLOAD_KIND) }
   ///  Milliseconds since epoch when the local mutation record was last refreshed.
-  public var UPDATED_AT_MS: Double { let o = _accessor.offset(VTOFFSET.UPDATED_AT_MS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var UPDATED_AT_MS: Double { let o = _accessor.offset(VT.UPDATED_AT_MS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Reserved for forward-compatible growth.
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
   public static func startSRI(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(RECORD_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORD_KEY, at: VTOFFSET.RECORD_KEY.p) }
-  public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VTOFFSET.SCHEMA_NAME.p) }
-  public static func add(ROLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROLE, at: VTOFFSET.ROLE.p) }
-  public static func add(ATTACHED_VIA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTACHED_VIA, at: VTOFFSET.ATTACHED_VIA.p) }
-  public static func add(PAYLOAD_KIND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYLOAD_KIND, at: VTOFFSET.PAYLOAD_KIND.p) }
-  public static func add(UPDATED_AT_MS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATED_AT_MS, def: 0.0, at: VTOFFSET.UPDATED_AT_MS.p) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VTOFFSET.RESERVED.p) }
+  public static func add(RECORD_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORD_KEY, at: VT.RECORD_KEY) }
+  public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VT.SCHEMA_NAME) }
+  public static func add(ROLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROLE, at: VT.ROLE) }
+  public static func add(ATTACHED_VIA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTACHED_VIA, at: VT.ATTACHED_VIA) }
+  public static func add(PAYLOAD_KIND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYLOAD_KIND, at: VT.PAYLOAD_KIND) }
+  public static func add(UPDATED_AT_MS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATED_AT_MS, def: 0.0, at: VT.UPDATED_AT_MS) }
+  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
   public static func endSRI(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSRI(
     _ fbb: inout FlatBufferBuilder,
@@ -86,13 +84,13 @@ public struct SRI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.RECORD_KEY.p, fieldName: "RECORD_KEY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SCHEMA_NAME.p, fieldName: "SCHEMA_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ROLE.p, fieldName: "ROLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ATTACHED_VIA.p, fieldName: "ATTACHED_VIA", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PAYLOAD_KIND.p, fieldName: "PAYLOAD_KIND", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UPDATED_AT_MS.p, fieldName: "UPDATED_AT_MS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.RECORD_KEY, fieldName: "RECORD_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCHEMA_NAME, fieldName: "SCHEMA_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ROLE, fieldName: "ROLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATTACHED_VIA, fieldName: "ATTACHED_VIA", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PAYLOAD_KIND, fieldName: "PAYLOAD_KIND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UPDATED_AT_MS, fieldName: "UPDATED_AT_MS", required: false, type: Double.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

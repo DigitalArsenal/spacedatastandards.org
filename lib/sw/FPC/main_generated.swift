@@ -85,16 +85,14 @@ public struct FPCGraphDefinition: FlatBufferTable, FlatbuffersVectorInitializabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case VERTEX_COUNT = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let VERTEX_COUNT: VOffset = 4
   }
 
   ///  Number of vertices in the graph.
-  public var VERTEX_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.VERTEX_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var VERTEX_COUNT: UInt32 { let o = _accessor.offset(VT.VERTEX_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   public static func startFPCGraphDefinition(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(VERTEX_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTEX_COUNT, def: 0, at: VTOFFSET.VERTEX_COUNT.p) }
+  public static func add(VERTEX_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTEX_COUNT, def: 0, at: VT.VERTEX_COUNT) }
   public static func endFPCGraphDefinition(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFPCGraphDefinition(
     _ fbb: inout FlatBufferBuilder,
@@ -107,7 +105,7 @@ public struct FPCGraphDefinition: FlatBufferTable, FlatbuffersVectorInitializabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.VERTEX_COUNT.p, fieldName: "VERTEX_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.VERTEX_COUNT, fieldName: "VERTEX_COUNT", required: false, type: UInt32.self)
     _v.finish()
   }
 }
@@ -124,30 +122,28 @@ public struct FPCWeightedEdgeList: FlatBufferTable, FlatbuffersVectorInitializab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case VERTEX_COUNT = 4
-    case EDGES = 6
-    case BUILD_GRAPH = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let VERTEX_COUNT: VOffset = 4
+    static let EDGES: VOffset = 6
+    static let BUILD_GRAPH: VOffset = 8
   }
 
   ///  Optional vertex capacity for implicit graph creation.
-  public var VERTEX_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.VERTEX_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var VERTEX_COUNT: UInt32 { let o = _accessor.offset(VT.VERTEX_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Weighted directed edge records.
-  public var EDGES: FlatbufferVector<weightedEdge> { return _accessor.vector(at: VTOFFSET.EDGES.v, byteSize: 16) }
-  public var mutableEdges: FlatbufferVector<weightedEdge_Mutable> { return _accessor.vector(at: VTOFFSET.EDGES.v, byteSize: 16) }
-  public func withUnsafePointerToEdges<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.EDGES.v, body: body) }
+  public var EDGES: FlatbufferVector<weightedEdge> { return _accessor.vector(at: VT.EDGES, byteSize: 16) }
+  public var mutableEdges: FlatbufferVector<weightedEdge_Mutable> { return _accessor.vector(at: VT.EDGES, byteSize: 16) }
+  public func withUnsafePointerToEdges<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.EDGES, body: body) }
   ///  Build a CSR representation after ingest.
-  public var BUILD_GRAPH: Bool { let o = _accessor.offset(VTOFFSET.BUILD_GRAPH.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var BUILD_GRAPH: Bool { let o = _accessor.offset(VT.BUILD_GRAPH); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startFPCWeightedEdgeList(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(VERTEX_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTEX_COUNT, def: 0, at: VTOFFSET.VERTEX_COUNT.p) }
-  public static func addVectorOf(EDGES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EDGES, at: VTOFFSET.EDGES.p) }
+  public static func add(VERTEX_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTEX_COUNT, def: 0, at: VT.VERTEX_COUNT) }
+  public static func addVectorOf(EDGES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EDGES, at: VT.EDGES) }
   public static func startVectorOfEdges(_ size: Int, in builder: inout FlatBufferBuilder) {
     builder.startVector(size * MemoryLayout<weightedEdge>.size, elementSize: MemoryLayout<weightedEdge>.alignment)
   }
   public static func add(BUILD_GRAPH: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BUILD_GRAPH, def: false,
-   at: VTOFFSET.BUILD_GRAPH.p) }
+   at: VT.BUILD_GRAPH) }
   public static func endFPCWeightedEdgeList(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFPCWeightedEdgeList(
     _ fbb: inout FlatBufferBuilder,
@@ -164,9 +160,9 @@ public struct FPCWeightedEdgeList: FlatBufferTable, FlatbuffersVectorInitializab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.VERTEX_COUNT.p, fieldName: "VERTEX_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.EDGES.p, fieldName: "EDGES", required: false, type: ForwardOffset<Vector<weightedEdge, weightedEdge>>.self)
-    try _v.visit(field: VTOFFSET.BUILD_GRAPH.p, fieldName: "BUILD_GRAPH", required: false, type: Bool.self)
+    try _v.visit(field: VT.VERTEX_COUNT, fieldName: "VERTEX_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.EDGES, fieldName: "EDGES", required: false, type: ForwardOffset<Vector<weightedEdge, weightedEdge>>.self)
+    try _v.visit(field: VT.BUILD_GRAPH, fieldName: "BUILD_GRAPH", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -183,31 +179,29 @@ public struct FPCCSRGraph: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case VERTEX_COUNT = 4
-    case OFFSETS = 6
-    case DESTINATIONS = 8
-    case WEIGHTS = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let VERTEX_COUNT: VOffset = 4
+    static let OFFSETS: VOffset = 6
+    static let DESTINATIONS: VOffset = 8
+    static let WEIGHTS: VOffset = 10
   }
 
   ///  Number of vertices in the graph.
-  public var VERTEX_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.VERTEX_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var VERTEX_COUNT: UInt32 { let o = _accessor.offset(VT.VERTEX_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  CSR row offsets (V + 1 entries).
-  public var OFFSETS: FlatbufferVector<UInt32> { return _accessor.vector(at: VTOFFSET.OFFSETS.v, byteSize: 4) }
-  public func withUnsafePointerToOffsets<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.OFFSETS.v, body: body) }
+  public var OFFSETS: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.OFFSETS, byteSize: 4) }
+  public func withUnsafePointerToOffsets<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OFFSETS, body: body) }
   ///  CSR destination indices.
-  public var DESTINATIONS: FlatbufferVector<UInt32> { return _accessor.vector(at: VTOFFSET.DESTINATIONS.v, byteSize: 4) }
-  public func withUnsafePointerToDestinations<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DESTINATIONS.v, body: body) }
+  public var DESTINATIONS: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.DESTINATIONS, byteSize: 4) }
+  public func withUnsafePointerToDestinations<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DESTINATIONS, body: body) }
   ///  CSR edge weights.
-  public var WEIGHTS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.WEIGHTS.v, byteSize: 8) }
-  public func withUnsafePointerToWeights<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.WEIGHTS.v, body: body) }
+  public var WEIGHTS: FlatbufferVector<Double> { return _accessor.vector(at: VT.WEIGHTS, byteSize: 8) }
+  public func withUnsafePointerToWeights<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.WEIGHTS, body: body) }
   public static func startFPCCSRGraph(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(VERTEX_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTEX_COUNT, def: 0, at: VTOFFSET.VERTEX_COUNT.p) }
-  public static func addVectorOf(OFFSETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OFFSETS, at: VTOFFSET.OFFSETS.p) }
-  public static func addVectorOf(DESTINATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESTINATIONS, at: VTOFFSET.DESTINATIONS.p) }
-  public static func addVectorOf(WEIGHTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WEIGHTS, at: VTOFFSET.WEIGHTS.p) }
+  public static func add(VERTEX_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTEX_COUNT, def: 0, at: VT.VERTEX_COUNT) }
+  public static func addVectorOf(OFFSETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OFFSETS, at: VT.OFFSETS) }
+  public static func addVectorOf(DESTINATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESTINATIONS, at: VT.DESTINATIONS) }
+  public static func addVectorOf(WEIGHTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WEIGHTS, at: VT.WEIGHTS) }
   public static func endFPCCSRGraph(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFPCCSRGraph(
     _ fbb: inout FlatBufferBuilder,
@@ -226,10 +220,10 @@ public struct FPCCSRGraph: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.VERTEX_COUNT.p, fieldName: "VERTEX_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.OFFSETS.p, fieldName: "OFFSETS", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
-    try _v.visit(field: VTOFFSET.DESTINATIONS.p, fieldName: "DESTINATIONS", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
-    try _v.visit(field: VTOFFSET.WEIGHTS.p, fieldName: "WEIGHTS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.VERTEX_COUNT, fieldName: "VERTEX_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OFFSETS, fieldName: "OFFSETS", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.DESTINATIONS, fieldName: "DESTINATIONS", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.WEIGHTS, fieldName: "WEIGHTS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
@@ -246,20 +240,18 @@ public struct FPCShortestPathRequest: FlatBufferTable, FlatbuffersVectorInitiali
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SOURCE = 4
-    case ALGORITHM = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SOURCE: VOffset = 4
+    static let ALGORITHM: VOffset = 6
   }
 
   ///  Source vertex index.
-  public var SOURCE: UInt32 { let o = _accessor.offset(VTOFFSET.SOURCE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SOURCE: UInt32 { let o = _accessor.offset(VT.SOURCE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Algorithm selection hint.
-  public var ALGORITHM: shortestPathAlgorithm { let o = _accessor.offset(VTOFFSET.ALGORITHM.v); return o == 0 ? .auto : shortestPathAlgorithm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .auto }
+  public var ALGORITHM: shortestPathAlgorithm { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? .auto : shortestPathAlgorithm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .auto }
   public static func startFPCShortestPathRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(SOURCE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE, def: 0, at: VTOFFSET.SOURCE.p) }
-  public static func add(ALGORITHM: shortestPathAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 0, at: VTOFFSET.ALGORITHM.p) }
+  public static func add(SOURCE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE, def: 0, at: VT.SOURCE) }
+  public static func add(ALGORITHM: shortestPathAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 0, at: VT.ALGORITHM) }
   public static func endFPCShortestPathRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFPCShortestPathRequest(
     _ fbb: inout FlatBufferBuilder,
@@ -274,8 +266,8 @@ public struct FPCShortestPathRequest: FlatBufferTable, FlatbuffersVectorInitiali
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SOURCE.p, fieldName: "SOURCE", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ALGORITHM.p, fieldName: "ALGORITHM", required: false, type: shortestPathAlgorithm.self)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: shortestPathAlgorithm.self)
     _v.finish()
   }
 }
@@ -292,34 +284,32 @@ public struct FPCShortestPathResult: FlatBufferTable, FlatbuffersVectorInitializ
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SOURCE = 4
-    case VERTEX_COUNT = 6
-    case REACHABLE_COUNT = 8
-    case DISTANCES = 10
-    case PREDECESSORS = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SOURCE: VOffset = 4
+    static let VERTEX_COUNT: VOffset = 6
+    static let REACHABLE_COUNT: VOffset = 8
+    static let DISTANCES: VOffset = 10
+    static let PREDECESSORS: VOffset = 12
   }
 
   ///  Source vertex index.
-  public var SOURCE: UInt32 { let o = _accessor.offset(VTOFFSET.SOURCE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SOURCE: UInt32 { let o = _accessor.offset(VT.SOURCE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Number of vertices in the solved graph.
-  public var VERTEX_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.VERTEX_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var VERTEX_COUNT: UInt32 { let o = _accessor.offset(VT.VERTEX_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Number of reachable vertices (finite distances).
-  public var REACHABLE_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.REACHABLE_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var REACHABLE_COUNT: UInt32 { let o = _accessor.offset(VT.REACHABLE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Distance array (length == VERTEX_COUNT).
-  public var DISTANCES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.DISTANCES.v, byteSize: 8) }
-  public func withUnsafePointerToDistances<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DISTANCES.v, body: body) }
+  public var DISTANCES: FlatbufferVector<Double> { return _accessor.vector(at: VT.DISTANCES, byteSize: 8) }
+  public func withUnsafePointerToDistances<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DISTANCES, body: body) }
   ///  Predecessor array (length == VERTEX_COUNT; UINT32_MAX means none / source).
-  public var PREDECESSORS: FlatbufferVector<UInt32> { return _accessor.vector(at: VTOFFSET.PREDECESSORS.v, byteSize: 4) }
-  public func withUnsafePointerToPredecessors<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.PREDECESSORS.v, body: body) }
+  public var PREDECESSORS: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.PREDECESSORS, byteSize: 4) }
+  public func withUnsafePointerToPredecessors<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PREDECESSORS, body: body) }
   public static func startFPCShortestPathResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(SOURCE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE, def: 0, at: VTOFFSET.SOURCE.p) }
-  public static func add(VERTEX_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTEX_COUNT, def: 0, at: VTOFFSET.VERTEX_COUNT.p) }
-  public static func add(REACHABLE_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REACHABLE_COUNT, def: 0, at: VTOFFSET.REACHABLE_COUNT.p) }
-  public static func addVectorOf(DISTANCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISTANCES, at: VTOFFSET.DISTANCES.p) }
-  public static func addVectorOf(PREDECESSORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREDECESSORS, at: VTOFFSET.PREDECESSORS.p) }
+  public static func add(SOURCE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE, def: 0, at: VT.SOURCE) }
+  public static func add(VERTEX_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTEX_COUNT, def: 0, at: VT.VERTEX_COUNT) }
+  public static func add(REACHABLE_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REACHABLE_COUNT, def: 0, at: VT.REACHABLE_COUNT) }
+  public static func addVectorOf(DISTANCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISTANCES, at: VT.DISTANCES) }
+  public static func addVectorOf(PREDECESSORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREDECESSORS, at: VT.PREDECESSORS) }
   public static func endFPCShortestPathResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFPCShortestPathResult(
     _ fbb: inout FlatBufferBuilder,
@@ -340,11 +330,11 @@ public struct FPCShortestPathResult: FlatBufferTable, FlatbuffersVectorInitializ
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SOURCE.p, fieldName: "SOURCE", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.VERTEX_COUNT.p, fieldName: "VERTEX_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.REACHABLE_COUNT.p, fieldName: "REACHABLE_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.DISTANCES.p, fieldName: "DISTANCES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.PREDECESSORS.p, fieldName: "PREDECESSORS", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.VERTEX_COUNT, fieldName: "VERTEX_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.REACHABLE_COUNT, fieldName: "REACHABLE_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.DISTANCES, fieldName: "DISTANCES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.PREDECESSORS, fieldName: "PREDECESSORS", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
     _v.finish()
   }
 }
@@ -361,16 +351,14 @@ public struct FPCPathRequest: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case TARGET = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let TARGET: VOffset = 4
   }
 
   ///  Target vertex index.
-  public var TARGET: UInt32 { let o = _accessor.offset(VTOFFSET.TARGET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var TARGET: UInt32 { let o = _accessor.offset(VT.TARGET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   public static func startFPCPathRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(TARGET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET, def: 0, at: VTOFFSET.TARGET.p) }
+  public static func add(TARGET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET, def: 0, at: VT.TARGET) }
   public static func endFPCPathRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFPCPathRequest(
     _ fbb: inout FlatBufferBuilder,
@@ -383,7 +371,7 @@ public struct FPCPathRequest: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.TARGET.p, fieldName: "TARGET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TARGET, fieldName: "TARGET", required: false, type: UInt32.self)
     _v.finish()
   }
 }
@@ -400,34 +388,32 @@ public struct FPCPathResult: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SOURCE = 4
-    case TARGET = 6
-    case REACHABLE = 8
-    case DISTANCE = 10
-    case PATH = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SOURCE: VOffset = 4
+    static let TARGET: VOffset = 6
+    static let REACHABLE: VOffset = 8
+    static let DISTANCE: VOffset = 10
+    static let PATH: VOffset = 12
   }
 
   ///  Source vertex index from the latest SSSP solve.
-  public var SOURCE: UInt32 { let o = _accessor.offset(VTOFFSET.SOURCE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SOURCE: UInt32 { let o = _accessor.offset(VT.SOURCE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Requested target vertex index.
-  public var TARGET: UInt32 { let o = _accessor.offset(VTOFFSET.TARGET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var TARGET: UInt32 { let o = _accessor.offset(VT.TARGET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Whether a path exists from SOURCE to TARGET.
-  public var REACHABLE: Bool { let o = _accessor.offset(VTOFFSET.REACHABLE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var REACHABLE: Bool { let o = _accessor.offset(VT.REACHABLE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Total distance from SOURCE to TARGET (Infinity if unreachable).
-  public var DISTANCE: Double { let o = _accessor.offset(VTOFFSET.DISTANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DISTANCE: Double { let o = _accessor.offset(VT.DISTANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Vertex sequence from SOURCE to TARGET.
-  public var PATH: FlatbufferVector<UInt32> { return _accessor.vector(at: VTOFFSET.PATH.v, byteSize: 4) }
-  public func withUnsafePointerToPath<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.PATH.v, body: body) }
+  public var PATH: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.PATH, byteSize: 4) }
+  public func withUnsafePointerToPath<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PATH, body: body) }
   public static func startFPCPathResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(SOURCE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE, def: 0, at: VTOFFSET.SOURCE.p) }
-  public static func add(TARGET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET, def: 0, at: VTOFFSET.TARGET.p) }
+  public static func add(SOURCE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE, def: 0, at: VT.SOURCE) }
+  public static func add(TARGET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET, def: 0, at: VT.TARGET) }
   public static func add(REACHABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REACHABLE, def: false,
-   at: VTOFFSET.REACHABLE.p) }
-  public static func add(DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE, def: 0.0, at: VTOFFSET.DISTANCE.p) }
-  public static func addVectorOf(PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PATH, at: VTOFFSET.PATH.p) }
+   at: VT.REACHABLE) }
+  public static func add(DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE, def: 0.0, at: VT.DISTANCE) }
+  public static func addVectorOf(PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PATH, at: VT.PATH) }
   public static func endFPCPathResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFPCPathResult(
     _ fbb: inout FlatBufferBuilder,
@@ -448,11 +434,11 @@ public struct FPCPathResult: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SOURCE.p, fieldName: "SOURCE", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.TARGET.p, fieldName: "TARGET", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.REACHABLE.p, fieldName: "REACHABLE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.DISTANCE.p, fieldName: "DISTANCE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PATH.p, fieldName: "PATH", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TARGET, fieldName: "TARGET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.REACHABLE, fieldName: "REACHABLE", required: false, type: Bool.self)
+    try _v.visit(field: VT.DISTANCE, fieldName: "DISTANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.PATH, fieldName: "PATH", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
     _v.finish()
   }
 }
@@ -470,33 +456,31 @@ public struct FPC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case GRAPH_DEFINITION = 4
-    case EDGES = 6
-    case CSR = 8
-    case SHORTEST_PATH_REQUEST = 10
-    case SHORTEST_PATH_RESULT = 12
-    case PATH_REQUEST = 14
-    case PATH_RESULT = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let GRAPH_DEFINITION: VOffset = 4
+    static let EDGES: VOffset = 6
+    static let CSR: VOffset = 8
+    static let SHORTEST_PATH_REQUEST: VOffset = 10
+    static let SHORTEST_PATH_RESULT: VOffset = 12
+    static let PATH_REQUEST: VOffset = 14
+    static let PATH_RESULT: VOffset = 16
   }
 
-  public var GRAPH_DEFINITION: FPCGraphDefinition? { let o = _accessor.offset(VTOFFSET.GRAPH_DEFINITION.v); return o == 0 ? nil : FPCGraphDefinition(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var EDGES: FPCWeightedEdgeList? { let o = _accessor.offset(VTOFFSET.EDGES.v); return o == 0 ? nil : FPCWeightedEdgeList(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var CSR: FPCCSRGraph? { let o = _accessor.offset(VTOFFSET.CSR.v); return o == 0 ? nil : FPCCSRGraph(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var SHORTEST_PATH_REQUEST: FPCShortestPathRequest? { let o = _accessor.offset(VTOFFSET.SHORTEST_PATH_REQUEST.v); return o == 0 ? nil : FPCShortestPathRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var SHORTEST_PATH_RESULT: FPCShortestPathResult? { let o = _accessor.offset(VTOFFSET.SHORTEST_PATH_RESULT.v); return o == 0 ? nil : FPCShortestPathResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var PATH_REQUEST: FPCPathRequest? { let o = _accessor.offset(VTOFFSET.PATH_REQUEST.v); return o == 0 ? nil : FPCPathRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var PATH_RESULT: FPCPathResult? { let o = _accessor.offset(VTOFFSET.PATH_RESULT.v); return o == 0 ? nil : FPCPathResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var GRAPH_DEFINITION: FPCGraphDefinition? { let o = _accessor.offset(VT.GRAPH_DEFINITION); return o == 0 ? nil : FPCGraphDefinition(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EDGES: FPCWeightedEdgeList? { let o = _accessor.offset(VT.EDGES); return o == 0 ? nil : FPCWeightedEdgeList(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CSR: FPCCSRGraph? { let o = _accessor.offset(VT.CSR); return o == 0 ? nil : FPCCSRGraph(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SHORTEST_PATH_REQUEST: FPCShortestPathRequest? { let o = _accessor.offset(VT.SHORTEST_PATH_REQUEST); return o == 0 ? nil : FPCShortestPathRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SHORTEST_PATH_RESULT: FPCShortestPathResult? { let o = _accessor.offset(VT.SHORTEST_PATH_RESULT); return o == 0 ? nil : FPCShortestPathResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PATH_REQUEST: FPCPathRequest? { let o = _accessor.offset(VT.PATH_REQUEST); return o == 0 ? nil : FPCPathRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PATH_RESULT: FPCPathResult? { let o = _accessor.offset(VT.PATH_RESULT); return o == 0 ? nil : FPCPathResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startFPC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(GRAPH_DEFINITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRAPH_DEFINITION, at: VTOFFSET.GRAPH_DEFINITION.p) }
-  public static func add(EDGES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EDGES, at: VTOFFSET.EDGES.p) }
-  public static func add(CSR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CSR, at: VTOFFSET.CSR.p) }
-  public static func add(SHORTEST_PATH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORTEST_PATH_REQUEST, at: VTOFFSET.SHORTEST_PATH_REQUEST.p) }
-  public static func add(SHORTEST_PATH_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORTEST_PATH_RESULT, at: VTOFFSET.SHORTEST_PATH_RESULT.p) }
-  public static func add(PATH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PATH_REQUEST, at: VTOFFSET.PATH_REQUEST.p) }
-  public static func add(PATH_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PATH_RESULT, at: VTOFFSET.PATH_RESULT.p) }
+  public static func add(GRAPH_DEFINITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRAPH_DEFINITION, at: VT.GRAPH_DEFINITION) }
+  public static func add(EDGES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EDGES, at: VT.EDGES) }
+  public static func add(CSR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CSR, at: VT.CSR) }
+  public static func add(SHORTEST_PATH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORTEST_PATH_REQUEST, at: VT.SHORTEST_PATH_REQUEST) }
+  public static func add(SHORTEST_PATH_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORTEST_PATH_RESULT, at: VT.SHORTEST_PATH_RESULT) }
+  public static func add(PATH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PATH_REQUEST, at: VT.PATH_REQUEST) }
+  public static func add(PATH_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PATH_RESULT, at: VT.PATH_RESULT) }
   public static func endFPC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFPC(
     _ fbb: inout FlatBufferBuilder,
@@ -521,13 +505,13 @@ public struct FPC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.GRAPH_DEFINITION.p, fieldName: "GRAPH_DEFINITION", required: false, type: ForwardOffset<FPCGraphDefinition>.self)
-    try _v.visit(field: VTOFFSET.EDGES.p, fieldName: "EDGES", required: false, type: ForwardOffset<FPCWeightedEdgeList>.self)
-    try _v.visit(field: VTOFFSET.CSR.p, fieldName: "CSR", required: false, type: ForwardOffset<FPCCSRGraph>.self)
-    try _v.visit(field: VTOFFSET.SHORTEST_PATH_REQUEST.p, fieldName: "SHORTEST_PATH_REQUEST", required: false, type: ForwardOffset<FPCShortestPathRequest>.self)
-    try _v.visit(field: VTOFFSET.SHORTEST_PATH_RESULT.p, fieldName: "SHORTEST_PATH_RESULT", required: false, type: ForwardOffset<FPCShortestPathResult>.self)
-    try _v.visit(field: VTOFFSET.PATH_REQUEST.p, fieldName: "PATH_REQUEST", required: false, type: ForwardOffset<FPCPathRequest>.self)
-    try _v.visit(field: VTOFFSET.PATH_RESULT.p, fieldName: "PATH_RESULT", required: false, type: ForwardOffset<FPCPathResult>.self)
+    try _v.visit(field: VT.GRAPH_DEFINITION, fieldName: "GRAPH_DEFINITION", required: false, type: ForwardOffset<FPCGraphDefinition>.self)
+    try _v.visit(field: VT.EDGES, fieldName: "EDGES", required: false, type: ForwardOffset<FPCWeightedEdgeList>.self)
+    try _v.visit(field: VT.CSR, fieldName: "CSR", required: false, type: ForwardOffset<FPCCSRGraph>.self)
+    try _v.visit(field: VT.SHORTEST_PATH_REQUEST, fieldName: "SHORTEST_PATH_REQUEST", required: false, type: ForwardOffset<FPCShortestPathRequest>.self)
+    try _v.visit(field: VT.SHORTEST_PATH_RESULT, fieldName: "SHORTEST_PATH_RESULT", required: false, type: ForwardOffset<FPCShortestPathResult>.self)
+    try _v.visit(field: VT.PATH_REQUEST, fieldName: "PATH_REQUEST", required: false, type: ForwardOffset<FPCPathRequest>.self)
+    try _v.visit(field: VT.PATH_RESULT, fieldName: "PATH_RESULT", required: false, type: ForwardOffset<FPCPathResult>.self)
     _v.finish()
   }
 }

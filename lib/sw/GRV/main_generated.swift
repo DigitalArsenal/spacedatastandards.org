@@ -74,51 +74,49 @@ public struct GRV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case MODEL_TYPE = 4
-    case MODEL_NAME = 6
-    case CENTRAL_BODY = 8
-    case MAX_DEGREE = 10
-    case MAX_ORDER = 12
-    case INCLUDE_SUN = 14
-    case INCLUDE_MOON = 16
-    case INCLUDE_PLANETS = 18
-    case SOLID_TIDES = 20
-    case OCEAN_TIDES = 22
-    case POLE_TIDES = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let MODEL_TYPE: VOffset = 4
+    static let MODEL_NAME: VOffset = 6
+    static let CENTRAL_BODY: VOffset = 8
+    static let MAX_DEGREE: VOffset = 10
+    static let MAX_ORDER: VOffset = 12
+    static let INCLUDE_SUN: VOffset = 14
+    static let INCLUDE_MOON: VOffset = 16
+    static let INCLUDE_PLANETS: VOffset = 18
+    static let SOLID_TIDES: VOffset = 20
+    static let OCEAN_TIDES: VOffset = 22
+    static let POLE_TIDES: VOffset = 24
   }
 
-  public var MODEL_TYPE: GravityModelType { let o = _accessor.offset(VTOFFSET.MODEL_TYPE.v); return o == 0 ? .j2J4 : GravityModelType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .j2J4 }
-  public var MODEL_NAME: GravityModelName { let o = _accessor.offset(VTOFFSET.MODEL_NAME.v); return o == 0 ? .egm2008 : GravityModelName(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .egm2008 }
-  public var CENTRAL_BODY: CentralBody { let o = _accessor.offset(VTOFFSET.CENTRAL_BODY.v); return o == 0 ? .earth : CentralBody(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .earth }
-  public var MAX_DEGREE: UInt16 { let o = _accessor.offset(VTOFFSET.MAX_DEGREE.v); return o == 0 ? 70 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var MAX_ORDER: UInt16 { let o = _accessor.offset(VTOFFSET.MAX_ORDER.v); return o == 0 ? 70 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var INCLUDE_SUN: Bool { let o = _accessor.offset(VTOFFSET.INCLUDE_SUN.v); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var INCLUDE_MOON: Bool { let o = _accessor.offset(VTOFFSET.INCLUDE_MOON.v); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var INCLUDE_PLANETS: Bool { let o = _accessor.offset(VTOFFSET.INCLUDE_PLANETS.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var SOLID_TIDES: Bool { let o = _accessor.offset(VTOFFSET.SOLID_TIDES.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var OCEAN_TIDES: Bool { let o = _accessor.offset(VTOFFSET.OCEAN_TIDES.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var POLE_TIDES: Bool { let o = _accessor.offset(VTOFFSET.POLE_TIDES.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var MODEL_TYPE: GravityModelType { let o = _accessor.offset(VT.MODEL_TYPE); return o == 0 ? .j2J4 : GravityModelType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .j2J4 }
+  public var MODEL_NAME: GravityModelName { let o = _accessor.offset(VT.MODEL_NAME); return o == 0 ? .egm2008 : GravityModelName(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .egm2008 }
+  public var CENTRAL_BODY: CentralBody { let o = _accessor.offset(VT.CENTRAL_BODY); return o == 0 ? .earth : CentralBody(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .earth }
+  public var MAX_DEGREE: UInt16 { let o = _accessor.offset(VT.MAX_DEGREE); return o == 0 ? 70 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var MAX_ORDER: UInt16 { let o = _accessor.offset(VT.MAX_ORDER); return o == 0 ? 70 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var INCLUDE_SUN: Bool { let o = _accessor.offset(VT.INCLUDE_SUN); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var INCLUDE_MOON: Bool { let o = _accessor.offset(VT.INCLUDE_MOON); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var INCLUDE_PLANETS: Bool { let o = _accessor.offset(VT.INCLUDE_PLANETS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SOLID_TIDES: Bool { let o = _accessor.offset(VT.SOLID_TIDES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OCEAN_TIDES: Bool { let o = _accessor.offset(VT.OCEAN_TIDES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var POLE_TIDES: Bool { let o = _accessor.offset(VT.POLE_TIDES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startGRV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(MODEL_TYPE: GravityModelType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL_TYPE.rawValue, def: 2, at: VTOFFSET.MODEL_TYPE.p) }
-  public static func add(MODEL_NAME: GravityModelName, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL_NAME.rawValue, def: 2, at: VTOFFSET.MODEL_NAME.p) }
-  public static func add(CENTRAL_BODY: CentralBody, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTRAL_BODY.rawValue, def: 0, at: VTOFFSET.CENTRAL_BODY.p) }
-  public static func add(MAX_DEGREE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_DEGREE, def: 70, at: VTOFFSET.MAX_DEGREE.p) }
-  public static func add(MAX_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ORDER, def: 70, at: VTOFFSET.MAX_ORDER.p) }
+  public static func add(MODEL_TYPE: GravityModelType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL_TYPE.rawValue, def: 2, at: VT.MODEL_TYPE) }
+  public static func add(MODEL_NAME: GravityModelName, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL_NAME.rawValue, def: 2, at: VT.MODEL_NAME) }
+  public static func add(CENTRAL_BODY: CentralBody, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTRAL_BODY.rawValue, def: 0, at: VT.CENTRAL_BODY) }
+  public static func add(MAX_DEGREE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_DEGREE, def: 70, at: VT.MAX_DEGREE) }
+  public static func add(MAX_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ORDER, def: 70, at: VT.MAX_ORDER) }
   public static func add(INCLUDE_SUN: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLUDE_SUN, def: true,
-   at: VTOFFSET.INCLUDE_SUN.p) }
+   at: VT.INCLUDE_SUN) }
   public static func add(INCLUDE_MOON: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLUDE_MOON, def: true,
-   at: VTOFFSET.INCLUDE_MOON.p) }
+   at: VT.INCLUDE_MOON) }
   public static func add(INCLUDE_PLANETS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLUDE_PLANETS, def: false,
-   at: VTOFFSET.INCLUDE_PLANETS.p) }
+   at: VT.INCLUDE_PLANETS) }
   public static func add(SOLID_TIDES: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLID_TIDES, def: false,
-   at: VTOFFSET.SOLID_TIDES.p) }
+   at: VT.SOLID_TIDES) }
   public static func add(OCEAN_TIDES: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCEAN_TIDES, def: false,
-   at: VTOFFSET.OCEAN_TIDES.p) }
+   at: VT.OCEAN_TIDES) }
   public static func add(POLE_TIDES: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLE_TIDES, def: false,
-   at: VTOFFSET.POLE_TIDES.p) }
+   at: VT.POLE_TIDES) }
   public static func endGRV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGRV(
     _ fbb: inout FlatBufferBuilder,
@@ -151,17 +149,17 @@ public struct GRV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.MODEL_TYPE.p, fieldName: "MODEL_TYPE", required: false, type: GravityModelType.self)
-    try _v.visit(field: VTOFFSET.MODEL_NAME.p, fieldName: "MODEL_NAME", required: false, type: GravityModelName.self)
-    try _v.visit(field: VTOFFSET.CENTRAL_BODY.p, fieldName: "CENTRAL_BODY", required: false, type: CentralBody.self)
-    try _v.visit(field: VTOFFSET.MAX_DEGREE.p, fieldName: "MAX_DEGREE", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.MAX_ORDER.p, fieldName: "MAX_ORDER", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.INCLUDE_SUN.p, fieldName: "INCLUDE_SUN", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.INCLUDE_MOON.p, fieldName: "INCLUDE_MOON", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.INCLUDE_PLANETS.p, fieldName: "INCLUDE_PLANETS", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.SOLID_TIDES.p, fieldName: "SOLID_TIDES", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OCEAN_TIDES.p, fieldName: "OCEAN_TIDES", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.POLE_TIDES.p, fieldName: "POLE_TIDES", required: false, type: Bool.self)
+    try _v.visit(field: VT.MODEL_TYPE, fieldName: "MODEL_TYPE", required: false, type: GravityModelType.self)
+    try _v.visit(field: VT.MODEL_NAME, fieldName: "MODEL_NAME", required: false, type: GravityModelName.self)
+    try _v.visit(field: VT.CENTRAL_BODY, fieldName: "CENTRAL_BODY", required: false, type: CentralBody.self)
+    try _v.visit(field: VT.MAX_DEGREE, fieldName: "MAX_DEGREE", required: false, type: UInt16.self)
+    try _v.visit(field: VT.MAX_ORDER, fieldName: "MAX_ORDER", required: false, type: UInt16.self)
+    try _v.visit(field: VT.INCLUDE_SUN, fieldName: "INCLUDE_SUN", required: false, type: Bool.self)
+    try _v.visit(field: VT.INCLUDE_MOON, fieldName: "INCLUDE_MOON", required: false, type: Bool.self)
+    try _v.visit(field: VT.INCLUDE_PLANETS, fieldName: "INCLUDE_PLANETS", required: false, type: Bool.self)
+    try _v.visit(field: VT.SOLID_TIDES, fieldName: "SOLID_TIDES", required: false, type: Bool.self)
+    try _v.visit(field: VT.OCEAN_TIDES, fieldName: "OCEAN_TIDES", required: false, type: Bool.self)
+    try _v.visit(field: VT.POLE_TIDES, fieldName: "POLE_TIDES", required: false, type: Bool.self)
     _v.finish()
   }
 }

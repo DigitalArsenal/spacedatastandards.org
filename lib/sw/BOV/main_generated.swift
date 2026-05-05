@@ -20,37 +20,35 @@ public struct BOV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case E_COORDINATE = 4
-    case F_COORDINATE = 6
-    case G_COORDINATE = 8
-    case E_DOT = 10
-    case F_DOT = 12
-    case G_DOT = 14
-    case EPOCH = 16
-    case TIME_FROM_LAUNCH = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let E_COORDINATE: VOffset = 4
+    static let F_COORDINATE: VOffset = 6
+    static let G_COORDINATE: VOffset = 8
+    static let E_DOT: VOffset = 10
+    static let F_DOT: VOffset = 12
+    static let G_DOT: VOffset = 14
+    static let EPOCH: VOffset = 16
+    static let TIME_FROM_LAUNCH: VOffset = 18
   }
 
-  public var E_COORDINATE: Double { let o = _accessor.offset(VTOFFSET.E_COORDINATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var F_COORDINATE: Double { let o = _accessor.offset(VTOFFSET.F_COORDINATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var G_COORDINATE: Double { let o = _accessor.offset(VTOFFSET.G_COORDINATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var E_DOT: Double { let o = _accessor.offset(VTOFFSET.E_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var F_DOT: Double { let o = _accessor.offset(VTOFFSET.F_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var G_DOT: Double { let o = _accessor.offset(VTOFFSET.G_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
-  public var TIME_FROM_LAUNCH: Double { let o = _accessor.offset(VTOFFSET.TIME_FROM_LAUNCH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var E_COORDINATE: Double { let o = _accessor.offset(VT.E_COORDINATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var F_COORDINATE: Double { let o = _accessor.offset(VT.F_COORDINATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var G_COORDINATE: Double { let o = _accessor.offset(VT.G_COORDINATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var E_DOT: Double { let o = _accessor.offset(VT.E_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var F_DOT: Double { let o = _accessor.offset(VT.F_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var G_DOT: Double { let o = _accessor.offset(VT.G_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  public var TIME_FROM_LAUNCH: Double { let o = _accessor.offset(VT.TIME_FROM_LAUNCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startBOV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(E_COORDINATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: E_COORDINATE, def: 0.0, at: VTOFFSET.E_COORDINATE.p) }
-  public static func add(F_COORDINATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F_COORDINATE, def: 0.0, at: VTOFFSET.F_COORDINATE.p) }
-  public static func add(G_COORDINATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: G_COORDINATE, def: 0.0, at: VTOFFSET.G_COORDINATE.p) }
-  public static func add(E_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: E_DOT, def: 0.0, at: VTOFFSET.E_DOT.p) }
-  public static func add(F_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F_DOT, def: 0.0, at: VTOFFSET.F_DOT.p) }
-  public static func add(G_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: G_DOT, def: 0.0, at: VTOFFSET.G_DOT.p) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(TIME_FROM_LAUNCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_FROM_LAUNCH, def: 0.0, at: VTOFFSET.TIME_FROM_LAUNCH.p) }
+  public static func add(E_COORDINATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: E_COORDINATE, def: 0.0, at: VT.E_COORDINATE) }
+  public static func add(F_COORDINATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F_COORDINATE, def: 0.0, at: VT.F_COORDINATE) }
+  public static func add(G_COORDINATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: G_COORDINATE, def: 0.0, at: VT.G_COORDINATE) }
+  public static func add(E_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: E_DOT, def: 0.0, at: VT.E_DOT) }
+  public static func add(F_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F_DOT, def: 0.0, at: VT.F_DOT) }
+  public static func add(G_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: G_DOT, def: 0.0, at: VT.G_DOT) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(TIME_FROM_LAUNCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_FROM_LAUNCH, def: 0.0, at: VT.TIME_FROM_LAUNCH) }
   public static func endBOV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBOV(
     _ fbb: inout FlatBufferBuilder,
@@ -77,14 +75,14 @@ public struct BOV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.E_COORDINATE.p, fieldName: "E_COORDINATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.F_COORDINATE.p, fieldName: "F_COORDINATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.G_COORDINATE.p, fieldName: "G_COORDINATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.E_DOT.p, fieldName: "E_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.F_DOT.p, fieldName: "F_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.G_DOT.p, fieldName: "G_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TIME_FROM_LAUNCH.p, fieldName: "TIME_FROM_LAUNCH", required: false, type: Double.self)
+    try _v.visit(field: VT.E_COORDINATE, fieldName: "E_COORDINATE", required: false, type: Double.self)
+    try _v.visit(field: VT.F_COORDINATE, fieldName: "F_COORDINATE", required: false, type: Double.self)
+    try _v.visit(field: VT.G_COORDINATE, fieldName: "G_COORDINATE", required: false, type: Double.self)
+    try _v.visit(field: VT.E_DOT, fieldName: "E_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.F_DOT, fieldName: "F_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.G_DOT, fieldName: "G_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_FROM_LAUNCH, fieldName: "TIME_FROM_LAUNCH", required: false, type: Double.self)
     _v.finish()
   }
 }

@@ -43,87 +43,85 @@ public struct OOT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case ID_ON_ORBIT = 6
-    case ID_THRUSTER = 8
-    case NAME = 10
-    case TYPE = 12
-    case QUANTITY = 14
-    case THRUST = 16
-    case ISP = 18
-    case PROPELLANT = 20
-    case PROPELLANT_MASS = 22
-    case PROPELLANT_REMAINING = 24
-    case DELTA_V_TOTAL = 26
-    case DELTA_V_REMAINING = 28
-    case TOTAL_IMPULSE = 30
-    case MASS = 32
-    case PURPOSE = 34
-    case NOTES = 36
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let ID_ON_ORBIT: VOffset = 6
+    static let ID_THRUSTER: VOffset = 8
+    static let NAME: VOffset = 10
+    static let TYPE: VOffset = 12
+    static let QUANTITY: VOffset = 14
+    static let THRUST: VOffset = 16
+    static let ISP: VOffset = 18
+    static let PROPELLANT: VOffset = 20
+    static let PROPELLANT_MASS: VOffset = 22
+    static let PROPELLANT_REMAINING: VOffset = 24
+    static let DELTA_V_TOTAL: VOffset = 26
+    static let DELTA_V_REMAINING: VOffset = 28
+    static let TOTAL_IMPULSE: VOffset = 30
+    static let MASS: VOffset = 32
+    static let PURPOSE: VOffset = 34
+    static let NOTES: VOffset = 36
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Reference to parent on-orbit object
-  public var ID_ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ID_ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_ON_ORBIT.v) }
+  public var ID_ON_ORBIT: String? { let o = _accessor.offset(VT.ID_ON_ORBIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_ON_ORBIT) }
   ///  Reference to thruster specification
-  public var ID_THRUSTER: String? { let o = _accessor.offset(VTOFFSET.ID_THRUSTER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_THRUSTERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_THRUSTER.v) }
+  public var ID_THRUSTER: String? { let o = _accessor.offset(VT.ID_THRUSTER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_THRUSTERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_THRUSTER) }
   ///  Thruster name or designation
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Thruster type
-  public var TYPE: thrusterType { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? .chemicalMono : thrusterType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .chemicalMono }
+  public var TYPE: thrusterType { let o = _accessor.offset(VT.TYPE); return o == 0 ? .chemicalMono : thrusterType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .chemicalMono }
   ///  Number of thrusters of this type
-  public var QUANTITY: UInt32 { let o = _accessor.offset(VTOFFSET.QUANTITY.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var QUANTITY: UInt32 { let o = _accessor.offset(VT.QUANTITY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Thrust output in Newtons
-  public var THRUST: Double { let o = _accessor.offset(VTOFFSET.THRUST.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var THRUST: Double { let o = _accessor.offset(VT.THRUST); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Specific impulse in seconds
-  public var ISP: Double { let o = _accessor.offset(VTOFFSET.ISP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ISP: Double { let o = _accessor.offset(VT.ISP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Propellant type (e.g., HYDRAZINE, XENON, KRYPTON, MMH_NTO, N2, GN2)
-  public var PROPELLANT: String? { let o = _accessor.offset(VTOFFSET.PROPELLANT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PROPELLANTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PROPELLANT.v) }
+  public var PROPELLANT: String? { let o = _accessor.offset(VT.PROPELLANT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPELLANTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPELLANT) }
   ///  Total propellant mass in kg
-  public var PROPELLANT_MASS: Double { let o = _accessor.offset(VTOFFSET.PROPELLANT_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PROPELLANT_MASS: Double { let o = _accessor.offset(VT.PROPELLANT_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Remaining propellant mass in kg
-  public var PROPELLANT_REMAINING: Double { let o = _accessor.offset(VTOFFSET.PROPELLANT_REMAINING.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PROPELLANT_REMAINING: Double { let o = _accessor.offset(VT.PROPELLANT_REMAINING); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Total delta-V capability in m/s
-  public var DELTA_V_TOTAL: Double { let o = _accessor.offset(VTOFFSET.DELTA_V_TOTAL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_V_TOTAL: Double { let o = _accessor.offset(VT.DELTA_V_TOTAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Remaining delta-V in m/s
-  public var DELTA_V_REMAINING: Double { let o = _accessor.offset(VTOFFSET.DELTA_V_REMAINING.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_V_REMAINING: Double { let o = _accessor.offset(VT.DELTA_V_REMAINING); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Total impulse in Newton-seconds
-  public var TOTAL_IMPULSE: Double { let o = _accessor.offset(VTOFFSET.TOTAL_IMPULSE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TOTAL_IMPULSE: Double { let o = _accessor.offset(VT.TOTAL_IMPULSE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Thruster dry mass in kg
-  public var MASS: Double { let o = _accessor.offset(VTOFFSET.MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MASS: Double { let o = _accessor.offset(VT.MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Purpose (e.g., ORBIT_RAISING, STATION_KEEPING, ATTITUDE_CONTROL, DEORBIT)
-  public var PURPOSE: String? { let o = _accessor.offset(VTOFFSET.PURPOSE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PURPOSESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PURPOSE.v) }
+  public var PURPOSE: String? { let o = _accessor.offset(VT.PURPOSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PURPOSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PURPOSE) }
   ///  Additional notes
-  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
   public static func startOOT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(ID_ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ON_ORBIT, at: VTOFFSET.ID_ON_ORBIT.p) }
-  public static func add(ID_THRUSTER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_THRUSTER, at: VTOFFSET.ID_THRUSTER.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(TYPE: thrusterType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE.rawValue, def: 0, at: VTOFFSET.TYPE.p) }
-  public static func add(QUANTITY: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUANTITY, def: 0, at: VTOFFSET.QUANTITY.p) }
-  public static func add(THRUST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRUST, def: 0.0, at: VTOFFSET.THRUST.p) }
-  public static func add(ISP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISP, def: 0.0, at: VTOFFSET.ISP.p) }
-  public static func add(PROPELLANT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPELLANT, at: VTOFFSET.PROPELLANT.p) }
-  public static func add(PROPELLANT_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROPELLANT_MASS, def: 0.0, at: VTOFFSET.PROPELLANT_MASS.p) }
-  public static func add(PROPELLANT_REMAINING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROPELLANT_REMAINING, def: 0.0, at: VTOFFSET.PROPELLANT_REMAINING.p) }
-  public static func add(DELTA_V_TOTAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_V_TOTAL, def: 0.0, at: VTOFFSET.DELTA_V_TOTAL.p) }
-  public static func add(DELTA_V_REMAINING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_V_REMAINING, def: 0.0, at: VTOFFSET.DELTA_V_REMAINING.p) }
-  public static func add(TOTAL_IMPULSE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_IMPULSE, def: 0.0, at: VTOFFSET.TOTAL_IMPULSE.p) }
-  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VTOFFSET.MASS.p) }
-  public static func add(PURPOSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PURPOSE, at: VTOFFSET.PURPOSE.p) }
-  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(ID_ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ON_ORBIT, at: VT.ID_ON_ORBIT) }
+  public static func add(ID_THRUSTER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_THRUSTER, at: VT.ID_THRUSTER) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(TYPE: thrusterType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE.rawValue, def: 0, at: VT.TYPE) }
+  public static func add(QUANTITY: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUANTITY, def: 0, at: VT.QUANTITY) }
+  public static func add(THRUST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRUST, def: 0.0, at: VT.THRUST) }
+  public static func add(ISP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISP, def: 0.0, at: VT.ISP) }
+  public static func add(PROPELLANT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPELLANT, at: VT.PROPELLANT) }
+  public static func add(PROPELLANT_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROPELLANT_MASS, def: 0.0, at: VT.PROPELLANT_MASS) }
+  public static func add(PROPELLANT_REMAINING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROPELLANT_REMAINING, def: 0.0, at: VT.PROPELLANT_REMAINING) }
+  public static func add(DELTA_V_TOTAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_V_TOTAL, def: 0.0, at: VT.DELTA_V_TOTAL) }
+  public static func add(DELTA_V_REMAINING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_V_REMAINING, def: 0.0, at: VT.DELTA_V_REMAINING) }
+  public static func add(TOTAL_IMPULSE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_IMPULSE, def: 0.0, at: VT.TOTAL_IMPULSE) }
+  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VT.MASS) }
+  public static func add(PURPOSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PURPOSE, at: VT.PURPOSE) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
   public static func endOOT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOOT(
     _ fbb: inout FlatBufferBuilder,
@@ -168,23 +166,23 @@ public struct OOT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_ON_ORBIT.p, fieldName: "ID_ON_ORBIT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_THRUSTER.p, fieldName: "ID_THRUSTER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: thrusterType.self)
-    try _v.visit(field: VTOFFSET.QUANTITY.p, fieldName: "QUANTITY", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.THRUST.p, fieldName: "THRUST", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ISP.p, fieldName: "ISP", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PROPELLANT.p, fieldName: "PROPELLANT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PROPELLANT_MASS.p, fieldName: "PROPELLANT_MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PROPELLANT_REMAINING.p, fieldName: "PROPELLANT_REMAINING", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_V_TOTAL.p, fieldName: "DELTA_V_TOTAL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_V_REMAINING.p, fieldName: "DELTA_V_REMAINING", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TOTAL_IMPULSE.p, fieldName: "TOTAL_IMPULSE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MASS.p, fieldName: "MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PURPOSE.p, fieldName: "PURPOSE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_ON_ORBIT, fieldName: "ID_ON_ORBIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_THRUSTER, fieldName: "ID_THRUSTER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: thrusterType.self)
+    try _v.visit(field: VT.QUANTITY, fieldName: "QUANTITY", required: false, type: UInt32.self)
+    try _v.visit(field: VT.THRUST, fieldName: "THRUST", required: false, type: Double.self)
+    try _v.visit(field: VT.ISP, fieldName: "ISP", required: false, type: Double.self)
+    try _v.visit(field: VT.PROPELLANT, fieldName: "PROPELLANT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPELLANT_MASS, fieldName: "PROPELLANT_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.PROPELLANT_REMAINING, fieldName: "PROPELLANT_REMAINING", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_V_TOTAL, fieldName: "DELTA_V_TOTAL", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_V_REMAINING, fieldName: "DELTA_V_REMAINING", required: false, type: Double.self)
+    try _v.visit(field: VT.TOTAL_IMPULSE, fieldName: "TOTAL_IMPULSE", required: false, type: Double.self)
+    try _v.visit(field: VT.MASS, fieldName: "MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.PURPOSE, fieldName: "PURPOSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

@@ -10,8 +10,8 @@ export declare class PLGMethodManifest implements flatbuffers.IUnpackableObject<
     __init(i: number, bb: flatbuffers.ByteBuffer): PLGMethodManifest;
     static getRootAsPLGMethodManifest(bb: flatbuffers.ByteBuffer, obj?: PLGMethodManifest): PLGMethodManifest;
     static getSizePrefixedRootAsPLGMethodManifest(bb: flatbuffers.ByteBuffer, obj?: PLGMethodManifest): PLGMethodManifest;
-    METHOD_ID(): string | null;
-    METHOD_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    METHOD_ID(): string;
+    METHOD_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     DISPLAY_NAME(): string | null;
     DISPLAY_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     INPUT_PORTS(index: number, obj?: PLGPortManifest): PLGPortManifest | null;

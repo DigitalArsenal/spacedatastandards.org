@@ -20,52 +20,50 @@ public struct BMC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case TYPE = 6
-    case CONTOUR_IDX = 8
-    case GAIN = 10
-    case REGION_NAME = 12
-    case GEOGRAPHY = 14
-    case GEOGRAPHY_TEXT = 16
-    case GEOGRAPHY_JSON = 18
-    case GEOGRAPHY_TYPE = 20
-    case GEOGRAPHY_NDIMS = 22
-    case GEOGRAPHY_SRID = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let TYPE: VOffset = 6
+    static let CONTOUR_IDX: VOffset = 8
+    static let GAIN: VOffset = 10
+    static let REGION_NAME: VOffset = 12
+    static let GEOGRAPHY: VOffset = 14
+    static let GEOGRAPHY_TEXT: VOffset = 16
+    static let GEOGRAPHY_JSON: VOffset = 18
+    static let GEOGRAPHY_TYPE: VOffset = 20
+    static let GEOGRAPHY_NDIMS: VOffset = 22
+    static let GEOGRAPHY_SRID: VOffset = 24
   }
 
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
-  public var TYPE: String? { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE.v) }
-  public var CONTOUR_IDX: Int32 { let o = _accessor.offset(VTOFFSET.CONTOUR_IDX.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var GAIN: Double { let o = _accessor.offset(VTOFFSET.GAIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var REGION_NAME: String? { let o = _accessor.offset(VTOFFSET.REGION_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REGION_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REGION_NAME.v) }
-  public var GEOGRAPHY: String? { let o = _accessor.offset(VTOFFSET.GEOGRAPHY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GEOGRAPHYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GEOGRAPHY.v) }
-  public var GEOGRAPHY_TEXT: String? { let o = _accessor.offset(VTOFFSET.GEOGRAPHY_TEXT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GEOGRAPHY_TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GEOGRAPHY_TEXT.v) }
-  public var GEOGRAPHY_JSON: String? { let o = _accessor.offset(VTOFFSET.GEOGRAPHY_JSON.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GEOGRAPHY_JSONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GEOGRAPHY_JSON.v) }
-  public var GEOGRAPHY_TYPE: String? { let o = _accessor.offset(VTOFFSET.GEOGRAPHY_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GEOGRAPHY_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GEOGRAPHY_TYPE.v) }
-  public var GEOGRAPHY_NDIMS: Int32 { let o = _accessor.offset(VTOFFSET.GEOGRAPHY_NDIMS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var GEOGRAPHY_SRID: Int32 { let o = _accessor.offset(VTOFFSET.GEOGRAPHY_SRID.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
+  public var TYPE: String? { let o = _accessor.offset(VT.TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TYPE) }
+  public var CONTOUR_IDX: Int32 { let o = _accessor.offset(VT.CONTOUR_IDX); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var GAIN: Double { let o = _accessor.offset(VT.GAIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REGION_NAME: String? { let o = _accessor.offset(VT.REGION_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REGION_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REGION_NAME) }
+  public var GEOGRAPHY: String? { let o = _accessor.offset(VT.GEOGRAPHY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GEOGRAPHYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GEOGRAPHY) }
+  public var GEOGRAPHY_TEXT: String? { let o = _accessor.offset(VT.GEOGRAPHY_TEXT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GEOGRAPHY_TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GEOGRAPHY_TEXT) }
+  public var GEOGRAPHY_JSON: String? { let o = _accessor.offset(VT.GEOGRAPHY_JSON); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GEOGRAPHY_JSONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GEOGRAPHY_JSON) }
+  public var GEOGRAPHY_TYPE: String? { let o = _accessor.offset(VT.GEOGRAPHY_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GEOGRAPHY_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GEOGRAPHY_TYPE) }
+  public var GEOGRAPHY_NDIMS: Int32 { let o = _accessor.offset(VT.GEOGRAPHY_NDIMS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var GEOGRAPHY_SRID: Int32 { let o = _accessor.offset(VT.GEOGRAPHY_SRID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startBMC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VTOFFSET.TYPE.p) }
-  public static func add(CONTOUR_IDX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTOUR_IDX, def: 0, at: VTOFFSET.CONTOUR_IDX.p) }
-  public static func add(GAIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAIN, def: 0.0, at: VTOFFSET.GAIN.p) }
-  public static func add(REGION_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION_NAME, at: VTOFFSET.REGION_NAME.p) }
-  public static func add(GEOGRAPHY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOGRAPHY, at: VTOFFSET.GEOGRAPHY.p) }
-  public static func add(GEOGRAPHY_TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOGRAPHY_TEXT, at: VTOFFSET.GEOGRAPHY_TEXT.p) }
-  public static func add(GEOGRAPHY_JSON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOGRAPHY_JSON, at: VTOFFSET.GEOGRAPHY_JSON.p) }
-  public static func add(GEOGRAPHY_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOGRAPHY_TYPE, at: VTOFFSET.GEOGRAPHY_TYPE.p) }
-  public static func add(GEOGRAPHY_NDIMS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOGRAPHY_NDIMS, def: 0, at: VTOFFSET.GEOGRAPHY_NDIMS.p) }
-  public static func add(GEOGRAPHY_SRID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOGRAPHY_SRID, def: 0, at: VTOFFSET.GEOGRAPHY_SRID.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VT.TYPE) }
+  public static func add(CONTOUR_IDX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTOUR_IDX, def: 0, at: VT.CONTOUR_IDX) }
+  public static func add(GAIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAIN, def: 0.0, at: VT.GAIN) }
+  public static func add(REGION_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION_NAME, at: VT.REGION_NAME) }
+  public static func add(GEOGRAPHY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOGRAPHY, at: VT.GEOGRAPHY) }
+  public static func add(GEOGRAPHY_TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOGRAPHY_TEXT, at: VT.GEOGRAPHY_TEXT) }
+  public static func add(GEOGRAPHY_JSON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOGRAPHY_JSON, at: VT.GEOGRAPHY_JSON) }
+  public static func add(GEOGRAPHY_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOGRAPHY_TYPE, at: VT.GEOGRAPHY_TYPE) }
+  public static func add(GEOGRAPHY_NDIMS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOGRAPHY_NDIMS, def: 0, at: VT.GEOGRAPHY_NDIMS) }
+  public static func add(GEOGRAPHY_SRID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOGRAPHY_SRID, def: 0, at: VT.GEOGRAPHY_SRID) }
   public static func endBMC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBMC(
     _ fbb: inout FlatBufferBuilder,
@@ -98,17 +96,17 @@ public struct BMC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONTOUR_IDX.p, fieldName: "CONTOUR_IDX", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.GAIN.p, fieldName: "GAIN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.REGION_NAME.p, fieldName: "REGION_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GEOGRAPHY.p, fieldName: "GEOGRAPHY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GEOGRAPHY_TEXT.p, fieldName: "GEOGRAPHY_TEXT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GEOGRAPHY_JSON.p, fieldName: "GEOGRAPHY_JSON", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GEOGRAPHY_TYPE.p, fieldName: "GEOGRAPHY_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GEOGRAPHY_NDIMS.p, fieldName: "GEOGRAPHY_NDIMS", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.GEOGRAPHY_SRID.p, fieldName: "GEOGRAPHY_SRID", required: false, type: Int32.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTOUR_IDX, fieldName: "CONTOUR_IDX", required: false, type: Int32.self)
+    try _v.visit(field: VT.GAIN, fieldName: "GAIN", required: false, type: Double.self)
+    try _v.visit(field: VT.REGION_NAME, fieldName: "REGION_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GEOGRAPHY, fieldName: "GEOGRAPHY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GEOGRAPHY_TEXT, fieldName: "GEOGRAPHY_TEXT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GEOGRAPHY_JSON, fieldName: "GEOGRAPHY_JSON", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GEOGRAPHY_TYPE, fieldName: "GEOGRAPHY_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GEOGRAPHY_NDIMS, fieldName: "GEOGRAPHY_NDIMS", required: false, type: Int32.self)
+    try _v.visit(field: VT.GEOGRAPHY_SRID, fieldName: "GEOGRAPHY_SRID", required: false, type: Int32.self)
     _v.finish()
   }
 }

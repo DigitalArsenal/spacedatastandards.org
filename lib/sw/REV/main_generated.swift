@@ -20,55 +20,53 @@ public struct REV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case REVIEW_ID = 4
-    case LISTING_ID = 6
-    case REVIEWER_PEER_ID = 8
-    case RATING = 10
-    case TITLE = 12
-    case CONTENT = 14
-    case ACL_GRANT_ID = 16
-    case TIMESTAMP = 18
-    case REVIEWER_SIGNATURE = 20
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let REVIEW_ID: VOffset = 4
+    static let LISTING_ID: VOffset = 6
+    static let REVIEWER_PEER_ID: VOffset = 8
+    static let RATING: VOffset = 10
+    static let TITLE: VOffset = 12
+    static let CONTENT: VOffset = 14
+    static let ACL_GRANT_ID: VOffset = 16
+    static let TIMESTAMP: VOffset = 18
+    static let REVIEWER_SIGNATURE: VOffset = 20
   }
 
   ///  Unique identifier for this review
-  public var REVIEW_ID: String! { let o = _accessor.offset(VTOFFSET.REVIEW_ID.v); return _accessor.string(at: o) }
-  public var REVIEW_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.REVIEW_ID.v) }
+  public var REVIEW_ID: String! { let o = _accessor.offset(VT.REVIEW_ID); return _accessor.string(at: o) }
+  public var REVIEW_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.REVIEW_ID) }
   ///  ID of the listing being reviewed
-  public var LISTING_ID: String! { let o = _accessor.offset(VTOFFSET.LISTING_ID.v); return _accessor.string(at: o) }
-  public var LISTING_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.LISTING_ID.v) }
+  public var LISTING_ID: String! { let o = _accessor.offset(VT.LISTING_ID); return _accessor.string(at: o) }
+  public var LISTING_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.LISTING_ID) }
   ///  Peer ID of the reviewer
-  public var REVIEWER_PEER_ID: String! { let o = _accessor.offset(VTOFFSET.REVIEWER_PEER_ID.v); return _accessor.string(at: o) }
-  public var REVIEWER_PEER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.REVIEWER_PEER_ID.v) }
+  public var REVIEWER_PEER_ID: String! { let o = _accessor.offset(VT.REVIEWER_PEER_ID); return _accessor.string(at: o) }
+  public var REVIEWER_PEER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.REVIEWER_PEER_ID) }
   ///  Rating from 1-5 stars
-  public var RATING: UInt8 { let o = _accessor.offset(VTOFFSET.RATING.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var RATING: UInt8 { let o = _accessor.offset(VT.RATING); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Review title
-  public var TITLE: String? { let o = _accessor.offset(VTOFFSET.TITLE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TITLESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TITLE.v) }
+  public var TITLE: String? { let o = _accessor.offset(VT.TITLE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TITLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TITLE) }
   ///  Review content/body
-  public var CONTENT: String? { let o = _accessor.offset(VTOFFSET.CONTENT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTENT.v) }
+  public var CONTENT: String? { let o = _accessor.offset(VT.CONTENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTENT) }
   ///  ACL grant ID proving purchase (proof of purchase)
-  public var ACL_GRANT_ID: String? { let o = _accessor.offset(VTOFFSET.ACL_GRANT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ACL_GRANT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ACL_GRANT_ID.v) }
+  public var ACL_GRANT_ID: String? { let o = _accessor.offset(VT.ACL_GRANT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ACL_GRANT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ACL_GRANT_ID) }
   ///  Unix timestamp of the review
-  public var TIMESTAMP: UInt64 { let o = _accessor.offset(VTOFFSET.TIMESTAMP.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var TIMESTAMP: UInt64 { let o = _accessor.offset(VT.TIMESTAMP); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Ed25519 signature from reviewer
-  public var REVIEWER_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.REVIEWER_SIGNATURE.v, byteSize: 1) }
-  public func withUnsafePointerToReviewerSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.REVIEWER_SIGNATURE.v, body: body) }
+  public var REVIEWER_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.REVIEWER_SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToReviewerSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.REVIEWER_SIGNATURE, body: body) }
   public static func startREV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(REVIEW_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEW_ID, at: VTOFFSET.REVIEW_ID.p) }
-  public static func add(LISTING_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LISTING_ID, at: VTOFFSET.LISTING_ID.p) }
-  public static func add(REVIEWER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEWER_PEER_ID, at: VTOFFSET.REVIEWER_PEER_ID.p) }
-  public static func add(RATING: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RATING, def: 0, at: VTOFFSET.RATING.p) }
-  public static func add(TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TITLE, at: VTOFFSET.TITLE.p) }
-  public static func add(CONTENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT, at: VTOFFSET.CONTENT.p) }
-  public static func add(ACL_GRANT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACL_GRANT_ID, at: VTOFFSET.ACL_GRANT_ID.p) }
-  public static func add(TIMESTAMP: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMESTAMP, def: 0, at: VTOFFSET.TIMESTAMP.p) }
-  public static func addVectorOf(REVIEWER_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEWER_SIGNATURE, at: VTOFFSET.REVIEWER_SIGNATURE.p) }
+  public static func add(REVIEW_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEW_ID, at: VT.REVIEW_ID) }
+  public static func add(LISTING_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LISTING_ID, at: VT.LISTING_ID) }
+  public static func add(REVIEWER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEWER_PEER_ID, at: VT.REVIEWER_PEER_ID) }
+  public static func add(RATING: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RATING, def: 0, at: VT.RATING) }
+  public static func add(TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TITLE, at: VT.TITLE) }
+  public static func add(CONTENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT, at: VT.CONTENT) }
+  public static func add(ACL_GRANT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACL_GRANT_ID, at: VT.ACL_GRANT_ID) }
+  public static func add(TIMESTAMP: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMESTAMP, def: 0, at: VT.TIMESTAMP) }
+  public static func addVectorOf(REVIEWER_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEWER_SIGNATURE, at: VT.REVIEWER_SIGNATURE) }
   public static func endREV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8]); return end }
   public static func createREV(
     _ fbb: inout FlatBufferBuilder,
@@ -97,15 +95,15 @@ public struct REV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.REVIEW_ID.p, fieldName: "REVIEW_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LISTING_ID.p, fieldName: "LISTING_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REVIEWER_PEER_ID.p, fieldName: "REVIEWER_PEER_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RATING.p, fieldName: "RATING", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.TITLE.p, fieldName: "TITLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONTENT.p, fieldName: "CONTENT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ACL_GRANT_ID.p, fieldName: "ACL_GRANT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TIMESTAMP.p, fieldName: "TIMESTAMP", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.REVIEWER_SIGNATURE.p, fieldName: "REVIEWER_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.REVIEW_ID, fieldName: "REVIEW_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LISTING_ID, fieldName: "LISTING_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REVIEWER_PEER_ID, fieldName: "REVIEWER_PEER_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RATING, fieldName: "RATING", required: false, type: UInt8.self)
+    try _v.visit(field: VT.TITLE, fieldName: "TITLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTENT, fieldName: "CONTENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ACL_GRANT_ID, fieldName: "ACL_GRANT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIMESTAMP, fieldName: "TIMESTAMP", required: false, type: UInt64.self)
+    try _v.visit(field: VT.REVIEWER_SIGNATURE, fieldName: "REVIEWER_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

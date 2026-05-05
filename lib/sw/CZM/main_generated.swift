@@ -196,17 +196,15 @@ public struct CZMInterval: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case INTERVAL = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let INTERVAL: VOffset = 4
   }
 
   ///  ISO 8601 interval string (e.g. "2012-03-15T10:00:00Z/2012-03-16T10:00:00Z")
-  public var INTERVAL: String? { let o = _accessor.offset(VTOFFSET.INTERVAL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INTERVALSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INTERVAL.v) }
+  public var INTERVAL: String? { let o = _accessor.offset(VT.INTERVAL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INTERVALSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INTERVAL) }
   public static func startCZMInterval(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(INTERVAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERVAL, at: VTOFFSET.INTERVAL.p) }
+  public static func add(INTERVAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERVAL, at: VT.INTERVAL) }
   public static func endCZMInterval(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMInterval(
     _ fbb: inout FlatBufferBuilder,
@@ -219,7 +217,7 @@ public struct CZMInterval: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.INTERVAL.p, fieldName: "INTERVAL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTERVAL, fieldName: "INTERVAL", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -236,21 +234,19 @@ public struct CZMInterpolation: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ALGORITHM = 4
-    case DEGREE = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ALGORITHM: VOffset = 4
+    static let DEGREE: VOffset = 6
   }
 
   ///  Algorithm: LINEAR, LAGRANGE, HERMITE
-  public var ALGORITHM: String? { let o = _accessor.offset(VTOFFSET.ALGORITHM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALGORITHM.v) }
+  public var ALGORITHM: String? { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALGORITHM) }
   ///  Polynomial degree (1=linear, 5=typical Lagrange)
-  public var DEGREE: Int32 { let o = _accessor.offset(VTOFFSET.DEGREE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var DEGREE: Int32 { let o = _accessor.offset(VT.DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startCZMInterpolation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM, at: VTOFFSET.ALGORITHM.p) }
-  public static func add(DEGREE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEGREE, def: 0, at: VTOFFSET.DEGREE.p) }
+  public static func add(ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM, at: VT.ALGORITHM) }
+  public static func add(DEGREE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEGREE, def: 0, at: VT.DEGREE) }
   public static func endCZMInterpolation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMInterpolation(
     _ fbb: inout FlatBufferBuilder,
@@ -265,8 +261,8 @@ public struct CZMInterpolation: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ALGORITHM.p, fieldName: "ALGORITHM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DEGREE.p, fieldName: "DEGREE", required: false, type: Int32.self)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DEGREE, fieldName: "DEGREE", required: false, type: Int32.self)
     _v.finish()
   }
 }
@@ -283,44 +279,42 @@ public struct CZMDynInterval: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case INTERVAL = 4
-    case VALUE_TYPE = 6
-    case NUMBER_VALUE = 8
-    case BOOLEAN_VALUE = 10
-    case STRING_VALUE = 12
-    case COLOR_VALUE = 14
-    case ARRAY_VALUE = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let INTERVAL: VOffset = 4
+    static let VALUE_TYPE: VOffset = 6
+    static let NUMBER_VALUE: VOffset = 8
+    static let BOOLEAN_VALUE: VOffset = 10
+    static let STRING_VALUE: VOffset = 12
+    static let COLOR_VALUE: VOffset = 14
+    static let ARRAY_VALUE: VOffset = 16
   }
 
   ///  ISO 8601 interval string
-  public var INTERVAL: String? { let o = _accessor.offset(VTOFFSET.INTERVAL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INTERVALSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INTERVAL.v) }
+  public var INTERVAL: String? { let o = _accessor.offset(VT.INTERVAL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INTERVALSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INTERVAL) }
   ///  Value type
-  public var VALUE_TYPE: CZMDynValueType { let o = _accessor.offset(VTOFFSET.VALUE_TYPE.v); return o == 0 ? .number : CZMDynValueType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .number }
+  public var VALUE_TYPE: CZMDynValueType { let o = _accessor.offset(VT.VALUE_TYPE); return o == 0 ? .number : CZMDynValueType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .number }
   ///  Numeric value (when VALUE_TYPE is NUMBER)
-  public var NUMBER_VALUE: Double { let o = _accessor.offset(VTOFFSET.NUMBER_VALUE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NUMBER_VALUE: Double { let o = _accessor.offset(VT.NUMBER_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Boolean value (when VALUE_TYPE is BOOLEAN)
-  public var BOOLEAN_VALUE: Bool { let o = _accessor.offset(VTOFFSET.BOOLEAN_VALUE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var BOOLEAN_VALUE: Bool { let o = _accessor.offset(VT.BOOLEAN_VALUE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  String value (when VALUE_TYPE is STRING)
-  public var STRING_VALUE: String? { let o = _accessor.offset(VTOFFSET.STRING_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STRING_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STRING_VALUE.v) }
+  public var STRING_VALUE: String? { let o = _accessor.offset(VT.STRING_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STRING_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STRING_VALUE) }
   ///  Color value (when VALUE_TYPE is COLOR)
-  public var COLOR_VALUE: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR_VALUE.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR_VALUE: CZMColor? { let o = _accessor.offset(VT.COLOR_VALUE); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Array value for cartesian/nearFarScalar types
-  public var ARRAY_VALUE: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.ARRAY_VALUE.v, byteSize: 8) }
-  public func withUnsafePointerToArrayValue<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ARRAY_VALUE.v, body: body) }
+  public var ARRAY_VALUE: FlatbufferVector<Double> { return _accessor.vector(at: VT.ARRAY_VALUE, byteSize: 8) }
+  public func withUnsafePointerToArrayValue<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ARRAY_VALUE, body: body) }
   public static func startCZMDynInterval(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(INTERVAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERVAL, at: VTOFFSET.INTERVAL.p) }
-  public static func add(VALUE_TYPE: CZMDynValueType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE_TYPE.rawValue, def: 0, at: VTOFFSET.VALUE_TYPE.p) }
-  public static func add(NUMBER_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUMBER_VALUE, def: 0.0, at: VTOFFSET.NUMBER_VALUE.p) }
+  public static func add(INTERVAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERVAL, at: VT.INTERVAL) }
+  public static func add(VALUE_TYPE: CZMDynValueType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE_TYPE.rawValue, def: 0, at: VT.VALUE_TYPE) }
+  public static func add(NUMBER_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUMBER_VALUE, def: 0.0, at: VT.NUMBER_VALUE) }
   public static func add(BOOLEAN_VALUE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOOLEAN_VALUE, def: false,
-   at: VTOFFSET.BOOLEAN_VALUE.p) }
-  public static func add(STRING_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STRING_VALUE, at: VTOFFSET.STRING_VALUE.p) }
-  public static func add(COLOR_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR_VALUE, at: VTOFFSET.COLOR_VALUE.p) }
-  public static func addVectorOf(ARRAY_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARRAY_VALUE, at: VTOFFSET.ARRAY_VALUE.p) }
+   at: VT.BOOLEAN_VALUE) }
+  public static func add(STRING_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STRING_VALUE, at: VT.STRING_VALUE) }
+  public static func add(COLOR_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR_VALUE, at: VT.COLOR_VALUE) }
+  public static func addVectorOf(ARRAY_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARRAY_VALUE, at: VT.ARRAY_VALUE) }
   public static func endCZMDynInterval(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMDynInterval(
     _ fbb: inout FlatBufferBuilder,
@@ -345,13 +339,13 @@ public struct CZMDynInterval: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.INTERVAL.p, fieldName: "INTERVAL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VALUE_TYPE.p, fieldName: "VALUE_TYPE", required: false, type: CZMDynValueType.self)
-    try _v.visit(field: VTOFFSET.NUMBER_VALUE.p, fieldName: "NUMBER_VALUE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BOOLEAN_VALUE.p, fieldName: "BOOLEAN_VALUE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.STRING_VALUE.p, fieldName: "STRING_VALUE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLOR_VALUE.p, fieldName: "COLOR_VALUE", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.ARRAY_VALUE.p, fieldName: "ARRAY_VALUE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.INTERVAL, fieldName: "INTERVAL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VALUE_TYPE, fieldName: "VALUE_TYPE", required: false, type: CZMDynValueType.self)
+    try _v.visit(field: VT.NUMBER_VALUE, fieldName: "NUMBER_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.BOOLEAN_VALUE, fieldName: "BOOLEAN_VALUE", required: false, type: Bool.self)
+    try _v.visit(field: VT.STRING_VALUE, fieldName: "STRING_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLOR_VALUE, fieldName: "COLOR_VALUE", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.ARRAY_VALUE, fieldName: "ARRAY_VALUE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
@@ -368,30 +362,28 @@ public struct CZMDynSampled: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case EPOCH = 4
-    case VALUE_TYPE = 6
-    case DATA = 8
-    case INTERPOLATION = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let VALUE_TYPE: VOffset = 6
+    static let DATA: VOffset = 8
+    static let INTERPOLATION: VOffset = 10
   }
 
   ///  Reference epoch (ISO 8601)
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
   ///  Value type determines stride through DATA
-  public var VALUE_TYPE: CZMDynValueType { let o = _accessor.offset(VTOFFSET.VALUE_TYPE.v); return o == 0 ? .number : CZMDynValueType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .number }
+  public var VALUE_TYPE: CZMDynValueType { let o = _accessor.offset(VT.VALUE_TYPE); return o == 0 ? .number : CZMDynValueType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .number }
   ///  Interleaved [time, value(s), ...] — stride depends on VALUE_TYPE
-  public var DATA: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.DATA.v, byteSize: 8) }
-  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DATA.v, body: body) }
+  public var DATA: FlatbufferVector<Double> { return _accessor.vector(at: VT.DATA, byteSize: 8) }
+  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DATA, body: body) }
   ///  Interpolation settings
-  public var INTERPOLATION: CZMInterpolation? { let o = _accessor.offset(VTOFFSET.INTERPOLATION.v); return o == 0 ? nil : CZMInterpolation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var INTERPOLATION: CZMInterpolation? { let o = _accessor.offset(VT.INTERPOLATION); return o == 0 ? nil : CZMInterpolation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCZMDynSampled(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(VALUE_TYPE: CZMDynValueType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE_TYPE.rawValue, def: 0, at: VTOFFSET.VALUE_TYPE.p) }
-  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VTOFFSET.DATA.p) }
-  public static func add(INTERPOLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERPOLATION, at: VTOFFSET.INTERPOLATION.p) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(VALUE_TYPE: CZMDynValueType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE_TYPE.rawValue, def: 0, at: VT.VALUE_TYPE) }
+  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VT.DATA) }
+  public static func add(INTERPOLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERPOLATION, at: VT.INTERPOLATION) }
   public static func endCZMDynSampled(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMDynSampled(
     _ fbb: inout FlatBufferBuilder,
@@ -410,10 +402,10 @@ public struct CZMDynSampled: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VALUE_TYPE.p, fieldName: "VALUE_TYPE", required: false, type: CZMDynValueType.self)
-    try _v.visit(field: VTOFFSET.DATA.p, fieldName: "DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.INTERPOLATION.p, fieldName: "INTERPOLATION", required: false, type: ForwardOffset<CZMInterpolation>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VALUE_TYPE, fieldName: "VALUE_TYPE", required: false, type: CZMDynValueType.self)
+    try _v.visit(field: VT.DATA, fieldName: "DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.INTERPOLATION, fieldName: "INTERPOLATION", required: false, type: ForwardOffset<CZMInterpolation>.self)
     _v.finish()
   }
 }
@@ -430,30 +422,28 @@ public struct CZMDynamicProperty: FlatBufferTable, FlatbuffersVectorInitializabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SAMPLED = 6
-    case INTERVALS = 8
-    case REFERENCE = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SAMPLED: VOffset = 6
+    static let INTERVALS: VOffset = 8
+    static let REFERENCE: VOffset = 10
   }
 
   ///  Dotted path name, e.g. "billboard.scale", "point.color"
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Sampled data (when property uses epoch + data array)
-  public var SAMPLED: CZMDynSampled? { let o = _accessor.offset(VTOFFSET.SAMPLED.v); return o == 0 ? nil : CZMDynSampled(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SAMPLED: CZMDynSampled? { let o = _accessor.offset(VT.SAMPLED); return o == 0 ? nil : CZMDynSampled(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Interval-based values
-  public var INTERVALS: FlatbufferVector<CZMDynInterval> { return _accessor.vector(at: VTOFFSET.INTERVALS.v, byteSize: 4) }
+  public var INTERVALS: FlatbufferVector<CZMDynInterval> { return _accessor.vector(at: VT.INTERVALS, byteSize: 4) }
   ///  Reference to another entity's property
-  public var REFERENCE: String? { let o = _accessor.offset(VTOFFSET.REFERENCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REFERENCE.v) }
+  public var REFERENCE: String? { let o = _accessor.offset(VT.REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REFERENCE) }
   public static func startCZMDynamicProperty(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SAMPLED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLED, at: VTOFFSET.SAMPLED.p) }
-  public static func addVectorOf(INTERVALS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERVALS, at: VTOFFSET.INTERVALS.p) }
-  public static func add(REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE, at: VTOFFSET.REFERENCE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SAMPLED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLED, at: VT.SAMPLED) }
+  public static func addVectorOf(INTERVALS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERVALS, at: VT.INTERVALS) }
+  public static func add(REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE, at: VT.REFERENCE) }
   public static func endCZMDynamicProperty(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMDynamicProperty(
     _ fbb: inout FlatBufferBuilder,
@@ -472,10 +462,10 @@ public struct CZMDynamicProperty: FlatBufferTable, FlatbuffersVectorInitializabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAMPLED.p, fieldName: "SAMPLED", required: false, type: ForwardOffset<CZMDynSampled>.self)
-    try _v.visit(field: VTOFFSET.INTERVALS.p, fieldName: "INTERVALS", required: false, type: ForwardOffset<Vector<ForwardOffset<CZMDynInterval>, CZMDynInterval>>.self)
-    try _v.visit(field: VTOFFSET.REFERENCE.p, fieldName: "REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAMPLED, fieldName: "SAMPLED", required: false, type: ForwardOffset<CZMDynSampled>.self)
+    try _v.visit(field: VT.INTERVALS, fieldName: "INTERVALS", required: false, type: ForwardOffset<Vector<ForwardOffset<CZMDynInterval>, CZMDynInterval>>.self)
+    try _v.visit(field: VT.REFERENCE, fieldName: "REFERENCE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -492,24 +482,22 @@ public struct CZMCartographicDegrees: FlatBufferTable, FlatbuffersVectorInitiali
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case LONGITUDE = 4
-    case LATITUDE = 6
-    case HEIGHT = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let LONGITUDE: VOffset = 4
+    static let LATITUDE: VOffset = 6
+    static let HEIGHT: VOffset = 8
   }
 
   ///  Longitude in degrees
-  public var LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE: Double { let o = _accessor.offset(VT.LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Latitude in degrees
-  public var LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LATITUDE: Double { let o = _accessor.offset(VT.LATITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height in meters above WGS84 ellipsoid
-  public var HEIGHT: Double { let o = _accessor.offset(VTOFFSET.HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HEIGHT: Double { let o = _accessor.offset(VT.HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMCartographicDegrees(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VTOFFSET.LONGITUDE.p) }
-  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VTOFFSET.LATITUDE.p) }
-  public static func add(HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT, def: 0.0, at: VTOFFSET.HEIGHT.p) }
+  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VT.LONGITUDE) }
+  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VT.LATITUDE) }
+  public static func add(HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT, def: 0.0, at: VT.HEIGHT) }
   public static func endCZMCartographicDegrees(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMCartographicDegrees(
     _ fbb: inout FlatBufferBuilder,
@@ -526,9 +514,9 @@ public struct CZMCartographicDegrees: FlatBufferTable, FlatbuffersVectorInitiali
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LONGITUDE.p, fieldName: "LONGITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LATITUDE.p, fieldName: "LATITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEIGHT.p, fieldName: "HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE, fieldName: "LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.LATITUDE, fieldName: "LATITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.HEIGHT, fieldName: "HEIGHT", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -545,24 +533,22 @@ public struct CZMCartesian: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case X = 4
-    case Y = 6
-    case Z = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let X: VOffset = 4
+    static let Y: VOffset = 6
+    static let Z: VOffset = 8
   }
 
   ///  X component in meters (Earth-fixed)
-  public var X: Double { let o = _accessor.offset(VTOFFSET.X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var X: Double { let o = _accessor.offset(VT.X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Y component in meters (Earth-fixed)
-  public var Y: Double { let o = _accessor.offset(VTOFFSET.Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y: Double { let o = _accessor.offset(VT.Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Z component in meters (Earth-fixed)
-  public var Z: Double { let o = _accessor.offset(VTOFFSET.Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Z: Double { let o = _accessor.offset(VT.Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMCartesian(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VTOFFSET.X.p) }
-  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VTOFFSET.Y.p) }
-  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VTOFFSET.Z.p) }
+  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VT.X) }
+  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VT.Y) }
+  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VT.Z) }
   public static func endCZMCartesian(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMCartesian(
     _ fbb: inout FlatBufferBuilder,
@@ -579,9 +565,9 @@ public struct CZMCartesian: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.X.p, fieldName: "X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Y.p, fieldName: "Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Z.p, fieldName: "Z", required: false, type: Double.self)
+    try _v.visit(field: VT.X, fieldName: "X", required: false, type: Double.self)
+    try _v.visit(field: VT.Y, fieldName: "Y", required: false, type: Double.self)
+    try _v.visit(field: VT.Z, fieldName: "Z", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -598,28 +584,26 @@ public struct CZMColor: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case RED = 4
-    case GREEN = 6
-    case BLUE = 8
-    case ALPHA = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let RED: VOffset = 4
+    static let GREEN: VOffset = 6
+    static let BLUE: VOffset = 8
+    static let ALPHA: VOffset = 10
   }
 
   ///  Red component (0-255)
-  public var RED: UInt8 { let o = _accessor.offset(VTOFFSET.RED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var RED: UInt8 { let o = _accessor.offset(VT.RED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Green component (0-255)
-  public var GREEN: UInt8 { let o = _accessor.offset(VTOFFSET.GREEN.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var GREEN: UInt8 { let o = _accessor.offset(VT.GREEN); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Blue component (0-255)
-  public var BLUE: UInt8 { let o = _accessor.offset(VTOFFSET.BLUE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var BLUE: UInt8 { let o = _accessor.offset(VT.BLUE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Alpha component (0-255)
-  public var ALPHA: UInt8 { let o = _accessor.offset(VTOFFSET.ALPHA.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var ALPHA: UInt8 { let o = _accessor.offset(VT.ALPHA); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   public static func startCZMColor(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(RED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RED, def: 0, at: VTOFFSET.RED.p) }
-  public static func add(GREEN: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GREEN, def: 0, at: VTOFFSET.GREEN.p) }
-  public static func add(BLUE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BLUE, def: 0, at: VTOFFSET.BLUE.p) }
-  public static func add(ALPHA: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALPHA, def: 0, at: VTOFFSET.ALPHA.p) }
+  public static func add(RED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RED, def: 0, at: VT.RED) }
+  public static func add(GREEN: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GREEN, def: 0, at: VT.GREEN) }
+  public static func add(BLUE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BLUE, def: 0, at: VT.BLUE) }
+  public static func add(ALPHA: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALPHA, def: 0, at: VT.ALPHA) }
   public static func endCZMColor(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMColor(
     _ fbb: inout FlatBufferBuilder,
@@ -638,10 +622,10 @@ public struct CZMColor: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.RED.p, fieldName: "RED", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.GREEN.p, fieldName: "GREEN", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.BLUE.p, fieldName: "BLUE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.ALPHA.p, fieldName: "ALPHA", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RED, fieldName: "RED", required: false, type: UInt8.self)
+    try _v.visit(field: VT.GREEN, fieldName: "GREEN", required: false, type: UInt8.self)
+    try _v.visit(field: VT.BLUE, fieldName: "BLUE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.ALPHA, fieldName: "ALPHA", required: false, type: UInt8.self)
     _v.finish()
   }
 }
@@ -658,28 +642,26 @@ public struct CZMNearFarScalar: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NEAR_DISTANCE = 4
-    case NEAR_VALUE = 6
-    case FAR_DISTANCE = 8
-    case FAR_VALUE = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NEAR_DISTANCE: VOffset = 4
+    static let NEAR_VALUE: VOffset = 6
+    static let FAR_DISTANCE: VOffset = 8
+    static let FAR_VALUE: VOffset = 10
   }
 
   ///  Near distance in meters
-  public var NEAR_DISTANCE: Double { let o = _accessor.offset(VTOFFSET.NEAR_DISTANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NEAR_DISTANCE: Double { let o = _accessor.offset(VT.NEAR_DISTANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Value at near distance
-  public var NEAR_VALUE: Double { let o = _accessor.offset(VTOFFSET.NEAR_VALUE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NEAR_VALUE: Double { let o = _accessor.offset(VT.NEAR_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Far distance in meters
-  public var FAR_DISTANCE: Double { let o = _accessor.offset(VTOFFSET.FAR_DISTANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FAR_DISTANCE: Double { let o = _accessor.offset(VT.FAR_DISTANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Value at far distance
-  public var FAR_VALUE: Double { let o = _accessor.offset(VTOFFSET.FAR_VALUE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FAR_VALUE: Double { let o = _accessor.offset(VT.FAR_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMNearFarScalar(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(NEAR_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEAR_DISTANCE, def: 0.0, at: VTOFFSET.NEAR_DISTANCE.p) }
-  public static func add(NEAR_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEAR_VALUE, def: 0.0, at: VTOFFSET.NEAR_VALUE.p) }
-  public static func add(FAR_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAR_DISTANCE, def: 0.0, at: VTOFFSET.FAR_DISTANCE.p) }
-  public static func add(FAR_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAR_VALUE, def: 0.0, at: VTOFFSET.FAR_VALUE.p) }
+  public static func add(NEAR_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEAR_DISTANCE, def: 0.0, at: VT.NEAR_DISTANCE) }
+  public static func add(NEAR_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEAR_VALUE, def: 0.0, at: VT.NEAR_VALUE) }
+  public static func add(FAR_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAR_DISTANCE, def: 0.0, at: VT.FAR_DISTANCE) }
+  public static func add(FAR_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAR_VALUE, def: 0.0, at: VT.FAR_VALUE) }
   public static func endCZMNearFarScalar(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMNearFarScalar(
     _ fbb: inout FlatBufferBuilder,
@@ -698,10 +680,10 @@ public struct CZMNearFarScalar: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NEAR_DISTANCE.p, fieldName: "NEAR_DISTANCE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NEAR_VALUE.p, fieldName: "NEAR_VALUE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FAR_DISTANCE.p, fieldName: "FAR_DISTANCE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FAR_VALUE.p, fieldName: "FAR_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.NEAR_DISTANCE, fieldName: "NEAR_DISTANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.NEAR_VALUE, fieldName: "NEAR_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.FAR_DISTANCE, fieldName: "FAR_DISTANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.FAR_VALUE, fieldName: "FAR_VALUE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -718,20 +700,18 @@ public struct CZMDistanceDisplayCondition: FlatBufferTable, FlatbuffersVectorIni
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NEAR_DISTANCE = 4
-    case FAR_DISTANCE = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NEAR_DISTANCE: VOffset = 4
+    static let FAR_DISTANCE: VOffset = 6
   }
 
   ///  Near distance in meters
-  public var NEAR_DISTANCE: Double { let o = _accessor.offset(VTOFFSET.NEAR_DISTANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NEAR_DISTANCE: Double { let o = _accessor.offset(VT.NEAR_DISTANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Far distance in meters
-  public var FAR_DISTANCE: Double { let o = _accessor.offset(VTOFFSET.FAR_DISTANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FAR_DISTANCE: Double { let o = _accessor.offset(VT.FAR_DISTANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMDistanceDisplayCondition(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(NEAR_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEAR_DISTANCE, def: 0.0, at: VTOFFSET.NEAR_DISTANCE.p) }
-  public static func add(FAR_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAR_DISTANCE, def: 0.0, at: VTOFFSET.FAR_DISTANCE.p) }
+  public static func add(NEAR_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEAR_DISTANCE, def: 0.0, at: VT.NEAR_DISTANCE) }
+  public static func add(FAR_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAR_DISTANCE, def: 0.0, at: VT.FAR_DISTANCE) }
   public static func endCZMDistanceDisplayCondition(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMDistanceDisplayCondition(
     _ fbb: inout FlatBufferBuilder,
@@ -746,8 +726,8 @@ public struct CZMDistanceDisplayCondition: FlatBufferTable, FlatbuffersVectorIni
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NEAR_DISTANCE.p, fieldName: "NEAR_DISTANCE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FAR_DISTANCE.p, fieldName: "FAR_DISTANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.NEAR_DISTANCE, fieldName: "NEAR_DISTANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.FAR_DISTANCE, fieldName: "FAR_DISTANCE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -764,28 +744,26 @@ public struct CZMOrientation: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case UNIT_QUATERNION_X = 4
-    case UNIT_QUATERNION_Y = 6
-    case UNIT_QUATERNION_Z = 8
-    case UNIT_QUATERNION_W = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let UNIT_QUATERNION_X: VOffset = 4
+    static let UNIT_QUATERNION_Y: VOffset = 6
+    static let UNIT_QUATERNION_Z: VOffset = 8
+    static let UNIT_QUATERNION_W: VOffset = 10
   }
 
   ///  X component
-  public var UNIT_QUATERNION_X: Double { let o = _accessor.offset(VTOFFSET.UNIT_QUATERNION_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var UNIT_QUATERNION_X: Double { let o = _accessor.offset(VT.UNIT_QUATERNION_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Y component
-  public var UNIT_QUATERNION_Y: Double { let o = _accessor.offset(VTOFFSET.UNIT_QUATERNION_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var UNIT_QUATERNION_Y: Double { let o = _accessor.offset(VT.UNIT_QUATERNION_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Z component
-  public var UNIT_QUATERNION_Z: Double { let o = _accessor.offset(VTOFFSET.UNIT_QUATERNION_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var UNIT_QUATERNION_Z: Double { let o = _accessor.offset(VT.UNIT_QUATERNION_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  W component
-  public var UNIT_QUATERNION_W: Double { let o = _accessor.offset(VTOFFSET.UNIT_QUATERNION_W.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var UNIT_QUATERNION_W: Double { let o = _accessor.offset(VT.UNIT_QUATERNION_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMOrientation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(UNIT_QUATERNION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNIT_QUATERNION_X, def: 0.0, at: VTOFFSET.UNIT_QUATERNION_X.p) }
-  public static func add(UNIT_QUATERNION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNIT_QUATERNION_Y, def: 0.0, at: VTOFFSET.UNIT_QUATERNION_Y.p) }
-  public static func add(UNIT_QUATERNION_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNIT_QUATERNION_Z, def: 0.0, at: VTOFFSET.UNIT_QUATERNION_Z.p) }
-  public static func add(UNIT_QUATERNION_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNIT_QUATERNION_W, def: 0.0, at: VTOFFSET.UNIT_QUATERNION_W.p) }
+  public static func add(UNIT_QUATERNION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNIT_QUATERNION_X, def: 0.0, at: VT.UNIT_QUATERNION_X) }
+  public static func add(UNIT_QUATERNION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNIT_QUATERNION_Y, def: 0.0, at: VT.UNIT_QUATERNION_Y) }
+  public static func add(UNIT_QUATERNION_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNIT_QUATERNION_Z, def: 0.0, at: VT.UNIT_QUATERNION_Z) }
+  public static func add(UNIT_QUATERNION_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UNIT_QUATERNION_W, def: 0.0, at: VT.UNIT_QUATERNION_W) }
   public static func endCZMOrientation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMOrientation(
     _ fbb: inout FlatBufferBuilder,
@@ -804,10 +782,10 @@ public struct CZMOrientation: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.UNIT_QUATERNION_X.p, fieldName: "UNIT_QUATERNION_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.UNIT_QUATERNION_Y.p, fieldName: "UNIT_QUATERNION_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.UNIT_QUATERNION_Z.p, fieldName: "UNIT_QUATERNION_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.UNIT_QUATERNION_W.p, fieldName: "UNIT_QUATERNION_W", required: false, type: Double.self)
+    try _v.visit(field: VT.UNIT_QUATERNION_X, fieldName: "UNIT_QUATERNION_X", required: false, type: Double.self)
+    try _v.visit(field: VT.UNIT_QUATERNION_Y, fieldName: "UNIT_QUATERNION_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.UNIT_QUATERNION_Z, fieldName: "UNIT_QUATERNION_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.UNIT_QUATERNION_W, fieldName: "UNIT_QUATERNION_W", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -824,24 +802,22 @@ public struct CZMViewFrom: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case X = 4
-    case Y = 6
-    case Z = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let X: VOffset = 4
+    static let Y: VOffset = 6
+    static let Z: VOffset = 8
   }
 
   ///  X offset in meters
-  public var X: Double { let o = _accessor.offset(VTOFFSET.X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var X: Double { let o = _accessor.offset(VT.X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Y offset in meters
-  public var Y: Double { let o = _accessor.offset(VTOFFSET.Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y: Double { let o = _accessor.offset(VT.Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Z offset in meters
-  public var Z: Double { let o = _accessor.offset(VTOFFSET.Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Z: Double { let o = _accessor.offset(VT.Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMViewFrom(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VTOFFSET.X.p) }
-  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VTOFFSET.Y.p) }
-  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VTOFFSET.Z.p) }
+  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VT.X) }
+  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VT.Y) }
+  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VT.Z) }
   public static func endCZMViewFrom(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMViewFrom(
     _ fbb: inout FlatBufferBuilder,
@@ -858,9 +834,9 @@ public struct CZMViewFrom: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.X.p, fieldName: "X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Y.p, fieldName: "Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Z.p, fieldName: "Z", required: false, type: Double.self)
+    try _v.visit(field: VT.X, fieldName: "X", required: false, type: Double.self)
+    try _v.visit(field: VT.Y, fieldName: "Y", required: false, type: Double.self)
+    try _v.visit(field: VT.Z, fieldName: "Z", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -877,16 +853,14 @@ public struct CZMSolidColorMaterial: FlatBufferTable, FlatbuffersVectorInitializ
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COLOR = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COLOR: VOffset = 4
   }
 
   ///  Color
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCZMSolidColorMaterial(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
   public static func endCZMSolidColorMaterial(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMSolidColorMaterial(
     _ fbb: inout FlatBufferBuilder,
@@ -899,7 +873,7 @@ public struct CZMSolidColorMaterial: FlatBufferTable, FlatbuffersVectorInitializ
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
     _v.finish()
   }
 }
@@ -916,34 +890,32 @@ public struct CZMImageMaterial: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case IMAGE = 4
-    case REPEAT_X = 6
-    case REPEAT_Y = 8
-    case COLOR = 10
-    case TRANSPARENT = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let IMAGE: VOffset = 4
+    static let REPEAT_X: VOffset = 6
+    static let REPEAT_Y: VOffset = 8
+    static let COLOR: VOffset = 10
+    static let TRANSPARENT: VOffset = 12
   }
 
   ///  Image URI
-  public var IMAGE: String? { let o = _accessor.offset(VTOFFSET.IMAGE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IMAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMAGE.v) }
+  public var IMAGE: String? { let o = _accessor.offset(VT.IMAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IMAGE) }
   ///  Repeat X
-  public var REPEAT_X: Double { let o = _accessor.offset(VTOFFSET.REPEAT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REPEAT_X: Double { let o = _accessor.offset(VT.REPEAT_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Repeat Y
-  public var REPEAT_Y: Double { let o = _accessor.offset(VTOFFSET.REPEAT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REPEAT_Y: Double { let o = _accessor.offset(VT.REPEAT_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Color tint
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Whether the image has transparency
-  public var TRANSPARENT: Bool { let o = _accessor.offset(VTOFFSET.TRANSPARENT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var TRANSPARENT: Bool { let o = _accessor.offset(VT.TRANSPARENT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startCZMImageMaterial(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(IMAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE, at: VTOFFSET.IMAGE.p) }
-  public static func add(REPEAT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPEAT_X, def: 0.0, at: VTOFFSET.REPEAT_X.p) }
-  public static func add(REPEAT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPEAT_Y, def: 0.0, at: VTOFFSET.REPEAT_Y.p) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
+  public static func add(IMAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE, at: VT.IMAGE) }
+  public static func add(REPEAT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPEAT_X, def: 0.0, at: VT.REPEAT_X) }
+  public static func add(REPEAT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPEAT_Y, def: 0.0, at: VT.REPEAT_Y) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
   public static func add(TRANSPARENT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSPARENT, def: false,
-   at: VTOFFSET.TRANSPARENT.p) }
+   at: VT.TRANSPARENT) }
   public static func endCZMImageMaterial(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMImageMaterial(
     _ fbb: inout FlatBufferBuilder,
@@ -964,11 +936,11 @@ public struct CZMImageMaterial: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.IMAGE.p, fieldName: "IMAGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REPEAT_X.p, fieldName: "REPEAT_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.REPEAT_Y.p, fieldName: "REPEAT_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.TRANSPARENT.p, fieldName: "TRANSPARENT", required: false, type: Bool.self)
+    try _v.visit(field: VT.IMAGE, fieldName: "IMAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REPEAT_X, fieldName: "REPEAT_X", required: false, type: Double.self)
+    try _v.visit(field: VT.REPEAT_Y, fieldName: "REPEAT_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.TRANSPARENT, fieldName: "TRANSPARENT", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -985,44 +957,42 @@ public struct CZMGridMaterial: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COLOR = 4
-    case CELL_ALPHA = 6
-    case LINE_COUNT_X = 8
-    case LINE_COUNT_Y = 10
-    case LINE_THICKNESS_X = 12
-    case LINE_THICKNESS_Y = 14
-    case LINE_OFFSET_X = 16
-    case LINE_OFFSET_Y = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COLOR: VOffset = 4
+    static let CELL_ALPHA: VOffset = 6
+    static let LINE_COUNT_X: VOffset = 8
+    static let LINE_COUNT_Y: VOffset = 10
+    static let LINE_THICKNESS_X: VOffset = 12
+    static let LINE_THICKNESS_Y: VOffset = 14
+    static let LINE_OFFSET_X: VOffset = 16
+    static let LINE_OFFSET_Y: VOffset = 18
   }
 
   ///  Grid line color
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Cell alpha
-  public var CELL_ALPHA: Double { let o = _accessor.offset(VTOFFSET.CELL_ALPHA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CELL_ALPHA: Double { let o = _accessor.offset(VT.CELL_ALPHA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of grid lines along X
-  public var LINE_COUNT_X: Double { let o = _accessor.offset(VTOFFSET.LINE_COUNT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LINE_COUNT_X: Double { let o = _accessor.offset(VT.LINE_COUNT_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of grid lines along Y
-  public var LINE_COUNT_Y: Double { let o = _accessor.offset(VTOFFSET.LINE_COUNT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LINE_COUNT_Y: Double { let o = _accessor.offset(VT.LINE_COUNT_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Thickness of grid lines along X
-  public var LINE_THICKNESS_X: Double { let o = _accessor.offset(VTOFFSET.LINE_THICKNESS_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LINE_THICKNESS_X: Double { let o = _accessor.offset(VT.LINE_THICKNESS_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Thickness of grid lines along Y
-  public var LINE_THICKNESS_Y: Double { let o = _accessor.offset(VTOFFSET.LINE_THICKNESS_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LINE_THICKNESS_Y: Double { let o = _accessor.offset(VT.LINE_THICKNESS_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Offset of grid lines along X
-  public var LINE_OFFSET_X: Double { let o = _accessor.offset(VTOFFSET.LINE_OFFSET_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LINE_OFFSET_X: Double { let o = _accessor.offset(VT.LINE_OFFSET_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Offset of grid lines along Y
-  public var LINE_OFFSET_Y: Double { let o = _accessor.offset(VTOFFSET.LINE_OFFSET_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LINE_OFFSET_Y: Double { let o = _accessor.offset(VT.LINE_OFFSET_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMGridMaterial(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(CELL_ALPHA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CELL_ALPHA, def: 0.0, at: VTOFFSET.CELL_ALPHA.p) }
-  public static func add(LINE_COUNT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINE_COUNT_X, def: 0.0, at: VTOFFSET.LINE_COUNT_X.p) }
-  public static func add(LINE_COUNT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINE_COUNT_Y, def: 0.0, at: VTOFFSET.LINE_COUNT_Y.p) }
-  public static func add(LINE_THICKNESS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINE_THICKNESS_X, def: 0.0, at: VTOFFSET.LINE_THICKNESS_X.p) }
-  public static func add(LINE_THICKNESS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINE_THICKNESS_Y, def: 0.0, at: VTOFFSET.LINE_THICKNESS_Y.p) }
-  public static func add(LINE_OFFSET_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINE_OFFSET_X, def: 0.0, at: VTOFFSET.LINE_OFFSET_X.p) }
-  public static func add(LINE_OFFSET_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINE_OFFSET_Y, def: 0.0, at: VTOFFSET.LINE_OFFSET_Y.p) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(CELL_ALPHA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CELL_ALPHA, def: 0.0, at: VT.CELL_ALPHA) }
+  public static func add(LINE_COUNT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINE_COUNT_X, def: 0.0, at: VT.LINE_COUNT_X) }
+  public static func add(LINE_COUNT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINE_COUNT_Y, def: 0.0, at: VT.LINE_COUNT_Y) }
+  public static func add(LINE_THICKNESS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINE_THICKNESS_X, def: 0.0, at: VT.LINE_THICKNESS_X) }
+  public static func add(LINE_THICKNESS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINE_THICKNESS_Y, def: 0.0, at: VT.LINE_THICKNESS_Y) }
+  public static func add(LINE_OFFSET_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINE_OFFSET_X, def: 0.0, at: VT.LINE_OFFSET_X) }
+  public static func add(LINE_OFFSET_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINE_OFFSET_Y, def: 0.0, at: VT.LINE_OFFSET_Y) }
   public static func endCZMGridMaterial(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMGridMaterial(
     _ fbb: inout FlatBufferBuilder,
@@ -1049,14 +1019,14 @@ public struct CZMGridMaterial: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.CELL_ALPHA.p, fieldName: "CELL_ALPHA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LINE_COUNT_X.p, fieldName: "LINE_COUNT_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LINE_COUNT_Y.p, fieldName: "LINE_COUNT_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LINE_THICKNESS_X.p, fieldName: "LINE_THICKNESS_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LINE_THICKNESS_Y.p, fieldName: "LINE_THICKNESS_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LINE_OFFSET_X.p, fieldName: "LINE_OFFSET_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LINE_OFFSET_Y.p, fieldName: "LINE_OFFSET_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.CELL_ALPHA, fieldName: "CELL_ALPHA", required: false, type: Double.self)
+    try _v.visit(field: VT.LINE_COUNT_X, fieldName: "LINE_COUNT_X", required: false, type: Double.self)
+    try _v.visit(field: VT.LINE_COUNT_Y, fieldName: "LINE_COUNT_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.LINE_THICKNESS_X, fieldName: "LINE_THICKNESS_X", required: false, type: Double.self)
+    try _v.visit(field: VT.LINE_THICKNESS_Y, fieldName: "LINE_THICKNESS_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.LINE_OFFSET_X, fieldName: "LINE_OFFSET_X", required: false, type: Double.self)
+    try _v.visit(field: VT.LINE_OFFSET_Y, fieldName: "LINE_OFFSET_Y", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -1073,33 +1043,31 @@ public struct CZMStripeMaterial: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ORIENTATION = 4
-    case EVEN_COLOR = 6
-    case ODD_COLOR = 8
-    case OFFSET = 10
-    case REPEAT_COUNT = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ORIENTATION: VOffset = 4
+    static let EVEN_COLOR: VOffset = 6
+    static let ODD_COLOR: VOffset = 8
+    static let OFFSET: VOffset = 10
+    static let REPEAT_COUNT: VOffset = 12
   }
 
   ///  Stripe orientation
-  public var ORIENTATION: String? { let o = _accessor.offset(VTOFFSET.ORIENTATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIENTATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIENTATION.v) }
+  public var ORIENTATION: String? { let o = _accessor.offset(VT.ORIENTATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIENTATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIENTATION) }
   ///  Even color
-  public var EVEN_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.EVEN_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EVEN_COLOR: CZMColor? { let o = _accessor.offset(VT.EVEN_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Odd color
-  public var ODD_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.ODD_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ODD_COLOR: CZMColor? { let o = _accessor.offset(VT.ODD_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Offset
-  public var OFFSET: Double { let o = _accessor.offset(VTOFFSET.OFFSET.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OFFSET: Double { let o = _accessor.offset(VT.OFFSET); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of times to repeat
-  public var REPEAT_COUNT: Double { let o = _accessor.offset(VTOFFSET.REPEAT_COUNT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REPEAT_COUNT: Double { let o = _accessor.offset(VT.REPEAT_COUNT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMStripeMaterial(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(ORIENTATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIENTATION, at: VTOFFSET.ORIENTATION.p) }
-  public static func add(EVEN_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVEN_COLOR, at: VTOFFSET.EVEN_COLOR.p) }
-  public static func add(ODD_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ODD_COLOR, at: VTOFFSET.ODD_COLOR.p) }
-  public static func add(OFFSET: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET, def: 0.0, at: VTOFFSET.OFFSET.p) }
-  public static func add(REPEAT_COUNT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPEAT_COUNT, def: 0.0, at: VTOFFSET.REPEAT_COUNT.p) }
+  public static func add(ORIENTATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIENTATION, at: VT.ORIENTATION) }
+  public static func add(EVEN_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVEN_COLOR, at: VT.EVEN_COLOR) }
+  public static func add(ODD_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ODD_COLOR, at: VT.ODD_COLOR) }
+  public static func add(OFFSET: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET, def: 0.0, at: VT.OFFSET) }
+  public static func add(REPEAT_COUNT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPEAT_COUNT, def: 0.0, at: VT.REPEAT_COUNT) }
   public static func endCZMStripeMaterial(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMStripeMaterial(
     _ fbb: inout FlatBufferBuilder,
@@ -1120,11 +1088,11 @@ public struct CZMStripeMaterial: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ORIENTATION.p, fieldName: "ORIENTATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EVEN_COLOR.p, fieldName: "EVEN_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.ODD_COLOR.p, fieldName: "ODD_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OFFSET.p, fieldName: "OFFSET", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.REPEAT_COUNT.p, fieldName: "REPEAT_COUNT", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIENTATION, fieldName: "ORIENTATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EVEN_COLOR, fieldName: "EVEN_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.ODD_COLOR, fieldName: "ODD_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OFFSET, fieldName: "OFFSET", required: false, type: Double.self)
+    try _v.visit(field: VT.REPEAT_COUNT, fieldName: "REPEAT_COUNT", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -1141,28 +1109,26 @@ public struct CZMCheckerboardMaterial: FlatBufferTable, FlatbuffersVectorInitial
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case EVEN_COLOR = 4
-    case ODD_COLOR = 6
-    case REPEAT_X = 8
-    case REPEAT_Y = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let EVEN_COLOR: VOffset = 4
+    static let ODD_COLOR: VOffset = 6
+    static let REPEAT_X: VOffset = 8
+    static let REPEAT_Y: VOffset = 10
   }
 
   ///  Even color
-  public var EVEN_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.EVEN_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var EVEN_COLOR: CZMColor? { let o = _accessor.offset(VT.EVEN_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Odd color
-  public var ODD_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.ODD_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ODD_COLOR: CZMColor? { let o = _accessor.offset(VT.ODD_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Repeat X
-  public var REPEAT_X: Double { let o = _accessor.offset(VTOFFSET.REPEAT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REPEAT_X: Double { let o = _accessor.offset(VT.REPEAT_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Repeat Y
-  public var REPEAT_Y: Double { let o = _accessor.offset(VTOFFSET.REPEAT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REPEAT_Y: Double { let o = _accessor.offset(VT.REPEAT_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMCheckerboardMaterial(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(EVEN_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVEN_COLOR, at: VTOFFSET.EVEN_COLOR.p) }
-  public static func add(ODD_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ODD_COLOR, at: VTOFFSET.ODD_COLOR.p) }
-  public static func add(REPEAT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPEAT_X, def: 0.0, at: VTOFFSET.REPEAT_X.p) }
-  public static func add(REPEAT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPEAT_Y, def: 0.0, at: VTOFFSET.REPEAT_Y.p) }
+  public static func add(EVEN_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVEN_COLOR, at: VT.EVEN_COLOR) }
+  public static func add(ODD_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ODD_COLOR, at: VT.ODD_COLOR) }
+  public static func add(REPEAT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPEAT_X, def: 0.0, at: VT.REPEAT_X) }
+  public static func add(REPEAT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPEAT_Y, def: 0.0, at: VT.REPEAT_Y) }
   public static func endCZMCheckerboardMaterial(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMCheckerboardMaterial(
     _ fbb: inout FlatBufferBuilder,
@@ -1181,10 +1147,10 @@ public struct CZMCheckerboardMaterial: FlatBufferTable, FlatbuffersVectorInitial
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.EVEN_COLOR.p, fieldName: "EVEN_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.ODD_COLOR.p, fieldName: "ODD_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.REPEAT_X.p, fieldName: "REPEAT_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.REPEAT_Y.p, fieldName: "REPEAT_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.EVEN_COLOR, fieldName: "EVEN_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.ODD_COLOR, fieldName: "ODD_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.REPEAT_X, fieldName: "REPEAT_X", required: false, type: Double.self)
+    try _v.visit(field: VT.REPEAT_Y, fieldName: "REPEAT_Y", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -1201,32 +1167,30 @@ public struct CZMMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SOLID_COLOR = 4
-    case IMAGE = 6
-    case GRID = 8
-    case STRIPE = 10
-    case CHECKERBOARD = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SOLID_COLOR: VOffset = 4
+    static let IMAGE: VOffset = 6
+    static let GRID: VOffset = 8
+    static let STRIPE: VOffset = 10
+    static let CHECKERBOARD: VOffset = 12
   }
 
   ///  Solid color material
-  public var SOLID_COLOR: CZMSolidColorMaterial? { let o = _accessor.offset(VTOFFSET.SOLID_COLOR.v); return o == 0 ? nil : CZMSolidColorMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SOLID_COLOR: CZMSolidColorMaterial? { let o = _accessor.offset(VT.SOLID_COLOR); return o == 0 ? nil : CZMSolidColorMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Image material
-  public var IMAGE: CZMImageMaterial? { let o = _accessor.offset(VTOFFSET.IMAGE.v); return o == 0 ? nil : CZMImageMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var IMAGE: CZMImageMaterial? { let o = _accessor.offset(VT.IMAGE); return o == 0 ? nil : CZMImageMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Grid material
-  public var GRID: CZMGridMaterial? { let o = _accessor.offset(VTOFFSET.GRID.v); return o == 0 ? nil : CZMGridMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var GRID: CZMGridMaterial? { let o = _accessor.offset(VT.GRID); return o == 0 ? nil : CZMGridMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Stripe material
-  public var STRIPE: CZMStripeMaterial? { let o = _accessor.offset(VTOFFSET.STRIPE.v); return o == 0 ? nil : CZMStripeMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var STRIPE: CZMStripeMaterial? { let o = _accessor.offset(VT.STRIPE); return o == 0 ? nil : CZMStripeMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Checkerboard material
-  public var CHECKERBOARD: CZMCheckerboardMaterial? { let o = _accessor.offset(VTOFFSET.CHECKERBOARD.v); return o == 0 ? nil : CZMCheckerboardMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CHECKERBOARD: CZMCheckerboardMaterial? { let o = _accessor.offset(VT.CHECKERBOARD); return o == 0 ? nil : CZMCheckerboardMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCZMMaterial(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(SOLID_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLID_COLOR, at: VTOFFSET.SOLID_COLOR.p) }
-  public static func add(IMAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE, at: VTOFFSET.IMAGE.p) }
-  public static func add(GRID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRID, at: VTOFFSET.GRID.p) }
-  public static func add(STRIPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STRIPE, at: VTOFFSET.STRIPE.p) }
-  public static func add(CHECKERBOARD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHECKERBOARD, at: VTOFFSET.CHECKERBOARD.p) }
+  public static func add(SOLID_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLID_COLOR, at: VT.SOLID_COLOR) }
+  public static func add(IMAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE, at: VT.IMAGE) }
+  public static func add(GRID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRID, at: VT.GRID) }
+  public static func add(STRIPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STRIPE, at: VT.STRIPE) }
+  public static func add(CHECKERBOARD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHECKERBOARD, at: VT.CHECKERBOARD) }
   public static func endCZMMaterial(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMMaterial(
     _ fbb: inout FlatBufferBuilder,
@@ -1247,11 +1211,11 @@ public struct CZMMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SOLID_COLOR.p, fieldName: "SOLID_COLOR", required: false, type: ForwardOffset<CZMSolidColorMaterial>.self)
-    try _v.visit(field: VTOFFSET.IMAGE.p, fieldName: "IMAGE", required: false, type: ForwardOffset<CZMImageMaterial>.self)
-    try _v.visit(field: VTOFFSET.GRID.p, fieldName: "GRID", required: false, type: ForwardOffset<CZMGridMaterial>.self)
-    try _v.visit(field: VTOFFSET.STRIPE.p, fieldName: "STRIPE", required: false, type: ForwardOffset<CZMStripeMaterial>.self)
-    try _v.visit(field: VTOFFSET.CHECKERBOARD.p, fieldName: "CHECKERBOARD", required: false, type: ForwardOffset<CZMCheckerboardMaterial>.self)
+    try _v.visit(field: VT.SOLID_COLOR, fieldName: "SOLID_COLOR", required: false, type: ForwardOffset<CZMSolidColorMaterial>.self)
+    try _v.visit(field: VT.IMAGE, fieldName: "IMAGE", required: false, type: ForwardOffset<CZMImageMaterial>.self)
+    try _v.visit(field: VT.GRID, fieldName: "GRID", required: false, type: ForwardOffset<CZMGridMaterial>.self)
+    try _v.visit(field: VT.STRIPE, fieldName: "STRIPE", required: false, type: ForwardOffset<CZMStripeMaterial>.self)
+    try _v.visit(field: VT.CHECKERBOARD, fieldName: "CHECKERBOARD", required: false, type: ForwardOffset<CZMCheckerboardMaterial>.self)
     _v.finish()
   }
 }
@@ -1268,24 +1232,22 @@ public struct CZMPolylineOutlineMaterial: FlatBufferTable, FlatbuffersVectorInit
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COLOR = 4
-    case OUTLINE_COLOR = 6
-    case OUTLINE_WIDTH = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COLOR: VOffset = 4
+    static let OUTLINE_COLOR: VOffset = 6
+    static let OUTLINE_WIDTH: VOffset = 8
   }
 
   ///  Line color
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline color
-  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.OUTLINE_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VT.OUTLINE_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline width
-  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VTOFFSET.OUTLINE_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VT.OUTLINE_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMPolylineOutlineMaterial(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VTOFFSET.OUTLINE_COLOR.p) }
-  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VTOFFSET.OUTLINE_WIDTH.p) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VT.OUTLINE_COLOR) }
+  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VT.OUTLINE_WIDTH) }
   public static func endCZMPolylineOutlineMaterial(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMPolylineOutlineMaterial(
     _ fbb: inout FlatBufferBuilder,
@@ -1302,9 +1264,9 @@ public struct CZMPolylineOutlineMaterial: FlatBufferTable, FlatbuffersVectorInit
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_COLOR.p, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_WIDTH.p, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE_COLOR, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE_WIDTH, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -1321,16 +1283,14 @@ public struct CZMPolylineArrowMaterial: FlatBufferTable, FlatbuffersVectorInitia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COLOR = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COLOR: VOffset = 4
   }
 
   ///  Arrow color
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCZMPolylineArrowMaterial(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
   public static func endCZMPolylineArrowMaterial(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMPolylineArrowMaterial(
     _ fbb: inout FlatBufferBuilder,
@@ -1343,7 +1303,7 @@ public struct CZMPolylineArrowMaterial: FlatBufferTable, FlatbuffersVectorInitia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
     _v.finish()
   }
 }
@@ -1360,28 +1320,26 @@ public struct CZMPolylineDashMaterial: FlatBufferTable, FlatbuffersVectorInitial
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COLOR = 4
-    case GAP_COLOR = 6
-    case DASH_LENGTH = 8
-    case DASH_PATTERN = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COLOR: VOffset = 4
+    static let GAP_COLOR: VOffset = 6
+    static let DASH_LENGTH: VOffset = 8
+    static let DASH_PATTERN: VOffset = 10
   }
 
   ///  Dash color
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Gap color
-  public var GAP_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.GAP_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var GAP_COLOR: CZMColor? { let o = _accessor.offset(VT.GAP_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Dash length in pixels
-  public var DASH_LENGTH: Double { let o = _accessor.offset(VTOFFSET.DASH_LENGTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DASH_LENGTH: Double { let o = _accessor.offset(VT.DASH_LENGTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Dash pattern (bitmask)
-  public var DASH_PATTERN: Int32 { let o = _accessor.offset(VTOFFSET.DASH_PATTERN.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var DASH_PATTERN: Int32 { let o = _accessor.offset(VT.DASH_PATTERN); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startCZMPolylineDashMaterial(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(GAP_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GAP_COLOR, at: VTOFFSET.GAP_COLOR.p) }
-  public static func add(DASH_LENGTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DASH_LENGTH, def: 0.0, at: VTOFFSET.DASH_LENGTH.p) }
-  public static func add(DASH_PATTERN: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DASH_PATTERN, def: 0, at: VTOFFSET.DASH_PATTERN.p) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(GAP_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GAP_COLOR, at: VT.GAP_COLOR) }
+  public static func add(DASH_LENGTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DASH_LENGTH, def: 0.0, at: VT.DASH_LENGTH) }
+  public static func add(DASH_PATTERN: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DASH_PATTERN, def: 0, at: VT.DASH_PATTERN) }
   public static func endCZMPolylineDashMaterial(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMPolylineDashMaterial(
     _ fbb: inout FlatBufferBuilder,
@@ -1400,10 +1358,10 @@ public struct CZMPolylineDashMaterial: FlatBufferTable, FlatbuffersVectorInitial
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.GAP_COLOR.p, fieldName: "GAP_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.DASH_LENGTH.p, fieldName: "DASH_LENGTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DASH_PATTERN.p, fieldName: "DASH_PATTERN", required: false, type: Int32.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.GAP_COLOR, fieldName: "GAP_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.DASH_LENGTH, fieldName: "DASH_LENGTH", required: false, type: Double.self)
+    try _v.visit(field: VT.DASH_PATTERN, fieldName: "DASH_PATTERN", required: false, type: Int32.self)
     _v.finish()
   }
 }
@@ -1420,24 +1378,22 @@ public struct CZMPolylineGlowMaterial: FlatBufferTable, FlatbuffersVectorInitial
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COLOR = 4
-    case GLOW_POWER = 6
-    case TAPER_POWER = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COLOR: VOffset = 4
+    static let GLOW_POWER: VOffset = 6
+    static let TAPER_POWER: VOffset = 8
   }
 
   ///  Glow color
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Glow power
-  public var GLOW_POWER: Double { let o = _accessor.offset(VTOFFSET.GLOW_POWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GLOW_POWER: Double { let o = _accessor.offset(VT.GLOW_POWER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Taper power
-  public var TAPER_POWER: Double { let o = _accessor.offset(VTOFFSET.TAPER_POWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TAPER_POWER: Double { let o = _accessor.offset(VT.TAPER_POWER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMPolylineGlowMaterial(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(GLOW_POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GLOW_POWER, def: 0.0, at: VTOFFSET.GLOW_POWER.p) }
-  public static func add(TAPER_POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAPER_POWER, def: 0.0, at: VTOFFSET.TAPER_POWER.p) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(GLOW_POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GLOW_POWER, def: 0.0, at: VT.GLOW_POWER) }
+  public static func add(TAPER_POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAPER_POWER, def: 0.0, at: VT.TAPER_POWER) }
   public static func endCZMPolylineGlowMaterial(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMPolylineGlowMaterial(
     _ fbb: inout FlatBufferBuilder,
@@ -1454,9 +1410,9 @@ public struct CZMPolylineGlowMaterial: FlatBufferTable, FlatbuffersVectorInitial
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.GLOW_POWER.p, fieldName: "GLOW_POWER", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TAPER_POWER.p, fieldName: "TAPER_POWER", required: false, type: Double.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.GLOW_POWER, fieldName: "GLOW_POWER", required: false, type: Double.self)
+    try _v.visit(field: VT.TAPER_POWER, fieldName: "TAPER_POWER", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -1473,32 +1429,30 @@ public struct CZMPolylineMaterial: FlatBufferTable, FlatbuffersVectorInitializab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SOLID_COLOR = 4
-    case POLYLINE_OUTLINE = 6
-    case POLYLINE_ARROW = 8
-    case POLYLINE_DASH = 10
-    case POLYLINE_GLOW = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SOLID_COLOR: VOffset = 4
+    static let POLYLINE_OUTLINE: VOffset = 6
+    static let POLYLINE_ARROW: VOffset = 8
+    static let POLYLINE_DASH: VOffset = 10
+    static let POLYLINE_GLOW: VOffset = 12
   }
 
   ///  Solid color material
-  public var SOLID_COLOR: CZMSolidColorMaterial? { let o = _accessor.offset(VTOFFSET.SOLID_COLOR.v); return o == 0 ? nil : CZMSolidColorMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SOLID_COLOR: CZMSolidColorMaterial? { let o = _accessor.offset(VT.SOLID_COLOR); return o == 0 ? nil : CZMSolidColorMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Polyline outline material
-  public var POLYLINE_OUTLINE: CZMPolylineOutlineMaterial? { let o = _accessor.offset(VTOFFSET.POLYLINE_OUTLINE.v); return o == 0 ? nil : CZMPolylineOutlineMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POLYLINE_OUTLINE: CZMPolylineOutlineMaterial? { let o = _accessor.offset(VT.POLYLINE_OUTLINE); return o == 0 ? nil : CZMPolylineOutlineMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Polyline arrow material
-  public var POLYLINE_ARROW: CZMPolylineArrowMaterial? { let o = _accessor.offset(VTOFFSET.POLYLINE_ARROW.v); return o == 0 ? nil : CZMPolylineArrowMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POLYLINE_ARROW: CZMPolylineArrowMaterial? { let o = _accessor.offset(VT.POLYLINE_ARROW); return o == 0 ? nil : CZMPolylineArrowMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Polyline dash material
-  public var POLYLINE_DASH: CZMPolylineDashMaterial? { let o = _accessor.offset(VTOFFSET.POLYLINE_DASH.v); return o == 0 ? nil : CZMPolylineDashMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POLYLINE_DASH: CZMPolylineDashMaterial? { let o = _accessor.offset(VT.POLYLINE_DASH); return o == 0 ? nil : CZMPolylineDashMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Polyline glow material
-  public var POLYLINE_GLOW: CZMPolylineGlowMaterial? { let o = _accessor.offset(VTOFFSET.POLYLINE_GLOW.v); return o == 0 ? nil : CZMPolylineGlowMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POLYLINE_GLOW: CZMPolylineGlowMaterial? { let o = _accessor.offset(VT.POLYLINE_GLOW); return o == 0 ? nil : CZMPolylineGlowMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCZMPolylineMaterial(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(SOLID_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLID_COLOR, at: VTOFFSET.SOLID_COLOR.p) }
-  public static func add(POLYLINE_OUTLINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYLINE_OUTLINE, at: VTOFFSET.POLYLINE_OUTLINE.p) }
-  public static func add(POLYLINE_ARROW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYLINE_ARROW, at: VTOFFSET.POLYLINE_ARROW.p) }
-  public static func add(POLYLINE_DASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYLINE_DASH, at: VTOFFSET.POLYLINE_DASH.p) }
-  public static func add(POLYLINE_GLOW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYLINE_GLOW, at: VTOFFSET.POLYLINE_GLOW.p) }
+  public static func add(SOLID_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLID_COLOR, at: VT.SOLID_COLOR) }
+  public static func add(POLYLINE_OUTLINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYLINE_OUTLINE, at: VT.POLYLINE_OUTLINE) }
+  public static func add(POLYLINE_ARROW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYLINE_ARROW, at: VT.POLYLINE_ARROW) }
+  public static func add(POLYLINE_DASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYLINE_DASH, at: VT.POLYLINE_DASH) }
+  public static func add(POLYLINE_GLOW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYLINE_GLOW, at: VT.POLYLINE_GLOW) }
   public static func endCZMPolylineMaterial(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMPolylineMaterial(
     _ fbb: inout FlatBufferBuilder,
@@ -1519,11 +1473,11 @@ public struct CZMPolylineMaterial: FlatBufferTable, FlatbuffersVectorInitializab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SOLID_COLOR.p, fieldName: "SOLID_COLOR", required: false, type: ForwardOffset<CZMSolidColorMaterial>.self)
-    try _v.visit(field: VTOFFSET.POLYLINE_OUTLINE.p, fieldName: "POLYLINE_OUTLINE", required: false, type: ForwardOffset<CZMPolylineOutlineMaterial>.self)
-    try _v.visit(field: VTOFFSET.POLYLINE_ARROW.p, fieldName: "POLYLINE_ARROW", required: false, type: ForwardOffset<CZMPolylineArrowMaterial>.self)
-    try _v.visit(field: VTOFFSET.POLYLINE_DASH.p, fieldName: "POLYLINE_DASH", required: false, type: ForwardOffset<CZMPolylineDashMaterial>.self)
-    try _v.visit(field: VTOFFSET.POLYLINE_GLOW.p, fieldName: "POLYLINE_GLOW", required: false, type: ForwardOffset<CZMPolylineGlowMaterial>.self)
+    try _v.visit(field: VT.SOLID_COLOR, fieldName: "SOLID_COLOR", required: false, type: ForwardOffset<CZMSolidColorMaterial>.self)
+    try _v.visit(field: VT.POLYLINE_OUTLINE, fieldName: "POLYLINE_OUTLINE", required: false, type: ForwardOffset<CZMPolylineOutlineMaterial>.self)
+    try _v.visit(field: VT.POLYLINE_ARROW, fieldName: "POLYLINE_ARROW", required: false, type: ForwardOffset<CZMPolylineArrowMaterial>.self)
+    try _v.visit(field: VT.POLYLINE_DASH, fieldName: "POLYLINE_DASH", required: false, type: ForwardOffset<CZMPolylineDashMaterial>.self)
+    try _v.visit(field: VT.POLYLINE_GLOW, fieldName: "POLYLINE_GLOW", required: false, type: ForwardOffset<CZMPolylineGlowMaterial>.self)
     _v.finish()
   }
 }
@@ -1540,103 +1494,101 @@ public struct CZMBillboard: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case IMAGE = 6
-    case SCALE = 8
-    case COLOR = 10
-    case HEIGHT_REFERENCE = 12
-    case PIXEL_OFFSET_X = 14
-    case PIXEL_OFFSET_Y = 16
-    case HORIZONTAL_ORIGIN = 18
-    case VERTICAL_ORIGIN = 20
-    case TRANSLUCENCY_BY_DISTANCE = 22
-    case ROTATION = 24
-    case SIZE_IN_METERS = 26
-    case WIDTH = 28
-    case HEIGHT = 30
-    case EYE_OFFSET_X = 32
-    case EYE_OFFSET_Y = 34
-    case EYE_OFFSET_Z = 36
-    case SCALE_BY_DISTANCE = 38
-    case PIXEL_OFFSET_SCALE_BY_DISTANCE = 40
-    case DISTANCE_DISPLAY_CONDITION_NEAR = 42
-    case DISTANCE_DISPLAY_CONDITION_FAR = 44
-    case DISABLE_DEPTH_TEST_DISTANCE = 46
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let IMAGE: VOffset = 6
+    static let SCALE: VOffset = 8
+    static let COLOR: VOffset = 10
+    static let HEIGHT_REFERENCE: VOffset = 12
+    static let PIXEL_OFFSET_X: VOffset = 14
+    static let PIXEL_OFFSET_Y: VOffset = 16
+    static let HORIZONTAL_ORIGIN: VOffset = 18
+    static let VERTICAL_ORIGIN: VOffset = 20
+    static let TRANSLUCENCY_BY_DISTANCE: VOffset = 22
+    static let ROTATION: VOffset = 24
+    static let SIZE_IN_METERS: VOffset = 26
+    static let WIDTH: VOffset = 28
+    static let HEIGHT: VOffset = 30
+    static let EYE_OFFSET_X: VOffset = 32
+    static let EYE_OFFSET_Y: VOffset = 34
+    static let EYE_OFFSET_Z: VOffset = 36
+    static let SCALE_BY_DISTANCE: VOffset = 38
+    static let PIXEL_OFFSET_SCALE_BY_DISTANCE: VOffset = 40
+    static let DISTANCE_DISPLAY_CONDITION_NEAR: VOffset = 42
+    static let DISTANCE_DISPLAY_CONDITION_FAR: VOffset = 44
+    static let DISABLE_DEPTH_TEST_DISTANCE: VOffset = 46
   }
 
   ///  Whether the billboard is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  URI of the billboard image
-  public var IMAGE: String? { let o = _accessor.offset(VTOFFSET.IMAGE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IMAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMAGE.v) }
+  public var IMAGE: String? { let o = _accessor.offset(VT.IMAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IMAGE) }
   ///  Scale factor
-  public var SCALE: Double { let o = _accessor.offset(VTOFFSET.SCALE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCALE: Double { let o = _accessor.offset(VT.SCALE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Billboard color tint
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Height reference
-  public var HEIGHT_REFERENCE: CZMHeightReference { let o = _accessor.offset(VTOFFSET.HEIGHT_REFERENCE.v); return o == 0 ? .none_ : CZMHeightReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var HEIGHT_REFERENCE: CZMHeightReference { let o = _accessor.offset(VT.HEIGHT_REFERENCE); return o == 0 ? .none_ : CZMHeightReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
   ///  Pixel offset X
-  public var PIXEL_OFFSET_X: Double { let o = _accessor.offset(VTOFFSET.PIXEL_OFFSET_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PIXEL_OFFSET_X: Double { let o = _accessor.offset(VT.PIXEL_OFFSET_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pixel offset Y
-  public var PIXEL_OFFSET_Y: Double { let o = _accessor.offset(VTOFFSET.PIXEL_OFFSET_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PIXEL_OFFSET_Y: Double { let o = _accessor.offset(VT.PIXEL_OFFSET_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Horizontal origin
-  public var HORIZONTAL_ORIGIN: CZMHorizontalOrigin { let o = _accessor.offset(VTOFFSET.HORIZONTAL_ORIGIN.v); return o == 0 ? .left_ : CZMHorizontalOrigin(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .left_ }
+  public var HORIZONTAL_ORIGIN: CZMHorizontalOrigin { let o = _accessor.offset(VT.HORIZONTAL_ORIGIN); return o == 0 ? .left_ : CZMHorizontalOrigin(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .left_ }
   ///  Vertical origin
-  public var VERTICAL_ORIGIN: CZMVerticalOrigin { let o = _accessor.offset(VTOFFSET.VERTICAL_ORIGIN.v); return o == 0 ? .baseline : CZMVerticalOrigin(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .baseline }
+  public var VERTICAL_ORIGIN: CZMVerticalOrigin { let o = _accessor.offset(VT.VERTICAL_ORIGIN); return o == 0 ? .baseline : CZMVerticalOrigin(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .baseline }
   ///  Translucency by distance
-  public var TRANSLUCENCY_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VTOFFSET.TRANSLUCENCY_BY_DISTANCE.v); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TRANSLUCENCY_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VT.TRANSLUCENCY_BY_DISTANCE); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Rotation in radians
-  public var ROTATION: Double { let o = _accessor.offset(VTOFFSET.ROTATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ROTATION: Double { let o = _accessor.offset(VT.ROTATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Whether size is in meters
-  public var SIZE_IN_METERS: Bool { let o = _accessor.offset(VTOFFSET.SIZE_IN_METERS.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SIZE_IN_METERS: Bool { let o = _accessor.offset(VT.SIZE_IN_METERS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Width in pixels
-  public var WIDTH: Double { let o = _accessor.offset(VTOFFSET.WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var WIDTH: Double { let o = _accessor.offset(VT.WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height in pixels
-  public var HEIGHT: Double { let o = _accessor.offset(VTOFFSET.HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HEIGHT: Double { let o = _accessor.offset(VT.HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Eye offset X in meters
-  public var EYE_OFFSET_X: Double { let o = _accessor.offset(VTOFFSET.EYE_OFFSET_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EYE_OFFSET_X: Double { let o = _accessor.offset(VT.EYE_OFFSET_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Eye offset Y in meters
-  public var EYE_OFFSET_Y: Double { let o = _accessor.offset(VTOFFSET.EYE_OFFSET_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EYE_OFFSET_Y: Double { let o = _accessor.offset(VT.EYE_OFFSET_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Eye offset Z in meters
-  public var EYE_OFFSET_Z: Double { let o = _accessor.offset(VTOFFSET.EYE_OFFSET_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EYE_OFFSET_Z: Double { let o = _accessor.offset(VT.EYE_OFFSET_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Scale by distance
-  public var SCALE_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VTOFFSET.SCALE_BY_DISTANCE.v); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SCALE_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VT.SCALE_BY_DISTANCE); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Pixel offset scale by distance
-  public var PIXEL_OFFSET_SCALE_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VTOFFSET.PIXEL_OFFSET_SCALE_BY_DISTANCE.v); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PIXEL_OFFSET_SCALE_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VT.PIXEL_OFFSET_SCALE_BY_DISTANCE); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Distance display condition near
-  public var DISTANCE_DISPLAY_CONDITION_NEAR: Double { let o = _accessor.offset(VTOFFSET.DISTANCE_DISPLAY_CONDITION_NEAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DISTANCE_DISPLAY_CONDITION_NEAR: Double { let o = _accessor.offset(VT.DISTANCE_DISPLAY_CONDITION_NEAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Distance display condition far
-  public var DISTANCE_DISPLAY_CONDITION_FAR: Double { let o = _accessor.offset(VTOFFSET.DISTANCE_DISPLAY_CONDITION_FAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DISTANCE_DISPLAY_CONDITION_FAR: Double { let o = _accessor.offset(VT.DISTANCE_DISPLAY_CONDITION_FAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Disable depth test distance
-  public var DISABLE_DEPTH_TEST_DISTANCE: Double { let o = _accessor.offset(VTOFFSET.DISABLE_DEPTH_TEST_DISTANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DISABLE_DEPTH_TEST_DISTANCE: Double { let o = _accessor.offset(VT.DISABLE_DEPTH_TEST_DISTANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMBillboard(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 22) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func add(IMAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE, at: VTOFFSET.IMAGE.p) }
-  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 0.0, at: VTOFFSET.SCALE.p) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(HEIGHT_REFERENCE: CZMHeightReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_REFERENCE.rawValue, def: 0, at: VTOFFSET.HEIGHT_REFERENCE.p) }
-  public static func add(PIXEL_OFFSET_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_OFFSET_X, def: 0.0, at: VTOFFSET.PIXEL_OFFSET_X.p) }
-  public static func add(PIXEL_OFFSET_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_OFFSET_Y, def: 0.0, at: VTOFFSET.PIXEL_OFFSET_Y.p) }
-  public static func add(HORIZONTAL_ORIGIN: CZMHorizontalOrigin, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HORIZONTAL_ORIGIN.rawValue, def: 0, at: VTOFFSET.HORIZONTAL_ORIGIN.p) }
-  public static func add(VERTICAL_ORIGIN: CZMVerticalOrigin, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTICAL_ORIGIN.rawValue, def: 0, at: VTOFFSET.VERTICAL_ORIGIN.p) }
-  public static func add(TRANSLUCENCY_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSLUCENCY_BY_DISTANCE, at: VTOFFSET.TRANSLUCENCY_BY_DISTANCE.p) }
-  public static func add(ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION, def: 0.0, at: VTOFFSET.ROTATION.p) }
+   at: VT.SHOW) }
+  public static func add(IMAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE, at: VT.IMAGE) }
+  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 0.0, at: VT.SCALE) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(HEIGHT_REFERENCE: CZMHeightReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_REFERENCE.rawValue, def: 0, at: VT.HEIGHT_REFERENCE) }
+  public static func add(PIXEL_OFFSET_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_OFFSET_X, def: 0.0, at: VT.PIXEL_OFFSET_X) }
+  public static func add(PIXEL_OFFSET_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_OFFSET_Y, def: 0.0, at: VT.PIXEL_OFFSET_Y) }
+  public static func add(HORIZONTAL_ORIGIN: CZMHorizontalOrigin, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HORIZONTAL_ORIGIN.rawValue, def: 0, at: VT.HORIZONTAL_ORIGIN) }
+  public static func add(VERTICAL_ORIGIN: CZMVerticalOrigin, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTICAL_ORIGIN.rawValue, def: 0, at: VT.VERTICAL_ORIGIN) }
+  public static func add(TRANSLUCENCY_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSLUCENCY_BY_DISTANCE, at: VT.TRANSLUCENCY_BY_DISTANCE) }
+  public static func add(ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION, def: 0.0, at: VT.ROTATION) }
   public static func add(SIZE_IN_METERS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_METERS, def: false,
-   at: VTOFFSET.SIZE_IN_METERS.p) }
-  public static func add(WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIDTH, def: 0.0, at: VTOFFSET.WIDTH.p) }
-  public static func add(HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT, def: 0.0, at: VTOFFSET.HEIGHT.p) }
-  public static func add(EYE_OFFSET_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EYE_OFFSET_X, def: 0.0, at: VTOFFSET.EYE_OFFSET_X.p) }
-  public static func add(EYE_OFFSET_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EYE_OFFSET_Y, def: 0.0, at: VTOFFSET.EYE_OFFSET_Y.p) }
-  public static func add(EYE_OFFSET_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EYE_OFFSET_Z, def: 0.0, at: VTOFFSET.EYE_OFFSET_Z.p) }
-  public static func add(SCALE_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCALE_BY_DISTANCE, at: VTOFFSET.SCALE_BY_DISTANCE.p) }
-  public static func add(PIXEL_OFFSET_SCALE_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PIXEL_OFFSET_SCALE_BY_DISTANCE, at: VTOFFSET.PIXEL_OFFSET_SCALE_BY_DISTANCE.p) }
-  public static func add(DISTANCE_DISPLAY_CONDITION_NEAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_NEAR, def: 0.0, at: VTOFFSET.DISTANCE_DISPLAY_CONDITION_NEAR.p) }
-  public static func add(DISTANCE_DISPLAY_CONDITION_FAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_FAR, def: 0.0, at: VTOFFSET.DISTANCE_DISPLAY_CONDITION_FAR.p) }
-  public static func add(DISABLE_DEPTH_TEST_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISABLE_DEPTH_TEST_DISTANCE, def: 0.0, at: VTOFFSET.DISABLE_DEPTH_TEST_DISTANCE.p) }
+   at: VT.SIZE_IN_METERS) }
+  public static func add(WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIDTH, def: 0.0, at: VT.WIDTH) }
+  public static func add(HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT, def: 0.0, at: VT.HEIGHT) }
+  public static func add(EYE_OFFSET_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EYE_OFFSET_X, def: 0.0, at: VT.EYE_OFFSET_X) }
+  public static func add(EYE_OFFSET_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EYE_OFFSET_Y, def: 0.0, at: VT.EYE_OFFSET_Y) }
+  public static func add(EYE_OFFSET_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EYE_OFFSET_Z, def: 0.0, at: VT.EYE_OFFSET_Z) }
+  public static func add(SCALE_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCALE_BY_DISTANCE, at: VT.SCALE_BY_DISTANCE) }
+  public static func add(PIXEL_OFFSET_SCALE_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PIXEL_OFFSET_SCALE_BY_DISTANCE, at: VT.PIXEL_OFFSET_SCALE_BY_DISTANCE) }
+  public static func add(DISTANCE_DISPLAY_CONDITION_NEAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_NEAR, def: 0.0, at: VT.DISTANCE_DISPLAY_CONDITION_NEAR) }
+  public static func add(DISTANCE_DISPLAY_CONDITION_FAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_FAR, def: 0.0, at: VT.DISTANCE_DISPLAY_CONDITION_FAR) }
+  public static func add(DISABLE_DEPTH_TEST_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISABLE_DEPTH_TEST_DISTANCE, def: 0.0, at: VT.DISABLE_DEPTH_TEST_DISTANCE) }
   public static func endCZMBillboard(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMBillboard(
     _ fbb: inout FlatBufferBuilder,
@@ -1691,28 +1643,28 @@ public struct CZMBillboard: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.IMAGE.p, fieldName: "IMAGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SCALE.p, fieldName: "SCALE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.HEIGHT_REFERENCE.p, fieldName: "HEIGHT_REFERENCE", required: false, type: CZMHeightReference.self)
-    try _v.visit(field: VTOFFSET.PIXEL_OFFSET_X.p, fieldName: "PIXEL_OFFSET_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PIXEL_OFFSET_Y.p, fieldName: "PIXEL_OFFSET_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HORIZONTAL_ORIGIN.p, fieldName: "HORIZONTAL_ORIGIN", required: false, type: CZMHorizontalOrigin.self)
-    try _v.visit(field: VTOFFSET.VERTICAL_ORIGIN.p, fieldName: "VERTICAL_ORIGIN", required: false, type: CZMVerticalOrigin.self)
-    try _v.visit(field: VTOFFSET.TRANSLUCENCY_BY_DISTANCE.p, fieldName: "TRANSLUCENCY_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
-    try _v.visit(field: VTOFFSET.ROTATION.p, fieldName: "ROTATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SIZE_IN_METERS.p, fieldName: "SIZE_IN_METERS", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.WIDTH.p, fieldName: "WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEIGHT.p, fieldName: "HEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EYE_OFFSET_X.p, fieldName: "EYE_OFFSET_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EYE_OFFSET_Y.p, fieldName: "EYE_OFFSET_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EYE_OFFSET_Z.p, fieldName: "EYE_OFFSET_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SCALE_BY_DISTANCE.p, fieldName: "SCALE_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
-    try _v.visit(field: VTOFFSET.PIXEL_OFFSET_SCALE_BY_DISTANCE.p, fieldName: "PIXEL_OFFSET_SCALE_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
-    try _v.visit(field: VTOFFSET.DISTANCE_DISPLAY_CONDITION_NEAR.p, fieldName: "DISTANCE_DISPLAY_CONDITION_NEAR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DISTANCE_DISPLAY_CONDITION_FAR.p, fieldName: "DISTANCE_DISPLAY_CONDITION_FAR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DISABLE_DEPTH_TEST_DISTANCE.p, fieldName: "DISABLE_DEPTH_TEST_DISTANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.IMAGE, fieldName: "IMAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCALE, fieldName: "SCALE", required: false, type: Double.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.HEIGHT_REFERENCE, fieldName: "HEIGHT_REFERENCE", required: false, type: CZMHeightReference.self)
+    try _v.visit(field: VT.PIXEL_OFFSET_X, fieldName: "PIXEL_OFFSET_X", required: false, type: Double.self)
+    try _v.visit(field: VT.PIXEL_OFFSET_Y, fieldName: "PIXEL_OFFSET_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.HORIZONTAL_ORIGIN, fieldName: "HORIZONTAL_ORIGIN", required: false, type: CZMHorizontalOrigin.self)
+    try _v.visit(field: VT.VERTICAL_ORIGIN, fieldName: "VERTICAL_ORIGIN", required: false, type: CZMVerticalOrigin.self)
+    try _v.visit(field: VT.TRANSLUCENCY_BY_DISTANCE, fieldName: "TRANSLUCENCY_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
+    try _v.visit(field: VT.ROTATION, fieldName: "ROTATION", required: false, type: Double.self)
+    try _v.visit(field: VT.SIZE_IN_METERS, fieldName: "SIZE_IN_METERS", required: false, type: Bool.self)
+    try _v.visit(field: VT.WIDTH, fieldName: "WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.HEIGHT, fieldName: "HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.EYE_OFFSET_X, fieldName: "EYE_OFFSET_X", required: false, type: Double.self)
+    try _v.visit(field: VT.EYE_OFFSET_Y, fieldName: "EYE_OFFSET_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.EYE_OFFSET_Z, fieldName: "EYE_OFFSET_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.SCALE_BY_DISTANCE, fieldName: "SCALE_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
+    try _v.visit(field: VT.PIXEL_OFFSET_SCALE_BY_DISTANCE, fieldName: "PIXEL_OFFSET_SCALE_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
+    try _v.visit(field: VT.DISTANCE_DISPLAY_CONDITION_NEAR, fieldName: "DISTANCE_DISPLAY_CONDITION_NEAR", required: false, type: Double.self)
+    try _v.visit(field: VT.DISTANCE_DISPLAY_CONDITION_FAR, fieldName: "DISTANCE_DISPLAY_CONDITION_FAR", required: false, type: Double.self)
+    try _v.visit(field: VT.DISABLE_DEPTH_TEST_DISTANCE, fieldName: "DISABLE_DEPTH_TEST_DISTANCE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -1729,120 +1681,118 @@ public struct CZMLabel: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case TEXT = 6
-    case FONT = 8
-    case STYLE = 10
-    case FILL_COLOR = 12
-    case OUTLINE_COLOR = 14
-    case OUTLINE_WIDTH = 16
-    case PIXEL_OFFSET_X = 18
-    case PIXEL_OFFSET_Y = 20
-    case SCALE = 22
-    case HORIZONTAL_ORIGIN = 24
-    case VERTICAL_ORIGIN = 26
-    case HEIGHT_REFERENCE = 28
-    case SHOW_BACKGROUND = 30
-    case BACKGROUND_COLOR = 32
-    case BACKGROUND_PADDING_X = 34
-    case BACKGROUND_PADDING_Y = 36
-    case EYE_OFFSET_X = 38
-    case EYE_OFFSET_Y = 40
-    case EYE_OFFSET_Z = 42
-    case TRANSLUCENCY_BY_DISTANCE = 44
-    case PIXEL_OFFSET_SCALE_BY_DISTANCE = 46
-    case SCALE_BY_DISTANCE = 48
-    case DISTANCE_DISPLAY_CONDITION_NEAR = 50
-    case DISTANCE_DISPLAY_CONDITION_FAR = 52
-    case DISABLE_DEPTH_TEST_DISTANCE = 54
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let TEXT: VOffset = 6
+    static let FONT: VOffset = 8
+    static let STYLE: VOffset = 10
+    static let FILL_COLOR: VOffset = 12
+    static let OUTLINE_COLOR: VOffset = 14
+    static let OUTLINE_WIDTH: VOffset = 16
+    static let PIXEL_OFFSET_X: VOffset = 18
+    static let PIXEL_OFFSET_Y: VOffset = 20
+    static let SCALE: VOffset = 22
+    static let HORIZONTAL_ORIGIN: VOffset = 24
+    static let VERTICAL_ORIGIN: VOffset = 26
+    static let HEIGHT_REFERENCE: VOffset = 28
+    static let SHOW_BACKGROUND: VOffset = 30
+    static let BACKGROUND_COLOR: VOffset = 32
+    static let BACKGROUND_PADDING_X: VOffset = 34
+    static let BACKGROUND_PADDING_Y: VOffset = 36
+    static let EYE_OFFSET_X: VOffset = 38
+    static let EYE_OFFSET_Y: VOffset = 40
+    static let EYE_OFFSET_Z: VOffset = 42
+    static let TRANSLUCENCY_BY_DISTANCE: VOffset = 44
+    static let PIXEL_OFFSET_SCALE_BY_DISTANCE: VOffset = 46
+    static let SCALE_BY_DISTANCE: VOffset = 48
+    static let DISTANCE_DISPLAY_CONDITION_NEAR: VOffset = 50
+    static let DISTANCE_DISPLAY_CONDITION_FAR: VOffset = 52
+    static let DISABLE_DEPTH_TEST_DISTANCE: VOffset = 54
   }
 
   ///  Whether the label is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Label text
-  public var TEXT: String? { let o = _accessor.offset(VTOFFSET.TEXT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TEXT.v) }
+  public var TEXT: String? { let o = _accessor.offset(VT.TEXT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TEXT) }
   ///  Font CSS string (e.g. "12pt Lucida Console")
-  public var FONT: String? { let o = _accessor.offset(VTOFFSET.FONT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FONTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FONT.v) }
+  public var FONT: String? { let o = _accessor.offset(VT.FONT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FONTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FONT) }
   ///  Label style
-  public var STYLE: CZMLabelStyle { let o = _accessor.offset(VTOFFSET.STYLE.v); return o == 0 ? .fill : CZMLabelStyle(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .fill }
+  public var STYLE: CZMLabelStyle { let o = _accessor.offset(VT.STYLE); return o == 0 ? .fill : CZMLabelStyle(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .fill }
   ///  Fill color
-  public var FILL_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.FILL_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var FILL_COLOR: CZMColor? { let o = _accessor.offset(VT.FILL_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline color
-  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.OUTLINE_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VT.OUTLINE_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline width in pixels
-  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VTOFFSET.OUTLINE_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VT.OUTLINE_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pixel offset X
-  public var PIXEL_OFFSET_X: Double { let o = _accessor.offset(VTOFFSET.PIXEL_OFFSET_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PIXEL_OFFSET_X: Double { let o = _accessor.offset(VT.PIXEL_OFFSET_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pixel offset Y
-  public var PIXEL_OFFSET_Y: Double { let o = _accessor.offset(VTOFFSET.PIXEL_OFFSET_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PIXEL_OFFSET_Y: Double { let o = _accessor.offset(VT.PIXEL_OFFSET_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Scale factor
-  public var SCALE: Double { let o = _accessor.offset(VTOFFSET.SCALE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCALE: Double { let o = _accessor.offset(VT.SCALE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Horizontal origin
-  public var HORIZONTAL_ORIGIN: CZMHorizontalOrigin { let o = _accessor.offset(VTOFFSET.HORIZONTAL_ORIGIN.v); return o == 0 ? .left_ : CZMHorizontalOrigin(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .left_ }
+  public var HORIZONTAL_ORIGIN: CZMHorizontalOrigin { let o = _accessor.offset(VT.HORIZONTAL_ORIGIN); return o == 0 ? .left_ : CZMHorizontalOrigin(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .left_ }
   ///  Vertical origin
-  public var VERTICAL_ORIGIN: CZMVerticalOrigin { let o = _accessor.offset(VTOFFSET.VERTICAL_ORIGIN.v); return o == 0 ? .baseline : CZMVerticalOrigin(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .baseline }
+  public var VERTICAL_ORIGIN: CZMVerticalOrigin { let o = _accessor.offset(VT.VERTICAL_ORIGIN); return o == 0 ? .baseline : CZMVerticalOrigin(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .baseline }
   ///  Height reference
-  public var HEIGHT_REFERENCE: CZMHeightReference { let o = _accessor.offset(VTOFFSET.HEIGHT_REFERENCE.v); return o == 0 ? .none_ : CZMHeightReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var HEIGHT_REFERENCE: CZMHeightReference { let o = _accessor.offset(VT.HEIGHT_REFERENCE); return o == 0 ? .none_ : CZMHeightReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
   ///  Whether to show background
-  public var SHOW_BACKGROUND: Bool { let o = _accessor.offset(VTOFFSET.SHOW_BACKGROUND.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW_BACKGROUND: Bool { let o = _accessor.offset(VT.SHOW_BACKGROUND); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Background color
-  public var BACKGROUND_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.BACKGROUND_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BACKGROUND_COLOR: CZMColor? { let o = _accessor.offset(VT.BACKGROUND_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Background padding X
-  public var BACKGROUND_PADDING_X: Double { let o = _accessor.offset(VTOFFSET.BACKGROUND_PADDING_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BACKGROUND_PADDING_X: Double { let o = _accessor.offset(VT.BACKGROUND_PADDING_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Background padding Y
-  public var BACKGROUND_PADDING_Y: Double { let o = _accessor.offset(VTOFFSET.BACKGROUND_PADDING_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BACKGROUND_PADDING_Y: Double { let o = _accessor.offset(VT.BACKGROUND_PADDING_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Eye offset X in meters
-  public var EYE_OFFSET_X: Double { let o = _accessor.offset(VTOFFSET.EYE_OFFSET_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EYE_OFFSET_X: Double { let o = _accessor.offset(VT.EYE_OFFSET_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Eye offset Y in meters
-  public var EYE_OFFSET_Y: Double { let o = _accessor.offset(VTOFFSET.EYE_OFFSET_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EYE_OFFSET_Y: Double { let o = _accessor.offset(VT.EYE_OFFSET_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Eye offset Z in meters
-  public var EYE_OFFSET_Z: Double { let o = _accessor.offset(VTOFFSET.EYE_OFFSET_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EYE_OFFSET_Z: Double { let o = _accessor.offset(VT.EYE_OFFSET_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Translucency by distance
-  public var TRANSLUCENCY_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VTOFFSET.TRANSLUCENCY_BY_DISTANCE.v); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TRANSLUCENCY_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VT.TRANSLUCENCY_BY_DISTANCE); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Pixel offset scale by distance
-  public var PIXEL_OFFSET_SCALE_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VTOFFSET.PIXEL_OFFSET_SCALE_BY_DISTANCE.v); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PIXEL_OFFSET_SCALE_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VT.PIXEL_OFFSET_SCALE_BY_DISTANCE); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Scale by distance
-  public var SCALE_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VTOFFSET.SCALE_BY_DISTANCE.v); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SCALE_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VT.SCALE_BY_DISTANCE); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Distance display condition near
-  public var DISTANCE_DISPLAY_CONDITION_NEAR: Double { let o = _accessor.offset(VTOFFSET.DISTANCE_DISPLAY_CONDITION_NEAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DISTANCE_DISPLAY_CONDITION_NEAR: Double { let o = _accessor.offset(VT.DISTANCE_DISPLAY_CONDITION_NEAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Distance display condition far
-  public var DISTANCE_DISPLAY_CONDITION_FAR: Double { let o = _accessor.offset(VTOFFSET.DISTANCE_DISPLAY_CONDITION_FAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DISTANCE_DISPLAY_CONDITION_FAR: Double { let o = _accessor.offset(VT.DISTANCE_DISPLAY_CONDITION_FAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Disable depth test distance
-  public var DISABLE_DEPTH_TEST_DISTANCE: Double { let o = _accessor.offset(VTOFFSET.DISABLE_DEPTH_TEST_DISTANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DISABLE_DEPTH_TEST_DISTANCE: Double { let o = _accessor.offset(VT.DISABLE_DEPTH_TEST_DISTANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMLabel(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 26) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func add(TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TEXT, at: VTOFFSET.TEXT.p) }
-  public static func add(FONT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FONT, at: VTOFFSET.FONT.p) }
-  public static func add(STYLE: CZMLabelStyle, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STYLE.rawValue, def: 0, at: VTOFFSET.STYLE.p) }
-  public static func add(FILL_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILL_COLOR, at: VTOFFSET.FILL_COLOR.p) }
-  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VTOFFSET.OUTLINE_COLOR.p) }
-  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VTOFFSET.OUTLINE_WIDTH.p) }
-  public static func add(PIXEL_OFFSET_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_OFFSET_X, def: 0.0, at: VTOFFSET.PIXEL_OFFSET_X.p) }
-  public static func add(PIXEL_OFFSET_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_OFFSET_Y, def: 0.0, at: VTOFFSET.PIXEL_OFFSET_Y.p) }
-  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 0.0, at: VTOFFSET.SCALE.p) }
-  public static func add(HORIZONTAL_ORIGIN: CZMHorizontalOrigin, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HORIZONTAL_ORIGIN.rawValue, def: 0, at: VTOFFSET.HORIZONTAL_ORIGIN.p) }
-  public static func add(VERTICAL_ORIGIN: CZMVerticalOrigin, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTICAL_ORIGIN.rawValue, def: 0, at: VTOFFSET.VERTICAL_ORIGIN.p) }
-  public static func add(HEIGHT_REFERENCE: CZMHeightReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_REFERENCE.rawValue, def: 0, at: VTOFFSET.HEIGHT_REFERENCE.p) }
+   at: VT.SHOW) }
+  public static func add(TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TEXT, at: VT.TEXT) }
+  public static func add(FONT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FONT, at: VT.FONT) }
+  public static func add(STYLE: CZMLabelStyle, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STYLE.rawValue, def: 0, at: VT.STYLE) }
+  public static func add(FILL_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILL_COLOR, at: VT.FILL_COLOR) }
+  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VT.OUTLINE_COLOR) }
+  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VT.OUTLINE_WIDTH) }
+  public static func add(PIXEL_OFFSET_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_OFFSET_X, def: 0.0, at: VT.PIXEL_OFFSET_X) }
+  public static func add(PIXEL_OFFSET_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_OFFSET_Y, def: 0.0, at: VT.PIXEL_OFFSET_Y) }
+  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 0.0, at: VT.SCALE) }
+  public static func add(HORIZONTAL_ORIGIN: CZMHorizontalOrigin, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HORIZONTAL_ORIGIN.rawValue, def: 0, at: VT.HORIZONTAL_ORIGIN) }
+  public static func add(VERTICAL_ORIGIN: CZMVerticalOrigin, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTICAL_ORIGIN.rawValue, def: 0, at: VT.VERTICAL_ORIGIN) }
+  public static func add(HEIGHT_REFERENCE: CZMHeightReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_REFERENCE.rawValue, def: 0, at: VT.HEIGHT_REFERENCE) }
   public static func add(SHOW_BACKGROUND: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_BACKGROUND, def: false,
-   at: VTOFFSET.SHOW_BACKGROUND.p) }
-  public static func add(BACKGROUND_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BACKGROUND_COLOR, at: VTOFFSET.BACKGROUND_COLOR.p) }
-  public static func add(BACKGROUND_PADDING_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BACKGROUND_PADDING_X, def: 0.0, at: VTOFFSET.BACKGROUND_PADDING_X.p) }
-  public static func add(BACKGROUND_PADDING_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BACKGROUND_PADDING_Y, def: 0.0, at: VTOFFSET.BACKGROUND_PADDING_Y.p) }
-  public static func add(EYE_OFFSET_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EYE_OFFSET_X, def: 0.0, at: VTOFFSET.EYE_OFFSET_X.p) }
-  public static func add(EYE_OFFSET_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EYE_OFFSET_Y, def: 0.0, at: VTOFFSET.EYE_OFFSET_Y.p) }
-  public static func add(EYE_OFFSET_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EYE_OFFSET_Z, def: 0.0, at: VTOFFSET.EYE_OFFSET_Z.p) }
-  public static func add(TRANSLUCENCY_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSLUCENCY_BY_DISTANCE, at: VTOFFSET.TRANSLUCENCY_BY_DISTANCE.p) }
-  public static func add(PIXEL_OFFSET_SCALE_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PIXEL_OFFSET_SCALE_BY_DISTANCE, at: VTOFFSET.PIXEL_OFFSET_SCALE_BY_DISTANCE.p) }
-  public static func add(SCALE_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCALE_BY_DISTANCE, at: VTOFFSET.SCALE_BY_DISTANCE.p) }
-  public static func add(DISTANCE_DISPLAY_CONDITION_NEAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_NEAR, def: 0.0, at: VTOFFSET.DISTANCE_DISPLAY_CONDITION_NEAR.p) }
-  public static func add(DISTANCE_DISPLAY_CONDITION_FAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_FAR, def: 0.0, at: VTOFFSET.DISTANCE_DISPLAY_CONDITION_FAR.p) }
-  public static func add(DISABLE_DEPTH_TEST_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISABLE_DEPTH_TEST_DISTANCE, def: 0.0, at: VTOFFSET.DISABLE_DEPTH_TEST_DISTANCE.p) }
+   at: VT.SHOW_BACKGROUND) }
+  public static func add(BACKGROUND_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BACKGROUND_COLOR, at: VT.BACKGROUND_COLOR) }
+  public static func add(BACKGROUND_PADDING_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BACKGROUND_PADDING_X, def: 0.0, at: VT.BACKGROUND_PADDING_X) }
+  public static func add(BACKGROUND_PADDING_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BACKGROUND_PADDING_Y, def: 0.0, at: VT.BACKGROUND_PADDING_Y) }
+  public static func add(EYE_OFFSET_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EYE_OFFSET_X, def: 0.0, at: VT.EYE_OFFSET_X) }
+  public static func add(EYE_OFFSET_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EYE_OFFSET_Y, def: 0.0, at: VT.EYE_OFFSET_Y) }
+  public static func add(EYE_OFFSET_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EYE_OFFSET_Z, def: 0.0, at: VT.EYE_OFFSET_Z) }
+  public static func add(TRANSLUCENCY_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSLUCENCY_BY_DISTANCE, at: VT.TRANSLUCENCY_BY_DISTANCE) }
+  public static func add(PIXEL_OFFSET_SCALE_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PIXEL_OFFSET_SCALE_BY_DISTANCE, at: VT.PIXEL_OFFSET_SCALE_BY_DISTANCE) }
+  public static func add(SCALE_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCALE_BY_DISTANCE, at: VT.SCALE_BY_DISTANCE) }
+  public static func add(DISTANCE_DISPLAY_CONDITION_NEAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_NEAR, def: 0.0, at: VT.DISTANCE_DISPLAY_CONDITION_NEAR) }
+  public static func add(DISTANCE_DISPLAY_CONDITION_FAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_FAR, def: 0.0, at: VT.DISTANCE_DISPLAY_CONDITION_FAR) }
+  public static func add(DISABLE_DEPTH_TEST_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISABLE_DEPTH_TEST_DISTANCE, def: 0.0, at: VT.DISABLE_DEPTH_TEST_DISTANCE) }
   public static func endCZMLabel(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMLabel(
     _ fbb: inout FlatBufferBuilder,
@@ -1905,32 +1855,32 @@ public struct CZMLabel: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.TEXT.p, fieldName: "TEXT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FONT.p, fieldName: "FONT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STYLE.p, fieldName: "STYLE", required: false, type: CZMLabelStyle.self)
-    try _v.visit(field: VTOFFSET.FILL_COLOR.p, fieldName: "FILL_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_COLOR.p, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_WIDTH.p, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PIXEL_OFFSET_X.p, fieldName: "PIXEL_OFFSET_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PIXEL_OFFSET_Y.p, fieldName: "PIXEL_OFFSET_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SCALE.p, fieldName: "SCALE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HORIZONTAL_ORIGIN.p, fieldName: "HORIZONTAL_ORIGIN", required: false, type: CZMHorizontalOrigin.self)
-    try _v.visit(field: VTOFFSET.VERTICAL_ORIGIN.p, fieldName: "VERTICAL_ORIGIN", required: false, type: CZMVerticalOrigin.self)
-    try _v.visit(field: VTOFFSET.HEIGHT_REFERENCE.p, fieldName: "HEIGHT_REFERENCE", required: false, type: CZMHeightReference.self)
-    try _v.visit(field: VTOFFSET.SHOW_BACKGROUND.p, fieldName: "SHOW_BACKGROUND", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.BACKGROUND_COLOR.p, fieldName: "BACKGROUND_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.BACKGROUND_PADDING_X.p, fieldName: "BACKGROUND_PADDING_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BACKGROUND_PADDING_Y.p, fieldName: "BACKGROUND_PADDING_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EYE_OFFSET_X.p, fieldName: "EYE_OFFSET_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EYE_OFFSET_Y.p, fieldName: "EYE_OFFSET_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EYE_OFFSET_Z.p, fieldName: "EYE_OFFSET_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TRANSLUCENCY_BY_DISTANCE.p, fieldName: "TRANSLUCENCY_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
-    try _v.visit(field: VTOFFSET.PIXEL_OFFSET_SCALE_BY_DISTANCE.p, fieldName: "PIXEL_OFFSET_SCALE_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
-    try _v.visit(field: VTOFFSET.SCALE_BY_DISTANCE.p, fieldName: "SCALE_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
-    try _v.visit(field: VTOFFSET.DISTANCE_DISPLAY_CONDITION_NEAR.p, fieldName: "DISTANCE_DISPLAY_CONDITION_NEAR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DISTANCE_DISPLAY_CONDITION_FAR.p, fieldName: "DISTANCE_DISPLAY_CONDITION_FAR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DISABLE_DEPTH_TEST_DISTANCE.p, fieldName: "DISABLE_DEPTH_TEST_DISTANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.TEXT, fieldName: "TEXT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FONT, fieldName: "FONT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STYLE, fieldName: "STYLE", required: false, type: CZMLabelStyle.self)
+    try _v.visit(field: VT.FILL_COLOR, fieldName: "FILL_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE_COLOR, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE_WIDTH, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.PIXEL_OFFSET_X, fieldName: "PIXEL_OFFSET_X", required: false, type: Double.self)
+    try _v.visit(field: VT.PIXEL_OFFSET_Y, fieldName: "PIXEL_OFFSET_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.SCALE, fieldName: "SCALE", required: false, type: Double.self)
+    try _v.visit(field: VT.HORIZONTAL_ORIGIN, fieldName: "HORIZONTAL_ORIGIN", required: false, type: CZMHorizontalOrigin.self)
+    try _v.visit(field: VT.VERTICAL_ORIGIN, fieldName: "VERTICAL_ORIGIN", required: false, type: CZMVerticalOrigin.self)
+    try _v.visit(field: VT.HEIGHT_REFERENCE, fieldName: "HEIGHT_REFERENCE", required: false, type: CZMHeightReference.self)
+    try _v.visit(field: VT.SHOW_BACKGROUND, fieldName: "SHOW_BACKGROUND", required: false, type: Bool.self)
+    try _v.visit(field: VT.BACKGROUND_COLOR, fieldName: "BACKGROUND_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.BACKGROUND_PADDING_X, fieldName: "BACKGROUND_PADDING_X", required: false, type: Double.self)
+    try _v.visit(field: VT.BACKGROUND_PADDING_Y, fieldName: "BACKGROUND_PADDING_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.EYE_OFFSET_X, fieldName: "EYE_OFFSET_X", required: false, type: Double.self)
+    try _v.visit(field: VT.EYE_OFFSET_Y, fieldName: "EYE_OFFSET_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.EYE_OFFSET_Z, fieldName: "EYE_OFFSET_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.TRANSLUCENCY_BY_DISTANCE, fieldName: "TRANSLUCENCY_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
+    try _v.visit(field: VT.PIXEL_OFFSET_SCALE_BY_DISTANCE, fieldName: "PIXEL_OFFSET_SCALE_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
+    try _v.visit(field: VT.SCALE_BY_DISTANCE, fieldName: "SCALE_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
+    try _v.visit(field: VT.DISTANCE_DISPLAY_CONDITION_NEAR, fieldName: "DISTANCE_DISPLAY_CONDITION_NEAR", required: false, type: Double.self)
+    try _v.visit(field: VT.DISTANCE_DISPLAY_CONDITION_FAR, fieldName: "DISTANCE_DISPLAY_CONDITION_FAR", required: false, type: Double.self)
+    try _v.visit(field: VT.DISABLE_DEPTH_TEST_DISTANCE, fieldName: "DISABLE_DEPTH_TEST_DISTANCE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -1947,57 +1897,55 @@ public struct CZMPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case COLOR = 6
-    case OUTLINE_COLOR = 8
-    case OUTLINE_WIDTH = 10
-    case PIXEL_SIZE = 12
-    case HEIGHT_REFERENCE = 14
-    case SCALE_BY_DISTANCE = 16
-    case TRANSLUCENCY_BY_DISTANCE = 18
-    case DISTANCE_DISPLAY_CONDITION_NEAR = 20
-    case DISTANCE_DISPLAY_CONDITION_FAR = 22
-    case DISABLE_DEPTH_TEST_DISTANCE = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let COLOR: VOffset = 6
+    static let OUTLINE_COLOR: VOffset = 8
+    static let OUTLINE_WIDTH: VOffset = 10
+    static let PIXEL_SIZE: VOffset = 12
+    static let HEIGHT_REFERENCE: VOffset = 14
+    static let SCALE_BY_DISTANCE: VOffset = 16
+    static let TRANSLUCENCY_BY_DISTANCE: VOffset = 18
+    static let DISTANCE_DISPLAY_CONDITION_NEAR: VOffset = 20
+    static let DISTANCE_DISPLAY_CONDITION_FAR: VOffset = 22
+    static let DISABLE_DEPTH_TEST_DISTANCE: VOffset = 24
   }
 
   ///  Whether the point is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Point color
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline color
-  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.OUTLINE_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VT.OUTLINE_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline width in pixels
-  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VTOFFSET.OUTLINE_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VT.OUTLINE_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pixel size
-  public var PIXEL_SIZE: Double { let o = _accessor.offset(VTOFFSET.PIXEL_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PIXEL_SIZE: Double { let o = _accessor.offset(VT.PIXEL_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height reference
-  public var HEIGHT_REFERENCE: CZMHeightReference { let o = _accessor.offset(VTOFFSET.HEIGHT_REFERENCE.v); return o == 0 ? .none_ : CZMHeightReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var HEIGHT_REFERENCE: CZMHeightReference { let o = _accessor.offset(VT.HEIGHT_REFERENCE); return o == 0 ? .none_ : CZMHeightReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
   ///  Scale by distance
-  public var SCALE_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VTOFFSET.SCALE_BY_DISTANCE.v); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SCALE_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VT.SCALE_BY_DISTANCE); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Translucency by distance
-  public var TRANSLUCENCY_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VTOFFSET.TRANSLUCENCY_BY_DISTANCE.v); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TRANSLUCENCY_BY_DISTANCE: CZMNearFarScalar? { let o = _accessor.offset(VT.TRANSLUCENCY_BY_DISTANCE); return o == 0 ? nil : CZMNearFarScalar(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Distance display condition near
-  public var DISTANCE_DISPLAY_CONDITION_NEAR: Double { let o = _accessor.offset(VTOFFSET.DISTANCE_DISPLAY_CONDITION_NEAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DISTANCE_DISPLAY_CONDITION_NEAR: Double { let o = _accessor.offset(VT.DISTANCE_DISPLAY_CONDITION_NEAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Distance display condition far
-  public var DISTANCE_DISPLAY_CONDITION_FAR: Double { let o = _accessor.offset(VTOFFSET.DISTANCE_DISPLAY_CONDITION_FAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DISTANCE_DISPLAY_CONDITION_FAR: Double { let o = _accessor.offset(VT.DISTANCE_DISPLAY_CONDITION_FAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Disable depth test distance
-  public var DISABLE_DEPTH_TEST_DISTANCE: Double { let o = _accessor.offset(VTOFFSET.DISABLE_DEPTH_TEST_DISTANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DISABLE_DEPTH_TEST_DISTANCE: Double { let o = _accessor.offset(VT.DISABLE_DEPTH_TEST_DISTANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMPoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VTOFFSET.OUTLINE_COLOR.p) }
-  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VTOFFSET.OUTLINE_WIDTH.p) }
-  public static func add(PIXEL_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_SIZE, def: 0.0, at: VTOFFSET.PIXEL_SIZE.p) }
-  public static func add(HEIGHT_REFERENCE: CZMHeightReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_REFERENCE.rawValue, def: 0, at: VTOFFSET.HEIGHT_REFERENCE.p) }
-  public static func add(SCALE_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCALE_BY_DISTANCE, at: VTOFFSET.SCALE_BY_DISTANCE.p) }
-  public static func add(TRANSLUCENCY_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSLUCENCY_BY_DISTANCE, at: VTOFFSET.TRANSLUCENCY_BY_DISTANCE.p) }
-  public static func add(DISTANCE_DISPLAY_CONDITION_NEAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_NEAR, def: 0.0, at: VTOFFSET.DISTANCE_DISPLAY_CONDITION_NEAR.p) }
-  public static func add(DISTANCE_DISPLAY_CONDITION_FAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_FAR, def: 0.0, at: VTOFFSET.DISTANCE_DISPLAY_CONDITION_FAR.p) }
-  public static func add(DISABLE_DEPTH_TEST_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISABLE_DEPTH_TEST_DISTANCE, def: 0.0, at: VTOFFSET.DISABLE_DEPTH_TEST_DISTANCE.p) }
+   at: VT.SHOW) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VT.OUTLINE_COLOR) }
+  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VT.OUTLINE_WIDTH) }
+  public static func add(PIXEL_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_SIZE, def: 0.0, at: VT.PIXEL_SIZE) }
+  public static func add(HEIGHT_REFERENCE: CZMHeightReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_REFERENCE.rawValue, def: 0, at: VT.HEIGHT_REFERENCE) }
+  public static func add(SCALE_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCALE_BY_DISTANCE, at: VT.SCALE_BY_DISTANCE) }
+  public static func add(TRANSLUCENCY_BY_DISTANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSLUCENCY_BY_DISTANCE, at: VT.TRANSLUCENCY_BY_DISTANCE) }
+  public static func add(DISTANCE_DISPLAY_CONDITION_NEAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_NEAR, def: 0.0, at: VT.DISTANCE_DISPLAY_CONDITION_NEAR) }
+  public static func add(DISTANCE_DISPLAY_CONDITION_FAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_FAR, def: 0.0, at: VT.DISTANCE_DISPLAY_CONDITION_FAR) }
+  public static func add(DISABLE_DEPTH_TEST_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISABLE_DEPTH_TEST_DISTANCE, def: 0.0, at: VT.DISABLE_DEPTH_TEST_DISTANCE) }
   public static func endCZMPoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMPoint(
     _ fbb: inout FlatBufferBuilder,
@@ -2030,17 +1978,17 @@ public struct CZMPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_COLOR.p, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_WIDTH.p, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PIXEL_SIZE.p, fieldName: "PIXEL_SIZE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEIGHT_REFERENCE.p, fieldName: "HEIGHT_REFERENCE", required: false, type: CZMHeightReference.self)
-    try _v.visit(field: VTOFFSET.SCALE_BY_DISTANCE.p, fieldName: "SCALE_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
-    try _v.visit(field: VTOFFSET.TRANSLUCENCY_BY_DISTANCE.p, fieldName: "TRANSLUCENCY_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
-    try _v.visit(field: VTOFFSET.DISTANCE_DISPLAY_CONDITION_NEAR.p, fieldName: "DISTANCE_DISPLAY_CONDITION_NEAR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DISTANCE_DISPLAY_CONDITION_FAR.p, fieldName: "DISTANCE_DISPLAY_CONDITION_FAR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DISABLE_DEPTH_TEST_DISTANCE.p, fieldName: "DISABLE_DEPTH_TEST_DISTANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE_COLOR, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE_WIDTH, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.PIXEL_SIZE, fieldName: "PIXEL_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VT.HEIGHT_REFERENCE, fieldName: "HEIGHT_REFERENCE", required: false, type: CZMHeightReference.self)
+    try _v.visit(field: VT.SCALE_BY_DISTANCE, fieldName: "SCALE_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
+    try _v.visit(field: VT.TRANSLUCENCY_BY_DISTANCE, fieldName: "TRANSLUCENCY_BY_DISTANCE", required: false, type: ForwardOffset<CZMNearFarScalar>.self)
+    try _v.visit(field: VT.DISTANCE_DISPLAY_CONDITION_NEAR, fieldName: "DISTANCE_DISPLAY_CONDITION_NEAR", required: false, type: Double.self)
+    try _v.visit(field: VT.DISTANCE_DISPLAY_CONDITION_FAR, fieldName: "DISTANCE_DISPLAY_CONDITION_FAR", required: false, type: Double.self)
+    try _v.visit(field: VT.DISABLE_DEPTH_TEST_DISTANCE, fieldName: "DISABLE_DEPTH_TEST_DISTANCE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -2057,71 +2005,69 @@ public struct CZMPolyline: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case POSITIONS_CARTOGRAPHIC_DEGREES = 6
-    case POSITIONS_CARTESIAN = 8
-    case WIDTH = 10
-    case COLOR = 12
-    case CLAMP_TO_GROUND = 14
-    case ARC_TYPE = 16
-    case GRANULARITY = 18
-    case MATERIAL = 20
-    case SHADOWS = 22
-    case DEPTH_FAIL_MATERIAL = 24
-    case CLASSIFICATION_TYPE = 26
-    case Z_INDEX = 28
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let POSITIONS_CARTOGRAPHIC_DEGREES: VOffset = 6
+    static let POSITIONS_CARTESIAN: VOffset = 8
+    static let WIDTH: VOffset = 10
+    static let COLOR: VOffset = 12
+    static let CLAMP_TO_GROUND: VOffset = 14
+    static let ARC_TYPE: VOffset = 16
+    static let GRANULARITY: VOffset = 18
+    static let MATERIAL: VOffset = 20
+    static let SHADOWS: VOffset = 22
+    static let DEPTH_FAIL_MATERIAL: VOffset = 24
+    static let CLASSIFICATION_TYPE: VOffset = 26
+    static let Z_INDEX: VOffset = 28
   }
 
   ///  Whether the polyline is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Positions as cartographic degrees [lon, lat, height, lon, lat, height, ...]
-  public var POSITIONS_CARTOGRAPHIC_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.v, byteSize: 8) }
-  public func withUnsafePointerToPositionsCartographicDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.v, body: body) }
+  public var POSITIONS_CARTOGRAPHIC_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITIONS_CARTOGRAPHIC_DEGREES, byteSize: 8) }
+  public func withUnsafePointerToPositionsCartographicDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITIONS_CARTOGRAPHIC_DEGREES, body: body) }
   ///  Positions as Cartesian [X, Y, Z, X, Y, Z, ...]
-  public var POSITIONS_CARTESIAN: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITIONS_CARTESIAN.v, byteSize: 8) }
-  public func withUnsafePointerToPositionsCartesian<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITIONS_CARTESIAN.v, body: body) }
+  public var POSITIONS_CARTESIAN: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITIONS_CARTESIAN, byteSize: 8) }
+  public func withUnsafePointerToPositionsCartesian<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITIONS_CARTESIAN, body: body) }
   ///  Line width in pixels
-  public var WIDTH: Double { let o = _accessor.offset(VTOFFSET.WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var WIDTH: Double { let o = _accessor.offset(VT.WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Line color (solid color material, legacy)
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Whether to clamp to ground
-  public var CLAMP_TO_GROUND: Bool { let o = _accessor.offset(VTOFFSET.CLAMP_TO_GROUND.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var CLAMP_TO_GROUND: Bool { let o = _accessor.offset(VT.CLAMP_TO_GROUND); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Arc type
-  public var ARC_TYPE: String? { let o = _accessor.offset(VTOFFSET.ARC_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ARC_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ARC_TYPE.v) }
+  public var ARC_TYPE: String? { let o = _accessor.offset(VT.ARC_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ARC_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ARC_TYPE) }
   ///  Granularity in radians
-  public var GRANULARITY: Double { let o = _accessor.offset(VTOFFSET.GRANULARITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GRANULARITY: Double { let o = _accessor.offset(VT.GRANULARITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Full polyline material
-  public var MATERIAL: CZMPolylineMaterial? { let o = _accessor.offset(VTOFFSET.MATERIAL.v); return o == 0 ? nil : CZMPolylineMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATERIAL: CZMPolylineMaterial? { let o = _accessor.offset(VT.MATERIAL); return o == 0 ? nil : CZMPolylineMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Shadow mode
-  public var SHADOWS: String? { let o = _accessor.offset(VTOFFSET.SHADOWS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADOWS.v) }
+  public var SHADOWS: String? { let o = _accessor.offset(VT.SHADOWS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADOWS) }
   ///  Depth fail material
-  public var DEPTH_FAIL_MATERIAL: CZMPolylineMaterial? { let o = _accessor.offset(VTOFFSET.DEPTH_FAIL_MATERIAL.v); return o == 0 ? nil : CZMPolylineMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DEPTH_FAIL_MATERIAL: CZMPolylineMaterial? { let o = _accessor.offset(VT.DEPTH_FAIL_MATERIAL); return o == 0 ? nil : CZMPolylineMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Classification type
-  public var CLASSIFICATION_TYPE: String? { let o = _accessor.offset(VTOFFSET.CLASSIFICATION_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CLASSIFICATION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLASSIFICATION_TYPE.v) }
+  public var CLASSIFICATION_TYPE: String? { let o = _accessor.offset(VT.CLASSIFICATION_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION_TYPE) }
   ///  Z-index for ordering
-  public var Z_INDEX: Int32 { let o = _accessor.offset(VTOFFSET.Z_INDEX.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var Z_INDEX: Int32 { let o = _accessor.offset(VT.Z_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startCZMPolyline(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func addVectorOf(POSITIONS_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTOGRAPHIC_DEGREES, at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.p) }
-  public static func addVectorOf(POSITIONS_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTESIAN, at: VTOFFSET.POSITIONS_CARTESIAN.p) }
-  public static func add(WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIDTH, def: 0.0, at: VTOFFSET.WIDTH.p) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
+   at: VT.SHOW) }
+  public static func addVectorOf(POSITIONS_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTOGRAPHIC_DEGREES, at: VT.POSITIONS_CARTOGRAPHIC_DEGREES) }
+  public static func addVectorOf(POSITIONS_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTESIAN, at: VT.POSITIONS_CARTESIAN) }
+  public static func add(WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIDTH, def: 0.0, at: VT.WIDTH) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
   public static func add(CLAMP_TO_GROUND: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLAMP_TO_GROUND, def: false,
-   at: VTOFFSET.CLAMP_TO_GROUND.p) }
-  public static func add(ARC_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARC_TYPE, at: VTOFFSET.ARC_TYPE.p) }
-  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VTOFFSET.GRANULARITY.p) }
-  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VTOFFSET.MATERIAL.p) }
-  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VTOFFSET.SHADOWS.p) }
-  public static func add(DEPTH_FAIL_MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEPTH_FAIL_MATERIAL, at: VTOFFSET.DEPTH_FAIL_MATERIAL.p) }
-  public static func add(CLASSIFICATION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION_TYPE, at: VTOFFSET.CLASSIFICATION_TYPE.p) }
-  public static func add(Z_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_INDEX, def: 0, at: VTOFFSET.Z_INDEX.p) }
+   at: VT.CLAMP_TO_GROUND) }
+  public static func add(ARC_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARC_TYPE, at: VT.ARC_TYPE) }
+  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VT.GRANULARITY) }
+  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VT.MATERIAL) }
+  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VT.SHADOWS) }
+  public static func add(DEPTH_FAIL_MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEPTH_FAIL_MATERIAL, at: VT.DEPTH_FAIL_MATERIAL) }
+  public static func add(CLASSIFICATION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION_TYPE, at: VT.CLASSIFICATION_TYPE) }
+  public static func add(Z_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_INDEX, def: 0, at: VT.Z_INDEX) }
   public static func endCZMPolyline(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMPolyline(
     _ fbb: inout FlatBufferBuilder,
@@ -2158,19 +2104,19 @@ public struct CZMPolyline: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.p, fieldName: "POSITIONS_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.POSITIONS_CARTESIAN.p, fieldName: "POSITIONS_CARTESIAN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.WIDTH.p, fieldName: "WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.CLAMP_TO_GROUND.p, fieldName: "CLAMP_TO_GROUND", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.ARC_TYPE.p, fieldName: "ARC_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GRANULARITY.p, fieldName: "GRANULARITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MATERIAL.p, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMPolylineMaterial>.self)
-    try _v.visit(field: VTOFFSET.SHADOWS.p, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DEPTH_FAIL_MATERIAL.p, fieldName: "DEPTH_FAIL_MATERIAL", required: false, type: ForwardOffset<CZMPolylineMaterial>.self)
-    try _v.visit(field: VTOFFSET.CLASSIFICATION_TYPE.p, fieldName: "CLASSIFICATION_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.Z_INDEX.p, fieldName: "Z_INDEX", required: false, type: Int32.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.POSITIONS_CARTOGRAPHIC_DEGREES, fieldName: "POSITIONS_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.POSITIONS_CARTESIAN, fieldName: "POSITIONS_CARTESIAN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.WIDTH, fieldName: "WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.CLAMP_TO_GROUND, fieldName: "CLAMP_TO_GROUND", required: false, type: Bool.self)
+    try _v.visit(field: VT.ARC_TYPE, fieldName: "ARC_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GRANULARITY, fieldName: "GRANULARITY", required: false, type: Double.self)
+    try _v.visit(field: VT.MATERIAL, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMPolylineMaterial>.self)
+    try _v.visit(field: VT.SHADOWS, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DEPTH_FAIL_MATERIAL, fieldName: "DEPTH_FAIL_MATERIAL", required: false, type: ForwardOffset<CZMPolylineMaterial>.self)
+    try _v.visit(field: VT.CLASSIFICATION_TYPE, fieldName: "CLASSIFICATION_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.Z_INDEX, fieldName: "Z_INDEX", required: false, type: Int32.self)
     _v.finish()
   }
 }
@@ -2187,115 +2133,113 @@ public struct CZMPolygon: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case POSITIONS_CARTOGRAPHIC_DEGREES = 6
-    case POSITIONS_CARTESIAN = 8
-    case FILL = 10
-    case COLOR = 12
-    case OUTLINE = 14
-    case OUTLINE_COLOR = 16
-    case EXTRUDED_HEIGHT = 18
-    case HEIGHT_REFERENCE = 20
-    case CLASSIFICATION_TYPE = 22
-    case HOLES = 24
-    case ARC_TYPE = 26
-    case HEIGHT = 28
-    case EXTRUDED_HEIGHT_REFERENCE = 30
-    case ST_ROTATION = 32
-    case GRANULARITY = 34
-    case MATERIAL = 36
-    case OUTLINE_WIDTH = 38
-    case PER_POSITION_HEIGHT = 40
-    case CLOSE_TOP = 42
-    case CLOSE_BOTTOM = 44
-    case SHADOWS = 46
-    case Z_INDEX = 48
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let POSITIONS_CARTOGRAPHIC_DEGREES: VOffset = 6
+    static let POSITIONS_CARTESIAN: VOffset = 8
+    static let FILL: VOffset = 10
+    static let COLOR: VOffset = 12
+    static let OUTLINE: VOffset = 14
+    static let OUTLINE_COLOR: VOffset = 16
+    static let EXTRUDED_HEIGHT: VOffset = 18
+    static let HEIGHT_REFERENCE: VOffset = 20
+    static let CLASSIFICATION_TYPE: VOffset = 22
+    static let HOLES: VOffset = 24
+    static let ARC_TYPE: VOffset = 26
+    static let HEIGHT: VOffset = 28
+    static let EXTRUDED_HEIGHT_REFERENCE: VOffset = 30
+    static let ST_ROTATION: VOffset = 32
+    static let GRANULARITY: VOffset = 34
+    static let MATERIAL: VOffset = 36
+    static let OUTLINE_WIDTH: VOffset = 38
+    static let PER_POSITION_HEIGHT: VOffset = 40
+    static let CLOSE_TOP: VOffset = 42
+    static let CLOSE_BOTTOM: VOffset = 44
+    static let SHADOWS: VOffset = 46
+    static let Z_INDEX: VOffset = 48
   }
 
   ///  Whether the polygon is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Positions as cartographic degrees [lon, lat, height, ...]
-  public var POSITIONS_CARTOGRAPHIC_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.v, byteSize: 8) }
-  public func withUnsafePointerToPositionsCartographicDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.v, body: body) }
+  public var POSITIONS_CARTOGRAPHIC_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITIONS_CARTOGRAPHIC_DEGREES, byteSize: 8) }
+  public func withUnsafePointerToPositionsCartographicDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITIONS_CARTOGRAPHIC_DEGREES, body: body) }
   ///  Positions as Cartesian [X, Y, Z, ...]
-  public var POSITIONS_CARTESIAN: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITIONS_CARTESIAN.v, byteSize: 8) }
-  public func withUnsafePointerToPositionsCartesian<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITIONS_CARTESIAN.v, body: body) }
+  public var POSITIONS_CARTESIAN: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITIONS_CARTESIAN, byteSize: 8) }
+  public func withUnsafePointerToPositionsCartesian<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITIONS_CARTESIAN, body: body) }
   ///  Fill flag
-  public var FILL: Bool { let o = _accessor.offset(VTOFFSET.FILL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FILL: Bool { let o = _accessor.offset(VT.FILL); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Fill color (solid color material, legacy)
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline flag
-  public var OUTLINE: Bool { let o = _accessor.offset(VTOFFSET.OUTLINE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OUTLINE: Bool { let o = _accessor.offset(VT.OUTLINE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Outline color
-  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.OUTLINE_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VT.OUTLINE_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Extruded height in meters
-  public var EXTRUDED_HEIGHT: Double { let o = _accessor.offset(VTOFFSET.EXTRUDED_HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EXTRUDED_HEIGHT: Double { let o = _accessor.offset(VT.EXTRUDED_HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height reference
-  public var HEIGHT_REFERENCE: CZMHeightReference { let o = _accessor.offset(VTOFFSET.HEIGHT_REFERENCE.v); return o == 0 ? .none_ : CZMHeightReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var HEIGHT_REFERENCE: CZMHeightReference { let o = _accessor.offset(VT.HEIGHT_REFERENCE); return o == 0 ? .none_ : CZMHeightReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
   ///  Classification type
-  public var CLASSIFICATION_TYPE: CZMClassificationType { let o = _accessor.offset(VTOFFSET.CLASSIFICATION_TYPE.v); return o == 0 ? .terrain : CZMClassificationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .terrain }
+  public var CLASSIFICATION_TYPE: CZMClassificationType { let o = _accessor.offset(VT.CLASSIFICATION_TYPE); return o == 0 ? .terrain : CZMClassificationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .terrain }
   ///  Holes (position lists: each hole is [lon,lat,h,...])
-  public var HOLES: FlatbufferVector<CZMPolygonHole> { return _accessor.vector(at: VTOFFSET.HOLES.v, byteSize: 4) }
+  public var HOLES: FlatbufferVector<CZMPolygonHole> { return _accessor.vector(at: VT.HOLES, byteSize: 4) }
   ///  Arc type
-  public var ARC_TYPE: String? { let o = _accessor.offset(VTOFFSET.ARC_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ARC_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ARC_TYPE.v) }
+  public var ARC_TYPE: String? { let o = _accessor.offset(VT.ARC_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ARC_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ARC_TYPE) }
   ///  Height in meters
-  public var HEIGHT: Double { let o = _accessor.offset(VTOFFSET.HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HEIGHT: Double { let o = _accessor.offset(VT.HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Extruded height reference
-  public var EXTRUDED_HEIGHT_REFERENCE: String? { let o = _accessor.offset(VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EXTRUDED_HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.v) }
+  public var EXTRUDED_HEIGHT_REFERENCE: String? { let o = _accessor.offset(VT.EXTRUDED_HEIGHT_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXTRUDED_HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXTRUDED_HEIGHT_REFERENCE) }
   ///  Texture rotation in radians
-  public var ST_ROTATION: Double { let o = _accessor.offset(VTOFFSET.ST_ROTATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ST_ROTATION: Double { let o = _accessor.offset(VT.ST_ROTATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Granularity in radians
-  public var GRANULARITY: Double { let o = _accessor.offset(VTOFFSET.GRANULARITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GRANULARITY: Double { let o = _accessor.offset(VT.GRANULARITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Full surface material
-  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VTOFFSET.MATERIAL.v); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VT.MATERIAL); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline width in pixels
-  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VTOFFSET.OUTLINE_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VT.OUTLINE_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Whether to use per-position heights
-  public var PER_POSITION_HEIGHT: Bool { let o = _accessor.offset(VTOFFSET.PER_POSITION_HEIGHT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var PER_POSITION_HEIGHT: Bool { let o = _accessor.offset(VT.PER_POSITION_HEIGHT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether to close the top of extruded polygon
-  public var CLOSE_TOP: Bool { let o = _accessor.offset(VTOFFSET.CLOSE_TOP.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var CLOSE_TOP: Bool { let o = _accessor.offset(VT.CLOSE_TOP); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether to close the bottom of extruded polygon
-  public var CLOSE_BOTTOM: Bool { let o = _accessor.offset(VTOFFSET.CLOSE_BOTTOM.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var CLOSE_BOTTOM: Bool { let o = _accessor.offset(VT.CLOSE_BOTTOM); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Shadow mode
-  public var SHADOWS: String? { let o = _accessor.offset(VTOFFSET.SHADOWS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADOWS.v) }
+  public var SHADOWS: String? { let o = _accessor.offset(VT.SHADOWS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADOWS) }
   ///  Z-index for ordering
-  public var Z_INDEX: Int32 { let o = _accessor.offset(VTOFFSET.Z_INDEX.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var Z_INDEX: Int32 { let o = _accessor.offset(VT.Z_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startCZMPolygon(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func addVectorOf(POSITIONS_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTOGRAPHIC_DEGREES, at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.p) }
-  public static func addVectorOf(POSITIONS_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTESIAN, at: VTOFFSET.POSITIONS_CARTESIAN.p) }
+   at: VT.SHOW) }
+  public static func addVectorOf(POSITIONS_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTOGRAPHIC_DEGREES, at: VT.POSITIONS_CARTOGRAPHIC_DEGREES) }
+  public static func addVectorOf(POSITIONS_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTESIAN, at: VT.POSITIONS_CARTESIAN) }
   public static func add(FILL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILL, def: false,
-   at: VTOFFSET.FILL.p) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
+   at: VT.FILL) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
   public static func add(OUTLINE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE, def: false,
-   at: VTOFFSET.OUTLINE.p) }
-  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VTOFFSET.OUTLINE_COLOR.p) }
-  public static func add(EXTRUDED_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDED_HEIGHT, def: 0.0, at: VTOFFSET.EXTRUDED_HEIGHT.p) }
-  public static func add(HEIGHT_REFERENCE: CZMHeightReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_REFERENCE.rawValue, def: 0, at: VTOFFSET.HEIGHT_REFERENCE.p) }
-  public static func add(CLASSIFICATION_TYPE: CZMClassificationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLASSIFICATION_TYPE.rawValue, def: 0, at: VTOFFSET.CLASSIFICATION_TYPE.p) }
-  public static func addVectorOf(HOLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HOLES, at: VTOFFSET.HOLES.p) }
-  public static func add(ARC_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARC_TYPE, at: VTOFFSET.ARC_TYPE.p) }
-  public static func add(HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT, def: 0.0, at: VTOFFSET.HEIGHT.p) }
-  public static func add(EXTRUDED_HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTRUDED_HEIGHT_REFERENCE, at: VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.p) }
-  public static func add(ST_ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ST_ROTATION, def: 0.0, at: VTOFFSET.ST_ROTATION.p) }
-  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VTOFFSET.GRANULARITY.p) }
-  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VTOFFSET.MATERIAL.p) }
-  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VTOFFSET.OUTLINE_WIDTH.p) }
+   at: VT.OUTLINE) }
+  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VT.OUTLINE_COLOR) }
+  public static func add(EXTRUDED_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDED_HEIGHT, def: 0.0, at: VT.EXTRUDED_HEIGHT) }
+  public static func add(HEIGHT_REFERENCE: CZMHeightReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_REFERENCE.rawValue, def: 0, at: VT.HEIGHT_REFERENCE) }
+  public static func add(CLASSIFICATION_TYPE: CZMClassificationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLASSIFICATION_TYPE.rawValue, def: 0, at: VT.CLASSIFICATION_TYPE) }
+  public static func addVectorOf(HOLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HOLES, at: VT.HOLES) }
+  public static func add(ARC_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARC_TYPE, at: VT.ARC_TYPE) }
+  public static func add(HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT, def: 0.0, at: VT.HEIGHT) }
+  public static func add(EXTRUDED_HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTRUDED_HEIGHT_REFERENCE, at: VT.EXTRUDED_HEIGHT_REFERENCE) }
+  public static func add(ST_ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ST_ROTATION, def: 0.0, at: VT.ST_ROTATION) }
+  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VT.GRANULARITY) }
+  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VT.MATERIAL) }
+  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VT.OUTLINE_WIDTH) }
   public static func add(PER_POSITION_HEIGHT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PER_POSITION_HEIGHT, def: false,
-   at: VTOFFSET.PER_POSITION_HEIGHT.p) }
+   at: VT.PER_POSITION_HEIGHT) }
   public static func add(CLOSE_TOP: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOSE_TOP, def: false,
-   at: VTOFFSET.CLOSE_TOP.p) }
+   at: VT.CLOSE_TOP) }
   public static func add(CLOSE_BOTTOM: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOSE_BOTTOM, def: false,
-   at: VTOFFSET.CLOSE_BOTTOM.p) }
-  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VTOFFSET.SHADOWS.p) }
-  public static func add(Z_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_INDEX, def: 0, at: VTOFFSET.Z_INDEX.p) }
+   at: VT.CLOSE_BOTTOM) }
+  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VT.SHADOWS) }
+  public static func add(Z_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_INDEX, def: 0, at: VT.Z_INDEX) }
   public static func endCZMPolygon(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMPolygon(
     _ fbb: inout FlatBufferBuilder,
@@ -2352,29 +2296,29 @@ public struct CZMPolygon: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.p, fieldName: "POSITIONS_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.POSITIONS_CARTESIAN.p, fieldName: "POSITIONS_CARTESIAN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.FILL.p, fieldName: "FILL", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE.p, fieldName: "OUTLINE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_COLOR.p, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.EXTRUDED_HEIGHT.p, fieldName: "EXTRUDED_HEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEIGHT_REFERENCE.p, fieldName: "HEIGHT_REFERENCE", required: false, type: CZMHeightReference.self)
-    try _v.visit(field: VTOFFSET.CLASSIFICATION_TYPE.p, fieldName: "CLASSIFICATION_TYPE", required: false, type: CZMClassificationType.self)
-    try _v.visit(field: VTOFFSET.HOLES.p, fieldName: "HOLES", required: false, type: ForwardOffset<Vector<ForwardOffset<CZMPolygonHole>, CZMPolygonHole>>.self)
-    try _v.visit(field: VTOFFSET.ARC_TYPE.p, fieldName: "ARC_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.HEIGHT.p, fieldName: "HEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.p, fieldName: "EXTRUDED_HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ST_ROTATION.p, fieldName: "ST_ROTATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.GRANULARITY.p, fieldName: "GRANULARITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MATERIAL.p, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_WIDTH.p, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PER_POSITION_HEIGHT.p, fieldName: "PER_POSITION_HEIGHT", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.CLOSE_TOP.p, fieldName: "CLOSE_TOP", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.CLOSE_BOTTOM.p, fieldName: "CLOSE_BOTTOM", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.SHADOWS.p, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.Z_INDEX.p, fieldName: "Z_INDEX", required: false, type: Int32.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.POSITIONS_CARTOGRAPHIC_DEGREES, fieldName: "POSITIONS_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.POSITIONS_CARTESIAN, fieldName: "POSITIONS_CARTESIAN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.FILL, fieldName: "FILL", required: false, type: Bool.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE, fieldName: "OUTLINE", required: false, type: Bool.self)
+    try _v.visit(field: VT.OUTLINE_COLOR, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.EXTRUDED_HEIGHT, fieldName: "EXTRUDED_HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.HEIGHT_REFERENCE, fieldName: "HEIGHT_REFERENCE", required: false, type: CZMHeightReference.self)
+    try _v.visit(field: VT.CLASSIFICATION_TYPE, fieldName: "CLASSIFICATION_TYPE", required: false, type: CZMClassificationType.self)
+    try _v.visit(field: VT.HOLES, fieldName: "HOLES", required: false, type: ForwardOffset<Vector<ForwardOffset<CZMPolygonHole>, CZMPolygonHole>>.self)
+    try _v.visit(field: VT.ARC_TYPE, fieldName: "ARC_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HEIGHT, fieldName: "HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.EXTRUDED_HEIGHT_REFERENCE, fieldName: "EXTRUDED_HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ST_ROTATION, fieldName: "ST_ROTATION", required: false, type: Double.self)
+    try _v.visit(field: VT.GRANULARITY, fieldName: "GRANULARITY", required: false, type: Double.self)
+    try _v.visit(field: VT.MATERIAL, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
+    try _v.visit(field: VT.OUTLINE_WIDTH, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.PER_POSITION_HEIGHT, fieldName: "PER_POSITION_HEIGHT", required: false, type: Bool.self)
+    try _v.visit(field: VT.CLOSE_TOP, fieldName: "CLOSE_TOP", required: false, type: Bool.self)
+    try _v.visit(field: VT.CLOSE_BOTTOM, fieldName: "CLOSE_BOTTOM", required: false, type: Bool.self)
+    try _v.visit(field: VT.SHADOWS, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.Z_INDEX, fieldName: "Z_INDEX", required: false, type: Int32.self)
     _v.finish()
   }
 }
@@ -2391,22 +2335,20 @@ public struct CZMPolygonHole: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case POSITIONS_CARTOGRAPHIC_DEGREES = 4
-    case POSITIONS_CARTESIAN = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let POSITIONS_CARTOGRAPHIC_DEGREES: VOffset = 4
+    static let POSITIONS_CARTESIAN: VOffset = 6
   }
 
   ///  Positions as cartographic degrees [lon, lat, height, ...]
-  public var POSITIONS_CARTOGRAPHIC_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.v, byteSize: 8) }
-  public func withUnsafePointerToPositionsCartographicDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.v, body: body) }
+  public var POSITIONS_CARTOGRAPHIC_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITIONS_CARTOGRAPHIC_DEGREES, byteSize: 8) }
+  public func withUnsafePointerToPositionsCartographicDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITIONS_CARTOGRAPHIC_DEGREES, body: body) }
   ///  Positions as Cartesian [X, Y, Z, ...]
-  public var POSITIONS_CARTESIAN: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITIONS_CARTESIAN.v, byteSize: 8) }
-  public func withUnsafePointerToPositionsCartesian<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITIONS_CARTESIAN.v, body: body) }
+  public var POSITIONS_CARTESIAN: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITIONS_CARTESIAN, byteSize: 8) }
+  public func withUnsafePointerToPositionsCartesian<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITIONS_CARTESIAN, body: body) }
   public static func startCZMPolygonHole(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func addVectorOf(POSITIONS_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTOGRAPHIC_DEGREES, at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.p) }
-  public static func addVectorOf(POSITIONS_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTESIAN, at: VTOFFSET.POSITIONS_CARTESIAN.p) }
+  public static func addVectorOf(POSITIONS_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTOGRAPHIC_DEGREES, at: VT.POSITIONS_CARTOGRAPHIC_DEGREES) }
+  public static func addVectorOf(POSITIONS_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTESIAN, at: VT.POSITIONS_CARTESIAN) }
   public static func endCZMPolygonHole(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMPolygonHole(
     _ fbb: inout FlatBufferBuilder,
@@ -2421,8 +2363,8 @@ public struct CZMPolygonHole: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.p, fieldName: "POSITIONS_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.POSITIONS_CARTESIAN.p, fieldName: "POSITIONS_CARTESIAN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.POSITIONS_CARTOGRAPHIC_DEGREES, fieldName: "POSITIONS_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.POSITIONS_CARTESIAN, fieldName: "POSITIONS_CARTESIAN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
@@ -2439,74 +2381,72 @@ public struct CZMModel: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case GLTF = 6
-    case SCALE = 8
-    case MINIMUM_PIXEL_SIZE = 10
-    case MAXIMUM_SCALE = 12
-    case HEIGHT_REFERENCE = 14
-    case COLOR = 16
-    case INCREMENTALLY_LOAD_TEXTURES = 18
-    case RUN_ANIMATIONS = 20
-    case SHADOWS = 22
-    case SILHOUETTE_COLOR = 24
-    case SILHOUETTE_SIZE = 26
-    case COLOR_BLEND_MODE = 28
-    case COLOR_BLEND_AMOUNT = 30
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let GLTF: VOffset = 6
+    static let SCALE: VOffset = 8
+    static let MINIMUM_PIXEL_SIZE: VOffset = 10
+    static let MAXIMUM_SCALE: VOffset = 12
+    static let HEIGHT_REFERENCE: VOffset = 14
+    static let COLOR: VOffset = 16
+    static let INCREMENTALLY_LOAD_TEXTURES: VOffset = 18
+    static let RUN_ANIMATIONS: VOffset = 20
+    static let SHADOWS: VOffset = 22
+    static let SILHOUETTE_COLOR: VOffset = 24
+    static let SILHOUETTE_SIZE: VOffset = 26
+    static let COLOR_BLEND_MODE: VOffset = 28
+    static let COLOR_BLEND_AMOUNT: VOffset = 30
   }
 
   ///  Whether the model is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  URI to the glTF model
-  public var GLTF: String? { let o = _accessor.offset(VTOFFSET.GLTF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GLTFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GLTF.v) }
+  public var GLTF: String? { let o = _accessor.offset(VT.GLTF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GLTFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GLTF) }
   ///  Scale factor
-  public var SCALE: Double { let o = _accessor.offset(VTOFFSET.SCALE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCALE: Double { let o = _accessor.offset(VT.SCALE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Minimum pixel size
-  public var MINIMUM_PIXEL_SIZE: Double { let o = _accessor.offset(VTOFFSET.MINIMUM_PIXEL_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MINIMUM_PIXEL_SIZE: Double { let o = _accessor.offset(VT.MINIMUM_PIXEL_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum scale
-  public var MAXIMUM_SCALE: Double { let o = _accessor.offset(VTOFFSET.MAXIMUM_SCALE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAXIMUM_SCALE: Double { let o = _accessor.offset(VT.MAXIMUM_SCALE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height reference
-  public var HEIGHT_REFERENCE: CZMHeightReference { let o = _accessor.offset(VTOFFSET.HEIGHT_REFERENCE.v); return o == 0 ? .none_ : CZMHeightReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var HEIGHT_REFERENCE: CZMHeightReference { let o = _accessor.offset(VT.HEIGHT_REFERENCE); return o == 0 ? .none_ : CZMHeightReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
   ///  Color tint
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Whether to incrementally load textures
-  public var INCREMENTALLY_LOAD_TEXTURES: Bool { let o = _accessor.offset(VTOFFSET.INCREMENTALLY_LOAD_TEXTURES.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var INCREMENTALLY_LOAD_TEXTURES: Bool { let o = _accessor.offset(VT.INCREMENTALLY_LOAD_TEXTURES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether to run animations
-  public var RUN_ANIMATIONS: Bool { let o = _accessor.offset(VTOFFSET.RUN_ANIMATIONS.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var RUN_ANIMATIONS: Bool { let o = _accessor.offset(VT.RUN_ANIMATIONS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Shadow mode
-  public var SHADOWS: String? { let o = _accessor.offset(VTOFFSET.SHADOWS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADOWS.v) }
+  public var SHADOWS: String? { let o = _accessor.offset(VT.SHADOWS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADOWS) }
   ///  Silhouette color
-  public var SILHOUETTE_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.SILHOUETTE_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SILHOUETTE_COLOR: CZMColor? { let o = _accessor.offset(VT.SILHOUETTE_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Silhouette size in pixels
-  public var SILHOUETTE_SIZE: Double { let o = _accessor.offset(VTOFFSET.SILHOUETTE_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SILHOUETTE_SIZE: Double { let o = _accessor.offset(VT.SILHOUETTE_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Color blend mode
-  public var COLOR_BLEND_MODE: String? { let o = _accessor.offset(VTOFFSET.COLOR_BLEND_MODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLOR_BLEND_MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLOR_BLEND_MODE.v) }
+  public var COLOR_BLEND_MODE: String? { let o = _accessor.offset(VT.COLOR_BLEND_MODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLOR_BLEND_MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR_BLEND_MODE) }
   ///  Color blend amount (0-1)
-  public var COLOR_BLEND_AMOUNT: Double { let o = _accessor.offset(VTOFFSET.COLOR_BLEND_AMOUNT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COLOR_BLEND_AMOUNT: Double { let o = _accessor.offset(VT.COLOR_BLEND_AMOUNT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMModel(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func add(GLTF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GLTF, at: VTOFFSET.GLTF.p) }
-  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 0.0, at: VTOFFSET.SCALE.p) }
-  public static func add(MINIMUM_PIXEL_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_PIXEL_SIZE, def: 0.0, at: VTOFFSET.MINIMUM_PIXEL_SIZE.p) }
-  public static func add(MAXIMUM_SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_SCALE, def: 0.0, at: VTOFFSET.MAXIMUM_SCALE.p) }
-  public static func add(HEIGHT_REFERENCE: CZMHeightReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_REFERENCE.rawValue, def: 0, at: VTOFFSET.HEIGHT_REFERENCE.p) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
+   at: VT.SHOW) }
+  public static func add(GLTF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GLTF, at: VT.GLTF) }
+  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 0.0, at: VT.SCALE) }
+  public static func add(MINIMUM_PIXEL_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_PIXEL_SIZE, def: 0.0, at: VT.MINIMUM_PIXEL_SIZE) }
+  public static func add(MAXIMUM_SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_SCALE, def: 0.0, at: VT.MAXIMUM_SCALE) }
+  public static func add(HEIGHT_REFERENCE: CZMHeightReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_REFERENCE.rawValue, def: 0, at: VT.HEIGHT_REFERENCE) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
   public static func add(INCREMENTALLY_LOAD_TEXTURES: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCREMENTALLY_LOAD_TEXTURES, def: false,
-   at: VTOFFSET.INCREMENTALLY_LOAD_TEXTURES.p) }
+   at: VT.INCREMENTALLY_LOAD_TEXTURES) }
   public static func add(RUN_ANIMATIONS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RUN_ANIMATIONS, def: false,
-   at: VTOFFSET.RUN_ANIMATIONS.p) }
-  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VTOFFSET.SHADOWS.p) }
-  public static func add(SILHOUETTE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SILHOUETTE_COLOR, at: VTOFFSET.SILHOUETTE_COLOR.p) }
-  public static func add(SILHOUETTE_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SILHOUETTE_SIZE, def: 0.0, at: VTOFFSET.SILHOUETTE_SIZE.p) }
-  public static func add(COLOR_BLEND_MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR_BLEND_MODE, at: VTOFFSET.COLOR_BLEND_MODE.p) }
-  public static func add(COLOR_BLEND_AMOUNT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLOR_BLEND_AMOUNT, def: 0.0, at: VTOFFSET.COLOR_BLEND_AMOUNT.p) }
+   at: VT.RUN_ANIMATIONS) }
+  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VT.SHADOWS) }
+  public static func add(SILHOUETTE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SILHOUETTE_COLOR, at: VT.SILHOUETTE_COLOR) }
+  public static func add(SILHOUETTE_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SILHOUETTE_SIZE, def: 0.0, at: VT.SILHOUETTE_SIZE) }
+  public static func add(COLOR_BLEND_MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR_BLEND_MODE, at: VT.COLOR_BLEND_MODE) }
+  public static func add(COLOR_BLEND_AMOUNT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLOR_BLEND_AMOUNT, def: 0.0, at: VT.COLOR_BLEND_AMOUNT) }
   public static func endCZMModel(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMModel(
     _ fbb: inout FlatBufferBuilder,
@@ -2545,20 +2485,20 @@ public struct CZMModel: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.GLTF.p, fieldName: "GLTF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SCALE.p, fieldName: "SCALE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MINIMUM_PIXEL_SIZE.p, fieldName: "MINIMUM_PIXEL_SIZE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAXIMUM_SCALE.p, fieldName: "MAXIMUM_SCALE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEIGHT_REFERENCE.p, fieldName: "HEIGHT_REFERENCE", required: false, type: CZMHeightReference.self)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.INCREMENTALLY_LOAD_TEXTURES.p, fieldName: "INCREMENTALLY_LOAD_TEXTURES", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.RUN_ANIMATIONS.p, fieldName: "RUN_ANIMATIONS", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.SHADOWS.p, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SILHOUETTE_COLOR.p, fieldName: "SILHOUETTE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.SILHOUETTE_SIZE.p, fieldName: "SILHOUETTE_SIZE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.COLOR_BLEND_MODE.p, fieldName: "COLOR_BLEND_MODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLOR_BLEND_AMOUNT.p, fieldName: "COLOR_BLEND_AMOUNT", required: false, type: Double.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.GLTF, fieldName: "GLTF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCALE, fieldName: "SCALE", required: false, type: Double.self)
+    try _v.visit(field: VT.MINIMUM_PIXEL_SIZE, fieldName: "MINIMUM_PIXEL_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_SCALE, fieldName: "MAXIMUM_SCALE", required: false, type: Double.self)
+    try _v.visit(field: VT.HEIGHT_REFERENCE, fieldName: "HEIGHT_REFERENCE", required: false, type: CZMHeightReference.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.INCREMENTALLY_LOAD_TEXTURES, fieldName: "INCREMENTALLY_LOAD_TEXTURES", required: false, type: Bool.self)
+    try _v.visit(field: VT.RUN_ANIMATIONS, fieldName: "RUN_ANIMATIONS", required: false, type: Bool.self)
+    try _v.visit(field: VT.SHADOWS, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SILHOUETTE_COLOR, fieldName: "SILHOUETTE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.SILHOUETTE_SIZE, fieldName: "SILHOUETTE_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VT.COLOR_BLEND_MODE, fieldName: "COLOR_BLEND_MODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLOR_BLEND_AMOUNT, fieldName: "COLOR_BLEND_AMOUNT", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -2575,41 +2515,39 @@ public struct CZMPath: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case LEAD_TIME = 6
-    case TRAIL_TIME = 8
-    case WIDTH = 10
-    case COLOR = 12
-    case RESOLUTION = 14
-    case MATERIAL = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let LEAD_TIME: VOffset = 6
+    static let TRAIL_TIME: VOffset = 8
+    static let WIDTH: VOffset = 10
+    static let COLOR: VOffset = 12
+    static let RESOLUTION: VOffset = 14
+    static let MATERIAL: VOffset = 16
   }
 
   ///  Whether the path is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Trail time in seconds (how far behind)
-  public var LEAD_TIME: Double { let o = _accessor.offset(VTOFFSET.LEAD_TIME.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LEAD_TIME: Double { let o = _accessor.offset(VT.LEAD_TIME); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Lead time in seconds (how far ahead)
-  public var TRAIL_TIME: Double { let o = _accessor.offset(VTOFFSET.TRAIL_TIME.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TRAIL_TIME: Double { let o = _accessor.offset(VT.TRAIL_TIME); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Line width in pixels
-  public var WIDTH: Double { let o = _accessor.offset(VTOFFSET.WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var WIDTH: Double { let o = _accessor.offset(VT.WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Path color (legacy solid color)
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Resolution in seconds
-  public var RESOLUTION: Double { let o = _accessor.offset(VTOFFSET.RESOLUTION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RESOLUTION: Double { let o = _accessor.offset(VT.RESOLUTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Full polyline material
-  public var MATERIAL: CZMPolylineMaterial? { let o = _accessor.offset(VTOFFSET.MATERIAL.v); return o == 0 ? nil : CZMPolylineMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATERIAL: CZMPolylineMaterial? { let o = _accessor.offset(VT.MATERIAL); return o == 0 ? nil : CZMPolylineMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCZMPath(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func add(LEAD_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEAD_TIME, def: 0.0, at: VTOFFSET.LEAD_TIME.p) }
-  public static func add(TRAIL_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAIL_TIME, def: 0.0, at: VTOFFSET.TRAIL_TIME.p) }
-  public static func add(WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIDTH, def: 0.0, at: VTOFFSET.WIDTH.p) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
-  public static func add(RESOLUTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESOLUTION, def: 0.0, at: VTOFFSET.RESOLUTION.p) }
-  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VTOFFSET.MATERIAL.p) }
+   at: VT.SHOW) }
+  public static func add(LEAD_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEAD_TIME, def: 0.0, at: VT.LEAD_TIME) }
+  public static func add(TRAIL_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAIL_TIME, def: 0.0, at: VT.TRAIL_TIME) }
+  public static func add(WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIDTH, def: 0.0, at: VT.WIDTH) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(RESOLUTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESOLUTION, def: 0.0, at: VT.RESOLUTION) }
+  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VT.MATERIAL) }
   public static func endCZMPath(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMPath(
     _ fbb: inout FlatBufferBuilder,
@@ -2634,13 +2572,13 @@ public struct CZMPath: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.LEAD_TIME.p, fieldName: "LEAD_TIME", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TRAIL_TIME.p, fieldName: "TRAIL_TIME", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.WIDTH.p, fieldName: "WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.RESOLUTION.p, fieldName: "RESOLUTION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MATERIAL.p, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMPolylineMaterial>.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.LEAD_TIME, fieldName: "LEAD_TIME", required: false, type: Double.self)
+    try _v.visit(field: VT.TRAIL_TIME, fieldName: "TRAIL_TIME", required: false, type: Double.self)
+    try _v.visit(field: VT.WIDTH, fieldName: "WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.RESOLUTION, fieldName: "RESOLUTION", required: false, type: Double.self)
+    try _v.visit(field: VT.MATERIAL, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMPolylineMaterial>.self)
     _v.finish()
   }
 }
@@ -2657,98 +2595,96 @@ public struct CZMEllipse: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case SEMI_MAJOR_AXIS = 6
-    case SEMI_MINOR_AXIS = 8
-    case ROTATION = 10
-    case FILL = 12
-    case COLOR = 14
-    case OUTLINE = 16
-    case OUTLINE_COLOR = 18
-    case HEIGHT = 20
-    case HEIGHT_REFERENCE = 22
-    case EXTRUDED_HEIGHT = 24
-    case EXTRUDED_HEIGHT_REFERENCE = 26
-    case ST_ROTATION = 28
-    case GRANULARITY = 30
-    case MATERIAL = 32
-    case OUTLINE_WIDTH = 34
-    case NUMBER_OF_VERTICAL_LINES = 36
-    case SHADOWS = 38
-    case CLASSIFICATION_TYPE = 40
-    case Z_INDEX = 42
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let SEMI_MAJOR_AXIS: VOffset = 6
+    static let SEMI_MINOR_AXIS: VOffset = 8
+    static let ROTATION: VOffset = 10
+    static let FILL: VOffset = 12
+    static let COLOR: VOffset = 14
+    static let OUTLINE: VOffset = 16
+    static let OUTLINE_COLOR: VOffset = 18
+    static let HEIGHT: VOffset = 20
+    static let HEIGHT_REFERENCE: VOffset = 22
+    static let EXTRUDED_HEIGHT: VOffset = 24
+    static let EXTRUDED_HEIGHT_REFERENCE: VOffset = 26
+    static let ST_ROTATION: VOffset = 28
+    static let GRANULARITY: VOffset = 30
+    static let MATERIAL: VOffset = 32
+    static let OUTLINE_WIDTH: VOffset = 34
+    static let NUMBER_OF_VERTICAL_LINES: VOffset = 36
+    static let SHADOWS: VOffset = 38
+    static let CLASSIFICATION_TYPE: VOffset = 40
+    static let Z_INDEX: VOffset = 42
   }
 
   ///  Whether the ellipse is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Semi-major axis in meters
-  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VTOFFSET.SEMI_MAJOR_AXIS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VT.SEMI_MAJOR_AXIS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Semi-minor axis in meters
-  public var SEMI_MINOR_AXIS: Double { let o = _accessor.offset(VTOFFSET.SEMI_MINOR_AXIS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEMI_MINOR_AXIS: Double { let o = _accessor.offset(VT.SEMI_MINOR_AXIS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Rotation from north in radians
-  public var ROTATION: Double { let o = _accessor.offset(VTOFFSET.ROTATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ROTATION: Double { let o = _accessor.offset(VT.ROTATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Fill flag
-  public var FILL: Bool { let o = _accessor.offset(VTOFFSET.FILL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FILL: Bool { let o = _accessor.offset(VT.FILL); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Fill color (legacy solid color)
-  public var COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COLOR: CZMColor? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline flag
-  public var OUTLINE: Bool { let o = _accessor.offset(VTOFFSET.OUTLINE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OUTLINE: Bool { let o = _accessor.offset(VT.OUTLINE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Outline color
-  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.OUTLINE_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VT.OUTLINE_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Height in meters
-  public var HEIGHT: Double { let o = _accessor.offset(VTOFFSET.HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HEIGHT: Double { let o = _accessor.offset(VT.HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height reference
-  public var HEIGHT_REFERENCE: CZMHeightReference { let o = _accessor.offset(VTOFFSET.HEIGHT_REFERENCE.v); return o == 0 ? .none_ : CZMHeightReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var HEIGHT_REFERENCE: CZMHeightReference { let o = _accessor.offset(VT.HEIGHT_REFERENCE); return o == 0 ? .none_ : CZMHeightReference(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
   ///  Extruded height in meters
-  public var EXTRUDED_HEIGHT: Double { let o = _accessor.offset(VTOFFSET.EXTRUDED_HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EXTRUDED_HEIGHT: Double { let o = _accessor.offset(VT.EXTRUDED_HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Extruded height reference
-  public var EXTRUDED_HEIGHT_REFERENCE: String? { let o = _accessor.offset(VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EXTRUDED_HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.v) }
+  public var EXTRUDED_HEIGHT_REFERENCE: String? { let o = _accessor.offset(VT.EXTRUDED_HEIGHT_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXTRUDED_HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXTRUDED_HEIGHT_REFERENCE) }
   ///  Texture rotation in radians
-  public var ST_ROTATION: Double { let o = _accessor.offset(VTOFFSET.ST_ROTATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ST_ROTATION: Double { let o = _accessor.offset(VT.ST_ROTATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Granularity in radians
-  public var GRANULARITY: Double { let o = _accessor.offset(VTOFFSET.GRANULARITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GRANULARITY: Double { let o = _accessor.offset(VT.GRANULARITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Full surface material
-  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VTOFFSET.MATERIAL.v); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VT.MATERIAL); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline width in pixels
-  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VTOFFSET.OUTLINE_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VT.OUTLINE_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of vertical lines
-  public var NUMBER_OF_VERTICAL_LINES: Int32 { let o = _accessor.offset(VTOFFSET.NUMBER_OF_VERTICAL_LINES.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var NUMBER_OF_VERTICAL_LINES: Int32 { let o = _accessor.offset(VT.NUMBER_OF_VERTICAL_LINES); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Shadow mode
-  public var SHADOWS: String? { let o = _accessor.offset(VTOFFSET.SHADOWS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADOWS.v) }
+  public var SHADOWS: String? { let o = _accessor.offset(VT.SHADOWS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADOWS) }
   ///  Classification type
-  public var CLASSIFICATION_TYPE: String? { let o = _accessor.offset(VTOFFSET.CLASSIFICATION_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CLASSIFICATION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLASSIFICATION_TYPE.v) }
+  public var CLASSIFICATION_TYPE: String? { let o = _accessor.offset(VT.CLASSIFICATION_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION_TYPE) }
   ///  Z-index for ordering
-  public var Z_INDEX: Int32 { let o = _accessor.offset(VTOFFSET.Z_INDEX.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var Z_INDEX: Int32 { let o = _accessor.offset(VT.Z_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startCZMEllipse(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VTOFFSET.SEMI_MAJOR_AXIS.p) }
-  public static func add(SEMI_MINOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MINOR_AXIS, def: 0.0, at: VTOFFSET.SEMI_MINOR_AXIS.p) }
-  public static func add(ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION, def: 0.0, at: VTOFFSET.ROTATION.p) }
+   at: VT.SHOW) }
+  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VT.SEMI_MAJOR_AXIS) }
+  public static func add(SEMI_MINOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MINOR_AXIS, def: 0.0, at: VT.SEMI_MINOR_AXIS) }
+  public static func add(ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION, def: 0.0, at: VT.ROTATION) }
   public static func add(FILL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILL, def: false,
-   at: VTOFFSET.FILL.p) }
-  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VTOFFSET.COLOR.p) }
+   at: VT.FILL) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
   public static func add(OUTLINE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE, def: false,
-   at: VTOFFSET.OUTLINE.p) }
-  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VTOFFSET.OUTLINE_COLOR.p) }
-  public static func add(HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT, def: 0.0, at: VTOFFSET.HEIGHT.p) }
-  public static func add(HEIGHT_REFERENCE: CZMHeightReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_REFERENCE.rawValue, def: 0, at: VTOFFSET.HEIGHT_REFERENCE.p) }
-  public static func add(EXTRUDED_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDED_HEIGHT, def: 0.0, at: VTOFFSET.EXTRUDED_HEIGHT.p) }
-  public static func add(EXTRUDED_HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTRUDED_HEIGHT_REFERENCE, at: VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.p) }
-  public static func add(ST_ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ST_ROTATION, def: 0.0, at: VTOFFSET.ST_ROTATION.p) }
-  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VTOFFSET.GRANULARITY.p) }
-  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VTOFFSET.MATERIAL.p) }
-  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VTOFFSET.OUTLINE_WIDTH.p) }
-  public static func add(NUMBER_OF_VERTICAL_LINES: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUMBER_OF_VERTICAL_LINES, def: 0, at: VTOFFSET.NUMBER_OF_VERTICAL_LINES.p) }
-  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VTOFFSET.SHADOWS.p) }
-  public static func add(CLASSIFICATION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION_TYPE, at: VTOFFSET.CLASSIFICATION_TYPE.p) }
-  public static func add(Z_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_INDEX, def: 0, at: VTOFFSET.Z_INDEX.p) }
+   at: VT.OUTLINE) }
+  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VT.OUTLINE_COLOR) }
+  public static func add(HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT, def: 0.0, at: VT.HEIGHT) }
+  public static func add(HEIGHT_REFERENCE: CZMHeightReference, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT_REFERENCE.rawValue, def: 0, at: VT.HEIGHT_REFERENCE) }
+  public static func add(EXTRUDED_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDED_HEIGHT, def: 0.0, at: VT.EXTRUDED_HEIGHT) }
+  public static func add(EXTRUDED_HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTRUDED_HEIGHT_REFERENCE, at: VT.EXTRUDED_HEIGHT_REFERENCE) }
+  public static func add(ST_ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ST_ROTATION, def: 0.0, at: VT.ST_ROTATION) }
+  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VT.GRANULARITY) }
+  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VT.MATERIAL) }
+  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VT.OUTLINE_WIDTH) }
+  public static func add(NUMBER_OF_VERTICAL_LINES: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUMBER_OF_VERTICAL_LINES, def: 0, at: VT.NUMBER_OF_VERTICAL_LINES) }
+  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VT.SHADOWS) }
+  public static func add(CLASSIFICATION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION_TYPE, at: VT.CLASSIFICATION_TYPE) }
+  public static func add(Z_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_INDEX, def: 0, at: VT.Z_INDEX) }
   public static func endCZMEllipse(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMEllipse(
     _ fbb: inout FlatBufferBuilder,
@@ -2799,26 +2735,26 @@ public struct CZMEllipse: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.SEMI_MAJOR_AXIS.p, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SEMI_MINOR_AXIS.p, fieldName: "SEMI_MINOR_AXIS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ROTATION.p, fieldName: "ROTATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FILL.p, fieldName: "FILL", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE.p, fieldName: "OUTLINE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_COLOR.p, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.HEIGHT.p, fieldName: "HEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEIGHT_REFERENCE.p, fieldName: "HEIGHT_REFERENCE", required: false, type: CZMHeightReference.self)
-    try _v.visit(field: VTOFFSET.EXTRUDED_HEIGHT.p, fieldName: "EXTRUDED_HEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.p, fieldName: "EXTRUDED_HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ST_ROTATION.p, fieldName: "ST_ROTATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.GRANULARITY.p, fieldName: "GRANULARITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MATERIAL.p, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_WIDTH.p, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NUMBER_OF_VERTICAL_LINES.p, fieldName: "NUMBER_OF_VERTICAL_LINES", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.SHADOWS.p, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CLASSIFICATION_TYPE.p, fieldName: "CLASSIFICATION_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.Z_INDEX.p, fieldName: "Z_INDEX", required: false, type: Int32.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.SEMI_MAJOR_AXIS, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
+    try _v.visit(field: VT.SEMI_MINOR_AXIS, fieldName: "SEMI_MINOR_AXIS", required: false, type: Double.self)
+    try _v.visit(field: VT.ROTATION, fieldName: "ROTATION", required: false, type: Double.self)
+    try _v.visit(field: VT.FILL, fieldName: "FILL", required: false, type: Bool.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE, fieldName: "OUTLINE", required: false, type: Bool.self)
+    try _v.visit(field: VT.OUTLINE_COLOR, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.HEIGHT, fieldName: "HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.HEIGHT_REFERENCE, fieldName: "HEIGHT_REFERENCE", required: false, type: CZMHeightReference.self)
+    try _v.visit(field: VT.EXTRUDED_HEIGHT, fieldName: "EXTRUDED_HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.EXTRUDED_HEIGHT_REFERENCE, fieldName: "EXTRUDED_HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ST_ROTATION, fieldName: "ST_ROTATION", required: false, type: Double.self)
+    try _v.visit(field: VT.GRANULARITY, fieldName: "GRANULARITY", required: false, type: Double.self)
+    try _v.visit(field: VT.MATERIAL, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
+    try _v.visit(field: VT.OUTLINE_WIDTH, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.NUMBER_OF_VERTICAL_LINES, fieldName: "NUMBER_OF_VERTICAL_LINES", required: false, type: Int32.self)
+    try _v.visit(field: VT.SHADOWS, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLASSIFICATION_TYPE, fieldName: "CLASSIFICATION_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.Z_INDEX, fieldName: "Z_INDEX", required: false, type: Int32.self)
     _v.finish()
   }
 }
@@ -2835,69 +2771,67 @@ public struct CZMBox: FlatBufferTable, FlatbuffersVectorInitializable, Verifiabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case DIMENSIONS_X = 6
-    case DIMENSIONS_Y = 8
-    case DIMENSIONS_Z = 10
-    case HEIGHT_REFERENCE = 12
-    case FILL = 14
-    case MATERIAL = 16
-    case OUTLINE = 18
-    case OUTLINE_COLOR = 20
-    case OUTLINE_WIDTH = 22
-    case SHADOWS = 24
-    case DISTANCE_DISPLAY_CONDITION_NEAR = 26
-    case DISTANCE_DISPLAY_CONDITION_FAR = 28
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let DIMENSIONS_X: VOffset = 6
+    static let DIMENSIONS_Y: VOffset = 8
+    static let DIMENSIONS_Z: VOffset = 10
+    static let HEIGHT_REFERENCE: VOffset = 12
+    static let FILL: VOffset = 14
+    static let MATERIAL: VOffset = 16
+    static let OUTLINE: VOffset = 18
+    static let OUTLINE_COLOR: VOffset = 20
+    static let OUTLINE_WIDTH: VOffset = 22
+    static let SHADOWS: VOffset = 24
+    static let DISTANCE_DISPLAY_CONDITION_NEAR: VOffset = 26
+    static let DISTANCE_DISPLAY_CONDITION_FAR: VOffset = 28
   }
 
   ///  Whether the box is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Width (X) in meters
-  public var DIMENSIONS_X: Double { let o = _accessor.offset(VTOFFSET.DIMENSIONS_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DIMENSIONS_X: Double { let o = _accessor.offset(VT.DIMENSIONS_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Depth (Y) in meters
-  public var DIMENSIONS_Y: Double { let o = _accessor.offset(VTOFFSET.DIMENSIONS_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DIMENSIONS_Y: Double { let o = _accessor.offset(VT.DIMENSIONS_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height (Z) in meters
-  public var DIMENSIONS_Z: Double { let o = _accessor.offset(VTOFFSET.DIMENSIONS_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DIMENSIONS_Z: Double { let o = _accessor.offset(VT.DIMENSIONS_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height reference
-  public var HEIGHT_REFERENCE: String? { let o = _accessor.offset(VTOFFSET.HEIGHT_REFERENCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HEIGHT_REFERENCE.v) }
+  public var HEIGHT_REFERENCE: String? { let o = _accessor.offset(VT.HEIGHT_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HEIGHT_REFERENCE) }
   ///  Fill flag
-  public var FILL: Bool { let o = _accessor.offset(VTOFFSET.FILL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FILL: Bool { let o = _accessor.offset(VT.FILL); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Surface material
-  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VTOFFSET.MATERIAL.v); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VT.MATERIAL); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline flag
-  public var OUTLINE: Bool { let o = _accessor.offset(VTOFFSET.OUTLINE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OUTLINE: Bool { let o = _accessor.offset(VT.OUTLINE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Outline color
-  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.OUTLINE_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VT.OUTLINE_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline width
-  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VTOFFSET.OUTLINE_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VT.OUTLINE_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Shadow mode
-  public var SHADOWS: String? { let o = _accessor.offset(VTOFFSET.SHADOWS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADOWS.v) }
+  public var SHADOWS: String? { let o = _accessor.offset(VT.SHADOWS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADOWS) }
   ///  Distance display condition near
-  public var DISTANCE_DISPLAY_CONDITION_NEAR: Double { let o = _accessor.offset(VTOFFSET.DISTANCE_DISPLAY_CONDITION_NEAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DISTANCE_DISPLAY_CONDITION_NEAR: Double { let o = _accessor.offset(VT.DISTANCE_DISPLAY_CONDITION_NEAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Distance display condition far
-  public var DISTANCE_DISPLAY_CONDITION_FAR: Double { let o = _accessor.offset(VTOFFSET.DISTANCE_DISPLAY_CONDITION_FAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DISTANCE_DISPLAY_CONDITION_FAR: Double { let o = _accessor.offset(VT.DISTANCE_DISPLAY_CONDITION_FAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMBox(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func add(DIMENSIONS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIMENSIONS_X, def: 0.0, at: VTOFFSET.DIMENSIONS_X.p) }
-  public static func add(DIMENSIONS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIMENSIONS_Y, def: 0.0, at: VTOFFSET.DIMENSIONS_Y.p) }
-  public static func add(DIMENSIONS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIMENSIONS_Z, def: 0.0, at: VTOFFSET.DIMENSIONS_Z.p) }
-  public static func add(HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEIGHT_REFERENCE, at: VTOFFSET.HEIGHT_REFERENCE.p) }
+   at: VT.SHOW) }
+  public static func add(DIMENSIONS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIMENSIONS_X, def: 0.0, at: VT.DIMENSIONS_X) }
+  public static func add(DIMENSIONS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIMENSIONS_Y, def: 0.0, at: VT.DIMENSIONS_Y) }
+  public static func add(DIMENSIONS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIMENSIONS_Z, def: 0.0, at: VT.DIMENSIONS_Z) }
+  public static func add(HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEIGHT_REFERENCE, at: VT.HEIGHT_REFERENCE) }
   public static func add(FILL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILL, def: false,
-   at: VTOFFSET.FILL.p) }
-  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VTOFFSET.MATERIAL.p) }
+   at: VT.FILL) }
+  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VT.MATERIAL) }
   public static func add(OUTLINE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE, def: false,
-   at: VTOFFSET.OUTLINE.p) }
-  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VTOFFSET.OUTLINE_COLOR.p) }
-  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VTOFFSET.OUTLINE_WIDTH.p) }
-  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VTOFFSET.SHADOWS.p) }
-  public static func add(DISTANCE_DISPLAY_CONDITION_NEAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_NEAR, def: 0.0, at: VTOFFSET.DISTANCE_DISPLAY_CONDITION_NEAR.p) }
-  public static func add(DISTANCE_DISPLAY_CONDITION_FAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_FAR, def: 0.0, at: VTOFFSET.DISTANCE_DISPLAY_CONDITION_FAR.p) }
+   at: VT.OUTLINE) }
+  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VT.OUTLINE_COLOR) }
+  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VT.OUTLINE_WIDTH) }
+  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VT.SHADOWS) }
+  public static func add(DISTANCE_DISPLAY_CONDITION_NEAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_NEAR, def: 0.0, at: VT.DISTANCE_DISPLAY_CONDITION_NEAR) }
+  public static func add(DISTANCE_DISPLAY_CONDITION_FAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_DISPLAY_CONDITION_FAR, def: 0.0, at: VT.DISTANCE_DISPLAY_CONDITION_FAR) }
   public static func endCZMBox(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMBox(
     _ fbb: inout FlatBufferBuilder,
@@ -2934,19 +2868,19 @@ public struct CZMBox: FlatBufferTable, FlatbuffersVectorInitializable, Verifiabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.DIMENSIONS_X.p, fieldName: "DIMENSIONS_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DIMENSIONS_Y.p, fieldName: "DIMENSIONS_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DIMENSIONS_Z.p, fieldName: "DIMENSIONS_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEIGHT_REFERENCE.p, fieldName: "HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FILL.p, fieldName: "FILL", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.MATERIAL.p, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE.p, fieldName: "OUTLINE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_COLOR.p, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_WIDTH.p, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SHADOWS.p, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DISTANCE_DISPLAY_CONDITION_NEAR.p, fieldName: "DISTANCE_DISPLAY_CONDITION_NEAR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DISTANCE_DISPLAY_CONDITION_FAR.p, fieldName: "DISTANCE_DISPLAY_CONDITION_FAR", required: false, type: Double.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.DIMENSIONS_X, fieldName: "DIMENSIONS_X", required: false, type: Double.self)
+    try _v.visit(field: VT.DIMENSIONS_Y, fieldName: "DIMENSIONS_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.DIMENSIONS_Z, fieldName: "DIMENSIONS_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.HEIGHT_REFERENCE, fieldName: "HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILL, fieldName: "FILL", required: false, type: Bool.self)
+    try _v.visit(field: VT.MATERIAL, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
+    try _v.visit(field: VT.OUTLINE, fieldName: "OUTLINE", required: false, type: Bool.self)
+    try _v.visit(field: VT.OUTLINE_COLOR, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE_WIDTH, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.SHADOWS, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DISTANCE_DISPLAY_CONDITION_NEAR, fieldName: "DISTANCE_DISPLAY_CONDITION_NEAR", required: false, type: Double.self)
+    try _v.visit(field: VT.DISTANCE_DISPLAY_CONDITION_FAR, fieldName: "DISTANCE_DISPLAY_CONDITION_FAR", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -2963,94 +2897,92 @@ public struct CZMCorridor: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case POSITIONS_CARTOGRAPHIC_DEGREES = 6
-    case POSITIONS_CARTESIAN = 8
-    case WIDTH = 10
-    case HEIGHT = 12
-    case HEIGHT_REFERENCE = 14
-    case EXTRUDED_HEIGHT = 16
-    case EXTRUDED_HEIGHT_REFERENCE = 18
-    case CORNER_TYPE = 20
-    case GRANULARITY = 22
-    case FILL = 24
-    case MATERIAL = 26
-    case OUTLINE = 28
-    case OUTLINE_COLOR = 30
-    case OUTLINE_WIDTH = 32
-    case SHADOWS = 34
-    case CLASSIFICATION_TYPE = 36
-    case Z_INDEX = 38
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let POSITIONS_CARTOGRAPHIC_DEGREES: VOffset = 6
+    static let POSITIONS_CARTESIAN: VOffset = 8
+    static let WIDTH: VOffset = 10
+    static let HEIGHT: VOffset = 12
+    static let HEIGHT_REFERENCE: VOffset = 14
+    static let EXTRUDED_HEIGHT: VOffset = 16
+    static let EXTRUDED_HEIGHT_REFERENCE: VOffset = 18
+    static let CORNER_TYPE: VOffset = 20
+    static let GRANULARITY: VOffset = 22
+    static let FILL: VOffset = 24
+    static let MATERIAL: VOffset = 26
+    static let OUTLINE: VOffset = 28
+    static let OUTLINE_COLOR: VOffset = 30
+    static let OUTLINE_WIDTH: VOffset = 32
+    static let SHADOWS: VOffset = 34
+    static let CLASSIFICATION_TYPE: VOffset = 36
+    static let Z_INDEX: VOffset = 38
   }
 
   ///  Whether the corridor is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Positions as cartographic degrees
-  public var POSITIONS_CARTOGRAPHIC_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.v, byteSize: 8) }
-  public func withUnsafePointerToPositionsCartographicDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.v, body: body) }
+  public var POSITIONS_CARTOGRAPHIC_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITIONS_CARTOGRAPHIC_DEGREES, byteSize: 8) }
+  public func withUnsafePointerToPositionsCartographicDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITIONS_CARTOGRAPHIC_DEGREES, body: body) }
   ///  Positions as Cartesian
-  public var POSITIONS_CARTESIAN: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITIONS_CARTESIAN.v, byteSize: 8) }
-  public func withUnsafePointerToPositionsCartesian<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITIONS_CARTESIAN.v, body: body) }
+  public var POSITIONS_CARTESIAN: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITIONS_CARTESIAN, byteSize: 8) }
+  public func withUnsafePointerToPositionsCartesian<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITIONS_CARTESIAN, body: body) }
   ///  Width in meters
-  public var WIDTH: Double { let o = _accessor.offset(VTOFFSET.WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var WIDTH: Double { let o = _accessor.offset(VT.WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height in meters
-  public var HEIGHT: Double { let o = _accessor.offset(VTOFFSET.HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HEIGHT: Double { let o = _accessor.offset(VT.HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height reference
-  public var HEIGHT_REFERENCE: String? { let o = _accessor.offset(VTOFFSET.HEIGHT_REFERENCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HEIGHT_REFERENCE.v) }
+  public var HEIGHT_REFERENCE: String? { let o = _accessor.offset(VT.HEIGHT_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HEIGHT_REFERENCE) }
   ///  Extruded height
-  public var EXTRUDED_HEIGHT: Double { let o = _accessor.offset(VTOFFSET.EXTRUDED_HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EXTRUDED_HEIGHT: Double { let o = _accessor.offset(VT.EXTRUDED_HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Extruded height reference
-  public var EXTRUDED_HEIGHT_REFERENCE: String? { let o = _accessor.offset(VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EXTRUDED_HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.v) }
+  public var EXTRUDED_HEIGHT_REFERENCE: String? { let o = _accessor.offset(VT.EXTRUDED_HEIGHT_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXTRUDED_HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXTRUDED_HEIGHT_REFERENCE) }
   ///  Corner type
-  public var CORNER_TYPE: String? { let o = _accessor.offset(VTOFFSET.CORNER_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CORNER_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CORNER_TYPE.v) }
+  public var CORNER_TYPE: String? { let o = _accessor.offset(VT.CORNER_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CORNER_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CORNER_TYPE) }
   ///  Granularity in radians
-  public var GRANULARITY: Double { let o = _accessor.offset(VTOFFSET.GRANULARITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GRANULARITY: Double { let o = _accessor.offset(VT.GRANULARITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Fill flag
-  public var FILL: Bool { let o = _accessor.offset(VTOFFSET.FILL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FILL: Bool { let o = _accessor.offset(VT.FILL); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Surface material
-  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VTOFFSET.MATERIAL.v); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VT.MATERIAL); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline flag
-  public var OUTLINE: Bool { let o = _accessor.offset(VTOFFSET.OUTLINE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OUTLINE: Bool { let o = _accessor.offset(VT.OUTLINE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Outline color
-  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.OUTLINE_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VT.OUTLINE_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline width
-  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VTOFFSET.OUTLINE_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VT.OUTLINE_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Shadow mode
-  public var SHADOWS: String? { let o = _accessor.offset(VTOFFSET.SHADOWS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADOWS.v) }
+  public var SHADOWS: String? { let o = _accessor.offset(VT.SHADOWS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADOWS) }
   ///  Classification type
-  public var CLASSIFICATION_TYPE: String? { let o = _accessor.offset(VTOFFSET.CLASSIFICATION_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CLASSIFICATION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLASSIFICATION_TYPE.v) }
+  public var CLASSIFICATION_TYPE: String? { let o = _accessor.offset(VT.CLASSIFICATION_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION_TYPE) }
   ///  Z-index for ordering
-  public var Z_INDEX: Int32 { let o = _accessor.offset(VTOFFSET.Z_INDEX.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var Z_INDEX: Int32 { let o = _accessor.offset(VT.Z_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startCZMCorridor(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func addVectorOf(POSITIONS_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTOGRAPHIC_DEGREES, at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.p) }
-  public static func addVectorOf(POSITIONS_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTESIAN, at: VTOFFSET.POSITIONS_CARTESIAN.p) }
-  public static func add(WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIDTH, def: 0.0, at: VTOFFSET.WIDTH.p) }
-  public static func add(HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT, def: 0.0, at: VTOFFSET.HEIGHT.p) }
-  public static func add(HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEIGHT_REFERENCE, at: VTOFFSET.HEIGHT_REFERENCE.p) }
-  public static func add(EXTRUDED_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDED_HEIGHT, def: 0.0, at: VTOFFSET.EXTRUDED_HEIGHT.p) }
-  public static func add(EXTRUDED_HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTRUDED_HEIGHT_REFERENCE, at: VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.p) }
-  public static func add(CORNER_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CORNER_TYPE, at: VTOFFSET.CORNER_TYPE.p) }
-  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VTOFFSET.GRANULARITY.p) }
+   at: VT.SHOW) }
+  public static func addVectorOf(POSITIONS_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTOGRAPHIC_DEGREES, at: VT.POSITIONS_CARTOGRAPHIC_DEGREES) }
+  public static func addVectorOf(POSITIONS_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTESIAN, at: VT.POSITIONS_CARTESIAN) }
+  public static func add(WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIDTH, def: 0.0, at: VT.WIDTH) }
+  public static func add(HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT, def: 0.0, at: VT.HEIGHT) }
+  public static func add(HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEIGHT_REFERENCE, at: VT.HEIGHT_REFERENCE) }
+  public static func add(EXTRUDED_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDED_HEIGHT, def: 0.0, at: VT.EXTRUDED_HEIGHT) }
+  public static func add(EXTRUDED_HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTRUDED_HEIGHT_REFERENCE, at: VT.EXTRUDED_HEIGHT_REFERENCE) }
+  public static func add(CORNER_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CORNER_TYPE, at: VT.CORNER_TYPE) }
+  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VT.GRANULARITY) }
   public static func add(FILL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILL, def: false,
-   at: VTOFFSET.FILL.p) }
-  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VTOFFSET.MATERIAL.p) }
+   at: VT.FILL) }
+  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VT.MATERIAL) }
   public static func add(OUTLINE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE, def: false,
-   at: VTOFFSET.OUTLINE.p) }
-  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VTOFFSET.OUTLINE_COLOR.p) }
-  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VTOFFSET.OUTLINE_WIDTH.p) }
-  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VTOFFSET.SHADOWS.p) }
-  public static func add(CLASSIFICATION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION_TYPE, at: VTOFFSET.CLASSIFICATION_TYPE.p) }
-  public static func add(Z_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_INDEX, def: 0, at: VTOFFSET.Z_INDEX.p) }
+   at: VT.OUTLINE) }
+  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VT.OUTLINE_COLOR) }
+  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VT.OUTLINE_WIDTH) }
+  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VT.SHADOWS) }
+  public static func add(CLASSIFICATION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION_TYPE, at: VT.CLASSIFICATION_TYPE) }
+  public static func add(Z_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_INDEX, def: 0, at: VT.Z_INDEX) }
   public static func endCZMCorridor(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMCorridor(
     _ fbb: inout FlatBufferBuilder,
@@ -3097,24 +3029,24 @@ public struct CZMCorridor: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.p, fieldName: "POSITIONS_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.POSITIONS_CARTESIAN.p, fieldName: "POSITIONS_CARTESIAN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.WIDTH.p, fieldName: "WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEIGHT.p, fieldName: "HEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEIGHT_REFERENCE.p, fieldName: "HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EXTRUDED_HEIGHT.p, fieldName: "EXTRUDED_HEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.p, fieldName: "EXTRUDED_HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CORNER_TYPE.p, fieldName: "CORNER_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GRANULARITY.p, fieldName: "GRANULARITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FILL.p, fieldName: "FILL", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.MATERIAL.p, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE.p, fieldName: "OUTLINE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_COLOR.p, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_WIDTH.p, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SHADOWS.p, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CLASSIFICATION_TYPE.p, fieldName: "CLASSIFICATION_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.Z_INDEX.p, fieldName: "Z_INDEX", required: false, type: Int32.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.POSITIONS_CARTOGRAPHIC_DEGREES, fieldName: "POSITIONS_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.POSITIONS_CARTESIAN, fieldName: "POSITIONS_CARTESIAN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.WIDTH, fieldName: "WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.HEIGHT, fieldName: "HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.HEIGHT_REFERENCE, fieldName: "HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXTRUDED_HEIGHT, fieldName: "EXTRUDED_HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.EXTRUDED_HEIGHT_REFERENCE, fieldName: "EXTRUDED_HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CORNER_TYPE, fieldName: "CORNER_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GRANULARITY, fieldName: "GRANULARITY", required: false, type: Double.self)
+    try _v.visit(field: VT.FILL, fieldName: "FILL", required: false, type: Bool.self)
+    try _v.visit(field: VT.MATERIAL, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
+    try _v.visit(field: VT.OUTLINE, fieldName: "OUTLINE", required: false, type: Bool.self)
+    try _v.visit(field: VT.OUTLINE_COLOR, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE_WIDTH, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.SHADOWS, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLASSIFICATION_TYPE, fieldName: "CLASSIFICATION_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.Z_INDEX, fieldName: "Z_INDEX", required: false, type: Int32.self)
     _v.finish()
   }
 }
@@ -3131,69 +3063,67 @@ public struct CZMCylinder: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case LENGTH = 6
-    case TOP_RADIUS = 8
-    case BOTTOM_RADIUS = 10
-    case HEIGHT_REFERENCE = 12
-    case FILL = 14
-    case MATERIAL = 16
-    case OUTLINE = 18
-    case OUTLINE_COLOR = 20
-    case OUTLINE_WIDTH = 22
-    case NUMBER_OF_VERTICAL_LINES = 24
-    case SLICES = 26
-    case SHADOWS = 28
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let LENGTH: VOffset = 6
+    static let TOP_RADIUS: VOffset = 8
+    static let BOTTOM_RADIUS: VOffset = 10
+    static let HEIGHT_REFERENCE: VOffset = 12
+    static let FILL: VOffset = 14
+    static let MATERIAL: VOffset = 16
+    static let OUTLINE: VOffset = 18
+    static let OUTLINE_COLOR: VOffset = 20
+    static let OUTLINE_WIDTH: VOffset = 22
+    static let NUMBER_OF_VERTICAL_LINES: VOffset = 24
+    static let SLICES: VOffset = 26
+    static let SHADOWS: VOffset = 28
   }
 
   ///  Whether the cylinder is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Length in meters
-  public var LENGTH: Double { let o = _accessor.offset(VTOFFSET.LENGTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LENGTH: Double { let o = _accessor.offset(VT.LENGTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Top radius in meters
-  public var TOP_RADIUS: Double { let o = _accessor.offset(VTOFFSET.TOP_RADIUS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TOP_RADIUS: Double { let o = _accessor.offset(VT.TOP_RADIUS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Bottom radius in meters
-  public var BOTTOM_RADIUS: Double { let o = _accessor.offset(VTOFFSET.BOTTOM_RADIUS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BOTTOM_RADIUS: Double { let o = _accessor.offset(VT.BOTTOM_RADIUS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height reference
-  public var HEIGHT_REFERENCE: String? { let o = _accessor.offset(VTOFFSET.HEIGHT_REFERENCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HEIGHT_REFERENCE.v) }
+  public var HEIGHT_REFERENCE: String? { let o = _accessor.offset(VT.HEIGHT_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HEIGHT_REFERENCE) }
   ///  Fill flag
-  public var FILL: Bool { let o = _accessor.offset(VTOFFSET.FILL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FILL: Bool { let o = _accessor.offset(VT.FILL); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Surface material
-  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VTOFFSET.MATERIAL.v); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VT.MATERIAL); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline flag
-  public var OUTLINE: Bool { let o = _accessor.offset(VTOFFSET.OUTLINE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OUTLINE: Bool { let o = _accessor.offset(VT.OUTLINE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Outline color
-  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.OUTLINE_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VT.OUTLINE_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline width
-  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VTOFFSET.OUTLINE_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VT.OUTLINE_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of vertical lines
-  public var NUMBER_OF_VERTICAL_LINES: Int32 { let o = _accessor.offset(VTOFFSET.NUMBER_OF_VERTICAL_LINES.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var NUMBER_OF_VERTICAL_LINES: Int32 { let o = _accessor.offset(VT.NUMBER_OF_VERTICAL_LINES); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Number of slices
-  public var SLICES: Int32 { let o = _accessor.offset(VTOFFSET.SLICES.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var SLICES: Int32 { let o = _accessor.offset(VT.SLICES); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Shadow mode
-  public var SHADOWS: String? { let o = _accessor.offset(VTOFFSET.SHADOWS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADOWS.v) }
+  public var SHADOWS: String? { let o = _accessor.offset(VT.SHADOWS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADOWS) }
   public static func startCZMCylinder(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func add(LENGTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LENGTH, def: 0.0, at: VTOFFSET.LENGTH.p) }
-  public static func add(TOP_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOP_RADIUS, def: 0.0, at: VTOFFSET.TOP_RADIUS.p) }
-  public static func add(BOTTOM_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOTTOM_RADIUS, def: 0.0, at: VTOFFSET.BOTTOM_RADIUS.p) }
-  public static func add(HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEIGHT_REFERENCE, at: VTOFFSET.HEIGHT_REFERENCE.p) }
+   at: VT.SHOW) }
+  public static func add(LENGTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LENGTH, def: 0.0, at: VT.LENGTH) }
+  public static func add(TOP_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOP_RADIUS, def: 0.0, at: VT.TOP_RADIUS) }
+  public static func add(BOTTOM_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOTTOM_RADIUS, def: 0.0, at: VT.BOTTOM_RADIUS) }
+  public static func add(HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEIGHT_REFERENCE, at: VT.HEIGHT_REFERENCE) }
   public static func add(FILL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILL, def: false,
-   at: VTOFFSET.FILL.p) }
-  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VTOFFSET.MATERIAL.p) }
+   at: VT.FILL) }
+  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VT.MATERIAL) }
   public static func add(OUTLINE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE, def: false,
-   at: VTOFFSET.OUTLINE.p) }
-  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VTOFFSET.OUTLINE_COLOR.p) }
-  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VTOFFSET.OUTLINE_WIDTH.p) }
-  public static func add(NUMBER_OF_VERTICAL_LINES: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUMBER_OF_VERTICAL_LINES, def: 0, at: VTOFFSET.NUMBER_OF_VERTICAL_LINES.p) }
-  public static func add(SLICES: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SLICES, def: 0, at: VTOFFSET.SLICES.p) }
-  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VTOFFSET.SHADOWS.p) }
+   at: VT.OUTLINE) }
+  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VT.OUTLINE_COLOR) }
+  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VT.OUTLINE_WIDTH) }
+  public static func add(NUMBER_OF_VERTICAL_LINES: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUMBER_OF_VERTICAL_LINES, def: 0, at: VT.NUMBER_OF_VERTICAL_LINES) }
+  public static func add(SLICES: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SLICES, def: 0, at: VT.SLICES) }
+  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VT.SHADOWS) }
   public static func endCZMCylinder(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMCylinder(
     _ fbb: inout FlatBufferBuilder,
@@ -3230,19 +3160,19 @@ public struct CZMCylinder: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.LENGTH.p, fieldName: "LENGTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TOP_RADIUS.p, fieldName: "TOP_RADIUS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BOTTOM_RADIUS.p, fieldName: "BOTTOM_RADIUS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEIGHT_REFERENCE.p, fieldName: "HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FILL.p, fieldName: "FILL", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.MATERIAL.p, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE.p, fieldName: "OUTLINE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_COLOR.p, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_WIDTH.p, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NUMBER_OF_VERTICAL_LINES.p, fieldName: "NUMBER_OF_VERTICAL_LINES", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.SLICES.p, fieldName: "SLICES", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.SHADOWS.p, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.LENGTH, fieldName: "LENGTH", required: false, type: Double.self)
+    try _v.visit(field: VT.TOP_RADIUS, fieldName: "TOP_RADIUS", required: false, type: Double.self)
+    try _v.visit(field: VT.BOTTOM_RADIUS, fieldName: "BOTTOM_RADIUS", required: false, type: Double.self)
+    try _v.visit(field: VT.HEIGHT_REFERENCE, fieldName: "HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILL, fieldName: "FILL", required: false, type: Bool.self)
+    try _v.visit(field: VT.MATERIAL, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
+    try _v.visit(field: VT.OUTLINE, fieldName: "OUTLINE", required: false, type: Bool.self)
+    try _v.visit(field: VT.OUTLINE_COLOR, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE_WIDTH, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.NUMBER_OF_VERTICAL_LINES, fieldName: "NUMBER_OF_VERTICAL_LINES", required: false, type: Int32.self)
+    try _v.visit(field: VT.SLICES, fieldName: "SLICES", required: false, type: Int32.self)
+    try _v.visit(field: VT.SHADOWS, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -3259,101 +3189,99 @@ public struct CZMEllipsoid: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case RADII_X = 6
-    case RADII_Y = 8
-    case RADII_Z = 10
-    case INNER_RADII_X = 12
-    case INNER_RADII_Y = 14
-    case INNER_RADII_Z = 16
-    case MINIMUM_CLOCK = 18
-    case MAXIMUM_CLOCK = 20
-    case MINIMUM_CONE = 22
-    case MAXIMUM_CONE = 24
-    case HEIGHT_REFERENCE = 26
-    case FILL = 28
-    case MATERIAL = 30
-    case OUTLINE = 32
-    case OUTLINE_COLOR = 34
-    case OUTLINE_WIDTH = 36
-    case STACK_PARTITIONS = 38
-    case SLICE_PARTITIONS = 40
-    case SUBDIVISIONS = 42
-    case SHADOWS = 44
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let RADII_X: VOffset = 6
+    static let RADII_Y: VOffset = 8
+    static let RADII_Z: VOffset = 10
+    static let INNER_RADII_X: VOffset = 12
+    static let INNER_RADII_Y: VOffset = 14
+    static let INNER_RADII_Z: VOffset = 16
+    static let MINIMUM_CLOCK: VOffset = 18
+    static let MAXIMUM_CLOCK: VOffset = 20
+    static let MINIMUM_CONE: VOffset = 22
+    static let MAXIMUM_CONE: VOffset = 24
+    static let HEIGHT_REFERENCE: VOffset = 26
+    static let FILL: VOffset = 28
+    static let MATERIAL: VOffset = 30
+    static let OUTLINE: VOffset = 32
+    static let OUTLINE_COLOR: VOffset = 34
+    static let OUTLINE_WIDTH: VOffset = 36
+    static let STACK_PARTITIONS: VOffset = 38
+    static let SLICE_PARTITIONS: VOffset = 40
+    static let SUBDIVISIONS: VOffset = 42
+    static let SHADOWS: VOffset = 44
   }
 
   ///  Whether the ellipsoid is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  X radius in meters
-  public var RADII_X: Double { let o = _accessor.offset(VTOFFSET.RADII_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RADII_X: Double { let o = _accessor.offset(VT.RADII_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Y radius in meters
-  public var RADII_Y: Double { let o = _accessor.offset(VTOFFSET.RADII_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RADII_Y: Double { let o = _accessor.offset(VT.RADII_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Z radius in meters
-  public var RADII_Z: Double { let o = _accessor.offset(VTOFFSET.RADII_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RADII_Z: Double { let o = _accessor.offset(VT.RADII_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Inner X radius
-  public var INNER_RADII_X: Double { let o = _accessor.offset(VTOFFSET.INNER_RADII_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INNER_RADII_X: Double { let o = _accessor.offset(VT.INNER_RADII_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Inner Y radius
-  public var INNER_RADII_Y: Double { let o = _accessor.offset(VTOFFSET.INNER_RADII_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INNER_RADII_Y: Double { let o = _accessor.offset(VT.INNER_RADII_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Inner Z radius
-  public var INNER_RADII_Z: Double { let o = _accessor.offset(VTOFFSET.INNER_RADII_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INNER_RADII_Z: Double { let o = _accessor.offset(VT.INNER_RADII_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Minimum clock angle in radians
-  public var MINIMUM_CLOCK: Double { let o = _accessor.offset(VTOFFSET.MINIMUM_CLOCK.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MINIMUM_CLOCK: Double { let o = _accessor.offset(VT.MINIMUM_CLOCK); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum clock angle in radians
-  public var MAXIMUM_CLOCK: Double { let o = _accessor.offset(VTOFFSET.MAXIMUM_CLOCK.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAXIMUM_CLOCK: Double { let o = _accessor.offset(VT.MAXIMUM_CLOCK); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Minimum cone angle in radians
-  public var MINIMUM_CONE: Double { let o = _accessor.offset(VTOFFSET.MINIMUM_CONE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MINIMUM_CONE: Double { let o = _accessor.offset(VT.MINIMUM_CONE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum cone angle in radians
-  public var MAXIMUM_CONE: Double { let o = _accessor.offset(VTOFFSET.MAXIMUM_CONE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAXIMUM_CONE: Double { let o = _accessor.offset(VT.MAXIMUM_CONE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height reference
-  public var HEIGHT_REFERENCE: String? { let o = _accessor.offset(VTOFFSET.HEIGHT_REFERENCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HEIGHT_REFERENCE.v) }
+  public var HEIGHT_REFERENCE: String? { let o = _accessor.offset(VT.HEIGHT_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HEIGHT_REFERENCE) }
   ///  Fill flag
-  public var FILL: Bool { let o = _accessor.offset(VTOFFSET.FILL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FILL: Bool { let o = _accessor.offset(VT.FILL); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Surface material
-  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VTOFFSET.MATERIAL.v); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VT.MATERIAL); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline flag
-  public var OUTLINE: Bool { let o = _accessor.offset(VTOFFSET.OUTLINE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OUTLINE: Bool { let o = _accessor.offset(VT.OUTLINE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Outline color
-  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.OUTLINE_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VT.OUTLINE_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline width
-  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VTOFFSET.OUTLINE_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VT.OUTLINE_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Stack partitions
-  public var STACK_PARTITIONS: Int32 { let o = _accessor.offset(VTOFFSET.STACK_PARTITIONS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var STACK_PARTITIONS: Int32 { let o = _accessor.offset(VT.STACK_PARTITIONS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Slice partitions
-  public var SLICE_PARTITIONS: Int32 { let o = _accessor.offset(VTOFFSET.SLICE_PARTITIONS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var SLICE_PARTITIONS: Int32 { let o = _accessor.offset(VT.SLICE_PARTITIONS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Subdivisions
-  public var SUBDIVISIONS: Int32 { let o = _accessor.offset(VTOFFSET.SUBDIVISIONS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var SUBDIVISIONS: Int32 { let o = _accessor.offset(VT.SUBDIVISIONS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Shadow mode
-  public var SHADOWS: String? { let o = _accessor.offset(VTOFFSET.SHADOWS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADOWS.v) }
+  public var SHADOWS: String? { let o = _accessor.offset(VT.SHADOWS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADOWS) }
   public static func startCZMEllipsoid(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func add(RADII_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADII_X, def: 0.0, at: VTOFFSET.RADII_X.p) }
-  public static func add(RADII_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADII_Y, def: 0.0, at: VTOFFSET.RADII_Y.p) }
-  public static func add(RADII_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADII_Z, def: 0.0, at: VTOFFSET.RADII_Z.p) }
-  public static func add(INNER_RADII_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INNER_RADII_X, def: 0.0, at: VTOFFSET.INNER_RADII_X.p) }
-  public static func add(INNER_RADII_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INNER_RADII_Y, def: 0.0, at: VTOFFSET.INNER_RADII_Y.p) }
-  public static func add(INNER_RADII_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INNER_RADII_Z, def: 0.0, at: VTOFFSET.INNER_RADII_Z.p) }
-  public static func add(MINIMUM_CLOCK: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_CLOCK, def: 0.0, at: VTOFFSET.MINIMUM_CLOCK.p) }
-  public static func add(MAXIMUM_CLOCK: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_CLOCK, def: 0.0, at: VTOFFSET.MAXIMUM_CLOCK.p) }
-  public static func add(MINIMUM_CONE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_CONE, def: 0.0, at: VTOFFSET.MINIMUM_CONE.p) }
-  public static func add(MAXIMUM_CONE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_CONE, def: 0.0, at: VTOFFSET.MAXIMUM_CONE.p) }
-  public static func add(HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEIGHT_REFERENCE, at: VTOFFSET.HEIGHT_REFERENCE.p) }
+   at: VT.SHOW) }
+  public static func add(RADII_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADII_X, def: 0.0, at: VT.RADII_X) }
+  public static func add(RADII_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADII_Y, def: 0.0, at: VT.RADII_Y) }
+  public static func add(RADII_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADII_Z, def: 0.0, at: VT.RADII_Z) }
+  public static func add(INNER_RADII_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INNER_RADII_X, def: 0.0, at: VT.INNER_RADII_X) }
+  public static func add(INNER_RADII_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INNER_RADII_Y, def: 0.0, at: VT.INNER_RADII_Y) }
+  public static func add(INNER_RADII_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INNER_RADII_Z, def: 0.0, at: VT.INNER_RADII_Z) }
+  public static func add(MINIMUM_CLOCK: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_CLOCK, def: 0.0, at: VT.MINIMUM_CLOCK) }
+  public static func add(MAXIMUM_CLOCK: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_CLOCK, def: 0.0, at: VT.MAXIMUM_CLOCK) }
+  public static func add(MINIMUM_CONE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_CONE, def: 0.0, at: VT.MINIMUM_CONE) }
+  public static func add(MAXIMUM_CONE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_CONE, def: 0.0, at: VT.MAXIMUM_CONE) }
+  public static func add(HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEIGHT_REFERENCE, at: VT.HEIGHT_REFERENCE) }
   public static func add(FILL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILL, def: false,
-   at: VTOFFSET.FILL.p) }
-  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VTOFFSET.MATERIAL.p) }
+   at: VT.FILL) }
+  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VT.MATERIAL) }
   public static func add(OUTLINE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE, def: false,
-   at: VTOFFSET.OUTLINE.p) }
-  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VTOFFSET.OUTLINE_COLOR.p) }
-  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VTOFFSET.OUTLINE_WIDTH.p) }
-  public static func add(STACK_PARTITIONS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STACK_PARTITIONS, def: 0, at: VTOFFSET.STACK_PARTITIONS.p) }
-  public static func add(SLICE_PARTITIONS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SLICE_PARTITIONS, def: 0, at: VTOFFSET.SLICE_PARTITIONS.p) }
-  public static func add(SUBDIVISIONS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUBDIVISIONS, def: 0, at: VTOFFSET.SUBDIVISIONS.p) }
-  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VTOFFSET.SHADOWS.p) }
+   at: VT.OUTLINE) }
+  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VT.OUTLINE_COLOR) }
+  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VT.OUTLINE_WIDTH) }
+  public static func add(STACK_PARTITIONS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STACK_PARTITIONS, def: 0, at: VT.STACK_PARTITIONS) }
+  public static func add(SLICE_PARTITIONS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SLICE_PARTITIONS, def: 0, at: VT.SLICE_PARTITIONS) }
+  public static func add(SUBDIVISIONS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUBDIVISIONS, def: 0, at: VT.SUBDIVISIONS) }
+  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VT.SHADOWS) }
   public static func endCZMEllipsoid(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMEllipsoid(
     _ fbb: inout FlatBufferBuilder,
@@ -3406,27 +3334,27 @@ public struct CZMEllipsoid: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.RADII_X.p, fieldName: "RADII_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RADII_Y.p, fieldName: "RADII_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RADII_Z.p, fieldName: "RADII_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INNER_RADII_X.p, fieldName: "INNER_RADII_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INNER_RADII_Y.p, fieldName: "INNER_RADII_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INNER_RADII_Z.p, fieldName: "INNER_RADII_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MINIMUM_CLOCK.p, fieldName: "MINIMUM_CLOCK", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAXIMUM_CLOCK.p, fieldName: "MAXIMUM_CLOCK", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MINIMUM_CONE.p, fieldName: "MINIMUM_CONE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAXIMUM_CONE.p, fieldName: "MAXIMUM_CONE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEIGHT_REFERENCE.p, fieldName: "HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FILL.p, fieldName: "FILL", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.MATERIAL.p, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE.p, fieldName: "OUTLINE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_COLOR.p, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_WIDTH.p, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STACK_PARTITIONS.p, fieldName: "STACK_PARTITIONS", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.SLICE_PARTITIONS.p, fieldName: "SLICE_PARTITIONS", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.SUBDIVISIONS.p, fieldName: "SUBDIVISIONS", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.SHADOWS.p, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.RADII_X, fieldName: "RADII_X", required: false, type: Double.self)
+    try _v.visit(field: VT.RADII_Y, fieldName: "RADII_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.RADII_Z, fieldName: "RADII_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.INNER_RADII_X, fieldName: "INNER_RADII_X", required: false, type: Double.self)
+    try _v.visit(field: VT.INNER_RADII_Y, fieldName: "INNER_RADII_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.INNER_RADII_Z, fieldName: "INNER_RADII_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.MINIMUM_CLOCK, fieldName: "MINIMUM_CLOCK", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_CLOCK, fieldName: "MAXIMUM_CLOCK", required: false, type: Double.self)
+    try _v.visit(field: VT.MINIMUM_CONE, fieldName: "MINIMUM_CONE", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_CONE, fieldName: "MAXIMUM_CONE", required: false, type: Double.self)
+    try _v.visit(field: VT.HEIGHT_REFERENCE, fieldName: "HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILL, fieldName: "FILL", required: false, type: Bool.self)
+    try _v.visit(field: VT.MATERIAL, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
+    try _v.visit(field: VT.OUTLINE, fieldName: "OUTLINE", required: false, type: Bool.self)
+    try _v.visit(field: VT.OUTLINE_COLOR, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE_WIDTH, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.STACK_PARTITIONS, fieldName: "STACK_PARTITIONS", required: false, type: Int32.self)
+    try _v.visit(field: VT.SLICE_PARTITIONS, fieldName: "SLICE_PARTITIONS", required: false, type: Int32.self)
+    try _v.visit(field: VT.SUBDIVISIONS, fieldName: "SUBDIVISIONS", required: false, type: Int32.self)
+    try _v.visit(field: VT.SHADOWS, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -3443,68 +3371,66 @@ public struct CZMPolylineVolume: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case POSITIONS_CARTOGRAPHIC_DEGREES = 6
-    case POSITIONS_CARTESIAN = 8
-    case SHAPE = 10
-    case CORNER_TYPE = 12
-    case GRANULARITY = 14
-    case FILL = 16
-    case MATERIAL = 18
-    case OUTLINE = 20
-    case OUTLINE_COLOR = 22
-    case OUTLINE_WIDTH = 24
-    case SHADOWS = 26
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let POSITIONS_CARTOGRAPHIC_DEGREES: VOffset = 6
+    static let POSITIONS_CARTESIAN: VOffset = 8
+    static let SHAPE: VOffset = 10
+    static let CORNER_TYPE: VOffset = 12
+    static let GRANULARITY: VOffset = 14
+    static let FILL: VOffset = 16
+    static let MATERIAL: VOffset = 18
+    static let OUTLINE: VOffset = 20
+    static let OUTLINE_COLOR: VOffset = 22
+    static let OUTLINE_WIDTH: VOffset = 24
+    static let SHADOWS: VOffset = 26
   }
 
   ///  Whether displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Positions as cartographic degrees
-  public var POSITIONS_CARTOGRAPHIC_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.v, byteSize: 8) }
-  public func withUnsafePointerToPositionsCartographicDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.v, body: body) }
+  public var POSITIONS_CARTOGRAPHIC_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITIONS_CARTOGRAPHIC_DEGREES, byteSize: 8) }
+  public func withUnsafePointerToPositionsCartographicDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITIONS_CARTOGRAPHIC_DEGREES, body: body) }
   ///  Positions as Cartesian
-  public var POSITIONS_CARTESIAN: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITIONS_CARTESIAN.v, byteSize: 8) }
-  public func withUnsafePointerToPositionsCartesian<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITIONS_CARTESIAN.v, body: body) }
+  public var POSITIONS_CARTESIAN: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITIONS_CARTESIAN, byteSize: 8) }
+  public func withUnsafePointerToPositionsCartesian<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITIONS_CARTESIAN, body: body) }
   ///  2D shape [x, y, x, y, ...]
-  public var SHAPE: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SHAPE.v, byteSize: 8) }
-  public func withUnsafePointerToShape<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SHAPE.v, body: body) }
+  public var SHAPE: FlatbufferVector<Double> { return _accessor.vector(at: VT.SHAPE, byteSize: 8) }
+  public func withUnsafePointerToShape<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SHAPE, body: body) }
   ///  Corner type
-  public var CORNER_TYPE: String? { let o = _accessor.offset(VTOFFSET.CORNER_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CORNER_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CORNER_TYPE.v) }
+  public var CORNER_TYPE: String? { let o = _accessor.offset(VT.CORNER_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CORNER_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CORNER_TYPE) }
   ///  Granularity in radians
-  public var GRANULARITY: Double { let o = _accessor.offset(VTOFFSET.GRANULARITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GRANULARITY: Double { let o = _accessor.offset(VT.GRANULARITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Fill flag
-  public var FILL: Bool { let o = _accessor.offset(VTOFFSET.FILL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FILL: Bool { let o = _accessor.offset(VT.FILL); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Surface material
-  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VTOFFSET.MATERIAL.v); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VT.MATERIAL); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline flag
-  public var OUTLINE: Bool { let o = _accessor.offset(VTOFFSET.OUTLINE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OUTLINE: Bool { let o = _accessor.offset(VT.OUTLINE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Outline color
-  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.OUTLINE_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VT.OUTLINE_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline width
-  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VTOFFSET.OUTLINE_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VT.OUTLINE_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Shadow mode
-  public var SHADOWS: String? { let o = _accessor.offset(VTOFFSET.SHADOWS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADOWS.v) }
+  public var SHADOWS: String? { let o = _accessor.offset(VT.SHADOWS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADOWS) }
   public static func startCZMPolylineVolume(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func addVectorOf(POSITIONS_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTOGRAPHIC_DEGREES, at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.p) }
-  public static func addVectorOf(POSITIONS_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTESIAN, at: VTOFFSET.POSITIONS_CARTESIAN.p) }
-  public static func addVectorOf(SHAPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHAPE, at: VTOFFSET.SHAPE.p) }
-  public static func add(CORNER_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CORNER_TYPE, at: VTOFFSET.CORNER_TYPE.p) }
-  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VTOFFSET.GRANULARITY.p) }
+   at: VT.SHOW) }
+  public static func addVectorOf(POSITIONS_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTOGRAPHIC_DEGREES, at: VT.POSITIONS_CARTOGRAPHIC_DEGREES) }
+  public static func addVectorOf(POSITIONS_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTESIAN, at: VT.POSITIONS_CARTESIAN) }
+  public static func addVectorOf(SHAPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHAPE, at: VT.SHAPE) }
+  public static func add(CORNER_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CORNER_TYPE, at: VT.CORNER_TYPE) }
+  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VT.GRANULARITY) }
   public static func add(FILL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILL, def: false,
-   at: VTOFFSET.FILL.p) }
-  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VTOFFSET.MATERIAL.p) }
+   at: VT.FILL) }
+  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VT.MATERIAL) }
   public static func add(OUTLINE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE, def: false,
-   at: VTOFFSET.OUTLINE.p) }
-  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VTOFFSET.OUTLINE_COLOR.p) }
-  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VTOFFSET.OUTLINE_WIDTH.p) }
-  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VTOFFSET.SHADOWS.p) }
+   at: VT.OUTLINE) }
+  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VT.OUTLINE_COLOR) }
+  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VT.OUTLINE_WIDTH) }
+  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VT.SHADOWS) }
   public static func endCZMPolylineVolume(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMPolylineVolume(
     _ fbb: inout FlatBufferBuilder,
@@ -3539,18 +3465,18 @@ public struct CZMPolylineVolume: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.p, fieldName: "POSITIONS_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.POSITIONS_CARTESIAN.p, fieldName: "POSITIONS_CARTESIAN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.SHAPE.p, fieldName: "SHAPE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.CORNER_TYPE.p, fieldName: "CORNER_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GRANULARITY.p, fieldName: "GRANULARITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FILL.p, fieldName: "FILL", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.MATERIAL.p, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE.p, fieldName: "OUTLINE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_COLOR.p, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_WIDTH.p, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SHADOWS.p, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.POSITIONS_CARTOGRAPHIC_DEGREES, fieldName: "POSITIONS_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.POSITIONS_CARTESIAN, fieldName: "POSITIONS_CARTESIAN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SHAPE, fieldName: "SHAPE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.CORNER_TYPE, fieldName: "CORNER_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GRANULARITY, fieldName: "GRANULARITY", required: false, type: Double.self)
+    try _v.visit(field: VT.FILL, fieldName: "FILL", required: false, type: Bool.self)
+    try _v.visit(field: VT.MATERIAL, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
+    try _v.visit(field: VT.OUTLINE, fieldName: "OUTLINE", required: false, type: Bool.self)
+    try _v.visit(field: VT.OUTLINE_COLOR, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE_WIDTH, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.SHADOWS, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -3567,88 +3493,86 @@ public struct CZMRectangle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case COORDINATES_WSEN_DEGREES = 6
-    case HEIGHT = 8
-    case HEIGHT_REFERENCE = 10
-    case EXTRUDED_HEIGHT = 12
-    case EXTRUDED_HEIGHT_REFERENCE = 14
-    case ROTATION = 16
-    case ST_ROTATION = 18
-    case GRANULARITY = 20
-    case FILL = 22
-    case MATERIAL = 24
-    case OUTLINE = 26
-    case OUTLINE_COLOR = 28
-    case OUTLINE_WIDTH = 30
-    case SHADOWS = 32
-    case CLASSIFICATION_TYPE = 34
-    case Z_INDEX = 36
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let COORDINATES_WSEN_DEGREES: VOffset = 6
+    static let HEIGHT: VOffset = 8
+    static let HEIGHT_REFERENCE: VOffset = 10
+    static let EXTRUDED_HEIGHT: VOffset = 12
+    static let EXTRUDED_HEIGHT_REFERENCE: VOffset = 14
+    static let ROTATION: VOffset = 16
+    static let ST_ROTATION: VOffset = 18
+    static let GRANULARITY: VOffset = 20
+    static let FILL: VOffset = 22
+    static let MATERIAL: VOffset = 24
+    static let OUTLINE: VOffset = 26
+    static let OUTLINE_COLOR: VOffset = 28
+    static let OUTLINE_WIDTH: VOffset = 30
+    static let SHADOWS: VOffset = 32
+    static let CLASSIFICATION_TYPE: VOffset = 34
+    static let Z_INDEX: VOffset = 36
   }
 
   ///  Whether the rectangle is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Coordinates [west, south, east, north] in degrees
-  public var COORDINATES_WSEN_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.COORDINATES_WSEN_DEGREES.v, byteSize: 8) }
-  public func withUnsafePointerToCoordinatesWsenDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COORDINATES_WSEN_DEGREES.v, body: body) }
+  public var COORDINATES_WSEN_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VT.COORDINATES_WSEN_DEGREES, byteSize: 8) }
+  public func withUnsafePointerToCoordinatesWsenDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COORDINATES_WSEN_DEGREES, body: body) }
   ///  Height in meters
-  public var HEIGHT: Double { let o = _accessor.offset(VTOFFSET.HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HEIGHT: Double { let o = _accessor.offset(VT.HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height reference
-  public var HEIGHT_REFERENCE: String? { let o = _accessor.offset(VTOFFSET.HEIGHT_REFERENCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HEIGHT_REFERENCE.v) }
+  public var HEIGHT_REFERENCE: String? { let o = _accessor.offset(VT.HEIGHT_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HEIGHT_REFERENCE) }
   ///  Extruded height
-  public var EXTRUDED_HEIGHT: Double { let o = _accessor.offset(VTOFFSET.EXTRUDED_HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EXTRUDED_HEIGHT: Double { let o = _accessor.offset(VT.EXTRUDED_HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Extruded height reference
-  public var EXTRUDED_HEIGHT_REFERENCE: String? { let o = _accessor.offset(VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EXTRUDED_HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.v) }
+  public var EXTRUDED_HEIGHT_REFERENCE: String? { let o = _accessor.offset(VT.EXTRUDED_HEIGHT_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXTRUDED_HEIGHT_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXTRUDED_HEIGHT_REFERENCE) }
   ///  Rotation in radians
-  public var ROTATION: Double { let o = _accessor.offset(VTOFFSET.ROTATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ROTATION: Double { let o = _accessor.offset(VT.ROTATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Texture rotation in radians
-  public var ST_ROTATION: Double { let o = _accessor.offset(VTOFFSET.ST_ROTATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ST_ROTATION: Double { let o = _accessor.offset(VT.ST_ROTATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Granularity in radians
-  public var GRANULARITY: Double { let o = _accessor.offset(VTOFFSET.GRANULARITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GRANULARITY: Double { let o = _accessor.offset(VT.GRANULARITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Fill flag
-  public var FILL: Bool { let o = _accessor.offset(VTOFFSET.FILL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FILL: Bool { let o = _accessor.offset(VT.FILL); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Surface material
-  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VTOFFSET.MATERIAL.v); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VT.MATERIAL); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline flag
-  public var OUTLINE: Bool { let o = _accessor.offset(VTOFFSET.OUTLINE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OUTLINE: Bool { let o = _accessor.offset(VT.OUTLINE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Outline color
-  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.OUTLINE_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VT.OUTLINE_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline width
-  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VTOFFSET.OUTLINE_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VT.OUTLINE_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Shadow mode
-  public var SHADOWS: String? { let o = _accessor.offset(VTOFFSET.SHADOWS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADOWS.v) }
+  public var SHADOWS: String? { let o = _accessor.offset(VT.SHADOWS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADOWS) }
   ///  Classification type
-  public var CLASSIFICATION_TYPE: String? { let o = _accessor.offset(VTOFFSET.CLASSIFICATION_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CLASSIFICATION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLASSIFICATION_TYPE.v) }
+  public var CLASSIFICATION_TYPE: String? { let o = _accessor.offset(VT.CLASSIFICATION_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION_TYPE) }
   ///  Z-index for ordering
-  public var Z_INDEX: Int32 { let o = _accessor.offset(VTOFFSET.Z_INDEX.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var Z_INDEX: Int32 { let o = _accessor.offset(VT.Z_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startCZMRectangle(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func addVectorOf(COORDINATES_WSEN_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATES_WSEN_DEGREES, at: VTOFFSET.COORDINATES_WSEN_DEGREES.p) }
-  public static func add(HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT, def: 0.0, at: VTOFFSET.HEIGHT.p) }
-  public static func add(HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEIGHT_REFERENCE, at: VTOFFSET.HEIGHT_REFERENCE.p) }
-  public static func add(EXTRUDED_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDED_HEIGHT, def: 0.0, at: VTOFFSET.EXTRUDED_HEIGHT.p) }
-  public static func add(EXTRUDED_HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTRUDED_HEIGHT_REFERENCE, at: VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.p) }
-  public static func add(ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION, def: 0.0, at: VTOFFSET.ROTATION.p) }
-  public static func add(ST_ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ST_ROTATION, def: 0.0, at: VTOFFSET.ST_ROTATION.p) }
-  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VTOFFSET.GRANULARITY.p) }
+   at: VT.SHOW) }
+  public static func addVectorOf(COORDINATES_WSEN_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATES_WSEN_DEGREES, at: VT.COORDINATES_WSEN_DEGREES) }
+  public static func add(HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEIGHT, def: 0.0, at: VT.HEIGHT) }
+  public static func add(HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEIGHT_REFERENCE, at: VT.HEIGHT_REFERENCE) }
+  public static func add(EXTRUDED_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDED_HEIGHT, def: 0.0, at: VT.EXTRUDED_HEIGHT) }
+  public static func add(EXTRUDED_HEIGHT_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTRUDED_HEIGHT_REFERENCE, at: VT.EXTRUDED_HEIGHT_REFERENCE) }
+  public static func add(ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROTATION, def: 0.0, at: VT.ROTATION) }
+  public static func add(ST_ROTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ST_ROTATION, def: 0.0, at: VT.ST_ROTATION) }
+  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VT.GRANULARITY) }
   public static func add(FILL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILL, def: false,
-   at: VTOFFSET.FILL.p) }
-  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VTOFFSET.MATERIAL.p) }
+   at: VT.FILL) }
+  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VT.MATERIAL) }
   public static func add(OUTLINE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE, def: false,
-   at: VTOFFSET.OUTLINE.p) }
-  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VTOFFSET.OUTLINE_COLOR.p) }
-  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VTOFFSET.OUTLINE_WIDTH.p) }
-  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VTOFFSET.SHADOWS.p) }
-  public static func add(CLASSIFICATION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION_TYPE, at: VTOFFSET.CLASSIFICATION_TYPE.p) }
-  public static func add(Z_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_INDEX, def: 0, at: VTOFFSET.Z_INDEX.p) }
+   at: VT.OUTLINE) }
+  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VT.OUTLINE_COLOR) }
+  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VT.OUTLINE_WIDTH) }
+  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VT.SHADOWS) }
+  public static func add(CLASSIFICATION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION_TYPE, at: VT.CLASSIFICATION_TYPE) }
+  public static func add(Z_INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_INDEX, def: 0, at: VT.Z_INDEX) }
   public static func endCZMRectangle(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMRectangle(
     _ fbb: inout FlatBufferBuilder,
@@ -3693,23 +3617,23 @@ public struct CZMRectangle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.COORDINATES_WSEN_DEGREES.p, fieldName: "COORDINATES_WSEN_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.HEIGHT.p, fieldName: "HEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HEIGHT_REFERENCE.p, fieldName: "HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EXTRUDED_HEIGHT.p, fieldName: "EXTRUDED_HEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EXTRUDED_HEIGHT_REFERENCE.p, fieldName: "EXTRUDED_HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ROTATION.p, fieldName: "ROTATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ST_ROTATION.p, fieldName: "ST_ROTATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.GRANULARITY.p, fieldName: "GRANULARITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FILL.p, fieldName: "FILL", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.MATERIAL.p, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE.p, fieldName: "OUTLINE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_COLOR.p, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_WIDTH.p, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SHADOWS.p, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CLASSIFICATION_TYPE.p, fieldName: "CLASSIFICATION_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.Z_INDEX.p, fieldName: "Z_INDEX", required: false, type: Int32.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.COORDINATES_WSEN_DEGREES, fieldName: "COORDINATES_WSEN_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.HEIGHT, fieldName: "HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.HEIGHT_REFERENCE, fieldName: "HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXTRUDED_HEIGHT, fieldName: "EXTRUDED_HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.EXTRUDED_HEIGHT_REFERENCE, fieldName: "EXTRUDED_HEIGHT_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ROTATION, fieldName: "ROTATION", required: false, type: Double.self)
+    try _v.visit(field: VT.ST_ROTATION, fieldName: "ST_ROTATION", required: false, type: Double.self)
+    try _v.visit(field: VT.GRANULARITY, fieldName: "GRANULARITY", required: false, type: Double.self)
+    try _v.visit(field: VT.FILL, fieldName: "FILL", required: false, type: Bool.self)
+    try _v.visit(field: VT.MATERIAL, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
+    try _v.visit(field: VT.OUTLINE, fieldName: "OUTLINE", required: false, type: Bool.self)
+    try _v.visit(field: VT.OUTLINE_COLOR, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE_WIDTH, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.SHADOWS, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLASSIFICATION_TYPE, fieldName: "CLASSIFICATION_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.Z_INDEX, fieldName: "Z_INDEX", required: false, type: Int32.self)
     _v.finish()
   }
 }
@@ -3726,26 +3650,24 @@ public struct CZMTileset: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case URI = 6
-    case MAXIMUM_SCREEN_SPACE_ERROR = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let URI: VOffset = 6
+    static let MAXIMUM_SCREEN_SPACE_ERROR: VOffset = 8
   }
 
   ///  Whether the tileset is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  URI to the tileset
-  public var URI: String? { let o = _accessor.offset(VTOFFSET.URI.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var URISegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.URI.v) }
+  public var URI: String? { let o = _accessor.offset(VT.URI); return o == 0 ? nil : _accessor.string(at: o) }
+  public var URISegmentArray: [UInt8]? { return _accessor.getVector(at: VT.URI) }
   ///  Maximum screen space error
-  public var MAXIMUM_SCREEN_SPACE_ERROR: Double { let o = _accessor.offset(VTOFFSET.MAXIMUM_SCREEN_SPACE_ERROR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAXIMUM_SCREEN_SPACE_ERROR: Double { let o = _accessor.offset(VT.MAXIMUM_SCREEN_SPACE_ERROR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCZMTileset(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func add(URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: URI, at: VTOFFSET.URI.p) }
-  public static func add(MAXIMUM_SCREEN_SPACE_ERROR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_SCREEN_SPACE_ERROR, def: 0.0, at: VTOFFSET.MAXIMUM_SCREEN_SPACE_ERROR.p) }
+   at: VT.SHOW) }
+  public static func add(URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: URI, at: VT.URI) }
+  public static func add(MAXIMUM_SCREEN_SPACE_ERROR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_SCREEN_SPACE_ERROR, def: 0.0, at: VT.MAXIMUM_SCREEN_SPACE_ERROR) }
   public static func endCZMTileset(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMTileset(
     _ fbb: inout FlatBufferBuilder,
@@ -3762,9 +3684,9 @@ public struct CZMTileset: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.URI.p, fieldName: "URI", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MAXIMUM_SCREEN_SPACE_ERROR.p, fieldName: "MAXIMUM_SCREEN_SPACE_ERROR", required: false, type: Double.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.URI, fieldName: "URI", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAXIMUM_SCREEN_SPACE_ERROR, fieldName: "MAXIMUM_SCREEN_SPACE_ERROR", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -3781,68 +3703,66 @@ public struct CZMWall: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SHOW = 4
-    case POSITIONS_CARTOGRAPHIC_DEGREES = 6
-    case POSITIONS_CARTESIAN = 8
-    case MINIMUM_HEIGHTS = 10
-    case MAXIMUM_HEIGHTS = 12
-    case GRANULARITY = 14
-    case FILL = 16
-    case MATERIAL = 18
-    case OUTLINE = 20
-    case OUTLINE_COLOR = 22
-    case OUTLINE_WIDTH = 24
-    case SHADOWS = 26
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SHOW: VOffset = 4
+    static let POSITIONS_CARTOGRAPHIC_DEGREES: VOffset = 6
+    static let POSITIONS_CARTESIAN: VOffset = 8
+    static let MINIMUM_HEIGHTS: VOffset = 10
+    static let MAXIMUM_HEIGHTS: VOffset = 12
+    static let GRANULARITY: VOffset = 14
+    static let FILL: VOffset = 16
+    static let MATERIAL: VOffset = 18
+    static let OUTLINE: VOffset = 20
+    static let OUTLINE_COLOR: VOffset = 22
+    static let OUTLINE_WIDTH: VOffset = 24
+    static let SHADOWS: VOffset = 26
   }
 
   ///  Whether the wall is displayed
-  public var SHOW: Bool { let o = _accessor.offset(VTOFFSET.SHOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SHOW: Bool { let o = _accessor.offset(VT.SHOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Positions as cartographic degrees
-  public var POSITIONS_CARTOGRAPHIC_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.v, byteSize: 8) }
-  public func withUnsafePointerToPositionsCartographicDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.v, body: body) }
+  public var POSITIONS_CARTOGRAPHIC_DEGREES: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITIONS_CARTOGRAPHIC_DEGREES, byteSize: 8) }
+  public func withUnsafePointerToPositionsCartographicDegrees<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITIONS_CARTOGRAPHIC_DEGREES, body: body) }
   ///  Positions as Cartesian
-  public var POSITIONS_CARTESIAN: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITIONS_CARTESIAN.v, byteSize: 8) }
-  public func withUnsafePointerToPositionsCartesian<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITIONS_CARTESIAN.v, body: body) }
+  public var POSITIONS_CARTESIAN: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITIONS_CARTESIAN, byteSize: 8) }
+  public func withUnsafePointerToPositionsCartesian<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITIONS_CARTESIAN, body: body) }
   ///  Minimum heights per position
-  public var MINIMUM_HEIGHTS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.MINIMUM_HEIGHTS.v, byteSize: 8) }
-  public func withUnsafePointerToMinimumHeights<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.MINIMUM_HEIGHTS.v, body: body) }
+  public var MINIMUM_HEIGHTS: FlatbufferVector<Double> { return _accessor.vector(at: VT.MINIMUM_HEIGHTS, byteSize: 8) }
+  public func withUnsafePointerToMinimumHeights<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.MINIMUM_HEIGHTS, body: body) }
   ///  Maximum heights per position
-  public var MAXIMUM_HEIGHTS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.MAXIMUM_HEIGHTS.v, byteSize: 8) }
-  public func withUnsafePointerToMaximumHeights<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.MAXIMUM_HEIGHTS.v, body: body) }
+  public var MAXIMUM_HEIGHTS: FlatbufferVector<Double> { return _accessor.vector(at: VT.MAXIMUM_HEIGHTS, byteSize: 8) }
+  public func withUnsafePointerToMaximumHeights<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.MAXIMUM_HEIGHTS, body: body) }
   ///  Granularity in radians
-  public var GRANULARITY: Double { let o = _accessor.offset(VTOFFSET.GRANULARITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GRANULARITY: Double { let o = _accessor.offset(VT.GRANULARITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Fill flag
-  public var FILL: Bool { let o = _accessor.offset(VTOFFSET.FILL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FILL: Bool { let o = _accessor.offset(VT.FILL); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Surface material
-  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VTOFFSET.MATERIAL.v); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATERIAL: CZMMaterial? { let o = _accessor.offset(VT.MATERIAL); return o == 0 ? nil : CZMMaterial(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline flag
-  public var OUTLINE: Bool { let o = _accessor.offset(VTOFFSET.OUTLINE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var OUTLINE: Bool { let o = _accessor.offset(VT.OUTLINE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Outline color
-  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VTOFFSET.OUTLINE_COLOR.v); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OUTLINE_COLOR: CZMColor? { let o = _accessor.offset(VT.OUTLINE_COLOR); return o == 0 ? nil : CZMColor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Outline width
-  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VTOFFSET.OUTLINE_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VT.OUTLINE_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Shadow mode
-  public var SHADOWS: String? { let o = _accessor.offset(VTOFFSET.SHADOWS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHADOWS.v) }
+  public var SHADOWS: String? { let o = _accessor.offset(VT.SHADOWS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHADOWSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHADOWS) }
   public static func startCZMWall(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(SHOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW, def: false,
-   at: VTOFFSET.SHOW.p) }
-  public static func addVectorOf(POSITIONS_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTOGRAPHIC_DEGREES, at: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.p) }
-  public static func addVectorOf(POSITIONS_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTESIAN, at: VTOFFSET.POSITIONS_CARTESIAN.p) }
-  public static func addVectorOf(MINIMUM_HEIGHTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MINIMUM_HEIGHTS, at: VTOFFSET.MINIMUM_HEIGHTS.p) }
-  public static func addVectorOf(MAXIMUM_HEIGHTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAXIMUM_HEIGHTS, at: VTOFFSET.MAXIMUM_HEIGHTS.p) }
-  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VTOFFSET.GRANULARITY.p) }
+   at: VT.SHOW) }
+  public static func addVectorOf(POSITIONS_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTOGRAPHIC_DEGREES, at: VT.POSITIONS_CARTOGRAPHIC_DEGREES) }
+  public static func addVectorOf(POSITIONS_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS_CARTESIAN, at: VT.POSITIONS_CARTESIAN) }
+  public static func addVectorOf(MINIMUM_HEIGHTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MINIMUM_HEIGHTS, at: VT.MINIMUM_HEIGHTS) }
+  public static func addVectorOf(MAXIMUM_HEIGHTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAXIMUM_HEIGHTS, at: VT.MAXIMUM_HEIGHTS) }
+  public static func add(GRANULARITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRANULARITY, def: 0.0, at: VT.GRANULARITY) }
   public static func add(FILL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILL, def: false,
-   at: VTOFFSET.FILL.p) }
-  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VTOFFSET.MATERIAL.p) }
+   at: VT.FILL) }
+  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VT.MATERIAL) }
   public static func add(OUTLINE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE, def: false,
-   at: VTOFFSET.OUTLINE.p) }
-  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VTOFFSET.OUTLINE_COLOR.p) }
-  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VTOFFSET.OUTLINE_WIDTH.p) }
-  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VTOFFSET.SHADOWS.p) }
+   at: VT.OUTLINE) }
+  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VT.OUTLINE_COLOR) }
+  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: 0.0, at: VT.OUTLINE_WIDTH) }
+  public static func add(SHADOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHADOWS, at: VT.SHADOWS) }
   public static func endCZMWall(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMWall(
     _ fbb: inout FlatBufferBuilder,
@@ -3877,18 +3797,18 @@ public struct CZMWall: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SHOW.p, fieldName: "SHOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.POSITIONS_CARTOGRAPHIC_DEGREES.p, fieldName: "POSITIONS_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.POSITIONS_CARTESIAN.p, fieldName: "POSITIONS_CARTESIAN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.MINIMUM_HEIGHTS.p, fieldName: "MINIMUM_HEIGHTS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.MAXIMUM_HEIGHTS.p, fieldName: "MAXIMUM_HEIGHTS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.GRANULARITY.p, fieldName: "GRANULARITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FILL.p, fieldName: "FILL", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.MATERIAL.p, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE.p, fieldName: "OUTLINE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_COLOR.p, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
-    try _v.visit(field: VTOFFSET.OUTLINE_WIDTH.p, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SHADOWS.p, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHOW, fieldName: "SHOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.POSITIONS_CARTOGRAPHIC_DEGREES, fieldName: "POSITIONS_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.POSITIONS_CARTESIAN, fieldName: "POSITIONS_CARTESIAN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.MINIMUM_HEIGHTS, fieldName: "MINIMUM_HEIGHTS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.MAXIMUM_HEIGHTS, fieldName: "MAXIMUM_HEIGHTS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.GRANULARITY, fieldName: "GRANULARITY", required: false, type: Double.self)
+    try _v.visit(field: VT.FILL, fieldName: "FILL", required: false, type: Bool.self)
+    try _v.visit(field: VT.MATERIAL, fieldName: "MATERIAL", required: false, type: ForwardOffset<CZMMaterial>.self)
+    try _v.visit(field: VT.OUTLINE, fieldName: "OUTLINE", required: false, type: Bool.self)
+    try _v.visit(field: VT.OUTLINE_COLOR, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<CZMColor>.self)
+    try _v.visit(field: VT.OUTLINE_WIDTH, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.SHADOWS, fieldName: "SHADOWS", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -3905,174 +3825,172 @@ public struct CZMPacket: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case NAME = 6
-    case PARENT = 8
-    case DESCRIPTION = 10
-    case AVAILABILITY = 12
-    case POSITION_CARTOGRAPHIC_DEGREES = 14
-    case POSITION_CARTESIAN = 16
-    case POSITION_EPOCH = 18
-    case POSITION_CARTOGRAPHIC_DEGREES_ARRAY = 20
-    case POSITION_CARTESIAN_ARRAY = 22
-    case BILLBOARD = 24
-    case LABEL = 26
-    case POINT = 28
-    case POLYLINE = 30
-    case POLYGON = 32
-    case MODEL = 34
-    case PATH = 36
-    case ELLIPSE = 38
-    case ORIENTATION = 40
-    case VIEW_FROM = 42
-    case DELETE = 44
-    case BOX = 46
-    case CORRIDOR = 48
-    case CYLINDER = 50
-    case ELLIPSOID = 52
-    case POLYLINE_VOLUME = 54
-    case RECTANGLE = 56
-    case TILESET = 58
-    case WALL = 60
-    case POSITION_INTERPOLATION = 62
-    case POSITION_REFERENCE_FRAME = 64
-    case POSITION_REFERENCE = 66
-    case ORIENTATION_EPOCH = 68
-    case ORIENTATION_ARRAY = 70
-    case ORIENTATION_INTERPOLATION = 72
-    case ORIENTATION_REFERENCE = 74
-    case DYNAMIC_PROPERTIES = 76
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let PARENT: VOffset = 8
+    static let DESCRIPTION: VOffset = 10
+    static let AVAILABILITY: VOffset = 12
+    static let POSITION_CARTOGRAPHIC_DEGREES: VOffset = 14
+    static let POSITION_CARTESIAN: VOffset = 16
+    static let POSITION_EPOCH: VOffset = 18
+    static let POSITION_CARTOGRAPHIC_DEGREES_ARRAY: VOffset = 20
+    static let POSITION_CARTESIAN_ARRAY: VOffset = 22
+    static let BILLBOARD: VOffset = 24
+    static let LABEL: VOffset = 26
+    static let POINT: VOffset = 28
+    static let POLYLINE: VOffset = 30
+    static let POLYGON: VOffset = 32
+    static let MODEL: VOffset = 34
+    static let PATH: VOffset = 36
+    static let ELLIPSE: VOffset = 38
+    static let ORIENTATION: VOffset = 40
+    static let VIEW_FROM: VOffset = 42
+    static let DELETE: VOffset = 44
+    static let BOX: VOffset = 46
+    static let CORRIDOR: VOffset = 48
+    static let CYLINDER: VOffset = 50
+    static let ELLIPSOID: VOffset = 52
+    static let POLYLINE_VOLUME: VOffset = 54
+    static let RECTANGLE: VOffset = 56
+    static let TILESET: VOffset = 58
+    static let WALL: VOffset = 60
+    static let POSITION_INTERPOLATION: VOffset = 62
+    static let POSITION_REFERENCE_FRAME: VOffset = 64
+    static let POSITION_REFERENCE: VOffset = 66
+    static let ORIENTATION_EPOCH: VOffset = 68
+    static let ORIENTATION_ARRAY: VOffset = 70
+    static let ORIENTATION_INTERPOLATION: VOffset = 72
+    static let ORIENTATION_REFERENCE: VOffset = 74
+    static let DYNAMIC_PROPERTIES: VOffset = 76
   }
 
   ///  Unique identifier for this object
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Human-readable name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Parent packet ID
-  public var PARENT: String? { let o = _accessor.offset(VTOFFSET.PARENT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PARENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARENT.v) }
+  public var PARENT: String? { let o = _accessor.offset(VT.PARENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARENT) }
   ///  Description (HTML allowed)
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Availability interval (ISO 8601 interval)
-  public var AVAILABILITY: String? { let o = _accessor.offset(VTOFFSET.AVAILABILITY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AVAILABILITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AVAILABILITY.v) }
+  public var AVAILABILITY: String? { let o = _accessor.offset(VT.AVAILABILITY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AVAILABILITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AVAILABILITY) }
   ///  Position as cartographic degrees
-  public var POSITION_CARTOGRAPHIC_DEGREES: CZMCartographicDegrees? { let o = _accessor.offset(VTOFFSET.POSITION_CARTOGRAPHIC_DEGREES.v); return o == 0 ? nil : CZMCartographicDegrees(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POSITION_CARTOGRAPHIC_DEGREES: CZMCartographicDegrees? { let o = _accessor.offset(VT.POSITION_CARTOGRAPHIC_DEGREES); return o == 0 ? nil : CZMCartographicDegrees(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Position as Cartesian
-  public var POSITION_CARTESIAN: CZMCartesian? { let o = _accessor.offset(VTOFFSET.POSITION_CARTESIAN.v); return o == 0 ? nil : CZMCartesian(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POSITION_CARTESIAN: CZMCartesian? { let o = _accessor.offset(VT.POSITION_CARTESIAN); return o == 0 ? nil : CZMCartesian(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Time-tagged positions [time, lon, lat, height, time, lon, lat, height, ...]
-  public var POSITION_EPOCH: String? { let o = _accessor.offset(VTOFFSET.POSITION_EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var POSITION_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POSITION_EPOCH.v) }
+  public var POSITION_EPOCH: String? { let o = _accessor.offset(VT.POSITION_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var POSITION_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.POSITION_EPOCH) }
   ///  Time-tagged cartographic degree values
-  public var POSITION_CARTOGRAPHIC_DEGREES_ARRAY: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITION_CARTOGRAPHIC_DEGREES_ARRAY.v, byteSize: 8) }
-  public func withUnsafePointerToPositionCartographicDegreesArray<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITION_CARTOGRAPHIC_DEGREES_ARRAY.v, body: body) }
+  public var POSITION_CARTOGRAPHIC_DEGREES_ARRAY: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITION_CARTOGRAPHIC_DEGREES_ARRAY, byteSize: 8) }
+  public func withUnsafePointerToPositionCartographicDegreesArray<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITION_CARTOGRAPHIC_DEGREES_ARRAY, body: body) }
   ///  Time-tagged Cartesian values
-  public var POSITION_CARTESIAN_ARRAY: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POSITION_CARTESIAN_ARRAY.v, byteSize: 8) }
-  public func withUnsafePointerToPositionCartesianArray<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POSITION_CARTESIAN_ARRAY.v, body: body) }
+  public var POSITION_CARTESIAN_ARRAY: FlatbufferVector<Double> { return _accessor.vector(at: VT.POSITION_CARTESIAN_ARRAY, byteSize: 8) }
+  public func withUnsafePointerToPositionCartesianArray<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POSITION_CARTESIAN_ARRAY, body: body) }
   ///  Billboard properties
-  public var BILLBOARD: CZMBillboard? { let o = _accessor.offset(VTOFFSET.BILLBOARD.v); return o == 0 ? nil : CZMBillboard(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BILLBOARD: CZMBillboard? { let o = _accessor.offset(VT.BILLBOARD); return o == 0 ? nil : CZMBillboard(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Label properties
-  public var LABEL: CZMLabel? { let o = _accessor.offset(VTOFFSET.LABEL.v); return o == 0 ? nil : CZMLabel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LABEL: CZMLabel? { let o = _accessor.offset(VT.LABEL); return o == 0 ? nil : CZMLabel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Point properties
-  public var POINT: CZMPoint? { let o = _accessor.offset(VTOFFSET.POINT.v); return o == 0 ? nil : CZMPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POINT: CZMPoint? { let o = _accessor.offset(VT.POINT); return o == 0 ? nil : CZMPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Polyline properties
-  public var POLYLINE: CZMPolyline? { let o = _accessor.offset(VTOFFSET.POLYLINE.v); return o == 0 ? nil : CZMPolyline(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POLYLINE: CZMPolyline? { let o = _accessor.offset(VT.POLYLINE); return o == 0 ? nil : CZMPolyline(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Polygon properties
-  public var POLYGON: CZMPolygon? { let o = _accessor.offset(VTOFFSET.POLYGON.v); return o == 0 ? nil : CZMPolygon(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POLYGON: CZMPolygon? { let o = _accessor.offset(VT.POLYGON); return o == 0 ? nil : CZMPolygon(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Model properties
-  public var MODEL: CZMModel? { let o = _accessor.offset(VTOFFSET.MODEL.v); return o == 0 ? nil : CZMModel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MODEL: CZMModel? { let o = _accessor.offset(VT.MODEL); return o == 0 ? nil : CZMModel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Path properties
-  public var PATH: CZMPath? { let o = _accessor.offset(VTOFFSET.PATH.v); return o == 0 ? nil : CZMPath(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PATH: CZMPath? { let o = _accessor.offset(VT.PATH); return o == 0 ? nil : CZMPath(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Ellipse properties
-  public var ELLIPSE: CZMEllipse? { let o = _accessor.offset(VTOFFSET.ELLIPSE.v); return o == 0 ? nil : CZMEllipse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ELLIPSE: CZMEllipse? { let o = _accessor.offset(VT.ELLIPSE); return o == 0 ? nil : CZMEllipse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Orientation (quaternion)
-  public var ORIENTATION: CZMOrientation? { let o = _accessor.offset(VTOFFSET.ORIENTATION.v); return o == 0 ? nil : CZMOrientation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ORIENTATION: CZMOrientation? { let o = _accessor.offset(VT.ORIENTATION); return o == 0 ? nil : CZMOrientation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Suggested camera offset
-  public var VIEW_FROM: CZMViewFrom? { let o = _accessor.offset(VTOFFSET.VIEW_FROM.v); return o == 0 ? nil : CZMViewFrom(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var VIEW_FROM: CZMViewFrom? { let o = _accessor.offset(VT.VIEW_FROM); return o == 0 ? nil : CZMViewFrom(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Whether to delete this object
-  public var DELETE: Bool { let o = _accessor.offset(VTOFFSET.DELETE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var DELETE: Bool { let o = _accessor.offset(VT.DELETE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Box properties
-  public var BOX: CZMBox? { let o = _accessor.offset(VTOFFSET.BOX.v); return o == 0 ? nil : CZMBox(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BOX: CZMBox? { let o = _accessor.offset(VT.BOX); return o == 0 ? nil : CZMBox(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Corridor properties
-  public var CORRIDOR: CZMCorridor? { let o = _accessor.offset(VTOFFSET.CORRIDOR.v); return o == 0 ? nil : CZMCorridor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CORRIDOR: CZMCorridor? { let o = _accessor.offset(VT.CORRIDOR); return o == 0 ? nil : CZMCorridor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Cylinder properties
-  public var CYLINDER: CZMCylinder? { let o = _accessor.offset(VTOFFSET.CYLINDER.v); return o == 0 ? nil : CZMCylinder(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CYLINDER: CZMCylinder? { let o = _accessor.offset(VT.CYLINDER); return o == 0 ? nil : CZMCylinder(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Ellipsoid properties
-  public var ELLIPSOID: CZMEllipsoid? { let o = _accessor.offset(VTOFFSET.ELLIPSOID.v); return o == 0 ? nil : CZMEllipsoid(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ELLIPSOID: CZMEllipsoid? { let o = _accessor.offset(VT.ELLIPSOID); return o == 0 ? nil : CZMEllipsoid(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Polyline volume properties
-  public var POLYLINE_VOLUME: CZMPolylineVolume? { let o = _accessor.offset(VTOFFSET.POLYLINE_VOLUME.v); return o == 0 ? nil : CZMPolylineVolume(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POLYLINE_VOLUME: CZMPolylineVolume? { let o = _accessor.offset(VT.POLYLINE_VOLUME); return o == 0 ? nil : CZMPolylineVolume(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Rectangle properties
-  public var RECTANGLE: CZMRectangle? { let o = _accessor.offset(VTOFFSET.RECTANGLE.v); return o == 0 ? nil : CZMRectangle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RECTANGLE: CZMRectangle? { let o = _accessor.offset(VT.RECTANGLE); return o == 0 ? nil : CZMRectangle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  3D Tileset properties
-  public var TILESET: CZMTileset? { let o = _accessor.offset(VTOFFSET.TILESET.v); return o == 0 ? nil : CZMTileset(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TILESET: CZMTileset? { let o = _accessor.offset(VT.TILESET); return o == 0 ? nil : CZMTileset(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Wall properties
-  public var WALL: CZMWall? { let o = _accessor.offset(VTOFFSET.WALL.v); return o == 0 ? nil : CZMWall(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var WALL: CZMWall? { let o = _accessor.offset(VT.WALL); return o == 0 ? nil : CZMWall(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Position interpolation settings
-  public var POSITION_INTERPOLATION: CZMInterpolation? { let o = _accessor.offset(VTOFFSET.POSITION_INTERPOLATION.v); return o == 0 ? nil : CZMInterpolation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POSITION_INTERPOLATION: CZMInterpolation? { let o = _accessor.offset(VT.POSITION_INTERPOLATION); return o == 0 ? nil : CZMInterpolation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Position reference frame (FIXED or INERTIAL)
-  public var POSITION_REFERENCE_FRAME: String? { let o = _accessor.offset(VTOFFSET.POSITION_REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var POSITION_REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POSITION_REFERENCE_FRAME.v) }
+  public var POSITION_REFERENCE_FRAME: String? { let o = _accessor.offset(VT.POSITION_REFERENCE_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var POSITION_REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.POSITION_REFERENCE_FRAME) }
   ///  Position reference to another entity
-  public var POSITION_REFERENCE: String? { let o = _accessor.offset(VTOFFSET.POSITION_REFERENCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var POSITION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POSITION_REFERENCE.v) }
+  public var POSITION_REFERENCE: String? { let o = _accessor.offset(VT.POSITION_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var POSITION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.POSITION_REFERENCE) }
   ///  Orientation epoch (ISO 8601)
-  public var ORIENTATION_EPOCH: String? { let o = _accessor.offset(VTOFFSET.ORIENTATION_EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIENTATION_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIENTATION_EPOCH.v) }
+  public var ORIENTATION_EPOCH: String? { let o = _accessor.offset(VT.ORIENTATION_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIENTATION_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIENTATION_EPOCH) }
   ///  Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
-  public var ORIENTATION_ARRAY: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.ORIENTATION_ARRAY.v, byteSize: 8) }
-  public func withUnsafePointerToOrientationArray<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ORIENTATION_ARRAY.v, body: body) }
+  public var ORIENTATION_ARRAY: FlatbufferVector<Double> { return _accessor.vector(at: VT.ORIENTATION_ARRAY, byteSize: 8) }
+  public func withUnsafePointerToOrientationArray<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ORIENTATION_ARRAY, body: body) }
   ///  Orientation interpolation settings
-  public var ORIENTATION_INTERPOLATION: CZMInterpolation? { let o = _accessor.offset(VTOFFSET.ORIENTATION_INTERPOLATION.v); return o == 0 ? nil : CZMInterpolation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ORIENTATION_INTERPOLATION: CZMInterpolation? { let o = _accessor.offset(VT.ORIENTATION_INTERPOLATION); return o == 0 ? nil : CZMInterpolation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Orientation reference to another entity
-  public var ORIENTATION_REFERENCE: String? { let o = _accessor.offset(VTOFFSET.ORIENTATION_REFERENCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIENTATION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIENTATION_REFERENCE.v) }
+  public var ORIENTATION_REFERENCE: String? { let o = _accessor.offset(VT.ORIENTATION_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIENTATION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIENTATION_REFERENCE) }
   ///  Generic bag for all time-dynamic (non-static) properties
-  public var DYNAMIC_PROPERTIES: FlatbufferVector<CZMDynamicProperty> { return _accessor.vector(at: VTOFFSET.DYNAMIC_PROPERTIES.v, byteSize: 4) }
+  public var DYNAMIC_PROPERTIES: FlatbufferVector<CZMDynamicProperty> { return _accessor.vector(at: VT.DYNAMIC_PROPERTIES, byteSize: 4) }
   public static func startCZMPacket(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 37) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(PARENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARENT, at: VTOFFSET.PARENT.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
-  public static func add(AVAILABILITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AVAILABILITY, at: VTOFFSET.AVAILABILITY.p) }
-  public static func add(POSITION_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_CARTOGRAPHIC_DEGREES, at: VTOFFSET.POSITION_CARTOGRAPHIC_DEGREES.p) }
-  public static func add(POSITION_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_CARTESIAN, at: VTOFFSET.POSITION_CARTESIAN.p) }
-  public static func add(POSITION_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_EPOCH, at: VTOFFSET.POSITION_EPOCH.p) }
-  public static func addVectorOf(POSITION_CARTOGRAPHIC_DEGREES_ARRAY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_CARTOGRAPHIC_DEGREES_ARRAY, at: VTOFFSET.POSITION_CARTOGRAPHIC_DEGREES_ARRAY.p) }
-  public static func addVectorOf(POSITION_CARTESIAN_ARRAY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_CARTESIAN_ARRAY, at: VTOFFSET.POSITION_CARTESIAN_ARRAY.p) }
-  public static func add(BILLBOARD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BILLBOARD, at: VTOFFSET.BILLBOARD.p) }
-  public static func add(LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL, at: VTOFFSET.LABEL.p) }
-  public static func add(POINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINT, at: VTOFFSET.POINT.p) }
-  public static func add(POLYLINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYLINE, at: VTOFFSET.POLYLINE.p) }
-  public static func add(POLYGON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGON, at: VTOFFSET.POLYGON.p) }
-  public static func add(MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL, at: VTOFFSET.MODEL.p) }
-  public static func add(PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PATH, at: VTOFFSET.PATH.p) }
-  public static func add(ELLIPSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELLIPSE, at: VTOFFSET.ELLIPSE.p) }
-  public static func add(ORIENTATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIENTATION, at: VTOFFSET.ORIENTATION.p) }
-  public static func add(VIEW_FROM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VIEW_FROM, at: VTOFFSET.VIEW_FROM.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(PARENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARENT, at: VT.PARENT) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(AVAILABILITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AVAILABILITY, at: VT.AVAILABILITY) }
+  public static func add(POSITION_CARTOGRAPHIC_DEGREES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_CARTOGRAPHIC_DEGREES, at: VT.POSITION_CARTOGRAPHIC_DEGREES) }
+  public static func add(POSITION_CARTESIAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_CARTESIAN, at: VT.POSITION_CARTESIAN) }
+  public static func add(POSITION_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_EPOCH, at: VT.POSITION_EPOCH) }
+  public static func addVectorOf(POSITION_CARTOGRAPHIC_DEGREES_ARRAY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_CARTOGRAPHIC_DEGREES_ARRAY, at: VT.POSITION_CARTOGRAPHIC_DEGREES_ARRAY) }
+  public static func addVectorOf(POSITION_CARTESIAN_ARRAY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_CARTESIAN_ARRAY, at: VT.POSITION_CARTESIAN_ARRAY) }
+  public static func add(BILLBOARD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BILLBOARD, at: VT.BILLBOARD) }
+  public static func add(LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL, at: VT.LABEL) }
+  public static func add(POINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINT, at: VT.POINT) }
+  public static func add(POLYLINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYLINE, at: VT.POLYLINE) }
+  public static func add(POLYGON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGON, at: VT.POLYGON) }
+  public static func add(MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL, at: VT.MODEL) }
+  public static func add(PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PATH, at: VT.PATH) }
+  public static func add(ELLIPSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELLIPSE, at: VT.ELLIPSE) }
+  public static func add(ORIENTATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIENTATION, at: VT.ORIENTATION) }
+  public static func add(VIEW_FROM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VIEW_FROM, at: VT.VIEW_FROM) }
   public static func add(DELETE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELETE, def: false,
-   at: VTOFFSET.DELETE.p) }
-  public static func add(BOX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOX, at: VTOFFSET.BOX.p) }
-  public static func add(CORRIDOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CORRIDOR, at: VTOFFSET.CORRIDOR.p) }
-  public static func add(CYLINDER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CYLINDER, at: VTOFFSET.CYLINDER.p) }
-  public static func add(ELLIPSOID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELLIPSOID, at: VTOFFSET.ELLIPSOID.p) }
-  public static func add(POLYLINE_VOLUME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYLINE_VOLUME, at: VTOFFSET.POLYLINE_VOLUME.p) }
-  public static func add(RECTANGLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECTANGLE, at: VTOFFSET.RECTANGLE.p) }
-  public static func add(TILESET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TILESET, at: VTOFFSET.TILESET.p) }
-  public static func add(WALL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WALL, at: VTOFFSET.WALL.p) }
-  public static func add(POSITION_INTERPOLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_INTERPOLATION, at: VTOFFSET.POSITION_INTERPOLATION.p) }
-  public static func add(POSITION_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_REFERENCE_FRAME, at: VTOFFSET.POSITION_REFERENCE_FRAME.p) }
-  public static func add(POSITION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_REFERENCE, at: VTOFFSET.POSITION_REFERENCE.p) }
-  public static func add(ORIENTATION_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIENTATION_EPOCH, at: VTOFFSET.ORIENTATION_EPOCH.p) }
-  public static func addVectorOf(ORIENTATION_ARRAY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIENTATION_ARRAY, at: VTOFFSET.ORIENTATION_ARRAY.p) }
-  public static func add(ORIENTATION_INTERPOLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIENTATION_INTERPOLATION, at: VTOFFSET.ORIENTATION_INTERPOLATION.p) }
-  public static func add(ORIENTATION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIENTATION_REFERENCE, at: VTOFFSET.ORIENTATION_REFERENCE.p) }
-  public static func addVectorOf(DYNAMIC_PROPERTIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DYNAMIC_PROPERTIES, at: VTOFFSET.DYNAMIC_PROPERTIES.p) }
+   at: VT.DELETE) }
+  public static func add(BOX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOX, at: VT.BOX) }
+  public static func add(CORRIDOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CORRIDOR, at: VT.CORRIDOR) }
+  public static func add(CYLINDER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CYLINDER, at: VT.CYLINDER) }
+  public static func add(ELLIPSOID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELLIPSOID, at: VT.ELLIPSOID) }
+  public static func add(POLYLINE_VOLUME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYLINE_VOLUME, at: VT.POLYLINE_VOLUME) }
+  public static func add(RECTANGLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECTANGLE, at: VT.RECTANGLE) }
+  public static func add(TILESET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TILESET, at: VT.TILESET) }
+  public static func add(WALL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WALL, at: VT.WALL) }
+  public static func add(POSITION_INTERPOLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_INTERPOLATION, at: VT.POSITION_INTERPOLATION) }
+  public static func add(POSITION_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_REFERENCE_FRAME, at: VT.POSITION_REFERENCE_FRAME) }
+  public static func add(POSITION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_REFERENCE, at: VT.POSITION_REFERENCE) }
+  public static func add(ORIENTATION_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIENTATION_EPOCH, at: VT.ORIENTATION_EPOCH) }
+  public static func addVectorOf(ORIENTATION_ARRAY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIENTATION_ARRAY, at: VT.ORIENTATION_ARRAY) }
+  public static func add(ORIENTATION_INTERPOLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIENTATION_INTERPOLATION, at: VT.ORIENTATION_INTERPOLATION) }
+  public static func add(ORIENTATION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIENTATION_REFERENCE, at: VT.ORIENTATION_REFERENCE) }
+  public static func addVectorOf(DYNAMIC_PROPERTIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DYNAMIC_PROPERTIES, at: VT.DYNAMIC_PROPERTIES) }
   public static func endCZMPacket(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZMPacket(
     _ fbb: inout FlatBufferBuilder,
@@ -4157,43 +4075,43 @@ public struct CZMPacket: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PARENT.p, fieldName: "PARENT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.AVAILABILITY.p, fieldName: "AVAILABILITY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.POSITION_CARTOGRAPHIC_DEGREES.p, fieldName: "POSITION_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<CZMCartographicDegrees>.self)
-    try _v.visit(field: VTOFFSET.POSITION_CARTESIAN.p, fieldName: "POSITION_CARTESIAN", required: false, type: ForwardOffset<CZMCartesian>.self)
-    try _v.visit(field: VTOFFSET.POSITION_EPOCH.p, fieldName: "POSITION_EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.POSITION_CARTOGRAPHIC_DEGREES_ARRAY.p, fieldName: "POSITION_CARTOGRAPHIC_DEGREES_ARRAY", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.POSITION_CARTESIAN_ARRAY.p, fieldName: "POSITION_CARTESIAN_ARRAY", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.BILLBOARD.p, fieldName: "BILLBOARD", required: false, type: ForwardOffset<CZMBillboard>.self)
-    try _v.visit(field: VTOFFSET.LABEL.p, fieldName: "LABEL", required: false, type: ForwardOffset<CZMLabel>.self)
-    try _v.visit(field: VTOFFSET.POINT.p, fieldName: "POINT", required: false, type: ForwardOffset<CZMPoint>.self)
-    try _v.visit(field: VTOFFSET.POLYLINE.p, fieldName: "POLYLINE", required: false, type: ForwardOffset<CZMPolyline>.self)
-    try _v.visit(field: VTOFFSET.POLYGON.p, fieldName: "POLYGON", required: false, type: ForwardOffset<CZMPolygon>.self)
-    try _v.visit(field: VTOFFSET.MODEL.p, fieldName: "MODEL", required: false, type: ForwardOffset<CZMModel>.self)
-    try _v.visit(field: VTOFFSET.PATH.p, fieldName: "PATH", required: false, type: ForwardOffset<CZMPath>.self)
-    try _v.visit(field: VTOFFSET.ELLIPSE.p, fieldName: "ELLIPSE", required: false, type: ForwardOffset<CZMEllipse>.self)
-    try _v.visit(field: VTOFFSET.ORIENTATION.p, fieldName: "ORIENTATION", required: false, type: ForwardOffset<CZMOrientation>.self)
-    try _v.visit(field: VTOFFSET.VIEW_FROM.p, fieldName: "VIEW_FROM", required: false, type: ForwardOffset<CZMViewFrom>.self)
-    try _v.visit(field: VTOFFSET.DELETE.p, fieldName: "DELETE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.BOX.p, fieldName: "BOX", required: false, type: ForwardOffset<CZMBox>.self)
-    try _v.visit(field: VTOFFSET.CORRIDOR.p, fieldName: "CORRIDOR", required: false, type: ForwardOffset<CZMCorridor>.self)
-    try _v.visit(field: VTOFFSET.CYLINDER.p, fieldName: "CYLINDER", required: false, type: ForwardOffset<CZMCylinder>.self)
-    try _v.visit(field: VTOFFSET.ELLIPSOID.p, fieldName: "ELLIPSOID", required: false, type: ForwardOffset<CZMEllipsoid>.self)
-    try _v.visit(field: VTOFFSET.POLYLINE_VOLUME.p, fieldName: "POLYLINE_VOLUME", required: false, type: ForwardOffset<CZMPolylineVolume>.self)
-    try _v.visit(field: VTOFFSET.RECTANGLE.p, fieldName: "RECTANGLE", required: false, type: ForwardOffset<CZMRectangle>.self)
-    try _v.visit(field: VTOFFSET.TILESET.p, fieldName: "TILESET", required: false, type: ForwardOffset<CZMTileset>.self)
-    try _v.visit(field: VTOFFSET.WALL.p, fieldName: "WALL", required: false, type: ForwardOffset<CZMWall>.self)
-    try _v.visit(field: VTOFFSET.POSITION_INTERPOLATION.p, fieldName: "POSITION_INTERPOLATION", required: false, type: ForwardOffset<CZMInterpolation>.self)
-    try _v.visit(field: VTOFFSET.POSITION_REFERENCE_FRAME.p, fieldName: "POSITION_REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.POSITION_REFERENCE.p, fieldName: "POSITION_REFERENCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIENTATION_EPOCH.p, fieldName: "ORIENTATION_EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIENTATION_ARRAY.p, fieldName: "ORIENTATION_ARRAY", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.ORIENTATION_INTERPOLATION.p, fieldName: "ORIENTATION_INTERPOLATION", required: false, type: ForwardOffset<CZMInterpolation>.self)
-    try _v.visit(field: VTOFFSET.ORIENTATION_REFERENCE.p, fieldName: "ORIENTATION_REFERENCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DYNAMIC_PROPERTIES.p, fieldName: "DYNAMIC_PROPERTIES", required: false, type: ForwardOffset<Vector<ForwardOffset<CZMDynamicProperty>, CZMDynamicProperty>>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARENT, fieldName: "PARENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AVAILABILITY, fieldName: "AVAILABILITY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POSITION_CARTOGRAPHIC_DEGREES, fieldName: "POSITION_CARTOGRAPHIC_DEGREES", required: false, type: ForwardOffset<CZMCartographicDegrees>.self)
+    try _v.visit(field: VT.POSITION_CARTESIAN, fieldName: "POSITION_CARTESIAN", required: false, type: ForwardOffset<CZMCartesian>.self)
+    try _v.visit(field: VT.POSITION_EPOCH, fieldName: "POSITION_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POSITION_CARTOGRAPHIC_DEGREES_ARRAY, fieldName: "POSITION_CARTOGRAPHIC_DEGREES_ARRAY", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.POSITION_CARTESIAN_ARRAY, fieldName: "POSITION_CARTESIAN_ARRAY", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.BILLBOARD, fieldName: "BILLBOARD", required: false, type: ForwardOffset<CZMBillboard>.self)
+    try _v.visit(field: VT.LABEL, fieldName: "LABEL", required: false, type: ForwardOffset<CZMLabel>.self)
+    try _v.visit(field: VT.POINT, fieldName: "POINT", required: false, type: ForwardOffset<CZMPoint>.self)
+    try _v.visit(field: VT.POLYLINE, fieldName: "POLYLINE", required: false, type: ForwardOffset<CZMPolyline>.self)
+    try _v.visit(field: VT.POLYGON, fieldName: "POLYGON", required: false, type: ForwardOffset<CZMPolygon>.self)
+    try _v.visit(field: VT.MODEL, fieldName: "MODEL", required: false, type: ForwardOffset<CZMModel>.self)
+    try _v.visit(field: VT.PATH, fieldName: "PATH", required: false, type: ForwardOffset<CZMPath>.self)
+    try _v.visit(field: VT.ELLIPSE, fieldName: "ELLIPSE", required: false, type: ForwardOffset<CZMEllipse>.self)
+    try _v.visit(field: VT.ORIENTATION, fieldName: "ORIENTATION", required: false, type: ForwardOffset<CZMOrientation>.self)
+    try _v.visit(field: VT.VIEW_FROM, fieldName: "VIEW_FROM", required: false, type: ForwardOffset<CZMViewFrom>.self)
+    try _v.visit(field: VT.DELETE, fieldName: "DELETE", required: false, type: Bool.self)
+    try _v.visit(field: VT.BOX, fieldName: "BOX", required: false, type: ForwardOffset<CZMBox>.self)
+    try _v.visit(field: VT.CORRIDOR, fieldName: "CORRIDOR", required: false, type: ForwardOffset<CZMCorridor>.self)
+    try _v.visit(field: VT.CYLINDER, fieldName: "CYLINDER", required: false, type: ForwardOffset<CZMCylinder>.self)
+    try _v.visit(field: VT.ELLIPSOID, fieldName: "ELLIPSOID", required: false, type: ForwardOffset<CZMEllipsoid>.self)
+    try _v.visit(field: VT.POLYLINE_VOLUME, fieldName: "POLYLINE_VOLUME", required: false, type: ForwardOffset<CZMPolylineVolume>.self)
+    try _v.visit(field: VT.RECTANGLE, fieldName: "RECTANGLE", required: false, type: ForwardOffset<CZMRectangle>.self)
+    try _v.visit(field: VT.TILESET, fieldName: "TILESET", required: false, type: ForwardOffset<CZMTileset>.self)
+    try _v.visit(field: VT.WALL, fieldName: "WALL", required: false, type: ForwardOffset<CZMWall>.self)
+    try _v.visit(field: VT.POSITION_INTERPOLATION, fieldName: "POSITION_INTERPOLATION", required: false, type: ForwardOffset<CZMInterpolation>.self)
+    try _v.visit(field: VT.POSITION_REFERENCE_FRAME, fieldName: "POSITION_REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POSITION_REFERENCE, fieldName: "POSITION_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIENTATION_EPOCH, fieldName: "ORIENTATION_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIENTATION_ARRAY, fieldName: "ORIENTATION_ARRAY", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ORIENTATION_INTERPOLATION, fieldName: "ORIENTATION_INTERPOLATION", required: false, type: ForwardOffset<CZMInterpolation>.self)
+    try _v.visit(field: VT.ORIENTATION_REFERENCE, fieldName: "ORIENTATION_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DYNAMIC_PROPERTIES, fieldName: "DYNAMIC_PROPERTIES", required: false, type: ForwardOffset<Vector<ForwardOffset<CZMDynamicProperty>, CZMDynamicProperty>>.self)
     _v.finish()
   }
 }
@@ -4210,50 +4128,48 @@ public struct CZM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case VERSION = 6
-    case CLOCK_CURRENT_TIME = 8
-    case CLOCK_INTERVAL = 10
-    case CLOCK_MULTIPLIER = 12
-    case CLOCK_RANGE = 14
-    case CLOCK_STEP = 16
-    case PACKETS = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let VERSION: VOffset = 6
+    static let CLOCK_CURRENT_TIME: VOffset = 8
+    static let CLOCK_INTERVAL: VOffset = 10
+    static let CLOCK_MULTIPLIER: VOffset = 12
+    static let CLOCK_RANGE: VOffset = 14
+    static let CLOCK_STEP: VOffset = 16
+    static let PACKETS: VOffset = 18
   }
 
   ///  Document-level name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Document-level version
-  public var VERSION: String? { let o = _accessor.offset(VTOFFSET.VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VERSION.v) }
+  public var VERSION: String? { let o = _accessor.offset(VT.VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VERSION) }
   ///  Clock settings - current time (ISO 8601)
-  public var CLOCK_CURRENT_TIME: String? { let o = _accessor.offset(VTOFFSET.CLOCK_CURRENT_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CLOCK_CURRENT_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLOCK_CURRENT_TIME.v) }
+  public var CLOCK_CURRENT_TIME: String? { let o = _accessor.offset(VT.CLOCK_CURRENT_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLOCK_CURRENT_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLOCK_CURRENT_TIME) }
   ///  Clock settings - interval (ISO 8601 interval)
-  public var CLOCK_INTERVAL: String? { let o = _accessor.offset(VTOFFSET.CLOCK_INTERVAL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CLOCK_INTERVALSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLOCK_INTERVAL.v) }
+  public var CLOCK_INTERVAL: String? { let o = _accessor.offset(VT.CLOCK_INTERVAL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLOCK_INTERVALSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLOCK_INTERVAL) }
   ///  Clock settings - multiplier
-  public var CLOCK_MULTIPLIER: Double { let o = _accessor.offset(VTOFFSET.CLOCK_MULTIPLIER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CLOCK_MULTIPLIER: Double { let o = _accessor.offset(VT.CLOCK_MULTIPLIER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Clock range
-  public var CLOCK_RANGE: String? { let o = _accessor.offset(VTOFFSET.CLOCK_RANGE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CLOCK_RANGESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLOCK_RANGE.v) }
+  public var CLOCK_RANGE: String? { let o = _accessor.offset(VT.CLOCK_RANGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLOCK_RANGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLOCK_RANGE) }
   ///  Clock step
-  public var CLOCK_STEP: String? { let o = _accessor.offset(VTOFFSET.CLOCK_STEP.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CLOCK_STEPSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLOCK_STEP.v) }
+  public var CLOCK_STEP: String? { let o = _accessor.offset(VT.CLOCK_STEP); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLOCK_STEPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLOCK_STEP) }
   ///  All packets in the document
-  public var PACKETS: FlatbufferVector<CZMPacket> { return _accessor.vector(at: VTOFFSET.PACKETS.v, byteSize: 4) }
+  public var PACKETS: FlatbufferVector<CZMPacket> { return _accessor.vector(at: VT.PACKETS, byteSize: 4) }
   public static func startCZM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VTOFFSET.VERSION.p) }
-  public static func add(CLOCK_CURRENT_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLOCK_CURRENT_TIME, at: VTOFFSET.CLOCK_CURRENT_TIME.p) }
-  public static func add(CLOCK_INTERVAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLOCK_INTERVAL, at: VTOFFSET.CLOCK_INTERVAL.p) }
-  public static func add(CLOCK_MULTIPLIER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOCK_MULTIPLIER, def: 0.0, at: VTOFFSET.CLOCK_MULTIPLIER.p) }
-  public static func add(CLOCK_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLOCK_RANGE, at: VTOFFSET.CLOCK_RANGE.p) }
-  public static func add(CLOCK_STEP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLOCK_STEP, at: VTOFFSET.CLOCK_STEP.p) }
-  public static func addVectorOf(PACKETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PACKETS, at: VTOFFSET.PACKETS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
+  public static func add(CLOCK_CURRENT_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLOCK_CURRENT_TIME, at: VT.CLOCK_CURRENT_TIME) }
+  public static func add(CLOCK_INTERVAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLOCK_INTERVAL, at: VT.CLOCK_INTERVAL) }
+  public static func add(CLOCK_MULTIPLIER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOCK_MULTIPLIER, def: 0.0, at: VT.CLOCK_MULTIPLIER) }
+  public static func add(CLOCK_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLOCK_RANGE, at: VT.CLOCK_RANGE) }
+  public static func add(CLOCK_STEP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLOCK_STEP, at: VT.CLOCK_STEP) }
+  public static func addVectorOf(PACKETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PACKETS, at: VT.PACKETS) }
   public static func endCZM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCZM(
     _ fbb: inout FlatBufferBuilder,
@@ -4280,14 +4196,14 @@ public struct CZM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CLOCK_CURRENT_TIME.p, fieldName: "CLOCK_CURRENT_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CLOCK_INTERVAL.p, fieldName: "CLOCK_INTERVAL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CLOCK_MULTIPLIER.p, fieldName: "CLOCK_MULTIPLIER", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CLOCK_RANGE.p, fieldName: "CLOCK_RANGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CLOCK_STEP.p, fieldName: "CLOCK_STEP", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PACKETS.p, fieldName: "PACKETS", required: false, type: ForwardOffset<Vector<ForwardOffset<CZMPacket>, CZMPacket>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLOCK_CURRENT_TIME, fieldName: "CLOCK_CURRENT_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLOCK_INTERVAL, fieldName: "CLOCK_INTERVAL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLOCK_MULTIPLIER, fieldName: "CLOCK_MULTIPLIER", required: false, type: Double.self)
+    try _v.visit(field: VT.CLOCK_RANGE, fieldName: "CLOCK_RANGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLOCK_STEP, fieldName: "CLOCK_STEP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PACKETS, fieldName: "PACKETS", required: false, type: ForwardOffset<Vector<ForwardOffset<CZMPacket>, CZMPacket>>.self)
     _v.finish()
   }
 }

@@ -22,13 +22,13 @@ export declare class LCH implements flatbuffers.IUnpackableObject<LCHT> {
     /**
      * Unique request identifier
      */
-    REQUEST_ID(): string | null;
-    REQUEST_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    REQUEST_ID(): string;
+    REQUEST_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Canonical module identifier
      */
-    MODULE_ID(): string | null;
-    MODULE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    MODULE_ID(): string;
+    MODULE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Optional requested module version
      */

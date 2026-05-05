@@ -20,18 +20,16 @@ public struct PNM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case MULTIFORMAT_ADDRESS = 4
-    case PUBLISH_TIMESTAMP = 6
-    case CID = 8
-    case FILE_NAME = 10
-    case FILE_ID = 12
-    case SIGNATURE = 14
-    case TIMESTAMP_SIGNATURE = 16
-    case SIGNATURE_TYPE = 18
-    case TIMESTAMP_SIGNATURE_TYPE = 20
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let MULTIFORMAT_ADDRESS: VOffset = 4
+    static let PUBLISH_TIMESTAMP: VOffset = 6
+    static let CID: VOffset = 8
+    static let FILE_NAME: VOffset = 10
+    static let FILE_ID: VOffset = 12
+    static let SIGNATURE: VOffset = 14
+    static let TIMESTAMP_SIGNATURE: VOffset = 16
+    static let SIGNATURE_TYPE: VOffset = 18
+    static let TIMESTAMP_SIGNATURE_TYPE: VOffset = 20
   }
 
   ///  Multiformat Address
@@ -41,50 +39,50 @@ public struct PNM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
   ///  - /dns4/example.com for a domain name resolvable only to IPv4 addresses
   ///  - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.
-  public var MULTIFORMAT_ADDRESS: String? { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MULTIFORMAT_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MULTIFORMAT_ADDRESS.v) }
+  public var MULTIFORMAT_ADDRESS: String? { let o = _accessor.offset(VT.MULTIFORMAT_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MULTIFORMAT_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MULTIFORMAT_ADDRESS) }
   ///  Publish Time OF THE Publish Notification Message
-  public var PUBLISH_TIMESTAMP: String? { let o = _accessor.offset(VTOFFSET.PUBLISH_TIMESTAMP.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PUBLISH_TIMESTAMPSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PUBLISH_TIMESTAMP.v) }
+  public var PUBLISH_TIMESTAMP: String? { let o = _accessor.offset(VT.PUBLISH_TIMESTAMP); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PUBLISH_TIMESTAMPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PUBLISH_TIMESTAMP) }
   ///  Concatenated Content Identifier (CID)
   ///  This field is a unique ID for distributed systems (CID).
   ///  The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
-  public var CID: String? { let o = _accessor.offset(VTOFFSET.CID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CID.v) }
+  public var CID: String? { let o = _accessor.offset(VT.CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CID) }
   ///  File ID
   ///  This field is the Name
-  public var FILE_NAME: String? { let o = _accessor.offset(VTOFFSET.FILE_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FILE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FILE_NAME.v) }
+  public var FILE_NAME: String? { let o = _accessor.offset(VT.FILE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_NAME) }
   ///  File ID
   ///  This field is the file ID / Standard Type
-  public var FILE_ID: String? { let o = _accessor.offset(VTOFFSET.FILE_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FILE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FILE_ID.v) }
+  public var FILE_ID: String? { let o = _accessor.offset(VT.FILE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_ID) }
   ///  Digital Signature of the CID
   ///  This is the digital signature of the CID, signed using the specified cryptographic method.
-  public var SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SIGNATURE.v) }
+  public var SIGNATURE: String? { let o = _accessor.offset(VT.SIGNATURE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE) }
   ///  Timestamp Signature
   ///  Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.
-  public var TIMESTAMP_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.TIMESTAMP_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TIMESTAMP_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIMESTAMP_SIGNATURE.v) }
+  public var TIMESTAMP_SIGNATURE: String? { let o = _accessor.offset(VT.TIMESTAMP_SIGNATURE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIMESTAMP_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIMESTAMP_SIGNATURE) }
   ///  Type of Cryptographic Signature Used
   ///  Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
-  public var SIGNATURE_TYPE: String? { let o = _accessor.offset(VTOFFSET.SIGNATURE_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SIGNATURE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SIGNATURE_TYPE.v) }
+  public var SIGNATURE_TYPE: String? { let o = _accessor.offset(VT.SIGNATURE_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNATURE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE_TYPE) }
   ///  Type of Cryptographic Signature Used for Timestamp
   ///  Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.
-  public var TIMESTAMP_SIGNATURE_TYPE: String? { let o = _accessor.offset(VTOFFSET.TIMESTAMP_SIGNATURE_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TIMESTAMP_SIGNATURE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIMESTAMP_SIGNATURE_TYPE.v) }
+  public var TIMESTAMP_SIGNATURE_TYPE: String? { let o = _accessor.offset(VT.TIMESTAMP_SIGNATURE_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIMESTAMP_SIGNATURE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIMESTAMP_SIGNATURE_TYPE) }
   public static func startPNM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VTOFFSET.MULTIFORMAT_ADDRESS.p) }
-  public static func add(PUBLISH_TIMESTAMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISH_TIMESTAMP, at: VTOFFSET.PUBLISH_TIMESTAMP.p) }
-  public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VTOFFSET.CID.p) }
-  public static func add(FILE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_NAME, at: VTOFFSET.FILE_NAME.p) }
-  public static func add(FILE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_ID, at: VTOFFSET.FILE_ID.p) }
-  public static func add(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VTOFFSET.SIGNATURE.p) }
-  public static func add(TIMESTAMP_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIMESTAMP_SIGNATURE, at: VTOFFSET.TIMESTAMP_SIGNATURE.p) }
-  public static func add(SIGNATURE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE_TYPE, at: VTOFFSET.SIGNATURE_TYPE.p) }
-  public static func add(TIMESTAMP_SIGNATURE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIMESTAMP_SIGNATURE_TYPE, at: VTOFFSET.TIMESTAMP_SIGNATURE_TYPE.p) }
+  public static func add(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VT.MULTIFORMAT_ADDRESS) }
+  public static func add(PUBLISH_TIMESTAMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISH_TIMESTAMP, at: VT.PUBLISH_TIMESTAMP) }
+  public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VT.CID) }
+  public static func add(FILE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_NAME, at: VT.FILE_NAME) }
+  public static func add(FILE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_ID, at: VT.FILE_ID) }
+  public static func add(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func add(TIMESTAMP_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIMESTAMP_SIGNATURE, at: VT.TIMESTAMP_SIGNATURE) }
+  public static func add(SIGNATURE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE_TYPE, at: VT.SIGNATURE_TYPE) }
+  public static func add(TIMESTAMP_SIGNATURE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIMESTAMP_SIGNATURE_TYPE, at: VT.TIMESTAMP_SIGNATURE_TYPE) }
   public static func endPNM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPNM(
     _ fbb: inout FlatBufferBuilder,
@@ -113,15 +111,15 @@ public struct PNM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.MULTIFORMAT_ADDRESS.p, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PUBLISH_TIMESTAMP.p, fieldName: "PUBLISH_TIMESTAMP", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CID.p, fieldName: "CID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FILE_NAME.p, fieldName: "FILE_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FILE_ID.p, fieldName: "FILE_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SIGNATURE.p, fieldName: "SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TIMESTAMP_SIGNATURE.p, fieldName: "TIMESTAMP_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SIGNATURE_TYPE.p, fieldName: "SIGNATURE_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TIMESTAMP_SIGNATURE_TYPE.p, fieldName: "TIMESTAMP_SIGNATURE_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MULTIFORMAT_ADDRESS, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PUBLISH_TIMESTAMP, fieldName: "PUBLISH_TIMESTAMP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CID, fieldName: "CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILE_NAME, fieldName: "FILE_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILE_ID, fieldName: "FILE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIMESTAMP_SIGNATURE, fieldName: "TIMESTAMP_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE_TYPE, fieldName: "SIGNATURE_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIMESTAMP_SIGNATURE_TYPE, fieldName: "TIMESTAMP_SIGNATURE_TYPE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

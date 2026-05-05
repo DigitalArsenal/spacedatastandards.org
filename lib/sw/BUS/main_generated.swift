@@ -55,116 +55,114 @@ public struct BUS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case NAME = 6
-    case MANUFACTURER = 8
-    case SIZE = 10
-    case DRY_MASS = 12
-    case WET_MASS = 14
-    case PAYLOAD_MASS = 16
-    case DIM_X = 18
-    case DIM_Y = 20
-    case DIM_Z = 22
-    case STOWED_X = 24
-    case STOWED_Y = 26
-    case STOWED_Z = 28
-    case POWER_GENERATION = 30
-    case PAYLOAD_POWER = 32
-    case BATTERY_CAPACITY = 34
-    case STABILIZATION = 36
-    case POINTING_ACCURACY = 38
-    case POINTING_KNOWLEDGE = 40
-    case DESIGN_LIFE = 42
-    case DATA_STORAGE = 44
-    case DOWNLINK_RATE = 46
-    case PAYLOAD_SLOTS = 48
-    case HERITAGE_COUNT = 50
-    case NOTES = 52
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let MANUFACTURER: VOffset = 8
+    static let SIZE: VOffset = 10
+    static let DRY_MASS: VOffset = 12
+    static let WET_MASS: VOffset = 14
+    static let PAYLOAD_MASS: VOffset = 16
+    static let DIM_X: VOffset = 18
+    static let DIM_Y: VOffset = 20
+    static let DIM_Z: VOffset = 22
+    static let STOWED_X: VOffset = 24
+    static let STOWED_Y: VOffset = 26
+    static let STOWED_Z: VOffset = 28
+    static let POWER_GENERATION: VOffset = 30
+    static let PAYLOAD_POWER: VOffset = 32
+    static let BATTERY_CAPACITY: VOffset = 34
+    static let STABILIZATION: VOffset = 36
+    static let POINTING_ACCURACY: VOffset = 38
+    static let POINTING_KNOWLEDGE: VOffset = 40
+    static let DESIGN_LIFE: VOffset = 42
+    static let DATA_STORAGE: VOffset = 44
+    static let DOWNLINK_RATE: VOffset = 46
+    static let PAYLOAD_SLOTS: VOffset = 48
+    static let HERITAGE_COUNT: VOffset = 50
+    static let NOTES: VOffset = 52
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Bus name or model
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Manufacturer
-  public var MANUFACTURER: String? { let o = _accessor.offset(VTOFFSET.MANUFACTURER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MANUFACTURERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MANUFACTURER.v) }
+  public var MANUFACTURER: String? { let o = _accessor.offset(VT.MANUFACTURER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MANUFACTURERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MANUFACTURER) }
   ///  Bus size category
-  public var SIZE: busSize { let o = _accessor.offset(VTOFFSET.SIZE.v); return o == 0 ? .femto : busSize(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .femto }
+  public var SIZE: busSize { let o = _accessor.offset(VT.SIZE); return o == 0 ? .femto : busSize(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .femto }
   ///  Dry mass in kg
-  public var DRY_MASS: Double { let o = _accessor.offset(VTOFFSET.DRY_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DRY_MASS: Double { let o = _accessor.offset(VT.DRY_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum wet mass (with propellant) in kg
-  public var WET_MASS: Double { let o = _accessor.offset(VTOFFSET.WET_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var WET_MASS: Double { let o = _accessor.offset(VT.WET_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum payload mass in kg
-  public var PAYLOAD_MASS: Double { let o = _accessor.offset(VTOFFSET.PAYLOAD_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PAYLOAD_MASS: Double { let o = _accessor.offset(VT.PAYLOAD_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Bus dimensions X in meters
-  public var DIM_X: Double { let o = _accessor.offset(VTOFFSET.DIM_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DIM_X: Double { let o = _accessor.offset(VT.DIM_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Bus dimensions Y in meters
-  public var DIM_Y: Double { let o = _accessor.offset(VTOFFSET.DIM_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DIM_Y: Double { let o = _accessor.offset(VT.DIM_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Bus dimensions Z in meters
-  public var DIM_Z: Double { let o = _accessor.offset(VTOFFSET.DIM_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DIM_Z: Double { let o = _accessor.offset(VT.DIM_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Stowed dimensions X in meters
-  public var STOWED_X: Double { let o = _accessor.offset(VTOFFSET.STOWED_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STOWED_X: Double { let o = _accessor.offset(VT.STOWED_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Stowed dimensions Y in meters
-  public var STOWED_Y: Double { let o = _accessor.offset(VTOFFSET.STOWED_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STOWED_Y: Double { let o = _accessor.offset(VT.STOWED_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Stowed dimensions Z in meters
-  public var STOWED_Z: Double { let o = _accessor.offset(VTOFFSET.STOWED_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STOWED_Z: Double { let o = _accessor.offset(VT.STOWED_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Total power generation in Watts
-  public var POWER_GENERATION: Double { let o = _accessor.offset(VTOFFSET.POWER_GENERATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POWER_GENERATION: Double { let o = _accessor.offset(VT.POWER_GENERATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Available payload power in Watts
-  public var PAYLOAD_POWER: Double { let o = _accessor.offset(VTOFFSET.PAYLOAD_POWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PAYLOAD_POWER: Double { let o = _accessor.offset(VT.PAYLOAD_POWER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Battery capacity in Watt-hours
-  public var BATTERY_CAPACITY: Double { let o = _accessor.offset(VTOFFSET.BATTERY_CAPACITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BATTERY_CAPACITY: Double { let o = _accessor.offset(VT.BATTERY_CAPACITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Stabilization method
-  public var STABILIZATION: BusStabilizationType { let o = _accessor.offset(VTOFFSET.STABILIZATION.v); return o == 0 ? .threeAxis : BusStabilizationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .threeAxis }
+  public var STABILIZATION: BusStabilizationType { let o = _accessor.offset(VT.STABILIZATION); return o == 0 ? .threeAxis : BusStabilizationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .threeAxis }
   ///  Pointing accuracy in degrees
-  public var POINTING_ACCURACY: Double { let o = _accessor.offset(VTOFFSET.POINTING_ACCURACY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POINTING_ACCURACY: Double { let o = _accessor.offset(VT.POINTING_ACCURACY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pointing knowledge in degrees
-  public var POINTING_KNOWLEDGE: Double { let o = _accessor.offset(VTOFFSET.POINTING_KNOWLEDGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POINTING_KNOWLEDGE: Double { let o = _accessor.offset(VT.POINTING_KNOWLEDGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Design life in years
-  public var DESIGN_LIFE: Double { let o = _accessor.offset(VTOFFSET.DESIGN_LIFE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DESIGN_LIFE: Double { let o = _accessor.offset(VT.DESIGN_LIFE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Data storage capacity in Gbits
-  public var DATA_STORAGE: Double { let o = _accessor.offset(VTOFFSET.DATA_STORAGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DATA_STORAGE: Double { let o = _accessor.offset(VT.DATA_STORAGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Downlink data rate in Mbps
-  public var DOWNLINK_RATE: Double { let o = _accessor.offset(VTOFFSET.DOWNLINK_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DOWNLINK_RATE: Double { let o = _accessor.offset(VT.DOWNLINK_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of payload slots/interfaces
-  public var PAYLOAD_SLOTS: UInt32 { let o = _accessor.offset(VTOFFSET.PAYLOAD_SLOTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var PAYLOAD_SLOTS: UInt32 { let o = _accessor.offset(VT.PAYLOAD_SLOTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Heritage missions count
-  public var HERITAGE_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.HERITAGE_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var HERITAGE_COUNT: UInt32 { let o = _accessor.offset(VT.HERITAGE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Additional notes
-  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
   public static func startBUS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 25) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(MANUFACTURER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANUFACTURER, at: VTOFFSET.MANUFACTURER.p) }
-  public static func add(SIZE: busSize, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE.rawValue, def: 0, at: VTOFFSET.SIZE.p) }
-  public static func add(DRY_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRY_MASS, def: 0.0, at: VTOFFSET.DRY_MASS.p) }
-  public static func add(WET_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WET_MASS, def: 0.0, at: VTOFFSET.WET_MASS.p) }
-  public static func add(PAYLOAD_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYLOAD_MASS, def: 0.0, at: VTOFFSET.PAYLOAD_MASS.p) }
-  public static func add(DIM_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIM_X, def: 0.0, at: VTOFFSET.DIM_X.p) }
-  public static func add(DIM_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIM_Y, def: 0.0, at: VTOFFSET.DIM_Y.p) }
-  public static func add(DIM_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIM_Z, def: 0.0, at: VTOFFSET.DIM_Z.p) }
-  public static func add(STOWED_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOWED_X, def: 0.0, at: VTOFFSET.STOWED_X.p) }
-  public static func add(STOWED_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOWED_Y, def: 0.0, at: VTOFFSET.STOWED_Y.p) }
-  public static func add(STOWED_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOWED_Z, def: 0.0, at: VTOFFSET.STOWED_Z.p) }
-  public static func add(POWER_GENERATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER_GENERATION, def: 0.0, at: VTOFFSET.POWER_GENERATION.p) }
-  public static func add(PAYLOAD_POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYLOAD_POWER, def: 0.0, at: VTOFFSET.PAYLOAD_POWER.p) }
-  public static func add(BATTERY_CAPACITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BATTERY_CAPACITY, def: 0.0, at: VTOFFSET.BATTERY_CAPACITY.p) }
-  public static func add(STABILIZATION: BusStabilizationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STABILIZATION.rawValue, def: 0, at: VTOFFSET.STABILIZATION.p) }
-  public static func add(POINTING_ACCURACY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINTING_ACCURACY, def: 0.0, at: VTOFFSET.POINTING_ACCURACY.p) }
-  public static func add(POINTING_KNOWLEDGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINTING_KNOWLEDGE, def: 0.0, at: VTOFFSET.POINTING_KNOWLEDGE.p) }
-  public static func add(DESIGN_LIFE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DESIGN_LIFE, def: 0.0, at: VTOFFSET.DESIGN_LIFE.p) }
-  public static func add(DATA_STORAGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_STORAGE, def: 0.0, at: VTOFFSET.DATA_STORAGE.p) }
-  public static func add(DOWNLINK_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DOWNLINK_RATE, def: 0.0, at: VTOFFSET.DOWNLINK_RATE.p) }
-  public static func add(PAYLOAD_SLOTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYLOAD_SLOTS, def: 0, at: VTOFFSET.PAYLOAD_SLOTS.p) }
-  public static func add(HERITAGE_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HERITAGE_COUNT, def: 0, at: VTOFFSET.HERITAGE_COUNT.p) }
-  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(MANUFACTURER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANUFACTURER, at: VT.MANUFACTURER) }
+  public static func add(SIZE: busSize, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE.rawValue, def: 0, at: VT.SIZE) }
+  public static func add(DRY_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRY_MASS, def: 0.0, at: VT.DRY_MASS) }
+  public static func add(WET_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WET_MASS, def: 0.0, at: VT.WET_MASS) }
+  public static func add(PAYLOAD_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYLOAD_MASS, def: 0.0, at: VT.PAYLOAD_MASS) }
+  public static func add(DIM_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIM_X, def: 0.0, at: VT.DIM_X) }
+  public static func add(DIM_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIM_Y, def: 0.0, at: VT.DIM_Y) }
+  public static func add(DIM_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIM_Z, def: 0.0, at: VT.DIM_Z) }
+  public static func add(STOWED_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOWED_X, def: 0.0, at: VT.STOWED_X) }
+  public static func add(STOWED_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOWED_Y, def: 0.0, at: VT.STOWED_Y) }
+  public static func add(STOWED_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOWED_Z, def: 0.0, at: VT.STOWED_Z) }
+  public static func add(POWER_GENERATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER_GENERATION, def: 0.0, at: VT.POWER_GENERATION) }
+  public static func add(PAYLOAD_POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYLOAD_POWER, def: 0.0, at: VT.PAYLOAD_POWER) }
+  public static func add(BATTERY_CAPACITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BATTERY_CAPACITY, def: 0.0, at: VT.BATTERY_CAPACITY) }
+  public static func add(STABILIZATION: BusStabilizationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STABILIZATION.rawValue, def: 0, at: VT.STABILIZATION) }
+  public static func add(POINTING_ACCURACY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINTING_ACCURACY, def: 0.0, at: VT.POINTING_ACCURACY) }
+  public static func add(POINTING_KNOWLEDGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINTING_KNOWLEDGE, def: 0.0, at: VT.POINTING_KNOWLEDGE) }
+  public static func add(DESIGN_LIFE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DESIGN_LIFE, def: 0.0, at: VT.DESIGN_LIFE) }
+  public static func add(DATA_STORAGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_STORAGE, def: 0.0, at: VT.DATA_STORAGE) }
+  public static func add(DOWNLINK_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DOWNLINK_RATE, def: 0.0, at: VT.DOWNLINK_RATE) }
+  public static func add(PAYLOAD_SLOTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYLOAD_SLOTS, def: 0, at: VT.PAYLOAD_SLOTS) }
+  public static func add(HERITAGE_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HERITAGE_COUNT, def: 0, at: VT.HERITAGE_COUNT) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
   public static func endBUS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBUS(
     _ fbb: inout FlatBufferBuilder,
@@ -225,31 +223,31 @@ public struct BUS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MANUFACTURER.p, fieldName: "MANUFACTURER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SIZE.p, fieldName: "SIZE", required: false, type: busSize.self)
-    try _v.visit(field: VTOFFSET.DRY_MASS.p, fieldName: "DRY_MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.WET_MASS.p, fieldName: "WET_MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PAYLOAD_MASS.p, fieldName: "PAYLOAD_MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DIM_X.p, fieldName: "DIM_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DIM_Y.p, fieldName: "DIM_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DIM_Z.p, fieldName: "DIM_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STOWED_X.p, fieldName: "STOWED_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STOWED_Y.p, fieldName: "STOWED_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STOWED_Z.p, fieldName: "STOWED_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POWER_GENERATION.p, fieldName: "POWER_GENERATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PAYLOAD_POWER.p, fieldName: "PAYLOAD_POWER", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BATTERY_CAPACITY.p, fieldName: "BATTERY_CAPACITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STABILIZATION.p, fieldName: "STABILIZATION", required: false, type: BusStabilizationType.self)
-    try _v.visit(field: VTOFFSET.POINTING_ACCURACY.p, fieldName: "POINTING_ACCURACY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POINTING_KNOWLEDGE.p, fieldName: "POINTING_KNOWLEDGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DESIGN_LIFE.p, fieldName: "DESIGN_LIFE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DATA_STORAGE.p, fieldName: "DATA_STORAGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DOWNLINK_RATE.p, fieldName: "DOWNLINK_RATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PAYLOAD_SLOTS.p, fieldName: "PAYLOAD_SLOTS", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.HERITAGE_COUNT.p, fieldName: "HERITAGE_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MANUFACTURER, fieldName: "MANUFACTURER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIZE, fieldName: "SIZE", required: false, type: busSize.self)
+    try _v.visit(field: VT.DRY_MASS, fieldName: "DRY_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.WET_MASS, fieldName: "WET_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.PAYLOAD_MASS, fieldName: "PAYLOAD_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.DIM_X, fieldName: "DIM_X", required: false, type: Double.self)
+    try _v.visit(field: VT.DIM_Y, fieldName: "DIM_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.DIM_Z, fieldName: "DIM_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.STOWED_X, fieldName: "STOWED_X", required: false, type: Double.self)
+    try _v.visit(field: VT.STOWED_Y, fieldName: "STOWED_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.STOWED_Z, fieldName: "STOWED_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.POWER_GENERATION, fieldName: "POWER_GENERATION", required: false, type: Double.self)
+    try _v.visit(field: VT.PAYLOAD_POWER, fieldName: "PAYLOAD_POWER", required: false, type: Double.self)
+    try _v.visit(field: VT.BATTERY_CAPACITY, fieldName: "BATTERY_CAPACITY", required: false, type: Double.self)
+    try _v.visit(field: VT.STABILIZATION, fieldName: "STABILIZATION", required: false, type: BusStabilizationType.self)
+    try _v.visit(field: VT.POINTING_ACCURACY, fieldName: "POINTING_ACCURACY", required: false, type: Double.self)
+    try _v.visit(field: VT.POINTING_KNOWLEDGE, fieldName: "POINTING_KNOWLEDGE", required: false, type: Double.self)
+    try _v.visit(field: VT.DESIGN_LIFE, fieldName: "DESIGN_LIFE", required: false, type: Double.self)
+    try _v.visit(field: VT.DATA_STORAGE, fieldName: "DATA_STORAGE", required: false, type: Double.self)
+    try _v.visit(field: VT.DOWNLINK_RATE, fieldName: "DOWNLINK_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.PAYLOAD_SLOTS, fieldName: "PAYLOAD_SLOTS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.HERITAGE_COUNT, fieldName: "HERITAGE_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

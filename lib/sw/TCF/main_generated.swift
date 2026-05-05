@@ -20,51 +20,49 @@ public struct TCF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case VERSION = 4
-    case BYPASS_FLAG = 6
-    case CONTROL_CMD_FLAG = 8
-    case SPACECRAFT_ID = 10
-    case VIRTUAL_CHANNEL_ID = 12
-    case FRAME_LENGTH = 14
-    case FRAME_SEQUENCE_NUM = 16
-    case DATA = 18
-    case FECF = 20
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let VERSION: VOffset = 4
+    static let BYPASS_FLAG: VOffset = 6
+    static let CONTROL_CMD_FLAG: VOffset = 8
+    static let SPACECRAFT_ID: VOffset = 10
+    static let VIRTUAL_CHANNEL_ID: VOffset = 12
+    static let FRAME_LENGTH: VOffset = 14
+    static let FRAME_SEQUENCE_NUM: VOffset = 16
+    static let DATA: VOffset = 18
+    static let FECF: VOffset = 20
   }
 
   ///  Transfer frame version
-  public var VERSION: UInt8 { let o = _accessor.offset(VTOFFSET.VERSION.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var VERSION: UInt8 { let o = _accessor.offset(VT.VERSION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Bypass flag
-  public var BYPASS_FLAG: Bool { let o = _accessor.offset(VTOFFSET.BYPASS_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var BYPASS_FLAG: Bool { let o = _accessor.offset(VT.BYPASS_FLAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Control command flag
-  public var CONTROL_CMD_FLAG: Bool { let o = _accessor.offset(VTOFFSET.CONTROL_CMD_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var CONTROL_CMD_FLAG: Bool { let o = _accessor.offset(VT.CONTROL_CMD_FLAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Spacecraft identifier
-  public var SPACECRAFT_ID: UInt16 { let o = _accessor.offset(VTOFFSET.SPACECRAFT_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SPACECRAFT_ID: UInt16 { let o = _accessor.offset(VT.SPACECRAFT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Virtual channel identifier
-  public var VIRTUAL_CHANNEL_ID: UInt8 { let o = _accessor.offset(VTOFFSET.VIRTUAL_CHANNEL_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var VIRTUAL_CHANNEL_ID: UInt8 { let o = _accessor.offset(VT.VIRTUAL_CHANNEL_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Frame length
-  public var FRAME_LENGTH: UInt16 { let o = _accessor.offset(VTOFFSET.FRAME_LENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var FRAME_LENGTH: UInt16 { let o = _accessor.offset(VT.FRAME_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Frame sequence number
-  public var FRAME_SEQUENCE_NUM: UInt8 { let o = _accessor.offset(VTOFFSET.FRAME_SEQUENCE_NUM.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var FRAME_SEQUENCE_NUM: UInt8 { let o = _accessor.offset(VT.FRAME_SEQUENCE_NUM); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Data field
-  public var DATA: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.DATA.v, byteSize: 1) }
-  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DATA.v, body: body) }
+  public var DATA: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.DATA, byteSize: 1) }
+  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DATA, body: body) }
   ///  Frame error control field
-  public var FECF: UInt16 { let o = _accessor.offset(VTOFFSET.FECF.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var FECF: UInt16 { let o = _accessor.offset(VT.FECF); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   public static func startTCF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(VERSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VTOFFSET.VERSION.p) }
+  public static func add(VERSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VT.VERSION) }
   public static func add(BYPASS_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYPASS_FLAG, def: false,
-   at: VTOFFSET.BYPASS_FLAG.p) }
+   at: VT.BYPASS_FLAG) }
   public static func add(CONTROL_CMD_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTROL_CMD_FLAG, def: false,
-   at: VTOFFSET.CONTROL_CMD_FLAG.p) }
-  public static func add(SPACECRAFT_ID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPACECRAFT_ID, def: 0, at: VTOFFSET.SPACECRAFT_ID.p) }
-  public static func add(VIRTUAL_CHANNEL_ID: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIRTUAL_CHANNEL_ID, def: 0, at: VTOFFSET.VIRTUAL_CHANNEL_ID.p) }
-  public static func add(FRAME_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_LENGTH, def: 0, at: VTOFFSET.FRAME_LENGTH.p) }
-  public static func add(FRAME_SEQUENCE_NUM: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_SEQUENCE_NUM, def: 0, at: VTOFFSET.FRAME_SEQUENCE_NUM.p) }
-  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VTOFFSET.DATA.p) }
-  public static func add(FECF: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FECF, def: 0, at: VTOFFSET.FECF.p) }
+   at: VT.CONTROL_CMD_FLAG) }
+  public static func add(SPACECRAFT_ID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPACECRAFT_ID, def: 0, at: VT.SPACECRAFT_ID) }
+  public static func add(VIRTUAL_CHANNEL_ID: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIRTUAL_CHANNEL_ID, def: 0, at: VT.VIRTUAL_CHANNEL_ID) }
+  public static func add(FRAME_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_LENGTH, def: 0, at: VT.FRAME_LENGTH) }
+  public static func add(FRAME_SEQUENCE_NUM: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_SEQUENCE_NUM, def: 0, at: VT.FRAME_SEQUENCE_NUM) }
+  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VT.DATA) }
+  public static func add(FECF: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FECF, def: 0, at: VT.FECF) }
   public static func endTCF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTCF(
     _ fbb: inout FlatBufferBuilder,
@@ -93,15 +91,15 @@ public struct TCF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.BYPASS_FLAG.p, fieldName: "BYPASS_FLAG", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.CONTROL_CMD_FLAG.p, fieldName: "CONTROL_CMD_FLAG", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.SPACECRAFT_ID.p, fieldName: "SPACECRAFT_ID", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.VIRTUAL_CHANNEL_ID.p, fieldName: "VIRTUAL_CHANNEL_ID", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.FRAME_LENGTH.p, fieldName: "FRAME_LENGTH", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.FRAME_SEQUENCE_NUM.p, fieldName: "FRAME_SEQUENCE_NUM", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.DATA.p, fieldName: "DATA", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.FECF.p, fieldName: "FECF", required: false, type: UInt16.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: UInt8.self)
+    try _v.visit(field: VT.BYPASS_FLAG, fieldName: "BYPASS_FLAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.CONTROL_CMD_FLAG, fieldName: "CONTROL_CMD_FLAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.SPACECRAFT_ID, fieldName: "SPACECRAFT_ID", required: false, type: UInt16.self)
+    try _v.visit(field: VT.VIRTUAL_CHANNEL_ID, fieldName: "VIRTUAL_CHANNEL_ID", required: false, type: UInt8.self)
+    try _v.visit(field: VT.FRAME_LENGTH, fieldName: "FRAME_LENGTH", required: false, type: UInt16.self)
+    try _v.visit(field: VT.FRAME_SEQUENCE_NUM, fieldName: "FRAME_SEQUENCE_NUM", required: false, type: UInt8.self)
+    try _v.visit(field: VT.DATA, fieldName: "DATA", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.FECF, fieldName: "FECF", required: false, type: UInt16.self)
     _v.finish()
   }
 }

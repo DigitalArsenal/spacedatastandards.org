@@ -13,23 +13,23 @@ export declare class PUR implements flatbuffers.IUnpackableObject<PURT> {
     /**
      * Unique identifier for this purchase request
      */
-    REQUEST_ID(): string | null;
-    REQUEST_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    REQUEST_ID(): string;
+    REQUEST_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * ID of the listing being purchased
      */
-    LISTING_ID(): string | null;
-    LISTING_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    LISTING_ID(): string;
+    LISTING_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Name of the pricing tier selected
      */
-    TIER_NAME(): string | null;
-    TIER_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    TIER_NAME(): string;
+    TIER_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Peer ID of the buyer
      */
-    BUYER_PEER_ID(): string | null;
-    BUYER_PEER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    BUYER_PEER_ID(): string;
+    BUYER_PEER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Buyer's encryption public key for encrypted delivery
      */

@@ -45,91 +45,89 @@ public struct PLK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case LICENSE_ID = 4
-    case PLUGIN_ID = 6
-    case PLUGIN_VERSION = 8
-    case LICENSEE_ORG = 10
-    case LICENSEE_EMAIL = 12
-    case LICENSEE_PEER_ID = 14
-    case LICENSEE_PUBKEY = 16
-    case ISSUER_PUBKEY = 18
-    case ALLOWED_DOMAINS = 20
-    case ALLOWED_TLDS = 22
-    case LICENSE_TYPE = 24
-    case MAX_ACTIVATIONS = 26
-    case ISSUED_AT = 28
-    case VALID_FROM = 30
-    case EXPIRES_AT = 32
-    case ISSUER_PEER_ID = 34
-    case SIGNATURE = 36
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let LICENSE_ID: VOffset = 4
+    static let PLUGIN_ID: VOffset = 6
+    static let PLUGIN_VERSION: VOffset = 8
+    static let LICENSEE_ORG: VOffset = 10
+    static let LICENSEE_EMAIL: VOffset = 12
+    static let LICENSEE_PEER_ID: VOffset = 14
+    static let LICENSEE_PUBKEY: VOffset = 16
+    static let ISSUER_PUBKEY: VOffset = 18
+    static let ALLOWED_DOMAINS: VOffset = 20
+    static let ALLOWED_TLDS: VOffset = 22
+    static let LICENSE_TYPE: VOffset = 24
+    static let MAX_ACTIVATIONS: VOffset = 26
+    static let ISSUED_AT: VOffset = 28
+    static let VALID_FROM: VOffset = 30
+    static let EXPIRES_AT: VOffset = 32
+    static let ISSUER_PEER_ID: VOffset = 34
+    static let SIGNATURE: VOffset = 36
   }
 
   ///  Unique license key identifier
-  public var LICENSE_ID: String! { let o = _accessor.offset(VTOFFSET.LICENSE_ID.v); return _accessor.string(at: o) }
-  public var LICENSE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.LICENSE_ID.v) }
+  public var LICENSE_ID: String! { let o = _accessor.offset(VT.LICENSE_ID); return _accessor.string(at: o) }
+  public var LICENSE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.LICENSE_ID) }
   ///  Plugin ID this license is for
-  public var PLUGIN_ID: String! { let o = _accessor.offset(VTOFFSET.PLUGIN_ID.v); return _accessor.string(at: o) }
-  public var PLUGIN_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.PLUGIN_ID.v) }
+  public var PLUGIN_ID: String! { let o = _accessor.offset(VT.PLUGIN_ID); return _accessor.string(at: o) }
+  public var PLUGIN_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PLUGIN_ID) }
   ///  Plugin version or version range (semver)
-  public var PLUGIN_VERSION: String? { let o = _accessor.offset(VTOFFSET.PLUGIN_VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PLUGIN_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PLUGIN_VERSION.v) }
+  public var PLUGIN_VERSION: String? { let o = _accessor.offset(VT.PLUGIN_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PLUGIN_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PLUGIN_VERSION) }
   ///  Licensee organization name
-  public var LICENSEE_ORG: String! { let o = _accessor.offset(VTOFFSET.LICENSEE_ORG.v); return _accessor.string(at: o) }
-  public var LICENSEE_ORGSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.LICENSEE_ORG.v) }
+  public var LICENSEE_ORG: String! { let o = _accessor.offset(VT.LICENSEE_ORG); return _accessor.string(at: o) }
+  public var LICENSEE_ORGSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.LICENSEE_ORG) }
   ///  Licensee contact email
-  public var LICENSEE_EMAIL: String? { let o = _accessor.offset(VTOFFSET.LICENSEE_EMAIL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LICENSEE_EMAILSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LICENSEE_EMAIL.v) }
+  public var LICENSEE_EMAIL: String? { let o = _accessor.offset(VT.LICENSEE_EMAIL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSEE_EMAILSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSEE_EMAIL) }
   ///  Licensee's SDN Peer ID
-  public var LICENSEE_PEER_ID: String? { let o = _accessor.offset(VTOFFSET.LICENSEE_PEER_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LICENSEE_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LICENSEE_PEER_ID.v) }
+  public var LICENSEE_PEER_ID: String? { let o = _accessor.offset(VT.LICENSEE_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSEE_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSEE_PEER_ID) }
   ///  Licensee's X25519 public key (32 bytes)
-  public var LICENSEE_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.LICENSEE_PUBKEY.v, byteSize: 1) }
-  public func withUnsafePointerToLicenseePubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.LICENSEE_PUBKEY.v, body: body) }
+  public var LICENSEE_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.LICENSEE_PUBKEY, byteSize: 1) }
+  public func withUnsafePointerToLicenseePubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.LICENSEE_PUBKEY, body: body) }
   ///  Issuer's X25519 public key (32 bytes)
   ///  Used with licensee's private key to derive shared secret via ECDH
-  public var ISSUER_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.ISSUER_PUBKEY.v, byteSize: 1) }
-  public func withUnsafePointerToIssuerPubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ISSUER_PUBKEY.v, body: body) }
+  public var ISSUER_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.ISSUER_PUBKEY, byteSize: 1) }
+  public func withUnsafePointerToIssuerPubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ISSUER_PUBKEY, body: body) }
   ///  Domain restrictions (empty = any domain allowed)
-  public var ALLOWED_DOMAINS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ALLOWED_DOMAINS.v, byteSize: 4) }
+  public var ALLOWED_DOMAINS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ALLOWED_DOMAINS, byteSize: 4) }
   ///  TLD restrictions (e.g., ".gov", ".mil", ".edu")
-  public var ALLOWED_TLDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ALLOWED_TLDS.v, byteSize: 4) }
+  public var ALLOWED_TLDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ALLOWED_TLDS, byteSize: 4) }
   ///  Type of license
-  public var LICENSE_TYPE: licenseCategory { let o = _accessor.offset(VTOFFSET.LICENSE_TYPE.v); return o == 0 ? .trial : licenseCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .trial }
+  public var LICENSE_TYPE: licenseCategory { let o = _accessor.offset(VT.LICENSE_TYPE); return o == 0 ? .trial : licenseCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .trial }
   ///  Maximum concurrent activations (0 = unlimited)
-  public var MAX_ACTIVATIONS: UInt32 { let o = _accessor.offset(VTOFFSET.MAX_ACTIVATIONS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var MAX_ACTIVATIONS: UInt32 { let o = _accessor.offset(VT.MAX_ACTIVATIONS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Unix timestamp when license was issued
-  public var ISSUED_AT: UInt64 { let o = _accessor.offset(VTOFFSET.ISSUED_AT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var ISSUED_AT: UInt64 { let o = _accessor.offset(VT.ISSUED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Unix timestamp when license becomes valid
-  public var VALID_FROM: UInt64 { let o = _accessor.offset(VTOFFSET.VALID_FROM.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var VALID_FROM: UInt64 { let o = _accessor.offset(VT.VALID_FROM); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Unix timestamp when license expires (0 = never expires)
-  public var EXPIRES_AT: UInt64 { let o = _accessor.offset(VTOFFSET.EXPIRES_AT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var EXPIRES_AT: UInt64 { let o = _accessor.offset(VT.EXPIRES_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Peer ID of the license issuer (OrbPro)
-  public var ISSUER_PEER_ID: String? { let o = _accessor.offset(VTOFFSET.ISSUER_PEER_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ISSUER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ISSUER_PEER_ID.v) }
+  public var ISSUER_PEER_ID: String? { let o = _accessor.offset(VT.ISSUER_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ISSUER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ISSUER_PEER_ID) }
   ///  Ed25519 signature from issuer over all fields (except SIGNATURE)
-  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.SIGNATURE.v, byteSize: 1) }
-  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SIGNATURE.v, body: body) }
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
   public static func startPLK(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
-  public static func add(LICENSE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE_ID, at: VTOFFSET.LICENSE_ID.p) }
-  public static func add(PLUGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_ID, at: VTOFFSET.PLUGIN_ID.p) }
-  public static func add(PLUGIN_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_VERSION, at: VTOFFSET.PLUGIN_VERSION.p) }
-  public static func add(LICENSEE_ORG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSEE_ORG, at: VTOFFSET.LICENSEE_ORG.p) }
-  public static func add(LICENSEE_EMAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSEE_EMAIL, at: VTOFFSET.LICENSEE_EMAIL.p) }
-  public static func add(LICENSEE_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSEE_PEER_ID, at: VTOFFSET.LICENSEE_PEER_ID.p) }
-  public static func addVectorOf(LICENSEE_PUBKEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSEE_PUBKEY, at: VTOFFSET.LICENSEE_PUBKEY.p) }
-  public static func addVectorOf(ISSUER_PUBKEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ISSUER_PUBKEY, at: VTOFFSET.ISSUER_PUBKEY.p) }
-  public static func addVectorOf(ALLOWED_DOMAINS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_DOMAINS, at: VTOFFSET.ALLOWED_DOMAINS.p) }
-  public static func addVectorOf(ALLOWED_TLDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_TLDS, at: VTOFFSET.ALLOWED_TLDS.p) }
-  public static func add(LICENSE_TYPE: licenseCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LICENSE_TYPE.rawValue, def: 0, at: VTOFFSET.LICENSE_TYPE.p) }
-  public static func add(MAX_ACTIVATIONS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ACTIVATIONS, def: 0, at: VTOFFSET.MAX_ACTIVATIONS.p) }
-  public static func add(ISSUED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISSUED_AT, def: 0, at: VTOFFSET.ISSUED_AT.p) }
-  public static func add(VALID_FROM: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_FROM, def: 0, at: VTOFFSET.VALID_FROM.p) }
-  public static func add(EXPIRES_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXPIRES_AT, def: 0, at: VTOFFSET.EXPIRES_AT.p) }
-  public static func add(ISSUER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ISSUER_PEER_ID, at: VTOFFSET.ISSUER_PEER_ID.p) }
-  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VTOFFSET.SIGNATURE.p) }
+  public static func add(LICENSE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE_ID, at: VT.LICENSE_ID) }
+  public static func add(PLUGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_ID, at: VT.PLUGIN_ID) }
+  public static func add(PLUGIN_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_VERSION, at: VT.PLUGIN_VERSION) }
+  public static func add(LICENSEE_ORG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSEE_ORG, at: VT.LICENSEE_ORG) }
+  public static func add(LICENSEE_EMAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSEE_EMAIL, at: VT.LICENSEE_EMAIL) }
+  public static func add(LICENSEE_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSEE_PEER_ID, at: VT.LICENSEE_PEER_ID) }
+  public static func addVectorOf(LICENSEE_PUBKEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSEE_PUBKEY, at: VT.LICENSEE_PUBKEY) }
+  public static func addVectorOf(ISSUER_PUBKEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ISSUER_PUBKEY, at: VT.ISSUER_PUBKEY) }
+  public static func addVectorOf(ALLOWED_DOMAINS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_DOMAINS, at: VT.ALLOWED_DOMAINS) }
+  public static func addVectorOf(ALLOWED_TLDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_TLDS, at: VT.ALLOWED_TLDS) }
+  public static func add(LICENSE_TYPE: licenseCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LICENSE_TYPE.rawValue, def: 0, at: VT.LICENSE_TYPE) }
+  public static func add(MAX_ACTIVATIONS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ACTIVATIONS, def: 0, at: VT.MAX_ACTIVATIONS) }
+  public static func add(ISSUED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISSUED_AT, def: 0, at: VT.ISSUED_AT) }
+  public static func add(VALID_FROM: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_FROM, def: 0, at: VT.VALID_FROM) }
+  public static func add(EXPIRES_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXPIRES_AT, def: 0, at: VT.EXPIRES_AT) }
+  public static func add(ISSUER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ISSUER_PEER_ID, at: VT.ISSUER_PEER_ID) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
   public static func endPLK(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 10]); return end }
   public static func createPLK(
     _ fbb: inout FlatBufferBuilder,
@@ -174,23 +172,23 @@ public struct PLK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LICENSE_ID.p, fieldName: "LICENSE_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PLUGIN_ID.p, fieldName: "PLUGIN_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PLUGIN_VERSION.p, fieldName: "PLUGIN_VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LICENSEE_ORG.p, fieldName: "LICENSEE_ORG", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LICENSEE_EMAIL.p, fieldName: "LICENSEE_EMAIL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LICENSEE_PEER_ID.p, fieldName: "LICENSEE_PEER_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LICENSEE_PUBKEY.p, fieldName: "LICENSEE_PUBKEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.ISSUER_PUBKEY.p, fieldName: "ISSUER_PUBKEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.ALLOWED_DOMAINS.p, fieldName: "ALLOWED_DOMAINS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.ALLOWED_TLDS.p, fieldName: "ALLOWED_TLDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.LICENSE_TYPE.p, fieldName: "LICENSE_TYPE", required: false, type: licenseCategory.self)
-    try _v.visit(field: VTOFFSET.MAX_ACTIVATIONS.p, fieldName: "MAX_ACTIVATIONS", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ISSUED_AT.p, fieldName: "ISSUED_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.VALID_FROM.p, fieldName: "VALID_FROM", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.EXPIRES_AT.p, fieldName: "EXPIRES_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.ISSUER_PEER_ID.p, fieldName: "ISSUER_PEER_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SIGNATURE.p, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.LICENSE_ID, fieldName: "LICENSE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PLUGIN_ID, fieldName: "PLUGIN_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PLUGIN_VERSION, fieldName: "PLUGIN_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSEE_ORG, fieldName: "LICENSEE_ORG", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSEE_EMAIL, fieldName: "LICENSEE_EMAIL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSEE_PEER_ID, fieldName: "LICENSEE_PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSEE_PUBKEY, fieldName: "LICENSEE_PUBKEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.ISSUER_PUBKEY, fieldName: "ISSUER_PUBKEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.ALLOWED_DOMAINS, fieldName: "ALLOWED_DOMAINS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ALLOWED_TLDS, fieldName: "ALLOWED_TLDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.LICENSE_TYPE, fieldName: "LICENSE_TYPE", required: false, type: licenseCategory.self)
+    try _v.visit(field: VT.MAX_ACTIVATIONS, fieldName: "MAX_ACTIVATIONS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ISSUED_AT, fieldName: "ISSUED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.VALID_FROM, fieldName: "VALID_FROM", required: false, type: UInt64.self)
+    try _v.visit(field: VT.EXPIRES_AT, fieldName: "EXPIRES_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.ISSUER_PEER_ID, fieldName: "ISSUER_PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

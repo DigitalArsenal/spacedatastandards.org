@@ -11,8 +11,8 @@ export declare class EntryFunction implements flatbuffers.IUnpackableObject<Entr
     /**
      * Function name as exported from WASM
      */
-    NAME(): string | null;
-    NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    NAME(): string;
+    NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Human-readable description
      */

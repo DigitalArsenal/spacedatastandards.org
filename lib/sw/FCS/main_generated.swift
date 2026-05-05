@@ -68,48 +68,46 @@ public struct FCS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case MODE = 4
-    case LEAD_METHOD = 6
-    case RANGEFINDER_TYPE = 8
-    case AMMO_SELECTED = 10
-    case TARGET = 12
-    case SOLUTION = 14
-    case LAST_RANGE = 16
-    case RANGE_RATE = 18
-    case ROUNDS_REMAINING = 20
-    case TEMPERATURE = 22
-    case RESERVED = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let MODE: VOffset = 4
+    static let LEAD_METHOD: VOffset = 6
+    static let RANGEFINDER_TYPE: VOffset = 8
+    static let AMMO_SELECTED: VOffset = 10
+    static let TARGET: VOffset = 12
+    static let SOLUTION: VOffset = 14
+    static let LAST_RANGE: VOffset = 16
+    static let RANGE_RATE: VOffset = 18
+    static let ROUNDS_REMAINING: VOffset = 20
+    static let TEMPERATURE: VOffset = 22
+    static let RESERVED: VOffset = 24
   }
 
-  public var MODE: UInt8 { let o = _accessor.offset(VTOFFSET.MODE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var LEAD_METHOD: UInt8 { let o = _accessor.offset(VTOFFSET.LEAD_METHOD.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var RANGEFINDER_TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.RANGEFINDER_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var AMMO_SELECTED: UInt8 { let o = _accessor.offset(VTOFFSET.AMMO_SELECTED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var TARGET: String? { let o = _accessor.offset(VTOFFSET.TARGET.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TARGETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TARGET.v) }
-  public var SOLUTION: String? { let o = _accessor.offset(VTOFFSET.SOLUTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOLUTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOLUTION.v) }
-  public var LAST_RANGE: Double { let o = _accessor.offset(VTOFFSET.LAST_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RANGE_RATE: Double { let o = _accessor.offset(VTOFFSET.RANGE_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ROUNDS_REMAINING: UInt16 { let o = _accessor.offset(VTOFFSET.ROUNDS_REMAINING.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var TEMPERATURE: Float32 { let o = _accessor.offset(VTOFFSET.TEMPERATURE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
+  public var MODE: UInt8 { let o = _accessor.offset(VT.MODE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var LEAD_METHOD: UInt8 { let o = _accessor.offset(VT.LEAD_METHOD); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var RANGEFINDER_TYPE: UInt8 { let o = _accessor.offset(VT.RANGEFINDER_TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var AMMO_SELECTED: UInt8 { let o = _accessor.offset(VT.AMMO_SELECTED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var TARGET: String? { let o = _accessor.offset(VT.TARGET); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET) }
+  public var SOLUTION: String? { let o = _accessor.offset(VT.SOLUTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOLUTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOLUTION) }
+  public var LAST_RANGE: Double { let o = _accessor.offset(VT.LAST_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RANGE_RATE: Double { let o = _accessor.offset(VT.RANGE_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ROUNDS_REMAINING: UInt16 { let o = _accessor.offset(VT.ROUNDS_REMAINING); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var TEMPERATURE: Float32 { let o = _accessor.offset(VT.TEMPERATURE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
   public static func startFCS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(MODE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODE, def: 0, at: VTOFFSET.MODE.p) }
-  public static func add(LEAD_METHOD: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEAD_METHOD, def: 0, at: VTOFFSET.LEAD_METHOD.p) }
-  public static func add(RANGEFINDER_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGEFINDER_TYPE, def: 0, at: VTOFFSET.RANGEFINDER_TYPE.p) }
-  public static func add(AMMO_SELECTED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AMMO_SELECTED, def: 0, at: VTOFFSET.AMMO_SELECTED.p) }
-  public static func add(TARGET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET, at: VTOFFSET.TARGET.p) }
-  public static func add(SOLUTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLUTION, at: VTOFFSET.SOLUTION.p) }
-  public static func add(LAST_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_RANGE, def: 0.0, at: VTOFFSET.LAST_RANGE.p) }
-  public static func add(RANGE_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_RATE, def: 0.0, at: VTOFFSET.RANGE_RATE.p) }
-  public static func add(ROUNDS_REMAINING: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROUNDS_REMAINING, def: 0, at: VTOFFSET.ROUNDS_REMAINING.p) }
-  public static func add(TEMPERATURE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEMPERATURE, def: 0.0, at: VTOFFSET.TEMPERATURE.p) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VTOFFSET.RESERVED.p) }
+  public static func add(MODE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODE, def: 0, at: VT.MODE) }
+  public static func add(LEAD_METHOD: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEAD_METHOD, def: 0, at: VT.LEAD_METHOD) }
+  public static func add(RANGEFINDER_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGEFINDER_TYPE, def: 0, at: VT.RANGEFINDER_TYPE) }
+  public static func add(AMMO_SELECTED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AMMO_SELECTED, def: 0, at: VT.AMMO_SELECTED) }
+  public static func add(TARGET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET, at: VT.TARGET) }
+  public static func add(SOLUTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLUTION, at: VT.SOLUTION) }
+  public static func add(LAST_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_RANGE, def: 0.0, at: VT.LAST_RANGE) }
+  public static func add(RANGE_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_RATE, def: 0.0, at: VT.RANGE_RATE) }
+  public static func add(ROUNDS_REMAINING: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROUNDS_REMAINING, def: 0, at: VT.ROUNDS_REMAINING) }
+  public static func add(TEMPERATURE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEMPERATURE, def: 0.0, at: VT.TEMPERATURE) }
+  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
   public static func endFCS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFCS(
     _ fbb: inout FlatBufferBuilder,
@@ -142,17 +140,17 @@ public struct FCS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.MODE.p, fieldName: "MODE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.LEAD_METHOD.p, fieldName: "LEAD_METHOD", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.RANGEFINDER_TYPE.p, fieldName: "RANGEFINDER_TYPE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.AMMO_SELECTED.p, fieldName: "AMMO_SELECTED", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.TARGET.p, fieldName: "TARGET", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SOLUTION.p, fieldName: "SOLUTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAST_RANGE.p, fieldName: "LAST_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RANGE_RATE.p, fieldName: "RANGE_RATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ROUNDS_REMAINING.p, fieldName: "ROUNDS_REMAINING", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.TEMPERATURE.p, fieldName: "TEMPERATURE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.MODE, fieldName: "MODE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.LEAD_METHOD, fieldName: "LEAD_METHOD", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RANGEFINDER_TYPE, fieldName: "RANGEFINDER_TYPE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.AMMO_SELECTED, fieldName: "AMMO_SELECTED", required: false, type: UInt8.self)
+    try _v.visit(field: VT.TARGET, fieldName: "TARGET", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOLUTION, fieldName: "SOLUTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAST_RANGE, fieldName: "LAST_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.RANGE_RATE, fieldName: "RANGE_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.ROUNDS_REMAINING, fieldName: "ROUNDS_REMAINING", required: false, type: UInt16.self)
+    try _v.visit(field: VT.TEMPERATURE, fieldName: "TEMPERATURE", required: false, type: Float32.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

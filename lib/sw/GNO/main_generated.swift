@@ -53,33 +53,31 @@ public struct gnssObsData: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SIGNAL = 4
-    case OBS_TYPE = 6
-    case VALUE = 8
-    case LLI = 10
-    case SSI = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SIGNAL: VOffset = 4
+    static let OBS_TYPE: VOffset = 6
+    static let VALUE: VOffset = 8
+    static let LLI: VOffset = 10
+    static let SSI: VOffset = 12
   }
 
   ///  Signal type code (e.g., L1C, L2P, L5Q, E1B)
-  public var SIGNAL: String? { let o = _accessor.offset(VTOFFSET.SIGNAL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SIGNALSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SIGNAL.v) }
+  public var SIGNAL: String? { let o = _accessor.offset(VT.SIGNAL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNALSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNAL) }
   ///  Observation type
-  public var OBS_TYPE: gnssObsType { let o = _accessor.offset(VTOFFSET.OBS_TYPE.v); return o == 0 ? .pseudorange : gnssObsType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pseudorange }
+  public var OBS_TYPE: gnssObsType { let o = _accessor.offset(VT.OBS_TYPE); return o == 0 ? .pseudorange : gnssObsType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pseudorange }
   ///  Observation value (units depend on type: m, cycles, Hz, dB-Hz)
-  public var VALUE: Double { let o = _accessor.offset(VTOFFSET.VALUE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VALUE: Double { let o = _accessor.offset(VT.VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Loss of lock indicator
-  public var LLI: UInt8 { let o = _accessor.offset(VTOFFSET.LLI.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var LLI: UInt8 { let o = _accessor.offset(VT.LLI); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Signal strength indicator (1-9)
-  public var SSI: UInt8 { let o = _accessor.offset(VTOFFSET.SSI.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var SSI: UInt8 { let o = _accessor.offset(VT.SSI); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   public static func startgnssObsData(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(SIGNAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNAL, at: VTOFFSET.SIGNAL.p) }
-  public static func add(OBS_TYPE: gnssObsType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBS_TYPE.rawValue, def: 0, at: VTOFFSET.OBS_TYPE.p) }
-  public static func add(VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: 0.0, at: VTOFFSET.VALUE.p) }
-  public static func add(LLI: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LLI, def: 0, at: VTOFFSET.LLI.p) }
-  public static func add(SSI: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SSI, def: 0, at: VTOFFSET.SSI.p) }
+  public static func add(SIGNAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNAL, at: VT.SIGNAL) }
+  public static func add(OBS_TYPE: gnssObsType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBS_TYPE.rawValue, def: 0, at: VT.OBS_TYPE) }
+  public static func add(VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: 0.0, at: VT.VALUE) }
+  public static func add(LLI: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LLI, def: 0, at: VT.LLI) }
+  public static func add(SSI: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SSI, def: 0, at: VT.SSI) }
   public static func endgnssObsData(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func creategnssObsData(
     _ fbb: inout FlatBufferBuilder,
@@ -100,11 +98,11 @@ public struct gnssObsData: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SIGNAL.p, fieldName: "SIGNAL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBS_TYPE.p, fieldName: "OBS_TYPE", required: false, type: gnssObsType.self)
-    try _v.visit(field: VTOFFSET.VALUE.p, fieldName: "VALUE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LLI.p, fieldName: "LLI", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.SSI.p, fieldName: "SSI", required: false, type: UInt8.self)
+    try _v.visit(field: VT.SIGNAL, fieldName: "SIGNAL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBS_TYPE, fieldName: "OBS_TYPE", required: false, type: gnssObsType.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.LLI, fieldName: "LLI", required: false, type: UInt8.self)
+    try _v.visit(field: VT.SSI, fieldName: "SSI", required: false, type: UInt8.self)
     _v.finish()
   }
 }
@@ -121,41 +119,39 @@ public struct gnssSatObs: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case GNSS_SAT_ID = 4
-    case CONSTELLATION = 6
-    case ELEVATION = 8
-    case AZIMUTH = 10
-    case TRACKING_STATUS = 12
-    case AGC_STATE = 14
-    case OBSERVATIONS = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let GNSS_SAT_ID: VOffset = 4
+    static let CONSTELLATION: VOffset = 6
+    static let ELEVATION: VOffset = 8
+    static let AZIMUTH: VOffset = 10
+    static let TRACKING_STATUS: VOffset = 12
+    static let AGC_STATE: VOffset = 14
+    static let OBSERVATIONS: VOffset = 16
   }
 
   ///  GNSS satellite identifier (e.g., G01, R24, E05, C03)
-  public var GNSS_SAT_ID: String? { let o = _accessor.offset(VTOFFSET.GNSS_SAT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GNSS_SAT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GNSS_SAT_ID.v) }
+  public var GNSS_SAT_ID: String? { let o = _accessor.offset(VT.GNSS_SAT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GNSS_SAT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GNSS_SAT_ID) }
   ///  Constellation
-  public var CONSTELLATION: gnssConstellation { let o = _accessor.offset(VTOFFSET.CONSTELLATION.v); return o == 0 ? .gps : gnssConstellation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gps }
+  public var CONSTELLATION: gnssConstellation { let o = _accessor.offset(VT.CONSTELLATION); return o == 0 ? .gps : gnssConstellation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gps }
   ///  Elevation angle in degrees
-  public var ELEVATION: Double { let o = _accessor.offset(VTOFFSET.ELEVATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ELEVATION: Double { let o = _accessor.offset(VT.ELEVATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Azimuth angle in degrees
-  public var AZIMUTH: Double { let o = _accessor.offset(VTOFFSET.AZIMUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var AZIMUTH: Double { let o = _accessor.offset(VT.AZIMUTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Tracking status (0=not tracked, 1=tracking, 2=locked)
-  public var TRACKING_STATUS: Int32 { let o = _accessor.offset(VTOFFSET.TRACKING_STATUS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var TRACKING_STATUS: Int32 { let o = _accessor.offset(VT.TRACKING_STATUS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  AGC state
-  public var AGC_STATE: Int32 { let o = _accessor.offset(VTOFFSET.AGC_STATE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var AGC_STATE: Int32 { let o = _accessor.offset(VT.AGC_STATE); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Observations for this satellite
-  public var OBSERVATIONS: FlatbufferVector<gnssObsData> { return _accessor.vector(at: VTOFFSET.OBSERVATIONS.v, byteSize: 4) }
+  public var OBSERVATIONS: FlatbufferVector<gnssObsData> { return _accessor.vector(at: VT.OBSERVATIONS, byteSize: 4) }
   public static func startgnssSatObs(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(GNSS_SAT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GNSS_SAT_ID, at: VTOFFSET.GNSS_SAT_ID.p) }
-  public static func add(CONSTELLATION: gnssConstellation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONSTELLATION.rawValue, def: 0, at: VTOFFSET.CONSTELLATION.p) }
-  public static func add(ELEVATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION, def: 0.0, at: VTOFFSET.ELEVATION.p) }
-  public static func add(AZIMUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH, def: 0.0, at: VTOFFSET.AZIMUTH.p) }
-  public static func add(TRACKING_STATUS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACKING_STATUS, def: 0, at: VTOFFSET.TRACKING_STATUS.p) }
-  public static func add(AGC_STATE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AGC_STATE, def: 0, at: VTOFFSET.AGC_STATE.p) }
-  public static func addVectorOf(OBSERVATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVATIONS, at: VTOFFSET.OBSERVATIONS.p) }
+  public static func add(GNSS_SAT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GNSS_SAT_ID, at: VT.GNSS_SAT_ID) }
+  public static func add(CONSTELLATION: gnssConstellation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONSTELLATION.rawValue, def: 0, at: VT.CONSTELLATION) }
+  public static func add(ELEVATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION, def: 0.0, at: VT.ELEVATION) }
+  public static func add(AZIMUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH, def: 0.0, at: VT.AZIMUTH) }
+  public static func add(TRACKING_STATUS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACKING_STATUS, def: 0, at: VT.TRACKING_STATUS) }
+  public static func add(AGC_STATE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AGC_STATE, def: 0, at: VT.AGC_STATE) }
+  public static func addVectorOf(OBSERVATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVATIONS, at: VT.OBSERVATIONS) }
   public static func endgnssSatObs(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func creategnssSatObs(
     _ fbb: inout FlatBufferBuilder,
@@ -180,13 +176,13 @@ public struct gnssSatObs: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.GNSS_SAT_ID.p, fieldName: "GNSS_SAT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONSTELLATION.p, fieldName: "CONSTELLATION", required: false, type: gnssConstellation.self)
-    try _v.visit(field: VTOFFSET.ELEVATION.p, fieldName: "ELEVATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.AZIMUTH.p, fieldName: "AZIMUTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TRACKING_STATUS.p, fieldName: "TRACKING_STATUS", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.AGC_STATE.p, fieldName: "AGC_STATE", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.OBSERVATIONS.p, fieldName: "OBSERVATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<gnssObsData>, gnssObsData>>.self)
+    try _v.visit(field: VT.GNSS_SAT_ID, fieldName: "GNSS_SAT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONSTELLATION, fieldName: "CONSTELLATION", required: false, type: gnssConstellation.self)
+    try _v.visit(field: VT.ELEVATION, fieldName: "ELEVATION", required: false, type: Double.self)
+    try _v.visit(field: VT.AZIMUTH, fieldName: "AZIMUTH", required: false, type: Double.self)
+    try _v.visit(field: VT.TRACKING_STATUS, fieldName: "TRACKING_STATUS", required: false, type: Int32.self)
+    try _v.visit(field: VT.AGC_STATE, fieldName: "AGC_STATE", required: false, type: Int32.self)
+    try _v.visit(field: VT.OBSERVATIONS, fieldName: "OBSERVATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<gnssObsData>, gnssObsData>>.self)
     _v.finish()
   }
 }
@@ -203,112 +199,110 @@ public struct GNO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case RECEIVER_ID = 6
-    case RECEIVER_TYPE = 8
-    case ANTENNA_ID = 10
-    case ANTENNA_TYPE = 12
-    case FIRMWARE_VERSION = 14
-    case EPOCH = 16
-    case CLOCK_OFFSET = 18
-    case CLOCK_DRIFT = 20
-    case LATITUDE = 22
-    case LONGITUDE = 24
-    case ALTITUDE = 26
-    case APPROX_X = 28
-    case APPROX_Y = 30
-    case APPROX_Z = 32
-    case INTERVAL = 34
-    case NUM_SATS = 36
-    case PDOP = 38
-    case HDOP = 40
-    case VDOP = 42
-    case SAT_OBS = 44
-    case OBS_CODE_SET = 46
-    case NOTES = 48
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let RECEIVER_ID: VOffset = 6
+    static let RECEIVER_TYPE: VOffset = 8
+    static let ANTENNA_ID: VOffset = 10
+    static let ANTENNA_TYPE: VOffset = 12
+    static let FIRMWARE_VERSION: VOffset = 14
+    static let EPOCH: VOffset = 16
+    static let CLOCK_OFFSET: VOffset = 18
+    static let CLOCK_DRIFT: VOffset = 20
+    static let LATITUDE: VOffset = 22
+    static let LONGITUDE: VOffset = 24
+    static let ALTITUDE: VOffset = 26
+    static let APPROX_X: VOffset = 28
+    static let APPROX_Y: VOffset = 30
+    static let APPROX_Z: VOffset = 32
+    static let INTERVAL: VOffset = 34
+    static let NUM_SATS: VOffset = 36
+    static let PDOP: VOffset = 38
+    static let HDOP: VOffset = 40
+    static let VDOP: VOffset = 42
+    static let SAT_OBS: VOffset = 44
+    static let OBS_CODE_SET: VOffset = 46
+    static let NOTES: VOffset = 48
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Receiver identifier
-  public var RECEIVER_ID: String? { let o = _accessor.offset(VTOFFSET.RECEIVER_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RECEIVER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RECEIVER_ID.v) }
+  public var RECEIVER_ID: String? { let o = _accessor.offset(VT.RECEIVER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RECEIVER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RECEIVER_ID) }
   ///  Receiver type/model
-  public var RECEIVER_TYPE: String? { let o = _accessor.offset(VTOFFSET.RECEIVER_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RECEIVER_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RECEIVER_TYPE.v) }
+  public var RECEIVER_TYPE: String? { let o = _accessor.offset(VT.RECEIVER_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RECEIVER_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RECEIVER_TYPE) }
   ///  Antenna identifier
-  public var ANTENNA_ID: String? { let o = _accessor.offset(VTOFFSET.ANTENNA_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ANTENNA_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ANTENNA_ID.v) }
+  public var ANTENNA_ID: String? { let o = _accessor.offset(VT.ANTENNA_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ANTENNA_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ANTENNA_ID) }
   ///  Antenna type/model
-  public var ANTENNA_TYPE: String? { let o = _accessor.offset(VTOFFSET.ANTENNA_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ANTENNA_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ANTENNA_TYPE.v) }
+  public var ANTENNA_TYPE: String? { let o = _accessor.offset(VT.ANTENNA_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ANTENNA_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ANTENNA_TYPE) }
   ///  Receiver firmware version
-  public var FIRMWARE_VERSION: String? { let o = _accessor.offset(VTOFFSET.FIRMWARE_VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FIRMWARE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FIRMWARE_VERSION.v) }
+  public var FIRMWARE_VERSION: String? { let o = _accessor.offset(VT.FIRMWARE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FIRMWARE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FIRMWARE_VERSION) }
   ///  Observation epoch (ISO 8601)
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
   ///  Receiver clock offset in seconds
-  public var CLOCK_OFFSET: Double { let o = _accessor.offset(VTOFFSET.CLOCK_OFFSET.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CLOCK_OFFSET: Double { let o = _accessor.offset(VT.CLOCK_OFFSET); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Receiver clock drift in seconds/second
-  public var CLOCK_DRIFT: Double { let o = _accessor.offset(VTOFFSET.CLOCK_DRIFT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CLOCK_DRIFT: Double { let o = _accessor.offset(VT.CLOCK_DRIFT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Receiver geodetic latitude in degrees
-  public var LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LATITUDE: Double { let o = _accessor.offset(VT.LATITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Receiver geodetic longitude in degrees
-  public var LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE: Double { let o = _accessor.offset(VT.LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Receiver altitude in meters above WGS-84
-  public var ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ALTITUDE: Double { let o = _accessor.offset(VT.ALTITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Approximate position X in meters (ECEF)
-  public var APPROX_X: Double { let o = _accessor.offset(VTOFFSET.APPROX_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var APPROX_X: Double { let o = _accessor.offset(VT.APPROX_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Approximate position Y in meters (ECEF)
-  public var APPROX_Y: Double { let o = _accessor.offset(VTOFFSET.APPROX_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var APPROX_Y: Double { let o = _accessor.offset(VT.APPROX_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Approximate position Z in meters (ECEF)
-  public var APPROX_Z: Double { let o = _accessor.offset(VTOFFSET.APPROX_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var APPROX_Z: Double { let o = _accessor.offset(VT.APPROX_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Observation interval in seconds
-  public var INTERVAL: Double { let o = _accessor.offset(VTOFFSET.INTERVAL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INTERVAL: Double { let o = _accessor.offset(VT.INTERVAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of satellites observed
-  public var NUM_SATS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_SATS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var NUM_SATS: UInt32 { let o = _accessor.offset(VT.NUM_SATS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  PDOP
-  public var PDOP: Double { let o = _accessor.offset(VTOFFSET.PDOP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PDOP: Double { let o = _accessor.offset(VT.PDOP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  HDOP
-  public var HDOP: Double { let o = _accessor.offset(VTOFFSET.HDOP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HDOP: Double { let o = _accessor.offset(VT.HDOP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  VDOP
-  public var VDOP: Double { let o = _accessor.offset(VTOFFSET.VDOP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VDOP: Double { let o = _accessor.offset(VT.VDOP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Satellite observations
-  public var SAT_OBS: FlatbufferVector<gnssSatObs> { return _accessor.vector(at: VTOFFSET.SAT_OBS.v, byteSize: 4) }
+  public var SAT_OBS: FlatbufferVector<gnssSatObs> { return _accessor.vector(at: VT.SAT_OBS, byteSize: 4) }
   ///  Observation code set identifiers
-  public var OBS_CODE_SET: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.OBS_CODE_SET.v, byteSize: 4) }
+  public var OBS_CODE_SET: FlatbufferVector<String?> { return _accessor.vector(at: VT.OBS_CODE_SET, byteSize: 4) }
   ///  Additional notes
-  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
   public static func startGNO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(RECEIVER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVER_ID, at: VTOFFSET.RECEIVER_ID.p) }
-  public static func add(RECEIVER_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVER_TYPE, at: VTOFFSET.RECEIVER_TYPE.p) }
-  public static func add(ANTENNA_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANTENNA_ID, at: VTOFFSET.ANTENNA_ID.p) }
-  public static func add(ANTENNA_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANTENNA_TYPE, at: VTOFFSET.ANTENNA_TYPE.p) }
-  public static func add(FIRMWARE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIRMWARE_VERSION, at: VTOFFSET.FIRMWARE_VERSION.p) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(CLOCK_OFFSET: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOCK_OFFSET, def: 0.0, at: VTOFFSET.CLOCK_OFFSET.p) }
-  public static func add(CLOCK_DRIFT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOCK_DRIFT, def: 0.0, at: VTOFFSET.CLOCK_DRIFT.p) }
-  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VTOFFSET.LATITUDE.p) }
-  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VTOFFSET.LONGITUDE.p) }
-  public static func add(ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VTOFFSET.ALTITUDE.p) }
-  public static func add(APPROX_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APPROX_X, def: 0.0, at: VTOFFSET.APPROX_X.p) }
-  public static func add(APPROX_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APPROX_Y, def: 0.0, at: VTOFFSET.APPROX_Y.p) }
-  public static func add(APPROX_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APPROX_Z, def: 0.0, at: VTOFFSET.APPROX_Z.p) }
-  public static func add(INTERVAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERVAL, def: 0.0, at: VTOFFSET.INTERVAL.p) }
-  public static func add(NUM_SATS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_SATS, def: 0, at: VTOFFSET.NUM_SATS.p) }
-  public static func add(PDOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PDOP, def: 0.0, at: VTOFFSET.PDOP.p) }
-  public static func add(HDOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HDOP, def: 0.0, at: VTOFFSET.HDOP.p) }
-  public static func add(VDOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VDOP, def: 0.0, at: VTOFFSET.VDOP.p) }
-  public static func addVectorOf(SAT_OBS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAT_OBS, at: VTOFFSET.SAT_OBS.p) }
-  public static func addVectorOf(OBS_CODE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBS_CODE_SET, at: VTOFFSET.OBS_CODE_SET.p) }
-  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(RECEIVER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVER_ID, at: VT.RECEIVER_ID) }
+  public static func add(RECEIVER_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVER_TYPE, at: VT.RECEIVER_TYPE) }
+  public static func add(ANTENNA_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANTENNA_ID, at: VT.ANTENNA_ID) }
+  public static func add(ANTENNA_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANTENNA_TYPE, at: VT.ANTENNA_TYPE) }
+  public static func add(FIRMWARE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIRMWARE_VERSION, at: VT.FIRMWARE_VERSION) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(CLOCK_OFFSET: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOCK_OFFSET, def: 0.0, at: VT.CLOCK_OFFSET) }
+  public static func add(CLOCK_DRIFT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CLOCK_DRIFT, def: 0.0, at: VT.CLOCK_DRIFT) }
+  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VT.LATITUDE) }
+  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VT.LONGITUDE) }
+  public static func add(ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VT.ALTITUDE) }
+  public static func add(APPROX_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APPROX_X, def: 0.0, at: VT.APPROX_X) }
+  public static func add(APPROX_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APPROX_Y, def: 0.0, at: VT.APPROX_Y) }
+  public static func add(APPROX_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APPROX_Z, def: 0.0, at: VT.APPROX_Z) }
+  public static func add(INTERVAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERVAL, def: 0.0, at: VT.INTERVAL) }
+  public static func add(NUM_SATS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_SATS, def: 0, at: VT.NUM_SATS) }
+  public static func add(PDOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PDOP, def: 0.0, at: VT.PDOP) }
+  public static func add(HDOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HDOP, def: 0.0, at: VT.HDOP) }
+  public static func add(VDOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VDOP, def: 0.0, at: VT.VDOP) }
+  public static func addVectorOf(SAT_OBS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAT_OBS, at: VT.SAT_OBS) }
+  public static func addVectorOf(OBS_CODE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBS_CODE_SET, at: VT.OBS_CODE_SET) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
   public static func endGNO(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGNO(
     _ fbb: inout FlatBufferBuilder,
@@ -365,29 +359,29 @@ public struct GNO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RECEIVER_ID.p, fieldName: "RECEIVER_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RECEIVER_TYPE.p, fieldName: "RECEIVER_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ANTENNA_ID.p, fieldName: "ANTENNA_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ANTENNA_TYPE.p, fieldName: "ANTENNA_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FIRMWARE_VERSION.p, fieldName: "FIRMWARE_VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CLOCK_OFFSET.p, fieldName: "CLOCK_OFFSET", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CLOCK_DRIFT.p, fieldName: "CLOCK_DRIFT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LATITUDE.p, fieldName: "LATITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LONGITUDE.p, fieldName: "LONGITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE.p, fieldName: "ALTITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.APPROX_X.p, fieldName: "APPROX_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.APPROX_Y.p, fieldName: "APPROX_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.APPROX_Z.p, fieldName: "APPROX_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INTERVAL.p, fieldName: "INTERVAL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NUM_SATS.p, fieldName: "NUM_SATS", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.PDOP.p, fieldName: "PDOP", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HDOP.p, fieldName: "HDOP", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VDOP.p, fieldName: "VDOP", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SAT_OBS.p, fieldName: "SAT_OBS", required: false, type: ForwardOffset<Vector<ForwardOffset<gnssSatObs>, gnssSatObs>>.self)
-    try _v.visit(field: VTOFFSET.OBS_CODE_SET.p, fieldName: "OBS_CODE_SET", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RECEIVER_ID, fieldName: "RECEIVER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RECEIVER_TYPE, fieldName: "RECEIVER_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ANTENNA_ID, fieldName: "ANTENNA_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ANTENNA_TYPE, fieldName: "ANTENNA_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FIRMWARE_VERSION, fieldName: "FIRMWARE_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLOCK_OFFSET, fieldName: "CLOCK_OFFSET", required: false, type: Double.self)
+    try _v.visit(field: VT.CLOCK_DRIFT, fieldName: "CLOCK_DRIFT", required: false, type: Double.self)
+    try _v.visit(field: VT.LATITUDE, fieldName: "LATITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE, fieldName: "LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE, fieldName: "ALTITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.APPROX_X, fieldName: "APPROX_X", required: false, type: Double.self)
+    try _v.visit(field: VT.APPROX_Y, fieldName: "APPROX_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.APPROX_Z, fieldName: "APPROX_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.INTERVAL, fieldName: "INTERVAL", required: false, type: Double.self)
+    try _v.visit(field: VT.NUM_SATS, fieldName: "NUM_SATS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.PDOP, fieldName: "PDOP", required: false, type: Double.self)
+    try _v.visit(field: VT.HDOP, fieldName: "HDOP", required: false, type: Double.self)
+    try _v.visit(field: VT.VDOP, fieldName: "VDOP", required: false, type: Double.self)
+    try _v.visit(field: VT.SAT_OBS, fieldName: "SAT_OBS", required: false, type: ForwardOffset<Vector<ForwardOffset<gnssSatObs>, gnssSatObs>>.self)
+    try _v.visit(field: VT.OBS_CODE_SET, fieldName: "OBS_CODE_SET", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

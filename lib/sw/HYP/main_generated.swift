@@ -30,26 +30,24 @@ public struct Score: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NORAD_CAT_ID = 4
-    case TYPE = 6
-    case TAG = 8
-    case SCORE = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NORAD_CAT_ID: VOffset = 4
+    static let TYPE: VOffset = 6
+    static let TAG: VOffset = 8
+    static let SCORE: VOffset = 10
   }
 
-  public var NORAD_CAT_ID: String? { let o = _accessor.offset(VTOFFSET.NORAD_CAT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NORAD_CAT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NORAD_CAT_ID.v) }
-  public var TYPE: ScoreType { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? .outlier : ScoreType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .outlier }
-  public var TAG: String? { let o = _accessor.offset(VTOFFSET.TAG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TAGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TAG.v) }
-  public var SCORE: Float32 { let o = _accessor.offset(VTOFFSET.SCORE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var NORAD_CAT_ID: String? { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NORAD_CAT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NORAD_CAT_ID) }
+  public var TYPE: ScoreType { let o = _accessor.offset(VT.TYPE); return o == 0 ? .outlier : ScoreType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .outlier }
+  public var TAG: String? { let o = _accessor.offset(VT.TAG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TAGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TAG) }
+  public var SCORE: Float32 { let o = _accessor.offset(VT.SCORE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   public static func startScore(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(NORAD_CAT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NORAD_CAT_ID, at: VTOFFSET.NORAD_CAT_ID.p) }
-  public static func add(TYPE: ScoreType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE.rawValue, def: 0, at: VTOFFSET.TYPE.p) }
-  public static func add(TAG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAG, at: VTOFFSET.TAG.p) }
-  public static func add(SCORE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCORE, def: 0.0, at: VTOFFSET.SCORE.p) }
+  public static func add(NORAD_CAT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NORAD_CAT_ID, at: VT.NORAD_CAT_ID) }
+  public static func add(TYPE: ScoreType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE.rawValue, def: 0, at: VT.TYPE) }
+  public static func add(TAG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAG, at: VT.TAG) }
+  public static func add(SCORE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCORE, def: 0.0, at: VT.SCORE) }
   public static func endScore(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createScore(
     _ fbb: inout FlatBufferBuilder,
@@ -68,10 +66,10 @@ public struct Score: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NORAD_CAT_ID.p, fieldName: "NORAD_CAT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ScoreType.self)
-    try _v.visit(field: VTOFFSET.TAG.p, fieldName: "TAG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SCORE.p, fieldName: "SCORE", required: false, type: Float32.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: ScoreType.self)
+    try _v.visit(field: VT.TAG, fieldName: "TAG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCORE, fieldName: "SCORE", required: false, type: Float32.self)
     _v.finish()
   }
 }
@@ -88,60 +86,58 @@ public struct HYP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CAT_IDS = 4
-    case SIT_IDS = 6
-    case NAME = 8
-    case CATEGORY = 10
-    case ROW_INDICATORS = 12
-    case COL_INDICATORS = 14
-    case MATRIX = 16
-    case SCORE = 18
-    case ANALYSIS_METHOD = 20
-    case EVENT_START_TIME = 22
-    case EVENT_END_TIME = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CAT_IDS: VOffset = 4
+    static let SIT_IDS: VOffset = 6
+    static let NAME: VOffset = 8
+    static let CATEGORY: VOffset = 10
+    static let ROW_INDICATORS: VOffset = 12
+    static let COL_INDICATORS: VOffset = 14
+    static let MATRIX: VOffset = 16
+    static let SCORE: VOffset = 18
+    static let ANALYSIS_METHOD: VOffset = 20
+    static let EVENT_START_TIME: VOffset = 22
+    static let EVENT_END_TIME: VOffset = 24
   }
 
   ///  Space Objects Involved
-  public var CAT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.CAT_IDS.v, byteSize: 4) }
+  public var CAT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.CAT_IDS, byteSize: 4) }
   ///  Space Objects Involved
-  public var SIT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SIT_IDS.v, byteSize: 4) }
+  public var SIT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SIT_IDS, byteSize: 4) }
   ///  Name of the hypothesis
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Category of the hypothesis
-  public var CATEGORY: String? { let o = _accessor.offset(VTOFFSET.CATEGORY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CATEGORYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CATEGORY.v) }
+  public var CATEGORY: String? { let o = _accessor.offset(VT.CATEGORY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CATEGORYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CATEGORY) }
   ///  Row indicators for the hypothesis matrix
-  public var ROW_INDICATORS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ROW_INDICATORS.v, byteSize: 4) }
+  public var ROW_INDICATORS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ROW_INDICATORS, byteSize: 4) }
   ///  Column indicators for the hypothesis matrix
-  public var COL_INDICATORS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.COL_INDICATORS.v, byteSize: 4) }
+  public var COL_INDICATORS: FlatbufferVector<String?> { return _accessor.vector(at: VT.COL_INDICATORS, byteSize: 4) }
   ///  Matrix data as a boolean array in row major format; if overflow, adds additional rows
-  public var MATRIX: FlatbufferVector<Bool> { return _accessor.vector(at: VTOFFSET.MATRIX.v, byteSize: 1) }
-  public func withUnsafePointerToMatrix<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.MATRIX.v, body: body) }
+  public var MATRIX: FlatbufferVector<Bool> { return _accessor.vector(at: VT.MATRIX, byteSize: 1) }
+  public func withUnsafePointerToMatrix<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.MATRIX, body: body) }
   ///  Scores for objects
-  public var SCORE: FlatbufferVector<Score> { return _accessor.vector(at: VTOFFSET.SCORE.v, byteSize: 4) }
+  public var SCORE: FlatbufferVector<Score> { return _accessor.vector(at: VT.SCORE, byteSize: 4) }
   ///  Analysis methodology used to form the hypothesis
-  public var ANALYSIS_METHOD: String? { let o = _accessor.offset(VTOFFSET.ANALYSIS_METHOD.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ANALYSIS_METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ANALYSIS_METHOD.v) }
-  public var EVENT_START_TIME: String? { let o = _accessor.offset(VTOFFSET.EVENT_START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EVENT_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EVENT_START_TIME.v) }
-  public var EVENT_END_TIME: String? { let o = _accessor.offset(VTOFFSET.EVENT_END_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EVENT_END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EVENT_END_TIME.v) }
+  public var ANALYSIS_METHOD: String? { let o = _accessor.offset(VT.ANALYSIS_METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ANALYSIS_METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ANALYSIS_METHOD) }
+  public var EVENT_START_TIME: String? { let o = _accessor.offset(VT.EVENT_START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EVENT_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EVENT_START_TIME) }
+  public var EVENT_END_TIME: String? { let o = _accessor.offset(VT.EVENT_END_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EVENT_END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EVENT_END_TIME) }
   public static func startHYP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func addVectorOf(CAT_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAT_IDS, at: VTOFFSET.CAT_IDS.p) }
-  public static func addVectorOf(SIT_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIT_IDS, at: VTOFFSET.SIT_IDS.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(CATEGORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATEGORY, at: VTOFFSET.CATEGORY.p) }
-  public static func addVectorOf(ROW_INDICATORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROW_INDICATORS, at: VTOFFSET.ROW_INDICATORS.p) }
-  public static func addVectorOf(COL_INDICATORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COL_INDICATORS, at: VTOFFSET.COL_INDICATORS.p) }
-  public static func addVectorOf(MATRIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATRIX, at: VTOFFSET.MATRIX.p) }
-  public static func addVectorOf(SCORE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCORE, at: VTOFFSET.SCORE.p) }
-  public static func add(ANALYSIS_METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANALYSIS_METHOD, at: VTOFFSET.ANALYSIS_METHOD.p) }
-  public static func add(EVENT_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_START_TIME, at: VTOFFSET.EVENT_START_TIME.p) }
-  public static func add(EVENT_END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_END_TIME, at: VTOFFSET.EVENT_END_TIME.p) }
+  public static func addVectorOf(CAT_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAT_IDS, at: VT.CAT_IDS) }
+  public static func addVectorOf(SIT_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIT_IDS, at: VT.SIT_IDS) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(CATEGORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATEGORY, at: VT.CATEGORY) }
+  public static func addVectorOf(ROW_INDICATORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROW_INDICATORS, at: VT.ROW_INDICATORS) }
+  public static func addVectorOf(COL_INDICATORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COL_INDICATORS, at: VT.COL_INDICATORS) }
+  public static func addVectorOf(MATRIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATRIX, at: VT.MATRIX) }
+  public static func addVectorOf(SCORE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCORE, at: VT.SCORE) }
+  public static func add(ANALYSIS_METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANALYSIS_METHOD, at: VT.ANALYSIS_METHOD) }
+  public static func add(EVENT_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_START_TIME, at: VT.EVENT_START_TIME) }
+  public static func add(EVENT_END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_END_TIME, at: VT.EVENT_END_TIME) }
   public static func endHYP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createHYP(
     _ fbb: inout FlatBufferBuilder,
@@ -174,17 +170,17 @@ public struct HYP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CAT_IDS.p, fieldName: "CAT_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.SIT_IDS.p, fieldName: "SIT_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CATEGORY.p, fieldName: "CATEGORY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ROW_INDICATORS.p, fieldName: "ROW_INDICATORS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.COL_INDICATORS.p, fieldName: "COL_INDICATORS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.MATRIX.p, fieldName: "MATRIX", required: false, type: ForwardOffset<Vector<Bool, Bool>>.self)
-    try _v.visit(field: VTOFFSET.SCORE.p, fieldName: "SCORE", required: false, type: ForwardOffset<Vector<ForwardOffset<Score>, Score>>.self)
-    try _v.visit(field: VTOFFSET.ANALYSIS_METHOD.p, fieldName: "ANALYSIS_METHOD", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EVENT_START_TIME.p, fieldName: "EVENT_START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EVENT_END_TIME.p, fieldName: "EVENT_END_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CAT_IDS, fieldName: "CAT_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SIT_IDS, fieldName: "SIT_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CATEGORY, fieldName: "CATEGORY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ROW_INDICATORS, fieldName: "ROW_INDICATORS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COL_INDICATORS, fieldName: "COL_INDICATORS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.MATRIX, fieldName: "MATRIX", required: false, type: ForwardOffset<Vector<Bool, Bool>>.self)
+    try _v.visit(field: VT.SCORE, fieldName: "SCORE", required: false, type: ForwardOffset<Vector<ForwardOffset<Score>, Score>>.self)
+    try _v.visit(field: VT.ANALYSIS_METHOD, fieldName: "ANALYSIS_METHOD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EVENT_START_TIME, fieldName: "EVENT_START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EVENT_END_TIME, fieldName: "EVENT_END_TIME", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

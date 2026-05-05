@@ -150,44 +150,42 @@ public struct SON: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COMMAND = 4
-    case ACTIVE_CONFIG = 6
-    case PASSIVE_CONFIG = 8
-    case TL_REQUEST = 10
-    case ENVIRONMENT = 12
-    case TARGET_SIGNATURE = 14
-    case TMA_INPUT = 16
-    case TORPEDO_SEEKER = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COMMAND: VOffset = 4
+    static let ACTIVE_CONFIG: VOffset = 6
+    static let PASSIVE_CONFIG: VOffset = 8
+    static let TL_REQUEST: VOffset = 10
+    static let ENVIRONMENT: VOffset = 12
+    static let TARGET_SIGNATURE: VOffset = 14
+    static let TMA_INPUT: VOffset = 16
+    static let TORPEDO_SEEKER: VOffset = 18
   }
 
-  public var COMMAND: String? { let o = _accessor.offset(VTOFFSET.COMMAND.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COMMANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMAND.v) }
-  public var ACTIVE_CONFIG: String? { let o = _accessor.offset(VTOFFSET.ACTIVE_CONFIG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ACTIVE_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ACTIVE_CONFIG.v) }
-  public var PASSIVE_CONFIG: String? { let o = _accessor.offset(VTOFFSET.PASSIVE_CONFIG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PASSIVE_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PASSIVE_CONFIG.v) }
-  public var TL_REQUEST: String? { let o = _accessor.offset(VTOFFSET.TL_REQUEST.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TL_REQUESTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TL_REQUEST.v) }
-  public var ENVIRONMENT: String? { let o = _accessor.offset(VTOFFSET.ENVIRONMENT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ENVIRONMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENVIRONMENT.v) }
-  public var TARGET_SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.TARGET_SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TARGET_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TARGET_SIGNATURE.v) }
-  public var TMA_INPUT: String? { let o = _accessor.offset(VTOFFSET.TMA_INPUT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TMA_INPUTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TMA_INPUT.v) }
-  public var TORPEDO_SEEKER: String? { let o = _accessor.offset(VTOFFSET.TORPEDO_SEEKER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TORPEDO_SEEKERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TORPEDO_SEEKER.v) }
+  public var COMMAND: String? { let o = _accessor.offset(VT.COMMAND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMAND) }
+  public var ACTIVE_CONFIG: String? { let o = _accessor.offset(VT.ACTIVE_CONFIG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ACTIVE_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ACTIVE_CONFIG) }
+  public var PASSIVE_CONFIG: String? { let o = _accessor.offset(VT.PASSIVE_CONFIG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PASSIVE_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PASSIVE_CONFIG) }
+  public var TL_REQUEST: String? { let o = _accessor.offset(VT.TL_REQUEST); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TL_REQUESTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TL_REQUEST) }
+  public var ENVIRONMENT: String? { let o = _accessor.offset(VT.ENVIRONMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENVIRONMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENVIRONMENT) }
+  public var TARGET_SIGNATURE: String? { let o = _accessor.offset(VT.TARGET_SIGNATURE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGET_SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET_SIGNATURE) }
+  public var TMA_INPUT: String? { let o = _accessor.offset(VT.TMA_INPUT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TMA_INPUTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TMA_INPUT) }
+  public var TORPEDO_SEEKER: String? { let o = _accessor.offset(VT.TORPEDO_SEEKER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TORPEDO_SEEKERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TORPEDO_SEEKER) }
   public static func startSON(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND, at: VTOFFSET.COMMAND.p) }
-  public static func add(ACTIVE_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACTIVE_CONFIG, at: VTOFFSET.ACTIVE_CONFIG.p) }
-  public static func add(PASSIVE_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PASSIVE_CONFIG, at: VTOFFSET.PASSIVE_CONFIG.p) }
-  public static func add(TL_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TL_REQUEST, at: VTOFFSET.TL_REQUEST.p) }
-  public static func add(ENVIRONMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENVIRONMENT, at: VTOFFSET.ENVIRONMENT.p) }
-  public static func add(TARGET_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_SIGNATURE, at: VTOFFSET.TARGET_SIGNATURE.p) }
-  public static func add(TMA_INPUT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TMA_INPUT, at: VTOFFSET.TMA_INPUT.p) }
-  public static func add(TORPEDO_SEEKER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TORPEDO_SEEKER, at: VTOFFSET.TORPEDO_SEEKER.p) }
+  public static func add(COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND, at: VT.COMMAND) }
+  public static func add(ACTIVE_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACTIVE_CONFIG, at: VT.ACTIVE_CONFIG) }
+  public static func add(PASSIVE_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PASSIVE_CONFIG, at: VT.PASSIVE_CONFIG) }
+  public static func add(TL_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TL_REQUEST, at: VT.TL_REQUEST) }
+  public static func add(ENVIRONMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENVIRONMENT, at: VT.ENVIRONMENT) }
+  public static func add(TARGET_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_SIGNATURE, at: VT.TARGET_SIGNATURE) }
+  public static func add(TMA_INPUT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TMA_INPUT, at: VT.TMA_INPUT) }
+  public static func add(TORPEDO_SEEKER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TORPEDO_SEEKER, at: VT.TORPEDO_SEEKER) }
   public static func endSON(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSON(
     _ fbb: inout FlatBufferBuilder,
@@ -214,14 +212,14 @@ public struct SON: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COMMAND.p, fieldName: "COMMAND", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ACTIVE_CONFIG.p, fieldName: "ACTIVE_CONFIG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PASSIVE_CONFIG.p, fieldName: "PASSIVE_CONFIG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TL_REQUEST.p, fieldName: "TL_REQUEST", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ENVIRONMENT.p, fieldName: "ENVIRONMENT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TARGET_SIGNATURE.p, fieldName: "TARGET_SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TMA_INPUT.p, fieldName: "TMA_INPUT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TORPEDO_SEEKER.p, fieldName: "TORPEDO_SEEKER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMAND, fieldName: "COMMAND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ACTIVE_CONFIG, fieldName: "ACTIVE_CONFIG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PASSIVE_CONFIG, fieldName: "PASSIVE_CONFIG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TL_REQUEST, fieldName: "TL_REQUEST", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENVIRONMENT, fieldName: "ENVIRONMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET_SIGNATURE, fieldName: "TARGET_SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TMA_INPUT, fieldName: "TMA_INPUT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TORPEDO_SEEKER, fieldName: "TORPEDO_SEEKER", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

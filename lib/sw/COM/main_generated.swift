@@ -138,57 +138,55 @@ public struct COM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SYSTEM_ID = 4
-    case ENTITY_ID = 6
-    case IS_TRANSMITTING = 8
-    case IS_RECEIVING = 10
-    case CURRENT_FREQUENCY_HZ = 12
-    case CURRENT_POWER_WATTS = 14
-    case CURRENT_DATA_RATE_BPS = 16
-    case MESSAGES_SENT = 18
-    case MESSAGES_RECEIVED = 20
-    case BYTES_SENT = 22
-    case BYTES_RECEIVED = 24
-    case CONNECTED_NODES = 26
-    case ACTIVE_LINKS = 28
-    case LAST_UPDATE_MS = 30
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SYSTEM_ID: VOffset = 4
+    static let ENTITY_ID: VOffset = 6
+    static let IS_TRANSMITTING: VOffset = 8
+    static let IS_RECEIVING: VOffset = 10
+    static let CURRENT_FREQUENCY_HZ: VOffset = 12
+    static let CURRENT_POWER_WATTS: VOffset = 14
+    static let CURRENT_DATA_RATE_BPS: VOffset = 16
+    static let MESSAGES_SENT: VOffset = 18
+    static let MESSAGES_RECEIVED: VOffset = 20
+    static let BYTES_SENT: VOffset = 22
+    static let BYTES_RECEIVED: VOffset = 24
+    static let CONNECTED_NODES: VOffset = 26
+    static let ACTIVE_LINKS: VOffset = 28
+    static let LAST_UPDATE_MS: VOffset = 30
   }
 
-  public var SYSTEM_ID: UInt32 { let o = _accessor.offset(VTOFFSET.SYSTEM_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public var ENTITY_ID: UInt32 { let o = _accessor.offset(VTOFFSET.ENTITY_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public var IS_TRANSMITTING: Bool { let o = _accessor.offset(VTOFFSET.IS_TRANSMITTING.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var IS_RECEIVING: Bool { let o = _accessor.offset(VTOFFSET.IS_RECEIVING.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var CURRENT_FREQUENCY_HZ: Double { let o = _accessor.offset(VTOFFSET.CURRENT_FREQUENCY_HZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CURRENT_POWER_WATTS: Double { let o = _accessor.offset(VTOFFSET.CURRENT_POWER_WATTS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CURRENT_DATA_RATE_BPS: Double { let o = _accessor.offset(VTOFFSET.CURRENT_DATA_RATE_BPS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MESSAGES_SENT: UInt64 { let o = _accessor.offset(VTOFFSET.MESSAGES_SENT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public var MESSAGES_RECEIVED: UInt64 { let o = _accessor.offset(VTOFFSET.MESSAGES_RECEIVED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public var BYTES_SENT: UInt64 { let o = _accessor.offset(VTOFFSET.BYTES_SENT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public var BYTES_RECEIVED: UInt64 { let o = _accessor.offset(VTOFFSET.BYTES_RECEIVED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public var CONNECTED_NODES: FlatbufferVector<UInt32> { return _accessor.vector(at: VTOFFSET.CONNECTED_NODES.v, byteSize: 4) }
-  public func withUnsafePointerToConnectedNodes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.CONNECTED_NODES.v, body: body) }
-  public var ACTIVE_LINKS: FlatbufferVector<DataLinkType> { return _accessor.vector(at: VTOFFSET.ACTIVE_LINKS.v, byteSize: 1) }
-  public var LAST_UPDATE_MS: Int64 { let o = _accessor.offset(VTOFFSET.LAST_UPDATE_MS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var SYSTEM_ID: UInt32 { let o = _accessor.offset(VT.SYSTEM_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var ENTITY_ID: UInt32 { let o = _accessor.offset(VT.ENTITY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var IS_TRANSMITTING: Bool { let o = _accessor.offset(VT.IS_TRANSMITTING); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var IS_RECEIVING: Bool { let o = _accessor.offset(VT.IS_RECEIVING); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var CURRENT_FREQUENCY_HZ: Double { let o = _accessor.offset(VT.CURRENT_FREQUENCY_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CURRENT_POWER_WATTS: Double { let o = _accessor.offset(VT.CURRENT_POWER_WATTS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CURRENT_DATA_RATE_BPS: Double { let o = _accessor.offset(VT.CURRENT_DATA_RATE_BPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MESSAGES_SENT: UInt64 { let o = _accessor.offset(VT.MESSAGES_SENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var MESSAGES_RECEIVED: UInt64 { let o = _accessor.offset(VT.MESSAGES_RECEIVED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var BYTES_SENT: UInt64 { let o = _accessor.offset(VT.BYTES_SENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var BYTES_RECEIVED: UInt64 { let o = _accessor.offset(VT.BYTES_RECEIVED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var CONNECTED_NODES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.CONNECTED_NODES, byteSize: 4) }
+  public func withUnsafePointerToConnectedNodes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CONNECTED_NODES, body: body) }
+  public var ACTIVE_LINKS: FlatbufferVector<DataLinkType> { return _accessor.vector(at: VT.ACTIVE_LINKS, byteSize: 1) }
+  public var LAST_UPDATE_MS: Int64 { let o = _accessor.offset(VT.LAST_UPDATE_MS); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   public static func startCOM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
-  public static func add(SYSTEM_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYSTEM_ID, def: 0, at: VTOFFSET.SYSTEM_ID.p) }
-  public static func add(ENTITY_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_ID, def: 0, at: VTOFFSET.ENTITY_ID.p) }
+  public static func add(SYSTEM_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYSTEM_ID, def: 0, at: VT.SYSTEM_ID) }
+  public static func add(ENTITY_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_ID, def: 0, at: VT.ENTITY_ID) }
   public static func add(IS_TRANSMITTING: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IS_TRANSMITTING, def: false,
-   at: VTOFFSET.IS_TRANSMITTING.p) }
+   at: VT.IS_TRANSMITTING) }
   public static func add(IS_RECEIVING: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IS_RECEIVING, def: false,
-   at: VTOFFSET.IS_RECEIVING.p) }
-  public static func add(CURRENT_FREQUENCY_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CURRENT_FREQUENCY_HZ, def: 0.0, at: VTOFFSET.CURRENT_FREQUENCY_HZ.p) }
-  public static func add(CURRENT_POWER_WATTS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CURRENT_POWER_WATTS, def: 0.0, at: VTOFFSET.CURRENT_POWER_WATTS.p) }
-  public static func add(CURRENT_DATA_RATE_BPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CURRENT_DATA_RATE_BPS, def: 0.0, at: VTOFFSET.CURRENT_DATA_RATE_BPS.p) }
-  public static func add(MESSAGES_SENT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGES_SENT, def: 0, at: VTOFFSET.MESSAGES_SENT.p) }
-  public static func add(MESSAGES_RECEIVED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGES_RECEIVED, def: 0, at: VTOFFSET.MESSAGES_RECEIVED.p) }
-  public static func add(BYTES_SENT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTES_SENT, def: 0, at: VTOFFSET.BYTES_SENT.p) }
-  public static func add(BYTES_RECEIVED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTES_RECEIVED, def: 0, at: VTOFFSET.BYTES_RECEIVED.p) }
-  public static func addVectorOf(CONNECTED_NODES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONNECTED_NODES, at: VTOFFSET.CONNECTED_NODES.p) }
-  public static func addVectorOf(ACTIVE_LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACTIVE_LINKS, at: VTOFFSET.ACTIVE_LINKS.p) }
-  public static func add(LAST_UPDATE_MS: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_UPDATE_MS, def: 0, at: VTOFFSET.LAST_UPDATE_MS.p) }
+   at: VT.IS_RECEIVING) }
+  public static func add(CURRENT_FREQUENCY_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CURRENT_FREQUENCY_HZ, def: 0.0, at: VT.CURRENT_FREQUENCY_HZ) }
+  public static func add(CURRENT_POWER_WATTS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CURRENT_POWER_WATTS, def: 0.0, at: VT.CURRENT_POWER_WATTS) }
+  public static func add(CURRENT_DATA_RATE_BPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CURRENT_DATA_RATE_BPS, def: 0.0, at: VT.CURRENT_DATA_RATE_BPS) }
+  public static func add(MESSAGES_SENT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGES_SENT, def: 0, at: VT.MESSAGES_SENT) }
+  public static func add(MESSAGES_RECEIVED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGES_RECEIVED, def: 0, at: VT.MESSAGES_RECEIVED) }
+  public static func add(BYTES_SENT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTES_SENT, def: 0, at: VT.BYTES_SENT) }
+  public static func add(BYTES_RECEIVED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTES_RECEIVED, def: 0, at: VT.BYTES_RECEIVED) }
+  public static func addVectorOf(CONNECTED_NODES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONNECTED_NODES, at: VT.CONNECTED_NODES) }
+  public static func addVectorOf(ACTIVE_LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACTIVE_LINKS, at: VT.ACTIVE_LINKS) }
+  public static func add(LAST_UPDATE_MS: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_UPDATE_MS, def: 0, at: VT.LAST_UPDATE_MS) }
   public static func endCOM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCOM(
     _ fbb: inout FlatBufferBuilder,
@@ -227,20 +225,20 @@ public struct COM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SYSTEM_ID.p, fieldName: "SYSTEM_ID", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ENTITY_ID.p, fieldName: "ENTITY_ID", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.IS_TRANSMITTING.p, fieldName: "IS_TRANSMITTING", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.IS_RECEIVING.p, fieldName: "IS_RECEIVING", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.CURRENT_FREQUENCY_HZ.p, fieldName: "CURRENT_FREQUENCY_HZ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CURRENT_POWER_WATTS.p, fieldName: "CURRENT_POWER_WATTS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CURRENT_DATA_RATE_BPS.p, fieldName: "CURRENT_DATA_RATE_BPS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MESSAGES_SENT.p, fieldName: "MESSAGES_SENT", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.MESSAGES_RECEIVED.p, fieldName: "MESSAGES_RECEIVED", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.BYTES_SENT.p, fieldName: "BYTES_SENT", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.BYTES_RECEIVED.p, fieldName: "BYTES_RECEIVED", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.CONNECTED_NODES.p, fieldName: "CONNECTED_NODES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
-    try _v.visit(field: VTOFFSET.ACTIVE_LINKS.p, fieldName: "ACTIVE_LINKS", required: false, type: ForwardOffset<Vector<DataLinkType, DataLinkType>>.self)
-    try _v.visit(field: VTOFFSET.LAST_UPDATE_MS.p, fieldName: "LAST_UPDATE_MS", required: false, type: Int64.self)
+    try _v.visit(field: VT.SYSTEM_ID, fieldName: "SYSTEM_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ENTITY_ID, fieldName: "ENTITY_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.IS_TRANSMITTING, fieldName: "IS_TRANSMITTING", required: false, type: Bool.self)
+    try _v.visit(field: VT.IS_RECEIVING, fieldName: "IS_RECEIVING", required: false, type: Bool.self)
+    try _v.visit(field: VT.CURRENT_FREQUENCY_HZ, fieldName: "CURRENT_FREQUENCY_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.CURRENT_POWER_WATTS, fieldName: "CURRENT_POWER_WATTS", required: false, type: Double.self)
+    try _v.visit(field: VT.CURRENT_DATA_RATE_BPS, fieldName: "CURRENT_DATA_RATE_BPS", required: false, type: Double.self)
+    try _v.visit(field: VT.MESSAGES_SENT, fieldName: "MESSAGES_SENT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.MESSAGES_RECEIVED, fieldName: "MESSAGES_RECEIVED", required: false, type: UInt64.self)
+    try _v.visit(field: VT.BYTES_SENT, fieldName: "BYTES_SENT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.BYTES_RECEIVED, fieldName: "BYTES_RECEIVED", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CONNECTED_NODES, fieldName: "CONNECTED_NODES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.ACTIVE_LINKS, fieldName: "ACTIVE_LINKS", required: false, type: ForwardOffset<Vector<DataLinkType, DataLinkType>>.self)
+    try _v.visit(field: VT.LAST_UPDATE_MS, fieldName: "LAST_UPDATE_MS", required: false, type: Int64.self)
     _v.finish()
   }
 }

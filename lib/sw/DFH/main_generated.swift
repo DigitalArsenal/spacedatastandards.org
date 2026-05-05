@@ -20,37 +20,35 @@ public struct driftRecord: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case EPOCH = 4
-    case DRIFT_RATE = 6
-    case MEAN_LONGITUDE = 8
-    case LONGITUDE_AMPLITUDE = 10
-    case ECCENTRICITY = 12
-    case INCLINATION = 14
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let DRIFT_RATE: VOffset = 6
+    static let MEAN_LONGITUDE: VOffset = 8
+    static let LONGITUDE_AMPLITUDE: VOffset = 10
+    static let ECCENTRICITY: VOffset = 12
+    static let INCLINATION: VOffset = 14
   }
 
   ///  Epoch of drift measurement (ISO 8601)
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
   ///  Longitude drift rate in degrees/day
-  public var DRIFT_RATE: Double { let o = _accessor.offset(VTOFFSET.DRIFT_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DRIFT_RATE: Double { let o = _accessor.offset(VT.DRIFT_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Mean longitude in degrees East
-  public var MEAN_LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.MEAN_LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MEAN_LONGITUDE: Double { let o = _accessor.offset(VT.MEAN_LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Longitude oscillation amplitude in degrees
-  public var LONGITUDE_AMPLITUDE: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE_AMPLITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE_AMPLITUDE: Double { let o = _accessor.offset(VT.LONGITUDE_AMPLITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Eccentricity
-  public var ECCENTRICITY: Double { let o = _accessor.offset(VTOFFSET.ECCENTRICITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Inclination in degrees
-  public var INCLINATION: Double { let o = _accessor.offset(VTOFFSET.INCLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startdriftRecord(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(DRIFT_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRIFT_RATE, def: 0.0, at: VTOFFSET.DRIFT_RATE.p) }
-  public static func add(MEAN_LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_LONGITUDE, def: 0.0, at: VTOFFSET.MEAN_LONGITUDE.p) }
-  public static func add(LONGITUDE_AMPLITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE_AMPLITUDE, def: 0.0, at: VTOFFSET.LONGITUDE_AMPLITUDE.p) }
-  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VTOFFSET.ECCENTRICITY.p) }
-  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VTOFFSET.INCLINATION.p) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(DRIFT_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRIFT_RATE, def: 0.0, at: VT.DRIFT_RATE) }
+  public static func add(MEAN_LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_LONGITUDE, def: 0.0, at: VT.MEAN_LONGITUDE) }
+  public static func add(LONGITUDE_AMPLITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE_AMPLITUDE, def: 0.0, at: VT.LONGITUDE_AMPLITUDE) }
+  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
+  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
   public static func enddriftRecord(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createdriftRecord(
     _ fbb: inout FlatBufferBuilder,
@@ -73,12 +71,12 @@ public struct driftRecord: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DRIFT_RATE.p, fieldName: "DRIFT_RATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MEAN_LONGITUDE.p, fieldName: "MEAN_LONGITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LONGITUDE_AMPLITUDE.p, fieldName: "LONGITUDE_AMPLITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ECCENTRICITY.p, fieldName: "ECCENTRICITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INCLINATION.p, fieldName: "INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DRIFT_RATE, fieldName: "DRIFT_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_LONGITUDE, fieldName: "MEAN_LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE_AMPLITUDE, fieldName: "LONGITUDE_AMPLITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -95,80 +93,78 @@ public struct DFH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case SAT_NO = 6
-    case OBJECT_DESIGNATOR = 8
-    case OBJECT_NAME = 10
-    case START_TIME = 12
-    case END_TIME = 14
-    case EFFECTIVE_UNTIL = 16
-    case DRIFT_RATE = 18
-    case MEAN_LONGITUDE = 20
-    case SLOT_CENTER = 22
-    case SLOT_HALF_WIDTH = 24
-    case STATION_KEEPING = 26
-    case RECORDS = 28
-    case NUM_RECORDS = 30
-    case NOTES = 32
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let SAT_NO: VOffset = 6
+    static let OBJECT_DESIGNATOR: VOffset = 8
+    static let OBJECT_NAME: VOffset = 10
+    static let START_TIME: VOffset = 12
+    static let END_TIME: VOffset = 14
+    static let EFFECTIVE_UNTIL: VOffset = 16
+    static let DRIFT_RATE: VOffset = 18
+    static let MEAN_LONGITUDE: VOffset = 20
+    static let SLOT_CENTER: VOffset = 22
+    static let SLOT_HALF_WIDTH: VOffset = 24
+    static let STATION_KEEPING: VOffset = 26
+    static let RECORDS: VOffset = 28
+    static let NUM_RECORDS: VOffset = 30
+    static let NOTES: VOffset = 32
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Satellite number
-  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VT.SAT_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Object designator
-  public var OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VTOFFSET.OBJECT_DESIGNATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_DESIGNATOR.v) }
+  public var OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VT.OBJECT_DESIGNATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_DESIGNATOR) }
   ///  Object common name
-  public var OBJECT_NAME: String? { let o = _accessor.offset(VTOFFSET.OBJECT_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_NAME.v) }
+  public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_NAME) }
   ///  History start time (ISO 8601)
-  public var START_TIME: String? { let o = _accessor.offset(VTOFFSET.START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START_TIME.v) }
+  public var START_TIME: String? { let o = _accessor.offset(VT.START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_TIME) }
   ///  History end time (ISO 8601)
-  public var END_TIME: String? { let o = _accessor.offset(VTOFFSET.END_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.END_TIME.v) }
+  public var END_TIME: String? { let o = _accessor.offset(VT.END_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.END_TIME) }
   ///  Current effective until date (ISO 8601)
-  public var EFFECTIVE_UNTIL: String? { let o = _accessor.offset(VTOFFSET.EFFECTIVE_UNTIL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EFFECTIVE_UNTILSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EFFECTIVE_UNTIL.v) }
+  public var EFFECTIVE_UNTIL: String? { let o = _accessor.offset(VT.EFFECTIVE_UNTIL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EFFECTIVE_UNTILSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EFFECTIVE_UNTIL) }
   ///  Current drift rate in degrees/day
-  public var DRIFT_RATE: Double { let o = _accessor.offset(VTOFFSET.DRIFT_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DRIFT_RATE: Double { let o = _accessor.offset(VT.DRIFT_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Current mean longitude in degrees East
-  public var MEAN_LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.MEAN_LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MEAN_LONGITUDE: Double { let o = _accessor.offset(VT.MEAN_LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Longitude slot center in degrees East (if station-keeping)
-  public var SLOT_CENTER: Double { let o = _accessor.offset(VTOFFSET.SLOT_CENTER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SLOT_CENTER: Double { let o = _accessor.offset(VT.SLOT_CENTER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Longitude slot half-width in degrees
-  public var SLOT_HALF_WIDTH: Double { let o = _accessor.offset(VTOFFSET.SLOT_HALF_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SLOT_HALF_WIDTH: Double { let o = _accessor.offset(VT.SLOT_HALF_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Whether object is actively station-keeping
-  public var STATION_KEEPING: Bool { let o = _accessor.offset(VTOFFSET.STATION_KEEPING.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var STATION_KEEPING: Bool { let o = _accessor.offset(VT.STATION_KEEPING); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Historical drift records
-  public var RECORDS: FlatbufferVector<driftRecord> { return _accessor.vector(at: VTOFFSET.RECORDS.v, byteSize: 4) }
+  public var RECORDS: FlatbufferVector<driftRecord> { return _accessor.vector(at: VT.RECORDS, byteSize: 4) }
   ///  Number of records in history
-  public var NUM_RECORDS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_RECORDS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var NUM_RECORDS: UInt32 { let o = _accessor.offset(VT.NUM_RECORDS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Additional notes
-  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
   public static func startDFH(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
-  public static func add(OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_DESIGNATOR, at: VTOFFSET.OBJECT_DESIGNATOR.p) }
-  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VTOFFSET.OBJECT_NAME.p) }
-  public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VTOFFSET.START_TIME.p) }
-  public static func add(END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_TIME, at: VTOFFSET.END_TIME.p) }
-  public static func add(EFFECTIVE_UNTIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EFFECTIVE_UNTIL, at: VTOFFSET.EFFECTIVE_UNTIL.p) }
-  public static func add(DRIFT_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRIFT_RATE, def: 0.0, at: VTOFFSET.DRIFT_RATE.p) }
-  public static func add(MEAN_LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_LONGITUDE, def: 0.0, at: VTOFFSET.MEAN_LONGITUDE.p) }
-  public static func add(SLOT_CENTER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SLOT_CENTER, def: 0.0, at: VTOFFSET.SLOT_CENTER.p) }
-  public static func add(SLOT_HALF_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SLOT_HALF_WIDTH, def: 0.0, at: VTOFFSET.SLOT_HALF_WIDTH.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VT.SAT_NO) }
+  public static func add(OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_DESIGNATOR, at: VT.OBJECT_DESIGNATOR) }
+  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
+  public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VT.START_TIME) }
+  public static func add(END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_TIME, at: VT.END_TIME) }
+  public static func add(EFFECTIVE_UNTIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EFFECTIVE_UNTIL, at: VT.EFFECTIVE_UNTIL) }
+  public static func add(DRIFT_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRIFT_RATE, def: 0.0, at: VT.DRIFT_RATE) }
+  public static func add(MEAN_LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_LONGITUDE, def: 0.0, at: VT.MEAN_LONGITUDE) }
+  public static func add(SLOT_CENTER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SLOT_CENTER, def: 0.0, at: VT.SLOT_CENTER) }
+  public static func add(SLOT_HALF_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SLOT_HALF_WIDTH, def: 0.0, at: VT.SLOT_HALF_WIDTH) }
   public static func add(STATION_KEEPING: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATION_KEEPING, def: false,
-   at: VTOFFSET.STATION_KEEPING.p) }
-  public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VTOFFSET.RECORDS.p) }
-  public static func add(NUM_RECORDS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_RECORDS, def: 0, at: VTOFFSET.NUM_RECORDS.p) }
-  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
+   at: VT.STATION_KEEPING) }
+  public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VT.RECORDS) }
+  public static func add(NUM_RECORDS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_RECORDS, def: 0, at: VT.NUM_RECORDS) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
   public static func endDFH(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDFH(
     _ fbb: inout FlatBufferBuilder,
@@ -209,21 +205,21 @@ public struct DFH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.OBJECT_DESIGNATOR.p, fieldName: "OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJECT_NAME.p, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.START_TIME.p, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.END_TIME.p, fieldName: "END_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EFFECTIVE_UNTIL.p, fieldName: "EFFECTIVE_UNTIL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DRIFT_RATE.p, fieldName: "DRIFT_RATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MEAN_LONGITUDE.p, fieldName: "MEAN_LONGITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SLOT_CENTER.p, fieldName: "SLOT_CENTER", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SLOT_HALF_WIDTH.p, fieldName: "SLOT_HALF_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STATION_KEEPING.p, fieldName: "STATION_KEEPING", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.RECORDS.p, fieldName: "RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<driftRecord>, driftRecord>>.self)
-    try _v.visit(field: VTOFFSET.NUM_RECORDS.p, fieldName: "NUM_RECORDS", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAT_NO, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBJECT_DESIGNATOR, fieldName: "OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_NAME, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.START_TIME, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.END_TIME, fieldName: "END_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EFFECTIVE_UNTIL, fieldName: "EFFECTIVE_UNTIL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DRIFT_RATE, fieldName: "DRIFT_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_LONGITUDE, fieldName: "MEAN_LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.SLOT_CENTER, fieldName: "SLOT_CENTER", required: false, type: Double.self)
+    try _v.visit(field: VT.SLOT_HALF_WIDTH, fieldName: "SLOT_HALF_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.STATION_KEEPING, fieldName: "STATION_KEEPING", required: false, type: Bool.self)
+    try _v.visit(field: VT.RECORDS, fieldName: "RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<driftRecord>, driftRecord>>.self)
+    try _v.visit(field: VT.NUM_RECORDS, fieldName: "NUM_RECORDS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

@@ -129,61 +129,59 @@ public struct DMG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case OVERALL_HEALTH = 4
-    case MOBILITY = 6
-    case FIREPOWER = 8
-    case MODULE_COUNT = 10
-    case CREW_COUNT = 12
-    case FIRE_COUNT = 14
-    case FLOOD_COUNT = 16
-    case IS_DESTROYED = 18
-    case DESTRUCTION_CAUSE = 20
-    case EXTINGUISHERS = 22
-    case REPAIR_ACTIVE = 24
-    case RELOAD_MULTIPLIER = 26
-    case ACCURACY_MULTIPLIER = 28
-    case CREW_ALIVE = 30
-    case CREW_WOUNDED = 32
-    case RESERVED = 34
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let OVERALL_HEALTH: VOffset = 4
+    static let MOBILITY: VOffset = 6
+    static let FIREPOWER: VOffset = 8
+    static let MODULE_COUNT: VOffset = 10
+    static let CREW_COUNT: VOffset = 12
+    static let FIRE_COUNT: VOffset = 14
+    static let FLOOD_COUNT: VOffset = 16
+    static let IS_DESTROYED: VOffset = 18
+    static let DESTRUCTION_CAUSE: VOffset = 20
+    static let EXTINGUISHERS: VOffset = 22
+    static let REPAIR_ACTIVE: VOffset = 24
+    static let RELOAD_MULTIPLIER: VOffset = 26
+    static let ACCURACY_MULTIPLIER: VOffset = 28
+    static let CREW_ALIVE: VOffset = 30
+    static let CREW_WOUNDED: VOffset = 32
+    static let RESERVED: VOffset = 34
   }
 
-  public var OVERALL_HEALTH: Float32 { let o = _accessor.offset(VTOFFSET.OVERALL_HEALTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var MOBILITY: Float32 { let o = _accessor.offset(VTOFFSET.MOBILITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var FIREPOWER: Float32 { let o = _accessor.offset(VTOFFSET.FIREPOWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var MODULE_COUNT: UInt8 { let o = _accessor.offset(VTOFFSET.MODULE_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var CREW_COUNT: UInt8 { let o = _accessor.offset(VTOFFSET.CREW_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var FIRE_COUNT: UInt8 { let o = _accessor.offset(VTOFFSET.FIRE_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var FLOOD_COUNT: UInt8 { let o = _accessor.offset(VTOFFSET.FLOOD_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var IS_DESTROYED: UInt8 { let o = _accessor.offset(VTOFFSET.IS_DESTROYED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var DESTRUCTION_CAUSE: UInt8 { let o = _accessor.offset(VTOFFSET.DESTRUCTION_CAUSE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var EXTINGUISHERS: UInt8 { let o = _accessor.offset(VTOFFSET.EXTINGUISHERS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var REPAIR_ACTIVE: UInt8 { let o = _accessor.offset(VTOFFSET.REPAIR_ACTIVE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var RELOAD_MULTIPLIER: Float32 { let o = _accessor.offset(VTOFFSET.RELOAD_MULTIPLIER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var ACCURACY_MULTIPLIER: Float32 { let o = _accessor.offset(VTOFFSET.ACCURACY_MULTIPLIER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var CREW_ALIVE: UInt8 { let o = _accessor.offset(VTOFFSET.CREW_ALIVE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var CREW_WOUNDED: UInt8 { let o = _accessor.offset(VTOFFSET.CREW_WOUNDED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
+  public var OVERALL_HEALTH: Float32 { let o = _accessor.offset(VT.OVERALL_HEALTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var MOBILITY: Float32 { let o = _accessor.offset(VT.MOBILITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var FIREPOWER: Float32 { let o = _accessor.offset(VT.FIREPOWER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var MODULE_COUNT: UInt8 { let o = _accessor.offset(VT.MODULE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var CREW_COUNT: UInt8 { let o = _accessor.offset(VT.CREW_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var FIRE_COUNT: UInt8 { let o = _accessor.offset(VT.FIRE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var FLOOD_COUNT: UInt8 { let o = _accessor.offset(VT.FLOOD_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var IS_DESTROYED: UInt8 { let o = _accessor.offset(VT.IS_DESTROYED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var DESTRUCTION_CAUSE: UInt8 { let o = _accessor.offset(VT.DESTRUCTION_CAUSE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var EXTINGUISHERS: UInt8 { let o = _accessor.offset(VT.EXTINGUISHERS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var REPAIR_ACTIVE: UInt8 { let o = _accessor.offset(VT.REPAIR_ACTIVE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var RELOAD_MULTIPLIER: Float32 { let o = _accessor.offset(VT.RELOAD_MULTIPLIER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var ACCURACY_MULTIPLIER: Float32 { let o = _accessor.offset(VT.ACCURACY_MULTIPLIER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var CREW_ALIVE: UInt8 { let o = _accessor.offset(VT.CREW_ALIVE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var CREW_WOUNDED: UInt8 { let o = _accessor.offset(VT.CREW_WOUNDED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
   public static func startDMG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
-  public static func add(OVERALL_HEALTH: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OVERALL_HEALTH, def: 0.0, at: VTOFFSET.OVERALL_HEALTH.p) }
-  public static func add(MOBILITY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOBILITY, def: 0.0, at: VTOFFSET.MOBILITY.p) }
-  public static func add(FIREPOWER: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIREPOWER, def: 0.0, at: VTOFFSET.FIREPOWER.p) }
-  public static func add(MODULE_COUNT: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODULE_COUNT, def: 0, at: VTOFFSET.MODULE_COUNT.p) }
-  public static func add(CREW_COUNT: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREW_COUNT, def: 0, at: VTOFFSET.CREW_COUNT.p) }
-  public static func add(FIRE_COUNT: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIRE_COUNT, def: 0, at: VTOFFSET.FIRE_COUNT.p) }
-  public static func add(FLOOD_COUNT: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLOOD_COUNT, def: 0, at: VTOFFSET.FLOOD_COUNT.p) }
-  public static func add(IS_DESTROYED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IS_DESTROYED, def: 0, at: VTOFFSET.IS_DESTROYED.p) }
-  public static func add(DESTRUCTION_CAUSE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DESTRUCTION_CAUSE, def: 0, at: VTOFFSET.DESTRUCTION_CAUSE.p) }
-  public static func add(EXTINGUISHERS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTINGUISHERS, def: 0, at: VTOFFSET.EXTINGUISHERS.p) }
-  public static func add(REPAIR_ACTIVE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPAIR_ACTIVE, def: 0, at: VTOFFSET.REPAIR_ACTIVE.p) }
-  public static func add(RELOAD_MULTIPLIER: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELOAD_MULTIPLIER, def: 0.0, at: VTOFFSET.RELOAD_MULTIPLIER.p) }
-  public static func add(ACCURACY_MULTIPLIER: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCURACY_MULTIPLIER, def: 0.0, at: VTOFFSET.ACCURACY_MULTIPLIER.p) }
-  public static func add(CREW_ALIVE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREW_ALIVE, def: 0, at: VTOFFSET.CREW_ALIVE.p) }
-  public static func add(CREW_WOUNDED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREW_WOUNDED, def: 0, at: VTOFFSET.CREW_WOUNDED.p) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VTOFFSET.RESERVED.p) }
+  public static func add(OVERALL_HEALTH: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OVERALL_HEALTH, def: 0.0, at: VT.OVERALL_HEALTH) }
+  public static func add(MOBILITY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOBILITY, def: 0.0, at: VT.MOBILITY) }
+  public static func add(FIREPOWER: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIREPOWER, def: 0.0, at: VT.FIREPOWER) }
+  public static func add(MODULE_COUNT: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODULE_COUNT, def: 0, at: VT.MODULE_COUNT) }
+  public static func add(CREW_COUNT: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREW_COUNT, def: 0, at: VT.CREW_COUNT) }
+  public static func add(FIRE_COUNT: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIRE_COUNT, def: 0, at: VT.FIRE_COUNT) }
+  public static func add(FLOOD_COUNT: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLOOD_COUNT, def: 0, at: VT.FLOOD_COUNT) }
+  public static func add(IS_DESTROYED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IS_DESTROYED, def: 0, at: VT.IS_DESTROYED) }
+  public static func add(DESTRUCTION_CAUSE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DESTRUCTION_CAUSE, def: 0, at: VT.DESTRUCTION_CAUSE) }
+  public static func add(EXTINGUISHERS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTINGUISHERS, def: 0, at: VT.EXTINGUISHERS) }
+  public static func add(REPAIR_ACTIVE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPAIR_ACTIVE, def: 0, at: VT.REPAIR_ACTIVE) }
+  public static func add(RELOAD_MULTIPLIER: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELOAD_MULTIPLIER, def: 0.0, at: VT.RELOAD_MULTIPLIER) }
+  public static func add(ACCURACY_MULTIPLIER: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCURACY_MULTIPLIER, def: 0.0, at: VT.ACCURACY_MULTIPLIER) }
+  public static func add(CREW_ALIVE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREW_ALIVE, def: 0, at: VT.CREW_ALIVE) }
+  public static func add(CREW_WOUNDED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREW_WOUNDED, def: 0, at: VT.CREW_WOUNDED) }
+  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
   public static func endDMG(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDMG(
     _ fbb: inout FlatBufferBuilder,
@@ -226,22 +224,22 @@ public struct DMG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.OVERALL_HEALTH.p, fieldName: "OVERALL_HEALTH", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.MOBILITY.p, fieldName: "MOBILITY", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.FIREPOWER.p, fieldName: "FIREPOWER", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.MODULE_COUNT.p, fieldName: "MODULE_COUNT", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.CREW_COUNT.p, fieldName: "CREW_COUNT", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.FIRE_COUNT.p, fieldName: "FIRE_COUNT", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.FLOOD_COUNT.p, fieldName: "FLOOD_COUNT", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.IS_DESTROYED.p, fieldName: "IS_DESTROYED", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.DESTRUCTION_CAUSE.p, fieldName: "DESTRUCTION_CAUSE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.EXTINGUISHERS.p, fieldName: "EXTINGUISHERS", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.REPAIR_ACTIVE.p, fieldName: "REPAIR_ACTIVE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.RELOAD_MULTIPLIER.p, fieldName: "RELOAD_MULTIPLIER", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.ACCURACY_MULTIPLIER.p, fieldName: "ACCURACY_MULTIPLIER", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.CREW_ALIVE.p, fieldName: "CREW_ALIVE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.CREW_WOUNDED.p, fieldName: "CREW_WOUNDED", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.OVERALL_HEALTH, fieldName: "OVERALL_HEALTH", required: false, type: Float32.self)
+    try _v.visit(field: VT.MOBILITY, fieldName: "MOBILITY", required: false, type: Float32.self)
+    try _v.visit(field: VT.FIREPOWER, fieldName: "FIREPOWER", required: false, type: Float32.self)
+    try _v.visit(field: VT.MODULE_COUNT, fieldName: "MODULE_COUNT", required: false, type: UInt8.self)
+    try _v.visit(field: VT.CREW_COUNT, fieldName: "CREW_COUNT", required: false, type: UInt8.self)
+    try _v.visit(field: VT.FIRE_COUNT, fieldName: "FIRE_COUNT", required: false, type: UInt8.self)
+    try _v.visit(field: VT.FLOOD_COUNT, fieldName: "FLOOD_COUNT", required: false, type: UInt8.self)
+    try _v.visit(field: VT.IS_DESTROYED, fieldName: "IS_DESTROYED", required: false, type: UInt8.self)
+    try _v.visit(field: VT.DESTRUCTION_CAUSE, fieldName: "DESTRUCTION_CAUSE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.EXTINGUISHERS, fieldName: "EXTINGUISHERS", required: false, type: UInt8.self)
+    try _v.visit(field: VT.REPAIR_ACTIVE, fieldName: "REPAIR_ACTIVE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RELOAD_MULTIPLIER, fieldName: "RELOAD_MULTIPLIER", required: false, type: Float32.self)
+    try _v.visit(field: VT.ACCURACY_MULTIPLIER, fieldName: "ACCURACY_MULTIPLIER", required: false, type: Float32.self)
+    try _v.visit(field: VT.CREW_ALIVE, fieldName: "CREW_ALIVE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.CREW_WOUNDED, fieldName: "CREW_WOUNDED", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

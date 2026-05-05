@@ -54,45 +54,43 @@ public struct ionoDataPoint: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case EPOCH = 4
-    case LAYER = 6
-    case CRITICAL_FREQ = 8
-    case VIRTUAL_HEIGHT = 10
-    case TRUE_HEIGHT = 12
-    case PEAK_DENSITY = 14
-    case TEC = 16
-    case TEC_UNCERTAINTY = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let LAYER: VOffset = 6
+    static let CRITICAL_FREQ: VOffset = 8
+    static let VIRTUAL_HEIGHT: VOffset = 10
+    static let TRUE_HEIGHT: VOffset = 12
+    static let PEAK_DENSITY: VOffset = 14
+    static let TEC: VOffset = 16
+    static let TEC_UNCERTAINTY: VOffset = 18
   }
 
   ///  Observation epoch (ISO 8601)
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
   ///  Ionospheric layer
-  public var LAYER: ionoLayer { let o = _accessor.offset(VTOFFSET.LAYER.v); return o == 0 ? .d : ionoLayer(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .d }
+  public var LAYER: ionoLayer { let o = _accessor.offset(VT.LAYER); return o == 0 ? .d : ionoLayer(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .d }
   ///  Critical frequency in MHz
-  public var CRITICAL_FREQ: Double { let o = _accessor.offset(VTOFFSET.CRITICAL_FREQ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CRITICAL_FREQ: Double { let o = _accessor.offset(VT.CRITICAL_FREQ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Virtual height in km
-  public var VIRTUAL_HEIGHT: Double { let o = _accessor.offset(VTOFFSET.VIRTUAL_HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VIRTUAL_HEIGHT: Double { let o = _accessor.offset(VT.VIRTUAL_HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  True height in km
-  public var TRUE_HEIGHT: Double { let o = _accessor.offset(VTOFFSET.TRUE_HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TRUE_HEIGHT: Double { let o = _accessor.offset(VT.TRUE_HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Peak electron density in electrons/m^3
-  public var PEAK_DENSITY: Double { let o = _accessor.offset(VTOFFSET.PEAK_DENSITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PEAK_DENSITY: Double { let o = _accessor.offset(VT.PEAK_DENSITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Total electron content in TECU
-  public var TEC: Double { let o = _accessor.offset(VTOFFSET.TEC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TEC: Double { let o = _accessor.offset(VT.TEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  TEC uncertainty in TECU
-  public var TEC_UNCERTAINTY: Double { let o = _accessor.offset(VTOFFSET.TEC_UNCERTAINTY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TEC_UNCERTAINTY: Double { let o = _accessor.offset(VT.TEC_UNCERTAINTY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startionoDataPoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(LAYER: ionoLayer, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAYER.rawValue, def: 0, at: VTOFFSET.LAYER.p) }
-  public static func add(CRITICAL_FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CRITICAL_FREQ, def: 0.0, at: VTOFFSET.CRITICAL_FREQ.p) }
-  public static func add(VIRTUAL_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIRTUAL_HEIGHT, def: 0.0, at: VTOFFSET.VIRTUAL_HEIGHT.p) }
-  public static func add(TRUE_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRUE_HEIGHT, def: 0.0, at: VTOFFSET.TRUE_HEIGHT.p) }
-  public static func add(PEAK_DENSITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PEAK_DENSITY, def: 0.0, at: VTOFFSET.PEAK_DENSITY.p) }
-  public static func add(TEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEC, def: 0.0, at: VTOFFSET.TEC.p) }
-  public static func add(TEC_UNCERTAINTY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEC_UNCERTAINTY, def: 0.0, at: VTOFFSET.TEC_UNCERTAINTY.p) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(LAYER: ionoLayer, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAYER.rawValue, def: 0, at: VT.LAYER) }
+  public static func add(CRITICAL_FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CRITICAL_FREQ, def: 0.0, at: VT.CRITICAL_FREQ) }
+  public static func add(VIRTUAL_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VIRTUAL_HEIGHT, def: 0.0, at: VT.VIRTUAL_HEIGHT) }
+  public static func add(TRUE_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRUE_HEIGHT, def: 0.0, at: VT.TRUE_HEIGHT) }
+  public static func add(PEAK_DENSITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PEAK_DENSITY, def: 0.0, at: VT.PEAK_DENSITY) }
+  public static func add(TEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEC, def: 0.0, at: VT.TEC) }
+  public static func add(TEC_UNCERTAINTY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEC_UNCERTAINTY, def: 0.0, at: VT.TEC_UNCERTAINTY) }
   public static func endionoDataPoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createionoDataPoint(
     _ fbb: inout FlatBufferBuilder,
@@ -119,14 +117,14 @@ public struct ionoDataPoint: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAYER.p, fieldName: "LAYER", required: false, type: ionoLayer.self)
-    try _v.visit(field: VTOFFSET.CRITICAL_FREQ.p, fieldName: "CRITICAL_FREQ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VIRTUAL_HEIGHT.p, fieldName: "VIRTUAL_HEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TRUE_HEIGHT.p, fieldName: "TRUE_HEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PEAK_DENSITY.p, fieldName: "PEAK_DENSITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TEC.p, fieldName: "TEC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TEC_UNCERTAINTY.p, fieldName: "TEC_UNCERTAINTY", required: false, type: Double.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAYER, fieldName: "LAYER", required: false, type: ionoLayer.self)
+    try _v.visit(field: VT.CRITICAL_FREQ, fieldName: "CRITICAL_FREQ", required: false, type: Double.self)
+    try _v.visit(field: VT.VIRTUAL_HEIGHT, fieldName: "VIRTUAL_HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.TRUE_HEIGHT, fieldName: "TRUE_HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.PEAK_DENSITY, fieldName: "PEAK_DENSITY", required: false, type: Double.self)
+    try _v.visit(field: VT.TEC, fieldName: "TEC", required: false, type: Double.self)
+    try _v.visit(field: VT.TEC_UNCERTAINTY, fieldName: "TEC_UNCERTAINTY", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -143,27 +141,25 @@ public struct ionoDensityProfile: FlatBufferTable, FlatbuffersVectorInitializabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case EPOCH = 4
-    case ALTITUDES = 6
-    case DENSITIES = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let ALTITUDES: VOffset = 6
+    static let DENSITIES: VOffset = 8
   }
 
   ///  Observation epoch (ISO 8601)
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
   ///  Altitudes in km
-  public var ALTITUDES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.ALTITUDES.v, byteSize: 8) }
-  public func withUnsafePointerToAltitudes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ALTITUDES.v, body: body) }
+  public var ALTITUDES: FlatbufferVector<Double> { return _accessor.vector(at: VT.ALTITUDES, byteSize: 8) }
+  public func withUnsafePointerToAltitudes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ALTITUDES, body: body) }
   ///  Electron densities at each altitude in electrons/m^3
-  public var DENSITIES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.DENSITIES.v, byteSize: 8) }
-  public func withUnsafePointerToDensities<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DENSITIES.v, body: body) }
+  public var DENSITIES: FlatbufferVector<Double> { return _accessor.vector(at: VT.DENSITIES, byteSize: 8) }
+  public func withUnsafePointerToDensities<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DENSITIES, body: body) }
   public static func startionoDensityProfile(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func addVectorOf(ALTITUDES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTITUDES, at: VTOFFSET.ALTITUDES.p) }
-  public static func addVectorOf(DENSITIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DENSITIES, at: VTOFFSET.DENSITIES.p) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func addVectorOf(ALTITUDES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTITUDES, at: VT.ALTITUDES) }
+  public static func addVectorOf(DENSITIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DENSITIES, at: VT.DENSITIES) }
   public static func endionoDensityProfile(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createionoDensityProfile(
     _ fbb: inout FlatBufferBuilder,
@@ -180,9 +176,9 @@ public struct ionoDensityProfile: FlatBufferTable, FlatbuffersVectorInitializabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ALTITUDES.p, fieldName: "ALTITUDES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.DENSITIES.p, fieldName: "DENSITIES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALTITUDES, fieldName: "ALTITUDES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.DENSITIES, fieldName: "DENSITIES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
@@ -199,114 +195,112 @@ public struct ION: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case SOURCE = 6
-    case STATION_ID = 8
-    case STATION_NAME = 10
-    case LATITUDE = 12
-    case LONGITUDE = 14
-    case ALTITUDE = 16
-    case START_TIME = 18
-    case STOP_TIME = 20
-    case FOF2 = 22
-    case FOF1 = 24
-    case FOE = 26
-    case FOES = 28
-    case HMF2 = 30
-    case HMF1 = 32
-    case HME = 34
-    case NMF2 = 36
-    case VTEC = 38
-    case STEC = 40
-    case S4 = 42
-    case DATA_POINTS = 44
-    case DENSITY_PROFILES = 46
-    case QUALITY = 48
-    case NOTES = 50
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let SOURCE: VOffset = 6
+    static let STATION_ID: VOffset = 8
+    static let STATION_NAME: VOffset = 10
+    static let LATITUDE: VOffset = 12
+    static let LONGITUDE: VOffset = 14
+    static let ALTITUDE: VOffset = 16
+    static let START_TIME: VOffset = 18
+    static let STOP_TIME: VOffset = 20
+    static let FOF2: VOffset = 22
+    static let FOF1: VOffset = 24
+    static let FOE: VOffset = 26
+    static let FOES: VOffset = 28
+    static let HMF2: VOffset = 30
+    static let HMF1: VOffset = 32
+    static let HME: VOffset = 34
+    static let NMF2: VOffset = 36
+    static let VTEC: VOffset = 38
+    static let STEC: VOffset = 40
+    static let S4: VOffset = 42
+    static let DATA_POINTS: VOffset = 44
+    static let DENSITY_PROFILES: VOffset = 46
+    static let QUALITY: VOffset = 48
+    static let NOTES: VOffset = 50
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Data source type
-  public var SOURCE: ionoSource { let o = _accessor.offset(VTOFFSET.SOURCE.v); return o == 0 ? .ionosonde : ionoSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ionosonde }
+  public var SOURCE: ionoSource { let o = _accessor.offset(VT.SOURCE); return o == 0 ? .ionosonde : ionoSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ionosonde }
   ///  Station or sensor identifier
-  public var STATION_ID: String? { let o = _accessor.offset(VTOFFSET.STATION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STATION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STATION_ID.v) }
+  public var STATION_ID: String? { let o = _accessor.offset(VT.STATION_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STATION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STATION_ID) }
   ///  Station name
-  public var STATION_NAME: String? { let o = _accessor.offset(VTOFFSET.STATION_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STATION_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STATION_NAME.v) }
+  public var STATION_NAME: String? { let o = _accessor.offset(VT.STATION_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STATION_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STATION_NAME) }
   ///  Station geodetic latitude in degrees
-  public var LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LATITUDE: Double { let o = _accessor.offset(VT.LATITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Station geodetic longitude in degrees
-  public var LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE: Double { let o = _accessor.offset(VT.LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Station altitude in meters
-  public var ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ALTITUDE: Double { let o = _accessor.offset(VT.ALTITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Observation start time (ISO 8601)
-  public var START_TIME: String? { let o = _accessor.offset(VTOFFSET.START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START_TIME.v) }
+  public var START_TIME: String? { let o = _accessor.offset(VT.START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_TIME) }
   ///  Observation stop time (ISO 8601)
-  public var STOP_TIME: String? { let o = _accessor.offset(VTOFFSET.STOP_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STOP_TIME.v) }
+  public var STOP_TIME: String? { let o = _accessor.offset(VT.STOP_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STOP_TIME) }
   ///  foF2 critical frequency in MHz
-  public var FOF2: Double { let o = _accessor.offset(VTOFFSET.FOF2.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FOF2: Double { let o = _accessor.offset(VT.FOF2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  foF1 critical frequency in MHz
-  public var FOF1: Double { let o = _accessor.offset(VTOFFSET.FOF1.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FOF1: Double { let o = _accessor.offset(VT.FOF1); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  foE critical frequency in MHz
-  public var FOE: Double { let o = _accessor.offset(VTOFFSET.FOE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FOE: Double { let o = _accessor.offset(VT.FOE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  foEs sporadic E critical frequency in MHz
-  public var FOES: Double { let o = _accessor.offset(VTOFFSET.FOES.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FOES: Double { let o = _accessor.offset(VT.FOES); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  hmF2 peak height of F2 layer in km
-  public var HMF2: Double { let o = _accessor.offset(VTOFFSET.HMF2.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HMF2: Double { let o = _accessor.offset(VT.HMF2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  hmF1 peak height of F1 layer in km
-  public var HMF1: Double { let o = _accessor.offset(VTOFFSET.HMF1.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HMF1: Double { let o = _accessor.offset(VT.HMF1); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  hmE peak height of E layer in km
-  public var HME: Double { let o = _accessor.offset(VTOFFSET.HME.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HME: Double { let o = _accessor.offset(VT.HME); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  NmF2 peak density of F2 layer in electrons/m^3
-  public var NMF2: Double { let o = _accessor.offset(VTOFFSET.NMF2.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NMF2: Double { let o = _accessor.offset(VT.NMF2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Vertical TEC in TECU
-  public var VTEC: Double { let o = _accessor.offset(VTOFFSET.VTEC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VTEC: Double { let o = _accessor.offset(VT.VTEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Slant TEC in TECU
-  public var STEC: Double { let o = _accessor.offset(VTOFFSET.STEC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STEC: Double { let o = _accessor.offset(VT.STEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Scintillation index S4
-  public var S4: Double { let o = _accessor.offset(VTOFFSET.S4.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var S4: Double { let o = _accessor.offset(VT.S4); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Observation data points
-  public var DATA_POINTS: FlatbufferVector<ionoDataPoint> { return _accessor.vector(at: VTOFFSET.DATA_POINTS.v, byteSize: 4) }
+  public var DATA_POINTS: FlatbufferVector<ionoDataPoint> { return _accessor.vector(at: VT.DATA_POINTS, byteSize: 4) }
   ///  Electron density profiles
-  public var DENSITY_PROFILES: FlatbufferVector<ionoDensityProfile> { return _accessor.vector(at: VTOFFSET.DENSITY_PROFILES.v, byteSize: 4) }
+  public var DENSITY_PROFILES: FlatbufferVector<ionoDensityProfile> { return _accessor.vector(at: VT.DENSITY_PROFILES, byteSize: 4) }
   ///  Data quality indicator (0-9, 9=best)
-  public var QUALITY: UInt8 { let o = _accessor.offset(VTOFFSET.QUALITY.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var QUALITY: UInt8 { let o = _accessor.offset(VT.QUALITY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Additional notes
-  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
   public static func startION(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(SOURCE: ionoSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE.rawValue, def: 0, at: VTOFFSET.SOURCE.p) }
-  public static func add(STATION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATION_ID, at: VTOFFSET.STATION_ID.p) }
-  public static func add(STATION_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATION_NAME, at: VTOFFSET.STATION_NAME.p) }
-  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VTOFFSET.LATITUDE.p) }
-  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VTOFFSET.LONGITUDE.p) }
-  public static func add(ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VTOFFSET.ALTITUDE.p) }
-  public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VTOFFSET.START_TIME.p) }
-  public static func add(STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_TIME, at: VTOFFSET.STOP_TIME.p) }
-  public static func add(FOF2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOF2, def: 0.0, at: VTOFFSET.FOF2.p) }
-  public static func add(FOF1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOF1, def: 0.0, at: VTOFFSET.FOF1.p) }
-  public static func add(FOE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOE, def: 0.0, at: VTOFFSET.FOE.p) }
-  public static func add(FOES: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOES, def: 0.0, at: VTOFFSET.FOES.p) }
-  public static func add(HMF2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HMF2, def: 0.0, at: VTOFFSET.HMF2.p) }
-  public static func add(HMF1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HMF1, def: 0.0, at: VTOFFSET.HMF1.p) }
-  public static func add(HME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HME, def: 0.0, at: VTOFFSET.HME.p) }
-  public static func add(NMF2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NMF2, def: 0.0, at: VTOFFSET.NMF2.p) }
-  public static func add(VTEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VTEC, def: 0.0, at: VTOFFSET.VTEC.p) }
-  public static func add(STEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEC, def: 0.0, at: VTOFFSET.STEC.p) }
-  public static func add(S4: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: S4, def: 0.0, at: VTOFFSET.S4.p) }
-  public static func addVectorOf(DATA_POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_POINTS, at: VTOFFSET.DATA_POINTS.p) }
-  public static func addVectorOf(DENSITY_PROFILES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DENSITY_PROFILES, at: VTOFFSET.DENSITY_PROFILES.p) }
-  public static func add(QUALITY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUALITY, def: 0, at: VTOFFSET.QUALITY.p) }
-  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(SOURCE: ionoSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE.rawValue, def: 0, at: VT.SOURCE) }
+  public static func add(STATION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATION_ID, at: VT.STATION_ID) }
+  public static func add(STATION_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATION_NAME, at: VT.STATION_NAME) }
+  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VT.LATITUDE) }
+  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VT.LONGITUDE) }
+  public static func add(ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VT.ALTITUDE) }
+  public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VT.START_TIME) }
+  public static func add(STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_TIME, at: VT.STOP_TIME) }
+  public static func add(FOF2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOF2, def: 0.0, at: VT.FOF2) }
+  public static func add(FOF1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOF1, def: 0.0, at: VT.FOF1) }
+  public static func add(FOE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOE, def: 0.0, at: VT.FOE) }
+  public static func add(FOES: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOES, def: 0.0, at: VT.FOES) }
+  public static func add(HMF2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HMF2, def: 0.0, at: VT.HMF2) }
+  public static func add(HMF1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HMF1, def: 0.0, at: VT.HMF1) }
+  public static func add(HME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HME, def: 0.0, at: VT.HME) }
+  public static func add(NMF2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NMF2, def: 0.0, at: VT.NMF2) }
+  public static func add(VTEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VTEC, def: 0.0, at: VT.VTEC) }
+  public static func add(STEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEC, def: 0.0, at: VT.STEC) }
+  public static func add(S4: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: S4, def: 0.0, at: VT.S4) }
+  public static func addVectorOf(DATA_POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_POINTS, at: VT.DATA_POINTS) }
+  public static func addVectorOf(DENSITY_PROFILES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DENSITY_PROFILES, at: VT.DENSITY_PROFILES) }
+  public static func add(QUALITY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUALITY, def: 0, at: VT.QUALITY) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
   public static func endION(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createION(
     _ fbb: inout FlatBufferBuilder,
@@ -365,30 +359,30 @@ public struct ION: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SOURCE.p, fieldName: "SOURCE", required: false, type: ionoSource.self)
-    try _v.visit(field: VTOFFSET.STATION_ID.p, fieldName: "STATION_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STATION_NAME.p, fieldName: "STATION_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LATITUDE.p, fieldName: "LATITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LONGITUDE.p, fieldName: "LONGITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE.p, fieldName: "ALTITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.START_TIME.p, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STOP_TIME.p, fieldName: "STOP_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FOF2.p, fieldName: "FOF2", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FOF1.p, fieldName: "FOF1", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FOE.p, fieldName: "FOE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FOES.p, fieldName: "FOES", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HMF2.p, fieldName: "HMF2", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HMF1.p, fieldName: "HMF1", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HME.p, fieldName: "HME", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NMF2.p, fieldName: "NMF2", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VTEC.p, fieldName: "VTEC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STEC.p, fieldName: "STEC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.S4.p, fieldName: "S4", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DATA_POINTS.p, fieldName: "DATA_POINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<ionoDataPoint>, ionoDataPoint>>.self)
-    try _v.visit(field: VTOFFSET.DENSITY_PROFILES.p, fieldName: "DENSITY_PROFILES", required: false, type: ForwardOffset<Vector<ForwardOffset<ionoDensityProfile>, ionoDensityProfile>>.self)
-    try _v.visit(field: VTOFFSET.QUALITY.p, fieldName: "QUALITY", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ionoSource.self)
+    try _v.visit(field: VT.STATION_ID, fieldName: "STATION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATION_NAME, fieldName: "STATION_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LATITUDE, fieldName: "LATITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE, fieldName: "LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE, fieldName: "ALTITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.START_TIME, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STOP_TIME, fieldName: "STOP_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FOF2, fieldName: "FOF2", required: false, type: Double.self)
+    try _v.visit(field: VT.FOF1, fieldName: "FOF1", required: false, type: Double.self)
+    try _v.visit(field: VT.FOE, fieldName: "FOE", required: false, type: Double.self)
+    try _v.visit(field: VT.FOES, fieldName: "FOES", required: false, type: Double.self)
+    try _v.visit(field: VT.HMF2, fieldName: "HMF2", required: false, type: Double.self)
+    try _v.visit(field: VT.HMF1, fieldName: "HMF1", required: false, type: Double.self)
+    try _v.visit(field: VT.HME, fieldName: "HME", required: false, type: Double.self)
+    try _v.visit(field: VT.NMF2, fieldName: "NMF2", required: false, type: Double.self)
+    try _v.visit(field: VT.VTEC, fieldName: "VTEC", required: false, type: Double.self)
+    try _v.visit(field: VT.STEC, fieldName: "STEC", required: false, type: Double.self)
+    try _v.visit(field: VT.S4, fieldName: "S4", required: false, type: Double.self)
+    try _v.visit(field: VT.DATA_POINTS, fieldName: "DATA_POINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<ionoDataPoint>, ionoDataPoint>>.self)
+    try _v.visit(field: VT.DENSITY_PROFILES, fieldName: "DENSITY_PROFILES", required: false, type: ForwardOffset<Vector<ForwardOffset<ionoDensityProfile>, ionoDensityProfile>>.self)
+    try _v.visit(field: VT.QUALITY, fieldName: "QUALITY", required: false, type: UInt8.self)
+    try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

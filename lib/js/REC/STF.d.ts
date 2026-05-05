@@ -16,13 +16,13 @@ export declare class STF implements flatbuffers.IUnpackableObject<STFT> {
     /**
      * Unique identifier for the listing
      */
-    LISTING_ID(): string | null;
-    LISTING_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    LISTING_ID(): string;
+    LISTING_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Peer ID of the data provider
      */
-    PROVIDER_PEER_ID(): string | null;
-    PROVIDER_PEER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    PROVIDER_PEER_ID(): string;
+    PROVIDER_PEER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * IPFS CID of provider's EPM (Entity Profile Message)
      */
@@ -31,8 +31,8 @@ export declare class STF implements flatbuffers.IUnpackableObject<STFT> {
     /**
      * Title of the data listing
      */
-    TITLE(): string | null;
-    TITLE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    TITLE(): string;
+    TITLE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Detailed description of the data offering
      */

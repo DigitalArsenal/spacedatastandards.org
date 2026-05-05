@@ -37,21 +37,21 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 /**
  * Unique license key identifier
  */
-LICENSE_ID():string|null
-LICENSE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LICENSE_ID(optionalEncoding?:any):string|Uint8Array|null {
+LICENSE_ID():string
+LICENSE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+LICENSE_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
  * Plugin ID this license is for
  */
-PLUGIN_ID():string|null
-PLUGIN_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-PLUGIN_ID(optionalEncoding?:any):string|Uint8Array|null {
+PLUGIN_ID():string
+PLUGIN_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+PLUGIN_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
@@ -67,11 +67,11 @@ PLUGIN_VERSION(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Licensee organization name
  */
-LICENSEE_ORG():string|null
-LICENSEE_ORG(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LICENSEE_ORG(optionalEncoding?:any):string|Uint8Array|null {
+LICENSEE_ORG():string
+LICENSEE_ORG(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+LICENSEE_ORG(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**

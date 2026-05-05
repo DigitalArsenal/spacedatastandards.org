@@ -38,55 +38,53 @@ public struct PCF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case STEP_SIZE = 4
-    case TOLERANCE = 6
-    case MIN_STEP = 8
-    case MAX_STEP = 10
-    case MAX_ITERATIONS = 12
-    case GRAVITY_DEGREE = 14
-    case GRAVITY_ORDER = 16
-    case INTEGRATOR = 18
-    case OUTPUT_FRAME = 20
-    case FORCE_FLAGS = 22
-    case DRAG_COEFFICIENT = 24
-    case SRP_COEFFICIENT = 26
-    case AREA_MASS_RATIO = 28
-    case RESERVED = 30
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let STEP_SIZE: VOffset = 4
+    static let TOLERANCE: VOffset = 6
+    static let MIN_STEP: VOffset = 8
+    static let MAX_STEP: VOffset = 10
+    static let MAX_ITERATIONS: VOffset = 12
+    static let GRAVITY_DEGREE: VOffset = 14
+    static let GRAVITY_ORDER: VOffset = 16
+    static let INTEGRATOR: VOffset = 18
+    static let OUTPUT_FRAME: VOffset = 20
+    static let FORCE_FLAGS: VOffset = 22
+    static let DRAG_COEFFICIENT: VOffset = 24
+    static let SRP_COEFFICIENT: VOffset = 26
+    static let AREA_MASS_RATIO: VOffset = 28
+    static let RESERVED: VOffset = 30
   }
 
-  public var STEP_SIZE: Double { let o = _accessor.offset(VTOFFSET.STEP_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var TOLERANCE: Double { let o = _accessor.offset(VTOFFSET.TOLERANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MIN_STEP: Double { let o = _accessor.offset(VTOFFSET.MIN_STEP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MAX_STEP: Double { let o = _accessor.offset(VTOFFSET.MAX_STEP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MAX_ITERATIONS: UInt32 { let o = _accessor.offset(VTOFFSET.MAX_ITERATIONS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public var GRAVITY_DEGREE: UInt16 { let o = _accessor.offset(VTOFFSET.GRAVITY_DEGREE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var GRAVITY_ORDER: UInt16 { let o = _accessor.offset(VTOFFSET.GRAVITY_ORDER.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var INTEGRATOR: UInt8 { let o = _accessor.offset(VTOFFSET.INTEGRATOR.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var OUTPUT_FRAME: UInt8 { let o = _accessor.offset(VTOFFSET.OUTPUT_FRAME.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var FORCE_FLAGS: UInt16 { let o = _accessor.offset(VTOFFSET.FORCE_FLAGS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var DRAG_COEFFICIENT: Float32 { let o = _accessor.offset(VTOFFSET.DRAG_COEFFICIENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var SRP_COEFFICIENT: Float32 { let o = _accessor.offset(VTOFFSET.SRP_COEFFICIENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var AREA_MASS_RATIO: Float32 { let o = _accessor.offset(VTOFFSET.AREA_MASS_RATIO.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
+  public var STEP_SIZE: Double { let o = _accessor.offset(VT.STEP_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TOLERANCE: Double { let o = _accessor.offset(VT.TOLERANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MIN_STEP: Double { let o = _accessor.offset(VT.MIN_STEP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_STEP: Double { let o = _accessor.offset(VT.MAX_STEP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_ITERATIONS: UInt32 { let o = _accessor.offset(VT.MAX_ITERATIONS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var GRAVITY_DEGREE: UInt16 { let o = _accessor.offset(VT.GRAVITY_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var GRAVITY_ORDER: UInt16 { let o = _accessor.offset(VT.GRAVITY_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var INTEGRATOR: UInt8 { let o = _accessor.offset(VT.INTEGRATOR); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var OUTPUT_FRAME: UInt8 { let o = _accessor.offset(VT.OUTPUT_FRAME); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var FORCE_FLAGS: UInt16 { let o = _accessor.offset(VT.FORCE_FLAGS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var DRAG_COEFFICIENT: Float32 { let o = _accessor.offset(VT.DRAG_COEFFICIENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var SRP_COEFFICIENT: Float32 { let o = _accessor.offset(VT.SRP_COEFFICIENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var AREA_MASS_RATIO: Float32 { let o = _accessor.offset(VT.AREA_MASS_RATIO); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
   public static func startPCF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
-  public static func add(STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SIZE, def: 0.0, at: VTOFFSET.STEP_SIZE.p) }
-  public static func add(TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOLERANCE, def: 0.0, at: VTOFFSET.TOLERANCE.p) }
-  public static func add(MIN_STEP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_STEP, def: 0.0, at: VTOFFSET.MIN_STEP.p) }
-  public static func add(MAX_STEP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_STEP, def: 0.0, at: VTOFFSET.MAX_STEP.p) }
-  public static func add(MAX_ITERATIONS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ITERATIONS, def: 0, at: VTOFFSET.MAX_ITERATIONS.p) }
-  public static func add(GRAVITY_DEGREE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITY_DEGREE, def: 0, at: VTOFFSET.GRAVITY_DEGREE.p) }
-  public static func add(GRAVITY_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITY_ORDER, def: 0, at: VTOFFSET.GRAVITY_ORDER.p) }
-  public static func add(INTEGRATOR: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTEGRATOR, def: 0, at: VTOFFSET.INTEGRATOR.p) }
-  public static func add(OUTPUT_FRAME: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_FRAME, def: 0, at: VTOFFSET.OUTPUT_FRAME.p) }
-  public static func add(FORCE_FLAGS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FORCE_FLAGS, def: 0, at: VTOFFSET.FORCE_FLAGS.p) }
-  public static func add(DRAG_COEFFICIENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_COEFFICIENT, def: 0.0, at: VTOFFSET.DRAG_COEFFICIENT.p) }
-  public static func add(SRP_COEFFICIENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRP_COEFFICIENT, def: 0.0, at: VTOFFSET.SRP_COEFFICIENT.p) }
-  public static func add(AREA_MASS_RATIO: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_MASS_RATIO, def: 0.0, at: VTOFFSET.AREA_MASS_RATIO.p) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VTOFFSET.RESERVED.p) }
+  public static func add(STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SIZE, def: 0.0, at: VT.STEP_SIZE) }
+  public static func add(TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOLERANCE, def: 0.0, at: VT.TOLERANCE) }
+  public static func add(MIN_STEP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_STEP, def: 0.0, at: VT.MIN_STEP) }
+  public static func add(MAX_STEP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_STEP, def: 0.0, at: VT.MAX_STEP) }
+  public static func add(MAX_ITERATIONS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ITERATIONS, def: 0, at: VT.MAX_ITERATIONS) }
+  public static func add(GRAVITY_DEGREE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITY_DEGREE, def: 0, at: VT.GRAVITY_DEGREE) }
+  public static func add(GRAVITY_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITY_ORDER, def: 0, at: VT.GRAVITY_ORDER) }
+  public static func add(INTEGRATOR: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTEGRATOR, def: 0, at: VT.INTEGRATOR) }
+  public static func add(OUTPUT_FRAME: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_FRAME, def: 0, at: VT.OUTPUT_FRAME) }
+  public static func add(FORCE_FLAGS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FORCE_FLAGS, def: 0, at: VT.FORCE_FLAGS) }
+  public static func add(DRAG_COEFFICIENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_COEFFICIENT, def: 0.0, at: VT.DRAG_COEFFICIENT) }
+  public static func add(SRP_COEFFICIENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRP_COEFFICIENT, def: 0.0, at: VT.SRP_COEFFICIENT) }
+  public static func add(AREA_MASS_RATIO: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_MASS_RATIO, def: 0.0, at: VT.AREA_MASS_RATIO) }
+  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
   public static func endPCF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPCF(
     _ fbb: inout FlatBufferBuilder,
@@ -125,20 +123,20 @@ public struct PCF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.STEP_SIZE.p, fieldName: "STEP_SIZE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TOLERANCE.p, fieldName: "TOLERANCE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MIN_STEP.p, fieldName: "MIN_STEP", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_STEP.p, fieldName: "MAX_STEP", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_ITERATIONS.p, fieldName: "MAX_ITERATIONS", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.GRAVITY_DEGREE.p, fieldName: "GRAVITY_DEGREE", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.GRAVITY_ORDER.p, fieldName: "GRAVITY_ORDER", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.INTEGRATOR.p, fieldName: "INTEGRATOR", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.OUTPUT_FRAME.p, fieldName: "OUTPUT_FRAME", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.FORCE_FLAGS.p, fieldName: "FORCE_FLAGS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.DRAG_COEFFICIENT.p, fieldName: "DRAG_COEFFICIENT", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.SRP_COEFFICIENT.p, fieldName: "SRP_COEFFICIENT", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.AREA_MASS_RATIO.p, fieldName: "AREA_MASS_RATIO", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.STEP_SIZE, fieldName: "STEP_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VT.TOLERANCE, fieldName: "TOLERANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_STEP, fieldName: "MIN_STEP", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_STEP, fieldName: "MAX_STEP", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_ITERATIONS, fieldName: "MAX_ITERATIONS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.GRAVITY_DEGREE, fieldName: "GRAVITY_DEGREE", required: false, type: UInt16.self)
+    try _v.visit(field: VT.GRAVITY_ORDER, fieldName: "GRAVITY_ORDER", required: false, type: UInt16.self)
+    try _v.visit(field: VT.INTEGRATOR, fieldName: "INTEGRATOR", required: false, type: UInt8.self)
+    try _v.visit(field: VT.OUTPUT_FRAME, fieldName: "OUTPUT_FRAME", required: false, type: UInt8.self)
+    try _v.visit(field: VT.FORCE_FLAGS, fieldName: "FORCE_FLAGS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.DRAG_COEFFICIENT, fieldName: "DRAG_COEFFICIENT", required: false, type: Float32.self)
+    try _v.visit(field: VT.SRP_COEFFICIENT, fieldName: "SRP_COEFFICIENT", required: false, type: Float32.self)
+    try _v.visit(field: VT.AREA_MASS_RATIO, fieldName: "AREA_MASS_RATIO", required: false, type: Float32.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

@@ -67,256 +67,254 @@ public struct MST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case MSG_TYPE = 6
-    case MSG_SUB_TYPE = 8
-    case MSG_CREATE_DATE = 10
-    case ENVIRONMENT = 12
-    case OBJ_TYPE = 14
-    case OBJ_TYPE_CONF = 16
-    case OBJ_PLAT = 18
-    case OBJ_IDENT = 20
-    case SPACE_AMP = 22
-    case SPACE_AMP_CONF = 24
-    case OBJ_ACT = 26
-    case SPACE_SPEC_TYPE = 28
-    case ACFT_SUB_TYPE = 30
-    case NAME = 32
-    case CALL_SIGN = 34
-    case LOST_TRK_IND = 36
-    case TRACK_ID = 38
-    case PARENT_TRACK_ID = 40
-    case MUID_SRC_TRK = 42
-    case MUID_SRC = 44
-    case ALERT = 46
-    case MSL_STATUS = 48
-    case TS = 50
-    case AOU_RPT_TYPE = 52
-    case CONTAINMENT = 54
-    case TRK_CONF = 56
-    case TRK_QUAL = 58
-    case ANG_ELEV = 60
-    case SEN_MODE = 62
-    case INFO_SOURCE = 64
-    case BOOSTING = 66
-    case POLAR_SING_LOC_LAT = 68
-    case POLAR_SING_LOC_LON = 70
-    case EMG_IND = 72
-    case DROP_PT_IND = 74
-    case LAUNCH_TIME = 76
-    case LAUNCH_LAT = 78
-    case LAUNCH_LON = 80
-    case AZ_CORR = 82
-    case BURNOUT_ALT = 84
-    case LAUNCH_AOU_TYPE = 86
-    case IMPACT_TIME = 88
-    case IMPACT_LAT = 90
-    case IMPACT_LON = 92
-    case IMPACT_AOU_TYPE = 94
-    case VECTOR_START_TIME = 96
-    case VECTOR_STEP_SIZE = 98
-    case VECTOR_COMPONENTS = 100
-    case VECTORS = 102
-    case AOU_RPT = 104
-    case LAUNCH_AOU = 106
-    case IMPACT_AOU = 108
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let MSG_TYPE: VOffset = 6
+    static let MSG_SUB_TYPE: VOffset = 8
+    static let MSG_CREATE_DATE: VOffset = 10
+    static let ENVIRONMENT: VOffset = 12
+    static let OBJ_TYPE: VOffset = 14
+    static let OBJ_TYPE_CONF: VOffset = 16
+    static let OBJ_PLAT: VOffset = 18
+    static let OBJ_IDENT: VOffset = 20
+    static let SPACE_AMP: VOffset = 22
+    static let SPACE_AMP_CONF: VOffset = 24
+    static let OBJ_ACT: VOffset = 26
+    static let SPACE_SPEC_TYPE: VOffset = 28
+    static let ACFT_SUB_TYPE: VOffset = 30
+    static let NAME: VOffset = 32
+    static let CALL_SIGN: VOffset = 34
+    static let LOST_TRK_IND: VOffset = 36
+    static let TRACK_ID: VOffset = 38
+    static let PARENT_TRACK_ID: VOffset = 40
+    static let MUID_SRC_TRK: VOffset = 42
+    static let MUID_SRC: VOffset = 44
+    static let ALERT: VOffset = 46
+    static let MSL_STATUS: VOffset = 48
+    static let TS: VOffset = 50
+    static let AOU_RPT_TYPE: VOffset = 52
+    static let CONTAINMENT: VOffset = 54
+    static let TRK_CONF: VOffset = 56
+    static let TRK_QUAL: VOffset = 58
+    static let ANG_ELEV: VOffset = 60
+    static let SEN_MODE: VOffset = 62
+    static let INFO_SOURCE: VOffset = 64
+    static let BOOSTING: VOffset = 66
+    static let POLAR_SING_LOC_LAT: VOffset = 68
+    static let POLAR_SING_LOC_LON: VOffset = 70
+    static let EMG_IND: VOffset = 72
+    static let DROP_PT_IND: VOffset = 74
+    static let LAUNCH_TIME: VOffset = 76
+    static let LAUNCH_LAT: VOffset = 78
+    static let LAUNCH_LON: VOffset = 80
+    static let AZ_CORR: VOffset = 82
+    static let BURNOUT_ALT: VOffset = 84
+    static let LAUNCH_AOU_TYPE: VOffset = 86
+    static let IMPACT_TIME: VOffset = 88
+    static let IMPACT_LAT: VOffset = 90
+    static let IMPACT_LON: VOffset = 92
+    static let IMPACT_AOU_TYPE: VOffset = 94
+    static let VECTOR_START_TIME: VOffset = 96
+    static let VECTOR_STEP_SIZE: VOffset = 98
+    static let VECTOR_COMPONENTS: VOffset = 100
+    static let VECTORS: VOffset = 102
+    static let AOU_RPT: VOffset = 104
+    static let LAUNCH_AOU: VOffset = 106
+    static let IMPACT_AOU: VOffset = 108
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Message type code
-  public var MSG_TYPE: String? { let o = _accessor.offset(VTOFFSET.MSG_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MSG_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MSG_TYPE.v) }
+  public var MSG_TYPE: String? { let o = _accessor.offset(VT.MSG_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MSG_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MSG_TYPE) }
   ///  Message sub-type
-  public var MSG_SUB_TYPE: String? { let o = _accessor.offset(VTOFFSET.MSG_SUB_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MSG_SUB_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MSG_SUB_TYPE.v) }
+  public var MSG_SUB_TYPE: String? { let o = _accessor.offset(VT.MSG_SUB_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MSG_SUB_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MSG_SUB_TYPE) }
   ///  Message creation date (ISO 8601)
-  public var MSG_CREATE_DATE: String? { let o = _accessor.offset(VTOFFSET.MSG_CREATE_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MSG_CREATE_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MSG_CREATE_DATE.v) }
+  public var MSG_CREATE_DATE: String? { let o = _accessor.offset(VT.MSG_CREATE_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MSG_CREATE_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MSG_CREATE_DATE) }
   ///  Track environment
-  public var ENVIRONMENT: missileEnvironment { let o = _accessor.offset(VTOFFSET.ENVIRONMENT.v); return o == 0 ? .space : missileEnvironment(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .space }
+  public var ENVIRONMENT: missileEnvironment { let o = _accessor.offset(VT.ENVIRONMENT); return o == 0 ? .space : missileEnvironment(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .space }
   ///  Object type classification
-  public var OBJ_TYPE: String? { let o = _accessor.offset(VTOFFSET.OBJ_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJ_TYPE.v) }
+  public var OBJ_TYPE: String? { let o = _accessor.offset(VT.OBJ_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJ_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_TYPE) }
   ///  Object type confidence (0-100)
-  public var OBJ_TYPE_CONF: UInt8 { let o = _accessor.offset(VTOFFSET.OBJ_TYPE_CONF.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var OBJ_TYPE_CONF: UInt8 { let o = _accessor.offset(VT.OBJ_TYPE_CONF); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Object platform type
-  public var OBJ_PLAT: String? { let o = _accessor.offset(VTOFFSET.OBJ_PLAT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_PLATSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJ_PLAT.v) }
+  public var OBJ_PLAT: String? { let o = _accessor.offset(VT.OBJ_PLAT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJ_PLATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_PLAT) }
   ///  Object identity assessment
-  public var OBJ_IDENT: String? { let o = _accessor.offset(VTOFFSET.OBJ_IDENT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_IDENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJ_IDENT.v) }
+  public var OBJ_IDENT: String? { let o = _accessor.offset(VT.OBJ_IDENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJ_IDENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_IDENT) }
   ///  Space amplification data
-  public var SPACE_AMP: String? { let o = _accessor.offset(VTOFFSET.SPACE_AMP.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SPACE_AMPSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SPACE_AMP.v) }
+  public var SPACE_AMP: String? { let o = _accessor.offset(VT.SPACE_AMP); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SPACE_AMPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SPACE_AMP) }
   ///  Space amplification confidence (0-100)
-  public var SPACE_AMP_CONF: UInt8 { let o = _accessor.offset(VTOFFSET.SPACE_AMP_CONF.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var SPACE_AMP_CONF: UInt8 { let o = _accessor.offset(VT.SPACE_AMP_CONF); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Object activity
-  public var OBJ_ACT: String? { let o = _accessor.offset(VTOFFSET.OBJ_ACT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJ_ACTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJ_ACT.v) }
+  public var OBJ_ACT: String? { let o = _accessor.offset(VT.OBJ_ACT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJ_ACTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJ_ACT) }
   ///  Space specific type
-  public var SPACE_SPEC_TYPE: String? { let o = _accessor.offset(VTOFFSET.SPACE_SPEC_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SPACE_SPEC_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SPACE_SPEC_TYPE.v) }
+  public var SPACE_SPEC_TYPE: String? { let o = _accessor.offset(VT.SPACE_SPEC_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SPACE_SPEC_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SPACE_SPEC_TYPE) }
   ///  Aircraft sub-type (if applicable)
-  public var ACFT_SUB_TYPE: String? { let o = _accessor.offset(VTOFFSET.ACFT_SUB_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ACFT_SUB_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ACFT_SUB_TYPE.v) }
+  public var ACFT_SUB_TYPE: String? { let o = _accessor.offset(VT.ACFT_SUB_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ACFT_SUB_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ACFT_SUB_TYPE) }
   ///  Object name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Call sign
-  public var CALL_SIGN: String? { let o = _accessor.offset(VTOFFSET.CALL_SIGN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CALL_SIGNSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CALL_SIGN.v) }
+  public var CALL_SIGN: String? { let o = _accessor.offset(VT.CALL_SIGN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CALL_SIGNSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CALL_SIGN) }
   ///  True if track is lost
-  public var LOST_TRK_IND: Bool { let o = _accessor.offset(VTOFFSET.LOST_TRK_IND.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var LOST_TRK_IND: Bool { let o = _accessor.offset(VT.LOST_TRK_IND); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Track identifier
-  public var TRACK_ID: String? { let o = _accessor.offset(VTOFFSET.TRACK_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRACK_ID.v) }
+  public var TRACK_ID: String? { let o = _accessor.offset(VT.TRACK_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRACK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACK_ID) }
   ///  Parent track identifier
-  public var PARENT_TRACK_ID: String? { let o = _accessor.offset(VTOFFSET.PARENT_TRACK_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PARENT_TRACK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARENT_TRACK_ID.v) }
+  public var PARENT_TRACK_ID: String? { let o = _accessor.offset(VT.PARENT_TRACK_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARENT_TRACK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARENT_TRACK_ID) }
   ///  Multi-unit identifier (source track)
-  public var MUID_SRC_TRK: String? { let o = _accessor.offset(VTOFFSET.MUID_SRC_TRK.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MUID_SRC_TRKSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MUID_SRC_TRK.v) }
+  public var MUID_SRC_TRK: String? { let o = _accessor.offset(VT.MUID_SRC_TRK); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MUID_SRC_TRKSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MUID_SRC_TRK) }
   ///  Multi-unit identifier (source)
-  public var MUID_SRC: String? { let o = _accessor.offset(VTOFFSET.MUID_SRC.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MUID_SRCSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MUID_SRC.v) }
+  public var MUID_SRC: String? { let o = _accessor.offset(VT.MUID_SRC); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MUID_SRCSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MUID_SRC) }
   ///  Alert classification
-  public var ALERT: String? { let o = _accessor.offset(VTOFFSET.ALERT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ALERTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALERT.v) }
+  public var ALERT: String? { let o = _accessor.offset(VT.ALERT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALERTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALERT) }
   ///  Missile engagement status
-  public var MSL_STATUS: missileStatus { let o = _accessor.offset(VTOFFSET.MSL_STATUS.v); return o == 0 ? .boosting : missileStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .boosting }
+  public var MSL_STATUS: missileStatus { let o = _accessor.offset(VT.MSL_STATUS); return o == 0 ? .boosting : missileStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .boosting }
   ///  Track timestamp (ISO 8601)
-  public var TS: String? { let o = _accessor.offset(VTOFFSET.TS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TS.v) }
+  public var TS: String? { let o = _accessor.offset(VT.TS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TS) }
   ///  AOU report type
-  public var AOU_RPT_TYPE: aouReportType { let o = _accessor.offset(VTOFFSET.AOU_RPT_TYPE.v); return o == 0 ? .circular : aouReportType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .circular }
+  public var AOU_RPT_TYPE: aouReportType { let o = _accessor.offset(VT.AOU_RPT_TYPE); return o == 0 ? .circular : aouReportType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .circular }
   ///  Containment probability (0-1)
-  public var CONTAINMENT: Double { let o = _accessor.offset(VTOFFSET.CONTAINMENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CONTAINMENT: Double { let o = _accessor.offset(VT.CONTAINMENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Track confidence (0-1)
-  public var TRK_CONF: Double { let o = _accessor.offset(VTOFFSET.TRK_CONF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TRK_CONF: Double { let o = _accessor.offset(VT.TRK_CONF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Track quality (0-15)
-  public var TRK_QUAL: UInt8 { let o = _accessor.offset(VTOFFSET.TRK_QUAL.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var TRK_QUAL: UInt8 { let o = _accessor.offset(VT.TRK_QUAL); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Elevation angle (degrees)
-  public var ANG_ELEV: Double { let o = _accessor.offset(VTOFFSET.ANG_ELEV.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ANG_ELEV: Double { let o = _accessor.offset(VT.ANG_ELEV); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor mode
-  public var SEN_MODE: String? { let o = _accessor.offset(VTOFFSET.SEN_MODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SEN_MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SEN_MODE.v) }
+  public var SEN_MODE: String? { let o = _accessor.offset(VT.SEN_MODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SEN_MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SEN_MODE) }
   ///  Information source
-  public var INFO_SOURCE: String? { let o = _accessor.offset(VTOFFSET.INFO_SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INFO_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INFO_SOURCE.v) }
+  public var INFO_SOURCE: String? { let o = _accessor.offset(VT.INFO_SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INFO_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INFO_SOURCE) }
   ///  True if object is in boost phase
-  public var BOOSTING: Bool { let o = _accessor.offset(VTOFFSET.BOOSTING.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var BOOSTING: Bool { let o = _accessor.offset(VT.BOOSTING); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Polar singularity latitude (degrees)
-  public var POLAR_SING_LOC_LAT: Double { let o = _accessor.offset(VTOFFSET.POLAR_SING_LOC_LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POLAR_SING_LOC_LAT: Double { let o = _accessor.offset(VT.POLAR_SING_LOC_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Polar singularity longitude (degrees)
-  public var POLAR_SING_LOC_LON: Double { let o = _accessor.offset(VTOFFSET.POLAR_SING_LOC_LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POLAR_SING_LOC_LON: Double { let o = _accessor.offset(VT.POLAR_SING_LOC_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  True if emergency indicator set
-  public var EMG_IND: Bool { let o = _accessor.offset(VTOFFSET.EMG_IND.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var EMG_IND: Bool { let o = _accessor.offset(VT.EMG_IND); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  True if drop point indicator set
-  public var DROP_PT_IND: Bool { let o = _accessor.offset(VTOFFSET.DROP_PT_IND.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var DROP_PT_IND: Bool { let o = _accessor.offset(VT.DROP_PT_IND); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Launch time (ISO 8601)
-  public var LAUNCH_TIME: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_TIME.v) }
+  public var LAUNCH_TIME: String? { let o = _accessor.offset(VT.LAUNCH_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_TIME) }
   ///  Launch latitude (degrees)
-  public var LAUNCH_LAT: Double { let o = _accessor.offset(VTOFFSET.LAUNCH_LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LAUNCH_LAT: Double { let o = _accessor.offset(VT.LAUNCH_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Launch longitude (degrees)
-  public var LAUNCH_LON: Double { let o = _accessor.offset(VTOFFSET.LAUNCH_LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LAUNCH_LON: Double { let o = _accessor.offset(VT.LAUNCH_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Azimuth correction (degrees)
-  public var AZ_CORR: Double { let o = _accessor.offset(VTOFFSET.AZ_CORR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var AZ_CORR: Double { let o = _accessor.offset(VT.AZ_CORR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Burnout altitude (km)
-  public var BURNOUT_ALT: Double { let o = _accessor.offset(VTOFFSET.BURNOUT_ALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BURNOUT_ALT: Double { let o = _accessor.offset(VT.BURNOUT_ALT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Launch AOU type
-  public var LAUNCH_AOU_TYPE: aouReportType { let o = _accessor.offset(VTOFFSET.LAUNCH_AOU_TYPE.v); return o == 0 ? .circular : aouReportType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .circular }
+  public var LAUNCH_AOU_TYPE: aouReportType { let o = _accessor.offset(VT.LAUNCH_AOU_TYPE); return o == 0 ? .circular : aouReportType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .circular }
   ///  Predicted impact time (ISO 8601)
-  public var IMPACT_TIME: String? { let o = _accessor.offset(VTOFFSET.IMPACT_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IMPACT_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMPACT_TIME.v) }
+  public var IMPACT_TIME: String? { let o = _accessor.offset(VT.IMPACT_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMPACT_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IMPACT_TIME) }
   ///  Predicted impact latitude (degrees)
-  public var IMPACT_LAT: Double { let o = _accessor.offset(VTOFFSET.IMPACT_LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var IMPACT_LAT: Double { let o = _accessor.offset(VT.IMPACT_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Predicted impact longitude (degrees)
-  public var IMPACT_LON: Double { let o = _accessor.offset(VTOFFSET.IMPACT_LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var IMPACT_LON: Double { let o = _accessor.offset(VT.IMPACT_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Impact AOU type
-  public var IMPACT_AOU_TYPE: aouReportType { let o = _accessor.offset(VTOFFSET.IMPACT_AOU_TYPE.v); return o == 0 ? .circular : aouReportType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .circular }
+  public var IMPACT_AOU_TYPE: aouReportType { let o = _accessor.offset(VT.IMPACT_AOU_TYPE); return o == 0 ? .circular : aouReportType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .circular }
   ///  Start time for vector data (ISO 8601)
-  public var VECTOR_START_TIME: String? { let o = _accessor.offset(VTOFFSET.VECTOR_START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VECTOR_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VECTOR_START_TIME.v) }
+  public var VECTOR_START_TIME: String? { let o = _accessor.offset(VT.VECTOR_START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VECTOR_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VECTOR_START_TIME) }
   ///  Time interval between vector points (seconds)
-  public var VECTOR_STEP_SIZE: Double { let o = _accessor.offset(VTOFFSET.VECTOR_STEP_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VECTOR_STEP_SIZE: Double { let o = _accessor.offset(VT.VECTOR_STEP_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
-  public var VECTOR_COMPONENTS: UInt8 { let o = _accessor.offset(VTOFFSET.VECTOR_COMPONENTS.v); return o == 0 ? 6 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var VECTOR_COMPONENTS: UInt8 { let o = _accessor.offset(VT.VECTOR_COMPONENTS); return o == 0 ? 6 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
-  public var VECTORS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.VECTORS.v, byteSize: 8) }
-  public func withUnsafePointerToVectors<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.VECTORS.v, body: body) }
+  public var VECTORS: FlatbufferVector<Double> { return _accessor.vector(at: VT.VECTORS, byteSize: 8) }
+  public func withUnsafePointerToVectors<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.VECTORS, body: body) }
   ///  AOU report data as flat array
-  public var AOU_RPT: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.AOU_RPT.v, byteSize: 8) }
-  public func withUnsafePointerToAouRpt<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.AOU_RPT.v, body: body) }
+  public var AOU_RPT: FlatbufferVector<Double> { return _accessor.vector(at: VT.AOU_RPT, byteSize: 8) }
+  public func withUnsafePointerToAouRpt<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.AOU_RPT, body: body) }
   ///  Launch AOU data as flat array
-  public var LAUNCH_AOU: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.LAUNCH_AOU.v, byteSize: 8) }
-  public func withUnsafePointerToLaunchAou<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.LAUNCH_AOU.v, body: body) }
+  public var LAUNCH_AOU: FlatbufferVector<Double> { return _accessor.vector(at: VT.LAUNCH_AOU, byteSize: 8) }
+  public func withUnsafePointerToLaunchAou<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.LAUNCH_AOU, body: body) }
   ///  Impact AOU data as flat array
-  public var IMPACT_AOU: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.IMPACT_AOU.v, byteSize: 8) }
-  public func withUnsafePointerToImpactAou<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.IMPACT_AOU.v, body: body) }
+  public var IMPACT_AOU: FlatbufferVector<Double> { return _accessor.vector(at: VT.IMPACT_AOU, byteSize: 8) }
+  public func withUnsafePointerToImpactAou<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.IMPACT_AOU, body: body) }
   public static func startMST(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 53) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(MSG_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_TYPE, at: VTOFFSET.MSG_TYPE.p) }
-  public static func add(MSG_SUB_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_SUB_TYPE, at: VTOFFSET.MSG_SUB_TYPE.p) }
-  public static func add(MSG_CREATE_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_CREATE_DATE, at: VTOFFSET.MSG_CREATE_DATE.p) }
-  public static func add(ENVIRONMENT: missileEnvironment, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENVIRONMENT.rawValue, def: 0, at: VTOFFSET.ENVIRONMENT.p) }
-  public static func add(OBJ_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_TYPE, at: VTOFFSET.OBJ_TYPE.p) }
-  public static func add(OBJ_TYPE_CONF: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJ_TYPE_CONF, def: 0, at: VTOFFSET.OBJ_TYPE_CONF.p) }
-  public static func add(OBJ_PLAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_PLAT, at: VTOFFSET.OBJ_PLAT.p) }
-  public static func add(OBJ_IDENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_IDENT, at: VTOFFSET.OBJ_IDENT.p) }
-  public static func add(SPACE_AMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPACE_AMP, at: VTOFFSET.SPACE_AMP.p) }
-  public static func add(SPACE_AMP_CONF: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPACE_AMP_CONF, def: 0, at: VTOFFSET.SPACE_AMP_CONF.p) }
-  public static func add(OBJ_ACT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_ACT, at: VTOFFSET.OBJ_ACT.p) }
-  public static func add(SPACE_SPEC_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPACE_SPEC_TYPE, at: VTOFFSET.SPACE_SPEC_TYPE.p) }
-  public static func add(ACFT_SUB_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACFT_SUB_TYPE, at: VTOFFSET.ACFT_SUB_TYPE.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(CALL_SIGN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CALL_SIGN, at: VTOFFSET.CALL_SIGN.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(MSG_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_TYPE, at: VT.MSG_TYPE) }
+  public static func add(MSG_SUB_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_SUB_TYPE, at: VT.MSG_SUB_TYPE) }
+  public static func add(MSG_CREATE_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_CREATE_DATE, at: VT.MSG_CREATE_DATE) }
+  public static func add(ENVIRONMENT: missileEnvironment, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENVIRONMENT.rawValue, def: 0, at: VT.ENVIRONMENT) }
+  public static func add(OBJ_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_TYPE, at: VT.OBJ_TYPE) }
+  public static func add(OBJ_TYPE_CONF: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJ_TYPE_CONF, def: 0, at: VT.OBJ_TYPE_CONF) }
+  public static func add(OBJ_PLAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_PLAT, at: VT.OBJ_PLAT) }
+  public static func add(OBJ_IDENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_IDENT, at: VT.OBJ_IDENT) }
+  public static func add(SPACE_AMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPACE_AMP, at: VT.SPACE_AMP) }
+  public static func add(SPACE_AMP_CONF: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPACE_AMP_CONF, def: 0, at: VT.SPACE_AMP_CONF) }
+  public static func add(OBJ_ACT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_ACT, at: VT.OBJ_ACT) }
+  public static func add(SPACE_SPEC_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPACE_SPEC_TYPE, at: VT.SPACE_SPEC_TYPE) }
+  public static func add(ACFT_SUB_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACFT_SUB_TYPE, at: VT.ACFT_SUB_TYPE) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(CALL_SIGN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CALL_SIGN, at: VT.CALL_SIGN) }
   public static func add(LOST_TRK_IND: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOST_TRK_IND, def: false,
-   at: VTOFFSET.LOST_TRK_IND.p) }
-  public static func add(TRACK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACK_ID, at: VTOFFSET.TRACK_ID.p) }
-  public static func add(PARENT_TRACK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARENT_TRACK_ID, at: VTOFFSET.PARENT_TRACK_ID.p) }
-  public static func add(MUID_SRC_TRK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MUID_SRC_TRK, at: VTOFFSET.MUID_SRC_TRK.p) }
-  public static func add(MUID_SRC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MUID_SRC, at: VTOFFSET.MUID_SRC.p) }
-  public static func add(ALERT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALERT, at: VTOFFSET.ALERT.p) }
-  public static func add(MSL_STATUS: missileStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MSL_STATUS.rawValue, def: 0, at: VTOFFSET.MSL_STATUS.p) }
-  public static func add(TS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TS, at: VTOFFSET.TS.p) }
-  public static func add(AOU_RPT_TYPE: aouReportType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AOU_RPT_TYPE.rawValue, def: 0, at: VTOFFSET.AOU_RPT_TYPE.p) }
-  public static func add(CONTAINMENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTAINMENT, def: 0.0, at: VTOFFSET.CONTAINMENT.p) }
-  public static func add(TRK_CONF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_CONF, def: 0.0, at: VTOFFSET.TRK_CONF.p) }
-  public static func add(TRK_QUAL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_QUAL, def: 0, at: VTOFFSET.TRK_QUAL.p) }
-  public static func add(ANG_ELEV: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANG_ELEV, def: 0.0, at: VTOFFSET.ANG_ELEV.p) }
-  public static func add(SEN_MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_MODE, at: VTOFFSET.SEN_MODE.p) }
-  public static func add(INFO_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INFO_SOURCE, at: VTOFFSET.INFO_SOURCE.p) }
+   at: VT.LOST_TRK_IND) }
+  public static func add(TRACK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACK_ID, at: VT.TRACK_ID) }
+  public static func add(PARENT_TRACK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARENT_TRACK_ID, at: VT.PARENT_TRACK_ID) }
+  public static func add(MUID_SRC_TRK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MUID_SRC_TRK, at: VT.MUID_SRC_TRK) }
+  public static func add(MUID_SRC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MUID_SRC, at: VT.MUID_SRC) }
+  public static func add(ALERT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALERT, at: VT.ALERT) }
+  public static func add(MSL_STATUS: missileStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MSL_STATUS.rawValue, def: 0, at: VT.MSL_STATUS) }
+  public static func add(TS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TS, at: VT.TS) }
+  public static func add(AOU_RPT_TYPE: aouReportType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AOU_RPT_TYPE.rawValue, def: 0, at: VT.AOU_RPT_TYPE) }
+  public static func add(CONTAINMENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTAINMENT, def: 0.0, at: VT.CONTAINMENT) }
+  public static func add(TRK_CONF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_CONF, def: 0.0, at: VT.TRK_CONF) }
+  public static func add(TRK_QUAL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_QUAL, def: 0, at: VT.TRK_QUAL) }
+  public static func add(ANG_ELEV: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANG_ELEV, def: 0.0, at: VT.ANG_ELEV) }
+  public static func add(SEN_MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_MODE, at: VT.SEN_MODE) }
+  public static func add(INFO_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INFO_SOURCE, at: VT.INFO_SOURCE) }
   public static func add(BOOSTING: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOOSTING, def: false,
-   at: VTOFFSET.BOOSTING.p) }
-  public static func add(POLAR_SING_LOC_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLAR_SING_LOC_LAT, def: 0.0, at: VTOFFSET.POLAR_SING_LOC_LAT.p) }
-  public static func add(POLAR_SING_LOC_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLAR_SING_LOC_LON, def: 0.0, at: VTOFFSET.POLAR_SING_LOC_LON.p) }
+   at: VT.BOOSTING) }
+  public static func add(POLAR_SING_LOC_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLAR_SING_LOC_LAT, def: 0.0, at: VT.POLAR_SING_LOC_LAT) }
+  public static func add(POLAR_SING_LOC_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLAR_SING_LOC_LON, def: 0.0, at: VT.POLAR_SING_LOC_LON) }
   public static func add(EMG_IND: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EMG_IND, def: false,
-   at: VTOFFSET.EMG_IND.p) }
+   at: VT.EMG_IND) }
   public static func add(DROP_PT_IND: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DROP_PT_IND, def: false,
-   at: VTOFFSET.DROP_PT_IND.p) }
-  public static func add(LAUNCH_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_TIME, at: VTOFFSET.LAUNCH_TIME.p) }
-  public static func add(LAUNCH_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_LAT, def: 0.0, at: VTOFFSET.LAUNCH_LAT.p) }
-  public static func add(LAUNCH_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_LON, def: 0.0, at: VTOFFSET.LAUNCH_LON.p) }
-  public static func add(AZ_CORR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZ_CORR, def: 0.0, at: VTOFFSET.AZ_CORR.p) }
-  public static func add(BURNOUT_ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BURNOUT_ALT, def: 0.0, at: VTOFFSET.BURNOUT_ALT.p) }
-  public static func add(LAUNCH_AOU_TYPE: aouReportType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_AOU_TYPE.rawValue, def: 0, at: VTOFFSET.LAUNCH_AOU_TYPE.p) }
-  public static func add(IMPACT_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_TIME, at: VTOFFSET.IMPACT_TIME.p) }
-  public static func add(IMPACT_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_LAT, def: 0.0, at: VTOFFSET.IMPACT_LAT.p) }
-  public static func add(IMPACT_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_LON, def: 0.0, at: VTOFFSET.IMPACT_LON.p) }
-  public static func add(IMPACT_AOU_TYPE: aouReportType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_AOU_TYPE.rawValue, def: 0, at: VTOFFSET.IMPACT_AOU_TYPE.p) }
-  public static func add(VECTOR_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VECTOR_START_TIME, at: VTOFFSET.VECTOR_START_TIME.p) }
-  public static func add(VECTOR_STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VECTOR_STEP_SIZE, def: 0.0, at: VTOFFSET.VECTOR_STEP_SIZE.p) }
-  public static func add(VECTOR_COMPONENTS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VECTOR_COMPONENTS, def: 6, at: VTOFFSET.VECTOR_COMPONENTS.p) }
-  public static func addVectorOf(VECTORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VECTORS, at: VTOFFSET.VECTORS.p) }
-  public static func addVectorOf(AOU_RPT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AOU_RPT, at: VTOFFSET.AOU_RPT.p) }
-  public static func addVectorOf(LAUNCH_AOU: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_AOU, at: VTOFFSET.LAUNCH_AOU.p) }
-  public static func addVectorOf(IMPACT_AOU: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_AOU, at: VTOFFSET.IMPACT_AOU.p) }
+   at: VT.DROP_PT_IND) }
+  public static func add(LAUNCH_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_TIME, at: VT.LAUNCH_TIME) }
+  public static func add(LAUNCH_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_LAT, def: 0.0, at: VT.LAUNCH_LAT) }
+  public static func add(LAUNCH_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_LON, def: 0.0, at: VT.LAUNCH_LON) }
+  public static func add(AZ_CORR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZ_CORR, def: 0.0, at: VT.AZ_CORR) }
+  public static func add(BURNOUT_ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BURNOUT_ALT, def: 0.0, at: VT.BURNOUT_ALT) }
+  public static func add(LAUNCH_AOU_TYPE: aouReportType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_AOU_TYPE.rawValue, def: 0, at: VT.LAUNCH_AOU_TYPE) }
+  public static func add(IMPACT_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_TIME, at: VT.IMPACT_TIME) }
+  public static func add(IMPACT_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_LAT, def: 0.0, at: VT.IMPACT_LAT) }
+  public static func add(IMPACT_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_LON, def: 0.0, at: VT.IMPACT_LON) }
+  public static func add(IMPACT_AOU_TYPE: aouReportType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_AOU_TYPE.rawValue, def: 0, at: VT.IMPACT_AOU_TYPE) }
+  public static func add(VECTOR_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VECTOR_START_TIME, at: VT.VECTOR_START_TIME) }
+  public static func add(VECTOR_STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VECTOR_STEP_SIZE, def: 0.0, at: VT.VECTOR_STEP_SIZE) }
+  public static func add(VECTOR_COMPONENTS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VECTOR_COMPONENTS, def: 6, at: VT.VECTOR_COMPONENTS) }
+  public static func addVectorOf(VECTORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VECTORS, at: VT.VECTORS) }
+  public static func addVectorOf(AOU_RPT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AOU_RPT, at: VT.AOU_RPT) }
+  public static func addVectorOf(LAUNCH_AOU: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_AOU, at: VT.LAUNCH_AOU) }
+  public static func addVectorOf(IMPACT_AOU: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_AOU, at: VT.IMPACT_AOU) }
   public static func endMST(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMST(
     _ fbb: inout FlatBufferBuilder,
@@ -433,59 +431,59 @@ public struct MST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MSG_TYPE.p, fieldName: "MSG_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MSG_SUB_TYPE.p, fieldName: "MSG_SUB_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MSG_CREATE_DATE.p, fieldName: "MSG_CREATE_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ENVIRONMENT.p, fieldName: "ENVIRONMENT", required: false, type: missileEnvironment.self)
-    try _v.visit(field: VTOFFSET.OBJ_TYPE.p, fieldName: "OBJ_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJ_TYPE_CONF.p, fieldName: "OBJ_TYPE_CONF", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.OBJ_PLAT.p, fieldName: "OBJ_PLAT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJ_IDENT.p, fieldName: "OBJ_IDENT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SPACE_AMP.p, fieldName: "SPACE_AMP", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SPACE_AMP_CONF.p, fieldName: "SPACE_AMP_CONF", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.OBJ_ACT.p, fieldName: "OBJ_ACT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SPACE_SPEC_TYPE.p, fieldName: "SPACE_SPEC_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ACFT_SUB_TYPE.p, fieldName: "ACFT_SUB_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CALL_SIGN.p, fieldName: "CALL_SIGN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LOST_TRK_IND.p, fieldName: "LOST_TRK_IND", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.TRACK_ID.p, fieldName: "TRACK_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PARENT_TRACK_ID.p, fieldName: "PARENT_TRACK_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MUID_SRC_TRK.p, fieldName: "MUID_SRC_TRK", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MUID_SRC.p, fieldName: "MUID_SRC", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ALERT.p, fieldName: "ALERT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MSL_STATUS.p, fieldName: "MSL_STATUS", required: false, type: missileStatus.self)
-    try _v.visit(field: VTOFFSET.TS.p, fieldName: "TS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.AOU_RPT_TYPE.p, fieldName: "AOU_RPT_TYPE", required: false, type: aouReportType.self)
-    try _v.visit(field: VTOFFSET.CONTAINMENT.p, fieldName: "CONTAINMENT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TRK_CONF.p, fieldName: "TRK_CONF", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TRK_QUAL.p, fieldName: "TRK_QUAL", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.ANG_ELEV.p, fieldName: "ANG_ELEV", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SEN_MODE.p, fieldName: "SEN_MODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INFO_SOURCE.p, fieldName: "INFO_SOURCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BOOSTING.p, fieldName: "BOOSTING", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.POLAR_SING_LOC_LAT.p, fieldName: "POLAR_SING_LOC_LAT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POLAR_SING_LOC_LON.p, fieldName: "POLAR_SING_LOC_LON", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EMG_IND.p, fieldName: "EMG_IND", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.DROP_PT_IND.p, fieldName: "DROP_PT_IND", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_TIME.p, fieldName: "LAUNCH_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_LAT.p, fieldName: "LAUNCH_LAT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_LON.p, fieldName: "LAUNCH_LON", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.AZ_CORR.p, fieldName: "AZ_CORR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BURNOUT_ALT.p, fieldName: "BURNOUT_ALT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_AOU_TYPE.p, fieldName: "LAUNCH_AOU_TYPE", required: false, type: aouReportType.self)
-    try _v.visit(field: VTOFFSET.IMPACT_TIME.p, fieldName: "IMPACT_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.IMPACT_LAT.p, fieldName: "IMPACT_LAT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.IMPACT_LON.p, fieldName: "IMPACT_LON", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.IMPACT_AOU_TYPE.p, fieldName: "IMPACT_AOU_TYPE", required: false, type: aouReportType.self)
-    try _v.visit(field: VTOFFSET.VECTOR_START_TIME.p, fieldName: "VECTOR_START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VECTOR_STEP_SIZE.p, fieldName: "VECTOR_STEP_SIZE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VECTOR_COMPONENTS.p, fieldName: "VECTOR_COMPONENTS", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.VECTORS.p, fieldName: "VECTORS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.AOU_RPT.p, fieldName: "AOU_RPT", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_AOU.p, fieldName: "LAUNCH_AOU", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.IMPACT_AOU.p, fieldName: "IMPACT_AOU", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MSG_TYPE, fieldName: "MSG_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MSG_SUB_TYPE, fieldName: "MSG_SUB_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MSG_CREATE_DATE, fieldName: "MSG_CREATE_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENVIRONMENT, fieldName: "ENVIRONMENT", required: false, type: missileEnvironment.self)
+    try _v.visit(field: VT.OBJ_TYPE, fieldName: "OBJ_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJ_TYPE_CONF, fieldName: "OBJ_TYPE_CONF", required: false, type: UInt8.self)
+    try _v.visit(field: VT.OBJ_PLAT, fieldName: "OBJ_PLAT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJ_IDENT, fieldName: "OBJ_IDENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SPACE_AMP, fieldName: "SPACE_AMP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SPACE_AMP_CONF, fieldName: "SPACE_AMP_CONF", required: false, type: UInt8.self)
+    try _v.visit(field: VT.OBJ_ACT, fieldName: "OBJ_ACT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SPACE_SPEC_TYPE, fieldName: "SPACE_SPEC_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ACFT_SUB_TYPE, fieldName: "ACFT_SUB_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CALL_SIGN, fieldName: "CALL_SIGN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LOST_TRK_IND, fieldName: "LOST_TRK_IND", required: false, type: Bool.self)
+    try _v.visit(field: VT.TRACK_ID, fieldName: "TRACK_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARENT_TRACK_ID, fieldName: "PARENT_TRACK_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MUID_SRC_TRK, fieldName: "MUID_SRC_TRK", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MUID_SRC, fieldName: "MUID_SRC", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALERT, fieldName: "ALERT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MSL_STATUS, fieldName: "MSL_STATUS", required: false, type: missileStatus.self)
+    try _v.visit(field: VT.TS, fieldName: "TS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AOU_RPT_TYPE, fieldName: "AOU_RPT_TYPE", required: false, type: aouReportType.self)
+    try _v.visit(field: VT.CONTAINMENT, fieldName: "CONTAINMENT", required: false, type: Double.self)
+    try _v.visit(field: VT.TRK_CONF, fieldName: "TRK_CONF", required: false, type: Double.self)
+    try _v.visit(field: VT.TRK_QUAL, fieldName: "TRK_QUAL", required: false, type: UInt8.self)
+    try _v.visit(field: VT.ANG_ELEV, fieldName: "ANG_ELEV", required: false, type: Double.self)
+    try _v.visit(field: VT.SEN_MODE, fieldName: "SEN_MODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INFO_SOURCE, fieldName: "INFO_SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BOOSTING, fieldName: "BOOSTING", required: false, type: Bool.self)
+    try _v.visit(field: VT.POLAR_SING_LOC_LAT, fieldName: "POLAR_SING_LOC_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.POLAR_SING_LOC_LON, fieldName: "POLAR_SING_LOC_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.EMG_IND, fieldName: "EMG_IND", required: false, type: Bool.self)
+    try _v.visit(field: VT.DROP_PT_IND, fieldName: "DROP_PT_IND", required: false, type: Bool.self)
+    try _v.visit(field: VT.LAUNCH_TIME, fieldName: "LAUNCH_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAUNCH_LAT, fieldName: "LAUNCH_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.LAUNCH_LON, fieldName: "LAUNCH_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.AZ_CORR, fieldName: "AZ_CORR", required: false, type: Double.self)
+    try _v.visit(field: VT.BURNOUT_ALT, fieldName: "BURNOUT_ALT", required: false, type: Double.self)
+    try _v.visit(field: VT.LAUNCH_AOU_TYPE, fieldName: "LAUNCH_AOU_TYPE", required: false, type: aouReportType.self)
+    try _v.visit(field: VT.IMPACT_TIME, fieldName: "IMPACT_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IMPACT_LAT, fieldName: "IMPACT_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_LON, fieldName: "IMPACT_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_AOU_TYPE, fieldName: "IMPACT_AOU_TYPE", required: false, type: aouReportType.self)
+    try _v.visit(field: VT.VECTOR_START_TIME, fieldName: "VECTOR_START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VECTOR_STEP_SIZE, fieldName: "VECTOR_STEP_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VT.VECTOR_COMPONENTS, fieldName: "VECTOR_COMPONENTS", required: false, type: UInt8.self)
+    try _v.visit(field: VT.VECTORS, fieldName: "VECTORS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.AOU_RPT, fieldName: "AOU_RPT", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.LAUNCH_AOU, fieldName: "LAUNCH_AOU", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.IMPACT_AOU, fieldName: "IMPACT_AOU", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }

@@ -100,20 +100,18 @@ public struct ATM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case MODEL = 4
-    case YEAR = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let MODEL: VOffset = 4
+    static let YEAR: VOffset = 6
   }
 
   ///  Canonical model family
-  public var MODEL: AtmosphericModelFamily { let o = _accessor.offset(VTOFFSET.MODEL.v); return o == 0 ? .ciraXx : AtmosphericModelFamily(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ciraXx }
+  public var MODEL: AtmosphericModelFamily { let o = _accessor.offset(VT.MODEL); return o == 0 ? .ciraXx : AtmosphericModelFamily(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ciraXx }
   ///  Four-digit year identifying the model version (e.g., 1970, 2008, 2020)
-  public var YEAR: Int32 { let o = _accessor.offset(VTOFFSET.YEAR.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var YEAR: Int32 { let o = _accessor.offset(VT.YEAR); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startATM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(MODEL: AtmosphericModelFamily, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL.rawValue, def: 0, at: VTOFFSET.MODEL.p) }
-  public static func add(YEAR: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: YEAR, def: 0, at: VTOFFSET.YEAR.p) }
+  public static func add(MODEL: AtmosphericModelFamily, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL.rawValue, def: 0, at: VT.MODEL) }
+  public static func add(YEAR: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: YEAR, def: 0, at: VT.YEAR) }
   public static func endATM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createATM(
     _ fbb: inout FlatBufferBuilder,
@@ -128,8 +126,8 @@ public struct ATM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.MODEL.p, fieldName: "MODEL", required: false, type: AtmosphericModelFamily.self)
-    try _v.visit(field: VTOFFSET.YEAR.p, fieldName: "YEAR", required: false, type: Int32.self)
+    try _v.visit(field: VT.MODEL, fieldName: "MODEL", required: false, type: AtmosphericModelFamily.self)
+    try _v.visit(field: VT.YEAR, fieldName: "YEAR", required: false, type: Int32.self)
     _v.finish()
   }
 }

@@ -59,40 +59,38 @@ public struct CRD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case X = 4
-    case Y = 6
-    case Z = 8
-    case VX = 10
-    case VY = 12
-    case VZ = 14
-    case FRAME = 16
-    case ELLIPSOID = 18
-    case RESERVED = 20
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let X: VOffset = 4
+    static let Y: VOffset = 6
+    static let Z: VOffset = 8
+    static let VX: VOffset = 10
+    static let VY: VOffset = 12
+    static let VZ: VOffset = 14
+    static let FRAME: VOffset = 16
+    static let ELLIPSOID: VOffset = 18
+    static let RESERVED: VOffset = 20
   }
 
-  public var X: Double { let o = _accessor.offset(VTOFFSET.X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Y: Double { let o = _accessor.offset(VTOFFSET.Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Z: Double { let o = _accessor.offset(VTOFFSET.Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VX: Double { let o = _accessor.offset(VTOFFSET.VX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VY: Double { let o = _accessor.offset(VTOFFSET.VY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VZ: Double { let o = _accessor.offset(VTOFFSET.VZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var FRAME: UInt8 { let o = _accessor.offset(VTOFFSET.FRAME.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var ELLIPSOID: UInt8 { let o = _accessor.offset(VTOFFSET.ELLIPSOID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
+  public var X: Double { let o = _accessor.offset(VT.X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y: Double { let o = _accessor.offset(VT.Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Z: Double { let o = _accessor.offset(VT.Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VX: Double { let o = _accessor.offset(VT.VX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VY: Double { let o = _accessor.offset(VT.VY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VZ: Double { let o = _accessor.offset(VT.VZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FRAME: UInt8 { let o = _accessor.offset(VT.FRAME); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var ELLIPSOID: UInt8 { let o = _accessor.offset(VT.ELLIPSOID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
   public static func startCRD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VTOFFSET.X.p) }
-  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VTOFFSET.Y.p) }
-  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VTOFFSET.Z.p) }
-  public static func add(VX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VX, def: 0.0, at: VTOFFSET.VX.p) }
-  public static func add(VY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VY, def: 0.0, at: VTOFFSET.VY.p) }
-  public static func add(VZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VZ, def: 0.0, at: VTOFFSET.VZ.p) }
-  public static func add(FRAME: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME, def: 0, at: VTOFFSET.FRAME.p) }
-  public static func add(ELLIPSOID: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELLIPSOID, def: 0, at: VTOFFSET.ELLIPSOID.p) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VTOFFSET.RESERVED.p) }
+  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VT.X) }
+  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VT.Y) }
+  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VT.Z) }
+  public static func add(VX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VX, def: 0.0, at: VT.VX) }
+  public static func add(VY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VY, def: 0.0, at: VT.VY) }
+  public static func add(VZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VZ, def: 0.0, at: VT.VZ) }
+  public static func add(FRAME: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME, def: 0, at: VT.FRAME) }
+  public static func add(ELLIPSOID: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELLIPSOID, def: 0, at: VT.ELLIPSOID) }
+  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
   public static func endCRD(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCRD(
     _ fbb: inout FlatBufferBuilder,
@@ -121,15 +119,15 @@ public struct CRD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.X.p, fieldName: "X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Y.p, fieldName: "Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Z.p, fieldName: "Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VX.p, fieldName: "VX", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VY.p, fieldName: "VY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VZ.p, fieldName: "VZ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FRAME.p, fieldName: "FRAME", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.ELLIPSOID.p, fieldName: "ELLIPSOID", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.X, fieldName: "X", required: false, type: Double.self)
+    try _v.visit(field: VT.Y, fieldName: "Y", required: false, type: Double.self)
+    try _v.visit(field: VT.Z, fieldName: "Z", required: false, type: Double.self)
+    try _v.visit(field: VT.VX, fieldName: "VX", required: false, type: Double.self)
+    try _v.visit(field: VT.VY, fieldName: "VY", required: false, type: Double.self)
+    try _v.visit(field: VT.VZ, fieldName: "VZ", required: false, type: Double.self)
+    try _v.visit(field: VT.FRAME, fieldName: "FRAME", required: false, type: UInt8.self)
+    try _v.visit(field: VT.ELLIPSOID, fieldName: "ELLIPSOID", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

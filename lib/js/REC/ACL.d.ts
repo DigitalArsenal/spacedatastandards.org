@@ -14,18 +14,18 @@ export declare class ACL implements flatbuffers.IUnpackableObject<ACLT> {
     /**
      * Unique identifier for this grant
      */
-    GRANT_ID(): string | null;
-    GRANT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    GRANT_ID(): string;
+    GRANT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * ID of the listing this grant applies to
      */
-    LISTING_ID(): string | null;
-    LISTING_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    LISTING_ID(): string;
+    LISTING_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Peer ID of the buyer/grantee
      */
-    BUYER_PEER_ID(): string | null;
-    BUYER_PEER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    BUYER_PEER_ID(): string;
+    BUYER_PEER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Buyer's encryption public key for encrypted delivery
      */

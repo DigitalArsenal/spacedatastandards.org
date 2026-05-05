@@ -31,11 +31,11 @@ static getSizePrefixedRootAsPIVRequest(bb:flatbuffers.ByteBuffer, obj?:PIVReques
 /**
  * Stable method identifier from PLG.METHODS[].METHOD_ID.
  */
-METHOD_ID():string|null
-METHOD_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-METHOD_ID(optionalEncoding?:any):string|Uint8Array|null {
+METHOD_ID():string
+METHOD_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+METHOD_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**

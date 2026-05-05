@@ -25,18 +25,18 @@ export declare class PLG implements flatbuffers.IUnpackableObject<PLGT> {
     /**
      * Unique identifier for the plugin
      */
-    PLUGIN_ID(): string | null;
-    PLUGIN_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    PLUGIN_ID(): string;
+    PLUGIN_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Human-readable plugin name
      */
-    NAME(): string | null;
-    NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    NAME(): string;
+    NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Plugin version (semver format)
      */
-    VERSION(): string | null;
-    VERSION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    VERSION(): string;
+    VERSION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Detailed description of plugin functionality
      */

@@ -27,18 +27,18 @@ static getSizePrefixedRootAsPLGTimerSpec(bb:flatbuffers.ByteBuffer, obj?:PLGTime
   return (obj || new PLGTimerSpec()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-TIMER_ID():string|null
-TIMER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TIMER_ID(optionalEncoding?:any):string|Uint8Array|null {
+TIMER_ID():string
+TIMER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+TIMER_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
-METHOD_ID():string|null
-METHOD_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-METHOD_ID(optionalEncoding?:any):string|Uint8Array|null {
+METHOD_ID():string
+METHOD_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+METHOD_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 INPUT_PORT_ID():string|null

@@ -15,13 +15,13 @@ export declare class PLK implements flatbuffers.IUnpackableObject<PLKT> {
     /**
      * Unique license key identifier
      */
-    LICENSE_ID(): string | null;
-    LICENSE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    LICENSE_ID(): string;
+    LICENSE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Plugin ID this license is for
      */
-    PLUGIN_ID(): string | null;
-    PLUGIN_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    PLUGIN_ID(): string;
+    PLUGIN_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Plugin version or version range (semver)
      */
@@ -30,8 +30,8 @@ export declare class PLK implements flatbuffers.IUnpackableObject<PLKT> {
     /**
      * Licensee organization name
      */
-    LICENSEE_ORG(): string | null;
-    LICENSEE_ORG(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    LICENSEE_ORG(): string;
+    LICENSEE_ORG(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Licensee contact email
      */

@@ -19,8 +19,8 @@ export declare class PLGAcceptedTypeSet implements flatbuffers.IUnpackableObject
     /**
      * Stable type-set identifier within the port.
      */
-    SET_ID(): string | null;
-    SET_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    SET_ID(): string;
+    SET_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Specific FlatBuffer types accepted by the set.
      */

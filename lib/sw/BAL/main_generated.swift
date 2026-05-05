@@ -109,42 +109,40 @@ public struct BAL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COMMAND = 4
-    case TRAJECTORY_REQUEST = 6
-    case TABLE_REQUEST = 8
-    case FIRE_CONTROL = 10
-    case PENETRATION_PROJECTILE = 12
-    case PENETRATION_ARMOR = 14
-    case IMPACT_VELOCITY_MPS = 16
-    case IMPACT_ANGLE_DEG = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COMMAND: VOffset = 4
+    static let TRAJECTORY_REQUEST: VOffset = 6
+    static let TABLE_REQUEST: VOffset = 8
+    static let FIRE_CONTROL: VOffset = 10
+    static let PENETRATION_PROJECTILE: VOffset = 12
+    static let PENETRATION_ARMOR: VOffset = 14
+    static let IMPACT_VELOCITY_MPS: VOffset = 16
+    static let IMPACT_ANGLE_DEG: VOffset = 18
   }
 
-  public var COMMAND: String? { let o = _accessor.offset(VTOFFSET.COMMAND.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COMMANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMAND.v) }
-  public var TRAJECTORY_REQUEST: String? { let o = _accessor.offset(VTOFFSET.TRAJECTORY_REQUEST.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRAJECTORY_REQUESTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRAJECTORY_REQUEST.v) }
-  public var TABLE_REQUEST: String? { let o = _accessor.offset(VTOFFSET.TABLE_REQUEST.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TABLE_REQUESTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TABLE_REQUEST.v) }
-  public var FIRE_CONTROL: String? { let o = _accessor.offset(VTOFFSET.FIRE_CONTROL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FIRE_CONTROLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FIRE_CONTROL.v) }
-  public var PENETRATION_PROJECTILE: String? { let o = _accessor.offset(VTOFFSET.PENETRATION_PROJECTILE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PENETRATION_PROJECTILESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PENETRATION_PROJECTILE.v) }
-  public var PENETRATION_ARMOR: String? { let o = _accessor.offset(VTOFFSET.PENETRATION_ARMOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PENETRATION_ARMORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PENETRATION_ARMOR.v) }
-  public var IMPACT_VELOCITY_MPS: Double { let o = _accessor.offset(VTOFFSET.IMPACT_VELOCITY_MPS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var IMPACT_ANGLE_DEG: Double { let o = _accessor.offset(VTOFFSET.IMPACT_ANGLE_DEG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COMMAND: String? { let o = _accessor.offset(VT.COMMAND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMAND) }
+  public var TRAJECTORY_REQUEST: String? { let o = _accessor.offset(VT.TRAJECTORY_REQUEST); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJECTORY_REQUESTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJECTORY_REQUEST) }
+  public var TABLE_REQUEST: String? { let o = _accessor.offset(VT.TABLE_REQUEST); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TABLE_REQUESTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TABLE_REQUEST) }
+  public var FIRE_CONTROL: String? { let o = _accessor.offset(VT.FIRE_CONTROL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FIRE_CONTROLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FIRE_CONTROL) }
+  public var PENETRATION_PROJECTILE: String? { let o = _accessor.offset(VT.PENETRATION_PROJECTILE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PENETRATION_PROJECTILESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PENETRATION_PROJECTILE) }
+  public var PENETRATION_ARMOR: String? { let o = _accessor.offset(VT.PENETRATION_ARMOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PENETRATION_ARMORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PENETRATION_ARMOR) }
+  public var IMPACT_VELOCITY_MPS: Double { let o = _accessor.offset(VT.IMPACT_VELOCITY_MPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var IMPACT_ANGLE_DEG: Double { let o = _accessor.offset(VT.IMPACT_ANGLE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startBAL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND, at: VTOFFSET.COMMAND.p) }
-  public static func add(TRAJECTORY_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJECTORY_REQUEST, at: VTOFFSET.TRAJECTORY_REQUEST.p) }
-  public static func add(TABLE_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TABLE_REQUEST, at: VTOFFSET.TABLE_REQUEST.p) }
-  public static func add(FIRE_CONTROL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIRE_CONTROL, at: VTOFFSET.FIRE_CONTROL.p) }
-  public static func add(PENETRATION_PROJECTILE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PENETRATION_PROJECTILE, at: VTOFFSET.PENETRATION_PROJECTILE.p) }
-  public static func add(PENETRATION_ARMOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PENETRATION_ARMOR, at: VTOFFSET.PENETRATION_ARMOR.p) }
-  public static func add(IMPACT_VELOCITY_MPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_VELOCITY_MPS, def: 0.0, at: VTOFFSET.IMPACT_VELOCITY_MPS.p) }
-  public static func add(IMPACT_ANGLE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_ANGLE_DEG, def: 0.0, at: VTOFFSET.IMPACT_ANGLE_DEG.p) }
+  public static func add(COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND, at: VT.COMMAND) }
+  public static func add(TRAJECTORY_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJECTORY_REQUEST, at: VT.TRAJECTORY_REQUEST) }
+  public static func add(TABLE_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TABLE_REQUEST, at: VT.TABLE_REQUEST) }
+  public static func add(FIRE_CONTROL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIRE_CONTROL, at: VT.FIRE_CONTROL) }
+  public static func add(PENETRATION_PROJECTILE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PENETRATION_PROJECTILE, at: VT.PENETRATION_PROJECTILE) }
+  public static func add(PENETRATION_ARMOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PENETRATION_ARMOR, at: VT.PENETRATION_ARMOR) }
+  public static func add(IMPACT_VELOCITY_MPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_VELOCITY_MPS, def: 0.0, at: VT.IMPACT_VELOCITY_MPS) }
+  public static func add(IMPACT_ANGLE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_ANGLE_DEG, def: 0.0, at: VT.IMPACT_ANGLE_DEG) }
   public static func endBAL(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBAL(
     _ fbb: inout FlatBufferBuilder,
@@ -171,14 +169,14 @@ public struct BAL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COMMAND.p, fieldName: "COMMAND", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRAJECTORY_REQUEST.p, fieldName: "TRAJECTORY_REQUEST", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TABLE_REQUEST.p, fieldName: "TABLE_REQUEST", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FIRE_CONTROL.p, fieldName: "FIRE_CONTROL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PENETRATION_PROJECTILE.p, fieldName: "PENETRATION_PROJECTILE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PENETRATION_ARMOR.p, fieldName: "PENETRATION_ARMOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.IMPACT_VELOCITY_MPS.p, fieldName: "IMPACT_VELOCITY_MPS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.IMPACT_ANGLE_DEG.p, fieldName: "IMPACT_ANGLE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.COMMAND, fieldName: "COMMAND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRAJECTORY_REQUEST, fieldName: "TRAJECTORY_REQUEST", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TABLE_REQUEST, fieldName: "TABLE_REQUEST", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FIRE_CONTROL, fieldName: "FIRE_CONTROL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PENETRATION_PROJECTILE, fieldName: "PENETRATION_PROJECTILE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PENETRATION_ARMOR, fieldName: "PENETRATION_ARMOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IMPACT_VELOCITY_MPS, fieldName: "IMPACT_VELOCITY_MPS", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_ANGLE_DEG, fieldName: "IMPACT_ANGLE_DEG", required: false, type: Double.self)
     _v.finish()
   }
 }

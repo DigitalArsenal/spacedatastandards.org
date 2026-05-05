@@ -39,107 +39,105 @@ public struct ANI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case SOURCE_ID = 6
-    case SOURCE_TYPE = 8
-    case ANALYTIC_TYPE = 10
-    case ALGORITHM = 12
-    case ALGORITHM_VERSION = 14
-    case PROCESSING_TIME = 16
-    case OBS_TIME = 18
-    case SAT_NO = 20
-    case OBJECT_DESIGNATOR = 22
-    case RA = 24
-    case DEC = 26
-    case FOV = 28
-    case VISUAL_MAG = 30
-    case MAG_UNCERTAINTY = 32
-    case OBJECT_COUNT = 34
-    case LABELS = 36
-    case CONFIDENCE = 38
-    case FEATURES = 40
-    case QUALITY = 42
-    case NOTES = 44
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let SOURCE_ID: VOffset = 6
+    static let SOURCE_TYPE: VOffset = 8
+    static let ANALYTIC_TYPE: VOffset = 10
+    static let ALGORITHM: VOffset = 12
+    static let ALGORITHM_VERSION: VOffset = 14
+    static let PROCESSING_TIME: VOffset = 16
+    static let OBS_TIME: VOffset = 18
+    static let SAT_NO: VOffset = 20
+    static let OBJECT_DESIGNATOR: VOffset = 22
+    static let RA: VOffset = 24
+    static let DEC: VOffset = 26
+    static let FOV: VOffset = 28
+    static let VISUAL_MAG: VOffset = 30
+    static let MAG_UNCERTAINTY: VOffset = 32
+    static let OBJECT_COUNT: VOffset = 34
+    static let LABELS: VOffset = 36
+    static let CONFIDENCE: VOffset = 38
+    static let FEATURES: VOffset = 40
+    static let QUALITY: VOffset = 42
+    static let NOTES: VOffset = 44
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Reference to source imagery (e.g., SKI, GDI, EOO)
-  public var SOURCE_ID: String? { let o = _accessor.offset(VTOFFSET.SOURCE_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCE_ID.v) }
+  public var SOURCE_ID: String? { let o = _accessor.offset(VT.SOURCE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_ID) }
   ///  Source imagery type
-  public var SOURCE_TYPE: String? { let o = _accessor.offset(VTOFFSET.SOURCE_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCE_TYPE.v) }
+  public var SOURCE_TYPE: String? { let o = _accessor.offset(VT.SOURCE_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_TYPE) }
   ///  Analytic product type
-  public var ANALYTIC_TYPE: analyticProfile { let o = _accessor.offset(VTOFFSET.ANALYTIC_TYPE.v); return o == 0 ? .spectral : analyticProfile(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .spectral }
+  public var ANALYTIC_TYPE: analyticProfile { let o = _accessor.offset(VT.ANALYTIC_TYPE); return o == 0 ? .spectral : analyticProfile(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .spectral }
   ///  Processing algorithm or pipeline name
-  public var ALGORITHM: String? { let o = _accessor.offset(VTOFFSET.ALGORITHM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALGORITHM.v) }
+  public var ALGORITHM: String? { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALGORITHM) }
   ///  Algorithm version
-  public var ALGORITHM_VERSION: String? { let o = _accessor.offset(VTOFFSET.ALGORITHM_VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ALGORITHM_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALGORITHM_VERSION.v) }
+  public var ALGORITHM_VERSION: String? { let o = _accessor.offset(VT.ALGORITHM_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALGORITHM_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALGORITHM_VERSION) }
   ///  Processing epoch (ISO 8601)
-  public var PROCESSING_TIME: String? { let o = _accessor.offset(VTOFFSET.PROCESSING_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PROCESSING_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PROCESSING_TIME.v) }
+  public var PROCESSING_TIME: String? { let o = _accessor.offset(VT.PROCESSING_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROCESSING_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROCESSING_TIME) }
   ///  Original observation epoch (ISO 8601)
-  public var OBS_TIME: String? { let o = _accessor.offset(VTOFFSET.OBS_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBS_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBS_TIME.v) }
+  public var OBS_TIME: String? { let o = _accessor.offset(VT.OBS_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBS_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBS_TIME) }
   ///  Target satellite number (if applicable)
-  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VT.SAT_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Target object designator
-  public var OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VTOFFSET.OBJECT_DESIGNATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_DESIGNATOR.v) }
+  public var OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VT.OBJECT_DESIGNATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_DESIGNATOR) }
   ///  Center right ascension in degrees
-  public var RA: Double { let o = _accessor.offset(VTOFFSET.RA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RA: Double { let o = _accessor.offset(VT.RA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Center declination in degrees
-  public var DEC: Double { let o = _accessor.offset(VTOFFSET.DEC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DEC: Double { let o = _accessor.offset(VT.DEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Field of view in degrees
-  public var FOV: Double { let o = _accessor.offset(VTOFFSET.FOV.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FOV: Double { let o = _accessor.offset(VT.FOV); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Visual magnitude estimate
-  public var VISUAL_MAG: Double { let o = _accessor.offset(VTOFFSET.VISUAL_MAG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VISUAL_MAG: Double { let o = _accessor.offset(VT.VISUAL_MAG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Magnitude uncertainty
-  public var MAG_UNCERTAINTY: Double { let o = _accessor.offset(VTOFFSET.MAG_UNCERTAINTY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAG_UNCERTAINTY: Double { let o = _accessor.offset(VT.MAG_UNCERTAINTY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Detected object count
-  public var OBJECT_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.OBJECT_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OBJECT_COUNT: UInt32 { let o = _accessor.offset(VT.OBJECT_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Classification labels
-  public var LABELS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.LABELS.v, byteSize: 4) }
+  public var LABELS: FlatbufferVector<String?> { return _accessor.vector(at: VT.LABELS, byteSize: 4) }
   ///  Classification confidence scores (0.0-1.0)
-  public var CONFIDENCE: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.CONFIDENCE.v, byteSize: 8) }
-  public func withUnsafePointerToConfidence<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.CONFIDENCE.v, body: body) }
+  public var CONFIDENCE: FlatbufferVector<Double> { return _accessor.vector(at: VT.CONFIDENCE, byteSize: 8) }
+  public func withUnsafePointerToConfidence<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CONFIDENCE, body: body) }
   ///  Feature vector or extracted parameters
-  public var FEATURES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.FEATURES.v, byteSize: 8) }
-  public func withUnsafePointerToFeatures<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.FEATURES.v, body: body) }
+  public var FEATURES: FlatbufferVector<Double> { return _accessor.vector(at: VT.FEATURES, byteSize: 8) }
+  public func withUnsafePointerToFeatures<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.FEATURES, body: body) }
   ///  Quality score (0.0-1.0)
-  public var QUALITY: Double { let o = _accessor.offset(VTOFFSET.QUALITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var QUALITY: Double { let o = _accessor.offset(VT.QUALITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Additional notes
-  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
   public static func startANI(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(SOURCE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_ID, at: VTOFFSET.SOURCE_ID.p) }
-  public static func add(SOURCE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_TYPE, at: VTOFFSET.SOURCE_TYPE.p) }
-  public static func add(ANALYTIC_TYPE: analyticProfile, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANALYTIC_TYPE.rawValue, def: 0, at: VTOFFSET.ANALYTIC_TYPE.p) }
-  public static func add(ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM, at: VTOFFSET.ALGORITHM.p) }
-  public static func add(ALGORITHM_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM_VERSION, at: VTOFFSET.ALGORITHM_VERSION.p) }
-  public static func add(PROCESSING_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROCESSING_TIME, at: VTOFFSET.PROCESSING_TIME.p) }
-  public static func add(OBS_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBS_TIME, at: VTOFFSET.OBS_TIME.p) }
-  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
-  public static func add(OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_DESIGNATOR, at: VTOFFSET.OBJECT_DESIGNATOR.p) }
-  public static func add(RA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA, def: 0.0, at: VTOFFSET.RA.p) }
-  public static func add(DEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEC, def: 0.0, at: VTOFFSET.DEC.p) }
-  public static func add(FOV: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOV, def: 0.0, at: VTOFFSET.FOV.p) }
-  public static func add(VISUAL_MAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISUAL_MAG, def: 0.0, at: VTOFFSET.VISUAL_MAG.p) }
-  public static func add(MAG_UNCERTAINTY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAG_UNCERTAINTY, def: 0.0, at: VTOFFSET.MAG_UNCERTAINTY.p) }
-  public static func add(OBJECT_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECT_COUNT, def: 0, at: VTOFFSET.OBJECT_COUNT.p) }
-  public static func addVectorOf(LABELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABELS, at: VTOFFSET.LABELS.p) }
-  public static func addVectorOf(CONFIDENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONFIDENCE, at: VTOFFSET.CONFIDENCE.p) }
-  public static func addVectorOf(FEATURES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FEATURES, at: VTOFFSET.FEATURES.p) }
-  public static func add(QUALITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUALITY, def: 0.0, at: VTOFFSET.QUALITY.p) }
-  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(SOURCE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_ID, at: VT.SOURCE_ID) }
+  public static func add(SOURCE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_TYPE, at: VT.SOURCE_TYPE) }
+  public static func add(ANALYTIC_TYPE: analyticProfile, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANALYTIC_TYPE.rawValue, def: 0, at: VT.ANALYTIC_TYPE) }
+  public static func add(ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM, at: VT.ALGORITHM) }
+  public static func add(ALGORITHM_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM_VERSION, at: VT.ALGORITHM_VERSION) }
+  public static func add(PROCESSING_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROCESSING_TIME, at: VT.PROCESSING_TIME) }
+  public static func add(OBS_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBS_TIME, at: VT.OBS_TIME) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VT.SAT_NO) }
+  public static func add(OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_DESIGNATOR, at: VT.OBJECT_DESIGNATOR) }
+  public static func add(RA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA, def: 0.0, at: VT.RA) }
+  public static func add(DEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEC, def: 0.0, at: VT.DEC) }
+  public static func add(FOV: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOV, def: 0.0, at: VT.FOV) }
+  public static func add(VISUAL_MAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISUAL_MAG, def: 0.0, at: VT.VISUAL_MAG) }
+  public static func add(MAG_UNCERTAINTY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAG_UNCERTAINTY, def: 0.0, at: VT.MAG_UNCERTAINTY) }
+  public static func add(OBJECT_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECT_COUNT, def: 0, at: VT.OBJECT_COUNT) }
+  public static func addVectorOf(LABELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABELS, at: VT.LABELS) }
+  public static func addVectorOf(CONFIDENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONFIDENCE, at: VT.CONFIDENCE) }
+  public static func addVectorOf(FEATURES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FEATURES, at: VT.FEATURES) }
+  public static func add(QUALITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUALITY, def: 0.0, at: VT.QUALITY) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
   public static func endANI(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createANI(
     _ fbb: inout FlatBufferBuilder,
@@ -192,27 +190,27 @@ public struct ANI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SOURCE_ID.p, fieldName: "SOURCE_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SOURCE_TYPE.p, fieldName: "SOURCE_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ANALYTIC_TYPE.p, fieldName: "ANALYTIC_TYPE", required: false, type: analyticProfile.self)
-    try _v.visit(field: VTOFFSET.ALGORITHM.p, fieldName: "ALGORITHM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ALGORITHM_VERSION.p, fieldName: "ALGORITHM_VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PROCESSING_TIME.p, fieldName: "PROCESSING_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBS_TIME.p, fieldName: "OBS_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.OBJECT_DESIGNATOR.p, fieldName: "OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RA.p, fieldName: "RA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DEC.p, fieldName: "DEC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FOV.p, fieldName: "FOV", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VISUAL_MAG.p, fieldName: "VISUAL_MAG", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAG_UNCERTAINTY.p, fieldName: "MAG_UNCERTAINTY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OBJECT_COUNT.p, fieldName: "OBJECT_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.LABELS.p, fieldName: "LABELS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.CONFIDENCE.p, fieldName: "CONFIDENCE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.FEATURES.p, fieldName: "FEATURES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.QUALITY.p, fieldName: "QUALITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_ID, fieldName: "SOURCE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_TYPE, fieldName: "SOURCE_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ANALYTIC_TYPE, fieldName: "ANALYTIC_TYPE", required: false, type: analyticProfile.self)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALGORITHM_VERSION, fieldName: "ALGORITHM_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROCESSING_TIME, fieldName: "PROCESSING_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBS_TIME, fieldName: "OBS_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAT_NO, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBJECT_DESIGNATOR, fieldName: "OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RA, fieldName: "RA", required: false, type: Double.self)
+    try _v.visit(field: VT.DEC, fieldName: "DEC", required: false, type: Double.self)
+    try _v.visit(field: VT.FOV, fieldName: "FOV", required: false, type: Double.self)
+    try _v.visit(field: VT.VISUAL_MAG, fieldName: "VISUAL_MAG", required: false, type: Double.self)
+    try _v.visit(field: VT.MAG_UNCERTAINTY, fieldName: "MAG_UNCERTAINTY", required: false, type: Double.self)
+    try _v.visit(field: VT.OBJECT_COUNT, fieldName: "OBJECT_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.LABELS, fieldName: "LABELS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.CONFIDENCE, fieldName: "CONFIDENCE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.FEATURES, fieldName: "FEATURES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.QUALITY, fieldName: "QUALITY", required: false, type: Double.self)
+    try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

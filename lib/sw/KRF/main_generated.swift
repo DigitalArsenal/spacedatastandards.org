@@ -54,48 +54,46 @@ public struct KRF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case KEY_ID = 4
-    case SLOT_ID = 6
-    case ROLE = 8
-    case ALGORITHM = 10
-    case PUBLIC_KEY = 12
-    case VERSION = 14
-    case EXPIRES_AT = 16
-    case HOST_MANAGED = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let KEY_ID: VOffset = 4
+    static let SLOT_ID: VOffset = 6
+    static let ROLE: VOffset = 8
+    static let ALGORITHM: VOffset = 10
+    static let PUBLIC_KEY: VOffset = 12
+    static let VERSION: VOffset = 14
+    static let EXPIRES_AT: VOffset = 16
+    static let HOST_MANAGED: VOffset = 18
   }
 
   ///  Logical key identifier used across publication and grant records.
-  public var KEY_ID: String? { let o = _accessor.offset(VTOFFSET.KEY_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var KEY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.KEY_ID.v) }
+  public var KEY_ID: String? { let o = _accessor.offset(VT.KEY_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KEY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY_ID) }
   ///  Host-managed key slot or key handle identifier.
-  public var SLOT_ID: String? { let o = _accessor.offset(VTOFFSET.SLOT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SLOT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SLOT_ID.v) }
+  public var SLOT_ID: String? { let o = _accessor.offset(VT.SLOT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SLOT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SLOT_ID) }
   ///  Role the referenced key fulfills for the module flow.
-  public var ROLE: keyReferenceRole { let o = _accessor.offset(VTOFFSET.ROLE.v); return o == 0 ? .unknown : keyReferenceRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  public var ROLE: keyReferenceRole { let o = _accessor.offset(VT.ROLE); return o == 0 ? .unknown : keyReferenceRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
   ///  Algorithm or key family for the referenced key.
-  public var ALGORITHM: keyReferenceAlgorithm { let o = _accessor.offset(VTOFFSET.ALGORITHM.v); return o == 0 ? .unknown : keyReferenceAlgorithm(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  public var ALGORITHM: keyReferenceAlgorithm { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? .unknown : keyReferenceAlgorithm(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
   ///  Optional public bytes for verification or peer identity binding.
-  public var PUBLIC_KEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.PUBLIC_KEY.v, byteSize: 1) }
-  public func withUnsafePointerToPublicKey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.PUBLIC_KEY.v, body: body) }
+  public var PUBLIC_KEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.PUBLIC_KEY, byteSize: 1) }
+  public func withUnsafePointerToPublicKey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PUBLIC_KEY, body: body) }
   ///  Logical version of the referenced key.
-  public var VERSION: UInt32 { let o = _accessor.offset(VTOFFSET.VERSION.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var VERSION: UInt32 { let o = _accessor.offset(VT.VERSION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Expiration time in unix milliseconds, or 0 if unbounded.
-  public var EXPIRES_AT: UInt64 { let o = _accessor.offset(VTOFFSET.EXPIRES_AT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var EXPIRES_AT: UInt64 { let o = _accessor.offset(VT.EXPIRES_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  True when the secret material remains in the host key slot.
-  public var HOST_MANAGED: Bool { let o = _accessor.offset(VTOFFSET.HOST_MANAGED.v); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HOST_MANAGED: Bool { let o = _accessor.offset(VT.HOST_MANAGED); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startKRF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ID, at: VTOFFSET.KEY_ID.p) }
-  public static func add(SLOT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SLOT_ID, at: VTOFFSET.SLOT_ID.p) }
-  public static func add(ROLE: keyReferenceRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLE.rawValue, def: 0, at: VTOFFSET.ROLE.p) }
-  public static func add(ALGORITHM: keyReferenceAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 0, at: VTOFFSET.ALGORITHM.p) }
-  public static func addVectorOf(PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY, at: VTOFFSET.PUBLIC_KEY.p) }
-  public static func add(VERSION: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VTOFFSET.VERSION.p) }
-  public static func add(EXPIRES_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXPIRES_AT, def: 0, at: VTOFFSET.EXPIRES_AT.p) }
+  public static func add(KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ID, at: VT.KEY_ID) }
+  public static func add(SLOT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SLOT_ID, at: VT.SLOT_ID) }
+  public static func add(ROLE: keyReferenceRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLE.rawValue, def: 0, at: VT.ROLE) }
+  public static func add(ALGORITHM: keyReferenceAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 0, at: VT.ALGORITHM) }
+  public static func addVectorOf(PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY, at: VT.PUBLIC_KEY) }
+  public static func add(VERSION: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VT.VERSION) }
+  public static func add(EXPIRES_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXPIRES_AT, def: 0, at: VT.EXPIRES_AT) }
   public static func add(HOST_MANAGED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOST_MANAGED, def: true,
-   at: VTOFFSET.HOST_MANAGED.p) }
+   at: VT.HOST_MANAGED) }
   public static func endKRF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKRF(
     _ fbb: inout FlatBufferBuilder,
@@ -122,14 +120,14 @@ public struct KRF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.KEY_ID.p, fieldName: "KEY_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SLOT_ID.p, fieldName: "SLOT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ROLE.p, fieldName: "ROLE", required: false, type: keyReferenceRole.self)
-    try _v.visit(field: VTOFFSET.ALGORITHM.p, fieldName: "ALGORITHM", required: false, type: keyReferenceAlgorithm.self)
-    try _v.visit(field: VTOFFSET.PUBLIC_KEY.p, fieldName: "PUBLIC_KEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.EXPIRES_AT.p, fieldName: "EXPIRES_AT", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.HOST_MANAGED.p, fieldName: "HOST_MANAGED", required: false, type: Bool.self)
+    try _v.visit(field: VT.KEY_ID, fieldName: "KEY_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SLOT_ID, fieldName: "SLOT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ROLE, fieldName: "ROLE", required: false, type: keyReferenceRole.self)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: keyReferenceAlgorithm.self)
+    try _v.visit(field: VT.PUBLIC_KEY, fieldName: "PUBLIC_KEY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: UInt32.self)
+    try _v.visit(field: VT.EXPIRES_AT, fieldName: "EXPIRES_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.HOST_MANAGED, fieldName: "HOST_MANAGED", required: false, type: Bool.self)
     _v.finish()
   }
 }

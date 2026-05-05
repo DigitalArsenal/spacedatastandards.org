@@ -52,64 +52,62 @@ public struct SNWBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SENSOR_ID = 4
-    case SENSOR_POS_X = 6
-    case SENSOR_POS_Y = 8
-    case SENSOR_POS_Z = 10
-    case SENSOR_ORIENT_W = 12
-    case SENSOR_ORIENT_X = 14
-    case SENSOR_ORIENT_Y = 16
-    case SENSOR_ORIENT_Z = 18
-    case INPUT_OFFSET = 20
-    case INPUT_ALIGNMENT = 22
-    case TARGET_COUNT = 24
-    case OUTPUT_OFFSET = 26
-    case OUTPUT_ALIGNMENT = 28
-    case EPOCH = 30
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SENSOR_ID: VOffset = 4
+    static let SENSOR_POS_X: VOffset = 6
+    static let SENSOR_POS_Y: VOffset = 8
+    static let SENSOR_POS_Z: VOffset = 10
+    static let SENSOR_ORIENT_W: VOffset = 12
+    static let SENSOR_ORIENT_X: VOffset = 14
+    static let SENSOR_ORIENT_Y: VOffset = 16
+    static let SENSOR_ORIENT_Z: VOffset = 18
+    static let INPUT_OFFSET: VOffset = 20
+    static let INPUT_ALIGNMENT: VOffset = 22
+    static let TARGET_COUNT: VOffset = 24
+    static let OUTPUT_OFFSET: VOffset = 26
+    static let OUTPUT_ALIGNMENT: VOffset = 28
+    static let EPOCH: VOffset = 30
   }
 
   ///  Sensor-configuration identifier assigned during sensor registration.
-  public var SENSOR_ID: UInt32 { let o = _accessor.offset(VTOFFSET.SENSOR_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SENSOR_ID: UInt32 { let o = _accessor.offset(VT.SENSOR_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Sensor position in ECEF (meters).
-  public var SENSOR_POS_X: Double { let o = _accessor.offset(VTOFFSET.SENSOR_POS_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SENSOR_POS_Y: Double { let o = _accessor.offset(VTOFFSET.SENSOR_POS_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SENSOR_POS_Z: Double { let o = _accessor.offset(VTOFFSET.SENSOR_POS_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_POS_X: Double { let o = _accessor.offset(VT.SENSOR_POS_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_POS_Y: Double { let o = _accessor.offset(VT.SENSOR_POS_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_POS_Z: Double { let o = _accessor.offset(VT.SENSOR_POS_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor orientation as a unit quaternion (W, X, Y, Z).
-  public var SENSOR_ORIENT_W: Double { let o = _accessor.offset(VTOFFSET.SENSOR_ORIENT_W.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SENSOR_ORIENT_X: Double { let o = _accessor.offset(VTOFFSET.SENSOR_ORIENT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SENSOR_ORIENT_Y: Double { let o = _accessor.offset(VTOFFSET.SENSOR_ORIENT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SENSOR_ORIENT_Z: Double { let o = _accessor.offset(VTOFFSET.SENSOR_ORIENT_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_ORIENT_W: Double { let o = _accessor.offset(VT.SENSOR_ORIENT_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_ORIENT_X: Double { let o = _accessor.offset(VT.SENSOR_ORIENT_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_ORIENT_Y: Double { let o = _accessor.offset(VT.SENSOR_ORIENT_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_ORIENT_Z: Double { let o = _accessor.offset(VT.SENSOR_ORIENT_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Byte offset in the arena where the targetState[] input stream begins.
-  public var INPUT_OFFSET: UInt32 { let o = _accessor.offset(VTOFFSET.INPUT_OFFSET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var INPUT_OFFSET: UInt32 { let o = _accessor.offset(VT.INPUT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Required start alignment for INPUT_OFFSET (bytes).
-  public var INPUT_ALIGNMENT: UInt32 { let o = _accessor.offset(VTOFFSET.INPUT_ALIGNMENT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var INPUT_ALIGNMENT: UInt32 { let o = _accessor.offset(VT.INPUT_ALIGNMENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Number of target records at INPUT_OFFSET.
-  public var TARGET_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.TARGET_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var TARGET_COUNT: UInt32 { let o = _accessor.offset(VT.TARGET_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Byte offset in the arena where the detectionResult[] output stream
   ///  will be written.
-  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VTOFFSET.OUTPUT_OFFSET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VT.OUTPUT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Required start alignment for OUTPUT_OFFSET (bytes).
-  public var OUTPUT_ALIGNMENT: UInt32 { let o = _accessor.offset(VTOFFSET.OUTPUT_ALIGNMENT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OUTPUT_ALIGNMENT: UInt32 { let o = _accessor.offset(VT.OUTPUT_ALIGNMENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Current time as a Julian date.
-  public var EPOCH: Double { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EPOCH: Double { let o = _accessor.offset(VT.EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startSNWBatchRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
-  public static func add(SENSOR_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ID, def: 0, at: VTOFFSET.SENSOR_ID.p) }
-  public static func add(SENSOR_POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_X, def: 0.0, at: VTOFFSET.SENSOR_POS_X.p) }
-  public static func add(SENSOR_POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_Y, def: 0.0, at: VTOFFSET.SENSOR_POS_Y.p) }
-  public static func add(SENSOR_POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_Z, def: 0.0, at: VTOFFSET.SENSOR_POS_Z.p) }
-  public static func add(SENSOR_ORIENT_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_W, def: 0.0, at: VTOFFSET.SENSOR_ORIENT_W.p) }
-  public static func add(SENSOR_ORIENT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_X, def: 0.0, at: VTOFFSET.SENSOR_ORIENT_X.p) }
-  public static func add(SENSOR_ORIENT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_Y, def: 0.0, at: VTOFFSET.SENSOR_ORIENT_Y.p) }
-  public static func add(SENSOR_ORIENT_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_Z, def: 0.0, at: VTOFFSET.SENSOR_ORIENT_Z.p) }
-  public static func add(INPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INPUT_OFFSET, def: 0, at: VTOFFSET.INPUT_OFFSET.p) }
-  public static func add(INPUT_ALIGNMENT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INPUT_ALIGNMENT, def: 0, at: VTOFFSET.INPUT_ALIGNMENT.p) }
-  public static func add(TARGET_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_COUNT, def: 0, at: VTOFFSET.TARGET_COUNT.p) }
-  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VTOFFSET.OUTPUT_OFFSET.p) }
-  public static func add(OUTPUT_ALIGNMENT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_ALIGNMENT, def: 0, at: VTOFFSET.OUTPUT_ALIGNMENT.p) }
-  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VTOFFSET.EPOCH.p) }
+  public static func add(SENSOR_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ID, def: 0, at: VT.SENSOR_ID) }
+  public static func add(SENSOR_POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_X, def: 0.0, at: VT.SENSOR_POS_X) }
+  public static func add(SENSOR_POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_Y, def: 0.0, at: VT.SENSOR_POS_Y) }
+  public static func add(SENSOR_POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_Z, def: 0.0, at: VT.SENSOR_POS_Z) }
+  public static func add(SENSOR_ORIENT_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_W, def: 0.0, at: VT.SENSOR_ORIENT_W) }
+  public static func add(SENSOR_ORIENT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_X, def: 0.0, at: VT.SENSOR_ORIENT_X) }
+  public static func add(SENSOR_ORIENT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_Y, def: 0.0, at: VT.SENSOR_ORIENT_Y) }
+  public static func add(SENSOR_ORIENT_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_Z, def: 0.0, at: VT.SENSOR_ORIENT_Z) }
+  public static func add(INPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INPUT_OFFSET, def: 0, at: VT.INPUT_OFFSET) }
+  public static func add(INPUT_ALIGNMENT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INPUT_ALIGNMENT, def: 0, at: VT.INPUT_ALIGNMENT) }
+  public static func add(TARGET_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_COUNT, def: 0, at: VT.TARGET_COUNT) }
+  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VT.OUTPUT_OFFSET) }
+  public static func add(OUTPUT_ALIGNMENT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_ALIGNMENT, def: 0, at: VT.OUTPUT_ALIGNMENT) }
+  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VT.EPOCH) }
   public static func endSNWBatchRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSNWBatchRequest(
     _ fbb: inout FlatBufferBuilder,
@@ -148,20 +146,20 @@ public struct SNWBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SENSOR_ID.p, fieldName: "SENSOR_ID", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.SENSOR_POS_X.p, fieldName: "SENSOR_POS_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_POS_Y.p, fieldName: "SENSOR_POS_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_POS_Z.p, fieldName: "SENSOR_POS_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_ORIENT_W.p, fieldName: "SENSOR_ORIENT_W", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_ORIENT_X.p, fieldName: "SENSOR_ORIENT_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_ORIENT_Y.p, fieldName: "SENSOR_ORIENT_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_ORIENT_Z.p, fieldName: "SENSOR_ORIENT_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INPUT_OFFSET.p, fieldName: "INPUT_OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.INPUT_ALIGNMENT.p, fieldName: "INPUT_ALIGNMENT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.TARGET_COUNT.p, fieldName: "TARGET_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.OUTPUT_OFFSET.p, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.OUTPUT_ALIGNMENT.p, fieldName: "OUTPUT_ALIGNMENT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_ID, fieldName: "SENSOR_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SENSOR_POS_X, fieldName: "SENSOR_POS_X", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_POS_Y, fieldName: "SENSOR_POS_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_POS_Z, fieldName: "SENSOR_POS_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_ORIENT_W, fieldName: "SENSOR_ORIENT_W", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_ORIENT_X, fieldName: "SENSOR_ORIENT_X", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_ORIENT_Y, fieldName: "SENSOR_ORIENT_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_ORIENT_Z, fieldName: "SENSOR_ORIENT_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.INPUT_OFFSET, fieldName: "INPUT_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.INPUT_ALIGNMENT, fieldName: "INPUT_ALIGNMENT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TARGET_COUNT, fieldName: "TARGET_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OUTPUT_OFFSET, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OUTPUT_ALIGNMENT, fieldName: "OUTPUT_ALIGNMENT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -178,33 +176,31 @@ public struct SNWBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COUNT = 4
-    case DETECTED_COUNT = 6
-    case OUTPUT_OFFSET = 8
-    case ERROR_CODE = 10
-    case ERROR_MESSAGE = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COUNT: VOffset = 4
+    static let DETECTED_COUNT: VOffset = 6
+    static let OUTPUT_OFFSET: VOffset = 8
+    static let ERROR_CODE: VOffset = 10
+    static let ERROR_MESSAGE: VOffset = 12
   }
 
   ///  Number of detection records written to OUTPUT_OFFSET.
-  public var COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var COUNT: UInt32 { let o = _accessor.offset(VT.COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Number of targets whose SNR met the detection threshold.
-  public var DETECTED_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.DETECTED_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var DETECTED_COUNT: UInt32 { let o = _accessor.offset(VT.DETECTED_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Byte offset where the detectionResult[] stream starts.
-  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VTOFFSET.OUTPUT_OFFSET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VT.OUTPUT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Error code (0 == OK).
-  public var ERROR_CODE: snwErrorCode { let o = _accessor.offset(VTOFFSET.ERROR_CODE.v); return o == 0 ? .ok : snwErrorCode(rawValue: _accessor.readBuffer(of: Int32.self, at: o)) ?? .ok }
+  public var ERROR_CODE: snwErrorCode { let o = _accessor.offset(VT.ERROR_CODE); return o == 0 ? .ok : snwErrorCode(rawValue: _accessor.readBuffer(of: Int32.self, at: o)) ?? .ok }
   ///  Optional error message when ERROR_CODE != OK.
-  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VTOFFSET.ERROR_MESSAGE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ERROR_MESSAGE.v) }
+  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
   public static func startSNWBatchResponse(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNT, def: 0, at: VTOFFSET.COUNT.p) }
-  public static func add(DETECTED_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DETECTED_COUNT, def: 0, at: VTOFFSET.DETECTED_COUNT.p) }
-  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VTOFFSET.OUTPUT_OFFSET.p) }
-  public static func add(ERROR_CODE: snwErrorCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERROR_CODE.rawValue, def: 0, at: VTOFFSET.ERROR_CODE.p) }
-  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VTOFFSET.ERROR_MESSAGE.p) }
+  public static func add(COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNT, def: 0, at: VT.COUNT) }
+  public static func add(DETECTED_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DETECTED_COUNT, def: 0, at: VT.DETECTED_COUNT) }
+  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VT.OUTPUT_OFFSET) }
+  public static func add(ERROR_CODE: snwErrorCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERROR_CODE.rawValue, def: 0, at: VT.ERROR_CODE) }
+  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
   public static func endSNWBatchResponse(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSNWBatchResponse(
     _ fbb: inout FlatBufferBuilder,
@@ -225,11 +221,11 @@ public struct SNWBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COUNT.p, fieldName: "COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.DETECTED_COUNT.p, fieldName: "DETECTED_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.OUTPUT_OFFSET.p, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ERROR_CODE.p, fieldName: "ERROR_CODE", required: false, type: snwErrorCode.self)
-    try _v.visit(field: VTOFFSET.ERROR_MESSAGE.p, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COUNT, fieldName: "COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.DETECTED_COUNT, fieldName: "DETECTED_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OUTPUT_OFFSET, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ERROR_CODE, fieldName: "ERROR_CODE", required: false, type: snwErrorCode.self)
+    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -247,18 +243,16 @@ public struct SNW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case BATCH_REQUEST = 4
-    case BATCH_RESPONSE = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let BATCH_REQUEST: VOffset = 4
+    static let BATCH_RESPONSE: VOffset = 6
   }
 
-  public var BATCH_REQUEST: SNWBatchRequest? { let o = _accessor.offset(VTOFFSET.BATCH_REQUEST.v); return o == 0 ? nil : SNWBatchRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var BATCH_RESPONSE: SNWBatchResponse? { let o = _accessor.offset(VTOFFSET.BATCH_RESPONSE.v); return o == 0 ? nil : SNWBatchResponse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BATCH_REQUEST: SNWBatchRequest? { let o = _accessor.offset(VT.BATCH_REQUEST); return o == 0 ? nil : SNWBatchRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BATCH_RESPONSE: SNWBatchResponse? { let o = _accessor.offset(VT.BATCH_RESPONSE); return o == 0 ? nil : SNWBatchResponse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startSNW(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(BATCH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_REQUEST, at: VTOFFSET.BATCH_REQUEST.p) }
-  public static func add(BATCH_RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_RESPONSE, at: VTOFFSET.BATCH_RESPONSE.p) }
+  public static func add(BATCH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_REQUEST, at: VT.BATCH_REQUEST) }
+  public static func add(BATCH_RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_RESPONSE, at: VT.BATCH_RESPONSE) }
   public static func endSNW(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSNW(
     _ fbb: inout FlatBufferBuilder,
@@ -273,8 +267,8 @@ public struct SNW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.BATCH_REQUEST.p, fieldName: "BATCH_REQUEST", required: false, type: ForwardOffset<SNWBatchRequest>.self)
-    try _v.visit(field: VTOFFSET.BATCH_RESPONSE.p, fieldName: "BATCH_RESPONSE", required: false, type: ForwardOffset<SNWBatchResponse>.self)
+    try _v.visit(field: VT.BATCH_REQUEST, fieldName: "BATCH_REQUEST", required: false, type: ForwardOffset<SNWBatchRequest>.self)
+    try _v.visit(field: VT.BATCH_RESPONSE, fieldName: "BATCH_RESPONSE", required: false, type: ForwardOffset<SNWBatchResponse>.self)
     _v.finish()
   }
 }

@@ -31,11 +31,11 @@ static getSizePrefixedRootAsPLGPortManifest(bb:flatbuffers.ByteBuffer, obj?:PLGP
 /**
  * Stable port identifier within the method.
  */
-PORT_ID():string|null
-PORT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-PORT_ID(optionalEncoding?:any):string|Uint8Array|null {
+PORT_ID():string
+PORT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+PORT_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**

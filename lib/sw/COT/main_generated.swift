@@ -44,32 +44,30 @@ public struct COTPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case LATITUDE = 4
-    case LONGITUDE = 6
-    case HAE = 8
-    case CE = 10
-    case LE = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let LATITUDE: VOffset = 4
+    static let LONGITUDE: VOffset = 6
+    static let HAE: VOffset = 8
+    static let CE: VOffset = 10
+    static let LE: VOffset = 12
   }
 
   ///  Latitude in decimal degrees (WGS84)
-  public var LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LATITUDE: Double { let o = _accessor.offset(VT.LATITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Longitude in decimal degrees (WGS84)
-  public var LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE: Double { let o = _accessor.offset(VT.LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height above WGS84 ellipsoid in meters
-  public var HAE: Double { let o = _accessor.offset(VTOFFSET.HAE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HAE: Double { let o = _accessor.offset(VT.HAE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Circular error in meters (95% confidence)
-  public var CE: Double { let o = _accessor.offset(VTOFFSET.CE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CE: Double { let o = _accessor.offset(VT.CE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Linear error (vertical) in meters (95% confidence)
-  public var LE: Double { let o = _accessor.offset(VTOFFSET.LE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LE: Double { let o = _accessor.offset(VT.LE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startCOTPoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VTOFFSET.LATITUDE.p) }
-  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VTOFFSET.LONGITUDE.p) }
-  public static func add(HAE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAE, def: 0.0, at: VTOFFSET.HAE.p) }
-  public static func add(CE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CE, def: 0.0, at: VTOFFSET.CE.p) }
-  public static func add(LE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LE, def: 0.0, at: VTOFFSET.LE.p) }
+  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VT.LATITUDE) }
+  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VT.LONGITUDE) }
+  public static func add(HAE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAE, def: 0.0, at: VT.HAE) }
+  public static func add(CE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CE, def: 0.0, at: VT.CE) }
+  public static func add(LE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LE, def: 0.0, at: VT.LE) }
   public static func endCOTPoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCOTPoint(
     _ fbb: inout FlatBufferBuilder,
@@ -90,11 +88,11 @@ public struct COTPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LATITUDE.p, fieldName: "LATITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LONGITUDE.p, fieldName: "LONGITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HAE.p, fieldName: "HAE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CE.p, fieldName: "CE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LE.p, fieldName: "LE", required: false, type: Double.self)
+    try _v.visit(field: VT.LATITUDE, fieldName: "LATITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE, fieldName: "LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.HAE, fieldName: "HAE", required: false, type: Double.self)
+    try _v.visit(field: VT.CE, fieldName: "CE", required: false, type: Double.self)
+    try _v.visit(field: VT.LE, fieldName: "LE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -111,126 +109,124 @@ public struct COTDetail: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CALLSIGN = 4
-    case ENDPOINT = 6
-    case PHONE = 8
-    case COURSE = 10
-    case SPEED = 12
-    case GROUP_NAME = 14
-    case GROUP_ROLE = 16
-    case STATUS_BATTERY = 18
-    case STATUS_READINESS = 20
-    case PREC_LOCATION_SOURCE = 22
-    case PREC_ALTSRC = 24
-    case UID_DROID = 26
-    case REMARKS = 28
-    case REMARKS_SOURCE = 30
-    case REMARKS_TIME = 32
-    case LINK_UID = 34
-    case LINK_TYPE = 36
-    case LINK_RELATION = 38
-    case COLOR = 40
-    case STROKE_WEIGHT = 42
-    case FILL_COLOR = 44
-    case LABELLED = 46
-    case ARCHIVE = 48
-    case RAW_XML = 50
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CALLSIGN: VOffset = 4
+    static let ENDPOINT: VOffset = 6
+    static let PHONE: VOffset = 8
+    static let COURSE: VOffset = 10
+    static let SPEED: VOffset = 12
+    static let GROUP_NAME: VOffset = 14
+    static let GROUP_ROLE: VOffset = 16
+    static let STATUS_BATTERY: VOffset = 18
+    static let STATUS_READINESS: VOffset = 20
+    static let PREC_LOCATION_SOURCE: VOffset = 22
+    static let PREC_ALTSRC: VOffset = 24
+    static let UID_DROID: VOffset = 26
+    static let REMARKS: VOffset = 28
+    static let REMARKS_SOURCE: VOffset = 30
+    static let REMARKS_TIME: VOffset = 32
+    static let LINK_UID: VOffset = 34
+    static let LINK_TYPE: VOffset = 36
+    static let LINK_RELATION: VOffset = 38
+    static let COLOR: VOffset = 40
+    static let STROKE_WEIGHT: VOffset = 42
+    static let FILL_COLOR: VOffset = 44
+    static let LABELLED: VOffset = 46
+    static let ARCHIVE: VOffset = 48
+    static let RAW_XML: VOffset = 50
   }
 
   ///  Contact callsign
-  public var CALLSIGN: String? { let o = _accessor.offset(VTOFFSET.CALLSIGN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CALLSIGNSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CALLSIGN.v) }
+  public var CALLSIGN: String? { let o = _accessor.offset(VT.CALLSIGN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CALLSIGNSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CALLSIGN) }
   ///  Contact endpoint (e.g. IP:port)
-  public var ENDPOINT: String? { let o = _accessor.offset(VTOFFSET.ENDPOINT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ENDPOINTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENDPOINT.v) }
+  public var ENDPOINT: String? { let o = _accessor.offset(VT.ENDPOINT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENDPOINTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENDPOINT) }
   ///  Contact phone number
-  public var PHONE: String? { let o = _accessor.offset(VTOFFSET.PHONE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PHONESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PHONE.v) }
+  public var PHONE: String? { let o = _accessor.offset(VT.PHONE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PHONESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PHONE) }
   ///  Track course in degrees true
-  public var COURSE: Double { let o = _accessor.offset(VTOFFSET.COURSE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COURSE: Double { let o = _accessor.offset(VT.COURSE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Track speed in m/s
-  public var SPEED: Double { let o = _accessor.offset(VTOFFSET.SPEED.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SPEED: Double { let o = _accessor.offset(VT.SPEED); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Group name/team
-  public var GROUP_NAME: String? { let o = _accessor.offset(VTOFFSET.GROUP_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GROUP_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GROUP_NAME.v) }
+  public var GROUP_NAME: String? { let o = _accessor.offset(VT.GROUP_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GROUP_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GROUP_NAME) }
   ///  Group role
-  public var GROUP_ROLE: String? { let o = _accessor.offset(VTOFFSET.GROUP_ROLE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GROUP_ROLESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GROUP_ROLE.v) }
+  public var GROUP_ROLE: String? { let o = _accessor.offset(VT.GROUP_ROLE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GROUP_ROLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GROUP_ROLE) }
   ///  Status (battery percentage, etc.)
-  public var STATUS_BATTERY: Double { let o = _accessor.offset(VTOFFSET.STATUS_BATTERY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STATUS_BATTERY: Double { let o = _accessor.offset(VT.STATUS_BATTERY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Status readiness
-  public var STATUS_READINESS: Bool { let o = _accessor.offset(VTOFFSET.STATUS_READINESS.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var STATUS_READINESS: Bool { let o = _accessor.offset(VT.STATUS_READINESS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Precision location source
-  public var PREC_LOCATION_SOURCE: String? { let o = _accessor.offset(VTOFFSET.PREC_LOCATION_SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PREC_LOCATION_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PREC_LOCATION_SOURCE.v) }
+  public var PREC_LOCATION_SOURCE: String? { let o = _accessor.offset(VT.PREC_LOCATION_SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PREC_LOCATION_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PREC_LOCATION_SOURCE) }
   ///  Precision location altitude source
-  public var PREC_ALTSRC: String? { let o = _accessor.offset(VTOFFSET.PREC_ALTSRC.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PREC_ALTSRCSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PREC_ALTSRC.v) }
+  public var PREC_ALTSRC: String? { let o = _accessor.offset(VT.PREC_ALTSRC); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PREC_ALTSRCSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PREC_ALTSRC) }
   ///  UID of the device
-  public var UID_DROID: String? { let o = _accessor.offset(VTOFFSET.UID_DROID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var UID_DROIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.UID_DROID.v) }
+  public var UID_DROID: String? { let o = _accessor.offset(VT.UID_DROID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UID_DROIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UID_DROID) }
   ///  Remarks text
-  public var REMARKS: String? { let o = _accessor.offset(VTOFFSET.REMARKS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REMARKSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REMARKS.v) }
+  public var REMARKS: String? { let o = _accessor.offset(VT.REMARKS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REMARKSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REMARKS) }
   ///  Remarks source
-  public var REMARKS_SOURCE: String? { let o = _accessor.offset(VTOFFSET.REMARKS_SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REMARKS_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REMARKS_SOURCE.v) }
+  public var REMARKS_SOURCE: String? { let o = _accessor.offset(VT.REMARKS_SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REMARKS_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REMARKS_SOURCE) }
   ///  Remarks timestamp (ISO 8601)
-  public var REMARKS_TIME: String? { let o = _accessor.offset(VTOFFSET.REMARKS_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REMARKS_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REMARKS_TIME.v) }
+  public var REMARKS_TIME: String? { let o = _accessor.offset(VT.REMARKS_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REMARKS_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REMARKS_TIME) }
   ///  Link UID (for related events)
-  public var LINK_UID: String? { let o = _accessor.offset(VTOFFSET.LINK_UID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_UIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_UID.v) }
+  public var LINK_UID: String? { let o = _accessor.offset(VT.LINK_UID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_UIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_UID) }
   ///  Link type
-  public var LINK_TYPE: String? { let o = _accessor.offset(VTOFFSET.LINK_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_TYPE.v) }
+  public var LINK_TYPE: String? { let o = _accessor.offset(VT.LINK_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_TYPE) }
   ///  Link relation
-  public var LINK_RELATION: String? { let o = _accessor.offset(VTOFFSET.LINK_RELATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_RELATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_RELATION.v) }
+  public var LINK_RELATION: String? { let o = _accessor.offset(VT.LINK_RELATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_RELATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_RELATION) }
   ///  Color in ARGB integer format
-  public var COLOR: Int32 { let o = _accessor.offset(VTOFFSET.COLOR.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var COLOR: Int32 { let o = _accessor.offset(VT.COLOR); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Stroke weight for drawing
-  public var STROKE_WEIGHT: Double { let o = _accessor.offset(VTOFFSET.STROKE_WEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var STROKE_WEIGHT: Double { let o = _accessor.offset(VT.STROKE_WEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Fill color in ARGB integer format
-  public var FILL_COLOR: Int32 { let o = _accessor.offset(VTOFFSET.FILL_COLOR.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var FILL_COLOR: Int32 { let o = _accessor.offset(VT.FILL_COLOR); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Labeled flag
-  public var LABELLED: Bool { let o = _accessor.offset(VTOFFSET.LABELLED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var LABELLED: Bool { let o = _accessor.offset(VT.LABELLED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Archive flag
-  public var ARCHIVE: Bool { let o = _accessor.offset(VTOFFSET.ARCHIVE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ARCHIVE: Bool { let o = _accessor.offset(VT.ARCHIVE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Raw XML detail content (for extensions not covered above)
-  public var RAW_XML: String? { let o = _accessor.offset(VTOFFSET.RAW_XML.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RAW_XMLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RAW_XML.v) }
+  public var RAW_XML: String? { let o = _accessor.offset(VT.RAW_XML); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RAW_XMLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RAW_XML) }
   public static func startCOTDetail(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
-  public static func add(CALLSIGN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CALLSIGN, at: VTOFFSET.CALLSIGN.p) }
-  public static func add(ENDPOINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENDPOINT, at: VTOFFSET.ENDPOINT.p) }
-  public static func add(PHONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHONE, at: VTOFFSET.PHONE.p) }
-  public static func add(COURSE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COURSE, def: 0.0, at: VTOFFSET.COURSE.p) }
-  public static func add(SPEED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPEED, def: 0.0, at: VTOFFSET.SPEED.p) }
-  public static func add(GROUP_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUP_NAME, at: VTOFFSET.GROUP_NAME.p) }
-  public static func add(GROUP_ROLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUP_ROLE, at: VTOFFSET.GROUP_ROLE.p) }
-  public static func add(STATUS_BATTERY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS_BATTERY, def: 0.0, at: VTOFFSET.STATUS_BATTERY.p) }
+  public static func add(CALLSIGN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CALLSIGN, at: VT.CALLSIGN) }
+  public static func add(ENDPOINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENDPOINT, at: VT.ENDPOINT) }
+  public static func add(PHONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHONE, at: VT.PHONE) }
+  public static func add(COURSE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COURSE, def: 0.0, at: VT.COURSE) }
+  public static func add(SPEED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPEED, def: 0.0, at: VT.SPEED) }
+  public static func add(GROUP_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUP_NAME, at: VT.GROUP_NAME) }
+  public static func add(GROUP_ROLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUP_ROLE, at: VT.GROUP_ROLE) }
+  public static func add(STATUS_BATTERY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS_BATTERY, def: 0.0, at: VT.STATUS_BATTERY) }
   public static func add(STATUS_READINESS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS_READINESS, def: false,
-   at: VTOFFSET.STATUS_READINESS.p) }
-  public static func add(PREC_LOCATION_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREC_LOCATION_SOURCE, at: VTOFFSET.PREC_LOCATION_SOURCE.p) }
-  public static func add(PREC_ALTSRC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREC_ALTSRC, at: VTOFFSET.PREC_ALTSRC.p) }
-  public static func add(UID_DROID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UID_DROID, at: VTOFFSET.UID_DROID.p) }
-  public static func add(REMARKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REMARKS, at: VTOFFSET.REMARKS.p) }
-  public static func add(REMARKS_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REMARKS_SOURCE, at: VTOFFSET.REMARKS_SOURCE.p) }
-  public static func add(REMARKS_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REMARKS_TIME, at: VTOFFSET.REMARKS_TIME.p) }
-  public static func add(LINK_UID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_UID, at: VTOFFSET.LINK_UID.p) }
-  public static func add(LINK_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_TYPE, at: VTOFFSET.LINK_TYPE.p) }
-  public static func add(LINK_RELATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_RELATION, at: VTOFFSET.LINK_RELATION.p) }
-  public static func add(COLOR: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLOR, def: 0, at: VTOFFSET.COLOR.p) }
-  public static func add(STROKE_WEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STROKE_WEIGHT, def: 0.0, at: VTOFFSET.STROKE_WEIGHT.p) }
-  public static func add(FILL_COLOR: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILL_COLOR, def: 0, at: VTOFFSET.FILL_COLOR.p) }
+   at: VT.STATUS_READINESS) }
+  public static func add(PREC_LOCATION_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREC_LOCATION_SOURCE, at: VT.PREC_LOCATION_SOURCE) }
+  public static func add(PREC_ALTSRC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREC_ALTSRC, at: VT.PREC_ALTSRC) }
+  public static func add(UID_DROID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UID_DROID, at: VT.UID_DROID) }
+  public static func add(REMARKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REMARKS, at: VT.REMARKS) }
+  public static func add(REMARKS_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REMARKS_SOURCE, at: VT.REMARKS_SOURCE) }
+  public static func add(REMARKS_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REMARKS_TIME, at: VT.REMARKS_TIME) }
+  public static func add(LINK_UID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_UID, at: VT.LINK_UID) }
+  public static func add(LINK_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_TYPE, at: VT.LINK_TYPE) }
+  public static func add(LINK_RELATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_RELATION, at: VT.LINK_RELATION) }
+  public static func add(COLOR: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLOR, def: 0, at: VT.COLOR) }
+  public static func add(STROKE_WEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STROKE_WEIGHT, def: 0.0, at: VT.STROKE_WEIGHT) }
+  public static func add(FILL_COLOR: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILL_COLOR, def: 0, at: VT.FILL_COLOR) }
   public static func add(LABELLED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LABELLED, def: false,
-   at: VTOFFSET.LABELLED.p) }
+   at: VT.LABELLED) }
   public static func add(ARCHIVE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARCHIVE, def: false,
-   at: VTOFFSET.ARCHIVE.p) }
-  public static func add(RAW_XML: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RAW_XML, at: VTOFFSET.RAW_XML.p) }
+   at: VT.ARCHIVE) }
+  public static func add(RAW_XML: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RAW_XML, at: VT.RAW_XML) }
   public static func endCOTDetail(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCOTDetail(
     _ fbb: inout FlatBufferBuilder,
@@ -289,30 +285,30 @@ public struct COTDetail: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CALLSIGN.p, fieldName: "CALLSIGN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ENDPOINT.p, fieldName: "ENDPOINT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PHONE.p, fieldName: "PHONE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COURSE.p, fieldName: "COURSE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SPEED.p, fieldName: "SPEED", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.GROUP_NAME.p, fieldName: "GROUP_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GROUP_ROLE.p, fieldName: "GROUP_ROLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STATUS_BATTERY.p, fieldName: "STATUS_BATTERY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STATUS_READINESS.p, fieldName: "STATUS_READINESS", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.PREC_LOCATION_SOURCE.p, fieldName: "PREC_LOCATION_SOURCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PREC_ALTSRC.p, fieldName: "PREC_ALTSRC", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UID_DROID.p, fieldName: "UID_DROID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REMARKS.p, fieldName: "REMARKS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REMARKS_SOURCE.p, fieldName: "REMARKS_SOURCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REMARKS_TIME.p, fieldName: "REMARKS_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINK_UID.p, fieldName: "LINK_UID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINK_TYPE.p, fieldName: "LINK_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINK_RELATION.p, fieldName: "LINK_RELATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLOR.p, fieldName: "COLOR", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.STROKE_WEIGHT.p, fieldName: "STROKE_WEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FILL_COLOR.p, fieldName: "FILL_COLOR", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.LABELLED.p, fieldName: "LABELLED", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.ARCHIVE.p, fieldName: "ARCHIVE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.RAW_XML.p, fieldName: "RAW_XML", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CALLSIGN, fieldName: "CALLSIGN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENDPOINT, fieldName: "ENDPOINT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PHONE, fieldName: "PHONE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COURSE, fieldName: "COURSE", required: false, type: Double.self)
+    try _v.visit(field: VT.SPEED, fieldName: "SPEED", required: false, type: Double.self)
+    try _v.visit(field: VT.GROUP_NAME, fieldName: "GROUP_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GROUP_ROLE, fieldName: "GROUP_ROLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATUS_BATTERY, fieldName: "STATUS_BATTERY", required: false, type: Double.self)
+    try _v.visit(field: VT.STATUS_READINESS, fieldName: "STATUS_READINESS", required: false, type: Bool.self)
+    try _v.visit(field: VT.PREC_LOCATION_SOURCE, fieldName: "PREC_LOCATION_SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PREC_ALTSRC, fieldName: "PREC_ALTSRC", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UID_DROID, fieldName: "UID_DROID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REMARKS, fieldName: "REMARKS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REMARKS_SOURCE, fieldName: "REMARKS_SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REMARKS_TIME, fieldName: "REMARKS_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINK_UID, fieldName: "LINK_UID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINK_TYPE, fieldName: "LINK_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINK_RELATION, fieldName: "LINK_RELATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: Int32.self)
+    try _v.visit(field: VT.STROKE_WEIGHT, fieldName: "STROKE_WEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.FILL_COLOR, fieldName: "FILL_COLOR", required: false, type: Int32.self)
+    try _v.visit(field: VT.LABELLED, fieldName: "LABELLED", required: false, type: Bool.self)
+    try _v.visit(field: VT.ARCHIVE, fieldName: "ARCHIVE", required: false, type: Bool.self)
+    try _v.visit(field: VT.RAW_XML, fieldName: "RAW_XML", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -329,70 +325,68 @@ public struct COT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case VERSION = 4
-    case UID = 6
-    case TYPE = 8
-    case HOW = 10
-    case TIME = 12
-    case START = 14
-    case STALE = 16
-    case ACCESS = 18
-    case QOS = 20
-    case OPEX = 22
-    case POINT = 24
-    case DETAIL = 26
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let VERSION: VOffset = 4
+    static let UID: VOffset = 6
+    static let TYPE: VOffset = 8
+    static let HOW: VOffset = 10
+    static let TIME: VOffset = 12
+    static let START: VOffset = 14
+    static let STALE: VOffset = 16
+    static let ACCESS: VOffset = 18
+    static let QOS: VOffset = 20
+    static let OPEX: VOffset = 22
+    static let POINT: VOffset = 24
+    static let DETAIL: VOffset = 26
   }
 
   ///  Schema version
-  public var VERSION: String? { let o = _accessor.offset(VTOFFSET.VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VERSION.v) }
+  public var VERSION: String? { let o = _accessor.offset(VT.VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VERSION) }
   ///  Globally unique event identifier
-  public var UID: String? { let o = _accessor.offset(VTOFFSET.UID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var UIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.UID.v) }
+  public var UID: String? { let o = _accessor.offset(VT.UID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UID) }
   ///  CoT event type (dot-delimited MIL-STD-2525/APP-6 hierarchy)
   ///  e.g. "a-f-G-U-C" = atom, friend, Ground, Unit, Combat
-  public var TYPE: String? { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE.v) }
+  public var TYPE: String? { let o = _accessor.offset(VT.TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TYPE) }
   ///  How the event was generated (e.g. "m-g" = machine GPS)
-  public var HOW: COTHowType { let o = _accessor.offset(VTOFFSET.HOW.v); return o == 0 ? .he : COTHowType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .he }
+  public var HOW: COTHowType { let o = _accessor.offset(VT.HOW); return o == 0 ? .he : COTHowType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .he }
   ///  Time the event was generated (ISO 8601)
-  public var TIME: String? { let o = _accessor.offset(VTOFFSET.TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIME.v) }
+  public var TIME: String? { let o = _accessor.offset(VT.TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME) }
   ///  Time the event information was valid (ISO 8601)
-  public var START: String? { let o = _accessor.offset(VTOFFSET.START.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START.v) }
+  public var START: String? { let o = _accessor.offset(VT.START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START) }
   ///  Time the event information is no longer valid (ISO 8601)
-  public var STALE: String? { let o = _accessor.offset(VTOFFSET.STALE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STALESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STALE.v) }
+  public var STALE: String? { let o = _accessor.offset(VT.STALE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STALESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STALE) }
   ///  Access control marking
-  public var ACCESS: String? { let o = _accessor.offset(VTOFFSET.ACCESS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ACCESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ACCESS.v) }
+  public var ACCESS: String? { let o = _accessor.offset(VT.ACCESS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ACCESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ACCESS) }
   ///  Quality of service
-  public var QOS: String? { let o = _accessor.offset(VTOFFSET.QOS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var QOSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.QOS.v) }
+  public var QOS: String? { let o = _accessor.offset(VT.QOS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var QOSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.QOS) }
   ///  Operational status
-  public var OPEX: String? { let o = _accessor.offset(VTOFFSET.OPEX.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OPEXSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPEX.v) }
+  public var OPEX: String? { let o = _accessor.offset(VT.OPEX); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OPEXSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OPEX) }
   ///  Point location
-  public var POINT: COTPoint? { let o = _accessor.offset(VTOFFSET.POINT.v); return o == 0 ? nil : COTPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POINT: COTPoint? { let o = _accessor.offset(VT.POINT); return o == 0 ? nil : COTPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Detailed event information
-  public var DETAIL: COTDetail? { let o = _accessor.offset(VTOFFSET.DETAIL.v); return o == 0 ? nil : COTDetail(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DETAIL: COTDetail? { let o = _accessor.offset(VT.DETAIL); return o == 0 ? nil : COTDetail(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCOT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
-  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VTOFFSET.VERSION.p) }
-  public static func add(UID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UID, at: VTOFFSET.UID.p) }
-  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VTOFFSET.TYPE.p) }
-  public static func add(HOW: COTHowType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOW.rawValue, def: 0, at: VTOFFSET.HOW.p) }
-  public static func add(TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME, at: VTOFFSET.TIME.p) }
-  public static func add(START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START, at: VTOFFSET.START.p) }
-  public static func add(STALE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STALE, at: VTOFFSET.STALE.p) }
-  public static func add(ACCESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCESS, at: VTOFFSET.ACCESS.p) }
-  public static func add(QOS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QOS, at: VTOFFSET.QOS.p) }
-  public static func add(OPEX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPEX, at: VTOFFSET.OPEX.p) }
-  public static func add(POINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINT, at: VTOFFSET.POINT.p) }
-  public static func add(DETAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DETAIL, at: VTOFFSET.DETAIL.p) }
+  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
+  public static func add(UID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UID, at: VT.UID) }
+  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VT.TYPE) }
+  public static func add(HOW: COTHowType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOW.rawValue, def: 0, at: VT.HOW) }
+  public static func add(TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME, at: VT.TIME) }
+  public static func add(START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START, at: VT.START) }
+  public static func add(STALE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STALE, at: VT.STALE) }
+  public static func add(ACCESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCESS, at: VT.ACCESS) }
+  public static func add(QOS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QOS, at: VT.QOS) }
+  public static func add(OPEX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPEX, at: VT.OPEX) }
+  public static func add(POINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINT, at: VT.POINT) }
+  public static func add(DETAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DETAIL, at: VT.DETAIL) }
   public static func endCOT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCOT(
     _ fbb: inout FlatBufferBuilder,
@@ -427,18 +421,18 @@ public struct COT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UID.p, fieldName: "UID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.HOW.p, fieldName: "HOW", required: false, type: COTHowType.self)
-    try _v.visit(field: VTOFFSET.TIME.p, fieldName: "TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.START.p, fieldName: "START", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STALE.p, fieldName: "STALE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ACCESS.p, fieldName: "ACCESS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.QOS.p, fieldName: "QOS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OPEX.p, fieldName: "OPEX", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.POINT.p, fieldName: "POINT", required: false, type: ForwardOffset<COTPoint>.self)
-    try _v.visit(field: VTOFFSET.DETAIL.p, fieldName: "DETAIL", required: false, type: ForwardOffset<COTDetail>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UID, fieldName: "UID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HOW, fieldName: "HOW", required: false, type: COTHowType.self)
+    try _v.visit(field: VT.TIME, fieldName: "TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.START, fieldName: "START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STALE, fieldName: "STALE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ACCESS, fieldName: "ACCESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.QOS, fieldName: "QOS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OPEX, fieldName: "OPEX", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POINT, fieldName: "POINT", required: false, type: ForwardOffset<COTPoint>.self)
+    try _v.visit(field: VT.DETAIL, fieldName: "DETAIL", required: false, type: ForwardOffset<COTDetail>.self)
     _v.finish()
   }
 }

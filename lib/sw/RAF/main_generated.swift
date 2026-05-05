@@ -41,47 +41,45 @@ public struct RAF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PDU_TYPE = 4
-    case INITIATOR_ID = 6
-    case RESPONDER_PORT_ID = 8
-    case SERVICE_TYPE = 10
-    case VERSION = 12
-    case INVOKE_ID = 14
-    case FRAME_QUALITY = 16
-    case DATA = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PDU_TYPE: VOffset = 4
+    static let INITIATOR_ID: VOffset = 6
+    static let RESPONDER_PORT_ID: VOffset = 8
+    static let SERVICE_TYPE: VOffset = 10
+    static let VERSION: VOffset = 12
+    static let INVOKE_ID: VOffset = 14
+    static let FRAME_QUALITY: VOffset = 16
+    static let DATA: VOffset = 18
   }
 
   ///  PDU type
-  public var PDU_TYPE: rafPduType { let o = _accessor.offset(VTOFFSET.PDU_TYPE.v); return o == 0 ? .bindInvocation : rafPduType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bindInvocation }
+  public var PDU_TYPE: rafPduType { let o = _accessor.offset(VT.PDU_TYPE); return o == 0 ? .bindInvocation : rafPduType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bindInvocation }
   ///  Initiator identifier
-  public var INITIATOR_ID: String? { let o = _accessor.offset(VTOFFSET.INITIATOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INITIATOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIATOR_ID.v) }
+  public var INITIATOR_ID: String? { let o = _accessor.offset(VT.INITIATOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INITIATOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INITIATOR_ID) }
   ///  Responder port identifier
-  public var RESPONDER_PORT_ID: String? { let o = _accessor.offset(VTOFFSET.RESPONDER_PORT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RESPONDER_PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RESPONDER_PORT_ID.v) }
+  public var RESPONDER_PORT_ID: String? { let o = _accessor.offset(VT.RESPONDER_PORT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RESPONDER_PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RESPONDER_PORT_ID) }
   ///  Service type
-  public var SERVICE_TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.SERVICE_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var SERVICE_TYPE: UInt8 { let o = _accessor.offset(VT.SERVICE_TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Version number
-  public var VERSION: UInt16 { let o = _accessor.offset(VTOFFSET.VERSION.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var VERSION: UInt16 { let o = _accessor.offset(VT.VERSION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Invoke ID
-  public var INVOKE_ID: UInt32 { let o = _accessor.offset(VTOFFSET.INVOKE_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var INVOKE_ID: UInt32 { let o = _accessor.offset(VT.INVOKE_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Frame quality
-  public var FRAME_QUALITY: UInt8 { let o = _accessor.offset(VTOFFSET.FRAME_QUALITY.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var FRAME_QUALITY: UInt8 { let o = _accessor.offset(VT.FRAME_QUALITY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Data
-  public var DATA: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.DATA.v, byteSize: 1) }
-  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DATA.v, body: body) }
+  public var DATA: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.DATA, byteSize: 1) }
+  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DATA, body: body) }
   public static func startRAF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(PDU_TYPE: rafPduType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PDU_TYPE.rawValue, def: 0, at: VTOFFSET.PDU_TYPE.p) }
-  public static func add(INITIATOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIATOR_ID, at: VTOFFSET.INITIATOR_ID.p) }
-  public static func add(RESPONDER_PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESPONDER_PORT_ID, at: VTOFFSET.RESPONDER_PORT_ID.p) }
-  public static func add(SERVICE_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SERVICE_TYPE, def: 0, at: VTOFFSET.SERVICE_TYPE.p) }
-  public static func add(VERSION: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VTOFFSET.VERSION.p) }
-  public static func add(INVOKE_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INVOKE_ID, def: 0, at: VTOFFSET.INVOKE_ID.p) }
-  public static func add(FRAME_QUALITY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_QUALITY, def: 0, at: VTOFFSET.FRAME_QUALITY.p) }
-  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VTOFFSET.DATA.p) }
+  public static func add(PDU_TYPE: rafPduType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PDU_TYPE.rawValue, def: 0, at: VT.PDU_TYPE) }
+  public static func add(INITIATOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIATOR_ID, at: VT.INITIATOR_ID) }
+  public static func add(RESPONDER_PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESPONDER_PORT_ID, at: VT.RESPONDER_PORT_ID) }
+  public static func add(SERVICE_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SERVICE_TYPE, def: 0, at: VT.SERVICE_TYPE) }
+  public static func add(VERSION: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VT.VERSION) }
+  public static func add(INVOKE_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INVOKE_ID, def: 0, at: VT.INVOKE_ID) }
+  public static func add(FRAME_QUALITY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_QUALITY, def: 0, at: VT.FRAME_QUALITY) }
+  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VT.DATA) }
   public static func endRAF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRAF(
     _ fbb: inout FlatBufferBuilder,
@@ -108,14 +106,14 @@ public struct RAF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PDU_TYPE.p, fieldName: "PDU_TYPE", required: false, type: rafPduType.self)
-    try _v.visit(field: VTOFFSET.INITIATOR_ID.p, fieldName: "INITIATOR_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RESPONDER_PORT_ID.p, fieldName: "RESPONDER_PORT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SERVICE_TYPE.p, fieldName: "SERVICE_TYPE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.INVOKE_ID.p, fieldName: "INVOKE_ID", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.FRAME_QUALITY.p, fieldName: "FRAME_QUALITY", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.DATA.p, fieldName: "DATA", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.PDU_TYPE, fieldName: "PDU_TYPE", required: false, type: rafPduType.self)
+    try _v.visit(field: VT.INITIATOR_ID, fieldName: "INITIATOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RESPONDER_PORT_ID, fieldName: "RESPONDER_PORT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SERVICE_TYPE, fieldName: "SERVICE_TYPE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: UInt16.self)
+    try _v.visit(field: VT.INVOKE_ID, fieldName: "INVOKE_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.FRAME_QUALITY, fieldName: "FRAME_QUALITY", required: false, type: UInt8.self)
+    try _v.visit(field: VT.DATA, fieldName: "DATA", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

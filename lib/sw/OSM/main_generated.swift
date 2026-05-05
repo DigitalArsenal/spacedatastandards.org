@@ -20,40 +20,38 @@ public struct OSM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case IS_STABLE = 4
-    case NUM_OBS = 6
-    case OBJECT_ID = 8
-    case ID_SENSOR = 10
-    case PASS_START = 12
-    case PASS_DURATION = 14
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let IS_STABLE: VOffset = 4
+    static let NUM_OBS: VOffset = 6
+    static let OBJECT_ID: VOffset = 8
+    static let ID_SENSOR: VOffset = 10
+    static let PASS_START: VOffset = 12
+    static let PASS_DURATION: VOffset = 14
   }
 
   ///  Indicates whether the observation is stable or not
-  public var IS_STABLE: Bool { let o = _accessor.offset(VTOFFSET.IS_STABLE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var IS_STABLE: Bool { let o = _accessor.offset(VT.IS_STABLE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  The number of observations
-  public var NUM_OBS: Int32 { let o = _accessor.offset(VTOFFSET.NUM_OBS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var NUM_OBS: Int32 { let o = _accessor.offset(VT.NUM_OBS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Unique identifier for the object being observed
-  public var OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_ID.v) }
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
   ///  Identifier of the sensor
-  public var ID_SENSOR: String? { let o = _accessor.offset(VTOFFSET.ID_SENSOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_SENSOR.v) }
+  public var ID_SENSOR: String? { let o = _accessor.offset(VT.ID_SENSOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_SENSOR) }
   ///  Timestamp of data creation
-  public var PASS_START: String? { let o = _accessor.offset(VTOFFSET.PASS_START.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PASS_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PASS_START.v) }
+  public var PASS_START: String? { let o = _accessor.offset(VT.PASS_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PASS_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PASS_START) }
   ///  Duration of the observation pass in seconds
-  public var PASS_DURATION: Int32 { let o = _accessor.offset(VTOFFSET.PASS_DURATION.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var PASS_DURATION: Int32 { let o = _accessor.offset(VT.PASS_DURATION); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startOSM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
   public static func add(IS_STABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IS_STABLE, def: false,
-   at: VTOFFSET.IS_STABLE.p) }
-  public static func add(NUM_OBS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_OBS, def: 0, at: VTOFFSET.NUM_OBS.p) }
-  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VTOFFSET.OBJECT_ID.p) }
-  public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VTOFFSET.ID_SENSOR.p) }
-  public static func add(PASS_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PASS_START, at: VTOFFSET.PASS_START.p) }
-  public static func add(PASS_DURATION: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PASS_DURATION, def: 0, at: VTOFFSET.PASS_DURATION.p) }
+   at: VT.IS_STABLE) }
+  public static func add(NUM_OBS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_OBS, def: 0, at: VT.NUM_OBS) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VT.ID_SENSOR) }
+  public static func add(PASS_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PASS_START, at: VT.PASS_START) }
+  public static func add(PASS_DURATION: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PASS_DURATION, def: 0, at: VT.PASS_DURATION) }
   public static func endOSM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOSM(
     _ fbb: inout FlatBufferBuilder,
@@ -76,12 +74,12 @@ public struct OSM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.IS_STABLE.p, fieldName: "IS_STABLE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.NUM_OBS.p, fieldName: "NUM_OBS", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.OBJECT_ID.p, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_SENSOR.p, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PASS_START.p, fieldName: "PASS_START", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PASS_DURATION.p, fieldName: "PASS_DURATION", required: false, type: Int32.self)
+    try _v.visit(field: VT.IS_STABLE, fieldName: "IS_STABLE", required: false, type: Bool.self)
+    try _v.visit(field: VT.NUM_OBS, fieldName: "NUM_OBS", required: false, type: Int32.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_SENSOR, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PASS_START, fieldName: "PASS_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PASS_DURATION, fieldName: "PASS_DURATION", required: false, type: Int32.self)
     _v.finish()
   }
 }

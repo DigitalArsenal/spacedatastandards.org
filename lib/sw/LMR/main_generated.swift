@@ -35,56 +35,54 @@ public struct LMR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ACTION = 4
-    case REQUEST_ID = 6
-    case MODULE_ID = 8
-    case MODULE_VERSION = 10
-    case WASM_CID = 12
-    case MODULE_HASH = 14
-    case STATUS = 16
-    case ERROR_CODE = 18
-    case ERROR_MESSAGE = 20
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ACTION: VOffset = 4
+    static let REQUEST_ID: VOffset = 6
+    static let MODULE_ID: VOffset = 8
+    static let MODULE_VERSION: VOffset = 10
+    static let WASM_CID: VOffset = 12
+    static let MODULE_HASH: VOffset = 14
+    static let STATUS: VOffset = 16
+    static let ERROR_CODE: VOffset = 18
+    static let ERROR_MESSAGE: VOffset = 20
   }
 
   ///  Action being requested or reported
-  public var ACTION: licensingModuleRequestAction { let o = _accessor.offset(VTOFFSET.ACTION.v); return o == 0 ? .fetch : licensingModuleRequestAction(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .fetch }
+  public var ACTION: licensingModuleRequestAction { let o = _accessor.offset(VT.ACTION); return o == 0 ? .fetch : licensingModuleRequestAction(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .fetch }
   ///  Unique request identifier
-  public var REQUEST_ID: String! { let o = _accessor.offset(VTOFFSET.REQUEST_ID.v); return _accessor.string(at: o) }
-  public var REQUEST_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.REQUEST_ID.v) }
+  public var REQUEST_ID: String! { let o = _accessor.offset(VT.REQUEST_ID); return _accessor.string(at: o) }
+  public var REQUEST_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.REQUEST_ID) }
   ///  Canonical module identifier
-  public var MODULE_ID: String! { let o = _accessor.offset(VTOFFSET.MODULE_ID.v); return _accessor.string(at: o) }
-  public var MODULE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.MODULE_ID.v) }
+  public var MODULE_ID: String! { let o = _accessor.offset(VT.MODULE_ID); return _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MODULE_ID) }
   ///  Optional module version
-  public var MODULE_VERSION: String? { let o = _accessor.offset(VTOFFSET.MODULE_VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MODULE_VERSION.v) }
+  public var MODULE_VERSION: String? { let o = _accessor.offset(VT.MODULE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_VERSION) }
   ///  IPFS CID of the encrypted module artifact
-  public var WASM_CID: String? { let o = _accessor.offset(VTOFFSET.WASM_CID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var WASM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.WASM_CID.v) }
+  public var WASM_CID: String? { let o = _accessor.offset(VT.WASM_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var WASM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.WASM_CID) }
   ///  SHA-256 hash of the decrypted module bytes
-  public var MODULE_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.MODULE_HASH.v, byteSize: 1) }
-  public func withUnsafePointerToModuleHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.MODULE_HASH.v, body: body) }
+  public var MODULE_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.MODULE_HASH, byteSize: 1) }
+  public func withUnsafePointerToModuleHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.MODULE_HASH, body: body) }
   ///  Human-readable status
-  public var STATUS: String? { let o = _accessor.offset(VTOFFSET.STATUS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STATUS.v) }
+  public var STATUS: String? { let o = _accessor.offset(VT.STATUS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STATUS) }
   ///  Structured error code
-  public var ERROR_CODE: String? { let o = _accessor.offset(VTOFFSET.ERROR_CODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ERROR_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ERROR_CODE.v) }
+  public var ERROR_CODE: String? { let o = _accessor.offset(VT.ERROR_CODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ERROR_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_CODE) }
   ///  Structured error message
-  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VTOFFSET.ERROR_MESSAGE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ERROR_MESSAGE.v) }
+  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
   public static func startLMR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(ACTION: licensingModuleRequestAction, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTION.rawValue, def: 0, at: VTOFFSET.ACTION.p) }
-  public static func add(REQUEST_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_ID, at: VTOFFSET.REQUEST_ID.p) }
-  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VTOFFSET.MODULE_ID.p) }
-  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VTOFFSET.MODULE_VERSION.p) }
-  public static func add(WASM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WASM_CID, at: VTOFFSET.WASM_CID.p) }
-  public static func addVectorOf(MODULE_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_HASH, at: VTOFFSET.MODULE_HASH.p) }
-  public static func add(STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATUS, at: VTOFFSET.STATUS.p) }
-  public static func add(ERROR_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_CODE, at: VTOFFSET.ERROR_CODE.p) }
-  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VTOFFSET.ERROR_MESSAGE.p) }
+  public static func add(ACTION: licensingModuleRequestAction, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTION.rawValue, def: 0, at: VT.ACTION) }
+  public static func add(REQUEST_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_ID, at: VT.REQUEST_ID) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VT.MODULE_VERSION) }
+  public static func add(WASM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WASM_CID, at: VT.WASM_CID) }
+  public static func addVectorOf(MODULE_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_HASH, at: VT.MODULE_HASH) }
+  public static func add(STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATUS, at: VT.STATUS) }
+  public static func add(ERROR_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_CODE, at: VT.ERROR_CODE) }
+  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
   public static func endLMR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 8]); return end }
   public static func createLMR(
     _ fbb: inout FlatBufferBuilder,
@@ -113,15 +111,15 @@ public struct LMR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ACTION.p, fieldName: "ACTION", required: false, type: licensingModuleRequestAction.self)
-    try _v.visit(field: VTOFFSET.REQUEST_ID.p, fieldName: "REQUEST_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MODULE_ID.p, fieldName: "MODULE_ID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MODULE_VERSION.p, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.WASM_CID.p, fieldName: "WASM_CID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MODULE_HASH.p, fieldName: "MODULE_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.STATUS.p, fieldName: "STATUS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ERROR_CODE.p, fieldName: "ERROR_CODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ERROR_MESSAGE.p, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ACTION, fieldName: "ACTION", required: false, type: licensingModuleRequestAction.self)
+    try _v.visit(field: VT.REQUEST_ID, fieldName: "REQUEST_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_VERSION, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.WASM_CID, fieldName: "WASM_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_HASH, fieldName: "MODULE_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ERROR_CODE, fieldName: "ERROR_CODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

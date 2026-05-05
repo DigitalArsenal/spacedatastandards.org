@@ -125,112 +125,110 @@ public struct MSL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case POSITION_X = 4
-    case POSITION_Y = 6
-    case POSITION_Z = 8
-    case VELOCITY_X = 10
-    case VELOCITY_Y = 12
-    case VELOCITY_Z = 14
-    case ATTITUDE_X = 16
-    case ATTITUDE_Y = 18
-    case ATTITUDE_Z = 20
-    case ATTITUDE_W = 22
-    case OMEGA_X = 24
-    case OMEGA_Y = 26
-    case OMEGA_Z = 28
-    case MASS = 30
-    case MASS_INITIAL = 32
-    case TARGET_POSITION_X = 34
-    case TARGET_POSITION_Y = 36
-    case TARGET_POSITION_Z = 38
-    case TARGET_VELOCITY_X = 40
-    case TARGET_VELOCITY_Y = 42
-    case TARGET_VELOCITY_Z = 44
-    case MISS_DISTANCE = 46
-    case SEEKER = 48
-    case MOTOR = 50
-    case GUIDANCE_CMD = 52
-    case PHASE = 54
-    case GUIDANCE_LAW = 56
-    case TYPE = 58
-    case ARMED = 60
-    case TIME_OF_FLIGHT = 62
-    case MAX_G = 64
-    case RESERVED = 66
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let POSITION_X: VOffset = 4
+    static let POSITION_Y: VOffset = 6
+    static let POSITION_Z: VOffset = 8
+    static let VELOCITY_X: VOffset = 10
+    static let VELOCITY_Y: VOffset = 12
+    static let VELOCITY_Z: VOffset = 14
+    static let ATTITUDE_X: VOffset = 16
+    static let ATTITUDE_Y: VOffset = 18
+    static let ATTITUDE_Z: VOffset = 20
+    static let ATTITUDE_W: VOffset = 22
+    static let OMEGA_X: VOffset = 24
+    static let OMEGA_Y: VOffset = 26
+    static let OMEGA_Z: VOffset = 28
+    static let MASS: VOffset = 30
+    static let MASS_INITIAL: VOffset = 32
+    static let TARGET_POSITION_X: VOffset = 34
+    static let TARGET_POSITION_Y: VOffset = 36
+    static let TARGET_POSITION_Z: VOffset = 38
+    static let TARGET_VELOCITY_X: VOffset = 40
+    static let TARGET_VELOCITY_Y: VOffset = 42
+    static let TARGET_VELOCITY_Z: VOffset = 44
+    static let MISS_DISTANCE: VOffset = 46
+    static let SEEKER: VOffset = 48
+    static let MOTOR: VOffset = 50
+    static let GUIDANCE_CMD: VOffset = 52
+    static let PHASE: VOffset = 54
+    static let GUIDANCE_LAW: VOffset = 56
+    static let TYPE: VOffset = 58
+    static let ARMED: VOffset = 60
+    static let TIME_OF_FLIGHT: VOffset = 62
+    static let MAX_G: VOffset = 64
+    static let RESERVED: VOffset = 66
   }
 
-  public var POSITION_X: Double { let o = _accessor.offset(VTOFFSET.POSITION_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POSITION_Y: Double { let o = _accessor.offset(VTOFFSET.POSITION_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POSITION_Z: Double { let o = _accessor.offset(VTOFFSET.POSITION_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VELOCITY_X: Double { let o = _accessor.offset(VTOFFSET.VELOCITY_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VELOCITY_Y: Double { let o = _accessor.offset(VTOFFSET.VELOCITY_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VELOCITY_Z: Double { let o = _accessor.offset(VTOFFSET.VELOCITY_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ATTITUDE_X: Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ATTITUDE_Y: Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ATTITUDE_Z: Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ATTITUDE_W: Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_W.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var OMEGA_X: Double { let o = _accessor.offset(VTOFFSET.OMEGA_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var OMEGA_Y: Double { let o = _accessor.offset(VTOFFSET.OMEGA_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var OMEGA_Z: Double { let o = _accessor.offset(VTOFFSET.OMEGA_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MASS: Double { let o = _accessor.offset(VTOFFSET.MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MASS_INITIAL: Double { let o = _accessor.offset(VTOFFSET.MASS_INITIAL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var TARGET_POSITION_X: Double { let o = _accessor.offset(VTOFFSET.TARGET_POSITION_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var TARGET_POSITION_Y: Double { let o = _accessor.offset(VTOFFSET.TARGET_POSITION_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var TARGET_POSITION_Z: Double { let o = _accessor.offset(VTOFFSET.TARGET_POSITION_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var TARGET_VELOCITY_X: Double { let o = _accessor.offset(VTOFFSET.TARGET_VELOCITY_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var TARGET_VELOCITY_Y: Double { let o = _accessor.offset(VTOFFSET.TARGET_VELOCITY_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var TARGET_VELOCITY_Z: Double { let o = _accessor.offset(VTOFFSET.TARGET_VELOCITY_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MISS_DISTANCE: Double { let o = _accessor.offset(VTOFFSET.MISS_DISTANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SEEKER: String? { let o = _accessor.offset(VTOFFSET.SEEKER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SEEKERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SEEKER.v) }
-  public var MOTOR: String? { let o = _accessor.offset(VTOFFSET.MOTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MOTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MOTOR.v) }
-  public var GUIDANCE_CMD: String? { let o = _accessor.offset(VTOFFSET.GUIDANCE_CMD.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GUIDANCE_CMDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GUIDANCE_CMD.v) }
-  public var PHASE: UInt8 { let o = _accessor.offset(VTOFFSET.PHASE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var GUIDANCE_LAW: UInt8 { let o = _accessor.offset(VTOFFSET.GUIDANCE_LAW.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var ARMED: UInt8 { let o = _accessor.offset(VTOFFSET.ARMED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var TIME_OF_FLIGHT: Float32 { let o = _accessor.offset(VTOFFSET.TIME_OF_FLIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var MAX_G: Float32 { let o = _accessor.offset(VTOFFSET.MAX_G.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
+  public var POSITION_X: Double { let o = _accessor.offset(VT.POSITION_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POSITION_Y: Double { let o = _accessor.offset(VT.POSITION_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POSITION_Z: Double { let o = _accessor.offset(VT.POSITION_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VELOCITY_X: Double { let o = _accessor.offset(VT.VELOCITY_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VELOCITY_Y: Double { let o = _accessor.offset(VT.VELOCITY_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VELOCITY_Z: Double { let o = _accessor.offset(VT.VELOCITY_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATTITUDE_X: Double { let o = _accessor.offset(VT.ATTITUDE_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATTITUDE_Y: Double { let o = _accessor.offset(VT.ATTITUDE_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATTITUDE_Z: Double { let o = _accessor.offset(VT.ATTITUDE_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATTITUDE_W: Double { let o = _accessor.offset(VT.ATTITUDE_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OMEGA_X: Double { let o = _accessor.offset(VT.OMEGA_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OMEGA_Y: Double { let o = _accessor.offset(VT.OMEGA_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OMEGA_Z: Double { let o = _accessor.offset(VT.OMEGA_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MASS: Double { let o = _accessor.offset(VT.MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MASS_INITIAL: Double { let o = _accessor.offset(VT.MASS_INITIAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGET_POSITION_X: Double { let o = _accessor.offset(VT.TARGET_POSITION_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGET_POSITION_Y: Double { let o = _accessor.offset(VT.TARGET_POSITION_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGET_POSITION_Z: Double { let o = _accessor.offset(VT.TARGET_POSITION_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGET_VELOCITY_X: Double { let o = _accessor.offset(VT.TARGET_VELOCITY_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGET_VELOCITY_Y: Double { let o = _accessor.offset(VT.TARGET_VELOCITY_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGET_VELOCITY_Z: Double { let o = _accessor.offset(VT.TARGET_VELOCITY_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MISS_DISTANCE: Double { let o = _accessor.offset(VT.MISS_DISTANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEEKER: String? { let o = _accessor.offset(VT.SEEKER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SEEKERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SEEKER) }
+  public var MOTOR: String? { let o = _accessor.offset(VT.MOTOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MOTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MOTOR) }
+  public var GUIDANCE_CMD: String? { let o = _accessor.offset(VT.GUIDANCE_CMD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GUIDANCE_CMDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GUIDANCE_CMD) }
+  public var PHASE: UInt8 { let o = _accessor.offset(VT.PHASE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var GUIDANCE_LAW: UInt8 { let o = _accessor.offset(VT.GUIDANCE_LAW); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var TYPE: UInt8 { let o = _accessor.offset(VT.TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var ARMED: UInt8 { let o = _accessor.offset(VT.ARMED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var TIME_OF_FLIGHT: Float32 { let o = _accessor.offset(VT.TIME_OF_FLIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var MAX_G: Float32 { let o = _accessor.offset(VT.MAX_G); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
   public static func startMSL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 32) }
-  public static func add(POSITION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_X, def: 0.0, at: VTOFFSET.POSITION_X.p) }
-  public static func add(POSITION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Y, def: 0.0, at: VTOFFSET.POSITION_Y.p) }
-  public static func add(POSITION_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Z, def: 0.0, at: VTOFFSET.POSITION_Z.p) }
-  public static func add(VELOCITY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_X, def: 0.0, at: VTOFFSET.VELOCITY_X.p) }
-  public static func add(VELOCITY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Y, def: 0.0, at: VTOFFSET.VELOCITY_Y.p) }
-  public static func add(VELOCITY_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Z, def: 0.0, at: VTOFFSET.VELOCITY_Z.p) }
-  public static func add(ATTITUDE_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_X, def: 0.0, at: VTOFFSET.ATTITUDE_X.p) }
-  public static func add(ATTITUDE_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_Y, def: 0.0, at: VTOFFSET.ATTITUDE_Y.p) }
-  public static func add(ATTITUDE_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_Z, def: 0.0, at: VTOFFSET.ATTITUDE_Z.p) }
-  public static func add(ATTITUDE_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_W, def: 0.0, at: VTOFFSET.ATTITUDE_W.p) }
-  public static func add(OMEGA_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_X, def: 0.0, at: VTOFFSET.OMEGA_X.p) }
-  public static func add(OMEGA_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_Y, def: 0.0, at: VTOFFSET.OMEGA_Y.p) }
-  public static func add(OMEGA_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_Z, def: 0.0, at: VTOFFSET.OMEGA_Z.p) }
-  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VTOFFSET.MASS.p) }
-  public static func add(MASS_INITIAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS_INITIAL, def: 0.0, at: VTOFFSET.MASS_INITIAL.p) }
-  public static func add(TARGET_POSITION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_POSITION_X, def: 0.0, at: VTOFFSET.TARGET_POSITION_X.p) }
-  public static func add(TARGET_POSITION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_POSITION_Y, def: 0.0, at: VTOFFSET.TARGET_POSITION_Y.p) }
-  public static func add(TARGET_POSITION_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_POSITION_Z, def: 0.0, at: VTOFFSET.TARGET_POSITION_Z.p) }
-  public static func add(TARGET_VELOCITY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_VELOCITY_X, def: 0.0, at: VTOFFSET.TARGET_VELOCITY_X.p) }
-  public static func add(TARGET_VELOCITY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_VELOCITY_Y, def: 0.0, at: VTOFFSET.TARGET_VELOCITY_Y.p) }
-  public static func add(TARGET_VELOCITY_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_VELOCITY_Z, def: 0.0, at: VTOFFSET.TARGET_VELOCITY_Z.p) }
-  public static func add(MISS_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MISS_DISTANCE, def: 0.0, at: VTOFFSET.MISS_DISTANCE.p) }
-  public static func add(SEEKER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEEKER, at: VTOFFSET.SEEKER.p) }
-  public static func add(MOTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MOTOR, at: VTOFFSET.MOTOR.p) }
-  public static func add(GUIDANCE_CMD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GUIDANCE_CMD, at: VTOFFSET.GUIDANCE_CMD.p) }
-  public static func add(PHASE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PHASE, def: 0, at: VTOFFSET.PHASE.p) }
-  public static func add(GUIDANCE_LAW: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GUIDANCE_LAW, def: 0, at: VTOFFSET.GUIDANCE_LAW.p) }
-  public static func add(TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE, def: 0, at: VTOFFSET.TYPE.p) }
-  public static func add(ARMED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARMED, def: 0, at: VTOFFSET.ARMED.p) }
-  public static func add(TIME_OF_FLIGHT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_OF_FLIGHT, def: 0.0, at: VTOFFSET.TIME_OF_FLIGHT.p) }
-  public static func add(MAX_G: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_G, def: 0.0, at: VTOFFSET.MAX_G.p) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VTOFFSET.RESERVED.p) }
+  public static func add(POSITION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_X, def: 0.0, at: VT.POSITION_X) }
+  public static func add(POSITION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Y, def: 0.0, at: VT.POSITION_Y) }
+  public static func add(POSITION_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Z, def: 0.0, at: VT.POSITION_Z) }
+  public static func add(VELOCITY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_X, def: 0.0, at: VT.VELOCITY_X) }
+  public static func add(VELOCITY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Y, def: 0.0, at: VT.VELOCITY_Y) }
+  public static func add(VELOCITY_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Z, def: 0.0, at: VT.VELOCITY_Z) }
+  public static func add(ATTITUDE_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_X, def: 0.0, at: VT.ATTITUDE_X) }
+  public static func add(ATTITUDE_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_Y, def: 0.0, at: VT.ATTITUDE_Y) }
+  public static func add(ATTITUDE_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_Z, def: 0.0, at: VT.ATTITUDE_Z) }
+  public static func add(ATTITUDE_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_W, def: 0.0, at: VT.ATTITUDE_W) }
+  public static func add(OMEGA_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_X, def: 0.0, at: VT.OMEGA_X) }
+  public static func add(OMEGA_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_Y, def: 0.0, at: VT.OMEGA_Y) }
+  public static func add(OMEGA_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_Z, def: 0.0, at: VT.OMEGA_Z) }
+  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VT.MASS) }
+  public static func add(MASS_INITIAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS_INITIAL, def: 0.0, at: VT.MASS_INITIAL) }
+  public static func add(TARGET_POSITION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_POSITION_X, def: 0.0, at: VT.TARGET_POSITION_X) }
+  public static func add(TARGET_POSITION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_POSITION_Y, def: 0.0, at: VT.TARGET_POSITION_Y) }
+  public static func add(TARGET_POSITION_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_POSITION_Z, def: 0.0, at: VT.TARGET_POSITION_Z) }
+  public static func add(TARGET_VELOCITY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_VELOCITY_X, def: 0.0, at: VT.TARGET_VELOCITY_X) }
+  public static func add(TARGET_VELOCITY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_VELOCITY_Y, def: 0.0, at: VT.TARGET_VELOCITY_Y) }
+  public static func add(TARGET_VELOCITY_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_VELOCITY_Z, def: 0.0, at: VT.TARGET_VELOCITY_Z) }
+  public static func add(MISS_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MISS_DISTANCE, def: 0.0, at: VT.MISS_DISTANCE) }
+  public static func add(SEEKER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEEKER, at: VT.SEEKER) }
+  public static func add(MOTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MOTOR, at: VT.MOTOR) }
+  public static func add(GUIDANCE_CMD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GUIDANCE_CMD, at: VT.GUIDANCE_CMD) }
+  public static func add(PHASE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PHASE, def: 0, at: VT.PHASE) }
+  public static func add(GUIDANCE_LAW: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GUIDANCE_LAW, def: 0, at: VT.GUIDANCE_LAW) }
+  public static func add(TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE, def: 0, at: VT.TYPE) }
+  public static func add(ARMED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARMED, def: 0, at: VT.ARMED) }
+  public static func add(TIME_OF_FLIGHT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_OF_FLIGHT, def: 0.0, at: VT.TIME_OF_FLIGHT) }
+  public static func add(MAX_G: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_G, def: 0.0, at: VT.MAX_G) }
+  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
   public static func endMSL(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMSL(
     _ fbb: inout FlatBufferBuilder,
@@ -305,38 +303,38 @@ public struct MSL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.POSITION_X.p, fieldName: "POSITION_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POSITION_Y.p, fieldName: "POSITION_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POSITION_Z.p, fieldName: "POSITION_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VELOCITY_X.p, fieldName: "VELOCITY_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VELOCITY_Y.p, fieldName: "VELOCITY_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VELOCITY_Z.p, fieldName: "VELOCITY_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_X.p, fieldName: "ATTITUDE_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_Y.p, fieldName: "ATTITUDE_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_Z.p, fieldName: "ATTITUDE_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_W.p, fieldName: "ATTITUDE_W", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OMEGA_X.p, fieldName: "OMEGA_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OMEGA_Y.p, fieldName: "OMEGA_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OMEGA_Z.p, fieldName: "OMEGA_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MASS.p, fieldName: "MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MASS_INITIAL.p, fieldName: "MASS_INITIAL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TARGET_POSITION_X.p, fieldName: "TARGET_POSITION_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TARGET_POSITION_Y.p, fieldName: "TARGET_POSITION_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TARGET_POSITION_Z.p, fieldName: "TARGET_POSITION_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TARGET_VELOCITY_X.p, fieldName: "TARGET_VELOCITY_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TARGET_VELOCITY_Y.p, fieldName: "TARGET_VELOCITY_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TARGET_VELOCITY_Z.p, fieldName: "TARGET_VELOCITY_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MISS_DISTANCE.p, fieldName: "MISS_DISTANCE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SEEKER.p, fieldName: "SEEKER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MOTOR.p, fieldName: "MOTOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GUIDANCE_CMD.p, fieldName: "GUIDANCE_CMD", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PHASE.p, fieldName: "PHASE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.GUIDANCE_LAW.p, fieldName: "GUIDANCE_LAW", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.ARMED.p, fieldName: "ARMED", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.TIME_OF_FLIGHT.p, fieldName: "TIME_OF_FLIGHT", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.MAX_G.p, fieldName: "MAX_G", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.POSITION_X, fieldName: "POSITION_X", required: false, type: Double.self)
+    try _v.visit(field: VT.POSITION_Y, fieldName: "POSITION_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.POSITION_Z, fieldName: "POSITION_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.VELOCITY_X, fieldName: "VELOCITY_X", required: false, type: Double.self)
+    try _v.visit(field: VT.VELOCITY_Y, fieldName: "VELOCITY_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.VELOCITY_Z, fieldName: "VELOCITY_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.ATTITUDE_X, fieldName: "ATTITUDE_X", required: false, type: Double.self)
+    try _v.visit(field: VT.ATTITUDE_Y, fieldName: "ATTITUDE_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.ATTITUDE_Z, fieldName: "ATTITUDE_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.ATTITUDE_W, fieldName: "ATTITUDE_W", required: false, type: Double.self)
+    try _v.visit(field: VT.OMEGA_X, fieldName: "OMEGA_X", required: false, type: Double.self)
+    try _v.visit(field: VT.OMEGA_Y, fieldName: "OMEGA_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.OMEGA_Z, fieldName: "OMEGA_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.MASS, fieldName: "MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.MASS_INITIAL, fieldName: "MASS_INITIAL", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGET_POSITION_X, fieldName: "TARGET_POSITION_X", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGET_POSITION_Y, fieldName: "TARGET_POSITION_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGET_POSITION_Z, fieldName: "TARGET_POSITION_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGET_VELOCITY_X, fieldName: "TARGET_VELOCITY_X", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGET_VELOCITY_Y, fieldName: "TARGET_VELOCITY_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGET_VELOCITY_Z, fieldName: "TARGET_VELOCITY_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.MISS_DISTANCE, fieldName: "MISS_DISTANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.SEEKER, fieldName: "SEEKER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MOTOR, fieldName: "MOTOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GUIDANCE_CMD, fieldName: "GUIDANCE_CMD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PHASE, fieldName: "PHASE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.GUIDANCE_LAW, fieldName: "GUIDANCE_LAW", required: false, type: UInt8.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.ARMED, fieldName: "ARMED", required: false, type: UInt8.self)
+    try _v.visit(field: VT.TIME_OF_FLIGHT, fieldName: "TIME_OF_FLIGHT", required: false, type: Float32.self)
+    try _v.visit(field: VT.MAX_G, fieldName: "MAX_G", required: false, type: Float32.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

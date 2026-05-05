@@ -121,66 +121,64 @@ public struct AST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COMMAND = 4
-    case PROPAGATION_REQUEST = 6
-    case TLE = 8
-    case INITIAL_ELEMENTS = 10
-    case INITIAL_STATE = 12
-    case EPOCH_MS = 14
-    case MANEUVER_PLAN = 16
-    case CONJUNCTION_PRIMARY = 18
-    case CONJUNCTION_SECONDARY = 20
-    case OBSERVATIONS = 22
-    case OD_CONFIG = 24
-    case GROUND_STATION = 26
-    case FORMATION_CONFIG = 28
-    case TARGET_ELEMENTS = 30
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COMMAND: VOffset = 4
+    static let PROPAGATION_REQUEST: VOffset = 6
+    static let TLE: VOffset = 8
+    static let INITIAL_ELEMENTS: VOffset = 10
+    static let INITIAL_STATE: VOffset = 12
+    static let EPOCH_MS: VOffset = 14
+    static let MANEUVER_PLAN: VOffset = 16
+    static let CONJUNCTION_PRIMARY: VOffset = 18
+    static let CONJUNCTION_SECONDARY: VOffset = 20
+    static let OBSERVATIONS: VOffset = 22
+    static let OD_CONFIG: VOffset = 24
+    static let GROUND_STATION: VOffset = 26
+    static let FORMATION_CONFIG: VOffset = 28
+    static let TARGET_ELEMENTS: VOffset = 30
   }
 
-  public var COMMAND: String? { let o = _accessor.offset(VTOFFSET.COMMAND.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COMMANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMAND.v) }
-  public var PROPAGATION_REQUEST: String? { let o = _accessor.offset(VTOFFSET.PROPAGATION_REQUEST.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PROPAGATION_REQUESTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PROPAGATION_REQUEST.v) }
-  public var TLE: String? { let o = _accessor.offset(VTOFFSET.TLE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TLESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TLE.v) }
-  public var INITIAL_ELEMENTS: String? { let o = _accessor.offset(VTOFFSET.INITIAL_ELEMENTS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INITIAL_ELEMENTSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_ELEMENTS.v) }
-  public var INITIAL_STATE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_STATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INITIAL_STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_STATE.v) }
-  public var EPOCH_MS: Int64 { let o = _accessor.offset(VTOFFSET.EPOCH_MS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
-  public var MANEUVER_PLAN: String? { let o = _accessor.offset(VTOFFSET.MANEUVER_PLAN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MANEUVER_PLANSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MANEUVER_PLAN.v) }
-  public var CONJUNCTION_PRIMARY: String? { let o = _accessor.offset(VTOFFSET.CONJUNCTION_PRIMARY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONJUNCTION_PRIMARYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONJUNCTION_PRIMARY.v) }
-  public var CONJUNCTION_SECONDARY: String? { let o = _accessor.offset(VTOFFSET.CONJUNCTION_SECONDARY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONJUNCTION_SECONDARYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONJUNCTION_SECONDARY.v) }
-  public var OBSERVATIONS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.OBSERVATIONS.v, byteSize: 4) }
-  public var OD_CONFIG: String? { let o = _accessor.offset(VTOFFSET.OD_CONFIG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OD_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OD_CONFIG.v) }
-  public var GROUND_STATION: String? { let o = _accessor.offset(VTOFFSET.GROUND_STATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GROUND_STATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GROUND_STATION.v) }
-  public var FORMATION_CONFIG: String? { let o = _accessor.offset(VTOFFSET.FORMATION_CONFIG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FORMATION_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FORMATION_CONFIG.v) }
-  public var TARGET_ELEMENTS: String? { let o = _accessor.offset(VTOFFSET.TARGET_ELEMENTS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TARGET_ELEMENTSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TARGET_ELEMENTS.v) }
+  public var COMMAND: String? { let o = _accessor.offset(VT.COMMAND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMAND) }
+  public var PROPAGATION_REQUEST: String? { let o = _accessor.offset(VT.PROPAGATION_REQUEST); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATION_REQUESTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATION_REQUEST) }
+  public var TLE: String? { let o = _accessor.offset(VT.TLE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TLE) }
+  public var INITIAL_ELEMENTS: String? { let o = _accessor.offset(VT.INITIAL_ELEMENTS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INITIAL_ELEMENTSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INITIAL_ELEMENTS) }
+  public var INITIAL_STATE: String? { let o = _accessor.offset(VT.INITIAL_STATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INITIAL_STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INITIAL_STATE) }
+  public var EPOCH_MS: Int64 { let o = _accessor.offset(VT.EPOCH_MS); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var MANEUVER_PLAN: String? { let o = _accessor.offset(VT.MANEUVER_PLAN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MANEUVER_PLANSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MANEUVER_PLAN) }
+  public var CONJUNCTION_PRIMARY: String? { let o = _accessor.offset(VT.CONJUNCTION_PRIMARY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONJUNCTION_PRIMARYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONJUNCTION_PRIMARY) }
+  public var CONJUNCTION_SECONDARY: String? { let o = _accessor.offset(VT.CONJUNCTION_SECONDARY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONJUNCTION_SECONDARYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONJUNCTION_SECONDARY) }
+  public var OBSERVATIONS: FlatbufferVector<String?> { return _accessor.vector(at: VT.OBSERVATIONS, byteSize: 4) }
+  public var OD_CONFIG: String? { let o = _accessor.offset(VT.OD_CONFIG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_CONFIG) }
+  public var GROUND_STATION: String? { let o = _accessor.offset(VT.GROUND_STATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GROUND_STATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GROUND_STATION) }
+  public var FORMATION_CONFIG: String? { let o = _accessor.offset(VT.FORMATION_CONFIG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FORMATION_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FORMATION_CONFIG) }
+  public var TARGET_ELEMENTS: String? { let o = _accessor.offset(VT.TARGET_ELEMENTS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGET_ELEMENTSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET_ELEMENTS) }
   public static func startAST(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
-  public static func add(COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND, at: VTOFFSET.COMMAND.p) }
-  public static func add(PROPAGATION_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATION_REQUEST, at: VTOFFSET.PROPAGATION_REQUEST.p) }
-  public static func add(TLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TLE, at: VTOFFSET.TLE.p) }
-  public static func add(INITIAL_ELEMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_ELEMENTS, at: VTOFFSET.INITIAL_ELEMENTS.p) }
-  public static func add(INITIAL_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_STATE, at: VTOFFSET.INITIAL_STATE.p) }
-  public static func add(EPOCH_MS: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_MS, def: 0, at: VTOFFSET.EPOCH_MS.p) }
-  public static func add(MANEUVER_PLAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANEUVER_PLAN, at: VTOFFSET.MANEUVER_PLAN.p) }
-  public static func add(CONJUNCTION_PRIMARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONJUNCTION_PRIMARY, at: VTOFFSET.CONJUNCTION_PRIMARY.p) }
-  public static func add(CONJUNCTION_SECONDARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONJUNCTION_SECONDARY, at: VTOFFSET.CONJUNCTION_SECONDARY.p) }
-  public static func addVectorOf(OBSERVATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVATIONS, at: VTOFFSET.OBSERVATIONS.p) }
-  public static func add(OD_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_CONFIG, at: VTOFFSET.OD_CONFIG.p) }
-  public static func add(GROUND_STATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUND_STATION, at: VTOFFSET.GROUND_STATION.p) }
-  public static func add(FORMATION_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FORMATION_CONFIG, at: VTOFFSET.FORMATION_CONFIG.p) }
-  public static func add(TARGET_ELEMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_ELEMENTS, at: VTOFFSET.TARGET_ELEMENTS.p) }
+  public static func add(COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND, at: VT.COMMAND) }
+  public static func add(PROPAGATION_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATION_REQUEST, at: VT.PROPAGATION_REQUEST) }
+  public static func add(TLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TLE, at: VT.TLE) }
+  public static func add(INITIAL_ELEMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_ELEMENTS, at: VT.INITIAL_ELEMENTS) }
+  public static func add(INITIAL_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_STATE, at: VT.INITIAL_STATE) }
+  public static func add(EPOCH_MS: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_MS, def: 0, at: VT.EPOCH_MS) }
+  public static func add(MANEUVER_PLAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANEUVER_PLAN, at: VT.MANEUVER_PLAN) }
+  public static func add(CONJUNCTION_PRIMARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONJUNCTION_PRIMARY, at: VT.CONJUNCTION_PRIMARY) }
+  public static func add(CONJUNCTION_SECONDARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONJUNCTION_SECONDARY, at: VT.CONJUNCTION_SECONDARY) }
+  public static func addVectorOf(OBSERVATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVATIONS, at: VT.OBSERVATIONS) }
+  public static func add(OD_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_CONFIG, at: VT.OD_CONFIG) }
+  public static func add(GROUND_STATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUND_STATION, at: VT.GROUND_STATION) }
+  public static func add(FORMATION_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FORMATION_CONFIG, at: VT.FORMATION_CONFIG) }
+  public static func add(TARGET_ELEMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_ELEMENTS, at: VT.TARGET_ELEMENTS) }
   public static func endAST(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAST(
     _ fbb: inout FlatBufferBuilder,
@@ -219,20 +217,20 @@ public struct AST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COMMAND.p, fieldName: "COMMAND", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PROPAGATION_REQUEST.p, fieldName: "PROPAGATION_REQUEST", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TLE.p, fieldName: "TLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_ELEMENTS.p, fieldName: "INITIAL_ELEMENTS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_STATE.p, fieldName: "INITIAL_STATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EPOCH_MS.p, fieldName: "EPOCH_MS", required: false, type: Int64.self)
-    try _v.visit(field: VTOFFSET.MANEUVER_PLAN.p, fieldName: "MANEUVER_PLAN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONJUNCTION_PRIMARY.p, fieldName: "CONJUNCTION_PRIMARY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONJUNCTION_SECONDARY.p, fieldName: "CONJUNCTION_SECONDARY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBSERVATIONS.p, fieldName: "OBSERVATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.OD_CONFIG.p, fieldName: "OD_CONFIG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GROUND_STATION.p, fieldName: "GROUND_STATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FORMATION_CONFIG.p, fieldName: "FORMATION_CONFIG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TARGET_ELEMENTS.p, fieldName: "TARGET_ELEMENTS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMAND, fieldName: "COMMAND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPAGATION_REQUEST, fieldName: "PROPAGATION_REQUEST", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TLE, fieldName: "TLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INITIAL_ELEMENTS, fieldName: "INITIAL_ELEMENTS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INITIAL_STATE, fieldName: "INITIAL_STATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH_MS, fieldName: "EPOCH_MS", required: false, type: Int64.self)
+    try _v.visit(field: VT.MANEUVER_PLAN, fieldName: "MANEUVER_PLAN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONJUNCTION_PRIMARY, fieldName: "CONJUNCTION_PRIMARY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONJUNCTION_SECONDARY, fieldName: "CONJUNCTION_SECONDARY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBSERVATIONS, fieldName: "OBSERVATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.OD_CONFIG, fieldName: "OD_CONFIG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GROUND_STATION, fieldName: "GROUND_STATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FORMATION_CONFIG, fieldName: "FORMATION_CONFIG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGET_ELEMENTS, fieldName: "TARGET_ELEMENTS", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

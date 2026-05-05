@@ -18,7 +18,7 @@ type HDWalletModule = {
 
 let _wallet: Promise<HDWalletModule> | null = null;
 function hdWallet(): Promise<HDWalletModule> {
-  if (!_wallet) _wallet = initHDWallet() as Promise<HDWalletModule>;
+  if (!_wallet) _wallet = initHDWallet() as unknown as Promise<HDWalletModule>;
   return _wallet;
 }
 

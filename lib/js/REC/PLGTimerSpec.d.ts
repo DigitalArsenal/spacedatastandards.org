@@ -8,10 +8,10 @@ export declare class PLGTimerSpec implements flatbuffers.IUnpackableObject<PLGTi
     __init(i: number, bb: flatbuffers.ByteBuffer): PLGTimerSpec;
     static getRootAsPLGTimerSpec(bb: flatbuffers.ByteBuffer, obj?: PLGTimerSpec): PLGTimerSpec;
     static getSizePrefixedRootAsPLGTimerSpec(bb: flatbuffers.ByteBuffer, obj?: PLGTimerSpec): PLGTimerSpec;
-    TIMER_ID(): string | null;
-    TIMER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    METHOD_ID(): string | null;
-    METHOD_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    TIMER_ID(): string;
+    TIMER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    METHOD_ID(): string;
+    METHOD_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     INPUT_PORT_ID(): string | null;
     INPUT_PORT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     DEFAULT_INTERVAL_MS(): bigint;

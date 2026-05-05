@@ -31,6 +31,7 @@ export * as CZM from './CZM/main.js';
 export * as DFH from './DFH/main.js';
 export * as DMG from './DMG/main.js';
 export * as DOA from './DOA/main.js';
+export * as DPM from './DPM/main.js';
 export * as EME from './EME/main.js';
 export * as ENC from './ENC/main.js';
 export * as ENV from './ENV/main.js';

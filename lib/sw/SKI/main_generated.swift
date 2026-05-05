@@ -36,193 +36,191 @@ public struct SKI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case ON_ORBIT = 6
-    case ORIG_OBJECT_ID = 8
-    case SAT_NO = 10
-    case ID_SENSOR = 12
-    case ORIG_SENSOR_ID = 14
-    case SENLAT = 16
-    case SENLON = 18
-    case SENALT = 20
-    case SENX = 22
-    case SENY = 24
-    case SENZ = 26
-    case SEN_QUAT = 28
-    case SEN_QUAT_DOT = 30
-    case IMAGE_TYPE = 32
-    case EXP_START_TIME = 34
-    case EXP_END_TIME = 36
-    case IMAGE_SOURCE_INFO = 38
-    case TOP_LEFT_START_AZ = 40
-    case TOP_LEFT_START_EL = 42
-    case TOP_LEFT_STOP_AZ = 44
-    case TOP_LEFT_STOP_EL = 46
-    case IMAGE_SET_ID = 48
-    case IMAGE_SET_LENGTH = 50
-    case SEQUENCE_ID = 52
-    case FRAME_FOVWIDTH = 54
-    case FRAME_FOVHEIGHT = 56
-    case PIXEL_FOVWIDTH = 58
-    case PIXEL_FOVHEIGHT = 60
-    case FRAME_WIDTH_PIXELS = 62
-    case FRAME_HEIGHT_PIXELS = 64
-    case PIXEL_BIT_DEPTH = 66
-    case ANNOTATION_KEY = 68
-    case CALIBRATION_KEY = 70
-    case FILENAME = 72
-    case FILESIZE = 74
-    case CHECKSUM_VALUE = 76
-    case TRANSACTION_ID = 78
-    case TAGS = 80
-    case DESCRIPTION = 82
-    case EO_OBSERVATIONS = 84
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let ON_ORBIT: VOffset = 6
+    static let ORIG_OBJECT_ID: VOffset = 8
+    static let SAT_NO: VOffset = 10
+    static let ID_SENSOR: VOffset = 12
+    static let ORIG_SENSOR_ID: VOffset = 14
+    static let SENLAT: VOffset = 16
+    static let SENLON: VOffset = 18
+    static let SENALT: VOffset = 20
+    static let SENX: VOffset = 22
+    static let SENY: VOffset = 24
+    static let SENZ: VOffset = 26
+    static let SEN_QUAT: VOffset = 28
+    static let SEN_QUAT_DOT: VOffset = 30
+    static let IMAGE_TYPE: VOffset = 32
+    static let EXP_START_TIME: VOffset = 34
+    static let EXP_END_TIME: VOffset = 36
+    static let IMAGE_SOURCE_INFO: VOffset = 38
+    static let TOP_LEFT_START_AZ: VOffset = 40
+    static let TOP_LEFT_START_EL: VOffset = 42
+    static let TOP_LEFT_STOP_AZ: VOffset = 44
+    static let TOP_LEFT_STOP_EL: VOffset = 46
+    static let IMAGE_SET_ID: VOffset = 48
+    static let IMAGE_SET_LENGTH: VOffset = 50
+    static let SEQUENCE_ID: VOffset = 52
+    static let FRAME_FOVWIDTH: VOffset = 54
+    static let FRAME_FOVHEIGHT: VOffset = 56
+    static let PIXEL_FOVWIDTH: VOffset = 58
+    static let PIXEL_FOVHEIGHT: VOffset = 60
+    static let FRAME_WIDTH_PIXELS: VOffset = 62
+    static let FRAME_HEIGHT_PIXELS: VOffset = 64
+    static let PIXEL_BIT_DEPTH: VOffset = 66
+    static let ANNOTATION_KEY: VOffset = 68
+    static let CALIBRATION_KEY: VOffset = 70
+    static let FILENAME: VOffset = 72
+    static let FILESIZE: VOffset = 74
+    static let CHECKSUM_VALUE: VOffset = 76
+    static let TRANSACTION_ID: VOffset = 78
+    static let TAGS: VOffset = 80
+    static let DESCRIPTION: VOffset = 82
+    static let EO_OBSERVATIONS: VOffset = 84
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  On-orbit reference
-  public var ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ON_ORBIT.v) }
+  public var ON_ORBIT: String? { let o = _accessor.offset(VT.ON_ORBIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ON_ORBIT) }
   ///  International designator
-  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
+  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VT.ORIG_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_OBJECT_ID) }
   ///  Satellite catalog number
-  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VT.SAT_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Sensor identifier
-  public var ID_SENSOR: String? { let o = _accessor.offset(VTOFFSET.ID_SENSOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_SENSOR.v) }
+  public var ID_SENSOR: String? { let o = _accessor.offset(VT.ID_SENSOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_SENSOR) }
   ///  Original sensor identifier
-  public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_SENSOR_ID.v) }
+  public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VT.ORIG_SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_SENSOR_ID) }
   ///  Sensor geodetic latitude (degrees)
-  public var SENLAT: Double { let o = _accessor.offset(VTOFFSET.SENLAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENLAT: Double { let o = _accessor.offset(VT.SENLAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor geodetic longitude (degrees)
-  public var SENLON: Double { let o = _accessor.offset(VTOFFSET.SENLON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENLON: Double { let o = _accessor.offset(VT.SENLON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor altitude (km)
-  public var SENALT: Double { let o = _accessor.offset(VTOFFSET.SENALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENALT: Double { let o = _accessor.offset(VT.SENALT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor ECEF X position (km)
-  public var SENX: Double { let o = _accessor.offset(VTOFFSET.SENX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENX: Double { let o = _accessor.offset(VT.SENX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor ECEF Y position (km)
-  public var SENY: Double { let o = _accessor.offset(VTOFFSET.SENY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENY: Double { let o = _accessor.offset(VT.SENY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor ECEF Z position (km)
-  public var SENZ: Double { let o = _accessor.offset(VTOFFSET.SENZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENZ: Double { let o = _accessor.offset(VT.SENZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor quaternion (scalar-last: q1, q2, q3, q0)
-  public var SEN_QUAT: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SEN_QUAT.v, byteSize: 8) }
-  public func withUnsafePointerToSenQuat<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SEN_QUAT.v, body: body) }
+  public var SEN_QUAT: FlatbufferVector<Double> { return _accessor.vector(at: VT.SEN_QUAT, byteSize: 8) }
+  public func withUnsafePointerToSenQuat<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SEN_QUAT, body: body) }
   ///  Sensor quaternion rate
-  public var SEN_QUAT_DOT: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SEN_QUAT_DOT.v, byteSize: 8) }
-  public func withUnsafePointerToSenQuatDot<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SEN_QUAT_DOT.v, body: body) }
+  public var SEN_QUAT_DOT: FlatbufferVector<Double> { return _accessor.vector(at: VT.SEN_QUAT_DOT, byteSize: 8) }
+  public func withUnsafePointerToSenQuatDot<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SEN_QUAT_DOT, body: body) }
   ///  Image type
-  public var IMAGE_TYPE: imageCategory { let o = _accessor.offset(VTOFFSET.IMAGE_TYPE.v); return o == 0 ? .visible : imageCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .visible }
+  public var IMAGE_TYPE: imageCategory { let o = _accessor.offset(VT.IMAGE_TYPE); return o == 0 ? .visible : imageCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .visible }
   ///  Exposure start time (ISO 8601)
-  public var EXP_START_TIME: String? { let o = _accessor.offset(VTOFFSET.EXP_START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EXP_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXP_START_TIME.v) }
+  public var EXP_START_TIME: String? { let o = _accessor.offset(VT.EXP_START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXP_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXP_START_TIME) }
   ///  Exposure end time (ISO 8601)
-  public var EXP_END_TIME: String? { let o = _accessor.offset(VTOFFSET.EXP_END_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EXP_END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXP_END_TIME.v) }
+  public var EXP_END_TIME: String? { let o = _accessor.offset(VT.EXP_END_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXP_END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXP_END_TIME) }
   ///  Image source information
-  public var IMAGE_SOURCE_INFO: String? { let o = _accessor.offset(VTOFFSET.IMAGE_SOURCE_INFO.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IMAGE_SOURCE_INFOSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMAGE_SOURCE_INFO.v) }
+  public var IMAGE_SOURCE_INFO: String? { let o = _accessor.offset(VT.IMAGE_SOURCE_INFO); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMAGE_SOURCE_INFOSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IMAGE_SOURCE_INFO) }
   ///  Top-left corner start azimuth (degrees)
-  public var TOP_LEFT_START_AZ: Double { let o = _accessor.offset(VTOFFSET.TOP_LEFT_START_AZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TOP_LEFT_START_AZ: Double { let o = _accessor.offset(VT.TOP_LEFT_START_AZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Top-left corner start elevation (degrees)
-  public var TOP_LEFT_START_EL: Double { let o = _accessor.offset(VTOFFSET.TOP_LEFT_START_EL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TOP_LEFT_START_EL: Double { let o = _accessor.offset(VT.TOP_LEFT_START_EL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Top-left corner stop azimuth (degrees)
-  public var TOP_LEFT_STOP_AZ: Double { let o = _accessor.offset(VTOFFSET.TOP_LEFT_STOP_AZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TOP_LEFT_STOP_AZ: Double { let o = _accessor.offset(VT.TOP_LEFT_STOP_AZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Top-left corner stop elevation (degrees)
-  public var TOP_LEFT_STOP_EL: Double { let o = _accessor.offset(VTOFFSET.TOP_LEFT_STOP_EL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TOP_LEFT_STOP_EL: Double { let o = _accessor.offset(VT.TOP_LEFT_STOP_EL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Image set identifier
-  public var IMAGE_SET_ID: String? { let o = _accessor.offset(VTOFFSET.IMAGE_SET_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IMAGE_SET_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMAGE_SET_ID.v) }
+  public var IMAGE_SET_ID: String? { let o = _accessor.offset(VT.IMAGE_SET_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMAGE_SET_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IMAGE_SET_ID) }
   ///  Number of images in set
-  public var IMAGE_SET_LENGTH: UInt16 { let o = _accessor.offset(VTOFFSET.IMAGE_SET_LENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var IMAGE_SET_LENGTH: UInt16 { let o = _accessor.offset(VT.IMAGE_SET_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Sequence number within set
-  public var SEQUENCE_ID: UInt16 { let o = _accessor.offset(VTOFFSET.SEQUENCE_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SEQUENCE_ID: UInt16 { let o = _accessor.offset(VT.SEQUENCE_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Frame field-of-view width (degrees)
-  public var FRAME_FOVWIDTH: Double { let o = _accessor.offset(VTOFFSET.FRAME_FOVWIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FRAME_FOVWIDTH: Double { let o = _accessor.offset(VT.FRAME_FOVWIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Frame field-of-view height (degrees)
-  public var FRAME_FOVHEIGHT: Double { let o = _accessor.offset(VTOFFSET.FRAME_FOVHEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FRAME_FOVHEIGHT: Double { let o = _accessor.offset(VT.FRAME_FOVHEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pixel field-of-view width (arcseconds)
-  public var PIXEL_FOVWIDTH: Double { let o = _accessor.offset(VTOFFSET.PIXEL_FOVWIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PIXEL_FOVWIDTH: Double { let o = _accessor.offset(VT.PIXEL_FOVWIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pixel field-of-view height (arcseconds)
-  public var PIXEL_FOVHEIGHT: Double { let o = _accessor.offset(VTOFFSET.PIXEL_FOVHEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PIXEL_FOVHEIGHT: Double { let o = _accessor.offset(VT.PIXEL_FOVHEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Frame width (pixels)
-  public var FRAME_WIDTH_PIXELS: UInt16 { let o = _accessor.offset(VTOFFSET.FRAME_WIDTH_PIXELS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var FRAME_WIDTH_PIXELS: UInt16 { let o = _accessor.offset(VT.FRAME_WIDTH_PIXELS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Frame height (pixels)
-  public var FRAME_HEIGHT_PIXELS: UInt16 { let o = _accessor.offset(VTOFFSET.FRAME_HEIGHT_PIXELS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var FRAME_HEIGHT_PIXELS: UInt16 { let o = _accessor.offset(VT.FRAME_HEIGHT_PIXELS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Pixel bit depth
-  public var PIXEL_BIT_DEPTH: UInt8 { let o = _accessor.offset(VTOFFSET.PIXEL_BIT_DEPTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var PIXEL_BIT_DEPTH: UInt8 { let o = _accessor.offset(VT.PIXEL_BIT_DEPTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Annotation key reference
-  public var ANNOTATION_KEY: String? { let o = _accessor.offset(VTOFFSET.ANNOTATION_KEY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ANNOTATION_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ANNOTATION_KEY.v) }
+  public var ANNOTATION_KEY: String? { let o = _accessor.offset(VT.ANNOTATION_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ANNOTATION_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ANNOTATION_KEY) }
   ///  Calibration key reference
-  public var CALIBRATION_KEY: String? { let o = _accessor.offset(VTOFFSET.CALIBRATION_KEY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CALIBRATION_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CALIBRATION_KEY.v) }
+  public var CALIBRATION_KEY: String? { let o = _accessor.offset(VT.CALIBRATION_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CALIBRATION_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CALIBRATION_KEY) }
   ///  Image filename
-  public var FILENAME: String? { let o = _accessor.offset(VTOFFSET.FILENAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FILENAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FILENAME.v) }
+  public var FILENAME: String? { let o = _accessor.offset(VT.FILENAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILENAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILENAME) }
   ///  File size (bytes)
-  public var FILESIZE: Int64 { let o = _accessor.offset(VTOFFSET.FILESIZE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var FILESIZE: Int64 { let o = _accessor.offset(VT.FILESIZE); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  File checksum value
-  public var CHECKSUM_VALUE: String? { let o = _accessor.offset(VTOFFSET.CHECKSUM_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CHECKSUM_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CHECKSUM_VALUE.v) }
+  public var CHECKSUM_VALUE: String? { let o = _accessor.offset(VT.CHECKSUM_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHECKSUM_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHECKSUM_VALUE) }
   ///  Transaction identifier
-  public var TRANSACTION_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSACTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSACTION_ID.v) }
+  public var TRANSACTION_ID: String? { let o = _accessor.offset(VT.TRANSACTION_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRANSACTION_ID) }
   ///  Associated tags
-  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TAGS.v, byteSize: 4) }
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VT.TAGS, byteSize: 4) }
   ///  Description
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Associated EO observation references
-  public var EO_OBSERVATIONS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.EO_OBSERVATIONS.v, byteSize: 4) }
+  public var EO_OBSERVATIONS: FlatbufferVector<String?> { return _accessor.vector(at: VT.EO_OBSERVATIONS, byteSize: 4) }
   public static func startSKI(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 41) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VTOFFSET.ON_ORBIT.p) }
-  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
-  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
-  public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VTOFFSET.ID_SENSOR.p) }
-  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
-  public static func add(SENLAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLAT, def: 0.0, at: VTOFFSET.SENLAT.p) }
-  public static func add(SENLON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLON, def: 0.0, at: VTOFFSET.SENLON.p) }
-  public static func add(SENALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENALT, def: 0.0, at: VTOFFSET.SENALT.p) }
-  public static func add(SENX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENX, def: 0.0, at: VTOFFSET.SENX.p) }
-  public static func add(SENY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENY, def: 0.0, at: VTOFFSET.SENY.p) }
-  public static func add(SENZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENZ, def: 0.0, at: VTOFFSET.SENZ.p) }
-  public static func addVectorOf(SEN_QUAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_QUAT, at: VTOFFSET.SEN_QUAT.p) }
-  public static func addVectorOf(SEN_QUAT_DOT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_QUAT_DOT, at: VTOFFSET.SEN_QUAT_DOT.p) }
-  public static func add(IMAGE_TYPE: imageCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_TYPE.rawValue, def: 0, at: VTOFFSET.IMAGE_TYPE.p) }
-  public static func add(EXP_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXP_START_TIME, at: VTOFFSET.EXP_START_TIME.p) }
-  public static func add(EXP_END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXP_END_TIME, at: VTOFFSET.EXP_END_TIME.p) }
-  public static func add(IMAGE_SOURCE_INFO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE_SOURCE_INFO, at: VTOFFSET.IMAGE_SOURCE_INFO.p) }
-  public static func add(TOP_LEFT_START_AZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOP_LEFT_START_AZ, def: 0.0, at: VTOFFSET.TOP_LEFT_START_AZ.p) }
-  public static func add(TOP_LEFT_START_EL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOP_LEFT_START_EL, def: 0.0, at: VTOFFSET.TOP_LEFT_START_EL.p) }
-  public static func add(TOP_LEFT_STOP_AZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOP_LEFT_STOP_AZ, def: 0.0, at: VTOFFSET.TOP_LEFT_STOP_AZ.p) }
-  public static func add(TOP_LEFT_STOP_EL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOP_LEFT_STOP_EL, def: 0.0, at: VTOFFSET.TOP_LEFT_STOP_EL.p) }
-  public static func add(IMAGE_SET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE_SET_ID, at: VTOFFSET.IMAGE_SET_ID.p) }
-  public static func add(IMAGE_SET_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_SET_LENGTH, def: 0, at: VTOFFSET.IMAGE_SET_LENGTH.p) }
-  public static func add(SEQUENCE_ID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEQUENCE_ID, def: 0, at: VTOFFSET.SEQUENCE_ID.p) }
-  public static func add(FRAME_FOVWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_FOVWIDTH, def: 0.0, at: VTOFFSET.FRAME_FOVWIDTH.p) }
-  public static func add(FRAME_FOVHEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_FOVHEIGHT, def: 0.0, at: VTOFFSET.FRAME_FOVHEIGHT.p) }
-  public static func add(PIXEL_FOVWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_FOVWIDTH, def: 0.0, at: VTOFFSET.PIXEL_FOVWIDTH.p) }
-  public static func add(PIXEL_FOVHEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_FOVHEIGHT, def: 0.0, at: VTOFFSET.PIXEL_FOVHEIGHT.p) }
-  public static func add(FRAME_WIDTH_PIXELS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_WIDTH_PIXELS, def: 0, at: VTOFFSET.FRAME_WIDTH_PIXELS.p) }
-  public static func add(FRAME_HEIGHT_PIXELS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_HEIGHT_PIXELS, def: 0, at: VTOFFSET.FRAME_HEIGHT_PIXELS.p) }
-  public static func add(PIXEL_BIT_DEPTH: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_BIT_DEPTH, def: 0, at: VTOFFSET.PIXEL_BIT_DEPTH.p) }
-  public static func add(ANNOTATION_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANNOTATION_KEY, at: VTOFFSET.ANNOTATION_KEY.p) }
-  public static func add(CALIBRATION_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CALIBRATION_KEY, at: VTOFFSET.CALIBRATION_KEY.p) }
-  public static func add(FILENAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILENAME, at: VTOFFSET.FILENAME.p) }
-  public static func add(FILESIZE: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILESIZE, def: 0, at: VTOFFSET.FILESIZE.p) }
-  public static func add(CHECKSUM_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHECKSUM_VALUE, at: VTOFFSET.CHECKSUM_VALUE.p) }
-  public static func add(TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSACTION_ID, at: VTOFFSET.TRANSACTION_ID.p) }
-  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VTOFFSET.TAGS.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
-  public static func addVectorOf(EO_OBSERVATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EO_OBSERVATIONS, at: VTOFFSET.EO_OBSERVATIONS.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VT.ON_ORBIT) }
+  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VT.ORIG_OBJECT_ID) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VT.SAT_NO) }
+  public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VT.ID_SENSOR) }
+  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VT.ORIG_SENSOR_ID) }
+  public static func add(SENLAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLAT, def: 0.0, at: VT.SENLAT) }
+  public static func add(SENLON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLON, def: 0.0, at: VT.SENLON) }
+  public static func add(SENALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENALT, def: 0.0, at: VT.SENALT) }
+  public static func add(SENX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENX, def: 0.0, at: VT.SENX) }
+  public static func add(SENY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENY, def: 0.0, at: VT.SENY) }
+  public static func add(SENZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENZ, def: 0.0, at: VT.SENZ) }
+  public static func addVectorOf(SEN_QUAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_QUAT, at: VT.SEN_QUAT) }
+  public static func addVectorOf(SEN_QUAT_DOT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_QUAT_DOT, at: VT.SEN_QUAT_DOT) }
+  public static func add(IMAGE_TYPE: imageCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_TYPE.rawValue, def: 0, at: VT.IMAGE_TYPE) }
+  public static func add(EXP_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXP_START_TIME, at: VT.EXP_START_TIME) }
+  public static func add(EXP_END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXP_END_TIME, at: VT.EXP_END_TIME) }
+  public static func add(IMAGE_SOURCE_INFO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE_SOURCE_INFO, at: VT.IMAGE_SOURCE_INFO) }
+  public static func add(TOP_LEFT_START_AZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOP_LEFT_START_AZ, def: 0.0, at: VT.TOP_LEFT_START_AZ) }
+  public static func add(TOP_LEFT_START_EL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOP_LEFT_START_EL, def: 0.0, at: VT.TOP_LEFT_START_EL) }
+  public static func add(TOP_LEFT_STOP_AZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOP_LEFT_STOP_AZ, def: 0.0, at: VT.TOP_LEFT_STOP_AZ) }
+  public static func add(TOP_LEFT_STOP_EL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOP_LEFT_STOP_EL, def: 0.0, at: VT.TOP_LEFT_STOP_EL) }
+  public static func add(IMAGE_SET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE_SET_ID, at: VT.IMAGE_SET_ID) }
+  public static func add(IMAGE_SET_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMAGE_SET_LENGTH, def: 0, at: VT.IMAGE_SET_LENGTH) }
+  public static func add(SEQUENCE_ID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEQUENCE_ID, def: 0, at: VT.SEQUENCE_ID) }
+  public static func add(FRAME_FOVWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_FOVWIDTH, def: 0.0, at: VT.FRAME_FOVWIDTH) }
+  public static func add(FRAME_FOVHEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_FOVHEIGHT, def: 0.0, at: VT.FRAME_FOVHEIGHT) }
+  public static func add(PIXEL_FOVWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_FOVWIDTH, def: 0.0, at: VT.PIXEL_FOVWIDTH) }
+  public static func add(PIXEL_FOVHEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_FOVHEIGHT, def: 0.0, at: VT.PIXEL_FOVHEIGHT) }
+  public static func add(FRAME_WIDTH_PIXELS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_WIDTH_PIXELS, def: 0, at: VT.FRAME_WIDTH_PIXELS) }
+  public static func add(FRAME_HEIGHT_PIXELS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_HEIGHT_PIXELS, def: 0, at: VT.FRAME_HEIGHT_PIXELS) }
+  public static func add(PIXEL_BIT_DEPTH: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_BIT_DEPTH, def: 0, at: VT.PIXEL_BIT_DEPTH) }
+  public static func add(ANNOTATION_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANNOTATION_KEY, at: VT.ANNOTATION_KEY) }
+  public static func add(CALIBRATION_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CALIBRATION_KEY, at: VT.CALIBRATION_KEY) }
+  public static func add(FILENAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILENAME, at: VT.FILENAME) }
+  public static func add(FILESIZE: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILESIZE, def: 0, at: VT.FILESIZE) }
+  public static func add(CHECKSUM_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHECKSUM_VALUE, at: VT.CHECKSUM_VALUE) }
+  public static func add(TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSACTION_ID, at: VT.TRANSACTION_ID) }
+  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VT.TAGS) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func addVectorOf(EO_OBSERVATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EO_OBSERVATIONS, at: VT.EO_OBSERVATIONS) }
   public static func endSKI(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSKI(
     _ fbb: inout FlatBufferBuilder,
@@ -315,47 +313,47 @@ public struct SKI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ON_ORBIT.p, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ID_SENSOR.p, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID.p, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SENLAT.p, fieldName: "SENLAT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENLON.p, fieldName: "SENLON", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENALT.p, fieldName: "SENALT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENX.p, fieldName: "SENX", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENY.p, fieldName: "SENY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENZ.p, fieldName: "SENZ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SEN_QUAT.p, fieldName: "SEN_QUAT", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.SEN_QUAT_DOT.p, fieldName: "SEN_QUAT_DOT", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.IMAGE_TYPE.p, fieldName: "IMAGE_TYPE", required: false, type: imageCategory.self)
-    try _v.visit(field: VTOFFSET.EXP_START_TIME.p, fieldName: "EXP_START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EXP_END_TIME.p, fieldName: "EXP_END_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.IMAGE_SOURCE_INFO.p, fieldName: "IMAGE_SOURCE_INFO", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TOP_LEFT_START_AZ.p, fieldName: "TOP_LEFT_START_AZ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TOP_LEFT_START_EL.p, fieldName: "TOP_LEFT_START_EL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TOP_LEFT_STOP_AZ.p, fieldName: "TOP_LEFT_STOP_AZ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TOP_LEFT_STOP_EL.p, fieldName: "TOP_LEFT_STOP_EL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.IMAGE_SET_ID.p, fieldName: "IMAGE_SET_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.IMAGE_SET_LENGTH.p, fieldName: "IMAGE_SET_LENGTH", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.SEQUENCE_ID.p, fieldName: "SEQUENCE_ID", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.FRAME_FOVWIDTH.p, fieldName: "FRAME_FOVWIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FRAME_FOVHEIGHT.p, fieldName: "FRAME_FOVHEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PIXEL_FOVWIDTH.p, fieldName: "PIXEL_FOVWIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PIXEL_FOVHEIGHT.p, fieldName: "PIXEL_FOVHEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FRAME_WIDTH_PIXELS.p, fieldName: "FRAME_WIDTH_PIXELS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.FRAME_HEIGHT_PIXELS.p, fieldName: "FRAME_HEIGHT_PIXELS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.PIXEL_BIT_DEPTH.p, fieldName: "PIXEL_BIT_DEPTH", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.ANNOTATION_KEY.p, fieldName: "ANNOTATION_KEY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CALIBRATION_KEY.p, fieldName: "CALIBRATION_KEY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FILENAME.p, fieldName: "FILENAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FILESIZE.p, fieldName: "FILESIZE", required: false, type: Int64.self)
-    try _v.visit(field: VTOFFSET.CHECKSUM_VALUE.p, fieldName: "CHECKSUM_VALUE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRANSACTION_ID.p, fieldName: "TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TAGS.p, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EO_OBSERVATIONS.p, fieldName: "EO_OBSERVATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ON_ORBIT, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIG_OBJECT_ID, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAT_NO, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ID_SENSOR, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIG_SENSOR_ID, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SENLAT, fieldName: "SENLAT", required: false, type: Double.self)
+    try _v.visit(field: VT.SENLON, fieldName: "SENLON", required: false, type: Double.self)
+    try _v.visit(field: VT.SENALT, fieldName: "SENALT", required: false, type: Double.self)
+    try _v.visit(field: VT.SENX, fieldName: "SENX", required: false, type: Double.self)
+    try _v.visit(field: VT.SENY, fieldName: "SENY", required: false, type: Double.self)
+    try _v.visit(field: VT.SENZ, fieldName: "SENZ", required: false, type: Double.self)
+    try _v.visit(field: VT.SEN_QUAT, fieldName: "SEN_QUAT", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SEN_QUAT_DOT, fieldName: "SEN_QUAT_DOT", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.IMAGE_TYPE, fieldName: "IMAGE_TYPE", required: false, type: imageCategory.self)
+    try _v.visit(field: VT.EXP_START_TIME, fieldName: "EXP_START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXP_END_TIME, fieldName: "EXP_END_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IMAGE_SOURCE_INFO, fieldName: "IMAGE_SOURCE_INFO", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TOP_LEFT_START_AZ, fieldName: "TOP_LEFT_START_AZ", required: false, type: Double.self)
+    try _v.visit(field: VT.TOP_LEFT_START_EL, fieldName: "TOP_LEFT_START_EL", required: false, type: Double.self)
+    try _v.visit(field: VT.TOP_LEFT_STOP_AZ, fieldName: "TOP_LEFT_STOP_AZ", required: false, type: Double.self)
+    try _v.visit(field: VT.TOP_LEFT_STOP_EL, fieldName: "TOP_LEFT_STOP_EL", required: false, type: Double.self)
+    try _v.visit(field: VT.IMAGE_SET_ID, fieldName: "IMAGE_SET_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IMAGE_SET_LENGTH, fieldName: "IMAGE_SET_LENGTH", required: false, type: UInt16.self)
+    try _v.visit(field: VT.SEQUENCE_ID, fieldName: "SEQUENCE_ID", required: false, type: UInt16.self)
+    try _v.visit(field: VT.FRAME_FOVWIDTH, fieldName: "FRAME_FOVWIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.FRAME_FOVHEIGHT, fieldName: "FRAME_FOVHEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.PIXEL_FOVWIDTH, fieldName: "PIXEL_FOVWIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.PIXEL_FOVHEIGHT, fieldName: "PIXEL_FOVHEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.FRAME_WIDTH_PIXELS, fieldName: "FRAME_WIDTH_PIXELS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.FRAME_HEIGHT_PIXELS, fieldName: "FRAME_HEIGHT_PIXELS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.PIXEL_BIT_DEPTH, fieldName: "PIXEL_BIT_DEPTH", required: false, type: UInt8.self)
+    try _v.visit(field: VT.ANNOTATION_KEY, fieldName: "ANNOTATION_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CALIBRATION_KEY, fieldName: "CALIBRATION_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILENAME, fieldName: "FILENAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILESIZE, fieldName: "FILESIZE", required: false, type: Int64.self)
+    try _v.visit(field: VT.CHECKSUM_VALUE, fieldName: "CHECKSUM_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRANSACTION_ID, fieldName: "TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TAGS, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EO_OBSERVATIONS, fieldName: "EO_OBSERVATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

@@ -20,64 +20,62 @@ public struct CHN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case NAME = 6
-    case TYPE = 8
-    case BEAM_NAME = 10
-    case ID_RFBAND = 12
-    case ENCRYPTION = 14
-    case PKG = 16
-    case RES = 18
-    case COMPRESSION = 20
-    case VPID = 22
-    case APID = 24
-    case SID = 26
-    case OWNER = 28
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let TYPE: VOffset = 8
+    static let BEAM_NAME: VOffset = 10
+    static let ID_RFBAND: VOffset = 12
+    static let ENCRYPTION: VOffset = 14
+    static let PKG: VOffset = 16
+    static let RES: VOffset = 18
+    static let COMPRESSION: VOffset = 20
+    static let VPID: VOffset = 22
+    static let APID: VOffset = 24
+    static let SID: VOffset = 26
+    static let OWNER: VOffset = 28
   }
 
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
-  public var TYPE: String? { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE.v) }
-  public var BEAM_NAME: String? { let o = _accessor.offset(VTOFFSET.BEAM_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BEAM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BEAM_NAME.v) }
-  public var ID_RFBAND: String? { let o = _accessor.offset(VTOFFSET.ID_RFBAND.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_RFBANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_RFBAND.v) }
-  public var ENCRYPTION: String? { let o = _accessor.offset(VTOFFSET.ENCRYPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ENCRYPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENCRYPTION.v) }
-  public var PKG: String? { let o = _accessor.offset(VTOFFSET.PKG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PKGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PKG.v) }
-  public var RES: String? { let o = _accessor.offset(VTOFFSET.RES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RES.v) }
-  public var COMPRESSION: String? { let o = _accessor.offset(VTOFFSET.COMPRESSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COMPRESSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMPRESSION.v) }
-  public var VPID: String? { let o = _accessor.offset(VTOFFSET.VPID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VPIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VPID.v) }
-  public var APID: String? { let o = _accessor.offset(VTOFFSET.APID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var APIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.APID.v) }
-  public var SID: String? { let o = _accessor.offset(VTOFFSET.SID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SID.v) }
-  public var OWNER: String? { let o = _accessor.offset(VTOFFSET.OWNER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OWNERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OWNER.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  public var TYPE: String? { let o = _accessor.offset(VT.TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TYPE) }
+  public var BEAM_NAME: String? { let o = _accessor.offset(VT.BEAM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BEAM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BEAM_NAME) }
+  public var ID_RFBAND: String? { let o = _accessor.offset(VT.ID_RFBAND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_RFBANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_RFBAND) }
+  public var ENCRYPTION: String? { let o = _accessor.offset(VT.ENCRYPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENCRYPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENCRYPTION) }
+  public var PKG: String? { let o = _accessor.offset(VT.PKG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PKGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PKG) }
+  public var RES: String? { let o = _accessor.offset(VT.RES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RES) }
+  public var COMPRESSION: String? { let o = _accessor.offset(VT.COMPRESSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMPRESSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMPRESSION) }
+  public var VPID: String? { let o = _accessor.offset(VT.VPID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VPIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VPID) }
+  public var APID: String? { let o = _accessor.offset(VT.APID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var APIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.APID) }
+  public var SID: String? { let o = _accessor.offset(VT.SID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SID) }
+  public var OWNER: String? { let o = _accessor.offset(VT.OWNER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OWNERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OWNER) }
   public static func startCHN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VTOFFSET.TYPE.p) }
-  public static func add(BEAM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEAM_NAME, at: VTOFFSET.BEAM_NAME.p) }
-  public static func add(ID_RFBAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_RFBAND, at: VTOFFSET.ID_RFBAND.p) }
-  public static func add(ENCRYPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTION, at: VTOFFSET.ENCRYPTION.p) }
-  public static func add(PKG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PKG, at: VTOFFSET.PKG.p) }
-  public static func add(RES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RES, at: VTOFFSET.RES.p) }
-  public static func add(COMPRESSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPRESSION, at: VTOFFSET.COMPRESSION.p) }
-  public static func add(VPID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VPID, at: VTOFFSET.VPID.p) }
-  public static func add(APID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: APID, at: VTOFFSET.APID.p) }
-  public static func add(SID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SID, at: VTOFFSET.SID.p) }
-  public static func add(OWNER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OWNER, at: VTOFFSET.OWNER.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VT.TYPE) }
+  public static func add(BEAM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEAM_NAME, at: VT.BEAM_NAME) }
+  public static func add(ID_RFBAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_RFBAND, at: VT.ID_RFBAND) }
+  public static func add(ENCRYPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTION, at: VT.ENCRYPTION) }
+  public static func add(PKG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PKG, at: VT.PKG) }
+  public static func add(RES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RES, at: VT.RES) }
+  public static func add(COMPRESSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPRESSION, at: VT.COMPRESSION) }
+  public static func add(VPID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VPID, at: VT.VPID) }
+  public static func add(APID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: APID, at: VT.APID) }
+  public static func add(SID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SID, at: VT.SID) }
+  public static func add(OWNER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OWNER, at: VT.OWNER) }
   public static func endCHN(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCHN(
     _ fbb: inout FlatBufferBuilder,
@@ -114,19 +112,19 @@ public struct CHN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BEAM_NAME.p, fieldName: "BEAM_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_RFBAND.p, fieldName: "ID_RFBAND", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ENCRYPTION.p, fieldName: "ENCRYPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PKG.p, fieldName: "PKG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RES.p, fieldName: "RES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COMPRESSION.p, fieldName: "COMPRESSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VPID.p, fieldName: "VPID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.APID.p, fieldName: "APID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SID.p, fieldName: "SID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OWNER.p, fieldName: "OWNER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BEAM_NAME, fieldName: "BEAM_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_RFBAND, fieldName: "ID_RFBAND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENCRYPTION, fieldName: "ENCRYPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PKG, fieldName: "PKG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RES, fieldName: "RES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMPRESSION, fieldName: "COMPRESSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VPID, fieldName: "VPID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.APID, fieldName: "APID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SID, fieldName: "SID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OWNER, fieldName: "OWNER", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

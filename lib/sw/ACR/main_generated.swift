@@ -95,96 +95,94 @@ public struct ACR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case POSITION_X = 4
-    case POSITION_Y = 6
-    case POSITION_Z = 8
-    case VELOCITY_X = 10
-    case VELOCITY_Y = 12
-    case VELOCITY_Z = 14
-    case ATTITUDE_X = 16
-    case ATTITUDE_Y = 18
-    case ATTITUDE_Z = 20
-    case ATTITUDE_W = 22
-    case OMEGA_X = 24
-    case OMEGA_Y = 26
-    case OMEGA_Z = 28
-    case MASS = 30
-    case CG_X = 32
-    case CG_Z = 34
-    case AERO = 36
-    case CONTROLS = 38
-    case ENGINE = 40
-    case GEAR_STATE = 42
-    case GEAR_POSITION = 44
-    case FLAP_POSITION = 46
-    case SPEEDBRAKE_POS = 48
-    case FLIGHT_PHASE = 50
-    case AUTOPILOT_MODE = 52
-    case WEIGHT_ON_WHEELS = 54
-    case RESERVED = 56
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let POSITION_X: VOffset = 4
+    static let POSITION_Y: VOffset = 6
+    static let POSITION_Z: VOffset = 8
+    static let VELOCITY_X: VOffset = 10
+    static let VELOCITY_Y: VOffset = 12
+    static let VELOCITY_Z: VOffset = 14
+    static let ATTITUDE_X: VOffset = 16
+    static let ATTITUDE_Y: VOffset = 18
+    static let ATTITUDE_Z: VOffset = 20
+    static let ATTITUDE_W: VOffset = 22
+    static let OMEGA_X: VOffset = 24
+    static let OMEGA_Y: VOffset = 26
+    static let OMEGA_Z: VOffset = 28
+    static let MASS: VOffset = 30
+    static let CG_X: VOffset = 32
+    static let CG_Z: VOffset = 34
+    static let AERO: VOffset = 36
+    static let CONTROLS: VOffset = 38
+    static let ENGINE: VOffset = 40
+    static let GEAR_STATE: VOffset = 42
+    static let GEAR_POSITION: VOffset = 44
+    static let FLAP_POSITION: VOffset = 46
+    static let SPEEDBRAKE_POS: VOffset = 48
+    static let FLIGHT_PHASE: VOffset = 50
+    static let AUTOPILOT_MODE: VOffset = 52
+    static let WEIGHT_ON_WHEELS: VOffset = 54
+    static let RESERVED: VOffset = 56
   }
 
-  public var POSITION_X: Double { let o = _accessor.offset(VTOFFSET.POSITION_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POSITION_Y: Double { let o = _accessor.offset(VTOFFSET.POSITION_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POSITION_Z: Double { let o = _accessor.offset(VTOFFSET.POSITION_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VELOCITY_X: Double { let o = _accessor.offset(VTOFFSET.VELOCITY_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VELOCITY_Y: Double { let o = _accessor.offset(VTOFFSET.VELOCITY_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VELOCITY_Z: Double { let o = _accessor.offset(VTOFFSET.VELOCITY_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ATTITUDE_X: Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ATTITUDE_Y: Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ATTITUDE_Z: Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ATTITUDE_W: Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_W.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var OMEGA_X: Double { let o = _accessor.offset(VTOFFSET.OMEGA_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var OMEGA_Y: Double { let o = _accessor.offset(VTOFFSET.OMEGA_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var OMEGA_Z: Double { let o = _accessor.offset(VTOFFSET.OMEGA_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MASS: Double { let o = _accessor.offset(VTOFFSET.MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CG_X: Float32 { let o = _accessor.offset(VTOFFSET.CG_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var CG_Z: Float32 { let o = _accessor.offset(VTOFFSET.CG_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var AERO: String? { let o = _accessor.offset(VTOFFSET.AERO.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AEROSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AERO.v) }
-  public var CONTROLS: String? { let o = _accessor.offset(VTOFFSET.CONTROLS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTROLSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTROLS.v) }
-  public var ENGINE: String? { let o = _accessor.offset(VTOFFSET.ENGINE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ENGINESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENGINE.v) }
-  public var GEAR_STATE: UInt8 { let o = _accessor.offset(VTOFFSET.GEAR_STATE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var GEAR_POSITION: UInt8 { let o = _accessor.offset(VTOFFSET.GEAR_POSITION.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var FLAP_POSITION: UInt8 { let o = _accessor.offset(VTOFFSET.FLAP_POSITION.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var SPEEDBRAKE_POS: UInt8 { let o = _accessor.offset(VTOFFSET.SPEEDBRAKE_POS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var FLIGHT_PHASE: UInt8 { let o = _accessor.offset(VTOFFSET.FLIGHT_PHASE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var AUTOPILOT_MODE: UInt8 { let o = _accessor.offset(VTOFFSET.AUTOPILOT_MODE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var WEIGHT_ON_WHEELS: UInt8 { let o = _accessor.offset(VTOFFSET.WEIGHT_ON_WHEELS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var RESERVED: UInt8 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var POSITION_X: Double { let o = _accessor.offset(VT.POSITION_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POSITION_Y: Double { let o = _accessor.offset(VT.POSITION_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POSITION_Z: Double { let o = _accessor.offset(VT.POSITION_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VELOCITY_X: Double { let o = _accessor.offset(VT.VELOCITY_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VELOCITY_Y: Double { let o = _accessor.offset(VT.VELOCITY_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VELOCITY_Z: Double { let o = _accessor.offset(VT.VELOCITY_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATTITUDE_X: Double { let o = _accessor.offset(VT.ATTITUDE_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATTITUDE_Y: Double { let o = _accessor.offset(VT.ATTITUDE_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATTITUDE_Z: Double { let o = _accessor.offset(VT.ATTITUDE_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATTITUDE_W: Double { let o = _accessor.offset(VT.ATTITUDE_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OMEGA_X: Double { let o = _accessor.offset(VT.OMEGA_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OMEGA_Y: Double { let o = _accessor.offset(VT.OMEGA_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OMEGA_Z: Double { let o = _accessor.offset(VT.OMEGA_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MASS: Double { let o = _accessor.offset(VT.MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CG_X: Float32 { let o = _accessor.offset(VT.CG_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var CG_Z: Float32 { let o = _accessor.offset(VT.CG_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var AERO: String? { let o = _accessor.offset(VT.AERO); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AEROSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AERO) }
+  public var CONTROLS: String? { let o = _accessor.offset(VT.CONTROLS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTROLSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTROLS) }
+  public var ENGINE: String? { let o = _accessor.offset(VT.ENGINE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENGINESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENGINE) }
+  public var GEAR_STATE: UInt8 { let o = _accessor.offset(VT.GEAR_STATE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var GEAR_POSITION: UInt8 { let o = _accessor.offset(VT.GEAR_POSITION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var FLAP_POSITION: UInt8 { let o = _accessor.offset(VT.FLAP_POSITION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var SPEEDBRAKE_POS: UInt8 { let o = _accessor.offset(VT.SPEEDBRAKE_POS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var FLIGHT_PHASE: UInt8 { let o = _accessor.offset(VT.FLIGHT_PHASE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var AUTOPILOT_MODE: UInt8 { let o = _accessor.offset(VT.AUTOPILOT_MODE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var WEIGHT_ON_WHEELS: UInt8 { let o = _accessor.offset(VT.WEIGHT_ON_WHEELS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var RESERVED: UInt8 { let o = _accessor.offset(VT.RESERVED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   public static func startACR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 27) }
-  public static func add(POSITION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_X, def: 0.0, at: VTOFFSET.POSITION_X.p) }
-  public static func add(POSITION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Y, def: 0.0, at: VTOFFSET.POSITION_Y.p) }
-  public static func add(POSITION_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Z, def: 0.0, at: VTOFFSET.POSITION_Z.p) }
-  public static func add(VELOCITY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_X, def: 0.0, at: VTOFFSET.VELOCITY_X.p) }
-  public static func add(VELOCITY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Y, def: 0.0, at: VTOFFSET.VELOCITY_Y.p) }
-  public static func add(VELOCITY_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Z, def: 0.0, at: VTOFFSET.VELOCITY_Z.p) }
-  public static func add(ATTITUDE_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_X, def: 0.0, at: VTOFFSET.ATTITUDE_X.p) }
-  public static func add(ATTITUDE_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_Y, def: 0.0, at: VTOFFSET.ATTITUDE_Y.p) }
-  public static func add(ATTITUDE_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_Z, def: 0.0, at: VTOFFSET.ATTITUDE_Z.p) }
-  public static func add(ATTITUDE_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_W, def: 0.0, at: VTOFFSET.ATTITUDE_W.p) }
-  public static func add(OMEGA_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_X, def: 0.0, at: VTOFFSET.OMEGA_X.p) }
-  public static func add(OMEGA_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_Y, def: 0.0, at: VTOFFSET.OMEGA_Y.p) }
-  public static func add(OMEGA_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_Z, def: 0.0, at: VTOFFSET.OMEGA_Z.p) }
-  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VTOFFSET.MASS.p) }
-  public static func add(CG_X: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CG_X, def: 0.0, at: VTOFFSET.CG_X.p) }
-  public static func add(CG_Z: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CG_Z, def: 0.0, at: VTOFFSET.CG_Z.p) }
-  public static func add(AERO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AERO, at: VTOFFSET.AERO.p) }
-  public static func add(CONTROLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTROLS, at: VTOFFSET.CONTROLS.p) }
-  public static func add(ENGINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENGINE, at: VTOFFSET.ENGINE.p) }
-  public static func add(GEAR_STATE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEAR_STATE, def: 0, at: VTOFFSET.GEAR_STATE.p) }
-  public static func add(GEAR_POSITION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEAR_POSITION, def: 0, at: VTOFFSET.GEAR_POSITION.p) }
-  public static func add(FLAP_POSITION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLAP_POSITION, def: 0, at: VTOFFSET.FLAP_POSITION.p) }
-  public static func add(SPEEDBRAKE_POS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPEEDBRAKE_POS, def: 0, at: VTOFFSET.SPEEDBRAKE_POS.p) }
-  public static func add(FLIGHT_PHASE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLIGHT_PHASE, def: 0, at: VTOFFSET.FLIGHT_PHASE.p) }
-  public static func add(AUTOPILOT_MODE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AUTOPILOT_MODE, def: 0, at: VTOFFSET.AUTOPILOT_MODE.p) }
-  public static func add(WEIGHT_ON_WHEELS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHT_ON_WHEELS, def: 0, at: VTOFFSET.WEIGHT_ON_WHEELS.p) }
-  public static func add(RESERVED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESERVED, def: 0, at: VTOFFSET.RESERVED.p) }
+  public static func add(POSITION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_X, def: 0.0, at: VT.POSITION_X) }
+  public static func add(POSITION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Y, def: 0.0, at: VT.POSITION_Y) }
+  public static func add(POSITION_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Z, def: 0.0, at: VT.POSITION_Z) }
+  public static func add(VELOCITY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_X, def: 0.0, at: VT.VELOCITY_X) }
+  public static func add(VELOCITY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Y, def: 0.0, at: VT.VELOCITY_Y) }
+  public static func add(VELOCITY_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Z, def: 0.0, at: VT.VELOCITY_Z) }
+  public static func add(ATTITUDE_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_X, def: 0.0, at: VT.ATTITUDE_X) }
+  public static func add(ATTITUDE_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_Y, def: 0.0, at: VT.ATTITUDE_Y) }
+  public static func add(ATTITUDE_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_Z, def: 0.0, at: VT.ATTITUDE_Z) }
+  public static func add(ATTITUDE_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_W, def: 0.0, at: VT.ATTITUDE_W) }
+  public static func add(OMEGA_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_X, def: 0.0, at: VT.OMEGA_X) }
+  public static func add(OMEGA_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_Y, def: 0.0, at: VT.OMEGA_Y) }
+  public static func add(OMEGA_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_Z, def: 0.0, at: VT.OMEGA_Z) }
+  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VT.MASS) }
+  public static func add(CG_X: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CG_X, def: 0.0, at: VT.CG_X) }
+  public static func add(CG_Z: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CG_Z, def: 0.0, at: VT.CG_Z) }
+  public static func add(AERO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AERO, at: VT.AERO) }
+  public static func add(CONTROLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTROLS, at: VT.CONTROLS) }
+  public static func add(ENGINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENGINE, at: VT.ENGINE) }
+  public static func add(GEAR_STATE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEAR_STATE, def: 0, at: VT.GEAR_STATE) }
+  public static func add(GEAR_POSITION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEAR_POSITION, def: 0, at: VT.GEAR_POSITION) }
+  public static func add(FLAP_POSITION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLAP_POSITION, def: 0, at: VT.FLAP_POSITION) }
+  public static func add(SPEEDBRAKE_POS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPEEDBRAKE_POS, def: 0, at: VT.SPEEDBRAKE_POS) }
+  public static func add(FLIGHT_PHASE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLIGHT_PHASE, def: 0, at: VT.FLIGHT_PHASE) }
+  public static func add(AUTOPILOT_MODE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AUTOPILOT_MODE, def: 0, at: VT.AUTOPILOT_MODE) }
+  public static func add(WEIGHT_ON_WHEELS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHT_ON_WHEELS, def: 0, at: VT.WEIGHT_ON_WHEELS) }
+  public static func add(RESERVED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESERVED, def: 0, at: VT.RESERVED) }
   public static func endACR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACR(
     _ fbb: inout FlatBufferBuilder,
@@ -249,33 +247,33 @@ public struct ACR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.POSITION_X.p, fieldName: "POSITION_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POSITION_Y.p, fieldName: "POSITION_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POSITION_Z.p, fieldName: "POSITION_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VELOCITY_X.p, fieldName: "VELOCITY_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VELOCITY_Y.p, fieldName: "VELOCITY_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VELOCITY_Z.p, fieldName: "VELOCITY_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_X.p, fieldName: "ATTITUDE_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_Y.p, fieldName: "ATTITUDE_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_Z.p, fieldName: "ATTITUDE_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_W.p, fieldName: "ATTITUDE_W", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OMEGA_X.p, fieldName: "OMEGA_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OMEGA_Y.p, fieldName: "OMEGA_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OMEGA_Z.p, fieldName: "OMEGA_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MASS.p, fieldName: "MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CG_X.p, fieldName: "CG_X", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.CG_Z.p, fieldName: "CG_Z", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.AERO.p, fieldName: "AERO", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONTROLS.p, fieldName: "CONTROLS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ENGINE.p, fieldName: "ENGINE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GEAR_STATE.p, fieldName: "GEAR_STATE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.GEAR_POSITION.p, fieldName: "GEAR_POSITION", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.FLAP_POSITION.p, fieldName: "FLAP_POSITION", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.SPEEDBRAKE_POS.p, fieldName: "SPEEDBRAKE_POS", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.FLIGHT_PHASE.p, fieldName: "FLIGHT_PHASE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.AUTOPILOT_MODE.p, fieldName: "AUTOPILOT_MODE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.WEIGHT_ON_WHEELS.p, fieldName: "WEIGHT_ON_WHEELS", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: UInt8.self)
+    try _v.visit(field: VT.POSITION_X, fieldName: "POSITION_X", required: false, type: Double.self)
+    try _v.visit(field: VT.POSITION_Y, fieldName: "POSITION_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.POSITION_Z, fieldName: "POSITION_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.VELOCITY_X, fieldName: "VELOCITY_X", required: false, type: Double.self)
+    try _v.visit(field: VT.VELOCITY_Y, fieldName: "VELOCITY_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.VELOCITY_Z, fieldName: "VELOCITY_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.ATTITUDE_X, fieldName: "ATTITUDE_X", required: false, type: Double.self)
+    try _v.visit(field: VT.ATTITUDE_Y, fieldName: "ATTITUDE_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.ATTITUDE_Z, fieldName: "ATTITUDE_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.ATTITUDE_W, fieldName: "ATTITUDE_W", required: false, type: Double.self)
+    try _v.visit(field: VT.OMEGA_X, fieldName: "OMEGA_X", required: false, type: Double.self)
+    try _v.visit(field: VT.OMEGA_Y, fieldName: "OMEGA_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.OMEGA_Z, fieldName: "OMEGA_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.MASS, fieldName: "MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.CG_X, fieldName: "CG_X", required: false, type: Float32.self)
+    try _v.visit(field: VT.CG_Z, fieldName: "CG_Z", required: false, type: Float32.self)
+    try _v.visit(field: VT.AERO, fieldName: "AERO", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTROLS, fieldName: "CONTROLS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENGINE, fieldName: "ENGINE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GEAR_STATE, fieldName: "GEAR_STATE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.GEAR_POSITION, fieldName: "GEAR_POSITION", required: false, type: UInt8.self)
+    try _v.visit(field: VT.FLAP_POSITION, fieldName: "FLAP_POSITION", required: false, type: UInt8.self)
+    try _v.visit(field: VT.SPEEDBRAKE_POS, fieldName: "SPEEDBRAKE_POS", required: false, type: UInt8.self)
+    try _v.visit(field: VT.FLIGHT_PHASE, fieldName: "FLIGHT_PHASE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.AUTOPILOT_MODE, fieldName: "AUTOPILOT_MODE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.WEIGHT_ON_WHEELS, fieldName: "WEIGHT_ON_WHEELS", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: UInt8.self)
     _v.finish()
   }
 }

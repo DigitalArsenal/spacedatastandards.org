@@ -45,21 +45,21 @@ MESSAGE_TYPE():licensingGrantMessageType {
 /**
  * Unique request identifier
  */
-REQUEST_ID():string|null
-REQUEST_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-REQUEST_ID(optionalEncoding?:any):string|Uint8Array|null {
+REQUEST_ID():string
+REQUEST_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+REQUEST_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
  * Canonical module identifier
  */
-MODULE_ID():string|null
-MODULE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-MODULE_ID(optionalEncoding?:any):string|Uint8Array|null {
+MODULE_ID():string
+MODULE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+MODULE_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**

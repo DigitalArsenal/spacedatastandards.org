@@ -77,52 +77,50 @@ public struct TME: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COMMAND = 4
-    case CONVERSION_REQUEST = 6
-    case LEAP_SECOND_QUERY = 8
-    case EOP_QUERY = 10
-    case SIDEREAL_QUERY = 12
-    case INTERVAL_REQUEST = 14
-    case SOLAR_POSITION_QUERY = 16
-    case LUNAR_POSITION_QUERY = 18
-    case SUNRISE_SUNSET_QUERY = 20
-    case CLOCK_PROPAGATION = 22
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COMMAND: VOffset = 4
+    static let CONVERSION_REQUEST: VOffset = 6
+    static let LEAP_SECOND_QUERY: VOffset = 8
+    static let EOP_QUERY: VOffset = 10
+    static let SIDEREAL_QUERY: VOffset = 12
+    static let INTERVAL_REQUEST: VOffset = 14
+    static let SOLAR_POSITION_QUERY: VOffset = 16
+    static let LUNAR_POSITION_QUERY: VOffset = 18
+    static let SUNRISE_SUNSET_QUERY: VOffset = 20
+    static let CLOCK_PROPAGATION: VOffset = 22
   }
 
-  public var COMMAND: String? { let o = _accessor.offset(VTOFFSET.COMMAND.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COMMANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMAND.v) }
-  public var CONVERSION_REQUEST: String? { let o = _accessor.offset(VTOFFSET.CONVERSION_REQUEST.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONVERSION_REQUESTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONVERSION_REQUEST.v) }
-  public var LEAP_SECOND_QUERY: String? { let o = _accessor.offset(VTOFFSET.LEAP_SECOND_QUERY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LEAP_SECOND_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LEAP_SECOND_QUERY.v) }
-  public var EOP_QUERY: String? { let o = _accessor.offset(VTOFFSET.EOP_QUERY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EOP_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EOP_QUERY.v) }
-  public var SIDEREAL_QUERY: String? { let o = _accessor.offset(VTOFFSET.SIDEREAL_QUERY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SIDEREAL_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SIDEREAL_QUERY.v) }
-  public var INTERVAL_REQUEST: String? { let o = _accessor.offset(VTOFFSET.INTERVAL_REQUEST.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INTERVAL_REQUESTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INTERVAL_REQUEST.v) }
-  public var SOLAR_POSITION_QUERY: String? { let o = _accessor.offset(VTOFFSET.SOLAR_POSITION_QUERY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOLAR_POSITION_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOLAR_POSITION_QUERY.v) }
-  public var LUNAR_POSITION_QUERY: String? { let o = _accessor.offset(VTOFFSET.LUNAR_POSITION_QUERY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LUNAR_POSITION_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LUNAR_POSITION_QUERY.v) }
-  public var SUNRISE_SUNSET_QUERY: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SUNRISE_SUNSET_QUERY.v, byteSize: 8) }
-  public func withUnsafePointerToSunriseSunsetQuery<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SUNRISE_SUNSET_QUERY.v, body: body) }
-  public var CLOCK_PROPAGATION: String? { let o = _accessor.offset(VTOFFSET.CLOCK_PROPAGATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CLOCK_PROPAGATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLOCK_PROPAGATION.v) }
+  public var COMMAND: String? { let o = _accessor.offset(VT.COMMAND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMAND) }
+  public var CONVERSION_REQUEST: String? { let o = _accessor.offset(VT.CONVERSION_REQUEST); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONVERSION_REQUESTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONVERSION_REQUEST) }
+  public var LEAP_SECOND_QUERY: String? { let o = _accessor.offset(VT.LEAP_SECOND_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LEAP_SECOND_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LEAP_SECOND_QUERY) }
+  public var EOP_QUERY: String? { let o = _accessor.offset(VT.EOP_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EOP_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EOP_QUERY) }
+  public var SIDEREAL_QUERY: String? { let o = _accessor.offset(VT.SIDEREAL_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIDEREAL_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIDEREAL_QUERY) }
+  public var INTERVAL_REQUEST: String? { let o = _accessor.offset(VT.INTERVAL_REQUEST); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INTERVAL_REQUESTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INTERVAL_REQUEST) }
+  public var SOLAR_POSITION_QUERY: String? { let o = _accessor.offset(VT.SOLAR_POSITION_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOLAR_POSITION_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOLAR_POSITION_QUERY) }
+  public var LUNAR_POSITION_QUERY: String? { let o = _accessor.offset(VT.LUNAR_POSITION_QUERY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LUNAR_POSITION_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LUNAR_POSITION_QUERY) }
+  public var SUNRISE_SUNSET_QUERY: FlatbufferVector<Double> { return _accessor.vector(at: VT.SUNRISE_SUNSET_QUERY, byteSize: 8) }
+  public func withUnsafePointerToSunriseSunsetQuery<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SUNRISE_SUNSET_QUERY, body: body) }
+  public var CLOCK_PROPAGATION: String? { let o = _accessor.offset(VT.CLOCK_PROPAGATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLOCK_PROPAGATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLOCK_PROPAGATION) }
   public static func startTME(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND, at: VTOFFSET.COMMAND.p) }
-  public static func add(CONVERSION_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONVERSION_REQUEST, at: VTOFFSET.CONVERSION_REQUEST.p) }
-  public static func add(LEAP_SECOND_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEAP_SECOND_QUERY, at: VTOFFSET.LEAP_SECOND_QUERY.p) }
-  public static func add(EOP_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EOP_QUERY, at: VTOFFSET.EOP_QUERY.p) }
-  public static func add(SIDEREAL_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIDEREAL_QUERY, at: VTOFFSET.SIDEREAL_QUERY.p) }
-  public static func add(INTERVAL_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERVAL_REQUEST, at: VTOFFSET.INTERVAL_REQUEST.p) }
-  public static func add(SOLAR_POSITION_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLAR_POSITION_QUERY, at: VTOFFSET.SOLAR_POSITION_QUERY.p) }
-  public static func add(LUNAR_POSITION_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LUNAR_POSITION_QUERY, at: VTOFFSET.LUNAR_POSITION_QUERY.p) }
-  public static func addVectorOf(SUNRISE_SUNSET_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUNRISE_SUNSET_QUERY, at: VTOFFSET.SUNRISE_SUNSET_QUERY.p) }
-  public static func add(CLOCK_PROPAGATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLOCK_PROPAGATION, at: VTOFFSET.CLOCK_PROPAGATION.p) }
+  public static func add(COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND, at: VT.COMMAND) }
+  public static func add(CONVERSION_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONVERSION_REQUEST, at: VT.CONVERSION_REQUEST) }
+  public static func add(LEAP_SECOND_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEAP_SECOND_QUERY, at: VT.LEAP_SECOND_QUERY) }
+  public static func add(EOP_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EOP_QUERY, at: VT.EOP_QUERY) }
+  public static func add(SIDEREAL_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIDEREAL_QUERY, at: VT.SIDEREAL_QUERY) }
+  public static func add(INTERVAL_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERVAL_REQUEST, at: VT.INTERVAL_REQUEST) }
+  public static func add(SOLAR_POSITION_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLAR_POSITION_QUERY, at: VT.SOLAR_POSITION_QUERY) }
+  public static func add(LUNAR_POSITION_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LUNAR_POSITION_QUERY, at: VT.LUNAR_POSITION_QUERY) }
+  public static func addVectorOf(SUNRISE_SUNSET_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUNRISE_SUNSET_QUERY, at: VT.SUNRISE_SUNSET_QUERY) }
+  public static func add(CLOCK_PROPAGATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLOCK_PROPAGATION, at: VT.CLOCK_PROPAGATION) }
   public static func endTME(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTME(
     _ fbb: inout FlatBufferBuilder,
@@ -153,16 +151,16 @@ public struct TME: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COMMAND.p, fieldName: "COMMAND", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONVERSION_REQUEST.p, fieldName: "CONVERSION_REQUEST", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LEAP_SECOND_QUERY.p, fieldName: "LEAP_SECOND_QUERY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EOP_QUERY.p, fieldName: "EOP_QUERY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SIDEREAL_QUERY.p, fieldName: "SIDEREAL_QUERY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INTERVAL_REQUEST.p, fieldName: "INTERVAL_REQUEST", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SOLAR_POSITION_QUERY.p, fieldName: "SOLAR_POSITION_QUERY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LUNAR_POSITION_QUERY.p, fieldName: "LUNAR_POSITION_QUERY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SUNRISE_SUNSET_QUERY.p, fieldName: "SUNRISE_SUNSET_QUERY", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.CLOCK_PROPAGATION.p, fieldName: "CLOCK_PROPAGATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMAND, fieldName: "COMMAND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONVERSION_REQUEST, fieldName: "CONVERSION_REQUEST", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LEAP_SECOND_QUERY, fieldName: "LEAP_SECOND_QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EOP_QUERY, fieldName: "EOP_QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIDEREAL_QUERY, fieldName: "SIDEREAL_QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTERVAL_REQUEST, fieldName: "INTERVAL_REQUEST", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOLAR_POSITION_QUERY, fieldName: "SOLAR_POSITION_QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LUNAR_POSITION_QUERY, fieldName: "LUNAR_POSITION_QUERY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SUNRISE_SUNSET_QUERY, fieldName: "SUNRISE_SUNSET_QUERY", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.CLOCK_PROPAGATION, fieldName: "CLOCK_PROPAGATION", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

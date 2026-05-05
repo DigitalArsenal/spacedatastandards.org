@@ -79,28 +79,26 @@ public struct TRN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SOURCES = 4
-    case INTERPOLATION = 6
-    case CACHE_ENABLED = 8
-    case MAX_CACHE_TILES = 10
-    case VERTICAL_EXAGGERATION = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SOURCES: VOffset = 4
+    static let INTERPOLATION: VOffset = 6
+    static let CACHE_ENABLED: VOffset = 8
+    static let MAX_CACHE_TILES: VOffset = 10
+    static let VERTICAL_EXAGGERATION: VOffset = 12
   }
 
-  public var SOURCES: FlatbufferVector<TerrainDataSource> { return _accessor.vector(at: VTOFFSET.SOURCES.v, byteSize: 1) }
-  public var INTERPOLATION: TerrainInterpolation { let o = _accessor.offset(VTOFFSET.INTERPOLATION.v); return o == 0 ? .bilinear : TerrainInterpolation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bilinear }
-  public var CACHE_ENABLED: Bool { let o = _accessor.offset(VTOFFSET.CACHE_ENABLED.v); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var MAX_CACHE_TILES: UInt16 { let o = _accessor.offset(VTOFFSET.MAX_CACHE_TILES.v); return o == 0 ? 100 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var VERTICAL_EXAGGERATION: Double { let o = _accessor.offset(VTOFFSET.VERTICAL_EXAGGERATION.v); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SOURCES: FlatbufferVector<TerrainDataSource> { return _accessor.vector(at: VT.SOURCES, byteSize: 1) }
+  public var INTERPOLATION: TerrainInterpolation { let o = _accessor.offset(VT.INTERPOLATION); return o == 0 ? .bilinear : TerrainInterpolation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bilinear }
+  public var CACHE_ENABLED: Bool { let o = _accessor.offset(VT.CACHE_ENABLED); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var MAX_CACHE_TILES: UInt16 { let o = _accessor.offset(VT.MAX_CACHE_TILES); return o == 0 ? 100 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var VERTICAL_EXAGGERATION: Double { let o = _accessor.offset(VT.VERTICAL_EXAGGERATION); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startTRN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func addVectorOf(SOURCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCES, at: VTOFFSET.SOURCES.p) }
-  public static func add(INTERPOLATION: TerrainInterpolation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERPOLATION.rawValue, def: 1, at: VTOFFSET.INTERPOLATION.p) }
+  public static func addVectorOf(SOURCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCES, at: VT.SOURCES) }
+  public static func add(INTERPOLATION: TerrainInterpolation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERPOLATION.rawValue, def: 1, at: VT.INTERPOLATION) }
   public static func add(CACHE_ENABLED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CACHE_ENABLED, def: true,
-   at: VTOFFSET.CACHE_ENABLED.p) }
-  public static func add(MAX_CACHE_TILES: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_CACHE_TILES, def: 100, at: VTOFFSET.MAX_CACHE_TILES.p) }
-  public static func add(VERTICAL_EXAGGERATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTICAL_EXAGGERATION, def: 1.0, at: VTOFFSET.VERTICAL_EXAGGERATION.p) }
+   at: VT.CACHE_ENABLED) }
+  public static func add(MAX_CACHE_TILES: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_CACHE_TILES, def: 100, at: VT.MAX_CACHE_TILES) }
+  public static func add(VERTICAL_EXAGGERATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERTICAL_EXAGGERATION, def: 1.0, at: VT.VERTICAL_EXAGGERATION) }
   public static func endTRN(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTRN(
     _ fbb: inout FlatBufferBuilder,
@@ -121,11 +119,11 @@ public struct TRN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SOURCES.p, fieldName: "SOURCES", required: false, type: ForwardOffset<Vector<TerrainDataSource, TerrainDataSource>>.self)
-    try _v.visit(field: VTOFFSET.INTERPOLATION.p, fieldName: "INTERPOLATION", required: false, type: TerrainInterpolation.self)
-    try _v.visit(field: VTOFFSET.CACHE_ENABLED.p, fieldName: "CACHE_ENABLED", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.MAX_CACHE_TILES.p, fieldName: "MAX_CACHE_TILES", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.VERTICAL_EXAGGERATION.p, fieldName: "VERTICAL_EXAGGERATION", required: false, type: Double.self)
+    try _v.visit(field: VT.SOURCES, fieldName: "SOURCES", required: false, type: ForwardOffset<Vector<TerrainDataSource, TerrainDataSource>>.self)
+    try _v.visit(field: VT.INTERPOLATION, fieldName: "INTERPOLATION", required: false, type: TerrainInterpolation.self)
+    try _v.visit(field: VT.CACHE_ENABLED, fieldName: "CACHE_ENABLED", required: false, type: Bool.self)
+    try _v.visit(field: VT.MAX_CACHE_TILES, fieldName: "MAX_CACHE_TILES", required: false, type: UInt16.self)
+    try _v.visit(field: VT.VERTICAL_EXAGGERATION, fieldName: "VERTICAL_EXAGGERATION", required: false, type: Double.self)
     _v.finish()
   }
 }

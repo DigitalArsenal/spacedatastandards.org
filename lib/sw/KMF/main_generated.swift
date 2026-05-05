@@ -69,44 +69,42 @@ public struct KMF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table, encryptionCtx: [UInt8]? = nil) { _accessor = t; self.encryptionCtx = encryptionCtx }
   public init(_ bb: ByteBuffer, o: Int32, encryptionCtx: [UInt8]? = nil) { _accessor = Table(bb: bb, position: o); self.encryptionCtx = encryptionCtx }
 
-  private enum VTOFFSET: VOffset {
-    case KEY_ID = 4
-    case ROLE = 6
-    case ALGORITHM = 8
-    case ENCODING = 10
-    case KEY_BYTES = 12
-    case VERSION = 14
-    case EXPIRES_AT = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let KEY_ID: VOffset = 4
+    static let ROLE: VOffset = 6
+    static let ALGORITHM: VOffset = 8
+    static let ENCODING: VOffset = 10
+    static let KEY_BYTES: VOffset = 12
+    static let VERSION: VOffset = 14
+    static let EXPIRES_AT: VOffset = 16
   }
 
   ///  Logical key identifier used across publication and grant records.
-  public var KEY_ID: String? { let o = _accessor.offset(VTOFFSET.KEY_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var KEY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.KEY_ID.v) }
+  public var KEY_ID: String? { let o = _accessor.offset(VT.KEY_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KEY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY_ID) }
   ///  Role the key bytes fulfill for the module flow.
-  public var ROLE: keyMaterialRole { let o = _accessor.offset(VTOFFSET.ROLE.v); return o == 0 ? .unknown : keyMaterialRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  public var ROLE: keyMaterialRole { let o = _accessor.offset(VT.ROLE); return o == 0 ? .unknown : keyMaterialRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
   ///  Algorithm or key family for the key bytes.
-  public var ALGORITHM: keyMaterialAlgorithm { let o = _accessor.offset(VTOFFSET.ALGORITHM.v); return o == 0 ? .unknown : keyMaterialAlgorithm(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  public var ALGORITHM: keyMaterialAlgorithm { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? .unknown : keyMaterialAlgorithm(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
   ///  Encoding of KEY_BYTES.
-  public var ENCODING: keyMaterialEncoding { let o = _accessor.offset(VTOFFSET.ENCODING.v); return o == 0 ? .unknown : keyMaterialEncoding(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  public var ENCODING: keyMaterialEncoding { let o = _accessor.offset(VT.ENCODING); return o == 0 ? .unknown : keyMaterialEncoding(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
   ///  Explicit key bytes when a module must receive them on a port.
   ///  This may be field-encrypted using the SDS/da-flatbuffers header-first
   ///  encryption flow when transported to a specific recipient.
-  public var KEY_BYTES: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.KEY_BYTES.v, byteSize: 1) }
-  public func withUnsafePointerToKeyBytes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.KEY_BYTES.v, body: body) }
+  public var KEY_BYTES: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.KEY_BYTES, byteSize: 1) }
+  public func withUnsafePointerToKeyBytes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.KEY_BYTES, body: body) }
   ///  Logical version of the key material.
-  public var VERSION: UInt32 { let o = _accessor.offset(VTOFFSET.VERSION.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var VERSION: UInt32 { let o = _accessor.offset(VT.VERSION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Expiration time in unix milliseconds, or 0 if unbounded.
-  public var EXPIRES_AT: UInt64 { let o = _accessor.offset(VTOFFSET.EXPIRES_AT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var EXPIRES_AT: UInt64 { let o = _accessor.offset(VT.EXPIRES_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   public static func startKMF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ID, at: VTOFFSET.KEY_ID.p) }
-  public static func add(ROLE: keyMaterialRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLE.rawValue, def: 0, at: VTOFFSET.ROLE.p) }
-  public static func add(ALGORITHM: keyMaterialAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 0, at: VTOFFSET.ALGORITHM.p) }
-  public static func add(ENCODING: keyMaterialEncoding, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCODING.rawValue, def: 0, at: VTOFFSET.ENCODING.p) }
-  public static func addVectorOf(KEY_BYTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_BYTES, at: VTOFFSET.KEY_BYTES.p) }
-  public static func add(VERSION: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VTOFFSET.VERSION.p) }
-  public static func add(EXPIRES_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXPIRES_AT, def: 0, at: VTOFFSET.EXPIRES_AT.p) }
+  public static func add(KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ID, at: VT.KEY_ID) }
+  public static func add(ROLE: keyMaterialRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLE.rawValue, def: 0, at: VT.ROLE) }
+  public static func add(ALGORITHM: keyMaterialAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 0, at: VT.ALGORITHM) }
+  public static func add(ENCODING: keyMaterialEncoding, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCODING.rawValue, def: 0, at: VT.ENCODING) }
+  public static func addVectorOf(KEY_BYTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_BYTES, at: VT.KEY_BYTES) }
+  public static func add(VERSION: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VT.VERSION) }
+  public static func add(EXPIRES_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXPIRES_AT, def: 0, at: VT.EXPIRES_AT) }
   public static func endKMF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createKMF(
     _ fbb: inout FlatBufferBuilder,
@@ -131,13 +129,13 @@ public struct KMF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.KEY_ID.p, fieldName: "KEY_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ROLE.p, fieldName: "ROLE", required: false, type: keyMaterialRole.self)
-    try _v.visit(field: VTOFFSET.ALGORITHM.p, fieldName: "ALGORITHM", required: false, type: keyMaterialAlgorithm.self)
-    try _v.visit(field: VTOFFSET.ENCODING.p, fieldName: "ENCODING", required: false, type: keyMaterialEncoding.self)
-    try _v.visit(field: VTOFFSET.KEY_BYTES.p, fieldName: "KEY_BYTES", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.EXPIRES_AT.p, fieldName: "EXPIRES_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.KEY_ID, fieldName: "KEY_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ROLE, fieldName: "ROLE", required: false, type: keyMaterialRole.self)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: keyMaterialAlgorithm.self)
+    try _v.visit(field: VT.ENCODING, fieldName: "ENCODING", required: false, type: keyMaterialEncoding.self)
+    try _v.visit(field: VT.KEY_BYTES, fieldName: "KEY_BYTES", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: UInt32.self)
+    try _v.visit(field: VT.EXPIRES_AT, fieldName: "EXPIRES_AT", required: false, type: UInt64.self)
     _v.finish()
   }
 }

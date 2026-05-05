@@ -241,56 +241,54 @@ public struct SDRRadarConfig: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case FREQUENCY = 4
-    case POWER = 6
-    case GAIN = 8
-    case BANDWIDTH = 10
-    case NOISE_FIGURE = 12
-    case SYSTEM_LOSS = 14
-    case PRF = 16
-    case PULSE_WIDTH = 18
-    case DETECTION_THRESHOLD = 20
-    case MIN_RANGE = 22
-    case MAX_RANGE = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let FREQUENCY: VOffset = 4
+    static let POWER: VOffset = 6
+    static let GAIN: VOffset = 8
+    static let BANDWIDTH: VOffset = 10
+    static let NOISE_FIGURE: VOffset = 12
+    static let SYSTEM_LOSS: VOffset = 14
+    static let PRF: VOffset = 16
+    static let PULSE_WIDTH: VOffset = 18
+    static let DETECTION_THRESHOLD: VOffset = 20
+    static let MIN_RANGE: VOffset = 22
+    static let MAX_RANGE: VOffset = 24
   }
 
   ///  Operating frequency (Hz).
-  public var FREQUENCY: Double { let o = _accessor.offset(VTOFFSET.FREQUENCY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FREQUENCY: Double { let o = _accessor.offset(VT.FREQUENCY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Transmit power (W).
-  public var POWER: Double { let o = _accessor.offset(VTOFFSET.POWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POWER: Double { let o = _accessor.offset(VT.POWER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Antenna gain (dB).
-  public var GAIN: Double { let o = _accessor.offset(VTOFFSET.GAIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GAIN: Double { let o = _accessor.offset(VT.GAIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Receiver bandwidth (Hz).
-  public var BANDWIDTH: Double { let o = _accessor.offset(VTOFFSET.BANDWIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BANDWIDTH: Double { let o = _accessor.offset(VT.BANDWIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Noise figure (dB).
-  public var NOISE_FIGURE: Double { let o = _accessor.offset(VTOFFSET.NOISE_FIGURE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NOISE_FIGURE: Double { let o = _accessor.offset(VT.NOISE_FIGURE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  System losses (dB).
-  public var SYSTEM_LOSS: Double { let o = _accessor.offset(VTOFFSET.SYSTEM_LOSS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SYSTEM_LOSS: Double { let o = _accessor.offset(VT.SYSTEM_LOSS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pulse repetition frequency (Hz).
-  public var PRF: Double { let o = _accessor.offset(VTOFFSET.PRF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PRF: Double { let o = _accessor.offset(VT.PRF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pulse width (seconds).
-  public var PULSE_WIDTH: Double { let o = _accessor.offset(VTOFFSET.PULSE_WIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PULSE_WIDTH: Double { let o = _accessor.offset(VT.PULSE_WIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Detection threshold SNR (dB).
-  public var DETECTION_THRESHOLD: Double { let o = _accessor.offset(VTOFFSET.DETECTION_THRESHOLD.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DETECTION_THRESHOLD: Double { let o = _accessor.offset(VT.DETECTION_THRESHOLD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Minimum detection range (meters).
-  public var MIN_RANGE: Double { let o = _accessor.offset(VTOFFSET.MIN_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MIN_RANGE: Double { let o = _accessor.offset(VT.MIN_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum detection range (meters).
-  public var MAX_RANGE: Double { let o = _accessor.offset(VTOFFSET.MAX_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_RANGE: Double { let o = _accessor.offset(VT.MAX_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startSDRRadarConfig(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(FREQUENCY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY, def: 0.0, at: VTOFFSET.FREQUENCY.p) }
-  public static func add(POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER, def: 0.0, at: VTOFFSET.POWER.p) }
-  public static func add(GAIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAIN, def: 0.0, at: VTOFFSET.GAIN.p) }
-  public static func add(BANDWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BANDWIDTH, def: 0.0, at: VTOFFSET.BANDWIDTH.p) }
-  public static func add(NOISE_FIGURE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOISE_FIGURE, def: 0.0, at: VTOFFSET.NOISE_FIGURE.p) }
-  public static func add(SYSTEM_LOSS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYSTEM_LOSS, def: 0.0, at: VTOFFSET.SYSTEM_LOSS.p) }
-  public static func add(PRF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRF, def: 0.0, at: VTOFFSET.PRF.p) }
-  public static func add(PULSE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PULSE_WIDTH, def: 0.0, at: VTOFFSET.PULSE_WIDTH.p) }
-  public static func add(DETECTION_THRESHOLD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DETECTION_THRESHOLD, def: 0.0, at: VTOFFSET.DETECTION_THRESHOLD.p) }
-  public static func add(MIN_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_RANGE, def: 0.0, at: VTOFFSET.MIN_RANGE.p) }
-  public static func add(MAX_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE, def: 0.0, at: VTOFFSET.MAX_RANGE.p) }
+  public static func add(FREQUENCY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY, def: 0.0, at: VT.FREQUENCY) }
+  public static func add(POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER, def: 0.0, at: VT.POWER) }
+  public static func add(GAIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAIN, def: 0.0, at: VT.GAIN) }
+  public static func add(BANDWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BANDWIDTH, def: 0.0, at: VT.BANDWIDTH) }
+  public static func add(NOISE_FIGURE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOISE_FIGURE, def: 0.0, at: VT.NOISE_FIGURE) }
+  public static func add(SYSTEM_LOSS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYSTEM_LOSS, def: 0.0, at: VT.SYSTEM_LOSS) }
+  public static func add(PRF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRF, def: 0.0, at: VT.PRF) }
+  public static func add(PULSE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PULSE_WIDTH, def: 0.0, at: VT.PULSE_WIDTH) }
+  public static func add(DETECTION_THRESHOLD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DETECTION_THRESHOLD, def: 0.0, at: VT.DETECTION_THRESHOLD) }
+  public static func add(MIN_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_RANGE, def: 0.0, at: VT.MIN_RANGE) }
+  public static func add(MAX_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE, def: 0.0, at: VT.MAX_RANGE) }
   public static func endSDRRadarConfig(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDRRadarConfig(
     _ fbb: inout FlatBufferBuilder,
@@ -323,17 +321,17 @@ public struct SDRRadarConfig: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.FREQUENCY.p, fieldName: "FREQUENCY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POWER.p, fieldName: "POWER", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.GAIN.p, fieldName: "GAIN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BANDWIDTH.p, fieldName: "BANDWIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NOISE_FIGURE.p, fieldName: "NOISE_FIGURE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SYSTEM_LOSS.p, fieldName: "SYSTEM_LOSS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PRF.p, fieldName: "PRF", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PULSE_WIDTH.p, fieldName: "PULSE_WIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DETECTION_THRESHOLD.p, fieldName: "DETECTION_THRESHOLD", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MIN_RANGE.p, fieldName: "MIN_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_RANGE.p, fieldName: "MAX_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.FREQUENCY, fieldName: "FREQUENCY", required: false, type: Double.self)
+    try _v.visit(field: VT.POWER, fieldName: "POWER", required: false, type: Double.self)
+    try _v.visit(field: VT.GAIN, fieldName: "GAIN", required: false, type: Double.self)
+    try _v.visit(field: VT.BANDWIDTH, fieldName: "BANDWIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.NOISE_FIGURE, fieldName: "NOISE_FIGURE", required: false, type: Double.self)
+    try _v.visit(field: VT.SYSTEM_LOSS, fieldName: "SYSTEM_LOSS", required: false, type: Double.self)
+    try _v.visit(field: VT.PRF, fieldName: "PRF", required: false, type: Double.self)
+    try _v.visit(field: VT.PULSE_WIDTH, fieldName: "PULSE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.DETECTION_THRESHOLD, fieldName: "DETECTION_THRESHOLD", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_RANGE, fieldName: "MIN_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_RANGE, fieldName: "MAX_RANGE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -350,48 +348,46 @@ public struct SDRSensorConfig: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CATEGORY = 4
-    case POS_X = 6
-    case POS_Y = 8
-    case POS_Z = 10
-    case ORIENT_W = 12
-    case ORIENT_X = 14
-    case ORIENT_Y = 16
-    case ORIENT_Z = 18
-    case RADAR = 20
-    case FLAGS = 22
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CATEGORY: VOffset = 4
+    static let POS_X: VOffset = 6
+    static let POS_Y: VOffset = 8
+    static let POS_Z: VOffset = 10
+    static let ORIENT_W: VOffset = 12
+    static let ORIENT_X: VOffset = 14
+    static let ORIENT_Y: VOffset = 16
+    static let ORIENT_Z: VOffset = 18
+    static let RADAR: VOffset = 20
+    static let FLAGS: VOffset = 22
   }
 
-  public var CATEGORY: sensorCategory { let o = _accessor.offset(VTOFFSET.CATEGORY.v); return o == 0 ? .radar : sensorCategory(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .radar }
+  public var CATEGORY: sensorCategory { let o = _accessor.offset(VT.CATEGORY); return o == 0 ? .radar : sensorCategory(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .radar }
   ///  Sensor position in ECEF (meters) — X.
-  public var POS_X: Double { let o = _accessor.offset(VTOFFSET.POS_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POS_X: Double { let o = _accessor.offset(VT.POS_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor position in ECEF (meters) — Y.
-  public var POS_Y: Double { let o = _accessor.offset(VTOFFSET.POS_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POS_Y: Double { let o = _accessor.offset(VT.POS_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor position in ECEF (meters) — Z.
-  public var POS_Z: Double { let o = _accessor.offset(VTOFFSET.POS_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POS_Z: Double { let o = _accessor.offset(VT.POS_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor orientation as quaternion (W, X, Y, Z).
-  public var ORIENT_W: Double { let o = _accessor.offset(VTOFFSET.ORIENT_W.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ORIENT_X: Double { let o = _accessor.offset(VTOFFSET.ORIENT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ORIENT_Y: Double { let o = _accessor.offset(VTOFFSET.ORIENT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ORIENT_Z: Double { let o = _accessor.offset(VTOFFSET.ORIENT_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ORIENT_W: Double { let o = _accessor.offset(VT.ORIENT_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ORIENT_X: Double { let o = _accessor.offset(VT.ORIENT_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ORIENT_Y: Double { let o = _accessor.offset(VT.ORIENT_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ORIENT_Z: Double { let o = _accessor.offset(VT.ORIENT_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Radar-specific config when CATEGORY == RADAR.
-  public var RADAR: SDRRadarConfig? { let o = _accessor.offset(VTOFFSET.RADAR.v); return o == 0 ? nil : SDRRadarConfig(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RADAR: SDRRadarConfig? { let o = _accessor.offset(VT.RADAR); return o == 0 ? nil : SDRRadarConfig(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Operational flags.
-  public var FLAGS: sensorOperationalFlags { let o = _accessor.offset(VTOFFSET.FLAGS.v); return o == 0 ? .active : sensorOperationalFlags(rawValue: _accessor.readBuffer(of: UInt32.self, at: o)) ?? .active }
+  public var FLAGS: sensorOperationalFlags { let o = _accessor.offset(VT.FLAGS); return o == 0 ? .active : sensorOperationalFlags(rawValue: _accessor.readBuffer(of: UInt32.self, at: o)) ?? .active }
   public static func startSDRSensorConfig(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(CATEGORY: sensorCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CATEGORY.rawValue, def: 0, at: VTOFFSET.CATEGORY.p) }
-  public static func add(POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_X, def: 0.0, at: VTOFFSET.POS_X.p) }
-  public static func add(POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_Y, def: 0.0, at: VTOFFSET.POS_Y.p) }
-  public static func add(POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_Z, def: 0.0, at: VTOFFSET.POS_Z.p) }
-  public static func add(ORIENT_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENT_W, def: 0.0, at: VTOFFSET.ORIENT_W.p) }
-  public static func add(ORIENT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENT_X, def: 0.0, at: VTOFFSET.ORIENT_X.p) }
-  public static func add(ORIENT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENT_Y, def: 0.0, at: VTOFFSET.ORIENT_Y.p) }
-  public static func add(ORIENT_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENT_Z, def: 0.0, at: VTOFFSET.ORIENT_Z.p) }
-  public static func add(RADAR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RADAR, at: VTOFFSET.RADAR.p) }
-  public static func add(FLAGS: sensorOperationalFlags, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLAGS.rawValue, def: 0, at: VTOFFSET.FLAGS.p) }
+  public static func add(CATEGORY: sensorCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CATEGORY.rawValue, def: 0, at: VT.CATEGORY) }
+  public static func add(POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_X, def: 0.0, at: VT.POS_X) }
+  public static func add(POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_Y, def: 0.0, at: VT.POS_Y) }
+  public static func add(POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_Z, def: 0.0, at: VT.POS_Z) }
+  public static func add(ORIENT_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENT_W, def: 0.0, at: VT.ORIENT_W) }
+  public static func add(ORIENT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENT_X, def: 0.0, at: VT.ORIENT_X) }
+  public static func add(ORIENT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENT_Y, def: 0.0, at: VT.ORIENT_Y) }
+  public static func add(ORIENT_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENT_Z, def: 0.0, at: VT.ORIENT_Z) }
+  public static func add(RADAR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RADAR, at: VT.RADAR) }
+  public static func add(FLAGS: sensorOperationalFlags, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLAGS.rawValue, def: 0, at: VT.FLAGS) }
   public static func endSDRSensorConfig(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDRSensorConfig(
     _ fbb: inout FlatBufferBuilder,
@@ -422,16 +418,16 @@ public struct SDRSensorConfig: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CATEGORY.p, fieldName: "CATEGORY", required: false, type: sensorCategory.self)
-    try _v.visit(field: VTOFFSET.POS_X.p, fieldName: "POS_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POS_Y.p, fieldName: "POS_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POS_Z.p, fieldName: "POS_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ORIENT_W.p, fieldName: "ORIENT_W", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ORIENT_X.p, fieldName: "ORIENT_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ORIENT_Y.p, fieldName: "ORIENT_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ORIENT_Z.p, fieldName: "ORIENT_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RADAR.p, fieldName: "RADAR", required: false, type: ForwardOffset<SDRRadarConfig>.self)
-    try _v.visit(field: VTOFFSET.FLAGS.p, fieldName: "FLAGS", required: false, type: sensorOperationalFlags.self)
+    try _v.visit(field: VT.CATEGORY, fieldName: "CATEGORY", required: false, type: sensorCategory.self)
+    try _v.visit(field: VT.POS_X, fieldName: "POS_X", required: false, type: Double.self)
+    try _v.visit(field: VT.POS_Y, fieldName: "POS_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.POS_Z, fieldName: "POS_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIENT_W, fieldName: "ORIENT_W", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIENT_X, fieldName: "ORIENT_X", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIENT_Y, fieldName: "ORIENT_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIENT_Z, fieldName: "ORIENT_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.RADAR, fieldName: "RADAR", required: false, type: ForwardOffset<SDRRadarConfig>.self)
+    try _v.visit(field: VT.FLAGS, fieldName: "FLAGS", required: false, type: sensorOperationalFlags.self)
     _v.finish()
   }
 }
@@ -448,51 +444,49 @@ public struct SDRBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SENSOR_POS_X = 4
-    case SENSOR_POS_Y = 6
-    case SENSOR_POS_Z = 8
-    case SENSOR_ORIENT_W = 10
-    case SENSOR_ORIENT_X = 12
-    case SENSOR_ORIENT_Y = 14
-    case SENSOR_ORIENT_Z = 16
-    case INPUT_OFFSET = 18
-    case TARGET_COUNT = 20
-    case OUTPUT_OFFSET = 22
-    case EPOCH = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SENSOR_POS_X: VOffset = 4
+    static let SENSOR_POS_Y: VOffset = 6
+    static let SENSOR_POS_Z: VOffset = 8
+    static let SENSOR_ORIENT_W: VOffset = 10
+    static let SENSOR_ORIENT_X: VOffset = 12
+    static let SENSOR_ORIENT_Y: VOffset = 14
+    static let SENSOR_ORIENT_Z: VOffset = 16
+    static let INPUT_OFFSET: VOffset = 18
+    static let TARGET_COUNT: VOffset = 20
+    static let OUTPUT_OFFSET: VOffset = 22
+    static let EPOCH: VOffset = 24
   }
 
   ///  Sensor position in ECEF (meters) — X.
-  public var SENSOR_POS_X: Double { let o = _accessor.offset(VTOFFSET.SENSOR_POS_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SENSOR_POS_Y: Double { let o = _accessor.offset(VTOFFSET.SENSOR_POS_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SENSOR_POS_Z: Double { let o = _accessor.offset(VTOFFSET.SENSOR_POS_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_POS_X: Double { let o = _accessor.offset(VT.SENSOR_POS_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_POS_Y: Double { let o = _accessor.offset(VT.SENSOR_POS_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_POS_Z: Double { let o = _accessor.offset(VT.SENSOR_POS_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor orientation as quaternion (W, X, Y, Z).
-  public var SENSOR_ORIENT_W: Double { let o = _accessor.offset(VTOFFSET.SENSOR_ORIENT_W.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SENSOR_ORIENT_X: Double { let o = _accessor.offset(VTOFFSET.SENSOR_ORIENT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SENSOR_ORIENT_Y: Double { let o = _accessor.offset(VTOFFSET.SENSOR_ORIENT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SENSOR_ORIENT_Z: Double { let o = _accessor.offset(VTOFFSET.SENSOR_ORIENT_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_ORIENT_W: Double { let o = _accessor.offset(VT.SENSOR_ORIENT_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_ORIENT_X: Double { let o = _accessor.offset(VT.SENSOR_ORIENT_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_ORIENT_Y: Double { let o = _accessor.offset(VT.SENSOR_ORIENT_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_ORIENT_Z: Double { let o = _accessor.offset(VT.SENSOR_ORIENT_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Input buffer offset where targetState[] starts.
-  public var INPUT_OFFSET: UInt32 { let o = _accessor.offset(VTOFFSET.INPUT_OFFSET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var INPUT_OFFSET: UInt32 { let o = _accessor.offset(VT.INPUT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Number of targets in the input buffer.
-  public var TARGET_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.TARGET_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var TARGET_COUNT: UInt32 { let o = _accessor.offset(VT.TARGET_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Output buffer offset where detectionResult[] is written.
-  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VTOFFSET.OUTPUT_OFFSET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VT.OUTPUT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Current time as a Julian date.
-  public var EPOCH: Double { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EPOCH: Double { let o = _accessor.offset(VT.EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startSDRBatchRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(SENSOR_POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_X, def: 0.0, at: VTOFFSET.SENSOR_POS_X.p) }
-  public static func add(SENSOR_POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_Y, def: 0.0, at: VTOFFSET.SENSOR_POS_Y.p) }
-  public static func add(SENSOR_POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_Z, def: 0.0, at: VTOFFSET.SENSOR_POS_Z.p) }
-  public static func add(SENSOR_ORIENT_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_W, def: 0.0, at: VTOFFSET.SENSOR_ORIENT_W.p) }
-  public static func add(SENSOR_ORIENT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_X, def: 0.0, at: VTOFFSET.SENSOR_ORIENT_X.p) }
-  public static func add(SENSOR_ORIENT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_Y, def: 0.0, at: VTOFFSET.SENSOR_ORIENT_Y.p) }
-  public static func add(SENSOR_ORIENT_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_Z, def: 0.0, at: VTOFFSET.SENSOR_ORIENT_Z.p) }
-  public static func add(INPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INPUT_OFFSET, def: 0, at: VTOFFSET.INPUT_OFFSET.p) }
-  public static func add(TARGET_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_COUNT, def: 0, at: VTOFFSET.TARGET_COUNT.p) }
-  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VTOFFSET.OUTPUT_OFFSET.p) }
-  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VTOFFSET.EPOCH.p) }
+  public static func add(SENSOR_POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_X, def: 0.0, at: VT.SENSOR_POS_X) }
+  public static func add(SENSOR_POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_Y, def: 0.0, at: VT.SENSOR_POS_Y) }
+  public static func add(SENSOR_POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_Z, def: 0.0, at: VT.SENSOR_POS_Z) }
+  public static func add(SENSOR_ORIENT_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_W, def: 0.0, at: VT.SENSOR_ORIENT_W) }
+  public static func add(SENSOR_ORIENT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_X, def: 0.0, at: VT.SENSOR_ORIENT_X) }
+  public static func add(SENSOR_ORIENT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_Y, def: 0.0, at: VT.SENSOR_ORIENT_Y) }
+  public static func add(SENSOR_ORIENT_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ORIENT_Z, def: 0.0, at: VT.SENSOR_ORIENT_Z) }
+  public static func add(INPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INPUT_OFFSET, def: 0, at: VT.INPUT_OFFSET) }
+  public static func add(TARGET_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_COUNT, def: 0, at: VT.TARGET_COUNT) }
+  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VT.OUTPUT_OFFSET) }
+  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VT.EPOCH) }
   public static func endSDRBatchRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDRBatchRequest(
     _ fbb: inout FlatBufferBuilder,
@@ -525,17 +519,17 @@ public struct SDRBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SENSOR_POS_X.p, fieldName: "SENSOR_POS_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_POS_Y.p, fieldName: "SENSOR_POS_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_POS_Z.p, fieldName: "SENSOR_POS_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_ORIENT_W.p, fieldName: "SENSOR_ORIENT_W", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_ORIENT_X.p, fieldName: "SENSOR_ORIENT_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_ORIENT_Y.p, fieldName: "SENSOR_ORIENT_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_ORIENT_Z.p, fieldName: "SENSOR_ORIENT_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INPUT_OFFSET.p, fieldName: "INPUT_OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.TARGET_COUNT.p, fieldName: "TARGET_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.OUTPUT_OFFSET.p, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_POS_X, fieldName: "SENSOR_POS_X", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_POS_Y, fieldName: "SENSOR_POS_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_POS_Z, fieldName: "SENSOR_POS_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_ORIENT_W, fieldName: "SENSOR_ORIENT_W", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_ORIENT_X, fieldName: "SENSOR_ORIENT_X", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_ORIENT_Y, fieldName: "SENSOR_ORIENT_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_ORIENT_Z, fieldName: "SENSOR_ORIENT_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.INPUT_OFFSET, fieldName: "INPUT_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TARGET_COUNT, fieldName: "TARGET_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OUTPUT_OFFSET, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -552,33 +546,31 @@ public struct SDRBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COUNT = 4
-    case DETECTED_COUNT = 6
-    case OUTPUT_OFFSET = 8
-    case ERROR_CODE = 10
-    case ERROR_MESSAGE = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COUNT: VOffset = 4
+    static let DETECTED_COUNT: VOffset = 6
+    static let OUTPUT_OFFSET: VOffset = 8
+    static let ERROR_CODE: VOffset = 10
+    static let ERROR_MESSAGE: VOffset = 12
   }
 
   ///  Number of detection results written.
-  public var COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var COUNT: UInt32 { let o = _accessor.offset(VT.COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Number of targets detected (SNR >= threshold).
-  public var DETECTED_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.DETECTED_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var DETECTED_COUNT: UInt32 { let o = _accessor.offset(VT.DETECTED_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Offset in arena where detectionResult[] starts.
-  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VTOFFSET.OUTPUT_OFFSET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VT.OUTPUT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Error code (0 == success).
-  public var ERROR_CODE: Int32 { let o = _accessor.offset(VTOFFSET.ERROR_CODE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var ERROR_CODE: Int32 { let o = _accessor.offset(VT.ERROR_CODE); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Error message when ERROR_CODE != 0.
-  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VTOFFSET.ERROR_MESSAGE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ERROR_MESSAGE.v) }
+  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
   public static func startSDRBatchResponse(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNT, def: 0, at: VTOFFSET.COUNT.p) }
-  public static func add(DETECTED_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DETECTED_COUNT, def: 0, at: VTOFFSET.DETECTED_COUNT.p) }
-  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VTOFFSET.OUTPUT_OFFSET.p) }
-  public static func add(ERROR_CODE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERROR_CODE, def: 0, at: VTOFFSET.ERROR_CODE.p) }
-  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VTOFFSET.ERROR_MESSAGE.p) }
+  public static func add(COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNT, def: 0, at: VT.COUNT) }
+  public static func add(DETECTED_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DETECTED_COUNT, def: 0, at: VT.DETECTED_COUNT) }
+  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VT.OUTPUT_OFFSET) }
+  public static func add(ERROR_CODE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERROR_CODE, def: 0, at: VT.ERROR_CODE) }
+  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
   public static func endSDRBatchResponse(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDRBatchResponse(
     _ fbb: inout FlatBufferBuilder,
@@ -599,11 +591,11 @@ public struct SDRBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COUNT.p, fieldName: "COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.DETECTED_COUNT.p, fieldName: "DETECTED_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.OUTPUT_OFFSET.p, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ERROR_CODE.p, fieldName: "ERROR_CODE", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.ERROR_MESSAGE.p, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COUNT, fieldName: "COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.DETECTED_COUNT, fieldName: "DETECTED_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OUTPUT_OFFSET, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ERROR_CODE, fieldName: "ERROR_CODE", required: false, type: Int32.self)
+    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -621,48 +613,46 @@ public struct SDRSingleInput: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case TARGET_POS_X = 4
-    case TARGET_POS_Y = 6
-    case TARGET_POS_Z = 8
-    case SENSOR_POS_X = 10
-    case SENSOR_POS_Y = 12
-    case SENSOR_POS_Z = 14
-    case RCS = 16
-    case FREQUENCY = 18
-    case TX_POWER = 20
-    case TIMESTAMP_MS = 22
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let TARGET_POS_X: VOffset = 4
+    static let TARGET_POS_Y: VOffset = 6
+    static let TARGET_POS_Z: VOffset = 8
+    static let SENSOR_POS_X: VOffset = 10
+    static let SENSOR_POS_Y: VOffset = 12
+    static let SENSOR_POS_Z: VOffset = 14
+    static let RCS: VOffset = 16
+    static let FREQUENCY: VOffset = 18
+    static let TX_POWER: VOffset = 20
+    static let TIMESTAMP_MS: VOffset = 22
   }
 
   ///  Target position in ECEF (meters) — X.
-  public var TARGET_POS_X: Double { let o = _accessor.offset(VTOFFSET.TARGET_POS_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var TARGET_POS_Y: Double { let o = _accessor.offset(VTOFFSET.TARGET_POS_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var TARGET_POS_Z: Double { let o = _accessor.offset(VTOFFSET.TARGET_POS_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGET_POS_X: Double { let o = _accessor.offset(VT.TARGET_POS_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGET_POS_Y: Double { let o = _accessor.offset(VT.TARGET_POS_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGET_POS_Z: Double { let o = _accessor.offset(VT.TARGET_POS_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor position in ECEF (meters) — X.
-  public var SENSOR_POS_X: Double { let o = _accessor.offset(VTOFFSET.SENSOR_POS_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SENSOR_POS_Y: Double { let o = _accessor.offset(VTOFFSET.SENSOR_POS_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SENSOR_POS_Z: Double { let o = _accessor.offset(VTOFFSET.SENSOR_POS_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_POS_X: Double { let o = _accessor.offset(VT.SENSOR_POS_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_POS_Y: Double { let o = _accessor.offset(VT.SENSOR_POS_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR_POS_Z: Double { let o = _accessor.offset(VT.SENSOR_POS_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Radar cross section (m^2).
-  public var RCS: Double { let o = _accessor.offset(VTOFFSET.RCS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RCS: Double { let o = _accessor.offset(VT.RCS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor operating frequency (Hz).
-  public var FREQUENCY: Double { let o = _accessor.offset(VTOFFSET.FREQUENCY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FREQUENCY: Double { let o = _accessor.offset(VT.FREQUENCY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Transmit power (W).
-  public var TX_POWER: Double { let o = _accessor.offset(VTOFFSET.TX_POWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TX_POWER: Double { let o = _accessor.offset(VT.TX_POWER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Unix timestamp (milliseconds since epoch).
-  public var TIMESTAMP_MS: UInt64 { let o = _accessor.offset(VTOFFSET.TIMESTAMP_MS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var TIMESTAMP_MS: UInt64 { let o = _accessor.offset(VT.TIMESTAMP_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   public static func startSDRSingleInput(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(TARGET_POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_POS_X, def: 0.0, at: VTOFFSET.TARGET_POS_X.p) }
-  public static func add(TARGET_POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_POS_Y, def: 0.0, at: VTOFFSET.TARGET_POS_Y.p) }
-  public static func add(TARGET_POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_POS_Z, def: 0.0, at: VTOFFSET.TARGET_POS_Z.p) }
-  public static func add(SENSOR_POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_X, def: 0.0, at: VTOFFSET.SENSOR_POS_X.p) }
-  public static func add(SENSOR_POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_Y, def: 0.0, at: VTOFFSET.SENSOR_POS_Y.p) }
-  public static func add(SENSOR_POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_Z, def: 0.0, at: VTOFFSET.SENSOR_POS_Z.p) }
-  public static func add(RCS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS, def: 0.0, at: VTOFFSET.RCS.p) }
-  public static func add(FREQUENCY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY, def: 0.0, at: VTOFFSET.FREQUENCY.p) }
-  public static func add(TX_POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TX_POWER, def: 0.0, at: VTOFFSET.TX_POWER.p) }
-  public static func add(TIMESTAMP_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMESTAMP_MS, def: 0, at: VTOFFSET.TIMESTAMP_MS.p) }
+  public static func add(TARGET_POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_POS_X, def: 0.0, at: VT.TARGET_POS_X) }
+  public static func add(TARGET_POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_POS_Y, def: 0.0, at: VT.TARGET_POS_Y) }
+  public static func add(TARGET_POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_POS_Z, def: 0.0, at: VT.TARGET_POS_Z) }
+  public static func add(SENSOR_POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_X, def: 0.0, at: VT.SENSOR_POS_X) }
+  public static func add(SENSOR_POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_Y, def: 0.0, at: VT.SENSOR_POS_Y) }
+  public static func add(SENSOR_POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_POS_Z, def: 0.0, at: VT.SENSOR_POS_Z) }
+  public static func add(RCS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS, def: 0.0, at: VT.RCS) }
+  public static func add(FREQUENCY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY, def: 0.0, at: VT.FREQUENCY) }
+  public static func add(TX_POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TX_POWER, def: 0.0, at: VT.TX_POWER) }
+  public static func add(TIMESTAMP_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMESTAMP_MS, def: 0, at: VT.TIMESTAMP_MS) }
   public static func endSDRSingleInput(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDRSingleInput(
     _ fbb: inout FlatBufferBuilder,
@@ -693,16 +683,16 @@ public struct SDRSingleInput: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.TARGET_POS_X.p, fieldName: "TARGET_POS_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TARGET_POS_Y.p, fieldName: "TARGET_POS_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TARGET_POS_Z.p, fieldName: "TARGET_POS_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_POS_X.p, fieldName: "SENSOR_POS_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_POS_Y.p, fieldName: "SENSOR_POS_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR_POS_Z.p, fieldName: "SENSOR_POS_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RCS.p, fieldName: "RCS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FREQUENCY.p, fieldName: "FREQUENCY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TX_POWER.p, fieldName: "TX_POWER", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TIMESTAMP_MS.p, fieldName: "TIMESTAMP_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.TARGET_POS_X, fieldName: "TARGET_POS_X", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGET_POS_Y, fieldName: "TARGET_POS_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGET_POS_Z, fieldName: "TARGET_POS_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_POS_X, fieldName: "SENSOR_POS_X", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_POS_Y, fieldName: "SENSOR_POS_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_POS_Z, fieldName: "SENSOR_POS_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.RCS, fieldName: "RCS", required: false, type: Double.self)
+    try _v.visit(field: VT.FREQUENCY, fieldName: "FREQUENCY", required: false, type: Double.self)
+    try _v.visit(field: VT.TX_POWER, fieldName: "TX_POWER", required: false, type: Double.self)
+    try _v.visit(field: VT.TIMESTAMP_MS, fieldName: "TIMESTAMP_MS", required: false, type: UInt64.self)
     _v.finish()
   }
 }
@@ -719,44 +709,42 @@ public struct SDRSingleResult: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case DETECTED = 4
-    case RANGE = 6
-    case SNR = 8
-    case AZIMUTH = 10
-    case ELEVATION = 12
-    case RANGE_RATE = 14
-    case TIMESTAMP_MS = 16
-    case TRACK_ID = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let DETECTED: VOffset = 4
+    static let RANGE: VOffset = 6
+    static let SNR: VOffset = 8
+    static let AZIMUTH: VOffset = 10
+    static let ELEVATION: VOffset = 12
+    static let RANGE_RATE: VOffset = 14
+    static let TIMESTAMP_MS: VOffset = 16
+    static let TRACK_ID: VOffset = 18
   }
 
-  public var DETECTED: Bool { let o = _accessor.offset(VTOFFSET.DETECTED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var DETECTED: Bool { let o = _accessor.offset(VT.DETECTED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Range to target (meters).
-  public var RANGE: Double { let o = _accessor.offset(VTOFFSET.RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RANGE: Double { let o = _accessor.offset(VT.RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Signal-to-noise ratio (dB).
-  public var SNR: Double { let o = _accessor.offset(VTOFFSET.SNR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SNR: Double { let o = _accessor.offset(VT.SNR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Azimuth angle to target (radians).
-  public var AZIMUTH: Double { let o = _accessor.offset(VTOFFSET.AZIMUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var AZIMUTH: Double { let o = _accessor.offset(VT.AZIMUTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Elevation angle to target (radians).
-  public var ELEVATION: Double { let o = _accessor.offset(VTOFFSET.ELEVATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ELEVATION: Double { let o = _accessor.offset(VT.ELEVATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Range rate / Doppler velocity (m/s).
-  public var RANGE_RATE: Double { let o = _accessor.offset(VTOFFSET.RANGE_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RANGE_RATE: Double { let o = _accessor.offset(VT.RANGE_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Detection timestamp (milliseconds since epoch).
-  public var TIMESTAMP_MS: UInt64 { let o = _accessor.offset(VTOFFSET.TIMESTAMP_MS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var TIMESTAMP_MS: UInt64 { let o = _accessor.offset(VT.TIMESTAMP_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Track identifier (0 if not tracking).
-  public var TRACK_ID: UInt32 { let o = _accessor.offset(VTOFFSET.TRACK_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var TRACK_ID: UInt32 { let o = _accessor.offset(VT.TRACK_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   public static func startSDRSingleResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(DETECTED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DETECTED, def: false,
-   at: VTOFFSET.DETECTED.p) }
-  public static func add(RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE, def: 0.0, at: VTOFFSET.RANGE.p) }
-  public static func add(SNR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SNR, def: 0.0, at: VTOFFSET.SNR.p) }
-  public static func add(AZIMUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH, def: 0.0, at: VTOFFSET.AZIMUTH.p) }
-  public static func add(ELEVATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION, def: 0.0, at: VTOFFSET.ELEVATION.p) }
-  public static func add(RANGE_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_RATE, def: 0.0, at: VTOFFSET.RANGE_RATE.p) }
-  public static func add(TIMESTAMP_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMESTAMP_MS, def: 0, at: VTOFFSET.TIMESTAMP_MS.p) }
-  public static func add(TRACK_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACK_ID, def: 0, at: VTOFFSET.TRACK_ID.p) }
+   at: VT.DETECTED) }
+  public static func add(RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE, def: 0.0, at: VT.RANGE) }
+  public static func add(SNR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SNR, def: 0.0, at: VT.SNR) }
+  public static func add(AZIMUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH, def: 0.0, at: VT.AZIMUTH) }
+  public static func add(ELEVATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION, def: 0.0, at: VT.ELEVATION) }
+  public static func add(RANGE_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_RATE, def: 0.0, at: VT.RANGE_RATE) }
+  public static func add(TIMESTAMP_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMESTAMP_MS, def: 0, at: VT.TIMESTAMP_MS) }
+  public static func add(TRACK_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACK_ID, def: 0, at: VT.TRACK_ID) }
   public static func endSDRSingleResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDRSingleResult(
     _ fbb: inout FlatBufferBuilder,
@@ -783,14 +771,14 @@ public struct SDRSingleResult: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.DETECTED.p, fieldName: "DETECTED", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.RANGE.p, fieldName: "RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SNR.p, fieldName: "SNR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.AZIMUTH.p, fieldName: "AZIMUTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ELEVATION.p, fieldName: "ELEVATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RANGE_RATE.p, fieldName: "RANGE_RATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TIMESTAMP_MS.p, fieldName: "TIMESTAMP_MS", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.TRACK_ID.p, fieldName: "TRACK_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.DETECTED, fieldName: "DETECTED", required: false, type: Bool.self)
+    try _v.visit(field: VT.RANGE, fieldName: "RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.SNR, fieldName: "SNR", required: false, type: Double.self)
+    try _v.visit(field: VT.AZIMUTH, fieldName: "AZIMUTH", required: false, type: Double.self)
+    try _v.visit(field: VT.ELEVATION, fieldName: "ELEVATION", required: false, type: Double.self)
+    try _v.visit(field: VT.RANGE_RATE, fieldName: "RANGE_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.TIMESTAMP_MS, fieldName: "TIMESTAMP_MS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.TRACK_ID, fieldName: "TRACK_ID", required: false, type: UInt32.self)
     _v.finish()
   }
 }
@@ -807,27 +795,25 @@ public struct SDR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CONFIG = 4
-    case BATCH_REQUEST = 6
-    case BATCH_RESPONSE = 8
-    case SINGLE_INPUT = 10
-    case SINGLE_RESULT = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CONFIG: VOffset = 4
+    static let BATCH_REQUEST: VOffset = 6
+    static let BATCH_RESPONSE: VOffset = 8
+    static let SINGLE_INPUT: VOffset = 10
+    static let SINGLE_RESULT: VOffset = 12
   }
 
-  public var CONFIG: SDRSensorConfig? { let o = _accessor.offset(VTOFFSET.CONFIG.v); return o == 0 ? nil : SDRSensorConfig(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var BATCH_REQUEST: SDRBatchRequest? { let o = _accessor.offset(VTOFFSET.BATCH_REQUEST.v); return o == 0 ? nil : SDRBatchRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var BATCH_RESPONSE: SDRBatchResponse? { let o = _accessor.offset(VTOFFSET.BATCH_RESPONSE.v); return o == 0 ? nil : SDRBatchResponse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var SINGLE_INPUT: SDRSingleInput? { let o = _accessor.offset(VTOFFSET.SINGLE_INPUT.v); return o == 0 ? nil : SDRSingleInput(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var SINGLE_RESULT: SDRSingleResult? { let o = _accessor.offset(VTOFFSET.SINGLE_RESULT.v); return o == 0 ? nil : SDRSingleResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CONFIG: SDRSensorConfig? { let o = _accessor.offset(VT.CONFIG); return o == 0 ? nil : SDRSensorConfig(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BATCH_REQUEST: SDRBatchRequest? { let o = _accessor.offset(VT.BATCH_REQUEST); return o == 0 ? nil : SDRBatchRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BATCH_RESPONSE: SDRBatchResponse? { let o = _accessor.offset(VT.BATCH_RESPONSE); return o == 0 ? nil : SDRBatchResponse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SINGLE_INPUT: SDRSingleInput? { let o = _accessor.offset(VT.SINGLE_INPUT); return o == 0 ? nil : SDRSingleInput(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SINGLE_RESULT: SDRSingleResult? { let o = _accessor.offset(VT.SINGLE_RESULT); return o == 0 ? nil : SDRSingleResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startSDR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONFIG, at: VTOFFSET.CONFIG.p) }
-  public static func add(BATCH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_REQUEST, at: VTOFFSET.BATCH_REQUEST.p) }
-  public static func add(BATCH_RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_RESPONSE, at: VTOFFSET.BATCH_RESPONSE.p) }
-  public static func add(SINGLE_INPUT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SINGLE_INPUT, at: VTOFFSET.SINGLE_INPUT.p) }
-  public static func add(SINGLE_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SINGLE_RESULT, at: VTOFFSET.SINGLE_RESULT.p) }
+  public static func add(CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONFIG, at: VT.CONFIG) }
+  public static func add(BATCH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_REQUEST, at: VT.BATCH_REQUEST) }
+  public static func add(BATCH_RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_RESPONSE, at: VT.BATCH_RESPONSE) }
+  public static func add(SINGLE_INPUT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SINGLE_INPUT, at: VT.SINGLE_INPUT) }
+  public static func add(SINGLE_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SINGLE_RESULT, at: VT.SINGLE_RESULT) }
   public static func endSDR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDR(
     _ fbb: inout FlatBufferBuilder,
@@ -848,11 +834,11 @@ public struct SDR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CONFIG.p, fieldName: "CONFIG", required: false, type: ForwardOffset<SDRSensorConfig>.self)
-    try _v.visit(field: VTOFFSET.BATCH_REQUEST.p, fieldName: "BATCH_REQUEST", required: false, type: ForwardOffset<SDRBatchRequest>.self)
-    try _v.visit(field: VTOFFSET.BATCH_RESPONSE.p, fieldName: "BATCH_RESPONSE", required: false, type: ForwardOffset<SDRBatchResponse>.self)
-    try _v.visit(field: VTOFFSET.SINGLE_INPUT.p, fieldName: "SINGLE_INPUT", required: false, type: ForwardOffset<SDRSingleInput>.self)
-    try _v.visit(field: VTOFFSET.SINGLE_RESULT.p, fieldName: "SINGLE_RESULT", required: false, type: ForwardOffset<SDRSingleResult>.self)
+    try _v.visit(field: VT.CONFIG, fieldName: "CONFIG", required: false, type: ForwardOffset<SDRSensorConfig>.self)
+    try _v.visit(field: VT.BATCH_REQUEST, fieldName: "BATCH_REQUEST", required: false, type: ForwardOffset<SDRBatchRequest>.self)
+    try _v.visit(field: VT.BATCH_RESPONSE, fieldName: "BATCH_RESPONSE", required: false, type: ForwardOffset<SDRBatchResponse>.self)
+    try _v.visit(field: VT.SINGLE_INPUT, fieldName: "SINGLE_INPUT", required: false, type: ForwardOffset<SDRSingleInput>.self)
+    try _v.visit(field: VT.SINGLE_RESULT, fieldName: "SINGLE_RESULT", required: false, type: ForwardOffset<SDRSingleResult>.self)
     _v.finish()
   }
 }

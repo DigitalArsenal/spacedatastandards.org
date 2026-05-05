@@ -38,21 +38,21 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 /**
  * Unique identifier for the listing
  */
-LISTING_ID():string|null
-LISTING_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LISTING_ID(optionalEncoding?:any):string|Uint8Array|null {
+LISTING_ID():string
+LISTING_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+LISTING_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
  * Peer ID of the data provider
  */
-PROVIDER_PEER_ID():string|null
-PROVIDER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-PROVIDER_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
+PROVIDER_PEER_ID():string
+PROVIDER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+PROVIDER_PEER_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
@@ -68,11 +68,11 @@ PROVIDER_EPM_CID(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Title of the data listing
  */
-TITLE():string|null
-TITLE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TITLE(optionalEncoding?:any):string|Uint8Array|null {
+TITLE():string
+TITLE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+TITLE(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**

@@ -205,32 +205,30 @@ public struct SDFConical: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case HALF_ANGLE = 4
-    case INNER_HALF_ANGLE = 6
-    case MIN_RANGE = 8
-    case MAX_RANGE = 10
-    case FLAT_CAP = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let HALF_ANGLE: VOffset = 4
+    static let INNER_HALF_ANGLE: VOffset = 6
+    static let MIN_RANGE: VOffset = 8
+    static let MAX_RANGE: VOffset = 10
+    static let FLAT_CAP: VOffset = 12
   }
 
-  public var HALF_ANGLE: Double { let o = _accessor.offset(VTOFFSET.HALF_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HALF_ANGLE: Double { let o = _accessor.offset(VT.HALF_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Inner half-angle for hollow cones (0 == solid).
-  public var INNER_HALF_ANGLE: Double { let o = _accessor.offset(VTOFFSET.INNER_HALF_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INNER_HALF_ANGLE: Double { let o = _accessor.offset(VT.INNER_HALF_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Minimum range (inner cap distance).
-  public var MIN_RANGE: Double { let o = _accessor.offset(VTOFFSET.MIN_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MIN_RANGE: Double { let o = _accessor.offset(VT.MIN_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum range (outer cap distance).
-  public var MAX_RANGE: Double { let o = _accessor.offset(VTOFFSET.MAX_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_RANGE: Double { let o = _accessor.offset(VT.MAX_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Use a flat cap (true) or a spherical cap (false).
-  public var FLAT_CAP: Bool { let o = _accessor.offset(VTOFFSET.FLAT_CAP.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FLAT_CAP: Bool { let o = _accessor.offset(VT.FLAT_CAP); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startSDFConical(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(HALF_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HALF_ANGLE, def: 0.0, at: VTOFFSET.HALF_ANGLE.p) }
-  public static func add(INNER_HALF_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INNER_HALF_ANGLE, def: 0.0, at: VTOFFSET.INNER_HALF_ANGLE.p) }
-  public static func add(MIN_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_RANGE, def: 0.0, at: VTOFFSET.MIN_RANGE.p) }
-  public static func add(MAX_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE, def: 0.0, at: VTOFFSET.MAX_RANGE.p) }
+  public static func add(HALF_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HALF_ANGLE, def: 0.0, at: VT.HALF_ANGLE) }
+  public static func add(INNER_HALF_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INNER_HALF_ANGLE, def: 0.0, at: VT.INNER_HALF_ANGLE) }
+  public static func add(MIN_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_RANGE, def: 0.0, at: VT.MIN_RANGE) }
+  public static func add(MAX_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE, def: 0.0, at: VT.MAX_RANGE) }
   public static func add(FLAT_CAP: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLAT_CAP, def: false,
-   at: VTOFFSET.FLAT_CAP.p) }
+   at: VT.FLAT_CAP) }
   public static func endSDFConical(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDFConical(
     _ fbb: inout FlatBufferBuilder,
@@ -251,11 +249,11 @@ public struct SDFConical: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.HALF_ANGLE.p, fieldName: "HALF_ANGLE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INNER_HALF_ANGLE.p, fieldName: "INNER_HALF_ANGLE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MIN_RANGE.p, fieldName: "MIN_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_RANGE.p, fieldName: "MAX_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FLAT_CAP.p, fieldName: "FLAT_CAP", required: false, type: Bool.self)
+    try _v.visit(field: VT.HALF_ANGLE, fieldName: "HALF_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.INNER_HALF_ANGLE, fieldName: "INNER_HALF_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_RANGE, fieldName: "MIN_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_RANGE, fieldName: "MAX_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.FLAT_CAP, fieldName: "FLAT_CAP", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -272,24 +270,22 @@ public struct SDFRectangular: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case X_HALF_ANGLE = 4
-    case Y_HALF_ANGLE = 6
-    case MIN_RANGE = 8
-    case MAX_RANGE = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let X_HALF_ANGLE: VOffset = 4
+    static let Y_HALF_ANGLE: VOffset = 6
+    static let MIN_RANGE: VOffset = 8
+    static let MAX_RANGE: VOffset = 10
   }
 
-  public var X_HALF_ANGLE: Double { let o = _accessor.offset(VTOFFSET.X_HALF_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Y_HALF_ANGLE: Double { let o = _accessor.offset(VTOFFSET.Y_HALF_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MIN_RANGE: Double { let o = _accessor.offset(VTOFFSET.MIN_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MAX_RANGE: Double { let o = _accessor.offset(VTOFFSET.MAX_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var X_HALF_ANGLE: Double { let o = _accessor.offset(VT.X_HALF_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y_HALF_ANGLE: Double { let o = _accessor.offset(VT.Y_HALF_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MIN_RANGE: Double { let o = _accessor.offset(VT.MIN_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_RANGE: Double { let o = _accessor.offset(VT.MAX_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startSDFRectangular(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(X_HALF_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_HALF_ANGLE, def: 0.0, at: VTOFFSET.X_HALF_ANGLE.p) }
-  public static func add(Y_HALF_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_HALF_ANGLE, def: 0.0, at: VTOFFSET.Y_HALF_ANGLE.p) }
-  public static func add(MIN_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_RANGE, def: 0.0, at: VTOFFSET.MIN_RANGE.p) }
-  public static func add(MAX_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE, def: 0.0, at: VTOFFSET.MAX_RANGE.p) }
+  public static func add(X_HALF_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_HALF_ANGLE, def: 0.0, at: VT.X_HALF_ANGLE) }
+  public static func add(Y_HALF_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_HALF_ANGLE, def: 0.0, at: VT.Y_HALF_ANGLE) }
+  public static func add(MIN_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_RANGE, def: 0.0, at: VT.MIN_RANGE) }
+  public static func add(MAX_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE, def: 0.0, at: VT.MAX_RANGE) }
   public static func endSDFRectangular(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDFRectangular(
     _ fbb: inout FlatBufferBuilder,
@@ -308,10 +304,10 @@ public struct SDFRectangular: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.X_HALF_ANGLE.p, fieldName: "X_HALF_ANGLE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Y_HALF_ANGLE.p, fieldName: "Y_HALF_ANGLE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MIN_RANGE.p, fieldName: "MIN_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_RANGE.p, fieldName: "MAX_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.X_HALF_ANGLE, fieldName: "X_HALF_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.Y_HALF_ANGLE, fieldName: "Y_HALF_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_RANGE, fieldName: "MIN_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_RANGE, fieldName: "MAX_RANGE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -328,19 +324,17 @@ public struct SDFSpherical: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case RADIUS = 4
-    case INNER_RADIUS = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let RADIUS: VOffset = 4
+    static let INNER_RADIUS: VOffset = 6
   }
 
-  public var RADIUS: Double { let o = _accessor.offset(VTOFFSET.RADIUS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RADIUS: Double { let o = _accessor.offset(VT.RADIUS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Inner radius for hollow sphere (0 == solid).
-  public var INNER_RADIUS: Double { let o = _accessor.offset(VTOFFSET.INNER_RADIUS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INNER_RADIUS: Double { let o = _accessor.offset(VT.INNER_RADIUS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startSDFSpherical(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIUS, def: 0.0, at: VTOFFSET.RADIUS.p) }
-  public static func add(INNER_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INNER_RADIUS, def: 0.0, at: VTOFFSET.INNER_RADIUS.p) }
+  public static func add(RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIUS, def: 0.0, at: VT.RADIUS) }
+  public static func add(INNER_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INNER_RADIUS, def: 0.0, at: VT.INNER_RADIUS) }
   public static func endSDFSpherical(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDFSpherical(
     _ fbb: inout FlatBufferBuilder,
@@ -355,8 +349,8 @@ public struct SDFSpherical: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.RADIUS.p, fieldName: "RADIUS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INNER_RADIUS.p, fieldName: "INNER_RADIUS", required: false, type: Double.self)
+    try _v.visit(field: VT.RADIUS, fieldName: "RADIUS", required: false, type: Double.self)
+    try _v.visit(field: VT.INNER_RADIUS, fieldName: "INNER_RADIUS", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -373,18 +367,16 @@ public struct SDFCylindrical: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case RADIUS = 4
-    case HALF_HEIGHT = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let RADIUS: VOffset = 4
+    static let HALF_HEIGHT: VOffset = 6
   }
 
-  public var RADIUS: Double { let o = _accessor.offset(VTOFFSET.RADIUS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var HALF_HEIGHT: Double { let o = _accessor.offset(VTOFFSET.HALF_HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RADIUS: Double { let o = _accessor.offset(VT.RADIUS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HALF_HEIGHT: Double { let o = _accessor.offset(VT.HALF_HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startSDFCylindrical(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIUS, def: 0.0, at: VTOFFSET.RADIUS.p) }
-  public static func add(HALF_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HALF_HEIGHT, def: 0.0, at: VTOFFSET.HALF_HEIGHT.p) }
+  public static func add(RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIUS, def: 0.0, at: VT.RADIUS) }
+  public static func add(HALF_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HALF_HEIGHT, def: 0.0, at: VT.HALF_HEIGHT) }
   public static func endSDFCylindrical(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDFCylindrical(
     _ fbb: inout FlatBufferBuilder,
@@ -399,8 +391,8 @@ public struct SDFCylindrical: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.RADIUS.p, fieldName: "RADIUS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.HALF_HEIGHT.p, fieldName: "HALF_HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.RADIUS, fieldName: "RADIUS", required: false, type: Double.self)
+    try _v.visit(field: VT.HALF_HEIGHT, fieldName: "HALF_HEIGHT", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -417,20 +409,18 @@ public struct SDFCustom: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case DIRECTIONS = 4
-    case MAX_RANGE = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let DIRECTIONS: VOffset = 4
+    static let MAX_RANGE: VOffset = 6
   }
 
   ///  Unit vectors defining the boundary packed as [x0, y0, z0, x1, y1, z1, ...].
-  public var DIRECTIONS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.DIRECTIONS.v, byteSize: 8) }
-  public func withUnsafePointerToDirections<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DIRECTIONS.v, body: body) }
-  public var MAX_RANGE: Double { let o = _accessor.offset(VTOFFSET.MAX_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DIRECTIONS: FlatbufferVector<Double> { return _accessor.vector(at: VT.DIRECTIONS, byteSize: 8) }
+  public func withUnsafePointerToDirections<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DIRECTIONS, body: body) }
+  public var MAX_RANGE: Double { let o = _accessor.offset(VT.MAX_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startSDFCustom(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func addVectorOf(DIRECTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DIRECTIONS, at: VTOFFSET.DIRECTIONS.p) }
-  public static func add(MAX_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE, def: 0.0, at: VTOFFSET.MAX_RANGE.p) }
+  public static func addVectorOf(DIRECTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DIRECTIONS, at: VT.DIRECTIONS) }
+  public static func add(MAX_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE, def: 0.0, at: VT.MAX_RANGE) }
   public static func endSDFCustom(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDFCustom(
     _ fbb: inout FlatBufferBuilder,
@@ -445,8 +435,8 @@ public struct SDFCustom: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.DIRECTIONS.p, fieldName: "DIRECTIONS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.MAX_RANGE.p, fieldName: "MAX_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.DIRECTIONS, fieldName: "DIRECTIONS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.MAX_RANGE, fieldName: "MAX_RANGE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -463,27 +453,25 @@ public struct SDFComposition: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case OPERATION = 4
-    case OPERAND_A = 6
-    case OPERAND_B = 8
-    case BLEND_RADIUS = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let OPERATION: VOffset = 4
+    static let OPERAND_A: VOffset = 6
+    static let OPERAND_B: VOffset = 8
+    static let BLEND_RADIUS: VOffset = 10
   }
 
-  public var OPERATION: sdfOperation { let o = _accessor.offset(VTOFFSET.OPERATION.v); return o == 0 ? .none_ : sdfOperation(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  public var OPERATION: sdfOperation { let o = _accessor.offset(VT.OPERATION); return o == 0 ? .none_ : sdfOperation(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
   ///  First operand (index into SDF.COMPONENTS[]).
-  public var OPERAND_A: UInt32 { let o = _accessor.offset(VTOFFSET.OPERAND_A.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OPERAND_A: UInt32 { let o = _accessor.offset(VT.OPERAND_A); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Second operand (index into SDF.COMPONENTS[]).
-  public var OPERAND_B: UInt32 { let o = _accessor.offset(VTOFFSET.OPERAND_B.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OPERAND_B: UInt32 { let o = _accessor.offset(VT.OPERAND_B); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Blend radius for smooth operations.
-  public var BLEND_RADIUS: Double { let o = _accessor.offset(VTOFFSET.BLEND_RADIUS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BLEND_RADIUS: Double { let o = _accessor.offset(VT.BLEND_RADIUS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startSDFComposition(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(OPERATION: sdfOperation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATION.rawValue, def: 0, at: VTOFFSET.OPERATION.p) }
-  public static func add(OPERAND_A: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERAND_A, def: 0, at: VTOFFSET.OPERAND_A.p) }
-  public static func add(OPERAND_B: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERAND_B, def: 0, at: VTOFFSET.OPERAND_B.p) }
-  public static func add(BLEND_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BLEND_RADIUS, def: 0.0, at: VTOFFSET.BLEND_RADIUS.p) }
+  public static func add(OPERATION: sdfOperation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATION.rawValue, def: 0, at: VT.OPERATION) }
+  public static func add(OPERAND_A: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERAND_A, def: 0, at: VT.OPERAND_A) }
+  public static func add(OPERAND_B: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERAND_B, def: 0, at: VT.OPERAND_B) }
+  public static func add(BLEND_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BLEND_RADIUS, def: 0.0, at: VT.BLEND_RADIUS) }
   public static func endSDFComposition(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDFComposition(
     _ fbb: inout FlatBufferBuilder,
@@ -502,10 +490,10 @@ public struct SDFComposition: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.OPERATION.p, fieldName: "OPERATION", required: false, type: sdfOperation.self)
-    try _v.visit(field: VTOFFSET.OPERAND_A.p, fieldName: "OPERAND_A", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.OPERAND_B.p, fieldName: "OPERAND_B", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.BLEND_RADIUS.p, fieldName: "BLEND_RADIUS", required: false, type: Double.self)
+    try _v.visit(field: VT.OPERATION, fieldName: "OPERATION", required: false, type: sdfOperation.self)
+    try _v.visit(field: VT.OPERAND_A, fieldName: "OPERAND_A", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OPERAND_B, fieldName: "OPERAND_B", required: false, type: UInt32.self)
+    try _v.visit(field: VT.BLEND_RADIUS, fieldName: "BLEND_RADIUS", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -522,30 +510,28 @@ public struct SDFComponent: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PRIMITIVE = 4
-    case CONE = 6
-    case RECTANGULAR = 8
-    case SPHERICAL = 10
-    case CYLINDRICAL = 12
-    case CUSTOM = 14
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PRIMITIVE: VOffset = 4
+    static let CONE: VOffset = 6
+    static let RECTANGULAR: VOffset = 8
+    static let SPHERICAL: VOffset = 10
+    static let CYLINDRICAL: VOffset = 12
+    static let CUSTOM: VOffset = 14
   }
 
-  public var PRIMITIVE: sdfPrimitive { let o = _accessor.offset(VTOFFSET.PRIMITIVE.v); return o == 0 ? .cone : sdfPrimitive(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .cone }
-  public var CONE: SDFConical? { let o = _accessor.offset(VTOFFSET.CONE.v); return o == 0 ? nil : SDFConical(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var RECTANGULAR: SDFRectangular? { let o = _accessor.offset(VTOFFSET.RECTANGULAR.v); return o == 0 ? nil : SDFRectangular(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var SPHERICAL: SDFSpherical? { let o = _accessor.offset(VTOFFSET.SPHERICAL.v); return o == 0 ? nil : SDFSpherical(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var CYLINDRICAL: SDFCylindrical? { let o = _accessor.offset(VTOFFSET.CYLINDRICAL.v); return o == 0 ? nil : SDFCylindrical(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var CUSTOM: SDFCustom? { let o = _accessor.offset(VTOFFSET.CUSTOM.v); return o == 0 ? nil : SDFCustom(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PRIMITIVE: sdfPrimitive { let o = _accessor.offset(VT.PRIMITIVE); return o == 0 ? .cone : sdfPrimitive(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .cone }
+  public var CONE: SDFConical? { let o = _accessor.offset(VT.CONE); return o == 0 ? nil : SDFConical(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RECTANGULAR: SDFRectangular? { let o = _accessor.offset(VT.RECTANGULAR); return o == 0 ? nil : SDFRectangular(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SPHERICAL: SDFSpherical? { let o = _accessor.offset(VT.SPHERICAL); return o == 0 ? nil : SDFSpherical(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CYLINDRICAL: SDFCylindrical? { let o = _accessor.offset(VT.CYLINDRICAL); return o == 0 ? nil : SDFCylindrical(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CUSTOM: SDFCustom? { let o = _accessor.offset(VT.CUSTOM); return o == 0 ? nil : SDFCustom(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startSDFComponent(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(PRIMITIVE: sdfPrimitive, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMITIVE.rawValue, def: 0, at: VTOFFSET.PRIMITIVE.p) }
-  public static func add(CONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONE, at: VTOFFSET.CONE.p) }
-  public static func add(RECTANGULAR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECTANGULAR, at: VTOFFSET.RECTANGULAR.p) }
-  public static func add(SPHERICAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPHERICAL, at: VTOFFSET.SPHERICAL.p) }
-  public static func add(CYLINDRICAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CYLINDRICAL, at: VTOFFSET.CYLINDRICAL.p) }
-  public static func add(CUSTOM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CUSTOM, at: VTOFFSET.CUSTOM.p) }
+  public static func add(PRIMITIVE: sdfPrimitive, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMITIVE.rawValue, def: 0, at: VT.PRIMITIVE) }
+  public static func add(CONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONE, at: VT.CONE) }
+  public static func add(RECTANGULAR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECTANGULAR, at: VT.RECTANGULAR) }
+  public static func add(SPHERICAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPHERICAL, at: VT.SPHERICAL) }
+  public static func add(CYLINDRICAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CYLINDRICAL, at: VT.CYLINDRICAL) }
+  public static func add(CUSTOM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CUSTOM, at: VT.CUSTOM) }
   public static func endSDFComponent(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDFComponent(
     _ fbb: inout FlatBufferBuilder,
@@ -568,12 +554,12 @@ public struct SDFComponent: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PRIMITIVE.p, fieldName: "PRIMITIVE", required: false, type: sdfPrimitive.self)
-    try _v.visit(field: VTOFFSET.CONE.p, fieldName: "CONE", required: false, type: ForwardOffset<SDFConical>.self)
-    try _v.visit(field: VTOFFSET.RECTANGULAR.p, fieldName: "RECTANGULAR", required: false, type: ForwardOffset<SDFRectangular>.self)
-    try _v.visit(field: VTOFFSET.SPHERICAL.p, fieldName: "SPHERICAL", required: false, type: ForwardOffset<SDFSpherical>.self)
-    try _v.visit(field: VTOFFSET.CYLINDRICAL.p, fieldName: "CYLINDRICAL", required: false, type: ForwardOffset<SDFCylindrical>.self)
-    try _v.visit(field: VTOFFSET.CUSTOM.p, fieldName: "CUSTOM", required: false, type: ForwardOffset<SDFCustom>.self)
+    try _v.visit(field: VT.PRIMITIVE, fieldName: "PRIMITIVE", required: false, type: sdfPrimitive.self)
+    try _v.visit(field: VT.CONE, fieldName: "CONE", required: false, type: ForwardOffset<SDFConical>.self)
+    try _v.visit(field: VT.RECTANGULAR, fieldName: "RECTANGULAR", required: false, type: ForwardOffset<SDFRectangular>.self)
+    try _v.visit(field: VT.SPHERICAL, fieldName: "SPHERICAL", required: false, type: ForwardOffset<SDFSpherical>.self)
+    try _v.visit(field: VT.CYLINDRICAL, fieldName: "CYLINDRICAL", required: false, type: ForwardOffset<SDFCylindrical>.self)
+    try _v.visit(field: VT.CUSTOM, fieldName: "CUSTOM", required: false, type: ForwardOffset<SDFCustom>.self)
     _v.finish()
   }
 }
@@ -590,29 +576,27 @@ public struct SDFConfig: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PRIMITIVE = 4
-    case COMPONENTS = 6
-    case COMPOSITIONS = 8
-    case INVERSE_TRANSFORM = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PRIMITIVE: VOffset = 4
+    static let COMPONENTS: VOffset = 6
+    static let COMPOSITIONS: VOffset = 8
+    static let INVERSE_TRANSFORM: VOffset = 10
   }
 
   ///  Root primitive type (useful when COMPONENTS[] is empty).
-  public var PRIMITIVE: sdfPrimitive { let o = _accessor.offset(VTOFFSET.PRIMITIVE.v); return o == 0 ? .cone : sdfPrimitive(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .cone }
+  public var PRIMITIVE: sdfPrimitive { let o = _accessor.offset(VT.PRIMITIVE); return o == 0 ? .cone : sdfPrimitive(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .cone }
   ///  One or more components that may be combined via COMPOSITIONS[].
-  public var COMPONENTS: FlatbufferVector<SDFComponent> { return _accessor.vector(at: VTOFFSET.COMPONENTS.v, byteSize: 4) }
+  public var COMPONENTS: FlatbufferVector<SDFComponent> { return _accessor.vector(at: VT.COMPONENTS, byteSize: 4) }
   ///  Composition tree over COMPONENTS[].
-  public var COMPOSITIONS: FlatbufferVector<SDFComposition> { return _accessor.vector(at: VTOFFSET.COMPOSITIONS.v, byteSize: 4) }
+  public var COMPOSITIONS: FlatbufferVector<SDFComposition> { return _accessor.vector(at: VT.COMPOSITIONS, byteSize: 4) }
   ///  World-to-local transform (4x4 column-major, 16 doubles).
-  public var INVERSE_TRANSFORM: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.INVERSE_TRANSFORM.v, byteSize: 8) }
-  public func withUnsafePointerToInverseTransform<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.INVERSE_TRANSFORM.v, body: body) }
+  public var INVERSE_TRANSFORM: FlatbufferVector<Double> { return _accessor.vector(at: VT.INVERSE_TRANSFORM, byteSize: 8) }
+  public func withUnsafePointerToInverseTransform<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.INVERSE_TRANSFORM, body: body) }
   public static func startSDFConfig(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(PRIMITIVE: sdfPrimitive, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMITIVE.rawValue, def: 0, at: VTOFFSET.PRIMITIVE.p) }
-  public static func addVectorOf(COMPONENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPONENTS, at: VTOFFSET.COMPONENTS.p) }
-  public static func addVectorOf(COMPOSITIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPOSITIONS, at: VTOFFSET.COMPOSITIONS.p) }
-  public static func addVectorOf(INVERSE_TRANSFORM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INVERSE_TRANSFORM, at: VTOFFSET.INVERSE_TRANSFORM.p) }
+  public static func add(PRIMITIVE: sdfPrimitive, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMITIVE.rawValue, def: 0, at: VT.PRIMITIVE) }
+  public static func addVectorOf(COMPONENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPONENTS, at: VT.COMPONENTS) }
+  public static func addVectorOf(COMPOSITIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPOSITIONS, at: VT.COMPOSITIONS) }
+  public static func addVectorOf(INVERSE_TRANSFORM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INVERSE_TRANSFORM, at: VT.INVERSE_TRANSFORM) }
   public static func endSDFConfig(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDFConfig(
     _ fbb: inout FlatBufferBuilder,
@@ -631,10 +615,10 @@ public struct SDFConfig: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PRIMITIVE.p, fieldName: "PRIMITIVE", required: false, type: sdfPrimitive.self)
-    try _v.visit(field: VTOFFSET.COMPONENTS.p, fieldName: "COMPONENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<SDFComponent>, SDFComponent>>.self)
-    try _v.visit(field: VTOFFSET.COMPOSITIONS.p, fieldName: "COMPOSITIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<SDFComposition>, SDFComposition>>.self)
-    try _v.visit(field: VTOFFSET.INVERSE_TRANSFORM.p, fieldName: "INVERSE_TRANSFORM", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.PRIMITIVE, fieldName: "PRIMITIVE", required: false, type: sdfPrimitive.self)
+    try _v.visit(field: VT.COMPONENTS, fieldName: "COMPONENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<SDFComponent>, SDFComponent>>.self)
+    try _v.visit(field: VT.COMPOSITIONS, fieldName: "COMPOSITIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<SDFComposition>, SDFComposition>>.self)
+    try _v.visit(field: VT.INVERSE_TRANSFORM, fieldName: "INVERSE_TRANSFORM", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
@@ -651,32 +635,30 @@ public struct SDFBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case INPUT_OFFSET = 4
-    case POINT_COUNT = 6
-    case ENTITY_IDS_OFFSET = 8
-    case OUTPUT_OFFSET = 10
-    case INVERSE_TRANSFORM_OFFSET = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let INPUT_OFFSET: VOffset = 4
+    static let POINT_COUNT: VOffset = 6
+    static let ENTITY_IDS_OFFSET: VOffset = 8
+    static let OUTPUT_OFFSET: VOffset = 10
+    static let INVERSE_TRANSFORM_OFFSET: VOffset = 12
   }
 
   ///  Input buffer offset (arena bytes) where the Vec3[] of world points begins.
-  public var INPUT_OFFSET: UInt32 { let o = _accessor.offset(VTOFFSET.INPUT_OFFSET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var INPUT_OFFSET: UInt32 { let o = _accessor.offset(VT.INPUT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Number of points to evaluate.
-  public var POINT_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.POINT_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var POINT_COUNT: UInt32 { let o = _accessor.offset(VT.POINT_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Entity-ids buffer offset corresponding to each point (optional).
-  public var ENTITY_IDS_OFFSET: UInt32 { let o = _accessor.offset(VTOFFSET.ENTITY_IDS_OFFSET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var ENTITY_IDS_OFFSET: UInt32 { let o = _accessor.offset(VT.ENTITY_IDS_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Output buffer offset where sdfResult[] is written.
-  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VTOFFSET.OUTPUT_OFFSET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VT.OUTPUT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Inverse-transform buffer offset (4x4 matrix, 128 bytes).
-  public var INVERSE_TRANSFORM_OFFSET: UInt32 { let o = _accessor.offset(VTOFFSET.INVERSE_TRANSFORM_OFFSET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var INVERSE_TRANSFORM_OFFSET: UInt32 { let o = _accessor.offset(VT.INVERSE_TRANSFORM_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   public static func startSDFBatchRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(INPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INPUT_OFFSET, def: 0, at: VTOFFSET.INPUT_OFFSET.p) }
-  public static func add(POINT_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINT_COUNT, def: 0, at: VTOFFSET.POINT_COUNT.p) }
-  public static func add(ENTITY_IDS_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_IDS_OFFSET, def: 0, at: VTOFFSET.ENTITY_IDS_OFFSET.p) }
-  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VTOFFSET.OUTPUT_OFFSET.p) }
-  public static func add(INVERSE_TRANSFORM_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INVERSE_TRANSFORM_OFFSET, def: 0, at: VTOFFSET.INVERSE_TRANSFORM_OFFSET.p) }
+  public static func add(INPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INPUT_OFFSET, def: 0, at: VT.INPUT_OFFSET) }
+  public static func add(POINT_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINT_COUNT, def: 0, at: VT.POINT_COUNT) }
+  public static func add(ENTITY_IDS_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_IDS_OFFSET, def: 0, at: VT.ENTITY_IDS_OFFSET) }
+  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VT.OUTPUT_OFFSET) }
+  public static func add(INVERSE_TRANSFORM_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INVERSE_TRANSFORM_OFFSET, def: 0, at: VT.INVERSE_TRANSFORM_OFFSET) }
   public static func endSDFBatchRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDFBatchRequest(
     _ fbb: inout FlatBufferBuilder,
@@ -697,11 +679,11 @@ public struct SDFBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.INPUT_OFFSET.p, fieldName: "INPUT_OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.POINT_COUNT.p, fieldName: "POINT_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ENTITY_IDS_OFFSET.p, fieldName: "ENTITY_IDS_OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.OUTPUT_OFFSET.p, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.INVERSE_TRANSFORM_OFFSET.p, fieldName: "INVERSE_TRANSFORM_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.INPUT_OFFSET, fieldName: "INPUT_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.POINT_COUNT, fieldName: "POINT_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ENTITY_IDS_OFFSET, fieldName: "ENTITY_IDS_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OUTPUT_OFFSET, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.INVERSE_TRANSFORM_OFFSET, fieldName: "INVERSE_TRANSFORM_OFFSET", required: false, type: UInt32.self)
     _v.finish()
   }
 }
@@ -718,33 +700,31 @@ public struct SDFBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COUNT = 4
-    case INSIDE_COUNT = 6
-    case OUTPUT_OFFSET = 8
-    case ERROR_CODE = 10
-    case ERROR_MESSAGE = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COUNT: VOffset = 4
+    static let INSIDE_COUNT: VOffset = 6
+    static let OUTPUT_OFFSET: VOffset = 8
+    static let ERROR_CODE: VOffset = 10
+    static let ERROR_MESSAGE: VOffset = 12
   }
 
   ///  Number of results written.
-  public var COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var COUNT: UInt32 { let o = _accessor.offset(VT.COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Number of points inside the volume.
-  public var INSIDE_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.INSIDE_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var INSIDE_COUNT: UInt32 { let o = _accessor.offset(VT.INSIDE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Output offset where sdfResult[] starts.
-  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VTOFFSET.OUTPUT_OFFSET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var OUTPUT_OFFSET: UInt32 { let o = _accessor.offset(VT.OUTPUT_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Error code (0 == success).
-  public var ERROR_CODE: Int32 { let o = _accessor.offset(VTOFFSET.ERROR_CODE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var ERROR_CODE: Int32 { let o = _accessor.offset(VT.ERROR_CODE); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Optional error message when ERROR_CODE != 0.
-  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VTOFFSET.ERROR_MESSAGE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ERROR_MESSAGE.v) }
+  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
   public static func startSDFBatchResponse(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNT, def: 0, at: VTOFFSET.COUNT.p) }
-  public static func add(INSIDE_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INSIDE_COUNT, def: 0, at: VTOFFSET.INSIDE_COUNT.p) }
-  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VTOFFSET.OUTPUT_OFFSET.p) }
-  public static func add(ERROR_CODE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERROR_CODE, def: 0, at: VTOFFSET.ERROR_CODE.p) }
-  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VTOFFSET.ERROR_MESSAGE.p) }
+  public static func add(COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNT, def: 0, at: VT.COUNT) }
+  public static func add(INSIDE_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INSIDE_COUNT, def: 0, at: VT.INSIDE_COUNT) }
+  public static func add(OUTPUT_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_OFFSET, def: 0, at: VT.OUTPUT_OFFSET) }
+  public static func add(ERROR_CODE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERROR_CODE, def: 0, at: VT.ERROR_CODE) }
+  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
   public static func endSDFBatchResponse(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDFBatchResponse(
     _ fbb: inout FlatBufferBuilder,
@@ -765,11 +745,11 @@ public struct SDFBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COUNT.p, fieldName: "COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.INSIDE_COUNT.p, fieldName: "INSIDE_COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.OUTPUT_OFFSET.p, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ERROR_CODE.p, fieldName: "ERROR_CODE", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.ERROR_MESSAGE.p, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COUNT, fieldName: "COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.INSIDE_COUNT, fieldName: "INSIDE_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OUTPUT_OFFSET, fieldName: "OUTPUT_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ERROR_CODE, fieldName: "ERROR_CODE", required: false, type: Int32.self)
+    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -787,34 +767,32 @@ public struct SDF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CONFIG = 4
-    case BATCH_REQUEST = 6
-    case BATCH_RESPONSE = 8
-    case RESULTS = 10
-    case TIME_RANGE_RESULTS = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CONFIG: VOffset = 4
+    static let BATCH_REQUEST: VOffset = 6
+    static let BATCH_RESPONSE: VOffset = 8
+    static let RESULTS: VOffset = 10
+    static let TIME_RANGE_RESULTS: VOffset = 12
   }
 
-  public var CONFIG: SDFConfig? { let o = _accessor.offset(VTOFFSET.CONFIG.v); return o == 0 ? nil : SDFConfig(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var BATCH_REQUEST: SDFBatchRequest? { let o = _accessor.offset(VTOFFSET.BATCH_REQUEST.v); return o == 0 ? nil : SDFBatchRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var BATCH_RESPONSE: SDFBatchResponse? { let o = _accessor.offset(VTOFFSET.BATCH_RESPONSE.v); return o == 0 ? nil : SDFBatchResponse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var RESULTS: FlatbufferVector<sdfResult> { return _accessor.vector(at: VTOFFSET.RESULTS.v, byteSize: 24) }
-  public var mutableResults: FlatbufferVector<sdfResult_Mutable> { return _accessor.vector(at: VTOFFSET.RESULTS.v, byteSize: 24) }
-  public func withUnsafePointerToResults<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESULTS.v, body: body) }
-  public var TIME_RANGE_RESULTS: FlatbufferVector<sdfTimeRangeResult> { return _accessor.vector(at: VTOFFSET.TIME_RANGE_RESULTS.v, byteSize: 40) }
-  public var mutableTimeRangeResults: FlatbufferVector<sdfTimeRangeResult_Mutable> { return _accessor.vector(at: VTOFFSET.TIME_RANGE_RESULTS.v, byteSize: 40) }
-  public func withUnsafePointerToTimeRangeResults<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.TIME_RANGE_RESULTS.v, body: body) }
+  public var CONFIG: SDFConfig? { let o = _accessor.offset(VT.CONFIG); return o == 0 ? nil : SDFConfig(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BATCH_REQUEST: SDFBatchRequest? { let o = _accessor.offset(VT.BATCH_REQUEST); return o == 0 ? nil : SDFBatchRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BATCH_RESPONSE: SDFBatchResponse? { let o = _accessor.offset(VT.BATCH_RESPONSE); return o == 0 ? nil : SDFBatchResponse(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RESULTS: FlatbufferVector<sdfResult> { return _accessor.vector(at: VT.RESULTS, byteSize: 24) }
+  public var mutableResults: FlatbufferVector<sdfResult_Mutable> { return _accessor.vector(at: VT.RESULTS, byteSize: 24) }
+  public func withUnsafePointerToResults<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESULTS, body: body) }
+  public var TIME_RANGE_RESULTS: FlatbufferVector<sdfTimeRangeResult> { return _accessor.vector(at: VT.TIME_RANGE_RESULTS, byteSize: 40) }
+  public var mutableTimeRangeResults: FlatbufferVector<sdfTimeRangeResult_Mutable> { return _accessor.vector(at: VT.TIME_RANGE_RESULTS, byteSize: 40) }
+  public func withUnsafePointerToTimeRangeResults<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TIME_RANGE_RESULTS, body: body) }
   public static func startSDF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONFIG, at: VTOFFSET.CONFIG.p) }
-  public static func add(BATCH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_REQUEST, at: VTOFFSET.BATCH_REQUEST.p) }
-  public static func add(BATCH_RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_RESPONSE, at: VTOFFSET.BATCH_RESPONSE.p) }
-  public static func addVectorOf(RESULTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESULTS, at: VTOFFSET.RESULTS.p) }
+  public static func add(CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONFIG, at: VT.CONFIG) }
+  public static func add(BATCH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_REQUEST, at: VT.BATCH_REQUEST) }
+  public static func add(BATCH_RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_RESPONSE, at: VT.BATCH_RESPONSE) }
+  public static func addVectorOf(RESULTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESULTS, at: VT.RESULTS) }
   public static func startVectorOfResults(_ size: Int, in builder: inout FlatBufferBuilder) {
     builder.startVector(size * MemoryLayout<sdfResult>.size, elementSize: MemoryLayout<sdfResult>.alignment)
   }
-  public static func addVectorOf(TIME_RANGE_RESULTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_RANGE_RESULTS, at: VTOFFSET.TIME_RANGE_RESULTS.p) }
+  public static func addVectorOf(TIME_RANGE_RESULTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_RANGE_RESULTS, at: VT.TIME_RANGE_RESULTS) }
   public static func startVectorOfTimeRangeResults(_ size: Int, in builder: inout FlatBufferBuilder) {
     builder.startVector(size * MemoryLayout<sdfTimeRangeResult>.size, elementSize: MemoryLayout<sdfTimeRangeResult>.alignment)
   }
@@ -838,11 +816,11 @@ public struct SDF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CONFIG.p, fieldName: "CONFIG", required: false, type: ForwardOffset<SDFConfig>.self)
-    try _v.visit(field: VTOFFSET.BATCH_REQUEST.p, fieldName: "BATCH_REQUEST", required: false, type: ForwardOffset<SDFBatchRequest>.self)
-    try _v.visit(field: VTOFFSET.BATCH_RESPONSE.p, fieldName: "BATCH_RESPONSE", required: false, type: ForwardOffset<SDFBatchResponse>.self)
-    try _v.visit(field: VTOFFSET.RESULTS.p, fieldName: "RESULTS", required: false, type: ForwardOffset<Vector<sdfResult, sdfResult>>.self)
-    try _v.visit(field: VTOFFSET.TIME_RANGE_RESULTS.p, fieldName: "TIME_RANGE_RESULTS", required: false, type: ForwardOffset<Vector<sdfTimeRangeResult, sdfTimeRangeResult>>.self)
+    try _v.visit(field: VT.CONFIG, fieldName: "CONFIG", required: false, type: ForwardOffset<SDFConfig>.self)
+    try _v.visit(field: VT.BATCH_REQUEST, fieldName: "BATCH_REQUEST", required: false, type: ForwardOffset<SDFBatchRequest>.self)
+    try _v.visit(field: VT.BATCH_RESPONSE, fieldName: "BATCH_RESPONSE", required: false, type: ForwardOffset<SDFBatchResponse>.self)
+    try _v.visit(field: VT.RESULTS, fieldName: "RESULTS", required: false, type: ForwardOffset<Vector<sdfResult, sdfResult>>.self)
+    try _v.visit(field: VT.TIME_RANGE_RESULTS, fieldName: "TIME_RANGE_RESULTS", required: false, type: ForwardOffset<Vector<sdfTimeRangeResult, sdfTimeRangeResult>>.self)
     _v.finish()
   }
 }

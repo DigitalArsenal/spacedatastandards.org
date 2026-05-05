@@ -57,265 +57,263 @@ public struct SAR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case SAT_NO = 6
-    case ORIG_OBJECT_ID = 8
-    case ON_ORBIT = 10
-    case ID_SENSOR = 12
-    case ORIG_SENSOR_ID = 14
-    case EXTERNAL_ID = 16
-    case COLLECTION_ID = 18
-    case DETECTION_ID = 20
-    case COLLECTION_START = 22
-    case COLLECTION_END = 24
-    case CENTER_TIME = 26
-    case DETECTION_START = 28
-    case DETECTION_END = 30
-    case DWELL_TIME = 32
-    case ORBIT_STATE = 34
-    case SAR_MODE = 36
-    case OPERATING_BAND = 38
-    case OPERATING_FREQ = 40
-    case SNR = 42
-    case TX_POLARIZATION = 44
-    case RX_POLARIZATION = 46
-    case GRAZE_ANGLE = 48
-    case INCIDENCE_ANGLE = 50
-    case SQUINT_ANGLE = 52
-    case PULSE_BANDWIDTH = 54
-    case PULSE_DURATION = 56
-    case CONTINUOUS_SPOT_ANGLE = 58
-    case SLANT_RANGE = 60
-    case NEAR_RANGE = 62
-    case FAR_RANGE = 64
-    case SWATH_LENGTH = 66
-    case AGJSON = 68
-    case ATEXT = 70
-    case ATYPE = 72
-    case COORD_SYS = 74
-    case SPACING_RANGE = 76
-    case SPACING_AZIMUTH = 78
-    case LOOKS_AZIMUTH = 80
-    case LOOKS_RANGE = 82
-    case RESOLUTION_RANGE = 84
-    case RESOLUTION_AZIMUTH = 86
-    case OB_DIRECTION = 88
-    case TARGETPOSX = 90
-    case TARGETPOSY = 92
-    case TARGETPOSZ = 94
-    case SENALT = 96
-    case SENVELX = 98
-    case SENVELY = 100
-    case SENVELZ = 102
-    case SENLAT_START = 104
-    case SENLON_START = 106
-    case SENLAT_END = 108
-    case SENLON_END = 110
-    case TRANSACTION_ID = 112
-    case TAGS = 114
-    case SRC_TYPS = 116
-    case SRC_IDS = 118
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let SAT_NO: VOffset = 6
+    static let ORIG_OBJECT_ID: VOffset = 8
+    static let ON_ORBIT: VOffset = 10
+    static let ID_SENSOR: VOffset = 12
+    static let ORIG_SENSOR_ID: VOffset = 14
+    static let EXTERNAL_ID: VOffset = 16
+    static let COLLECTION_ID: VOffset = 18
+    static let DETECTION_ID: VOffset = 20
+    static let COLLECTION_START: VOffset = 22
+    static let COLLECTION_END: VOffset = 24
+    static let CENTER_TIME: VOffset = 26
+    static let DETECTION_START: VOffset = 28
+    static let DETECTION_END: VOffset = 30
+    static let DWELL_TIME: VOffset = 32
+    static let ORBIT_STATE: VOffset = 34
+    static let SAR_MODE: VOffset = 36
+    static let OPERATING_BAND: VOffset = 38
+    static let OPERATING_FREQ: VOffset = 40
+    static let SNR: VOffset = 42
+    static let TX_POLARIZATION: VOffset = 44
+    static let RX_POLARIZATION: VOffset = 46
+    static let GRAZE_ANGLE: VOffset = 48
+    static let INCIDENCE_ANGLE: VOffset = 50
+    static let SQUINT_ANGLE: VOffset = 52
+    static let PULSE_BANDWIDTH: VOffset = 54
+    static let PULSE_DURATION: VOffset = 56
+    static let CONTINUOUS_SPOT_ANGLE: VOffset = 58
+    static let SLANT_RANGE: VOffset = 60
+    static let NEAR_RANGE: VOffset = 62
+    static let FAR_RANGE: VOffset = 64
+    static let SWATH_LENGTH: VOffset = 66
+    static let AGJSON: VOffset = 68
+    static let ATEXT: VOffset = 70
+    static let ATYPE: VOffset = 72
+    static let COORD_SYS: VOffset = 74
+    static let SPACING_RANGE: VOffset = 76
+    static let SPACING_AZIMUTH: VOffset = 78
+    static let LOOKS_AZIMUTH: VOffset = 80
+    static let LOOKS_RANGE: VOffset = 82
+    static let RESOLUTION_RANGE: VOffset = 84
+    static let RESOLUTION_AZIMUTH: VOffset = 86
+    static let OB_DIRECTION: VOffset = 88
+    static let TARGETPOSX: VOffset = 90
+    static let TARGETPOSY: VOffset = 92
+    static let TARGETPOSZ: VOffset = 94
+    static let SENALT: VOffset = 96
+    static let SENVELX: VOffset = 98
+    static let SENVELY: VOffset = 100
+    static let SENVELZ: VOffset = 102
+    static let SENLAT_START: VOffset = 104
+    static let SENLON_START: VOffset = 106
+    static let SENLAT_END: VOffset = 108
+    static let SENLON_END: VOffset = 110
+    static let TRANSACTION_ID: VOffset = 112
+    static let TAGS: VOffset = 114
+    static let SRC_TYPS: VOffset = 116
+    static let SRC_IDS: VOffset = 118
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Satellite catalog number (of SAR platform)
-  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VT.SAT_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  International designator
-  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
+  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VT.ORIG_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_OBJECT_ID) }
   ///  On-orbit reference
-  public var ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ON_ORBIT.v) }
+  public var ON_ORBIT: String? { let o = _accessor.offset(VT.ON_ORBIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ON_ORBIT) }
   ///  Sensor identifier
-  public var ID_SENSOR: String? { let o = _accessor.offset(VTOFFSET.ID_SENSOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_SENSOR.v) }
+  public var ID_SENSOR: String? { let o = _accessor.offset(VT.ID_SENSOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_SENSOR) }
   ///  Original sensor identifier
-  public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_SENSOR_ID.v) }
+  public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VT.ORIG_SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_SENSOR_ID) }
   ///  External reference identifier
-  public var EXTERNAL_ID: String? { let o = _accessor.offset(VTOFFSET.EXTERNAL_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EXTERNAL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXTERNAL_ID.v) }
+  public var EXTERNAL_ID: String? { let o = _accessor.offset(VT.EXTERNAL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXTERNAL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXTERNAL_ID) }
   ///  Collection identifier
-  public var COLLECTION_ID: String? { let o = _accessor.offset(VTOFFSET.COLLECTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLLECTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLLECTION_ID.v) }
+  public var COLLECTION_ID: String? { let o = _accessor.offset(VT.COLLECTION_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLLECTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLLECTION_ID) }
   ///  Detection identifier
-  public var DETECTION_ID: String? { let o = _accessor.offset(VTOFFSET.DETECTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DETECTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DETECTION_ID.v) }
+  public var DETECTION_ID: String? { let o = _accessor.offset(VT.DETECTION_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DETECTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DETECTION_ID) }
   ///  Collection start time (ISO 8601)
-  public var COLLECTION_START: String? { let o = _accessor.offset(VTOFFSET.COLLECTION_START.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLLECTION_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLLECTION_START.v) }
+  public var COLLECTION_START: String? { let o = _accessor.offset(VT.COLLECTION_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLLECTION_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLLECTION_START) }
   ///  Collection end time (ISO 8601)
-  public var COLLECTION_END: String? { let o = _accessor.offset(VTOFFSET.COLLECTION_END.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLLECTION_ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLLECTION_END.v) }
+  public var COLLECTION_END: String? { let o = _accessor.offset(VT.COLLECTION_END); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLLECTION_ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLLECTION_END) }
   ///  Center time of observation (ISO 8601)
-  public var CENTER_TIME: String? { let o = _accessor.offset(VTOFFSET.CENTER_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CENTER_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CENTER_TIME.v) }
+  public var CENTER_TIME: String? { let o = _accessor.offset(VT.CENTER_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTER_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_TIME) }
   ///  Detection start time (ISO 8601)
-  public var DETECTION_START: String? { let o = _accessor.offset(VTOFFSET.DETECTION_START.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DETECTION_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DETECTION_START.v) }
+  public var DETECTION_START: String? { let o = _accessor.offset(VT.DETECTION_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DETECTION_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DETECTION_START) }
   ///  Detection end time (ISO 8601)
-  public var DETECTION_END: String? { let o = _accessor.offset(VTOFFSET.DETECTION_END.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DETECTION_ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DETECTION_END.v) }
+  public var DETECTION_END: String? { let o = _accessor.offset(VT.DETECTION_END); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DETECTION_ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DETECTION_END) }
   ///  Integration/dwell time (seconds)
-  public var DWELL_TIME: Double { let o = _accessor.offset(VTOFFSET.DWELL_TIME.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DWELL_TIME: Double { let o = _accessor.offset(VT.DWELL_TIME); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Orbit state description
-  public var ORBIT_STATE: String? { let o = _accessor.offset(VTOFFSET.ORBIT_STATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORBIT_STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORBIT_STATE.v) }
+  public var ORBIT_STATE: String? { let o = _accessor.offset(VT.ORBIT_STATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORBIT_STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORBIT_STATE) }
   ///  SAR imaging mode
-  public var SAR_MODE: sarMission { let o = _accessor.offset(VTOFFSET.SAR_MODE.v); return o == 0 ? .stripmap : sarMission(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .stripmap }
+  public var SAR_MODE: sarMission { let o = _accessor.offset(VT.SAR_MODE); return o == 0 ? .stripmap : sarMission(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .stripmap }
   ///  Operating RF band (e.g., X, C, L, S, P)
-  public var OPERATING_BAND: String? { let o = _accessor.offset(VTOFFSET.OPERATING_BAND.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OPERATING_BANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPERATING_BAND.v) }
+  public var OPERATING_BAND: String? { let o = _accessor.offset(VT.OPERATING_BAND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OPERATING_BANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OPERATING_BAND) }
   ///  Operating frequency (GHz)
-  public var OPERATING_FREQ: Double { let o = _accessor.offset(VTOFFSET.OPERATING_FREQ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OPERATING_FREQ: Double { let o = _accessor.offset(VT.OPERATING_FREQ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Signal-to-noise ratio (dB)
-  public var SNR: Double { let o = _accessor.offset(VTOFFSET.SNR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SNR: Double { let o = _accessor.offset(VT.SNR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Transmit polarization
-  public var TX_POLARIZATION: sarPolarization { let o = _accessor.offset(VTOFFSET.TX_POLARIZATION.v); return o == 0 ? .hh : sarPolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .hh }
+  public var TX_POLARIZATION: sarPolarization { let o = _accessor.offset(VT.TX_POLARIZATION); return o == 0 ? .hh : sarPolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .hh }
   ///  Receive polarization
-  public var RX_POLARIZATION: sarPolarization { let o = _accessor.offset(VTOFFSET.RX_POLARIZATION.v); return o == 0 ? .hh : sarPolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .hh }
+  public var RX_POLARIZATION: sarPolarization { let o = _accessor.offset(VT.RX_POLARIZATION); return o == 0 ? .hh : sarPolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .hh }
   ///  Grazing angle (degrees)
-  public var GRAZE_ANGLE: Double { let o = _accessor.offset(VTOFFSET.GRAZE_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GRAZE_ANGLE: Double { let o = _accessor.offset(VT.GRAZE_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Incidence angle (degrees)
-  public var INCIDENCE_ANGLE: Double { let o = _accessor.offset(VTOFFSET.INCIDENCE_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INCIDENCE_ANGLE: Double { let o = _accessor.offset(VT.INCIDENCE_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Squint angle (degrees)
-  public var SQUINT_ANGLE: Double { let o = _accessor.offset(VTOFFSET.SQUINT_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SQUINT_ANGLE: Double { let o = _accessor.offset(VT.SQUINT_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pulse bandwidth (MHz)
-  public var PULSE_BANDWIDTH: Double { let o = _accessor.offset(VTOFFSET.PULSE_BANDWIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PULSE_BANDWIDTH: Double { let o = _accessor.offset(VT.PULSE_BANDWIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pulse duration (microseconds)
-  public var PULSE_DURATION: Double { let o = _accessor.offset(VTOFFSET.PULSE_DURATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PULSE_DURATION: Double { let o = _accessor.offset(VT.PULSE_DURATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Continuous spot angle (degrees)
-  public var CONTINUOUS_SPOT_ANGLE: Double { let o = _accessor.offset(VTOFFSET.CONTINUOUS_SPOT_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CONTINUOUS_SPOT_ANGLE: Double { let o = _accessor.offset(VT.CONTINUOUS_SPOT_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Slant range to target (km)
-  public var SLANT_RANGE: Double { let o = _accessor.offset(VTOFFSET.SLANT_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SLANT_RANGE: Double { let o = _accessor.offset(VT.SLANT_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Near range (km)
-  public var NEAR_RANGE: Double { let o = _accessor.offset(VTOFFSET.NEAR_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NEAR_RANGE: Double { let o = _accessor.offset(VT.NEAR_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Far range (km)
-  public var FAR_RANGE: Double { let o = _accessor.offset(VTOFFSET.FAR_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FAR_RANGE: Double { let o = _accessor.offset(VT.FAR_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Swath length (km)
-  public var SWATH_LENGTH: Double { let o = _accessor.offset(VTOFFSET.SWATH_LENGTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SWATH_LENGTH: Double { let o = _accessor.offset(VT.SWATH_LENGTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Image area GeoJSON
-  public var AGJSON: String? { let o = _accessor.offset(VTOFFSET.AGJSON.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AGJSONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AGJSON.v) }
+  public var AGJSON: String? { let o = _accessor.offset(VT.AGJSON); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AGJSONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AGJSON) }
   ///  Image area text description
-  public var ATEXT: String? { let o = _accessor.offset(VTOFFSET.ATEXT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ATEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ATEXT.v) }
+  public var ATEXT: String? { let o = _accessor.offset(VT.ATEXT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATEXT) }
   ///  Area type
-  public var ATYPE: String? { let o = _accessor.offset(VTOFFSET.ATYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ATYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ATYPE.v) }
+  public var ATYPE: String? { let o = _accessor.offset(VT.ATYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATYPE) }
   ///  Coordinate system
-  public var COORD_SYS: String? { let o = _accessor.offset(VTOFFSET.COORD_SYS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COORD_SYSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COORD_SYS.v) }
+  public var COORD_SYS: String? { let o = _accessor.offset(VT.COORD_SYS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COORD_SYSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COORD_SYS) }
   ///  Range pixel spacing (meters)
-  public var SPACING_RANGE: Double { let o = _accessor.offset(VTOFFSET.SPACING_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SPACING_RANGE: Double { let o = _accessor.offset(VT.SPACING_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Azimuth pixel spacing (meters)
-  public var SPACING_AZIMUTH: Double { let o = _accessor.offset(VTOFFSET.SPACING_AZIMUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SPACING_AZIMUTH: Double { let o = _accessor.offset(VT.SPACING_AZIMUTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of azimuth looks
-  public var LOOKS_AZIMUTH: UInt8 { let o = _accessor.offset(VTOFFSET.LOOKS_AZIMUTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var LOOKS_AZIMUTH: UInt8 { let o = _accessor.offset(VT.LOOKS_AZIMUTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Number of range looks
-  public var LOOKS_RANGE: UInt8 { let o = _accessor.offset(VTOFFSET.LOOKS_RANGE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var LOOKS_RANGE: UInt8 { let o = _accessor.offset(VT.LOOKS_RANGE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Range resolution (meters)
-  public var RESOLUTION_RANGE: Double { let o = _accessor.offset(VTOFFSET.RESOLUTION_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RESOLUTION_RANGE: Double { let o = _accessor.offset(VT.RESOLUTION_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Azimuth resolution (meters)
-  public var RESOLUTION_AZIMUTH: Double { let o = _accessor.offset(VTOFFSET.RESOLUTION_AZIMUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RESOLUTION_AZIMUTH: Double { let o = _accessor.offset(VT.RESOLUTION_AZIMUTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Observation direction (ASCENDING/DESCENDING)
-  public var OB_DIRECTION: String? { let o = _accessor.offset(VTOFFSET.OB_DIRECTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OB_DIRECTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_DIRECTION.v) }
+  public var OB_DIRECTION: String? { let o = _accessor.offset(VT.OB_DIRECTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OB_DIRECTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OB_DIRECTION) }
   ///  Target position X (km)
-  public var TARGETPOSX: Double { let o = _accessor.offset(VTOFFSET.TARGETPOSX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGETPOSX: Double { let o = _accessor.offset(VT.TARGETPOSX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Target position Y (km)
-  public var TARGETPOSY: Double { let o = _accessor.offset(VTOFFSET.TARGETPOSY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGETPOSY: Double { let o = _accessor.offset(VT.TARGETPOSY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Target position Z (km)
-  public var TARGETPOSZ: Double { let o = _accessor.offset(VTOFFSET.TARGETPOSZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TARGETPOSZ: Double { let o = _accessor.offset(VT.TARGETPOSZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor altitude (km)
-  public var SENALT: Double { let o = _accessor.offset(VTOFFSET.SENALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENALT: Double { let o = _accessor.offset(VT.SENALT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor velocity X (km/s)
-  public var SENVELX: Double { let o = _accessor.offset(VTOFFSET.SENVELX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENVELX: Double { let o = _accessor.offset(VT.SENVELX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor velocity Y (km/s)
-  public var SENVELY: Double { let o = _accessor.offset(VTOFFSET.SENVELY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENVELY: Double { let o = _accessor.offset(VT.SENVELY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor velocity Z (km/s)
-  public var SENVELZ: Double { let o = _accessor.offset(VTOFFSET.SENVELZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENVELZ: Double { let o = _accessor.offset(VT.SENVELZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor latitude at start (degrees)
-  public var SENLAT_START: Double { let o = _accessor.offset(VTOFFSET.SENLAT_START.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENLAT_START: Double { let o = _accessor.offset(VT.SENLAT_START); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor longitude at start (degrees)
-  public var SENLON_START: Double { let o = _accessor.offset(VTOFFSET.SENLON_START.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENLON_START: Double { let o = _accessor.offset(VT.SENLON_START); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor latitude at end (degrees)
-  public var SENLAT_END: Double { let o = _accessor.offset(VTOFFSET.SENLAT_END.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENLAT_END: Double { let o = _accessor.offset(VT.SENLAT_END); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor longitude at end (degrees)
-  public var SENLON_END: Double { let o = _accessor.offset(VTOFFSET.SENLON_END.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENLON_END: Double { let o = _accessor.offset(VT.SENLON_END); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Transaction identifier
-  public var TRANSACTION_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSACTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSACTION_ID.v) }
+  public var TRANSACTION_ID: String? { let o = _accessor.offset(VT.TRANSACTION_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRANSACTION_ID) }
   ///  Associated tags
-  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TAGS.v, byteSize: 4) }
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VT.TAGS, byteSize: 4) }
   ///  Source types
-  public var SRC_TYPS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SRC_TYPS.v, byteSize: 4) }
+  public var SRC_TYPS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SRC_TYPS, byteSize: 4) }
   ///  Source identifiers
-  public var SRC_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SRC_IDS.v, byteSize: 4) }
+  public var SRC_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SRC_IDS, byteSize: 4) }
   public static func startSAR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 58) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
-  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
-  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VTOFFSET.ON_ORBIT.p) }
-  public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VTOFFSET.ID_SENSOR.p) }
-  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
-  public static func add(EXTERNAL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTERNAL_ID, at: VTOFFSET.EXTERNAL_ID.p) }
-  public static func add(COLLECTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLECTION_ID, at: VTOFFSET.COLLECTION_ID.p) }
-  public static func add(DETECTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DETECTION_ID, at: VTOFFSET.DETECTION_ID.p) }
-  public static func add(COLLECTION_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLECTION_START, at: VTOFFSET.COLLECTION_START.p) }
-  public static func add(COLLECTION_END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLECTION_END, at: VTOFFSET.COLLECTION_END.p) }
-  public static func add(CENTER_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_TIME, at: VTOFFSET.CENTER_TIME.p) }
-  public static func add(DETECTION_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DETECTION_START, at: VTOFFSET.DETECTION_START.p) }
-  public static func add(DETECTION_END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DETECTION_END, at: VTOFFSET.DETECTION_END.p) }
-  public static func add(DWELL_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DWELL_TIME, def: 0.0, at: VTOFFSET.DWELL_TIME.p) }
-  public static func add(ORBIT_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_STATE, at: VTOFFSET.ORBIT_STATE.p) }
-  public static func add(SAR_MODE: sarMission, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAR_MODE.rawValue, def: 0, at: VTOFFSET.SAR_MODE.p) }
-  public static func add(OPERATING_BAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATING_BAND, at: VTOFFSET.OPERATING_BAND.p) }
-  public static func add(OPERATING_FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATING_FREQ, def: 0.0, at: VTOFFSET.OPERATING_FREQ.p) }
-  public static func add(SNR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SNR, def: 0.0, at: VTOFFSET.SNR.p) }
-  public static func add(TX_POLARIZATION: sarPolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TX_POLARIZATION.rawValue, def: 0, at: VTOFFSET.TX_POLARIZATION.p) }
-  public static func add(RX_POLARIZATION: sarPolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RX_POLARIZATION.rawValue, def: 0, at: VTOFFSET.RX_POLARIZATION.p) }
-  public static func add(GRAZE_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAZE_ANGLE, def: 0.0, at: VTOFFSET.GRAZE_ANGLE.p) }
-  public static func add(INCIDENCE_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCIDENCE_ANGLE, def: 0.0, at: VTOFFSET.INCIDENCE_ANGLE.p) }
-  public static func add(SQUINT_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SQUINT_ANGLE, def: 0.0, at: VTOFFSET.SQUINT_ANGLE.p) }
-  public static func add(PULSE_BANDWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PULSE_BANDWIDTH, def: 0.0, at: VTOFFSET.PULSE_BANDWIDTH.p) }
-  public static func add(PULSE_DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PULSE_DURATION, def: 0.0, at: VTOFFSET.PULSE_DURATION.p) }
-  public static func add(CONTINUOUS_SPOT_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTINUOUS_SPOT_ANGLE, def: 0.0, at: VTOFFSET.CONTINUOUS_SPOT_ANGLE.p) }
-  public static func add(SLANT_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SLANT_RANGE, def: 0.0, at: VTOFFSET.SLANT_RANGE.p) }
-  public static func add(NEAR_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEAR_RANGE, def: 0.0, at: VTOFFSET.NEAR_RANGE.p) }
-  public static func add(FAR_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAR_RANGE, def: 0.0, at: VTOFFSET.FAR_RANGE.p) }
-  public static func add(SWATH_LENGTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SWATH_LENGTH, def: 0.0, at: VTOFFSET.SWATH_LENGTH.p) }
-  public static func add(AGJSON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGJSON, at: VTOFFSET.AGJSON.p) }
-  public static func add(ATEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATEXT, at: VTOFFSET.ATEXT.p) }
-  public static func add(ATYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATYPE, at: VTOFFSET.ATYPE.p) }
-  public static func add(COORD_SYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORD_SYS, at: VTOFFSET.COORD_SYS.p) }
-  public static func add(SPACING_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPACING_RANGE, def: 0.0, at: VTOFFSET.SPACING_RANGE.p) }
-  public static func add(SPACING_AZIMUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPACING_AZIMUTH, def: 0.0, at: VTOFFSET.SPACING_AZIMUTH.p) }
-  public static func add(LOOKS_AZIMUTH: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOOKS_AZIMUTH, def: 0, at: VTOFFSET.LOOKS_AZIMUTH.p) }
-  public static func add(LOOKS_RANGE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOOKS_RANGE, def: 0, at: VTOFFSET.LOOKS_RANGE.p) }
-  public static func add(RESOLUTION_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESOLUTION_RANGE, def: 0.0, at: VTOFFSET.RESOLUTION_RANGE.p) }
-  public static func add(RESOLUTION_AZIMUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESOLUTION_AZIMUTH, def: 0.0, at: VTOFFSET.RESOLUTION_AZIMUTH.p) }
-  public static func add(OB_DIRECTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_DIRECTION, at: VTOFFSET.OB_DIRECTION.p) }
-  public static func add(TARGETPOSX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGETPOSX, def: 0.0, at: VTOFFSET.TARGETPOSX.p) }
-  public static func add(TARGETPOSY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGETPOSY, def: 0.0, at: VTOFFSET.TARGETPOSY.p) }
-  public static func add(TARGETPOSZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGETPOSZ, def: 0.0, at: VTOFFSET.TARGETPOSZ.p) }
-  public static func add(SENALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENALT, def: 0.0, at: VTOFFSET.SENALT.p) }
-  public static func add(SENVELX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENVELX, def: 0.0, at: VTOFFSET.SENVELX.p) }
-  public static func add(SENVELY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENVELY, def: 0.0, at: VTOFFSET.SENVELY.p) }
-  public static func add(SENVELZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENVELZ, def: 0.0, at: VTOFFSET.SENVELZ.p) }
-  public static func add(SENLAT_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLAT_START, def: 0.0, at: VTOFFSET.SENLAT_START.p) }
-  public static func add(SENLON_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLON_START, def: 0.0, at: VTOFFSET.SENLON_START.p) }
-  public static func add(SENLAT_END: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLAT_END, def: 0.0, at: VTOFFSET.SENLAT_END.p) }
-  public static func add(SENLON_END: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLON_END, def: 0.0, at: VTOFFSET.SENLON_END.p) }
-  public static func add(TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSACTION_ID, at: VTOFFSET.TRANSACTION_ID.p) }
-  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VTOFFSET.TAGS.p) }
-  public static func addVectorOf(SRC_TYPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRC_TYPS, at: VTOFFSET.SRC_TYPS.p) }
-  public static func addVectorOf(SRC_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRC_IDS, at: VTOFFSET.SRC_IDS.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VT.SAT_NO) }
+  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VT.ORIG_OBJECT_ID) }
+  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VT.ON_ORBIT) }
+  public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VT.ID_SENSOR) }
+  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VT.ORIG_SENSOR_ID) }
+  public static func add(EXTERNAL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTERNAL_ID, at: VT.EXTERNAL_ID) }
+  public static func add(COLLECTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLECTION_ID, at: VT.COLLECTION_ID) }
+  public static func add(DETECTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DETECTION_ID, at: VT.DETECTION_ID) }
+  public static func add(COLLECTION_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLECTION_START, at: VT.COLLECTION_START) }
+  public static func add(COLLECTION_END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLECTION_END, at: VT.COLLECTION_END) }
+  public static func add(CENTER_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_TIME, at: VT.CENTER_TIME) }
+  public static func add(DETECTION_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DETECTION_START, at: VT.DETECTION_START) }
+  public static func add(DETECTION_END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DETECTION_END, at: VT.DETECTION_END) }
+  public static func add(DWELL_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DWELL_TIME, def: 0.0, at: VT.DWELL_TIME) }
+  public static func add(ORBIT_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_STATE, at: VT.ORBIT_STATE) }
+  public static func add(SAR_MODE: sarMission, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAR_MODE.rawValue, def: 0, at: VT.SAR_MODE) }
+  public static func add(OPERATING_BAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATING_BAND, at: VT.OPERATING_BAND) }
+  public static func add(OPERATING_FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATING_FREQ, def: 0.0, at: VT.OPERATING_FREQ) }
+  public static func add(SNR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SNR, def: 0.0, at: VT.SNR) }
+  public static func add(TX_POLARIZATION: sarPolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TX_POLARIZATION.rawValue, def: 0, at: VT.TX_POLARIZATION) }
+  public static func add(RX_POLARIZATION: sarPolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RX_POLARIZATION.rawValue, def: 0, at: VT.RX_POLARIZATION) }
+  public static func add(GRAZE_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAZE_ANGLE, def: 0.0, at: VT.GRAZE_ANGLE) }
+  public static func add(INCIDENCE_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCIDENCE_ANGLE, def: 0.0, at: VT.INCIDENCE_ANGLE) }
+  public static func add(SQUINT_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SQUINT_ANGLE, def: 0.0, at: VT.SQUINT_ANGLE) }
+  public static func add(PULSE_BANDWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PULSE_BANDWIDTH, def: 0.0, at: VT.PULSE_BANDWIDTH) }
+  public static func add(PULSE_DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PULSE_DURATION, def: 0.0, at: VT.PULSE_DURATION) }
+  public static func add(CONTINUOUS_SPOT_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTINUOUS_SPOT_ANGLE, def: 0.0, at: VT.CONTINUOUS_SPOT_ANGLE) }
+  public static func add(SLANT_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SLANT_RANGE, def: 0.0, at: VT.SLANT_RANGE) }
+  public static func add(NEAR_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEAR_RANGE, def: 0.0, at: VT.NEAR_RANGE) }
+  public static func add(FAR_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAR_RANGE, def: 0.0, at: VT.FAR_RANGE) }
+  public static func add(SWATH_LENGTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SWATH_LENGTH, def: 0.0, at: VT.SWATH_LENGTH) }
+  public static func add(AGJSON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGJSON, at: VT.AGJSON) }
+  public static func add(ATEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATEXT, at: VT.ATEXT) }
+  public static func add(ATYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATYPE, at: VT.ATYPE) }
+  public static func add(COORD_SYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORD_SYS, at: VT.COORD_SYS) }
+  public static func add(SPACING_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPACING_RANGE, def: 0.0, at: VT.SPACING_RANGE) }
+  public static func add(SPACING_AZIMUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPACING_AZIMUTH, def: 0.0, at: VT.SPACING_AZIMUTH) }
+  public static func add(LOOKS_AZIMUTH: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOOKS_AZIMUTH, def: 0, at: VT.LOOKS_AZIMUTH) }
+  public static func add(LOOKS_RANGE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOOKS_RANGE, def: 0, at: VT.LOOKS_RANGE) }
+  public static func add(RESOLUTION_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESOLUTION_RANGE, def: 0.0, at: VT.RESOLUTION_RANGE) }
+  public static func add(RESOLUTION_AZIMUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESOLUTION_AZIMUTH, def: 0.0, at: VT.RESOLUTION_AZIMUTH) }
+  public static func add(OB_DIRECTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_DIRECTION, at: VT.OB_DIRECTION) }
+  public static func add(TARGETPOSX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGETPOSX, def: 0.0, at: VT.TARGETPOSX) }
+  public static func add(TARGETPOSY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGETPOSY, def: 0.0, at: VT.TARGETPOSY) }
+  public static func add(TARGETPOSZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGETPOSZ, def: 0.0, at: VT.TARGETPOSZ) }
+  public static func add(SENALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENALT, def: 0.0, at: VT.SENALT) }
+  public static func add(SENVELX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENVELX, def: 0.0, at: VT.SENVELX) }
+  public static func add(SENVELY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENVELY, def: 0.0, at: VT.SENVELY) }
+  public static func add(SENVELZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENVELZ, def: 0.0, at: VT.SENVELZ) }
+  public static func add(SENLAT_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLAT_START, def: 0.0, at: VT.SENLAT_START) }
+  public static func add(SENLON_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLON_START, def: 0.0, at: VT.SENLON_START) }
+  public static func add(SENLAT_END: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLAT_END, def: 0.0, at: VT.SENLAT_END) }
+  public static func add(SENLON_END: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLON_END, def: 0.0, at: VT.SENLON_END) }
+  public static func add(TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSACTION_ID, at: VT.TRANSACTION_ID) }
+  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VT.TAGS) }
+  public static func addVectorOf(SRC_TYPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRC_TYPS, at: VT.SRC_TYPS) }
+  public static func addVectorOf(SRC_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRC_IDS, at: VT.SRC_IDS) }
   public static func endSAR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSAR(
     _ fbb: inout FlatBufferBuilder,
@@ -442,64 +440,64 @@ public struct SAR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ON_ORBIT.p, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ID_SENSOR.p, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID.p, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EXTERNAL_ID.p, fieldName: "EXTERNAL_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLLECTION_ID.p, fieldName: "COLLECTION_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DETECTION_ID.p, fieldName: "DETECTION_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLLECTION_START.p, fieldName: "COLLECTION_START", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLLECTION_END.p, fieldName: "COLLECTION_END", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CENTER_TIME.p, fieldName: "CENTER_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DETECTION_START.p, fieldName: "DETECTION_START", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DETECTION_END.p, fieldName: "DETECTION_END", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DWELL_TIME.p, fieldName: "DWELL_TIME", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ORBIT_STATE.p, fieldName: "ORBIT_STATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAR_MODE.p, fieldName: "SAR_MODE", required: false, type: sarMission.self)
-    try _v.visit(field: VTOFFSET.OPERATING_BAND.p, fieldName: "OPERATING_BAND", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OPERATING_FREQ.p, fieldName: "OPERATING_FREQ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SNR.p, fieldName: "SNR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TX_POLARIZATION.p, fieldName: "TX_POLARIZATION", required: false, type: sarPolarization.self)
-    try _v.visit(field: VTOFFSET.RX_POLARIZATION.p, fieldName: "RX_POLARIZATION", required: false, type: sarPolarization.self)
-    try _v.visit(field: VTOFFSET.GRAZE_ANGLE.p, fieldName: "GRAZE_ANGLE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INCIDENCE_ANGLE.p, fieldName: "INCIDENCE_ANGLE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SQUINT_ANGLE.p, fieldName: "SQUINT_ANGLE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PULSE_BANDWIDTH.p, fieldName: "PULSE_BANDWIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PULSE_DURATION.p, fieldName: "PULSE_DURATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CONTINUOUS_SPOT_ANGLE.p, fieldName: "CONTINUOUS_SPOT_ANGLE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SLANT_RANGE.p, fieldName: "SLANT_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NEAR_RANGE.p, fieldName: "NEAR_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FAR_RANGE.p, fieldName: "FAR_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SWATH_LENGTH.p, fieldName: "SWATH_LENGTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.AGJSON.p, fieldName: "AGJSON", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ATEXT.p, fieldName: "ATEXT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ATYPE.p, fieldName: "ATYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COORD_SYS.p, fieldName: "COORD_SYS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SPACING_RANGE.p, fieldName: "SPACING_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SPACING_AZIMUTH.p, fieldName: "SPACING_AZIMUTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LOOKS_AZIMUTH.p, fieldName: "LOOKS_AZIMUTH", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.LOOKS_RANGE.p, fieldName: "LOOKS_RANGE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.RESOLUTION_RANGE.p, fieldName: "RESOLUTION_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RESOLUTION_AZIMUTH.p, fieldName: "RESOLUTION_AZIMUTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OB_DIRECTION.p, fieldName: "OB_DIRECTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TARGETPOSX.p, fieldName: "TARGETPOSX", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TARGETPOSY.p, fieldName: "TARGETPOSY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TARGETPOSZ.p, fieldName: "TARGETPOSZ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENALT.p, fieldName: "SENALT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENVELX.p, fieldName: "SENVELX", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENVELY.p, fieldName: "SENVELY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENVELZ.p, fieldName: "SENVELZ", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENLAT_START.p, fieldName: "SENLAT_START", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENLON_START.p, fieldName: "SENLON_START", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENLAT_END.p, fieldName: "SENLAT_END", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENLON_END.p, fieldName: "SENLON_END", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TRANSACTION_ID.p, fieldName: "TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TAGS.p, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.SRC_TYPS.p, fieldName: "SRC_TYPS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.SRC_IDS.p, fieldName: "SRC_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAT_NO, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ORIG_OBJECT_ID, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ON_ORBIT, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_SENSOR, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIG_SENSOR_ID, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXTERNAL_ID, fieldName: "EXTERNAL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLLECTION_ID, fieldName: "COLLECTION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DETECTION_ID, fieldName: "DETECTION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLLECTION_START, fieldName: "COLLECTION_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLLECTION_END, fieldName: "COLLECTION_END", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CENTER_TIME, fieldName: "CENTER_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DETECTION_START, fieldName: "DETECTION_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DETECTION_END, fieldName: "DETECTION_END", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DWELL_TIME, fieldName: "DWELL_TIME", required: false, type: Double.self)
+    try _v.visit(field: VT.ORBIT_STATE, fieldName: "ORBIT_STATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAR_MODE, fieldName: "SAR_MODE", required: false, type: sarMission.self)
+    try _v.visit(field: VT.OPERATING_BAND, fieldName: "OPERATING_BAND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OPERATING_FREQ, fieldName: "OPERATING_FREQ", required: false, type: Double.self)
+    try _v.visit(field: VT.SNR, fieldName: "SNR", required: false, type: Double.self)
+    try _v.visit(field: VT.TX_POLARIZATION, fieldName: "TX_POLARIZATION", required: false, type: sarPolarization.self)
+    try _v.visit(field: VT.RX_POLARIZATION, fieldName: "RX_POLARIZATION", required: false, type: sarPolarization.self)
+    try _v.visit(field: VT.GRAZE_ANGLE, fieldName: "GRAZE_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.INCIDENCE_ANGLE, fieldName: "INCIDENCE_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.SQUINT_ANGLE, fieldName: "SQUINT_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.PULSE_BANDWIDTH, fieldName: "PULSE_BANDWIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.PULSE_DURATION, fieldName: "PULSE_DURATION", required: false, type: Double.self)
+    try _v.visit(field: VT.CONTINUOUS_SPOT_ANGLE, fieldName: "CONTINUOUS_SPOT_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.SLANT_RANGE, fieldName: "SLANT_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.NEAR_RANGE, fieldName: "NEAR_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.FAR_RANGE, fieldName: "FAR_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.SWATH_LENGTH, fieldName: "SWATH_LENGTH", required: false, type: Double.self)
+    try _v.visit(field: VT.AGJSON, fieldName: "AGJSON", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATEXT, fieldName: "ATEXT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATYPE, fieldName: "ATYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COORD_SYS, fieldName: "COORD_SYS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SPACING_RANGE, fieldName: "SPACING_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.SPACING_AZIMUTH, fieldName: "SPACING_AZIMUTH", required: false, type: Double.self)
+    try _v.visit(field: VT.LOOKS_AZIMUTH, fieldName: "LOOKS_AZIMUTH", required: false, type: UInt8.self)
+    try _v.visit(field: VT.LOOKS_RANGE, fieldName: "LOOKS_RANGE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RESOLUTION_RANGE, fieldName: "RESOLUTION_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.RESOLUTION_AZIMUTH, fieldName: "RESOLUTION_AZIMUTH", required: false, type: Double.self)
+    try _v.visit(field: VT.OB_DIRECTION, fieldName: "OB_DIRECTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TARGETPOSX, fieldName: "TARGETPOSX", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGETPOSY, fieldName: "TARGETPOSY", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGETPOSZ, fieldName: "TARGETPOSZ", required: false, type: Double.self)
+    try _v.visit(field: VT.SENALT, fieldName: "SENALT", required: false, type: Double.self)
+    try _v.visit(field: VT.SENVELX, fieldName: "SENVELX", required: false, type: Double.self)
+    try _v.visit(field: VT.SENVELY, fieldName: "SENVELY", required: false, type: Double.self)
+    try _v.visit(field: VT.SENVELZ, fieldName: "SENVELZ", required: false, type: Double.self)
+    try _v.visit(field: VT.SENLAT_START, fieldName: "SENLAT_START", required: false, type: Double.self)
+    try _v.visit(field: VT.SENLON_START, fieldName: "SENLON_START", required: false, type: Double.self)
+    try _v.visit(field: VT.SENLAT_END, fieldName: "SENLAT_END", required: false, type: Double.self)
+    try _v.visit(field: VT.SENLON_END, fieldName: "SENLON_END", required: false, type: Double.self)
+    try _v.visit(field: VT.TRANSACTION_ID, fieldName: "TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TAGS, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SRC_TYPS, fieldName: "SRC_TYPS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SRC_IDS, fieldName: "SRC_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

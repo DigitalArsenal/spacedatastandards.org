@@ -36,165 +36,163 @@ public struct DOA: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case OB_TIME = 6
-    case SAT_NO = 8
-    case ORIG_OBJECT_ID = 10
-    case ON_ORBIT = 12
-    case UCT = 14
-    case TASK_ID = 16
-    case TRANSACTION_ID = 18
-    case COLLECTION_MODE = 20
-    case ID_SENSOR1 = 22
-    case ORIG_SENSOR_ID1 = 24
-    case SENLAT = 26
-    case SENLON = 28
-    case SENALT = 30
-    case SENSOR1_DELAY = 32
-    case ID_SENSOR2 = 34
-    case ORIG_SENSOR_ID2 = 36
-    case SEN2LAT = 38
-    case SEN2LON = 40
-    case SEN2ALT = 42
-    case SENSOR2_DELAY = 44
-    case FREQUENCY = 46
-    case BANDWIDTH = 48
-    case SNR = 50
-    case DELTA_RANGE = 52
-    case DELTA_RANGE_UNC = 54
-    case DELTA_RANGE_RATE = 56
-    case DELTA_RANGE_RATE_UNC = 58
-    case TDOA = 60
-    case TDOA_UNC = 62
-    case FDOA = 64
-    case FDOA_UNC = 66
-    case RAW_FILE_URI = 68
-    case DESCRIPTOR = 70
-    case TAGS = 72
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let OB_TIME: VOffset = 6
+    static let SAT_NO: VOffset = 8
+    static let ORIG_OBJECT_ID: VOffset = 10
+    static let ON_ORBIT: VOffset = 12
+    static let UCT: VOffset = 14
+    static let TASK_ID: VOffset = 16
+    static let TRANSACTION_ID: VOffset = 18
+    static let COLLECTION_MODE: VOffset = 20
+    static let ID_SENSOR1: VOffset = 22
+    static let ORIG_SENSOR_ID1: VOffset = 24
+    static let SENLAT: VOffset = 26
+    static let SENLON: VOffset = 28
+    static let SENALT: VOffset = 30
+    static let SENSOR1_DELAY: VOffset = 32
+    static let ID_SENSOR2: VOffset = 34
+    static let ORIG_SENSOR_ID2: VOffset = 36
+    static let SEN2LAT: VOffset = 38
+    static let SEN2LON: VOffset = 40
+    static let SEN2ALT: VOffset = 42
+    static let SENSOR2_DELAY: VOffset = 44
+    static let FREQUENCY: VOffset = 46
+    static let BANDWIDTH: VOffset = 48
+    static let SNR: VOffset = 50
+    static let DELTA_RANGE: VOffset = 52
+    static let DELTA_RANGE_UNC: VOffset = 54
+    static let DELTA_RANGE_RATE: VOffset = 56
+    static let DELTA_RANGE_RATE_UNC: VOffset = 58
+    static let TDOA: VOffset = 60
+    static let TDOA_UNC: VOffset = 62
+    static let FDOA: VOffset = 64
+    static let FDOA_UNC: VOffset = 66
+    static let RAW_FILE_URI: VOffset = 68
+    static let DESCRIPTOR: VOffset = 70
+    static let TAGS: VOffset = 72
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  Observation time (ISO 8601)
-  public var OB_TIME: String? { let o = _accessor.offset(VTOFFSET.OB_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OB_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_TIME.v) }
+  public var OB_TIME: String? { let o = _accessor.offset(VT.OB_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OB_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OB_TIME) }
   ///  Satellite catalog number
-  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VT.SAT_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  International designator
-  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
+  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VT.ORIG_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_OBJECT_ID) }
   ///  On-orbit reference
-  public var ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ON_ORBIT.v) }
+  public var ON_ORBIT: String? { let o = _accessor.offset(VT.ON_ORBIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ON_ORBIT) }
   ///  True if uncorrelated target
-  public var UCT: Bool { let o = _accessor.offset(VTOFFSET.UCT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var UCT: Bool { let o = _accessor.offset(VT.UCT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Task identifier
-  public var TASK_ID: String? { let o = _accessor.offset(VTOFFSET.TASK_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TASK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TASK_ID.v) }
+  public var TASK_ID: String? { let o = _accessor.offset(VT.TASK_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TASK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TASK_ID) }
   ///  Transaction identifier
-  public var TRANSACTION_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSACTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSACTION_ID.v) }
+  public var TRANSACTION_ID: String? { let o = _accessor.offset(VT.TRANSACTION_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRANSACTION_ID) }
   ///  Collection mode
-  public var COLLECTION_MODE: doaCollectionMode { let o = _accessor.offset(VTOFFSET.COLLECTION_MODE.v); return o == 0 ? .tdoa : doaCollectionMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .tdoa }
+  public var COLLECTION_MODE: doaCollectionMode { let o = _accessor.offset(VT.COLLECTION_MODE); return o == 0 ? .tdoa : doaCollectionMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .tdoa }
   ///  Sensor 1 identifier
-  public var ID_SENSOR1: String? { let o = _accessor.offset(VTOFFSET.ID_SENSOR1.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_SENSOR1SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_SENSOR1.v) }
+  public var ID_SENSOR1: String? { let o = _accessor.offset(VT.ID_SENSOR1); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_SENSOR1SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_SENSOR1) }
   ///  Sensor 1 original identifier
-  public var ORIG_SENSOR_ID1: String? { let o = _accessor.offset(VTOFFSET.ORIG_SENSOR_ID1.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_SENSOR_ID1SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_SENSOR_ID1.v) }
+  public var ORIG_SENSOR_ID1: String? { let o = _accessor.offset(VT.ORIG_SENSOR_ID1); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_SENSOR_ID1SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_SENSOR_ID1) }
   ///  Sensor 1 latitude (degrees)
-  public var SENLAT: Double { let o = _accessor.offset(VTOFFSET.SENLAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENLAT: Double { let o = _accessor.offset(VT.SENLAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor 1 longitude (degrees)
-  public var SENLON: Double { let o = _accessor.offset(VTOFFSET.SENLON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENLON: Double { let o = _accessor.offset(VT.SENLON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor 1 altitude (km)
-  public var SENALT: Double { let o = _accessor.offset(VTOFFSET.SENALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENALT: Double { let o = _accessor.offset(VT.SENALT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor 1 processing delay (seconds)
-  public var SENSOR1_DELAY: Double { let o = _accessor.offset(VTOFFSET.SENSOR1_DELAY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR1_DELAY: Double { let o = _accessor.offset(VT.SENSOR1_DELAY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor 2 identifier
-  public var ID_SENSOR2: String? { let o = _accessor.offset(VTOFFSET.ID_SENSOR2.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_SENSOR2SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_SENSOR2.v) }
+  public var ID_SENSOR2: String? { let o = _accessor.offset(VT.ID_SENSOR2); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_SENSOR2SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_SENSOR2) }
   ///  Sensor 2 original identifier
-  public var ORIG_SENSOR_ID2: String? { let o = _accessor.offset(VTOFFSET.ORIG_SENSOR_ID2.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_SENSOR_ID2SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_SENSOR_ID2.v) }
+  public var ORIG_SENSOR_ID2: String? { let o = _accessor.offset(VT.ORIG_SENSOR_ID2); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_SENSOR_ID2SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_SENSOR_ID2) }
   ///  Sensor 2 latitude (degrees)
-  public var SEN2LAT: Double { let o = _accessor.offset(VTOFFSET.SEN2LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEN2LAT: Double { let o = _accessor.offset(VT.SEN2LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor 2 longitude (degrees)
-  public var SEN2LON: Double { let o = _accessor.offset(VTOFFSET.SEN2LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEN2LON: Double { let o = _accessor.offset(VT.SEN2LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor 2 altitude (km)
-  public var SEN2ALT: Double { let o = _accessor.offset(VTOFFSET.SEN2ALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEN2ALT: Double { let o = _accessor.offset(VT.SEN2ALT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor 2 processing delay (seconds)
-  public var SENSOR2_DELAY: Double { let o = _accessor.offset(VTOFFSET.SENSOR2_DELAY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SENSOR2_DELAY: Double { let o = _accessor.offset(VT.SENSOR2_DELAY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Measured frequency (MHz)
-  public var FREQUENCY: Double { let o = _accessor.offset(VTOFFSET.FREQUENCY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FREQUENCY: Double { let o = _accessor.offset(VT.FREQUENCY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Measurement bandwidth (MHz)
-  public var BANDWIDTH: Double { let o = _accessor.offset(VTOFFSET.BANDWIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BANDWIDTH: Double { let o = _accessor.offset(VT.BANDWIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Signal-to-noise ratio (dB)
-  public var SNR: Double { let o = _accessor.offset(VTOFFSET.SNR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SNR: Double { let o = _accessor.offset(VT.SNR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Differential range (km)
-  public var DELTA_RANGE: Double { let o = _accessor.offset(VTOFFSET.DELTA_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_RANGE: Double { let o = _accessor.offset(VT.DELTA_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Differential range uncertainty (km, 1-sigma)
-  public var DELTA_RANGE_UNC: Double { let o = _accessor.offset(VTOFFSET.DELTA_RANGE_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_RANGE_UNC: Double { let o = _accessor.offset(VT.DELTA_RANGE_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Differential range rate (km/s)
-  public var DELTA_RANGE_RATE: Double { let o = _accessor.offset(VTOFFSET.DELTA_RANGE_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_RANGE_RATE: Double { let o = _accessor.offset(VT.DELTA_RANGE_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Differential range rate uncertainty (km/s, 1-sigma)
-  public var DELTA_RANGE_RATE_UNC: Double { let o = _accessor.offset(VTOFFSET.DELTA_RANGE_RATE_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_RANGE_RATE_UNC: Double { let o = _accessor.offset(VT.DELTA_RANGE_RATE_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Time difference of arrival (seconds)
-  public var TDOA: Double { let o = _accessor.offset(VTOFFSET.TDOA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TDOA: Double { let o = _accessor.offset(VT.TDOA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  TDOA uncertainty (seconds, 1-sigma)
-  public var TDOA_UNC: Double { let o = _accessor.offset(VTOFFSET.TDOA_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TDOA_UNC: Double { let o = _accessor.offset(VT.TDOA_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Frequency difference of arrival (Hz)
-  public var FDOA: Double { let o = _accessor.offset(VTOFFSET.FDOA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FDOA: Double { let o = _accessor.offset(VT.FDOA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  FDOA uncertainty (Hz, 1-sigma)
-  public var FDOA_UNC: Double { let o = _accessor.offset(VTOFFSET.FDOA_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FDOA_UNC: Double { let o = _accessor.offset(VT.FDOA_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Reference to raw data file
-  public var RAW_FILE_URI: String? { let o = _accessor.offset(VTOFFSET.RAW_FILE_URI.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RAW_FILE_URISegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RAW_FILE_URI.v) }
+  public var RAW_FILE_URI: String? { let o = _accessor.offset(VT.RAW_FILE_URI); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RAW_FILE_URISegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RAW_FILE_URI) }
   ///  Event descriptor
-  public var DESCRIPTOR: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTOR.v) }
+  public var DESCRIPTOR: String? { let o = _accessor.offset(VT.DESCRIPTOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTOR) }
   ///  Associated tags
-  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TAGS.v, byteSize: 4) }
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VT.TAGS, byteSize: 4) }
   public static func startDOA(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 35) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TIME, at: VTOFFSET.OB_TIME.p) }
-  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
-  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
-  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VTOFFSET.ON_ORBIT.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TIME, at: VT.OB_TIME) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VT.SAT_NO) }
+  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VT.ORIG_OBJECT_ID) }
+  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VT.ON_ORBIT) }
   public static func add(UCT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UCT, def: false,
-   at: VTOFFSET.UCT.p) }
-  public static func add(TASK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TASK_ID, at: VTOFFSET.TASK_ID.p) }
-  public static func add(TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSACTION_ID, at: VTOFFSET.TRANSACTION_ID.p) }
-  public static func add(COLLECTION_MODE: doaCollectionMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLLECTION_MODE.rawValue, def: 0, at: VTOFFSET.COLLECTION_MODE.p) }
-  public static func add(ID_SENSOR1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR1, at: VTOFFSET.ID_SENSOR1.p) }
-  public static func add(ORIG_SENSOR_ID1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID1, at: VTOFFSET.ORIG_SENSOR_ID1.p) }
-  public static func add(SENLAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLAT, def: 0.0, at: VTOFFSET.SENLAT.p) }
-  public static func add(SENLON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLON, def: 0.0, at: VTOFFSET.SENLON.p) }
-  public static func add(SENALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENALT, def: 0.0, at: VTOFFSET.SENALT.p) }
-  public static func add(SENSOR1_DELAY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR1_DELAY, def: 0.0, at: VTOFFSET.SENSOR1_DELAY.p) }
-  public static func add(ID_SENSOR2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR2, at: VTOFFSET.ID_SENSOR2.p) }
-  public static func add(ORIG_SENSOR_ID2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID2, at: VTOFFSET.ORIG_SENSOR_ID2.p) }
-  public static func add(SEN2LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEN2LAT, def: 0.0, at: VTOFFSET.SEN2LAT.p) }
-  public static func add(SEN2LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEN2LON, def: 0.0, at: VTOFFSET.SEN2LON.p) }
-  public static func add(SEN2ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEN2ALT, def: 0.0, at: VTOFFSET.SEN2ALT.p) }
-  public static func add(SENSOR2_DELAY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR2_DELAY, def: 0.0, at: VTOFFSET.SENSOR2_DELAY.p) }
-  public static func add(FREQUENCY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY, def: 0.0, at: VTOFFSET.FREQUENCY.p) }
-  public static func add(BANDWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BANDWIDTH, def: 0.0, at: VTOFFSET.BANDWIDTH.p) }
-  public static func add(SNR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SNR, def: 0.0, at: VTOFFSET.SNR.p) }
-  public static func add(DELTA_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_RANGE, def: 0.0, at: VTOFFSET.DELTA_RANGE.p) }
-  public static func add(DELTA_RANGE_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_RANGE_UNC, def: 0.0, at: VTOFFSET.DELTA_RANGE_UNC.p) }
-  public static func add(DELTA_RANGE_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_RANGE_RATE, def: 0.0, at: VTOFFSET.DELTA_RANGE_RATE.p) }
-  public static func add(DELTA_RANGE_RATE_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_RANGE_RATE_UNC, def: 0.0, at: VTOFFSET.DELTA_RANGE_RATE_UNC.p) }
-  public static func add(TDOA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TDOA, def: 0.0, at: VTOFFSET.TDOA.p) }
-  public static func add(TDOA_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TDOA_UNC, def: 0.0, at: VTOFFSET.TDOA_UNC.p) }
-  public static func add(FDOA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FDOA, def: 0.0, at: VTOFFSET.FDOA.p) }
-  public static func add(FDOA_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FDOA_UNC, def: 0.0, at: VTOFFSET.FDOA_UNC.p) }
-  public static func add(RAW_FILE_URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RAW_FILE_URI, at: VTOFFSET.RAW_FILE_URI.p) }
-  public static func add(DESCRIPTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTOR, at: VTOFFSET.DESCRIPTOR.p) }
-  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VTOFFSET.TAGS.p) }
+   at: VT.UCT) }
+  public static func add(TASK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TASK_ID, at: VT.TASK_ID) }
+  public static func add(TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSACTION_ID, at: VT.TRANSACTION_ID) }
+  public static func add(COLLECTION_MODE: doaCollectionMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLLECTION_MODE.rawValue, def: 0, at: VT.COLLECTION_MODE) }
+  public static func add(ID_SENSOR1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR1, at: VT.ID_SENSOR1) }
+  public static func add(ORIG_SENSOR_ID1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID1, at: VT.ORIG_SENSOR_ID1) }
+  public static func add(SENLAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLAT, def: 0.0, at: VT.SENLAT) }
+  public static func add(SENLON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLON, def: 0.0, at: VT.SENLON) }
+  public static func add(SENALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENALT, def: 0.0, at: VT.SENALT) }
+  public static func add(SENSOR1_DELAY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR1_DELAY, def: 0.0, at: VT.SENSOR1_DELAY) }
+  public static func add(ID_SENSOR2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR2, at: VT.ID_SENSOR2) }
+  public static func add(ORIG_SENSOR_ID2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID2, at: VT.ORIG_SENSOR_ID2) }
+  public static func add(SEN2LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEN2LAT, def: 0.0, at: VT.SEN2LAT) }
+  public static func add(SEN2LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEN2LON, def: 0.0, at: VT.SEN2LON) }
+  public static func add(SEN2ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEN2ALT, def: 0.0, at: VT.SEN2ALT) }
+  public static func add(SENSOR2_DELAY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR2_DELAY, def: 0.0, at: VT.SENSOR2_DELAY) }
+  public static func add(FREQUENCY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY, def: 0.0, at: VT.FREQUENCY) }
+  public static func add(BANDWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BANDWIDTH, def: 0.0, at: VT.BANDWIDTH) }
+  public static func add(SNR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SNR, def: 0.0, at: VT.SNR) }
+  public static func add(DELTA_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_RANGE, def: 0.0, at: VT.DELTA_RANGE) }
+  public static func add(DELTA_RANGE_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_RANGE_UNC, def: 0.0, at: VT.DELTA_RANGE_UNC) }
+  public static func add(DELTA_RANGE_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_RANGE_RATE, def: 0.0, at: VT.DELTA_RANGE_RATE) }
+  public static func add(DELTA_RANGE_RATE_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_RANGE_RATE_UNC, def: 0.0, at: VT.DELTA_RANGE_RATE_UNC) }
+  public static func add(TDOA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TDOA, def: 0.0, at: VT.TDOA) }
+  public static func add(TDOA_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TDOA_UNC, def: 0.0, at: VT.TDOA_UNC) }
+  public static func add(FDOA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FDOA, def: 0.0, at: VT.FDOA) }
+  public static func add(FDOA_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FDOA_UNC, def: 0.0, at: VT.FDOA_UNC) }
+  public static func add(RAW_FILE_URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RAW_FILE_URI, at: VT.RAW_FILE_URI) }
+  public static func add(DESCRIPTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTOR, at: VT.DESCRIPTOR) }
+  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VT.TAGS) }
   public static func endDOA(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDOA(
     _ fbb: inout FlatBufferBuilder,
@@ -275,41 +273,41 @@ public struct DOA: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OB_TIME.p, fieldName: "OB_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ON_ORBIT.p, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UCT.p, fieldName: "UCT", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.TASK_ID.p, fieldName: "TASK_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRANSACTION_ID.p, fieldName: "TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COLLECTION_MODE.p, fieldName: "COLLECTION_MODE", required: false, type: doaCollectionMode.self)
-    try _v.visit(field: VTOFFSET.ID_SENSOR1.p, fieldName: "ID_SENSOR1", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID1.p, fieldName: "ORIG_SENSOR_ID1", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SENLAT.p, fieldName: "SENLAT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENLON.p, fieldName: "SENLON", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENALT.p, fieldName: "SENALT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR1_DELAY.p, fieldName: "SENSOR1_DELAY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ID_SENSOR2.p, fieldName: "ID_SENSOR2", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID2.p, fieldName: "ORIG_SENSOR_ID2", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SEN2LAT.p, fieldName: "SEN2LAT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SEN2LON.p, fieldName: "SEN2LON", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SEN2ALT.p, fieldName: "SEN2ALT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SENSOR2_DELAY.p, fieldName: "SENSOR2_DELAY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FREQUENCY.p, fieldName: "FREQUENCY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BANDWIDTH.p, fieldName: "BANDWIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SNR.p, fieldName: "SNR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_RANGE.p, fieldName: "DELTA_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_RANGE_UNC.p, fieldName: "DELTA_RANGE_UNC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_RANGE_RATE.p, fieldName: "DELTA_RANGE_RATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_RANGE_RATE_UNC.p, fieldName: "DELTA_RANGE_RATE_UNC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TDOA.p, fieldName: "TDOA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TDOA_UNC.p, fieldName: "TDOA_UNC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FDOA.p, fieldName: "FDOA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FDOA_UNC.p, fieldName: "FDOA_UNC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RAW_FILE_URI.p, fieldName: "RAW_FILE_URI", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTOR.p, fieldName: "DESCRIPTOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TAGS.p, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OB_TIME, fieldName: "OB_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAT_NO, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ORIG_OBJECT_ID, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ON_ORBIT, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UCT, fieldName: "UCT", required: false, type: Bool.self)
+    try _v.visit(field: VT.TASK_ID, fieldName: "TASK_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRANSACTION_ID, fieldName: "TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COLLECTION_MODE, fieldName: "COLLECTION_MODE", required: false, type: doaCollectionMode.self)
+    try _v.visit(field: VT.ID_SENSOR1, fieldName: "ID_SENSOR1", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIG_SENSOR_ID1, fieldName: "ORIG_SENSOR_ID1", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SENLAT, fieldName: "SENLAT", required: false, type: Double.self)
+    try _v.visit(field: VT.SENLON, fieldName: "SENLON", required: false, type: Double.self)
+    try _v.visit(field: VT.SENALT, fieldName: "SENALT", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR1_DELAY, fieldName: "SENSOR1_DELAY", required: false, type: Double.self)
+    try _v.visit(field: VT.ID_SENSOR2, fieldName: "ID_SENSOR2", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIG_SENSOR_ID2, fieldName: "ORIG_SENSOR_ID2", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SEN2LAT, fieldName: "SEN2LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.SEN2LON, fieldName: "SEN2LON", required: false, type: Double.self)
+    try _v.visit(field: VT.SEN2ALT, fieldName: "SEN2ALT", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR2_DELAY, fieldName: "SENSOR2_DELAY", required: false, type: Double.self)
+    try _v.visit(field: VT.FREQUENCY, fieldName: "FREQUENCY", required: false, type: Double.self)
+    try _v.visit(field: VT.BANDWIDTH, fieldName: "BANDWIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.SNR, fieldName: "SNR", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_RANGE, fieldName: "DELTA_RANGE", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_RANGE_UNC, fieldName: "DELTA_RANGE_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_RANGE_RATE, fieldName: "DELTA_RANGE_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_RANGE_RATE_UNC, fieldName: "DELTA_RANGE_RATE_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.TDOA, fieldName: "TDOA", required: false, type: Double.self)
+    try _v.visit(field: VT.TDOA_UNC, fieldName: "TDOA_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.FDOA, fieldName: "FDOA", required: false, type: Double.self)
+    try _v.visit(field: VT.FDOA_UNC, fieldName: "FDOA_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.RAW_FILE_URI, fieldName: "RAW_FILE_URI", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTOR, fieldName: "DESCRIPTOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TAGS, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

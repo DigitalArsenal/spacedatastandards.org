@@ -25,8 +25,8 @@ export declare class PPEPositionRecord implements flatbuffers.IUnpackableObject<
      * Together with EPOCH_HALF_SPAN, defines the time interval:
      *   [EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]
      */
-    EPOCH_MID(): string | null;
-    EPOCH_MID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    EPOCH_MID(): string;
+    EPOCH_MID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Half-span of the validity window in seconds.
      * The full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID.
@@ -48,21 +48,21 @@ export declare class PPEPositionRecord implements flatbuffers.IUnpackableObject<
      */
     POS_COEFF_X(index: number): number | null;
     posCoeffXLength(): number;
-    posCoeffXArray(): Float64Array | null;
+    posCoeffXArray(): Float64Array;
     /**
      * Position coefficients for Y-axis (km).
      * Length must equal NUM_COEFFICIENTS.
      */
     POS_COEFF_Y(index: number): number | null;
     posCoeffYLength(): number;
-    posCoeffYArray(): Float64Array | null;
+    posCoeffYArray(): Float64Array;
     /**
      * Position coefficients for Z-axis (km).
      * Length must equal NUM_COEFFICIENTS.
      */
     POS_COEFF_Z(index: number): number | null;
     posCoeffZLength(): number;
-    posCoeffZArray(): Float64Array | null;
+    posCoeffZArray(): Float64Array;
     /**
      * Whether explicit velocity coefficients are provided.
      * If false, velocity should be derived by differentiating the position polynomial.

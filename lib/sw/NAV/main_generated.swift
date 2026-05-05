@@ -82,120 +82,118 @@ public struct NAV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case POSITION_X = 4
-    case POSITION_Y = 6
-    case POSITION_Z = 8
-    case VELOCITY_X = 10
-    case VELOCITY_Y = 12
-    case VELOCITY_Z = 14
-    case ATTITUDE_X = 16
-    case ATTITUDE_Y = 18
-    case ATTITUDE_Z = 20
-    case ATTITUDE_W = 22
-    case OMEGA_X = 24
-    case OMEGA_Y = 26
-    case OMEGA_Z = 28
-    case SPEED_KNOTS = 30
-    case HEADING = 32
-    case COURSE = 34
-    case RUDDER_ANGLE = 36
-    case HULL = 38
-    case PROPULSION = 40
-    case DC_STATE = 42
-    case FIRES_ACTIVE = 44
-    case FLOODING_ACTIVE = 46
-    case CREW_CASUALTIES = 48
-    case HULL_INTEGRITY = 50
-    case POWER_AVAILABLE = 52
-    case WEAPONS_ONLINE = 54
-    case SENSORS_ONLINE = 56
-    case RESERVED1 = 58
-    case FUEL_REMAINING = 60
-    case AMMO_MAIN = 62
-    case MISSILES_REMAINING = 64
-    case TORPEDOES_REMAINING = 66
-    case VESSEL_TYPE = 68
-    case PROPULSION_TYPE = 70
-    case RESERVED = 72
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let POSITION_X: VOffset = 4
+    static let POSITION_Y: VOffset = 6
+    static let POSITION_Z: VOffset = 8
+    static let VELOCITY_X: VOffset = 10
+    static let VELOCITY_Y: VOffset = 12
+    static let VELOCITY_Z: VOffset = 14
+    static let ATTITUDE_X: VOffset = 16
+    static let ATTITUDE_Y: VOffset = 18
+    static let ATTITUDE_Z: VOffset = 20
+    static let ATTITUDE_W: VOffset = 22
+    static let OMEGA_X: VOffset = 24
+    static let OMEGA_Y: VOffset = 26
+    static let OMEGA_Z: VOffset = 28
+    static let SPEED_KNOTS: VOffset = 30
+    static let HEADING: VOffset = 32
+    static let COURSE: VOffset = 34
+    static let RUDDER_ANGLE: VOffset = 36
+    static let HULL: VOffset = 38
+    static let PROPULSION: VOffset = 40
+    static let DC_STATE: VOffset = 42
+    static let FIRES_ACTIVE: VOffset = 44
+    static let FLOODING_ACTIVE: VOffset = 46
+    static let CREW_CASUALTIES: VOffset = 48
+    static let HULL_INTEGRITY: VOffset = 50
+    static let POWER_AVAILABLE: VOffset = 52
+    static let WEAPONS_ONLINE: VOffset = 54
+    static let SENSORS_ONLINE: VOffset = 56
+    static let RESERVED1: VOffset = 58
+    static let FUEL_REMAINING: VOffset = 60
+    static let AMMO_MAIN: VOffset = 62
+    static let MISSILES_REMAINING: VOffset = 64
+    static let TORPEDOES_REMAINING: VOffset = 66
+    static let VESSEL_TYPE: VOffset = 68
+    static let PROPULSION_TYPE: VOffset = 70
+    static let RESERVED: VOffset = 72
   }
 
-  public var POSITION_X: Double { let o = _accessor.offset(VTOFFSET.POSITION_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POSITION_Y: Double { let o = _accessor.offset(VTOFFSET.POSITION_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POSITION_Z: Double { let o = _accessor.offset(VTOFFSET.POSITION_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VELOCITY_X: Double { let o = _accessor.offset(VTOFFSET.VELOCITY_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VELOCITY_Y: Double { let o = _accessor.offset(VTOFFSET.VELOCITY_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VELOCITY_Z: Double { let o = _accessor.offset(VTOFFSET.VELOCITY_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ATTITUDE_X: Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ATTITUDE_Y: Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ATTITUDE_Z: Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ATTITUDE_W: Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_W.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var OMEGA_X: Double { let o = _accessor.offset(VTOFFSET.OMEGA_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var OMEGA_Y: Double { let o = _accessor.offset(VTOFFSET.OMEGA_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var OMEGA_Z: Double { let o = _accessor.offset(VTOFFSET.OMEGA_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SPEED_KNOTS: Float32 { let o = _accessor.offset(VTOFFSET.SPEED_KNOTS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var HEADING: Float32 { let o = _accessor.offset(VTOFFSET.HEADING.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var COURSE: Float32 { let o = _accessor.offset(VTOFFSET.COURSE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var RUDDER_ANGLE: Float32 { let o = _accessor.offset(VTOFFSET.RUDDER_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var HULL: String? { let o = _accessor.offset(VTOFFSET.HULL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HULLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HULL.v) }
-  public var PROPULSION: String? { let o = _accessor.offset(VTOFFSET.PROPULSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PROPULSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PROPULSION.v) }
-  public var DC_STATE: UInt8 { let o = _accessor.offset(VTOFFSET.DC_STATE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var FIRES_ACTIVE: UInt8 { let o = _accessor.offset(VTOFFSET.FIRES_ACTIVE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var FLOODING_ACTIVE: UInt8 { let o = _accessor.offset(VTOFFSET.FLOODING_ACTIVE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var CREW_CASUALTIES: UInt8 { let o = _accessor.offset(VTOFFSET.CREW_CASUALTIES.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var HULL_INTEGRITY: Float32 { let o = _accessor.offset(VTOFFSET.HULL_INTEGRITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var POWER_AVAILABLE: Float32 { let o = _accessor.offset(VTOFFSET.POWER_AVAILABLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var WEAPONS_ONLINE: UInt8 { let o = _accessor.offset(VTOFFSET.WEAPONS_ONLINE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var SENSORS_ONLINE: UInt8 { let o = _accessor.offset(VTOFFSET.SENSORS_ONLINE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var RESERVED1: UInt16 { let o = _accessor.offset(VTOFFSET.RESERVED1.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var FUEL_REMAINING: Float32 { let o = _accessor.offset(VTOFFSET.FUEL_REMAINING.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var AMMO_MAIN: UInt16 { let o = _accessor.offset(VTOFFSET.AMMO_MAIN.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var MISSILES_REMAINING: UInt8 { let o = _accessor.offset(VTOFFSET.MISSILES_REMAINING.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var TORPEDOES_REMAINING: UInt8 { let o = _accessor.offset(VTOFFSET.TORPEDOES_REMAINING.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var VESSEL_TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.VESSEL_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var PROPULSION_TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.PROPULSION_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
+  public var POSITION_X: Double { let o = _accessor.offset(VT.POSITION_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POSITION_Y: Double { let o = _accessor.offset(VT.POSITION_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POSITION_Z: Double { let o = _accessor.offset(VT.POSITION_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VELOCITY_X: Double { let o = _accessor.offset(VT.VELOCITY_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VELOCITY_Y: Double { let o = _accessor.offset(VT.VELOCITY_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VELOCITY_Z: Double { let o = _accessor.offset(VT.VELOCITY_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATTITUDE_X: Double { let o = _accessor.offset(VT.ATTITUDE_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATTITUDE_Y: Double { let o = _accessor.offset(VT.ATTITUDE_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATTITUDE_Z: Double { let o = _accessor.offset(VT.ATTITUDE_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ATTITUDE_W: Double { let o = _accessor.offset(VT.ATTITUDE_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OMEGA_X: Double { let o = _accessor.offset(VT.OMEGA_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OMEGA_Y: Double { let o = _accessor.offset(VT.OMEGA_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OMEGA_Z: Double { let o = _accessor.offset(VT.OMEGA_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SPEED_KNOTS: Float32 { let o = _accessor.offset(VT.SPEED_KNOTS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var HEADING: Float32 { let o = _accessor.offset(VT.HEADING); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var COURSE: Float32 { let o = _accessor.offset(VT.COURSE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var RUDDER_ANGLE: Float32 { let o = _accessor.offset(VT.RUDDER_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var HULL: String? { let o = _accessor.offset(VT.HULL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HULLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HULL) }
+  public var PROPULSION: String? { let o = _accessor.offset(VT.PROPULSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPULSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPULSION) }
+  public var DC_STATE: UInt8 { let o = _accessor.offset(VT.DC_STATE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var FIRES_ACTIVE: UInt8 { let o = _accessor.offset(VT.FIRES_ACTIVE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var FLOODING_ACTIVE: UInt8 { let o = _accessor.offset(VT.FLOODING_ACTIVE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var CREW_CASUALTIES: UInt8 { let o = _accessor.offset(VT.CREW_CASUALTIES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var HULL_INTEGRITY: Float32 { let o = _accessor.offset(VT.HULL_INTEGRITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var POWER_AVAILABLE: Float32 { let o = _accessor.offset(VT.POWER_AVAILABLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var WEAPONS_ONLINE: UInt8 { let o = _accessor.offset(VT.WEAPONS_ONLINE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var SENSORS_ONLINE: UInt8 { let o = _accessor.offset(VT.SENSORS_ONLINE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var RESERVED1: UInt16 { let o = _accessor.offset(VT.RESERVED1); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var FUEL_REMAINING: Float32 { let o = _accessor.offset(VT.FUEL_REMAINING); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var AMMO_MAIN: UInt16 { let o = _accessor.offset(VT.AMMO_MAIN); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var MISSILES_REMAINING: UInt8 { let o = _accessor.offset(VT.MISSILES_REMAINING); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var TORPEDOES_REMAINING: UInt8 { let o = _accessor.offset(VT.TORPEDOES_REMAINING); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var VESSEL_TYPE: UInt8 { let o = _accessor.offset(VT.VESSEL_TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var PROPULSION_TYPE: UInt8 { let o = _accessor.offset(VT.PROPULSION_TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
   public static func startNAV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 35) }
-  public static func add(POSITION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_X, def: 0.0, at: VTOFFSET.POSITION_X.p) }
-  public static func add(POSITION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Y, def: 0.0, at: VTOFFSET.POSITION_Y.p) }
-  public static func add(POSITION_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Z, def: 0.0, at: VTOFFSET.POSITION_Z.p) }
-  public static func add(VELOCITY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_X, def: 0.0, at: VTOFFSET.VELOCITY_X.p) }
-  public static func add(VELOCITY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Y, def: 0.0, at: VTOFFSET.VELOCITY_Y.p) }
-  public static func add(VELOCITY_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Z, def: 0.0, at: VTOFFSET.VELOCITY_Z.p) }
-  public static func add(ATTITUDE_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_X, def: 0.0, at: VTOFFSET.ATTITUDE_X.p) }
-  public static func add(ATTITUDE_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_Y, def: 0.0, at: VTOFFSET.ATTITUDE_Y.p) }
-  public static func add(ATTITUDE_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_Z, def: 0.0, at: VTOFFSET.ATTITUDE_Z.p) }
-  public static func add(ATTITUDE_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_W, def: 0.0, at: VTOFFSET.ATTITUDE_W.p) }
-  public static func add(OMEGA_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_X, def: 0.0, at: VTOFFSET.OMEGA_X.p) }
-  public static func add(OMEGA_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_Y, def: 0.0, at: VTOFFSET.OMEGA_Y.p) }
-  public static func add(OMEGA_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_Z, def: 0.0, at: VTOFFSET.OMEGA_Z.p) }
-  public static func add(SPEED_KNOTS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPEED_KNOTS, def: 0.0, at: VTOFFSET.SPEED_KNOTS.p) }
-  public static func add(HEADING: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEADING, def: 0.0, at: VTOFFSET.HEADING.p) }
-  public static func add(COURSE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COURSE, def: 0.0, at: VTOFFSET.COURSE.p) }
-  public static func add(RUDDER_ANGLE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RUDDER_ANGLE, def: 0.0, at: VTOFFSET.RUDDER_ANGLE.p) }
-  public static func add(HULL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HULL, at: VTOFFSET.HULL.p) }
-  public static func add(PROPULSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPULSION, at: VTOFFSET.PROPULSION.p) }
-  public static func add(DC_STATE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_STATE, def: 0, at: VTOFFSET.DC_STATE.p) }
-  public static func add(FIRES_ACTIVE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIRES_ACTIVE, def: 0, at: VTOFFSET.FIRES_ACTIVE.p) }
-  public static func add(FLOODING_ACTIVE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLOODING_ACTIVE, def: 0, at: VTOFFSET.FLOODING_ACTIVE.p) }
-  public static func add(CREW_CASUALTIES: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREW_CASUALTIES, def: 0, at: VTOFFSET.CREW_CASUALTIES.p) }
-  public static func add(HULL_INTEGRITY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HULL_INTEGRITY, def: 0.0, at: VTOFFSET.HULL_INTEGRITY.p) }
-  public static func add(POWER_AVAILABLE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER_AVAILABLE, def: 0.0, at: VTOFFSET.POWER_AVAILABLE.p) }
-  public static func add(WEAPONS_ONLINE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEAPONS_ONLINE, def: 0, at: VTOFFSET.WEAPONS_ONLINE.p) }
-  public static func add(SENSORS_ONLINE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSORS_ONLINE, def: 0, at: VTOFFSET.SENSORS_ONLINE.p) }
-  public static func add(RESERVED1: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESERVED1, def: 0, at: VTOFFSET.RESERVED1.p) }
-  public static func add(FUEL_REMAINING: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FUEL_REMAINING, def: 0.0, at: VTOFFSET.FUEL_REMAINING.p) }
-  public static func add(AMMO_MAIN: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AMMO_MAIN, def: 0, at: VTOFFSET.AMMO_MAIN.p) }
-  public static func add(MISSILES_REMAINING: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MISSILES_REMAINING, def: 0, at: VTOFFSET.MISSILES_REMAINING.p) }
-  public static func add(TORPEDOES_REMAINING: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TORPEDOES_REMAINING, def: 0, at: VTOFFSET.TORPEDOES_REMAINING.p) }
-  public static func add(VESSEL_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VESSEL_TYPE, def: 0, at: VTOFFSET.VESSEL_TYPE.p) }
-  public static func add(PROPULSION_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROPULSION_TYPE, def: 0, at: VTOFFSET.PROPULSION_TYPE.p) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VTOFFSET.RESERVED.p) }
+  public static func add(POSITION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_X, def: 0.0, at: VT.POSITION_X) }
+  public static func add(POSITION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Y, def: 0.0, at: VT.POSITION_Y) }
+  public static func add(POSITION_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Z, def: 0.0, at: VT.POSITION_Z) }
+  public static func add(VELOCITY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_X, def: 0.0, at: VT.VELOCITY_X) }
+  public static func add(VELOCITY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Y, def: 0.0, at: VT.VELOCITY_Y) }
+  public static func add(VELOCITY_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Z, def: 0.0, at: VT.VELOCITY_Z) }
+  public static func add(ATTITUDE_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_X, def: 0.0, at: VT.ATTITUDE_X) }
+  public static func add(ATTITUDE_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_Y, def: 0.0, at: VT.ATTITUDE_Y) }
+  public static func add(ATTITUDE_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_Z, def: 0.0, at: VT.ATTITUDE_Z) }
+  public static func add(ATTITUDE_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_W, def: 0.0, at: VT.ATTITUDE_W) }
+  public static func add(OMEGA_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_X, def: 0.0, at: VT.OMEGA_X) }
+  public static func add(OMEGA_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_Y, def: 0.0, at: VT.OMEGA_Y) }
+  public static func add(OMEGA_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OMEGA_Z, def: 0.0, at: VT.OMEGA_Z) }
+  public static func add(SPEED_KNOTS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPEED_KNOTS, def: 0.0, at: VT.SPEED_KNOTS) }
+  public static func add(HEADING: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HEADING, def: 0.0, at: VT.HEADING) }
+  public static func add(COURSE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COURSE, def: 0.0, at: VT.COURSE) }
+  public static func add(RUDDER_ANGLE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RUDDER_ANGLE, def: 0.0, at: VT.RUDDER_ANGLE) }
+  public static func add(HULL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HULL, at: VT.HULL) }
+  public static func add(PROPULSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPULSION, at: VT.PROPULSION) }
+  public static func add(DC_STATE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_STATE, def: 0, at: VT.DC_STATE) }
+  public static func add(FIRES_ACTIVE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIRES_ACTIVE, def: 0, at: VT.FIRES_ACTIVE) }
+  public static func add(FLOODING_ACTIVE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLOODING_ACTIVE, def: 0, at: VT.FLOODING_ACTIVE) }
+  public static func add(CREW_CASUALTIES: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREW_CASUALTIES, def: 0, at: VT.CREW_CASUALTIES) }
+  public static func add(HULL_INTEGRITY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HULL_INTEGRITY, def: 0.0, at: VT.HULL_INTEGRITY) }
+  public static func add(POWER_AVAILABLE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER_AVAILABLE, def: 0.0, at: VT.POWER_AVAILABLE) }
+  public static func add(WEAPONS_ONLINE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEAPONS_ONLINE, def: 0, at: VT.WEAPONS_ONLINE) }
+  public static func add(SENSORS_ONLINE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSORS_ONLINE, def: 0, at: VT.SENSORS_ONLINE) }
+  public static func add(RESERVED1: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESERVED1, def: 0, at: VT.RESERVED1) }
+  public static func add(FUEL_REMAINING: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FUEL_REMAINING, def: 0.0, at: VT.FUEL_REMAINING) }
+  public static func add(AMMO_MAIN: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AMMO_MAIN, def: 0, at: VT.AMMO_MAIN) }
+  public static func add(MISSILES_REMAINING: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MISSILES_REMAINING, def: 0, at: VT.MISSILES_REMAINING) }
+  public static func add(TORPEDOES_REMAINING: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TORPEDOES_REMAINING, def: 0, at: VT.TORPEDOES_REMAINING) }
+  public static func add(VESSEL_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VESSEL_TYPE, def: 0, at: VT.VESSEL_TYPE) }
+  public static func add(PROPULSION_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROPULSION_TYPE, def: 0, at: VT.PROPULSION_TYPE) }
+  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
   public static func endNAV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createNAV(
     _ fbb: inout FlatBufferBuilder,
@@ -276,41 +274,41 @@ public struct NAV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.POSITION_X.p, fieldName: "POSITION_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POSITION_Y.p, fieldName: "POSITION_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POSITION_Z.p, fieldName: "POSITION_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VELOCITY_X.p, fieldName: "VELOCITY_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VELOCITY_Y.p, fieldName: "VELOCITY_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VELOCITY_Z.p, fieldName: "VELOCITY_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_X.p, fieldName: "ATTITUDE_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_Y.p, fieldName: "ATTITUDE_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_Z.p, fieldName: "ATTITUDE_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ATTITUDE_W.p, fieldName: "ATTITUDE_W", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OMEGA_X.p, fieldName: "OMEGA_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OMEGA_Y.p, fieldName: "OMEGA_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OMEGA_Z.p, fieldName: "OMEGA_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SPEED_KNOTS.p, fieldName: "SPEED_KNOTS", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.HEADING.p, fieldName: "HEADING", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.COURSE.p, fieldName: "COURSE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.RUDDER_ANGLE.p, fieldName: "RUDDER_ANGLE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.HULL.p, fieldName: "HULL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PROPULSION.p, fieldName: "PROPULSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DC_STATE.p, fieldName: "DC_STATE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.FIRES_ACTIVE.p, fieldName: "FIRES_ACTIVE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.FLOODING_ACTIVE.p, fieldName: "FLOODING_ACTIVE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.CREW_CASUALTIES.p, fieldName: "CREW_CASUALTIES", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.HULL_INTEGRITY.p, fieldName: "HULL_INTEGRITY", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.POWER_AVAILABLE.p, fieldName: "POWER_AVAILABLE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.WEAPONS_ONLINE.p, fieldName: "WEAPONS_ONLINE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.SENSORS_ONLINE.p, fieldName: "SENSORS_ONLINE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.RESERVED1.p, fieldName: "RESERVED1", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.FUEL_REMAINING.p, fieldName: "FUEL_REMAINING", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.AMMO_MAIN.p, fieldName: "AMMO_MAIN", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.MISSILES_REMAINING.p, fieldName: "MISSILES_REMAINING", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.TORPEDOES_REMAINING.p, fieldName: "TORPEDOES_REMAINING", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.VESSEL_TYPE.p, fieldName: "VESSEL_TYPE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.PROPULSION_TYPE.p, fieldName: "PROPULSION_TYPE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.POSITION_X, fieldName: "POSITION_X", required: false, type: Double.self)
+    try _v.visit(field: VT.POSITION_Y, fieldName: "POSITION_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.POSITION_Z, fieldName: "POSITION_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.VELOCITY_X, fieldName: "VELOCITY_X", required: false, type: Double.self)
+    try _v.visit(field: VT.VELOCITY_Y, fieldName: "VELOCITY_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.VELOCITY_Z, fieldName: "VELOCITY_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.ATTITUDE_X, fieldName: "ATTITUDE_X", required: false, type: Double.self)
+    try _v.visit(field: VT.ATTITUDE_Y, fieldName: "ATTITUDE_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.ATTITUDE_Z, fieldName: "ATTITUDE_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.ATTITUDE_W, fieldName: "ATTITUDE_W", required: false, type: Double.self)
+    try _v.visit(field: VT.OMEGA_X, fieldName: "OMEGA_X", required: false, type: Double.self)
+    try _v.visit(field: VT.OMEGA_Y, fieldName: "OMEGA_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.OMEGA_Z, fieldName: "OMEGA_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.SPEED_KNOTS, fieldName: "SPEED_KNOTS", required: false, type: Float32.self)
+    try _v.visit(field: VT.HEADING, fieldName: "HEADING", required: false, type: Float32.self)
+    try _v.visit(field: VT.COURSE, fieldName: "COURSE", required: false, type: Float32.self)
+    try _v.visit(field: VT.RUDDER_ANGLE, fieldName: "RUDDER_ANGLE", required: false, type: Float32.self)
+    try _v.visit(field: VT.HULL, fieldName: "HULL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPULSION, fieldName: "PROPULSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_STATE, fieldName: "DC_STATE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.FIRES_ACTIVE, fieldName: "FIRES_ACTIVE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.FLOODING_ACTIVE, fieldName: "FLOODING_ACTIVE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.CREW_CASUALTIES, fieldName: "CREW_CASUALTIES", required: false, type: UInt8.self)
+    try _v.visit(field: VT.HULL_INTEGRITY, fieldName: "HULL_INTEGRITY", required: false, type: Float32.self)
+    try _v.visit(field: VT.POWER_AVAILABLE, fieldName: "POWER_AVAILABLE", required: false, type: Float32.self)
+    try _v.visit(field: VT.WEAPONS_ONLINE, fieldName: "WEAPONS_ONLINE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.SENSORS_ONLINE, fieldName: "SENSORS_ONLINE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RESERVED1, fieldName: "RESERVED1", required: false, type: UInt16.self)
+    try _v.visit(field: VT.FUEL_REMAINING, fieldName: "FUEL_REMAINING", required: false, type: Float32.self)
+    try _v.visit(field: VT.AMMO_MAIN, fieldName: "AMMO_MAIN", required: false, type: UInt16.self)
+    try _v.visit(field: VT.MISSILES_REMAINING, fieldName: "MISSILES_REMAINING", required: false, type: UInt8.self)
+    try _v.visit(field: VT.TORPEDOES_REMAINING, fieldName: "TORPEDOES_REMAINING", required: false, type: UInt8.self)
+    try _v.visit(field: VT.VESSEL_TYPE, fieldName: "VESSEL_TYPE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.PROPULSION_TYPE, fieldName: "PROPULSION_TYPE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

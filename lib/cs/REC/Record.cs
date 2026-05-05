@@ -53,6 +53,7 @@ public struct Record : IFlatbufferObject
   public DFH valueAsDFH() { return value<DFH>().Value; }
   public DMG valueAsDMG() { return value<DMG>().Value; }
   public DOA valueAsDOA() { return value<DOA>().Value; }
+  public DPM valueAsDPM() { return value<DPM>().Value; }
   public EME valueAsEME() { return value<EME>().Value; }
   public ENC valueAsENC() { return value<ENC>().Value; }
   public ENV valueAsENV() { return value<ENV>().Value; }
@@ -309,6 +310,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.DOA:
         _o.value.Value = this.value<DOA>().HasValue ? this.value<DOA>().Value.UnPack() : null;
+        break;
+      case RecordType.DPM:
+        _o.value.Value = this.value<DPM>().HasValue ? this.value<DPM>().Value.UnPack() : null;
         break;
       case RecordType.EME:
         _o.value.Value = this.value<EME>().HasValue ? this.value<EME>().Value.UnPack() : null;

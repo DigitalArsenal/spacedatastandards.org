@@ -63,105 +63,103 @@ public struct GEO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case ORIG_OBJECT_ID = 6
-    case SAT_NO = 8
-    case ON_ORBIT = 10
-    case STATION_KEEPING = 12
-    case SS = 14
-    case SC = 16
-    case RELATIVE_ENERGY = 18
-    case LONGITUDE_RATE = 20
-    case LONGITUDE_MIN = 22
-    case LONGITUDE_MAX = 24
-    case CONFIDENCE = 26
-    case TROUGH = 28
-    case PLANE_CHANGE_STATUS = 30
-    case LOST_FLAG = 32
-    case SEMI_ANNUAL_CORR_FLAG = 34
-    case OBJECT_STATUS = 36
-    case INCLINATION = 38
-    case ECCENTRICITY = 40
-    case EPOCH = 42
-    case RAW_FILE_URI = 44
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let ORIG_OBJECT_ID: VOffset = 6
+    static let SAT_NO: VOffset = 8
+    static let ON_ORBIT: VOffset = 10
+    static let STATION_KEEPING: VOffset = 12
+    static let SS: VOffset = 14
+    static let SC: VOffset = 16
+    static let RELATIVE_ENERGY: VOffset = 18
+    static let LONGITUDE_RATE: VOffset = 20
+    static let LONGITUDE_MIN: VOffset = 22
+    static let LONGITUDE_MAX: VOffset = 24
+    static let CONFIDENCE: VOffset = 26
+    static let TROUGH: VOffset = 28
+    static let PLANE_CHANGE_STATUS: VOffset = 30
+    static let LOST_FLAG: VOffset = 32
+    static let SEMI_ANNUAL_CORR_FLAG: VOffset = 34
+    static let OBJECT_STATUS: VOffset = 36
+    static let INCLINATION: VOffset = 38
+    static let ECCENTRICITY: VOffset = 40
+    static let EPOCH: VOffset = 42
+    static let RAW_FILE_URI: VOffset = 44
   }
 
   ///  Unique identifier
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
   ///  International designator
-  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
+  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VT.ORIG_OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIG_OBJECT_ID) }
   ///  Satellite catalog number
-  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VT.SAT_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  On-orbit reference identifier
-  public var ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ON_ORBIT.v) }
+  public var ON_ORBIT: String? { let o = _accessor.offset(VT.ON_ORBIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ON_ORBIT) }
   ///  Station-keeping status
-  public var STATION_KEEPING: geoStationKeeping { let o = _accessor.offset(VTOFFSET.STATION_KEEPING.v); return o == 0 ? .active : geoStationKeeping(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .active }
+  public var STATION_KEEPING: geoStationKeeping { let o = _accessor.offset(VT.STATION_KEEPING); return o == 0 ? .active : geoStationKeeping(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .active }
   ///  Subsatellite point longitude (degrees east)
-  public var SS: Double { let o = _accessor.offset(VTOFFSET.SS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SS: Double { let o = _accessor.offset(VT.SS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Longitude of ascending node (degrees)
-  public var SC: Double { let o = _accessor.offset(VTOFFSET.SC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SC: Double { let o = _accessor.offset(VT.SC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Relative energy (km^2/s^2)
-  public var RELATIVE_ENERGY: Double { let o = _accessor.offset(VTOFFSET.RELATIVE_ENERGY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RELATIVE_ENERGY: Double { let o = _accessor.offset(VT.RELATIVE_ENERGY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Longitude drift rate (degrees/day)
-  public var LONGITUDE_RATE: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE_RATE: Double { let o = _accessor.offset(VT.LONGITUDE_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Western longitude boundary of slot (degrees east)
-  public var LONGITUDE_MIN: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE_MIN: Double { let o = _accessor.offset(VT.LONGITUDE_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Eastern longitude boundary of slot (degrees east)
-  public var LONGITUDE_MAX: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE_MAX: Double { let o = _accessor.offset(VT.LONGITUDE_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Assessment confidence level
-  public var CONFIDENCE: geoConfidence { let o = _accessor.offset(VTOFFSET.CONFIDENCE.v); return o == 0 ? .high : geoConfidence(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .high }
+  public var CONFIDENCE: geoConfidence { let o = _accessor.offset(VT.CONFIDENCE); return o == 0 ? .high : geoConfidence(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .high }
   ///  Trough type (east/west gravitational well)
-  public var TROUGH: troughType { let o = _accessor.offset(VTOFFSET.TROUGH.v); return o == 0 ? .east : troughType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .east }
+  public var TROUGH: troughType { let o = _accessor.offset(VT.TROUGH); return o == 0 ? .east : troughType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .east }
   ///  Plane change status description
-  public var PLANE_CHANGE_STATUS: String? { let o = _accessor.offset(VTOFFSET.PLANE_CHANGE_STATUS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PLANE_CHANGE_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PLANE_CHANGE_STATUS.v) }
+  public var PLANE_CHANGE_STATUS: String? { let o = _accessor.offset(VT.PLANE_CHANGE_STATUS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PLANE_CHANGE_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PLANE_CHANGE_STATUS) }
   ///  True if object is lost/not tracked
-  public var LOST_FLAG: Bool { let o = _accessor.offset(VTOFFSET.LOST_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var LOST_FLAG: Bool { let o = _accessor.offset(VT.LOST_FLAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  True if semi-annual correction applied
-  public var SEMI_ANNUAL_CORR_FLAG: Bool { let o = _accessor.offset(VTOFFSET.SEMI_ANNUAL_CORR_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SEMI_ANNUAL_CORR_FLAG: Bool { let o = _accessor.offset(VT.SEMI_ANNUAL_CORR_FLAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Current operational status
-  public var OBJECT_STATUS: String? { let o = _accessor.offset(VTOFFSET.OBJECT_STATUS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_STATUS.v) }
+  public var OBJECT_STATUS: String? { let o = _accessor.offset(VT.OBJECT_STATUS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_STATUS) }
   ///  Inclination (degrees)
-  public var INCLINATION: Double { let o = _accessor.offset(VTOFFSET.INCLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Eccentricity
-  public var ECCENTRICITY: Double { let o = _accessor.offset(VTOFFSET.ECCENTRICITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Epoch of status (ISO 8601)
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
   ///  Reference to raw data file
-  public var RAW_FILE_URI: String? { let o = _accessor.offset(VTOFFSET.RAW_FILE_URI.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RAW_FILE_URISegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RAW_FILE_URI.v) }
+  public var RAW_FILE_URI: String? { let o = _accessor.offset(VT.RAW_FILE_URI); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RAW_FILE_URISegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RAW_FILE_URI) }
   public static func startGEO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
-  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
-  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VTOFFSET.ON_ORBIT.p) }
-  public static func add(STATION_KEEPING: geoStationKeeping, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATION_KEEPING.rawValue, def: 0, at: VTOFFSET.STATION_KEEPING.p) }
-  public static func add(SS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SS, def: 0.0, at: VTOFFSET.SS.p) }
-  public static func add(SC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SC, def: 0.0, at: VTOFFSET.SC.p) }
-  public static func add(RELATIVE_ENERGY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_ENERGY, def: 0.0, at: VTOFFSET.RELATIVE_ENERGY.p) }
-  public static func add(LONGITUDE_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE_RATE, def: 0.0, at: VTOFFSET.LONGITUDE_RATE.p) }
-  public static func add(LONGITUDE_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE_MIN, def: 0.0, at: VTOFFSET.LONGITUDE_MIN.p) }
-  public static func add(LONGITUDE_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE_MAX, def: 0.0, at: VTOFFSET.LONGITUDE_MAX.p) }
-  public static func add(CONFIDENCE: geoConfidence, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONFIDENCE.rawValue, def: 0, at: VTOFFSET.CONFIDENCE.p) }
-  public static func add(TROUGH: troughType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TROUGH.rawValue, def: 0, at: VTOFFSET.TROUGH.p) }
-  public static func add(PLANE_CHANGE_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLANE_CHANGE_STATUS, at: VTOFFSET.PLANE_CHANGE_STATUS.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VT.ORIG_OBJECT_ID) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VT.SAT_NO) }
+  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VT.ON_ORBIT) }
+  public static func add(STATION_KEEPING: geoStationKeeping, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATION_KEEPING.rawValue, def: 0, at: VT.STATION_KEEPING) }
+  public static func add(SS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SS, def: 0.0, at: VT.SS) }
+  public static func add(SC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SC, def: 0.0, at: VT.SC) }
+  public static func add(RELATIVE_ENERGY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_ENERGY, def: 0.0, at: VT.RELATIVE_ENERGY) }
+  public static func add(LONGITUDE_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE_RATE, def: 0.0, at: VT.LONGITUDE_RATE) }
+  public static func add(LONGITUDE_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE_MIN, def: 0.0, at: VT.LONGITUDE_MIN) }
+  public static func add(LONGITUDE_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE_MAX, def: 0.0, at: VT.LONGITUDE_MAX) }
+  public static func add(CONFIDENCE: geoConfidence, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONFIDENCE.rawValue, def: 0, at: VT.CONFIDENCE) }
+  public static func add(TROUGH: troughType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TROUGH.rawValue, def: 0, at: VT.TROUGH) }
+  public static func add(PLANE_CHANGE_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLANE_CHANGE_STATUS, at: VT.PLANE_CHANGE_STATUS) }
   public static func add(LOST_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOST_FLAG, def: false,
-   at: VTOFFSET.LOST_FLAG.p) }
+   at: VT.LOST_FLAG) }
   public static func add(SEMI_ANNUAL_CORR_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_ANNUAL_CORR_FLAG, def: false,
-   at: VTOFFSET.SEMI_ANNUAL_CORR_FLAG.p) }
-  public static func add(OBJECT_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_STATUS, at: VTOFFSET.OBJECT_STATUS.p) }
-  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VTOFFSET.INCLINATION.p) }
-  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VTOFFSET.ECCENTRICITY.p) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(RAW_FILE_URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RAW_FILE_URI, at: VTOFFSET.RAW_FILE_URI.p) }
+   at: VT.SEMI_ANNUAL_CORR_FLAG) }
+  public static func add(OBJECT_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_STATUS, at: VT.OBJECT_STATUS) }
+  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
+  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(RAW_FILE_URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RAW_FILE_URI, at: VT.RAW_FILE_URI) }
   public static func endGEO(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGEO(
     _ fbb: inout FlatBufferBuilder,
@@ -214,27 +212,27 @@ public struct GEO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ON_ORBIT.p, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STATION_KEEPING.p, fieldName: "STATION_KEEPING", required: false, type: geoStationKeeping.self)
-    try _v.visit(field: VTOFFSET.SS.p, fieldName: "SS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SC.p, fieldName: "SC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RELATIVE_ENERGY.p, fieldName: "RELATIVE_ENERGY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LONGITUDE_RATE.p, fieldName: "LONGITUDE_RATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LONGITUDE_MIN.p, fieldName: "LONGITUDE_MIN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LONGITUDE_MAX.p, fieldName: "LONGITUDE_MAX", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CONFIDENCE.p, fieldName: "CONFIDENCE", required: false, type: geoConfidence.self)
-    try _v.visit(field: VTOFFSET.TROUGH.p, fieldName: "TROUGH", required: false, type: troughType.self)
-    try _v.visit(field: VTOFFSET.PLANE_CHANGE_STATUS.p, fieldName: "PLANE_CHANGE_STATUS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LOST_FLAG.p, fieldName: "LOST_FLAG", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.SEMI_ANNUAL_CORR_FLAG.p, fieldName: "SEMI_ANNUAL_CORR_FLAG", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OBJECT_STATUS.p, fieldName: "OBJECT_STATUS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INCLINATION.p, fieldName: "INCLINATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ECCENTRICITY.p, fieldName: "ECCENTRICITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RAW_FILE_URI.p, fieldName: "RAW_FILE_URI", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIG_OBJECT_ID, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAT_NO, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ON_ORBIT, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATION_KEEPING, fieldName: "STATION_KEEPING", required: false, type: geoStationKeeping.self)
+    try _v.visit(field: VT.SS, fieldName: "SS", required: false, type: Double.self)
+    try _v.visit(field: VT.SC, fieldName: "SC", required: false, type: Double.self)
+    try _v.visit(field: VT.RELATIVE_ENERGY, fieldName: "RELATIVE_ENERGY", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE_RATE, fieldName: "LONGITUDE_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE_MIN, fieldName: "LONGITUDE_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE_MAX, fieldName: "LONGITUDE_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.CONFIDENCE, fieldName: "CONFIDENCE", required: false, type: geoConfidence.self)
+    try _v.visit(field: VT.TROUGH, fieldName: "TROUGH", required: false, type: troughType.self)
+    try _v.visit(field: VT.PLANE_CHANGE_STATUS, fieldName: "PLANE_CHANGE_STATUS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LOST_FLAG, fieldName: "LOST_FLAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.SEMI_ANNUAL_CORR_FLAG, fieldName: "SEMI_ANNUAL_CORR_FLAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.OBJECT_STATUS, fieldName: "OBJECT_STATUS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RAW_FILE_URI, fieldName: "RAW_FILE_URI", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

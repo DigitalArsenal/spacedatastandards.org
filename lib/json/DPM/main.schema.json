@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "publicationAssetKind" : {
+      "type" : "string",
+      "enum": ["DATA_SHARD", "QUERY_INDEX", "MANIFEST", "OTHER"]
+    },
+    "DPMAsset" : {
+      "type" : "object",
+      "description" : "One immutable content-addressed object published for a dataset update.",
+      "properties" : {
+        "ASSET_KIND" : {
+                "$ref" : "#/definitions/publicationAssetKind",
+                "description" : "Asset role."
+              },
+        "CID" : {
+                "type" : "string",
+                "description" : "IPFS CIDv1/multihash content identifier."
+              },
+        "MULTIFORMAT_ADDRESS" : {
+                "type" : "string",
+                "description" : "Multiformat address, usually /ipfs/{CID}."
+              },
+        "FILE_NAME" : {
+                "type" : "string",
+                "description" : "File name or logical artifact name."
+              },
+        "BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Byte length of the published object."
+              },
+        "BYTE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 hash of the exact published bytes, lowercase hex."
+              },
+        "SCHEMA_NAME" : {
+                "type" : "string",
+                "description" : "SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs."
+              },
+        "SCHEMA_HASH" : {
+                "type" : "string",
+                "description" : "Hash of the SDS schema used to encode this object."
+              },
+        "CONTENT_KEY_ID" : {
+                "type" : "string",
+                "description" : "Optional content-key identifier for encrypted artifacts."
+              }
+      },
+      "required" : ["CID"],
+      "additionalProperties" : false
+    },
+    "DPMSourceBatch" : {
+      "type" : "object",
+      "description" : "Source batch metadata bound into the dataset publication.",
+      "properties" : {
+        "SOURCE_NAME" : {
+                "type" : "string",
+                "description" : "Provider-controlled source name."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Original source URL."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 hash of raw source bytes, lowercase hex."
+              },
+        "HTTP_ETAG" : {
+                "type" : "string",
+                "description" : "HTTP ETag observed during retrieval."
+              },
+        "HTTP_LAST_MODIFIED" : {
+                "type" : "string",
+                "description" : "HTTP Last-Modified value observed during retrieval."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "Retrieval timestamp in ISO 8601 UTC."
+              },
+        "PARSER_VERSION" : {
+                "type" : "string",
+                "description" : "Parser or transform version."
+              },
+        "RECORD_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of normalized records emitted from this source."
+              },
+        "WARNINGS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Warnings or policy notes produced during normalization."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "DPMQueryBinding" : {
+      "type" : "object",
+      "description" : "Canonical query metadata that can replay the dataset selection.",
+      "properties" : {
+        "CANONICAL_QUERY" : {
+                "type" : "string",
+                "description" : "Canonical query text or canonical JSON representation."
+              },
+        "QUERY_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 hash of CANONICAL_QUERY, lowercase hex."
+              },
+        "RESULT_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 hash of the ordered result bytes, lowercase hex."
+              },
+        "QUERY_ENGINE" : {
+                "type" : "string",
+                "description" : "Query engine or profile name, e.g. FlatSQL."
+              },
+        "QUERY_ENGINE_VERSION" : {
+                "type" : "string",
+                "description" : "Query engine version or profile version."
+              },
+        "SCHEMA_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "SDS schema names selected by the query."
+              },
+        "PROVIDER_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Provider peer IDs selected by the query."
+              },
+        "SOURCE_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Source names selected by the query."
+              },
+        "BATCH_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Batch IDs selected by the query."
+              },
+        "WINDOW_START" : {
+                "type" : "string",
+                "description" : "Inclusive query window start in ISO 8601 UTC."
+              },
+        "WINDOW_END" : {
+                "type" : "string",
+                "description" : "Inclusive query window end in ISO 8601 UTC."
+              }
+      },
+      "required" : ["CANONICAL_QUERY", "QUERY_SHA256", "RESULT_SHA256"],
+      "additionalProperties" : false
+    },
+    "DPMEncryptionBinding" : {
+      "type" : "object",
+      "description" : "Encryption metadata for protected dataset artifacts.",
+      "properties" : {
+        "ENCRYPTED" : {
+                "type" : "boolean",
+                "description" : "Whether any artifact in this manifest is encrypted."
+              },
+        "ALGORITHM" : {
+                "type" : "string",
+                "description" : "Encryption algorithm, e.g. AES-256-GCM."
+              },
+        "CONTENT_KEY_ID" : {
+                "type" : "string",
+                "description" : "Content-key identifier."
+              },
+        "KEY_EPOCH" : {
+                "type" : "string",
+                "description" : "Key epoch or rotation label."
+              },
+        "POLICY_ID" : {
+                "type" : "string",
+                "description" : "Policy or listing identifier bound as AAD."
+              },
+        "AAD_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 hash of canonical encryption AAD, lowercase hex."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "DPM" : {
+      "type" : "object",
+      "description" : "Dataset Publication Manifest binding data/index CIDs, query replay,\nsource hashes, schema hashes, encryption metadata, and provider signature.",
+      "properties" : {
+        "VERSION" : {
+                "type" : "string",
+                "description" : "Manifest format version."
+              },
+        "DATASET_ID" : {
+                "type" : "string",
+                "description" : "Stable dataset identifier."
+              },
+        "UPDATE_ID" : {
+                "type" : "string",
+                "description" : "Dataset update or batch identifier."
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Provider peer ID."
+              },
+        "PROVIDER_EPM_CID" : {
+                "type" : "string",
+                "description" : "Provider EPM CID."
+              },
+        "PUBLISH_TIMESTAMP" : {
+                "type" : "string",
+                "description" : "Publication timestamp in ISO 8601 UTC."
+              },
+        "ASSETS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/DPMAsset"},
+                "description" : "Published shard, index, and auxiliary artifacts."
+              },
+        "SOURCES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/DPMSourceBatch"},
+                "description" : "Source batches used to build the dataset."
+              },
+        "QUERY" : {
+                "$ref" : "#/definitions/DPMQueryBinding",
+                "description" : "Replayable query binding."
+              },
+        "ENCRYPTION" : {
+                "$ref" : "#/definitions/DPMEncryptionBinding",
+                "description" : "Encryption/key metadata."
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Provider signature over the canonical manifest bytes or manifest digest."
+              },
+        "SIGNATURE_TYPE" : {
+                "type" : "string",
+                "description" : "Signature algorithm, e.g. Ed25519."
+              }
+      },
+      "required" : ["DATASET_ID", "UPDATE_ID", "PROVIDER_PEER_ID", "PUBLISH_TIMESTAMP"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DPM"
+}

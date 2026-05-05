@@ -37,43 +37,41 @@ public struct STV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case EPOCH = 4
-    case POS_X = 6
-    case POS_Y = 8
-    case POS_Z = 10
-    case VEL_X = 12
-    case VEL_Y = 14
-    case VEL_Z = 16
-    case REF_FRAME = 18
-    case FLAGS = 20
-    case RESERVED = 22
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let POS_X: VOffset = 6
+    static let POS_Y: VOffset = 8
+    static let POS_Z: VOffset = 10
+    static let VEL_X: VOffset = 12
+    static let VEL_Y: VOffset = 14
+    static let VEL_Z: VOffset = 16
+    static let REF_FRAME: VOffset = 18
+    static let FLAGS: VOffset = 20
+    static let RESERVED: VOffset = 22
   }
 
-  public var EPOCH: Double { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POS_X: Double { let o = _accessor.offset(VTOFFSET.POS_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POS_Y: Double { let o = _accessor.offset(VTOFFSET.POS_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POS_Z: Double { let o = _accessor.offset(VTOFFSET.POS_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VEL_X: Double { let o = _accessor.offset(VTOFFSET.VEL_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VEL_Y: Double { let o = _accessor.offset(VTOFFSET.VEL_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VEL_Z: Double { let o = _accessor.offset(VTOFFSET.VEL_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var REF_FRAME: UInt8 { let o = _accessor.offset(VTOFFSET.REF_FRAME.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var FLAGS: UInt8 { let o = _accessor.offset(VTOFFSET.FLAGS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
+  public var EPOCH: Double { let o = _accessor.offset(VT.EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POS_X: Double { let o = _accessor.offset(VT.POS_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POS_Y: Double { let o = _accessor.offset(VT.POS_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POS_Z: Double { let o = _accessor.offset(VT.POS_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VEL_X: Double { let o = _accessor.offset(VT.VEL_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VEL_Y: Double { let o = _accessor.offset(VT.VEL_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VEL_Z: Double { let o = _accessor.offset(VT.VEL_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var REF_FRAME: UInt8 { let o = _accessor.offset(VT.REF_FRAME); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var FLAGS: UInt8 { let o = _accessor.offset(VT.FLAGS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
   public static func startSTV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VTOFFSET.EPOCH.p) }
-  public static func add(POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_X, def: 0.0, at: VTOFFSET.POS_X.p) }
-  public static func add(POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_Y, def: 0.0, at: VTOFFSET.POS_Y.p) }
-  public static func add(POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_Z, def: 0.0, at: VTOFFSET.POS_Z.p) }
-  public static func add(VEL_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VEL_X, def: 0.0, at: VTOFFSET.VEL_X.p) }
-  public static func add(VEL_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VEL_Y, def: 0.0, at: VTOFFSET.VEL_Y.p) }
-  public static func add(VEL_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VEL_Z, def: 0.0, at: VTOFFSET.VEL_Z.p) }
-  public static func add(REF_FRAME: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REF_FRAME, def: 0, at: VTOFFSET.REF_FRAME.p) }
-  public static func add(FLAGS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLAGS, def: 0, at: VTOFFSET.FLAGS.p) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VTOFFSET.RESERVED.p) }
+  public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VT.EPOCH) }
+  public static func add(POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_X, def: 0.0, at: VT.POS_X) }
+  public static func add(POS_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_Y, def: 0.0, at: VT.POS_Y) }
+  public static func add(POS_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_Z, def: 0.0, at: VT.POS_Z) }
+  public static func add(VEL_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VEL_X, def: 0.0, at: VT.VEL_X) }
+  public static func add(VEL_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VEL_Y, def: 0.0, at: VT.VEL_Y) }
+  public static func add(VEL_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VEL_Z, def: 0.0, at: VT.VEL_Z) }
+  public static func add(REF_FRAME: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REF_FRAME, def: 0, at: VT.REF_FRAME) }
+  public static func add(FLAGS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLAGS, def: 0, at: VT.FLAGS) }
+  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
   public static func endSTV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSTV(
     _ fbb: inout FlatBufferBuilder,
@@ -104,16 +102,16 @@ public struct STV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POS_X.p, fieldName: "POS_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POS_Y.p, fieldName: "POS_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POS_Z.p, fieldName: "POS_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VEL_X.p, fieldName: "VEL_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VEL_Y.p, fieldName: "VEL_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VEL_Z.p, fieldName: "VEL_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.REF_FRAME.p, fieldName: "REF_FRAME", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.FLAGS.p, fieldName: "FLAGS", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: Double.self)
+    try _v.visit(field: VT.POS_X, fieldName: "POS_X", required: false, type: Double.self)
+    try _v.visit(field: VT.POS_Y, fieldName: "POS_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.POS_Z, fieldName: "POS_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.VEL_X, fieldName: "VEL_X", required: false, type: Double.self)
+    try _v.visit(field: VT.VEL_Y, fieldName: "VEL_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.VEL_Z, fieldName: "VEL_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.REF_FRAME, fieldName: "REF_FRAME", required: false, type: UInt8.self)
+    try _v.visit(field: VT.FLAGS, fieldName: "FLAGS", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

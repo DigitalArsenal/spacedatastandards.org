@@ -37,35 +37,33 @@ public struct ROC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case FAMILY = 6
-    case VARIANT = 8
-    case STAGES = 10
-    case SUSTAINERS = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let FAMILY: VOffset = 6
+    static let VARIANT: VOffset = 8
+    static let STAGES: VOffset = 10
+    static let SUSTAINERS: VOffset = 12
   }
 
   ///  Rocket Name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Rocket Family
-  public var FAMILY: String? { let o = _accessor.offset(VTOFFSET.FAMILY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FAMILYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FAMILY.v) }
+  public var FAMILY: String? { let o = _accessor.offset(VT.FAMILY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FAMILYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FAMILY) }
   ///  Rocket Variant
-  public var VARIANT: String? { let o = _accessor.offset(VTOFFSET.VARIANT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VARIANTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VARIANT.v) }
+  public var VARIANT: String? { let o = _accessor.offset(VT.VARIANT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VARIANTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VARIANT) }
   ///  Stages in the Rocket
-  public var STAGES: FlatbufferVector<STAGE> { return _accessor.vector(at: VTOFFSET.STAGES.v, byteSize: 4) }
+  public var STAGES: FlatbufferVector<STAGE> { return _accessor.vector(at: VT.STAGES, byteSize: 4) }
   ///  Sustainers in the Rocket
-  public var SUSTAINERS: FlatbufferVector<SUSTAINER> { return _accessor.vector(at: VTOFFSET.SUSTAINERS.v, byteSize: 4) }
+  public var SUSTAINERS: FlatbufferVector<SUSTAINER> { return _accessor.vector(at: VT.SUSTAINERS, byteSize: 4) }
   public static func startROC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(FAMILY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAMILY, at: VTOFFSET.FAMILY.p) }
-  public static func add(VARIANT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIANT, at: VTOFFSET.VARIANT.p) }
-  public static func addVectorOf(STAGES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STAGES, at: VTOFFSET.STAGES.p) }
-  public static func addVectorOf(SUSTAINERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUSTAINERS, at: VTOFFSET.SUSTAINERS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(FAMILY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAMILY, at: VT.FAMILY) }
+  public static func add(VARIANT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIANT, at: VT.VARIANT) }
+  public static func addVectorOf(STAGES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STAGES, at: VT.STAGES) }
+  public static func addVectorOf(SUSTAINERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUSTAINERS, at: VT.SUSTAINERS) }
   public static func endROC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createROC(
     _ fbb: inout FlatBufferBuilder,
@@ -86,11 +84,11 @@ public struct ROC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FAMILY.p, fieldName: "FAMILY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VARIANT.p, fieldName: "VARIANT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STAGES.p, fieldName: "STAGES", required: false, type: ForwardOffset<Vector<ForwardOffset<STAGE>, STAGE>>.self)
-    try _v.visit(field: VTOFFSET.SUSTAINERS.p, fieldName: "SUSTAINERS", required: false, type: ForwardOffset<Vector<ForwardOffset<SUSTAINER>, SUSTAINER>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FAMILY, fieldName: "FAMILY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VARIANT, fieldName: "VARIANT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STAGES, fieldName: "STAGES", required: false, type: ForwardOffset<Vector<ForwardOffset<STAGE>, STAGE>>.self)
+    try _v.visit(field: VT.SUSTAINERS, fieldName: "SUSTAINERS", required: false, type: ForwardOffset<Vector<ForwardOffset<SUSTAINER>, SUSTAINER>>.self)
     _v.finish()
   }
 }
@@ -107,33 +105,31 @@ public struct STAGE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case STAGE_NUMBER = 4
-    case ENGINES = 6
-    case FUEL_TYPE = 8
-    case THRUST = 10
-    case BURN_DURATION = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let STAGE_NUMBER: VOffset = 4
+    static let ENGINES: VOffset = 6
+    static let FUEL_TYPE: VOffset = 8
+    static let THRUST: VOffset = 10
+    static let BURN_DURATION: VOffset = 12
   }
 
   ///  Stage Number
-  public var STAGE_NUMBER: Int32 { let o = _accessor.offset(VTOFFSET.STAGE_NUMBER.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var STAGE_NUMBER: Int32 { let o = _accessor.offset(VT.STAGE_NUMBER); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Engines Used in This Stage
-  public var ENGINES: FlatbufferVector<ENGINE> { return _accessor.vector(at: VTOFFSET.ENGINES.v, byteSize: 4) }
+  public var ENGINES: FlatbufferVector<ENGINE> { return _accessor.vector(at: VT.ENGINES, byteSize: 4) }
   ///  Fuel Type Used in This Stage
-  public var FUEL_TYPE: String? { let o = _accessor.offset(VTOFFSET.FUEL_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FUEL_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FUEL_TYPE.v) }
+  public var FUEL_TYPE: String? { let o = _accessor.offset(VT.FUEL_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FUEL_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FUEL_TYPE) }
   ///  Thrust Produced by This Stage (in Newtons)
-  public var THRUST: Double { let o = _accessor.offset(VTOFFSET.THRUST.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var THRUST: Double { let o = _accessor.offset(VT.THRUST); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Duration of the Burn (in Seconds)
-  public var BURN_DURATION: Double { let o = _accessor.offset(VTOFFSET.BURN_DURATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BURN_DURATION: Double { let o = _accessor.offset(VT.BURN_DURATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startSTAGE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(STAGE_NUMBER: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STAGE_NUMBER, def: 0, at: VTOFFSET.STAGE_NUMBER.p) }
-  public static func addVectorOf(ENGINES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENGINES, at: VTOFFSET.ENGINES.p) }
-  public static func add(FUEL_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FUEL_TYPE, at: VTOFFSET.FUEL_TYPE.p) }
-  public static func add(THRUST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRUST, def: 0.0, at: VTOFFSET.THRUST.p) }
-  public static func add(BURN_DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BURN_DURATION, def: 0.0, at: VTOFFSET.BURN_DURATION.p) }
+  public static func add(STAGE_NUMBER: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STAGE_NUMBER, def: 0, at: VT.STAGE_NUMBER) }
+  public static func addVectorOf(ENGINES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENGINES, at: VT.ENGINES) }
+  public static func add(FUEL_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FUEL_TYPE, at: VT.FUEL_TYPE) }
+  public static func add(THRUST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRUST, def: 0.0, at: VT.THRUST) }
+  public static func add(BURN_DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BURN_DURATION, def: 0.0, at: VT.BURN_DURATION) }
   public static func endSTAGE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSTAGE(
     _ fbb: inout FlatBufferBuilder,
@@ -154,11 +150,11 @@ public struct STAGE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.STAGE_NUMBER.p, fieldName: "STAGE_NUMBER", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.ENGINES.p, fieldName: "ENGINES", required: false, type: ForwardOffset<Vector<ForwardOffset<ENGINE>, ENGINE>>.self)
-    try _v.visit(field: VTOFFSET.FUEL_TYPE.p, fieldName: "FUEL_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.THRUST.p, fieldName: "THRUST", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BURN_DURATION.p, fieldName: "BURN_DURATION", required: false, type: Double.self)
+    try _v.visit(field: VT.STAGE_NUMBER, fieldName: "STAGE_NUMBER", required: false, type: Int32.self)
+    try _v.visit(field: VT.ENGINES, fieldName: "ENGINES", required: false, type: ForwardOffset<Vector<ForwardOffset<ENGINE>, ENGINE>>.self)
+    try _v.visit(field: VT.FUEL_TYPE, fieldName: "FUEL_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.THRUST, fieldName: "THRUST", required: false, type: Double.self)
+    try _v.visit(field: VT.BURN_DURATION, fieldName: "BURN_DURATION", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -175,25 +171,23 @@ public struct SUSTAINER: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SUSTAINER_NAME = 4
-    case THRUST = 6
-    case BURN_DURATION = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SUSTAINER_NAME: VOffset = 4
+    static let THRUST: VOffset = 6
+    static let BURN_DURATION: VOffset = 8
   }
 
   ///  Name of the Sustainer
-  public var SUSTAINER_NAME: String? { let o = _accessor.offset(VTOFFSET.SUSTAINER_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SUSTAINER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SUSTAINER_NAME.v) }
+  public var SUSTAINER_NAME: String? { let o = _accessor.offset(VT.SUSTAINER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SUSTAINER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SUSTAINER_NAME) }
   ///  Thrust Produced by the Sustainer (in Newtons)
-  public var THRUST: Double { let o = _accessor.offset(VTOFFSET.THRUST.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var THRUST: Double { let o = _accessor.offset(VT.THRUST); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Duration of the Burn (in Seconds)
-  public var BURN_DURATION: Double { let o = _accessor.offset(VTOFFSET.BURN_DURATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BURN_DURATION: Double { let o = _accessor.offset(VT.BURN_DURATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startSUSTAINER(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(SUSTAINER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUSTAINER_NAME, at: VTOFFSET.SUSTAINER_NAME.p) }
-  public static func add(THRUST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRUST, def: 0.0, at: VTOFFSET.THRUST.p) }
-  public static func add(BURN_DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BURN_DURATION, def: 0.0, at: VTOFFSET.BURN_DURATION.p) }
+  public static func add(SUSTAINER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUSTAINER_NAME, at: VT.SUSTAINER_NAME) }
+  public static func add(THRUST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRUST, def: 0.0, at: VT.THRUST) }
+  public static func add(BURN_DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BURN_DURATION, def: 0.0, at: VT.BURN_DURATION) }
   public static func endSUSTAINER(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSUSTAINER(
     _ fbb: inout FlatBufferBuilder,
@@ -210,9 +204,9 @@ public struct SUSTAINER: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SUSTAINER_NAME.p, fieldName: "SUSTAINER_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.THRUST.p, fieldName: "THRUST", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BURN_DURATION.p, fieldName: "BURN_DURATION", required: false, type: Double.self)
+    try _v.visit(field: VT.SUSTAINER_NAME, fieldName: "SUSTAINER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.THRUST, fieldName: "THRUST", required: false, type: Double.self)
+    try _v.visit(field: VT.BURN_DURATION, fieldName: "BURN_DURATION", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -229,25 +223,23 @@ public struct ENGINE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ENGINE_NAME = 4
-    case TYPE = 6
-    case THRUST = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ENGINE_NAME: VOffset = 4
+    static let TYPE: VOffset = 6
+    static let THRUST: VOffset = 8
   }
 
   ///  Engine Name
-  public var ENGINE_NAME: String? { let o = _accessor.offset(VTOFFSET.ENGINE_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ENGINE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENGINE_NAME.v) }
+  public var ENGINE_NAME: String? { let o = _accessor.offset(VT.ENGINE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENGINE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENGINE_NAME) }
   ///  Type of Engine
-  public var TYPE: ENGINE_TYPE { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? .liquid : ENGINE_TYPE(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .liquid }
+  public var TYPE: ENGINE_TYPE { let o = _accessor.offset(VT.TYPE); return o == 0 ? .liquid : ENGINE_TYPE(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .liquid }
   ///  Thrust Produced by the Engine (in Newtons)
-  public var THRUST: Double { let o = _accessor.offset(VTOFFSET.THRUST.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var THRUST: Double { let o = _accessor.offset(VT.THRUST); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startENGINE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(ENGINE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENGINE_NAME, at: VTOFFSET.ENGINE_NAME.p) }
-  public static func add(TYPE: ENGINE_TYPE, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE.rawValue, def: 0, at: VTOFFSET.TYPE.p) }
-  public static func add(THRUST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRUST, def: 0.0, at: VTOFFSET.THRUST.p) }
+  public static func add(ENGINE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENGINE_NAME, at: VT.ENGINE_NAME) }
+  public static func add(TYPE: ENGINE_TYPE, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE.rawValue, def: 0, at: VT.TYPE) }
+  public static func add(THRUST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRUST, def: 0.0, at: VT.THRUST) }
   public static func endENGINE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createENGINE(
     _ fbb: inout FlatBufferBuilder,
@@ -264,9 +256,9 @@ public struct ENGINE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ENGINE_NAME.p, fieldName: "ENGINE_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ENGINE_TYPE.self)
-    try _v.visit(field: VTOFFSET.THRUST.p, fieldName: "THRUST", required: false, type: Double.self)
+    try _v.visit(field: VT.ENGINE_NAME, fieldName: "ENGINE_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: ENGINE_TYPE.self)
+    try _v.visit(field: VT.THRUST, fieldName: "THRUST", required: false, type: Double.self)
     _v.finish()
   }
 }

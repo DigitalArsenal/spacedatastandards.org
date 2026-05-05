@@ -27,18 +27,18 @@ static getSizePrefixedRootAsPLGProtocolSpec(bb:flatbuffers.ByteBuffer, obj?:PLGP
   return (obj || new PLGProtocolSpec()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-PROTOCOL_ID():string|null
-PROTOCOL_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-PROTOCOL_ID(optionalEncoding?:any):string|Uint8Array|null {
+PROTOCOL_ID():string
+PROTOCOL_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+PROTOCOL_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
-METHOD_ID():string|null
-METHOD_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-METHOD_ID(optionalEncoding?:any):string|Uint8Array|null {
+METHOD_ID():string
+METHOD_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+METHOD_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 INPUT_PORT_ID():string|null

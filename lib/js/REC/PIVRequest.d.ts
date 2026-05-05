@@ -12,8 +12,8 @@ export declare class PIVRequest implements flatbuffers.IUnpackableObject<PIVRequ
     /**
      * Stable method identifier from PLG.METHODS[].METHOD_ID.
      */
-    METHOD_ID(): string | null;
-    METHOD_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    METHOD_ID(): string;
+    METHOD_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Input frames. Each TAB.TYPE_REF names the payload schema and each
      * TAB.WIRE_FORMAT selects FLATBUFFER or ALIGNED_BINARY. TAB.OFFSET

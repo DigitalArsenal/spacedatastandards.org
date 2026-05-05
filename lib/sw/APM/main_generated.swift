@@ -20,48 +20,46 @@ public struct APM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CCSDS_APM_VERS = 4
-    case CREATION_DATE = 6
-    case ORIGINATOR = 8
-    case OBJECT_NAME = 10
-    case OBJECT_ID = 12
-    case EPOCH = 14
-    case Q1 = 16
-    case Q2 = 18
-    case Q3 = 20
-    case QC = 22
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CCSDS_APM_VERS: VOffset = 4
+    static let CREATION_DATE: VOffset = 6
+    static let ORIGINATOR: VOffset = 8
+    static let OBJECT_NAME: VOffset = 10
+    static let OBJECT_ID: VOffset = 12
+    static let EPOCH: VOffset = 14
+    static let Q1: VOffset = 16
+    static let Q2: VOffset = 18
+    static let Q3: VOffset = 20
+    static let QC: VOffset = 22
   }
 
-  public var CCSDS_APM_VERS: String? { let o = _accessor.offset(VTOFFSET.CCSDS_APM_VERS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CCSDS_APM_VERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CCSDS_APM_VERS.v) }
-  public var CREATION_DATE: String? { let o = _accessor.offset(VTOFFSET.CREATION_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CREATION_DATE.v) }
-  public var ORIGINATOR: String? { let o = _accessor.offset(VTOFFSET.ORIGINATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIGINATOR.v) }
-  public var OBJECT_NAME: String? { let o = _accessor.offset(VTOFFSET.OBJECT_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_NAME.v) }
-  public var OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_ID.v) }
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
-  public var Q1: Double { let o = _accessor.offset(VTOFFSET.Q1.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Q2: Double { let o = _accessor.offset(VTOFFSET.Q2.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Q3: Double { let o = _accessor.offset(VTOFFSET.Q3.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var QC: Double { let o = _accessor.offset(VTOFFSET.QC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CCSDS_APM_VERS: String? { let o = _accessor.offset(VT.CCSDS_APM_VERS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CCSDS_APM_VERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CCSDS_APM_VERS) }
+  public var CREATION_DATE: String? { let o = _accessor.offset(VT.CREATION_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATION_DATE) }
+  public var ORIGINATOR: String? { let o = _accessor.offset(VT.ORIGINATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR) }
+  public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_NAME) }
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  public var Q1: Double { let o = _accessor.offset(VT.Q1); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Q2: Double { let o = _accessor.offset(VT.Q2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Q3: Double { let o = _accessor.offset(VT.Q3); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var QC: Double { let o = _accessor.offset(VT.QC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startAPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(CCSDS_APM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_APM_VERS, at: VTOFFSET.CCSDS_APM_VERS.p) }
-  public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VTOFFSET.CREATION_DATE.p) }
-  public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VTOFFSET.ORIGINATOR.p) }
-  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VTOFFSET.OBJECT_NAME.p) }
-  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VTOFFSET.OBJECT_ID.p) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(Q1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q1, def: 0.0, at: VTOFFSET.Q1.p) }
-  public static func add(Q2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q2, def: 0.0, at: VTOFFSET.Q2.p) }
-  public static func add(Q3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q3, def: 0.0, at: VTOFFSET.Q3.p) }
-  public static func add(QC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC, def: 0.0, at: VTOFFSET.QC.p) }
+  public static func add(CCSDS_APM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_APM_VERS, at: VT.CCSDS_APM_VERS) }
+  public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
+  public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
+  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(Q1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q1, def: 0.0, at: VT.Q1) }
+  public static func add(Q2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q2, def: 0.0, at: VT.Q2) }
+  public static func add(Q3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q3, def: 0.0, at: VT.Q3) }
+  public static func add(QC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC, def: 0.0, at: VT.QC) }
   public static func endAPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAPM(
     _ fbb: inout FlatBufferBuilder,
@@ -92,16 +90,16 @@ public struct APM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CCSDS_APM_VERS.p, fieldName: "CCSDS_APM_VERS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CREATION_DATE.p, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIGINATOR.p, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJECT_NAME.p, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJECT_ID.p, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.Q1.p, fieldName: "Q1", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Q2.p, fieldName: "Q2", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Q3.p, fieldName: "Q3", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.QC.p, fieldName: "QC", required: false, type: Double.self)
+    try _v.visit(field: VT.CCSDS_APM_VERS, fieldName: "CCSDS_APM_VERS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREATION_DATE, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORIGINATOR, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_NAME, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.Q1, fieldName: "Q1", required: false, type: Double.self)
+    try _v.visit(field: VT.Q2, fieldName: "Q2", required: false, type: Double.self)
+    try _v.visit(field: VT.Q3, fieldName: "Q3", required: false, type: Double.self)
+    try _v.visit(field: VT.QC, fieldName: "QC", required: false, type: Double.self)
     _v.finish()
   }
 }

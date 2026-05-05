@@ -33,13 +33,13 @@ export declare class ENC implements flatbuffers.IUnpackableObject<ENCT> {
      */
     EPHEMERAL_PUBLIC_KEY(index: number): number | null;
     ephemeralPublicKeyLength(): number;
-    ephemeralPublicKeyArray(): Uint8Array | null;
+    ephemeralPublicKeyArray(): Uint8Array;
     /**
      * Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
      */
     NONCE_START(index: number): number | null;
     nonceStartLength(): number;
-    nonceStartArray(): Uint8Array | null;
+    nonceStartArray(): Uint8Array;
     /**
      * Optional identifier for the recipient's public key (up to 32 bytes)
      */

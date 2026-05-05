@@ -56,33 +56,31 @@ public struct CanonicalizationRule: FlatBufferTable, FlatbuffersVectorInitializa
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case version = 4
-    case stripped_custom_section_prefix = 6
-    case bundle_section_name = 8
-    case hash_algorithm = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let version: VOffset = 4
+    static let stripped_custom_section_prefix: VOffset = 6
+    static let bundle_section_name: VOffset = 8
+    static let hash_algorithm: VOffset = 10
   }
 
   ///  Schema version for the canonicalization contract.
-  public var version: UInt16 { let o = _accessor.offset(VTOFFSET.version.v); return o == 0 ? 1 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var version: UInt16 { let o = _accessor.offset(VT.version); return o == 0 ? 1 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Strip any custom section whose name starts with this prefix before
   ///  hashing the module for signature verification.
-  public var stripped_custom_section_prefix: String? { let o = _accessor.offset(VTOFFSET.stripped_custom_section_prefix.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var stripped_custom_section_prefixSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.stripped_custom_section_prefix.v) }
+  public var stripped_custom_section_prefix: String? { let o = _accessor.offset(VT.stripped_custom_section_prefix); return o == 0 ? nil : _accessor.string(at: o) }
+  public var stripped_custom_section_prefixSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.stripped_custom_section_prefix) }
   ///  Logical container name used for the module bundle record within the
   ///  delivery artifact.
-  public var bundle_section_name: String? { let o = _accessor.offset(VTOFFSET.bundle_section_name.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var bundle_section_nameSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.bundle_section_name.v) }
+  public var bundle_section_name: String? { let o = _accessor.offset(VT.bundle_section_name); return o == 0 ? nil : _accessor.string(at: o) }
+  public var bundle_section_nameSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.bundle_section_name) }
   ///  Hash function identifier, for example `sha256`.
-  public var hash_algorithm: String? { let o = _accessor.offset(VTOFFSET.hash_algorithm.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var hash_algorithmSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.hash_algorithm.v) }
+  public var hash_algorithm: String? { let o = _accessor.offset(VT.hash_algorithm); return o == 0 ? nil : _accessor.string(at: o) }
+  public var hash_algorithmSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.hash_algorithm) }
   public static func startCanonicalizationRule(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(version: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: version, def: 1, at: VTOFFSET.version.p) }
-  public static func add(stripped_custom_section_prefix: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: stripped_custom_section_prefix, at: VTOFFSET.stripped_custom_section_prefix.p) }
-  public static func add(bundle_section_name: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: bundle_section_name, at: VTOFFSET.bundle_section_name.p) }
-  public static func add(hash_algorithm: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: hash_algorithm, at: VTOFFSET.hash_algorithm.p) }
+  public static func add(version: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: version, def: 1, at: VT.version) }
+  public static func add(stripped_custom_section_prefix: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: stripped_custom_section_prefix, at: VT.stripped_custom_section_prefix) }
+  public static func add(bundle_section_name: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: bundle_section_name, at: VT.bundle_section_name) }
+  public static func add(hash_algorithm: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: hash_algorithm, at: VT.hash_algorithm) }
   public static func endCanonicalizationRule(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCanonicalizationRule(
     _ fbb: inout FlatBufferBuilder,
@@ -101,10 +99,10 @@ public struct CanonicalizationRule: FlatBufferTable, FlatbuffersVectorInitializa
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.version.p, fieldName: "version", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.stripped_custom_section_prefix.p, fieldName: "stripped_custom_section_prefix", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.bundle_section_name.p, fieldName: "bundle_section_name", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.hash_algorithm.p, fieldName: "hash_algorithm", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.version, fieldName: "version", required: false, type: UInt16.self)
+    try _v.visit(field: VT.stripped_custom_section_prefix, fieldName: "stripped_custom_section_prefix", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.bundle_section_name, fieldName: "bundle_section_name", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.hash_algorithm, fieldName: "hash_algorithm", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -121,62 +119,60 @@ public struct ModuleBundleEntry: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case entry_id = 4
-    case role = 6
-    case section_name = 8
-    case type_ref = 10
-    case payload_encoding = 12
-    case media_type = 14
-    case flags = 16
-    case sha256 = 18
-    case payload = 20
-    case description = 22
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let entry_id: VOffset = 4
+    static let role: VOffset = 6
+    static let section_name: VOffset = 8
+    static let type_ref: VOffset = 10
+    static let payload_encoding: VOffset = 12
+    static let media_type: VOffset = 14
+    static let flags: VOffset = 16
+    static let sha256: VOffset = 18
+    static let payload: VOffset = 20
+    static let description: VOffset = 22
   }
 
   ///  Stable bundle-local identifier.
-  public var entry_id: String! { let o = _accessor.offset(VTOFFSET.entry_id.v); return _accessor.string(at: o) }
-  public var entry_idSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.entry_id.v) }
+  public var entry_id: String! { let o = _accessor.offset(VT.entry_id); return _accessor.string(at: o) }
+  public var entry_idSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.entry_id) }
   ///  High-level semantic role of the payload.
-  public var role: ModuleBundleEntryRole { let o = _accessor.offset(VTOFFSET.role.v); return o == 0 ? .auxiliary : ModuleBundleEntryRole(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .auxiliary }
+  public var role: ModuleBundleEntryRole { let o = _accessor.offset(VT.role); return o == 0 ? .auxiliary : ModuleBundleEntryRole(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .auxiliary }
   ///  Optional logical section name within the bundle, for example
   ///  `sds.authorization`.
-  public var section_name: String? { let o = _accessor.offset(VTOFFSET.section_name.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var section_nameSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.section_name.v) }
+  public var section_name: String? { let o = _accessor.offset(VT.section_name); return o == 0 ? nil : _accessor.string(at: o) }
+  public var section_nameSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.section_name) }
   ///  SDS/shared-module schema identity when the payload is itself a
   ///  FlatBuffer. Stored as canonical JSON text for portability.
-  public var type_ref: String? { let o = _accessor.offset(VTOFFSET.type_ref.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var type_refSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.type_ref.v) }
+  public var type_ref: String? { let o = _accessor.offset(VT.type_ref); return o == 0 ? nil : _accessor.string(at: o) }
+  public var type_refSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.type_ref) }
   ///  Encoding used for `payload`.
-  public var payload_encoding: ModulePayloadEncoding { let o = _accessor.offset(VTOFFSET.payload_encoding.v); return o == 0 ? .rawBytes : ModulePayloadEncoding(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .rawBytes }
+  public var payload_encoding: ModulePayloadEncoding { let o = _accessor.offset(VT.payload_encoding); return o == 0 ? .rawBytes : ModulePayloadEncoding(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .rawBytes }
   ///  Optional media type for transitional payloads such as JSON envelopes.
-  public var media_type: String? { let o = _accessor.offset(VTOFFSET.media_type.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var media_typeSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.media_type.v) }
+  public var media_type: String? { let o = _accessor.offset(VT.media_type); return o == 0 ? nil : _accessor.string(at: o) }
+  public var media_typeSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.media_type) }
   ///  Implementation-defined bit flags for signed/encrypted/compressed state.
-  public var flags: UInt32 { let o = _accessor.offset(VTOFFSET.flags.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var flags: UInt32 { let o = _accessor.offset(VT.flags); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  SHA-256 of the payload bytes.
-  public var sha256: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.sha256.v, byteSize: 1) }
-  public func withUnsafePointerToSha256<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.sha256.v, body: body) }
+  public var sha256: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.sha256, byteSize: 1) }
+  public func withUnsafePointerToSha256<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.sha256, body: body) }
   ///  Embedded payload bytes. For single-file deployment this should be
   ///  populated for every entry.
-  public var payload: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.payload.v, byteSize: 1) }
-  public func withUnsafePointerToPayload<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.payload.v, body: body) }
+  public var payload: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.payload, byteSize: 1) }
+  public func withUnsafePointerToPayload<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.payload, body: body) }
   ///  Human-readable description for tooling and diagnostics.
-  public var description: String? { let o = _accessor.offset(VTOFFSET.description.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var descriptionSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.description.v) }
+  public var description: String? { let o = _accessor.offset(VT.description); return o == 0 ? nil : _accessor.string(at: o) }
+  public var descriptionSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.description) }
   public static func startModuleBundleEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(entry_id: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: entry_id, at: VTOFFSET.entry_id.p) }
-  public static func add(role: ModuleBundleEntryRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: role.rawValue, def: 5, at: VTOFFSET.role.p) }
-  public static func add(section_name: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: section_name, at: VTOFFSET.section_name.p) }
-  public static func add(type_ref: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: type_ref, at: VTOFFSET.type_ref.p) }
-  public static func add(payload_encoding: ModulePayloadEncoding, _ fbb: inout FlatBufferBuilder) { fbb.add(element: payload_encoding.rawValue, def: 0, at: VTOFFSET.payload_encoding.p) }
-  public static func add(media_type: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: media_type, at: VTOFFSET.media_type.p) }
-  public static func add(flags: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: flags, def: 0, at: VTOFFSET.flags.p) }
-  public static func addVectorOf(sha256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: sha256, at: VTOFFSET.sha256.p) }
-  public static func addVectorOf(payload: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: payload, at: VTOFFSET.payload.p) }
-  public static func add(description: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: description, at: VTOFFSET.description.p) }
+  public static func add(entry_id: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: entry_id, at: VT.entry_id) }
+  public static func add(role: ModuleBundleEntryRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: role.rawValue, def: 5, at: VT.role) }
+  public static func add(section_name: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: section_name, at: VT.section_name) }
+  public static func add(type_ref: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: type_ref, at: VT.type_ref) }
+  public static func add(payload_encoding: ModulePayloadEncoding, _ fbb: inout FlatBufferBuilder) { fbb.add(element: payload_encoding.rawValue, def: 0, at: VT.payload_encoding) }
+  public static func add(media_type: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: media_type, at: VT.media_type) }
+  public static func add(flags: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: flags, def: 0, at: VT.flags) }
+  public static func addVectorOf(sha256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: sha256, at: VT.sha256) }
+  public static func addVectorOf(payload: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: payload, at: VT.payload) }
+  public static func add(description: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: description, at: VT.description) }
   public static func endModuleBundleEntry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createModuleBundleEntry(
     _ fbb: inout FlatBufferBuilder,
@@ -232,16 +228,16 @@ public struct ModuleBundleEntry: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.entry_id.p, fieldName: "entry_id", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.role.p, fieldName: "role", required: false, type: ModuleBundleEntryRole.self)
-    try _v.visit(field: VTOFFSET.section_name.p, fieldName: "section_name", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.type_ref.p, fieldName: "type_ref", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.payload_encoding.p, fieldName: "payload_encoding", required: false, type: ModulePayloadEncoding.self)
-    try _v.visit(field: VTOFFSET.media_type.p, fieldName: "media_type", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.flags.p, fieldName: "flags", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.sha256.p, fieldName: "sha256", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.payload.p, fieldName: "payload", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.description.p, fieldName: "description", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.entry_id, fieldName: "entry_id", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.role, fieldName: "role", required: false, type: ModuleBundleEntryRole.self)
+    try _v.visit(field: VT.section_name, fieldName: "section_name", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.type_ref, fieldName: "type_ref", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.payload_encoding, fieldName: "payload_encoding", required: false, type: ModulePayloadEncoding.self)
+    try _v.visit(field: VT.media_type, fieldName: "media_type", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.flags, fieldName: "flags", required: false, type: UInt32.self)
+    try _v.visit(field: VT.sha256, fieldName: "sha256", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.payload, fieldName: "payload", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.description, fieldName: "description", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -258,50 +254,48 @@ public struct MBL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case bundle_version = 4
-    case module_format = 6
-    case canonicalization = 8
-    case canonical_module_hash = 10
-    case manifest_hash = 12
-    case manifest_export_symbol = 14
-    case manifest_size_symbol = 16
-    case entries = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let bundle_version: VOffset = 4
+    static let module_format: VOffset = 6
+    static let canonicalization: VOffset = 8
+    static let canonical_module_hash: VOffset = 10
+    static let manifest_hash: VOffset = 12
+    static let manifest_export_symbol: VOffset = 14
+    static let manifest_size_symbol: VOffset = 16
+    static let entries: VOffset = 18
   }
 
   ///  Bundle schema version.
-  public var bundle_version: UInt16 { let o = _accessor.offset(VTOFFSET.bundle_version.v); return o == 0 ? 1 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var bundle_version: UInt16 { let o = _accessor.offset(VT.bundle_version); return o == 0 ? 1 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Human-readable package format label.
-  public var module_format: String? { let o = _accessor.offset(VTOFFSET.module_format.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var module_formatSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.module_format.v) }
+  public var module_format: String? { let o = _accessor.offset(VT.module_format); return o == 0 ? nil : _accessor.string(at: o) }
+  public var module_formatSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.module_format) }
   ///  Canonicalization rule used to compute module hashes.
-  public var canonicalization: CanonicalizationRule? { let o = _accessor.offset(VTOFFSET.canonicalization.v); return o == 0 ? nil : CanonicalizationRule(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var canonicalization: CanonicalizationRule? { let o = _accessor.offset(VT.canonicalization); return o == 0 ? nil : CanonicalizationRule(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  SHA-256 of the wasm module after stripping SDS-owned custom sections.
-  public var canonical_module_hash: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.canonical_module_hash.v, byteSize: 1) }
-  public func withUnsafePointerToCanonicalModuleHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.canonical_module_hash.v, body: body) }
+  public var canonical_module_hash: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.canonical_module_hash, byteSize: 1) }
+  public func withUnsafePointerToCanonicalModuleHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.canonical_module_hash, body: body) }
   ///  SHA-256 of the canonical plugin manifest bytes.
-  public var manifest_hash: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.manifest_hash.v, byteSize: 1) }
-  public func withUnsafePointerToManifestHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.manifest_hash.v, body: body) }
+  public var manifest_hash: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.manifest_hash, byteSize: 1) }
+  public func withUnsafePointerToManifestHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.manifest_hash, body: body) }
   ///  Legacy ABI export retained for backward compatibility.
-  public var manifest_export_symbol: String? { let o = _accessor.offset(VTOFFSET.manifest_export_symbol.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var manifest_export_symbolSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.manifest_export_symbol.v) }
+  public var manifest_export_symbol: String? { let o = _accessor.offset(VT.manifest_export_symbol); return o == 0 ? nil : _accessor.string(at: o) }
+  public var manifest_export_symbolSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.manifest_export_symbol) }
   ///  Legacy ABI export retained for backward compatibility.
-  public var manifest_size_symbol: String? { let o = _accessor.offset(VTOFFSET.manifest_size_symbol.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var manifest_size_symbolSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.manifest_size_symbol.v) }
+  public var manifest_size_symbol: String? { let o = _accessor.offset(VT.manifest_size_symbol); return o == 0 ? nil : _accessor.string(at: o) }
+  public var manifest_size_symbolSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.manifest_size_symbol) }
   ///  Payloads embedded in the bundle.
-  public var entries: FlatbufferVector<ModuleBundleEntry> { return _accessor.vector(at: VTOFFSET.entries.v, byteSize: 4) }
-  public func entriesBy(key: String) -> ModuleBundleEntry? { let o = _accessor.offset(VTOFFSET.entries.v); return o == 0 ? nil : ModuleBundleEntry.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
+  public var entries: FlatbufferVector<ModuleBundleEntry> { return _accessor.vector(at: VT.entries, byteSize: 4) }
+  public func entriesBy(key: String) -> ModuleBundleEntry? { let o = _accessor.offset(VT.entries); return o == 0 ? nil : ModuleBundleEntry.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
   public static func startMBL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(bundle_version: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: bundle_version, def: 1, at: VTOFFSET.bundle_version.p) }
-  public static func add(module_format: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: module_format, at: VTOFFSET.module_format.p) }
-  public static func add(canonicalization: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: canonicalization, at: VTOFFSET.canonicalization.p) }
-  public static func addVectorOf(canonical_module_hash: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: canonical_module_hash, at: VTOFFSET.canonical_module_hash.p) }
-  public static func addVectorOf(manifest_hash: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: manifest_hash, at: VTOFFSET.manifest_hash.p) }
-  public static func add(manifest_export_symbol: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: manifest_export_symbol, at: VTOFFSET.manifest_export_symbol.p) }
-  public static func add(manifest_size_symbol: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: manifest_size_symbol, at: VTOFFSET.manifest_size_symbol.p) }
-  public static func addVectorOf(entries: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: entries, at: VTOFFSET.entries.p) }
+  public static func add(bundle_version: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: bundle_version, def: 1, at: VT.bundle_version) }
+  public static func add(module_format: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: module_format, at: VT.module_format) }
+  public static func add(canonicalization: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: canonicalization, at: VT.canonicalization) }
+  public static func addVectorOf(canonical_module_hash: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: canonical_module_hash, at: VT.canonical_module_hash) }
+  public static func addVectorOf(manifest_hash: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: manifest_hash, at: VT.manifest_hash) }
+  public static func add(manifest_export_symbol: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: manifest_export_symbol, at: VT.manifest_export_symbol) }
+  public static func add(manifest_size_symbol: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: manifest_size_symbol, at: VT.manifest_size_symbol) }
+  public static func addVectorOf(entries: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: entries, at: VT.entries) }
   public static func endMBL(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMBL(
     _ fbb: inout FlatBufferBuilder,
@@ -328,14 +322,14 @@ public struct MBL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.bundle_version.p, fieldName: "bundle_version", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.module_format.p, fieldName: "module_format", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.canonicalization.p, fieldName: "canonicalization", required: false, type: ForwardOffset<CanonicalizationRule>.self)
-    try _v.visit(field: VTOFFSET.canonical_module_hash.p, fieldName: "canonical_module_hash", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.manifest_hash.p, fieldName: "manifest_hash", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.manifest_export_symbol.p, fieldName: "manifest_export_symbol", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.manifest_size_symbol.p, fieldName: "manifest_size_symbol", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.entries.p, fieldName: "entries", required: false, type: ForwardOffset<Vector<ForwardOffset<ModuleBundleEntry>, ModuleBundleEntry>>.self)
+    try _v.visit(field: VT.bundle_version, fieldName: "bundle_version", required: false, type: UInt16.self)
+    try _v.visit(field: VT.module_format, fieldName: "module_format", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.canonicalization, fieldName: "canonicalization", required: false, type: ForwardOffset<CanonicalizationRule>.self)
+    try _v.visit(field: VT.canonical_module_hash, fieldName: "canonical_module_hash", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.manifest_hash, fieldName: "manifest_hash", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.manifest_export_symbol, fieldName: "manifest_export_symbol", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.manifest_size_symbol, fieldName: "manifest_size_symbol", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.entries, fieldName: "entries", required: false, type: ForwardOffset<Vector<ForwardOffset<ModuleBundleEntry>, ModuleBundleEntry>>.self)
     _v.finish()
   }
 }

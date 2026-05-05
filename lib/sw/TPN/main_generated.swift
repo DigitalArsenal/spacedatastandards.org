@@ -20,52 +20,50 @@ public struct TPN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case NAME = 6
-    case NID = 8
-    case TID = 10
-    case TTF = 12
-    case SYMBOL_RATE = 14
-    case FEC = 16
-    case MODULATION = 18
-    case FORMAT = 20
-    case SYSTEM = 22
-    case CHANNELS = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let NID: VOffset = 8
+    static let TID: VOffset = 10
+    static let TTF: VOffset = 12
+    static let SYMBOL_RATE: VOffset = 14
+    static let FEC: VOffset = 16
+    static let MODULATION: VOffset = 18
+    static let FORMAT: VOffset = 20
+    static let SYSTEM: VOffset = 22
+    static let CHANNELS: VOffset = 24
   }
 
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
-  public var NID: String? { let o = _accessor.offset(VTOFFSET.NID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NID.v) }
-  public var TID: String? { let o = _accessor.offset(VTOFFSET.TID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TID.v) }
-  public var TTF: Double { let o = _accessor.offset(VTOFFSET.TTF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SYMBOL_RATE: Double { let o = _accessor.offset(VTOFFSET.SYMBOL_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var FEC: Int32 { let o = _accessor.offset(VTOFFSET.FEC.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var MODULATION: String? { let o = _accessor.offset(VTOFFSET.MODULATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODULATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MODULATION.v) }
-  public var FORMAT: String? { let o = _accessor.offset(VTOFFSET.FORMAT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FORMATSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FORMAT.v) }
-  public var SYSTEM: String? { let o = _accessor.offset(VTOFFSET.SYSTEM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SYSTEM.v) }
-  public var CHANNELS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.CHANNELS.v, byteSize: 4) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  public var NID: String? { let o = _accessor.offset(VT.NID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NID) }
+  public var TID: String? { let o = _accessor.offset(VT.TID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TID) }
+  public var TTF: Double { let o = _accessor.offset(VT.TTF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SYMBOL_RATE: Double { let o = _accessor.offset(VT.SYMBOL_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FEC: Int32 { let o = _accessor.offset(VT.FEC); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var MODULATION: String? { let o = _accessor.offset(VT.MODULATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULATION) }
+  public var FORMAT: String? { let o = _accessor.offset(VT.FORMAT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FORMATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FORMAT) }
+  public var SYSTEM: String? { let o = _accessor.offset(VT.SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SYSTEM) }
+  public var CHANNELS: FlatbufferVector<String?> { return _accessor.vector(at: VT.CHANNELS, byteSize: 4) }
   public static func startTPN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(NID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NID, at: VTOFFSET.NID.p) }
-  public static func add(TID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TID, at: VTOFFSET.TID.p) }
-  public static func add(TTF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TTF, def: 0.0, at: VTOFFSET.TTF.p) }
-  public static func add(SYMBOL_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYMBOL_RATE, def: 0.0, at: VTOFFSET.SYMBOL_RATE.p) }
-  public static func add(FEC: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FEC, def: 0, at: VTOFFSET.FEC.p) }
-  public static func add(MODULATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULATION, at: VTOFFSET.MODULATION.p) }
-  public static func add(FORMAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FORMAT, at: VTOFFSET.FORMAT.p) }
-  public static func add(SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYSTEM, at: VTOFFSET.SYSTEM.p) }
-  public static func addVectorOf(CHANNELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANNELS, at: VTOFFSET.CHANNELS.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(NID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NID, at: VT.NID) }
+  public static func add(TID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TID, at: VT.TID) }
+  public static func add(TTF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TTF, def: 0.0, at: VT.TTF) }
+  public static func add(SYMBOL_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYMBOL_RATE, def: 0.0, at: VT.SYMBOL_RATE) }
+  public static func add(FEC: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FEC, def: 0, at: VT.FEC) }
+  public static func add(MODULATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULATION, at: VT.MODULATION) }
+  public static func add(FORMAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FORMAT, at: VT.FORMAT) }
+  public static func add(SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYSTEM, at: VT.SYSTEM) }
+  public static func addVectorOf(CHANNELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANNELS, at: VT.CHANNELS) }
   public static func endTPN(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTPN(
     _ fbb: inout FlatBufferBuilder,
@@ -98,17 +96,17 @@ public struct TPN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NID.p, fieldName: "NID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TID.p, fieldName: "TID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TTF.p, fieldName: "TTF", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SYMBOL_RATE.p, fieldName: "SYMBOL_RATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FEC.p, fieldName: "FEC", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.MODULATION.p, fieldName: "MODULATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FORMAT.p, fieldName: "FORMAT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SYSTEM.p, fieldName: "SYSTEM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CHANNELS.p, fieldName: "CHANNELS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NID, fieldName: "NID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TID, fieldName: "TID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TTF, fieldName: "TTF", required: false, type: Double.self)
+    try _v.visit(field: VT.SYMBOL_RATE, fieldName: "SYMBOL_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.FEC, fieldName: "FEC", required: false, type: Int32.self)
+    try _v.visit(field: VT.MODULATION, fieldName: "MODULATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FORMAT, fieldName: "FORMAT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SYSTEM, fieldName: "SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CHANNELS, fieldName: "CHANNELS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

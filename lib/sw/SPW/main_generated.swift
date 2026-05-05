@@ -49,137 +49,135 @@ public struct SPW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case DATE = 4
-    case BSRN = 6
-    case ND = 8
-    case KP1 = 10
-    case KP2 = 12
-    case KP3 = 14
-    case KP4 = 16
-    case KP5 = 18
-    case KP6 = 20
-    case KP7 = 22
-    case KP8 = 24
-    case KP_SUM = 26
-    case AP1 = 28
-    case AP2 = 30
-    case AP3 = 32
-    case AP4 = 34
-    case AP5 = 36
-    case AP6 = 38
-    case AP7 = 40
-    case AP8 = 42
-    case AP_AVG = 44
-    case CP = 46
-    case C9 = 48
-    case ISN = 50
-    case F107_OBS = 52
-    case F107_ADJ = 54
-    case F107_DATA_TYPE = 56
-    case F107_OBS_CENTER81 = 58
-    case F107_OBS_LAST81 = 60
-    case F107_ADJ_CENTER81 = 62
-    case F107_ADJ_LAST81 = 64
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let DATE: VOffset = 4
+    static let BSRN: VOffset = 6
+    static let ND: VOffset = 8
+    static let KP1: VOffset = 10
+    static let KP2: VOffset = 12
+    static let KP3: VOffset = 14
+    static let KP4: VOffset = 16
+    static let KP5: VOffset = 18
+    static let KP6: VOffset = 20
+    static let KP7: VOffset = 22
+    static let KP8: VOffset = 24
+    static let KP_SUM: VOffset = 26
+    static let AP1: VOffset = 28
+    static let AP2: VOffset = 30
+    static let AP3: VOffset = 32
+    static let AP4: VOffset = 34
+    static let AP5: VOffset = 36
+    static let AP6: VOffset = 38
+    static let AP7: VOffset = 40
+    static let AP8: VOffset = 42
+    static let AP_AVG: VOffset = 44
+    static let CP: VOffset = 46
+    static let C9: VOffset = 48
+    static let ISN: VOffset = 50
+    static let F107_OBS: VOffset = 52
+    static let F107_ADJ: VOffset = 54
+    static let F107_DATA_TYPE: VOffset = 56
+    static let F107_OBS_CENTER81: VOffset = 58
+    static let F107_OBS_LAST81: VOffset = 60
+    static let F107_ADJ_CENTER81: VOffset = 62
+    static let F107_ADJ_LAST81: VOffset = 64
   }
 
   ///  Date in ISO 8601 format
-  public var DATE: String? { let o = _accessor.offset(VTOFFSET.DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DATE.v) }
+  public var DATE: String? { let o = _accessor.offset(VT.DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATE) }
   ///  Bartels Solar Rotation Number
-  public var BSRN: Int32 { let o = _accessor.offset(VTOFFSET.BSRN.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var BSRN: Int32 { let o = _accessor.offset(VT.BSRN); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Day within Bartels cycle (1-27)
-  public var ND: Int32 { let o = _accessor.offset(VTOFFSET.ND.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var ND: Int32 { let o = _accessor.offset(VT.ND); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10
-  public var KP1: Int32 { let o = _accessor.offset(VTOFFSET.KP1.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var KP1: Int32 { let o = _accessor.offset(VT.KP1); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10
-  public var KP2: Int32 { let o = _accessor.offset(VTOFFSET.KP2.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var KP2: Int32 { let o = _accessor.offset(VT.KP2); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10
-  public var KP3: Int32 { let o = _accessor.offset(VTOFFSET.KP3.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var KP3: Int32 { let o = _accessor.offset(VT.KP3); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10
-  public var KP4: Int32 { let o = _accessor.offset(VTOFFSET.KP4.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var KP4: Int32 { let o = _accessor.offset(VT.KP4); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10
-  public var KP5: Int32 { let o = _accessor.offset(VTOFFSET.KP5.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var KP5: Int32 { let o = _accessor.offset(VT.KP5); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10
-  public var KP6: Int32 { let o = _accessor.offset(VTOFFSET.KP6.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var KP6: Int32 { let o = _accessor.offset(VT.KP6); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10
-  public var KP7: Int32 { let o = _accessor.offset(VTOFFSET.KP7.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var KP7: Int32 { let o = _accessor.offset(VT.KP7); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10
-  public var KP8: Int32 { let o = _accessor.offset(VTOFFSET.KP8.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var KP8: Int32 { let o = _accessor.offset(VT.KP8); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Sum of the 8 Kp indices for the day
-  public var KP_SUM: Int32 { let o = _accessor.offset(VTOFFSET.KP_SUM.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var KP_SUM: Int32 { let o = _accessor.offset(VT.KP_SUM); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary Equivalent Amplitude (Ap) for 0000-0300 UT
-  public var AP1: Int32 { let o = _accessor.offset(VTOFFSET.AP1.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var AP1: Int32 { let o = _accessor.offset(VT.AP1); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary Equivalent Amplitude (Ap) for 0300-0600 UT
-  public var AP2: Int32 { let o = _accessor.offset(VTOFFSET.AP2.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var AP2: Int32 { let o = _accessor.offset(VT.AP2); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary Equivalent Amplitude (Ap) for 0600-0900 UT
-  public var AP3: Int32 { let o = _accessor.offset(VTOFFSET.AP3.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var AP3: Int32 { let o = _accessor.offset(VT.AP3); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary Equivalent Amplitude (Ap) for 0900-1200 UT
-  public var AP4: Int32 { let o = _accessor.offset(VTOFFSET.AP4.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var AP4: Int32 { let o = _accessor.offset(VT.AP4); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary Equivalent Amplitude (Ap) for 1200-1500 UT
-  public var AP5: Int32 { let o = _accessor.offset(VTOFFSET.AP5.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var AP5: Int32 { let o = _accessor.offset(VT.AP5); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary Equivalent Amplitude (Ap) for 1500-1800 UT
-  public var AP6: Int32 { let o = _accessor.offset(VTOFFSET.AP6.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var AP6: Int32 { let o = _accessor.offset(VT.AP6); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary Equivalent Amplitude (Ap) for 1800-2100 UT
-  public var AP7: Int32 { let o = _accessor.offset(VTOFFSET.AP7.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var AP7: Int32 { let o = _accessor.offset(VT.AP7); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary Equivalent Amplitude (Ap) for 2100-0000 UT
-  public var AP8: Int32 { let o = _accessor.offset(VTOFFSET.AP8.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var AP8: Int32 { let o = _accessor.offset(VT.AP8); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Arithmetic average of the 8 Ap indices for the day
-  public var AP_AVG: Int32 { let o = _accessor.offset(VTOFFSET.AP_AVG.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var AP_AVG: Int32 { let o = _accessor.offset(VT.AP_AVG); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Planetary Daily Character Figure (0.0 to 2.5)
-  public var CP: Float32 { let o = _accessor.offset(VTOFFSET.CP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var CP: Float32 { let o = _accessor.offset(VT.CP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  C9 index (0-9)
-  public var C9: Int32 { let o = _accessor.offset(VTOFFSET.C9.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var C9: Int32 { let o = _accessor.offset(VT.C9); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  International Sunspot Number
-  public var ISN: Int32 { let o = _accessor.offset(VTOFFSET.ISN.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var ISN: Int32 { let o = _accessor.offset(VT.ISN); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Observed 10.7cm Solar Radio Flux
-  public var F107_OBS: Float32 { let o = _accessor.offset(VTOFFSET.F107_OBS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var F107_OBS: Float32 { let o = _accessor.offset(VT.F107_OBS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  Adjusted 10.7cm Solar Radio Flux (to 1 AU)
-  public var F107_ADJ: Float32 { let o = _accessor.offset(VTOFFSET.F107_ADJ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var F107_ADJ: Float32 { let o = _accessor.offset(VT.F107_ADJ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  F10.7 Data Type
-  public var F107_DATA_TYPE: F107DataType { let o = _accessor.offset(VTOFFSET.F107_DATA_TYPE.v); return o == 0 ? .obs : F107DataType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .obs }
+  public var F107_DATA_TYPE: F107DataType { let o = _accessor.offset(VT.F107_DATA_TYPE); return o == 0 ? .obs : F107DataType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .obs }
   ///  81-day centered average of observed F10.7
-  public var F107_OBS_CENTER81: Float32 { let o = _accessor.offset(VTOFFSET.F107_OBS_CENTER81.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var F107_OBS_CENTER81: Float32 { let o = _accessor.offset(VT.F107_OBS_CENTER81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  81-day trailing average of observed F10.7
-  public var F107_OBS_LAST81: Float32 { let o = _accessor.offset(VTOFFSET.F107_OBS_LAST81.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var F107_OBS_LAST81: Float32 { let o = _accessor.offset(VT.F107_OBS_LAST81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  81-day centered average of adjusted F10.7
-  public var F107_ADJ_CENTER81: Float32 { let o = _accessor.offset(VTOFFSET.F107_ADJ_CENTER81.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var F107_ADJ_CENTER81: Float32 { let o = _accessor.offset(VT.F107_ADJ_CENTER81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  81-day trailing average of adjusted F10.7
-  public var F107_ADJ_LAST81: Float32 { let o = _accessor.offset(VTOFFSET.F107_ADJ_LAST81.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var F107_ADJ_LAST81: Float32 { let o = _accessor.offset(VT.F107_ADJ_LAST81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   public static func startSPW(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 31) }
-  public static func add(DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATE, at: VTOFFSET.DATE.p) }
-  public static func add(BSRN: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BSRN, def: 0, at: VTOFFSET.BSRN.p) }
-  public static func add(ND: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ND, def: 0, at: VTOFFSET.ND.p) }
-  public static func add(KP1: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP1, def: 0, at: VTOFFSET.KP1.p) }
-  public static func add(KP2: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP2, def: 0, at: VTOFFSET.KP2.p) }
-  public static func add(KP3: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP3, def: 0, at: VTOFFSET.KP3.p) }
-  public static func add(KP4: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP4, def: 0, at: VTOFFSET.KP4.p) }
-  public static func add(KP5: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP5, def: 0, at: VTOFFSET.KP5.p) }
-  public static func add(KP6: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP6, def: 0, at: VTOFFSET.KP6.p) }
-  public static func add(KP7: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP7, def: 0, at: VTOFFSET.KP7.p) }
-  public static func add(KP8: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP8, def: 0, at: VTOFFSET.KP8.p) }
-  public static func add(KP_SUM: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP_SUM, def: 0, at: VTOFFSET.KP_SUM.p) }
-  public static func add(AP1: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP1, def: 0, at: VTOFFSET.AP1.p) }
-  public static func add(AP2: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP2, def: 0, at: VTOFFSET.AP2.p) }
-  public static func add(AP3: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP3, def: 0, at: VTOFFSET.AP3.p) }
-  public static func add(AP4: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP4, def: 0, at: VTOFFSET.AP4.p) }
-  public static func add(AP5: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP5, def: 0, at: VTOFFSET.AP5.p) }
-  public static func add(AP6: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP6, def: 0, at: VTOFFSET.AP6.p) }
-  public static func add(AP7: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP7, def: 0, at: VTOFFSET.AP7.p) }
-  public static func add(AP8: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP8, def: 0, at: VTOFFSET.AP8.p) }
-  public static func add(AP_AVG: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP_AVG, def: 0, at: VTOFFSET.AP_AVG.p) }
-  public static func add(CP: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CP, def: 0.0, at: VTOFFSET.CP.p) }
-  public static func add(C9: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: C9, def: 0, at: VTOFFSET.C9.p) }
-  public static func add(ISN: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISN, def: 0, at: VTOFFSET.ISN.p) }
-  public static func add(F107_OBS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_OBS, def: 0.0, at: VTOFFSET.F107_OBS.p) }
-  public static func add(F107_ADJ: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_ADJ, def: 0.0, at: VTOFFSET.F107_ADJ.p) }
-  public static func add(F107_DATA_TYPE: F107DataType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_DATA_TYPE.rawValue, def: 0, at: VTOFFSET.F107_DATA_TYPE.p) }
-  public static func add(F107_OBS_CENTER81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_OBS_CENTER81, def: 0.0, at: VTOFFSET.F107_OBS_CENTER81.p) }
-  public static func add(F107_OBS_LAST81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_OBS_LAST81, def: 0.0, at: VTOFFSET.F107_OBS_LAST81.p) }
-  public static func add(F107_ADJ_CENTER81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_ADJ_CENTER81, def: 0.0, at: VTOFFSET.F107_ADJ_CENTER81.p) }
-  public static func add(F107_ADJ_LAST81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_ADJ_LAST81, def: 0.0, at: VTOFFSET.F107_ADJ_LAST81.p) }
+  public static func add(DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATE, at: VT.DATE) }
+  public static func add(BSRN: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BSRN, def: 0, at: VT.BSRN) }
+  public static func add(ND: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ND, def: 0, at: VT.ND) }
+  public static func add(KP1: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP1, def: 0, at: VT.KP1) }
+  public static func add(KP2: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP2, def: 0, at: VT.KP2) }
+  public static func add(KP3: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP3, def: 0, at: VT.KP3) }
+  public static func add(KP4: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP4, def: 0, at: VT.KP4) }
+  public static func add(KP5: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP5, def: 0, at: VT.KP5) }
+  public static func add(KP6: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP6, def: 0, at: VT.KP6) }
+  public static func add(KP7: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP7, def: 0, at: VT.KP7) }
+  public static func add(KP8: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP8, def: 0, at: VT.KP8) }
+  public static func add(KP_SUM: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP_SUM, def: 0, at: VT.KP_SUM) }
+  public static func add(AP1: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP1, def: 0, at: VT.AP1) }
+  public static func add(AP2: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP2, def: 0, at: VT.AP2) }
+  public static func add(AP3: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP3, def: 0, at: VT.AP3) }
+  public static func add(AP4: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP4, def: 0, at: VT.AP4) }
+  public static func add(AP5: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP5, def: 0, at: VT.AP5) }
+  public static func add(AP6: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP6, def: 0, at: VT.AP6) }
+  public static func add(AP7: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP7, def: 0, at: VT.AP7) }
+  public static func add(AP8: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP8, def: 0, at: VT.AP8) }
+  public static func add(AP_AVG: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP_AVG, def: 0, at: VT.AP_AVG) }
+  public static func add(CP: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CP, def: 0.0, at: VT.CP) }
+  public static func add(C9: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: C9, def: 0, at: VT.C9) }
+  public static func add(ISN: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ISN, def: 0, at: VT.ISN) }
+  public static func add(F107_OBS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_OBS, def: 0.0, at: VT.F107_OBS) }
+  public static func add(F107_ADJ: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_ADJ, def: 0.0, at: VT.F107_ADJ) }
+  public static func add(F107_DATA_TYPE: F107DataType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_DATA_TYPE.rawValue, def: 0, at: VT.F107_DATA_TYPE) }
+  public static func add(F107_OBS_CENTER81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_OBS_CENTER81, def: 0.0, at: VT.F107_OBS_CENTER81) }
+  public static func add(F107_OBS_LAST81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_OBS_LAST81, def: 0.0, at: VT.F107_OBS_LAST81) }
+  public static func add(F107_ADJ_CENTER81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_ADJ_CENTER81, def: 0.0, at: VT.F107_ADJ_CENTER81) }
+  public static func add(F107_ADJ_LAST81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_ADJ_LAST81, def: 0.0, at: VT.F107_ADJ_LAST81) }
   public static func endSPW(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSPW(
     _ fbb: inout FlatBufferBuilder,
@@ -252,37 +250,37 @@ public struct SPW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.DATE.p, fieldName: "DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BSRN.p, fieldName: "BSRN", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.ND.p, fieldName: "ND", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.KP1.p, fieldName: "KP1", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.KP2.p, fieldName: "KP2", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.KP3.p, fieldName: "KP3", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.KP4.p, fieldName: "KP4", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.KP5.p, fieldName: "KP5", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.KP6.p, fieldName: "KP6", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.KP7.p, fieldName: "KP7", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.KP8.p, fieldName: "KP8", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.KP_SUM.p, fieldName: "KP_SUM", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.AP1.p, fieldName: "AP1", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.AP2.p, fieldName: "AP2", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.AP3.p, fieldName: "AP3", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.AP4.p, fieldName: "AP4", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.AP5.p, fieldName: "AP5", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.AP6.p, fieldName: "AP6", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.AP7.p, fieldName: "AP7", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.AP8.p, fieldName: "AP8", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.AP_AVG.p, fieldName: "AP_AVG", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.CP.p, fieldName: "CP", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.C9.p, fieldName: "C9", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.ISN.p, fieldName: "ISN", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.F107_OBS.p, fieldName: "F107_OBS", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.F107_ADJ.p, fieldName: "F107_ADJ", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.F107_DATA_TYPE.p, fieldName: "F107_DATA_TYPE", required: false, type: F107DataType.self)
-    try _v.visit(field: VTOFFSET.F107_OBS_CENTER81.p, fieldName: "F107_OBS_CENTER81", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.F107_OBS_LAST81.p, fieldName: "F107_OBS_LAST81", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.F107_ADJ_CENTER81.p, fieldName: "F107_ADJ_CENTER81", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.F107_ADJ_LAST81.p, fieldName: "F107_ADJ_LAST81", required: false, type: Float32.self)
+    try _v.visit(field: VT.DATE, fieldName: "DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BSRN, fieldName: "BSRN", required: false, type: Int32.self)
+    try _v.visit(field: VT.ND, fieldName: "ND", required: false, type: Int32.self)
+    try _v.visit(field: VT.KP1, fieldName: "KP1", required: false, type: Int32.self)
+    try _v.visit(field: VT.KP2, fieldName: "KP2", required: false, type: Int32.self)
+    try _v.visit(field: VT.KP3, fieldName: "KP3", required: false, type: Int32.self)
+    try _v.visit(field: VT.KP4, fieldName: "KP4", required: false, type: Int32.self)
+    try _v.visit(field: VT.KP5, fieldName: "KP5", required: false, type: Int32.self)
+    try _v.visit(field: VT.KP6, fieldName: "KP6", required: false, type: Int32.self)
+    try _v.visit(field: VT.KP7, fieldName: "KP7", required: false, type: Int32.self)
+    try _v.visit(field: VT.KP8, fieldName: "KP8", required: false, type: Int32.self)
+    try _v.visit(field: VT.KP_SUM, fieldName: "KP_SUM", required: false, type: Int32.self)
+    try _v.visit(field: VT.AP1, fieldName: "AP1", required: false, type: Int32.self)
+    try _v.visit(field: VT.AP2, fieldName: "AP2", required: false, type: Int32.self)
+    try _v.visit(field: VT.AP3, fieldName: "AP3", required: false, type: Int32.self)
+    try _v.visit(field: VT.AP4, fieldName: "AP4", required: false, type: Int32.self)
+    try _v.visit(field: VT.AP5, fieldName: "AP5", required: false, type: Int32.self)
+    try _v.visit(field: VT.AP6, fieldName: "AP6", required: false, type: Int32.self)
+    try _v.visit(field: VT.AP7, fieldName: "AP7", required: false, type: Int32.self)
+    try _v.visit(field: VT.AP8, fieldName: "AP8", required: false, type: Int32.self)
+    try _v.visit(field: VT.AP_AVG, fieldName: "AP_AVG", required: false, type: Int32.self)
+    try _v.visit(field: VT.CP, fieldName: "CP", required: false, type: Float32.self)
+    try _v.visit(field: VT.C9, fieldName: "C9", required: false, type: Int32.self)
+    try _v.visit(field: VT.ISN, fieldName: "ISN", required: false, type: Int32.self)
+    try _v.visit(field: VT.F107_OBS, fieldName: "F107_OBS", required: false, type: Float32.self)
+    try _v.visit(field: VT.F107_ADJ, fieldName: "F107_ADJ", required: false, type: Float32.self)
+    try _v.visit(field: VT.F107_DATA_TYPE, fieldName: "F107_DATA_TYPE", required: false, type: F107DataType.self)
+    try _v.visit(field: VT.F107_OBS_CENTER81, fieldName: "F107_OBS_CENTER81", required: false, type: Float32.self)
+    try _v.visit(field: VT.F107_OBS_LAST81, fieldName: "F107_OBS_LAST81", required: false, type: Float32.self)
+    try _v.visit(field: VT.F107_ADJ_CENTER81, fieldName: "F107_ADJ_CENTER81", required: false, type: Float32.self)
+    try _v.visit(field: VT.F107_ADJ_LAST81, fieldName: "F107_ADJ_LAST81", required: false, type: Float32.self)
     _v.finish()
   }
 }
@@ -298,15 +296,13 @@ public struct SPWCOLLECTION: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case RECORDS = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let RECORDS: VOffset = 4
   }
 
-  public var RECORDS: FlatbufferVector<SPW> { return _accessor.vector(at: VTOFFSET.RECORDS.v, byteSize: 4) }
+  public var RECORDS: FlatbufferVector<SPW> { return _accessor.vector(at: VT.RECORDS, byteSize: 4) }
   public static func startSPWCOLLECTION(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VTOFFSET.RECORDS.p) }
+  public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VT.RECORDS) }
   public static func endSPWCOLLECTION(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSPWCOLLECTION(
     _ fbb: inout FlatBufferBuilder,
@@ -319,7 +315,7 @@ public struct SPWCOLLECTION: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.RECORDS.p, fieldName: "RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<SPW>, SPW>>.self)
+    try _v.visit(field: VT.RECORDS, fieldName: "RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<SPW>, SPW>>.self)
     _v.finish()
   }
 }

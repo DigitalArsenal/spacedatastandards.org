@@ -20,80 +20,78 @@ public struct OON: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SAT_NO = 4
-    case COMMON_NAME = 6
-    case CONSTELLATION = 8
-    case INTL_DES = 10
-    case LAUNCH_DATE = 12
-    case DECAY_DATE = 14
-    case OBJECT_TYPE = 16
-    case MISSION_NUMBER = 18
-    case CATEGORY = 20
-    case LIFETIME_YEARS = 22
-    case ALT_NAME = 24
-    case LAUNCH_SITE_ID = 26
-    case ANTENNAS = 28
-    case BATTERIES = 30
-    case SOLAR_ARRAYS = 32
-    case THRUSTERS = 34
-    case ONORBIT_DETAILS = 36
-    case COUNTRY_CODE = 38
-    case ENTITY_COLLECTION = 40
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SAT_NO: VOffset = 4
+    static let COMMON_NAME: VOffset = 6
+    static let CONSTELLATION: VOffset = 8
+    static let INTL_DES: VOffset = 10
+    static let LAUNCH_DATE: VOffset = 12
+    static let DECAY_DATE: VOffset = 14
+    static let OBJECT_TYPE: VOffset = 16
+    static let MISSION_NUMBER: VOffset = 18
+    static let CATEGORY: VOffset = 20
+    static let LIFETIME_YEARS: VOffset = 22
+    static let ALT_NAME: VOffset = 24
+    static let LAUNCH_SITE_ID: VOffset = 26
+    static let ANTENNAS: VOffset = 28
+    static let BATTERIES: VOffset = 30
+    static let SOLAR_ARRAYS: VOffset = 32
+    static let THRUSTERS: VOffset = 34
+    static let ONORBIT_DETAILS: VOffset = 36
+    static let COUNTRY_CODE: VOffset = 38
+    static let ENTITY_COLLECTION: VOffset = 40
   }
 
-  public var SAT_NO: Int32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var COMMON_NAME: String? { let o = _accessor.offset(VTOFFSET.COMMON_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COMMON_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMON_NAME.v) }
-  public var CONSTELLATION: String? { let o = _accessor.offset(VTOFFSET.CONSTELLATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONSTELLATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONSTELLATION.v) }
-  public var INTL_DES: String? { let o = _accessor.offset(VTOFFSET.INTL_DES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INTL_DESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INTL_DES.v) }
-  public var LAUNCH_DATE: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_DATE.v) }
-  public var DECAY_DATE: String? { let o = _accessor.offset(VTOFFSET.DECAY_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DECAY_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DECAY_DATE.v) }
-  public var OBJECT_TYPE: String? { let o = _accessor.offset(VTOFFSET.OBJECT_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_TYPE.v) }
-  public var MISSION_NUMBER: String? { let o = _accessor.offset(VTOFFSET.MISSION_NUMBER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MISSION_NUMBERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MISSION_NUMBER.v) }
-  public var CATEGORY: String? { let o = _accessor.offset(VTOFFSET.CATEGORY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CATEGORYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CATEGORY.v) }
-  public var LIFETIME_YEARS: Int32 { let o = _accessor.offset(VTOFFSET.LIFETIME_YEARS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var ALT_NAME: String? { let o = _accessor.offset(VTOFFSET.ALT_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ALT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALT_NAME.v) }
-  public var LAUNCH_SITE_ID: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_SITE_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_SITE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_SITE_ID.v) }
-  public var ANTENNAS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ANTENNAS.v, byteSize: 4) }
-  public var BATTERIES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.BATTERIES.v, byteSize: 4) }
-  public var SOLAR_ARRAYS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SOLAR_ARRAYS.v, byteSize: 4) }
-  public var THRUSTERS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.THRUSTERS.v, byteSize: 4) }
-  public var ONORBIT_DETAILS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ONORBIT_DETAILS.v, byteSize: 4) }
-  public var COUNTRY_CODE: String? { let o = _accessor.offset(VTOFFSET.COUNTRY_CODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COUNTRY_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COUNTRY_CODE.v) }
-  public var ENTITY_COLLECTION: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ENTITY_COLLECTION.v, byteSize: 4) }
+  public var SAT_NO: Int32 { let o = _accessor.offset(VT.SAT_NO); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var COMMON_NAME: String? { let o = _accessor.offset(VT.COMMON_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMON_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMON_NAME) }
+  public var CONSTELLATION: String? { let o = _accessor.offset(VT.CONSTELLATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONSTELLATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONSTELLATION) }
+  public var INTL_DES: String? { let o = _accessor.offset(VT.INTL_DES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INTL_DESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INTL_DES) }
+  public var LAUNCH_DATE: String? { let o = _accessor.offset(VT.LAUNCH_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_DATE) }
+  public var DECAY_DATE: String? { let o = _accessor.offset(VT.DECAY_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DECAY_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DECAY_DATE) }
+  public var OBJECT_TYPE: String? { let o = _accessor.offset(VT.OBJECT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_TYPE) }
+  public var MISSION_NUMBER: String? { let o = _accessor.offset(VT.MISSION_NUMBER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MISSION_NUMBERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MISSION_NUMBER) }
+  public var CATEGORY: String? { let o = _accessor.offset(VT.CATEGORY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CATEGORYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CATEGORY) }
+  public var LIFETIME_YEARS: Int32 { let o = _accessor.offset(VT.LIFETIME_YEARS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var ALT_NAME: String? { let o = _accessor.offset(VT.ALT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALT_NAME) }
+  public var LAUNCH_SITE_ID: String? { let o = _accessor.offset(VT.LAUNCH_SITE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_SITE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAUNCH_SITE_ID) }
+  public var ANTENNAS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ANTENNAS, byteSize: 4) }
+  public var BATTERIES: FlatbufferVector<String?> { return _accessor.vector(at: VT.BATTERIES, byteSize: 4) }
+  public var SOLAR_ARRAYS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SOLAR_ARRAYS, byteSize: 4) }
+  public var THRUSTERS: FlatbufferVector<String?> { return _accessor.vector(at: VT.THRUSTERS, byteSize: 4) }
+  public var ONORBIT_DETAILS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ONORBIT_DETAILS, byteSize: 4) }
+  public var COUNTRY_CODE: String? { let o = _accessor.offset(VT.COUNTRY_CODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COUNTRY_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COUNTRY_CODE) }
+  public var ENTITY_COLLECTION: FlatbufferVector<String?> { return _accessor.vector(at: VT.ENTITY_COLLECTION, byteSize: 4) }
   public static func startOON(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
-  public static func add(SAT_NO: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
-  public static func add(COMMON_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMON_NAME, at: VTOFFSET.COMMON_NAME.p) }
-  public static func add(CONSTELLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTELLATION, at: VTOFFSET.CONSTELLATION.p) }
-  public static func add(INTL_DES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTL_DES, at: VTOFFSET.INTL_DES.p) }
-  public static func add(LAUNCH_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_DATE, at: VTOFFSET.LAUNCH_DATE.p) }
-  public static func add(DECAY_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DECAY_DATE, at: VTOFFSET.DECAY_DATE.p) }
-  public static func add(OBJECT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_TYPE, at: VTOFFSET.OBJECT_TYPE.p) }
-  public static func add(MISSION_NUMBER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION_NUMBER, at: VTOFFSET.MISSION_NUMBER.p) }
-  public static func add(CATEGORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATEGORY, at: VTOFFSET.CATEGORY.p) }
-  public static func add(LIFETIME_YEARS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIFETIME_YEARS, def: 0, at: VTOFFSET.LIFETIME_YEARS.p) }
-  public static func add(ALT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALT_NAME, at: VTOFFSET.ALT_NAME.p) }
-  public static func add(LAUNCH_SITE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_SITE_ID, at: VTOFFSET.LAUNCH_SITE_ID.p) }
-  public static func addVectorOf(ANTENNAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANTENNAS, at: VTOFFSET.ANTENNAS.p) }
-  public static func addVectorOf(BATTERIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATTERIES, at: VTOFFSET.BATTERIES.p) }
-  public static func addVectorOf(SOLAR_ARRAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLAR_ARRAYS, at: VTOFFSET.SOLAR_ARRAYS.p) }
-  public static func addVectorOf(THRUSTERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THRUSTERS, at: VTOFFSET.THRUSTERS.p) }
-  public static func addVectorOf(ONORBIT_DETAILS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ONORBIT_DETAILS, at: VTOFFSET.ONORBIT_DETAILS.p) }
-  public static func add(COUNTRY_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COUNTRY_CODE, at: VTOFFSET.COUNTRY_CODE.p) }
-  public static func addVectorOf(ENTITY_COLLECTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_COLLECTION, at: VTOFFSET.ENTITY_COLLECTION.p) }
+  public static func add(SAT_NO: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VT.SAT_NO) }
+  public static func add(COMMON_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMON_NAME, at: VT.COMMON_NAME) }
+  public static func add(CONSTELLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTELLATION, at: VT.CONSTELLATION) }
+  public static func add(INTL_DES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTL_DES, at: VT.INTL_DES) }
+  public static func add(LAUNCH_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_DATE, at: VT.LAUNCH_DATE) }
+  public static func add(DECAY_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DECAY_DATE, at: VT.DECAY_DATE) }
+  public static func add(OBJECT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_TYPE, at: VT.OBJECT_TYPE) }
+  public static func add(MISSION_NUMBER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION_NUMBER, at: VT.MISSION_NUMBER) }
+  public static func add(CATEGORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATEGORY, at: VT.CATEGORY) }
+  public static func add(LIFETIME_YEARS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIFETIME_YEARS, def: 0, at: VT.LIFETIME_YEARS) }
+  public static func add(ALT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALT_NAME, at: VT.ALT_NAME) }
+  public static func add(LAUNCH_SITE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_SITE_ID, at: VT.LAUNCH_SITE_ID) }
+  public static func addVectorOf(ANTENNAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANTENNAS, at: VT.ANTENNAS) }
+  public static func addVectorOf(BATTERIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATTERIES, at: VT.BATTERIES) }
+  public static func addVectorOf(SOLAR_ARRAYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLAR_ARRAYS, at: VT.SOLAR_ARRAYS) }
+  public static func addVectorOf(THRUSTERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THRUSTERS, at: VT.THRUSTERS) }
+  public static func addVectorOf(ONORBIT_DETAILS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ONORBIT_DETAILS, at: VT.ONORBIT_DETAILS) }
+  public static func add(COUNTRY_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COUNTRY_CODE, at: VT.COUNTRY_CODE) }
+  public static func addVectorOf(ENTITY_COLLECTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_COLLECTION, at: VT.ENTITY_COLLECTION) }
   public static func endOON(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOON(
     _ fbb: inout FlatBufferBuilder,
@@ -142,25 +140,25 @@ public struct OON: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.COMMON_NAME.p, fieldName: "COMMON_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONSTELLATION.p, fieldName: "CONSTELLATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INTL_DES.p, fieldName: "INTL_DES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_DATE.p, fieldName: "LAUNCH_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DECAY_DATE.p, fieldName: "DECAY_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBJECT_TYPE.p, fieldName: "OBJECT_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MISSION_NUMBER.p, fieldName: "MISSION_NUMBER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CATEGORY.p, fieldName: "CATEGORY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LIFETIME_YEARS.p, fieldName: "LIFETIME_YEARS", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.ALT_NAME.p, fieldName: "ALT_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_SITE_ID.p, fieldName: "LAUNCH_SITE_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ANTENNAS.p, fieldName: "ANTENNAS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.BATTERIES.p, fieldName: "BATTERIES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.SOLAR_ARRAYS.p, fieldName: "SOLAR_ARRAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.THRUSTERS.p, fieldName: "THRUSTERS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.ONORBIT_DETAILS.p, fieldName: "ONORBIT_DETAILS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.COUNTRY_CODE.p, fieldName: "COUNTRY_CODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ENTITY_COLLECTION.p, fieldName: "ENTITY_COLLECTION", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SAT_NO, fieldName: "SAT_NO", required: false, type: Int32.self)
+    try _v.visit(field: VT.COMMON_NAME, fieldName: "COMMON_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONSTELLATION, fieldName: "CONSTELLATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTL_DES, fieldName: "INTL_DES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAUNCH_DATE, fieldName: "LAUNCH_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DECAY_DATE, fieldName: "DECAY_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_TYPE, fieldName: "OBJECT_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MISSION_NUMBER, fieldName: "MISSION_NUMBER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CATEGORY, fieldName: "CATEGORY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LIFETIME_YEARS, fieldName: "LIFETIME_YEARS", required: false, type: Int32.self)
+    try _v.visit(field: VT.ALT_NAME, fieldName: "ALT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAUNCH_SITE_ID, fieldName: "LAUNCH_SITE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ANTENNAS, fieldName: "ANTENNAS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.BATTERIES, fieldName: "BATTERIES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SOLAR_ARRAYS, fieldName: "SOLAR_ARRAYS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.THRUSTERS, fieldName: "THRUSTERS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ONORBIT_DETAILS, fieldName: "ONORBIT_DETAILS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COUNTRY_CODE, fieldName: "COUNTRY_CODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENTITY_COLLECTION, fieldName: "ENTITY_COLLECTION", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

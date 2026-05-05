@@ -20,43 +20,41 @@ public struct SDL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SPI = 4
-    case IV_LENGTH = 6
-    case IV = 8
-    case MAC_LENGTH = 10
-    case MAC = 12
-    case PAD_LENGTH = 14
-    case PAYLOAD = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SPI: VOffset = 4
+    static let IV_LENGTH: VOffset = 6
+    static let IV: VOffset = 8
+    static let MAC_LENGTH: VOffset = 10
+    static let MAC: VOffset = 12
+    static let PAD_LENGTH: VOffset = 14
+    static let PAYLOAD: VOffset = 16
   }
 
   ///  Security Parameter Index
-  public var SPI: UInt16 { let o = _accessor.offset(VTOFFSET.SPI.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SPI: UInt16 { let o = _accessor.offset(VT.SPI); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Initialization vector length in bytes
-  public var IV_LENGTH: UInt8 { let o = _accessor.offset(VTOFFSET.IV_LENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var IV_LENGTH: UInt8 { let o = _accessor.offset(VT.IV_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Initialization vector
-  public var IV: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.IV.v, byteSize: 1) }
-  public func withUnsafePointerToIv<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.IV.v, body: body) }
+  public var IV: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.IV, byteSize: 1) }
+  public func withUnsafePointerToIv<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.IV, body: body) }
   ///  MAC length in bytes
-  public var MAC_LENGTH: UInt8 { let o = _accessor.offset(VTOFFSET.MAC_LENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var MAC_LENGTH: UInt8 { let o = _accessor.offset(VT.MAC_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Message authentication code
-  public var MAC: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.MAC.v, byteSize: 1) }
-  public func withUnsafePointerToMac<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.MAC.v, body: body) }
+  public var MAC: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.MAC, byteSize: 1) }
+  public func withUnsafePointerToMac<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.MAC, body: body) }
   ///  Pad length
-  public var PAD_LENGTH: UInt8 { let o = _accessor.offset(VTOFFSET.PAD_LENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var PAD_LENGTH: UInt8 { let o = _accessor.offset(VT.PAD_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Security payload
-  public var PAYLOAD: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.PAYLOAD.v, byteSize: 1) }
-  public func withUnsafePointerToPayload<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.PAYLOAD.v, body: body) }
+  public var PAYLOAD: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.PAYLOAD, byteSize: 1) }
+  public func withUnsafePointerToPayload<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PAYLOAD, body: body) }
   public static func startSDL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(SPI: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPI, def: 0, at: VTOFFSET.SPI.p) }
-  public static func add(IV_LENGTH: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IV_LENGTH, def: 0, at: VTOFFSET.IV_LENGTH.p) }
-  public static func addVectorOf(IV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IV, at: VTOFFSET.IV.p) }
-  public static func add(MAC_LENGTH: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAC_LENGTH, def: 0, at: VTOFFSET.MAC_LENGTH.p) }
-  public static func addVectorOf(MAC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAC, at: VTOFFSET.MAC.p) }
-  public static func add(PAD_LENGTH: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAD_LENGTH, def: 0, at: VTOFFSET.PAD_LENGTH.p) }
-  public static func addVectorOf(PAYLOAD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYLOAD, at: VTOFFSET.PAYLOAD.p) }
+  public static func add(SPI: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPI, def: 0, at: VT.SPI) }
+  public static func add(IV_LENGTH: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IV_LENGTH, def: 0, at: VT.IV_LENGTH) }
+  public static func addVectorOf(IV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IV, at: VT.IV) }
+  public static func add(MAC_LENGTH: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAC_LENGTH, def: 0, at: VT.MAC_LENGTH) }
+  public static func addVectorOf(MAC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAC, at: VT.MAC) }
+  public static func add(PAD_LENGTH: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAD_LENGTH, def: 0, at: VT.PAD_LENGTH) }
+  public static func addVectorOf(PAYLOAD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYLOAD, at: VT.PAYLOAD) }
   public static func endSDL(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSDL(
     _ fbb: inout FlatBufferBuilder,
@@ -81,13 +79,13 @@ public struct SDL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SPI.p, fieldName: "SPI", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.IV_LENGTH.p, fieldName: "IV_LENGTH", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.IV.p, fieldName: "IV", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.MAC_LENGTH.p, fieldName: "MAC_LENGTH", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.MAC.p, fieldName: "MAC", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.PAD_LENGTH.p, fieldName: "PAD_LENGTH", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.PAYLOAD.p, fieldName: "PAYLOAD", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.SPI, fieldName: "SPI", required: false, type: UInt16.self)
+    try _v.visit(field: VT.IV_LENGTH, fieldName: "IV_LENGTH", required: false, type: UInt8.self)
+    try _v.visit(field: VT.IV, fieldName: "IV", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.MAC_LENGTH, fieldName: "MAC_LENGTH", required: false, type: UInt8.self)
+    try _v.visit(field: VT.MAC, fieldName: "MAC", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.PAD_LENGTH, fieldName: "PAD_LENGTH", required: false, type: UInt8.self)
+    try _v.visit(field: VT.PAYLOAD, fieldName: "PAYLOAD", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

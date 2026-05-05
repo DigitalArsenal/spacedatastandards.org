@@ -8,12 +8,12 @@ export declare class PLGBuildArtifact implements flatbuffers.IUnpackableObject<P
     __init(i: number, bb: flatbuffers.ByteBuffer): PLGBuildArtifact;
     static getRootAsPLGBuildArtifact(bb: flatbuffers.ByteBuffer, obj?: PLGBuildArtifact): PLGBuildArtifact;
     static getSizePrefixedRootAsPLGBuildArtifact(bb: flatbuffers.ByteBuffer, obj?: PLGBuildArtifact): PLGBuildArtifact;
-    ARTIFACT_ID(): string | null;
-    ARTIFACT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    ARTIFACT_ID(): string;
+    ARTIFACT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     KIND(): string | null;
     KIND(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    PATH(): string | null;
-    PATH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    PATH(): string;
+    PATH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     TARGET(): string | null;
     TARGET(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     ENTRY_SYMBOL(): string | null;

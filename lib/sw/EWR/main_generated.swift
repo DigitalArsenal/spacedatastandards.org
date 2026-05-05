@@ -122,49 +122,47 @@ public struct EWR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SYSTEM_ID = 4
-    case ENTITY_ID = 6
-    case ESM_ACTIVE = 8
-    case ECM_ACTIVE = 10
-    case RWR_ACTIVE = 12
-    case ESM_CONTACTS = 14
-    case ACTIVE_JAMMING = 16
-    case COUNTERMEASURES = 18
-    case THREAT_WARNINGS = 20
-    case EMCON_LEVEL = 22
-    case LAST_UPDATE_MS = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SYSTEM_ID: VOffset = 4
+    static let ENTITY_ID: VOffset = 6
+    static let ESM_ACTIVE: VOffset = 8
+    static let ECM_ACTIVE: VOffset = 10
+    static let RWR_ACTIVE: VOffset = 12
+    static let ESM_CONTACTS: VOffset = 14
+    static let ACTIVE_JAMMING: VOffset = 16
+    static let COUNTERMEASURES: VOffset = 18
+    static let THREAT_WARNINGS: VOffset = 20
+    static let EMCON_LEVEL: VOffset = 22
+    static let LAST_UPDATE_MS: VOffset = 24
   }
 
-  public var SYSTEM_ID: UInt32 { let o = _accessor.offset(VTOFFSET.SYSTEM_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public var ENTITY_ID: UInt32 { let o = _accessor.offset(VTOFFSET.ENTITY_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public var ESM_ACTIVE: Bool { let o = _accessor.offset(VTOFFSET.ESM_ACTIVE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var ECM_ACTIVE: Bool { let o = _accessor.offset(VTOFFSET.ECM_ACTIVE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var RWR_ACTIVE: Bool { let o = _accessor.offset(VTOFFSET.RWR_ACTIVE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var ESM_CONTACTS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ESM_CONTACTS.v, byteSize: 4) }
-  public var ACTIVE_JAMMING: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ACTIVE_JAMMING.v, byteSize: 4) }
-  public var COUNTERMEASURES: String? { let o = _accessor.offset(VTOFFSET.COUNTERMEASURES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COUNTERMEASURESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COUNTERMEASURES.v) }
-  public var THREAT_WARNINGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.THREAT_WARNINGS.v, byteSize: 4) }
-  public var EMCON_LEVEL: UInt8 { let o = _accessor.offset(VTOFFSET.EMCON_LEVEL.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var LAST_UPDATE_MS: Int64 { let o = _accessor.offset(VTOFFSET.LAST_UPDATE_MS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var SYSTEM_ID: UInt32 { let o = _accessor.offset(VT.SYSTEM_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var ENTITY_ID: UInt32 { let o = _accessor.offset(VT.ENTITY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var ESM_ACTIVE: Bool { let o = _accessor.offset(VT.ESM_ACTIVE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ECM_ACTIVE: Bool { let o = _accessor.offset(VT.ECM_ACTIVE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var RWR_ACTIVE: Bool { let o = _accessor.offset(VT.RWR_ACTIVE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ESM_CONTACTS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ESM_CONTACTS, byteSize: 4) }
+  public var ACTIVE_JAMMING: FlatbufferVector<String?> { return _accessor.vector(at: VT.ACTIVE_JAMMING, byteSize: 4) }
+  public var COUNTERMEASURES: String? { let o = _accessor.offset(VT.COUNTERMEASURES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COUNTERMEASURESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COUNTERMEASURES) }
+  public var THREAT_WARNINGS: FlatbufferVector<String?> { return _accessor.vector(at: VT.THREAT_WARNINGS, byteSize: 4) }
+  public var EMCON_LEVEL: UInt8 { let o = _accessor.offset(VT.EMCON_LEVEL); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var LAST_UPDATE_MS: Int64 { let o = _accessor.offset(VT.LAST_UPDATE_MS); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   public static func startEWR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(SYSTEM_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYSTEM_ID, def: 0, at: VTOFFSET.SYSTEM_ID.p) }
-  public static func add(ENTITY_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_ID, def: 0, at: VTOFFSET.ENTITY_ID.p) }
+  public static func add(SYSTEM_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYSTEM_ID, def: 0, at: VT.SYSTEM_ID) }
+  public static func add(ENTITY_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_ID, def: 0, at: VT.ENTITY_ID) }
   public static func add(ESM_ACTIVE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ESM_ACTIVE, def: false,
-   at: VTOFFSET.ESM_ACTIVE.p) }
+   at: VT.ESM_ACTIVE) }
   public static func add(ECM_ACTIVE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECM_ACTIVE, def: false,
-   at: VTOFFSET.ECM_ACTIVE.p) }
+   at: VT.ECM_ACTIVE) }
   public static func add(RWR_ACTIVE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RWR_ACTIVE, def: false,
-   at: VTOFFSET.RWR_ACTIVE.p) }
-  public static func addVectorOf(ESM_CONTACTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ESM_CONTACTS, at: VTOFFSET.ESM_CONTACTS.p) }
-  public static func addVectorOf(ACTIVE_JAMMING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACTIVE_JAMMING, at: VTOFFSET.ACTIVE_JAMMING.p) }
-  public static func add(COUNTERMEASURES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COUNTERMEASURES, at: VTOFFSET.COUNTERMEASURES.p) }
-  public static func addVectorOf(THREAT_WARNINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THREAT_WARNINGS, at: VTOFFSET.THREAT_WARNINGS.p) }
-  public static func add(EMCON_LEVEL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EMCON_LEVEL, def: 0, at: VTOFFSET.EMCON_LEVEL.p) }
-  public static func add(LAST_UPDATE_MS: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_UPDATE_MS, def: 0, at: VTOFFSET.LAST_UPDATE_MS.p) }
+   at: VT.RWR_ACTIVE) }
+  public static func addVectorOf(ESM_CONTACTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ESM_CONTACTS, at: VT.ESM_CONTACTS) }
+  public static func addVectorOf(ACTIVE_JAMMING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACTIVE_JAMMING, at: VT.ACTIVE_JAMMING) }
+  public static func add(COUNTERMEASURES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COUNTERMEASURES, at: VT.COUNTERMEASURES) }
+  public static func addVectorOf(THREAT_WARNINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THREAT_WARNINGS, at: VT.THREAT_WARNINGS) }
+  public static func add(EMCON_LEVEL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EMCON_LEVEL, def: 0, at: VT.EMCON_LEVEL) }
+  public static func add(LAST_UPDATE_MS: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_UPDATE_MS, def: 0, at: VT.LAST_UPDATE_MS) }
   public static func endEWR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEWR(
     _ fbb: inout FlatBufferBuilder,
@@ -197,17 +195,17 @@ public struct EWR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SYSTEM_ID.p, fieldName: "SYSTEM_ID", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ENTITY_ID.p, fieldName: "ENTITY_ID", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.ESM_ACTIVE.p, fieldName: "ESM_ACTIVE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.ECM_ACTIVE.p, fieldName: "ECM_ACTIVE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.RWR_ACTIVE.p, fieldName: "RWR_ACTIVE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.ESM_CONTACTS.p, fieldName: "ESM_CONTACTS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.ACTIVE_JAMMING.p, fieldName: "ACTIVE_JAMMING", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.COUNTERMEASURES.p, fieldName: "COUNTERMEASURES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.THREAT_WARNINGS.p, fieldName: "THREAT_WARNINGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.EMCON_LEVEL.p, fieldName: "EMCON_LEVEL", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.LAST_UPDATE_MS.p, fieldName: "LAST_UPDATE_MS", required: false, type: Int64.self)
+    try _v.visit(field: VT.SYSTEM_ID, fieldName: "SYSTEM_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ENTITY_ID, fieldName: "ENTITY_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ESM_ACTIVE, fieldName: "ESM_ACTIVE", required: false, type: Bool.self)
+    try _v.visit(field: VT.ECM_ACTIVE, fieldName: "ECM_ACTIVE", required: false, type: Bool.self)
+    try _v.visit(field: VT.RWR_ACTIVE, fieldName: "RWR_ACTIVE", required: false, type: Bool.self)
+    try _v.visit(field: VT.ESM_CONTACTS, fieldName: "ESM_CONTACTS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ACTIVE_JAMMING, fieldName: "ACTIVE_JAMMING", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COUNTERMEASURES, fieldName: "COUNTERMEASURES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.THREAT_WARNINGS, fieldName: "THREAT_WARNINGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.EMCON_LEVEL, fieldName: "EMCON_LEVEL", required: false, type: UInt8.self)
+    try _v.visit(field: VT.LAST_UPDATE_MS, fieldName: "LAST_UPDATE_MS", required: false, type: Int64.self)
     _v.finish()
   }
 }

@@ -8,10 +8,10 @@ export declare class PLGProtocolSpec implements flatbuffers.IUnpackableObject<PL
     __init(i: number, bb: flatbuffers.ByteBuffer): PLGProtocolSpec;
     static getRootAsPLGProtocolSpec(bb: flatbuffers.ByteBuffer, obj?: PLGProtocolSpec): PLGProtocolSpec;
     static getSizePrefixedRootAsPLGProtocolSpec(bb: flatbuffers.ByteBuffer, obj?: PLGProtocolSpec): PLGProtocolSpec;
-    PROTOCOL_ID(): string | null;
-    PROTOCOL_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    METHOD_ID(): string | null;
-    METHOD_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    PROTOCOL_ID(): string;
+    PROTOCOL_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    METHOD_ID(): string;
+    METHOD_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     INPUT_PORT_ID(): string | null;
     INPUT_PORT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     OUTPUT_PORT_ID(): string | null;

@@ -44,77 +44,75 @@ public struct CFP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case VERSION = 4
-    case PDU_TYPE = 6
-    case DIRECTION = 8
-    case TRANSMISSION_MODE = 10
-    case CRC_FLAG = 12
-    case LARGE_FILE_FLAG = 14
-    case DATA_FIELD_LENGTH = 16
-    case SOURCE_ENTITY_ID = 18
-    case TRANSACTION_SEQ_NUM = 20
-    case DESTINATION_ENTITY_ID = 22
-    case CHECKSUM_TYPE = 24
-    case FILE_SIZE = 26
-    case SOURCE_FILENAME = 28
-    case DESTINATION_FILENAME = 30
-    case DATA = 32
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let VERSION: VOffset = 4
+    static let PDU_TYPE: VOffset = 6
+    static let DIRECTION: VOffset = 8
+    static let TRANSMISSION_MODE: VOffset = 10
+    static let CRC_FLAG: VOffset = 12
+    static let LARGE_FILE_FLAG: VOffset = 14
+    static let DATA_FIELD_LENGTH: VOffset = 16
+    static let SOURCE_ENTITY_ID: VOffset = 18
+    static let TRANSACTION_SEQ_NUM: VOffset = 20
+    static let DESTINATION_ENTITY_ID: VOffset = 22
+    static let CHECKSUM_TYPE: VOffset = 24
+    static let FILE_SIZE: VOffset = 26
+    static let SOURCE_FILENAME: VOffset = 28
+    static let DESTINATION_FILENAME: VOffset = 30
+    static let DATA: VOffset = 32
   }
 
   ///  PDU version
-  public var VERSION: UInt8 { let o = _accessor.offset(VTOFFSET.VERSION.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var VERSION: UInt8 { let o = _accessor.offset(VT.VERSION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  PDU type
-  public var PDU_TYPE: pduKind { let o = _accessor.offset(VTOFFSET.PDU_TYPE.v); return o == 0 ? .fileDirective : pduKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .fileDirective }
+  public var PDU_TYPE: pduKind { let o = _accessor.offset(VT.PDU_TYPE); return o == 0 ? .fileDirective : pduKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .fileDirective }
   ///  Direction (toward receiver or sender)
-  public var DIRECTION: UInt8 { let o = _accessor.offset(VTOFFSET.DIRECTION.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var DIRECTION: UInt8 { let o = _accessor.offset(VT.DIRECTION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Transmission mode
-  public var TRANSMISSION_MODE: transmissionClass { let o = _accessor.offset(VTOFFSET.TRANSMISSION_MODE.v); return o == 0 ? .acknowledged : transmissionClass(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .acknowledged }
+  public var TRANSMISSION_MODE: transmissionClass { let o = _accessor.offset(VT.TRANSMISSION_MODE); return o == 0 ? .acknowledged : transmissionClass(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .acknowledged }
   ///  CRC present flag
-  public var CRC_FLAG: Bool { let o = _accessor.offset(VTOFFSET.CRC_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var CRC_FLAG: Bool { let o = _accessor.offset(VT.CRC_FLAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Large file flag
-  public var LARGE_FILE_FLAG: Bool { let o = _accessor.offset(VTOFFSET.LARGE_FILE_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var LARGE_FILE_FLAG: Bool { let o = _accessor.offset(VT.LARGE_FILE_FLAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Data field length
-  public var DATA_FIELD_LENGTH: UInt16 { let o = _accessor.offset(VTOFFSET.DATA_FIELD_LENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var DATA_FIELD_LENGTH: UInt16 { let o = _accessor.offset(VT.DATA_FIELD_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Source entity ID
-  public var SOURCE_ENTITY_ID: UInt64 { let o = _accessor.offset(VTOFFSET.SOURCE_ENTITY_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var SOURCE_ENTITY_ID: UInt64 { let o = _accessor.offset(VT.SOURCE_ENTITY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Transaction sequence number
-  public var TRANSACTION_SEQ_NUM: UInt64 { let o = _accessor.offset(VTOFFSET.TRANSACTION_SEQ_NUM.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var TRANSACTION_SEQ_NUM: UInt64 { let o = _accessor.offset(VT.TRANSACTION_SEQ_NUM); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Destination entity ID
-  public var DESTINATION_ENTITY_ID: UInt64 { let o = _accessor.offset(VTOFFSET.DESTINATION_ENTITY_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var DESTINATION_ENTITY_ID: UInt64 { let o = _accessor.offset(VT.DESTINATION_ENTITY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  File checksum type
-  public var CHECKSUM_TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.CHECKSUM_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var CHECKSUM_TYPE: UInt8 { let o = _accessor.offset(VT.CHECKSUM_TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  File size
-  public var FILE_SIZE: UInt64 { let o = _accessor.offset(VTOFFSET.FILE_SIZE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var FILE_SIZE: UInt64 { let o = _accessor.offset(VT.FILE_SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Source filename
-  public var SOURCE_FILENAME: String? { let o = _accessor.offset(VTOFFSET.SOURCE_FILENAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCE_FILENAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCE_FILENAME.v) }
+  public var SOURCE_FILENAME: String? { let o = _accessor.offset(VT.SOURCE_FILENAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_FILENAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_FILENAME) }
   ///  Destination filename
-  public var DESTINATION_FILENAME: String? { let o = _accessor.offset(VTOFFSET.DESTINATION_FILENAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESTINATION_FILENAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESTINATION_FILENAME.v) }
+  public var DESTINATION_FILENAME: String? { let o = _accessor.offset(VT.DESTINATION_FILENAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESTINATION_FILENAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESTINATION_FILENAME) }
   ///  PDU data
-  public var DATA: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.DATA.v, byteSize: 1) }
-  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DATA.v, body: body) }
+  public var DATA: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.DATA, byteSize: 1) }
+  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DATA, body: body) }
   public static func startCFP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
-  public static func add(VERSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VTOFFSET.VERSION.p) }
-  public static func add(PDU_TYPE: pduKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PDU_TYPE.rawValue, def: 0, at: VTOFFSET.PDU_TYPE.p) }
-  public static func add(DIRECTION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION, def: 0, at: VTOFFSET.DIRECTION.p) }
-  public static func add(TRANSMISSION_MODE: transmissionClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSMISSION_MODE.rawValue, def: 0, at: VTOFFSET.TRANSMISSION_MODE.p) }
+  public static func add(VERSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VT.VERSION) }
+  public static func add(PDU_TYPE: pduKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PDU_TYPE.rawValue, def: 0, at: VT.PDU_TYPE) }
+  public static func add(DIRECTION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION, def: 0, at: VT.DIRECTION) }
+  public static func add(TRANSMISSION_MODE: transmissionClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSMISSION_MODE.rawValue, def: 0, at: VT.TRANSMISSION_MODE) }
   public static func add(CRC_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CRC_FLAG, def: false,
-   at: VTOFFSET.CRC_FLAG.p) }
+   at: VT.CRC_FLAG) }
   public static func add(LARGE_FILE_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LARGE_FILE_FLAG, def: false,
-   at: VTOFFSET.LARGE_FILE_FLAG.p) }
-  public static func add(DATA_FIELD_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_FIELD_LENGTH, def: 0, at: VTOFFSET.DATA_FIELD_LENGTH.p) }
-  public static func add(SOURCE_ENTITY_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE_ENTITY_ID, def: 0, at: VTOFFSET.SOURCE_ENTITY_ID.p) }
-  public static func add(TRANSACTION_SEQ_NUM: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSACTION_SEQ_NUM, def: 0, at: VTOFFSET.TRANSACTION_SEQ_NUM.p) }
-  public static func add(DESTINATION_ENTITY_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DESTINATION_ENTITY_ID, def: 0, at: VTOFFSET.DESTINATION_ENTITY_ID.p) }
-  public static func add(CHECKSUM_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHECKSUM_TYPE, def: 0, at: VTOFFSET.CHECKSUM_TYPE.p) }
-  public static func add(FILE_SIZE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILE_SIZE, def: 0, at: VTOFFSET.FILE_SIZE.p) }
-  public static func add(SOURCE_FILENAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_FILENAME, at: VTOFFSET.SOURCE_FILENAME.p) }
-  public static func add(DESTINATION_FILENAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESTINATION_FILENAME, at: VTOFFSET.DESTINATION_FILENAME.p) }
-  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VTOFFSET.DATA.p) }
+   at: VT.LARGE_FILE_FLAG) }
+  public static func add(DATA_FIELD_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_FIELD_LENGTH, def: 0, at: VT.DATA_FIELD_LENGTH) }
+  public static func add(SOURCE_ENTITY_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE_ENTITY_ID, def: 0, at: VT.SOURCE_ENTITY_ID) }
+  public static func add(TRANSACTION_SEQ_NUM: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSACTION_SEQ_NUM, def: 0, at: VT.TRANSACTION_SEQ_NUM) }
+  public static func add(DESTINATION_ENTITY_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DESTINATION_ENTITY_ID, def: 0, at: VT.DESTINATION_ENTITY_ID) }
+  public static func add(CHECKSUM_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHECKSUM_TYPE, def: 0, at: VT.CHECKSUM_TYPE) }
+  public static func add(FILE_SIZE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILE_SIZE, def: 0, at: VT.FILE_SIZE) }
+  public static func add(SOURCE_FILENAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_FILENAME, at: VT.SOURCE_FILENAME) }
+  public static func add(DESTINATION_FILENAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESTINATION_FILENAME, at: VT.DESTINATION_FILENAME) }
+  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VT.DATA) }
   public static func endCFP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCFP(
     _ fbb: inout FlatBufferBuilder,
@@ -155,21 +153,21 @@ public struct CFP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.PDU_TYPE.p, fieldName: "PDU_TYPE", required: false, type: pduKind.self)
-    try _v.visit(field: VTOFFSET.DIRECTION.p, fieldName: "DIRECTION", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.TRANSMISSION_MODE.p, fieldName: "TRANSMISSION_MODE", required: false, type: transmissionClass.self)
-    try _v.visit(field: VTOFFSET.CRC_FLAG.p, fieldName: "CRC_FLAG", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.LARGE_FILE_FLAG.p, fieldName: "LARGE_FILE_FLAG", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.DATA_FIELD_LENGTH.p, fieldName: "DATA_FIELD_LENGTH", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.SOURCE_ENTITY_ID.p, fieldName: "SOURCE_ENTITY_ID", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.TRANSACTION_SEQ_NUM.p, fieldName: "TRANSACTION_SEQ_NUM", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.DESTINATION_ENTITY_ID.p, fieldName: "DESTINATION_ENTITY_ID", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.CHECKSUM_TYPE.p, fieldName: "CHECKSUM_TYPE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.FILE_SIZE.p, fieldName: "FILE_SIZE", required: false, type: UInt64.self)
-    try _v.visit(field: VTOFFSET.SOURCE_FILENAME.p, fieldName: "SOURCE_FILENAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESTINATION_FILENAME.p, fieldName: "DESTINATION_FILENAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATA.p, fieldName: "DATA", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: UInt8.self)
+    try _v.visit(field: VT.PDU_TYPE, fieldName: "PDU_TYPE", required: false, type: pduKind.self)
+    try _v.visit(field: VT.DIRECTION, fieldName: "DIRECTION", required: false, type: UInt8.self)
+    try _v.visit(field: VT.TRANSMISSION_MODE, fieldName: "TRANSMISSION_MODE", required: false, type: transmissionClass.self)
+    try _v.visit(field: VT.CRC_FLAG, fieldName: "CRC_FLAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.LARGE_FILE_FLAG, fieldName: "LARGE_FILE_FLAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.DATA_FIELD_LENGTH, fieldName: "DATA_FIELD_LENGTH", required: false, type: UInt16.self)
+    try _v.visit(field: VT.SOURCE_ENTITY_ID, fieldName: "SOURCE_ENTITY_ID", required: false, type: UInt64.self)
+    try _v.visit(field: VT.TRANSACTION_SEQ_NUM, fieldName: "TRANSACTION_SEQ_NUM", required: false, type: UInt64.self)
+    try _v.visit(field: VT.DESTINATION_ENTITY_ID, fieldName: "DESTINATION_ENTITY_ID", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CHECKSUM_TYPE, fieldName: "CHECKSUM_TYPE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.FILE_SIZE, fieldName: "FILE_SIZE", required: false, type: UInt64.self)
+    try _v.visit(field: VT.SOURCE_FILENAME, fieldName: "SOURCE_FILENAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESTINATION_FILENAME, fieldName: "DESTINATION_FILENAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA, fieldName: "DATA", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

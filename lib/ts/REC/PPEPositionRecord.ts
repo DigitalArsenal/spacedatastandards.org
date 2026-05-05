@@ -44,11 +44,11 @@ static getSizePrefixedRootAsPPEPositionRecord(bb:flatbuffers.ByteBuffer, obj?:PP
  * Together with EPOCH_HALF_SPAN, defines the time interval:
  *   [EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]
  */
-EPOCH_MID():string|null
-EPOCH_MID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EPOCH_MID(optionalEncoding?:any):string|Uint8Array|null {
+EPOCH_MID():string
+EPOCH_MID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+EPOCH_MID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
@@ -92,9 +92,9 @@ posCoeffXLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-posCoeffXArray():Float64Array|null {
+posCoeffXArray():Float64Array {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+  return new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset));
 }
 
 /**
@@ -111,9 +111,9 @@ posCoeffYLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-posCoeffYArray():Float64Array|null {
+posCoeffYArray():Float64Array {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+  return new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset));
 }
 
 /**
@@ -130,9 +130,9 @@ posCoeffZLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-posCoeffZArray():Float64Array|null {
+posCoeffZArray():Float64Array {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+  return new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset));
 }
 
 /**

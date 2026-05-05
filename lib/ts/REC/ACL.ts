@@ -36,31 +36,31 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 /**
  * Unique identifier for this grant
  */
-GRANT_ID():string|null
-GRANT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-GRANT_ID(optionalEncoding?:any):string|Uint8Array|null {
+GRANT_ID():string
+GRANT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+GRANT_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
  * ID of the listing this grant applies to
  */
-LISTING_ID():string|null
-LISTING_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LISTING_ID(optionalEncoding?:any):string|Uint8Array|null {
+LISTING_ID():string
+LISTING_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+LISTING_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**
  * Peer ID of the buyer/grantee
  */
-BUYER_PEER_ID():string|null
-BUYER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-BUYER_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
+BUYER_PEER_ID():string
+BUYER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+BUYER_PEER_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
 /**

@@ -12,8 +12,8 @@ export declare class PLGPortManifest implements flatbuffers.IUnpackableObject<PL
     /**
      * Stable port identifier within the method.
      */
-    PORT_ID(): string | null;
-    PORT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    PORT_ID(): string;
+    PORT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
      * Human-readable name for UIs.
      */

@@ -32,46 +32,44 @@ public struct SPP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case VERSION = 4
-    case PACKET_TYPE = 6
-    case SEC_HDR_FLAG = 8
-    case APID = 10
-    case SEQUENCE_FLAGS = 12
-    case SEQUENCE_COUNT = 14
-    case DATA_LENGTH = 16
-    case DATA = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let VERSION: VOffset = 4
+    static let PACKET_TYPE: VOffset = 6
+    static let SEC_HDR_FLAG: VOffset = 8
+    static let APID: VOffset = 10
+    static let SEQUENCE_FLAGS: VOffset = 12
+    static let SEQUENCE_COUNT: VOffset = 14
+    static let DATA_LENGTH: VOffset = 16
+    static let DATA: VOffset = 18
   }
 
   ///  Packet version number
-  public var VERSION: UInt8 { let o = _accessor.offset(VTOFFSET.VERSION.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var VERSION: UInt8 { let o = _accessor.offset(VT.VERSION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Packet type (TM or TC)
-  public var PACKET_TYPE: packetKind { let o = _accessor.offset(VTOFFSET.PACKET_TYPE.v); return o == 0 ? .tm : packetKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .tm }
+  public var PACKET_TYPE: packetKind { let o = _accessor.offset(VT.PACKET_TYPE); return o == 0 ? .tm : packetKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .tm }
   ///  Secondary header flag
-  public var SEC_HDR_FLAG: Bool { let o = _accessor.offset(VTOFFSET.SEC_HDR_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SEC_HDR_FLAG: Bool { let o = _accessor.offset(VT.SEC_HDR_FLAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Application Process Identifier
-  public var APID: UInt16 { let o = _accessor.offset(VTOFFSET.APID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var APID: UInt16 { let o = _accessor.offset(VT.APID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Sequence flags (00=continuation, 01=first, 10=last, 11=standalone)
-  public var SEQUENCE_FLAGS: UInt8 { let o = _accessor.offset(VTOFFSET.SEQUENCE_FLAGS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var SEQUENCE_FLAGS: UInt8 { let o = _accessor.offset(VT.SEQUENCE_FLAGS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Sequence count
-  public var SEQUENCE_COUNT: UInt16 { let o = _accessor.offset(VTOFFSET.SEQUENCE_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SEQUENCE_COUNT: UInt16 { let o = _accessor.offset(VT.SEQUENCE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Data length minus 1
-  public var DATA_LENGTH: UInt16 { let o = _accessor.offset(VTOFFSET.DATA_LENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var DATA_LENGTH: UInt16 { let o = _accessor.offset(VT.DATA_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Packet data zone
-  public var DATA: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.DATA.v, byteSize: 1) }
-  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DATA.v, body: body) }
+  public var DATA: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.DATA, byteSize: 1) }
+  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DATA, body: body) }
   public static func startSPP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(VERSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VTOFFSET.VERSION.p) }
-  public static func add(PACKET_TYPE: packetKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PACKET_TYPE.rawValue, def: 0, at: VTOFFSET.PACKET_TYPE.p) }
+  public static func add(VERSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VT.VERSION) }
+  public static func add(PACKET_TYPE: packetKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PACKET_TYPE.rawValue, def: 0, at: VT.PACKET_TYPE) }
   public static func add(SEC_HDR_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEC_HDR_FLAG, def: false,
-   at: VTOFFSET.SEC_HDR_FLAG.p) }
-  public static func add(APID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APID, def: 0, at: VTOFFSET.APID.p) }
-  public static func add(SEQUENCE_FLAGS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEQUENCE_FLAGS, def: 0, at: VTOFFSET.SEQUENCE_FLAGS.p) }
-  public static func add(SEQUENCE_COUNT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEQUENCE_COUNT, def: 0, at: VTOFFSET.SEQUENCE_COUNT.p) }
-  public static func add(DATA_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_LENGTH, def: 0, at: VTOFFSET.DATA_LENGTH.p) }
-  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VTOFFSET.DATA.p) }
+   at: VT.SEC_HDR_FLAG) }
+  public static func add(APID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APID, def: 0, at: VT.APID) }
+  public static func add(SEQUENCE_FLAGS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEQUENCE_FLAGS, def: 0, at: VT.SEQUENCE_FLAGS) }
+  public static func add(SEQUENCE_COUNT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEQUENCE_COUNT, def: 0, at: VT.SEQUENCE_COUNT) }
+  public static func add(DATA_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_LENGTH, def: 0, at: VT.DATA_LENGTH) }
+  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VT.DATA) }
   public static func endSPP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSPP(
     _ fbb: inout FlatBufferBuilder,
@@ -98,14 +96,14 @@ public struct SPP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.PACKET_TYPE.p, fieldName: "PACKET_TYPE", required: false, type: packetKind.self)
-    try _v.visit(field: VTOFFSET.SEC_HDR_FLAG.p, fieldName: "SEC_HDR_FLAG", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.APID.p, fieldName: "APID", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.SEQUENCE_FLAGS.p, fieldName: "SEQUENCE_FLAGS", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.SEQUENCE_COUNT.p, fieldName: "SEQUENCE_COUNT", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.DATA_LENGTH.p, fieldName: "DATA_LENGTH", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.DATA.p, fieldName: "DATA", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: UInt8.self)
+    try _v.visit(field: VT.PACKET_TYPE, fieldName: "PACKET_TYPE", required: false, type: packetKind.self)
+    try _v.visit(field: VT.SEC_HDR_FLAG, fieldName: "SEC_HDR_FLAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.APID, fieldName: "APID", required: false, type: UInt16.self)
+    try _v.visit(field: VT.SEQUENCE_FLAGS, fieldName: "SEQUENCE_FLAGS", required: false, type: UInt8.self)
+    try _v.visit(field: VT.SEQUENCE_COUNT, fieldName: "SEQUENCE_COUNT", required: false, type: UInt16.self)
+    try _v.visit(field: VT.DATA_LENGTH, fieldName: "DATA_LENGTH", required: false, type: UInt16.self)
+    try _v.visit(field: VT.DATA, fieldName: "DATA", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

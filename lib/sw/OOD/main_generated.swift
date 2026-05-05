@@ -20,137 +20,135 @@ public struct OOD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ID = 4
-    case LAST_OB_TIME = 6
-    case VISMAG = 8
-    case VISMAG_MIN = 10
-    case VISMAG_MAX = 12
-    case VISMAG_MEAN = 14
-    case RCS = 16
-    case RCS_MIN = 18
-    case RCS_MAX = 20
-    case RCS_MEAN = 22
-    case BOL_DELTA_V = 24
-    case MAX_DELTA_V = 26
-    case DELTA_VUNC = 28
-    case EST_DELTA_VDURATION = 30
-    case NUM_MISSION = 32
-    case MISSION_TYPES = 34
-    case BUS_TYPE = 36
-    case GEO_SLOT = 38
-    case DRIFT_RATE = 40
-    case DRY_MASS = 42
-    case ADDITIONAL_MASS = 44
-    case LAUNCH_MASS_MIN = 46
-    case LAUNCH_MASS = 48
-    case LAUNCH_MASS_MAX = 50
-    case BOL_FUEL_MASS = 52
-    case CURRENT_MASS = 54
-    case TOTAL_MASS_UNC = 56
-    case SOLAR_ARRAY_AREA = 58
-    case MANEUVERABLE = 60
-    case FUEL_REMAINING = 62
-    case CROSS_SECTION = 64
-    case BUS_CROSS_SECTION = 66
-    case MAX_RADIUS = 68
-    case COLA_RADIUS = 70
-    case ADEPT_RADIUS = 72
-    case NUM_DEPLOYABLE = 74
-    case DEP_NAMES = 76
-    case DEP_EST_MASSES = 78
-    case DEP_MASS_UNCS = 80
-    case LAST_OB_SOURCE = 82
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ID: VOffset = 4
+    static let LAST_OB_TIME: VOffset = 6
+    static let VISMAG: VOffset = 8
+    static let VISMAG_MIN: VOffset = 10
+    static let VISMAG_MAX: VOffset = 12
+    static let VISMAG_MEAN: VOffset = 14
+    static let RCS: VOffset = 16
+    static let RCS_MIN: VOffset = 18
+    static let RCS_MAX: VOffset = 20
+    static let RCS_MEAN: VOffset = 22
+    static let BOL_DELTA_V: VOffset = 24
+    static let MAX_DELTA_V: VOffset = 26
+    static let DELTA_VUNC: VOffset = 28
+    static let EST_DELTA_VDURATION: VOffset = 30
+    static let NUM_MISSION: VOffset = 32
+    static let MISSION_TYPES: VOffset = 34
+    static let BUS_TYPE: VOffset = 36
+    static let GEO_SLOT: VOffset = 38
+    static let DRIFT_RATE: VOffset = 40
+    static let DRY_MASS: VOffset = 42
+    static let ADDITIONAL_MASS: VOffset = 44
+    static let LAUNCH_MASS_MIN: VOffset = 46
+    static let LAUNCH_MASS: VOffset = 48
+    static let LAUNCH_MASS_MAX: VOffset = 50
+    static let BOL_FUEL_MASS: VOffset = 52
+    static let CURRENT_MASS: VOffset = 54
+    static let TOTAL_MASS_UNC: VOffset = 56
+    static let SOLAR_ARRAY_AREA: VOffset = 58
+    static let MANEUVERABLE: VOffset = 60
+    static let FUEL_REMAINING: VOffset = 62
+    static let CROSS_SECTION: VOffset = 64
+    static let BUS_CROSS_SECTION: VOffset = 66
+    static let MAX_RADIUS: VOffset = 68
+    static let COLA_RADIUS: VOffset = 70
+    static let ADEPT_RADIUS: VOffset = 72
+    static let NUM_DEPLOYABLE: VOffset = 74
+    static let DEP_NAMES: VOffset = 76
+    static let DEP_EST_MASSES: VOffset = 78
+    static let DEP_MASS_UNCS: VOffset = 80
+    static let LAST_OB_SOURCE: VOffset = 82
   }
 
-  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
-  public var LAST_OB_TIME: String? { let o = _accessor.offset(VTOFFSET.LAST_OB_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAST_OB_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAST_OB_TIME.v) }
-  public var VISMAG: Double { let o = _accessor.offset(VTOFFSET.VISMAG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VISMAG_MIN: Double { let o = _accessor.offset(VTOFFSET.VISMAG_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VISMAG_MAX: Double { let o = _accessor.offset(VTOFFSET.VISMAG_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var VISMAG_MEAN: Double { let o = _accessor.offset(VTOFFSET.VISMAG_MEAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RCS: Double { let o = _accessor.offset(VTOFFSET.RCS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RCS_MIN: Double { let o = _accessor.offset(VTOFFSET.RCS_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RCS_MAX: Double { let o = _accessor.offset(VTOFFSET.RCS_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RCS_MEAN: Double { let o = _accessor.offset(VTOFFSET.RCS_MEAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var BOL_DELTA_V: Double { let o = _accessor.offset(VTOFFSET.BOL_DELTA_V.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MAX_DELTA_V: Double { let o = _accessor.offset(VTOFFSET.MAX_DELTA_V.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var DELTA_VUNC: Double { let o = _accessor.offset(VTOFFSET.DELTA_VUNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var EST_DELTA_VDURATION: Double { let o = _accessor.offset(VTOFFSET.EST_DELTA_VDURATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var NUM_MISSION: Int32 { let o = _accessor.offset(VTOFFSET.NUM_MISSION.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var MISSION_TYPES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MISSION_TYPES.v, byteSize: 4) }
-  public var BUS_TYPE: String? { let o = _accessor.offset(VTOFFSET.BUS_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BUS_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BUS_TYPE.v) }
-  public var GEO_SLOT: Double { let o = _accessor.offset(VTOFFSET.GEO_SLOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var DRIFT_RATE: Double { let o = _accessor.offset(VTOFFSET.DRIFT_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var DRY_MASS: Double { let o = _accessor.offset(VTOFFSET.DRY_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ADDITIONAL_MASS: Double { let o = _accessor.offset(VTOFFSET.ADDITIONAL_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var LAUNCH_MASS_MIN: Double { let o = _accessor.offset(VTOFFSET.LAUNCH_MASS_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var LAUNCH_MASS: Double { let o = _accessor.offset(VTOFFSET.LAUNCH_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var LAUNCH_MASS_MAX: Double { let o = _accessor.offset(VTOFFSET.LAUNCH_MASS_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var BOL_FUEL_MASS: Double { let o = _accessor.offset(VTOFFSET.BOL_FUEL_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CURRENT_MASS: Double { let o = _accessor.offset(VTOFFSET.CURRENT_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var TOTAL_MASS_UNC: Double { let o = _accessor.offset(VTOFFSET.TOTAL_MASS_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SOLAR_ARRAY_AREA: Double { let o = _accessor.offset(VTOFFSET.SOLAR_ARRAY_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MANEUVERABLE: Bool { let o = _accessor.offset(VTOFFSET.MANEUVERABLE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var FUEL_REMAINING: Double { let o = _accessor.offset(VTOFFSET.FUEL_REMAINING.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CROSS_SECTION: Double { let o = _accessor.offset(VTOFFSET.CROSS_SECTION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var BUS_CROSS_SECTION: Double { let o = _accessor.offset(VTOFFSET.BUS_CROSS_SECTION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MAX_RADIUS: Double { let o = _accessor.offset(VTOFFSET.MAX_RADIUS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var COLA_RADIUS: Double { let o = _accessor.offset(VTOFFSET.COLA_RADIUS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ADEPT_RADIUS: Double { let o = _accessor.offset(VTOFFSET.ADEPT_RADIUS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var NUM_DEPLOYABLE: Int32 { let o = _accessor.offset(VTOFFSET.NUM_DEPLOYABLE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var DEP_NAMES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.DEP_NAMES.v, byteSize: 4) }
-  public var DEP_EST_MASSES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.DEP_EST_MASSES.v, byteSize: 4) }
-  public var DEP_MASS_UNCS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.DEP_MASS_UNCS.v, byteSize: 4) }
-  public var LAST_OB_SOURCE: String? { let o = _accessor.offset(VTOFFSET.LAST_OB_SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAST_OB_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAST_OB_SOURCE.v) }
+  public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
+  public var LAST_OB_TIME: String? { let o = _accessor.offset(VT.LAST_OB_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_OB_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAST_OB_TIME) }
+  public var VISMAG: Double { let o = _accessor.offset(VT.VISMAG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VISMAG_MIN: Double { let o = _accessor.offset(VT.VISMAG_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VISMAG_MAX: Double { let o = _accessor.offset(VT.VISMAG_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VISMAG_MEAN: Double { let o = _accessor.offset(VT.VISMAG_MEAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RCS: Double { let o = _accessor.offset(VT.RCS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RCS_MIN: Double { let o = _accessor.offset(VT.RCS_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RCS_MAX: Double { let o = _accessor.offset(VT.RCS_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RCS_MEAN: Double { let o = _accessor.offset(VT.RCS_MEAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BOL_DELTA_V: Double { let o = _accessor.offset(VT.BOL_DELTA_V); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_DELTA_V: Double { let o = _accessor.offset(VT.MAX_DELTA_V); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DELTA_VUNC: Double { let o = _accessor.offset(VT.DELTA_VUNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var EST_DELTA_VDURATION: Double { let o = _accessor.offset(VT.EST_DELTA_VDURATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NUM_MISSION: Int32 { let o = _accessor.offset(VT.NUM_MISSION); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var MISSION_TYPES: FlatbufferVector<String?> { return _accessor.vector(at: VT.MISSION_TYPES, byteSize: 4) }
+  public var BUS_TYPE: String? { let o = _accessor.offset(VT.BUS_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BUS_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BUS_TYPE) }
+  public var GEO_SLOT: Double { let o = _accessor.offset(VT.GEO_SLOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DRIFT_RATE: Double { let o = _accessor.offset(VT.DRIFT_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DRY_MASS: Double { let o = _accessor.offset(VT.DRY_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ADDITIONAL_MASS: Double { let o = _accessor.offset(VT.ADDITIONAL_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LAUNCH_MASS_MIN: Double { let o = _accessor.offset(VT.LAUNCH_MASS_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LAUNCH_MASS: Double { let o = _accessor.offset(VT.LAUNCH_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LAUNCH_MASS_MAX: Double { let o = _accessor.offset(VT.LAUNCH_MASS_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BOL_FUEL_MASS: Double { let o = _accessor.offset(VT.BOL_FUEL_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CURRENT_MASS: Double { let o = _accessor.offset(VT.CURRENT_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TOTAL_MASS_UNC: Double { let o = _accessor.offset(VT.TOTAL_MASS_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SOLAR_ARRAY_AREA: Double { let o = _accessor.offset(VT.SOLAR_ARRAY_AREA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MANEUVERABLE: Bool { let o = _accessor.offset(VT.MANEUVERABLE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var FUEL_REMAINING: Double { let o = _accessor.offset(VT.FUEL_REMAINING); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CROSS_SECTION: Double { let o = _accessor.offset(VT.CROSS_SECTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BUS_CROSS_SECTION: Double { let o = _accessor.offset(VT.BUS_CROSS_SECTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_RADIUS: Double { let o = _accessor.offset(VT.MAX_RADIUS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COLA_RADIUS: Double { let o = _accessor.offset(VT.COLA_RADIUS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ADEPT_RADIUS: Double { let o = _accessor.offset(VT.ADEPT_RADIUS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NUM_DEPLOYABLE: Int32 { let o = _accessor.offset(VT.NUM_DEPLOYABLE); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var DEP_NAMES: FlatbufferVector<String?> { return _accessor.vector(at: VT.DEP_NAMES, byteSize: 4) }
+  public var DEP_EST_MASSES: FlatbufferVector<String?> { return _accessor.vector(at: VT.DEP_EST_MASSES, byteSize: 4) }
+  public var DEP_MASS_UNCS: FlatbufferVector<String?> { return _accessor.vector(at: VT.DEP_MASS_UNCS, byteSize: 4) }
+  public var LAST_OB_SOURCE: String? { let o = _accessor.offset(VT.LAST_OB_SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_OB_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAST_OB_SOURCE) }
   public static func startOOD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 40) }
-  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(LAST_OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_OB_TIME, at: VTOFFSET.LAST_OB_TIME.p) }
-  public static func add(VISMAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISMAG, def: 0.0, at: VTOFFSET.VISMAG.p) }
-  public static func add(VISMAG_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISMAG_MIN, def: 0.0, at: VTOFFSET.VISMAG_MIN.p) }
-  public static func add(VISMAG_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISMAG_MAX, def: 0.0, at: VTOFFSET.VISMAG_MAX.p) }
-  public static func add(VISMAG_MEAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISMAG_MEAN, def: 0.0, at: VTOFFSET.VISMAG_MEAN.p) }
-  public static func add(RCS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS, def: 0.0, at: VTOFFSET.RCS.p) }
-  public static func add(RCS_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS_MIN, def: 0.0, at: VTOFFSET.RCS_MIN.p) }
-  public static func add(RCS_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS_MAX, def: 0.0, at: VTOFFSET.RCS_MAX.p) }
-  public static func add(RCS_MEAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS_MEAN, def: 0.0, at: VTOFFSET.RCS_MEAN.p) }
-  public static func add(BOL_DELTA_V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOL_DELTA_V, def: 0.0, at: VTOFFSET.BOL_DELTA_V.p) }
-  public static func add(MAX_DELTA_V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_DELTA_V, def: 0.0, at: VTOFFSET.MAX_DELTA_V.p) }
-  public static func add(DELTA_VUNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_VUNC, def: 0.0, at: VTOFFSET.DELTA_VUNC.p) }
-  public static func add(EST_DELTA_VDURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EST_DELTA_VDURATION, def: 0.0, at: VTOFFSET.EST_DELTA_VDURATION.p) }
-  public static func add(NUM_MISSION: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_MISSION, def: 0, at: VTOFFSET.NUM_MISSION.p) }
-  public static func addVectorOf(MISSION_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION_TYPES, at: VTOFFSET.MISSION_TYPES.p) }
-  public static func add(BUS_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUS_TYPE, at: VTOFFSET.BUS_TYPE.p) }
-  public static func add(GEO_SLOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEO_SLOT, def: 0.0, at: VTOFFSET.GEO_SLOT.p) }
-  public static func add(DRIFT_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRIFT_RATE, def: 0.0, at: VTOFFSET.DRIFT_RATE.p) }
-  public static func add(DRY_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRY_MASS, def: 0.0, at: VTOFFSET.DRY_MASS.p) }
-  public static func add(ADDITIONAL_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ADDITIONAL_MASS, def: 0.0, at: VTOFFSET.ADDITIONAL_MASS.p) }
-  public static func add(LAUNCH_MASS_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_MASS_MIN, def: 0.0, at: VTOFFSET.LAUNCH_MASS_MIN.p) }
-  public static func add(LAUNCH_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_MASS, def: 0.0, at: VTOFFSET.LAUNCH_MASS.p) }
-  public static func add(LAUNCH_MASS_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_MASS_MAX, def: 0.0, at: VTOFFSET.LAUNCH_MASS_MAX.p) }
-  public static func add(BOL_FUEL_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOL_FUEL_MASS, def: 0.0, at: VTOFFSET.BOL_FUEL_MASS.p) }
-  public static func add(CURRENT_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CURRENT_MASS, def: 0.0, at: VTOFFSET.CURRENT_MASS.p) }
-  public static func add(TOTAL_MASS_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_MASS_UNC, def: 0.0, at: VTOFFSET.TOTAL_MASS_UNC.p) }
-  public static func add(SOLAR_ARRAY_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_ARRAY_AREA, def: 0.0, at: VTOFFSET.SOLAR_ARRAY_AREA.p) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(LAST_OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_OB_TIME, at: VT.LAST_OB_TIME) }
+  public static func add(VISMAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISMAG, def: 0.0, at: VT.VISMAG) }
+  public static func add(VISMAG_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISMAG_MIN, def: 0.0, at: VT.VISMAG_MIN) }
+  public static func add(VISMAG_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISMAG_MAX, def: 0.0, at: VT.VISMAG_MAX) }
+  public static func add(VISMAG_MEAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VISMAG_MEAN, def: 0.0, at: VT.VISMAG_MEAN) }
+  public static func add(RCS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS, def: 0.0, at: VT.RCS) }
+  public static func add(RCS_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS_MIN, def: 0.0, at: VT.RCS_MIN) }
+  public static func add(RCS_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS_MAX, def: 0.0, at: VT.RCS_MAX) }
+  public static func add(RCS_MEAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS_MEAN, def: 0.0, at: VT.RCS_MEAN) }
+  public static func add(BOL_DELTA_V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOL_DELTA_V, def: 0.0, at: VT.BOL_DELTA_V) }
+  public static func add(MAX_DELTA_V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_DELTA_V, def: 0.0, at: VT.MAX_DELTA_V) }
+  public static func add(DELTA_VUNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_VUNC, def: 0.0, at: VT.DELTA_VUNC) }
+  public static func add(EST_DELTA_VDURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EST_DELTA_VDURATION, def: 0.0, at: VT.EST_DELTA_VDURATION) }
+  public static func add(NUM_MISSION: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_MISSION, def: 0, at: VT.NUM_MISSION) }
+  public static func addVectorOf(MISSION_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION_TYPES, at: VT.MISSION_TYPES) }
+  public static func add(BUS_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUS_TYPE, at: VT.BUS_TYPE) }
+  public static func add(GEO_SLOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEO_SLOT, def: 0.0, at: VT.GEO_SLOT) }
+  public static func add(DRIFT_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRIFT_RATE, def: 0.0, at: VT.DRIFT_RATE) }
+  public static func add(DRY_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRY_MASS, def: 0.0, at: VT.DRY_MASS) }
+  public static func add(ADDITIONAL_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ADDITIONAL_MASS, def: 0.0, at: VT.ADDITIONAL_MASS) }
+  public static func add(LAUNCH_MASS_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_MASS_MIN, def: 0.0, at: VT.LAUNCH_MASS_MIN) }
+  public static func add(LAUNCH_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_MASS, def: 0.0, at: VT.LAUNCH_MASS) }
+  public static func add(LAUNCH_MASS_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_MASS_MAX, def: 0.0, at: VT.LAUNCH_MASS_MAX) }
+  public static func add(BOL_FUEL_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOL_FUEL_MASS, def: 0.0, at: VT.BOL_FUEL_MASS) }
+  public static func add(CURRENT_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CURRENT_MASS, def: 0.0, at: VT.CURRENT_MASS) }
+  public static func add(TOTAL_MASS_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_MASS_UNC, def: 0.0, at: VT.TOTAL_MASS_UNC) }
+  public static func add(SOLAR_ARRAY_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_ARRAY_AREA, def: 0.0, at: VT.SOLAR_ARRAY_AREA) }
   public static func add(MANEUVERABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MANEUVERABLE, def: false,
-   at: VTOFFSET.MANEUVERABLE.p) }
-  public static func add(FUEL_REMAINING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FUEL_REMAINING, def: 0.0, at: VTOFFSET.FUEL_REMAINING.p) }
-  public static func add(CROSS_SECTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CROSS_SECTION, def: 0.0, at: VTOFFSET.CROSS_SECTION.p) }
-  public static func add(BUS_CROSS_SECTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BUS_CROSS_SECTION, def: 0.0, at: VTOFFSET.BUS_CROSS_SECTION.p) }
-  public static func add(MAX_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RADIUS, def: 0.0, at: VTOFFSET.MAX_RADIUS.p) }
-  public static func add(COLA_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLA_RADIUS, def: 0.0, at: VTOFFSET.COLA_RADIUS.p) }
-  public static func add(ADEPT_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ADEPT_RADIUS, def: 0.0, at: VTOFFSET.ADEPT_RADIUS.p) }
-  public static func add(NUM_DEPLOYABLE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_DEPLOYABLE, def: 0, at: VTOFFSET.NUM_DEPLOYABLE.p) }
-  public static func addVectorOf(DEP_NAMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEP_NAMES, at: VTOFFSET.DEP_NAMES.p) }
-  public static func addVectorOf(DEP_EST_MASSES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEP_EST_MASSES, at: VTOFFSET.DEP_EST_MASSES.p) }
-  public static func addVectorOf(DEP_MASS_UNCS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEP_MASS_UNCS, at: VTOFFSET.DEP_MASS_UNCS.p) }
-  public static func add(LAST_OB_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_OB_SOURCE, at: VTOFFSET.LAST_OB_SOURCE.p) }
+   at: VT.MANEUVERABLE) }
+  public static func add(FUEL_REMAINING: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FUEL_REMAINING, def: 0.0, at: VT.FUEL_REMAINING) }
+  public static func add(CROSS_SECTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CROSS_SECTION, def: 0.0, at: VT.CROSS_SECTION) }
+  public static func add(BUS_CROSS_SECTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BUS_CROSS_SECTION, def: 0.0, at: VT.BUS_CROSS_SECTION) }
+  public static func add(MAX_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RADIUS, def: 0.0, at: VT.MAX_RADIUS) }
+  public static func add(COLA_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLA_RADIUS, def: 0.0, at: VT.COLA_RADIUS) }
+  public static func add(ADEPT_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ADEPT_RADIUS, def: 0.0, at: VT.ADEPT_RADIUS) }
+  public static func add(NUM_DEPLOYABLE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_DEPLOYABLE, def: 0, at: VT.NUM_DEPLOYABLE) }
+  public static func addVectorOf(DEP_NAMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEP_NAMES, at: VT.DEP_NAMES) }
+  public static func addVectorOf(DEP_EST_MASSES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEP_EST_MASSES, at: VT.DEP_EST_MASSES) }
+  public static func addVectorOf(DEP_MASS_UNCS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEP_MASS_UNCS, at: VT.DEP_MASS_UNCS) }
+  public static func add(LAST_OB_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_OB_SOURCE, at: VT.LAST_OB_SOURCE) }
   public static func endOOD(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOOD(
     _ fbb: inout FlatBufferBuilder,
@@ -241,46 +239,46 @@ public struct OOD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAST_OB_TIME.p, fieldName: "LAST_OB_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VISMAG.p, fieldName: "VISMAG", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VISMAG_MIN.p, fieldName: "VISMAG_MIN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VISMAG_MAX.p, fieldName: "VISMAG_MAX", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VISMAG_MEAN.p, fieldName: "VISMAG_MEAN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RCS.p, fieldName: "RCS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RCS_MIN.p, fieldName: "RCS_MIN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RCS_MAX.p, fieldName: "RCS_MAX", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RCS_MEAN.p, fieldName: "RCS_MEAN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BOL_DELTA_V.p, fieldName: "BOL_DELTA_V", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_DELTA_V.p, fieldName: "MAX_DELTA_V", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_VUNC.p, fieldName: "DELTA_VUNC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.EST_DELTA_VDURATION.p, fieldName: "EST_DELTA_VDURATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NUM_MISSION.p, fieldName: "NUM_MISSION", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.MISSION_TYPES.p, fieldName: "MISSION_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.BUS_TYPE.p, fieldName: "BUS_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.GEO_SLOT.p, fieldName: "GEO_SLOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DRIFT_RATE.p, fieldName: "DRIFT_RATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DRY_MASS.p, fieldName: "DRY_MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ADDITIONAL_MASS.p, fieldName: "ADDITIONAL_MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_MASS_MIN.p, fieldName: "LAUNCH_MASS_MIN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_MASS.p, fieldName: "LAUNCH_MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_MASS_MAX.p, fieldName: "LAUNCH_MASS_MAX", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BOL_FUEL_MASS.p, fieldName: "BOL_FUEL_MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CURRENT_MASS.p, fieldName: "CURRENT_MASS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TOTAL_MASS_UNC.p, fieldName: "TOTAL_MASS_UNC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SOLAR_ARRAY_AREA.p, fieldName: "SOLAR_ARRAY_AREA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MANEUVERABLE.p, fieldName: "MANEUVERABLE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.FUEL_REMAINING.p, fieldName: "FUEL_REMAINING", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CROSS_SECTION.p, fieldName: "CROSS_SECTION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BUS_CROSS_SECTION.p, fieldName: "BUS_CROSS_SECTION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_RADIUS.p, fieldName: "MAX_RADIUS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.COLA_RADIUS.p, fieldName: "COLA_RADIUS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ADEPT_RADIUS.p, fieldName: "ADEPT_RADIUS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NUM_DEPLOYABLE.p, fieldName: "NUM_DEPLOYABLE", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.DEP_NAMES.p, fieldName: "DEP_NAMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.DEP_EST_MASSES.p, fieldName: "DEP_EST_MASSES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.DEP_MASS_UNCS.p, fieldName: "DEP_MASS_UNCS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.LAST_OB_SOURCE.p, fieldName: "LAST_OB_SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LAST_OB_TIME, fieldName: "LAST_OB_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VISMAG, fieldName: "VISMAG", required: false, type: Double.self)
+    try _v.visit(field: VT.VISMAG_MIN, fieldName: "VISMAG_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.VISMAG_MAX, fieldName: "VISMAG_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.VISMAG_MEAN, fieldName: "VISMAG_MEAN", required: false, type: Double.self)
+    try _v.visit(field: VT.RCS, fieldName: "RCS", required: false, type: Double.self)
+    try _v.visit(field: VT.RCS_MIN, fieldName: "RCS_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.RCS_MAX, fieldName: "RCS_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.RCS_MEAN, fieldName: "RCS_MEAN", required: false, type: Double.self)
+    try _v.visit(field: VT.BOL_DELTA_V, fieldName: "BOL_DELTA_V", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_DELTA_V, fieldName: "MAX_DELTA_V", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_VUNC, fieldName: "DELTA_VUNC", required: false, type: Double.self)
+    try _v.visit(field: VT.EST_DELTA_VDURATION, fieldName: "EST_DELTA_VDURATION", required: false, type: Double.self)
+    try _v.visit(field: VT.NUM_MISSION, fieldName: "NUM_MISSION", required: false, type: Int32.self)
+    try _v.visit(field: VT.MISSION_TYPES, fieldName: "MISSION_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.BUS_TYPE, fieldName: "BUS_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GEO_SLOT, fieldName: "GEO_SLOT", required: false, type: Double.self)
+    try _v.visit(field: VT.DRIFT_RATE, fieldName: "DRIFT_RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.DRY_MASS, fieldName: "DRY_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.ADDITIONAL_MASS, fieldName: "ADDITIONAL_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.LAUNCH_MASS_MIN, fieldName: "LAUNCH_MASS_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.LAUNCH_MASS, fieldName: "LAUNCH_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.LAUNCH_MASS_MAX, fieldName: "LAUNCH_MASS_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.BOL_FUEL_MASS, fieldName: "BOL_FUEL_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.CURRENT_MASS, fieldName: "CURRENT_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.TOTAL_MASS_UNC, fieldName: "TOTAL_MASS_UNC", required: false, type: Double.self)
+    try _v.visit(field: VT.SOLAR_ARRAY_AREA, fieldName: "SOLAR_ARRAY_AREA", required: false, type: Double.self)
+    try _v.visit(field: VT.MANEUVERABLE, fieldName: "MANEUVERABLE", required: false, type: Bool.self)
+    try _v.visit(field: VT.FUEL_REMAINING, fieldName: "FUEL_REMAINING", required: false, type: Double.self)
+    try _v.visit(field: VT.CROSS_SECTION, fieldName: "CROSS_SECTION", required: false, type: Double.self)
+    try _v.visit(field: VT.BUS_CROSS_SECTION, fieldName: "BUS_CROSS_SECTION", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_RADIUS, fieldName: "MAX_RADIUS", required: false, type: Double.self)
+    try _v.visit(field: VT.COLA_RADIUS, fieldName: "COLA_RADIUS", required: false, type: Double.self)
+    try _v.visit(field: VT.ADEPT_RADIUS, fieldName: "ADEPT_RADIUS", required: false, type: Double.self)
+    try _v.visit(field: VT.NUM_DEPLOYABLE, fieldName: "NUM_DEPLOYABLE", required: false, type: Int32.self)
+    try _v.visit(field: VT.DEP_NAMES, fieldName: "DEP_NAMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.DEP_EST_MASSES, fieldName: "DEP_EST_MASSES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.DEP_MASS_UNCS, fieldName: "DEP_MASS_UNCS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.LAST_OB_SOURCE, fieldName: "LAST_OB_SOURCE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

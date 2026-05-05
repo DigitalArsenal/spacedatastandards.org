@@ -39,27 +39,25 @@ public struct GPXLink: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case HREF = 4
-    case TEXT = 6
-    case TYPE = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let HREF: VOffset = 4
+    static let TEXT: VOffset = 6
+    static let TYPE: VOffset = 8
   }
 
   ///  URL
-  public var HREF: String? { let o = _accessor.offset(VTOFFSET.HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HREF.v) }
+  public var HREF: String? { let o = _accessor.offset(VT.HREF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HREF) }
   ///  Link text
-  public var TEXT: String? { let o = _accessor.offset(VTOFFSET.TEXT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TEXT.v) }
+  public var TEXT: String? { let o = _accessor.offset(VT.TEXT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TEXT) }
   ///  MIME type
-  public var TYPE: String? { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE.v) }
+  public var TYPE: String? { let o = _accessor.offset(VT.TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TYPE) }
   public static func startGPXLink(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HREF, at: VTOFFSET.HREF.p) }
-  public static func add(TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TEXT, at: VTOFFSET.TEXT.p) }
-  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VTOFFSET.TYPE.p) }
+  public static func add(HREF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HREF, at: VT.HREF) }
+  public static func add(TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TEXT, at: VT.TEXT) }
+  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VT.TYPE) }
   public static func endGPXLink(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGPXLink(
     _ fbb: inout FlatBufferBuilder,
@@ -76,9 +74,9 @@ public struct GPXLink: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.HREF.p, fieldName: "HREF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TEXT.p, fieldName: "TEXT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HREF, fieldName: "HREF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TEXT, fieldName: "TEXT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -95,107 +93,105 @@ public struct GPXWaypoint: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case LATITUDE = 4
-    case LONGITUDE = 6
-    case ELEVATION = 8
-    case TIME = 10
-    case MAGVAR = 12
-    case GEOID_HEIGHT = 14
-    case NAME = 16
-    case COMMENT = 18
-    case DESCRIPTION = 20
-    case SOURCE = 22
-    case LINKS = 24
-    case SYMBOL = 26
-    case TYPE = 28
-    case FIX = 30
-    case SAT = 32
-    case HDOP = 34
-    case VDOP = 36
-    case PDOP = 38
-    case AGE_OF_DGPS_DATA = 40
-    case DGPS_ID = 42
-    case SPEED = 44
-    case COURSE = 46
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let LATITUDE: VOffset = 4
+    static let LONGITUDE: VOffset = 6
+    static let ELEVATION: VOffset = 8
+    static let TIME: VOffset = 10
+    static let MAGVAR: VOffset = 12
+    static let GEOID_HEIGHT: VOffset = 14
+    static let NAME: VOffset = 16
+    static let COMMENT: VOffset = 18
+    static let DESCRIPTION: VOffset = 20
+    static let SOURCE: VOffset = 22
+    static let LINKS: VOffset = 24
+    static let SYMBOL: VOffset = 26
+    static let TYPE: VOffset = 28
+    static let FIX: VOffset = 30
+    static let SAT: VOffset = 32
+    static let HDOP: VOffset = 34
+    static let VDOP: VOffset = 36
+    static let PDOP: VOffset = 38
+    static let AGE_OF_DGPS_DATA: VOffset = 40
+    static let DGPS_ID: VOffset = 42
+    static let SPEED: VOffset = 44
+    static let COURSE: VOffset = 46
   }
 
   ///  Latitude in decimal degrees (WGS84)
-  public var LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LATITUDE: Double { let o = _accessor.offset(VT.LATITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Longitude in decimal degrees (WGS84)
-  public var LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LONGITUDE: Double { let o = _accessor.offset(VT.LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Elevation in meters above WGS84 ellipsoid
-  public var ELEVATION: Double { let o = _accessor.offset(VTOFFSET.ELEVATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ELEVATION: Double { let o = _accessor.offset(VT.ELEVATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  UTC timestamp (ISO 8601)
-  public var TIME: String? { let o = _accessor.offset(VTOFFSET.TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIME.v) }
+  public var TIME: String? { let o = _accessor.offset(VT.TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME) }
   ///  Magnetic variation in degrees
-  public var MAGVAR: Double { let o = _accessor.offset(VTOFFSET.MAGVAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAGVAR: Double { let o = _accessor.offset(VT.MAGVAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Height of geoid above WGS84 ellipsoid in meters
-  public var GEOID_HEIGHT: Double { let o = _accessor.offset(VTOFFSET.GEOID_HEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var GEOID_HEIGHT: Double { let o = _accessor.offset(VT.GEOID_HEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Waypoint name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Comment
-  public var COMMENT: String? { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMENT.v) }
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
   ///  Description
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Source of data
-  public var SOURCE: String? { let o = _accessor.offset(VTOFFSET.SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCE.v) }
+  public var SOURCE: String? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE) }
   ///  Links to additional information
-  public var LINKS: FlatbufferVector<GPXLink> { return _accessor.vector(at: VTOFFSET.LINKS.v, byteSize: 4) }
+  public var LINKS: FlatbufferVector<GPXLink> { return _accessor.vector(at: VT.LINKS, byteSize: 4) }
   ///  Symbol name
-  public var SYMBOL: String? { let o = _accessor.offset(VTOFFSET.SYMBOL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SYMBOLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SYMBOL.v) }
+  public var SYMBOL: String? { let o = _accessor.offset(VT.SYMBOL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SYMBOLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SYMBOL) }
   ///  Type/category
-  public var TYPE: String? { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE.v) }
+  public var TYPE: String? { let o = _accessor.offset(VT.TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TYPE) }
   ///  Type of GPS fix
-  public var FIX: GPXFixType { let o = _accessor.offset(VTOFFSET.FIX.v); return o == 0 ? .none_ : GPXFixType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var FIX: GPXFixType { let o = _accessor.offset(VT.FIX); return o == 0 ? .none_ : GPXFixType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
   ///  Number of satellites used for fix
-  public var SAT: UInt16 { let o = _accessor.offset(VTOFFSET.SAT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SAT: UInt16 { let o = _accessor.offset(VT.SAT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Horizontal dilution of precision
-  public var HDOP: Double { let o = _accessor.offset(VTOFFSET.HDOP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var HDOP: Double { let o = _accessor.offset(VT.HDOP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Vertical dilution of precision
-  public var VDOP: Double { let o = _accessor.offset(VTOFFSET.VDOP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VDOP: Double { let o = _accessor.offset(VT.VDOP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Position dilution of precision
-  public var PDOP: Double { let o = _accessor.offset(VTOFFSET.PDOP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PDOP: Double { let o = _accessor.offset(VT.PDOP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Age of DGPS data in seconds
-  public var AGE_OF_DGPS_DATA: Double { let o = _accessor.offset(VTOFFSET.AGE_OF_DGPS_DATA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var AGE_OF_DGPS_DATA: Double { let o = _accessor.offset(VT.AGE_OF_DGPS_DATA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  DGPS station ID
-  public var DGPS_ID: UInt16 { let o = _accessor.offset(VTOFFSET.DGPS_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var DGPS_ID: UInt16 { let o = _accessor.offset(VT.DGPS_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Speed in meters per second
-  public var SPEED: Double { let o = _accessor.offset(VTOFFSET.SPEED.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SPEED: Double { let o = _accessor.offset(VT.SPEED); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Course/heading in degrees true
-  public var COURSE: Double { let o = _accessor.offset(VTOFFSET.COURSE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COURSE: Double { let o = _accessor.offset(VT.COURSE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startGPXWaypoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 22) }
-  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VTOFFSET.LATITUDE.p) }
-  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VTOFFSET.LONGITUDE.p) }
-  public static func add(ELEVATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION, def: 0.0, at: VTOFFSET.ELEVATION.p) }
-  public static func add(TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME, at: VTOFFSET.TIME.p) }
-  public static func add(MAGVAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAGVAR, def: 0.0, at: VTOFFSET.MAGVAR.p) }
-  public static func add(GEOID_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOID_HEIGHT, def: 0.0, at: VTOFFSET.GEOID_HEIGHT.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
-  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VTOFFSET.SOURCE.p) }
-  public static func addVectorOf(LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINKS, at: VTOFFSET.LINKS.p) }
-  public static func add(SYMBOL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYMBOL, at: VTOFFSET.SYMBOL.p) }
-  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VTOFFSET.TYPE.p) }
-  public static func add(FIX: GPXFixType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIX.rawValue, def: 0, at: VTOFFSET.FIX.p) }
-  public static func add(SAT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT, def: 0, at: VTOFFSET.SAT.p) }
-  public static func add(HDOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HDOP, def: 0.0, at: VTOFFSET.HDOP.p) }
-  public static func add(VDOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VDOP, def: 0.0, at: VTOFFSET.VDOP.p) }
-  public static func add(PDOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PDOP, def: 0.0, at: VTOFFSET.PDOP.p) }
-  public static func add(AGE_OF_DGPS_DATA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AGE_OF_DGPS_DATA, def: 0.0, at: VTOFFSET.AGE_OF_DGPS_DATA.p) }
-  public static func add(DGPS_ID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DGPS_ID, def: 0, at: VTOFFSET.DGPS_ID.p) }
-  public static func add(SPEED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPEED, def: 0.0, at: VTOFFSET.SPEED.p) }
-  public static func add(COURSE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COURSE, def: 0.0, at: VTOFFSET.COURSE.p) }
+  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VT.LATITUDE) }
+  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VT.LONGITUDE) }
+  public static func add(ELEVATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION, def: 0.0, at: VT.ELEVATION) }
+  public static func add(TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME, at: VT.TIME) }
+  public static func add(MAGVAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAGVAR, def: 0.0, at: VT.MAGVAR) }
+  public static func add(GEOID_HEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOID_HEIGHT, def: 0.0, at: VT.GEOID_HEIGHT) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
+  public static func addVectorOf(LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINKS, at: VT.LINKS) }
+  public static func add(SYMBOL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYMBOL, at: VT.SYMBOL) }
+  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VT.TYPE) }
+  public static func add(FIX: GPXFixType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIX.rawValue, def: 0, at: VT.FIX) }
+  public static func add(SAT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT, def: 0, at: VT.SAT) }
+  public static func add(HDOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HDOP, def: 0.0, at: VT.HDOP) }
+  public static func add(VDOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VDOP, def: 0.0, at: VT.VDOP) }
+  public static func add(PDOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PDOP, def: 0.0, at: VT.PDOP) }
+  public static func add(AGE_OF_DGPS_DATA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AGE_OF_DGPS_DATA, def: 0.0, at: VT.AGE_OF_DGPS_DATA) }
+  public static func add(DGPS_ID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DGPS_ID, def: 0, at: VT.DGPS_ID) }
+  public static func add(SPEED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPEED, def: 0.0, at: VT.SPEED) }
+  public static func add(COURSE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COURSE, def: 0.0, at: VT.COURSE) }
   public static func endGPXWaypoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGPXWaypoint(
     _ fbb: inout FlatBufferBuilder,
@@ -250,28 +246,28 @@ public struct GPXWaypoint: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LATITUDE.p, fieldName: "LATITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LONGITUDE.p, fieldName: "LONGITUDE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ELEVATION.p, fieldName: "ELEVATION", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TIME.p, fieldName: "TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MAGVAR.p, fieldName: "MAGVAR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.GEOID_HEIGHT.p, fieldName: "GEOID_HEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SOURCE.p, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINKS.p, fieldName: "LINKS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXLink>, GPXLink>>.self)
-    try _v.visit(field: VTOFFSET.SYMBOL.p, fieldName: "SYMBOL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FIX.p, fieldName: "FIX", required: false, type: GPXFixType.self)
-    try _v.visit(field: VTOFFSET.SAT.p, fieldName: "SAT", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.HDOP.p, fieldName: "HDOP", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VDOP.p, fieldName: "VDOP", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PDOP.p, fieldName: "PDOP", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.AGE_OF_DGPS_DATA.p, fieldName: "AGE_OF_DGPS_DATA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DGPS_ID.p, fieldName: "DGPS_ID", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.SPEED.p, fieldName: "SPEED", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.COURSE.p, fieldName: "COURSE", required: false, type: Double.self)
+    try _v.visit(field: VT.LATITUDE, fieldName: "LATITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.LONGITUDE, fieldName: "LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.ELEVATION, fieldName: "ELEVATION", required: false, type: Double.self)
+    try _v.visit(field: VT.TIME, fieldName: "TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAGVAR, fieldName: "MAGVAR", required: false, type: Double.self)
+    try _v.visit(field: VT.GEOID_HEIGHT, fieldName: "GEOID_HEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINKS, fieldName: "LINKS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXLink>, GPXLink>>.self)
+    try _v.visit(field: VT.SYMBOL, fieldName: "SYMBOL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FIX, fieldName: "FIX", required: false, type: GPXFixType.self)
+    try _v.visit(field: VT.SAT, fieldName: "SAT", required: false, type: UInt16.self)
+    try _v.visit(field: VT.HDOP, fieldName: "HDOP", required: false, type: Double.self)
+    try _v.visit(field: VT.VDOP, fieldName: "VDOP", required: false, type: Double.self)
+    try _v.visit(field: VT.PDOP, fieldName: "PDOP", required: false, type: Double.self)
+    try _v.visit(field: VT.AGE_OF_DGPS_DATA, fieldName: "AGE_OF_DGPS_DATA", required: false, type: Double.self)
+    try _v.visit(field: VT.DGPS_ID, fieldName: "DGPS_ID", required: false, type: UInt16.self)
+    try _v.visit(field: VT.SPEED, fieldName: "SPEED", required: false, type: Double.self)
+    try _v.visit(field: VT.COURSE, fieldName: "COURSE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -288,16 +284,14 @@ public struct GPXTrackSegment: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case POINTS = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let POINTS: VOffset = 4
   }
 
   ///  Ordered track points in this segment
-  public var POINTS: FlatbufferVector<GPXWaypoint> { return _accessor.vector(at: VTOFFSET.POINTS.v, byteSize: 4) }
+  public var POINTS: FlatbufferVector<GPXWaypoint> { return _accessor.vector(at: VT.POINTS, byteSize: 4) }
   public static func startGPXTrackSegment(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func addVectorOf(POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTS, at: VTOFFSET.POINTS.p) }
+  public static func addVectorOf(POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTS, at: VT.POINTS) }
   public static func endGPXTrackSegment(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGPXTrackSegment(
     _ fbb: inout FlatBufferBuilder,
@@ -310,7 +304,7 @@ public struct GPXTrackSegment: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.POINTS.p, fieldName: "POINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXWaypoint>, GPXWaypoint>>.self)
+    try _v.visit(field: VT.POINTS, fieldName: "POINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXWaypoint>, GPXWaypoint>>.self)
     _v.finish()
   }
 }
@@ -327,49 +321,47 @@ public struct GPXTrack: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case COMMENT = 6
-    case DESCRIPTION = 8
-    case SOURCE = 10
-    case LINKS = 12
-    case NUMBER = 14
-    case TYPE = 16
-    case SEGMENTS = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let COMMENT: VOffset = 6
+    static let DESCRIPTION: VOffset = 8
+    static let SOURCE: VOffset = 10
+    static let LINKS: VOffset = 12
+    static let NUMBER: VOffset = 14
+    static let TYPE: VOffset = 16
+    static let SEGMENTS: VOffset = 18
   }
 
   ///  Track name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Comment
-  public var COMMENT: String? { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMENT.v) }
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
   ///  Description
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Source of data
-  public var SOURCE: String? { let o = _accessor.offset(VTOFFSET.SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCE.v) }
+  public var SOURCE: String? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE) }
   ///  Links to additional information
-  public var LINKS: FlatbufferVector<GPXLink> { return _accessor.vector(at: VTOFFSET.LINKS.v, byteSize: 4) }
+  public var LINKS: FlatbufferVector<GPXLink> { return _accessor.vector(at: VT.LINKS, byteSize: 4) }
   ///  Track number
-  public var NUMBER: UInt32 { let o = _accessor.offset(VTOFFSET.NUMBER.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var NUMBER: UInt32 { let o = _accessor.offset(VT.NUMBER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Type/category
-  public var TYPE: String? { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE.v) }
+  public var TYPE: String? { let o = _accessor.offset(VT.TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TYPE) }
   ///  Track segments
-  public var SEGMENTS: FlatbufferVector<GPXTrackSegment> { return _accessor.vector(at: VTOFFSET.SEGMENTS.v, byteSize: 4) }
+  public var SEGMENTS: FlatbufferVector<GPXTrackSegment> { return _accessor.vector(at: VT.SEGMENTS, byteSize: 4) }
   public static func startGPXTrack(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
-  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VTOFFSET.SOURCE.p) }
-  public static func addVectorOf(LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINKS, at: VTOFFSET.LINKS.p) }
-  public static func add(NUMBER: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUMBER, def: 0, at: VTOFFSET.NUMBER.p) }
-  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VTOFFSET.TYPE.p) }
-  public static func addVectorOf(SEGMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENTS, at: VTOFFSET.SEGMENTS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
+  public static func addVectorOf(LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINKS, at: VT.LINKS) }
+  public static func add(NUMBER: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUMBER, def: 0, at: VT.NUMBER) }
+  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VT.TYPE) }
+  public static func addVectorOf(SEGMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENTS, at: VT.SEGMENTS) }
   public static func endGPXTrack(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGPXTrack(
     _ fbb: inout FlatBufferBuilder,
@@ -396,14 +388,14 @@ public struct GPXTrack: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SOURCE.p, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINKS.p, fieldName: "LINKS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXLink>, GPXLink>>.self)
-    try _v.visit(field: VTOFFSET.NUMBER.p, fieldName: "NUMBER", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SEGMENTS.p, fieldName: "SEGMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXTrackSegment>, GPXTrackSegment>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINKS, fieldName: "LINKS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXLink>, GPXLink>>.self)
+    try _v.visit(field: VT.NUMBER, fieldName: "NUMBER", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SEGMENTS, fieldName: "SEGMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXTrackSegment>, GPXTrackSegment>>.self)
     _v.finish()
   }
 }
@@ -420,49 +412,47 @@ public struct GPXRoute: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case COMMENT = 6
-    case DESCRIPTION = 8
-    case SOURCE = 10
-    case LINKS = 12
-    case NUMBER = 14
-    case TYPE = 16
-    case POINTS = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let COMMENT: VOffset = 6
+    static let DESCRIPTION: VOffset = 8
+    static let SOURCE: VOffset = 10
+    static let LINKS: VOffset = 12
+    static let NUMBER: VOffset = 14
+    static let TYPE: VOffset = 16
+    static let POINTS: VOffset = 18
   }
 
   ///  Route name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Comment
-  public var COMMENT: String? { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMENT.v) }
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
   ///  Description
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Source of data
-  public var SOURCE: String? { let o = _accessor.offset(VTOFFSET.SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCE.v) }
+  public var SOURCE: String? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE) }
   ///  Links to additional information
-  public var LINKS: FlatbufferVector<GPXLink> { return _accessor.vector(at: VTOFFSET.LINKS.v, byteSize: 4) }
+  public var LINKS: FlatbufferVector<GPXLink> { return _accessor.vector(at: VT.LINKS, byteSize: 4) }
   ///  Route number
-  public var NUMBER: UInt32 { let o = _accessor.offset(VTOFFSET.NUMBER.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var NUMBER: UInt32 { let o = _accessor.offset(VT.NUMBER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Type/category
-  public var TYPE: String? { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE.v) }
+  public var TYPE: String? { let o = _accessor.offset(VT.TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TYPE) }
   ///  Route points (ordered waypoints)
-  public var POINTS: FlatbufferVector<GPXWaypoint> { return _accessor.vector(at: VTOFFSET.POINTS.v, byteSize: 4) }
+  public var POINTS: FlatbufferVector<GPXWaypoint> { return _accessor.vector(at: VT.POINTS, byteSize: 4) }
   public static func startGPXRoute(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
-  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VTOFFSET.SOURCE.p) }
-  public static func addVectorOf(LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINKS, at: VTOFFSET.LINKS.p) }
-  public static func add(NUMBER: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUMBER, def: 0, at: VTOFFSET.NUMBER.p) }
-  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VTOFFSET.TYPE.p) }
-  public static func addVectorOf(POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTS, at: VTOFFSET.POINTS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
+  public static func addVectorOf(LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINKS, at: VT.LINKS) }
+  public static func add(NUMBER: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUMBER, def: 0, at: VT.NUMBER) }
+  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VT.TYPE) }
+  public static func addVectorOf(POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTS, at: VT.POINTS) }
   public static func endGPXRoute(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGPXRoute(
     _ fbb: inout FlatBufferBuilder,
@@ -489,14 +479,14 @@ public struct GPXRoute: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SOURCE.p, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINKS.p, fieldName: "LINKS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXLink>, GPXLink>>.self)
-    try _v.visit(field: VTOFFSET.NUMBER.p, fieldName: "NUMBER", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.POINTS.p, fieldName: "POINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXWaypoint>, GPXWaypoint>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINKS, fieldName: "LINKS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXLink>, GPXLink>>.self)
+    try _v.visit(field: VT.NUMBER, fieldName: "NUMBER", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POINTS, fieldName: "POINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXWaypoint>, GPXWaypoint>>.self)
     _v.finish()
   }
 }
@@ -513,103 +503,101 @@ public struct GPX: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case VERSION = 4
-    case CREATOR = 6
-    case NAME = 8
-    case DESCRIPTION = 10
-    case AUTHOR_NAME = 12
-    case AUTHOR_EMAIL = 14
-    case AUTHOR_LINK = 16
-    case COPYRIGHT_AUTHOR = 18
-    case COPYRIGHT_YEAR = 20
-    case COPYRIGHT_LICENSE = 22
-    case LINKS = 24
-    case TIME = 26
-    case KEYWORDS = 28
-    case BOUNDS_MIN_LAT = 30
-    case BOUNDS_MIN_LON = 32
-    case BOUNDS_MAX_LAT = 34
-    case BOUNDS_MAX_LON = 36
-    case WAYPOINTS = 38
-    case ROUTES = 40
-    case TRACKS = 42
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let VERSION: VOffset = 4
+    static let CREATOR: VOffset = 6
+    static let NAME: VOffset = 8
+    static let DESCRIPTION: VOffset = 10
+    static let AUTHOR_NAME: VOffset = 12
+    static let AUTHOR_EMAIL: VOffset = 14
+    static let AUTHOR_LINK: VOffset = 16
+    static let COPYRIGHT_AUTHOR: VOffset = 18
+    static let COPYRIGHT_YEAR: VOffset = 20
+    static let COPYRIGHT_LICENSE: VOffset = 22
+    static let LINKS: VOffset = 24
+    static let TIME: VOffset = 26
+    static let KEYWORDS: VOffset = 28
+    static let BOUNDS_MIN_LAT: VOffset = 30
+    static let BOUNDS_MIN_LON: VOffset = 32
+    static let BOUNDS_MAX_LAT: VOffset = 34
+    static let BOUNDS_MAX_LON: VOffset = 36
+    static let WAYPOINTS: VOffset = 38
+    static let ROUTES: VOffset = 40
+    static let TRACKS: VOffset = 42
   }
 
   ///  GPX schema version
-  public var VERSION: String? { let o = _accessor.offset(VTOFFSET.VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VERSION.v) }
+  public var VERSION: String? { let o = _accessor.offset(VT.VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VERSION) }
   ///  Creator software/organization
-  public var CREATOR: String? { let o = _accessor.offset(VTOFFSET.CREATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CREATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CREATOR.v) }
+  public var CREATOR: String? { let o = _accessor.offset(VT.CREATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CREATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CREATOR) }
   ///  File name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  File description
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Person or organization who created the file
-  public var AUTHOR_NAME: String? { let o = _accessor.offset(VTOFFSET.AUTHOR_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AUTHOR_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AUTHOR_NAME.v) }
+  public var AUTHOR_NAME: String? { let o = _accessor.offset(VT.AUTHOR_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AUTHOR_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AUTHOR_NAME) }
   ///  Author email
-  public var AUTHOR_EMAIL: String? { let o = _accessor.offset(VTOFFSET.AUTHOR_EMAIL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AUTHOR_EMAILSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AUTHOR_EMAIL.v) }
+  public var AUTHOR_EMAIL: String? { let o = _accessor.offset(VT.AUTHOR_EMAIL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AUTHOR_EMAILSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AUTHOR_EMAIL) }
   ///  Author link
-  public var AUTHOR_LINK: GPXLink? { let o = _accessor.offset(VTOFFSET.AUTHOR_LINK.v); return o == 0 ? nil : GPXLink(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var AUTHOR_LINK: GPXLink? { let o = _accessor.offset(VT.AUTHOR_LINK); return o == 0 ? nil : GPXLink(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Copyright holder
-  public var COPYRIGHT_AUTHOR: String? { let o = _accessor.offset(VTOFFSET.COPYRIGHT_AUTHOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COPYRIGHT_AUTHORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COPYRIGHT_AUTHOR.v) }
+  public var COPYRIGHT_AUTHOR: String? { let o = _accessor.offset(VT.COPYRIGHT_AUTHOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COPYRIGHT_AUTHORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COPYRIGHT_AUTHOR) }
   ///  Copyright year
-  public var COPYRIGHT_YEAR: String? { let o = _accessor.offset(VTOFFSET.COPYRIGHT_YEAR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COPYRIGHT_YEARSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COPYRIGHT_YEAR.v) }
+  public var COPYRIGHT_YEAR: String? { let o = _accessor.offset(VT.COPYRIGHT_YEAR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COPYRIGHT_YEARSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COPYRIGHT_YEAR) }
   ///  Copyright license URL
-  public var COPYRIGHT_LICENSE: String? { let o = _accessor.offset(VTOFFSET.COPYRIGHT_LICENSE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COPYRIGHT_LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COPYRIGHT_LICENSE.v) }
+  public var COPYRIGHT_LICENSE: String? { let o = _accessor.offset(VT.COPYRIGHT_LICENSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COPYRIGHT_LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COPYRIGHT_LICENSE) }
   ///  Links to additional information
-  public var LINKS: FlatbufferVector<GPXLink> { return _accessor.vector(at: VTOFFSET.LINKS.v, byteSize: 4) }
+  public var LINKS: FlatbufferVector<GPXLink> { return _accessor.vector(at: VT.LINKS, byteSize: 4) }
   ///  Creation timestamp (ISO 8601)
-  public var TIME: String? { let o = _accessor.offset(VTOFFSET.TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIME.v) }
+  public var TIME: String? { let o = _accessor.offset(VT.TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME) }
   ///  Keywords
-  public var KEYWORDS: String? { let o = _accessor.offset(VTOFFSET.KEYWORDS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var KEYWORDSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.KEYWORDS.v) }
+  public var KEYWORDS: String? { let o = _accessor.offset(VT.KEYWORDS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KEYWORDSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEYWORDS) }
   ///  Minimum latitude of bounding box
-  public var BOUNDS_MIN_LAT: Double { let o = _accessor.offset(VTOFFSET.BOUNDS_MIN_LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BOUNDS_MIN_LAT: Double { let o = _accessor.offset(VT.BOUNDS_MIN_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Minimum longitude of bounding box
-  public var BOUNDS_MIN_LON: Double { let o = _accessor.offset(VTOFFSET.BOUNDS_MIN_LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BOUNDS_MIN_LON: Double { let o = _accessor.offset(VT.BOUNDS_MIN_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum latitude of bounding box
-  public var BOUNDS_MAX_LAT: Double { let o = _accessor.offset(VTOFFSET.BOUNDS_MAX_LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BOUNDS_MAX_LAT: Double { let o = _accessor.offset(VT.BOUNDS_MAX_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum longitude of bounding box
-  public var BOUNDS_MAX_LON: Double { let o = _accessor.offset(VTOFFSET.BOUNDS_MAX_LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var BOUNDS_MAX_LON: Double { let o = _accessor.offset(VT.BOUNDS_MAX_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Waypoints
-  public var WAYPOINTS: FlatbufferVector<GPXWaypoint> { return _accessor.vector(at: VTOFFSET.WAYPOINTS.v, byteSize: 4) }
+  public var WAYPOINTS: FlatbufferVector<GPXWaypoint> { return _accessor.vector(at: VT.WAYPOINTS, byteSize: 4) }
   ///  Routes
-  public var ROUTES: FlatbufferVector<GPXRoute> { return _accessor.vector(at: VTOFFSET.ROUTES.v, byteSize: 4) }
+  public var ROUTES: FlatbufferVector<GPXRoute> { return _accessor.vector(at: VT.ROUTES, byteSize: 4) }
   ///  Tracks
-  public var TRACKS: FlatbufferVector<GPXTrack> { return _accessor.vector(at: VTOFFSET.TRACKS.v, byteSize: 4) }
+  public var TRACKS: FlatbufferVector<GPXTrack> { return _accessor.vector(at: VT.TRACKS, byteSize: 4) }
   public static func startGPX(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
-  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VTOFFSET.VERSION.p) }
-  public static func add(CREATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATOR, at: VTOFFSET.CREATOR.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
-  public static func add(AUTHOR_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AUTHOR_NAME, at: VTOFFSET.AUTHOR_NAME.p) }
-  public static func add(AUTHOR_EMAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AUTHOR_EMAIL, at: VTOFFSET.AUTHOR_EMAIL.p) }
-  public static func add(AUTHOR_LINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AUTHOR_LINK, at: VTOFFSET.AUTHOR_LINK.p) }
-  public static func add(COPYRIGHT_AUTHOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COPYRIGHT_AUTHOR, at: VTOFFSET.COPYRIGHT_AUTHOR.p) }
-  public static func add(COPYRIGHT_YEAR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COPYRIGHT_YEAR, at: VTOFFSET.COPYRIGHT_YEAR.p) }
-  public static func add(COPYRIGHT_LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COPYRIGHT_LICENSE, at: VTOFFSET.COPYRIGHT_LICENSE.p) }
-  public static func addVectorOf(LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINKS, at: VTOFFSET.LINKS.p) }
-  public static func add(TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME, at: VTOFFSET.TIME.p) }
-  public static func add(KEYWORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEYWORDS, at: VTOFFSET.KEYWORDS.p) }
-  public static func add(BOUNDS_MIN_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOUNDS_MIN_LAT, def: 0.0, at: VTOFFSET.BOUNDS_MIN_LAT.p) }
-  public static func add(BOUNDS_MIN_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOUNDS_MIN_LON, def: 0.0, at: VTOFFSET.BOUNDS_MIN_LON.p) }
-  public static func add(BOUNDS_MAX_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOUNDS_MAX_LAT, def: 0.0, at: VTOFFSET.BOUNDS_MAX_LAT.p) }
-  public static func add(BOUNDS_MAX_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOUNDS_MAX_LON, def: 0.0, at: VTOFFSET.BOUNDS_MAX_LON.p) }
-  public static func addVectorOf(WAYPOINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WAYPOINTS, at: VTOFFSET.WAYPOINTS.p) }
-  public static func addVectorOf(ROUTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROUTES, at: VTOFFSET.ROUTES.p) }
-  public static func addVectorOf(TRACKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACKS, at: VTOFFSET.TRACKS.p) }
+  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
+  public static func add(CREATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATOR, at: VT.CREATOR) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(AUTHOR_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AUTHOR_NAME, at: VT.AUTHOR_NAME) }
+  public static func add(AUTHOR_EMAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AUTHOR_EMAIL, at: VT.AUTHOR_EMAIL) }
+  public static func add(AUTHOR_LINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AUTHOR_LINK, at: VT.AUTHOR_LINK) }
+  public static func add(COPYRIGHT_AUTHOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COPYRIGHT_AUTHOR, at: VT.COPYRIGHT_AUTHOR) }
+  public static func add(COPYRIGHT_YEAR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COPYRIGHT_YEAR, at: VT.COPYRIGHT_YEAR) }
+  public static func add(COPYRIGHT_LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COPYRIGHT_LICENSE, at: VT.COPYRIGHT_LICENSE) }
+  public static func addVectorOf(LINKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINKS, at: VT.LINKS) }
+  public static func add(TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME, at: VT.TIME) }
+  public static func add(KEYWORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEYWORDS, at: VT.KEYWORDS) }
+  public static func add(BOUNDS_MIN_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOUNDS_MIN_LAT, def: 0.0, at: VT.BOUNDS_MIN_LAT) }
+  public static func add(BOUNDS_MIN_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOUNDS_MIN_LON, def: 0.0, at: VT.BOUNDS_MIN_LON) }
+  public static func add(BOUNDS_MAX_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOUNDS_MAX_LAT, def: 0.0, at: VT.BOUNDS_MAX_LAT) }
+  public static func add(BOUNDS_MAX_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOUNDS_MAX_LON, def: 0.0, at: VT.BOUNDS_MAX_LON) }
+  public static func addVectorOf(WAYPOINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WAYPOINTS, at: VT.WAYPOINTS) }
+  public static func addVectorOf(ROUTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROUTES, at: VT.ROUTES) }
+  public static func addVectorOf(TRACKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACKS, at: VT.TRACKS) }
   public static func endGPX(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGPX(
     _ fbb: inout FlatBufferBuilder,
@@ -660,26 +648,26 @@ public struct GPX: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CREATOR.p, fieldName: "CREATOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.AUTHOR_NAME.p, fieldName: "AUTHOR_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.AUTHOR_EMAIL.p, fieldName: "AUTHOR_EMAIL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.AUTHOR_LINK.p, fieldName: "AUTHOR_LINK", required: false, type: ForwardOffset<GPXLink>.self)
-    try _v.visit(field: VTOFFSET.COPYRIGHT_AUTHOR.p, fieldName: "COPYRIGHT_AUTHOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COPYRIGHT_YEAR.p, fieldName: "COPYRIGHT_YEAR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COPYRIGHT_LICENSE.p, fieldName: "COPYRIGHT_LICENSE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINKS.p, fieldName: "LINKS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXLink>, GPXLink>>.self)
-    try _v.visit(field: VTOFFSET.TIME.p, fieldName: "TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.KEYWORDS.p, fieldName: "KEYWORDS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BOUNDS_MIN_LAT.p, fieldName: "BOUNDS_MIN_LAT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BOUNDS_MIN_LON.p, fieldName: "BOUNDS_MIN_LON", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BOUNDS_MAX_LAT.p, fieldName: "BOUNDS_MAX_LAT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BOUNDS_MAX_LON.p, fieldName: "BOUNDS_MAX_LON", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.WAYPOINTS.p, fieldName: "WAYPOINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXWaypoint>, GPXWaypoint>>.self)
-    try _v.visit(field: VTOFFSET.ROUTES.p, fieldName: "ROUTES", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXRoute>, GPXRoute>>.self)
-    try _v.visit(field: VTOFFSET.TRACKS.p, fieldName: "TRACKS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXTrack>, GPXTrack>>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CREATOR, fieldName: "CREATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AUTHOR_NAME, fieldName: "AUTHOR_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AUTHOR_EMAIL, fieldName: "AUTHOR_EMAIL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AUTHOR_LINK, fieldName: "AUTHOR_LINK", required: false, type: ForwardOffset<GPXLink>.self)
+    try _v.visit(field: VT.COPYRIGHT_AUTHOR, fieldName: "COPYRIGHT_AUTHOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COPYRIGHT_YEAR, fieldName: "COPYRIGHT_YEAR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COPYRIGHT_LICENSE, fieldName: "COPYRIGHT_LICENSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINKS, fieldName: "LINKS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXLink>, GPXLink>>.self)
+    try _v.visit(field: VT.TIME, fieldName: "TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.KEYWORDS, fieldName: "KEYWORDS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BOUNDS_MIN_LAT, fieldName: "BOUNDS_MIN_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.BOUNDS_MIN_LON, fieldName: "BOUNDS_MIN_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.BOUNDS_MAX_LAT, fieldName: "BOUNDS_MAX_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.BOUNDS_MAX_LON, fieldName: "BOUNDS_MAX_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.WAYPOINTS, fieldName: "WAYPOINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXWaypoint>, GPXWaypoint>>.self)
+    try _v.visit(field: VT.ROUTES, fieldName: "ROUTES", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXRoute>, GPXRoute>>.self)
+    try _v.visit(field: VT.TRACKS, fieldName: "TRACKS", required: false, type: ForwardOffset<Vector<ForwardOffset<GPXTrack>, GPXTrack>>.self)
     _v.finish()
   }
 }

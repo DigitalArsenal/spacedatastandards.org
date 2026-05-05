@@ -325,33 +325,31 @@ public struct IntegerDataEncoding: FlatBufferTable, FlatbuffersVectorInitializab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SIZE_IN_BITS = 4
-    case BYTE_ORDER = 6
-    case ENCODING = 8
-    case DEFAULT_CALIBRATOR = 10
-    case CONTEXT_CALIBRATOR_LIST = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SIZE_IN_BITS: VOffset = 4
+    static let BYTE_ORDER: VOffset = 6
+    static let ENCODING: VOffset = 8
+    static let DEFAULT_CALIBRATOR: VOffset = 10
+    static let CONTEXT_CALIBRATOR_LIST: VOffset = 12
   }
 
   ///  Number of bits for this integer
-  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VTOFFSET.SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VT.SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Byte ordering
-  public var BYTE_ORDER: ByteOrderType { let o = _accessor.offset(VTOFFSET.BYTE_ORDER.v); return o == 0 ? .bigEndian : ByteOrderType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bigEndian }
+  public var BYTE_ORDER: ByteOrderType { let o = _accessor.offset(VT.BYTE_ORDER); return o == 0 ? .bigEndian : ByteOrderType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bigEndian }
   ///  Integer encoding type
-  public var ENCODING: IntegerEncodingType { let o = _accessor.offset(VTOFFSET.ENCODING.v); return o == 0 ? .unsigned : IntegerEncodingType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unsigned }
+  public var ENCODING: IntegerEncodingType { let o = _accessor.offset(VT.ENCODING); return o == 0 ? .unsigned : IntegerEncodingType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unsigned }
   ///  Default calibrator reference
-  public var DEFAULT_CALIBRATOR: String? { let o = _accessor.offset(VTOFFSET.DEFAULT_CALIBRATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DEFAULT_CALIBRATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DEFAULT_CALIBRATOR.v) }
+  public var DEFAULT_CALIBRATOR: String? { let o = _accessor.offset(VT.DEFAULT_CALIBRATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DEFAULT_CALIBRATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DEFAULT_CALIBRATOR) }
   ///  Context-dependent calibrators
-  public var CONTEXT_CALIBRATOR_LIST: FlatbufferVector<ContextCalibrator> { return _accessor.vector(at: VTOFFSET.CONTEXT_CALIBRATOR_LIST.v, byteSize: 4) }
+  public var CONTEXT_CALIBRATOR_LIST: FlatbufferVector<ContextCalibrator> { return _accessor.vector(at: VT.CONTEXT_CALIBRATOR_LIST, byteSize: 4) }
   public static func startIntegerDataEncoding(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VTOFFSET.SIZE_IN_BITS.p) }
-  public static func add(BYTE_ORDER: ByteOrderType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_ORDER.rawValue, def: 0, at: VTOFFSET.BYTE_ORDER.p) }
-  public static func add(ENCODING: IntegerEncodingType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCODING.rawValue, def: 0, at: VTOFFSET.ENCODING.p) }
-  public static func add(DEFAULT_CALIBRATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_CALIBRATOR, at: VTOFFSET.DEFAULT_CALIBRATOR.p) }
-  public static func addVectorOf(CONTEXT_CALIBRATOR_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_CALIBRATOR_LIST, at: VTOFFSET.CONTEXT_CALIBRATOR_LIST.p) }
+  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VT.SIZE_IN_BITS) }
+  public static func add(BYTE_ORDER: ByteOrderType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_ORDER.rawValue, def: 0, at: VT.BYTE_ORDER) }
+  public static func add(ENCODING: IntegerEncodingType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCODING.rawValue, def: 0, at: VT.ENCODING) }
+  public static func add(DEFAULT_CALIBRATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_CALIBRATOR, at: VT.DEFAULT_CALIBRATOR) }
+  public static func addVectorOf(CONTEXT_CALIBRATOR_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_CALIBRATOR_LIST, at: VT.CONTEXT_CALIBRATOR_LIST) }
   public static func endIntegerDataEncoding(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createIntegerDataEncoding(
     _ fbb: inout FlatBufferBuilder,
@@ -372,11 +370,11 @@ public struct IntegerDataEncoding: FlatBufferTable, FlatbuffersVectorInitializab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SIZE_IN_BITS.p, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.BYTE_ORDER.p, fieldName: "BYTE_ORDER", required: false, type: ByteOrderType.self)
-    try _v.visit(field: VTOFFSET.ENCODING.p, fieldName: "ENCODING", required: false, type: IntegerEncodingType.self)
-    try _v.visit(field: VTOFFSET.DEFAULT_CALIBRATOR.p, fieldName: "DEFAULT_CALIBRATOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONTEXT_CALIBRATOR_LIST.p, fieldName: "CONTEXT_CALIBRATOR_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextCalibrator>, ContextCalibrator>>.self)
+    try _v.visit(field: VT.SIZE_IN_BITS, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.BYTE_ORDER, fieldName: "BYTE_ORDER", required: false, type: ByteOrderType.self)
+    try _v.visit(field: VT.ENCODING, fieldName: "ENCODING", required: false, type: IntegerEncodingType.self)
+    try _v.visit(field: VT.DEFAULT_CALIBRATOR, fieldName: "DEFAULT_CALIBRATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTEXT_CALIBRATOR_LIST, fieldName: "CONTEXT_CALIBRATOR_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextCalibrator>, ContextCalibrator>>.self)
     _v.finish()
   }
 }
@@ -393,33 +391,31 @@ public struct FloatDataEncoding: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SIZE_IN_BITS = 4
-    case BYTE_ORDER = 6
-    case ENCODING = 8
-    case DEFAULT_CALIBRATOR = 10
-    case CONTEXT_CALIBRATOR_LIST = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SIZE_IN_BITS: VOffset = 4
+    static let BYTE_ORDER: VOffset = 6
+    static let ENCODING: VOffset = 8
+    static let DEFAULT_CALIBRATOR: VOffset = 10
+    static let CONTEXT_CALIBRATOR_LIST: VOffset = 12
   }
 
   ///  Number of bits (typically 32 or 64)
-  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VTOFFSET.SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VT.SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Byte ordering
-  public var BYTE_ORDER: ByteOrderType { let o = _accessor.offset(VTOFFSET.BYTE_ORDER.v); return o == 0 ? .bigEndian : ByteOrderType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bigEndian }
+  public var BYTE_ORDER: ByteOrderType { let o = _accessor.offset(VT.BYTE_ORDER); return o == 0 ? .bigEndian : ByteOrderType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bigEndian }
   ///  Float encoding format
-  public var ENCODING: FloatEncodingType { let o = _accessor.offset(VTOFFSET.ENCODING.v); return o == 0 ? .ieee7541985 : FloatEncodingType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ieee7541985 }
+  public var ENCODING: FloatEncodingType { let o = _accessor.offset(VT.ENCODING); return o == 0 ? .ieee7541985 : FloatEncodingType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ieee7541985 }
   ///  Default calibrator reference
-  public var DEFAULT_CALIBRATOR: String? { let o = _accessor.offset(VTOFFSET.DEFAULT_CALIBRATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DEFAULT_CALIBRATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DEFAULT_CALIBRATOR.v) }
+  public var DEFAULT_CALIBRATOR: String? { let o = _accessor.offset(VT.DEFAULT_CALIBRATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DEFAULT_CALIBRATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DEFAULT_CALIBRATOR) }
   ///  Context-dependent calibrators
-  public var CONTEXT_CALIBRATOR_LIST: FlatbufferVector<ContextCalibrator> { return _accessor.vector(at: VTOFFSET.CONTEXT_CALIBRATOR_LIST.v, byteSize: 4) }
+  public var CONTEXT_CALIBRATOR_LIST: FlatbufferVector<ContextCalibrator> { return _accessor.vector(at: VT.CONTEXT_CALIBRATOR_LIST, byteSize: 4) }
   public static func startFloatDataEncoding(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VTOFFSET.SIZE_IN_BITS.p) }
-  public static func add(BYTE_ORDER: ByteOrderType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_ORDER.rawValue, def: 0, at: VTOFFSET.BYTE_ORDER.p) }
-  public static func add(ENCODING: FloatEncodingType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCODING.rawValue, def: 0, at: VTOFFSET.ENCODING.p) }
-  public static func add(DEFAULT_CALIBRATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_CALIBRATOR, at: VTOFFSET.DEFAULT_CALIBRATOR.p) }
-  public static func addVectorOf(CONTEXT_CALIBRATOR_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_CALIBRATOR_LIST, at: VTOFFSET.CONTEXT_CALIBRATOR_LIST.p) }
+  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VT.SIZE_IN_BITS) }
+  public static func add(BYTE_ORDER: ByteOrderType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_ORDER.rawValue, def: 0, at: VT.BYTE_ORDER) }
+  public static func add(ENCODING: FloatEncodingType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCODING.rawValue, def: 0, at: VT.ENCODING) }
+  public static func add(DEFAULT_CALIBRATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_CALIBRATOR, at: VT.DEFAULT_CALIBRATOR) }
+  public static func addVectorOf(CONTEXT_CALIBRATOR_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_CALIBRATOR_LIST, at: VT.CONTEXT_CALIBRATOR_LIST) }
   public static func endFloatDataEncoding(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFloatDataEncoding(
     _ fbb: inout FlatBufferBuilder,
@@ -440,11 +436,11 @@ public struct FloatDataEncoding: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SIZE_IN_BITS.p, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.BYTE_ORDER.p, fieldName: "BYTE_ORDER", required: false, type: ByteOrderType.self)
-    try _v.visit(field: VTOFFSET.ENCODING.p, fieldName: "ENCODING", required: false, type: FloatEncodingType.self)
-    try _v.visit(field: VTOFFSET.DEFAULT_CALIBRATOR.p, fieldName: "DEFAULT_CALIBRATOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONTEXT_CALIBRATOR_LIST.p, fieldName: "CONTEXT_CALIBRATOR_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextCalibrator>, ContextCalibrator>>.self)
+    try _v.visit(field: VT.SIZE_IN_BITS, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.BYTE_ORDER, fieldName: "BYTE_ORDER", required: false, type: ByteOrderType.self)
+    try _v.visit(field: VT.ENCODING, fieldName: "ENCODING", required: false, type: FloatEncodingType.self)
+    try _v.visit(field: VT.DEFAULT_CALIBRATOR, fieldName: "DEFAULT_CALIBRATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTEXT_CALIBRATOR_LIST, fieldName: "CONTEXT_CALIBRATOR_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextCalibrator>, ContextCalibrator>>.self)
     _v.finish()
   }
 }
@@ -461,36 +457,34 @@ public struct StringDataEncoding: FlatBufferTable, FlatbuffersVectorInitializabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ENCODING = 4
-    case SIZE_TYPE = 6
-    case SIZE_IN_BITS = 8
-    case TERMINATION_CHAR = 10
-    case MAX_SIZE_IN_BITS = 12
-    case LEADING_SIZE_BITS = 14
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ENCODING: VOffset = 4
+    static let SIZE_TYPE: VOffset = 6
+    static let SIZE_IN_BITS: VOffset = 8
+    static let TERMINATION_CHAR: VOffset = 10
+    static let MAX_SIZE_IN_BITS: VOffset = 12
+    static let LEADING_SIZE_BITS: VOffset = 14
   }
 
   ///  Character encoding
-  public var ENCODING: StringEncodingType { let o = _accessor.offset(VTOFFSET.ENCODING.v); return o == 0 ? .utf8 : StringEncodingType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .utf8 }
+  public var ENCODING: StringEncodingType { let o = _accessor.offset(VT.ENCODING); return o == 0 ? .utf8 : StringEncodingType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .utf8 }
   ///  Size type specification
-  public var SIZE_TYPE: StringSizeType { let o = _accessor.offset(VTOFFSET.SIZE_TYPE.v); return o == 0 ? .fixed : StringSizeType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .fixed }
+  public var SIZE_TYPE: StringSizeType { let o = _accessor.offset(VT.SIZE_TYPE); return o == 0 ? .fixed : StringSizeType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .fixed }
   ///  Fixed size in bits (when SIZE_TYPE=FIXED)
-  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VTOFFSET.SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VT.SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Termination character (when SIZE_TYPE=TERMINATION_CHAR)
-  public var TERMINATION_CHAR: UInt8 { let o = _accessor.offset(VTOFFSET.TERMINATION_CHAR.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var TERMINATION_CHAR: UInt8 { let o = _accessor.offset(VT.TERMINATION_CHAR); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Maximum size in bits (for variable length)
-  public var MAX_SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VTOFFSET.MAX_SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var MAX_SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VT.MAX_SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Leading size field bits (when SIZE_TYPE=LEADING_SIZE)
-  public var LEADING_SIZE_BITS: UInt8 { let o = _accessor.offset(VTOFFSET.LEADING_SIZE_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var LEADING_SIZE_BITS: UInt8 { let o = _accessor.offset(VT.LEADING_SIZE_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   public static func startStringDataEncoding(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(ENCODING: StringEncodingType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCODING.rawValue, def: 3, at: VTOFFSET.ENCODING.p) }
-  public static func add(SIZE_TYPE: StringSizeType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_TYPE.rawValue, def: 0, at: VTOFFSET.SIZE_TYPE.p) }
-  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VTOFFSET.SIZE_IN_BITS.p) }
-  public static func add(TERMINATION_CHAR: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TERMINATION_CHAR, def: 0, at: VTOFFSET.TERMINATION_CHAR.p) }
-  public static func add(MAX_SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_SIZE_IN_BITS, def: 0, at: VTOFFSET.MAX_SIZE_IN_BITS.p) }
-  public static func add(LEADING_SIZE_BITS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEADING_SIZE_BITS, def: 0, at: VTOFFSET.LEADING_SIZE_BITS.p) }
+  public static func add(ENCODING: StringEncodingType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCODING.rawValue, def: 3, at: VT.ENCODING) }
+  public static func add(SIZE_TYPE: StringSizeType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_TYPE.rawValue, def: 0, at: VT.SIZE_TYPE) }
+  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VT.SIZE_IN_BITS) }
+  public static func add(TERMINATION_CHAR: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TERMINATION_CHAR, def: 0, at: VT.TERMINATION_CHAR) }
+  public static func add(MAX_SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_SIZE_IN_BITS, def: 0, at: VT.MAX_SIZE_IN_BITS) }
+  public static func add(LEADING_SIZE_BITS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEADING_SIZE_BITS, def: 0, at: VT.LEADING_SIZE_BITS) }
   public static func endStringDataEncoding(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createStringDataEncoding(
     _ fbb: inout FlatBufferBuilder,
@@ -513,12 +507,12 @@ public struct StringDataEncoding: FlatBufferTable, FlatbuffersVectorInitializabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ENCODING.p, fieldName: "ENCODING", required: false, type: StringEncodingType.self)
-    try _v.visit(field: VTOFFSET.SIZE_TYPE.p, fieldName: "SIZE_TYPE", required: false, type: StringSizeType.self)
-    try _v.visit(field: VTOFFSET.SIZE_IN_BITS.p, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.TERMINATION_CHAR.p, fieldName: "TERMINATION_CHAR", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.MAX_SIZE_IN_BITS.p, fieldName: "MAX_SIZE_IN_BITS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.LEADING_SIZE_BITS.p, fieldName: "LEADING_SIZE_BITS", required: false, type: UInt8.self)
+    try _v.visit(field: VT.ENCODING, fieldName: "ENCODING", required: false, type: StringEncodingType.self)
+    try _v.visit(field: VT.SIZE_TYPE, fieldName: "SIZE_TYPE", required: false, type: StringSizeType.self)
+    try _v.visit(field: VT.SIZE_IN_BITS, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.TERMINATION_CHAR, fieldName: "TERMINATION_CHAR", required: false, type: UInt8.self)
+    try _v.visit(field: VT.MAX_SIZE_IN_BITS, fieldName: "MAX_SIZE_IN_BITS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.LEADING_SIZE_BITS, fieldName: "LEADING_SIZE_BITS", required: false, type: UInt8.self)
     _v.finish()
   }
 }
@@ -535,24 +529,22 @@ public struct BinaryDataEncoding: FlatBufferTable, FlatbuffersVectorInitializabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SIZE_IN_BITS = 4
-    case MAX_SIZE_IN_BITS = 6
-    case LEADING_SIZE_BITS = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SIZE_IN_BITS: VOffset = 4
+    static let MAX_SIZE_IN_BITS: VOffset = 6
+    static let LEADING_SIZE_BITS: VOffset = 8
   }
 
   ///  Fixed size in bits
-  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VTOFFSET.SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VT.SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Maximum size in bits (for variable length)
-  public var MAX_SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VTOFFSET.MAX_SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var MAX_SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VT.MAX_SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Leading size field bits (for variable length)
-  public var LEADING_SIZE_BITS: UInt8 { let o = _accessor.offset(VTOFFSET.LEADING_SIZE_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var LEADING_SIZE_BITS: UInt8 { let o = _accessor.offset(VT.LEADING_SIZE_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   public static func startBinaryDataEncoding(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VTOFFSET.SIZE_IN_BITS.p) }
-  public static func add(MAX_SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_SIZE_IN_BITS, def: 0, at: VTOFFSET.MAX_SIZE_IN_BITS.p) }
-  public static func add(LEADING_SIZE_BITS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEADING_SIZE_BITS, def: 0, at: VTOFFSET.LEADING_SIZE_BITS.p) }
+  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VT.SIZE_IN_BITS) }
+  public static func add(MAX_SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_SIZE_IN_BITS, def: 0, at: VT.MAX_SIZE_IN_BITS) }
+  public static func add(LEADING_SIZE_BITS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEADING_SIZE_BITS, def: 0, at: VT.LEADING_SIZE_BITS) }
   public static func endBinaryDataEncoding(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBinaryDataEncoding(
     _ fbb: inout FlatBufferBuilder,
@@ -569,9 +561,9 @@ public struct BinaryDataEncoding: FlatBufferTable, FlatbuffersVectorInitializabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SIZE_IN_BITS.p, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.MAX_SIZE_IN_BITS.p, fieldName: "MAX_SIZE_IN_BITS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.LEADING_SIZE_BITS.p, fieldName: "LEADING_SIZE_BITS", required: false, type: UInt8.self)
+    try _v.visit(field: VT.SIZE_IN_BITS, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.MAX_SIZE_IN_BITS, fieldName: "MAX_SIZE_IN_BITS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.LEADING_SIZE_BITS, fieldName: "LEADING_SIZE_BITS", required: false, type: UInt8.self)
     _v.finish()
   }
 }
@@ -588,17 +580,15 @@ public struct PolynomialCalibrator: FlatBufferTable, FlatbuffersVectorInitializa
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COEFFICIENTS = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COEFFICIENTS: VOffset = 4
   }
 
   ///  Polynomial terms (index is power, value is coefficient)
-  public var COEFFICIENTS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.COEFFICIENTS.v, byteSize: 8) }
-  public func withUnsafePointerToCoefficients<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COEFFICIENTS.v, body: body) }
+  public var COEFFICIENTS: FlatbufferVector<Double> { return _accessor.vector(at: VT.COEFFICIENTS, byteSize: 8) }
+  public func withUnsafePointerToCoefficients<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COEFFICIENTS, body: body) }
   public static func startPolynomialCalibrator(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func addVectorOf(COEFFICIENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFFICIENTS, at: VTOFFSET.COEFFICIENTS.p) }
+  public static func addVectorOf(COEFFICIENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFFICIENTS, at: VT.COEFFICIENTS) }
   public static func endPolynomialCalibrator(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPolynomialCalibrator(
     _ fbb: inout FlatBufferBuilder,
@@ -611,7 +601,7 @@ public struct PolynomialCalibrator: FlatBufferTable, FlatbuffersVectorInitializa
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COEFFICIENTS.p, fieldName: "COEFFICIENTS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.COEFFICIENTS, fieldName: "COEFFICIENTS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
@@ -628,20 +618,18 @@ public struct SplinePoint: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case RAW = 4
-    case CALIBRATED = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let RAW: VOffset = 4
+    static let CALIBRATED: VOffset = 6
   }
 
   ///  Raw value
-  public var RAW: Double { let o = _accessor.offset(VTOFFSET.RAW.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RAW: Double { let o = _accessor.offset(VT.RAW); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Calibrated/engineering value
-  public var CALIBRATED: Double { let o = _accessor.offset(VTOFFSET.CALIBRATED.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var CALIBRATED: Double { let o = _accessor.offset(VT.CALIBRATED); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startSplinePoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(RAW: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RAW, def: 0.0, at: VTOFFSET.RAW.p) }
-  public static func add(CALIBRATED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CALIBRATED, def: 0.0, at: VTOFFSET.CALIBRATED.p) }
+  public static func add(RAW: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RAW, def: 0.0, at: VT.RAW) }
+  public static func add(CALIBRATED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CALIBRATED, def: 0.0, at: VT.CALIBRATED) }
   public static func endSplinePoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSplinePoint(
     _ fbb: inout FlatBufferBuilder,
@@ -656,8 +644,8 @@ public struct SplinePoint: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.RAW.p, fieldName: "RAW", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CALIBRATED.p, fieldName: "CALIBRATED", required: false, type: Double.self)
+    try _v.visit(field: VT.RAW, fieldName: "RAW", required: false, type: Double.self)
+    try _v.visit(field: VT.CALIBRATED, fieldName: "CALIBRATED", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -674,26 +662,24 @@ public struct SplineCalibrator: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case POINTS = 4
-    case EXTRAPOLATE_LOW = 6
-    case EXTRAPOLATE_HIGH = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let POINTS: VOffset = 4
+    static let EXTRAPOLATE_LOW: VOffset = 6
+    static let EXTRAPOLATE_HIGH: VOffset = 8
   }
 
   ///  Spline points ordered by raw value
-  public var POINTS: FlatbufferVector<SplinePoint> { return _accessor.vector(at: VTOFFSET.POINTS.v, byteSize: 4) }
+  public var POINTS: FlatbufferVector<SplinePoint> { return _accessor.vector(at: VT.POINTS, byteSize: 4) }
   ///  Extrapolate below minimum point
-  public var EXTRAPOLATE_LOW: Bool { let o = _accessor.offset(VTOFFSET.EXTRAPOLATE_LOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var EXTRAPOLATE_LOW: Bool { let o = _accessor.offset(VT.EXTRAPOLATE_LOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Extrapolate above maximum point
-  public var EXTRAPOLATE_HIGH: Bool { let o = _accessor.offset(VTOFFSET.EXTRAPOLATE_HIGH.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var EXTRAPOLATE_HIGH: Bool { let o = _accessor.offset(VT.EXTRAPOLATE_HIGH); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startSplineCalibrator(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func addVectorOf(POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTS, at: VTOFFSET.POINTS.p) }
+  public static func addVectorOf(POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTS, at: VT.POINTS) }
   public static func add(EXTRAPOLATE_LOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRAPOLATE_LOW, def: false,
-   at: VTOFFSET.EXTRAPOLATE_LOW.p) }
+   at: VT.EXTRAPOLATE_LOW) }
   public static func add(EXTRAPOLATE_HIGH: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRAPOLATE_HIGH, def: false,
-   at: VTOFFSET.EXTRAPOLATE_HIGH.p) }
+   at: VT.EXTRAPOLATE_HIGH) }
   public static func endSplineCalibrator(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSplineCalibrator(
     _ fbb: inout FlatBufferBuilder,
@@ -710,9 +696,9 @@ public struct SplineCalibrator: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.POINTS.p, fieldName: "POINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<SplinePoint>, SplinePoint>>.self)
-    try _v.visit(field: VTOFFSET.EXTRAPOLATE_LOW.p, fieldName: "EXTRAPOLATE_LOW", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.EXTRAPOLATE_HIGH.p, fieldName: "EXTRAPOLATE_HIGH", required: false, type: Bool.self)
+    try _v.visit(field: VT.POINTS, fieldName: "POINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<SplinePoint>, SplinePoint>>.self)
+    try _v.visit(field: VT.EXTRAPOLATE_LOW, fieldName: "EXTRAPOLATE_LOW", required: false, type: Bool.self)
+    try _v.visit(field: VT.EXTRAPOLATE_HIGH, fieldName: "EXTRAPOLATE_HIGH", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -729,17 +715,15 @@ public struct MathOperation: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case RPN_EXPRESSION = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let RPN_EXPRESSION: VOffset = 4
   }
 
   ///  Operation in Reverse Polish Notation (RPN)
-  public var RPN_EXPRESSION: String? { let o = _accessor.offset(VTOFFSET.RPN_EXPRESSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RPN_EXPRESSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RPN_EXPRESSION.v) }
+  public var RPN_EXPRESSION: String? { let o = _accessor.offset(VT.RPN_EXPRESSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RPN_EXPRESSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RPN_EXPRESSION) }
   public static func startMathOperation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func add(RPN_EXPRESSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RPN_EXPRESSION, at: VTOFFSET.RPN_EXPRESSION.p) }
+  public static func add(RPN_EXPRESSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RPN_EXPRESSION, at: VT.RPN_EXPRESSION) }
   public static func endMathOperation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMathOperation(
     _ fbb: inout FlatBufferBuilder,
@@ -752,7 +736,7 @@ public struct MathOperation: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.RPN_EXPRESSION.p, fieldName: "RPN_EXPRESSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RPN_EXPRESSION, fieldName: "RPN_EXPRESSION", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -769,28 +753,26 @@ public struct ContextCalibrator: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case MATCH_CRITERIA = 4
-    case POLYNOMIAL = 6
-    case SPLINE = 8
-    case MATH_OPERATION = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let MATCH_CRITERIA: VOffset = 4
+    static let POLYNOMIAL: VOffset = 6
+    static let SPLINE: VOffset = 8
+    static let MATH_OPERATION: VOffset = 10
   }
 
   ///  Match criteria for selecting this calibrator
-  public var MATCH_CRITERIA: MatchCriteria? { let o = _accessor.offset(VTOFFSET.MATCH_CRITERIA.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATCH_CRITERIA: MatchCriteria? { let o = _accessor.offset(VT.MATCH_CRITERIA); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Polynomial calibrator (if used)
-  public var POLYNOMIAL: PolynomialCalibrator? { let o = _accessor.offset(VTOFFSET.POLYNOMIAL.v); return o == 0 ? nil : PolynomialCalibrator(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var POLYNOMIAL: PolynomialCalibrator? { let o = _accessor.offset(VT.POLYNOMIAL); return o == 0 ? nil : PolynomialCalibrator(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Spline calibrator (if used)
-  public var SPLINE: SplineCalibrator? { let o = _accessor.offset(VTOFFSET.SPLINE.v); return o == 0 ? nil : SplineCalibrator(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SPLINE: SplineCalibrator? { let o = _accessor.offset(VT.SPLINE); return o == 0 ? nil : SplineCalibrator(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Math operation calibrator (if used)
-  public var MATH_OPERATION: MathOperation? { let o = _accessor.offset(VTOFFSET.MATH_OPERATION.v); return o == 0 ? nil : MathOperation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATH_OPERATION: MathOperation? { let o = _accessor.offset(VT.MATH_OPERATION); return o == 0 ? nil : MathOperation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startContextCalibrator(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(MATCH_CRITERIA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATCH_CRITERIA, at: VTOFFSET.MATCH_CRITERIA.p) }
-  public static func add(POLYNOMIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYNOMIAL, at: VTOFFSET.POLYNOMIAL.p) }
-  public static func add(SPLINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPLINE, at: VTOFFSET.SPLINE.p) }
-  public static func add(MATH_OPERATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATH_OPERATION, at: VTOFFSET.MATH_OPERATION.p) }
+  public static func add(MATCH_CRITERIA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATCH_CRITERIA, at: VT.MATCH_CRITERIA) }
+  public static func add(POLYNOMIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYNOMIAL, at: VT.POLYNOMIAL) }
+  public static func add(SPLINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPLINE, at: VT.SPLINE) }
+  public static func add(MATH_OPERATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATH_OPERATION, at: VT.MATH_OPERATION) }
   public static func endContextCalibrator(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createContextCalibrator(
     _ fbb: inout FlatBufferBuilder,
@@ -809,10 +791,10 @@ public struct ContextCalibrator: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.MATCH_CRITERIA.p, fieldName: "MATCH_CRITERIA", required: false, type: ForwardOffset<MatchCriteria>.self)
-    try _v.visit(field: VTOFFSET.POLYNOMIAL.p, fieldName: "POLYNOMIAL", required: false, type: ForwardOffset<PolynomialCalibrator>.self)
-    try _v.visit(field: VTOFFSET.SPLINE.p, fieldName: "SPLINE", required: false, type: ForwardOffset<SplineCalibrator>.self)
-    try _v.visit(field: VTOFFSET.MATH_OPERATION.p, fieldName: "MATH_OPERATION", required: false, type: ForwardOffset<MathOperation>.self)
+    try _v.visit(field: VT.MATCH_CRITERIA, fieldName: "MATCH_CRITERIA", required: false, type: ForwardOffset<MatchCriteria>.self)
+    try _v.visit(field: VT.POLYNOMIAL, fieldName: "POLYNOMIAL", required: false, type: ForwardOffset<PolynomialCalibrator>.self)
+    try _v.visit(field: VT.SPLINE, fieldName: "SPLINE", required: false, type: ForwardOffset<SplineCalibrator>.self)
+    try _v.visit(field: VT.MATH_OPERATION, fieldName: "MATH_OPERATION", required: false, type: ForwardOffset<MathOperation>.self)
     _v.finish()
   }
 }
@@ -829,28 +811,26 @@ public struct AlarmRange: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case MIN_INCLUSIVE = 4
-    case MAX_INCLUSIVE = 6
-    case MIN_EXCLUSIVE = 8
-    case MAX_EXCLUSIVE = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let MIN_INCLUSIVE: VOffset = 4
+    static let MAX_INCLUSIVE: VOffset = 6
+    static let MIN_EXCLUSIVE: VOffset = 8
+    static let MAX_EXCLUSIVE: VOffset = 10
   }
 
   ///  Minimum value (inclusive)
-  public var MIN_INCLUSIVE: Double { let o = _accessor.offset(VTOFFSET.MIN_INCLUSIVE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MIN_INCLUSIVE: Double { let o = _accessor.offset(VT.MIN_INCLUSIVE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum value (inclusive)
-  public var MAX_INCLUSIVE: Double { let o = _accessor.offset(VTOFFSET.MAX_INCLUSIVE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_INCLUSIVE: Double { let o = _accessor.offset(VT.MAX_INCLUSIVE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Minimum value (exclusive)
-  public var MIN_EXCLUSIVE: Double { let o = _accessor.offset(VTOFFSET.MIN_EXCLUSIVE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MIN_EXCLUSIVE: Double { let o = _accessor.offset(VT.MIN_EXCLUSIVE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum value (exclusive)
-  public var MAX_EXCLUSIVE: Double { let o = _accessor.offset(VTOFFSET.MAX_EXCLUSIVE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_EXCLUSIVE: Double { let o = _accessor.offset(VT.MAX_EXCLUSIVE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startAlarmRange(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(MIN_INCLUSIVE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_INCLUSIVE, def: 0.0, at: VTOFFSET.MIN_INCLUSIVE.p) }
-  public static func add(MAX_INCLUSIVE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_INCLUSIVE, def: 0.0, at: VTOFFSET.MAX_INCLUSIVE.p) }
-  public static func add(MIN_EXCLUSIVE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_EXCLUSIVE, def: 0.0, at: VTOFFSET.MIN_EXCLUSIVE.p) }
-  public static func add(MAX_EXCLUSIVE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_EXCLUSIVE, def: 0.0, at: VTOFFSET.MAX_EXCLUSIVE.p) }
+  public static func add(MIN_INCLUSIVE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_INCLUSIVE, def: 0.0, at: VT.MIN_INCLUSIVE) }
+  public static func add(MAX_INCLUSIVE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_INCLUSIVE, def: 0.0, at: VT.MAX_INCLUSIVE) }
+  public static func add(MIN_EXCLUSIVE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_EXCLUSIVE, def: 0.0, at: VT.MIN_EXCLUSIVE) }
+  public static func add(MAX_EXCLUSIVE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_EXCLUSIVE, def: 0.0, at: VT.MAX_EXCLUSIVE) }
   public static func endAlarmRange(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAlarmRange(
     _ fbb: inout FlatBufferBuilder,
@@ -869,10 +849,10 @@ public struct AlarmRange: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.MIN_INCLUSIVE.p, fieldName: "MIN_INCLUSIVE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_INCLUSIVE.p, fieldName: "MAX_INCLUSIVE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MIN_EXCLUSIVE.p, fieldName: "MIN_EXCLUSIVE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_EXCLUSIVE.p, fieldName: "MAX_EXCLUSIVE", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_INCLUSIVE, fieldName: "MIN_INCLUSIVE", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_INCLUSIVE, fieldName: "MAX_INCLUSIVE", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_EXCLUSIVE, fieldName: "MIN_EXCLUSIVE", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_EXCLUSIVE, fieldName: "MAX_EXCLUSIVE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -889,32 +869,30 @@ public struct StaticAlarmRanges: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case WATCH_RANGE = 4
-    case WARNING_RANGE = 6
-    case DISTRESS_RANGE = 8
-    case CRITICAL_RANGE = 10
-    case SEVERE_RANGE = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let WATCH_RANGE: VOffset = 4
+    static let WARNING_RANGE: VOffset = 6
+    static let DISTRESS_RANGE: VOffset = 8
+    static let CRITICAL_RANGE: VOffset = 10
+    static let SEVERE_RANGE: VOffset = 12
   }
 
   ///  Watch range
-  public var WATCH_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.WATCH_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var WATCH_RANGE: AlarmRange? { let o = _accessor.offset(VT.WATCH_RANGE); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Warning range
-  public var WARNING_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.WARNING_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var WARNING_RANGE: AlarmRange? { let o = _accessor.offset(VT.WARNING_RANGE); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Distress range
-  public var DISTRESS_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.DISTRESS_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DISTRESS_RANGE: AlarmRange? { let o = _accessor.offset(VT.DISTRESS_RANGE); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Critical range
-  public var CRITICAL_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.CRITICAL_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CRITICAL_RANGE: AlarmRange? { let o = _accessor.offset(VT.CRITICAL_RANGE); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Severe range
-  public var SEVERE_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.SEVERE_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SEVERE_RANGE: AlarmRange? { let o = _accessor.offset(VT.SEVERE_RANGE); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startStaticAlarmRanges(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(WATCH_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WATCH_RANGE, at: VTOFFSET.WATCH_RANGE.p) }
-  public static func add(WARNING_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WARNING_RANGE, at: VTOFFSET.WARNING_RANGE.p) }
-  public static func add(DISTRESS_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISTRESS_RANGE, at: VTOFFSET.DISTRESS_RANGE.p) }
-  public static func add(CRITICAL_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CRITICAL_RANGE, at: VTOFFSET.CRITICAL_RANGE.p) }
-  public static func add(SEVERE_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEVERE_RANGE, at: VTOFFSET.SEVERE_RANGE.p) }
+  public static func add(WATCH_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WATCH_RANGE, at: VT.WATCH_RANGE) }
+  public static func add(WARNING_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WARNING_RANGE, at: VT.WARNING_RANGE) }
+  public static func add(DISTRESS_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISTRESS_RANGE, at: VT.DISTRESS_RANGE) }
+  public static func add(CRITICAL_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CRITICAL_RANGE, at: VT.CRITICAL_RANGE) }
+  public static func add(SEVERE_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEVERE_RANGE, at: VT.SEVERE_RANGE) }
   public static func endStaticAlarmRanges(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createStaticAlarmRanges(
     _ fbb: inout FlatBufferBuilder,
@@ -935,11 +913,11 @@ public struct StaticAlarmRanges: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.WATCH_RANGE.p, fieldName: "WATCH_RANGE", required: false, type: ForwardOffset<AlarmRange>.self)
-    try _v.visit(field: VTOFFSET.WARNING_RANGE.p, fieldName: "WARNING_RANGE", required: false, type: ForwardOffset<AlarmRange>.self)
-    try _v.visit(field: VTOFFSET.DISTRESS_RANGE.p, fieldName: "DISTRESS_RANGE", required: false, type: ForwardOffset<AlarmRange>.self)
-    try _v.visit(field: VTOFFSET.CRITICAL_RANGE.p, fieldName: "CRITICAL_RANGE", required: false, type: ForwardOffset<AlarmRange>.self)
-    try _v.visit(field: VTOFFSET.SEVERE_RANGE.p, fieldName: "SEVERE_RANGE", required: false, type: ForwardOffset<AlarmRange>.self)
+    try _v.visit(field: VT.WATCH_RANGE, fieldName: "WATCH_RANGE", required: false, type: ForwardOffset<AlarmRange>.self)
+    try _v.visit(field: VT.WARNING_RANGE, fieldName: "WARNING_RANGE", required: false, type: ForwardOffset<AlarmRange>.self)
+    try _v.visit(field: VT.DISTRESS_RANGE, fieldName: "DISTRESS_RANGE", required: false, type: ForwardOffset<AlarmRange>.self)
+    try _v.visit(field: VT.CRITICAL_RANGE, fieldName: "CRITICAL_RANGE", required: false, type: ForwardOffset<AlarmRange>.self)
+    try _v.visit(field: VT.SEVERE_RANGE, fieldName: "SEVERE_RANGE", required: false, type: ForwardOffset<AlarmRange>.self)
     _v.finish()
   }
 }
@@ -956,21 +934,19 @@ public struct EnumerationAlarm: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case LABEL = 4
-    case ALARM_LEVEL = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let LABEL: VOffset = 4
+    static let ALARM_LEVEL: VOffset = 6
   }
 
   ///  Enumerated value label
-  public var LABEL: String? { let o = _accessor.offset(VTOFFSET.LABEL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LABEL.v) }
+  public var LABEL: String? { let o = _accessor.offset(VT.LABEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LABEL) }
   ///  Alarm level for this value
-  public var ALARM_LEVEL: AlarmSeverityType { let o = _accessor.offset(VTOFFSET.ALARM_LEVEL.v); return o == 0 ? .normal : AlarmSeverityType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .normal }
+  public var ALARM_LEVEL: AlarmSeverityType { let o = _accessor.offset(VT.ALARM_LEVEL); return o == 0 ? .normal : AlarmSeverityType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .normal }
   public static func startEnumerationAlarm(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL, at: VTOFFSET.LABEL.p) }
-  public static func add(ALARM_LEVEL: AlarmSeverityType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALARM_LEVEL.rawValue, def: 0, at: VTOFFSET.ALARM_LEVEL.p) }
+  public static func add(LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL, at: VT.LABEL) }
+  public static func add(ALARM_LEVEL: AlarmSeverityType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALARM_LEVEL.rawValue, def: 0, at: VT.ALARM_LEVEL) }
   public static func endEnumerationAlarm(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEnumerationAlarm(
     _ fbb: inout FlatBufferBuilder,
@@ -985,8 +961,8 @@ public struct EnumerationAlarm: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LABEL.p, fieldName: "LABEL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ALARM_LEVEL.p, fieldName: "ALARM_LEVEL", required: false, type: AlarmSeverityType.self)
+    try _v.visit(field: VT.LABEL, fieldName: "LABEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALARM_LEVEL, fieldName: "ALARM_LEVEL", required: false, type: AlarmSeverityType.self)
     _v.finish()
   }
 }
@@ -1003,24 +979,22 @@ public struct DefaultAlarm: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case MIN_VIOLATIONS = 4
-    case STATIC_ALARM_RANGES = 6
-    case ENUMERATION_ALARMS = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let MIN_VIOLATIONS: VOffset = 4
+    static let STATIC_ALARM_RANGES: VOffset = 6
+    static let ENUMERATION_ALARMS: VOffset = 8
   }
 
   ///  Minimum violations before alarm triggers
-  public var MIN_VIOLATIONS: UInt16 { let o = _accessor.offset(VTOFFSET.MIN_VIOLATIONS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var MIN_VIOLATIONS: UInt16 { let o = _accessor.offset(VT.MIN_VIOLATIONS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Static numeric alarm ranges
-  public var STATIC_ALARM_RANGES: StaticAlarmRanges? { let o = _accessor.offset(VTOFFSET.STATIC_ALARM_RANGES.v); return o == 0 ? nil : StaticAlarmRanges(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var STATIC_ALARM_RANGES: StaticAlarmRanges? { let o = _accessor.offset(VT.STATIC_ALARM_RANGES); return o == 0 ? nil : StaticAlarmRanges(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Enumeration alarms for enumerated types
-  public var ENUMERATION_ALARMS: FlatbufferVector<EnumerationAlarm> { return _accessor.vector(at: VTOFFSET.ENUMERATION_ALARMS.v, byteSize: 4) }
+  public var ENUMERATION_ALARMS: FlatbufferVector<EnumerationAlarm> { return _accessor.vector(at: VT.ENUMERATION_ALARMS, byteSize: 4) }
   public static func startDefaultAlarm(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(MIN_VIOLATIONS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_VIOLATIONS, def: 0, at: VTOFFSET.MIN_VIOLATIONS.p) }
-  public static func add(STATIC_ALARM_RANGES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATIC_ALARM_RANGES, at: VTOFFSET.STATIC_ALARM_RANGES.p) }
-  public static func addVectorOf(ENUMERATION_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENUMERATION_ALARMS, at: VTOFFSET.ENUMERATION_ALARMS.p) }
+  public static func add(MIN_VIOLATIONS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_VIOLATIONS, def: 0, at: VT.MIN_VIOLATIONS) }
+  public static func add(STATIC_ALARM_RANGES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATIC_ALARM_RANGES, at: VT.STATIC_ALARM_RANGES) }
+  public static func addVectorOf(ENUMERATION_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENUMERATION_ALARMS, at: VT.ENUMERATION_ALARMS) }
   public static func endDefaultAlarm(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDefaultAlarm(
     _ fbb: inout FlatBufferBuilder,
@@ -1037,9 +1011,9 @@ public struct DefaultAlarm: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.MIN_VIOLATIONS.p, fieldName: "MIN_VIOLATIONS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.STATIC_ALARM_RANGES.p, fieldName: "STATIC_ALARM_RANGES", required: false, type: ForwardOffset<StaticAlarmRanges>.self)
-    try _v.visit(field: VTOFFSET.ENUMERATION_ALARMS.p, fieldName: "ENUMERATION_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<EnumerationAlarm>, EnumerationAlarm>>.self)
+    try _v.visit(field: VT.MIN_VIOLATIONS, fieldName: "MIN_VIOLATIONS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.STATIC_ALARM_RANGES, fieldName: "STATIC_ALARM_RANGES", required: false, type: ForwardOffset<StaticAlarmRanges>.self)
+    try _v.visit(field: VT.ENUMERATION_ALARMS, fieldName: "ENUMERATION_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<EnumerationAlarm>, EnumerationAlarm>>.self)
     _v.finish()
   }
 }
@@ -1056,20 +1030,18 @@ public struct ContextAlarm: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case MATCH_CRITERIA = 4
-    case ALARM = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let MATCH_CRITERIA: VOffset = 4
+    static let ALARM: VOffset = 6
   }
 
   ///  Match criteria for this alarm context
-  public var MATCH_CRITERIA: MatchCriteria? { let o = _accessor.offset(VTOFFSET.MATCH_CRITERIA.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MATCH_CRITERIA: MatchCriteria? { let o = _accessor.offset(VT.MATCH_CRITERIA); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Alarm definition for this context
-  public var ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ALARM: DefaultAlarm? { let o = _accessor.offset(VT.ALARM); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startContextAlarm(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(MATCH_CRITERIA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATCH_CRITERIA, at: VTOFFSET.MATCH_CRITERIA.p) }
-  public static func add(ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALARM, at: VTOFFSET.ALARM.p) }
+  public static func add(MATCH_CRITERIA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATCH_CRITERIA, at: VT.MATCH_CRITERIA) }
+  public static func add(ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALARM, at: VT.ALARM) }
   public static func endContextAlarm(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createContextAlarm(
     _ fbb: inout FlatBufferBuilder,
@@ -1084,8 +1056,8 @@ public struct ContextAlarm: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.MATCH_CRITERIA.p, fieldName: "MATCH_CRITERIA", required: false, type: ForwardOffset<MatchCriteria>.self)
-    try _v.visit(field: VTOFFSET.ALARM.p, fieldName: "ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
+    try _v.visit(field: VT.MATCH_CRITERIA, fieldName: "MATCH_CRITERIA", required: false, type: ForwardOffset<MatchCriteria>.self)
+    try _v.visit(field: VT.ALARM, fieldName: "ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
     _v.finish()
   }
 }
@@ -1102,31 +1074,29 @@ public struct ParameterComparison: FlatBufferTable, FlatbuffersVectorInitializab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PARAMETER_REF = 4
-    case OPERATOR = 6
-    case VALUE = 8
-    case USE_CALIBRATED_VALUE = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PARAMETER_REF: VOffset = 4
+    static let OPERATOR: VOffset = 6
+    static let VALUE: VOffset = 8
+    static let USE_CALIBRATED_VALUE: VOffset = 10
   }
 
   ///  Parameter reference path
-  public var PARAMETER_REF: String? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARAMETER_REF.v) }
+  public var PARAMETER_REF: String? { let o = _accessor.offset(VT.PARAMETER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAMETER_REF) }
   ///  Comparison operator
-  public var OPERATOR: ComparisonOperator { let o = _accessor.offset(VTOFFSET.OPERATOR.v); return o == 0 ? .eq : ComparisonOperator(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .eq }
+  public var OPERATOR: ComparisonOperator { let o = _accessor.offset(VT.OPERATOR); return o == 0 ? .eq : ComparisonOperator(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .eq }
   ///  Value to compare against
-  public var VALUE: String? { let o = _accessor.offset(VTOFFSET.VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VALUE.v) }
+  public var VALUE: String? { let o = _accessor.offset(VT.VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VALUE) }
   ///  Use calibrated value (true) or raw value (false)
-  public var USE_CALIBRATED_VALUE: Bool { let o = _accessor.offset(VTOFFSET.USE_CALIBRATED_VALUE.v); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var USE_CALIBRATED_VALUE: Bool { let o = _accessor.offset(VT.USE_CALIBRATED_VALUE); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startParameterComparison(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VTOFFSET.PARAMETER_REF.p) }
-  public static func add(OPERATOR: ComparisonOperator, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATOR.rawValue, def: 0, at: VTOFFSET.OPERATOR.p) }
-  public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VTOFFSET.VALUE.p) }
+  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VT.PARAMETER_REF) }
+  public static func add(OPERATOR: ComparisonOperator, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATOR.rawValue, def: 0, at: VT.OPERATOR) }
+  public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VT.VALUE) }
   public static func add(USE_CALIBRATED_VALUE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USE_CALIBRATED_VALUE, def: true,
-   at: VTOFFSET.USE_CALIBRATED_VALUE.p) }
+   at: VT.USE_CALIBRATED_VALUE) }
   public static func endParameterComparison(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createParameterComparison(
     _ fbb: inout FlatBufferBuilder,
@@ -1145,10 +1115,10 @@ public struct ParameterComparison: FlatBufferTable, FlatbuffersVectorInitializab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PARAMETER_REF.p, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OPERATOR.p, fieldName: "OPERATOR", required: false, type: ComparisonOperator.self)
-    try _v.visit(field: VTOFFSET.VALUE.p, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.USE_CALIBRATED_VALUE.p, fieldName: "USE_CALIBRATED_VALUE", required: false, type: Bool.self)
+    try _v.visit(field: VT.PARAMETER_REF, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OPERATOR, fieldName: "OPERATOR", required: false, type: ComparisonOperator.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.USE_CALIBRATED_VALUE, fieldName: "USE_CALIBRATED_VALUE", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -1165,24 +1135,22 @@ public struct BooleanExpression: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case OPERATOR = 4
-    case CONDITIONS = 6
-    case EXPRESSIONS = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let OPERATOR: VOffset = 4
+    static let CONDITIONS: VOffset = 6
+    static let EXPRESSIONS: VOffset = 8
   }
 
   ///  Boolean operator
-  public var OPERATOR: BooleanOperatorType { let o = _accessor.offset(VTOFFSET.OPERATOR.v); return o == 0 ? .and : BooleanOperatorType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .and }
+  public var OPERATOR: BooleanOperatorType { let o = _accessor.offset(VT.OPERATOR); return o == 0 ? .and : BooleanOperatorType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .and }
   ///  Comparison conditions
-  public var CONDITIONS: FlatbufferVector<ParameterComparison> { return _accessor.vector(at: VTOFFSET.CONDITIONS.v, byteSize: 4) }
+  public var CONDITIONS: FlatbufferVector<ParameterComparison> { return _accessor.vector(at: VT.CONDITIONS, byteSize: 4) }
   ///  Nested expressions
-  public var EXPRESSIONS: FlatbufferVector<BooleanExpression> { return _accessor.vector(at: VTOFFSET.EXPRESSIONS.v, byteSize: 4) }
+  public var EXPRESSIONS: FlatbufferVector<BooleanExpression> { return _accessor.vector(at: VT.EXPRESSIONS, byteSize: 4) }
   public static func startBooleanExpression(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(OPERATOR: BooleanOperatorType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATOR.rawValue, def: 0, at: VTOFFSET.OPERATOR.p) }
-  public static func addVectorOf(CONDITIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONDITIONS, at: VTOFFSET.CONDITIONS.p) }
-  public static func addVectorOf(EXPRESSIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXPRESSIONS, at: VTOFFSET.EXPRESSIONS.p) }
+  public static func add(OPERATOR: BooleanOperatorType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATOR.rawValue, def: 0, at: VT.OPERATOR) }
+  public static func addVectorOf(CONDITIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONDITIONS, at: VT.CONDITIONS) }
+  public static func addVectorOf(EXPRESSIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXPRESSIONS, at: VT.EXPRESSIONS) }
   public static func endBooleanExpression(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBooleanExpression(
     _ fbb: inout FlatBufferBuilder,
@@ -1199,9 +1167,9 @@ public struct BooleanExpression: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.OPERATOR.p, fieldName: "OPERATOR", required: false, type: BooleanOperatorType.self)
-    try _v.visit(field: VTOFFSET.CONDITIONS.p, fieldName: "CONDITIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<ParameterComparison>, ParameterComparison>>.self)
-    try _v.visit(field: VTOFFSET.EXPRESSIONS.p, fieldName: "EXPRESSIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<BooleanExpression>, BooleanExpression>>.self)
+    try _v.visit(field: VT.OPERATOR, fieldName: "OPERATOR", required: false, type: BooleanOperatorType.self)
+    try _v.visit(field: VT.CONDITIONS, fieldName: "CONDITIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<ParameterComparison>, ParameterComparison>>.self)
+    try _v.visit(field: VT.EXPRESSIONS, fieldName: "EXPRESSIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<BooleanExpression>, BooleanExpression>>.self)
     _v.finish()
   }
 }
@@ -1218,29 +1186,27 @@ public struct MatchCriteria: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COMPARISON = 4
-    case COMPARISON_LIST = 6
-    case BOOLEAN_EXPRESSION = 8
-    case CUSTOM_ALGORITHM = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COMPARISON: VOffset = 4
+    static let COMPARISON_LIST: VOffset = 6
+    static let BOOLEAN_EXPRESSION: VOffset = 8
+    static let CUSTOM_ALGORITHM: VOffset = 10
   }
 
   ///  Single comparison
-  public var COMPARISON: ParameterComparison? { let o = _accessor.offset(VTOFFSET.COMPARISON.v); return o == 0 ? nil : ParameterComparison(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COMPARISON: ParameterComparison? { let o = _accessor.offset(VT.COMPARISON); return o == 0 ? nil : ParameterComparison(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  List of comparisons (implicit AND)
-  public var COMPARISON_LIST: FlatbufferVector<ParameterComparison> { return _accessor.vector(at: VTOFFSET.COMPARISON_LIST.v, byteSize: 4) }
+  public var COMPARISON_LIST: FlatbufferVector<ParameterComparison> { return _accessor.vector(at: VT.COMPARISON_LIST, byteSize: 4) }
   ///  Boolean expression
-  public var BOOLEAN_EXPRESSION: BooleanExpression? { let o = _accessor.offset(VTOFFSET.BOOLEAN_EXPRESSION.v); return o == 0 ? nil : BooleanExpression(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BOOLEAN_EXPRESSION: BooleanExpression? { let o = _accessor.offset(VT.BOOLEAN_EXPRESSION); return o == 0 ? nil : BooleanExpression(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Custom algorithm reference
-  public var CUSTOM_ALGORITHM: String? { let o = _accessor.offset(VTOFFSET.CUSTOM_ALGORITHM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CUSTOM_ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CUSTOM_ALGORITHM.v) }
+  public var CUSTOM_ALGORITHM: String? { let o = _accessor.offset(VT.CUSTOM_ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CUSTOM_ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CUSTOM_ALGORITHM) }
   public static func startMatchCriteria(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(COMPARISON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPARISON, at: VTOFFSET.COMPARISON.p) }
-  public static func addVectorOf(COMPARISON_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPARISON_LIST, at: VTOFFSET.COMPARISON_LIST.p) }
-  public static func add(BOOLEAN_EXPRESSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOOLEAN_EXPRESSION, at: VTOFFSET.BOOLEAN_EXPRESSION.p) }
-  public static func add(CUSTOM_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CUSTOM_ALGORITHM, at: VTOFFSET.CUSTOM_ALGORITHM.p) }
+  public static func add(COMPARISON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPARISON, at: VT.COMPARISON) }
+  public static func addVectorOf(COMPARISON_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMPARISON_LIST, at: VT.COMPARISON_LIST) }
+  public static func add(BOOLEAN_EXPRESSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOOLEAN_EXPRESSION, at: VT.BOOLEAN_EXPRESSION) }
+  public static func add(CUSTOM_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CUSTOM_ALGORITHM, at: VT.CUSTOM_ALGORITHM) }
   public static func endMatchCriteria(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMatchCriteria(
     _ fbb: inout FlatBufferBuilder,
@@ -1259,10 +1225,10 @@ public struct MatchCriteria: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COMPARISON.p, fieldName: "COMPARISON", required: false, type: ForwardOffset<ParameterComparison>.self)
-    try _v.visit(field: VTOFFSET.COMPARISON_LIST.p, fieldName: "COMPARISON_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<ParameterComparison>, ParameterComparison>>.self)
-    try _v.visit(field: VTOFFSET.BOOLEAN_EXPRESSION.p, fieldName: "BOOLEAN_EXPRESSION", required: false, type: ForwardOffset<BooleanExpression>.self)
-    try _v.visit(field: VTOFFSET.CUSTOM_ALGORITHM.p, fieldName: "CUSTOM_ALGORITHM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COMPARISON, fieldName: "COMPARISON", required: false, type: ForwardOffset<ParameterComparison>.self)
+    try _v.visit(field: VT.COMPARISON_LIST, fieldName: "COMPARISON_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<ParameterComparison>, ParameterComparison>>.self)
+    try _v.visit(field: VT.BOOLEAN_EXPRESSION, fieldName: "BOOLEAN_EXPRESSION", required: false, type: ForwardOffset<BooleanExpression>.self)
+    try _v.visit(field: VT.CUSTOM_ALGORITHM, fieldName: "CUSTOM_ALGORITHM", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -1279,30 +1245,28 @@ public struct Unit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case DESCRIPTION = 4
-    case SYMBOL = 6
-    case POWER = 8
-    case FACTOR = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let DESCRIPTION: VOffset = 4
+    static let SYMBOL: VOffset = 6
+    static let POWER: VOffset = 8
+    static let FACTOR: VOffset = 10
   }
 
   ///  Unit description (e.g., "meters per second")
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   ///  Unit symbol (e.g., "m/s")
-  public var SYMBOL: String? { let o = _accessor.offset(VTOFFSET.SYMBOL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SYMBOLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SYMBOL.v) }
+  public var SYMBOL: String? { let o = _accessor.offset(VT.SYMBOL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SYMBOLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SYMBOL) }
   ///  Power/exponent for this unit
-  public var POWER: Double { let o = _accessor.offset(VTOFFSET.POWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POWER: Double { let o = _accessor.offset(VT.POWER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Factor multiplier
-  public var FACTOR: Double { let o = _accessor.offset(VTOFFSET.FACTOR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var FACTOR: Double { let o = _accessor.offset(VT.FACTOR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startUnit(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
-  public static func add(SYMBOL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYMBOL, at: VTOFFSET.SYMBOL.p) }
-  public static func add(POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER, def: 0.0, at: VTOFFSET.POWER.p) }
-  public static func add(FACTOR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FACTOR, def: 0.0, at: VTOFFSET.FACTOR.p) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func add(SYMBOL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYMBOL, at: VT.SYMBOL) }
+  public static func add(POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER, def: 0.0, at: VT.POWER) }
+  public static func add(FACTOR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FACTOR, def: 0.0, at: VT.FACTOR) }
   public static func endUnit(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createUnit(
     _ fbb: inout FlatBufferBuilder,
@@ -1321,10 +1285,10 @@ public struct Unit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SYMBOL.p, fieldName: "SYMBOL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.POWER.p, fieldName: "POWER", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.FACTOR.p, fieldName: "FACTOR", required: false, type: Double.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SYMBOL, fieldName: "SYMBOL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POWER, fieldName: "POWER", required: false, type: Double.self)
+    try _v.visit(field: VT.FACTOR, fieldName: "FACTOR", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -1341,30 +1305,28 @@ public struct EnumerationValue: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case LABEL = 4
-    case VALUE = 6
-    case MAX_VALUE = 8
-    case DESCRIPTION = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let LABEL: VOffset = 4
+    static let VALUE: VOffset = 6
+    static let MAX_VALUE: VOffset = 8
+    static let DESCRIPTION: VOffset = 10
   }
 
   ///  Label/name for this value
-  public var LABEL: String? { let o = _accessor.offset(VTOFFSET.LABEL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LABEL.v) }
+  public var LABEL: String? { let o = _accessor.offset(VT.LABEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LABEL) }
   ///  Numeric value
-  public var VALUE: Int64 { let o = _accessor.offset(VTOFFSET.VALUE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var VALUE: Int64 { let o = _accessor.offset(VT.VALUE); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  Maximum value (for ranges)
-  public var MAX_VALUE: Int64 { let o = _accessor.offset(VTOFFSET.MAX_VALUE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var MAX_VALUE: Int64 { let o = _accessor.offset(VT.MAX_VALUE); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  Description of this enumeration value
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
   public static func startEnumerationValue(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL, at: VTOFFSET.LABEL.p) }
-  public static func add(VALUE: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: 0, at: VTOFFSET.VALUE.p) }
-  public static func add(MAX_VALUE: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_VALUE, def: 0, at: VTOFFSET.MAX_VALUE.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
+  public static func add(LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL, at: VT.LABEL) }
+  public static func add(VALUE: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: 0, at: VT.VALUE) }
+  public static func add(MAX_VALUE: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_VALUE, def: 0, at: VT.MAX_VALUE) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
   public static func endEnumerationValue(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEnumerationValue(
     _ fbb: inout FlatBufferBuilder,
@@ -1383,10 +1345,10 @@ public struct EnumerationValue: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.LABEL.p, fieldName: "LABEL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VALUE.p, fieldName: "VALUE", required: false, type: Int64.self)
-    try _v.visit(field: VTOFFSET.MAX_VALUE.p, fieldName: "MAX_VALUE", required: false, type: Int64.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LABEL, fieldName: "LABEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: Int64.self)
+    try _v.visit(field: VT.MAX_VALUE, fieldName: "MAX_VALUE", required: false, type: Int64.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -1403,64 +1365,62 @@ public struct IntegerParameterType: FlatBufferTable, FlatbuffersVectorInitializa
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case UNITS = 10
-    case DATA_ENCODING = 12
-    case DEFAULT_ALARM = 14
-    case CONTEXT_ALARMS = 16
-    case VALID_MIN = 18
-    case VALID_MAX = 20
-    case SIGNED = 22
-    case SIZE_IN_BITS = 24
-    case INITIAL_VALUE = 26
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let UNITS: VOffset = 10
+    static let DATA_ENCODING: VOffset = 12
+    static let DEFAULT_ALARM: VOffset = 14
+    static let CONTEXT_ALARMS: VOffset = 16
+    static let VALID_MIN: VOffset = 18
+    static let VALID_MAX: VOffset = 20
+    static let SIGNED: VOffset = 22
+    static let SIZE_IN_BITS: VOffset = 24
+    static let INITIAL_VALUE: VOffset = 26
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Units
-  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VTOFFSET.UNITS.v, byteSize: 4) }
+  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VT.UNITS, byteSize: 4) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Default alarm
-  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VT.DEFAULT_ALARM); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Context alarms
-  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VTOFFSET.CONTEXT_ALARMS.v, byteSize: 4) }
+  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VT.CONTEXT_ALARMS, byteSize: 4) }
   ///  Minimum valid value
-  public var VALID_MIN: Int64 { let o = _accessor.offset(VTOFFSET.VALID_MIN.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var VALID_MIN: Int64 { let o = _accessor.offset(VT.VALID_MIN); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  Maximum valid value
-  public var VALID_MAX: Int64 { let o = _accessor.offset(VTOFFSET.VALID_MAX.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var VALID_MAX: Int64 { let o = _accessor.offset(VT.VALID_MAX); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  Signed integer (true) or unsigned (false)
-  public var SIGNED: Bool { let o = _accessor.offset(VTOFFSET.SIGNED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SIGNED: Bool { let o = _accessor.offset(VT.SIGNED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Size in bits
-  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VTOFFSET.SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VT.SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Initial/default value
-  public var INITIAL_VALUE: Int64 { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var INITIAL_VALUE: Int64 { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   public static func startIntegerParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func addVectorOf(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VTOFFSET.UNITS.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func add(DEFAULT_ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_ALARM, at: VTOFFSET.DEFAULT_ALARM.p) }
-  public static func addVectorOf(CONTEXT_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_ALARMS, at: VTOFFSET.CONTEXT_ALARMS.p) }
-  public static func add(VALID_MIN: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MIN, def: 0, at: VTOFFSET.VALID_MIN.p) }
-  public static func add(VALID_MAX: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MAX, def: 0, at: VTOFFSET.VALID_MAX.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func addVectorOf(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VT.UNITS) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func add(DEFAULT_ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_ALARM, at: VT.DEFAULT_ALARM) }
+  public static func addVectorOf(CONTEXT_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_ALARMS, at: VT.CONTEXT_ALARMS) }
+  public static func add(VALID_MIN: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MIN, def: 0, at: VT.VALID_MIN) }
+  public static func add(VALID_MAX: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MAX, def: 0, at: VT.VALID_MAX) }
   public static func add(SIGNED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGNED, def: false,
-   at: VTOFFSET.SIGNED.p) }
-  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VTOFFSET.SIZE_IN_BITS.p) }
-  public static func add(INITIAL_VALUE: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_VALUE, def: 0, at: VTOFFSET.INITIAL_VALUE.p) }
+   at: VT.SIGNED) }
+  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VT.SIZE_IN_BITS) }
+  public static func add(INITIAL_VALUE: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_VALUE, def: 0, at: VT.INITIAL_VALUE) }
   public static func endIntegerParameterType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createIntegerParameterType(
     _ fbb: inout FlatBufferBuilder,
@@ -1495,18 +1455,18 @@ public struct IntegerParameterType: FlatBufferTable, FlatbuffersVectorInitializa
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UNITS.p, fieldName: "UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<Unit>, Unit>>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.DEFAULT_ALARM.p, fieldName: "DEFAULT_ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
-    try _v.visit(field: VTOFFSET.CONTEXT_ALARMS.p, fieldName: "CONTEXT_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextAlarm>, ContextAlarm>>.self)
-    try _v.visit(field: VTOFFSET.VALID_MIN.p, fieldName: "VALID_MIN", required: false, type: Int64.self)
-    try _v.visit(field: VTOFFSET.VALID_MAX.p, fieldName: "VALID_MAX", required: false, type: Int64.self)
-    try _v.visit(field: VTOFFSET.SIGNED.p, fieldName: "SIGNED", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.SIZE_IN_BITS.p, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: Int64.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UNITS, fieldName: "UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<Unit>, Unit>>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
+    try _v.visit(field: VT.DEFAULT_ALARM, fieldName: "DEFAULT_ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
+    try _v.visit(field: VT.CONTEXT_ALARMS, fieldName: "CONTEXT_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextAlarm>, ContextAlarm>>.self)
+    try _v.visit(field: VT.VALID_MIN, fieldName: "VALID_MIN", required: false, type: Int64.self)
+    try _v.visit(field: VT.VALID_MAX, fieldName: "VALID_MAX", required: false, type: Int64.self)
+    try _v.visit(field: VT.SIGNED, fieldName: "SIGNED", required: false, type: Bool.self)
+    try _v.visit(field: VT.SIZE_IN_BITS, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: Int64.self)
     _v.finish()
   }
 }
@@ -1523,59 +1483,57 @@ public struct FloatParameterType: FlatBufferTable, FlatbuffersVectorInitializabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case UNITS = 10
-    case DATA_ENCODING = 12
-    case DEFAULT_ALARM = 14
-    case CONTEXT_ALARMS = 16
-    case VALID_MIN = 18
-    case VALID_MAX = 20
-    case SIZE_IN_BITS = 22
-    case INITIAL_VALUE = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let UNITS: VOffset = 10
+    static let DATA_ENCODING: VOffset = 12
+    static let DEFAULT_ALARM: VOffset = 14
+    static let CONTEXT_ALARMS: VOffset = 16
+    static let VALID_MIN: VOffset = 18
+    static let VALID_MAX: VOffset = 20
+    static let SIZE_IN_BITS: VOffset = 22
+    static let INITIAL_VALUE: VOffset = 24
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Units
-  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VTOFFSET.UNITS.v, byteSize: 4) }
+  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VT.UNITS, byteSize: 4) }
   ///  Data encoding
-  public var DATA_ENCODING: FloatDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : FloatDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: FloatDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : FloatDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Default alarm
-  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VT.DEFAULT_ALARM); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Context alarms
-  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VTOFFSET.CONTEXT_ALARMS.v, byteSize: 4) }
+  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VT.CONTEXT_ALARMS, byteSize: 4) }
   ///  Minimum valid value
-  public var VALID_MIN: Double { let o = _accessor.offset(VTOFFSET.VALID_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VALID_MIN: Double { let o = _accessor.offset(VT.VALID_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum valid value
-  public var VALID_MAX: Double { let o = _accessor.offset(VTOFFSET.VALID_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VALID_MAX: Double { let o = _accessor.offset(VT.VALID_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Size in bits (32 or 64)
-  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VTOFFSET.SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VT.SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Initial/default value
-  public var INITIAL_VALUE: Double { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INITIAL_VALUE: Double { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startFloatParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func addVectorOf(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VTOFFSET.UNITS.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func add(DEFAULT_ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_ALARM, at: VTOFFSET.DEFAULT_ALARM.p) }
-  public static func addVectorOf(CONTEXT_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_ALARMS, at: VTOFFSET.CONTEXT_ALARMS.p) }
-  public static func add(VALID_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MIN, def: 0.0, at: VTOFFSET.VALID_MIN.p) }
-  public static func add(VALID_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MAX, def: 0.0, at: VTOFFSET.VALID_MAX.p) }
-  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VTOFFSET.SIZE_IN_BITS.p) }
-  public static func add(INITIAL_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_VALUE, def: 0.0, at: VTOFFSET.INITIAL_VALUE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func addVectorOf(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VT.UNITS) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func add(DEFAULT_ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_ALARM, at: VT.DEFAULT_ALARM) }
+  public static func addVectorOf(CONTEXT_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_ALARMS, at: VT.CONTEXT_ALARMS) }
+  public static func add(VALID_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MIN, def: 0.0, at: VT.VALID_MIN) }
+  public static func add(VALID_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MAX, def: 0.0, at: VT.VALID_MAX) }
+  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VT.SIZE_IN_BITS) }
+  public static func add(INITIAL_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_VALUE, def: 0.0, at: VT.INITIAL_VALUE) }
   public static func endFloatParameterType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFloatParameterType(
     _ fbb: inout FlatBufferBuilder,
@@ -1608,17 +1566,17 @@ public struct FloatParameterType: FlatBufferTable, FlatbuffersVectorInitializabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UNITS.p, fieldName: "UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<Unit>, Unit>>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<FloatDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.DEFAULT_ALARM.p, fieldName: "DEFAULT_ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
-    try _v.visit(field: VTOFFSET.CONTEXT_ALARMS.p, fieldName: "CONTEXT_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextAlarm>, ContextAlarm>>.self)
-    try _v.visit(field: VTOFFSET.VALID_MIN.p, fieldName: "VALID_MIN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VALID_MAX.p, fieldName: "VALID_MAX", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SIZE_IN_BITS.p, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UNITS, fieldName: "UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<Unit>, Unit>>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<FloatDataEncoding>.self)
+    try _v.visit(field: VT.DEFAULT_ALARM, fieldName: "DEFAULT_ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
+    try _v.visit(field: VT.CONTEXT_ALARMS, fieldName: "CONTEXT_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextAlarm>, ContextAlarm>>.self)
+    try _v.visit(field: VT.VALID_MIN, fieldName: "VALID_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.VALID_MAX, fieldName: "VALID_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.SIZE_IN_BITS, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -1635,49 +1593,47 @@ public struct StringParameterType: FlatBufferTable, FlatbuffersVectorInitializab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case DATA_ENCODING = 10
-    case DEFAULT_ALARM = 12
-    case CONTEXT_ALARMS = 14
-    case INITIAL_VALUE = 16
-    case RESTRICTION_PATTERN = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let DATA_ENCODING: VOffset = 10
+    static let DEFAULT_ALARM: VOffset = 12
+    static let CONTEXT_ALARMS: VOffset = 14
+    static let INITIAL_VALUE: VOffset = 16
+    static let RESTRICTION_PATTERN: VOffset = 18
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Data encoding
-  public var DATA_ENCODING: StringDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : StringDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: StringDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : StringDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Default alarm
-  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VT.DEFAULT_ALARM); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Context alarms
-  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VTOFFSET.CONTEXT_ALARMS.v, byteSize: 4) }
+  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VT.CONTEXT_ALARMS, byteSize: 4) }
   ///  Initial/default value
-  public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
+  public var INITIAL_VALUE: String? { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INITIAL_VALUE) }
   ///  Restriction pattern (regex)
-  public var RESTRICTION_PATTERN: String? { let o = _accessor.offset(VTOFFSET.RESTRICTION_PATTERN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RESTRICTION_PATTERNSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RESTRICTION_PATTERN.v) }
+  public var RESTRICTION_PATTERN: String? { let o = _accessor.offset(VT.RESTRICTION_PATTERN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RESTRICTION_PATTERNSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RESTRICTION_PATTERN) }
   public static func startStringParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func add(DEFAULT_ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_ALARM, at: VTOFFSET.DEFAULT_ALARM.p) }
-  public static func addVectorOf(CONTEXT_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_ALARMS, at: VTOFFSET.CONTEXT_ALARMS.p) }
-  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VTOFFSET.INITIAL_VALUE.p) }
-  public static func add(RESTRICTION_PATTERN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESTRICTION_PATTERN, at: VTOFFSET.RESTRICTION_PATTERN.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func add(DEFAULT_ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_ALARM, at: VT.DEFAULT_ALARM) }
+  public static func addVectorOf(CONTEXT_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_ALARMS, at: VT.CONTEXT_ALARMS) }
+  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VT.INITIAL_VALUE) }
+  public static func add(RESTRICTION_PATTERN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESTRICTION_PATTERN, at: VT.RESTRICTION_PATTERN) }
   public static func endStringParameterType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createStringParameterType(
     _ fbb: inout FlatBufferBuilder,
@@ -1704,14 +1660,14 @@ public struct StringParameterType: FlatBufferTable, FlatbuffersVectorInitializab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<StringDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.DEFAULT_ALARM.p, fieldName: "DEFAULT_ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
-    try _v.visit(field: VTOFFSET.CONTEXT_ALARMS.p, fieldName: "CONTEXT_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextAlarm>, ContextAlarm>>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RESTRICTION_PATTERN.p, fieldName: "RESTRICTION_PATTERN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<StringDataEncoding>.self)
+    try _v.visit(field: VT.DEFAULT_ALARM, fieldName: "DEFAULT_ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
+    try _v.visit(field: VT.CONTEXT_ALARMS, fieldName: "CONTEXT_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextAlarm>, ContextAlarm>>.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RESTRICTION_PATTERN, fieldName: "RESTRICTION_PATTERN", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -1728,46 +1684,44 @@ public struct BooleanParameterType: FlatBufferTable, FlatbuffersVectorInitializa
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case DATA_ENCODING = 10
-    case ONE_STRING_VALUE = 12
-    case ZERO_STRING_VALUE = 14
-    case INITIAL_VALUE = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let DATA_ENCODING: VOffset = 10
+    static let ONE_STRING_VALUE: VOffset = 12
+    static let ZERO_STRING_VALUE: VOffset = 14
+    static let INITIAL_VALUE: VOffset = 16
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Data encoding (typically IntegerDataEncoding with 1 bit)
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  String representation of true value
-  public var ONE_STRING_VALUE: String? { let o = _accessor.offset(VTOFFSET.ONE_STRING_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ONE_STRING_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ONE_STRING_VALUE.v) }
+  public var ONE_STRING_VALUE: String? { let o = _accessor.offset(VT.ONE_STRING_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ONE_STRING_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ONE_STRING_VALUE) }
   ///  String representation of false value
-  public var ZERO_STRING_VALUE: String? { let o = _accessor.offset(VTOFFSET.ZERO_STRING_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ZERO_STRING_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ZERO_STRING_VALUE.v) }
+  public var ZERO_STRING_VALUE: String? { let o = _accessor.offset(VT.ZERO_STRING_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ZERO_STRING_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ZERO_STRING_VALUE) }
   ///  Initial/default value
-  public var INITIAL_VALUE: Bool { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var INITIAL_VALUE: Bool { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startBooleanParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func add(ONE_STRING_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ONE_STRING_VALUE, at: VTOFFSET.ONE_STRING_VALUE.p) }
-  public static func add(ZERO_STRING_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ZERO_STRING_VALUE, at: VTOFFSET.ZERO_STRING_VALUE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func add(ONE_STRING_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ONE_STRING_VALUE, at: VT.ONE_STRING_VALUE) }
+  public static func add(ZERO_STRING_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ZERO_STRING_VALUE, at: VT.ZERO_STRING_VALUE) }
   public static func add(INITIAL_VALUE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_VALUE, def: false,
-   at: VTOFFSET.INITIAL_VALUE.p) }
+   at: VT.INITIAL_VALUE) }
   public static func endBooleanParameterType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBooleanParameterType(
     _ fbb: inout FlatBufferBuilder,
@@ -1792,13 +1746,13 @@ public struct BooleanParameterType: FlatBufferTable, FlatbuffersVectorInitializa
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.ONE_STRING_VALUE.p, fieldName: "ONE_STRING_VALUE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ZERO_STRING_VALUE.p, fieldName: "ZERO_STRING_VALUE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: Bool.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
+    try _v.visit(field: VT.ONE_STRING_VALUE, fieldName: "ONE_STRING_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ZERO_STRING_VALUE, fieldName: "ZERO_STRING_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -1815,48 +1769,46 @@ public struct EnumeratedParameterType: FlatBufferTable, FlatbuffersVectorInitial
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case DATA_ENCODING = 10
-    case DEFAULT_ALARM = 12
-    case CONTEXT_ALARMS = 14
-    case ENUMERATION_LIST = 16
-    case INITIAL_VALUE = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let DATA_ENCODING: VOffset = 10
+    static let DEFAULT_ALARM: VOffset = 12
+    static let CONTEXT_ALARMS: VOffset = 14
+    static let ENUMERATION_LIST: VOffset = 16
+    static let INITIAL_VALUE: VOffset = 18
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Default alarm
-  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VT.DEFAULT_ALARM); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Context alarms
-  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VTOFFSET.CONTEXT_ALARMS.v, byteSize: 4) }
+  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VT.CONTEXT_ALARMS, byteSize: 4) }
   ///  Enumeration values list
-  public var ENUMERATION_LIST: FlatbufferVector<EnumerationValue> { return _accessor.vector(at: VTOFFSET.ENUMERATION_LIST.v, byteSize: 4) }
+  public var ENUMERATION_LIST: FlatbufferVector<EnumerationValue> { return _accessor.vector(at: VT.ENUMERATION_LIST, byteSize: 4) }
   ///  Initial/default value label
-  public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
+  public var INITIAL_VALUE: String? { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INITIAL_VALUE) }
   public static func startEnumeratedParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func add(DEFAULT_ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_ALARM, at: VTOFFSET.DEFAULT_ALARM.p) }
-  public static func addVectorOf(CONTEXT_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_ALARMS, at: VTOFFSET.CONTEXT_ALARMS.p) }
-  public static func addVectorOf(ENUMERATION_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENUMERATION_LIST, at: VTOFFSET.ENUMERATION_LIST.p) }
-  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VTOFFSET.INITIAL_VALUE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func add(DEFAULT_ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_ALARM, at: VT.DEFAULT_ALARM) }
+  public static func addVectorOf(CONTEXT_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_ALARMS, at: VT.CONTEXT_ALARMS) }
+  public static func addVectorOf(ENUMERATION_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENUMERATION_LIST, at: VT.ENUMERATION_LIST) }
+  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VT.INITIAL_VALUE) }
   public static func endEnumeratedParameterType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEnumeratedParameterType(
     _ fbb: inout FlatBufferBuilder,
@@ -1883,14 +1835,14 @@ public struct EnumeratedParameterType: FlatBufferTable, FlatbuffersVectorInitial
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.DEFAULT_ALARM.p, fieldName: "DEFAULT_ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
-    try _v.visit(field: VTOFFSET.CONTEXT_ALARMS.p, fieldName: "CONTEXT_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextAlarm>, ContextAlarm>>.self)
-    try _v.visit(field: VTOFFSET.ENUMERATION_LIST.p, fieldName: "ENUMERATION_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<EnumerationValue>, EnumerationValue>>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
+    try _v.visit(field: VT.DEFAULT_ALARM, fieldName: "DEFAULT_ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
+    try _v.visit(field: VT.CONTEXT_ALARMS, fieldName: "CONTEXT_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextAlarm>, ContextAlarm>>.self)
+    try _v.visit(field: VT.ENUMERATION_LIST, fieldName: "ENUMERATION_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<EnumerationValue>, EnumerationValue>>.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -1907,36 +1859,34 @@ public struct BinaryParameterType: FlatBufferTable, FlatbuffersVectorInitializab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case DATA_ENCODING = 10
-    case INITIAL_VALUE = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let DATA_ENCODING: VOffset = 10
+    static let INITIAL_VALUE: VOffset = 12
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Data encoding
-  public var DATA_ENCODING: BinaryDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : BinaryDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: BinaryDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : BinaryDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Initial/default value (hex string)
-  public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
+  public var INITIAL_VALUE: String? { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INITIAL_VALUE) }
   public static func startBinaryParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VTOFFSET.INITIAL_VALUE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VT.INITIAL_VALUE) }
   public static func endBinaryParameterType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBinaryParameterType(
     _ fbb: inout FlatBufferBuilder,
@@ -1957,11 +1907,11 @@ public struct BinaryParameterType: FlatBufferTable, FlatbuffersVectorInitializab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<BinaryDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<BinaryDataEncoding>.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -1978,56 +1928,54 @@ public struct AbsoluteTimeParameterType: FlatBufferTable, FlatbuffersVectorIniti
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case EPOCH = 10
-    case EPOCH_DATE = 12
-    case DATA_ENCODING = 14
-    case SCALE = 16
-    case OFFSET = 18
-    case DEFAULT_ALARM = 20
-    case CONTEXT_ALARMS = 22
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let EPOCH: VOffset = 10
+    static let EPOCH_DATE: VOffset = 12
+    static let DATA_ENCODING: VOffset = 14
+    static let SCALE: VOffset = 16
+    static let OFFSET: VOffset = 18
+    static let DEFAULT_ALARM: VOffset = 20
+    static let CONTEXT_ALARMS: VOffset = 22
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Reference epoch
-  public var EPOCH: EpochType { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? .unix : EpochType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unix }
+  public var EPOCH: EpochType { let o = _accessor.offset(VT.EPOCH); return o == 0 ? .unix : EpochType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unix }
   ///  Custom epoch date (ISO 8601) when EPOCH=CUSTOM
-  public var EPOCH_DATE: String? { let o = _accessor.offset(VTOFFSET.EPOCH_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCH_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH_DATE.v) }
+  public var EPOCH_DATE: String? { let o = _accessor.offset(VT.EPOCH_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCH_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_DATE) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Time unit scale factor
-  public var SCALE: Double { let o = _accessor.offset(VTOFFSET.SCALE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SCALE: Double { let o = _accessor.offset(VT.SCALE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Time unit offset
-  public var OFFSET: Double { let o = _accessor.offset(VTOFFSET.OFFSET.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OFFSET: Double { let o = _accessor.offset(VT.OFFSET); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Default alarm
-  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VT.DEFAULT_ALARM); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Context alarms
-  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VTOFFSET.CONTEXT_ALARMS.v, byteSize: 4) }
+  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VT.CONTEXT_ALARMS, byteSize: 4) }
   public static func startAbsoluteTimeParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(EPOCH: EpochType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH.rawValue, def: 2, at: VTOFFSET.EPOCH.p) }
-  public static func add(EPOCH_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_DATE, at: VTOFFSET.EPOCH_DATE.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 0.0, at: VTOFFSET.SCALE.p) }
-  public static func add(OFFSET: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET, def: 0.0, at: VTOFFSET.OFFSET.p) }
-  public static func add(DEFAULT_ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_ALARM, at: VTOFFSET.DEFAULT_ALARM.p) }
-  public static func addVectorOf(CONTEXT_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_ALARMS, at: VTOFFSET.CONTEXT_ALARMS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(EPOCH: EpochType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH.rawValue, def: 2, at: VT.EPOCH) }
+  public static func add(EPOCH_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_DATE, at: VT.EPOCH_DATE) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func add(SCALE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE, def: 0.0, at: VT.SCALE) }
+  public static func add(OFFSET: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET, def: 0.0, at: VT.OFFSET) }
+  public static func add(DEFAULT_ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_ALARM, at: VT.DEFAULT_ALARM) }
+  public static func addVectorOf(CONTEXT_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_ALARMS, at: VT.CONTEXT_ALARMS) }
   public static func endAbsoluteTimeParameterType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAbsoluteTimeParameterType(
     _ fbb: inout FlatBufferBuilder,
@@ -2058,16 +2006,16 @@ public struct AbsoluteTimeParameterType: FlatBufferTable, FlatbuffersVectorIniti
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: EpochType.self)
-    try _v.visit(field: VTOFFSET.EPOCH_DATE.p, fieldName: "EPOCH_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.SCALE.p, fieldName: "SCALE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OFFSET.p, fieldName: "OFFSET", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DEFAULT_ALARM.p, fieldName: "DEFAULT_ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
-    try _v.visit(field: VTOFFSET.CONTEXT_ALARMS.p, fieldName: "CONTEXT_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextAlarm>, ContextAlarm>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: EpochType.self)
+    try _v.visit(field: VT.EPOCH_DATE, fieldName: "EPOCH_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
+    try _v.visit(field: VT.SCALE, fieldName: "SCALE", required: false, type: Double.self)
+    try _v.visit(field: VT.OFFSET, fieldName: "OFFSET", required: false, type: Double.self)
+    try _v.visit(field: VT.DEFAULT_ALARM, fieldName: "DEFAULT_ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
+    try _v.visit(field: VT.CONTEXT_ALARMS, fieldName: "CONTEXT_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextAlarm>, ContextAlarm>>.self)
     _v.finish()
   }
 }
@@ -2084,43 +2032,41 @@ public struct RelativeTimeParameterType: FlatBufferTable, FlatbuffersVectorIniti
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case UNITS = 10
-    case DATA_ENCODING = 12
-    case DEFAULT_ALARM = 14
-    case CONTEXT_ALARMS = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let UNITS: VOffset = 10
+    static let DATA_ENCODING: VOffset = 12
+    static let DEFAULT_ALARM: VOffset = 14
+    static let CONTEXT_ALARMS: VOffset = 16
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Units
-  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VTOFFSET.UNITS.v, byteSize: 4) }
+  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VT.UNITS, byteSize: 4) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Default alarm
-  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VT.DEFAULT_ALARM); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Context alarms
-  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VTOFFSET.CONTEXT_ALARMS.v, byteSize: 4) }
+  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VT.CONTEXT_ALARMS, byteSize: 4) }
   public static func startRelativeTimeParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func addVectorOf(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VTOFFSET.UNITS.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func add(DEFAULT_ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_ALARM, at: VTOFFSET.DEFAULT_ALARM.p) }
-  public static func addVectorOf(CONTEXT_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_ALARMS, at: VTOFFSET.CONTEXT_ALARMS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func addVectorOf(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VT.UNITS) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func add(DEFAULT_ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_ALARM, at: VT.DEFAULT_ALARM) }
+  public static func addVectorOf(CONTEXT_ALARMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT_ALARMS, at: VT.CONTEXT_ALARMS) }
   public static func endRelativeTimeParameterType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRelativeTimeParameterType(
     _ fbb: inout FlatBufferBuilder,
@@ -2145,13 +2091,13 @@ public struct RelativeTimeParameterType: FlatBufferTable, FlatbuffersVectorIniti
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UNITS.p, fieldName: "UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<Unit>, Unit>>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.DEFAULT_ALARM.p, fieldName: "DEFAULT_ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
-    try _v.visit(field: VTOFFSET.CONTEXT_ALARMS.p, fieldName: "CONTEXT_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextAlarm>, ContextAlarm>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UNITS, fieldName: "UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<Unit>, Unit>>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
+    try _v.visit(field: VT.DEFAULT_ALARM, fieldName: "DEFAULT_ALARM", required: false, type: ForwardOffset<DefaultAlarm>.self)
+    try _v.visit(field: VT.CONTEXT_ALARMS, fieldName: "CONTEXT_ALARMS", required: false, type: ForwardOffset<Vector<ForwardOffset<ContextAlarm>, ContextAlarm>>.self)
     _v.finish()
   }
 }
@@ -2168,21 +2114,19 @@ public struct ArrayDimension: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SIZE = 4
-    case SIZE_PARAMETER_REF = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SIZE: VOffset = 4
+    static let SIZE_PARAMETER_REF: VOffset = 6
   }
 
   ///  Fixed size of this dimension
-  public var SIZE: UInt32 { let o = _accessor.offset(VTOFFSET.SIZE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SIZE: UInt32 { let o = _accessor.offset(VT.SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Dynamic size from parameter reference
-  public var SIZE_PARAMETER_REF: String? { let o = _accessor.offset(VTOFFSET.SIZE_PARAMETER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SIZE_PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SIZE_PARAMETER_REF.v) }
+  public var SIZE_PARAMETER_REF: String? { let o = _accessor.offset(VT.SIZE_PARAMETER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIZE_PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIZE_PARAMETER_REF) }
   public static func startArrayDimension(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(SIZE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE, def: 0, at: VTOFFSET.SIZE.p) }
-  public static func add(SIZE_PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIZE_PARAMETER_REF, at: VTOFFSET.SIZE_PARAMETER_REF.p) }
+  public static func add(SIZE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE, def: 0, at: VT.SIZE) }
+  public static func add(SIZE_PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIZE_PARAMETER_REF, at: VT.SIZE_PARAMETER_REF) }
   public static func endArrayDimension(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createArrayDimension(
     _ fbb: inout FlatBufferBuilder,
@@ -2197,8 +2141,8 @@ public struct ArrayDimension: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SIZE.p, fieldName: "SIZE", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.SIZE_PARAMETER_REF.p, fieldName: "SIZE_PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIZE, fieldName: "SIZE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SIZE_PARAMETER_REF, fieldName: "SIZE_PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -2215,36 +2159,34 @@ public struct ArrayParameterType: FlatBufferTable, FlatbuffersVectorInitializabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case ARRAY_TYPE_REF = 10
-    case DIMENSIONS = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let ARRAY_TYPE_REF: VOffset = 10
+    static let DIMENSIONS: VOffset = 12
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Reference to the array element type
-  public var ARRAY_TYPE_REF: String? { let o = _accessor.offset(VTOFFSET.ARRAY_TYPE_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ARRAY_TYPE_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ARRAY_TYPE_REF.v) }
+  public var ARRAY_TYPE_REF: String? { let o = _accessor.offset(VT.ARRAY_TYPE_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ARRAY_TYPE_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ARRAY_TYPE_REF) }
   ///  Dimension list
-  public var DIMENSIONS: FlatbufferVector<ArrayDimension> { return _accessor.vector(at: VTOFFSET.DIMENSIONS.v, byteSize: 4) }
+  public var DIMENSIONS: FlatbufferVector<ArrayDimension> { return _accessor.vector(at: VT.DIMENSIONS, byteSize: 4) }
   public static func startArrayParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(ARRAY_TYPE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARRAY_TYPE_REF, at: VTOFFSET.ARRAY_TYPE_REF.p) }
-  public static func addVectorOf(DIMENSIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DIMENSIONS, at: VTOFFSET.DIMENSIONS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(ARRAY_TYPE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARRAY_TYPE_REF, at: VT.ARRAY_TYPE_REF) }
+  public static func addVectorOf(DIMENSIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DIMENSIONS, at: VT.DIMENSIONS) }
   public static func endArrayParameterType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createArrayParameterType(
     _ fbb: inout FlatBufferBuilder,
@@ -2265,11 +2207,11 @@ public struct ArrayParameterType: FlatBufferTable, FlatbuffersVectorInitializabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ARRAY_TYPE_REF.p, fieldName: "ARRAY_TYPE_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DIMENSIONS.p, fieldName: "DIMENSIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<ArrayDimension>, ArrayDimension>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ARRAY_TYPE_REF, fieldName: "ARRAY_TYPE_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DIMENSIONS, fieldName: "DIMENSIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<ArrayDimension>, ArrayDimension>>.self)
     _v.finish()
   }
 }
@@ -2286,27 +2228,25 @@ public struct AggregateMember: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case TYPE_REF = 6
-    case SHORT_DESCRIPTION = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let TYPE_REF: VOffset = 6
+    static let SHORT_DESCRIPTION: VOffset = 8
   }
 
   ///  Member name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Reference to parameter type
-  public var TYPE_REF: String? { let o = _accessor.offset(VTOFFSET.TYPE_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TYPE_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE_REF.v) }
+  public var TYPE_REF: String? { let o = _accessor.offset(VT.TYPE_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TYPE_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TYPE_REF) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   public static func startAggregateMember(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(TYPE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE_REF, at: VTOFFSET.TYPE_REF.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(TYPE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE_REF, at: VT.TYPE_REF) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
   public static func endAggregateMember(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAggregateMember(
     _ fbb: inout FlatBufferBuilder,
@@ -2323,9 +2263,9 @@ public struct AggregateMember: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TYPE_REF.p, fieldName: "TYPE_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TYPE_REF, fieldName: "TYPE_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -2342,31 +2282,29 @@ public struct AggregateParameterType: FlatBufferTable, FlatbuffersVectorInitiali
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case MEMBERS = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let MEMBERS: VOffset = 10
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Member list
-  public var MEMBERS: FlatbufferVector<AggregateMember> { return _accessor.vector(at: VTOFFSET.MEMBERS.v, byteSize: 4) }
+  public var MEMBERS: FlatbufferVector<AggregateMember> { return _accessor.vector(at: VT.MEMBERS, byteSize: 4) }
   public static func startAggregateParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func addVectorOf(MEMBERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEMBERS, at: VTOFFSET.MEMBERS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func addVectorOf(MEMBERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEMBERS, at: VT.MEMBERS) }
   public static func endAggregateParameterType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAggregateParameterType(
     _ fbb: inout FlatBufferBuilder,
@@ -2385,10 +2323,10 @@ public struct AggregateParameterType: FlatBufferTable, FlatbuffersVectorInitiali
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MEMBERS.p, fieldName: "MEMBERS", required: false, type: ForwardOffset<Vector<ForwardOffset<AggregateMember>, AggregateMember>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MEMBERS, fieldName: "MEMBERS", required: false, type: ForwardOffset<Vector<ForwardOffset<AggregateMember>, AggregateMember>>.self)
     _v.finish()
   }
 }
@@ -2405,52 +2343,50 @@ public struct ParameterTypeSet: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case INTEGER_TYPES = 4
-    case FLOAT_TYPES = 6
-    case STRING_TYPES = 8
-    case BOOLEAN_TYPES = 10
-    case ENUMERATED_TYPES = 12
-    case BINARY_TYPES = 14
-    case ABSOLUTE_TIME_TYPES = 16
-    case RELATIVE_TIME_TYPES = 18
-    case ARRAY_TYPES = 20
-    case AGGREGATE_TYPES = 22
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let INTEGER_TYPES: VOffset = 4
+    static let FLOAT_TYPES: VOffset = 6
+    static let STRING_TYPES: VOffset = 8
+    static let BOOLEAN_TYPES: VOffset = 10
+    static let ENUMERATED_TYPES: VOffset = 12
+    static let BINARY_TYPES: VOffset = 14
+    static let ABSOLUTE_TIME_TYPES: VOffset = 16
+    static let RELATIVE_TIME_TYPES: VOffset = 18
+    static let ARRAY_TYPES: VOffset = 20
+    static let AGGREGATE_TYPES: VOffset = 22
   }
 
   ///  Integer parameter types
-  public var INTEGER_TYPES: FlatbufferVector<IntegerParameterType> { return _accessor.vector(at: VTOFFSET.INTEGER_TYPES.v, byteSize: 4) }
+  public var INTEGER_TYPES: FlatbufferVector<IntegerParameterType> { return _accessor.vector(at: VT.INTEGER_TYPES, byteSize: 4) }
   ///  Float parameter types
-  public var FLOAT_TYPES: FlatbufferVector<FloatParameterType> { return _accessor.vector(at: VTOFFSET.FLOAT_TYPES.v, byteSize: 4) }
+  public var FLOAT_TYPES: FlatbufferVector<FloatParameterType> { return _accessor.vector(at: VT.FLOAT_TYPES, byteSize: 4) }
   ///  String parameter types
-  public var STRING_TYPES: FlatbufferVector<StringParameterType> { return _accessor.vector(at: VTOFFSET.STRING_TYPES.v, byteSize: 4) }
+  public var STRING_TYPES: FlatbufferVector<StringParameterType> { return _accessor.vector(at: VT.STRING_TYPES, byteSize: 4) }
   ///  Boolean parameter types
-  public var BOOLEAN_TYPES: FlatbufferVector<BooleanParameterType> { return _accessor.vector(at: VTOFFSET.BOOLEAN_TYPES.v, byteSize: 4) }
+  public var BOOLEAN_TYPES: FlatbufferVector<BooleanParameterType> { return _accessor.vector(at: VT.BOOLEAN_TYPES, byteSize: 4) }
   ///  Enumerated parameter types
-  public var ENUMERATED_TYPES: FlatbufferVector<EnumeratedParameterType> { return _accessor.vector(at: VTOFFSET.ENUMERATED_TYPES.v, byteSize: 4) }
+  public var ENUMERATED_TYPES: FlatbufferVector<EnumeratedParameterType> { return _accessor.vector(at: VT.ENUMERATED_TYPES, byteSize: 4) }
   ///  Binary parameter types
-  public var BINARY_TYPES: FlatbufferVector<BinaryParameterType> { return _accessor.vector(at: VTOFFSET.BINARY_TYPES.v, byteSize: 4) }
+  public var BINARY_TYPES: FlatbufferVector<BinaryParameterType> { return _accessor.vector(at: VT.BINARY_TYPES, byteSize: 4) }
   ///  Absolute time parameter types
-  public var ABSOLUTE_TIME_TYPES: FlatbufferVector<AbsoluteTimeParameterType> { return _accessor.vector(at: VTOFFSET.ABSOLUTE_TIME_TYPES.v, byteSize: 4) }
+  public var ABSOLUTE_TIME_TYPES: FlatbufferVector<AbsoluteTimeParameterType> { return _accessor.vector(at: VT.ABSOLUTE_TIME_TYPES, byteSize: 4) }
   ///  Relative time parameter types
-  public var RELATIVE_TIME_TYPES: FlatbufferVector<RelativeTimeParameterType> { return _accessor.vector(at: VTOFFSET.RELATIVE_TIME_TYPES.v, byteSize: 4) }
+  public var RELATIVE_TIME_TYPES: FlatbufferVector<RelativeTimeParameterType> { return _accessor.vector(at: VT.RELATIVE_TIME_TYPES, byteSize: 4) }
   ///  Array parameter types
-  public var ARRAY_TYPES: FlatbufferVector<ArrayParameterType> { return _accessor.vector(at: VTOFFSET.ARRAY_TYPES.v, byteSize: 4) }
+  public var ARRAY_TYPES: FlatbufferVector<ArrayParameterType> { return _accessor.vector(at: VT.ARRAY_TYPES, byteSize: 4) }
   ///  Aggregate parameter types
-  public var AGGREGATE_TYPES: FlatbufferVector<AggregateParameterType> { return _accessor.vector(at: VTOFFSET.AGGREGATE_TYPES.v, byteSize: 4) }
+  public var AGGREGATE_TYPES: FlatbufferVector<AggregateParameterType> { return _accessor.vector(at: VT.AGGREGATE_TYPES, byteSize: 4) }
   public static func startParameterTypeSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func addVectorOf(INTEGER_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGER_TYPES, at: VTOFFSET.INTEGER_TYPES.p) }
-  public static func addVectorOf(FLOAT_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLOAT_TYPES, at: VTOFFSET.FLOAT_TYPES.p) }
-  public static func addVectorOf(STRING_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STRING_TYPES, at: VTOFFSET.STRING_TYPES.p) }
-  public static func addVectorOf(BOOLEAN_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOOLEAN_TYPES, at: VTOFFSET.BOOLEAN_TYPES.p) }
-  public static func addVectorOf(ENUMERATED_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENUMERATED_TYPES, at: VTOFFSET.ENUMERATED_TYPES.p) }
-  public static func addVectorOf(BINARY_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BINARY_TYPES, at: VTOFFSET.BINARY_TYPES.p) }
-  public static func addVectorOf(ABSOLUTE_TIME_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ABSOLUTE_TIME_TYPES, at: VTOFFSET.ABSOLUTE_TIME_TYPES.p) }
-  public static func addVectorOf(RELATIVE_TIME_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RELATIVE_TIME_TYPES, at: VTOFFSET.RELATIVE_TIME_TYPES.p) }
-  public static func addVectorOf(ARRAY_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARRAY_TYPES, at: VTOFFSET.ARRAY_TYPES.p) }
-  public static func addVectorOf(AGGREGATE_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGGREGATE_TYPES, at: VTOFFSET.AGGREGATE_TYPES.p) }
+  public static func addVectorOf(INTEGER_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGER_TYPES, at: VT.INTEGER_TYPES) }
+  public static func addVectorOf(FLOAT_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLOAT_TYPES, at: VT.FLOAT_TYPES) }
+  public static func addVectorOf(STRING_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STRING_TYPES, at: VT.STRING_TYPES) }
+  public static func addVectorOf(BOOLEAN_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOOLEAN_TYPES, at: VT.BOOLEAN_TYPES) }
+  public static func addVectorOf(ENUMERATED_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENUMERATED_TYPES, at: VT.ENUMERATED_TYPES) }
+  public static func addVectorOf(BINARY_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BINARY_TYPES, at: VT.BINARY_TYPES) }
+  public static func addVectorOf(ABSOLUTE_TIME_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ABSOLUTE_TIME_TYPES, at: VT.ABSOLUTE_TIME_TYPES) }
+  public static func addVectorOf(RELATIVE_TIME_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RELATIVE_TIME_TYPES, at: VT.RELATIVE_TIME_TYPES) }
+  public static func addVectorOf(ARRAY_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARRAY_TYPES, at: VT.ARRAY_TYPES) }
+  public static func addVectorOf(AGGREGATE_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGGREGATE_TYPES, at: VT.AGGREGATE_TYPES) }
   public static func endParameterTypeSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createParameterTypeSet(
     _ fbb: inout FlatBufferBuilder,
@@ -2481,16 +2417,16 @@ public struct ParameterTypeSet: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.INTEGER_TYPES.p, fieldName: "INTEGER_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<IntegerParameterType>, IntegerParameterType>>.self)
-    try _v.visit(field: VTOFFSET.FLOAT_TYPES.p, fieldName: "FLOAT_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<FloatParameterType>, FloatParameterType>>.self)
-    try _v.visit(field: VTOFFSET.STRING_TYPES.p, fieldName: "STRING_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<StringParameterType>, StringParameterType>>.self)
-    try _v.visit(field: VTOFFSET.BOOLEAN_TYPES.p, fieldName: "BOOLEAN_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<BooleanParameterType>, BooleanParameterType>>.self)
-    try _v.visit(field: VTOFFSET.ENUMERATED_TYPES.p, fieldName: "ENUMERATED_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<EnumeratedParameterType>, EnumeratedParameterType>>.self)
-    try _v.visit(field: VTOFFSET.BINARY_TYPES.p, fieldName: "BINARY_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<BinaryParameterType>, BinaryParameterType>>.self)
-    try _v.visit(field: VTOFFSET.ABSOLUTE_TIME_TYPES.p, fieldName: "ABSOLUTE_TIME_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<AbsoluteTimeParameterType>, AbsoluteTimeParameterType>>.self)
-    try _v.visit(field: VTOFFSET.RELATIVE_TIME_TYPES.p, fieldName: "RELATIVE_TIME_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<RelativeTimeParameterType>, RelativeTimeParameterType>>.self)
-    try _v.visit(field: VTOFFSET.ARRAY_TYPES.p, fieldName: "ARRAY_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<ArrayParameterType>, ArrayParameterType>>.self)
-    try _v.visit(field: VTOFFSET.AGGREGATE_TYPES.p, fieldName: "AGGREGATE_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<AggregateParameterType>, AggregateParameterType>>.self)
+    try _v.visit(field: VT.INTEGER_TYPES, fieldName: "INTEGER_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<IntegerParameterType>, IntegerParameterType>>.self)
+    try _v.visit(field: VT.FLOAT_TYPES, fieldName: "FLOAT_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<FloatParameterType>, FloatParameterType>>.self)
+    try _v.visit(field: VT.STRING_TYPES, fieldName: "STRING_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<StringParameterType>, StringParameterType>>.self)
+    try _v.visit(field: VT.BOOLEAN_TYPES, fieldName: "BOOLEAN_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<BooleanParameterType>, BooleanParameterType>>.self)
+    try _v.visit(field: VT.ENUMERATED_TYPES, fieldName: "ENUMERATED_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<EnumeratedParameterType>, EnumeratedParameterType>>.self)
+    try _v.visit(field: VT.BINARY_TYPES, fieldName: "BINARY_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<BinaryParameterType>, BinaryParameterType>>.self)
+    try _v.visit(field: VT.ABSOLUTE_TIME_TYPES, fieldName: "ABSOLUTE_TIME_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<AbsoluteTimeParameterType>, AbsoluteTimeParameterType>>.self)
+    try _v.visit(field: VT.RELATIVE_TIME_TYPES, fieldName: "RELATIVE_TIME_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<RelativeTimeParameterType>, RelativeTimeParameterType>>.self)
+    try _v.visit(field: VT.ARRAY_TYPES, fieldName: "ARRAY_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<ArrayParameterType>, ArrayParameterType>>.self)
+    try _v.visit(field: VT.AGGREGATE_TYPES, fieldName: "AGGREGATE_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<AggregateParameterType>, AggregateParameterType>>.self)
     _v.finish()
   }
 }
@@ -2507,30 +2443,28 @@ public struct ParameterProperties: FlatBufferTable, FlatbuffersVectorInitializab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case DATA_SOURCE = 4
-    case READ_ONLY = 6
-    case SYSTEM_NAME = 8
-    case VALIDITY_CONDITION = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let DATA_SOURCE: VOffset = 4
+    static let READ_ONLY: VOffset = 6
+    static let SYSTEM_NAME: VOffset = 8
+    static let VALIDITY_CONDITION: VOffset = 10
   }
 
   ///  Data source type
-  public var DATA_SOURCE: DataSourceType { let o = _accessor.offset(VTOFFSET.DATA_SOURCE.v); return o == 0 ? .telemetered : DataSourceType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .telemetered }
+  public var DATA_SOURCE: DataSourceType { let o = _accessor.offset(VT.DATA_SOURCE); return o == 0 ? .telemetered : DataSourceType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .telemetered }
   ///  Read-only parameter
-  public var READ_ONLY: Bool { let o = _accessor.offset(VTOFFSET.READ_ONLY.v); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var READ_ONLY: Bool { let o = _accessor.offset(VT.READ_ONLY); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  System/subsystem name
-  public var SYSTEM_NAME: String? { let o = _accessor.offset(VTOFFSET.SYSTEM_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SYSTEM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SYSTEM_NAME.v) }
+  public var SYSTEM_NAME: String? { let o = _accessor.offset(VT.SYSTEM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SYSTEM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SYSTEM_NAME) }
   ///  Validity condition
-  public var VALIDITY_CONDITION: MatchCriteria? { let o = _accessor.offset(VTOFFSET.VALIDITY_CONDITION.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var VALIDITY_CONDITION: MatchCriteria? { let o = _accessor.offset(VT.VALIDITY_CONDITION); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startParameterProperties(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(DATA_SOURCE: DataSourceType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_SOURCE.rawValue, def: 0, at: VTOFFSET.DATA_SOURCE.p) }
+  public static func add(DATA_SOURCE: DataSourceType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_SOURCE.rawValue, def: 0, at: VT.DATA_SOURCE) }
   public static func add(READ_ONLY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: READ_ONLY, def: true,
-   at: VTOFFSET.READ_ONLY.p) }
-  public static func add(SYSTEM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYSTEM_NAME, at: VTOFFSET.SYSTEM_NAME.p) }
-  public static func add(VALIDITY_CONDITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALIDITY_CONDITION, at: VTOFFSET.VALIDITY_CONDITION.p) }
+   at: VT.READ_ONLY) }
+  public static func add(SYSTEM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYSTEM_NAME, at: VT.SYSTEM_NAME) }
+  public static func add(VALIDITY_CONDITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALIDITY_CONDITION, at: VT.VALIDITY_CONDITION) }
   public static func endParameterProperties(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createParameterProperties(
     _ fbb: inout FlatBufferBuilder,
@@ -2549,10 +2483,10 @@ public struct ParameterProperties: FlatBufferTable, FlatbuffersVectorInitializab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.DATA_SOURCE.p, fieldName: "DATA_SOURCE", required: false, type: DataSourceType.self)
-    try _v.visit(field: VTOFFSET.READ_ONLY.p, fieldName: "READ_ONLY", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.SYSTEM_NAME.p, fieldName: "SYSTEM_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VALIDITY_CONDITION.p, fieldName: "VALIDITY_CONDITION", required: false, type: ForwardOffset<MatchCriteria>.self)
+    try _v.visit(field: VT.DATA_SOURCE, fieldName: "DATA_SOURCE", required: false, type: DataSourceType.self)
+    try _v.visit(field: VT.READ_ONLY, fieldName: "READ_ONLY", required: false, type: Bool.self)
+    try _v.visit(field: VT.SYSTEM_NAME, fieldName: "SYSTEM_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VALIDITY_CONDITION, fieldName: "VALIDITY_CONDITION", required: false, type: ForwardOffset<MatchCriteria>.self)
     _v.finish()
   }
 }
@@ -2569,46 +2503,44 @@ public struct Parameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case PARAMETER_TYPE_REF = 6
-    case SHORT_DESCRIPTION = 8
-    case LONG_DESCRIPTION = 10
-    case PROPERTIES = 12
-    case PHYSICAL_ADDRESS = 14
-    case INITIAL_VALUE = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let PARAMETER_TYPE_REF: VOffset = 6
+    static let SHORT_DESCRIPTION: VOffset = 8
+    static let LONG_DESCRIPTION: VOffset = 10
+    static let PROPERTIES: VOffset = 12
+    static let PHYSICAL_ADDRESS: VOffset = 14
+    static let INITIAL_VALUE: VOffset = 16
   }
 
   ///  Parameter name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Reference to parameter type
-  public var PARAMETER_TYPE_REF: String? { let o = _accessor.offset(VTOFFSET.PARAMETER_TYPE_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PARAMETER_TYPE_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARAMETER_TYPE_REF.v) }
+  public var PARAMETER_TYPE_REF: String? { let o = _accessor.offset(VT.PARAMETER_TYPE_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAMETER_TYPE_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAMETER_TYPE_REF) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Parameter properties
-  public var PROPERTIES: ParameterProperties? { let o = _accessor.offset(VTOFFSET.PROPERTIES.v); return o == 0 ? nil : ParameterProperties(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PROPERTIES: ParameterProperties? { let o = _accessor.offset(VT.PROPERTIES); return o == 0 ? nil : ParameterProperties(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Physical address mapping
-  public var PHYSICAL_ADDRESS: String? { let o = _accessor.offset(VTOFFSET.PHYSICAL_ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PHYSICAL_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PHYSICAL_ADDRESS.v) }
+  public var PHYSICAL_ADDRESS: String? { let o = _accessor.offset(VT.PHYSICAL_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PHYSICAL_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PHYSICAL_ADDRESS) }
   ///  Initial/default value
-  public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
+  public var INITIAL_VALUE: String? { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INITIAL_VALUE) }
   public static func startParameter(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(PARAMETER_TYPE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_TYPE_REF, at: VTOFFSET.PARAMETER_TYPE_REF.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(PROPERTIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPERTIES, at: VTOFFSET.PROPERTIES.p) }
-  public static func add(PHYSICAL_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHYSICAL_ADDRESS, at: VTOFFSET.PHYSICAL_ADDRESS.p) }
-  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VTOFFSET.INITIAL_VALUE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(PARAMETER_TYPE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_TYPE_REF, at: VT.PARAMETER_TYPE_REF) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(PROPERTIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPERTIES, at: VT.PROPERTIES) }
+  public static func add(PHYSICAL_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHYSICAL_ADDRESS, at: VT.PHYSICAL_ADDRESS) }
+  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VT.INITIAL_VALUE) }
   public static func endParameter(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createParameter(
     _ fbb: inout FlatBufferBuilder,
@@ -2633,13 +2565,13 @@ public struct Parameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PARAMETER_TYPE_REF.p, fieldName: "PARAMETER_TYPE_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PROPERTIES.p, fieldName: "PROPERTIES", required: false, type: ForwardOffset<ParameterProperties>.self)
-    try _v.visit(field: VTOFFSET.PHYSICAL_ADDRESS.p, fieldName: "PHYSICAL_ADDRESS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARAMETER_TYPE_REF, fieldName: "PARAMETER_TYPE_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPERTIES, fieldName: "PROPERTIES", required: false, type: ForwardOffset<ParameterProperties>.self)
+    try _v.visit(field: VT.PHYSICAL_ADDRESS, fieldName: "PHYSICAL_ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -2656,16 +2588,14 @@ public struct ParameterSet: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PARAMETERS = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PARAMETERS: VOffset = 4
   }
 
   ///  Parameters
-  public var PARAMETERS: FlatbufferVector<Parameter> { return _accessor.vector(at: VTOFFSET.PARAMETERS.v, byteSize: 4) }
+  public var PARAMETERS: FlatbufferVector<Parameter> { return _accessor.vector(at: VT.PARAMETERS, byteSize: 4) }
   public static func startParameterSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func addVectorOf(PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETERS, at: VTOFFSET.PARAMETERS.p) }
+  public static func addVectorOf(PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETERS, at: VT.PARAMETERS) }
   public static func endParameterSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createParameterSet(
     _ fbb: inout FlatBufferBuilder,
@@ -2678,7 +2608,7 @@ public struct ParameterSet: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PARAMETERS.p, fieldName: "PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<Parameter>, Parameter>>.self)
+    try _v.visit(field: VT.PARAMETERS, fieldName: "PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<Parameter>, Parameter>>.self)
     _v.finish()
   }
 }
@@ -2695,20 +2625,18 @@ public struct LocationInContainer: FlatBufferTable, FlatbuffersVectorInitializab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case REFERENCE_LOCATION = 4
-    case OFFSET_IN_BITS = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let REFERENCE_LOCATION: VOffset = 4
+    static let OFFSET_IN_BITS: VOffset = 6
   }
 
   ///  Reference location type
-  public var REFERENCE_LOCATION: ReferenceLocationType { let o = _accessor.offset(VTOFFSET.REFERENCE_LOCATION.v); return o == 0 ? .previousEntry : ReferenceLocationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .previousEntry }
+  public var REFERENCE_LOCATION: ReferenceLocationType { let o = _accessor.offset(VT.REFERENCE_LOCATION); return o == 0 ? .previousEntry : ReferenceLocationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .previousEntry }
   ///  Offset in bits from reference location
-  public var OFFSET_IN_BITS: Int32 { let o = _accessor.offset(VTOFFSET.OFFSET_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var OFFSET_IN_BITS: Int32 { let o = _accessor.offset(VT.OFFSET_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startLocationInContainer(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(REFERENCE_LOCATION: ReferenceLocationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_LOCATION.rawValue, def: 2, at: VTOFFSET.REFERENCE_LOCATION.p) }
-  public static func add(OFFSET_IN_BITS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET_IN_BITS, def: 0, at: VTOFFSET.OFFSET_IN_BITS.p) }
+  public static func add(REFERENCE_LOCATION: ReferenceLocationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_LOCATION.rawValue, def: 2, at: VT.REFERENCE_LOCATION) }
+  public static func add(OFFSET_IN_BITS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET_IN_BITS, def: 0, at: VT.OFFSET_IN_BITS) }
   public static func endLocationInContainer(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createLocationInContainer(
     _ fbb: inout FlatBufferBuilder,
@@ -2723,8 +2651,8 @@ public struct LocationInContainer: FlatBufferTable, FlatbuffersVectorInitializab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.REFERENCE_LOCATION.p, fieldName: "REFERENCE_LOCATION", required: false, type: ReferenceLocationType.self)
-    try _v.visit(field: VTOFFSET.OFFSET_IN_BITS.p, fieldName: "OFFSET_IN_BITS", required: false, type: Int32.self)
+    try _v.visit(field: VT.REFERENCE_LOCATION, fieldName: "REFERENCE_LOCATION", required: false, type: ReferenceLocationType.self)
+    try _v.visit(field: VT.OFFSET_IN_BITS, fieldName: "OFFSET_IN_BITS", required: false, type: Int32.self)
     _v.finish()
   }
 }
@@ -2741,25 +2669,23 @@ public struct RepeatEntry: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case COUNT = 4
-    case COUNT_PARAMETER_REF = 6
-    case OFFSET_IN_BITS = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let COUNT: VOffset = 4
+    static let COUNT_PARAMETER_REF: VOffset = 6
+    static let OFFSET_IN_BITS: VOffset = 8
   }
 
   ///  Fixed repeat count
-  public var COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var COUNT: UInt32 { let o = _accessor.offset(VT.COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Dynamic count from parameter reference
-  public var COUNT_PARAMETER_REF: String? { let o = _accessor.offset(VTOFFSET.COUNT_PARAMETER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COUNT_PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COUNT_PARAMETER_REF.v) }
+  public var COUNT_PARAMETER_REF: String? { let o = _accessor.offset(VT.COUNT_PARAMETER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COUNT_PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COUNT_PARAMETER_REF) }
   ///  Offset in bits between repetitions
-  public var OFFSET_IN_BITS: Int32 { let o = _accessor.offset(VTOFFSET.OFFSET_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var OFFSET_IN_BITS: Int32 { let o = _accessor.offset(VT.OFFSET_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startRepeatEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNT, def: 0, at: VTOFFSET.COUNT.p) }
-  public static func add(COUNT_PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COUNT_PARAMETER_REF, at: VTOFFSET.COUNT_PARAMETER_REF.p) }
-  public static func add(OFFSET_IN_BITS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET_IN_BITS, def: 0, at: VTOFFSET.OFFSET_IN_BITS.p) }
+  public static func add(COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COUNT, def: 0, at: VT.COUNT) }
+  public static func add(COUNT_PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COUNT_PARAMETER_REF, at: VT.COUNT_PARAMETER_REF) }
+  public static func add(OFFSET_IN_BITS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET_IN_BITS, def: 0, at: VT.OFFSET_IN_BITS) }
   public static func endRepeatEntry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRepeatEntry(
     _ fbb: inout FlatBufferBuilder,
@@ -2776,9 +2702,9 @@ public struct RepeatEntry: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COUNT.p, fieldName: "COUNT", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.COUNT_PARAMETER_REF.p, fieldName: "COUNT_PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OFFSET_IN_BITS.p, fieldName: "OFFSET_IN_BITS", required: false, type: Int32.self)
+    try _v.visit(field: VT.COUNT, fieldName: "COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.COUNT_PARAMETER_REF, fieldName: "COUNT_PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OFFSET_IN_BITS, fieldName: "OFFSET_IN_BITS", required: false, type: Int32.self)
     _v.finish()
   }
 }
@@ -2795,34 +2721,32 @@ public struct ParameterRefEntry: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PARAMETER_REF = 4
-    case LOCATION = 6
-    case REPEAT = 8
-    case INCLUDE_CONDITION = 10
-    case SHORT_DESCRIPTION = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PARAMETER_REF: VOffset = 4
+    static let LOCATION: VOffset = 6
+    static let REPEAT: VOffset = 8
+    static let INCLUDE_CONDITION: VOffset = 10
+    static let SHORT_DESCRIPTION: VOffset = 12
   }
 
   ///  Parameter reference path
-  public var PARAMETER_REF: String? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARAMETER_REF.v) }
+  public var PARAMETER_REF: String? { let o = _accessor.offset(VT.PARAMETER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAMETER_REF) }
   ///  Location in container
-  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VT.LOCATION); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Repeat specification
-  public var REPEAT: RepeatEntry? { let o = _accessor.offset(VTOFFSET.REPEAT.v); return o == 0 ? nil : RepeatEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var REPEAT: RepeatEntry? { let o = _accessor.offset(VT.REPEAT); return o == 0 ? nil : RepeatEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Include condition
-  public var INCLUDE_CONDITION: MatchCriteria? { let o = _accessor.offset(VTOFFSET.INCLUDE_CONDITION.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var INCLUDE_CONDITION: MatchCriteria? { let o = _accessor.offset(VT.INCLUDE_CONDITION); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   public static func startParameterRefEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VTOFFSET.PARAMETER_REF.p) }
-  public static func add(LOCATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION, at: VTOFFSET.LOCATION.p) }
-  public static func add(REPEAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPEAT, at: VTOFFSET.REPEAT.p) }
-  public static func add(INCLUDE_CONDITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INCLUDE_CONDITION, at: VTOFFSET.INCLUDE_CONDITION.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
+  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VT.PARAMETER_REF) }
+  public static func add(LOCATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION, at: VT.LOCATION) }
+  public static func add(REPEAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPEAT, at: VT.REPEAT) }
+  public static func add(INCLUDE_CONDITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INCLUDE_CONDITION, at: VT.INCLUDE_CONDITION) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
   public static func endParameterRefEntry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createParameterRefEntry(
     _ fbb: inout FlatBufferBuilder,
@@ -2843,11 +2767,11 @@ public struct ParameterRefEntry: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PARAMETER_REF.p, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LOCATION.p, fieldName: "LOCATION", required: false, type: ForwardOffset<LocationInContainer>.self)
-    try _v.visit(field: VTOFFSET.REPEAT.p, fieldName: "REPEAT", required: false, type: ForwardOffset<RepeatEntry>.self)
-    try _v.visit(field: VTOFFSET.INCLUDE_CONDITION.p, fieldName: "INCLUDE_CONDITION", required: false, type: ForwardOffset<MatchCriteria>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARAMETER_REF, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LOCATION, fieldName: "LOCATION", required: false, type: ForwardOffset<LocationInContainer>.self)
+    try _v.visit(field: VT.REPEAT, fieldName: "REPEAT", required: false, type: ForwardOffset<RepeatEntry>.self)
+    try _v.visit(field: VT.INCLUDE_CONDITION, fieldName: "INCLUDE_CONDITION", required: false, type: ForwardOffset<MatchCriteria>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -2864,29 +2788,27 @@ public struct ContainerRefEntry: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CONTAINER_REF = 4
-    case LOCATION = 6
-    case REPEAT = 8
-    case INCLUDE_CONDITION = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CONTAINER_REF: VOffset = 4
+    static let LOCATION: VOffset = 6
+    static let REPEAT: VOffset = 8
+    static let INCLUDE_CONDITION: VOffset = 10
   }
 
   ///  Container reference path
-  public var CONTAINER_REF: String? { let o = _accessor.offset(VTOFFSET.CONTAINER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTAINER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTAINER_REF.v) }
+  public var CONTAINER_REF: String? { let o = _accessor.offset(VT.CONTAINER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTAINER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTAINER_REF) }
   ///  Location in container
-  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VT.LOCATION); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Repeat specification
-  public var REPEAT: RepeatEntry? { let o = _accessor.offset(VTOFFSET.REPEAT.v); return o == 0 ? nil : RepeatEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var REPEAT: RepeatEntry? { let o = _accessor.offset(VT.REPEAT); return o == 0 ? nil : RepeatEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Include condition
-  public var INCLUDE_CONDITION: MatchCriteria? { let o = _accessor.offset(VTOFFSET.INCLUDE_CONDITION.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var INCLUDE_CONDITION: MatchCriteria? { let o = _accessor.offset(VT.INCLUDE_CONDITION); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startContainerRefEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(CONTAINER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REF, at: VTOFFSET.CONTAINER_REF.p) }
-  public static func add(LOCATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION, at: VTOFFSET.LOCATION.p) }
-  public static func add(REPEAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPEAT, at: VTOFFSET.REPEAT.p) }
-  public static func add(INCLUDE_CONDITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INCLUDE_CONDITION, at: VTOFFSET.INCLUDE_CONDITION.p) }
+  public static func add(CONTAINER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REF, at: VT.CONTAINER_REF) }
+  public static func add(LOCATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION, at: VT.LOCATION) }
+  public static func add(REPEAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPEAT, at: VT.REPEAT) }
+  public static func add(INCLUDE_CONDITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INCLUDE_CONDITION, at: VT.INCLUDE_CONDITION) }
   public static func endContainerRefEntry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createContainerRefEntry(
     _ fbb: inout FlatBufferBuilder,
@@ -2905,10 +2827,10 @@ public struct ContainerRefEntry: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CONTAINER_REF.p, fieldName: "CONTAINER_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LOCATION.p, fieldName: "LOCATION", required: false, type: ForwardOffset<LocationInContainer>.self)
-    try _v.visit(field: VTOFFSET.REPEAT.p, fieldName: "REPEAT", required: false, type: ForwardOffset<RepeatEntry>.self)
-    try _v.visit(field: VTOFFSET.INCLUDE_CONDITION.p, fieldName: "INCLUDE_CONDITION", required: false, type: ForwardOffset<MatchCriteria>.self)
+    try _v.visit(field: VT.CONTAINER_REF, fieldName: "CONTAINER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LOCATION, fieldName: "LOCATION", required: false, type: ForwardOffset<LocationInContainer>.self)
+    try _v.visit(field: VT.REPEAT, fieldName: "REPEAT", required: false, type: ForwardOffset<RepeatEntry>.self)
+    try _v.visit(field: VT.INCLUDE_CONDITION, fieldName: "INCLUDE_CONDITION", required: false, type: ForwardOffset<MatchCriteria>.self)
     _v.finish()
   }
 }
@@ -2925,30 +2847,28 @@ public struct FixedValueEntry: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case BINARY_VALUE = 4
-    case SIZE_IN_BITS = 6
-    case NAME = 8
-    case LOCATION = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let BINARY_VALUE: VOffset = 4
+    static let SIZE_IN_BITS: VOffset = 6
+    static let NAME: VOffset = 8
+    static let LOCATION: VOffset = 10
   }
 
   ///  Binary value (hex string)
-  public var BINARY_VALUE: String? { let o = _accessor.offset(VTOFFSET.BINARY_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BINARY_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BINARY_VALUE.v) }
+  public var BINARY_VALUE: String? { let o = _accessor.offset(VT.BINARY_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BINARY_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BINARY_VALUE) }
   ///  Size in bits
-  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VTOFFSET.SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VT.SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Name/description
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Location in container
-  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VT.LOCATION); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startFixedValueEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(BINARY_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BINARY_VALUE, at: VTOFFSET.BINARY_VALUE.p) }
-  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VTOFFSET.SIZE_IN_BITS.p) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(LOCATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION, at: VTOFFSET.LOCATION.p) }
+  public static func add(BINARY_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BINARY_VALUE, at: VT.BINARY_VALUE) }
+  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VT.SIZE_IN_BITS) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(LOCATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION, at: VT.LOCATION) }
   public static func endFixedValueEntry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFixedValueEntry(
     _ fbb: inout FlatBufferBuilder,
@@ -2967,10 +2887,10 @@ public struct FixedValueEntry: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.BINARY_VALUE.p, fieldName: "BINARY_VALUE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SIZE_IN_BITS.p, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LOCATION.p, fieldName: "LOCATION", required: false, type: ForwardOffset<LocationInContainer>.self)
+    try _v.visit(field: VT.BINARY_VALUE, fieldName: "BINARY_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIZE_IN_BITS, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LOCATION, fieldName: "LOCATION", required: false, type: ForwardOffset<LocationInContainer>.self)
     _v.finish()
   }
 }
@@ -2987,29 +2907,27 @@ public struct ArrayParameterRefEntry: FlatBufferTable, FlatbuffersVectorInitiali
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PARAMETER_REF = 4
-    case LOCATION = 6
-    case FIRST_INDEX = 8
-    case LAST_INDEX = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PARAMETER_REF: VOffset = 4
+    static let LOCATION: VOffset = 6
+    static let FIRST_INDEX: VOffset = 8
+    static let LAST_INDEX: VOffset = 10
   }
 
   ///  Parameter reference path
-  public var PARAMETER_REF: String? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARAMETER_REF.v) }
+  public var PARAMETER_REF: String? { let o = _accessor.offset(VT.PARAMETER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAMETER_REF) }
   ///  Location in container
-  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VT.LOCATION); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  First index to include
-  public var FIRST_INDEX: UInt32 { let o = _accessor.offset(VTOFFSET.FIRST_INDEX.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var FIRST_INDEX: UInt32 { let o = _accessor.offset(VT.FIRST_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Last index to include
-  public var LAST_INDEX: UInt32 { let o = _accessor.offset(VTOFFSET.LAST_INDEX.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var LAST_INDEX: UInt32 { let o = _accessor.offset(VT.LAST_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   public static func startArrayParameterRefEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VTOFFSET.PARAMETER_REF.p) }
-  public static func add(LOCATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION, at: VTOFFSET.LOCATION.p) }
-  public static func add(FIRST_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIRST_INDEX, def: 0, at: VTOFFSET.FIRST_INDEX.p) }
-  public static func add(LAST_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_INDEX, def: 0, at: VTOFFSET.LAST_INDEX.p) }
+  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VT.PARAMETER_REF) }
+  public static func add(LOCATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION, at: VT.LOCATION) }
+  public static func add(FIRST_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIRST_INDEX, def: 0, at: VT.FIRST_INDEX) }
+  public static func add(LAST_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAST_INDEX, def: 0, at: VT.LAST_INDEX) }
   public static func endArrayParameterRefEntry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createArrayParameterRefEntry(
     _ fbb: inout FlatBufferBuilder,
@@ -3028,10 +2946,10 @@ public struct ArrayParameterRefEntry: FlatBufferTable, FlatbuffersVectorInitiali
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PARAMETER_REF.p, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LOCATION.p, fieldName: "LOCATION", required: false, type: ForwardOffset<LocationInContainer>.self)
-    try _v.visit(field: VTOFFSET.FIRST_INDEX.p, fieldName: "FIRST_INDEX", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.LAST_INDEX.p, fieldName: "LAST_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.PARAMETER_REF, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LOCATION, fieldName: "LOCATION", required: false, type: ForwardOffset<LocationInContainer>.self)
+    try _v.visit(field: VT.FIRST_INDEX, fieldName: "FIRST_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.LAST_INDEX, fieldName: "LAST_INDEX", required: false, type: UInt32.self)
     _v.finish()
   }
 }
@@ -3048,28 +2966,26 @@ public struct ContainerEntry: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PARAMETER_REF_ENTRY = 4
-    case CONTAINER_REF_ENTRY = 6
-    case FIXED_VALUE_ENTRY = 8
-    case ARRAY_PARAMETER_REF_ENTRY = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PARAMETER_REF_ENTRY: VOffset = 4
+    static let CONTAINER_REF_ENTRY: VOffset = 6
+    static let FIXED_VALUE_ENTRY: VOffset = 8
+    static let ARRAY_PARAMETER_REF_ENTRY: VOffset = 10
   }
 
   ///  Parameter reference entry
-  public var PARAMETER_REF_ENTRY: ParameterRefEntry? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF_ENTRY.v); return o == 0 ? nil : ParameterRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PARAMETER_REF_ENTRY: ParameterRefEntry? { let o = _accessor.offset(VT.PARAMETER_REF_ENTRY); return o == 0 ? nil : ParameterRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Container reference entry
-  public var CONTAINER_REF_ENTRY: ContainerRefEntry? { let o = _accessor.offset(VTOFFSET.CONTAINER_REF_ENTRY.v); return o == 0 ? nil : ContainerRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CONTAINER_REF_ENTRY: ContainerRefEntry? { let o = _accessor.offset(VT.CONTAINER_REF_ENTRY); return o == 0 ? nil : ContainerRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Fixed value entry
-  public var FIXED_VALUE_ENTRY: FixedValueEntry? { let o = _accessor.offset(VTOFFSET.FIXED_VALUE_ENTRY.v); return o == 0 ? nil : FixedValueEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var FIXED_VALUE_ENTRY: FixedValueEntry? { let o = _accessor.offset(VT.FIXED_VALUE_ENTRY); return o == 0 ? nil : FixedValueEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Array parameter reference entry
-  public var ARRAY_PARAMETER_REF_ENTRY: ArrayParameterRefEntry? { let o = _accessor.offset(VTOFFSET.ARRAY_PARAMETER_REF_ENTRY.v); return o == 0 ? nil : ArrayParameterRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ARRAY_PARAMETER_REF_ENTRY: ArrayParameterRefEntry? { let o = _accessor.offset(VT.ARRAY_PARAMETER_REF_ENTRY); return o == 0 ? nil : ArrayParameterRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startContainerEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(PARAMETER_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF_ENTRY, at: VTOFFSET.PARAMETER_REF_ENTRY.p) }
-  public static func add(CONTAINER_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REF_ENTRY, at: VTOFFSET.CONTAINER_REF_ENTRY.p) }
-  public static func add(FIXED_VALUE_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIXED_VALUE_ENTRY, at: VTOFFSET.FIXED_VALUE_ENTRY.p) }
-  public static func add(ARRAY_PARAMETER_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARRAY_PARAMETER_REF_ENTRY, at: VTOFFSET.ARRAY_PARAMETER_REF_ENTRY.p) }
+  public static func add(PARAMETER_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF_ENTRY, at: VT.PARAMETER_REF_ENTRY) }
+  public static func add(CONTAINER_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REF_ENTRY, at: VT.CONTAINER_REF_ENTRY) }
+  public static func add(FIXED_VALUE_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIXED_VALUE_ENTRY, at: VT.FIXED_VALUE_ENTRY) }
+  public static func add(ARRAY_PARAMETER_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARRAY_PARAMETER_REF_ENTRY, at: VT.ARRAY_PARAMETER_REF_ENTRY) }
   public static func endContainerEntry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createContainerEntry(
     _ fbb: inout FlatBufferBuilder,
@@ -3088,10 +3004,10 @@ public struct ContainerEntry: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PARAMETER_REF_ENTRY.p, fieldName: "PARAMETER_REF_ENTRY", required: false, type: ForwardOffset<ParameterRefEntry>.self)
-    try _v.visit(field: VTOFFSET.CONTAINER_REF_ENTRY.p, fieldName: "CONTAINER_REF_ENTRY", required: false, type: ForwardOffset<ContainerRefEntry>.self)
-    try _v.visit(field: VTOFFSET.FIXED_VALUE_ENTRY.p, fieldName: "FIXED_VALUE_ENTRY", required: false, type: ForwardOffset<FixedValueEntry>.self)
-    try _v.visit(field: VTOFFSET.ARRAY_PARAMETER_REF_ENTRY.p, fieldName: "ARRAY_PARAMETER_REF_ENTRY", required: false, type: ForwardOffset<ArrayParameterRefEntry>.self)
+    try _v.visit(field: VT.PARAMETER_REF_ENTRY, fieldName: "PARAMETER_REF_ENTRY", required: false, type: ForwardOffset<ParameterRefEntry>.self)
+    try _v.visit(field: VT.CONTAINER_REF_ENTRY, fieldName: "CONTAINER_REF_ENTRY", required: false, type: ForwardOffset<ContainerRefEntry>.self)
+    try _v.visit(field: VT.FIXED_VALUE_ENTRY, fieldName: "FIXED_VALUE_ENTRY", required: false, type: ForwardOffset<FixedValueEntry>.self)
+    try _v.visit(field: VT.ARRAY_PARAMETER_REF_ENTRY, fieldName: "ARRAY_PARAMETER_REF_ENTRY", required: false, type: ForwardOffset<ArrayParameterRefEntry>.self)
     _v.finish()
   }
 }
@@ -3108,21 +3024,19 @@ public struct BaseContainer: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CONTAINER_REF = 4
-    case RESTRICTION_CRITERIA = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CONTAINER_REF: VOffset = 4
+    static let RESTRICTION_CRITERIA: VOffset = 6
   }
 
   ///  Container reference path
-  public var CONTAINER_REF: String? { let o = _accessor.offset(VTOFFSET.CONTAINER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTAINER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTAINER_REF.v) }
+  public var CONTAINER_REF: String? { let o = _accessor.offset(VT.CONTAINER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTAINER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTAINER_REF) }
   ///  Restriction criteria
-  public var RESTRICTION_CRITERIA: MatchCriteria? { let o = _accessor.offset(VTOFFSET.RESTRICTION_CRITERIA.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RESTRICTION_CRITERIA: MatchCriteria? { let o = _accessor.offset(VT.RESTRICTION_CRITERIA); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startBaseContainer(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(CONTAINER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REF, at: VTOFFSET.CONTAINER_REF.p) }
-  public static func add(RESTRICTION_CRITERIA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESTRICTION_CRITERIA, at: VTOFFSET.RESTRICTION_CRITERIA.p) }
+  public static func add(CONTAINER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REF, at: VT.CONTAINER_REF) }
+  public static func add(RESTRICTION_CRITERIA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESTRICTION_CRITERIA, at: VT.RESTRICTION_CRITERIA) }
   public static func endBaseContainer(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBaseContainer(
     _ fbb: inout FlatBufferBuilder,
@@ -3137,8 +3051,8 @@ public struct BaseContainer: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CONTAINER_REF.p, fieldName: "CONTAINER_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RESTRICTION_CRITERIA.p, fieldName: "RESTRICTION_CRITERIA", required: false, type: ForwardOffset<MatchCriteria>.self)
+    try _v.visit(field: VT.CONTAINER_REF, fieldName: "CONTAINER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RESTRICTION_CRITERIA, fieldName: "RESTRICTION_CRITERIA", required: false, type: ForwardOffset<MatchCriteria>.self)
     _v.finish()
   }
 }
@@ -3155,25 +3069,23 @@ public struct RateInStream: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case STREAM_REF = 4
-    case RATE = 6
-    case BASIS = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let STREAM_REF: VOffset = 4
+    static let RATE: VOffset = 6
+    static let BASIS: VOffset = 8
   }
 
   ///  Stream reference
-  public var STREAM_REF: String? { let o = _accessor.offset(VTOFFSET.STREAM_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STREAM_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STREAM_REF.v) }
+  public var STREAM_REF: String? { let o = _accessor.offset(VT.STREAM_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STREAM_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STREAM_REF) }
   ///  Rate value
-  public var RATE: Double { let o = _accessor.offset(VTOFFSET.RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RATE: Double { let o = _accessor.offset(VT.RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Rate basis
-  public var BASIS: RateBasisType { let o = _accessor.offset(VTOFFSET.BASIS.v); return o == 0 ? .perSecond : RateBasisType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .perSecond }
+  public var BASIS: RateBasisType { let o = _accessor.offset(VT.BASIS); return o == 0 ? .perSecond : RateBasisType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .perSecond }
   public static func startRateInStream(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(STREAM_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STREAM_REF, at: VTOFFSET.STREAM_REF.p) }
-  public static func add(RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RATE, def: 0.0, at: VTOFFSET.RATE.p) }
-  public static func add(BASIS: RateBasisType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BASIS.rawValue, def: 0, at: VTOFFSET.BASIS.p) }
+  public static func add(STREAM_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STREAM_REF, at: VT.STREAM_REF) }
+  public static func add(RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RATE, def: 0.0, at: VT.RATE) }
+  public static func add(BASIS: RateBasisType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BASIS.rawValue, def: 0, at: VT.BASIS) }
   public static func endRateInStream(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRateInStream(
     _ fbb: inout FlatBufferBuilder,
@@ -3190,9 +3102,9 @@ public struct RateInStream: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.STREAM_REF.p, fieldName: "STREAM_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RATE.p, fieldName: "RATE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BASIS.p, fieldName: "BASIS", required: false, type: RateBasisType.self)
+    try _v.visit(field: VT.STREAM_REF, fieldName: "STREAM_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RATE, fieldName: "RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.BASIS, fieldName: "BASIS", required: false, type: RateBasisType.self)
     _v.finish()
   }
 }
@@ -3209,25 +3121,23 @@ public struct ContainerBinaryEncoding: FlatBufferTable, FlatbuffersVectorInitial
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ERROR_DETECTION = 4
-    case CRC_POLYNOMIAL = 6
-    case SIZE_IN_BITS = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ERROR_DETECTION: VOffset = 4
+    static let CRC_POLYNOMIAL: VOffset = 6
+    static let SIZE_IN_BITS: VOffset = 8
   }
 
   ///  Error detection type
-  public var ERROR_DETECTION: ErrorDetectionType { let o = _accessor.offset(VTOFFSET.ERROR_DETECTION.v); return o == 0 ? .none_ : ErrorDetectionType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  public var ERROR_DETECTION: ErrorDetectionType { let o = _accessor.offset(VT.ERROR_DETECTION); return o == 0 ? .none_ : ErrorDetectionType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
   ///  CRC polynomial (for CRC error detection)
-  public var CRC_POLYNOMIAL: String? { let o = _accessor.offset(VTOFFSET.CRC_POLYNOMIAL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CRC_POLYNOMIALSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CRC_POLYNOMIAL.v) }
+  public var CRC_POLYNOMIAL: String? { let o = _accessor.offset(VT.CRC_POLYNOMIAL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CRC_POLYNOMIALSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CRC_POLYNOMIAL) }
   ///  Size in bits
-  public var SIZE_IN_BITS: UInt32 { let o = _accessor.offset(VTOFFSET.SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SIZE_IN_BITS: UInt32 { let o = _accessor.offset(VT.SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   public static func startContainerBinaryEncoding(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(ERROR_DETECTION: ErrorDetectionType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERROR_DETECTION.rawValue, def: 0, at: VTOFFSET.ERROR_DETECTION.p) }
-  public static func add(CRC_POLYNOMIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CRC_POLYNOMIAL, at: VTOFFSET.CRC_POLYNOMIAL.p) }
-  public static func add(SIZE_IN_BITS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VTOFFSET.SIZE_IN_BITS.p) }
+  public static func add(ERROR_DETECTION: ErrorDetectionType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERROR_DETECTION.rawValue, def: 0, at: VT.ERROR_DETECTION) }
+  public static func add(CRC_POLYNOMIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CRC_POLYNOMIAL, at: VT.CRC_POLYNOMIAL) }
+  public static func add(SIZE_IN_BITS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VT.SIZE_IN_BITS) }
   public static func endContainerBinaryEncoding(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createContainerBinaryEncoding(
     _ fbb: inout FlatBufferBuilder,
@@ -3244,9 +3154,9 @@ public struct ContainerBinaryEncoding: FlatBufferTable, FlatbuffersVectorInitial
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ERROR_DETECTION.p, fieldName: "ERROR_DETECTION", required: false, type: ErrorDetectionType.self)
-    try _v.visit(field: VTOFFSET.CRC_POLYNOMIAL.p, fieldName: "CRC_POLYNOMIAL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SIZE_IN_BITS.p, fieldName: "SIZE_IN_BITS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ERROR_DETECTION, fieldName: "ERROR_DETECTION", required: false, type: ErrorDetectionType.self)
+    try _v.visit(field: VT.CRC_POLYNOMIAL, fieldName: "CRC_POLYNOMIAL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIZE_IN_BITS, fieldName: "SIZE_IN_BITS", required: false, type: UInt32.self)
     _v.finish()
   }
 }
@@ -3263,53 +3173,51 @@ public struct SequenceContainer: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case ABSTRACT = 10
-    case ENTRY_LIST = 12
-    case BASE_CONTAINER = 14
-    case BINARY_ENCODING = 16
-    case RATE_IN_STREAM = 18
-    case IDLE_PATTERN = 20
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let ABSTRACT: VOffset = 10
+    static let ENTRY_LIST: VOffset = 12
+    static let BASE_CONTAINER: VOffset = 14
+    static let BINARY_ENCODING: VOffset = 16
+    static let RATE_IN_STREAM: VOffset = 18
+    static let IDLE_PATTERN: VOffset = 20
   }
 
   ///  Container name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Abstract container (used as base only)
-  public var ABSTRACT: Bool { let o = _accessor.offset(VTOFFSET.ABSTRACT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ABSTRACT: Bool { let o = _accessor.offset(VT.ABSTRACT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Container entry list
-  public var ENTRY_LIST: FlatbufferVector<ContainerEntry> { return _accessor.vector(at: VTOFFSET.ENTRY_LIST.v, byteSize: 4) }
+  public var ENTRY_LIST: FlatbufferVector<ContainerEntry> { return _accessor.vector(at: VT.ENTRY_LIST, byteSize: 4) }
   ///  Base container (inheritance)
-  public var BASE_CONTAINER: BaseContainer? { let o = _accessor.offset(VTOFFSET.BASE_CONTAINER.v); return o == 0 ? nil : BaseContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BASE_CONTAINER: BaseContainer? { let o = _accessor.offset(VT.BASE_CONTAINER); return o == 0 ? nil : BaseContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Binary encoding
-  public var BINARY_ENCODING: ContainerBinaryEncoding? { let o = _accessor.offset(VTOFFSET.BINARY_ENCODING.v); return o == 0 ? nil : ContainerBinaryEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BINARY_ENCODING: ContainerBinaryEncoding? { let o = _accessor.offset(VT.BINARY_ENCODING); return o == 0 ? nil : ContainerBinaryEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Rate in stream
-  public var RATE_IN_STREAM: RateInStream? { let o = _accessor.offset(VTOFFSET.RATE_IN_STREAM.v); return o == 0 ? nil : RateInStream(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RATE_IN_STREAM: RateInStream? { let o = _accessor.offset(VT.RATE_IN_STREAM); return o == 0 ? nil : RateInStream(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Idle pattern (hex string for padding)
-  public var IDLE_PATTERN: String? { let o = _accessor.offset(VTOFFSET.IDLE_PATTERN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IDLE_PATTERNSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IDLE_PATTERN.v) }
+  public var IDLE_PATTERN: String? { let o = _accessor.offset(VT.IDLE_PATTERN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDLE_PATTERNSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IDLE_PATTERN) }
   public static func startSequenceContainer(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
   public static func add(ABSTRACT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ABSTRACT, def: false,
-   at: VTOFFSET.ABSTRACT.p) }
-  public static func addVectorOf(ENTRY_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTRY_LIST, at: VTOFFSET.ENTRY_LIST.p) }
-  public static func add(BASE_CONTAINER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BASE_CONTAINER, at: VTOFFSET.BASE_CONTAINER.p) }
-  public static func add(BINARY_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BINARY_ENCODING, at: VTOFFSET.BINARY_ENCODING.p) }
-  public static func add(RATE_IN_STREAM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RATE_IN_STREAM, at: VTOFFSET.RATE_IN_STREAM.p) }
-  public static func add(IDLE_PATTERN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IDLE_PATTERN, at: VTOFFSET.IDLE_PATTERN.p) }
+   at: VT.ABSTRACT) }
+  public static func addVectorOf(ENTRY_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTRY_LIST, at: VT.ENTRY_LIST) }
+  public static func add(BASE_CONTAINER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BASE_CONTAINER, at: VT.BASE_CONTAINER) }
+  public static func add(BINARY_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BINARY_ENCODING, at: VT.BINARY_ENCODING) }
+  public static func add(RATE_IN_STREAM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RATE_IN_STREAM, at: VT.RATE_IN_STREAM) }
+  public static func add(IDLE_PATTERN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IDLE_PATTERN, at: VT.IDLE_PATTERN) }
   public static func endSequenceContainer(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSequenceContainer(
     _ fbb: inout FlatBufferBuilder,
@@ -3338,15 +3246,15 @@ public struct SequenceContainer: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ABSTRACT.p, fieldName: "ABSTRACT", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.ENTRY_LIST.p, fieldName: "ENTRY_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<ContainerEntry>, ContainerEntry>>.self)
-    try _v.visit(field: VTOFFSET.BASE_CONTAINER.p, fieldName: "BASE_CONTAINER", required: false, type: ForwardOffset<BaseContainer>.self)
-    try _v.visit(field: VTOFFSET.BINARY_ENCODING.p, fieldName: "BINARY_ENCODING", required: false, type: ForwardOffset<ContainerBinaryEncoding>.self)
-    try _v.visit(field: VTOFFSET.RATE_IN_STREAM.p, fieldName: "RATE_IN_STREAM", required: false, type: ForwardOffset<RateInStream>.self)
-    try _v.visit(field: VTOFFSET.IDLE_PATTERN.p, fieldName: "IDLE_PATTERN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ABSTRACT, fieldName: "ABSTRACT", required: false, type: Bool.self)
+    try _v.visit(field: VT.ENTRY_LIST, fieldName: "ENTRY_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<ContainerEntry>, ContainerEntry>>.self)
+    try _v.visit(field: VT.BASE_CONTAINER, fieldName: "BASE_CONTAINER", required: false, type: ForwardOffset<BaseContainer>.self)
+    try _v.visit(field: VT.BINARY_ENCODING, fieldName: "BINARY_ENCODING", required: false, type: ForwardOffset<ContainerBinaryEncoding>.self)
+    try _v.visit(field: VT.RATE_IN_STREAM, fieldName: "RATE_IN_STREAM", required: false, type: ForwardOffset<RateInStream>.self)
+    try _v.visit(field: VT.IDLE_PATTERN, fieldName: "IDLE_PATTERN", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -3363,16 +3271,14 @@ public struct ContainerSet: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CONTAINERS = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CONTAINERS: VOffset = 4
   }
 
   ///  Sequence containers
-  public var CONTAINERS: FlatbufferVector<SequenceContainer> { return _accessor.vector(at: VTOFFSET.CONTAINERS.v, byteSize: 4) }
+  public var CONTAINERS: FlatbufferVector<SequenceContainer> { return _accessor.vector(at: VT.CONTAINERS, byteSize: 4) }
   public static func startContainerSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func addVectorOf(CONTAINERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINERS, at: VTOFFSET.CONTAINERS.p) }
+  public static func addVectorOf(CONTAINERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINERS, at: VT.CONTAINERS) }
   public static func endContainerSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createContainerSet(
     _ fbb: inout FlatBufferBuilder,
@@ -3385,7 +3291,7 @@ public struct ContainerSet: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CONTAINERS.p, fieldName: "CONTAINERS", required: false, type: ForwardOffset<Vector<ForwardOffset<SequenceContainer>, SequenceContainer>>.self)
+    try _v.visit(field: VT.CONTAINERS, fieldName: "CONTAINERS", required: false, type: ForwardOffset<Vector<ForwardOffset<SequenceContainer>, SequenceContainer>>.self)
     _v.finish()
   }
 }
@@ -3402,22 +3308,20 @@ public struct AlgorithmInput: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PARAMETER_REF = 4
-    case INPUT_NAME = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PARAMETER_REF: VOffset = 4
+    static let INPUT_NAME: VOffset = 6
   }
 
   ///  Parameter reference
-  public var PARAMETER_REF: String? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARAMETER_REF.v) }
+  public var PARAMETER_REF: String? { let o = _accessor.offset(VT.PARAMETER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAMETER_REF) }
   ///  Input name in algorithm
-  public var INPUT_NAME: String? { let o = _accessor.offset(VTOFFSET.INPUT_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INPUT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INPUT_NAME.v) }
+  public var INPUT_NAME: String? { let o = _accessor.offset(VT.INPUT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INPUT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INPUT_NAME) }
   public static func startAlgorithmInput(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VTOFFSET.PARAMETER_REF.p) }
-  public static func add(INPUT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INPUT_NAME, at: VTOFFSET.INPUT_NAME.p) }
+  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VT.PARAMETER_REF) }
+  public static func add(INPUT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INPUT_NAME, at: VT.INPUT_NAME) }
   public static func endAlgorithmInput(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAlgorithmInput(
     _ fbb: inout FlatBufferBuilder,
@@ -3432,8 +3336,8 @@ public struct AlgorithmInput: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PARAMETER_REF.p, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INPUT_NAME.p, fieldName: "INPUT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARAMETER_REF, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INPUT_NAME, fieldName: "INPUT_NAME", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -3450,22 +3354,20 @@ public struct AlgorithmOutput: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PARAMETER_REF = 4
-    case OUTPUT_NAME = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PARAMETER_REF: VOffset = 4
+    static let OUTPUT_NAME: VOffset = 6
   }
 
   ///  Parameter reference
-  public var PARAMETER_REF: String? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARAMETER_REF.v) }
+  public var PARAMETER_REF: String? { let o = _accessor.offset(VT.PARAMETER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAMETER_REF) }
   ///  Output name in algorithm
-  public var OUTPUT_NAME: String? { let o = _accessor.offset(VTOFFSET.OUTPUT_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OUTPUT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OUTPUT_NAME.v) }
+  public var OUTPUT_NAME: String? { let o = _accessor.offset(VT.OUTPUT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OUTPUT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OUTPUT_NAME) }
   public static func startAlgorithmOutput(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VTOFFSET.PARAMETER_REF.p) }
-  public static func add(OUTPUT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTPUT_NAME, at: VTOFFSET.OUTPUT_NAME.p) }
+  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VT.PARAMETER_REF) }
+  public static func add(OUTPUT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTPUT_NAME, at: VT.OUTPUT_NAME) }
   public static func endAlgorithmOutput(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAlgorithmOutput(
     _ fbb: inout FlatBufferBuilder,
@@ -3480,8 +3382,8 @@ public struct AlgorithmOutput: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PARAMETER_REF.p, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OUTPUT_NAME.p, fieldName: "OUTPUT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARAMETER_REF, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OUTPUT_NAME, fieldName: "OUTPUT_NAME", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -3498,26 +3400,24 @@ public struct AlgorithmTrigger: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PARAMETER_REF = 4
-    case CONTAINER_REF = 6
-    case RATE = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PARAMETER_REF: VOffset = 4
+    static let CONTAINER_REF: VOffset = 6
+    static let RATE: VOffset = 8
   }
 
   ///  Trigger on parameter update
-  public var PARAMETER_REF: String? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARAMETER_REF.v) }
+  public var PARAMETER_REF: String? { let o = _accessor.offset(VT.PARAMETER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAMETER_REF) }
   ///  Trigger on container reception
-  public var CONTAINER_REF: String? { let o = _accessor.offset(VTOFFSET.CONTAINER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTAINER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTAINER_REF.v) }
+  public var CONTAINER_REF: String? { let o = _accessor.offset(VT.CONTAINER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTAINER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTAINER_REF) }
   ///  Trigger rate (per second)
-  public var RATE: Double { let o = _accessor.offset(VTOFFSET.RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RATE: Double { let o = _accessor.offset(VT.RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startAlgorithmTrigger(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VTOFFSET.PARAMETER_REF.p) }
-  public static func add(CONTAINER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REF, at: VTOFFSET.CONTAINER_REF.p) }
-  public static func add(RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RATE, def: 0.0, at: VTOFFSET.RATE.p) }
+  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VT.PARAMETER_REF) }
+  public static func add(CONTAINER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REF, at: VT.CONTAINER_REF) }
+  public static func add(RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RATE, def: 0.0, at: VT.RATE) }
   public static func endAlgorithmTrigger(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAlgorithmTrigger(
     _ fbb: inout FlatBufferBuilder,
@@ -3534,9 +3434,9 @@ public struct AlgorithmTrigger: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PARAMETER_REF.p, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONTAINER_REF.p, fieldName: "CONTAINER_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RATE.p, fieldName: "RATE", required: false, type: Double.self)
+    try _v.visit(field: VT.PARAMETER_REF, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTAINER_REF, fieldName: "CONTAINER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RATE, fieldName: "RATE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -3553,54 +3453,52 @@ public struct CustomAlgorithm: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case LANGUAGE = 10
-    case ALGORITHM_TEXT = 12
-    case EXTERNAL_ALGORITHM_REF = 14
-    case INPUTS = 16
-    case OUTPUTS = 18
-    case TRIGGERS = 20
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let LANGUAGE: VOffset = 10
+    static let ALGORITHM_TEXT: VOffset = 12
+    static let EXTERNAL_ALGORITHM_REF: VOffset = 14
+    static let INPUTS: VOffset = 16
+    static let OUTPUTS: VOffset = 18
+    static let TRIGGERS: VOffset = 20
   }
 
   ///  Algorithm name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Programming language
-  public var LANGUAGE: String? { let o = _accessor.offset(VTOFFSET.LANGUAGE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LANGUAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LANGUAGE.v) }
+  public var LANGUAGE: String? { let o = _accessor.offset(VT.LANGUAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LANGUAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LANGUAGE) }
   ///  Algorithm text/code
-  public var ALGORITHM_TEXT: String? { let o = _accessor.offset(VTOFFSET.ALGORITHM_TEXT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ALGORITHM_TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALGORITHM_TEXT.v) }
+  public var ALGORITHM_TEXT: String? { let o = _accessor.offset(VT.ALGORITHM_TEXT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALGORITHM_TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALGORITHM_TEXT) }
   ///  External algorithm reference
-  public var EXTERNAL_ALGORITHM_REF: String? { let o = _accessor.offset(VTOFFSET.EXTERNAL_ALGORITHM_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EXTERNAL_ALGORITHM_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXTERNAL_ALGORITHM_REF.v) }
+  public var EXTERNAL_ALGORITHM_REF: String? { let o = _accessor.offset(VT.EXTERNAL_ALGORITHM_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EXTERNAL_ALGORITHM_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EXTERNAL_ALGORITHM_REF) }
   ///  Input bindings
-  public var INPUTS: FlatbufferVector<AlgorithmInput> { return _accessor.vector(at: VTOFFSET.INPUTS.v, byteSize: 4) }
+  public var INPUTS: FlatbufferVector<AlgorithmInput> { return _accessor.vector(at: VT.INPUTS, byteSize: 4) }
   ///  Output bindings
-  public var OUTPUTS: FlatbufferVector<AlgorithmOutput> { return _accessor.vector(at: VTOFFSET.OUTPUTS.v, byteSize: 4) }
+  public var OUTPUTS: FlatbufferVector<AlgorithmOutput> { return _accessor.vector(at: VT.OUTPUTS, byteSize: 4) }
   ///  Trigger conditions
-  public var TRIGGERS: FlatbufferVector<AlgorithmTrigger> { return _accessor.vector(at: VTOFFSET.TRIGGERS.v, byteSize: 4) }
+  public var TRIGGERS: FlatbufferVector<AlgorithmTrigger> { return _accessor.vector(at: VT.TRIGGERS, byteSize: 4) }
   public static func startCustomAlgorithm(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(LANGUAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LANGUAGE, at: VTOFFSET.LANGUAGE.p) }
-  public static func add(ALGORITHM_TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM_TEXT, at: VTOFFSET.ALGORITHM_TEXT.p) }
-  public static func add(EXTERNAL_ALGORITHM_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTERNAL_ALGORITHM_REF, at: VTOFFSET.EXTERNAL_ALGORITHM_REF.p) }
-  public static func addVectorOf(INPUTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INPUTS, at: VTOFFSET.INPUTS.p) }
-  public static func addVectorOf(OUTPUTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTPUTS, at: VTOFFSET.OUTPUTS.p) }
-  public static func addVectorOf(TRIGGERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRIGGERS, at: VTOFFSET.TRIGGERS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(LANGUAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LANGUAGE, at: VT.LANGUAGE) }
+  public static func add(ALGORITHM_TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM_TEXT, at: VT.ALGORITHM_TEXT) }
+  public static func add(EXTERNAL_ALGORITHM_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTERNAL_ALGORITHM_REF, at: VT.EXTERNAL_ALGORITHM_REF) }
+  public static func addVectorOf(INPUTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INPUTS, at: VT.INPUTS) }
+  public static func addVectorOf(OUTPUTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTPUTS, at: VT.OUTPUTS) }
+  public static func addVectorOf(TRIGGERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRIGGERS, at: VT.TRIGGERS) }
   public static func endCustomAlgorithm(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCustomAlgorithm(
     _ fbb: inout FlatBufferBuilder,
@@ -3629,15 +3527,15 @@ public struct CustomAlgorithm: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LANGUAGE.p, fieldName: "LANGUAGE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ALGORITHM_TEXT.p, fieldName: "ALGORITHM_TEXT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EXTERNAL_ALGORITHM_REF.p, fieldName: "EXTERNAL_ALGORITHM_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INPUTS.p, fieldName: "INPUTS", required: false, type: ForwardOffset<Vector<ForwardOffset<AlgorithmInput>, AlgorithmInput>>.self)
-    try _v.visit(field: VTOFFSET.OUTPUTS.p, fieldName: "OUTPUTS", required: false, type: ForwardOffset<Vector<ForwardOffset<AlgorithmOutput>, AlgorithmOutput>>.self)
-    try _v.visit(field: VTOFFSET.TRIGGERS.p, fieldName: "TRIGGERS", required: false, type: ForwardOffset<Vector<ForwardOffset<AlgorithmTrigger>, AlgorithmTrigger>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LANGUAGE, fieldName: "LANGUAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALGORITHM_TEXT, fieldName: "ALGORITHM_TEXT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXTERNAL_ALGORITHM_REF, fieldName: "EXTERNAL_ALGORITHM_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INPUTS, fieldName: "INPUTS", required: false, type: ForwardOffset<Vector<ForwardOffset<AlgorithmInput>, AlgorithmInput>>.self)
+    try _v.visit(field: VT.OUTPUTS, fieldName: "OUTPUTS", required: false, type: ForwardOffset<Vector<ForwardOffset<AlgorithmOutput>, AlgorithmOutput>>.self)
+    try _v.visit(field: VT.TRIGGERS, fieldName: "TRIGGERS", required: false, type: ForwardOffset<Vector<ForwardOffset<AlgorithmTrigger>, AlgorithmTrigger>>.self)
     _v.finish()
   }
 }
@@ -3654,36 +3552,34 @@ public struct MathAlgorithm: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case MATH_OPERATION = 8
-    case OUTPUT_PARAMETER_REF = 10
-    case TRIGGERS = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let MATH_OPERATION: VOffset = 8
+    static let OUTPUT_PARAMETER_REF: VOffset = 10
+    static let TRIGGERS: VOffset = 12
   }
 
   ///  Algorithm name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Math operation in RPN
-  public var MATH_OPERATION: String? { let o = _accessor.offset(VTOFFSET.MATH_OPERATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MATH_OPERATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MATH_OPERATION.v) }
+  public var MATH_OPERATION: String? { let o = _accessor.offset(VT.MATH_OPERATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MATH_OPERATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MATH_OPERATION) }
   ///  Output parameter reference
-  public var OUTPUT_PARAMETER_REF: String? { let o = _accessor.offset(VTOFFSET.OUTPUT_PARAMETER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OUTPUT_PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OUTPUT_PARAMETER_REF.v) }
+  public var OUTPUT_PARAMETER_REF: String? { let o = _accessor.offset(VT.OUTPUT_PARAMETER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OUTPUT_PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OUTPUT_PARAMETER_REF) }
   ///  Trigger conditions
-  public var TRIGGERS: FlatbufferVector<AlgorithmTrigger> { return _accessor.vector(at: VTOFFSET.TRIGGERS.v, byteSize: 4) }
+  public var TRIGGERS: FlatbufferVector<AlgorithmTrigger> { return _accessor.vector(at: VT.TRIGGERS, byteSize: 4) }
   public static func startMathAlgorithm(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(MATH_OPERATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATH_OPERATION, at: VTOFFSET.MATH_OPERATION.p) }
-  public static func add(OUTPUT_PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTPUT_PARAMETER_REF, at: VTOFFSET.OUTPUT_PARAMETER_REF.p) }
-  public static func addVectorOf(TRIGGERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRIGGERS, at: VTOFFSET.TRIGGERS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(MATH_OPERATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATH_OPERATION, at: VT.MATH_OPERATION) }
+  public static func add(OUTPUT_PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTPUT_PARAMETER_REF, at: VT.OUTPUT_PARAMETER_REF) }
+  public static func addVectorOf(TRIGGERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRIGGERS, at: VT.TRIGGERS) }
   public static func endMathAlgorithm(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMathAlgorithm(
     _ fbb: inout FlatBufferBuilder,
@@ -3704,11 +3600,11 @@ public struct MathAlgorithm: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MATH_OPERATION.p, fieldName: "MATH_OPERATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OUTPUT_PARAMETER_REF.p, fieldName: "OUTPUT_PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRIGGERS.p, fieldName: "TRIGGERS", required: false, type: ForwardOffset<Vector<ForwardOffset<AlgorithmTrigger>, AlgorithmTrigger>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MATH_OPERATION, fieldName: "MATH_OPERATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OUTPUT_PARAMETER_REF, fieldName: "OUTPUT_PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRIGGERS, fieldName: "TRIGGERS", required: false, type: ForwardOffset<Vector<ForwardOffset<AlgorithmTrigger>, AlgorithmTrigger>>.self)
     _v.finish()
   }
 }
@@ -3725,20 +3621,18 @@ public struct AlgorithmSet: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CUSTOM_ALGORITHMS = 4
-    case MATH_ALGORITHMS = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CUSTOM_ALGORITHMS: VOffset = 4
+    static let MATH_ALGORITHMS: VOffset = 6
   }
 
   ///  Custom algorithms
-  public var CUSTOM_ALGORITHMS: FlatbufferVector<CustomAlgorithm> { return _accessor.vector(at: VTOFFSET.CUSTOM_ALGORITHMS.v, byteSize: 4) }
+  public var CUSTOM_ALGORITHMS: FlatbufferVector<CustomAlgorithm> { return _accessor.vector(at: VT.CUSTOM_ALGORITHMS, byteSize: 4) }
   ///  Math algorithms
-  public var MATH_ALGORITHMS: FlatbufferVector<MathAlgorithm> { return _accessor.vector(at: VTOFFSET.MATH_ALGORITHMS.v, byteSize: 4) }
+  public var MATH_ALGORITHMS: FlatbufferVector<MathAlgorithm> { return _accessor.vector(at: VT.MATH_ALGORITHMS, byteSize: 4) }
   public static func startAlgorithmSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func addVectorOf(CUSTOM_ALGORITHMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CUSTOM_ALGORITHMS, at: VTOFFSET.CUSTOM_ALGORITHMS.p) }
-  public static func addVectorOf(MATH_ALGORITHMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATH_ALGORITHMS, at: VTOFFSET.MATH_ALGORITHMS.p) }
+  public static func addVectorOf(CUSTOM_ALGORITHMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CUSTOM_ALGORITHMS, at: VT.CUSTOM_ALGORITHMS) }
+  public static func addVectorOf(MATH_ALGORITHMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATH_ALGORITHMS, at: VT.MATH_ALGORITHMS) }
   public static func endAlgorithmSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAlgorithmSet(
     _ fbb: inout FlatBufferBuilder,
@@ -3753,8 +3647,8 @@ public struct AlgorithmSet: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CUSTOM_ALGORITHMS.p, fieldName: "CUSTOM_ALGORITHMS", required: false, type: ForwardOffset<Vector<ForwardOffset<CustomAlgorithm>, CustomAlgorithm>>.self)
-    try _v.visit(field: VTOFFSET.MATH_ALGORITHMS.p, fieldName: "MATH_ALGORITHMS", required: false, type: ForwardOffset<Vector<ForwardOffset<MathAlgorithm>, MathAlgorithm>>.self)
+    try _v.visit(field: VT.CUSTOM_ALGORITHMS, fieldName: "CUSTOM_ALGORITHMS", required: false, type: ForwardOffset<Vector<ForwardOffset<CustomAlgorithm>, CustomAlgorithm>>.self)
+    try _v.visit(field: VT.MATH_ALGORITHMS, fieldName: "MATH_ALGORITHMS", required: false, type: ForwardOffset<Vector<ForwardOffset<MathAlgorithm>, MathAlgorithm>>.self)
     _v.finish()
   }
 }
@@ -3771,56 +3665,54 @@ public struct IntegerArgumentType: FlatBufferTable, FlatbuffersVectorInitializab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case UNITS = 10
-    case DATA_ENCODING = 12
-    case VALID_MIN = 14
-    case VALID_MAX = 16
-    case SIGNED = 18
-    case SIZE_IN_BITS = 20
-    case INITIAL_VALUE = 22
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let UNITS: VOffset = 10
+    static let DATA_ENCODING: VOffset = 12
+    static let VALID_MIN: VOffset = 14
+    static let VALID_MAX: VOffset = 16
+    static let SIGNED: VOffset = 18
+    static let SIZE_IN_BITS: VOffset = 20
+    static let INITIAL_VALUE: VOffset = 22
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Units
-  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VTOFFSET.UNITS.v, byteSize: 4) }
+  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VT.UNITS, byteSize: 4) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Minimum valid value
-  public var VALID_MIN: Int64 { let o = _accessor.offset(VTOFFSET.VALID_MIN.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var VALID_MIN: Int64 { let o = _accessor.offset(VT.VALID_MIN); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  Maximum valid value
-  public var VALID_MAX: Int64 { let o = _accessor.offset(VTOFFSET.VALID_MAX.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var VALID_MAX: Int64 { let o = _accessor.offset(VT.VALID_MAX); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  Signed integer (true) or unsigned (false)
-  public var SIGNED: Bool { let o = _accessor.offset(VTOFFSET.SIGNED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var SIGNED: Bool { let o = _accessor.offset(VT.SIGNED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Size in bits
-  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VTOFFSET.SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VT.SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Initial/default value
-  public var INITIAL_VALUE: Int64 { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var INITIAL_VALUE: Int64 { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   public static func startIntegerArgumentType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func addVectorOf(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VTOFFSET.UNITS.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func add(VALID_MIN: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MIN, def: 0, at: VTOFFSET.VALID_MIN.p) }
-  public static func add(VALID_MAX: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MAX, def: 0, at: VTOFFSET.VALID_MAX.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func addVectorOf(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VT.UNITS) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func add(VALID_MIN: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MIN, def: 0, at: VT.VALID_MIN) }
+  public static func add(VALID_MAX: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MAX, def: 0, at: VT.VALID_MAX) }
   public static func add(SIGNED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGNED, def: false,
-   at: VTOFFSET.SIGNED.p) }
-  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VTOFFSET.SIZE_IN_BITS.p) }
-  public static func add(INITIAL_VALUE: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_VALUE, def: 0, at: VTOFFSET.INITIAL_VALUE.p) }
+   at: VT.SIGNED) }
+  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VT.SIZE_IN_BITS) }
+  public static func add(INITIAL_VALUE: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_VALUE, def: 0, at: VT.INITIAL_VALUE) }
   public static func endIntegerArgumentType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createIntegerArgumentType(
     _ fbb: inout FlatBufferBuilder,
@@ -3851,16 +3743,16 @@ public struct IntegerArgumentType: FlatBufferTable, FlatbuffersVectorInitializab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UNITS.p, fieldName: "UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<Unit>, Unit>>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.VALID_MIN.p, fieldName: "VALID_MIN", required: false, type: Int64.self)
-    try _v.visit(field: VTOFFSET.VALID_MAX.p, fieldName: "VALID_MAX", required: false, type: Int64.self)
-    try _v.visit(field: VTOFFSET.SIGNED.p, fieldName: "SIGNED", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.SIZE_IN_BITS.p, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: Int64.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UNITS, fieldName: "UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<Unit>, Unit>>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
+    try _v.visit(field: VT.VALID_MIN, fieldName: "VALID_MIN", required: false, type: Int64.self)
+    try _v.visit(field: VT.VALID_MAX, fieldName: "VALID_MAX", required: false, type: Int64.self)
+    try _v.visit(field: VT.SIGNED, fieldName: "SIGNED", required: false, type: Bool.self)
+    try _v.visit(field: VT.SIZE_IN_BITS, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: Int64.self)
     _v.finish()
   }
 }
@@ -3877,51 +3769,49 @@ public struct FloatArgumentType: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case UNITS = 10
-    case DATA_ENCODING = 12
-    case VALID_MIN = 14
-    case VALID_MAX = 16
-    case SIZE_IN_BITS = 18
-    case INITIAL_VALUE = 20
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let UNITS: VOffset = 10
+    static let DATA_ENCODING: VOffset = 12
+    static let VALID_MIN: VOffset = 14
+    static let VALID_MAX: VOffset = 16
+    static let SIZE_IN_BITS: VOffset = 18
+    static let INITIAL_VALUE: VOffset = 20
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Units
-  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VTOFFSET.UNITS.v, byteSize: 4) }
+  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VT.UNITS, byteSize: 4) }
   ///  Data encoding
-  public var DATA_ENCODING: FloatDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : FloatDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: FloatDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : FloatDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Minimum valid value
-  public var VALID_MIN: Double { let o = _accessor.offset(VTOFFSET.VALID_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VALID_MIN: Double { let o = _accessor.offset(VT.VALID_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum valid value
-  public var VALID_MAX: Double { let o = _accessor.offset(VTOFFSET.VALID_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var VALID_MAX: Double { let o = _accessor.offset(VT.VALID_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Size in bits
-  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VTOFFSET.SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SIZE_IN_BITS: UInt16 { let o = _accessor.offset(VT.SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Initial/default value
-  public var INITIAL_VALUE: Double { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INITIAL_VALUE: Double { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startFloatArgumentType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func addVectorOf(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VTOFFSET.UNITS.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func add(VALID_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MIN, def: 0.0, at: VTOFFSET.VALID_MIN.p) }
-  public static func add(VALID_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MAX, def: 0.0, at: VTOFFSET.VALID_MAX.p) }
-  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VTOFFSET.SIZE_IN_BITS.p) }
-  public static func add(INITIAL_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_VALUE, def: 0.0, at: VTOFFSET.INITIAL_VALUE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func addVectorOf(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VT.UNITS) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func add(VALID_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MIN, def: 0.0, at: VT.VALID_MIN) }
+  public static func add(VALID_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALID_MAX, def: 0.0, at: VT.VALID_MAX) }
+  public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VT.SIZE_IN_BITS) }
+  public static func add(INITIAL_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_VALUE, def: 0.0, at: VT.INITIAL_VALUE) }
   public static func endFloatArgumentType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFloatArgumentType(
     _ fbb: inout FlatBufferBuilder,
@@ -3950,15 +3840,15 @@ public struct FloatArgumentType: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UNITS.p, fieldName: "UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<Unit>, Unit>>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<FloatDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.VALID_MIN.p, fieldName: "VALID_MIN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.VALID_MAX.p, fieldName: "VALID_MAX", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.SIZE_IN_BITS.p, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UNITS, fieldName: "UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<Unit>, Unit>>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<FloatDataEncoding>.self)
+    try _v.visit(field: VT.VALID_MIN, fieldName: "VALID_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.VALID_MAX, fieldName: "VALID_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.SIZE_IN_BITS, fieldName: "SIZE_IN_BITS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -3975,41 +3865,39 @@ public struct StringArgumentType: FlatBufferTable, FlatbuffersVectorInitializabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case DATA_ENCODING = 10
-    case INITIAL_VALUE = 12
-    case RESTRICTION_PATTERN = 14
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let DATA_ENCODING: VOffset = 10
+    static let INITIAL_VALUE: VOffset = 12
+    static let RESTRICTION_PATTERN: VOffset = 14
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Data encoding
-  public var DATA_ENCODING: StringDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : StringDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: StringDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : StringDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Initial/default value
-  public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
+  public var INITIAL_VALUE: String? { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INITIAL_VALUE) }
   ///  Restriction pattern (regex)
-  public var RESTRICTION_PATTERN: String? { let o = _accessor.offset(VTOFFSET.RESTRICTION_PATTERN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var RESTRICTION_PATTERNSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RESTRICTION_PATTERN.v) }
+  public var RESTRICTION_PATTERN: String? { let o = _accessor.offset(VT.RESTRICTION_PATTERN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RESTRICTION_PATTERNSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RESTRICTION_PATTERN) }
   public static func startStringArgumentType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VTOFFSET.INITIAL_VALUE.p) }
-  public static func add(RESTRICTION_PATTERN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESTRICTION_PATTERN, at: VTOFFSET.RESTRICTION_PATTERN.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VT.INITIAL_VALUE) }
+  public static func add(RESTRICTION_PATTERN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESTRICTION_PATTERN, at: VT.RESTRICTION_PATTERN) }
   public static func endStringArgumentType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createStringArgumentType(
     _ fbb: inout FlatBufferBuilder,
@@ -4032,12 +3920,12 @@ public struct StringArgumentType: FlatBufferTable, FlatbuffersVectorInitializabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<StringDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.RESTRICTION_PATTERN.p, fieldName: "RESTRICTION_PATTERN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<StringDataEncoding>.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RESTRICTION_PATTERN, fieldName: "RESTRICTION_PATTERN", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -4054,46 +3942,44 @@ public struct BooleanArgumentType: FlatBufferTable, FlatbuffersVectorInitializab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case DATA_ENCODING = 10
-    case ONE_STRING_VALUE = 12
-    case ZERO_STRING_VALUE = 14
-    case INITIAL_VALUE = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let DATA_ENCODING: VOffset = 10
+    static let ONE_STRING_VALUE: VOffset = 12
+    static let ZERO_STRING_VALUE: VOffset = 14
+    static let INITIAL_VALUE: VOffset = 16
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  String representation of true value
-  public var ONE_STRING_VALUE: String? { let o = _accessor.offset(VTOFFSET.ONE_STRING_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ONE_STRING_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ONE_STRING_VALUE.v) }
+  public var ONE_STRING_VALUE: String? { let o = _accessor.offset(VT.ONE_STRING_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ONE_STRING_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ONE_STRING_VALUE) }
   ///  String representation of false value
-  public var ZERO_STRING_VALUE: String? { let o = _accessor.offset(VTOFFSET.ZERO_STRING_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ZERO_STRING_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ZERO_STRING_VALUE.v) }
+  public var ZERO_STRING_VALUE: String? { let o = _accessor.offset(VT.ZERO_STRING_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ZERO_STRING_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ZERO_STRING_VALUE) }
   ///  Initial/default value
-  public var INITIAL_VALUE: Bool { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var INITIAL_VALUE: Bool { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startBooleanArgumentType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func add(ONE_STRING_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ONE_STRING_VALUE, at: VTOFFSET.ONE_STRING_VALUE.p) }
-  public static func add(ZERO_STRING_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ZERO_STRING_VALUE, at: VTOFFSET.ZERO_STRING_VALUE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func add(ONE_STRING_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ONE_STRING_VALUE, at: VT.ONE_STRING_VALUE) }
+  public static func add(ZERO_STRING_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ZERO_STRING_VALUE, at: VT.ZERO_STRING_VALUE) }
   public static func add(INITIAL_VALUE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_VALUE, def: false,
-   at: VTOFFSET.INITIAL_VALUE.p) }
+   at: VT.INITIAL_VALUE) }
   public static func endBooleanArgumentType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBooleanArgumentType(
     _ fbb: inout FlatBufferBuilder,
@@ -4118,13 +4004,13 @@ public struct BooleanArgumentType: FlatBufferTable, FlatbuffersVectorInitializab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.ONE_STRING_VALUE.p, fieldName: "ONE_STRING_VALUE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ZERO_STRING_VALUE.p, fieldName: "ZERO_STRING_VALUE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: Bool.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
+    try _v.visit(field: VT.ONE_STRING_VALUE, fieldName: "ONE_STRING_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ZERO_STRING_VALUE, fieldName: "ZERO_STRING_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -4141,40 +4027,38 @@ public struct EnumeratedArgumentType: FlatBufferTable, FlatbuffersVectorInitiali
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case DATA_ENCODING = 10
-    case ENUMERATION_LIST = 12
-    case INITIAL_VALUE = 14
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let DATA_ENCODING: VOffset = 10
+    static let ENUMERATION_LIST: VOffset = 12
+    static let INITIAL_VALUE: VOffset = 14
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Enumeration values list
-  public var ENUMERATION_LIST: FlatbufferVector<EnumerationValue> { return _accessor.vector(at: VTOFFSET.ENUMERATION_LIST.v, byteSize: 4) }
+  public var ENUMERATION_LIST: FlatbufferVector<EnumerationValue> { return _accessor.vector(at: VT.ENUMERATION_LIST, byteSize: 4) }
   ///  Initial/default value label
-  public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
+  public var INITIAL_VALUE: String? { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INITIAL_VALUE) }
   public static func startEnumeratedArgumentType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func addVectorOf(ENUMERATION_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENUMERATION_LIST, at: VTOFFSET.ENUMERATION_LIST.p) }
-  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VTOFFSET.INITIAL_VALUE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func addVectorOf(ENUMERATION_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENUMERATION_LIST, at: VT.ENUMERATION_LIST) }
+  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VT.INITIAL_VALUE) }
   public static func endEnumeratedArgumentType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEnumeratedArgumentType(
     _ fbb: inout FlatBufferBuilder,
@@ -4197,12 +4081,12 @@ public struct EnumeratedArgumentType: FlatBufferTable, FlatbuffersVectorInitiali
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.ENUMERATION_LIST.p, fieldName: "ENUMERATION_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<EnumerationValue>, EnumerationValue>>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<IntegerDataEncoding>.self)
+    try _v.visit(field: VT.ENUMERATION_LIST, fieldName: "ENUMERATION_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<EnumerationValue>, EnumerationValue>>.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -4219,36 +4103,34 @@ public struct BinaryArgumentType: FlatBufferTable, FlatbuffersVectorInitializabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case DATA_ENCODING = 10
-    case INITIAL_VALUE = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let DATA_ENCODING: VOffset = 10
+    static let INITIAL_VALUE: VOffset = 12
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Data encoding
-  public var DATA_ENCODING: BinaryDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : BinaryDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DATA_ENCODING: BinaryDataEncoding? { let o = _accessor.offset(VT.DATA_ENCODING); return o == 0 ? nil : BinaryDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Initial/default value (hex string)
-  public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
+  public var INITIAL_VALUE: String? { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INITIAL_VALUE) }
   public static func startBinaryArgumentType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VTOFFSET.DATA_ENCODING.p) }
-  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VTOFFSET.INITIAL_VALUE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(DATA_ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ENCODING, at: VT.DATA_ENCODING) }
+  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VT.INITIAL_VALUE) }
   public static func endBinaryArgumentType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBinaryArgumentType(
     _ fbb: inout FlatBufferBuilder,
@@ -4269,11 +4151,11 @@ public struct BinaryArgumentType: FlatBufferTable, FlatbuffersVectorInitializabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATA_ENCODING.p, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<BinaryDataEncoding>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_ENCODING, fieldName: "DATA_ENCODING", required: false, type: ForwardOffset<BinaryDataEncoding>.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -4290,31 +4172,29 @@ public struct AggregateArgumentType: FlatBufferTable, FlatbuffersVectorInitializ
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case MEMBERS = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let MEMBERS: VOffset = 10
   }
 
   ///  Type name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Member list
-  public var MEMBERS: FlatbufferVector<AggregateMember> { return _accessor.vector(at: VTOFFSET.MEMBERS.v, byteSize: 4) }
+  public var MEMBERS: FlatbufferVector<AggregateMember> { return _accessor.vector(at: VT.MEMBERS, byteSize: 4) }
   public static func startAggregateArgumentType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func addVectorOf(MEMBERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEMBERS, at: VTOFFSET.MEMBERS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func addVectorOf(MEMBERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEMBERS, at: VT.MEMBERS) }
   public static func endAggregateArgumentType(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAggregateArgumentType(
     _ fbb: inout FlatBufferBuilder,
@@ -4333,10 +4213,10 @@ public struct AggregateArgumentType: FlatBufferTable, FlatbuffersVectorInitializ
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MEMBERS.p, fieldName: "MEMBERS", required: false, type: ForwardOffset<Vector<ForwardOffset<AggregateMember>, AggregateMember>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MEMBERS, fieldName: "MEMBERS", required: false, type: ForwardOffset<Vector<ForwardOffset<AggregateMember>, AggregateMember>>.self)
     _v.finish()
   }
 }
@@ -4353,40 +4233,38 @@ public struct ArgumentTypeSet: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case INTEGER_TYPES = 4
-    case FLOAT_TYPES = 6
-    case STRING_TYPES = 8
-    case BOOLEAN_TYPES = 10
-    case ENUMERATED_TYPES = 12
-    case BINARY_TYPES = 14
-    case AGGREGATE_TYPES = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let INTEGER_TYPES: VOffset = 4
+    static let FLOAT_TYPES: VOffset = 6
+    static let STRING_TYPES: VOffset = 8
+    static let BOOLEAN_TYPES: VOffset = 10
+    static let ENUMERATED_TYPES: VOffset = 12
+    static let BINARY_TYPES: VOffset = 14
+    static let AGGREGATE_TYPES: VOffset = 16
   }
 
   ///  Integer argument types
-  public var INTEGER_TYPES: FlatbufferVector<IntegerArgumentType> { return _accessor.vector(at: VTOFFSET.INTEGER_TYPES.v, byteSize: 4) }
+  public var INTEGER_TYPES: FlatbufferVector<IntegerArgumentType> { return _accessor.vector(at: VT.INTEGER_TYPES, byteSize: 4) }
   ///  Float argument types
-  public var FLOAT_TYPES: FlatbufferVector<FloatArgumentType> { return _accessor.vector(at: VTOFFSET.FLOAT_TYPES.v, byteSize: 4) }
+  public var FLOAT_TYPES: FlatbufferVector<FloatArgumentType> { return _accessor.vector(at: VT.FLOAT_TYPES, byteSize: 4) }
   ///  String argument types
-  public var STRING_TYPES: FlatbufferVector<StringArgumentType> { return _accessor.vector(at: VTOFFSET.STRING_TYPES.v, byteSize: 4) }
+  public var STRING_TYPES: FlatbufferVector<StringArgumentType> { return _accessor.vector(at: VT.STRING_TYPES, byteSize: 4) }
   ///  Boolean argument types
-  public var BOOLEAN_TYPES: FlatbufferVector<BooleanArgumentType> { return _accessor.vector(at: VTOFFSET.BOOLEAN_TYPES.v, byteSize: 4) }
+  public var BOOLEAN_TYPES: FlatbufferVector<BooleanArgumentType> { return _accessor.vector(at: VT.BOOLEAN_TYPES, byteSize: 4) }
   ///  Enumerated argument types
-  public var ENUMERATED_TYPES: FlatbufferVector<EnumeratedArgumentType> { return _accessor.vector(at: VTOFFSET.ENUMERATED_TYPES.v, byteSize: 4) }
+  public var ENUMERATED_TYPES: FlatbufferVector<EnumeratedArgumentType> { return _accessor.vector(at: VT.ENUMERATED_TYPES, byteSize: 4) }
   ///  Binary argument types
-  public var BINARY_TYPES: FlatbufferVector<BinaryArgumentType> { return _accessor.vector(at: VTOFFSET.BINARY_TYPES.v, byteSize: 4) }
+  public var BINARY_TYPES: FlatbufferVector<BinaryArgumentType> { return _accessor.vector(at: VT.BINARY_TYPES, byteSize: 4) }
   ///  Aggregate argument types
-  public var AGGREGATE_TYPES: FlatbufferVector<AggregateArgumentType> { return _accessor.vector(at: VTOFFSET.AGGREGATE_TYPES.v, byteSize: 4) }
+  public var AGGREGATE_TYPES: FlatbufferVector<AggregateArgumentType> { return _accessor.vector(at: VT.AGGREGATE_TYPES, byteSize: 4) }
   public static func startArgumentTypeSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func addVectorOf(INTEGER_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGER_TYPES, at: VTOFFSET.INTEGER_TYPES.p) }
-  public static func addVectorOf(FLOAT_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLOAT_TYPES, at: VTOFFSET.FLOAT_TYPES.p) }
-  public static func addVectorOf(STRING_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STRING_TYPES, at: VTOFFSET.STRING_TYPES.p) }
-  public static func addVectorOf(BOOLEAN_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOOLEAN_TYPES, at: VTOFFSET.BOOLEAN_TYPES.p) }
-  public static func addVectorOf(ENUMERATED_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENUMERATED_TYPES, at: VTOFFSET.ENUMERATED_TYPES.p) }
-  public static func addVectorOf(BINARY_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BINARY_TYPES, at: VTOFFSET.BINARY_TYPES.p) }
-  public static func addVectorOf(AGGREGATE_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGGREGATE_TYPES, at: VTOFFSET.AGGREGATE_TYPES.p) }
+  public static func addVectorOf(INTEGER_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGER_TYPES, at: VT.INTEGER_TYPES) }
+  public static func addVectorOf(FLOAT_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLOAT_TYPES, at: VT.FLOAT_TYPES) }
+  public static func addVectorOf(STRING_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STRING_TYPES, at: VT.STRING_TYPES) }
+  public static func addVectorOf(BOOLEAN_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BOOLEAN_TYPES, at: VT.BOOLEAN_TYPES) }
+  public static func addVectorOf(ENUMERATED_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENUMERATED_TYPES, at: VT.ENUMERATED_TYPES) }
+  public static func addVectorOf(BINARY_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BINARY_TYPES, at: VT.BINARY_TYPES) }
+  public static func addVectorOf(AGGREGATE_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGGREGATE_TYPES, at: VT.AGGREGATE_TYPES) }
   public static func endArgumentTypeSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createArgumentTypeSet(
     _ fbb: inout FlatBufferBuilder,
@@ -4411,13 +4289,13 @@ public struct ArgumentTypeSet: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.INTEGER_TYPES.p, fieldName: "INTEGER_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<IntegerArgumentType>, IntegerArgumentType>>.self)
-    try _v.visit(field: VTOFFSET.FLOAT_TYPES.p, fieldName: "FLOAT_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<FloatArgumentType>, FloatArgumentType>>.self)
-    try _v.visit(field: VTOFFSET.STRING_TYPES.p, fieldName: "STRING_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<StringArgumentType>, StringArgumentType>>.self)
-    try _v.visit(field: VTOFFSET.BOOLEAN_TYPES.p, fieldName: "BOOLEAN_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<BooleanArgumentType>, BooleanArgumentType>>.self)
-    try _v.visit(field: VTOFFSET.ENUMERATED_TYPES.p, fieldName: "ENUMERATED_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<EnumeratedArgumentType>, EnumeratedArgumentType>>.self)
-    try _v.visit(field: VTOFFSET.BINARY_TYPES.p, fieldName: "BINARY_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<BinaryArgumentType>, BinaryArgumentType>>.self)
-    try _v.visit(field: VTOFFSET.AGGREGATE_TYPES.p, fieldName: "AGGREGATE_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<AggregateArgumentType>, AggregateArgumentType>>.self)
+    try _v.visit(field: VT.INTEGER_TYPES, fieldName: "INTEGER_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<IntegerArgumentType>, IntegerArgumentType>>.self)
+    try _v.visit(field: VT.FLOAT_TYPES, fieldName: "FLOAT_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<FloatArgumentType>, FloatArgumentType>>.self)
+    try _v.visit(field: VT.STRING_TYPES, fieldName: "STRING_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<StringArgumentType>, StringArgumentType>>.self)
+    try _v.visit(field: VT.BOOLEAN_TYPES, fieldName: "BOOLEAN_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<BooleanArgumentType>, BooleanArgumentType>>.self)
+    try _v.visit(field: VT.ENUMERATED_TYPES, fieldName: "ENUMERATED_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<EnumeratedArgumentType>, EnumeratedArgumentType>>.self)
+    try _v.visit(field: VT.BINARY_TYPES, fieldName: "BINARY_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<BinaryArgumentType>, BinaryArgumentType>>.self)
+    try _v.visit(field: VT.AGGREGATE_TYPES, fieldName: "AGGREGATE_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<AggregateArgumentType>, AggregateArgumentType>>.self)
     _v.finish()
   }
 }
@@ -4434,37 +4312,35 @@ public struct Argument: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case ARGUMENT_TYPE_REF = 6
-    case SHORT_DESCRIPTION = 8
-    case LONG_DESCRIPTION = 10
-    case INITIAL_VALUE = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let ARGUMENT_TYPE_REF: VOffset = 6
+    static let SHORT_DESCRIPTION: VOffset = 8
+    static let LONG_DESCRIPTION: VOffset = 10
+    static let INITIAL_VALUE: VOffset = 12
   }
 
   ///  Argument name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Reference to argument type
-  public var ARGUMENT_TYPE_REF: String? { let o = _accessor.offset(VTOFFSET.ARGUMENT_TYPE_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ARGUMENT_TYPE_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ARGUMENT_TYPE_REF.v) }
+  public var ARGUMENT_TYPE_REF: String? { let o = _accessor.offset(VT.ARGUMENT_TYPE_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ARGUMENT_TYPE_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ARGUMENT_TYPE_REF) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Initial/default value
-  public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
+  public var INITIAL_VALUE: String? { let o = _accessor.offset(VT.INITIAL_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INITIAL_VALUE) }
   public static func startArgument(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(ARGUMENT_TYPE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_TYPE_REF, at: VTOFFSET.ARGUMENT_TYPE_REF.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VTOFFSET.INITIAL_VALUE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(ARGUMENT_TYPE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_TYPE_REF, at: VT.ARGUMENT_TYPE_REF) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(INITIAL_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_VALUE, at: VT.INITIAL_VALUE) }
   public static func endArgument(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createArgument(
     _ fbb: inout FlatBufferBuilder,
@@ -4485,11 +4361,11 @@ public struct Argument: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ARGUMENT_TYPE_REF.p, fieldName: "ARGUMENT_TYPE_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_VALUE.p, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ARGUMENT_TYPE_REF, fieldName: "ARGUMENT_TYPE_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INITIAL_VALUE, fieldName: "INITIAL_VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -4506,26 +4382,24 @@ public struct ArgumentRefEntry: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ARGUMENT_REF = 4
-    case LOCATION = 6
-    case SHORT_DESCRIPTION = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ARGUMENT_REF: VOffset = 4
+    static let LOCATION: VOffset = 6
+    static let SHORT_DESCRIPTION: VOffset = 8
   }
 
   ///  Argument reference
-  public var ARGUMENT_REF: String? { let o = _accessor.offset(VTOFFSET.ARGUMENT_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ARGUMENT_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ARGUMENT_REF.v) }
+  public var ARGUMENT_REF: String? { let o = _accessor.offset(VT.ARGUMENT_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ARGUMENT_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ARGUMENT_REF) }
   ///  Location in container
-  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VT.LOCATION); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   public static func startArgumentRefEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(ARGUMENT_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_REF, at: VTOFFSET.ARGUMENT_REF.p) }
-  public static func add(LOCATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION, at: VTOFFSET.LOCATION.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
+  public static func add(ARGUMENT_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_REF, at: VT.ARGUMENT_REF) }
+  public static func add(LOCATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION, at: VT.LOCATION) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
   public static func endArgumentRefEntry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createArgumentRefEntry(
     _ fbb: inout FlatBufferBuilder,
@@ -4542,9 +4416,9 @@ public struct ArgumentRefEntry: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ARGUMENT_REF.p, fieldName: "ARGUMENT_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LOCATION.p, fieldName: "LOCATION", required: false, type: ForwardOffset<LocationInContainer>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ARGUMENT_REF, fieldName: "ARGUMENT_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LOCATION, fieldName: "LOCATION", required: false, type: ForwardOffset<LocationInContainer>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -4561,24 +4435,22 @@ public struct CommandContainerEntry: FlatBufferTable, FlatbuffersVectorInitializ
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ARGUMENT_REF_ENTRY = 4
-    case PARAMETER_REF_ENTRY = 6
-    case FIXED_VALUE_ENTRY = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ARGUMENT_REF_ENTRY: VOffset = 4
+    static let PARAMETER_REF_ENTRY: VOffset = 6
+    static let FIXED_VALUE_ENTRY: VOffset = 8
   }
 
   ///  Argument reference entry
-  public var ARGUMENT_REF_ENTRY: ArgumentRefEntry? { let o = _accessor.offset(VTOFFSET.ARGUMENT_REF_ENTRY.v); return o == 0 ? nil : ArgumentRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ARGUMENT_REF_ENTRY: ArgumentRefEntry? { let o = _accessor.offset(VT.ARGUMENT_REF_ENTRY); return o == 0 ? nil : ArgumentRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Parameter reference entry
-  public var PARAMETER_REF_ENTRY: ParameterRefEntry? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF_ENTRY.v); return o == 0 ? nil : ParameterRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PARAMETER_REF_ENTRY: ParameterRefEntry? { let o = _accessor.offset(VT.PARAMETER_REF_ENTRY); return o == 0 ? nil : ParameterRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Fixed value entry
-  public var FIXED_VALUE_ENTRY: FixedValueEntry? { let o = _accessor.offset(VTOFFSET.FIXED_VALUE_ENTRY.v); return o == 0 ? nil : FixedValueEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var FIXED_VALUE_ENTRY: FixedValueEntry? { let o = _accessor.offset(VT.FIXED_VALUE_ENTRY); return o == 0 ? nil : FixedValueEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCommandContainerEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(ARGUMENT_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_REF_ENTRY, at: VTOFFSET.ARGUMENT_REF_ENTRY.p) }
-  public static func add(PARAMETER_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF_ENTRY, at: VTOFFSET.PARAMETER_REF_ENTRY.p) }
-  public static func add(FIXED_VALUE_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIXED_VALUE_ENTRY, at: VTOFFSET.FIXED_VALUE_ENTRY.p) }
+  public static func add(ARGUMENT_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_REF_ENTRY, at: VT.ARGUMENT_REF_ENTRY) }
+  public static func add(PARAMETER_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF_ENTRY, at: VT.PARAMETER_REF_ENTRY) }
+  public static func add(FIXED_VALUE_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIXED_VALUE_ENTRY, at: VT.FIXED_VALUE_ENTRY) }
   public static func endCommandContainerEntry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCommandContainerEntry(
     _ fbb: inout FlatBufferBuilder,
@@ -4595,9 +4467,9 @@ public struct CommandContainerEntry: FlatBufferTable, FlatbuffersVectorInitializ
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ARGUMENT_REF_ENTRY.p, fieldName: "ARGUMENT_REF_ENTRY", required: false, type: ForwardOffset<ArgumentRefEntry>.self)
-    try _v.visit(field: VTOFFSET.PARAMETER_REF_ENTRY.p, fieldName: "PARAMETER_REF_ENTRY", required: false, type: ForwardOffset<ParameterRefEntry>.self)
-    try _v.visit(field: VTOFFSET.FIXED_VALUE_ENTRY.p, fieldName: "FIXED_VALUE_ENTRY", required: false, type: ForwardOffset<FixedValueEntry>.self)
+    try _v.visit(field: VT.ARGUMENT_REF_ENTRY, fieldName: "ARGUMENT_REF_ENTRY", required: false, type: ForwardOffset<ArgumentRefEntry>.self)
+    try _v.visit(field: VT.PARAMETER_REF_ENTRY, fieldName: "PARAMETER_REF_ENTRY", required: false, type: ForwardOffset<ParameterRefEntry>.self)
+    try _v.visit(field: VT.FIXED_VALUE_ENTRY, fieldName: "FIXED_VALUE_ENTRY", required: false, type: ForwardOffset<FixedValueEntry>.self)
     _v.finish()
   }
 }
@@ -4614,25 +4486,23 @@ public struct CommandContainer: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case ENTRY_LIST = 6
-    case BASE_CONTAINER = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let ENTRY_LIST: VOffset = 6
+    static let BASE_CONTAINER: VOffset = 8
   }
 
   ///  Container name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Entry list
-  public var ENTRY_LIST: FlatbufferVector<CommandContainerEntry> { return _accessor.vector(at: VTOFFSET.ENTRY_LIST.v, byteSize: 4) }
+  public var ENTRY_LIST: FlatbufferVector<CommandContainerEntry> { return _accessor.vector(at: VT.ENTRY_LIST, byteSize: 4) }
   ///  Base container reference
-  public var BASE_CONTAINER: BaseContainer? { let o = _accessor.offset(VTOFFSET.BASE_CONTAINER.v); return o == 0 ? nil : BaseContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BASE_CONTAINER: BaseContainer? { let o = _accessor.offset(VT.BASE_CONTAINER); return o == 0 ? nil : BaseContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCommandContainer(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func addVectorOf(ENTRY_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTRY_LIST, at: VTOFFSET.ENTRY_LIST.p) }
-  public static func add(BASE_CONTAINER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BASE_CONTAINER, at: VTOFFSET.BASE_CONTAINER.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func addVectorOf(ENTRY_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTRY_LIST, at: VT.ENTRY_LIST) }
+  public static func add(BASE_CONTAINER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BASE_CONTAINER, at: VT.BASE_CONTAINER) }
   public static func endCommandContainer(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCommandContainer(
     _ fbb: inout FlatBufferBuilder,
@@ -4649,9 +4519,9 @@ public struct CommandContainer: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ENTRY_LIST.p, fieldName: "ENTRY_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<CommandContainerEntry>, CommandContainerEntry>>.self)
-    try _v.visit(field: VTOFFSET.BASE_CONTAINER.p, fieldName: "BASE_CONTAINER", required: false, type: ForwardOffset<BaseContainer>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENTRY_LIST, fieldName: "ENTRY_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<CommandContainerEntry>, CommandContainerEntry>>.self)
+    try _v.visit(field: VT.BASE_CONTAINER, fieldName: "BASE_CONTAINER", required: false, type: ForwardOffset<BaseContainer>.self)
     _v.finish()
   }
 }
@@ -4668,42 +4538,40 @@ public struct CommandVerifier: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case VERIFIER_TYPE = 6
-    case CONDITION = 8
-    case CONTAINER_REF = 10
-    case TIME_WINDOW_START = 12
-    case TIME_WINDOW_STOP = 14
-    case TIME_WINDOW_REF = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let VERIFIER_TYPE: VOffset = 6
+    static let CONDITION: VOffset = 8
+    static let CONTAINER_REF: VOffset = 10
+    static let TIME_WINDOW_START: VOffset = 12
+    static let TIME_WINDOW_STOP: VOffset = 14
+    static let TIME_WINDOW_REF: VOffset = 16
   }
 
   ///  Verifier name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Verifier type
-  public var VERIFIER_TYPE: VerifierType { let o = _accessor.offset(VTOFFSET.VERIFIER_TYPE.v); return o == 0 ? .start : VerifierType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .start }
+  public var VERIFIER_TYPE: VerifierType { let o = _accessor.offset(VT.VERIFIER_TYPE); return o == 0 ? .start : VerifierType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .start }
   ///  Verification condition
-  public var CONDITION: MatchCriteria? { let o = _accessor.offset(VTOFFSET.CONDITION.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CONDITION: MatchCriteria? { let o = _accessor.offset(VT.CONDITION); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Container reference for verification
-  public var CONTAINER_REF: String? { let o = _accessor.offset(VTOFFSET.CONTAINER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTAINER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTAINER_REF.v) }
+  public var CONTAINER_REF: String? { let o = _accessor.offset(VT.CONTAINER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTAINER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTAINER_REF) }
   ///  Time window start (seconds)
-  public var TIME_WINDOW_START: Double { let o = _accessor.offset(VTOFFSET.TIME_WINDOW_START.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TIME_WINDOW_START: Double { let o = _accessor.offset(VT.TIME_WINDOW_START); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Time window stop (seconds)
-  public var TIME_WINDOW_STOP: Double { let o = _accessor.offset(VTOFFSET.TIME_WINDOW_STOP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TIME_WINDOW_STOP: Double { let o = _accessor.offset(VT.TIME_WINDOW_STOP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Time window reference type
-  public var TIME_WINDOW_REF: TimeWindowRefType { let o = _accessor.offset(VTOFFSET.TIME_WINDOW_REF.v); return o == 0 ? .commandRelease : TimeWindowRefType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .commandRelease }
+  public var TIME_WINDOW_REF: TimeWindowRefType { let o = _accessor.offset(VT.TIME_WINDOW_REF); return o == 0 ? .commandRelease : TimeWindowRefType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .commandRelease }
   public static func startCommandVerifier(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(VERIFIER_TYPE: VerifierType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERIFIER_TYPE.rawValue, def: 0, at: VTOFFSET.VERIFIER_TYPE.p) }
-  public static func add(CONDITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONDITION, at: VTOFFSET.CONDITION.p) }
-  public static func add(CONTAINER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REF, at: VTOFFSET.CONTAINER_REF.p) }
-  public static func add(TIME_WINDOW_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_WINDOW_START, def: 0.0, at: VTOFFSET.TIME_WINDOW_START.p) }
-  public static func add(TIME_WINDOW_STOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_WINDOW_STOP, def: 0.0, at: VTOFFSET.TIME_WINDOW_STOP.p) }
-  public static func add(TIME_WINDOW_REF: TimeWindowRefType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_WINDOW_REF.rawValue, def: 0, at: VTOFFSET.TIME_WINDOW_REF.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(VERIFIER_TYPE: VerifierType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERIFIER_TYPE.rawValue, def: 0, at: VT.VERIFIER_TYPE) }
+  public static func add(CONDITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONDITION, at: VT.CONDITION) }
+  public static func add(CONTAINER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REF, at: VT.CONTAINER_REF) }
+  public static func add(TIME_WINDOW_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_WINDOW_START, def: 0.0, at: VT.TIME_WINDOW_START) }
+  public static func add(TIME_WINDOW_STOP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_WINDOW_STOP, def: 0.0, at: VT.TIME_WINDOW_STOP) }
+  public static func add(TIME_WINDOW_REF: TimeWindowRefType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_WINDOW_REF.rawValue, def: 0, at: VT.TIME_WINDOW_REF) }
   public static func endCommandVerifier(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCommandVerifier(
     _ fbb: inout FlatBufferBuilder,
@@ -4728,13 +4596,13 @@ public struct CommandVerifier: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VERIFIER_TYPE.p, fieldName: "VERIFIER_TYPE", required: false, type: VerifierType.self)
-    try _v.visit(field: VTOFFSET.CONDITION.p, fieldName: "CONDITION", required: false, type: ForwardOffset<MatchCriteria>.self)
-    try _v.visit(field: VTOFFSET.CONTAINER_REF.p, fieldName: "CONTAINER_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TIME_WINDOW_START.p, fieldName: "TIME_WINDOW_START", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TIME_WINDOW_STOP.p, fieldName: "TIME_WINDOW_STOP", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TIME_WINDOW_REF.p, fieldName: "TIME_WINDOW_REF", required: false, type: TimeWindowRefType.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VERIFIER_TYPE, fieldName: "VERIFIER_TYPE", required: false, type: VerifierType.self)
+    try _v.visit(field: VT.CONDITION, fieldName: "CONDITION", required: false, type: ForwardOffset<MatchCriteria>.self)
+    try _v.visit(field: VT.CONTAINER_REF, fieldName: "CONTAINER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_WINDOW_START, fieldName: "TIME_WINDOW_START", required: false, type: Double.self)
+    try _v.visit(field: VT.TIME_WINDOW_STOP, fieldName: "TIME_WINDOW_STOP", required: false, type: Double.self)
+    try _v.visit(field: VT.TIME_WINDOW_REF, fieldName: "TIME_WINDOW_REF", required: false, type: TimeWindowRefType.self)
     _v.finish()
   }
 }
@@ -4751,21 +4619,19 @@ public struct CommandSignificance: FlatBufferTable, FlatbuffersVectorInitializab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case CONSEQUENCE_LEVEL = 4
-    case REASON_FOR_WARNING = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let CONSEQUENCE_LEVEL: VOffset = 4
+    static let REASON_FOR_WARNING: VOffset = 6
   }
 
   ///  Consequence level (1=lowest, higher=more severe)
-  public var CONSEQUENCE_LEVEL: UInt8 { let o = _accessor.offset(VTOFFSET.CONSEQUENCE_LEVEL.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var CONSEQUENCE_LEVEL: UInt8 { let o = _accessor.offset(VT.CONSEQUENCE_LEVEL); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Reason for significance
-  public var REASON_FOR_WARNING: String? { let o = _accessor.offset(VTOFFSET.REASON_FOR_WARNING.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REASON_FOR_WARNINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REASON_FOR_WARNING.v) }
+  public var REASON_FOR_WARNING: String? { let o = _accessor.offset(VT.REASON_FOR_WARNING); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REASON_FOR_WARNINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REASON_FOR_WARNING) }
   public static func startCommandSignificance(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(CONSEQUENCE_LEVEL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONSEQUENCE_LEVEL, def: 0, at: VTOFFSET.CONSEQUENCE_LEVEL.p) }
-  public static func add(REASON_FOR_WARNING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REASON_FOR_WARNING, at: VTOFFSET.REASON_FOR_WARNING.p) }
+  public static func add(CONSEQUENCE_LEVEL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONSEQUENCE_LEVEL, def: 0, at: VT.CONSEQUENCE_LEVEL) }
+  public static func add(REASON_FOR_WARNING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REASON_FOR_WARNING, at: VT.REASON_FOR_WARNING) }
   public static func endCommandSignificance(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCommandSignificance(
     _ fbb: inout FlatBufferBuilder,
@@ -4780,8 +4646,8 @@ public struct CommandSignificance: FlatBufferTable, FlatbuffersVectorInitializab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CONSEQUENCE_LEVEL.p, fieldName: "CONSEQUENCE_LEVEL", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.REASON_FOR_WARNING.p, fieldName: "REASON_FOR_WARNING", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONSEQUENCE_LEVEL, fieldName: "CONSEQUENCE_LEVEL", required: false, type: UInt8.self)
+    try _v.visit(field: VT.REASON_FOR_WARNING, fieldName: "REASON_FOR_WARNING", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -4798,21 +4664,19 @@ public struct BaseMetaCommand: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case META_COMMAND_REF = 4
-    case ARGUMENT_ASSIGNMENTS = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let META_COMMAND_REF: VOffset = 4
+    static let ARGUMENT_ASSIGNMENTS: VOffset = 6
   }
 
   ///  MetaCommand reference
-  public var META_COMMAND_REF: String? { let o = _accessor.offset(VTOFFSET.META_COMMAND_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var META_COMMAND_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.META_COMMAND_REF.v) }
+  public var META_COMMAND_REF: String? { let o = _accessor.offset(VT.META_COMMAND_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var META_COMMAND_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.META_COMMAND_REF) }
   ///  Argument assignments for inherited arguments
-  public var ARGUMENT_ASSIGNMENTS: FlatbufferVector<ArgumentAssignment> { return _accessor.vector(at: VTOFFSET.ARGUMENT_ASSIGNMENTS.v, byteSize: 4) }
+  public var ARGUMENT_ASSIGNMENTS: FlatbufferVector<ArgumentAssignment> { return _accessor.vector(at: VT.ARGUMENT_ASSIGNMENTS, byteSize: 4) }
   public static func startBaseMetaCommand(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(META_COMMAND_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: META_COMMAND_REF, at: VTOFFSET.META_COMMAND_REF.p) }
-  public static func addVectorOf(ARGUMENT_ASSIGNMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_ASSIGNMENTS, at: VTOFFSET.ARGUMENT_ASSIGNMENTS.p) }
+  public static func add(META_COMMAND_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: META_COMMAND_REF, at: VT.META_COMMAND_REF) }
+  public static func addVectorOf(ARGUMENT_ASSIGNMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_ASSIGNMENTS, at: VT.ARGUMENT_ASSIGNMENTS) }
   public static func endBaseMetaCommand(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBaseMetaCommand(
     _ fbb: inout FlatBufferBuilder,
@@ -4827,8 +4691,8 @@ public struct BaseMetaCommand: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.META_COMMAND_REF.p, fieldName: "META_COMMAND_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ARGUMENT_ASSIGNMENTS.p, fieldName: "ARGUMENT_ASSIGNMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<ArgumentAssignment>, ArgumentAssignment>>.self)
+    try _v.visit(field: VT.META_COMMAND_REF, fieldName: "META_COMMAND_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ARGUMENT_ASSIGNMENTS, fieldName: "ARGUMENT_ASSIGNMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<ArgumentAssignment>, ArgumentAssignment>>.self)
     _v.finish()
   }
 }
@@ -4845,22 +4709,20 @@ public struct ArgumentAssignment: FlatBufferTable, FlatbuffersVectorInitializabl
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ARGUMENT_NAME = 4
-    case VALUE = 6
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ARGUMENT_NAME: VOffset = 4
+    static let VALUE: VOffset = 6
   }
 
   ///  Argument name
-  public var ARGUMENT_NAME: String? { let o = _accessor.offset(VTOFFSET.ARGUMENT_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ARGUMENT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ARGUMENT_NAME.v) }
+  public var ARGUMENT_NAME: String? { let o = _accessor.offset(VT.ARGUMENT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ARGUMENT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ARGUMENT_NAME) }
   ///  Assigned value
-  public var VALUE: String? { let o = _accessor.offset(VTOFFSET.VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VALUE.v) }
+  public var VALUE: String? { let o = _accessor.offset(VT.VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VALUE) }
   public static func startArgumentAssignment(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(ARGUMENT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_NAME, at: VTOFFSET.ARGUMENT_NAME.p) }
-  public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VTOFFSET.VALUE.p) }
+  public static func add(ARGUMENT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_NAME, at: VT.ARGUMENT_NAME) }
+  public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VT.VALUE) }
   public static func endArgumentAssignment(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createArgumentAssignment(
     _ fbb: inout FlatBufferBuilder,
@@ -4875,8 +4737,8 @@ public struct ArgumentAssignment: FlatBufferTable, FlatbuffersVectorInitializabl
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ARGUMENT_NAME.p, fieldName: "ARGUMENT_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VALUE.p, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ARGUMENT_NAME, fieldName: "ARGUMENT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -4893,26 +4755,24 @@ public struct Interlock: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PARAMETER_REF = 4
-    case VALUE = 6
-    case OPERATOR = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PARAMETER_REF: VOffset = 4
+    static let VALUE: VOffset = 6
+    static let OPERATOR: VOffset = 8
   }
 
   ///  Parameter reference
-  public var PARAMETER_REF: String? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARAMETER_REF.v) }
+  public var PARAMETER_REF: String? { let o = _accessor.offset(VT.PARAMETER_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAMETER_REF) }
   ///  Required value
-  public var VALUE: String? { let o = _accessor.offset(VTOFFSET.VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VALUE.v) }
+  public var VALUE: String? { let o = _accessor.offset(VT.VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VALUE) }
   ///  Operator for comparison
-  public var OPERATOR: ComparisonOperator { let o = _accessor.offset(VTOFFSET.OPERATOR.v); return o == 0 ? .eq : ComparisonOperator(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .eq }
+  public var OPERATOR: ComparisonOperator { let o = _accessor.offset(VT.OPERATOR); return o == 0 ? .eq : ComparisonOperator(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .eq }
   public static func startInterlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VTOFFSET.PARAMETER_REF.p) }
-  public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VTOFFSET.VALUE.p) }
-  public static func add(OPERATOR: ComparisonOperator, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATOR.rawValue, def: 0, at: VTOFFSET.OPERATOR.p) }
+  public static func add(PARAMETER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF, at: VT.PARAMETER_REF) }
+  public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VT.VALUE) }
+  public static func add(OPERATOR: ComparisonOperator, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATOR.rawValue, def: 0, at: VT.OPERATOR) }
   public static func endInterlock(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createInterlock(
     _ fbb: inout FlatBufferBuilder,
@@ -4929,9 +4789,9 @@ public struct Interlock: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PARAMETER_REF.p, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VALUE.p, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OPERATOR.p, fieldName: "OPERATOR", required: false, type: ComparisonOperator.self)
+    try _v.visit(field: VT.PARAMETER_REF, fieldName: "PARAMETER_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OPERATOR, fieldName: "OPERATOR", required: false, type: ComparisonOperator.self)
     _v.finish()
   }
 }
@@ -4948,60 +4808,58 @@ public struct MetaCommand: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case ABSTRACT = 10
-    case ARGUMENTS = 12
-    case COMMAND_CONTAINER = 14
-    case BASE_META_COMMAND = 16
-    case VERIFIERS = 18
-    case SIGNIFICANCE = 20
-    case INTERLOCKS = 22
-    case DEFAULT_SIGNIFICANCE = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let ABSTRACT: VOffset = 10
+    static let ARGUMENTS: VOffset = 12
+    static let COMMAND_CONTAINER: VOffset = 14
+    static let BASE_META_COMMAND: VOffset = 16
+    static let VERIFIERS: VOffset = 18
+    static let SIGNIFICANCE: VOffset = 20
+    static let INTERLOCKS: VOffset = 22
+    static let DEFAULT_SIGNIFICANCE: VOffset = 24
   }
 
   ///  Command name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Abstract command (base only)
-  public var ABSTRACT: Bool { let o = _accessor.offset(VTOFFSET.ABSTRACT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var ABSTRACT: Bool { let o = _accessor.offset(VT.ABSTRACT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Argument list
-  public var ARGUMENTS: FlatbufferVector<Argument> { return _accessor.vector(at: VTOFFSET.ARGUMENTS.v, byteSize: 4) }
+  public var ARGUMENTS: FlatbufferVector<Argument> { return _accessor.vector(at: VT.ARGUMENTS, byteSize: 4) }
   ///  Command container
-  public var COMMAND_CONTAINER: CommandContainer? { let o = _accessor.offset(VTOFFSET.COMMAND_CONTAINER.v); return o == 0 ? nil : CommandContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COMMAND_CONTAINER: CommandContainer? { let o = _accessor.offset(VT.COMMAND_CONTAINER); return o == 0 ? nil : CommandContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Base metacommand (inheritance)
-  public var BASE_META_COMMAND: BaseMetaCommand? { let o = _accessor.offset(VTOFFSET.BASE_META_COMMAND.v); return o == 0 ? nil : BaseMetaCommand(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var BASE_META_COMMAND: BaseMetaCommand? { let o = _accessor.offset(VT.BASE_META_COMMAND); return o == 0 ? nil : BaseMetaCommand(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Command verifiers
-  public var VERIFIERS: FlatbufferVector<CommandVerifier> { return _accessor.vector(at: VTOFFSET.VERIFIERS.v, byteSize: 4) }
+  public var VERIFIERS: FlatbufferVector<CommandVerifier> { return _accessor.vector(at: VT.VERIFIERS, byteSize: 4) }
   ///  Command significance
-  public var SIGNIFICANCE: CommandSignificance? { let o = _accessor.offset(VTOFFSET.SIGNIFICANCE.v); return o == 0 ? nil : CommandSignificance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SIGNIFICANCE: CommandSignificance? { let o = _accessor.offset(VT.SIGNIFICANCE); return o == 0 ? nil : CommandSignificance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Interlock constraints
-  public var INTERLOCKS: FlatbufferVector<Interlock> { return _accessor.vector(at: VTOFFSET.INTERLOCKS.v, byteSize: 4) }
+  public var INTERLOCKS: FlatbufferVector<Interlock> { return _accessor.vector(at: VT.INTERLOCKS, byteSize: 4) }
   ///  Default significance
-  public var DEFAULT_SIGNIFICANCE: CommandSignificance? { let o = _accessor.offset(VTOFFSET.DEFAULT_SIGNIFICANCE.v); return o == 0 ? nil : CommandSignificance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var DEFAULT_SIGNIFICANCE: CommandSignificance? { let o = _accessor.offset(VT.DEFAULT_SIGNIFICANCE); return o == 0 ? nil : CommandSignificance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startMetaCommand(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
   public static func add(ABSTRACT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ABSTRACT, def: false,
-   at: VTOFFSET.ABSTRACT.p) }
-  public static func addVectorOf(ARGUMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENTS, at: VTOFFSET.ARGUMENTS.p) }
-  public static func add(COMMAND_CONTAINER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND_CONTAINER, at: VTOFFSET.COMMAND_CONTAINER.p) }
-  public static func add(BASE_META_COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BASE_META_COMMAND, at: VTOFFSET.BASE_META_COMMAND.p) }
-  public static func addVectorOf(VERIFIERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERIFIERS, at: VTOFFSET.VERIFIERS.p) }
-  public static func add(SIGNIFICANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNIFICANCE, at: VTOFFSET.SIGNIFICANCE.p) }
-  public static func addVectorOf(INTERLOCKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERLOCKS, at: VTOFFSET.INTERLOCKS.p) }
-  public static func add(DEFAULT_SIGNIFICANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_SIGNIFICANCE, at: VTOFFSET.DEFAULT_SIGNIFICANCE.p) }
+   at: VT.ABSTRACT) }
+  public static func addVectorOf(ARGUMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENTS, at: VT.ARGUMENTS) }
+  public static func add(COMMAND_CONTAINER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND_CONTAINER, at: VT.COMMAND_CONTAINER) }
+  public static func add(BASE_META_COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BASE_META_COMMAND, at: VT.BASE_META_COMMAND) }
+  public static func addVectorOf(VERIFIERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERIFIERS, at: VT.VERIFIERS) }
+  public static func add(SIGNIFICANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNIFICANCE, at: VT.SIGNIFICANCE) }
+  public static func addVectorOf(INTERLOCKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERLOCKS, at: VT.INTERLOCKS) }
+  public static func add(DEFAULT_SIGNIFICANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DEFAULT_SIGNIFICANCE, at: VT.DEFAULT_SIGNIFICANCE) }
   public static func endMetaCommand(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMetaCommand(
     _ fbb: inout FlatBufferBuilder,
@@ -5034,17 +4892,17 @@ public struct MetaCommand: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ABSTRACT.p, fieldName: "ABSTRACT", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.ARGUMENTS.p, fieldName: "ARGUMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<Argument>, Argument>>.self)
-    try _v.visit(field: VTOFFSET.COMMAND_CONTAINER.p, fieldName: "COMMAND_CONTAINER", required: false, type: ForwardOffset<CommandContainer>.self)
-    try _v.visit(field: VTOFFSET.BASE_META_COMMAND.p, fieldName: "BASE_META_COMMAND", required: false, type: ForwardOffset<BaseMetaCommand>.self)
-    try _v.visit(field: VTOFFSET.VERIFIERS.p, fieldName: "VERIFIERS", required: false, type: ForwardOffset<Vector<ForwardOffset<CommandVerifier>, CommandVerifier>>.self)
-    try _v.visit(field: VTOFFSET.SIGNIFICANCE.p, fieldName: "SIGNIFICANCE", required: false, type: ForwardOffset<CommandSignificance>.self)
-    try _v.visit(field: VTOFFSET.INTERLOCKS.p, fieldName: "INTERLOCKS", required: false, type: ForwardOffset<Vector<ForwardOffset<Interlock>, Interlock>>.self)
-    try _v.visit(field: VTOFFSET.DEFAULT_SIGNIFICANCE.p, fieldName: "DEFAULT_SIGNIFICANCE", required: false, type: ForwardOffset<CommandSignificance>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ABSTRACT, fieldName: "ABSTRACT", required: false, type: Bool.self)
+    try _v.visit(field: VT.ARGUMENTS, fieldName: "ARGUMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<Argument>, Argument>>.self)
+    try _v.visit(field: VT.COMMAND_CONTAINER, fieldName: "COMMAND_CONTAINER", required: false, type: ForwardOffset<CommandContainer>.self)
+    try _v.visit(field: VT.BASE_META_COMMAND, fieldName: "BASE_META_COMMAND", required: false, type: ForwardOffset<BaseMetaCommand>.self)
+    try _v.visit(field: VT.VERIFIERS, fieldName: "VERIFIERS", required: false, type: ForwardOffset<Vector<ForwardOffset<CommandVerifier>, CommandVerifier>>.self)
+    try _v.visit(field: VT.SIGNIFICANCE, fieldName: "SIGNIFICANCE", required: false, type: ForwardOffset<CommandSignificance>.self)
+    try _v.visit(field: VT.INTERLOCKS, fieldName: "INTERLOCKS", required: false, type: ForwardOffset<Vector<ForwardOffset<Interlock>, Interlock>>.self)
+    try _v.visit(field: VT.DEFAULT_SIGNIFICANCE, fieldName: "DEFAULT_SIGNIFICANCE", required: false, type: ForwardOffset<CommandSignificance>.self)
     _v.finish()
   }
 }
@@ -5061,16 +4919,14 @@ public struct MetaCommandSet: FlatBufferTable, FlatbuffersVectorInitializable, V
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case META_COMMANDS = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let META_COMMANDS: VOffset = 4
   }
 
   ///  MetaCommands
-  public var META_COMMANDS: FlatbufferVector<MetaCommand> { return _accessor.vector(at: VTOFFSET.META_COMMANDS.v, byteSize: 4) }
+  public var META_COMMANDS: FlatbufferVector<MetaCommand> { return _accessor.vector(at: VT.META_COMMANDS, byteSize: 4) }
   public static func startMetaCommandSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func addVectorOf(META_COMMANDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: META_COMMANDS, at: VTOFFSET.META_COMMANDS.p) }
+  public static func addVectorOf(META_COMMANDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: META_COMMANDS, at: VT.META_COMMANDS) }
   public static func endMetaCommandSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMetaCommandSet(
     _ fbb: inout FlatBufferBuilder,
@@ -5083,7 +4939,7 @@ public struct MetaCommandSet: FlatBufferTable, FlatbuffersVectorInitializable, V
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.META_COMMANDS.p, fieldName: "META_COMMANDS", required: false, type: ForwardOffset<Vector<ForwardOffset<MetaCommand>, MetaCommand>>.self)
+    try _v.visit(field: VT.META_COMMANDS, fieldName: "META_COMMANDS", required: false, type: ForwardOffset<Vector<ForwardOffset<MetaCommand>, MetaCommand>>.self)
     _v.finish()
   }
 }
@@ -5100,31 +4956,29 @@ public struct FixedFrameStream: FlatBufferTable, FlatbuffersVectorInitializable,
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case FRAME_SIZE_IN_BITS = 8
-    case SYNC_PATTERN = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let FRAME_SIZE_IN_BITS: VOffset = 8
+    static let SYNC_PATTERN: VOffset = 10
   }
 
   ///  Stream name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Frame size in bits
-  public var FRAME_SIZE_IN_BITS: UInt32 { let o = _accessor.offset(VTOFFSET.FRAME_SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var FRAME_SIZE_IN_BITS: UInt32 { let o = _accessor.offset(VT.FRAME_SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Sync pattern (hex string)
-  public var SYNC_PATTERN: String? { let o = _accessor.offset(VTOFFSET.SYNC_PATTERN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SYNC_PATTERNSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SYNC_PATTERN.v) }
+  public var SYNC_PATTERN: String? { let o = _accessor.offset(VT.SYNC_PATTERN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SYNC_PATTERNSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SYNC_PATTERN) }
   public static func startFixedFrameStream(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(FRAME_SIZE_IN_BITS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_SIZE_IN_BITS, def: 0, at: VTOFFSET.FRAME_SIZE_IN_BITS.p) }
-  public static func add(SYNC_PATTERN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYNC_PATTERN, at: VTOFFSET.SYNC_PATTERN.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(FRAME_SIZE_IN_BITS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_SIZE_IN_BITS, def: 0, at: VT.FRAME_SIZE_IN_BITS) }
+  public static func add(SYNC_PATTERN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYNC_PATTERN, at: VT.SYNC_PATTERN) }
   public static func endFixedFrameStream(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFixedFrameStream(
     _ fbb: inout FlatBufferBuilder,
@@ -5143,10 +4997,10 @@ public struct FixedFrameStream: FlatBufferTable, FlatbuffersVectorInitializable,
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FRAME_SIZE_IN_BITS.p, fieldName: "FRAME_SIZE_IN_BITS", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.SYNC_PATTERN.p, fieldName: "SYNC_PATTERN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FRAME_SIZE_IN_BITS, fieldName: "FRAME_SIZE_IN_BITS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SYNC_PATTERN, fieldName: "SYNC_PATTERN", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -5163,38 +5017,36 @@ public struct VariableFrameStream: FlatBufferTable, FlatbuffersVectorInitializab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case MIN_FRAME_SIZE_IN_BITS = 8
-    case MAX_FRAME_SIZE_IN_BITS = 10
-    case SIZE_FIELD_OFFSET = 12
-    case SIZE_FIELD_SIZE = 14
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let MIN_FRAME_SIZE_IN_BITS: VOffset = 8
+    static let MAX_FRAME_SIZE_IN_BITS: VOffset = 10
+    static let SIZE_FIELD_OFFSET: VOffset = 12
+    static let SIZE_FIELD_SIZE: VOffset = 14
   }
 
   ///  Stream name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Minimum frame size in bits
-  public var MIN_FRAME_SIZE_IN_BITS: UInt32 { let o = _accessor.offset(VTOFFSET.MIN_FRAME_SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var MIN_FRAME_SIZE_IN_BITS: UInt32 { let o = _accessor.offset(VT.MIN_FRAME_SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Maximum frame size in bits
-  public var MAX_FRAME_SIZE_IN_BITS: UInt32 { let o = _accessor.offset(VTOFFSET.MAX_FRAME_SIZE_IN_BITS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var MAX_FRAME_SIZE_IN_BITS: UInt32 { let o = _accessor.offset(VT.MAX_FRAME_SIZE_IN_BITS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Size field location in bits
-  public var SIZE_FIELD_OFFSET: UInt32 { let o = _accessor.offset(VTOFFSET.SIZE_FIELD_OFFSET.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SIZE_FIELD_OFFSET: UInt32 { let o = _accessor.offset(VT.SIZE_FIELD_OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Size field size in bits
-  public var SIZE_FIELD_SIZE: UInt16 { let o = _accessor.offset(VTOFFSET.SIZE_FIELD_SIZE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var SIZE_FIELD_SIZE: UInt16 { let o = _accessor.offset(VT.SIZE_FIELD_SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   public static func startVariableFrameStream(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(MIN_FRAME_SIZE_IN_BITS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_FRAME_SIZE_IN_BITS, def: 0, at: VTOFFSET.MIN_FRAME_SIZE_IN_BITS.p) }
-  public static func add(MAX_FRAME_SIZE_IN_BITS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_FRAME_SIZE_IN_BITS, def: 0, at: VTOFFSET.MAX_FRAME_SIZE_IN_BITS.p) }
-  public static func add(SIZE_FIELD_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_FIELD_OFFSET, def: 0, at: VTOFFSET.SIZE_FIELD_OFFSET.p) }
-  public static func add(SIZE_FIELD_SIZE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_FIELD_SIZE, def: 0, at: VTOFFSET.SIZE_FIELD_SIZE.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(MIN_FRAME_SIZE_IN_BITS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_FRAME_SIZE_IN_BITS, def: 0, at: VT.MIN_FRAME_SIZE_IN_BITS) }
+  public static func add(MAX_FRAME_SIZE_IN_BITS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_FRAME_SIZE_IN_BITS, def: 0, at: VT.MAX_FRAME_SIZE_IN_BITS) }
+  public static func add(SIZE_FIELD_OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_FIELD_OFFSET, def: 0, at: VT.SIZE_FIELD_OFFSET) }
+  public static func add(SIZE_FIELD_SIZE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_FIELD_SIZE, def: 0, at: VT.SIZE_FIELD_SIZE) }
   public static func endVariableFrameStream(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createVariableFrameStream(
     _ fbb: inout FlatBufferBuilder,
@@ -5217,12 +5069,12 @@ public struct VariableFrameStream: FlatBufferTable, FlatbuffersVectorInitializab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MIN_FRAME_SIZE_IN_BITS.p, fieldName: "MIN_FRAME_SIZE_IN_BITS", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.MAX_FRAME_SIZE_IN_BITS.p, fieldName: "MAX_FRAME_SIZE_IN_BITS", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.SIZE_FIELD_OFFSET.p, fieldName: "SIZE_FIELD_OFFSET", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.SIZE_FIELD_SIZE.p, fieldName: "SIZE_FIELD_SIZE", required: false, type: UInt16.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MIN_FRAME_SIZE_IN_BITS, fieldName: "MIN_FRAME_SIZE_IN_BITS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MAX_FRAME_SIZE_IN_BITS, fieldName: "MAX_FRAME_SIZE_IN_BITS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SIZE_FIELD_OFFSET, fieldName: "SIZE_FIELD_OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SIZE_FIELD_SIZE, fieldName: "SIZE_FIELD_SIZE", required: false, type: UInt16.self)
     _v.finish()
   }
 }
@@ -5239,27 +5091,25 @@ public struct CustomStream: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case ALGORITHM_REF = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let ALGORITHM_REF: VOffset = 8
   }
 
   ///  Stream name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Algorithm reference for parsing
-  public var ALGORITHM_REF: String? { let o = _accessor.offset(VTOFFSET.ALGORITHM_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ALGORITHM_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALGORITHM_REF.v) }
+  public var ALGORITHM_REF: String? { let o = _accessor.offset(VT.ALGORITHM_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALGORITHM_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALGORITHM_REF) }
   public static func startCustomStream(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(ALGORITHM_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM_REF, at: VTOFFSET.ALGORITHM_REF.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(ALGORITHM_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM_REF, at: VT.ALGORITHM_REF) }
   public static func endCustomStream(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCustomStream(
     _ fbb: inout FlatBufferBuilder,
@@ -5276,9 +5126,9 @@ public struct CustomStream: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ALGORITHM_REF.p, fieldName: "ALGORITHM_REF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALGORITHM_REF, fieldName: "ALGORITHM_REF", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -5295,24 +5145,22 @@ public struct StreamSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case FIXED_FRAME_STREAMS = 4
-    case VARIABLE_FRAME_STREAMS = 6
-    case CUSTOM_STREAMS = 8
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let FIXED_FRAME_STREAMS: VOffset = 4
+    static let VARIABLE_FRAME_STREAMS: VOffset = 6
+    static let CUSTOM_STREAMS: VOffset = 8
   }
 
   ///  Fixed frame streams
-  public var FIXED_FRAME_STREAMS: FlatbufferVector<FixedFrameStream> { return _accessor.vector(at: VTOFFSET.FIXED_FRAME_STREAMS.v, byteSize: 4) }
+  public var FIXED_FRAME_STREAMS: FlatbufferVector<FixedFrameStream> { return _accessor.vector(at: VT.FIXED_FRAME_STREAMS, byteSize: 4) }
   ///  Variable frame streams
-  public var VARIABLE_FRAME_STREAMS: FlatbufferVector<VariableFrameStream> { return _accessor.vector(at: VTOFFSET.VARIABLE_FRAME_STREAMS.v, byteSize: 4) }
+  public var VARIABLE_FRAME_STREAMS: FlatbufferVector<VariableFrameStream> { return _accessor.vector(at: VT.VARIABLE_FRAME_STREAMS, byteSize: 4) }
   ///  Custom streams
-  public var CUSTOM_STREAMS: FlatbufferVector<CustomStream> { return _accessor.vector(at: VTOFFSET.CUSTOM_STREAMS.v, byteSize: 4) }
+  public var CUSTOM_STREAMS: FlatbufferVector<CustomStream> { return _accessor.vector(at: VT.CUSTOM_STREAMS, byteSize: 4) }
   public static func startStreamSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
-  public static func addVectorOf(FIXED_FRAME_STREAMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIXED_FRAME_STREAMS, at: VTOFFSET.FIXED_FRAME_STREAMS.p) }
-  public static func addVectorOf(VARIABLE_FRAME_STREAMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIABLE_FRAME_STREAMS, at: VTOFFSET.VARIABLE_FRAME_STREAMS.p) }
-  public static func addVectorOf(CUSTOM_STREAMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CUSTOM_STREAMS, at: VTOFFSET.CUSTOM_STREAMS.p) }
+  public static func addVectorOf(FIXED_FRAME_STREAMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIXED_FRAME_STREAMS, at: VT.FIXED_FRAME_STREAMS) }
+  public static func addVectorOf(VARIABLE_FRAME_STREAMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIABLE_FRAME_STREAMS, at: VT.VARIABLE_FRAME_STREAMS) }
+  public static func addVectorOf(CUSTOM_STREAMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CUSTOM_STREAMS, at: VT.CUSTOM_STREAMS) }
   public static func endStreamSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createStreamSet(
     _ fbb: inout FlatBufferBuilder,
@@ -5329,9 +5177,9 @@ public struct StreamSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.FIXED_FRAME_STREAMS.p, fieldName: "FIXED_FRAME_STREAMS", required: false, type: ForwardOffset<Vector<ForwardOffset<FixedFrameStream>, FixedFrameStream>>.self)
-    try _v.visit(field: VTOFFSET.VARIABLE_FRAME_STREAMS.p, fieldName: "VARIABLE_FRAME_STREAMS", required: false, type: ForwardOffset<Vector<ForwardOffset<VariableFrameStream>, VariableFrameStream>>.self)
-    try _v.visit(field: VTOFFSET.CUSTOM_STREAMS.p, fieldName: "CUSTOM_STREAMS", required: false, type: ForwardOffset<Vector<ForwardOffset<CustomStream>, CustomStream>>.self)
+    try _v.visit(field: VT.FIXED_FRAME_STREAMS, fieldName: "FIXED_FRAME_STREAMS", required: false, type: ForwardOffset<Vector<ForwardOffset<FixedFrameStream>, FixedFrameStream>>.self)
+    try _v.visit(field: VT.VARIABLE_FRAME_STREAMS, fieldName: "VARIABLE_FRAME_STREAMS", required: false, type: ForwardOffset<Vector<ForwardOffset<VariableFrameStream>, VariableFrameStream>>.self)
+    try _v.visit(field: VT.CUSTOM_STREAMS, fieldName: "CUSTOM_STREAMS", required: false, type: ForwardOffset<Vector<ForwardOffset<CustomStream>, CustomStream>>.self)
     _v.finish()
   }
 }
@@ -5348,35 +5196,33 @@ public struct Service: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case CONTAINER_REFS = 10
-    case COMMAND_REFS = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let CONTAINER_REFS: VOffset = 10
+    static let COMMAND_REFS: VOffset = 12
   }
 
   ///  Service name
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Container references provided by this service
-  public var CONTAINER_REFS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.CONTAINER_REFS.v, byteSize: 4) }
+  public var CONTAINER_REFS: FlatbufferVector<String?> { return _accessor.vector(at: VT.CONTAINER_REFS, byteSize: 4) }
   ///  Command references accepted by this service
-  public var COMMAND_REFS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.COMMAND_REFS.v, byteSize: 4) }
+  public var COMMAND_REFS: FlatbufferVector<String?> { return _accessor.vector(at: VT.COMMAND_REFS, byteSize: 4) }
   public static func startService(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func addVectorOf(CONTAINER_REFS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REFS, at: VTOFFSET.CONTAINER_REFS.p) }
-  public static func addVectorOf(COMMAND_REFS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND_REFS, at: VTOFFSET.COMMAND_REFS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func addVectorOf(CONTAINER_REFS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REFS, at: VT.CONTAINER_REFS) }
+  public static func addVectorOf(COMMAND_REFS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND_REFS, at: VT.COMMAND_REFS) }
   public static func endService(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createService(
     _ fbb: inout FlatBufferBuilder,
@@ -5397,11 +5243,11 @@ public struct Service: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONTAINER_REFS.p, fieldName: "CONTAINER_REFS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.COMMAND_REFS.p, fieldName: "COMMAND_REFS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTAINER_REFS, fieldName: "CONTAINER_REFS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COMMAND_REFS, fieldName: "COMMAND_REFS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }
@@ -5418,16 +5264,14 @@ public struct ServiceSet: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case SERVICES = 4
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let SERVICES: VOffset = 4
   }
 
   ///  Services
-  public var SERVICES: FlatbufferVector<Service> { return _accessor.vector(at: VTOFFSET.SERVICES.v, byteSize: 4) }
+  public var SERVICES: FlatbufferVector<Service> { return _accessor.vector(at: VT.SERVICES, byteSize: 4) }
   public static func startServiceSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
-  public static func addVectorOf(SERVICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SERVICES, at: VTOFFSET.SERVICES.p) }
+  public static func addVectorOf(SERVICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SERVICES, at: VT.SERVICES) }
   public static func endServiceSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createServiceSet(
     _ fbb: inout FlatBufferBuilder,
@@ -5440,7 +5284,7 @@ public struct ServiceSet: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.SERVICES.p, fieldName: "SERVICES", required: false, type: ForwardOffset<Vector<ForwardOffset<Service>, Service>>.self)
+    try _v.visit(field: VT.SERVICES, fieldName: "SERVICES", required: false, type: ForwardOffset<Vector<ForwardOffset<Service>, Service>>.self)
     _v.finish()
   }
 }
@@ -5457,41 +5301,39 @@ public struct XTCHeader: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case VERSION = 4
-    case DATE = 6
-    case CLASSIFICATION = 8
-    case VALIDATION_STATUS = 10
-    case AUTHOR = 12
-    case NOTES = 14
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let VERSION: VOffset = 4
+    static let DATE: VOffset = 6
+    static let CLASSIFICATION: VOffset = 8
+    static let VALIDATION_STATUS: VOffset = 10
+    static let AUTHOR: VOffset = 12
+    static let NOTES: VOffset = 14
   }
 
   ///  Version of this XTCE document
-  public var VERSION: String? { let o = _accessor.offset(VTOFFSET.VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VERSION.v) }
+  public var VERSION: String? { let o = _accessor.offset(VT.VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VERSION) }
   ///  Date of document creation (ISO 8601)
-  public var DATE: String? { let o = _accessor.offset(VTOFFSET.DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DATE.v) }
+  public var DATE: String? { let o = _accessor.offset(VT.DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATE) }
   ///  Classification level
-  public var CLASSIFICATION: String? { let o = _accessor.offset(VTOFFSET.CLASSIFICATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLASSIFICATION.v) }
+  public var CLASSIFICATION: String? { let o = _accessor.offset(VT.CLASSIFICATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION) }
   ///  Validation status
-  public var VALIDATION_STATUS: String? { let o = _accessor.offset(VTOFFSET.VALIDATION_STATUS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var VALIDATION_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VALIDATION_STATUS.v) }
+  public var VALIDATION_STATUS: String? { let o = _accessor.offset(VT.VALIDATION_STATUS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VALIDATION_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VALIDATION_STATUS) }
   ///  Author information
-  public var AUTHOR: String? { let o = _accessor.offset(VTOFFSET.AUTHOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var AUTHORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AUTHOR.v) }
+  public var AUTHOR: String? { let o = _accessor.offset(VT.AUTHOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AUTHORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AUTHOR) }
   ///  Notes/comments
-  public var NOTES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.NOTES.v, byteSize: 4) }
+  public var NOTES: FlatbufferVector<String?> { return _accessor.vector(at: VT.NOTES, byteSize: 4) }
   public static func startXTCHeader(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VTOFFSET.VERSION.p) }
-  public static func add(DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATE, at: VTOFFSET.DATE.p) }
-  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VTOFFSET.CLASSIFICATION.p) }
-  public static func add(VALIDATION_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALIDATION_STATUS, at: VTOFFSET.VALIDATION_STATUS.p) }
-  public static func add(AUTHOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AUTHOR, at: VTOFFSET.AUTHOR.p) }
-  public static func addVectorOf(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
+  public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
+  public static func add(DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATE, at: VT.DATE) }
+  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VT.CLASSIFICATION) }
+  public static func add(VALIDATION_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALIDATION_STATUS, at: VT.VALIDATION_STATUS) }
+  public static func add(AUTHOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AUTHOR, at: VT.AUTHOR) }
+  public static func addVectorOf(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
   public static func endXTCHeader(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createXTCHeader(
     _ fbb: inout FlatBufferBuilder,
@@ -5514,12 +5356,12 @@ public struct XTCHeader: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.VERSION.p, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATE.p, fieldName: "DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CLASSIFICATION.p, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.VALIDATION_STATUS.p, fieldName: "VALIDATION_STATUS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.AUTHOR.p, fieldName: "AUTHOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATE, fieldName: "DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLASSIFICATION, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VALIDATION_STATUS, fieldName: "VALIDATION_STATUS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AUTHOR, fieldName: "AUTHOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }
@@ -5536,32 +5378,30 @@ public struct TelemetryMetaData: FlatBufferTable, FlatbuffersVectorInitializable
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case PARAMETER_TYPE_SET = 4
-    case PARAMETER_SET = 6
-    case CONTAINER_SET = 8
-    case ALGORITHM_SET = 10
-    case STREAM_SET = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let PARAMETER_TYPE_SET: VOffset = 4
+    static let PARAMETER_SET: VOffset = 6
+    static let CONTAINER_SET: VOffset = 8
+    static let ALGORITHM_SET: VOffset = 10
+    static let STREAM_SET: VOffset = 12
   }
 
   ///  Parameter type definitions
-  public var PARAMETER_TYPE_SET: ParameterTypeSet? { let o = _accessor.offset(VTOFFSET.PARAMETER_TYPE_SET.v); return o == 0 ? nil : ParameterTypeSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PARAMETER_TYPE_SET: ParameterTypeSet? { let o = _accessor.offset(VT.PARAMETER_TYPE_SET); return o == 0 ? nil : ParameterTypeSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Parameter definitions
-  public var PARAMETER_SET: ParameterSet? { let o = _accessor.offset(VTOFFSET.PARAMETER_SET.v); return o == 0 ? nil : ParameterSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PARAMETER_SET: ParameterSet? { let o = _accessor.offset(VT.PARAMETER_SET); return o == 0 ? nil : ParameterSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Container definitions
-  public var CONTAINER_SET: ContainerSet? { let o = _accessor.offset(VTOFFSET.CONTAINER_SET.v); return o == 0 ? nil : ContainerSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CONTAINER_SET: ContainerSet? { let o = _accessor.offset(VT.CONTAINER_SET); return o == 0 ? nil : ContainerSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Algorithm definitions
-  public var ALGORITHM_SET: AlgorithmSet? { let o = _accessor.offset(VTOFFSET.ALGORITHM_SET.v); return o == 0 ? nil : AlgorithmSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ALGORITHM_SET: AlgorithmSet? { let o = _accessor.offset(VT.ALGORITHM_SET); return o == 0 ? nil : AlgorithmSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Stream definitions
-  public var STREAM_SET: StreamSet? { let o = _accessor.offset(VTOFFSET.STREAM_SET.v); return o == 0 ? nil : StreamSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var STREAM_SET: StreamSet? { let o = _accessor.offset(VT.STREAM_SET); return o == 0 ? nil : StreamSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startTelemetryMetaData(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(PARAMETER_TYPE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_TYPE_SET, at: VTOFFSET.PARAMETER_TYPE_SET.p) }
-  public static func add(PARAMETER_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_SET, at: VTOFFSET.PARAMETER_SET.p) }
-  public static func add(CONTAINER_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_SET, at: VTOFFSET.CONTAINER_SET.p) }
-  public static func add(ALGORITHM_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM_SET, at: VTOFFSET.ALGORITHM_SET.p) }
-  public static func add(STREAM_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STREAM_SET, at: VTOFFSET.STREAM_SET.p) }
+  public static func add(PARAMETER_TYPE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_TYPE_SET, at: VT.PARAMETER_TYPE_SET) }
+  public static func add(PARAMETER_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_SET, at: VT.PARAMETER_SET) }
+  public static func add(CONTAINER_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_SET, at: VT.CONTAINER_SET) }
+  public static func add(ALGORITHM_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM_SET, at: VT.ALGORITHM_SET) }
+  public static func add(STREAM_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STREAM_SET, at: VT.STREAM_SET) }
   public static func endTelemetryMetaData(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTelemetryMetaData(
     _ fbb: inout FlatBufferBuilder,
@@ -5582,11 +5422,11 @@ public struct TelemetryMetaData: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PARAMETER_TYPE_SET.p, fieldName: "PARAMETER_TYPE_SET", required: false, type: ForwardOffset<ParameterTypeSet>.self)
-    try _v.visit(field: VTOFFSET.PARAMETER_SET.p, fieldName: "PARAMETER_SET", required: false, type: ForwardOffset<ParameterSet>.self)
-    try _v.visit(field: VTOFFSET.CONTAINER_SET.p, fieldName: "CONTAINER_SET", required: false, type: ForwardOffset<ContainerSet>.self)
-    try _v.visit(field: VTOFFSET.ALGORITHM_SET.p, fieldName: "ALGORITHM_SET", required: false, type: ForwardOffset<AlgorithmSet>.self)
-    try _v.visit(field: VTOFFSET.STREAM_SET.p, fieldName: "STREAM_SET", required: false, type: ForwardOffset<StreamSet>.self)
+    try _v.visit(field: VT.PARAMETER_TYPE_SET, fieldName: "PARAMETER_TYPE_SET", required: false, type: ForwardOffset<ParameterTypeSet>.self)
+    try _v.visit(field: VT.PARAMETER_SET, fieldName: "PARAMETER_SET", required: false, type: ForwardOffset<ParameterSet>.self)
+    try _v.visit(field: VT.CONTAINER_SET, fieldName: "CONTAINER_SET", required: false, type: ForwardOffset<ContainerSet>.self)
+    try _v.visit(field: VT.ALGORITHM_SET, fieldName: "ALGORITHM_SET", required: false, type: ForwardOffset<AlgorithmSet>.self)
+    try _v.visit(field: VT.STREAM_SET, fieldName: "STREAM_SET", required: false, type: ForwardOffset<StreamSet>.self)
     _v.finish()
   }
 }
@@ -5603,40 +5443,38 @@ public struct CommandMetaData: FlatBufferTable, FlatbuffersVectorInitializable, 
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ARGUMENT_TYPE_SET = 4
-    case PARAMETER_TYPE_SET = 6
-    case PARAMETER_SET = 8
-    case META_COMMAND_SET = 10
-    case COMMAND_CONTAINER_SET = 12
-    case ALGORITHM_SET = 14
-    case STREAM_SET = 16
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ARGUMENT_TYPE_SET: VOffset = 4
+    static let PARAMETER_TYPE_SET: VOffset = 6
+    static let PARAMETER_SET: VOffset = 8
+    static let META_COMMAND_SET: VOffset = 10
+    static let COMMAND_CONTAINER_SET: VOffset = 12
+    static let ALGORITHM_SET: VOffset = 14
+    static let STREAM_SET: VOffset = 16
   }
 
   ///  Argument type definitions
-  public var ARGUMENT_TYPE_SET: ArgumentTypeSet? { let o = _accessor.offset(VTOFFSET.ARGUMENT_TYPE_SET.v); return o == 0 ? nil : ArgumentTypeSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ARGUMENT_TYPE_SET: ArgumentTypeSet? { let o = _accessor.offset(VT.ARGUMENT_TYPE_SET); return o == 0 ? nil : ArgumentTypeSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Parameter types used by commands
-  public var PARAMETER_TYPE_SET: ParameterTypeSet? { let o = _accessor.offset(VTOFFSET.PARAMETER_TYPE_SET.v); return o == 0 ? nil : ParameterTypeSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PARAMETER_TYPE_SET: ParameterTypeSet? { let o = _accessor.offset(VT.PARAMETER_TYPE_SET); return o == 0 ? nil : ParameterTypeSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Parameters used by commands
-  public var PARAMETER_SET: ParameterSet? { let o = _accessor.offset(VTOFFSET.PARAMETER_SET.v); return o == 0 ? nil : ParameterSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var PARAMETER_SET: ParameterSet? { let o = _accessor.offset(VT.PARAMETER_SET); return o == 0 ? nil : ParameterSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  MetaCommand definitions
-  public var META_COMMAND_SET: MetaCommandSet? { let o = _accessor.offset(VTOFFSET.META_COMMAND_SET.v); return o == 0 ? nil : MetaCommandSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var META_COMMAND_SET: MetaCommandSet? { let o = _accessor.offset(VT.META_COMMAND_SET); return o == 0 ? nil : MetaCommandSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Command container set
-  public var COMMAND_CONTAINER_SET: ContainerSet? { let o = _accessor.offset(VTOFFSET.COMMAND_CONTAINER_SET.v); return o == 0 ? nil : ContainerSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COMMAND_CONTAINER_SET: ContainerSet? { let o = _accessor.offset(VT.COMMAND_CONTAINER_SET); return o == 0 ? nil : ContainerSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Algorithm definitions
-  public var ALGORITHM_SET: AlgorithmSet? { let o = _accessor.offset(VTOFFSET.ALGORITHM_SET.v); return o == 0 ? nil : AlgorithmSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ALGORITHM_SET: AlgorithmSet? { let o = _accessor.offset(VT.ALGORITHM_SET); return o == 0 ? nil : AlgorithmSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Stream definitions
-  public var STREAM_SET: StreamSet? { let o = _accessor.offset(VTOFFSET.STREAM_SET.v); return o == 0 ? nil : StreamSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var STREAM_SET: StreamSet? { let o = _accessor.offset(VT.STREAM_SET); return o == 0 ? nil : StreamSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCommandMetaData(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(ARGUMENT_TYPE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_TYPE_SET, at: VTOFFSET.ARGUMENT_TYPE_SET.p) }
-  public static func add(PARAMETER_TYPE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_TYPE_SET, at: VTOFFSET.PARAMETER_TYPE_SET.p) }
-  public static func add(PARAMETER_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_SET, at: VTOFFSET.PARAMETER_SET.p) }
-  public static func add(META_COMMAND_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: META_COMMAND_SET, at: VTOFFSET.META_COMMAND_SET.p) }
-  public static func add(COMMAND_CONTAINER_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND_CONTAINER_SET, at: VTOFFSET.COMMAND_CONTAINER_SET.p) }
-  public static func add(ALGORITHM_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM_SET, at: VTOFFSET.ALGORITHM_SET.p) }
-  public static func add(STREAM_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STREAM_SET, at: VTOFFSET.STREAM_SET.p) }
+  public static func add(ARGUMENT_TYPE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_TYPE_SET, at: VT.ARGUMENT_TYPE_SET) }
+  public static func add(PARAMETER_TYPE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_TYPE_SET, at: VT.PARAMETER_TYPE_SET) }
+  public static func add(PARAMETER_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_SET, at: VT.PARAMETER_SET) }
+  public static func add(META_COMMAND_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: META_COMMAND_SET, at: VT.META_COMMAND_SET) }
+  public static func add(COMMAND_CONTAINER_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND_CONTAINER_SET, at: VT.COMMAND_CONTAINER_SET) }
+  public static func add(ALGORITHM_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM_SET, at: VT.ALGORITHM_SET) }
+  public static func add(STREAM_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STREAM_SET, at: VT.STREAM_SET) }
   public static func endCommandMetaData(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCommandMetaData(
     _ fbb: inout FlatBufferBuilder,
@@ -5661,13 +5499,13 @@ public struct CommandMetaData: FlatBufferTable, FlatbuffersVectorInitializable, 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ARGUMENT_TYPE_SET.p, fieldName: "ARGUMENT_TYPE_SET", required: false, type: ForwardOffset<ArgumentTypeSet>.self)
-    try _v.visit(field: VTOFFSET.PARAMETER_TYPE_SET.p, fieldName: "PARAMETER_TYPE_SET", required: false, type: ForwardOffset<ParameterTypeSet>.self)
-    try _v.visit(field: VTOFFSET.PARAMETER_SET.p, fieldName: "PARAMETER_SET", required: false, type: ForwardOffset<ParameterSet>.self)
-    try _v.visit(field: VTOFFSET.META_COMMAND_SET.p, fieldName: "META_COMMAND_SET", required: false, type: ForwardOffset<MetaCommandSet>.self)
-    try _v.visit(field: VTOFFSET.COMMAND_CONTAINER_SET.p, fieldName: "COMMAND_CONTAINER_SET", required: false, type: ForwardOffset<ContainerSet>.self)
-    try _v.visit(field: VTOFFSET.ALGORITHM_SET.p, fieldName: "ALGORITHM_SET", required: false, type: ForwardOffset<AlgorithmSet>.self)
-    try _v.visit(field: VTOFFSET.STREAM_SET.p, fieldName: "STREAM_SET", required: false, type: ForwardOffset<StreamSet>.self)
+    try _v.visit(field: VT.ARGUMENT_TYPE_SET, fieldName: "ARGUMENT_TYPE_SET", required: false, type: ForwardOffset<ArgumentTypeSet>.self)
+    try _v.visit(field: VT.PARAMETER_TYPE_SET, fieldName: "PARAMETER_TYPE_SET", required: false, type: ForwardOffset<ParameterTypeSet>.self)
+    try _v.visit(field: VT.PARAMETER_SET, fieldName: "PARAMETER_SET", required: false, type: ForwardOffset<ParameterSet>.self)
+    try _v.visit(field: VT.META_COMMAND_SET, fieldName: "META_COMMAND_SET", required: false, type: ForwardOffset<MetaCommandSet>.self)
+    try _v.visit(field: VT.COMMAND_CONTAINER_SET, fieldName: "COMMAND_CONTAINER_SET", required: false, type: ForwardOffset<ContainerSet>.self)
+    try _v.visit(field: VT.ALGORITHM_SET, fieldName: "ALGORITHM_SET", required: false, type: ForwardOffset<AlgorithmSet>.self)
+    try _v.visit(field: VT.STREAM_SET, fieldName: "STREAM_SET", required: false, type: ForwardOffset<StreamSet>.self)
     _v.finish()
   }
 }
@@ -5687,52 +5525,50 @@ public struct XTC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case NAME = 4
-    case SHORT_DESCRIPTION = 6
-    case LONG_DESCRIPTION = 8
-    case OPERATIONAL_STATUS = 10
-    case HEADER = 12
-    case TELEMETRY_META_DATA = 14
-    case COMMAND_META_DATA = 16
-    case SERVICE_SET = 18
-    case CHILD_SYSTEMS = 20
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let SHORT_DESCRIPTION: VOffset = 6
+    static let LONG_DESCRIPTION: VOffset = 8
+    static let OPERATIONAL_STATUS: VOffset = 10
+    static let HEADER: VOffset = 12
+    static let TELEMETRY_META_DATA: VOffset = 14
+    static let COMMAND_META_DATA: VOffset = 16
+    static let SERVICE_SET: VOffset = 18
+    static let CHILD_SYSTEMS: VOffset = 20
   }
 
   ///  Name of this space system
-  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
   ///  Short description
-  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
+  public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VT.SHORT_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHORT_DESCRIPTION) }
   ///  Long description
-  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
+  public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VT.LONG_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LONG_DESCRIPTION) }
   ///  Operational status
-  public var OPERATIONAL_STATUS: String? { let o = _accessor.offset(VTOFFSET.OPERATIONAL_STATUS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OPERATIONAL_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPERATIONAL_STATUS.v) }
+  public var OPERATIONAL_STATUS: String? { let o = _accessor.offset(VT.OPERATIONAL_STATUS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OPERATIONAL_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OPERATIONAL_STATUS) }
   ///  Document header
-  public var HEADER: XTCHeader? { let o = _accessor.offset(VTOFFSET.HEADER.v); return o == 0 ? nil : XTCHeader(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var HEADER: XTCHeader? { let o = _accessor.offset(VT.HEADER); return o == 0 ? nil : XTCHeader(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Telemetry metadata
-  public var TELEMETRY_META_DATA: TelemetryMetaData? { let o = _accessor.offset(VTOFFSET.TELEMETRY_META_DATA.v); return o == 0 ? nil : TelemetryMetaData(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TELEMETRY_META_DATA: TelemetryMetaData? { let o = _accessor.offset(VT.TELEMETRY_META_DATA); return o == 0 ? nil : TelemetryMetaData(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Command metadata
-  public var COMMAND_META_DATA: CommandMetaData? { let o = _accessor.offset(VTOFFSET.COMMAND_META_DATA.v); return o == 0 ? nil : CommandMetaData(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var COMMAND_META_DATA: CommandMetaData? { let o = _accessor.offset(VT.COMMAND_META_DATA); return o == 0 ? nil : CommandMetaData(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Service definitions
-  public var SERVICE_SET: ServiceSet? { let o = _accessor.offset(VTOFFSET.SERVICE_SET.v); return o == 0 ? nil : ServiceSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var SERVICE_SET: ServiceSet? { let o = _accessor.offset(VT.SERVICE_SET); return o == 0 ? nil : ServiceSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Child space systems (hierarchical structure)
-  public var CHILD_SYSTEMS: FlatbufferVector<XTC> { return _accessor.vector(at: VTOFFSET.CHILD_SYSTEMS.v, byteSize: 4) }
+  public var CHILD_SYSTEMS: FlatbufferVector<XTC> { return _accessor.vector(at: VT.CHILD_SYSTEMS, byteSize: 4) }
   public static func startXTC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
-  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VTOFFSET.LONG_DESCRIPTION.p) }
-  public static func add(OPERATIONAL_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATIONAL_STATUS, at: VTOFFSET.OPERATIONAL_STATUS.p) }
-  public static func add(HEADER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEADER, at: VTOFFSET.HEADER.p) }
-  public static func add(TELEMETRY_META_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TELEMETRY_META_DATA, at: VTOFFSET.TELEMETRY_META_DATA.p) }
-  public static func add(COMMAND_META_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND_META_DATA, at: VTOFFSET.COMMAND_META_DATA.p) }
-  public static func add(SERVICE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SERVICE_SET, at: VTOFFSET.SERVICE_SET.p) }
-  public static func addVectorOf(CHILD_SYSTEMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHILD_SYSTEMS, at: VTOFFSET.CHILD_SYSTEMS.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VT.SHORT_DESCRIPTION) }
+  public static func add(LONG_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LONG_DESCRIPTION, at: VT.LONG_DESCRIPTION) }
+  public static func add(OPERATIONAL_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATIONAL_STATUS, at: VT.OPERATIONAL_STATUS) }
+  public static func add(HEADER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEADER, at: VT.HEADER) }
+  public static func add(TELEMETRY_META_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TELEMETRY_META_DATA, at: VT.TELEMETRY_META_DATA) }
+  public static func add(COMMAND_META_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND_META_DATA, at: VT.COMMAND_META_DATA) }
+  public static func add(SERVICE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SERVICE_SET, at: VT.SERVICE_SET) }
+  public static func addVectorOf(CHILD_SYSTEMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHILD_SYSTEMS, at: VT.CHILD_SYSTEMS) }
   public static func endXTC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createXTC(
     _ fbb: inout FlatBufferBuilder,
@@ -5761,15 +5597,15 @@ public struct XTC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SHORT_DESCRIPTION.p, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LONG_DESCRIPTION.p, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OPERATIONAL_STATUS.p, fieldName: "OPERATIONAL_STATUS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.HEADER.p, fieldName: "HEADER", required: false, type: ForwardOffset<XTCHeader>.self)
-    try _v.visit(field: VTOFFSET.TELEMETRY_META_DATA.p, fieldName: "TELEMETRY_META_DATA", required: false, type: ForwardOffset<TelemetryMetaData>.self)
-    try _v.visit(field: VTOFFSET.COMMAND_META_DATA.p, fieldName: "COMMAND_META_DATA", required: false, type: ForwardOffset<CommandMetaData>.self)
-    try _v.visit(field: VTOFFSET.SERVICE_SET.p, fieldName: "SERVICE_SET", required: false, type: ForwardOffset<ServiceSet>.self)
-    try _v.visit(field: VTOFFSET.CHILD_SYSTEMS.p, fieldName: "CHILD_SYSTEMS", required: false, type: ForwardOffset<Vector<ForwardOffset<XTC>, XTC>>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHORT_DESCRIPTION, fieldName: "SHORT_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LONG_DESCRIPTION, fieldName: "LONG_DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OPERATIONAL_STATUS, fieldName: "OPERATIONAL_STATUS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HEADER, fieldName: "HEADER", required: false, type: ForwardOffset<XTCHeader>.self)
+    try _v.visit(field: VT.TELEMETRY_META_DATA, fieldName: "TELEMETRY_META_DATA", required: false, type: ForwardOffset<TelemetryMetaData>.self)
+    try _v.visit(field: VT.COMMAND_META_DATA, fieldName: "COMMAND_META_DATA", required: false, type: ForwardOffset<CommandMetaData>.self)
+    try _v.visit(field: VT.SERVICE_SET, fieldName: "SERVICE_SET", required: false, type: ForwardOffset<ServiceSet>.self)
+    try _v.visit(field: VT.CHILD_SYSTEMS, fieldName: "CHILD_SYSTEMS", required: false, type: ForwardOffset<Vector<ForwardOffset<XTC>, XTC>>.self)
     _v.finish()
   }
 }

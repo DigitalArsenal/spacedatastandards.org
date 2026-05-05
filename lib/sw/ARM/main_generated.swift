@@ -89,52 +89,50 @@ public struct ARM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case THICKNESS = 4
-    case ANGLE = 6
-    case MATERIAL = 8
-    case HARDNESS = 10
-    case QUALITY = 12
-    case ERA_TYPE = 14
-    case ERA_EFFECTIVENESS = 16
-    case ERA_VS_KE = 18
-    case RHA_EQUIVALENT = 20
-    case NORMAL_X = 22
-    case NORMAL_Y = 24
-    case NORMAL_Z = 26
-    case RESERVED = 28
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let THICKNESS: VOffset = 4
+    static let ANGLE: VOffset = 6
+    static let MATERIAL: VOffset = 8
+    static let HARDNESS: VOffset = 10
+    static let QUALITY: VOffset = 12
+    static let ERA_TYPE: VOffset = 14
+    static let ERA_EFFECTIVENESS: VOffset = 16
+    static let ERA_VS_KE: VOffset = 18
+    static let RHA_EQUIVALENT: VOffset = 20
+    static let NORMAL_X: VOffset = 22
+    static let NORMAL_Y: VOffset = 24
+    static let NORMAL_Z: VOffset = 26
+    static let RESERVED: VOffset = 28
   }
 
-  public var THICKNESS: Double { let o = _accessor.offset(VTOFFSET.THICKNESS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ANGLE: Double { let o = _accessor.offset(VTOFFSET.ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MATERIAL: UInt8 { let o = _accessor.offset(VTOFFSET.MATERIAL.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var HARDNESS: UInt8 { let o = _accessor.offset(VTOFFSET.HARDNESS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var QUALITY: UInt8 { let o = _accessor.offset(VTOFFSET.QUALITY.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var ERA_TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.ERA_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var ERA_EFFECTIVENESS: Float32 { let o = _accessor.offset(VTOFFSET.ERA_EFFECTIVENESS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var ERA_VS_KE: Float32 { let o = _accessor.offset(VTOFFSET.ERA_VS_KE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var RHA_EQUIVALENT: Float32 { let o = _accessor.offset(VTOFFSET.RHA_EQUIVALENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var NORMAL_X: Double { let o = _accessor.offset(VTOFFSET.NORMAL_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var NORMAL_Y: Double { let o = _accessor.offset(VTOFFSET.NORMAL_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var NORMAL_Z: Double { let o = _accessor.offset(VTOFFSET.NORMAL_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
+  public var THICKNESS: Double { let o = _accessor.offset(VT.THICKNESS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ANGLE: Double { let o = _accessor.offset(VT.ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MATERIAL: UInt8 { let o = _accessor.offset(VT.MATERIAL); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var HARDNESS: UInt8 { let o = _accessor.offset(VT.HARDNESS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var QUALITY: UInt8 { let o = _accessor.offset(VT.QUALITY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var ERA_TYPE: UInt8 { let o = _accessor.offset(VT.ERA_TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var ERA_EFFECTIVENESS: Float32 { let o = _accessor.offset(VT.ERA_EFFECTIVENESS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var ERA_VS_KE: Float32 { let o = _accessor.offset(VT.ERA_VS_KE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var RHA_EQUIVALENT: Float32 { let o = _accessor.offset(VT.RHA_EQUIVALENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public var NORMAL_X: Double { let o = _accessor.offset(VT.NORMAL_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NORMAL_Y: Double { let o = _accessor.offset(VT.NORMAL_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var NORMAL_Z: Double { let o = _accessor.offset(VT.NORMAL_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
   public static func startARM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
-  public static func add(THICKNESS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THICKNESS, def: 0.0, at: VTOFFSET.THICKNESS.p) }
-  public static func add(ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE, def: 0.0, at: VTOFFSET.ANGLE.p) }
-  public static func add(MATERIAL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MATERIAL, def: 0, at: VTOFFSET.MATERIAL.p) }
-  public static func add(HARDNESS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HARDNESS, def: 0, at: VTOFFSET.HARDNESS.p) }
-  public static func add(QUALITY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUALITY, def: 0, at: VTOFFSET.QUALITY.p) }
-  public static func add(ERA_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERA_TYPE, def: 0, at: VTOFFSET.ERA_TYPE.p) }
-  public static func add(ERA_EFFECTIVENESS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERA_EFFECTIVENESS, def: 0.0, at: VTOFFSET.ERA_EFFECTIVENESS.p) }
-  public static func add(ERA_VS_KE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERA_VS_KE, def: 0.0, at: VTOFFSET.ERA_VS_KE.p) }
-  public static func add(RHA_EQUIVALENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RHA_EQUIVALENT, def: 0.0, at: VTOFFSET.RHA_EQUIVALENT.p) }
-  public static func add(NORMAL_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORMAL_X, def: 0.0, at: VTOFFSET.NORMAL_X.p) }
-  public static func add(NORMAL_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORMAL_Y, def: 0.0, at: VTOFFSET.NORMAL_Y.p) }
-  public static func add(NORMAL_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORMAL_Z, def: 0.0, at: VTOFFSET.NORMAL_Z.p) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VTOFFSET.RESERVED.p) }
+  public static func add(THICKNESS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THICKNESS, def: 0.0, at: VT.THICKNESS) }
+  public static func add(ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE, def: 0.0, at: VT.ANGLE) }
+  public static func add(MATERIAL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MATERIAL, def: 0, at: VT.MATERIAL) }
+  public static func add(HARDNESS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HARDNESS, def: 0, at: VT.HARDNESS) }
+  public static func add(QUALITY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUALITY, def: 0, at: VT.QUALITY) }
+  public static func add(ERA_TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERA_TYPE, def: 0, at: VT.ERA_TYPE) }
+  public static func add(ERA_EFFECTIVENESS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERA_EFFECTIVENESS, def: 0.0, at: VT.ERA_EFFECTIVENESS) }
+  public static func add(ERA_VS_KE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERA_VS_KE, def: 0.0, at: VT.ERA_VS_KE) }
+  public static func add(RHA_EQUIVALENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RHA_EQUIVALENT, def: 0.0, at: VT.RHA_EQUIVALENT) }
+  public static func add(NORMAL_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORMAL_X, def: 0.0, at: VT.NORMAL_X) }
+  public static func add(NORMAL_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORMAL_Y, def: 0.0, at: VT.NORMAL_Y) }
+  public static func add(NORMAL_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORMAL_Z, def: 0.0, at: VT.NORMAL_Z) }
+  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
   public static func endARM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createARM(
     _ fbb: inout FlatBufferBuilder,
@@ -171,19 +169,19 @@ public struct ARM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.THICKNESS.p, fieldName: "THICKNESS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ANGLE.p, fieldName: "ANGLE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MATERIAL.p, fieldName: "MATERIAL", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.HARDNESS.p, fieldName: "HARDNESS", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.QUALITY.p, fieldName: "QUALITY", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.ERA_TYPE.p, fieldName: "ERA_TYPE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.ERA_EFFECTIVENESS.p, fieldName: "ERA_EFFECTIVENESS", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.ERA_VS_KE.p, fieldName: "ERA_VS_KE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.RHA_EQUIVALENT.p, fieldName: "RHA_EQUIVALENT", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.NORMAL_X.p, fieldName: "NORMAL_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NORMAL_Y.p, fieldName: "NORMAL_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NORMAL_Z.p, fieldName: "NORMAL_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RESERVED.p, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.THICKNESS, fieldName: "THICKNESS", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLE, fieldName: "ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.MATERIAL, fieldName: "MATERIAL", required: false, type: UInt8.self)
+    try _v.visit(field: VT.HARDNESS, fieldName: "HARDNESS", required: false, type: UInt8.self)
+    try _v.visit(field: VT.QUALITY, fieldName: "QUALITY", required: false, type: UInt8.self)
+    try _v.visit(field: VT.ERA_TYPE, fieldName: "ERA_TYPE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.ERA_EFFECTIVENESS, fieldName: "ERA_EFFECTIVENESS", required: false, type: Float32.self)
+    try _v.visit(field: VT.ERA_VS_KE, fieldName: "ERA_VS_KE", required: false, type: Float32.self)
+    try _v.visit(field: VT.RHA_EQUIVALENT, fieldName: "RHA_EQUIVALENT", required: false, type: Float32.self)
+    try _v.visit(field: VT.NORMAL_X, fieldName: "NORMAL_X", required: false, type: Double.self)
+    try _v.visit(field: VT.NORMAL_Y, fieldName: "NORMAL_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.NORMAL_Z, fieldName: "NORMAL_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

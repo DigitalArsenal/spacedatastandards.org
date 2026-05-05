@@ -20,67 +20,65 @@ public struct EME: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
-  private enum VTOFFSET: VOffset {
-    case ENCRYPTED_BLOB = 4
-    case EPHEMERAL_PUBLIC_KEY = 6
-    case MAC = 8
-    case NONCE_START = 10
-    case TAG = 12
-    case IV = 14
-    case SALT = 16
-    case PUBLIC_KEY_IDENTIFIER = 18
-    case CIPHER_SUITE = 20
-    case KDF_PARAMETERS = 22
-    case ENCRYPTION_ALGORITHM_PARAMETERS = 24
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
+  private struct VT {
+    static let ENCRYPTED_BLOB: VOffset = 4
+    static let EPHEMERAL_PUBLIC_KEY: VOffset = 6
+    static let MAC: VOffset = 8
+    static let NONCE_START: VOffset = 10
+    static let TAG: VOffset = 12
+    static let IV: VOffset = 14
+    static let SALT: VOffset = 16
+    static let PUBLIC_KEY_IDENTIFIER: VOffset = 18
+    static let CIPHER_SUITE: VOffset = 20
+    static let KDF_PARAMETERS: VOffset = 22
+    static let ENCRYPTION_ALGORITHM_PARAMETERS: VOffset = 24
   }
 
   ///  Encrypted data blob, containing the ciphertext of the original plaintext message.
-  public var ENCRYPTED_BLOB: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.ENCRYPTED_BLOB.v, byteSize: 1) }
-  public func withUnsafePointerToEncryptedBlob<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ENCRYPTED_BLOB.v, body: body) }
+  public var ENCRYPTED_BLOB: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.ENCRYPTED_BLOB, byteSize: 1) }
+  public func withUnsafePointerToEncryptedBlob<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ENCRYPTED_BLOB, body: body) }
   ///  Temporary public key used for the encryption session, contributing to the derivation of the shared secret.
-  public var EPHEMERAL_PUBLIC_KEY: String? { let o = _accessor.offset(VTOFFSET.EPHEMERAL_PUBLIC_KEY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPHEMERAL_PUBLIC_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPHEMERAL_PUBLIC_KEY.v) }
+  public var EPHEMERAL_PUBLIC_KEY: String? { let o = _accessor.offset(VT.EPHEMERAL_PUBLIC_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPHEMERAL_PUBLIC_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPHEMERAL_PUBLIC_KEY) }
   ///  Message Authentication Code to verify the integrity and authenticity of the encrypted message.
-  public var MAC: String? { let o = _accessor.offset(VTOFFSET.MAC.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MACSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MAC.v) }
+  public var MAC: String? { let o = _accessor.offset(VT.MAC); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MACSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAC) }
   ///  Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
-  public var NONCE_START: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.NONCE_START.v, byteSize: 1) }
-  public func withUnsafePointerToNonceStart<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.NONCE_START.v, body: body) }
+  public var NONCE_START: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.NONCE_START, byteSize: 1) }
+  public func withUnsafePointerToNonceStart<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.NONCE_START, body: body) }
   ///  Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
-  public var TAG: String? { let o = _accessor.offset(VTOFFSET.TAG.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TAGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TAG.v) }
+  public var TAG: String? { let o = _accessor.offset(VT.TAG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TAGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TAG) }
   ///  Initialization vector used to introduce randomness in the encryption process, enhancing security.
-  public var IV: String? { let o = _accessor.offset(VTOFFSET.IV.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IVSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IV.v) }
+  public var IV: String? { let o = _accessor.offset(VT.IV); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IVSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IV) }
   ///  Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
-  public var SALT: String? { let o = _accessor.offset(VTOFFSET.SALT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SALTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SALT.v) }
+  public var SALT: String? { let o = _accessor.offset(VT.SALT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SALTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SALT) }
   ///  Identifier for the public key used, aiding in recipient key management and message decryption.
-  public var PUBLIC_KEY_IDENTIFIER: String? { let o = _accessor.offset(VTOFFSET.PUBLIC_KEY_IDENTIFIER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PUBLIC_KEY_IDENTIFIERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PUBLIC_KEY_IDENTIFIER.v) }
+  public var PUBLIC_KEY_IDENTIFIER: String? { let o = _accessor.offset(VT.PUBLIC_KEY_IDENTIFIER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PUBLIC_KEY_IDENTIFIERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PUBLIC_KEY_IDENTIFIER) }
   ///  Specifies the set of cryptographic algorithms used in the encryption process.
-  public var CIPHER_SUITE: String? { let o = _accessor.offset(VTOFFSET.CIPHER_SUITE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CIPHER_SUITESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CIPHER_SUITE.v) }
+  public var CIPHER_SUITE: String? { let o = _accessor.offset(VT.CIPHER_SUITE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CIPHER_SUITESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CIPHER_SUITE) }
   ///  Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
-  public var KDF_PARAMETERS: String? { let o = _accessor.offset(VTOFFSET.KDF_PARAMETERS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var KDF_PARAMETERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.KDF_PARAMETERS.v) }
+  public var KDF_PARAMETERS: String? { let o = _accessor.offset(VT.KDF_PARAMETERS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KDF_PARAMETERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KDF_PARAMETERS) }
   ///  Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
-  public var ENCRYPTION_ALGORITHM_PARAMETERS: String? { let o = _accessor.offset(VTOFFSET.ENCRYPTION_ALGORITHM_PARAMETERS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ENCRYPTION_ALGORITHM_PARAMETERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENCRYPTION_ALGORITHM_PARAMETERS.v) }
+  public var ENCRYPTION_ALGORITHM_PARAMETERS: String? { let o = _accessor.offset(VT.ENCRYPTION_ALGORITHM_PARAMETERS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENCRYPTION_ALGORITHM_PARAMETERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENCRYPTION_ALGORITHM_PARAMETERS) }
   public static func startEME(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
-  public static func addVectorOf(ENCRYPTED_BLOB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTED_BLOB, at: VTOFFSET.ENCRYPTED_BLOB.p) }
-  public static func add(EPHEMERAL_PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERAL_PUBLIC_KEY, at: VTOFFSET.EPHEMERAL_PUBLIC_KEY.p) }
-  public static func add(MAC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAC, at: VTOFFSET.MAC.p) }
-  public static func addVectorOf(NONCE_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NONCE_START, at: VTOFFSET.NONCE_START.p) }
-  public static func add(TAG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAG, at: VTOFFSET.TAG.p) }
-  public static func add(IV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IV, at: VTOFFSET.IV.p) }
-  public static func add(SALT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SALT, at: VTOFFSET.SALT.p) }
-  public static func add(PUBLIC_KEY_IDENTIFIER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY_IDENTIFIER, at: VTOFFSET.PUBLIC_KEY_IDENTIFIER.p) }
-  public static func add(CIPHER_SUITE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CIPHER_SUITE, at: VTOFFSET.CIPHER_SUITE.p) }
-  public static func add(KDF_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KDF_PARAMETERS, at: VTOFFSET.KDF_PARAMETERS.p) }
-  public static func add(ENCRYPTION_ALGORITHM_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTION_ALGORITHM_PARAMETERS, at: VTOFFSET.ENCRYPTION_ALGORITHM_PARAMETERS.p) }
+  public static func addVectorOf(ENCRYPTED_BLOB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTED_BLOB, at: VT.ENCRYPTED_BLOB) }
+  public static func add(EPHEMERAL_PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERAL_PUBLIC_KEY, at: VT.EPHEMERAL_PUBLIC_KEY) }
+  public static func add(MAC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAC, at: VT.MAC) }
+  public static func addVectorOf(NONCE_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NONCE_START, at: VT.NONCE_START) }
+  public static func add(TAG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAG, at: VT.TAG) }
+  public static func add(IV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IV, at: VT.IV) }
+  public static func add(SALT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SALT, at: VT.SALT) }
+  public static func add(PUBLIC_KEY_IDENTIFIER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY_IDENTIFIER, at: VT.PUBLIC_KEY_IDENTIFIER) }
+  public static func add(CIPHER_SUITE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CIPHER_SUITE, at: VT.CIPHER_SUITE) }
+  public static func add(KDF_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KDF_PARAMETERS, at: VT.KDF_PARAMETERS) }
+  public static func add(ENCRYPTION_ALGORITHM_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTION_ALGORITHM_PARAMETERS, at: VT.ENCRYPTION_ALGORITHM_PARAMETERS) }
   public static func endEME(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEME(
     _ fbb: inout FlatBufferBuilder,
@@ -113,17 +111,17 @@ public struct EME: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.ENCRYPTED_BLOB.p, fieldName: "ENCRYPTED_BLOB", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.EPHEMERAL_PUBLIC_KEY.p, fieldName: "EPHEMERAL_PUBLIC_KEY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MAC.p, fieldName: "MAC", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NONCE_START.p, fieldName: "NONCE_START", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
-    try _v.visit(field: VTOFFSET.TAG.p, fieldName: "TAG", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.IV.p, fieldName: "IV", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SALT.p, fieldName: "SALT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PUBLIC_KEY_IDENTIFIER.p, fieldName: "PUBLIC_KEY_IDENTIFIER", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CIPHER_SUITE.p, fieldName: "CIPHER_SUITE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.KDF_PARAMETERS.p, fieldName: "KDF_PARAMETERS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ENCRYPTION_ALGORITHM_PARAMETERS.p, fieldName: "ENCRYPTION_ALGORITHM_PARAMETERS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENCRYPTED_BLOB, fieldName: "ENCRYPTED_BLOB", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.EPHEMERAL_PUBLIC_KEY, fieldName: "EPHEMERAL_PUBLIC_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAC, fieldName: "MAC", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NONCE_START, fieldName: "NONCE_START", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.TAG, fieldName: "TAG", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IV, fieldName: "IV", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SALT, fieldName: "SALT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PUBLIC_KEY_IDENTIFIER, fieldName: "PUBLIC_KEY_IDENTIFIER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CIPHER_SUITE, fieldName: "CIPHER_SUITE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.KDF_PARAMETERS, fieldName: "KDF_PARAMETERS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENCRYPTION_ALGORITHM_PARAMETERS, fieldName: "ENCRYPTION_ALGORITHM_PARAMETERS", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
