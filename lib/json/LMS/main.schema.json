@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "lambertTransferPath" : {
+      "type" : "string",
+      "enum": ["SHORT", "LONG"]
+    },
+    "LMS" : {
+      "type" : "object",
+      "description" : "Lambert boundary-value solve request.",
+      "properties" : {
+        "REQUEST_ID" : {
+                "type" : "string",
+                "description" : "Caller-supplied request identifier for result correlation."
+              },
+        "R1_X" : {
+                "type" : "number",
+                "description" : "Initial position X component (km)."
+              },
+        "R1_Y" : {
+                "type" : "number",
+                "description" : "Initial position Y component (km)."
+              },
+        "R1_Z" : {
+                "type" : "number",
+                "description" : "Initial position Z component (km)."
+              },
+        "R2_X" : {
+                "type" : "number",
+                "description" : "Final position X component (km)."
+              },
+        "R2_Y" : {
+                "type" : "number",
+                "description" : "Final position Y component (km)."
+              },
+        "R2_Z" : {
+                "type" : "number",
+                "description" : "Final position Z component (km)."
+              },
+        "TOF_SEC" : {
+                "type" : "number",
+                "description" : "Time of flight (seconds). Must be greater than zero."
+              },
+        "MU_KM3_S2" : {
+                "type" : "number",
+                "description" : "Central-body gravitational parameter (km^3/s^2). Must be greater than zero."
+              },
+        "TRANSFER_WAY" : {
+                "$ref" : "#/definitions/lambertTransferPath",
+                "description" : "Short-way or long-way transfer selection."
+              },
+        "MAX_REVS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Maximum complete revolutions to search. Zero means single-revolution only."
+              },
+        "REF_FRAME" : {
+                "type" : "string",
+                "description" : "Inertial reference frame label for both position vectors (for example GCRF, EME2000, ICRF)."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Optional epoch/time-scale label for provenance. The solver uses TOF, not epoch, internally."
+              },
+        "FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Request flags reserved for future compatibility."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LMS"
+}

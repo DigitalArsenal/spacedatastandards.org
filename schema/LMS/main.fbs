@@ -1,0 +1,43 @@
+// Hash: bcbef07294e497ad5d0401f6157fda0f0ad452b15b60b741aad8dea3d6c18c00
+// Version: 1.94.0
+// -----------------------------------END_HEADER
+/// Lambert transfer path selection.
+enum lambertTransferPath : byte {
+  SHORT = 0,
+  LONG = 1,
+}
+
+/// Lambert boundary-value solve request.
+table LMS {
+  /// Caller-supplied request identifier for result correlation.
+  REQUEST_ID:string;
+  /// Initial position X component (km).
+  R1_X:double;
+  /// Initial position Y component (km).
+  R1_Y:double;
+  /// Initial position Z component (km).
+  R1_Z:double;
+  /// Final position X component (km).
+  R2_X:double;
+  /// Final position Y component (km).
+  R2_Y:double;
+  /// Final position Z component (km).
+  R2_Z:double;
+  /// Time of flight (seconds). Must be greater than zero.
+  TOF_SEC:double;
+  /// Central-body gravitational parameter (km^3/s^2). Must be greater than zero.
+  MU_KM3_S2:double;
+  /// Short-way or long-way transfer selection.
+  TRANSFER_WAY:lambertTransferPath = SHORT;
+  /// Maximum complete revolutions to search. Zero means single-revolution only.
+  MAX_REVS:uint16;
+  /// Inertial reference frame label for both position vectors (for example GCRF, EME2000, ICRF).
+  REF_FRAME:string;
+  /// Optional epoch/time-scale label for provenance. The solver uses TOF, not epoch, internally.
+  EPOCH:string;
+  /// Request flags reserved for future compatibility.
+  FLAGS:uint16;
+}
+
+root_type LMS;
+file_identifier "$LMS";

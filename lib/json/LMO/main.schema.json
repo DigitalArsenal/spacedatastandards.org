@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "lambertSolveState" : {
+      "type" : "string",
+      "enum": ["OK", "ERROR"]
+    },
+    "lambertBranchKind" : {
+      "type" : "string",
+      "enum": ["SINGLE", "MULTI_LONG_PERIOD", "MULTI_SHORT_PERIOD"]
+    },
+    "lambertVector3" : {
+      "type" : "object",
+      "description" : "Three-component vector in the request frame.",
+      "properties" : {
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "lambertSolutionBranch" : {
+      "type" : "object",
+      "description" : "One returned Lambert solution branch.",
+      "properties" : {
+        "BRANCH_KIND" : {
+                "$ref" : "#/definitions/lambertBranchKind",
+                "description" : "Branch kind."
+              },
+        "N_REVS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Complete revolution count for this branch. Zero for single-revolution."
+              },
+        "V1" : {
+                "$ref" : "#/definitions/lambertVector3",
+                "description" : "Departure velocity at r1 (km/s)."
+              },
+        "V2" : {
+                "$ref" : "#/definitions/lambertVector3",
+                "description" : "Arrival velocity at r2 (km/s)."
+              },
+        "ITERATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Householder iteration count used to converge this branch."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LMO" : {
+      "type" : "object",
+      "description" : "Lambert solve result.",
+      "properties" : {
+        "REQUEST_ID" : {
+                "type" : "string",
+                "description" : "Request identifier copied from LMS.REQUEST_ID."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/lambertSolveState",
+                "description" : "Solve status."
+              },
+        "ERROR_CODE" : {
+                "type" : "string",
+                "description" : "Structured error code when STATUS is ERROR."
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string",
+                "description" : "Human-readable error message when STATUS is ERROR."
+              },
+        "SINGLE" : {
+                "$ref" : "#/definitions/lambertSolutionBranch",
+                "description" : "Single-revolution solution when STATUS is OK."
+              },
+        "MULTI" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/lambertSolutionBranch"},
+                "description" : "Multi-revolution branches in ascending N_REVS order."
+              },
+        "MAX_FEASIBLE_REVS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Highest revolution count that produced a feasible pair. Zero when no multi-rev branch is feasible."
+              },
+        "FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Result flags reserved for future compatibility."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LMO"
+}

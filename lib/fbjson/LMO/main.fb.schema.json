@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "lambertSolveState": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "ERROR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0
+        },
+        "ERROR": {
+          "value": 1
+        }
+      }
+    },
+    "lambertBranchKind": {
+      "type": "string",
+      "enum": [
+        "SINGLE",
+        "MULTI_LONG_PERIOD",
+        "MULTI_SHORT_PERIOD"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SINGLE": {
+          "value": 0
+        },
+        "MULTI_LONG_PERIOD": {
+          "value": 1
+        },
+        "MULTI_SHORT_PERIOD": {
+          "value": 2
+        }
+      }
+    },
+    "lambertVector3": {
+      "type": "object",
+      "description": "Three-component vector in the request frame.",
+      "properties": {
+        "X": {
+          "type": "number"
+        },
+        "Y": {
+          "type": "number"
+        },
+        "Z": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "lambertSolutionBranch": {
+      "type": "object",
+      "description": "One returned Lambert solution branch.",
+      "properties": {
+        "BRANCH_KIND": {
+          "$ref": "#/definitions/lambertBranchKind",
+          "description": "Branch kind.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SINGLE": {
+              "value": 0
+            },
+            "MULTI_LONG_PERIOD": {
+              "value": 1
+            },
+            "MULTI_SHORT_PERIOD": {
+              "value": 2
+            }
+          }
+        },
+        "N_REVS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Complete revolution count for this branch. Zero for single-revolution.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "V1": {
+          "$ref": "#/definitions/lambertVector3",
+          "description": "Departure velocity at r1 (km/s).",
+          "x-flatbuffer-type": "lambertVector3"
+        },
+        "V2": {
+          "$ref": "#/definitions/lambertVector3",
+          "description": "Arrival velocity at r2 (km/s).",
+          "x-flatbuffer-type": "lambertVector3"
+        },
+        "ITERATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Householder iteration count used to converge this branch.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LMO": {
+      "type": "object",
+      "description": "Lambert solve result.",
+      "properties": {
+        "REQUEST_ID": {
+          "type": "string",
+          "description": "Request identifier copied from LMS.REQUEST_ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/lambertSolveState",
+          "description": "Solve status.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0
+            },
+            "ERROR": {
+              "value": 1
+            }
+          }
+        },
+        "ERROR_CODE": {
+          "type": "string",
+          "description": "Structured error code when STATUS is ERROR.",
+          "x-flatbuffer-type": "string"
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Human-readable error message when STATUS is ERROR.",
+          "x-flatbuffer-type": "string"
+        },
+        "SINGLE": {
+          "$ref": "#/definitions/lambertSolutionBranch",
+          "description": "Single-revolution solution when STATUS is OK.",
+          "x-flatbuffer-type": "lambertSolutionBranch"
+        },
+        "MULTI": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/lambertSolutionBranch"
+          },
+          "description": "Multi-revolution branches in ascending N_REVS order.",
+          "x-flatbuffer-type": "[lambertSolutionBranch]"
+        },
+        "MAX_FEASIBLE_REVS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Highest revolution count that produced a feasible pair. Zero when no multi-rev branch is feasible.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "FLAGS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Result flags reserved for future compatibility.",
+          "x-flatbuffer-type": "uint16"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/LMO",
+  "x-flatbuffer-root-type": "LMO",
+  "x-flatbuffer-file-identifier": "$LMO"
+}

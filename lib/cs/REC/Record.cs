@@ -86,7 +86,9 @@ public struct Record : IFlatbufferObject
   public LDM valueAsLDM() { return value<LDM>().Value; }
   public LGR valueAsLGR() { return value<LGR>().Value; }
   public LKS valueAsLKS() { return value<LKS>().Value; }
+  public LMO valueAsLMO() { return value<LMO>().Value; }
   public LMR valueAsLMR() { return value<LMR>().Value; }
+  public LMS valueAsLMS() { return value<LMS>().Value; }
   public LND valueAsLND() { return value<LND>().Value; }
   public LNE valueAsLNE() { return value<LNE>().Value; }
   public LPF valueAsLPF() { return value<LPF>().Value; }
@@ -410,8 +412,14 @@ public struct Record : IFlatbufferObject
       case RecordType.LKS:
         _o.value.Value = this.value<LKS>().HasValue ? this.value<LKS>().Value.UnPack() : null;
         break;
+      case RecordType.LMO:
+        _o.value.Value = this.value<LMO>().HasValue ? this.value<LMO>().Value.UnPack() : null;
+        break;
       case RecordType.LMR:
         _o.value.Value = this.value<LMR>().HasValue ? this.value<LMR>().Value.UnPack() : null;
+        break;
+      case RecordType.LMS:
+        _o.value.Value = this.value<LMS>().HasValue ? this.value<LMS>().Value.UnPack() : null;
         break;
       case RecordType.LND:
         _o.value.Value = this.value<LND>().HasValue ? this.value<LND>().Value.UnPack() : null;

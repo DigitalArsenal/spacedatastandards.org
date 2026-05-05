@@ -1,6 +1,6 @@
 {
     "name": "spacedatastandards.org",
-    "version": "1.94.0+1777988437897",
+    "version": "1.95.0+1777995125864",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",

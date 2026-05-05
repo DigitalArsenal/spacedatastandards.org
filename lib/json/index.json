@@ -5809,6 +5809,86 @@
             },
             "$ref": "#/definitions/LCC"
         },
+        "LMS": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "lambertTransferPath": {
+                    "type": "string",
+                    "enum": [
+                        "SHORT",
+                        "LONG"
+                    ]
+                },
+                "LMS": {
+                    "type": "object",
+                    "description": "Lambert boundary-value solve request.",
+                    "properties": {
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Caller-supplied request identifier for result correlation."
+                        },
+                        "R1_X": {
+                            "type": "number",
+                            "description": "Initial position X component (km)."
+                        },
+                        "R1_Y": {
+                            "type": "number",
+                            "description": "Initial position Y component (km)."
+                        },
+                        "R1_Z": {
+                            "type": "number",
+                            "description": "Initial position Z component (km)."
+                        },
+                        "R2_X": {
+                            "type": "number",
+                            "description": "Final position X component (km)."
+                        },
+                        "R2_Y": {
+                            "type": "number",
+                            "description": "Final position Y component (km)."
+                        },
+                        "R2_Z": {
+                            "type": "number",
+                            "description": "Final position Z component (km)."
+                        },
+                        "TOF_SEC": {
+                            "type": "number",
+                            "description": "Time of flight (seconds). Must be greater than zero."
+                        },
+                        "MU_KM3_S2": {
+                            "type": "number",
+                            "description": "Central-body gravitational parameter (km^3/s^2). Must be greater than zero."
+                        },
+                        "TRANSFER_WAY": {
+                            "$ref": "#/definitions/lambertTransferPath",
+                            "description": "Short-way or long-way transfer selection."
+                        },
+                        "MAX_REVS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Maximum complete revolutions to search. Zero means single-revolution only."
+                        },
+                        "REF_FRAME": {
+                            "type": "string",
+                            "description": "Inertial reference frame label for both position vectors (for example GCRF, EME2000, ICRF)."
+                        },
+                        "EPOCH": {
+                            "type": "string",
+                            "description": "Optional epoch/time-scale label for provenance. The solver uses TOF, not epoch, internally."
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Request flags reserved for future compatibility."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/LMS"
+        },
         "ATM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -6469,6 +6549,120 @@
                 }
             },
             "$ref": "#/definitions/SEV"
+        },
+        "LMO": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "lambertSolveState": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "ERROR"
+                    ]
+                },
+                "lambertBranchKind": {
+                    "type": "string",
+                    "enum": [
+                        "SINGLE",
+                        "MULTI_LONG_PERIOD",
+                        "MULTI_SHORT_PERIOD"
+                    ]
+                },
+                "lambertVector3": {
+                    "type": "object",
+                    "description": "Three-component vector in the request frame.",
+                    "properties": {
+                        "X": {
+                            "type": "number"
+                        },
+                        "Y": {
+                            "type": "number"
+                        },
+                        "Z": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "lambertSolutionBranch": {
+                    "type": "object",
+                    "description": "One returned Lambert solution branch.",
+                    "properties": {
+                        "BRANCH_KIND": {
+                            "$ref": "#/definitions/lambertBranchKind",
+                            "description": "Branch kind."
+                        },
+                        "N_REVS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Complete revolution count for this branch. Zero for single-revolution."
+                        },
+                        "V1": {
+                            "$ref": "#/definitions/lambertVector3",
+                            "description": "Departure velocity at r1 (km/s)."
+                        },
+                        "V2": {
+                            "$ref": "#/definitions/lambertVector3",
+                            "description": "Arrival velocity at r2 (km/s)."
+                        },
+                        "ITERATIONS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Householder iteration count used to converge this branch."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "LMO": {
+                    "type": "object",
+                    "description": "Lambert solve result.",
+                    "properties": {
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Request identifier copied from LMS.REQUEST_ID."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/lambertSolveState",
+                            "description": "Solve status."
+                        },
+                        "ERROR_CODE": {
+                            "type": "string",
+                            "description": "Structured error code when STATUS is ERROR."
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Human-readable error message when STATUS is ERROR."
+                        },
+                        "SINGLE": {
+                            "$ref": "#/definitions/lambertSolutionBranch",
+                            "description": "Single-revolution solution when STATUS is OK."
+                        },
+                        "MULTI": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/lambertSolutionBranch"
+                            },
+                            "description": "Multi-revolution branches in ascending N_REVS order."
+                        },
+                        "MAX_FEASIBLE_REVS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Highest revolution count that produced a feasible pair. Zero when no multi-rev branch is feasible."
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Result flags reserved for future compatibility."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/LMO"
         },
         "LMR": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",

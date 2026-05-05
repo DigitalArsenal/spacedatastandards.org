@@ -155,6 +155,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -289,10 +291,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 154;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 156;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 155] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 157] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -360,7 +362,9 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 155] = [
   RecordType::LDM,
   RecordType::LGR,
   RecordType::LKS,
+  RecordType::LMO,
   RecordType::LMR,
+  RecordType::LMS,
   RecordType::LND,
   RecordType::LNE,
   RecordType::LPF,
@@ -522,97 +526,99 @@ impl RecordType {
   pub const LDM: Self = Self(64);
   pub const LGR: Self = Self(65);
   pub const LKS: Self = Self(66);
-  pub const LMR: Self = Self(67);
-  pub const LND: Self = Self(68);
-  pub const LNE: Self = Self(69);
-  pub const LPF: Self = Self(70);
-  pub const LWK: Self = Self(71);
-  pub const MBL: Self = Self(72);
-  pub const MET: Self = Self(73);
-  pub const MFE: Self = Self(74);
-  pub const MNF: Self = Self(75);
-  pub const MNV: Self = Self(76);
-  pub const MPE: Self = Self(77);
-  pub const MSL: Self = Self(78);
-  pub const MST: Self = Self(79);
-  pub const MTI: Self = Self(80);
-  pub const NAV: Self = Self(81);
-  pub const OBD: Self = Self(82);
-  pub const OBT: Self = Self(83);
-  pub const OCM: Self = Self(84);
-  pub const OEM: Self = Self(85);
-  pub const OMM: Self = Self(86);
-  pub const OOA: Self = Self(87);
-  pub const OOB: Self = Self(88);
-  pub const OOD: Self = Self(89);
-  pub const OOE: Self = Self(90);
-  pub const OOI: Self = Self(91);
-  pub const OOL: Self = Self(92);
-  pub const OON: Self = Self(93);
-  pub const OOS: Self = Self(94);
-  pub const OOT: Self = Self(95);
-  pub const OPM: Self = Self(96);
-  pub const OSM: Self = Self(97);
-  pub const PCF: Self = Self(98);
-  pub const PHY: Self = Self(99);
-  pub const PIV: Self = Self(100);
-  pub const PLD: Self = Self(101);
-  pub const PLG: Self = Self(102);
-  pub const PLK: Self = Self(103);
-  pub const PNM: Self = Self(104);
-  pub const PPE: Self = Self(105);
-  pub const PRG: Self = Self(106);
-  pub const PRW: Self = Self(107);
-  pub const PUR: Self = Self(108);
-  pub const RAF: Self = Self(109);
-  pub const RCF: Self = Self(110);
-  pub const RDM: Self = Self(111);
-  pub const RDO: Self = Self(112);
-  pub const REV: Self = Self(113);
-  pub const RFB: Self = Self(114);
-  pub const RFE: Self = Self(115);
-  pub const RFM: Self = Self(116);
-  pub const RFO: Self = Self(117);
-  pub const ROC: Self = Self(118);
-  pub const SAR: Self = Self(119);
-  pub const SCM: Self = Self(120);
-  pub const SDF: Self = Self(121);
-  pub const SDL: Self = Self(122);
-  pub const SDR: Self = Self(123);
-  pub const SEN: Self = Self(124);
-  pub const SEO: Self = Self(125);
-  pub const SEV: Self = Self(126);
-  pub const SHW: Self = Self(127);
-  pub const SIT: Self = Self(128);
-  pub const SKI: Self = Self(129);
-  pub const SNR: Self = Self(130);
-  pub const SNW: Self = Self(131);
-  pub const SOI: Self = Self(132);
-  pub const SON: Self = Self(133);
-  pub const SPP: Self = Self(134);
-  pub const SPW: Self = Self(135);
-  pub const SRI: Self = Self(136);
-  pub const STF: Self = Self(137);
-  pub const STR: Self = Self(138);
-  pub const STV: Self = Self(139);
-  pub const SWR: Self = Self(140);
-  pub const TAB: Self = Self(141);
-  pub const TCF: Self = Self(142);
-  pub const TDM: Self = Self(143);
-  pub const TIM: Self = Self(144);
-  pub const TKG: Self = Self(145);
-  pub const TME: Self = Self(146);
-  pub const TMF: Self = Self(147);
-  pub const TPN: Self = Self(148);
-  pub const TRK: Self = Self(149);
-  pub const TRN: Self = Self(150);
-  pub const VCM: Self = Self(151);
-  pub const WPN: Self = Self(152);
-  pub const WTH: Self = Self(153);
-  pub const XTC: Self = Self(154);
+  pub const LMO: Self = Self(67);
+  pub const LMR: Self = Self(68);
+  pub const LMS: Self = Self(69);
+  pub const LND: Self = Self(70);
+  pub const LNE: Self = Self(71);
+  pub const LPF: Self = Self(72);
+  pub const LWK: Self = Self(73);
+  pub const MBL: Self = Self(74);
+  pub const MET: Self = Self(75);
+  pub const MFE: Self = Self(76);
+  pub const MNF: Self = Self(77);
+  pub const MNV: Self = Self(78);
+  pub const MPE: Self = Self(79);
+  pub const MSL: Self = Self(80);
+  pub const MST: Self = Self(81);
+  pub const MTI: Self = Self(82);
+  pub const NAV: Self = Self(83);
+  pub const OBD: Self = Self(84);
+  pub const OBT: Self = Self(85);
+  pub const OCM: Self = Self(86);
+  pub const OEM: Self = Self(87);
+  pub const OMM: Self = Self(88);
+  pub const OOA: Self = Self(89);
+  pub const OOB: Self = Self(90);
+  pub const OOD: Self = Self(91);
+  pub const OOE: Self = Self(92);
+  pub const OOI: Self = Self(93);
+  pub const OOL: Self = Self(94);
+  pub const OON: Self = Self(95);
+  pub const OOS: Self = Self(96);
+  pub const OOT: Self = Self(97);
+  pub const OPM: Self = Self(98);
+  pub const OSM: Self = Self(99);
+  pub const PCF: Self = Self(100);
+  pub const PHY: Self = Self(101);
+  pub const PIV: Self = Self(102);
+  pub const PLD: Self = Self(103);
+  pub const PLG: Self = Self(104);
+  pub const PLK: Self = Self(105);
+  pub const PNM: Self = Self(106);
+  pub const PPE: Self = Self(107);
+  pub const PRG: Self = Self(108);
+  pub const PRW: Self = Self(109);
+  pub const PUR: Self = Self(110);
+  pub const RAF: Self = Self(111);
+  pub const RCF: Self = Self(112);
+  pub const RDM: Self = Self(113);
+  pub const RDO: Self = Self(114);
+  pub const REV: Self = Self(115);
+  pub const RFB: Self = Self(116);
+  pub const RFE: Self = Self(117);
+  pub const RFM: Self = Self(118);
+  pub const RFO: Self = Self(119);
+  pub const ROC: Self = Self(120);
+  pub const SAR: Self = Self(121);
+  pub const SCM: Self = Self(122);
+  pub const SDF: Self = Self(123);
+  pub const SDL: Self = Self(124);
+  pub const SDR: Self = Self(125);
+  pub const SEN: Self = Self(126);
+  pub const SEO: Self = Self(127);
+  pub const SEV: Self = Self(128);
+  pub const SHW: Self = Self(129);
+  pub const SIT: Self = Self(130);
+  pub const SKI: Self = Self(131);
+  pub const SNR: Self = Self(132);
+  pub const SNW: Self = Self(133);
+  pub const SOI: Self = Self(134);
+  pub const SON: Self = Self(135);
+  pub const SPP: Self = Self(136);
+  pub const SPW: Self = Self(137);
+  pub const SRI: Self = Self(138);
+  pub const STF: Self = Self(139);
+  pub const STR: Self = Self(140);
+  pub const STV: Self = Self(141);
+  pub const SWR: Self = Self(142);
+  pub const TAB: Self = Self(143);
+  pub const TCF: Self = Self(144);
+  pub const TDM: Self = Self(145);
+  pub const TIM: Self = Self(146);
+  pub const TKG: Self = Self(147);
+  pub const TME: Self = Self(148);
+  pub const TMF: Self = Self(149);
+  pub const TPN: Self = Self(150);
+  pub const TRK: Self = Self(151);
+  pub const TRN: Self = Self(152);
+  pub const VCM: Self = Self(153);
+  pub const WPN: Self = Self(154);
+  pub const WTH: Self = Self(155);
+  pub const XTC: Self = Self(156);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 154;
+  pub const ENUM_MAX: u8 = 156;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -681,7 +687,9 @@ impl RecordType {
     Self::LDM,
     Self::LGR,
     Self::LKS,
+    Self::LMO,
     Self::LMR,
+    Self::LMS,
     Self::LND,
     Self::LNE,
     Self::LPF,
@@ -840,7 +848,9 @@ impl RecordType {
       Self::LDM => Some("LDM"),
       Self::LGR => Some("LGR"),
       Self::LKS => Some("LKS"),
+      Self::LMO => Some("LMO"),
       Self::LMR => Some("LMR"),
+      Self::LMS => Some("LMS"),
       Self::LND => Some("LND"),
       Self::LNE => Some("LNE"),
       Self::LPF => Some("LPF"),
@@ -1055,7 +1065,9 @@ pub enum RecordTypeT {
   LDM(alloc::boxed::Box<LDMT>),
   LGR(alloc::boxed::Box<LGRT>),
   LKS(alloc::boxed::Box<LKST>),
+  LMO(alloc::boxed::Box<LMOT>),
   LMR(alloc::boxed::Box<LMRT>),
+  LMS(alloc::boxed::Box<LMST>),
   LND(alloc::boxed::Box<LNDT>),
   LNE(alloc::boxed::Box<LNET>),
   LPF(alloc::boxed::Box<LPFT>),
@@ -1219,7 +1231,9 @@ impl RecordTypeT {
       Self::LDM(_) => RecordType::LDM,
       Self::LGR(_) => RecordType::LGR,
       Self::LKS(_) => RecordType::LKS,
+      Self::LMO(_) => RecordType::LMO,
       Self::LMR(_) => RecordType::LMR,
+      Self::LMS(_) => RecordType::LMS,
       Self::LND(_) => RecordType::LND,
       Self::LNE(_) => RecordType::LNE,
       Self::LPF(_) => RecordType::LPF,
@@ -1378,7 +1392,9 @@ impl RecordTypeT {
       Self::LDM(v) => Some(v.pack(fbb).as_union_value()),
       Self::LGR(v) => Some(v.pack(fbb).as_union_value()),
       Self::LKS(v) => Some(v.pack(fbb).as_union_value()),
+      Self::LMO(v) => Some(v.pack(fbb).as_union_value()),
       Self::LMR(v) => Some(v.pack(fbb).as_union_value()),
+      Self::LMS(v) => Some(v.pack(fbb).as_union_value()),
       Self::LND(v) => Some(v.pack(fbb).as_union_value()),
       Self::LNE(v) => Some(v.pack(fbb).as_union_value()),
       Self::LPF(v) => Some(v.pack(fbb).as_union_value()),
@@ -2854,6 +2870,27 @@ impl RecordTypeT {
   pub fn as_lks_mut(&mut self) -> Option<&mut LKST> {
     if let Self::LKS(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned LMOT, setting the union to NONE.
+  pub fn take_lmo(&mut self) -> Option<alloc::boxed::Box<LMOT>> {
+    if let Self::LMO(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::LMO(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the LMOT.
+  pub fn as_lmo(&self) -> Option<&LMOT> {
+    if let Self::LMO(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the LMOT.
+  pub fn as_lmo_mut(&mut self) -> Option<&mut LMOT> {
+    if let Self::LMO(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned LMRT, setting the union to NONE.
   pub fn take_lmr(&mut self) -> Option<alloc::boxed::Box<LMRT>> {
     if let Self::LMR(_) = self {
@@ -2874,6 +2911,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the LMRT.
   pub fn as_lmr_mut(&mut self) -> Option<&mut LMRT> {
     if let Self::LMR(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned LMST, setting the union to NONE.
+  pub fn take_lms(&mut self) -> Option<alloc::boxed::Box<LMST>> {
+    if let Self::LMS(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::LMS(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the LMST.
+  pub fn as_lms(&self) -> Option<&LMST> {
+    if let Self::LMS(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the LMST.
+  pub fn as_lms_mut(&mut self) -> Option<&mut LMST> {
+    if let Self::LMS(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned LNDT, setting the union to NONE.
   pub fn take_lnd(&mut self) -> Option<alloc::boxed::Box<LNDT>> {
@@ -5073,9 +5131,19 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::LKS`.")
             .unpack()
       )),
+      RecordType::LMO => RecordTypeT::LMO(alloc::boxed::Box::new(
+        self.value_as_lmo()
+            .expect("Invalid union table, expected `RecordType::LMO`.")
+            .unpack()
+      )),
       RecordType::LMR => RecordTypeT::LMR(alloc::boxed::Box::new(
         self.value_as_lmr()
             .expect("Invalid union table, expected `RecordType::LMR`.")
+            .unpack()
+      )),
+      RecordType::LMS => RecordTypeT::LMS(alloc::boxed::Box::new(
+        self.value_as_lms()
+            .expect("Invalid union table, expected `RecordType::LMS`.")
             .unpack()
       )),
       RecordType::LND => RecordTypeT::LND(alloc::boxed::Box::new(
@@ -6539,6 +6607,21 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_lmo(&self) -> Option<LMO<'a>> {
+    if self.value_type() == RecordType::LMO {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { LMO::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_lmr(&self) -> Option<LMR<'a>> {
     if self.value_type() == RecordType::LMR {
       self.value().map(|t| {
@@ -6546,6 +6629,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { LMR::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_lms(&self) -> Option<LMS<'a>> {
+    if self.value_type() == RecordType::LMS {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { LMS::init_from_table(t) }
      })
     } else {
       None
@@ -7933,7 +8031,9 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::LDM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<LDM>>("RecordType::LDM", pos),
           RecordType::LGR => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<LGR>>("RecordType::LGR", pos),
           RecordType::LKS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<LKS>>("RecordType::LKS", pos),
+          RecordType::LMO => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<LMO>>("RecordType::LMO", pos),
           RecordType::LMR => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<LMR>>("RecordType::LMR", pos),
+          RecordType::LMS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<LMS>>("RecordType::LMS", pos),
           RecordType::LND => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<LND>>("RecordType::LND", pos),
           RecordType::LNE => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<LNE>>("RecordType::LNE", pos),
           RecordType::LPF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<LPF>>("RecordType::LPF", pos),
@@ -8544,8 +8644,22 @@ impl ::core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::LMO => {
+          if let Some(x) = self.value_as_lmo() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::LMR => {
           if let Some(x) = self.value_as_lmr() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::LMS => {
+          if let Some(x) = self.value_as_lms() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

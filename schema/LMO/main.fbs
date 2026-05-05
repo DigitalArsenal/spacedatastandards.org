@@ -1,0 +1,59 @@
+// Hash: 19027b05bd8a42849998344c8d6f18266c27848db33c2be2ef7b1b498e0ffe2e
+// Version: 1.94.0
+// -----------------------------------END_HEADER
+/// Lambert solve status.
+enum lambertSolveState : byte {
+  OK = 0,
+  ERROR = 1,
+}
+
+/// Lambert solver branch kind.
+enum lambertBranchKind : byte {
+  SINGLE = 0,
+  MULTI_LONG_PERIOD = 1,
+  MULTI_SHORT_PERIOD = 2,
+}
+
+/// Three-component vector in the request frame.
+struct lambertVector3 {
+  X:double;
+  Y:double;
+  Z:double;
+}
+
+/// One returned Lambert solution branch.
+table lambertSolutionBranch {
+  /// Branch kind.
+  BRANCH_KIND:lambertBranchKind = SINGLE;
+  /// Complete revolution count for this branch. Zero for single-revolution.
+  N_REVS:uint16;
+  /// Departure velocity at r1 (km/s).
+  V1:lambertVector3;
+  /// Arrival velocity at r2 (km/s).
+  V2:lambertVector3;
+  /// Householder iteration count used to converge this branch.
+  ITERATIONS:uint32;
+}
+
+/// Lambert solve result.
+table LMO {
+  /// Request identifier copied from LMS.REQUEST_ID.
+  REQUEST_ID:string;
+  /// Solve status.
+  STATUS:lambertSolveState = OK;
+  /// Structured error code when STATUS is ERROR.
+  ERROR_CODE:string;
+  /// Human-readable error message when STATUS is ERROR.
+  ERROR_MESSAGE:string;
+  /// Single-revolution solution when STATUS is OK.
+  SINGLE:lambertSolutionBranch;
+  /// Multi-revolution branches in ascending N_REVS order.
+  MULTI:[lambertSolutionBranch];
+  /// Highest revolution count that produced a feasible pair. Zero when no multi-rev branch is feasible.
+  MAX_FEASIBLE_REVS:uint16;
+  /// Result flags reserved for future compatibility.
+  FLAGS:uint16;
+}
+
+root_type LMO;
+file_identifier "$LMO";
