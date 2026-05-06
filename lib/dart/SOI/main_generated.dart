@@ -325,7 +325,7 @@ class _SOIReader extends fb.TableReader<SOI> {
   const _SOIReader();
 
   @override
-  SOI createObject(fb.BufferContext bc, int offset) => 
+  SOI createObject(fb.BufferContext bc, int offset) =>
     SOI._(bc, offset);
 }
 

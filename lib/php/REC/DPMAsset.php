@@ -6,7 +6,8 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// One immutable content-addressed object published for a dataset update.
+/// One immutable asset or provider-mediated query contract published for a
+/// dataset update.
 class DPMAsset extends Table
 {
     /**
@@ -51,24 +52,62 @@ class DPMAsset extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \publicationAssetKind::OTHER;
     }
 
-    /// IPFS CIDv1/multihash content identifier.
-    public function getCID()
+    /// Transport profile for this asset. CONTENT_ADDRESS assets use CID and
+    /// MULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the
+    /// signed DPM query and root fields; they are not required to be published as
+    /// discoverable IPFS files.
+    /**
+     * @return sbyte
+     */
+    public function getTRANSPORT_KIND()
     {
         $o = $this->__offset(6);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \dpmTransportKind::CONTENT_ADDRESS;
+    }
+
+    /// Optional IPFS CIDv1/multihash content identifier. This field is required
+    /// for CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose
+    /// bytes are retrieved through a provider protocol.
+    public function getCID()
+    {
+        $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Multiformat address, usually /ipfs/{CID}.
+    /// Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For
+    /// SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when
+    /// provider routing is resolved from the DPM provider identity.
     public function getMULTIFORMAT_ADDRESS()
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// File name or logical artifact name.
     public function getFILE_NAME()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Canonical publication/update partition identity for this asset. FILE_ID is
+    /// not a display filename; it is the stable identifier used by PNMs,
+    /// manifests, entitlements, query requests, subscriber caches, and
+    /// completeness proofs. Example:
+    /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+    public function getFILE_ID()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Provider protocol name/version used to fetch this asset when
+    /// TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
+    /// response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the
+    /// provider signature in this DPM.
+    public function getTRANSPORT_PROTOCOL()
+    {
+        $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -78,35 +117,44 @@ class DPMAsset extends Table
      */
     public function getBYTE_LENGTH()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
     /// SHA-256 hash of the exact published bytes, lowercase hex.
     public function getBYTE_SHA256()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Merkle root over canonical records in this asset, lowercase hex. For
+    /// provider-mediated query delivery, subscribers verify returned records and
+    /// proof paths against this root before importing data.
+    public function getDATA_ROOT()
+    {
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
     public function getSCHEMA_NAME()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Hash of the SDS schema used to encode this object.
     public function getSCHEMA_HASH()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Optional content-key identifier for encrypted artifacts.
     public function getCONTENT_KEY_ID()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -116,27 +164,30 @@ class DPMAsset extends Table
      */
     public static function startDPMAsset(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(9);
+        $builder->StartObject(13);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DPMAsset
      */
-    public static function createDPMAsset(FlatBufferBuilder $builder, $ASSET_KIND, $CID, $MULTIFORMAT_ADDRESS, $FILE_NAME, $BYTE_LENGTH, $BYTE_SHA256, $SCHEMA_NAME, $SCHEMA_HASH, $CONTENT_KEY_ID)
+    public static function createDPMAsset(FlatBufferBuilder $builder, $ASSET_KIND, $TRANSPORT_KIND, $CID, $MULTIFORMAT_ADDRESS, $FILE_NAME, $FILE_ID, $TRANSPORT_PROTOCOL, $BYTE_LENGTH, $BYTE_SHA256, $DATA_ROOT, $SCHEMA_NAME, $SCHEMA_HASH, $CONTENT_KEY_ID)
     {
-        $builder->startObject(9);
+        $builder->startObject(13);
         self::addASSET_KIND($builder, $ASSET_KIND);
+        self::addTRANSPORT_KIND($builder, $TRANSPORT_KIND);
         self::addCID($builder, $CID);
         self::addMULTIFORMAT_ADDRESS($builder, $MULTIFORMAT_ADDRESS);
         self::addFILE_NAME($builder, $FILE_NAME);
+        self::addFILE_ID($builder, $FILE_ID);
+        self::addTRANSPORT_PROTOCOL($builder, $TRANSPORT_PROTOCOL);
         self::addBYTE_LENGTH($builder, $BYTE_LENGTH);
         self::addBYTE_SHA256($builder, $BYTE_SHA256);
+        self::addDATA_ROOT($builder, $DATA_ROOT);
         self::addSCHEMA_NAME($builder, $SCHEMA_NAME);
         self::addSCHEMA_HASH($builder, $SCHEMA_HASH);
         self::addCONTENT_KEY_ID($builder, $CONTENT_KEY_ID);
         $o = $builder->endObject();
-        $builder->required($o, 6);  // CID
         return $o;
     }
 
@@ -152,12 +203,22 @@ class DPMAsset extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addTRANSPORT_KIND(FlatBufferBuilder $builder, $TRANSPORT_KIND)
+    {
+        $builder->addSbyteX(1, $TRANSPORT_KIND, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addCID(FlatBufferBuilder $builder, $CID)
     {
-        $builder->addOffsetX(1, $CID, 0);
+        $builder->addOffsetX(2, $CID, 0);
     }
 
     /**
@@ -167,7 +228,7 @@ class DPMAsset extends Table
      */
     public static function addMULTIFORMAT_ADDRESS(FlatBufferBuilder $builder, $MULTIFORMAT_ADDRESS)
     {
-        $builder->addOffsetX(2, $MULTIFORMAT_ADDRESS, 0);
+        $builder->addOffsetX(3, $MULTIFORMAT_ADDRESS, 0);
     }
 
     /**
@@ -177,7 +238,27 @@ class DPMAsset extends Table
      */
     public static function addFILE_NAME(FlatBufferBuilder $builder, $FILE_NAME)
     {
-        $builder->addOffsetX(3, $FILE_NAME, 0);
+        $builder->addOffsetX(4, $FILE_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addFILE_ID(FlatBufferBuilder $builder, $FILE_ID)
+    {
+        $builder->addOffsetX(5, $FILE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTRANSPORT_PROTOCOL(FlatBufferBuilder $builder, $TRANSPORT_PROTOCOL)
+    {
+        $builder->addOffsetX(6, $TRANSPORT_PROTOCOL, 0);
     }
 
     /**
@@ -187,7 +268,7 @@ class DPMAsset extends Table
      */
     public static function addBYTE_LENGTH(FlatBufferBuilder $builder, $BYTE_LENGTH)
     {
-        $builder->addUlongX(4, $BYTE_LENGTH, 0);
+        $builder->addUlongX(7, $BYTE_LENGTH, 0);
     }
 
     /**
@@ -197,7 +278,17 @@ class DPMAsset extends Table
      */
     public static function addBYTE_SHA256(FlatBufferBuilder $builder, $BYTE_SHA256)
     {
-        $builder->addOffsetX(5, $BYTE_SHA256, 0);
+        $builder->addOffsetX(8, $BYTE_SHA256, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDATA_ROOT(FlatBufferBuilder $builder, $DATA_ROOT)
+    {
+        $builder->addOffsetX(9, $DATA_ROOT, 0);
     }
 
     /**
@@ -207,7 +298,7 @@ class DPMAsset extends Table
      */
     public static function addSCHEMA_NAME(FlatBufferBuilder $builder, $SCHEMA_NAME)
     {
-        $builder->addOffsetX(6, $SCHEMA_NAME, 0);
+        $builder->addOffsetX(10, $SCHEMA_NAME, 0);
     }
 
     /**
@@ -217,7 +308,7 @@ class DPMAsset extends Table
      */
     public static function addSCHEMA_HASH(FlatBufferBuilder $builder, $SCHEMA_HASH)
     {
-        $builder->addOffsetX(7, $SCHEMA_HASH, 0);
+        $builder->addOffsetX(11, $SCHEMA_HASH, 0);
     }
 
     /**
@@ -227,7 +318,7 @@ class DPMAsset extends Table
      */
     public static function addCONTENT_KEY_ID(FlatBufferBuilder $builder, $CONTENT_KEY_ID)
     {
-        $builder->addOffsetX(8, $CONTENT_KEY_ID, 0);
+        $builder->addOffsetX(12, $CONTENT_KEY_ID, 0);
     }
 
     /**
@@ -237,7 +328,6 @@ class DPMAsset extends Table
     public static function endDPMAsset(FlatBufferBuilder $builder)
     {
         $o = $builder->endObject();
-        $builder->required($o, 6);  // CID
         return $o;
     }
 }

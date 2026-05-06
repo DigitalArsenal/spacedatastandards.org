@@ -53,7 +53,7 @@ class _REVReader extends fb.TableReader<REV> {
   const _REVReader();
 
   @override
-  REV createObject(fb.BufferContext bc, int offset) => 
+  REV createObject(fb.BufferContext bc, int offset) =>
     REV._(bc, offset);
 }
 

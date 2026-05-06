@@ -39,11 +39,11 @@ public final class TDM extends com.google.flatbuffers.Table {
    */
   public double OBSERVER_X() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Cartesian Y coordinate of the OBSERVER location in chosen reference frame 
+   * Cartesian Y coordinate of the OBSERVER location in chosen reference frame
    */
   public double OBSERVER_Y() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Cartesian Z coordinate of the OBSERVER location in chosen reference frame 
+   * Cartesian Z coordinate of the OBSERVER location in chosen reference frame
    */
   public double OBSERVER_Z() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -51,11 +51,11 @@ public final class TDM extends com.google.flatbuffers.Table {
    */
   public double OBSERVER_VX() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame 
+   * Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame
    */
   public double OBSERVER_VY() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
+   * Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame
    */
   public double OBSERVER_VZ() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**

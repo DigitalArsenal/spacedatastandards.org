@@ -179,7 +179,7 @@ class _SPWReader extends fb.TableReader<SPW> {
   const _SPWReader();
 
   @override
-  SPW createObject(fb.BufferContext bc, int offset) => 
+  SPW createObject(fb.BufferContext bc, int offset) =>
     SPW._(bc, offset);
 }
 
@@ -501,7 +501,7 @@ class _SPWCOLLECTIONReader extends fb.TableReader<SPWCOLLECTION> {
   const _SPWCOLLECTIONReader();
 
   @override
-  SPWCOLLECTION createObject(fb.BufferContext bc, int offset) => 
+  SPWCOLLECTION createObject(fb.BufferContext bc, int offset) =>
     SPWCOLLECTION._(bc, offset);
 }
 

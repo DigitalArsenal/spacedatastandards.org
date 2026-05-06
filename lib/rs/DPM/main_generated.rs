@@ -97,10 +97,353 @@ impl<'a> ::flatbuffers::Verifiable for publicationAssetKind {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for publicationAssetKind {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_DPM_TRANSPORT_KIND: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_DPM_TRANSPORT_KIND: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_DPM_TRANSPORT_KIND: [dpmTransportKind; 3] = [
+  dpmTransportKind::CONTENT_ADDRESS,
+  dpmTransportKind::SDN_QUERY,
+  dpmTransportKind::OTHER,
+];
+
+/// Transport profile used to resolve a dataset update asset.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct dpmTransportKind(pub i8);
+#[allow(non_upper_case_globals)]
+impl dpmTransportKind {
+  /// Asset bytes are resolved by content address, usually an IPFS CID.
+  pub const CONTENT_ADDRESS: Self = Self(0);
+  /// Asset bytes are resolved from the provider through a signed SDN query
+  /// protocol. This mode is used when the update is not published as a
+  /// globally discoverable file.
+  pub const SDN_QUERY: Self = Self(1);
+  /// Asset bytes are resolved by another protocol named in TRANSPORT_PROTOCOL.
+  pub const OTHER: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::CONTENT_ADDRESS,
+    Self::SDN_QUERY,
+    Self::OTHER,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::CONTENT_ADDRESS => Some("CONTENT_ADDRESS"),
+      Self::SDN_QUERY => Some("SDN_QUERY"),
+      Self::OTHER => Some("OTHER"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for dpmTransportKind {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for dpmTransportKind {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for dpmTransportKind {
+    type Output = dpmTransportKind;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for dpmTransportKind {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for dpmTransportKind {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for dpmTransportKind {}
+pub enum DPMCompletenessIndexOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Completeness-capable signed index over a dataset update.
+pub struct DPMCompletenessIndex<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for DPMCompletenessIndex<'a> {
+  type Inner = DPMCompletenessIndex<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> DPMCompletenessIndex<'a> {
+  pub const VT_INDEX_NAME: ::flatbuffers::VOffsetT = 4;
+  pub const VT_CANONICAL_ORDER: ::flatbuffers::VOffsetT = 6;
+  pub const VT_INDEX_ROOT: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MERKLE_PROFILE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_SUPPORTS_RANGE_COMPLETENESS: ::flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    DPMCompletenessIndex { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args DPMCompletenessIndexArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<DPMCompletenessIndex<'bldr>> {
+    let mut builder = DPMCompletenessIndexBuilder::new(_fbb);
+    if let Some(x) = args.MERKLE_PROFILE { builder.add_MERKLE_PROFILE(x); }
+    if let Some(x) = args.INDEX_ROOT { builder.add_INDEX_ROOT(x); }
+    if let Some(x) = args.CANONICAL_ORDER { builder.add_CANONICAL_ORDER(x); }
+    if let Some(x) = args.INDEX_NAME { builder.add_INDEX_NAME(x); }
+    builder.add_SUPPORTS_RANGE_COMPLETENESS(args.SUPPORTS_RANGE_COMPLETENESS);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> DPMCompletenessIndexT {
+    let INDEX_NAME = self.INDEX_NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CANONICAL_ORDER = self.CANONICAL_ORDER().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let INDEX_ROOT = self.INDEX_ROOT().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MERKLE_PROFILE = self.MERKLE_PROFILE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SUPPORTS_RANGE_COMPLETENESS = self.SUPPORTS_RANGE_COMPLETENESS();
+    DPMCompletenessIndexT {
+      INDEX_NAME,
+      CANONICAL_ORDER,
+      INDEX_ROOT,
+      MERKLE_PROFILE,
+      SUPPORTS_RANGE_COMPLETENESS,
+    }
+  }
+
+  /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+  #[inline]
+  pub fn INDEX_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMCompletenessIndex::VT_INDEX_NAME, None)}
+  }
+  /// Deterministic ordering expression for the index. Providers and
+  /// subscribers MUST use this ordering when building or verifying range
+  /// proofs. A query is completeness-verifiable only when its predicate can be
+  /// expressed against one or more declared indexes.
+  #[inline]
+  pub fn CANONICAL_ORDER(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMCompletenessIndex::VT_CANONICAL_ORDER, None)}
+  }
+  /// SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
+  /// signed by the DPM provider signature and is the verifier's commitment for
+  /// inclusion and range-completeness proofs.
+  #[inline]
+  pub fn INDEX_ROOT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMCompletenessIndex::VT_INDEX_ROOT, None)}
+  }
+  /// Hash profile for leaves and internal nodes, e.g.
+  /// SDN-MERKLE-SHA256-v1. Profiles define domain separators, leaf material,
+  /// pair ordering, duplicate handling, and odd-leaf promotion.
+  #[inline]
+  pub fn MERKLE_PROFILE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMCompletenessIndex::VT_MERKLE_PROFILE, None)}
+  }
+  /// Whether this index can prove that no matching records were omitted for a
+  /// supported range query. Inclusion proofs alone prove authenticity, not
+  /// completeness.
+  #[inline]
+  pub fn SUPPORTS_RANGE_COMPLETENESS(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(DPMCompletenessIndex::VT_SUPPORTS_RANGE_COMPLETENESS, Some(false)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for DPMCompletenessIndex<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INDEX_NAME", Self::VT_INDEX_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CANONICAL_ORDER", Self::VT_CANONICAL_ORDER, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INDEX_ROOT", Self::VT_INDEX_ROOT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MERKLE_PROFILE", Self::VT_MERKLE_PROFILE, false)?
+     .visit_field::<bool>("SUPPORTS_RANGE_COMPLETENESS", Self::VT_SUPPORTS_RANGE_COMPLETENESS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct DPMCompletenessIndexArgs<'a> {
+    pub INDEX_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CANONICAL_ORDER: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INDEX_ROOT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MERKLE_PROFILE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SUPPORTS_RANGE_COMPLETENESS: bool,
+}
+impl<'a> Default for DPMCompletenessIndexArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    DPMCompletenessIndexArgs {
+      INDEX_NAME: None,
+      CANONICAL_ORDER: None,
+      INDEX_ROOT: None,
+      MERKLE_PROFILE: None,
+      SUPPORTS_RANGE_COMPLETENESS: false,
+    }
+  }
+}
+
+pub struct DPMCompletenessIndexBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DPMCompletenessIndexBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_INDEX_NAME(&mut self, INDEX_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMCompletenessIndex::VT_INDEX_NAME, INDEX_NAME);
+  }
+  #[inline]
+  pub fn add_CANONICAL_ORDER(&mut self, CANONICAL_ORDER: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMCompletenessIndex::VT_CANONICAL_ORDER, CANONICAL_ORDER);
+  }
+  #[inline]
+  pub fn add_INDEX_ROOT(&mut self, INDEX_ROOT: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMCompletenessIndex::VT_INDEX_ROOT, INDEX_ROOT);
+  }
+  #[inline]
+  pub fn add_MERKLE_PROFILE(&mut self, MERKLE_PROFILE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMCompletenessIndex::VT_MERKLE_PROFILE, MERKLE_PROFILE);
+  }
+  #[inline]
+  pub fn add_SUPPORTS_RANGE_COMPLETENESS(&mut self, SUPPORTS_RANGE_COMPLETENESS: bool) {
+    self.fbb_.push_slot::<bool>(DPMCompletenessIndex::VT_SUPPORTS_RANGE_COMPLETENESS, SUPPORTS_RANGE_COMPLETENESS, false);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> DPMCompletenessIndexBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    DPMCompletenessIndexBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<DPMCompletenessIndex<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for DPMCompletenessIndex<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("DPMCompletenessIndex");
+      ds.field("INDEX_NAME", &self.INDEX_NAME());
+      ds.field("CANONICAL_ORDER", &self.CANONICAL_ORDER());
+      ds.field("INDEX_ROOT", &self.INDEX_ROOT());
+      ds.field("MERKLE_PROFILE", &self.MERKLE_PROFILE());
+      ds.field("SUPPORTS_RANGE_COMPLETENESS", &self.SUPPORTS_RANGE_COMPLETENESS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct DPMCompletenessIndexT {
+  pub INDEX_NAME: Option<alloc::string::String>,
+  pub CANONICAL_ORDER: Option<alloc::string::String>,
+  pub INDEX_ROOT: Option<alloc::string::String>,
+  pub MERKLE_PROFILE: Option<alloc::string::String>,
+  pub SUPPORTS_RANGE_COMPLETENESS: bool,
+}
+impl Default for DPMCompletenessIndexT {
+  fn default() -> Self {
+    Self {
+      INDEX_NAME: None,
+      CANONICAL_ORDER: None,
+      INDEX_ROOT: None,
+      MERKLE_PROFILE: None,
+      SUPPORTS_RANGE_COMPLETENESS: false,
+    }
+  }
+}
+impl DPMCompletenessIndexT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<DPMCompletenessIndex<'b>> {
+    let INDEX_NAME = self.INDEX_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CANONICAL_ORDER = self.CANONICAL_ORDER.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let INDEX_ROOT = self.INDEX_ROOT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MERKLE_PROFILE = self.MERKLE_PROFILE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SUPPORTS_RANGE_COMPLETENESS = self.SUPPORTS_RANGE_COMPLETENESS;
+    DPMCompletenessIndex::create(_fbb, &DPMCompletenessIndexArgs{
+      INDEX_NAME,
+      CANONICAL_ORDER,
+      INDEX_ROOT,
+      MERKLE_PROFILE,
+      SUPPORTS_RANGE_COMPLETENESS,
+    })
+  }
+}
 pub enum DPMAssetOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// One immutable content-addressed object published for a dataset update.
+/// One immutable asset or provider-mediated query contract published for a
+/// dataset update.
 pub struct DPMAsset<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -115,14 +458,18 @@ impl<'a> ::flatbuffers::Follow<'a> for DPMAsset<'a> {
 
 impl<'a> DPMAsset<'a> {
   pub const VT_ASSET_KIND: ::flatbuffers::VOffsetT = 4;
-  pub const VT_CID: ::flatbuffers::VOffsetT = 6;
-  pub const VT_MULTIFORMAT_ADDRESS: ::flatbuffers::VOffsetT = 8;
-  pub const VT_FILE_NAME: ::flatbuffers::VOffsetT = 10;
-  pub const VT_BYTE_LENGTH: ::flatbuffers::VOffsetT = 12;
-  pub const VT_BYTE_SHA256: ::flatbuffers::VOffsetT = 14;
-  pub const VT_SCHEMA_NAME: ::flatbuffers::VOffsetT = 16;
-  pub const VT_SCHEMA_HASH: ::flatbuffers::VOffsetT = 18;
-  pub const VT_CONTENT_KEY_ID: ::flatbuffers::VOffsetT = 20;
+  pub const VT_TRANSPORT_KIND: ::flatbuffers::VOffsetT = 6;
+  pub const VT_CID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MULTIFORMAT_ADDRESS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_FILE_NAME: ::flatbuffers::VOffsetT = 12;
+  pub const VT_FILE_ID: ::flatbuffers::VOffsetT = 14;
+  pub const VT_TRANSPORT_PROTOCOL: ::flatbuffers::VOffsetT = 16;
+  pub const VT_BYTE_LENGTH: ::flatbuffers::VOffsetT = 18;
+  pub const VT_BYTE_SHA256: ::flatbuffers::VOffsetT = 20;
+  pub const VT_DATA_ROOT: ::flatbuffers::VOffsetT = 22;
+  pub const VT_SCHEMA_NAME: ::flatbuffers::VOffsetT = 24;
+  pub const VT_SCHEMA_HASH: ::flatbuffers::VOffsetT = 26;
+  pub const VT_CONTENT_KEY_ID: ::flatbuffers::VOffsetT = 28;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -138,28 +485,41 @@ impl<'a> DPMAsset<'a> {
     if let Some(x) = args.CONTENT_KEY_ID { builder.add_CONTENT_KEY_ID(x); }
     if let Some(x) = args.SCHEMA_HASH { builder.add_SCHEMA_HASH(x); }
     if let Some(x) = args.SCHEMA_NAME { builder.add_SCHEMA_NAME(x); }
+    if let Some(x) = args.DATA_ROOT { builder.add_DATA_ROOT(x); }
     if let Some(x) = args.BYTE_SHA256 { builder.add_BYTE_SHA256(x); }
+    if let Some(x) = args.TRANSPORT_PROTOCOL { builder.add_TRANSPORT_PROTOCOL(x); }
+    if let Some(x) = args.FILE_ID { builder.add_FILE_ID(x); }
     if let Some(x) = args.FILE_NAME { builder.add_FILE_NAME(x); }
     if let Some(x) = args.MULTIFORMAT_ADDRESS { builder.add_MULTIFORMAT_ADDRESS(x); }
     if let Some(x) = args.CID { builder.add_CID(x); }
+    builder.add_TRANSPORT_KIND(args.TRANSPORT_KIND);
     builder.add_ASSET_KIND(args.ASSET_KIND);
     builder.finish()
   }
 
   pub fn unpack(&self) -> DPMAssetT {
     let ASSET_KIND = self.ASSET_KIND();
-    let CID = {
-      let x = self.CID();
+    let TRANSPORT_KIND = self.TRANSPORT_KIND();
+    let CID = self.CID().map(|x| {
       alloc::string::ToString::to_string(x)
-    };
+    });
     let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS().map(|x| {
       alloc::string::ToString::to_string(x)
     });
     let FILE_NAME = self.FILE_NAME().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let FILE_ID = self.FILE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TRANSPORT_PROTOCOL = self.TRANSPORT_PROTOCOL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     let BYTE_LENGTH = self.BYTE_LENGTH();
     let BYTE_SHA256 = self.BYTE_SHA256().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DATA_ROOT = self.DATA_ROOT().map(|x| {
       alloc::string::ToString::to_string(x)
     });
     let SCHEMA_NAME = self.SCHEMA_NAME().map(|x| {
@@ -173,11 +533,15 @@ impl<'a> DPMAsset<'a> {
     });
     DPMAssetT {
       ASSET_KIND,
+      TRANSPORT_KIND,
       CID,
       MULTIFORMAT_ADDRESS,
       FILE_NAME,
+      FILE_ID,
+      TRANSPORT_PROTOCOL,
       BYTE_LENGTH,
       BYTE_SHA256,
+      DATA_ROOT,
       SCHEMA_NAME,
       SCHEMA_HASH,
       CONTENT_KEY_ID,
@@ -192,15 +556,30 @@ impl<'a> DPMAsset<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<publicationAssetKind>(DPMAsset::VT_ASSET_KIND, Some(publicationAssetKind::OTHER)).unwrap()}
   }
-  /// IPFS CIDv1/multihash content identifier.
+  /// Transport profile for this asset. CONTENT_ADDRESS assets use CID and
+  /// MULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the
+  /// signed DPM query and root fields; they are not required to be published as
+  /// discoverable IPFS files.
   #[inline]
-  pub fn CID(&self) -> &'a str {
+  pub fn TRANSPORT_KIND(&self) -> dpmTransportKind {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMAsset::VT_CID, None).unwrap()}
+    unsafe { self._tab.get::<dpmTransportKind>(DPMAsset::VT_TRANSPORT_KIND, Some(dpmTransportKind::CONTENT_ADDRESS)).unwrap()}
   }
-  /// Multiformat address, usually /ipfs/{CID}.
+  /// Optional IPFS CIDv1/multihash content identifier. This field is required
+  /// for CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose
+  /// bytes are retrieved through a provider protocol.
+  #[inline]
+  pub fn CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMAsset::VT_CID, None)}
+  }
+  /// Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For
+  /// SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when
+  /// provider routing is resolved from the DPM provider identity.
   #[inline]
   pub fn MULTIFORMAT_ADDRESS(&self) -> Option<&'a str> {
     // Safety:
@@ -215,6 +594,29 @@ impl<'a> DPMAsset<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMAsset::VT_FILE_NAME, None)}
+  }
+  /// Canonical publication/update partition identity for this asset. FILE_ID is
+  /// not a display filename; it is the stable identifier used by PNMs,
+  /// manifests, entitlements, query requests, subscriber caches, and
+  /// completeness proofs. Example:
+  /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  #[inline]
+  pub fn FILE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMAsset::VT_FILE_ID, None)}
+  }
+  /// Provider protocol name/version used to fetch this asset when
+  /// TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
+  /// response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the
+  /// provider signature in this DPM.
+  #[inline]
+  pub fn TRANSPORT_PROTOCOL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMAsset::VT_TRANSPORT_PROTOCOL, None)}
   }
   /// Byte length of the published object.
   #[inline]
@@ -231,6 +633,16 @@ impl<'a> DPMAsset<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMAsset::VT_BYTE_SHA256, None)}
+  }
+  /// Merkle root over canonical records in this asset, lowercase hex. For
+  /// provider-mediated query delivery, subscribers verify returned records and
+  /// proof paths against this root before importing data.
+  #[inline]
+  pub fn DATA_ROOT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMAsset::VT_DATA_ROOT, None)}
   }
   /// SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
   #[inline]
@@ -265,11 +677,15 @@ impl ::flatbuffers::Verifiable for DPMAsset<'_> {
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
      .visit_field::<publicationAssetKind>("ASSET_KIND", Self::VT_ASSET_KIND, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CID", Self::VT_CID, true)?
+     .visit_field::<dpmTransportKind>("TRANSPORT_KIND", Self::VT_TRANSPORT_KIND, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CID", Self::VT_CID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MULTIFORMAT_ADDRESS", Self::VT_MULTIFORMAT_ADDRESS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FILE_NAME", Self::VT_FILE_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FILE_ID", Self::VT_FILE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRANSPORT_PROTOCOL", Self::VT_TRANSPORT_PROTOCOL, false)?
      .visit_field::<u64>("BYTE_LENGTH", Self::VT_BYTE_LENGTH, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BYTE_SHA256", Self::VT_BYTE_SHA256, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATA_ROOT", Self::VT_DATA_ROOT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCHEMA_NAME", Self::VT_SCHEMA_NAME, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCHEMA_HASH", Self::VT_SCHEMA_HASH, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONTENT_KEY_ID", Self::VT_CONTENT_KEY_ID, false)?
@@ -279,11 +695,15 @@ impl ::flatbuffers::Verifiable for DPMAsset<'_> {
 }
 pub struct DPMAssetArgs<'a> {
     pub ASSET_KIND: publicationAssetKind,
+    pub TRANSPORT_KIND: dpmTransportKind,
     pub CID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub MULTIFORMAT_ADDRESS: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub FILE_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FILE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRANSPORT_PROTOCOL: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub BYTE_LENGTH: u64,
     pub BYTE_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DATA_ROOT: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SCHEMA_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SCHEMA_HASH: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub CONTENT_KEY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
@@ -293,11 +713,15 @@ impl<'a> Default for DPMAssetArgs<'a> {
   fn default() -> Self {
     DPMAssetArgs {
       ASSET_KIND: publicationAssetKind::OTHER,
-      CID: None, // required field
+      TRANSPORT_KIND: dpmTransportKind::CONTENT_ADDRESS,
+      CID: None,
       MULTIFORMAT_ADDRESS: None,
       FILE_NAME: None,
+      FILE_ID: None,
+      TRANSPORT_PROTOCOL: None,
       BYTE_LENGTH: 0,
       BYTE_SHA256: None,
+      DATA_ROOT: None,
       SCHEMA_NAME: None,
       SCHEMA_HASH: None,
       CONTENT_KEY_ID: None,
@@ -315,6 +739,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DPMAssetBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<publicationAssetKind>(DPMAsset::VT_ASSET_KIND, ASSET_KIND, publicationAssetKind::OTHER);
   }
   #[inline]
+  pub fn add_TRANSPORT_KIND(&mut self, TRANSPORT_KIND: dpmTransportKind) {
+    self.fbb_.push_slot::<dpmTransportKind>(DPMAsset::VT_TRANSPORT_KIND, TRANSPORT_KIND, dpmTransportKind::CONTENT_ADDRESS);
+  }
+  #[inline]
   pub fn add_CID(&mut self, CID: ::flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMAsset::VT_CID, CID);
   }
@@ -327,12 +755,24 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DPMAssetBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMAsset::VT_FILE_NAME, FILE_NAME);
   }
   #[inline]
+  pub fn add_FILE_ID(&mut self, FILE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMAsset::VT_FILE_ID, FILE_ID);
+  }
+  #[inline]
+  pub fn add_TRANSPORT_PROTOCOL(&mut self, TRANSPORT_PROTOCOL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMAsset::VT_TRANSPORT_PROTOCOL, TRANSPORT_PROTOCOL);
+  }
+  #[inline]
   pub fn add_BYTE_LENGTH(&mut self, BYTE_LENGTH: u64) {
     self.fbb_.push_slot::<u64>(DPMAsset::VT_BYTE_LENGTH, BYTE_LENGTH, 0);
   }
   #[inline]
   pub fn add_BYTE_SHA256(&mut self, BYTE_SHA256: ::flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMAsset::VT_BYTE_SHA256, BYTE_SHA256);
+  }
+  #[inline]
+  pub fn add_DATA_ROOT(&mut self, DATA_ROOT: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMAsset::VT_DATA_ROOT, DATA_ROOT);
   }
   #[inline]
   pub fn add_SCHEMA_NAME(&mut self, SCHEMA_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
@@ -357,7 +797,6 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DPMAssetBuilder<'a, 'b, A> {
   #[inline]
   pub fn finish(self) -> ::flatbuffers::WIPOffset<DPMAsset<'a>> {
     let o = self.fbb_.end_table(self.start_);
-    self.fbb_.required(o, DPMAsset::VT_CID,"CID");
     ::flatbuffers::WIPOffset::new(o.value())
   }
 }
@@ -366,11 +805,15 @@ impl ::core::fmt::Debug for DPMAsset<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
     let mut ds = f.debug_struct("DPMAsset");
       ds.field("ASSET_KIND", &self.ASSET_KIND());
+      ds.field("TRANSPORT_KIND", &self.TRANSPORT_KIND());
       ds.field("CID", &self.CID());
       ds.field("MULTIFORMAT_ADDRESS", &self.MULTIFORMAT_ADDRESS());
       ds.field("FILE_NAME", &self.FILE_NAME());
+      ds.field("FILE_ID", &self.FILE_ID());
+      ds.field("TRANSPORT_PROTOCOL", &self.TRANSPORT_PROTOCOL());
       ds.field("BYTE_LENGTH", &self.BYTE_LENGTH());
       ds.field("BYTE_SHA256", &self.BYTE_SHA256());
+      ds.field("DATA_ROOT", &self.DATA_ROOT());
       ds.field("SCHEMA_NAME", &self.SCHEMA_NAME());
       ds.field("SCHEMA_HASH", &self.SCHEMA_HASH());
       ds.field("CONTENT_KEY_ID", &self.CONTENT_KEY_ID());
@@ -381,11 +824,15 @@ impl ::core::fmt::Debug for DPMAsset<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct DPMAssetT {
   pub ASSET_KIND: publicationAssetKind,
-  pub CID: alloc::string::String,
+  pub TRANSPORT_KIND: dpmTransportKind,
+  pub CID: Option<alloc::string::String>,
   pub MULTIFORMAT_ADDRESS: Option<alloc::string::String>,
   pub FILE_NAME: Option<alloc::string::String>,
+  pub FILE_ID: Option<alloc::string::String>,
+  pub TRANSPORT_PROTOCOL: Option<alloc::string::String>,
   pub BYTE_LENGTH: u64,
   pub BYTE_SHA256: Option<alloc::string::String>,
+  pub DATA_ROOT: Option<alloc::string::String>,
   pub SCHEMA_NAME: Option<alloc::string::String>,
   pub SCHEMA_HASH: Option<alloc::string::String>,
   pub CONTENT_KEY_ID: Option<alloc::string::String>,
@@ -394,11 +841,15 @@ impl Default for DPMAssetT {
   fn default() -> Self {
     Self {
       ASSET_KIND: publicationAssetKind::OTHER,
-      CID: alloc::string::ToString::to_string(""),
+      TRANSPORT_KIND: dpmTransportKind::CONTENT_ADDRESS,
+      CID: None,
       MULTIFORMAT_ADDRESS: None,
       FILE_NAME: None,
+      FILE_ID: None,
+      TRANSPORT_PROTOCOL: None,
       BYTE_LENGTH: 0,
       BYTE_SHA256: None,
+      DATA_ROOT: None,
       SCHEMA_NAME: None,
       SCHEMA_HASH: None,
       CONTENT_KEY_ID: None,
@@ -411,8 +862,8 @@ impl DPMAssetT {
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
   ) -> ::flatbuffers::WIPOffset<DPMAsset<'b>> {
     let ASSET_KIND = self.ASSET_KIND;
-    let CID = Some({
-      let x = &self.CID;
+    let TRANSPORT_KIND = self.TRANSPORT_KIND;
+    let CID = self.CID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS.as_ref().map(|x|{
@@ -421,8 +872,17 @@ impl DPMAssetT {
     let FILE_NAME = self.FILE_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let FILE_ID = self.FILE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRANSPORT_PROTOCOL = self.TRANSPORT_PROTOCOL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let BYTE_LENGTH = self.BYTE_LENGTH;
     let BYTE_SHA256 = self.BYTE_SHA256.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DATA_ROOT = self.DATA_ROOT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let SCHEMA_NAME = self.SCHEMA_NAME.as_ref().map(|x|{
@@ -436,11 +896,15 @@ impl DPMAssetT {
     });
     DPMAsset::create(_fbb, &DPMAssetArgs{
       ASSET_KIND,
+      TRANSPORT_KIND,
       CID,
       MULTIFORMAT_ADDRESS,
       FILE_NAME,
+      FILE_ID,
+      TRANSPORT_PROTOCOL,
       BYTE_LENGTH,
       BYTE_SHA256,
+      DATA_ROOT,
       SCHEMA_NAME,
       SCHEMA_HASH,
       CONTENT_KEY_ID,
@@ -820,12 +1284,14 @@ impl<'a> DPMQueryBinding<'a> {
   pub const VT_RESULT_SHA256: ::flatbuffers::VOffsetT = 8;
   pub const VT_QUERY_ENGINE: ::flatbuffers::VOffsetT = 10;
   pub const VT_QUERY_ENGINE_VERSION: ::flatbuffers::VOffsetT = 12;
-  pub const VT_SCHEMA_NAMES: ::flatbuffers::VOffsetT = 14;
-  pub const VT_PROVIDER_IDS: ::flatbuffers::VOffsetT = 16;
-  pub const VT_SOURCE_NAMES: ::flatbuffers::VOffsetT = 18;
-  pub const VT_BATCH_IDS: ::flatbuffers::VOffsetT = 20;
-  pub const VT_WINDOW_START: ::flatbuffers::VOffsetT = 22;
-  pub const VT_WINDOW_END: ::flatbuffers::VOffsetT = 24;
+  pub const VT_CANONICAL_ORDER: ::flatbuffers::VOffsetT = 14;
+  pub const VT_QUERY_PROTOCOL: ::flatbuffers::VOffsetT = 16;
+  pub const VT_SCHEMA_NAMES: ::flatbuffers::VOffsetT = 18;
+  pub const VT_PROVIDER_IDS: ::flatbuffers::VOffsetT = 20;
+  pub const VT_SOURCE_NAMES: ::flatbuffers::VOffsetT = 22;
+  pub const VT_BATCH_IDS: ::flatbuffers::VOffsetT = 24;
+  pub const VT_WINDOW_START: ::flatbuffers::VOffsetT = 26;
+  pub const VT_WINDOW_END: ::flatbuffers::VOffsetT = 28;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -843,6 +1309,8 @@ impl<'a> DPMQueryBinding<'a> {
     if let Some(x) = args.SOURCE_NAMES { builder.add_SOURCE_NAMES(x); }
     if let Some(x) = args.PROVIDER_IDS { builder.add_PROVIDER_IDS(x); }
     if let Some(x) = args.SCHEMA_NAMES { builder.add_SCHEMA_NAMES(x); }
+    if let Some(x) = args.QUERY_PROTOCOL { builder.add_QUERY_PROTOCOL(x); }
+    if let Some(x) = args.CANONICAL_ORDER { builder.add_CANONICAL_ORDER(x); }
     if let Some(x) = args.QUERY_ENGINE_VERSION { builder.add_QUERY_ENGINE_VERSION(x); }
     if let Some(x) = args.QUERY_ENGINE { builder.add_QUERY_ENGINE(x); }
     if let Some(x) = args.RESULT_SHA256 { builder.add_RESULT_SHA256(x); }
@@ -870,6 +1338,12 @@ impl<'a> DPMQueryBinding<'a> {
     let QUERY_ENGINE_VERSION = self.QUERY_ENGINE_VERSION().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let CANONICAL_ORDER = self.CANONICAL_ORDER().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let QUERY_PROTOCOL = self.QUERY_PROTOCOL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     let SCHEMA_NAMES = self.SCHEMA_NAMES().map(|x| {
       x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
     });
@@ -894,6 +1368,8 @@ impl<'a> DPMQueryBinding<'a> {
       RESULT_SHA256,
       QUERY_ENGINE,
       QUERY_ENGINE_VERSION,
+      CANONICAL_ORDER,
+      QUERY_PROTOCOL,
       SCHEMA_NAMES,
       PROVIDER_IDS,
       SOURCE_NAMES,
@@ -942,6 +1418,27 @@ impl<'a> DPMQueryBinding<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMQueryBinding::VT_QUERY_ENGINE_VERSION, None)}
+  }
+  /// Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+  /// computed. Providers MUST stream records in this order unless each chunk
+  /// includes enough proof material to restore and verify the canonical order.
+  #[inline]
+  pub fn CANONICAL_ORDER(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMQueryBinding::VT_CANONICAL_ORDER, None)}
+  }
+  /// Query protocol name/version for provider-mediated retrieval, e.g.
+  /// /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+  /// protocol to the provider, submits the signed query or a permitted subset,
+  /// and imports only responses that verify against the signed roots.
+  #[inline]
+  pub fn QUERY_PROTOCOL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMQueryBinding::VT_QUERY_PROTOCOL, None)}
   }
   /// SDS schema names selected by the query.
   #[inline]
@@ -1004,6 +1501,8 @@ impl ::flatbuffers::Verifiable for DPMQueryBinding<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RESULT_SHA256", Self::VT_RESULT_SHA256, true)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("QUERY_ENGINE", Self::VT_QUERY_ENGINE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("QUERY_ENGINE_VERSION", Self::VT_QUERY_ENGINE_VERSION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CANONICAL_ORDER", Self::VT_CANONICAL_ORDER, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("QUERY_PROTOCOL", Self::VT_QUERY_PROTOCOL, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("SCHEMA_NAMES", Self::VT_SCHEMA_NAMES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("PROVIDER_IDS", Self::VT_PROVIDER_IDS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("SOURCE_NAMES", Self::VT_SOURCE_NAMES, false)?
@@ -1020,6 +1519,8 @@ pub struct DPMQueryBindingArgs<'a> {
     pub RESULT_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub QUERY_ENGINE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub QUERY_ENGINE_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CANONICAL_ORDER: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub QUERY_PROTOCOL: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SCHEMA_NAMES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub PROVIDER_IDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub SOURCE_NAMES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
@@ -1036,6 +1537,8 @@ impl<'a> Default for DPMQueryBindingArgs<'a> {
       RESULT_SHA256: None, // required field
       QUERY_ENGINE: None,
       QUERY_ENGINE_VERSION: None,
+      CANONICAL_ORDER: None,
+      QUERY_PROTOCOL: None,
       SCHEMA_NAMES: None,
       PROVIDER_IDS: None,
       SOURCE_NAMES: None,
@@ -1070,6 +1573,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DPMQueryBindingBuilder<'a, 'b
   #[inline]
   pub fn add_QUERY_ENGINE_VERSION(&mut self, QUERY_ENGINE_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMQueryBinding::VT_QUERY_ENGINE_VERSION, QUERY_ENGINE_VERSION);
+  }
+  #[inline]
+  pub fn add_CANONICAL_ORDER(&mut self, CANONICAL_ORDER: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMQueryBinding::VT_CANONICAL_ORDER, CANONICAL_ORDER);
+  }
+  #[inline]
+  pub fn add_QUERY_PROTOCOL(&mut self, QUERY_PROTOCOL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMQueryBinding::VT_QUERY_PROTOCOL, QUERY_PROTOCOL);
   }
   #[inline]
   pub fn add_SCHEMA_NAMES(&mut self, SCHEMA_NAMES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
@@ -1121,6 +1632,8 @@ impl ::core::fmt::Debug for DPMQueryBinding<'_> {
       ds.field("RESULT_SHA256", &self.RESULT_SHA256());
       ds.field("QUERY_ENGINE", &self.QUERY_ENGINE());
       ds.field("QUERY_ENGINE_VERSION", &self.QUERY_ENGINE_VERSION());
+      ds.field("CANONICAL_ORDER", &self.CANONICAL_ORDER());
+      ds.field("QUERY_PROTOCOL", &self.QUERY_PROTOCOL());
       ds.field("SCHEMA_NAMES", &self.SCHEMA_NAMES());
       ds.field("PROVIDER_IDS", &self.PROVIDER_IDS());
       ds.field("SOURCE_NAMES", &self.SOURCE_NAMES());
@@ -1138,6 +1651,8 @@ pub struct DPMQueryBindingT {
   pub RESULT_SHA256: alloc::string::String,
   pub QUERY_ENGINE: Option<alloc::string::String>,
   pub QUERY_ENGINE_VERSION: Option<alloc::string::String>,
+  pub CANONICAL_ORDER: Option<alloc::string::String>,
+  pub QUERY_PROTOCOL: Option<alloc::string::String>,
   pub SCHEMA_NAMES: Option<alloc::vec::Vec<alloc::string::String>>,
   pub PROVIDER_IDS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub SOURCE_NAMES: Option<alloc::vec::Vec<alloc::string::String>>,
@@ -1153,6 +1668,8 @@ impl Default for DPMQueryBindingT {
       RESULT_SHA256: alloc::string::ToString::to_string(""),
       QUERY_ENGINE: None,
       QUERY_ENGINE_VERSION: None,
+      CANONICAL_ORDER: None,
+      QUERY_PROTOCOL: None,
       SCHEMA_NAMES: None,
       PROVIDER_IDS: None,
       SOURCE_NAMES: None,
@@ -1185,6 +1702,12 @@ impl DPMQueryBindingT {
     let QUERY_ENGINE_VERSION = self.QUERY_ENGINE_VERSION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let CANONICAL_ORDER = self.CANONICAL_ORDER.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let QUERY_PROTOCOL = self.QUERY_PROTOCOL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let SCHEMA_NAMES = self.SCHEMA_NAMES.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
@@ -1209,6 +1732,8 @@ impl DPMQueryBindingT {
       RESULT_SHA256,
       QUERY_ENGINE,
       QUERY_ENGINE_VERSION,
+      CANONICAL_ORDER,
+      QUERY_PROTOCOL,
       SCHEMA_NAMES,
       PROVIDER_IDS,
       SOURCE_NAMES,
@@ -1489,7 +2014,8 @@ pub enum DPMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
 /// Dataset Publication Manifest binding data/index CIDs, query replay,
-/// source hashes, schema hashes, encryption metadata, and provider signature.
+/// source hashes, schema hashes, encryption metadata, provider-mediated query
+/// protocols, completeness roots, and provider signature.
 pub struct DPM<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -1506,15 +2032,17 @@ impl<'a> DPM<'a> {
   pub const VT_VERSION: ::flatbuffers::VOffsetT = 4;
   pub const VT_DATASET_ID: ::flatbuffers::VOffsetT = 6;
   pub const VT_UPDATE_ID: ::flatbuffers::VOffsetT = 8;
-  pub const VT_PROVIDER_PEER_ID: ::flatbuffers::VOffsetT = 10;
-  pub const VT_PROVIDER_EPM_CID: ::flatbuffers::VOffsetT = 12;
-  pub const VT_PUBLISH_TIMESTAMP: ::flatbuffers::VOffsetT = 14;
-  pub const VT_ASSETS: ::flatbuffers::VOffsetT = 16;
-  pub const VT_SOURCES: ::flatbuffers::VOffsetT = 18;
-  pub const VT_QUERY: ::flatbuffers::VOffsetT = 20;
-  pub const VT_ENCRYPTION: ::flatbuffers::VOffsetT = 22;
-  pub const VT_PROVIDER_SIGNATURE: ::flatbuffers::VOffsetT = 24;
-  pub const VT_SIGNATURE_TYPE: ::flatbuffers::VOffsetT = 26;
+  pub const VT_FILE_ID: ::flatbuffers::VOffsetT = 10;
+  pub const VT_PROVIDER_PEER_ID: ::flatbuffers::VOffsetT = 12;
+  pub const VT_PROVIDER_EPM_CID: ::flatbuffers::VOffsetT = 14;
+  pub const VT_PUBLISH_TIMESTAMP: ::flatbuffers::VOffsetT = 16;
+  pub const VT_ASSETS: ::flatbuffers::VOffsetT = 18;
+  pub const VT_SOURCES: ::flatbuffers::VOffsetT = 20;
+  pub const VT_QUERY: ::flatbuffers::VOffsetT = 22;
+  pub const VT_INDEXES: ::flatbuffers::VOffsetT = 24;
+  pub const VT_ENCRYPTION: ::flatbuffers::VOffsetT = 26;
+  pub const VT_PROVIDER_SIGNATURE: ::flatbuffers::VOffsetT = 28;
+  pub const VT_SIGNATURE_TYPE: ::flatbuffers::VOffsetT = 30;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1529,12 +2057,14 @@ impl<'a> DPM<'a> {
     if let Some(x) = args.SIGNATURE_TYPE { builder.add_SIGNATURE_TYPE(x); }
     if let Some(x) = args.PROVIDER_SIGNATURE { builder.add_PROVIDER_SIGNATURE(x); }
     if let Some(x) = args.ENCRYPTION { builder.add_ENCRYPTION(x); }
+    if let Some(x) = args.INDEXES { builder.add_INDEXES(x); }
     if let Some(x) = args.QUERY { builder.add_QUERY(x); }
     if let Some(x) = args.SOURCES { builder.add_SOURCES(x); }
     if let Some(x) = args.ASSETS { builder.add_ASSETS(x); }
     if let Some(x) = args.PUBLISH_TIMESTAMP { builder.add_PUBLISH_TIMESTAMP(x); }
     if let Some(x) = args.PROVIDER_EPM_CID { builder.add_PROVIDER_EPM_CID(x); }
     if let Some(x) = args.PROVIDER_PEER_ID { builder.add_PROVIDER_PEER_ID(x); }
+    if let Some(x) = args.FILE_ID { builder.add_FILE_ID(x); }
     if let Some(x) = args.UPDATE_ID { builder.add_UPDATE_ID(x); }
     if let Some(x) = args.DATASET_ID { builder.add_DATASET_ID(x); }
     if let Some(x) = args.VERSION { builder.add_VERSION(x); }
@@ -1553,6 +2083,9 @@ impl<'a> DPM<'a> {
       let x = self.UPDATE_ID();
       alloc::string::ToString::to_string(x)
     };
+    let FILE_ID = self.FILE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     let PROVIDER_PEER_ID = {
       let x = self.PROVIDER_PEER_ID();
       alloc::string::ToString::to_string(x)
@@ -1573,6 +2106,9 @@ impl<'a> DPM<'a> {
     let QUERY = self.QUERY().map(|x| {
       alloc::boxed::Box::new(x.unpack())
     });
+    let INDEXES = self.INDEXES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     let ENCRYPTION = self.ENCRYPTION().map(|x| {
       alloc::boxed::Box::new(x.unpack())
     });
@@ -1586,12 +2122,14 @@ impl<'a> DPM<'a> {
       VERSION,
       DATASET_ID,
       UPDATE_ID,
+      FILE_ID,
       PROVIDER_PEER_ID,
       PROVIDER_EPM_CID,
       PUBLISH_TIMESTAMP,
       ASSETS,
       SOURCES,
       QUERY,
+      INDEXES,
       ENCRYPTION,
       PROVIDER_SIGNATURE,
       SIGNATURE_TYPE,
@@ -1621,6 +2159,19 @@ impl<'a> DPM<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPM::VT_UPDATE_ID, None).unwrap()}
+  }
+  /// Canonical publication/update partition identity. FILE_ID is the key used
+  /// everywhere a subscriber, provider, PNM, entitlement, cache, or query
+  /// protocol refers to this exact update. It is not merely a human filename
+  /// and it is not the FlatBuffer file_identifier. For completeness-verifiable
+  /// streams, all returned records MUST belong to this FILE_ID and prove
+  /// inclusion under this DPM's signed roots.
+  #[inline]
+  pub fn FILE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPM::VT_FILE_ID, None)}
   }
   /// Provider peer ID.
   #[inline]
@@ -1670,6 +2221,17 @@ impl<'a> DPM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<DPMQueryBinding>>(DPM::VT_QUERY, None)}
   }
+  /// Signed completeness-capable indexes. Inclusion proofs prove that returned
+  /// records are authentic members of DATA_ROOT. Range-completeness proofs also
+  /// prove that no matching records were omitted, but only for predicates
+  /// expressible against these declared indexes.
+  #[inline]
+  pub fn INDEXES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<DPMCompletenessIndex<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<DPMCompletenessIndex>>>>(DPM::VT_INDEXES, None)}
+  }
   /// Encryption/key metadata.
   #[inline]
   pub fn ENCRYPTION(&self) -> Option<DPMEncryptionBinding<'a>> {
@@ -1705,12 +2267,14 @@ impl ::flatbuffers::Verifiable for DPM<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VERSION", Self::VT_VERSION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATASET_ID", Self::VT_DATASET_ID, true)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("UPDATE_ID", Self::VT_UPDATE_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FILE_ID", Self::VT_FILE_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_PEER_ID", Self::VT_PROVIDER_PEER_ID, true)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_EPM_CID", Self::VT_PROVIDER_EPM_CID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PUBLISH_TIMESTAMP", Self::VT_PUBLISH_TIMESTAMP, true)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<DPMAsset>>>>("ASSETS", Self::VT_ASSETS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<DPMSourceBatch>>>>("SOURCES", Self::VT_SOURCES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<DPMQueryBinding>>("QUERY", Self::VT_QUERY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<DPMCompletenessIndex>>>>("INDEXES", Self::VT_INDEXES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<DPMEncryptionBinding>>("ENCRYPTION", Self::VT_ENCRYPTION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("PROVIDER_SIGNATURE", Self::VT_PROVIDER_SIGNATURE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIGNATURE_TYPE", Self::VT_SIGNATURE_TYPE, false)?
@@ -1722,12 +2286,14 @@ pub struct DPMArgs<'a> {
     pub VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub DATASET_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub UPDATE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FILE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PROVIDER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PROVIDER_EPM_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PUBLISH_TIMESTAMP: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ASSETS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<DPMAsset<'a>>>>>,
     pub SOURCES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<DPMSourceBatch<'a>>>>>,
     pub QUERY: Option<::flatbuffers::WIPOffset<DPMQueryBinding<'a>>>,
+    pub INDEXES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<DPMCompletenessIndex<'a>>>>>,
     pub ENCRYPTION: Option<::flatbuffers::WIPOffset<DPMEncryptionBinding<'a>>>,
     pub PROVIDER_SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
     pub SIGNATURE_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
@@ -1739,12 +2305,14 @@ impl<'a> Default for DPMArgs<'a> {
       VERSION: None,
       DATASET_ID: None, // required field
       UPDATE_ID: None, // required field
+      FILE_ID: None,
       PROVIDER_PEER_ID: None, // required field
       PROVIDER_EPM_CID: None,
       PUBLISH_TIMESTAMP: None, // required field
       ASSETS: None,
       SOURCES: None,
       QUERY: None,
+      INDEXES: None,
       ENCRYPTION: None,
       PROVIDER_SIGNATURE: None,
       SIGNATURE_TYPE: None,
@@ -1770,6 +2338,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DPMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPM::VT_UPDATE_ID, UPDATE_ID);
   }
   #[inline]
+  pub fn add_FILE_ID(&mut self, FILE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPM::VT_FILE_ID, FILE_ID);
+  }
+  #[inline]
   pub fn add_PROVIDER_PEER_ID(&mut self, PROVIDER_PEER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPM::VT_PROVIDER_PEER_ID, PROVIDER_PEER_ID);
   }
@@ -1792,6 +2364,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DPMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_QUERY(&mut self, QUERY: ::flatbuffers::WIPOffset<DPMQueryBinding<'b >>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<DPMQueryBinding>>(DPM::VT_QUERY, QUERY);
+  }
+  #[inline]
+  pub fn add_INDEXES(&mut self, INDEXES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<DPMCompletenessIndex<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPM::VT_INDEXES, INDEXES);
   }
   #[inline]
   pub fn add_ENCRYPTION(&mut self, ENCRYPTION: ::flatbuffers::WIPOffset<DPMEncryptionBinding<'b >>) {
@@ -1830,12 +2406,14 @@ impl ::core::fmt::Debug for DPM<'_> {
       ds.field("VERSION", &self.VERSION());
       ds.field("DATASET_ID", &self.DATASET_ID());
       ds.field("UPDATE_ID", &self.UPDATE_ID());
+      ds.field("FILE_ID", &self.FILE_ID());
       ds.field("PROVIDER_PEER_ID", &self.PROVIDER_PEER_ID());
       ds.field("PROVIDER_EPM_CID", &self.PROVIDER_EPM_CID());
       ds.field("PUBLISH_TIMESTAMP", &self.PUBLISH_TIMESTAMP());
       ds.field("ASSETS", &self.ASSETS());
       ds.field("SOURCES", &self.SOURCES());
       ds.field("QUERY", &self.QUERY());
+      ds.field("INDEXES", &self.INDEXES());
       ds.field("ENCRYPTION", &self.ENCRYPTION());
       ds.field("PROVIDER_SIGNATURE", &self.PROVIDER_SIGNATURE());
       ds.field("SIGNATURE_TYPE", &self.SIGNATURE_TYPE());
@@ -1848,12 +2426,14 @@ pub struct DPMT {
   pub VERSION: Option<alloc::string::String>,
   pub DATASET_ID: alloc::string::String,
   pub UPDATE_ID: alloc::string::String,
+  pub FILE_ID: Option<alloc::string::String>,
   pub PROVIDER_PEER_ID: alloc::string::String,
   pub PROVIDER_EPM_CID: Option<alloc::string::String>,
   pub PUBLISH_TIMESTAMP: alloc::string::String,
   pub ASSETS: Option<alloc::vec::Vec<DPMAssetT>>,
   pub SOURCES: Option<alloc::vec::Vec<DPMSourceBatchT>>,
   pub QUERY: Option<alloc::boxed::Box<DPMQueryBindingT>>,
+  pub INDEXES: Option<alloc::vec::Vec<DPMCompletenessIndexT>>,
   pub ENCRYPTION: Option<alloc::boxed::Box<DPMEncryptionBindingT>>,
   pub PROVIDER_SIGNATURE: Option<alloc::vec::Vec<u8>>,
   pub SIGNATURE_TYPE: Option<alloc::string::String>,
@@ -1864,12 +2444,14 @@ impl Default for DPMT {
       VERSION: None,
       DATASET_ID: alloc::string::ToString::to_string(""),
       UPDATE_ID: alloc::string::ToString::to_string(""),
+      FILE_ID: None,
       PROVIDER_PEER_ID: alloc::string::ToString::to_string(""),
       PROVIDER_EPM_CID: None,
       PUBLISH_TIMESTAMP: alloc::string::ToString::to_string(""),
       ASSETS: None,
       SOURCES: None,
       QUERY: None,
+      INDEXES: None,
       ENCRYPTION: None,
       PROVIDER_SIGNATURE: None,
       SIGNATURE_TYPE: None,
@@ -1892,6 +2474,9 @@ impl DPMT {
       let x = &self.UPDATE_ID;
       _fbb.create_string(x)
     });
+    let FILE_ID = self.FILE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let PROVIDER_PEER_ID = Some({
       let x = &self.PROVIDER_PEER_ID;
       _fbb.create_string(x)
@@ -1912,6 +2497,9 @@ impl DPMT {
     let QUERY = self.QUERY.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let INDEXES = self.INDEXES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     let ENCRYPTION = self.ENCRYPTION.as_ref().map(|x|{
       x.pack(_fbb)
     });
@@ -1925,12 +2513,14 @@ impl DPMT {
       VERSION,
       DATASET_ID,
       UPDATE_ID,
+      FILE_ID,
       PROVIDER_PEER_ID,
       PROVIDER_EPM_CID,
       PUBLISH_TIMESTAMP,
       ASSETS,
       SOURCES,
       QUERY,
+      INDEXES,
       ENCRYPTION,
       PROVIDER_SIGNATURE,
       SIGNATURE_TYPE,

@@ -123,7 +123,7 @@ class _WTHReader extends fb.TableReader<WTH> {
   const _WTHReader();
 
   @override
-  WTH createObject(fb.BufferContext bc, int offset) => 
+  WTH createObject(fb.BufferContext bc, int offset) =>
     WTH._(bc, offset);
 }
 

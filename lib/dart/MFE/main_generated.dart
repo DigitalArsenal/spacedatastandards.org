@@ -58,7 +58,7 @@ class _MFEReader extends fb.TableReader<MFE> {
   const _MFEReader();
 
   @override
-  MFE createObject(fb.BufferContext bc, int offset) => 
+  MFE createObject(fb.BufferContext bc, int offset) =>
     MFE._(bc, offset);
 }
 

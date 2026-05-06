@@ -185,8 +185,8 @@ public struct EOO : IFlatbufferObject
   public int FOV_COUNT { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   /// Number of uncorrelated satellites in the field of view (JCO).
   public int FOV_COUNT_UCTS { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
-  /// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+  /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods,
+  /// the exposure duration should be the total integration time. This field is highly recommended / required if the
   /// observations are going to be used for photometric processing.
   public float EXP_DURATION { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
@@ -201,31 +201,31 @@ public struct EOO : IFlatbufferObject
   public float MAG_UNC { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// [Definition needed].
   public float MAG_NORM_RANGE { get { int o = __p.__offset(122); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+  /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range
   /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
   public float GEOLAT { get { int o = __p.__offset(124); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+  /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range
   /// and viewing geometry. It must NOT be computed from the orbit state.
   public float GEOLON { get { int o = __p.__offset(126); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
   public float GEOALT { get { int o = __p.__offset(128); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
   public float GEORANGE { get { int o = __p.__offset(130); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+  /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently
   /// empty part of the night sky.
   public float SKY_BKGRND { get { int o = __p.__offset(132); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
-  /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
-  /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+  /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass
+  /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general,
+  /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical
   /// object and the observer.
   public float PRIMARY_EXTINCTION { get { int o = __p.__offset(134); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Primary Extinction Coefficient Uncertainty, in Magnitudes.
   public float PRIMARY_EXTINCTION_UNC { get { int o = __p.__offset(136); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+  /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the
   /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
   public float SOLAR_PHASE_ANGLE { get { int o = __p.__offset(138); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
-  /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+  /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector
+  /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition)
   /// and positive when opening (after the opposition).
   public float SOLAR_EQ_PHASE_ANGLE { get { int o = __p.__offset(140); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Angle from the sun to the equatorial plane.
@@ -234,7 +234,7 @@ public struct EOO : IFlatbufferObject
   public float SHUTTER_DELAY { get { int o = __p.__offset(144); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Sensor timing bias in seconds.
   public float TIMING_BIAS { get { int o = __p.__offset(146); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
+  /// Optional URI location in the document repository of the raw file parsed by the system to produce this record.
   public string RAW_FILE_URI { get { int o = __p.__offset(148); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetRAW_FILE_URIBytes() { return __p.__vector_as_span<byte>(148, 1); }
@@ -263,7 +263,7 @@ public struct EOO : IFlatbufferObject
 #endif
   public byte[] GetSOURCEArray() { return __p.__vector_as_array<byte>(156); }
   /// Originating system or organization which produced the data, if different from the source.
-  /// The origin may be different than the source if the source was a mediating system which forwarded 
+  /// The origin may be different than the source if the source was a mediating system which forwarded
   /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
   public string ORIGIN { get { int o = __p.__offset(158); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -292,8 +292,8 @@ public struct EOO : IFlatbufferObject
   public byte[] GetCREATED_BYArray() { return __p.__vector_as_array<byte>(164); }
   /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
   public RFM? REFERENCE_FRAME { get { int o = __p.__offset(166); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
-  /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+  /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),
+  /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).
   /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
   public RFM? SEN_REFERENCE_FRAME { get { int o = __p.__offset(168); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.

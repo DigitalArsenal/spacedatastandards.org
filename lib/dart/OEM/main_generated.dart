@@ -123,13 +123,13 @@ class _sizeShapeProfileReader extends fb.Reader<sizeShapeProfile> {
 
 ///  A single time-segment record of polynomial coefficients for Cartesian position
 ///  (and optionally velocity). Coefficients are stored per axis.
-/// 
+///
 ///  To evaluate position at time t within this record's validity window:
 ///    1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN
 ///       where tau is in [-1, +1].
 ///    2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using
 ///       the coefficients for each axis.
-/// 
+///
 ///  Velocity coefficients, if present, follow the same evaluation procedure.
 ///  If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by
 ///  analytically differentiating the position polynomial.
@@ -205,7 +205,7 @@ class _PPEPositionRecordReader extends fb.TableReader<PPEPositionRecord> {
   const _PPEPositionRecordReader();
 
   @override
-  PPEPositionRecord createObject(fb.BufferContext bc, int offset) => 
+  PPEPositionRecord createObject(fb.BufferContext bc, int offset) =>
     PPEPositionRecord._(bc, offset);
 }
 
@@ -376,7 +376,7 @@ class PPEPositionRecordObjectBuilder extends fb.ObjectBuilder {
   }
 }
 ///  A single time-segment record of polynomial coefficients for classical orbital elements.
-/// 
+///
 ///  The six classical elements are:
 ///    1. SMA or R_PERIAPSIS (size/shape) — see SIZE_SHAPE_TYPE
 ///    2. Eccentricity (dimensionless)
@@ -384,7 +384,7 @@ class PPEPositionRecordObjectBuilder extends fb.ObjectBuilder {
 ///    4. Right Ascension of Ascending Node / RAAN (degrees)
 ///    5. Argument of Periapsis (degrees)
 ///    6. Anomaly (degrees) — see ANOMALY_TYPE
-/// 
+///
 ///  Evaluation follows the same normalized-time procedure as PPEPositionRecord.
 class PPEOrbitalElementRecord {
   PPEOrbitalElementRecord._(this._bc, this._bcOffset);
@@ -458,7 +458,7 @@ class _PPEOrbitalElementRecordReader extends fb.TableReader<PPEOrbitalElementRec
   const _PPEOrbitalElementRecordReader();
 
   @override
-  PPEOrbitalElementRecord createObject(fb.BufferContext bc, int offset) => 
+  PPEOrbitalElementRecord createObject(fb.BufferContext bc, int offset) =>
     PPEOrbitalElementRecord._(bc, offset);
 }
 
@@ -639,7 +639,7 @@ class PPEOrbitalElementRecordObjectBuilder extends fb.ObjectBuilder {
 }
 ///  Polynomial Ephemeris — top-level message containing metadata and
 ///  one or more polynomial coefficient records for a single space object.
-/// 
+///
 ///  A PPE message may contain position records, orbital element records, or both.
 ///  Records should be ordered chronologically by EPOCH_MID and should collectively
 ///  cover the time span [START_TIME, STOP_TIME] without gaps.
@@ -708,7 +708,7 @@ class _PPEReader extends fb.TableReader<PPE> {
   const _PPEReader();
 
   @override
-  PPE createObject(fb.BufferContext bc, int offset) => 
+  PPE createObject(fb.BufferContext bc, int offset) =>
     PPE._(bc, offset);
 }
 

@@ -18,7 +18,8 @@ import kotlin.math.sign
 
 /**
  * Dataset Publication Manifest binding data/index CIDs, query replay,
- * source hashes, schema hashes, encryption metadata, and provider signature.
+ * source hashes, schema hashes, encryption metadata, provider-mediated query
+ * protocols, completeness roots, and provider signature.
  */
 @Suppress("unused")
 class DPM : Table() {
@@ -73,53 +74,72 @@ class DPM : Table() {
     val updateIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun updateIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * Provider peer ID.
+     * Canonical publication/update partition identity. FILE_ID is the key used
+     * everywhere a subscriber, provider, PNM, entitlement, cache, or query
+     * protocol refers to this exact update. It is not merely a human filename
+     * and it is not the FlatBuffer file_identifier. For completeness-verifiable
+     * streams, all returned records MUST belong to this FILE_ID and prove
+     * inclusion under this DPM's signed roots.
      */
-    val providerPeerId : String
+    val fileId : String?
         get() {
             val o = __offset(10)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                throw AssertionError("No value for (required) field providerPeerId")
-            }
-        }
-    val providerPeerIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun providerPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    /**
-     * Provider EPM CID.
-     */
-    val providerEpmCid : String?
-        get() {
-            val o = __offset(12)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val providerEpmCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
-    fun providerEpmCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    val fileIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun fileIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Provider peer ID.
+     */
+    val providerPeerId : String
+        get() {
+            val o = __offset(12)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                throw AssertionError("No value for (required) field providerPeerId")
+            }
+        }
+    val providerPeerIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun providerPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Provider EPM CID.
+     */
+    val providerEpmCid : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val providerEpmCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun providerEpmCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Publication timestamp in ISO 8601 UTC.
      */
     val publishTimestamp : String
         get() {
-            val o = __offset(14)
+            val o = __offset(16)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 throw AssertionError("No value for (required) field publishTimestamp")
             }
         }
-    val publishTimestampAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun publishTimestampInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val publishTimestampAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun publishTimestampInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Published shard, index, and auxiliary artifacts.
      */
     fun assets(j: Int) : DPMAsset? = assets(DPMAsset(), j)
     fun assets(obj: DPMAsset, j: Int) : DPMAsset? {
-        val o = __offset(16)
+        val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -128,14 +148,14 @@ class DPM : Table() {
     }
     val assetsLength : Int
         get() {
-            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Source batches used to build the dataset.
      */
     fun sources(j: Int) : DPMSourceBatch? = sources(DPMSourceBatch(), j)
     fun sources(obj: DPMSourceBatch, j: Int) : DPMSourceBatch? {
-        val o = __offset(18)
+        val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -144,14 +164,14 @@ class DPM : Table() {
     }
     val sourcesLength : Int
         get() {
-            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Replayable query binding.
      */
     val query : DPMQueryBinding? get() = query(DPMQueryBinding())
     fun query(obj: DPMQueryBinding) : DPMQueryBinding? {
-        val o = __offset(20)
+        val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -159,11 +179,30 @@ class DPM : Table() {
         }
     }
     /**
+     * Signed completeness-capable indexes. Inclusion proofs prove that returned
+     * records are authentic members of DATA_ROOT. Range-completeness proofs also
+     * prove that no matching records were omitted, but only for predicates
+     * expressible against these declared indexes.
+     */
+    fun indexes(j: Int) : DPMCompletenessIndex? = indexes(DPMCompletenessIndex(), j)
+    fun indexes(obj: DPMCompletenessIndex, j: Int) : DPMCompletenessIndex? {
+        val o = __offset(24)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val indexesLength : Int
+        get() {
+            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
      * Encryption/key metadata.
      */
     val encryption : DPMEncryptionBinding? get() = encryption(DPMEncryptionBinding())
     fun encryption(obj: DPMEncryptionBinding) : DPMEncryptionBinding? {
-        val o = __offset(22)
+        val o = __offset(26)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -174,7 +213,7 @@ class DPM : Table() {
      * Provider signature over the canonical manifest bytes or manifest digest.
      */
     fun providerSignature(j: Int) : UByte {
-        val o = __offset(24)
+        val o = __offset(28)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
         } else {
@@ -183,24 +222,24 @@ class DPM : Table() {
     }
     val providerSignatureLength : Int
         get() {
-            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
-    val providerSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
-    fun providerSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    val providerSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun providerSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Signature algorithm, e.g. Ed25519.
      */
     val signatureType : String?
         get() {
-            val o = __offset(26)
+            val o = __offset(30)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val signatureTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
-    fun signatureTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
+    val signatureTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun signatureTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDPM(_bb: ByteBuffer): DPM = getRootAsDPM(_bb, DPM())
@@ -209,30 +248,33 @@ class DPM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun DPMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DPM")
-        fun createDPM(builder: FlatBufferBuilder, versionOffset: Int, datasetIdOffset: Int, updateIdOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, publishTimestampOffset: Int, assetsOffset: Int, sourcesOffset: Int, queryOffset: Int, encryptionOffset: Int, providerSignatureOffset: Int, signatureTypeOffset: Int) : Int {
-            builder.startTable(12)
+        fun createDPM(builder: FlatBufferBuilder, versionOffset: Int, datasetIdOffset: Int, updateIdOffset: Int, fileIdOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, publishTimestampOffset: Int, assetsOffset: Int, sourcesOffset: Int, queryOffset: Int, indexesOffset: Int, encryptionOffset: Int, providerSignatureOffset: Int, signatureTypeOffset: Int) : Int {
+            builder.startTable(14)
             addSIGNATURETYPE(builder, signatureTypeOffset)
             addPROVIDERSIGNATURE(builder, providerSignatureOffset)
             addENCRYPTION(builder, encryptionOffset)
+            addINDEXES(builder, indexesOffset)
             addQUERY(builder, queryOffset)
             addSOURCES(builder, sourcesOffset)
             addASSETS(builder, assetsOffset)
             addPUBLISHTIMESTAMP(builder, publishTimestampOffset)
             addPROVIDEREPMCID(builder, providerEpmCidOffset)
             addPROVIDERPEERID(builder, providerPeerIdOffset)
+            addFILEID(builder, fileIdOffset)
             addUPDATEID(builder, updateIdOffset)
             addDATASETID(builder, datasetIdOffset)
             addVERSION(builder, versionOffset)
             return endDPM(builder)
         }
-        fun startDPM(builder: FlatBufferBuilder) = builder.startTable(12)
+        fun startDPM(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(0, version, 0)
         fun addDATASETID(builder: FlatBufferBuilder, datasetId: Int) = builder.addOffset(1, datasetId, 0)
         fun addUPDATEID(builder: FlatBufferBuilder, updateId: Int) = builder.addOffset(2, updateId, 0)
-        fun addPROVIDERPEERID(builder: FlatBufferBuilder, providerPeerId: Int) = builder.addOffset(3, providerPeerId, 0)
-        fun addPROVIDEREPMCID(builder: FlatBufferBuilder, providerEpmCid: Int) = builder.addOffset(4, providerEpmCid, 0)
-        fun addPUBLISHTIMESTAMP(builder: FlatBufferBuilder, publishTimestamp: Int) = builder.addOffset(5, publishTimestamp, 0)
-        fun addASSETS(builder: FlatBufferBuilder, assets: Int) = builder.addOffset(6, assets, 0)
+        fun addFILEID(builder: FlatBufferBuilder, fileId: Int) = builder.addOffset(3, fileId, 0)
+        fun addPROVIDERPEERID(builder: FlatBufferBuilder, providerPeerId: Int) = builder.addOffset(4, providerPeerId, 0)
+        fun addPROVIDEREPMCID(builder: FlatBufferBuilder, providerEpmCid: Int) = builder.addOffset(5, providerEpmCid, 0)
+        fun addPUBLISHTIMESTAMP(builder: FlatBufferBuilder, publishTimestamp: Int) = builder.addOffset(6, publishTimestamp, 0)
+        fun addASSETS(builder: FlatBufferBuilder, assets: Int) = builder.addOffset(7, assets, 0)
         fun createAssetsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -241,7 +283,7 @@ class DPM : Table() {
             return builder.endVector()
         }
         fun startAssetsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSOURCES(builder: FlatBufferBuilder, sources: Int) = builder.addOffset(7, sources, 0)
+        fun addSOURCES(builder: FlatBufferBuilder, sources: Int) = builder.addOffset(8, sources, 0)
         fun createSourcesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -250,9 +292,18 @@ class DPM : Table() {
             return builder.endVector()
         }
         fun startSourcesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addQUERY(builder: FlatBufferBuilder, query: Int) = builder.addOffset(8, query, 0)
-        fun addENCRYPTION(builder: FlatBufferBuilder, encryption: Int) = builder.addOffset(9, encryption, 0)
-        fun addPROVIDERSIGNATURE(builder: FlatBufferBuilder, providerSignature: Int) = builder.addOffset(10, providerSignature, 0)
+        fun addQUERY(builder: FlatBufferBuilder, query: Int) = builder.addOffset(9, query, 0)
+        fun addINDEXES(builder: FlatBufferBuilder, indexes: Int) = builder.addOffset(10, indexes, 0)
+        fun createIndexesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startIndexesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addENCRYPTION(builder: FlatBufferBuilder, encryption: Int) = builder.addOffset(11, encryption, 0)
+        fun addPROVIDERSIGNATURE(builder: FlatBufferBuilder, providerSignature: Int) = builder.addOffset(12, providerSignature, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createProviderSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -262,13 +313,13 @@ class DPM : Table() {
             return builder.endVector()
         }
         fun startProviderSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addSIGNATURETYPE(builder: FlatBufferBuilder, signatureType: Int) = builder.addOffset(11, signatureType, 0)
+        fun addSIGNATURETYPE(builder: FlatBufferBuilder, signatureType: Int) = builder.addOffset(13, signatureType, 0)
         fun endDPM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 6)
                 builder.required(o, 8)
-                builder.required(o, 10)
-                builder.required(o, 14)
+                builder.required(o, 12)
+                builder.required(o, 16)
             return o
         }
         fun finishDPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$DPM")

@@ -210,7 +210,7 @@ class _SHWUniformReader extends fb.TableReader<SHWUniform> {
   const _SHWUniformReader();
 
   @override
-  SHWUniform createObject(fb.BufferContext bc, int offset) => 
+  SHWUniform createObject(fb.BufferContext bc, int offset) =>
     SHWUniform._(bc, offset);
 }
 
@@ -334,7 +334,7 @@ class _SHWCompileRequestReader extends fb.TableReader<SHWCompileRequest> {
   const _SHWCompileRequestReader();
 
   @override
-  SHWCompileRequest createObject(fb.BufferContext bc, int offset) => 
+  SHWCompileRequest createObject(fb.BufferContext bc, int offset) =>
     SHWCompileRequest._(bc, offset);
 }
 
@@ -473,7 +473,7 @@ class _SHWCompileResponseReader extends fb.TableReader<SHWCompileResponse> {
   const _SHWCompileResponseReader();
 
   @override
-  SHWCompileResponse createObject(fb.BufferContext bc, int offset) => 
+  SHWCompileResponse createObject(fb.BufferContext bc, int offset) =>
     SHWCompileResponse._(bc, offset);
 }
 
@@ -594,7 +594,7 @@ class _SHWReader extends fb.TableReader<SHW> {
   const _SHWReader();
 
   @override
-  SHW createObject(fb.BufferContext bc, int offset) => 
+  SHW createObject(fb.BufferContext bc, int offset) =>
     SHW._(bc, offset);
 }
 

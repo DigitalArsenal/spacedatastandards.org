@@ -248,7 +248,7 @@ class _NAVReader extends fb.TableReader<NAV> {
   const _NAVReader();
 
   @override
-  NAV createObject(fb.BufferContext bc, int offset) => 
+  NAV createObject(fb.BufferContext bc, int offset) =>
     NAV._(bc, offset);
 }
 

@@ -201,7 +201,7 @@ class _GEOReader extends fb.TableReader<GEO> {
   const _GEOReader();
 
   @override
-  GEO createObject(fb.BufferContext bc, int offset) => 
+  GEO createObject(fb.BufferContext bc, int offset) =>
     GEO._(bc, offset);
 }
 

@@ -59,7 +59,7 @@ class _EMEReader extends fb.TableReader<EME> {
   const _EMEReader();
 
   @override
-  EME createObject(fb.BufferContext bc, int offset) => 
+  EME createObject(fb.BufferContext bc, int offset) =>
     EME._(bc, offset);
 }
 

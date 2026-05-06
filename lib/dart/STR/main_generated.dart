@@ -134,7 +134,7 @@ class _STRReader extends fb.TableReader<STR> {
   const _STRReader();
 
   @override
-  STR createObject(fb.BufferContext bc, int offset) => 
+  STR createObject(fb.BufferContext bc, int offset) =>
     STR._(bc, offset);
 }
 

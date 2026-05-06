@@ -173,7 +173,7 @@ class _FCSReader extends fb.TableReader<FCS> {
   const _FCSReader();
 
   @override
-  FCS createObject(fb.BufferContext bc, int offset) => 
+  FCS createObject(fb.BufferContext bc, int offset) =>
     FCS._(bc, offset);
 }
 

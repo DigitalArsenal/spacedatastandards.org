@@ -106,7 +106,7 @@ class _OODReader extends fb.TableReader<OOD> {
   const _OODReader();
 
   @override
-  OOD createObject(fb.BufferContext bc, int offset) => 
+  OOD createObject(fb.BufferContext bc, int offset) =>
     OOD._(bc, offset);
 }
 

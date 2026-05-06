@@ -305,7 +305,7 @@ class _EWRReader extends fb.TableReader<EWR> {
   const _EWRReader();
 
   @override
-  EWR createObject(fb.BufferContext bc, int offset) => 
+  EWR createObject(fb.BufferContext bc, int offset) =>
     EWR._(bc, offset);
 }
 

@@ -80,7 +80,7 @@ public struct FPCGraphDefinition: FlatBufferTable, FlatbuffersVectorInitializabl
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FPC" } 
+  public static var id: String { "$FPC" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FPCGraphDefinition.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -117,7 +117,7 @@ public struct FPCWeightedEdgeList: FlatBufferTable, FlatbuffersVectorInitializab
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FPC" } 
+  public static var id: String { "$FPC" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FPCWeightedEdgeList.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -174,7 +174,7 @@ public struct FPCCSRGraph: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FPC" } 
+  public static var id: String { "$FPC" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FPCCSRGraph.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -235,7 +235,7 @@ public struct FPCShortestPathRequest: FlatBufferTable, FlatbuffersVectorInitiali
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FPC" } 
+  public static var id: String { "$FPC" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FPCShortestPathRequest.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -279,7 +279,7 @@ public struct FPCShortestPathResult: FlatBufferTable, FlatbuffersVectorInitializ
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FPC" } 
+  public static var id: String { "$FPC" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FPCShortestPathResult.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -346,7 +346,7 @@ public struct FPCPathRequest: FlatBufferTable, FlatbuffersVectorInitializable, V
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FPC" } 
+  public static var id: String { "$FPC" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FPCPathRequest.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -383,7 +383,7 @@ public struct FPCPathResult: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FPC" } 
+  public static var id: String { "$FPC" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FPCPathResult.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -451,7 +451,7 @@ public struct FPC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$FPC" } 
+  public static var id: String { "$FPC" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FPC.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }

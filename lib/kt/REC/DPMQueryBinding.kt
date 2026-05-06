@@ -100,10 +100,43 @@ class DPMQueryBinding : Table() {
     val queryEngineVersionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
     fun queryEngineVersionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
+     * Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+     * computed. Providers MUST stream records in this order unless each chunk
+     * includes enough proof material to restore and verify the canonical order.
+     */
+    val canonicalOrder : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val canonicalOrderAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun canonicalOrderInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Query protocol name/version for provider-mediated retrieval, e.g.
+     * /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+     * protocol to the provider, submits the signed query or a permitted subset,
+     * and imports only responses that verify against the signed roots.
+     */
+    val queryProtocol : String?
+        get() {
+            val o = __offset(16)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val queryProtocolAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun queryProtocolInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
      * SDS schema names selected by the query.
      */
     fun schemaNames(j: Int) : String? {
-        val o = __offset(14)
+        val o = __offset(18)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -112,13 +145,13 @@ class DPMQueryBinding : Table() {
     }
     val schemaNamesLength : Int
         get() {
-            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Provider peer IDs selected by the query.
      */
     fun providerIds(j: Int) : String? {
-        val o = __offset(16)
+        val o = __offset(20)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -127,13 +160,13 @@ class DPMQueryBinding : Table() {
     }
     val providerIdsLength : Int
         get() {
-            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Source names selected by the query.
      */
     fun sourceNames(j: Int) : String? {
-        val o = __offset(18)
+        val o = __offset(22)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -142,13 +175,13 @@ class DPMQueryBinding : Table() {
     }
     val sourceNamesLength : Int
         get() {
-            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Batch IDs selected by the query.
      */
     fun batchIds(j: Int) : String? {
-        val o = __offset(20)
+        val o = __offset(24)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -157,36 +190,36 @@ class DPMQueryBinding : Table() {
     }
     val batchIdsLength : Int
         get() {
-            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Inclusive query window start in ISO 8601 UTC.
      */
     val windowStart : String?
         get() {
-            val o = __offset(22)
+            val o = __offset(26)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val windowStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
-    fun windowStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
+    val windowStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun windowStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Inclusive query window end in ISO 8601 UTC.
      */
     val windowEnd : String?
         get() {
-            val o = __offset(24)
+            val o = __offset(28)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val windowEndAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
-    fun windowEndInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    val windowEndAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun windowEndInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDPMQueryBinding(_bb: ByteBuffer): DPMQueryBinding = getRootAsDPMQueryBinding(_bb, DPMQueryBinding())
@@ -194,14 +227,16 @@ class DPMQueryBinding : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createDPMQueryBinding(builder: FlatBufferBuilder, canonicalQueryOffset: Int, querySha256Offset: Int, resultSha256Offset: Int, queryEngineOffset: Int, queryEngineVersionOffset: Int, schemaNamesOffset: Int, providerIdsOffset: Int, sourceNamesOffset: Int, batchIdsOffset: Int, windowStartOffset: Int, windowEndOffset: Int) : Int {
-            builder.startTable(11)
+        fun createDPMQueryBinding(builder: FlatBufferBuilder, canonicalQueryOffset: Int, querySha256Offset: Int, resultSha256Offset: Int, queryEngineOffset: Int, queryEngineVersionOffset: Int, canonicalOrderOffset: Int, queryProtocolOffset: Int, schemaNamesOffset: Int, providerIdsOffset: Int, sourceNamesOffset: Int, batchIdsOffset: Int, windowStartOffset: Int, windowEndOffset: Int) : Int {
+            builder.startTable(13)
             addWINDOWEND(builder, windowEndOffset)
             addWINDOWSTART(builder, windowStartOffset)
             addBATCHIDS(builder, batchIdsOffset)
             addSOURCENAMES(builder, sourceNamesOffset)
             addPROVIDERIDS(builder, providerIdsOffset)
             addSCHEMANAMES(builder, schemaNamesOffset)
+            addQUERYPROTOCOL(builder, queryProtocolOffset)
+            addCANONICALORDER(builder, canonicalOrderOffset)
             addQUERYENGINEVERSION(builder, queryEngineVersionOffset)
             addQUERYENGINE(builder, queryEngineOffset)
             addRESULTSHA256(builder, resultSha256Offset)
@@ -209,13 +244,15 @@ class DPMQueryBinding : Table() {
             addCANONICALQUERY(builder, canonicalQueryOffset)
             return endDPMQueryBinding(builder)
         }
-        fun startDPMQueryBinding(builder: FlatBufferBuilder) = builder.startTable(11)
+        fun startDPMQueryBinding(builder: FlatBufferBuilder) = builder.startTable(13)
         fun addCANONICALQUERY(builder: FlatBufferBuilder, canonicalQuery: Int) = builder.addOffset(0, canonicalQuery, 0)
         fun addQUERYSHA256(builder: FlatBufferBuilder, querySha256: Int) = builder.addOffset(1, querySha256, 0)
         fun addRESULTSHA256(builder: FlatBufferBuilder, resultSha256: Int) = builder.addOffset(2, resultSha256, 0)
         fun addQUERYENGINE(builder: FlatBufferBuilder, queryEngine: Int) = builder.addOffset(3, queryEngine, 0)
         fun addQUERYENGINEVERSION(builder: FlatBufferBuilder, queryEngineVersion: Int) = builder.addOffset(4, queryEngineVersion, 0)
-        fun addSCHEMANAMES(builder: FlatBufferBuilder, schemaNames: Int) = builder.addOffset(5, schemaNames, 0)
+        fun addCANONICALORDER(builder: FlatBufferBuilder, canonicalOrder: Int) = builder.addOffset(5, canonicalOrder, 0)
+        fun addQUERYPROTOCOL(builder: FlatBufferBuilder, queryProtocol: Int) = builder.addOffset(6, queryProtocol, 0)
+        fun addSCHEMANAMES(builder: FlatBufferBuilder, schemaNames: Int) = builder.addOffset(7, schemaNames, 0)
         fun createSchemaNamesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -224,7 +261,7 @@ class DPMQueryBinding : Table() {
             return builder.endVector()
         }
         fun startSchemaNamesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPROVIDERIDS(builder: FlatBufferBuilder, providerIds: Int) = builder.addOffset(6, providerIds, 0)
+        fun addPROVIDERIDS(builder: FlatBufferBuilder, providerIds: Int) = builder.addOffset(8, providerIds, 0)
         fun createProviderIdsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -233,7 +270,7 @@ class DPMQueryBinding : Table() {
             return builder.endVector()
         }
         fun startProviderIdsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSOURCENAMES(builder: FlatBufferBuilder, sourceNames: Int) = builder.addOffset(7, sourceNames, 0)
+        fun addSOURCENAMES(builder: FlatBufferBuilder, sourceNames: Int) = builder.addOffset(9, sourceNames, 0)
         fun createSourceNamesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -242,7 +279,7 @@ class DPMQueryBinding : Table() {
             return builder.endVector()
         }
         fun startSourceNamesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addBATCHIDS(builder: FlatBufferBuilder, batchIds: Int) = builder.addOffset(8, batchIds, 0)
+        fun addBATCHIDS(builder: FlatBufferBuilder, batchIds: Int) = builder.addOffset(10, batchIds, 0)
         fun createBatchIdsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -251,8 +288,8 @@ class DPMQueryBinding : Table() {
             return builder.endVector()
         }
         fun startBatchIdsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addWINDOWSTART(builder: FlatBufferBuilder, windowStart: Int) = builder.addOffset(9, windowStart, 0)
-        fun addWINDOWEND(builder: FlatBufferBuilder, windowEnd: Int) = builder.addOffset(10, windowEnd, 0)
+        fun addWINDOWSTART(builder: FlatBufferBuilder, windowStart: Int) = builder.addOffset(11, windowStart, 0)
+        fun addWINDOWEND(builder: FlatBufferBuilder, windowEnd: Int) = builder.addOffset(12, windowEnd, 0)
         fun endDPMQueryBinding(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

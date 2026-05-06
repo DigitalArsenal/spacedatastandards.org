@@ -163,7 +163,7 @@ class _ENCReader extends fb.TableReader<ENC> {
   const _ENCReader();
 
   @override
-  ENC createObject(fb.BufferContext bc, int offset) => 
+  ENC createObject(fb.BufferContext bc, int offset) =>
     ENC._(bc, offset);
 }
 

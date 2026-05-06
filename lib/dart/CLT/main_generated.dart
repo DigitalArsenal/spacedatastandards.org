@@ -101,7 +101,7 @@ class _CLTReader extends fb.TableReader<CLT> {
   const _CLTReader();
 
   @override
-  CLT createObject(fb.BufferContext bc, int offset) => 
+  CLT createObject(fb.BufferContext bc, int offset) =>
     CLT._(bc, offset);
 }
 

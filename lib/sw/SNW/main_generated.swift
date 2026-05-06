@@ -14,7 +14,7 @@ import FlatBuffers
 ///  single-frame + detection-result payload shapes). SNW is the runtime
 ///  transport that moves a batch of target states into a sensor and pulls a
 ///  batch of detection results back out across a JS ↔ WASM boundary.
-/// 
+///
 ///  Persistent sensor hardware catalog → SDS `SNR`.
 ///  Sensor maintenance event log → SDS `SEN`.
 ///  Per-plugin wire contract + config + compact single-frame → SDS `SDR`.
@@ -35,7 +35,7 @@ public enum snwErrorCode: Int32, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  Batch target detection request.
-/// 
+///
 ///  Sensor position and orientation are passed inline (not via an arena
 ///  offset) because they are small and uniform across a batch. The target
 ///  stream lives at INPUT_OFFSET as a tightly packed array of `targetState`
@@ -47,7 +47,7 @@ public struct SNWBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, 
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$SNW" } 
+  public static var id: String { "$SNW" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SNWBatchRequest.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -171,7 +171,7 @@ public struct SNWBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable,
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$SNW" } 
+  public static var id: String { "$SNW" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SNWBatchResponse.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -238,7 +238,7 @@ public struct SNW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$SNW" } 
+  public static var id: String { "$SNW" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SNW.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }

@@ -182,7 +182,7 @@ class _targetStateReader extends fb.StructReader<targetState> {
   int get size => 40;
 
   @override
-  targetState createObject(fb.BufferContext bc, int offset) => 
+  targetState createObject(fb.BufferContext bc, int offset) =>
     targetState._(bc, offset);
 }
 
@@ -290,7 +290,7 @@ class _detectionResultReader extends fb.StructReader<detectionResult> {
   int get size => 48;
 
   @override
-  detectionResult createObject(fb.BufferContext bc, int offset) => 
+  detectionResult createObject(fb.BufferContext bc, int offset) =>
     detectionResult._(bc, offset);
 }
 
@@ -417,7 +417,7 @@ class _SDRRadarConfigReader extends fb.TableReader<SDRRadarConfig> {
   const _SDRRadarConfigReader();
 
   @override
-  SDRRadarConfig createObject(fb.BufferContext bc, int offset) => 
+  SDRRadarConfig createObject(fb.BufferContext bc, int offset) =>
     SDRRadarConfig._(bc, offset);
 }
 
@@ -597,7 +597,7 @@ class _SDRSensorConfigReader extends fb.TableReader<SDRSensorConfig> {
   const _SDRSensorConfigReader();
 
   @override
-  SDRSensorConfig createObject(fb.BufferContext bc, int offset) => 
+  SDRSensorConfig createObject(fb.BufferContext bc, int offset) =>
     SDRSensorConfig._(bc, offset);
 }
 
@@ -775,7 +775,7 @@ class _SDRBatchRequestReader extends fb.TableReader<SDRBatchRequest> {
   const _SDRBatchRequestReader();
 
   @override
-  SDRBatchRequest createObject(fb.BufferContext bc, int offset) => 
+  SDRBatchRequest createObject(fb.BufferContext bc, int offset) =>
     SDRBatchRequest._(bc, offset);
 }
 
@@ -950,7 +950,7 @@ class _SDRBatchResponseReader extends fb.TableReader<SDRBatchResponse> {
   const _SDRBatchResponseReader();
 
   @override
-  SDRBatchResponse createObject(fb.BufferContext bc, int offset) => 
+  SDRBatchResponse createObject(fb.BufferContext bc, int offset) =>
     SDRBatchResponse._(bc, offset);
 }
 
@@ -1084,7 +1084,7 @@ class _SDRSingleInputReader extends fb.TableReader<SDRSingleInput> {
   const _SDRSingleInputReader();
 
   @override
-  SDRSingleInput createObject(fb.BufferContext bc, int offset) => 
+  SDRSingleInput createObject(fb.BufferContext bc, int offset) =>
     SDRSingleInput._(bc, offset);
 }
 
@@ -1253,7 +1253,7 @@ class _SDRSingleResultReader extends fb.TableReader<SDRSingleResult> {
   const _SDRSingleResultReader();
 
   @override
-  SDRSingleResult createObject(fb.BufferContext bc, int offset) => 
+  SDRSingleResult createObject(fb.BufferContext bc, int offset) =>
     SDRSingleResult._(bc, offset);
 }
 
@@ -1392,7 +1392,7 @@ class _SDRReader extends fb.TableReader<SDR> {
   const _SDRReader();
 
   @override
-  SDR createObject(fb.BufferContext bc, int offset) => 
+  SDR createObject(fb.BufferContext bc, int offset) =>
     SDR._(bc, offset);
 }
 

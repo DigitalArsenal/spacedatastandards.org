@@ -48,7 +48,7 @@ class _BMCReader extends fb.TableReader<BMC> {
   const _BMCReader();
 
   @override
-  BMC createObject(fb.BufferContext bc, int offset) => 
+  BMC createObject(fb.BufferContext bc, int offset) =>
     BMC._(bc, offset);
 }
 

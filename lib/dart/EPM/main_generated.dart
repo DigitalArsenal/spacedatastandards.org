@@ -117,7 +117,7 @@ class _CryptoKeyReader extends fb.TableReader<CryptoKey> {
   const _CryptoKeyReader();
 
   @override
-  CryptoKey createObject(fb.BufferContext bc, int offset) => 
+  CryptoKey createObject(fb.BufferContext bc, int offset) =>
     CryptoKey._(bc, offset);
 }
 
@@ -267,7 +267,7 @@ class _AddressReader extends fb.TableReader<Address> {
   const _AddressReader();
 
   @override
-  Address createObject(fb.BufferContext bc, int offset) => 
+  Address createObject(fb.BufferContext bc, int offset) =>
     Address._(bc, offset);
 }
 
@@ -411,7 +411,7 @@ class _ChainProofReader extends fb.TableReader<ChainProof> {
   const _ChainProofReader();
 
   @override
-  ChainProof createObject(fb.BufferContext bc, int offset) => 
+  ChainProof createObject(fb.BufferContext bc, int offset) =>
     ChainProof._(bc, offset);
 }
 
@@ -607,7 +607,7 @@ class _EPMReader extends fb.TableReader<EPM> {
   const _EPMReader();
 
   @override
-  EPM createObject(fb.BufferContext bc, int offset) => 
+  EPM createObject(fb.BufferContext bc, int offset) =>
     EPM._(bc, offset);
 }
 

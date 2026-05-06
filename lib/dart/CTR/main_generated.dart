@@ -51,7 +51,7 @@ class _CTRReader extends fb.TableReader<CTR> {
   const _CTRReader();
 
   @override
-  CTR createObject(fb.BufferContext bc, int offset) => 
+  CTR createObject(fb.BufferContext bc, int offset) =>
     CTR._(bc, offset);
 }
 

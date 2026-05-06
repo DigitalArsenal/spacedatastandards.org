@@ -17,7 +17,17 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Publish Notification Message
+ * Publish Notification Message.
+ *
+ * PNM is the compact network announcement for a published record, manifest, or
+ * dataset update. For dataset updates, FILE_ID identifies the canonical update
+ * partition and CID usually points to a small DPM manifest or digest. The DPM
+ * carries the full verification contract: provider identity, retrieval
+ * protocol, canonical query, result hash, Merkle roots, completeness-capable
+ * indexes, and signature. Large or paid dataset updates do not need to be
+ * published as globally discoverable IPFS files; a PNM may instead advertise a
+ * provider-mediated SDN query protocol whose response is verified against the
+ * signed DPM roots.
  */
 @Suppress("unused")
 class PNM : Table() {
@@ -66,7 +76,10 @@ class PNM : Table() {
     /**
      * Concatenated Content Identifier (CID)
      * This field is a unique ID for distributed systems (CID).
-     * The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+     * The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.
+     * For dataset-update PNMs this SHOULD identify a compact DPM manifest,
+     * manifest digest, or other small verification object, not necessarily the
+     * full dataset bytes.
      */
     val cid : String?
         get() {
@@ -96,7 +109,10 @@ class PNM : Table() {
     fun fileNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * File ID
-     * This field is the file ID / Standard Type
+     * Canonical publication/update partition identity. For dataset-update PNMs,
+     * this MUST match DPM.FILE_ID and is the stable key for entitlements,
+     * provider query requests, subscriber caches, and completeness verification.
+     * Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
      */
     val fileId : String?
         get() {

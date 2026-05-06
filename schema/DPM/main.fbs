@@ -1,5 +1,5 @@
-// Hash: 255bed9c598577692f98a238959d02e4ee9f3b023fcea87d49043da4a1a797fa
-// Version: 1.0.1
+// Hash: 63b3ce5768be6ae854cebe1557a17396446e6c9f0bee6dce81a629afa181df15
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 /// Dataset Publication Manifest
 
@@ -11,20 +11,80 @@ enum publicationAssetKind : byte {
   OTHER
 }
 
-/// One immutable content-addressed object published for a dataset update.
+/// Transport profile used to resolve a dataset update asset.
+enum dpmTransportKind : byte {
+  /// Asset bytes are resolved by content address, usually an IPFS CID.
+  CONTENT_ADDRESS,
+  /// Asset bytes are resolved from the provider through a signed SDN query
+  /// protocol. This mode is used when the update is not published as a
+  /// globally discoverable file.
+  SDN_QUERY,
+  /// Asset bytes are resolved by another protocol named in TRANSPORT_PROTOCOL.
+  OTHER
+}
+
+/// Completeness-capable signed index over a dataset update.
+table DPMCompletenessIndex {
+  /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+  INDEX_NAME: string;
+  /// Deterministic ordering expression for the index. Providers and
+  /// subscribers MUST use this ordering when building or verifying range
+  /// proofs. A query is completeness-verifiable only when its predicate can be
+  /// expressed against one or more declared indexes.
+  CANONICAL_ORDER: string;
+  /// SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
+  /// signed by the DPM provider signature and is the verifier's commitment for
+  /// inclusion and range-completeness proofs.
+  INDEX_ROOT: string;
+  /// Hash profile for leaves and internal nodes, e.g.
+  /// SDN-MERKLE-SHA256-v1. Profiles define domain separators, leaf material,
+  /// pair ordering, duplicate handling, and odd-leaf promotion.
+  MERKLE_PROFILE: string;
+  /// Whether this index can prove that no matching records were omitted for a
+  /// supported range query. Inclusion proofs alone prove authenticity, not
+  /// completeness.
+  SUPPORTS_RANGE_COMPLETENESS: bool;
+}
+
+/// One immutable asset or provider-mediated query contract published for a
+/// dataset update.
 table DPMAsset {
   /// Asset role.
   ASSET_KIND: publicationAssetKind = OTHER;
-  /// IPFS CIDv1/multihash content identifier.
-  CID: string (required);
-  /// Multiformat address, usually /ipfs/{CID}.
+  /// Transport profile for this asset. CONTENT_ADDRESS assets use CID and
+  /// MULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the
+  /// signed DPM query and root fields; they are not required to be published as
+  /// discoverable IPFS files.
+  TRANSPORT_KIND: dpmTransportKind = CONTENT_ADDRESS;
+  /// Optional IPFS CIDv1/multihash content identifier. This field is required
+  /// for CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose
+  /// bytes are retrieved through a provider protocol.
+  CID: string;
+  /// Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For
+  /// SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when
+  /// provider routing is resolved from the DPM provider identity.
   MULTIFORMAT_ADDRESS: string;
   /// File name or logical artifact name.
   FILE_NAME: string;
+  /// Canonical publication/update partition identity for this asset. FILE_ID is
+  /// not a display filename; it is the stable identifier used by PNMs,
+  /// manifests, entitlements, query requests, subscriber caches, and
+  /// completeness proofs. Example:
+  /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  FILE_ID: string;
+  /// Provider protocol name/version used to fetch this asset when
+  /// TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
+  /// response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the
+  /// provider signature in this DPM.
+  TRANSPORT_PROTOCOL: string;
   /// Byte length of the published object.
   BYTE_LENGTH: uint64;
   /// SHA-256 hash of the exact published bytes, lowercase hex.
   BYTE_SHA256: string;
+  /// Merkle root over canonical records in this asset, lowercase hex. For
+  /// provider-mediated query delivery, subscribers verify returned records and
+  /// proof paths against this root before importing data.
+  DATA_ROOT: string;
   /// SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
   SCHEMA_NAME: string;
   /// Hash of the SDS schema used to encode this object.
@@ -67,6 +127,15 @@ table DPMQueryBinding {
   QUERY_ENGINE: string;
   /// Query engine version or profile version.
   QUERY_ENGINE_VERSION: string;
+  /// Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+  /// computed. Providers MUST stream records in this order unless each chunk
+  /// includes enough proof material to restore and verify the canonical order.
+  CANONICAL_ORDER: string;
+  /// Query protocol name/version for provider-mediated retrieval, e.g.
+  /// /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+  /// protocol to the provider, submits the signed query or a permitted subset,
+  /// and imports only responses that verify against the signed roots.
+  QUERY_PROTOCOL: string;
   /// SDS schema names selected by the query.
   SCHEMA_NAMES: [string];
   /// Provider peer IDs selected by the query.
@@ -98,7 +167,8 @@ table DPMEncryptionBinding {
 }
 
 /// Dataset Publication Manifest binding data/index CIDs, query replay,
-/// source hashes, schema hashes, encryption metadata, and provider signature.
+/// source hashes, schema hashes, encryption metadata, provider-mediated query
+/// protocols, completeness roots, and provider signature.
 table DPM {
   /// Manifest format version.
   VERSION: string;
@@ -106,6 +176,13 @@ table DPM {
   DATASET_ID: string (required);
   /// Dataset update or batch identifier.
   UPDATE_ID: string (required);
+  /// Canonical publication/update partition identity. FILE_ID is the key used
+  /// everywhere a subscriber, provider, PNM, entitlement, cache, or query
+  /// protocol refers to this exact update. It is not merely a human filename
+  /// and it is not the FlatBuffer file_identifier. For completeness-verifiable
+  /// streams, all returned records MUST belong to this FILE_ID and prove
+  /// inclusion under this DPM's signed roots.
+  FILE_ID: string;
   /// Provider peer ID.
   PROVIDER_PEER_ID: string (required);
   /// Provider EPM CID.
@@ -118,6 +195,11 @@ table DPM {
   SOURCES: [DPMSourceBatch];
   /// Replayable query binding.
   QUERY: DPMQueryBinding;
+  /// Signed completeness-capable indexes. Inclusion proofs prove that returned
+  /// records are authentic members of DATA_ROOT. Range-completeness proofs also
+  /// prove that no matching records were omitted, but only for predicates
+  /// expressible against these declared indexes.
+  INDEXES: [DPMCompletenessIndex];
   /// Encryption/key metadata.
   ENCRYPTION: DPMEncryptionBinding;
   /// Provider signature over the canonical manifest bytes or manifest digest.

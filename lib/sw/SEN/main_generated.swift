@@ -49,7 +49,7 @@ public struct sensorMaintenanceEvent: FlatBufferTable, FlatbuffersVectorInitiali
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$SEN" } 
+  public static var id: String { "$SEN" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: sensorMaintenanceEvent.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -117,7 +117,7 @@ public struct sensorPlan: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$SEN" } 
+  public static var id: String { "$SEN" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: sensorPlan.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -200,7 +200,7 @@ public struct sensorStats: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$SEN" } 
+  public static var id: String { "$SEN" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: sensorStats.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -295,7 +295,7 @@ public struct SEN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$SEN" } 
+  public static var id: String { "$SEN" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SEN.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }

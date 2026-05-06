@@ -202,7 +202,7 @@ class _OBTReader extends fb.TableReader<OBT> {
   const _OBTReader();
 
   @override
-  OBT createObject(fb.BufferContext bc, int offset) => 
+  OBT createObject(fb.BufferContext bc, int offset) =>
     OBT._(bc, offset);
 }
 

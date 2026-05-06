@@ -206,7 +206,7 @@ class _RDOReader extends fb.TableReader<RDO> {
   const _RDOReader();
 
   @override
-  RDO createObject(fb.BufferContext bc, int offset) => 
+  RDO createObject(fb.BufferContext bc, int offset) =>
     RDO._(bc, offset);
 }
 

@@ -104,7 +104,7 @@ class _RAFReader extends fb.TableReader<RAF> {
   const _RAFReader();
 
   @override
-  RAF createObject(fb.BufferContext bc, int offset) => 
+  RAF createObject(fb.BufferContext bc, int offset) =>
     RAF._(bc, offset);
 }
 

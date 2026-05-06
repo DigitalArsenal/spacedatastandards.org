@@ -374,7 +374,7 @@ class _SONReader extends fb.TableReader<SON> {
   const _SONReader();
 
   @override
-  SON createObject(fb.BufferContext bc, int offset) => 
+  SON createObject(fb.BufferContext bc, int offset) =>
     SON._(bc, offset);
 }
 

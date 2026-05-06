@@ -17,7 +17,8 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * One immutable content-addressed object published for a dataset update.
+ * One immutable asset or provider-mediated query contract published for a
+ * dataset update.
  */
 @Suppress("unused")
 class DPMAsset : Table() {
@@ -38,23 +39,22 @@ class DPMAsset : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 3
         }
     /**
-     * IPFS CIDv1/multihash content identifier.
+     * Transport profile for this asset. CONTENT_ADDRESS assets use CID and
+     * MULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the
+     * signed DPM query and root fields; they are not required to be published as
+     * discoverable IPFS files.
      */
-    val cid : String
+    val transportKind : Byte
         get() {
             val o = __offset(6)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                throw AssertionError("No value for (required) field cid")
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val cidAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun cidInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     /**
-     * Multiformat address, usually /ipfs/{CID}.
+     * Optional IPFS CIDv1/multihash content identifier. This field is required
+     * for CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose
+     * bytes are retrieved through a provider protocol.
      */
-    val multiformatAddress : String?
+    val cid : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -63,12 +63,14 @@ class DPMAsset : Table() {
                 null
             }
         }
-    val multiformatAddressAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
-    fun multiformatAddressInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val cidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun cidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * File name or logical artifact name.
+     * Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For
+     * SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when
+     * provider routing is resolved from the DPM provider identity.
      */
-    val fileName : String?
+    val multiformatAddress : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,20 +79,30 @@ class DPMAsset : Table() {
                 null
             }
         }
-    val fileNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
-    fun fileNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    val multiformatAddressAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun multiformatAddressInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
-     * Byte length of the published object.
+     * File name or logical artifact name.
      */
-    val byteLength : ULong
+    val fileName : String?
         get() {
             val o = __offset(12)
-            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
+    val fileNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun fileNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
-     * SHA-256 hash of the exact published bytes, lowercase hex.
+     * Canonical publication/update partition identity for this asset. FILE_ID is
+     * not a display filename; it is the stable identifier used by PNMs,
+     * manifests, entitlements, query requests, subscriber caches, and
+     * completeness proofs. Example:
+     * celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
      */
-    val byteSha256 : String?
+    val fileId : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -99,12 +111,15 @@ class DPMAsset : Table() {
                 null
             }
         }
-    val byteSha256AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
-    fun byteSha256InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    val fileIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun fileIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
-     * SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
+     * Provider protocol name/version used to fetch this asset when
+     * TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
+     * response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the
+     * provider signature in this DPM.
      */
-    val schemaName : String?
+    val transportProtocol : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -113,26 +128,20 @@ class DPMAsset : Table() {
                 null
             }
         }
-    val schemaNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
-    fun schemaNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    val transportProtocolAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun transportProtocolInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
-     * Hash of the SDS schema used to encode this object.
+     * Byte length of the published object.
      */
-    val schemaHash : String?
+    val byteLength : ULong
         get() {
             val o = __offset(18)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
-    val schemaHashAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
-    fun schemaHashInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
-     * Optional content-key identifier for encrypted artifacts.
+     * SHA-256 hash of the exact published bytes, lowercase hex.
      */
-    val contentKeyId : String?
+    val byteSha256 : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -141,8 +150,66 @@ class DPMAsset : Table() {
                 null
             }
         }
-    val contentKeyIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
-    fun contentKeyIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    val byteSha256AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun byteSha256InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * Merkle root over canonical records in this asset, lowercase hex. For
+     * provider-mediated query delivery, subscribers verify returned records and
+     * proof paths against this root before importing data.
+     */
+    val dataRoot : String?
+        get() {
+            val o = __offset(22)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val dataRootAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun dataRootInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
+     */
+    val schemaName : String?
+        get() {
+            val o = __offset(24)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val schemaNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun schemaNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * Hash of the SDS schema used to encode this object.
+     */
+    val schemaHash : String?
+        get() {
+            val o = __offset(26)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val schemaHashAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun schemaHashInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Optional content-key identifier for encrypted artifacts.
+     */
+    val contentKeyId : String?
+        get() {
+            val o = __offset(28)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val contentKeyIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun contentKeyIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDPMAsset(_bb: ByteBuffer): DPMAsset = getRootAsDPMAsset(_bb, DPMAsset())
@@ -150,32 +217,39 @@ class DPMAsset : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createDPMAsset(builder: FlatBufferBuilder, assetKind: Byte, cidOffset: Int, multiformatAddressOffset: Int, fileNameOffset: Int, byteLength: ULong, byteSha256Offset: Int, schemaNameOffset: Int, schemaHashOffset: Int, contentKeyIdOffset: Int) : Int {
-            builder.startTable(9)
+        fun createDPMAsset(builder: FlatBufferBuilder, assetKind: Byte, transportKind: Byte, cidOffset: Int, multiformatAddressOffset: Int, fileNameOffset: Int, fileIdOffset: Int, transportProtocolOffset: Int, byteLength: ULong, byteSha256Offset: Int, dataRootOffset: Int, schemaNameOffset: Int, schemaHashOffset: Int, contentKeyIdOffset: Int) : Int {
+            builder.startTable(13)
             addBYTELENGTH(builder, byteLength)
             addCONTENTKEYID(builder, contentKeyIdOffset)
             addSCHEMAHASH(builder, schemaHashOffset)
             addSCHEMANAME(builder, schemaNameOffset)
+            addDATAROOT(builder, dataRootOffset)
             addBYTESHA256(builder, byteSha256Offset)
+            addTRANSPORTPROTOCOL(builder, transportProtocolOffset)
+            addFILEID(builder, fileIdOffset)
             addFILENAME(builder, fileNameOffset)
             addMULTIFORMATADDRESS(builder, multiformatAddressOffset)
             addCID(builder, cidOffset)
+            addTRANSPORTKIND(builder, transportKind)
             addASSETKIND(builder, assetKind)
             return endDPMAsset(builder)
         }
-        fun startDPMAsset(builder: FlatBufferBuilder) = builder.startTable(9)
+        fun startDPMAsset(builder: FlatBufferBuilder) = builder.startTable(13)
         fun addASSETKIND(builder: FlatBufferBuilder, assetKind: Byte) = builder.addByte(0, assetKind, 3)
-        fun addCID(builder: FlatBufferBuilder, cid: Int) = builder.addOffset(1, cid, 0)
-        fun addMULTIFORMATADDRESS(builder: FlatBufferBuilder, multiformatAddress: Int) = builder.addOffset(2, multiformatAddress, 0)
-        fun addFILENAME(builder: FlatBufferBuilder, fileName: Int) = builder.addOffset(3, fileName, 0)
-        fun addBYTELENGTH(builder: FlatBufferBuilder, byteLength: ULong) = builder.addLong(4, byteLength.toLong(), 0)
-        fun addBYTESHA256(builder: FlatBufferBuilder, byteSha256: Int) = builder.addOffset(5, byteSha256, 0)
-        fun addSCHEMANAME(builder: FlatBufferBuilder, schemaName: Int) = builder.addOffset(6, schemaName, 0)
-        fun addSCHEMAHASH(builder: FlatBufferBuilder, schemaHash: Int) = builder.addOffset(7, schemaHash, 0)
-        fun addCONTENTKEYID(builder: FlatBufferBuilder, contentKeyId: Int) = builder.addOffset(8, contentKeyId, 0)
+        fun addTRANSPORTKIND(builder: FlatBufferBuilder, transportKind: Byte) = builder.addByte(1, transportKind, 0)
+        fun addCID(builder: FlatBufferBuilder, cid: Int) = builder.addOffset(2, cid, 0)
+        fun addMULTIFORMATADDRESS(builder: FlatBufferBuilder, multiformatAddress: Int) = builder.addOffset(3, multiformatAddress, 0)
+        fun addFILENAME(builder: FlatBufferBuilder, fileName: Int) = builder.addOffset(4, fileName, 0)
+        fun addFILEID(builder: FlatBufferBuilder, fileId: Int) = builder.addOffset(5, fileId, 0)
+        fun addTRANSPORTPROTOCOL(builder: FlatBufferBuilder, transportProtocol: Int) = builder.addOffset(6, transportProtocol, 0)
+        fun addBYTELENGTH(builder: FlatBufferBuilder, byteLength: ULong) = builder.addLong(7, byteLength.toLong(), 0)
+        fun addBYTESHA256(builder: FlatBufferBuilder, byteSha256: Int) = builder.addOffset(8, byteSha256, 0)
+        fun addDATAROOT(builder: FlatBufferBuilder, dataRoot: Int) = builder.addOffset(9, dataRoot, 0)
+        fun addSCHEMANAME(builder: FlatBufferBuilder, schemaName: Int) = builder.addOffset(10, schemaName, 0)
+        fun addSCHEMAHASH(builder: FlatBufferBuilder, schemaHash: Int) = builder.addOffset(11, schemaHash, 0)
+        fun addCONTENTKEYID(builder: FlatBufferBuilder, contentKeyId: Int) = builder.addOffset(12, contentKeyId, 0)
         fun endDPMAsset(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
-                builder.required(o, 6)
             return o
         }
     }

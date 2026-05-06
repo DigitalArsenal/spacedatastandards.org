@@ -68,7 +68,7 @@ class _TMFReader extends fb.TableReader<TMF> {
   const _TMFReader();
 
   @override
-  TMF createObject(fb.BufferContext bc, int offset) => 
+  TMF createObject(fb.BufferContext bc, int offset) =>
     TMF._(bc, offset);
 }
 

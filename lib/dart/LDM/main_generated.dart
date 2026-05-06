@@ -45,7 +45,7 @@ class _BOVReader extends fb.TableReader<BOV> {
   const _BOVReader();
 
   @override
-  BOV createObject(fb.BufferContext bc, int offset) => 
+  BOV createObject(fb.BufferContext bc, int offset) =>
     BOV._(bc, offset);
 }
 

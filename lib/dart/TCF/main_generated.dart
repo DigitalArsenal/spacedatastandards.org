@@ -54,7 +54,7 @@ class _TCFReader extends fb.TableReader<TCF> {
   const _TCFReader();
 
   @override
-  TCF createObject(fb.BufferContext bc, int offset) => 
+  TCF createObject(fb.BufferContext bc, int offset) =>
     TCF._(bc, offset);
 }
 

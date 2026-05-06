@@ -225,7 +225,7 @@ class _GVHReader extends fb.TableReader<GVH> {
   const _GVHReader();
 
   @override
-  GVH createObject(fb.BufferContext bc, int offset) => 
+  GVH createObject(fb.BufferContext bc, int offset) =>
     GVH._(bc, offset);
 }
 

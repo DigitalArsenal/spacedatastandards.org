@@ -24,46 +24,176 @@ public enum publicationAssetKind: Int8, FlatbuffersVectorInitializable, Enum, Ve
 }
 
 
-///  One immutable content-addressed object published for a dataset update.
+///  Transport profile used to resolve a dataset update asset.
+public enum dpmTransportKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Asset bytes are resolved by content address, usually an IPFS CID.
+  case contentAddress = 0
+  ///  Asset bytes are resolved from the provider through a signed SDN query
+  ///  protocol. This mode is used when the update is not published as a
+  ///  globally discoverable file.
+  case sdnQuery = 1
+  ///  Asset bytes are resolved by another protocol named in TRANSPORT_PROTOCOL.
+  case other = 2
+
+  public static var max: dpmTransportKind { return .other }
+  public static var min: dpmTransportKind { return .contentAddress }
+}
+
+
+///  Completeness-capable signed index over a dataset update.
+public struct DPMCompletenessIndex: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$DPM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DPMCompletenessIndex.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let INDEX_NAME: VOffset = 4
+    static let CANONICAL_ORDER: VOffset = 6
+    static let INDEX_ROOT: VOffset = 8
+    static let MERKLE_PROFILE: VOffset = 10
+    static let SUPPORTS_RANGE_COMPLETENESS: VOffset = 12
+  }
+
+  ///  Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+  public var INDEX_NAME: String? { let o = _accessor.offset(VT.INDEX_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INDEX_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INDEX_NAME) }
+  ///  Deterministic ordering expression for the index. Providers and
+  ///  subscribers MUST use this ordering when building or verifying range
+  ///  proofs. A query is completeness-verifiable only when its predicate can be
+  ///  expressed against one or more declared indexes.
+  public var CANONICAL_ORDER: String? { let o = _accessor.offset(VT.CANONICAL_ORDER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CANONICAL_ORDERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CANONICAL_ORDER) }
+  ///  SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
+  ///  signed by the DPM provider signature and is the verifier's commitment for
+  ///  inclusion and range-completeness proofs.
+  public var INDEX_ROOT: String? { let o = _accessor.offset(VT.INDEX_ROOT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INDEX_ROOTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INDEX_ROOT) }
+  ///  Hash profile for leaves and internal nodes, e.g.
+  ///  SDN-MERKLE-SHA256-v1. Profiles define domain separators, leaf material,
+  ///  pair ordering, duplicate handling, and odd-leaf promotion.
+  public var MERKLE_PROFILE: String? { let o = _accessor.offset(VT.MERKLE_PROFILE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MERKLE_PROFILESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MERKLE_PROFILE) }
+  ///  Whether this index can prove that no matching records were omitted for a
+  ///  supported range query. Inclusion proofs alone prove authenticity, not
+  ///  completeness.
+  public var SUPPORTS_RANGE_COMPLETENESS: Bool { let o = _accessor.offset(VT.SUPPORTS_RANGE_COMPLETENESS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startDPMCompletenessIndex(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(INDEX_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INDEX_NAME, at: VT.INDEX_NAME) }
+  public static func add(CANONICAL_ORDER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_ORDER, at: VT.CANONICAL_ORDER) }
+  public static func add(INDEX_ROOT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INDEX_ROOT, at: VT.INDEX_ROOT) }
+  public static func add(MERKLE_PROFILE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MERKLE_PROFILE, at: VT.MERKLE_PROFILE) }
+  public static func add(SUPPORTS_RANGE_COMPLETENESS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUPPORTS_RANGE_COMPLETENESS, def: false,
+   at: VT.SUPPORTS_RANGE_COMPLETENESS) }
+  public static func endDPMCompletenessIndex(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createDPMCompletenessIndex(
+    _ fbb: inout FlatBufferBuilder,
+    INDEX_NAMEOffset INDEX_NAME: Offset = Offset(),
+    CANONICAL_ORDEROffset CANONICAL_ORDER: Offset = Offset(),
+    INDEX_ROOTOffset INDEX_ROOT: Offset = Offset(),
+    MERKLE_PROFILEOffset MERKLE_PROFILE: Offset = Offset(),
+    SUPPORTS_RANGE_COMPLETENESS: Bool = false
+  ) -> Offset {
+    let __start = DPMCompletenessIndex.startDPMCompletenessIndex(&fbb)
+    DPMCompletenessIndex.add(INDEX_NAME: INDEX_NAME, &fbb)
+    DPMCompletenessIndex.add(CANONICAL_ORDER: CANONICAL_ORDER, &fbb)
+    DPMCompletenessIndex.add(INDEX_ROOT: INDEX_ROOT, &fbb)
+    DPMCompletenessIndex.add(MERKLE_PROFILE: MERKLE_PROFILE, &fbb)
+    DPMCompletenessIndex.add(SUPPORTS_RANGE_COMPLETENESS: SUPPORTS_RANGE_COMPLETENESS, &fbb)
+    return DPMCompletenessIndex.endDPMCompletenessIndex(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.INDEX_NAME, fieldName: "INDEX_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CANONICAL_ORDER, fieldName: "CANONICAL_ORDER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INDEX_ROOT, fieldName: "INDEX_ROOT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MERKLE_PROFILE, fieldName: "MERKLE_PROFILE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SUPPORTS_RANGE_COMPLETENESS, fieldName: "SUPPORTS_RANGE_COMPLETENESS", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  One immutable asset or provider-mediated query contract published for a
+///  dataset update.
 public struct DPMAsset: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$DPM" } 
+  public static var id: String { "$DPM" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DPMAsset.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
     static let ASSET_KIND: VOffset = 4
-    static let CID: VOffset = 6
-    static let MULTIFORMAT_ADDRESS: VOffset = 8
-    static let FILE_NAME: VOffset = 10
-    static let BYTE_LENGTH: VOffset = 12
-    static let BYTE_SHA256: VOffset = 14
-    static let SCHEMA_NAME: VOffset = 16
-    static let SCHEMA_HASH: VOffset = 18
-    static let CONTENT_KEY_ID: VOffset = 20
+    static let TRANSPORT_KIND: VOffset = 6
+    static let CID: VOffset = 8
+    static let MULTIFORMAT_ADDRESS: VOffset = 10
+    static let FILE_NAME: VOffset = 12
+    static let FILE_ID: VOffset = 14
+    static let TRANSPORT_PROTOCOL: VOffset = 16
+    static let BYTE_LENGTH: VOffset = 18
+    static let BYTE_SHA256: VOffset = 20
+    static let DATA_ROOT: VOffset = 22
+    static let SCHEMA_NAME: VOffset = 24
+    static let SCHEMA_HASH: VOffset = 26
+    static let CONTENT_KEY_ID: VOffset = 28
   }
 
   ///  Asset role.
   public var ASSET_KIND: publicationAssetKind { let o = _accessor.offset(VT.ASSET_KIND); return o == 0 ? .other : publicationAssetKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .other }
-  ///  IPFS CIDv1/multihash content identifier.
-  public var CID: String! { let o = _accessor.offset(VT.CID); return _accessor.string(at: o) }
-  public var CIDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.CID) }
-  ///  Multiformat address, usually /ipfs/{CID}.
+  ///  Transport profile for this asset. CONTENT_ADDRESS assets use CID and
+  ///  MULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the
+  ///  signed DPM query and root fields; they are not required to be published as
+  ///  discoverable IPFS files.
+  public var TRANSPORT_KIND: dpmTransportKind { let o = _accessor.offset(VT.TRANSPORT_KIND); return o == 0 ? .contentAddress : dpmTransportKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .contentAddress }
+  ///  Optional IPFS CIDv1/multihash content identifier. This field is required
+  ///  for CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose
+  ///  bytes are retrieved through a provider protocol.
+  public var CID: String? { let o = _accessor.offset(VT.CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CID) }
+  ///  Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For
+  ///  SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when
+  ///  provider routing is resolved from the DPM provider identity.
   public var MULTIFORMAT_ADDRESS: String? { let o = _accessor.offset(VT.MULTIFORMAT_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
   public var MULTIFORMAT_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MULTIFORMAT_ADDRESS) }
   ///  File name or logical artifact name.
   public var FILE_NAME: String? { let o = _accessor.offset(VT.FILE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var FILE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_NAME) }
+  ///  Canonical publication/update partition identity for this asset. FILE_ID is
+  ///  not a display filename; it is the stable identifier used by PNMs,
+  ///  manifests, entitlements, query requests, subscriber caches, and
+  ///  completeness proofs. Example:
+  ///  celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  public var FILE_ID: String? { let o = _accessor.offset(VT.FILE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_ID) }
+  ///  Provider protocol name/version used to fetch this asset when
+  ///  TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
+  ///  response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the
+  ///  provider signature in this DPM.
+  public var TRANSPORT_PROTOCOL: String? { let o = _accessor.offset(VT.TRANSPORT_PROTOCOL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRANSPORT_PROTOCOLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRANSPORT_PROTOCOL) }
   ///  Byte length of the published object.
   public var BYTE_LENGTH: UInt64 { let o = _accessor.offset(VT.BYTE_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  SHA-256 hash of the exact published bytes, lowercase hex.
   public var BYTE_SHA256: String? { let o = _accessor.offset(VT.BYTE_SHA256); return o == 0 ? nil : _accessor.string(at: o) }
   public var BYTE_SHA256SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BYTE_SHA256) }
+  ///  Merkle root over canonical records in this asset, lowercase hex. For
+  ///  provider-mediated query delivery, subscribers verify returned records and
+  ///  proof paths against this root before importing data.
+  public var DATA_ROOT: String? { let o = _accessor.offset(VT.DATA_ROOT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATA_ROOTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATA_ROOT) }
   ///  SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
   public var SCHEMA_NAME: String? { let o = _accessor.offset(VT.SCHEMA_NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var SCHEMA_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_NAME) }
@@ -73,36 +203,48 @@ public struct DPMAsset: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   ///  Optional content-key identifier for encrypted artifacts.
   public var CONTENT_KEY_ID: String? { let o = _accessor.offset(VT.CONTENT_KEY_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var CONTENT_KEY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTENT_KEY_ID) }
-  public static func startDPMAsset(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func startDPMAsset(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
   public static func add(ASSET_KIND: publicationAssetKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ASSET_KIND.rawValue, def: 3, at: VT.ASSET_KIND) }
+  public static func add(TRANSPORT_KIND: dpmTransportKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSPORT_KIND.rawValue, def: 0, at: VT.TRANSPORT_KIND) }
   public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VT.CID) }
   public static func add(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VT.MULTIFORMAT_ADDRESS) }
   public static func add(FILE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_NAME, at: VT.FILE_NAME) }
+  public static func add(FILE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_ID, at: VT.FILE_ID) }
+  public static func add(TRANSPORT_PROTOCOL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSPORT_PROTOCOL, at: VT.TRANSPORT_PROTOCOL) }
   public static func add(BYTE_LENGTH: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_LENGTH, def: 0, at: VT.BYTE_LENGTH) }
   public static func add(BYTE_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BYTE_SHA256, at: VT.BYTE_SHA256) }
+  public static func add(DATA_ROOT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_ROOT, at: VT.DATA_ROOT) }
   public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VT.SCHEMA_NAME) }
   public static func add(SCHEMA_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_HASH, at: VT.SCHEMA_HASH) }
   public static func add(CONTENT_KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT_KEY_ID, at: VT.CONTENT_KEY_ID) }
-  public static func endDPMAsset(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6]); return end }
+  public static func endDPMAsset(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDPMAsset(
     _ fbb: inout FlatBufferBuilder,
     ASSET_KIND: publicationAssetKind = .other,
-    CIDOffset CID: Offset,
+    TRANSPORT_KIND: dpmTransportKind = .contentAddress,
+    CIDOffset CID: Offset = Offset(),
     MULTIFORMAT_ADDRESSOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
     FILE_NAMEOffset FILE_NAME: Offset = Offset(),
+    FILE_IDOffset FILE_ID: Offset = Offset(),
+    TRANSPORT_PROTOCOLOffset TRANSPORT_PROTOCOL: Offset = Offset(),
     BYTE_LENGTH: UInt64 = 0,
     BYTE_SHA256Offset BYTE_SHA256: Offset = Offset(),
+    DATA_ROOTOffset DATA_ROOT: Offset = Offset(),
     SCHEMA_NAMEOffset SCHEMA_NAME: Offset = Offset(),
     SCHEMA_HASHOffset SCHEMA_HASH: Offset = Offset(),
     CONTENT_KEY_IDOffset CONTENT_KEY_ID: Offset = Offset()
   ) -> Offset {
     let __start = DPMAsset.startDPMAsset(&fbb)
     DPMAsset.add(ASSET_KIND: ASSET_KIND, &fbb)
+    DPMAsset.add(TRANSPORT_KIND: TRANSPORT_KIND, &fbb)
     DPMAsset.add(CID: CID, &fbb)
     DPMAsset.add(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
     DPMAsset.add(FILE_NAME: FILE_NAME, &fbb)
+    DPMAsset.add(FILE_ID: FILE_ID, &fbb)
+    DPMAsset.add(TRANSPORT_PROTOCOL: TRANSPORT_PROTOCOL, &fbb)
     DPMAsset.add(BYTE_LENGTH: BYTE_LENGTH, &fbb)
     DPMAsset.add(BYTE_SHA256: BYTE_SHA256, &fbb)
+    DPMAsset.add(DATA_ROOT: DATA_ROOT, &fbb)
     DPMAsset.add(SCHEMA_NAME: SCHEMA_NAME, &fbb)
     DPMAsset.add(SCHEMA_HASH: SCHEMA_HASH, &fbb)
     DPMAsset.add(CONTENT_KEY_ID: CONTENT_KEY_ID, &fbb)
@@ -112,11 +254,15 @@ public struct DPMAsset: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.ASSET_KIND, fieldName: "ASSET_KIND", required: false, type: publicationAssetKind.self)
-    try _v.visit(field: VT.CID, fieldName: "CID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRANSPORT_KIND, fieldName: "TRANSPORT_KIND", required: false, type: dpmTransportKind.self)
+    try _v.visit(field: VT.CID, fieldName: "CID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.MULTIFORMAT_ADDRESS, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.FILE_NAME, fieldName: "FILE_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILE_ID, fieldName: "FILE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRANSPORT_PROTOCOL, fieldName: "TRANSPORT_PROTOCOL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.BYTE_LENGTH, fieldName: "BYTE_LENGTH", required: false, type: UInt64.self)
     try _v.visit(field: VT.BYTE_SHA256, fieldName: "BYTE_SHA256", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATA_ROOT, fieldName: "DATA_ROOT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SCHEMA_NAME, fieldName: "SCHEMA_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SCHEMA_HASH, fieldName: "SCHEMA_HASH", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.CONTENT_KEY_ID, fieldName: "CONTENT_KEY_ID", required: false, type: ForwardOffset<String>.self)
@@ -131,7 +277,7 @@ public struct DPMSourceBatch: FlatBufferTable, FlatbuffersVectorInitializable, V
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$DPM" } 
+  public static var id: String { "$DPM" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DPMSourceBatch.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -231,7 +377,7 @@ public struct DPMQueryBinding: FlatBufferTable, FlatbuffersVectorInitializable, 
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$DPM" } 
+  public static var id: String { "$DPM" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DPMQueryBinding.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -242,12 +388,14 @@ public struct DPMQueryBinding: FlatBufferTable, FlatbuffersVectorInitializable, 
     static let RESULT_SHA256: VOffset = 8
     static let QUERY_ENGINE: VOffset = 10
     static let QUERY_ENGINE_VERSION: VOffset = 12
-    static let SCHEMA_NAMES: VOffset = 14
-    static let PROVIDER_IDS: VOffset = 16
-    static let SOURCE_NAMES: VOffset = 18
-    static let BATCH_IDS: VOffset = 20
-    static let WINDOW_START: VOffset = 22
-    static let WINDOW_END: VOffset = 24
+    static let CANONICAL_ORDER: VOffset = 14
+    static let QUERY_PROTOCOL: VOffset = 16
+    static let SCHEMA_NAMES: VOffset = 18
+    static let PROVIDER_IDS: VOffset = 20
+    static let SOURCE_NAMES: VOffset = 22
+    static let BATCH_IDS: VOffset = 24
+    static let WINDOW_START: VOffset = 26
+    static let WINDOW_END: VOffset = 28
   }
 
   ///  Canonical query text or canonical JSON representation.
@@ -265,6 +413,17 @@ public struct DPMQueryBinding: FlatBufferTable, FlatbuffersVectorInitializable, 
   ///  Query engine version or profile version.
   public var QUERY_ENGINE_VERSION: String? { let o = _accessor.offset(VT.QUERY_ENGINE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
   public var QUERY_ENGINE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.QUERY_ENGINE_VERSION) }
+  ///  Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+  ///  computed. Providers MUST stream records in this order unless each chunk
+  ///  includes enough proof material to restore and verify the canonical order.
+  public var CANONICAL_ORDER: String? { let o = _accessor.offset(VT.CANONICAL_ORDER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CANONICAL_ORDERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CANONICAL_ORDER) }
+  ///  Query protocol name/version for provider-mediated retrieval, e.g.
+  ///  /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+  ///  protocol to the provider, submits the signed query or a permitted subset,
+  ///  and imports only responses that verify against the signed roots.
+  public var QUERY_PROTOCOL: String? { let o = _accessor.offset(VT.QUERY_PROTOCOL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var QUERY_PROTOCOLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.QUERY_PROTOCOL) }
   ///  SDS schema names selected by the query.
   public var SCHEMA_NAMES: FlatbufferVector<String?> { return _accessor.vector(at: VT.SCHEMA_NAMES, byteSize: 4) }
   ///  Provider peer IDs selected by the query.
@@ -279,12 +438,14 @@ public struct DPMQueryBinding: FlatBufferTable, FlatbuffersVectorInitializable, 
   ///  Inclusive query window end in ISO 8601 UTC.
   public var WINDOW_END: String? { let o = _accessor.offset(VT.WINDOW_END); return o == 0 ? nil : _accessor.string(at: o) }
   public var WINDOW_ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.WINDOW_END) }
-  public static func startDPMQueryBinding(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func startDPMQueryBinding(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
   public static func add(CANONICAL_QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_QUERY, at: VT.CANONICAL_QUERY) }
   public static func add(QUERY_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUERY_SHA256, at: VT.QUERY_SHA256) }
   public static func add(RESULT_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESULT_SHA256, at: VT.RESULT_SHA256) }
   public static func add(QUERY_ENGINE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUERY_ENGINE, at: VT.QUERY_ENGINE) }
   public static func add(QUERY_ENGINE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUERY_ENGINE_VERSION, at: VT.QUERY_ENGINE_VERSION) }
+  public static func add(CANONICAL_ORDER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_ORDER, at: VT.CANONICAL_ORDER) }
+  public static func add(QUERY_PROTOCOL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUERY_PROTOCOL, at: VT.QUERY_PROTOCOL) }
   public static func addVectorOf(SCHEMA_NAMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAMES, at: VT.SCHEMA_NAMES) }
   public static func addVectorOf(PROVIDER_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_IDS, at: VT.PROVIDER_IDS) }
   public static func addVectorOf(SOURCE_NAMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_NAMES, at: VT.SOURCE_NAMES) }
@@ -299,6 +460,8 @@ public struct DPMQueryBinding: FlatBufferTable, FlatbuffersVectorInitializable, 
     RESULT_SHA256Offset RESULT_SHA256: Offset,
     QUERY_ENGINEOffset QUERY_ENGINE: Offset = Offset(),
     QUERY_ENGINE_VERSIONOffset QUERY_ENGINE_VERSION: Offset = Offset(),
+    CANONICAL_ORDEROffset CANONICAL_ORDER: Offset = Offset(),
+    QUERY_PROTOCOLOffset QUERY_PROTOCOL: Offset = Offset(),
     SCHEMA_NAMESVectorOffset SCHEMA_NAMES: Offset = Offset(),
     PROVIDER_IDSVectorOffset PROVIDER_IDS: Offset = Offset(),
     SOURCE_NAMESVectorOffset SOURCE_NAMES: Offset = Offset(),
@@ -312,6 +475,8 @@ public struct DPMQueryBinding: FlatBufferTable, FlatbuffersVectorInitializable, 
     DPMQueryBinding.add(RESULT_SHA256: RESULT_SHA256, &fbb)
     DPMQueryBinding.add(QUERY_ENGINE: QUERY_ENGINE, &fbb)
     DPMQueryBinding.add(QUERY_ENGINE_VERSION: QUERY_ENGINE_VERSION, &fbb)
+    DPMQueryBinding.add(CANONICAL_ORDER: CANONICAL_ORDER, &fbb)
+    DPMQueryBinding.add(QUERY_PROTOCOL: QUERY_PROTOCOL, &fbb)
     DPMQueryBinding.addVectorOf(SCHEMA_NAMES: SCHEMA_NAMES, &fbb)
     DPMQueryBinding.addVectorOf(PROVIDER_IDS: PROVIDER_IDS, &fbb)
     DPMQueryBinding.addVectorOf(SOURCE_NAMES: SOURCE_NAMES, &fbb)
@@ -328,6 +493,8 @@ public struct DPMQueryBinding: FlatBufferTable, FlatbuffersVectorInitializable, 
     try _v.visit(field: VT.RESULT_SHA256, fieldName: "RESULT_SHA256", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.QUERY_ENGINE, fieldName: "QUERY_ENGINE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.QUERY_ENGINE_VERSION, fieldName: "QUERY_ENGINE_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CANONICAL_ORDER, fieldName: "CANONICAL_ORDER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.QUERY_PROTOCOL, fieldName: "QUERY_PROTOCOL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SCHEMA_NAMES, fieldName: "SCHEMA_NAMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.PROVIDER_IDS, fieldName: "PROVIDER_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.SOURCE_NAMES, fieldName: "SOURCE_NAMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
@@ -345,7 +512,7 @@ public struct DPMEncryptionBinding: FlatBufferTable, FlatbuffersVectorInitializa
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$DPM" } 
+  public static var id: String { "$DPM" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DPMEncryptionBinding.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -417,14 +584,15 @@ public struct DPMEncryptionBinding: FlatBufferTable, FlatbuffersVectorInitializa
 }
 
 ///  Dataset Publication Manifest binding data/index CIDs, query replay,
-///  source hashes, schema hashes, encryption metadata, and provider signature.
+///  source hashes, schema hashes, encryption metadata, provider-mediated query
+///  protocols, completeness roots, and provider signature.
 public struct DPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$DPM" } 
+  public static var id: String { "$DPM" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DPM.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -433,15 +601,17 @@ public struct DPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let VERSION: VOffset = 4
     static let DATASET_ID: VOffset = 6
     static let UPDATE_ID: VOffset = 8
-    static let PROVIDER_PEER_ID: VOffset = 10
-    static let PROVIDER_EPM_CID: VOffset = 12
-    static let PUBLISH_TIMESTAMP: VOffset = 14
-    static let ASSETS: VOffset = 16
-    static let SOURCES: VOffset = 18
-    static let QUERY: VOffset = 20
-    static let ENCRYPTION: VOffset = 22
-    static let PROVIDER_SIGNATURE: VOffset = 24
-    static let SIGNATURE_TYPE: VOffset = 26
+    static let FILE_ID: VOffset = 10
+    static let PROVIDER_PEER_ID: VOffset = 12
+    static let PROVIDER_EPM_CID: VOffset = 14
+    static let PUBLISH_TIMESTAMP: VOffset = 16
+    static let ASSETS: VOffset = 18
+    static let SOURCES: VOffset = 20
+    static let QUERY: VOffset = 22
+    static let INDEXES: VOffset = 24
+    static let ENCRYPTION: VOffset = 26
+    static let PROVIDER_SIGNATURE: VOffset = 28
+    static let SIGNATURE_TYPE: VOffset = 30
   }
 
   ///  Manifest format version.
@@ -453,6 +623,14 @@ public struct DPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Dataset update or batch identifier.
   public var UPDATE_ID: String! { let o = _accessor.offset(VT.UPDATE_ID); return _accessor.string(at: o) }
   public var UPDATE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.UPDATE_ID) }
+  ///  Canonical publication/update partition identity. FILE_ID is the key used
+  ///  everywhere a subscriber, provider, PNM, entitlement, cache, or query
+  ///  protocol refers to this exact update. It is not merely a human filename
+  ///  and it is not the FlatBuffer file_identifier. For completeness-verifiable
+  ///  streams, all returned records MUST belong to this FILE_ID and prove
+  ///  inclusion under this DPM's signed roots.
+  public var FILE_ID: String? { let o = _accessor.offset(VT.FILE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_ID) }
   ///  Provider peer ID.
   public var PROVIDER_PEER_ID: String! { let o = _accessor.offset(VT.PROVIDER_PEER_ID); return _accessor.string(at: o) }
   public var PROVIDER_PEER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PROVIDER_PEER_ID) }
@@ -468,6 +646,11 @@ public struct DPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var SOURCES: FlatbufferVector<DPMSourceBatch> { return _accessor.vector(at: VT.SOURCES, byteSize: 4) }
   ///  Replayable query binding.
   public var QUERY: DPMQueryBinding? { let o = _accessor.offset(VT.QUERY); return o == 0 ? nil : DPMQueryBinding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Signed completeness-capable indexes. Inclusion proofs prove that returned
+  ///  records are authentic members of DATA_ROOT. Range-completeness proofs also
+  ///  prove that no matching records were omitted, but only for predicates
+  ///  expressible against these declared indexes.
+  public var INDEXES: FlatbufferVector<DPMCompletenessIndex> { return _accessor.vector(at: VT.INDEXES, byteSize: 4) }
   ///  Encryption/key metadata.
   public var ENCRYPTION: DPMEncryptionBinding? { let o = _accessor.offset(VT.ENCRYPTION); return o == 0 ? nil : DPMEncryptionBinding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Provider signature over the canonical manifest bytes or manifest digest.
@@ -476,31 +659,35 @@ public struct DPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Signature algorithm, e.g. Ed25519.
   public var SIGNATURE_TYPE: String? { let o = _accessor.offset(VT.SIGNATURE_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
   public var SIGNATURE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE_TYPE) }
-  public static func startDPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func startDPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
   public static func add(DATASET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATASET_ID, at: VT.DATASET_ID) }
   public static func add(UPDATE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATE_ID, at: VT.UPDATE_ID) }
+  public static func add(FILE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_ID, at: VT.FILE_ID) }
   public static func add(PROVIDER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_PEER_ID, at: VT.PROVIDER_PEER_ID) }
   public static func add(PROVIDER_EPM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_EPM_CID, at: VT.PROVIDER_EPM_CID) }
   public static func add(PUBLISH_TIMESTAMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLISH_TIMESTAMP, at: VT.PUBLISH_TIMESTAMP) }
   public static func addVectorOf(ASSETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASSETS, at: VT.ASSETS) }
   public static func addVectorOf(SOURCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCES, at: VT.SOURCES) }
   public static func add(QUERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUERY, at: VT.QUERY) }
+  public static func addVectorOf(INDEXES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INDEXES, at: VT.INDEXES) }
   public static func add(ENCRYPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTION, at: VT.ENCRYPTION) }
   public static func addVectorOf(PROVIDER_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_SIGNATURE, at: VT.PROVIDER_SIGNATURE) }
   public static func add(SIGNATURE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE_TYPE, at: VT.SIGNATURE_TYPE) }
-  public static func endDPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 8, 10, 14]); return end }
+  public static func endDPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 8, 12, 16]); return end }
   public static func createDPM(
     _ fbb: inout FlatBufferBuilder,
     VERSIONOffset VERSION: Offset = Offset(),
     DATASET_IDOffset DATASET_ID: Offset,
     UPDATE_IDOffset UPDATE_ID: Offset,
+    FILE_IDOffset FILE_ID: Offset = Offset(),
     PROVIDER_PEER_IDOffset PROVIDER_PEER_ID: Offset,
     PROVIDER_EPM_CIDOffset PROVIDER_EPM_CID: Offset = Offset(),
     PUBLISH_TIMESTAMPOffset PUBLISH_TIMESTAMP: Offset,
     ASSETSVectorOffset ASSETS: Offset = Offset(),
     SOURCESVectorOffset SOURCES: Offset = Offset(),
     QUERYOffset QUERY: Offset = Offset(),
+    INDEXESVectorOffset INDEXES: Offset = Offset(),
     ENCRYPTIONOffset ENCRYPTION: Offset = Offset(),
     PROVIDER_SIGNATUREVectorOffset PROVIDER_SIGNATURE: Offset = Offset(),
     SIGNATURE_TYPEOffset SIGNATURE_TYPE: Offset = Offset()
@@ -509,12 +696,14 @@ public struct DPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     DPM.add(VERSION: VERSION, &fbb)
     DPM.add(DATASET_ID: DATASET_ID, &fbb)
     DPM.add(UPDATE_ID: UPDATE_ID, &fbb)
+    DPM.add(FILE_ID: FILE_ID, &fbb)
     DPM.add(PROVIDER_PEER_ID: PROVIDER_PEER_ID, &fbb)
     DPM.add(PROVIDER_EPM_CID: PROVIDER_EPM_CID, &fbb)
     DPM.add(PUBLISH_TIMESTAMP: PUBLISH_TIMESTAMP, &fbb)
     DPM.addVectorOf(ASSETS: ASSETS, &fbb)
     DPM.addVectorOf(SOURCES: SOURCES, &fbb)
     DPM.add(QUERY: QUERY, &fbb)
+    DPM.addVectorOf(INDEXES: INDEXES, &fbb)
     DPM.add(ENCRYPTION: ENCRYPTION, &fbb)
     DPM.addVectorOf(PROVIDER_SIGNATURE: PROVIDER_SIGNATURE, &fbb)
     DPM.add(SIGNATURE_TYPE: SIGNATURE_TYPE, &fbb)
@@ -526,12 +715,14 @@ public struct DPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.DATASET_ID, fieldName: "DATASET_ID", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.UPDATE_ID, fieldName: "UPDATE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILE_ID, fieldName: "FILE_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.PROVIDER_PEER_ID, fieldName: "PROVIDER_PEER_ID", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.PROVIDER_EPM_CID, fieldName: "PROVIDER_EPM_CID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.PUBLISH_TIMESTAMP, fieldName: "PUBLISH_TIMESTAMP", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ASSETS, fieldName: "ASSETS", required: false, type: ForwardOffset<Vector<ForwardOffset<DPMAsset>, DPMAsset>>.self)
     try _v.visit(field: VT.SOURCES, fieldName: "SOURCES", required: false, type: ForwardOffset<Vector<ForwardOffset<DPMSourceBatch>, DPMSourceBatch>>.self)
     try _v.visit(field: VT.QUERY, fieldName: "QUERY", required: false, type: ForwardOffset<DPMQueryBinding>.self)
+    try _v.visit(field: VT.INDEXES, fieldName: "INDEXES", required: false, type: ForwardOffset<Vector<ForwardOffset<DPMCompletenessIndex>, DPMCompletenessIndex>>.self)
     try _v.visit(field: VT.ENCRYPTION, fieldName: "ENCRYPTION", required: false, type: ForwardOffset<DPMEncryptionBinding>.self)
     try _v.visit(field: VT.PROVIDER_SIGNATURE, fieldName: "PROVIDER_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     try _v.visit(field: VT.SIGNATURE_TYPE, fieldName: "SIGNATURE_TYPE", required: false, type: ForwardOffset<String>.self)

@@ -219,8 +219,8 @@ impl ::flatbuffers::SimpleToVerifyInSlice for sdfOperation {}
 #[repr(transparent)]
 #[derive(Clone, Copy, PartialEq)]
 pub struct sdfResult(pub [u8; 24]);
-impl Default for sdfResult { 
-  fn default() -> Self { 
+impl Default for sdfResult {
+  fn default() -> Self {
     Self([0; 24])
   }
 }
@@ -441,8 +441,8 @@ impl sdfResultT {
 #[repr(transparent)]
 #[derive(Clone, Copy, PartialEq)]
 pub struct sdfTimeRangeResult(pub [u8; 40]);
-impl Default for sdfTimeRangeResult { 
-  fn default() -> Self { 
+impl Default for sdfTimeRangeResult {
+  fn default() -> Self {
     Self([0; 40])
   }
 }

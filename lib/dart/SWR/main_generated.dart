@@ -77,7 +77,7 @@ class _SWRReader extends fb.TableReader<SWR> {
   const _SWRReader();
 
   @override
-  SWR createObject(fb.BufferContext bc, int offset) => 
+  SWR createObject(fb.BufferContext bc, int offset) =>
     SWR._(bc, offset);
 }
 

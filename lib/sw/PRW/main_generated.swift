@@ -11,7 +11,7 @@ import FlatBuffers
 ///  Propagator Runtime Wire — arena-addressed init / batch request / batch
 ///  response envelopes for orbital propagators that produce state vectors
 ///  into a shared memory arena.
-/// 
+///
 ///  Data interchange for the underlying content (state vectors, covariance,
 ///  maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris)
 ///  lives in SDS `OCM` + `OMM` + `PPE` + `RFM` + `ATM`. PRW is the runtime
@@ -95,7 +95,7 @@ public enum prwSourceKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 ///  Propagator initialization request — assigns TLE / OMM / Keplerian /
 ///  polynomial inputs to entity handles.
-/// 
+///
 ///  The actual per-entity source record is carried inline as raw bytes
 ///  tagged with SOURCE_KIND and, where useful, a SDS file_identifier.
 ///  Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the
@@ -107,7 +107,7 @@ public struct PRWInit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRW" } 
+  public static var id: String { "$PRW" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWInit.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -151,7 +151,7 @@ public struct PRWKeplerianElements: FlatBufferTable, FlatbuffersVectorInitializa
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRW" } 
+  public static var id: String { "$PRW" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWKeplerianElements.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -236,7 +236,7 @@ public struct PRWTleLines: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRW" } 
+  public static var id: String { "$PRW" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWTleLines.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -296,7 +296,7 @@ public struct PRWInitSource: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRW" } 
+  public static var id: String { "$PRW" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWInitSource.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -365,7 +365,7 @@ public struct PRWBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, 
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRW" } 
+  public static var id: String { "$PRW" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWBatchRequest.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -435,7 +435,7 @@ public struct PRWBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable,
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRW" } 
+  public static var id: String { "$PRW" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWBatchResponse.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -517,7 +517,7 @@ public struct PRW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PRW" } 
+  public static var id: String { "$PRW" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRW.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }

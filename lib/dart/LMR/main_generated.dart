@@ -94,7 +94,7 @@ class _LMRReader extends fb.TableReader<LMR> {
   const _LMRReader();
 
   @override
-  LMR createObject(fb.BufferContext bc, int offset) => 
+  LMR createObject(fb.BufferContext bc, int offset) =>
     LMR._(bc, offset);
 }
 

@@ -70,7 +70,7 @@ class _OOAReader extends fb.TableReader<OOA> {
   const _OOAReader();
 
   @override
-  OOA createObject(fb.BufferContext bc, int offset) => 
+  OOA createObject(fb.BufferContext bc, int offset) =>
     OOA._(bc, offset);
 }
 

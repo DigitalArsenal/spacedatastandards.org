@@ -45,7 +45,7 @@ class _driftRecordReader extends fb.TableReader<driftRecord> {
   const _driftRecordReader();
 
   @override
-  driftRecord createObject(fb.BufferContext bc, int offset) => 
+  driftRecord createObject(fb.BufferContext bc, int offset) =>
     driftRecord._(bc, offset);
 }
 
@@ -203,7 +203,7 @@ class _DFHReader extends fb.TableReader<DFH> {
   const _DFHReader();
 
   @override
-  DFH createObject(fb.BufferContext bc, int offset) => 
+  DFH createObject(fb.BufferContext bc, int offset) =>
     DFH._(bc, offset);
 }
 

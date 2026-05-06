@@ -92,11 +92,11 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double OBSERVER_X() const {
     return GetField<double>(VT_OBSERVER_X, 0.0);
   }
-  /// Cartesian Y coordinate of the OBSERVER location in chosen reference frame 
+  /// Cartesian Y coordinate of the OBSERVER location in chosen reference frame
   double OBSERVER_Y() const {
     return GetField<double>(VT_OBSERVER_Y, 0.0);
   }
-  /// Cartesian Z coordinate of the OBSERVER location in chosen reference frame 
+  /// Cartesian Z coordinate of the OBSERVER location in chosen reference frame
   double OBSERVER_Z() const {
     return GetField<double>(VT_OBSERVER_Z, 0.0);
   }
@@ -104,11 +104,11 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double OBSERVER_VX() const {
     return GetField<double>(VT_OBSERVER_VX, 0.0);
   }
-  /// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame 
+  /// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame
   double OBSERVER_VY() const {
     return GetField<double>(VT_OBSERVER_VY, 0.0);
   }
-  /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
+  /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame
   double OBSERVER_VZ() const {
     return GetField<double>(VT_OBSERVER_VZ, 0.0);
   }

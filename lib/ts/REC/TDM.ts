@@ -51,7 +51,7 @@ OBSERVER_X():number {
 }
 
 /**
- * Cartesian Y coordinate of the OBSERVER location in chosen reference frame 
+ * Cartesian Y coordinate of the OBSERVER location in chosen reference frame
  */
 OBSERVER_Y():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
@@ -59,7 +59,7 @@ OBSERVER_Y():number {
 }
 
 /**
- * Cartesian Z coordinate of the OBSERVER location in chosen reference frame 
+ * Cartesian Z coordinate of the OBSERVER location in chosen reference frame
  */
 OBSERVER_Z():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
@@ -75,7 +75,7 @@ OBSERVER_VX():number {
 }
 
 /**
- * Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame 
+ * Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame
  */
 OBSERVER_VY():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
@@ -83,7 +83,7 @@ OBSERVER_VY():number {
 }
 
 /**
- * Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
+ * Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame
  */
 OBSERVER_VZ():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);

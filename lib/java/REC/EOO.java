@@ -261,8 +261,8 @@ public final class EOO extends com.google.flatbuffers.Table {
    */
   public int FOV_COUNT_UCTS() { int o = __offset(108); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
   /**
-   * Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
-   * the exposure duration should be the total integration time. This field is highly recommended / required if the 
+   * Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods,
+   * the exposure duration should be the total integration time. This field is highly recommended / required if the
    * observations are going to be used for photometric processing.
    */
   public float EXP_DURATION() { int o = __offset(110); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
@@ -291,12 +291,12 @@ public final class EOO extends com.google.flatbuffers.Table {
    */
   public float MAG_NORM_RANGE() { int o = __offset(122); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+   * Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range
    * and corresponding viewing geometry. It must NOT be computed from the orbit state.
    */
   public float GEOLAT() { int o = __offset(124); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+   * Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range
    * and viewing geometry. It must NOT be computed from the orbit state.
    */
   public float GEOLON() { int o = __offset(126); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
@@ -309,14 +309,14 @@ public final class EOO extends com.google.flatbuffers.Table {
    */
   public float GEORANGE() { int o = __offset(130); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+   * Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently
    * empty part of the night sky.
    */
   public float SKY_BKGRND() { int o = __offset(132); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
-   * to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
-   * describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+   * Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass
+   * to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general,
+   * describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical
    * object and the observer.
    */
   public float PRIMARY_EXTINCTION() { int o = __offset(134); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
@@ -325,13 +325,13 @@ public final class EOO extends com.google.flatbuffers.Table {
    */
   public float PRIMARY_EXTINCTION_UNC() { int o = __offset(136); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+   * The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the
    * calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
    */
   public float SOLAR_PHASE_ANGLE() { int o = __offset(138); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
-   * onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+   * The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector
+   * onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition)
    * and positive when opening (after the opposition).
    */
   public float SOLAR_EQ_PHASE_ANGLE() { int o = __offset(140); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
@@ -348,7 +348,7 @@ public final class EOO extends com.google.flatbuffers.Table {
    */
   public float TIMING_BIAS() { int o = __offset(146); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
+   * Optional URI location in the document repository of the raw file parsed by the system to produce this record.
    */
   public String RAW_FILE_URI() { int o = __offset(148); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer RAW_FILE_URIAsByteBuffer() { return __vector_as_bytebuffer(148, 1); }
@@ -375,7 +375,7 @@ public final class EOO extends com.google.flatbuffers.Table {
   public ByteBuffer SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 156, 1); }
   /**
    * Originating system or organization which produced the data, if different from the source.
-   * The origin may be different than the source if the source was a mediating system which forwarded 
+   * The origin may be different than the source if the source was a mediating system which forwarded
    * the data on behalf of the origin system. If null, the source may be assumed to be the origin.
    */
   public String ORIGIN() { int o = __offset(158); return o != 0 ? __string(o + bb_pos) : null; }
@@ -403,8 +403,8 @@ public final class EOO extends com.google.flatbuffers.Table {
   public RFM REFERENCE_FRAME() { return REFERENCE_FRAME(new RFM()); }
   public RFM REFERENCE_FRAME(RFM obj) { int o = __offset(166); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
-   * The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
-   * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+   * The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),
+   * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).
    * Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
    */
   public RFM SEN_REFERENCE_FRAME() { return SEN_REFERENCE_FRAME(new RFM()); }

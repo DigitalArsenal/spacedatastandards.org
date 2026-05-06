@@ -1140,8 +1140,8 @@ func (rcv *EOO) MutateFovCountUcts(n int32) bool {
 	return rcv.MutateFOV_COUNT_UCTS(n)
 }
 
-/// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
-/// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+/// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods,
+/// the exposure duration should be the total integration time. This field is highly recommended / required if the
 /// observations are going to be used for photometric processing.
 func (rcv *EOO) EXP_DURATION() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
@@ -1155,8 +1155,8 @@ func (rcv *EOO) ExpDuration() float32 {
 	return rcv.EXP_DURATION()
 }
 
-/// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
-/// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+/// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods,
+/// the exposure duration should be the total integration time. This field is highly recommended / required if the
 /// observations are going to be used for photometric processing.
 func (rcv *EOO) MutateEXP_DURATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(110, n)
@@ -1298,7 +1298,7 @@ func (rcv *EOO) MutateMagNormRange(n float32) bool {
 	return rcv.MutateMAG_NORM_RANGE(n)
 }
 
-/// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+/// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range
 /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
 func (rcv *EOO) GEOLAT() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(124))
@@ -1312,7 +1312,7 @@ func (rcv *EOO) Geolat() float32 {
 	return rcv.GEOLAT()
 }
 
-/// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+/// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range
 /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
 func (rcv *EOO) MutateGEOLAT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(124, n)
@@ -1322,7 +1322,7 @@ func (rcv *EOO) MutateGeolat(n float32) bool {
 	return rcv.MutateGEOLAT(n)
 }
 
-/// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+/// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range
 /// and viewing geometry. It must NOT be computed from the orbit state.
 func (rcv *EOO) GEOLON() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
@@ -1336,7 +1336,7 @@ func (rcv *EOO) Geolon() float32 {
 	return rcv.GEOLON()
 }
 
-/// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+/// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range
 /// and viewing geometry. It must NOT be computed from the orbit state.
 func (rcv *EOO) MutateGEOLON(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(126, n)
@@ -1390,7 +1390,7 @@ func (rcv *EOO) MutateGeorange(n float32) bool {
 	return rcv.MutateGEORANGE(n)
 }
 
-/// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+/// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently
 /// empty part of the night sky.
 func (rcv *EOO) SKY_BKGRND() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(132))
@@ -1404,7 +1404,7 @@ func (rcv *EOO) SkyBkgrnd() float32 {
 	return rcv.SKY_BKGRND()
 }
 
-/// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+/// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently
 /// empty part of the night sky.
 func (rcv *EOO) MutateSKY_BKGRND(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(132, n)
@@ -1414,9 +1414,9 @@ func (rcv *EOO) MutateSkyBkgrnd(n float32) bool {
 	return rcv.MutateSKY_BKGRND(n)
 }
 
-/// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
-/// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
-/// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+/// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass
+/// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general,
+/// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical
 /// object and the observer.
 func (rcv *EOO) PRIMARY_EXTINCTION() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(134))
@@ -1430,9 +1430,9 @@ func (rcv *EOO) PrimaryExtinction() float32 {
 	return rcv.PRIMARY_EXTINCTION()
 }
 
-/// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
-/// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
-/// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+/// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass
+/// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general,
+/// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical
 /// object and the observer.
 func (rcv *EOO) MutatePRIMARY_EXTINCTION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(134, n)
@@ -1464,7 +1464,7 @@ func (rcv *EOO) MutatePrimaryExtinctionUnc(n float32) bool {
 	return rcv.MutatePRIMARY_EXTINCTION_UNC(n)
 }
 
-/// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+/// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the
 /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
 func (rcv *EOO) SOLAR_PHASE_ANGLE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(138))
@@ -1478,7 +1478,7 @@ func (rcv *EOO) SolarPhaseAngle() float32 {
 	return rcv.SOLAR_PHASE_ANGLE()
 }
 
-/// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+/// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the
 /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
 func (rcv *EOO) MutateSOLAR_PHASE_ANGLE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(138, n)
@@ -1488,8 +1488,8 @@ func (rcv *EOO) MutateSolarPhaseAngle(n float32) bool {
 	return rcv.MutateSOLAR_PHASE_ANGLE(n)
 }
 
-/// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
-/// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+/// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector
+/// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition)
 /// and positive when opening (after the opposition).
 func (rcv *EOO) SOLAR_EQ_PHASE_ANGLE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(140))
@@ -1503,8 +1503,8 @@ func (rcv *EOO) SolarEqPhaseAngle() float32 {
 	return rcv.SOLAR_EQ_PHASE_ANGLE()
 }
 
-/// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
-/// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+/// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector
+/// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition)
 /// and positive when opening (after the opposition).
 func (rcv *EOO) MutateSOLAR_EQ_PHASE_ANGLE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(140, n)
@@ -1580,7 +1580,7 @@ func (rcv *EOO) MutateTimingBias(n float32) bool {
 	return rcv.MutateTIMING_BIAS(n)
 }
 
-/// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
+/// Optional URI location in the document repository of the raw file parsed by the system to produce this record.
 func (rcv *EOO) RAW_FILE_URI() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(148))
 	if o != 0 {
@@ -1593,7 +1593,7 @@ func (rcv *EOO) RawFileUri() []byte {
 	return rcv.RAW_FILE_URI()
 }
 
-/// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
+/// Optional URI location in the document repository of the raw file parsed by the system to produce this record.
 /// Intensity of the target for IR observations, in kw/sr/em.
 func (rcv *EOO) INTENSITY() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(150))
@@ -1667,7 +1667,7 @@ func (rcv *EOO) Source() []byte {
 
 /// Source of the data.
 /// Originating system or organization which produced the data, if different from the source.
-/// The origin may be different than the source if the source was a mediating system which forwarded 
+/// The origin may be different than the source if the source was a mediating system which forwarded
 /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
 func (rcv *EOO) ORIGIN() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(158))
@@ -1682,7 +1682,7 @@ func (rcv *EOO) Origin() []byte {
 }
 
 /// Originating system or organization which produced the data, if different from the source.
-/// The origin may be different than the source if the source was a mediating system which forwarded 
+/// The origin may be different than the source if the source was a mediating system which forwarded
 /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
 /// Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
 func (rcv *EOO) DATA_MODE() DataMode {
@@ -1753,8 +1753,8 @@ func (rcv *EOO) ReferenceFrame(obj *RFM) *RFM {
 }
 
 /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
-/// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
-/// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+/// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),
+/// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).
 /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
 func (rcv *EOO) SEN_REFERENCE_FRAME(obj *RFM) *RFM {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(168))
@@ -1773,8 +1773,8 @@ func (rcv *EOO) SenReferenceFrame(obj *RFM) *RFM {
 	return rcv.SEN_REFERENCE_FRAME(obj)
 }
 
-/// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
-/// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+/// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),
+/// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).
 /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
 /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
 func (rcv *EOO) UMBRA() bool {

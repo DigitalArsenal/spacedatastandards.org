@@ -42,7 +42,7 @@ class _TPNReader extends fb.TableReader<TPN> {
   const _TPNReader();
 
   @override
-  TPN createObject(fb.BufferContext bc, int offset) => 
+  TPN createObject(fb.BufferContext bc, int offset) =>
     TPN._(bc, offset);
 }
 

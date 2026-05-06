@@ -3,7 +3,7 @@
   "definitions": {
     "PNM" : {
       "type" : "object",
-      "description" : "Publish Notification Message",
+      "description" : "Publish Notification Message.\n\nPNM is the compact network announcement for a published record, manifest, or\ndataset update. For dataset updates, FILE_ID identifies the canonical update\npartition and CID usually points to a small DPM manifest or digest. The DPM\ncarries the full verification contract: provider identity, retrieval\nprotocol, canonical query, result hash, Merkle roots, completeness-capable\nindexes, and signature. Large or paid dataset updates do not need to be\npublished as globally discoverable IPFS files; a PNM may instead advertise a\nprovider-mediated SDN query protocol whose response is verified against the\nsigned DPM roots.",
       "properties" : {
         "MULTIFORMAT_ADDRESS" : {
                 "type" : "string",
@@ -15,7 +15,7 @@
               },
         "CID" : {
                 "type" : "string",
-                "description" : "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid."
+                "description" : "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
               },
         "FILE_NAME" : {
                 "type" : "string",
@@ -23,7 +23,7 @@
               },
         "FILE_ID" : {
                 "type" : "string",
-                "description" : "File ID\nThis field is the file ID / Standard Type"
+                "description" : "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key for entitlements,\nprovider query requests, subscriber caches, and completeness verification.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
               },
         "SIGNATURE" : {
                 "type" : "string",

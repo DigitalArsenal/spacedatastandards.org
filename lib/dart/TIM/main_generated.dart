@@ -86,7 +86,7 @@ class _TIMReader extends fb.TableReader<TIM> {
   const _TIMReader();
 
   @override
-  TIM createObject(fb.BufferContext bc, int offset) => 
+  TIM createObject(fb.BufferContext bc, int offset) =>
     TIM._(bc, offset);
 }
 

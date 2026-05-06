@@ -271,7 +271,7 @@ class _TRKReader extends fb.TableReader<TRK> {
   const _TRKReader();
 
   @override
-  TRK createObject(fb.BufferContext bc, int offset) => 
+  TRK createObject(fb.BufferContext bc, int offset) =>
     TRK._(bc, offset);
 }
 

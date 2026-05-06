@@ -153,7 +153,7 @@ class _HELReader extends fb.TableReader<HEL> {
   const _HELReader();
 
   @override
-  HEL createObject(fb.BufferContext bc, int offset) => 
+  HEL createObject(fb.BufferContext bc, int offset) =>
     HEL._(bc, offset);
 }
 

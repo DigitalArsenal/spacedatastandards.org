@@ -126,7 +126,7 @@ class _PLKReader extends fb.TableReader<PLK> {
   const _PLKReader();
 
   @override
-  PLK createObject(fb.BufferContext bc, int offset) => 
+  PLK createObject(fb.BufferContext bc, int offset) =>
     PLK._(bc, offset);
 }
 

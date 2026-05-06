@@ -273,7 +273,7 @@ class _BALReader extends fb.TableReader<BAL> {
   const _BALReader();
 
   @override
-  BAL createObject(fb.BufferContext bc, int offset) => 
+  BAL createObject(fb.BufferContext bc, int offset) =>
     BAL._(bc, offset);
 }
 

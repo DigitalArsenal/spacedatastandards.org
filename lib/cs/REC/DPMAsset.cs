@@ -6,7 +6,8 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// One immutable content-addressed object published for a dataset update.
+/// One immutable asset or provider-mediated query contract published for a
+/// dataset update.
 public struct DPMAsset : IFlatbufferObject
 {
   private Table __p;
@@ -19,101 +20,154 @@ public struct DPMAsset : IFlatbufferObject
 
   /// Asset role.
   public publicationAssetKind ASSET_KIND { get { int o = __p.__offset(4); return o != 0 ? (publicationAssetKind)__p.bb.GetSbyte(o + __p.bb_pos) : publicationAssetKind.OTHER; } }
-  /// IPFS CIDv1/multihash content identifier.
-  public string CID { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Transport profile for this asset. CONTENT_ADDRESS assets use CID and
+  /// MULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the
+  /// signed DPM query and root fields; they are not required to be published as
+  /// discoverable IPFS files.
+  public dpmTransportKind TRANSPORT_KIND { get { int o = __p.__offset(6); return o != 0 ? (dpmTransportKind)__p.bb.GetSbyte(o + __p.bb_pos) : dpmTransportKind.CONTENT_ADDRESS; } }
+  /// Optional IPFS CIDv1/multihash content identifier. This field is required
+  /// for CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose
+  /// bytes are retrieved through a provider protocol.
+  public string CID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCIDBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetCIDBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetCIDBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetCIDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetCIDArray() { return __p.__vector_as_array<byte>(6); }
-  /// Multiformat address, usually /ipfs/{CID}.
-  public string MULTIFORMAT_ADDRESS { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCIDArray() { return __p.__vector_as_array<byte>(8); }
+  /// Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For
+  /// SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when
+  /// provider routing is resolved from the DPM provider identity.
+  public string MULTIFORMAT_ADDRESS { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMULTIFORMAT_ADDRESSBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetMULTIFORMAT_ADDRESSBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetMULTIFORMAT_ADDRESSBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetMULTIFORMAT_ADDRESSBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetMULTIFORMAT_ADDRESSArray() { return __p.__vector_as_array<byte>(8); }
+  public byte[] GetMULTIFORMAT_ADDRESSArray() { return __p.__vector_as_array<byte>(10); }
   /// File name or logical artifact name.
-  public string FILE_NAME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string FILE_NAME { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetFILE_NAMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetFILE_NAMEBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetFILE_NAMEBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetFILE_NAMEBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetFILE_NAMEArray() { return __p.__vector_as_array<byte>(10); }
+  public byte[] GetFILE_NAMEArray() { return __p.__vector_as_array<byte>(12); }
+  /// Canonical publication/update partition identity for this asset. FILE_ID is
+  /// not a display filename; it is the stable identifier used by PNMs,
+  /// manifests, entitlements, query requests, subscriber caches, and
+  /// completeness proofs. Example:
+  /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  public string FILE_ID { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetFILE_IDBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetFILE_IDBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetFILE_IDArray() { return __p.__vector_as_array<byte>(14); }
+  /// Provider protocol name/version used to fetch this asset when
+  /// TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
+  /// response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the
+  /// provider signature in this DPM.
+  public string TRANSPORT_PROTOCOL { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTRANSPORT_PROTOCOLBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetTRANSPORT_PROTOCOLBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetTRANSPORT_PROTOCOLArray() { return __p.__vector_as_array<byte>(16); }
   /// Byte length of the published object.
-  public ulong BYTE_LENGTH { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public ulong BYTE_LENGTH { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// SHA-256 hash of the exact published bytes, lowercase hex.
-  public string BYTE_SHA256 { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string BYTE_SHA256 { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetBYTE_SHA256Bytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetBYTE_SHA256Bytes() { return __p.__vector_as_span<byte>(20, 1); }
 #else
-  public ArraySegment<byte>? GetBYTE_SHA256Bytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetBYTE_SHA256Bytes() { return __p.__vector_as_arraysegment(20); }
 #endif
-  public byte[] GetBYTE_SHA256Array() { return __p.__vector_as_array<byte>(14); }
+  public byte[] GetBYTE_SHA256Array() { return __p.__vector_as_array<byte>(20); }
+  /// Merkle root over canonical records in this asset, lowercase hex. For
+  /// provider-mediated query delivery, subscribers verify returned records and
+  /// proof paths against this root before importing data.
+  public string DATA_ROOT { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDATA_ROOTBytes() { return __p.__vector_as_span<byte>(22, 1); }
+#else
+  public ArraySegment<byte>? GetDATA_ROOTBytes() { return __p.__vector_as_arraysegment(22); }
+#endif
+  public byte[] GetDATA_ROOTArray() { return __p.__vector_as_array<byte>(22); }
   /// SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
-  public string SCHEMA_NAME { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string SCHEMA_NAME { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSCHEMA_NAMEBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetSCHEMA_NAMEBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetSCHEMA_NAMEBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetSCHEMA_NAMEBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetSCHEMA_NAMEArray() { return __p.__vector_as_array<byte>(16); }
+  public byte[] GetSCHEMA_NAMEArray() { return __p.__vector_as_array<byte>(24); }
   /// Hash of the SDS schema used to encode this object.
-  public string SCHEMA_HASH { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string SCHEMA_HASH { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSCHEMA_HASHBytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetSCHEMA_HASHBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetSCHEMA_HASHBytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetSCHEMA_HASHBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetSCHEMA_HASHArray() { return __p.__vector_as_array<byte>(18); }
+  public byte[] GetSCHEMA_HASHArray() { return __p.__vector_as_array<byte>(26); }
   /// Optional content-key identifier for encrypted artifacts.
-  public string CONTENT_KEY_ID { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string CONTENT_KEY_ID { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCONTENT_KEY_IDBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetCONTENT_KEY_IDBytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetCONTENT_KEY_IDBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetCONTENT_KEY_IDBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetCONTENT_KEY_IDArray() { return __p.__vector_as_array<byte>(20); }
+  public byte[] GetCONTENT_KEY_IDArray() { return __p.__vector_as_array<byte>(28); }
 
   public static Offset<DPMAsset> CreateDPMAsset(FlatBufferBuilder builder,
       publicationAssetKind ASSET_KIND = publicationAssetKind.OTHER,
+      dpmTransportKind TRANSPORT_KIND = dpmTransportKind.CONTENT_ADDRESS,
       StringOffset CIDOffset = default(StringOffset),
       StringOffset MULTIFORMAT_ADDRESSOffset = default(StringOffset),
       StringOffset FILE_NAMEOffset = default(StringOffset),
+      StringOffset FILE_IDOffset = default(StringOffset),
+      StringOffset TRANSPORT_PROTOCOLOffset = default(StringOffset),
       ulong BYTE_LENGTH = 0,
       StringOffset BYTE_SHA256Offset = default(StringOffset),
+      StringOffset DATA_ROOTOffset = default(StringOffset),
       StringOffset SCHEMA_NAMEOffset = default(StringOffset),
       StringOffset SCHEMA_HASHOffset = default(StringOffset),
       StringOffset CONTENT_KEY_IDOffset = default(StringOffset)) {
-    builder.StartTable(9);
+    builder.StartTable(13);
     DPMAsset.AddBYTE_LENGTH(builder, BYTE_LENGTH);
     DPMAsset.AddCONTENT_KEY_ID(builder, CONTENT_KEY_IDOffset);
     DPMAsset.AddSCHEMA_HASH(builder, SCHEMA_HASHOffset);
     DPMAsset.AddSCHEMA_NAME(builder, SCHEMA_NAMEOffset);
+    DPMAsset.AddDATA_ROOT(builder, DATA_ROOTOffset);
     DPMAsset.AddBYTE_SHA256(builder, BYTE_SHA256Offset);
+    DPMAsset.AddTRANSPORT_PROTOCOL(builder, TRANSPORT_PROTOCOLOffset);
+    DPMAsset.AddFILE_ID(builder, FILE_IDOffset);
     DPMAsset.AddFILE_NAME(builder, FILE_NAMEOffset);
     DPMAsset.AddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESSOffset);
     DPMAsset.AddCID(builder, CIDOffset);
+    DPMAsset.AddTRANSPORT_KIND(builder, TRANSPORT_KIND);
     DPMAsset.AddASSET_KIND(builder, ASSET_KIND);
     return DPMAsset.EndDPMAsset(builder);
   }
 
-  public static void StartDPMAsset(FlatBufferBuilder builder) { builder.StartTable(9); }
+  public static void StartDPMAsset(FlatBufferBuilder builder) { builder.StartTable(13); }
   public static void AddASSET_KIND(FlatBufferBuilder builder, publicationAssetKind ASSET_KIND) { builder.AddSbyte(0, (sbyte)ASSET_KIND, 3); }
-  public static void AddCID(FlatBufferBuilder builder, StringOffset CIDOffset) { builder.AddOffset(1, CIDOffset.Value, 0); }
-  public static void AddMULTIFORMAT_ADDRESS(FlatBufferBuilder builder, StringOffset MULTIFORMAT_ADDRESSOffset) { builder.AddOffset(2, MULTIFORMAT_ADDRESSOffset.Value, 0); }
-  public static void AddFILE_NAME(FlatBufferBuilder builder, StringOffset FILE_NAMEOffset) { builder.AddOffset(3, FILE_NAMEOffset.Value, 0); }
-  public static void AddBYTE_LENGTH(FlatBufferBuilder builder, ulong BYTE_LENGTH) { builder.AddUlong(4, BYTE_LENGTH, 0); }
-  public static void AddBYTE_SHA256(FlatBufferBuilder builder, StringOffset BYTE_SHA256Offset) { builder.AddOffset(5, BYTE_SHA256Offset.Value, 0); }
-  public static void AddSCHEMA_NAME(FlatBufferBuilder builder, StringOffset SCHEMA_NAMEOffset) { builder.AddOffset(6, SCHEMA_NAMEOffset.Value, 0); }
-  public static void AddSCHEMA_HASH(FlatBufferBuilder builder, StringOffset SCHEMA_HASHOffset) { builder.AddOffset(7, SCHEMA_HASHOffset.Value, 0); }
-  public static void AddCONTENT_KEY_ID(FlatBufferBuilder builder, StringOffset CONTENT_KEY_IDOffset) { builder.AddOffset(8, CONTENT_KEY_IDOffset.Value, 0); }
+  public static void AddTRANSPORT_KIND(FlatBufferBuilder builder, dpmTransportKind TRANSPORT_KIND) { builder.AddSbyte(1, (sbyte)TRANSPORT_KIND, 0); }
+  public static void AddCID(FlatBufferBuilder builder, StringOffset CIDOffset) { builder.AddOffset(2, CIDOffset.Value, 0); }
+  public static void AddMULTIFORMAT_ADDRESS(FlatBufferBuilder builder, StringOffset MULTIFORMAT_ADDRESSOffset) { builder.AddOffset(3, MULTIFORMAT_ADDRESSOffset.Value, 0); }
+  public static void AddFILE_NAME(FlatBufferBuilder builder, StringOffset FILE_NAMEOffset) { builder.AddOffset(4, FILE_NAMEOffset.Value, 0); }
+  public static void AddFILE_ID(FlatBufferBuilder builder, StringOffset FILE_IDOffset) { builder.AddOffset(5, FILE_IDOffset.Value, 0); }
+  public static void AddTRANSPORT_PROTOCOL(FlatBufferBuilder builder, StringOffset TRANSPORT_PROTOCOLOffset) { builder.AddOffset(6, TRANSPORT_PROTOCOLOffset.Value, 0); }
+  public static void AddBYTE_LENGTH(FlatBufferBuilder builder, ulong BYTE_LENGTH) { builder.AddUlong(7, BYTE_LENGTH, 0); }
+  public static void AddBYTE_SHA256(FlatBufferBuilder builder, StringOffset BYTE_SHA256Offset) { builder.AddOffset(8, BYTE_SHA256Offset.Value, 0); }
+  public static void AddDATA_ROOT(FlatBufferBuilder builder, StringOffset DATA_ROOTOffset) { builder.AddOffset(9, DATA_ROOTOffset.Value, 0); }
+  public static void AddSCHEMA_NAME(FlatBufferBuilder builder, StringOffset SCHEMA_NAMEOffset) { builder.AddOffset(10, SCHEMA_NAMEOffset.Value, 0); }
+  public static void AddSCHEMA_HASH(FlatBufferBuilder builder, StringOffset SCHEMA_HASHOffset) { builder.AddOffset(11, SCHEMA_HASHOffset.Value, 0); }
+  public static void AddCONTENT_KEY_ID(FlatBufferBuilder builder, StringOffset CONTENT_KEY_IDOffset) { builder.AddOffset(12, CONTENT_KEY_IDOffset.Value, 0); }
   public static Offset<DPMAsset> EndDPMAsset(FlatBufferBuilder builder) {
     int o = builder.EndTable();
-    builder.Required(o, 6);  // CID
     return new Offset<DPMAsset>(o);
   }
   public DPMAssetT UnPack() {
@@ -123,11 +177,15 @@ public struct DPMAsset : IFlatbufferObject
   }
   public void UnPackTo(DPMAssetT _o) {
     _o.ASSET_KIND = this.ASSET_KIND;
+    _o.TRANSPORT_KIND = this.TRANSPORT_KIND;
     _o.CID = this.CID;
     _o.MULTIFORMAT_ADDRESS = this.MULTIFORMAT_ADDRESS;
     _o.FILE_NAME = this.FILE_NAME;
+    _o.FILE_ID = this.FILE_ID;
+    _o.TRANSPORT_PROTOCOL = this.TRANSPORT_PROTOCOL;
     _o.BYTE_LENGTH = this.BYTE_LENGTH;
     _o.BYTE_SHA256 = this.BYTE_SHA256;
+    _o.DATA_ROOT = this.DATA_ROOT;
     _o.SCHEMA_NAME = this.SCHEMA_NAME;
     _o.SCHEMA_HASH = this.SCHEMA_HASH;
     _o.CONTENT_KEY_ID = this.CONTENT_KEY_ID;
@@ -137,18 +195,25 @@ public struct DPMAsset : IFlatbufferObject
     var _CID = _o.CID == null ? default(StringOffset) : builder.CreateString(_o.CID);
     var _MULTIFORMAT_ADDRESS = _o.MULTIFORMAT_ADDRESS == null ? default(StringOffset) : builder.CreateString(_o.MULTIFORMAT_ADDRESS);
     var _FILE_NAME = _o.FILE_NAME == null ? default(StringOffset) : builder.CreateString(_o.FILE_NAME);
+    var _FILE_ID = _o.FILE_ID == null ? default(StringOffset) : builder.CreateString(_o.FILE_ID);
+    var _TRANSPORT_PROTOCOL = _o.TRANSPORT_PROTOCOL == null ? default(StringOffset) : builder.CreateString(_o.TRANSPORT_PROTOCOL);
     var _BYTE_SHA256 = _o.BYTE_SHA256 == null ? default(StringOffset) : builder.CreateString(_o.BYTE_SHA256);
+    var _DATA_ROOT = _o.DATA_ROOT == null ? default(StringOffset) : builder.CreateString(_o.DATA_ROOT);
     var _SCHEMA_NAME = _o.SCHEMA_NAME == null ? default(StringOffset) : builder.CreateString(_o.SCHEMA_NAME);
     var _SCHEMA_HASH = _o.SCHEMA_HASH == null ? default(StringOffset) : builder.CreateString(_o.SCHEMA_HASH);
     var _CONTENT_KEY_ID = _o.CONTENT_KEY_ID == null ? default(StringOffset) : builder.CreateString(_o.CONTENT_KEY_ID);
     return CreateDPMAsset(
       builder,
       _o.ASSET_KIND,
+      _o.TRANSPORT_KIND,
       _CID,
       _MULTIFORMAT_ADDRESS,
       _FILE_NAME,
+      _FILE_ID,
+      _TRANSPORT_PROTOCOL,
       _o.BYTE_LENGTH,
       _BYTE_SHA256,
+      _DATA_ROOT,
       _SCHEMA_NAME,
       _SCHEMA_HASH,
       _CONTENT_KEY_ID);
@@ -158,22 +223,30 @@ public struct DPMAsset : IFlatbufferObject
 public class DPMAssetT
 {
   public publicationAssetKind ASSET_KIND { get; set; }
+  public dpmTransportKind TRANSPORT_KIND { get; set; }
   public string CID { get; set; }
   public string MULTIFORMAT_ADDRESS { get; set; }
   public string FILE_NAME { get; set; }
+  public string FILE_ID { get; set; }
+  public string TRANSPORT_PROTOCOL { get; set; }
   public ulong BYTE_LENGTH { get; set; }
   public string BYTE_SHA256 { get; set; }
+  public string DATA_ROOT { get; set; }
   public string SCHEMA_NAME { get; set; }
   public string SCHEMA_HASH { get; set; }
   public string CONTENT_KEY_ID { get; set; }
 
   public DPMAssetT() {
     this.ASSET_KIND = publicationAssetKind.OTHER;
+    this.TRANSPORT_KIND = dpmTransportKind.CONTENT_ADDRESS;
     this.CID = null;
     this.MULTIFORMAT_ADDRESS = null;
     this.FILE_NAME = null;
+    this.FILE_ID = null;
+    this.TRANSPORT_PROTOCOL = null;
     this.BYTE_LENGTH = 0;
     this.BYTE_SHA256 = null;
+    this.DATA_ROOT = null;
     this.SCHEMA_NAME = null;
     this.SCHEMA_HASH = null;
     this.CONTENT_KEY_ID = null;
@@ -187,14 +260,18 @@ static public class DPMAssetVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*ASSET_KIND*/, 1 /*publicationAssetKind*/, 1, false)
-      && verifier.VerifyString(tablePos, 6 /*CID*/, true)
-      && verifier.VerifyString(tablePos, 8 /*MULTIFORMAT_ADDRESS*/, false)
-      && verifier.VerifyString(tablePos, 10 /*FILE_NAME*/, false)
-      && verifier.VerifyField(tablePos, 12 /*BYTE_LENGTH*/, 8 /*ulong*/, 8, false)
-      && verifier.VerifyString(tablePos, 14 /*BYTE_SHA256*/, false)
-      && verifier.VerifyString(tablePos, 16 /*SCHEMA_NAME*/, false)
-      && verifier.VerifyString(tablePos, 18 /*SCHEMA_HASH*/, false)
-      && verifier.VerifyString(tablePos, 20 /*CONTENT_KEY_ID*/, false)
+      && verifier.VerifyField(tablePos, 6 /*TRANSPORT_KIND*/, 1 /*dpmTransportKind*/, 1, false)
+      && verifier.VerifyString(tablePos, 8 /*CID*/, false)
+      && verifier.VerifyString(tablePos, 10 /*MULTIFORMAT_ADDRESS*/, false)
+      && verifier.VerifyString(tablePos, 12 /*FILE_NAME*/, false)
+      && verifier.VerifyString(tablePos, 14 /*FILE_ID*/, false)
+      && verifier.VerifyString(tablePos, 16 /*TRANSPORT_PROTOCOL*/, false)
+      && verifier.VerifyField(tablePos, 18 /*BYTE_LENGTH*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 20 /*BYTE_SHA256*/, false)
+      && verifier.VerifyString(tablePos, 22 /*DATA_ROOT*/, false)
+      && verifier.VerifyString(tablePos, 24 /*SCHEMA_NAME*/, false)
+      && verifier.VerifyString(tablePos, 26 /*SCHEMA_HASH*/, false)
+      && verifier.VerifyString(tablePos, 28 /*CONTENT_KEY_ID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

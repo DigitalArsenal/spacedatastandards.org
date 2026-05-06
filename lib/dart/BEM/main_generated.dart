@@ -122,7 +122,7 @@ class _beamContourPointReader extends fb.TableReader<beamContourPoint> {
   const _beamContourPointReader();
 
   @override
-  beamContourPoint createObject(fb.BufferContext bc, int offset) => 
+  beamContourPoint createObject(fb.BufferContext bc, int offset) =>
     beamContourPoint._(bc, offset);
 }
 
@@ -217,7 +217,7 @@ class _beamContourReader extends fb.TableReader<beamContour> {
   const _beamContourReader();
 
   @override
-  beamContour createObject(fb.BufferContext bc, int offset) => 
+  beamContour createObject(fb.BufferContext bc, int offset) =>
     beamContour._(bc, offset);
 }
 
@@ -354,7 +354,7 @@ class _BEMReader extends fb.TableReader<BEM> {
   const _BEMReader();
 
   @override
-  BEM createObject(fb.BufferContext bc, int offset) => 
+  BEM createObject(fb.BufferContext bc, int offset) =>
     BEM._(bc, offset);
 }
 

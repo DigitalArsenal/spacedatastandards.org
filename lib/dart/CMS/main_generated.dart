@@ -161,7 +161,7 @@ class _commsChannelReader extends fb.TableReader<commsChannel> {
   const _commsChannelReader();
 
   @override
-  commsChannel createObject(fb.BufferContext bc, int offset) => 
+  commsChannel createObject(fb.BufferContext bc, int offset) =>
     commsChannel._(bc, offset);
 }
 
@@ -348,7 +348,7 @@ class _commsTransponderReader extends fb.TableReader<commsTransponder> {
   const _commsTransponderReader();
 
   @override
-  commsTransponder createObject(fb.BufferContext bc, int offset) => 
+  commsTransponder createObject(fb.BufferContext bc, int offset) =>
     commsTransponder._(bc, offset);
 }
 
@@ -579,7 +579,7 @@ class _CMSReader extends fb.TableReader<CMS> {
   const _CMSReader();
 
   @override
-  CMS createObject(fb.BufferContext bc, int offset) => 
+  CMS createObject(fb.BufferContext bc, int offset) =>
     CMS._(bc, offset);
 }
 

@@ -188,7 +188,7 @@ class _mnvOrbitalStateReader extends fb.TableReader<mnvOrbitalState> {
   const _mnvOrbitalStateReader();
 
   @override
-  mnvOrbitalState createObject(fb.BufferContext bc, int offset) => 
+  mnvOrbitalState createObject(fb.BufferContext bc, int offset) =>
     mnvOrbitalState._(bc, offset);
 }
 
@@ -593,7 +593,7 @@ class _MNVReader extends fb.TableReader<MNV> {
   const _MNVReader();
 
   @override
-  MNV createObject(fb.BufferContext bc, int offset) => 
+  MNV createObject(fb.BufferContext bc, int offset) =>
     MNV._(bc, offset);
 }
 

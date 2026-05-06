@@ -6,7 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// One immutable content-addressed object published for a dataset update.
+/// One immutable asset or provider-mediated query contract published for a
+/// dataset update.
 type DPMAsset struct {
 	_tab flatbuffers.Table
 }
@@ -64,9 +65,39 @@ func (rcv *DPMAsset) MutateAssetKind(n publicationAssetKind) bool {
 	return rcv.MutateASSET_KIND(n)
 }
 
-/// IPFS CIDv1/multihash content identifier.
-func (rcv *DPMAsset) CID() []byte {
+/// Transport profile for this asset. CONTENT_ADDRESS assets use CID and
+/// MULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the
+/// signed DPM query and root fields; they are not required to be published as
+/// discoverable IPFS files.
+func (rcv *DPMAsset) TRANSPORT_KIND() dpmTransportKind {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
+	if o != 0 {
+		return dpmTransportKind(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *DPMAsset) TransportKind() dpmTransportKind {
+	return rcv.TRANSPORT_KIND()
+}
+
+/// Transport profile for this asset. CONTENT_ADDRESS assets use CID and
+/// MULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the
+/// signed DPM query and root fields; they are not required to be published as
+/// discoverable IPFS files.
+func (rcv *DPMAsset) MutateTRANSPORT_KIND(n dpmTransportKind) bool {
+	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *DPMAsset) MutateTransportKind(n dpmTransportKind) bool {
+	return rcv.MutateTRANSPORT_KIND(n)
+}
+
+/// Optional IPFS CIDv1/multihash content identifier. This field is required
+/// for CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose
+/// bytes are retrieved through a provider protocol.
+func (rcv *DPMAsset) CID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -77,10 +108,14 @@ func (rcv *DPMAsset) Cid() []byte {
 	return rcv.CID()
 }
 
-/// IPFS CIDv1/multihash content identifier.
-/// Multiformat address, usually /ipfs/{CID}.
+/// Optional IPFS CIDv1/multihash content identifier. This field is required
+/// for CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose
+/// bytes are retrieved through a provider protocol.
+/// Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For
+/// SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when
+/// provider routing is resolved from the DPM provider identity.
 func (rcv *DPMAsset) MULTIFORMAT_ADDRESS() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -91,10 +126,12 @@ func (rcv *DPMAsset) MultiformatAddress() []byte {
 	return rcv.MULTIFORMAT_ADDRESS()
 }
 
-/// Multiformat address, usually /ipfs/{CID}.
+/// Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For
+/// SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when
+/// provider routing is resolved from the DPM provider identity.
 /// File name or logical artifact name.
 func (rcv *DPMAsset) FILE_NAME() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -106,9 +143,51 @@ func (rcv *DPMAsset) FileName() []byte {
 }
 
 /// File name or logical artifact name.
+/// Canonical publication/update partition identity for this asset. FILE_ID is
+/// not a display filename; it is the stable identifier used by PNMs,
+/// manifests, entitlements, query requests, subscriber caches, and
+/// completeness proofs. Example:
+/// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+func (rcv *DPMAsset) FILE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DPMAsset) FileId() []byte {
+	return rcv.FILE_ID()
+}
+
+/// Canonical publication/update partition identity for this asset. FILE_ID is
+/// not a display filename; it is the stable identifier used by PNMs,
+/// manifests, entitlements, query requests, subscriber caches, and
+/// completeness proofs. Example:
+/// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+/// Provider protocol name/version used to fetch this asset when
+/// TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
+/// response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the
+/// provider signature in this DPM.
+func (rcv *DPMAsset) TRANSPORT_PROTOCOL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DPMAsset) TransportProtocol() []byte {
+	return rcv.TRANSPORT_PROTOCOL()
+}
+
+/// Provider protocol name/version used to fetch this asset when
+/// TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
+/// response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the
+/// provider signature in this DPM.
 /// Byte length of the published object.
 func (rcv *DPMAsset) BYTE_LENGTH() uint64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.GetUint64(o + rcv._tab.Pos)
 	}
@@ -121,7 +200,7 @@ func (rcv *DPMAsset) ByteLength() uint64 {
 
 /// Byte length of the published object.
 func (rcv *DPMAsset) MutateBYTE_LENGTH(n uint64) bool {
-	return rcv._tab.MutateUint64Slot(12, n)
+	return rcv._tab.MutateUint64Slot(18, n)
 }
 
 func (rcv *DPMAsset) MutateByteLength(n uint64) bool {
@@ -130,7 +209,7 @@ func (rcv *DPMAsset) MutateByteLength(n uint64) bool {
 
 /// SHA-256 hash of the exact published bytes, lowercase hex.
 func (rcv *DPMAsset) BYTE_SHA256() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -142,9 +221,27 @@ func (rcv *DPMAsset) ByteSha256() []byte {
 }
 
 /// SHA-256 hash of the exact published bytes, lowercase hex.
+/// Merkle root over canonical records in this asset, lowercase hex. For
+/// provider-mediated query delivery, subscribers verify returned records and
+/// proof paths against this root before importing data.
+func (rcv *DPMAsset) DATA_ROOT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DPMAsset) DataRoot() []byte {
+	return rcv.DATA_ROOT()
+}
+
+/// Merkle root over canonical records in this asset, lowercase hex. For
+/// provider-mediated query delivery, subscribers verify returned records and
+/// proof paths against this root before importing data.
 /// SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
 func (rcv *DPMAsset) SCHEMA_NAME() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -158,7 +255,7 @@ func (rcv *DPMAsset) SchemaName() []byte {
 /// SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
 /// Hash of the SDS schema used to encode this object.
 func (rcv *DPMAsset) SCHEMA_HASH() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -172,7 +269,7 @@ func (rcv *DPMAsset) SchemaHash() []byte {
 /// Hash of the SDS schema used to encode this object.
 /// Optional content-key identifier for encrypted artifacts.
 func (rcv *DPMAsset) CONTENT_KEY_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -185,7 +282,7 @@ func (rcv *DPMAsset) ContentKeyId() []byte {
 
 /// Optional content-key identifier for encrypted artifacts.
 func DPMAssetStart(builder *flatbuffers.Builder) {
-	builder.StartObject(9)
+	builder.StartObject(13)
 }
 func DPMAssetAddASSET_KIND(builder *flatbuffers.Builder, ASSET_KIND publicationAssetKind) {
 	builder.PrependInt8Slot(0, int8(ASSET_KIND), 3)
@@ -193,50 +290,74 @@ func DPMAssetAddASSET_KIND(builder *flatbuffers.Builder, ASSET_KIND publicationA
 func DPMAssetAddAssetKind(builder *flatbuffers.Builder, ASSET_KIND publicationAssetKind) {
 	DPMAssetAddASSET_KIND(builder, ASSET_KIND)
 }
+func DPMAssetAddTRANSPORT_KIND(builder *flatbuffers.Builder, TRANSPORT_KIND dpmTransportKind) {
+	builder.PrependInt8Slot(1, int8(TRANSPORT_KIND), 0)
+}
+func DPMAssetAddTransportKind(builder *flatbuffers.Builder, TRANSPORT_KIND dpmTransportKind) {
+	DPMAssetAddTRANSPORT_KIND(builder, TRANSPORT_KIND)
+}
 func DPMAssetAddCID(builder *flatbuffers.Builder, CID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CID), 0)
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CID), 0)
 }
 func DPMAssetAddCid(builder *flatbuffers.Builder, CID flatbuffers.UOffsetT) {
 	DPMAssetAddCID(builder, CID)
 }
 func DPMAssetAddMULTIFORMAT_ADDRESS(builder *flatbuffers.Builder, MULTIFORMAT_ADDRESS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(MULTIFORMAT_ADDRESS), 0)
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(MULTIFORMAT_ADDRESS), 0)
 }
 func DPMAssetAddMultiformatAddress(builder *flatbuffers.Builder, MULTIFORMAT_ADDRESS flatbuffers.UOffsetT) {
 	DPMAssetAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
 }
 func DPMAssetAddFILE_NAME(builder *flatbuffers.Builder, FILE_NAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(FILE_NAME), 0)
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(FILE_NAME), 0)
 }
 func DPMAssetAddFileName(builder *flatbuffers.Builder, FILE_NAME flatbuffers.UOffsetT) {
 	DPMAssetAddFILE_NAME(builder, FILE_NAME)
 }
+func DPMAssetAddFILE_ID(builder *flatbuffers.Builder, FILE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(FILE_ID), 0)
+}
+func DPMAssetAddFileId(builder *flatbuffers.Builder, FILE_ID flatbuffers.UOffsetT) {
+	DPMAssetAddFILE_ID(builder, FILE_ID)
+}
+func DPMAssetAddTRANSPORT_PROTOCOL(builder *flatbuffers.Builder, TRANSPORT_PROTOCOL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(TRANSPORT_PROTOCOL), 0)
+}
+func DPMAssetAddTransportProtocol(builder *flatbuffers.Builder, TRANSPORT_PROTOCOL flatbuffers.UOffsetT) {
+	DPMAssetAddTRANSPORT_PROTOCOL(builder, TRANSPORT_PROTOCOL)
+}
 func DPMAssetAddBYTE_LENGTH(builder *flatbuffers.Builder, BYTE_LENGTH uint64) {
-	builder.PrependUint64Slot(4, BYTE_LENGTH, 0)
+	builder.PrependUint64Slot(7, BYTE_LENGTH, 0)
 }
 func DPMAssetAddByteLength(builder *flatbuffers.Builder, BYTE_LENGTH uint64) {
 	DPMAssetAddBYTE_LENGTH(builder, BYTE_LENGTH)
 }
 func DPMAssetAddBYTE_SHA256(builder *flatbuffers.Builder, BYTE_SHA256 flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(BYTE_SHA256), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(BYTE_SHA256), 0)
 }
 func DPMAssetAddByteSha256(builder *flatbuffers.Builder, BYTE_SHA256 flatbuffers.UOffsetT) {
 	DPMAssetAddBYTE_SHA256(builder, BYTE_SHA256)
 }
+func DPMAssetAddDATA_ROOT(builder *flatbuffers.Builder, DATA_ROOT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(DATA_ROOT), 0)
+}
+func DPMAssetAddDataRoot(builder *flatbuffers.Builder, DATA_ROOT flatbuffers.UOffsetT) {
+	DPMAssetAddDATA_ROOT(builder, DATA_ROOT)
+}
 func DPMAssetAddSCHEMA_NAME(builder *flatbuffers.Builder, SCHEMA_NAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SCHEMA_NAME), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(SCHEMA_NAME), 0)
 }
 func DPMAssetAddSchemaName(builder *flatbuffers.Builder, SCHEMA_NAME flatbuffers.UOffsetT) {
 	DPMAssetAddSCHEMA_NAME(builder, SCHEMA_NAME)
 }
 func DPMAssetAddSCHEMA_HASH(builder *flatbuffers.Builder, SCHEMA_HASH flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(SCHEMA_HASH), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(SCHEMA_HASH), 0)
 }
 func DPMAssetAddSchemaHash(builder *flatbuffers.Builder, SCHEMA_HASH flatbuffers.UOffsetT) {
 	DPMAssetAddSCHEMA_HASH(builder, SCHEMA_HASH)
 }
 func DPMAssetAddCONTENT_KEY_ID(builder *flatbuffers.Builder, CONTENT_KEY_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(CONTENT_KEY_ID), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(CONTENT_KEY_ID), 0)
 }
 func DPMAssetAddContentKeyId(builder *flatbuffers.Builder, CONTENT_KEY_ID flatbuffers.UOffsetT) {
 	DPMAssetAddCONTENT_KEY_ID(builder, CONTENT_KEY_ID)

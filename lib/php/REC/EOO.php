@@ -541,8 +541,8 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
-    /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
-    /// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+    /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods,
+    /// the exposure duration should be the total integration time. This field is highly recommended / required if the
     /// observations are going to be used for photometric processing.
     /**
      * @return float
@@ -613,7 +613,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+    /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range
     /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
     /**
      * @return float
@@ -624,7 +624,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+    /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range
     /// and viewing geometry. It must NOT be computed from the orbit state.
     /**
      * @return float
@@ -655,7 +655,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+    /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently
     /// empty part of the night sky.
     /**
      * @return float
@@ -666,9 +666,9 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
-    /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
-    /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+    /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass
+    /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general,
+    /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical
     /// object and the observer.
     /**
      * @return float
@@ -689,7 +689,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+    /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the
     /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
     /**
      * @return float
@@ -700,8 +700,8 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
-    /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+    /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector
+    /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition)
     /// and positive when opening (after the opposition).
     /**
      * @return float
@@ -742,7 +742,7 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
+    /// Optional URI location in the document repository of the raw file parsed by the system to produce this record.
     public function getRAW_FILE_URI()
     {
         $o = $this->__offset(148);
@@ -784,7 +784,7 @@ class EOO extends Table
     }
 
     /// Originating system or organization which produced the data, if different from the source.
-    /// The origin may be different than the source if the source was a mediating system which forwarded 
+    /// The origin may be different than the source if the source was a mediating system which forwarded
     /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
     public function getORIGIN()
     {
@@ -824,8 +824,8 @@ class EOO extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
-    /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+    /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),
+    /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).
     /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
     public function getSEN_REFERENCE_FRAME()
     {

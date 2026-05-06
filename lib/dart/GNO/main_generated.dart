@@ -127,7 +127,7 @@ class _gnssObsDataReader extends fb.TableReader<gnssObsData> {
   const _gnssObsDataReader();
 
   @override
-  gnssObsData createObject(fb.BufferContext bc, int offset) => 
+  gnssObsData createObject(fb.BufferContext bc, int offset) =>
     gnssObsData._(bc, offset);
 }
 
@@ -250,7 +250,7 @@ class _gnssSatObsReader extends fb.TableReader<gnssSatObs> {
   const _gnssSatObsReader();
 
   @override
-  gnssSatObs createObject(fb.BufferContext bc, int offset) => 
+  gnssSatObs createObject(fb.BufferContext bc, int offset) =>
     gnssSatObs._(bc, offset);
 }
 
@@ -435,7 +435,7 @@ class _GNOReader extends fb.TableReader<GNO> {
   const _GNOReader();
 
   @override
-  GNO createObject(fb.BufferContext bc, int offset) => 
+  GNO createObject(fb.BufferContext bc, int offset) =>
     GNO._(bc, offset);
 }
 

@@ -12,7 +12,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 ///  single-frame + detection-result payload shapes). SNW is the runtime
 ///  transport that moves a batch of target states into a sensor and pulls a
 ///  batch of detection results back out across a JS ↔ WASM boundary.
-/// 
+///
 ///  Persistent sensor hardware catalog → SDS `SNR`.
 ///  Sensor maintenance event log → SDS `SEN`.
 ///  Per-plugin wire contract + config + compact single-frame → SDS `SDR`.
@@ -59,7 +59,7 @@ class _snwErrorCodeReader extends fb.Reader<snwErrorCode> {
 }
 
 ///  Batch target detection request.
-/// 
+///
 ///  Sensor position and orientation are passed inline (not via an arena
 ///  offset) because they are small and uniform across a batch. The target
 ///  stream lives at INPUT_OFFSET as a tightly packed array of `targetState`
@@ -125,7 +125,7 @@ class _SNWBatchRequestReader extends fb.TableReader<SNWBatchRequest> {
   const _SNWBatchRequestReader();
 
   @override
-  SNWBatchRequest createObject(fb.BufferContext bc, int offset) => 
+  SNWBatchRequest createObject(fb.BufferContext bc, int offset) =>
     SNWBatchRequest._(bc, offset);
 }
 
@@ -327,7 +327,7 @@ class _SNWBatchResponseReader extends fb.TableReader<SNWBatchResponse> {
   const _SNWBatchResponseReader();
 
   @override
-  SNWBatchResponse createObject(fb.BufferContext bc, int offset) => 
+  SNWBatchResponse createObject(fb.BufferContext bc, int offset) =>
     SNWBatchResponse._(bc, offset);
 }
 
@@ -441,7 +441,7 @@ class _SNWReader extends fb.TableReader<SNW> {
   const _SNWReader();
 
   @override
-  SNW createObject(fb.BufferContext bc, int offset) => 
+  SNW createObject(fb.BufferContext bc, int offset) =>
     SNW._(bc, offset);
 }
 

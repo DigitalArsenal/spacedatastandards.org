@@ -152,7 +152,7 @@ class _LCHReader extends fb.TableReader<LCH> {
   const _LCHReader();
 
   @override
-  LCH createObject(fb.BufferContext bc, int offset) => 
+  LCH createObject(fb.BufferContext bc, int offset) =>
     LCH._(bc, offset);
 }
 

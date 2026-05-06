@@ -105,7 +105,7 @@ class _LMSReader extends fb.TableReader<LMS> {
   const _LMSReader();
 
   @override
-  LMS createObject(fb.BufferContext bc, int offset) => 
+  LMS createObject(fb.BufferContext bc, int offset) =>
     LMS._(bc, offset);
 }
 

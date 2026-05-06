@@ -100,7 +100,7 @@ class _ATMReader extends fb.TableReader<ATM> {
   const _ATMReader();
 
   @override
-  ATM createObject(fb.BufferContext bc, int offset) => 
+  ATM createObject(fb.BufferContext bc, int offset) =>
     ATM._(bc, offset);
 }
 

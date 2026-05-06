@@ -102,7 +102,7 @@ class _MTIReader extends fb.TableReader<MTI> {
   const _MTIReader();
 
   @override
-  MTI createObject(fb.BufferContext bc, int offset) => 
+  MTI createObject(fb.BufferContext bc, int offset) =>
     MTI._(bc, offset);
 }
 

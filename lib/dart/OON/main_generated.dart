@@ -63,7 +63,7 @@ class _OONReader extends fb.TableReader<OON> {
   const _OONReader();
 
   @override
-  OON createObject(fb.BufferContext bc, int offset) => 
+  OON createObject(fb.BufferContext bc, int offset) =>
     OON._(bc, offset);
 }
 

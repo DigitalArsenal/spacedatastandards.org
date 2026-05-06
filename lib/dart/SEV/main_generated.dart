@@ -46,7 +46,7 @@ class _SEVReader extends fb.TableReader<SEV> {
   const _SEVReader();
 
   @override
-  SEV createObject(fb.BufferContext bc, int offset) => 
+  SEV createObject(fb.BufferContext bc, int offset) =>
     SEV._(bc, offset);
 }
 

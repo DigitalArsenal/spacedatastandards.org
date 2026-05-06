@@ -85,7 +85,7 @@ class _SPPReader extends fb.TableReader<SPP> {
   const _SPPReader();
 
   @override
-  SPP createObject(fb.BufferContext bc, int offset) => 
+  SPP createObject(fb.BufferContext bc, int offset) =>
     SPP._(bc, offset);
 }
 

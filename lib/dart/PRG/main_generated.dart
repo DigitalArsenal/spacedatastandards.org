@@ -40,7 +40,7 @@ class _PRGReader extends fb.TableReader<PRG> {
   const _PRGReader();
 
   @override
-  PRG createObject(fb.BufferContext bc, int offset) => 
+  PRG createObject(fb.BufferContext bc, int offset) =>
     PRG._(bc, offset);
 }
 
@@ -147,7 +147,7 @@ class _USRReader extends fb.TableReader<USR> {
   const _USRReader();
 
   @override
-  USR createObject(fb.BufferContext bc, int offset) => 
+  USR createObject(fb.BufferContext bc, int offset) =>
     USR._(bc, offset);
 }
 

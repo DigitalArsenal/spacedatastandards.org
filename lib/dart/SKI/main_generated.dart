@@ -184,7 +184,7 @@ class _SKIReader extends fb.TableReader<SKI> {
   const _SKIReader();
 
   @override
-  SKI createObject(fb.BufferContext bc, int offset) => 
+  SKI createObject(fb.BufferContext bc, int offset) =>
     SKI._(bc, offset);
 }
 

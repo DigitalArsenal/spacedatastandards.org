@@ -8,14 +8,24 @@ import Common
 
 import FlatBuffers
 
-///  Publish Notification Message
+///  Publish Notification Message.
+///
+///  PNM is the compact network announcement for a published record, manifest, or
+///  dataset update. For dataset updates, FILE_ID identifies the canonical update
+///  partition and CID usually points to a small DPM manifest or digest. The DPM
+///  carries the full verification contract: provider identity, retrieval
+///  protocol, canonical query, result hash, Merkle roots, completeness-capable
+///  indexes, and signature. Large or paid dataset updates do not need to be
+///  published as globally discoverable IPFS files; a PNM may instead advertise a
+///  provider-mediated SDN query protocol whose response is verified against the
+///  signed DPM roots.
 public struct PNM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PNM" } 
+  public static var id: String { "$PNM" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PNM.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -46,7 +56,10 @@ public struct PNM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var PUBLISH_TIMESTAMPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PUBLISH_TIMESTAMP) }
   ///  Concatenated Content Identifier (CID)
   ///  This field is a unique ID for distributed systems (CID).
-  ///  The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+  ///  The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.
+  ///  For dataset-update PNMs this SHOULD identify a compact DPM manifest,
+  ///  manifest digest, or other small verification object, not necessarily the
+  ///  full dataset bytes.
   public var CID: String? { let o = _accessor.offset(VT.CID); return o == 0 ? nil : _accessor.string(at: o) }
   public var CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CID) }
   ///  File ID
@@ -54,7 +67,10 @@ public struct PNM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var FILE_NAME: String? { let o = _accessor.offset(VT.FILE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var FILE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_NAME) }
   ///  File ID
-  ///  This field is the file ID / Standard Type
+  ///  Canonical publication/update partition identity. For dataset-update PNMs,
+  ///  this MUST match DPM.FILE_ID and is the stable key for entitlements,
+  ///  provider query requests, subscriber caches, and completeness verification.
+  ///  Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
   public var FILE_ID: String? { let o = _accessor.offset(VT.FILE_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var FILE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_ID) }
   ///  Digital Signature of the CID

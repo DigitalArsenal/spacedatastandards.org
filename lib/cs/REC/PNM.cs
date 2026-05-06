@@ -6,7 +6,17 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Publish Notification Message
+/// Publish Notification Message.
+///
+/// PNM is the compact network announcement for a published record, manifest, or
+/// dataset update. For dataset updates, FILE_ID identifies the canonical update
+/// partition and CID usually points to a small DPM manifest or digest. The DPM
+/// carries the full verification contract: provider identity, retrieval
+/// protocol, canonical query, result hash, Merkle roots, completeness-capable
+/// indexes, and signature. Large or paid dataset updates do not need to be
+/// published as globally discoverable IPFS files; a PNM may instead advertise a
+/// provider-mediated SDN query protocol whose response is verified against the
+/// signed DPM roots.
 public struct PNM : IFlatbufferObject
 {
   private Table __p;
@@ -43,7 +53,10 @@ public struct PNM : IFlatbufferObject
   public byte[] GetPUBLISH_TIMESTAMPArray() { return __p.__vector_as_array<byte>(6); }
   /// Concatenated Content Identifier (CID)
   /// This field is a unique ID for distributed systems (CID).
-  /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+  /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.
+  /// For dataset-update PNMs this SHOULD identify a compact DPM manifest,
+  /// manifest digest, or other small verification object, not necessarily the
+  /// full dataset bytes.
   public string CID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCIDBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -61,7 +74,10 @@ public struct PNM : IFlatbufferObject
 #endif
   public byte[] GetFILE_NAMEArray() { return __p.__vector_as_array<byte>(10); }
   /// File ID
-  /// This field is the file ID / Standard Type
+  /// Canonical publication/update partition identity. For dataset-update PNMs,
+  /// this MUST match DPM.FILE_ID and is the stable key for entitlements,
+  /// provider query requests, subscriber caches, and completeness verification.
+  /// Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
   public string FILE_ID { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetFILE_IDBytes() { return __p.__vector_as_span<byte>(12, 1); }

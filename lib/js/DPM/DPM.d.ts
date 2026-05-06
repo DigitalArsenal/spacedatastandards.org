@@ -1,11 +1,13 @@
 import * as flatbuffers from 'flatbuffers';
 import { DPMAsset, DPMAssetT } from './DPMAsset.js';
+import { DPMCompletenessIndex, DPMCompletenessIndexT } from './DPMCompletenessIndex.js';
 import { DPMEncryptionBinding, DPMEncryptionBindingT } from './DPMEncryptionBinding.js';
 import { DPMQueryBinding, DPMQueryBindingT } from './DPMQueryBinding.js';
 import { DPMSourceBatch, DPMSourceBatchT } from './DPMSourceBatch.js';
 /**
  * Dataset Publication Manifest binding data/index CIDs, query replay,
- * source hashes, schema hashes, encryption metadata, and provider signature.
+ * source hashes, schema hashes, encryption metadata, provider-mediated query
+ * protocols, completeness roots, and provider signature.
  */
 export declare class DPM implements flatbuffers.IUnpackableObject<DPMT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -29,6 +31,16 @@ export declare class DPM implements flatbuffers.IUnpackableObject<DPMT> {
      */
     UPDATE_ID(): string;
     UPDATE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    /**
+     * Canonical publication/update partition identity. FILE_ID is the key used
+     * everywhere a subscriber, provider, PNM, entitlement, cache, or query
+     * protocol refers to this exact update. It is not merely a human filename
+     * and it is not the FlatBuffer file_identifier. For completeness-verifiable
+     * streams, all returned records MUST belong to this FILE_ID and prove
+     * inclusion under this DPM's signed roots.
+     */
+    FILE_ID(): string | null;
+    FILE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Provider peer ID.
      */
@@ -59,6 +71,14 @@ export declare class DPM implements flatbuffers.IUnpackableObject<DPMT> {
      */
     QUERY(obj?: DPMQueryBinding): DPMQueryBinding | null;
     /**
+     * Signed completeness-capable indexes. Inclusion proofs prove that returned
+     * records are authentic members of DATA_ROOT. Range-completeness proofs also
+     * prove that no matching records were omitted, but only for predicates
+     * expressible against these declared indexes.
+     */
+    INDEXES(index: number, obj?: DPMCompletenessIndex): DPMCompletenessIndex | null;
+    indexesLength(): number;
+    /**
      * Encryption/key metadata.
      */
     ENCRYPTION(obj?: DPMEncryptionBinding): DPMEncryptionBinding | null;
@@ -77,6 +97,7 @@ export declare class DPM implements flatbuffers.IUnpackableObject<DPMT> {
     static addVersion(builder: flatbuffers.Builder, VERSIONOffset: flatbuffers.Offset): void;
     static addDatasetId(builder: flatbuffers.Builder, DATASET_IDOffset: flatbuffers.Offset): void;
     static addUpdateId(builder: flatbuffers.Builder, UPDATE_IDOffset: flatbuffers.Offset): void;
+    static addFileId(builder: flatbuffers.Builder, FILE_IDOffset: flatbuffers.Offset): void;
     static addProviderPeerId(builder: flatbuffers.Builder, PROVIDER_PEER_IDOffset: flatbuffers.Offset): void;
     static addProviderEpmCid(builder: flatbuffers.Builder, PROVIDER_EPM_CIDOffset: flatbuffers.Offset): void;
     static addPublishTimestamp(builder: flatbuffers.Builder, PUBLISH_TIMESTAMPOffset: flatbuffers.Offset): void;
@@ -87,6 +108,9 @@ export declare class DPM implements flatbuffers.IUnpackableObject<DPMT> {
     static createSourcesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startSourcesVector(builder: flatbuffers.Builder, numElems: number): void;
     static addQuery(builder: flatbuffers.Builder, QUERYOffset: flatbuffers.Offset): void;
+    static addIndexes(builder: flatbuffers.Builder, INDEXESOffset: flatbuffers.Offset): void;
+    static createIndexesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startIndexesVector(builder: flatbuffers.Builder, numElems: number): void;
     static addEncryption(builder: flatbuffers.Builder, ENCRYPTIONOffset: flatbuffers.Offset): void;
     static addProviderSignature(builder: flatbuffers.Builder, PROVIDER_SIGNATUREOffset: flatbuffers.Offset): void;
     static createProviderSignatureVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
@@ -102,16 +126,18 @@ export declare class DPMT implements flatbuffers.IGeneratedObject {
     VERSION: string | Uint8Array | null;
     DATASET_ID: string | Uint8Array | null;
     UPDATE_ID: string | Uint8Array | null;
+    FILE_ID: string | Uint8Array | null;
     PROVIDER_PEER_ID: string | Uint8Array | null;
     PROVIDER_EPM_CID: string | Uint8Array | null;
     PUBLISH_TIMESTAMP: string | Uint8Array | null;
     ASSETS: (DPMAssetT)[];
     SOURCES: (DPMSourceBatchT)[];
     QUERY: DPMQueryBindingT | null;
+    INDEXES: (DPMCompletenessIndexT)[];
     ENCRYPTION: DPMEncryptionBindingT | null;
     PROVIDER_SIGNATURE: (number)[];
     SIGNATURE_TYPE: string | Uint8Array | null;
-    constructor(VERSION?: string | Uint8Array | null, DATASET_ID?: string | Uint8Array | null, UPDATE_ID?: string | Uint8Array | null, PROVIDER_PEER_ID?: string | Uint8Array | null, PROVIDER_EPM_CID?: string | Uint8Array | null, PUBLISH_TIMESTAMP?: string | Uint8Array | null, ASSETS?: (DPMAssetT)[], SOURCES?: (DPMSourceBatchT)[], QUERY?: DPMQueryBindingT | null, ENCRYPTION?: DPMEncryptionBindingT | null, PROVIDER_SIGNATURE?: (number)[], SIGNATURE_TYPE?: string | Uint8Array | null);
+    constructor(VERSION?: string | Uint8Array | null, DATASET_ID?: string | Uint8Array | null, UPDATE_ID?: string | Uint8Array | null, FILE_ID?: string | Uint8Array | null, PROVIDER_PEER_ID?: string | Uint8Array | null, PROVIDER_EPM_CID?: string | Uint8Array | null, PUBLISH_TIMESTAMP?: string | Uint8Array | null, ASSETS?: (DPMAssetT)[], SOURCES?: (DPMSourceBatchT)[], QUERY?: DPMQueryBindingT | null, INDEXES?: (DPMCompletenessIndexT)[], ENCRYPTION?: DPMEncryptionBindingT | null, PROVIDER_SIGNATURE?: (number)[], SIGNATURE_TYPE?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=DPM.d.ts.map

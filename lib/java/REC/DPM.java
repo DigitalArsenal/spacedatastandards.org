@@ -18,7 +18,8 @@ import java.nio.ByteOrder;
 
 /**
  * Dataset Publication Manifest binding data/index CIDs, query replay,
- * source hashes, schema hashes, encryption metadata, and provider signature.
+ * source hashes, schema hashes, encryption metadata, provider-mediated query
+ * protocols, completeness roots, and provider signature.
  */
 @SuppressWarnings("unused")
 public final class DPM extends com.google.flatbuffers.Table {
@@ -48,120 +49,150 @@ public final class DPM extends com.google.flatbuffers.Table {
   public ByteBuffer UPDATE_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer UPDATE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
+   * Canonical publication/update partition identity. FILE_ID is the key used
+   * everywhere a subscriber, provider, PNM, entitlement, cache, or query
+   * protocol refers to this exact update. It is not merely a human filename
+   * and it is not the FlatBuffer file_identifier. For completeness-verifiable
+   * streams, all returned records MUST belong to this FILE_ID and prove
+   * inclusion under this DPM's signed roots.
+   */
+  public String FILE_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FILE_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer FILE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
    * Provider peer ID.
    */
-  public String PROVIDER_PEER_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer PROVIDER_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer PROVIDER_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  public String PROVIDER_PEER_ID() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROVIDER_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer PROVIDER_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
    * Provider EPM CID.
    */
-  public String PROVIDER_EPM_CID() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer PROVIDER_EPM_CIDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer PROVIDER_EPM_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  public String PROVIDER_EPM_CID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROVIDER_EPM_CIDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer PROVIDER_EPM_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
    * Publication timestamp in ISO 8601 UTC.
    */
-  public String PUBLISH_TIMESTAMP() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer PUBLISH_TIMESTAMPAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer PUBLISH_TIMESTAMPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  public String PUBLISH_TIMESTAMP() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PUBLISH_TIMESTAMPAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer PUBLISH_TIMESTAMPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
   /**
    * Published shard, index, and auxiliary artifacts.
    */
   public DPMAsset ASSETS(int j) { return ASSETS(new DPMAsset(), j); }
-  public DPMAsset ASSETS(DPMAsset obj, int j) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int ASSETSLength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
+  public DPMAsset ASSETS(DPMAsset obj, int j) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int ASSETSLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
   public DPMAsset.Vector assetsVector() { return assetsVector(new DPMAsset.Vector()); }
-  public DPMAsset.Vector assetsVector(DPMAsset.Vector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public DPMAsset.Vector assetsVector(DPMAsset.Vector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Source batches used to build the dataset.
    */
   public DPMSourceBatch SOURCES(int j) { return SOURCES(new DPMSourceBatch(), j); }
-  public DPMSourceBatch SOURCES(DPMSourceBatch obj, int j) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int SOURCESLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
+  public DPMSourceBatch SOURCES(DPMSourceBatch obj, int j) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SOURCESLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
   public DPMSourceBatch.Vector sourcesVector() { return sourcesVector(new DPMSourceBatch.Vector()); }
-  public DPMSourceBatch.Vector sourcesVector(DPMSourceBatch.Vector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public DPMSourceBatch.Vector sourcesVector(DPMSourceBatch.Vector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Replayable query binding.
    */
   public DPMQueryBinding QUERY() { return QUERY(new DPMQueryBinding()); }
-  public DPMQueryBinding QUERY(DPMQueryBinding obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public DPMQueryBinding QUERY(DPMQueryBinding obj) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Signed completeness-capable indexes. Inclusion proofs prove that returned
+   * records are authentic members of DATA_ROOT. Range-completeness proofs also
+   * prove that no matching records were omitted, but only for predicates
+   * expressible against these declared indexes.
+   */
+  public DPMCompletenessIndex INDEXES(int j) { return INDEXES(new DPMCompletenessIndex(), j); }
+  public DPMCompletenessIndex INDEXES(DPMCompletenessIndex obj, int j) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int INDEXESLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
+  public DPMCompletenessIndex.Vector indexesVector() { return indexesVector(new DPMCompletenessIndex.Vector()); }
+  public DPMCompletenessIndex.Vector indexesVector(DPMCompletenessIndex.Vector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Encryption/key metadata.
    */
   public DPMEncryptionBinding ENCRYPTION() { return ENCRYPTION(new DPMEncryptionBinding()); }
-  public DPMEncryptionBinding ENCRYPTION(DPMEncryptionBinding obj) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public DPMEncryptionBinding ENCRYPTION(DPMEncryptionBinding obj) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Provider signature over the canonical manifest bytes or manifest digest.
    */
-  public int PROVIDER_SIGNATURE(int j) { int o = __offset(24); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
-  public int PROVIDER_SIGNATURELength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
+  public int PROVIDER_SIGNATURE(int j) { int o = __offset(28); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int PROVIDER_SIGNATURELength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
   public ByteVector providerSignatureVector() { return providerSignatureVector(new ByteVector()); }
-  public ByteVector providerSignatureVector(ByteVector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer PROVIDER_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer PROVIDER_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  public ByteVector providerSignatureVector(ByteVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer PROVIDER_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer PROVIDER_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
   /**
    * Signature algorithm, e.g. Ed25519.
    */
-  public String SIGNATURE_TYPE() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SIGNATURE_TYPEAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
-  public ByteBuffer SIGNATURE_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  public String SIGNATURE_TYPE() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SIGNATURE_TYPEAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer SIGNATURE_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
 
   public static int createDPM(FlatBufferBuilder builder,
       int VERSIONOffset,
       int DATASET_IDOffset,
       int UPDATE_IDOffset,
+      int FILE_IDOffset,
       int PROVIDER_PEER_IDOffset,
       int PROVIDER_EPM_CIDOffset,
       int PUBLISH_TIMESTAMPOffset,
       int ASSETSOffset,
       int SOURCESOffset,
       int QUERYOffset,
+      int INDEXESOffset,
       int ENCRYPTIONOffset,
       int PROVIDER_SIGNATUREOffset,
       int SIGNATURE_TYPEOffset) {
-    builder.startTable(12);
+    builder.startTable(14);
     DPM.addSignatureType(builder, SIGNATURE_TYPEOffset);
     DPM.addProviderSignature(builder, PROVIDER_SIGNATUREOffset);
     DPM.addEncryption(builder, ENCRYPTIONOffset);
+    DPM.addIndexes(builder, INDEXESOffset);
     DPM.addQuery(builder, QUERYOffset);
     DPM.addSources(builder, SOURCESOffset);
     DPM.addAssets(builder, ASSETSOffset);
     DPM.addPublishTimestamp(builder, PUBLISH_TIMESTAMPOffset);
     DPM.addProviderEpmCid(builder, PROVIDER_EPM_CIDOffset);
     DPM.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
+    DPM.addFileId(builder, FILE_IDOffset);
     DPM.addUpdateId(builder, UPDATE_IDOffset);
     DPM.addDatasetId(builder, DATASET_IDOffset);
     DPM.addVersion(builder, VERSIONOffset);
     return DPM.endDPM(builder);
   }
 
-  public static void startDPM(FlatBufferBuilder builder) { builder.startTable(12); }
+  public static void startDPM(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addVersion(FlatBufferBuilder builder, int VERSIONOffset) { builder.addOffset(0, VERSIONOffset, 0); }
   public static void addDatasetId(FlatBufferBuilder builder, int DATASET_IDOffset) { builder.addOffset(1, DATASET_IDOffset, 0); }
   public static void addUpdateId(FlatBufferBuilder builder, int UPDATE_IDOffset) { builder.addOffset(2, UPDATE_IDOffset, 0); }
-  public static void addProviderPeerId(FlatBufferBuilder builder, int PROVIDER_PEER_IDOffset) { builder.addOffset(3, PROVIDER_PEER_IDOffset, 0); }
-  public static void addProviderEpmCid(FlatBufferBuilder builder, int PROVIDER_EPM_CIDOffset) { builder.addOffset(4, PROVIDER_EPM_CIDOffset, 0); }
-  public static void addPublishTimestamp(FlatBufferBuilder builder, int PUBLISH_TIMESTAMPOffset) { builder.addOffset(5, PUBLISH_TIMESTAMPOffset, 0); }
-  public static void addAssets(FlatBufferBuilder builder, int ASSETSOffset) { builder.addOffset(6, ASSETSOffset, 0); }
+  public static void addFileId(FlatBufferBuilder builder, int FILE_IDOffset) { builder.addOffset(3, FILE_IDOffset, 0); }
+  public static void addProviderPeerId(FlatBufferBuilder builder, int PROVIDER_PEER_IDOffset) { builder.addOffset(4, PROVIDER_PEER_IDOffset, 0); }
+  public static void addProviderEpmCid(FlatBufferBuilder builder, int PROVIDER_EPM_CIDOffset) { builder.addOffset(5, PROVIDER_EPM_CIDOffset, 0); }
+  public static void addPublishTimestamp(FlatBufferBuilder builder, int PUBLISH_TIMESTAMPOffset) { builder.addOffset(6, PUBLISH_TIMESTAMPOffset, 0); }
+  public static void addAssets(FlatBufferBuilder builder, int ASSETSOffset) { builder.addOffset(7, ASSETSOffset, 0); }
   public static int createAssetsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startAssetsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addSources(FlatBufferBuilder builder, int SOURCESOffset) { builder.addOffset(7, SOURCESOffset, 0); }
+  public static void addSources(FlatBufferBuilder builder, int SOURCESOffset) { builder.addOffset(8, SOURCESOffset, 0); }
   public static int createSourcesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startSourcesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addQuery(FlatBufferBuilder builder, int QUERYOffset) { builder.addOffset(8, QUERYOffset, 0); }
-  public static void addEncryption(FlatBufferBuilder builder, int ENCRYPTIONOffset) { builder.addOffset(9, ENCRYPTIONOffset, 0); }
-  public static void addProviderSignature(FlatBufferBuilder builder, int PROVIDER_SIGNATUREOffset) { builder.addOffset(10, PROVIDER_SIGNATUREOffset, 0); }
+  public static void addQuery(FlatBufferBuilder builder, int QUERYOffset) { builder.addOffset(9, QUERYOffset, 0); }
+  public static void addIndexes(FlatBufferBuilder builder, int INDEXESOffset) { builder.addOffset(10, INDEXESOffset, 0); }
+  public static int createIndexesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startIndexesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addEncryption(FlatBufferBuilder builder, int ENCRYPTIONOffset) { builder.addOffset(11, ENCRYPTIONOffset, 0); }
+  public static void addProviderSignature(FlatBufferBuilder builder, int PROVIDER_SIGNATUREOffset) { builder.addOffset(12, PROVIDER_SIGNATUREOffset, 0); }
   public static int createProviderSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createProviderSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startProviderSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
-  public static void addSignatureType(FlatBufferBuilder builder, int SIGNATURE_TYPEOffset) { builder.addOffset(11, SIGNATURE_TYPEOffset, 0); }
+  public static void addSignatureType(FlatBufferBuilder builder, int SIGNATURE_TYPEOffset) { builder.addOffset(13, SIGNATURE_TYPEOffset, 0); }
   public static int endDPM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 6);  // DATASET_ID
     builder.required(o, 8);  // UPDATE_ID
-    builder.required(o, 10);  // PROVIDER_PEER_ID
-    builder.required(o, 14);  // PUBLISH_TIMESTAMP
+    builder.required(o, 12);  // PROVIDER_PEER_ID
+    builder.required(o, 16);  // PUBLISH_TIMESTAMP
     return o;
   }
   public static void finishDPMBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$DPM"); }

@@ -104,7 +104,7 @@ async function writeOutputs(baseDir, outputs) {
   for (const [relativePath, source] of outputs.entries()) {
     const outputPath = path.join(baseDir, relativePath);
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
-    await fs.writeFile(outputPath, source, "utf8");
+    await fs.writeFile(outputPath, source.replace(/[ \t]+$/gm, ""), "utf8");
   }
 }
 

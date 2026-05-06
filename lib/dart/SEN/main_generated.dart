@@ -130,7 +130,7 @@ class _sensorMaintenanceEventReader extends fb.TableReader<sensorMaintenanceEven
   const _sensorMaintenanceEventReader();
 
   @override
-  sensorMaintenanceEvent createObject(fb.BufferContext bc, int offset) => 
+  sensorMaintenanceEvent createObject(fb.BufferContext bc, int offset) =>
     sensorMaintenanceEvent._(bc, offset);
 }
 
@@ -262,7 +262,7 @@ class _sensorPlanReader extends fb.TableReader<sensorPlan> {
   const _sensorPlanReader();
 
   @override
-  sensorPlan createObject(fb.BufferContext bc, int offset) => 
+  sensorPlan createObject(fb.BufferContext bc, int offset) =>
     sensorPlan._(bc, offset);
 }
 
@@ -419,7 +419,7 @@ class _sensorStatsReader extends fb.TableReader<sensorStats> {
   const _sensorStatsReader();
 
   @override
-  sensorStats createObject(fb.BufferContext bc, int offset) => 
+  sensorStats createObject(fb.BufferContext bc, int offset) =>
     sensorStats._(bc, offset);
 }
 
@@ -593,7 +593,7 @@ class _SENReader extends fb.TableReader<SEN> {
   const _SENReader();
 
   @override
-  SEN createObject(fb.BufferContext bc, int offset) => 
+  SEN createObject(fb.BufferContext bc, int offset) =>
     SEN._(bc, offset);
 }
 

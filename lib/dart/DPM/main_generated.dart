@@ -46,7 +46,185 @@ class _publicationAssetKindReader extends fb.Reader<publicationAssetKind> {
       publicationAssetKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  One immutable content-addressed object published for a dataset update.
+///  Transport profile used to resolve a dataset update asset.
+enum dpmTransportKind {
+  CONTENT_ADDRESS(0),
+  SDN_QUERY(1),
+  OTHER(2);
+
+  final int value;
+  const dpmTransportKind(this.value);
+
+  factory dpmTransportKind.fromValue(int value) {
+    switch (value) {
+      case 0: return dpmTransportKind.CONTENT_ADDRESS;
+      case 1: return dpmTransportKind.SDN_QUERY;
+      case 2: return dpmTransportKind.OTHER;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static dpmTransportKind? _createOrNull(int? value) =>
+      value == null ? null : dpmTransportKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<dpmTransportKind> reader = _dpmTransportKindReader();
+}
+
+class _dpmTransportKindReader extends fb.Reader<dpmTransportKind> {
+  const _dpmTransportKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  dpmTransportKind read(fb.BufferContext bc, int offset) =>
+      dpmTransportKind.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Completeness-capable signed index over a dataset update.
+class DPMCompletenessIndex {
+  DPMCompletenessIndex._(this._bc, this._bcOffset);
+  factory DPMCompletenessIndex(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<DPMCompletenessIndex> reader = _DPMCompletenessIndexReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+  String? get INDEX_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get indexName => INDEX_NAME;
+  ///  Deterministic ordering expression for the index. Providers and
+  ///  subscribers MUST use this ordering when building or verifying range
+  ///  proofs. A query is completeness-verifiable only when its predicate can be
+  ///  expressed against one or more declared indexes.
+  String? get CANONICAL_ORDER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get canonicalOrder => CANONICAL_ORDER;
+  ///  SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
+  ///  signed by the DPM provider signature and is the verifier's commitment for
+  ///  inclusion and range-completeness proofs.
+  String? get INDEX_ROOT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get indexRoot => INDEX_ROOT;
+  ///  Hash profile for leaves and internal nodes, e.g.
+  ///  SDN-MERKLE-SHA256-v1. Profiles define domain separators, leaf material,
+  ///  pair ordering, duplicate handling, and odd-leaf promotion.
+  String? get MERKLE_PROFILE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get merkleProfile => MERKLE_PROFILE;
+  ///  Whether this index can prove that no matching records were omitted for a
+  ///  supported range query. Inclusion proofs alone prove authenticity, not
+  ///  completeness.
+  bool get SUPPORTS_RANGE_COMPLETENESS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get supportsRangeCompleteness => SUPPORTS_RANGE_COMPLETENESS;
+
+  @override
+  String toString() {
+    return 'DPMCompletenessIndex{indexName: ${indexName}, canonicalOrder: ${canonicalOrder}, indexRoot: ${indexRoot}, merkleProfile: ${merkleProfile}, supportsRangeCompleteness: ${supportsRangeCompleteness}}';
+  }
+}
+
+class _DPMCompletenessIndexReader extends fb.TableReader<DPMCompletenessIndex> {
+  const _DPMCompletenessIndexReader();
+
+  @override
+  DPMCompletenessIndex createObject(fb.BufferContext bc, int offset) =>
+    DPMCompletenessIndex._(bc, offset);
+}
+
+class DPMCompletenessIndexBuilder {
+  DPMCompletenessIndexBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addIndexNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addCanonicalOrderOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addIndexRootOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addMerkleProfileOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSupportsRangeCompleteness(bool? SUPPORTS_RANGE_COMPLETENESS) {
+    fbBuilder.addBool(4, SUPPORTS_RANGE_COMPLETENESS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class DPMCompletenessIndexObjectBuilder extends fb.ObjectBuilder {
+  final String? _INDEX_NAME;
+  final String? _CANONICAL_ORDER;
+  final String? _INDEX_ROOT;
+  final String? _MERKLE_PROFILE;
+  final bool? _SUPPORTS_RANGE_COMPLETENESS;
+
+  DPMCompletenessIndexObjectBuilder({
+    String? INDEX_NAME,
+    String? indexName,
+    String? CANONICAL_ORDER,
+    String? canonicalOrder,
+    String? INDEX_ROOT,
+    String? indexRoot,
+    String? MERKLE_PROFILE,
+    String? merkleProfile,
+    bool? SUPPORTS_RANGE_COMPLETENESS,
+    bool? supportsRangeCompleteness,
+  })
+      : _INDEX_NAME = indexName ?? INDEX_NAME,
+        _CANONICAL_ORDER = canonicalOrder ?? CANONICAL_ORDER,
+        _INDEX_ROOT = indexRoot ?? INDEX_ROOT,
+        _MERKLE_PROFILE = merkleProfile ?? MERKLE_PROFILE,
+        _SUPPORTS_RANGE_COMPLETENESS = supportsRangeCompleteness ?? SUPPORTS_RANGE_COMPLETENESS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INDEX_NAMEOffset = _INDEX_NAME == null ? null
+        : fbBuilder.writeString(_INDEX_NAME!);
+    final int? CANONICAL_ORDEROffset = _CANONICAL_ORDER == null ? null
+        : fbBuilder.writeString(_CANONICAL_ORDER!);
+    final int? INDEX_ROOTOffset = _INDEX_ROOT == null ? null
+        : fbBuilder.writeString(_INDEX_ROOT!);
+    final int? MERKLE_PROFILEOffset = _MERKLE_PROFILE == null ? null
+        : fbBuilder.writeString(_MERKLE_PROFILE!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, INDEX_NAMEOffset);
+    fbBuilder.addOffset(1, CANONICAL_ORDEROffset);
+    fbBuilder.addOffset(2, INDEX_ROOTOffset);
+    fbBuilder.addOffset(3, MERKLE_PROFILEOffset);
+    fbBuilder.addBool(4, _SUPPORTS_RANGE_COMPLETENESS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One immutable asset or provider-mediated query contract published for a
+///  dataset update.
 class DPMAsset {
   DPMAsset._(this._bc, this._bcOffset);
   factory DPMAsset(List<int> bytes) {
@@ -62,33 +240,61 @@ class DPMAsset {
   ///  Asset role.
   publicationAssetKind get ASSET_KIND => publicationAssetKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 3));
   publicationAssetKind get assetKind => ASSET_KIND;
-  ///  IPFS CIDv1/multihash content identifier.
-  String? get CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Multiformat address, usually /ipfs/{CID}.
-  String? get MULTIFORMAT_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Transport profile for this asset. CONTENT_ADDRESS assets use CID and
+  ///  MULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the
+  ///  signed DPM query and root fields; they are not required to be published as
+  ///  discoverable IPFS files.
+  dpmTransportKind get TRANSPORT_KIND => dpmTransportKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  dpmTransportKind get transportKind => TRANSPORT_KIND;
+  ///  Optional IPFS CIDv1/multihash content identifier. This field is required
+  ///  for CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose
+  ///  bytes are retrieved through a provider protocol.
+  String? get CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For
+  ///  SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when
+  ///  provider routing is resolved from the DPM provider identity.
+  String? get MULTIFORMAT_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   String? get multiformatAddress => MULTIFORMAT_ADDRESS;
   ///  File name or logical artifact name.
-  String? get FILE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get FILE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   String? get fileName => FILE_NAME;
+  ///  Canonical publication/update partition identity for this asset. FILE_ID is
+  ///  not a display filename; it is the stable identifier used by PNMs,
+  ///  manifests, entitlements, query requests, subscriber caches, and
+  ///  completeness proofs. Example:
+  ///  celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  String? get FILE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get fileId => FILE_ID;
+  ///  Provider protocol name/version used to fetch this asset when
+  ///  TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
+  ///  response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the
+  ///  provider signature in this DPM.
+  String? get TRANSPORT_PROTOCOL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get transportProtocol => TRANSPORT_PROTOCOL;
   ///  Byte length of the published object.
-  int get BYTE_LENGTH => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get BYTE_LENGTH => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
   int get byteLength => BYTE_LENGTH;
   ///  SHA-256 hash of the exact published bytes, lowercase hex.
-  String? get BYTE_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get BYTE_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
   String? get byteSha256 => BYTE_SHA256;
+  ///  Merkle root over canonical records in this asset, lowercase hex. For
+  ///  provider-mediated query delivery, subscribers verify returned records and
+  ///  proof paths against this root before importing data.
+  String? get DATA_ROOT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get dataRoot => DATA_ROOT;
   ///  SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
-  String? get SCHEMA_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get SCHEMA_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
   String? get schemaName => SCHEMA_NAME;
   ///  Hash of the SDS schema used to encode this object.
-  String? get SCHEMA_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get SCHEMA_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
   String? get schemaHash => SCHEMA_HASH;
   ///  Optional content-key identifier for encrypted artifacts.
-  String? get CONTENT_KEY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get CONTENT_KEY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
   String? get contentKeyId => CONTENT_KEY_ID;
 
   @override
   String toString() {
-    return 'DPMAsset{assetKind: ${assetKind}, CID: ${CID}, multiformatAddress: ${multiformatAddress}, fileName: ${fileName}, byteLength: ${byteLength}, byteSha256: ${byteSha256}, schemaName: ${schemaName}, schemaHash: ${schemaHash}, contentKeyId: ${contentKeyId}}';
+    return 'DPMAsset{assetKind: ${assetKind}, transportKind: ${transportKind}, CID: ${CID}, multiformatAddress: ${multiformatAddress}, fileName: ${fileName}, fileId: ${fileId}, transportProtocol: ${transportProtocol}, byteLength: ${byteLength}, byteSha256: ${byteSha256}, dataRoot: ${dataRoot}, schemaName: ${schemaName}, schemaHash: ${schemaHash}, contentKeyId: ${contentKeyId}}';
   }
 }
 
@@ -96,7 +302,7 @@ class _DPMAssetReader extends fb.TableReader<DPMAsset> {
   const _DPMAssetReader();
 
   @override
-  DPMAsset createObject(fb.BufferContext bc, int offset) => 
+  DPMAsset createObject(fb.BufferContext bc, int offset) =>
     DPMAsset._(bc, offset);
 }
 
@@ -106,43 +312,59 @@ class DPMAssetBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(13);
   }
 
   int addAssetKind(publicationAssetKind? ASSET_KIND) {
     fbBuilder.addInt8(0, ASSET_KIND?.value);
     return fbBuilder.offset;
   }
-  int addCidOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addTransportKind(dpmTransportKind? TRANSPORT_KIND) {
+    fbBuilder.addInt8(1, TRANSPORT_KIND?.value);
     return fbBuilder.offset;
   }
-  int addMultiformatAddressOffset(int? offset) {
+  int addCidOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addFileNameOffset(int? offset) {
+  int addMultiformatAddressOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addByteLength(int? BYTE_LENGTH) {
-    fbBuilder.addUint64(4, BYTE_LENGTH);
+  int addFileNameOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addByteSha256Offset(int? offset) {
+  int addFileIdOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addSchemaNameOffset(int? offset) {
+  int addTransportProtocolOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
+  int addByteLength(int? BYTE_LENGTH) {
+    fbBuilder.addUint64(7, BYTE_LENGTH);
+    return fbBuilder.offset;
+  }
+  int addByteSha256Offset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addDataRootOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addSchemaNameOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
   int addSchemaHashOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
   int addContentKeyIdOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
+    fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
 
@@ -153,11 +375,15 @@ class DPMAssetBuilder {
 
 class DPMAssetObjectBuilder extends fb.ObjectBuilder {
   final publicationAssetKind? _ASSET_KIND;
+  final dpmTransportKind? _TRANSPORT_KIND;
   final String? _CID;
   final String? _MULTIFORMAT_ADDRESS;
   final String? _FILE_NAME;
+  final String? _FILE_ID;
+  final String? _TRANSPORT_PROTOCOL;
   final int? _BYTE_LENGTH;
   final String? _BYTE_SHA256;
+  final String? _DATA_ROOT;
   final String? _SCHEMA_NAME;
   final String? _SCHEMA_HASH;
   final String? _CONTENT_KEY_ID;
@@ -165,15 +391,23 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
   DPMAssetObjectBuilder({
     publicationAssetKind? ASSET_KIND,
     publicationAssetKind? assetKind,
+    dpmTransportKind? TRANSPORT_KIND,
+    dpmTransportKind? transportKind,
     String? CID,
     String? MULTIFORMAT_ADDRESS,
     String? multiformatAddress,
     String? FILE_NAME,
     String? fileName,
+    String? FILE_ID,
+    String? fileId,
+    String? TRANSPORT_PROTOCOL,
+    String? transportProtocol,
     int? BYTE_LENGTH,
     int? byteLength,
     String? BYTE_SHA256,
     String? byteSha256,
+    String? DATA_ROOT,
+    String? dataRoot,
     String? SCHEMA_NAME,
     String? schemaName,
     String? SCHEMA_HASH,
@@ -182,11 +416,15 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
     String? contentKeyId,
   })
       : _ASSET_KIND = assetKind ?? ASSET_KIND,
+        _TRANSPORT_KIND = transportKind ?? TRANSPORT_KIND,
         _CID = CID,
         _MULTIFORMAT_ADDRESS = multiformatAddress ?? MULTIFORMAT_ADDRESS,
         _FILE_NAME = fileName ?? FILE_NAME,
+        _FILE_ID = fileId ?? FILE_ID,
+        _TRANSPORT_PROTOCOL = transportProtocol ?? TRANSPORT_PROTOCOL,
         _BYTE_LENGTH = byteLength ?? BYTE_LENGTH,
         _BYTE_SHA256 = byteSha256 ?? BYTE_SHA256,
+        _DATA_ROOT = dataRoot ?? DATA_ROOT,
         _SCHEMA_NAME = schemaName ?? SCHEMA_NAME,
         _SCHEMA_HASH = schemaHash ?? SCHEMA_HASH,
         _CONTENT_KEY_ID = contentKeyId ?? CONTENT_KEY_ID;
@@ -200,24 +438,34 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_MULTIFORMAT_ADDRESS!);
     final int? FILE_NAMEOffset = _FILE_NAME == null ? null
         : fbBuilder.writeString(_FILE_NAME!);
+    final int? FILE_IDOffset = _FILE_ID == null ? null
+        : fbBuilder.writeString(_FILE_ID!);
+    final int? TRANSPORT_PROTOCOLOffset = _TRANSPORT_PROTOCOL == null ? null
+        : fbBuilder.writeString(_TRANSPORT_PROTOCOL!);
     final int? BYTE_SHA256Offset = _BYTE_SHA256 == null ? null
         : fbBuilder.writeString(_BYTE_SHA256!);
+    final int? DATA_ROOTOffset = _DATA_ROOT == null ? null
+        : fbBuilder.writeString(_DATA_ROOT!);
     final int? SCHEMA_NAMEOffset = _SCHEMA_NAME == null ? null
         : fbBuilder.writeString(_SCHEMA_NAME!);
     final int? SCHEMA_HASHOffset = _SCHEMA_HASH == null ? null
         : fbBuilder.writeString(_SCHEMA_HASH!);
     final int? CONTENT_KEY_IDOffset = _CONTENT_KEY_ID == null ? null
         : fbBuilder.writeString(_CONTENT_KEY_ID!);
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(13);
     fbBuilder.addInt8(0, _ASSET_KIND?.value);
-    fbBuilder.addOffset(1, CIDOffset);
-    fbBuilder.addOffset(2, MULTIFORMAT_ADDRESSOffset);
-    fbBuilder.addOffset(3, FILE_NAMEOffset);
-    fbBuilder.addUint64(4, _BYTE_LENGTH);
-    fbBuilder.addOffset(5, BYTE_SHA256Offset);
-    fbBuilder.addOffset(6, SCHEMA_NAMEOffset);
-    fbBuilder.addOffset(7, SCHEMA_HASHOffset);
-    fbBuilder.addOffset(8, CONTENT_KEY_IDOffset);
+    fbBuilder.addInt8(1, _TRANSPORT_KIND?.value);
+    fbBuilder.addOffset(2, CIDOffset);
+    fbBuilder.addOffset(3, MULTIFORMAT_ADDRESSOffset);
+    fbBuilder.addOffset(4, FILE_NAMEOffset);
+    fbBuilder.addOffset(5, FILE_IDOffset);
+    fbBuilder.addOffset(6, TRANSPORT_PROTOCOLOffset);
+    fbBuilder.addUint64(7, _BYTE_LENGTH);
+    fbBuilder.addOffset(8, BYTE_SHA256Offset);
+    fbBuilder.addOffset(9, DATA_ROOTOffset);
+    fbBuilder.addOffset(10, SCHEMA_NAMEOffset);
+    fbBuilder.addOffset(11, SCHEMA_HASHOffset);
+    fbBuilder.addOffset(12, CONTENT_KEY_IDOffset);
     return fbBuilder.endTable();
   }
 
@@ -279,7 +527,7 @@ class _DPMSourceBatchReader extends fb.TableReader<DPMSourceBatch> {
   const _DPMSourceBatchReader();
 
   @override
-  DPMSourceBatch createObject(fb.BufferContext bc, int offset) => 
+  DPMSourceBatch createObject(fb.BufferContext bc, int offset) =>
     DPMSourceBatch._(bc, offset);
 }
 
@@ -442,28 +690,39 @@ class DPMQueryBinding {
   ///  Query engine version or profile version.
   String? get QUERY_ENGINE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   String? get queryEngineVersion => QUERY_ENGINE_VERSION;
+  ///  Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+  ///  computed. Providers MUST stream records in this order unless each chunk
+  ///  includes enough proof material to restore and verify the canonical order.
+  String? get CANONICAL_ORDER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get canonicalOrder => CANONICAL_ORDER;
+  ///  Query protocol name/version for provider-mediated retrieval, e.g.
+  ///  /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+  ///  protocol to the provider, submits the signed query or a permitted subset,
+  ///  and imports only responses that verify against the signed roots.
+  String? get QUERY_PROTOCOL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get queryProtocol => QUERY_PROTOCOL;
   ///  SDS schema names selected by the query.
-  List<String>? get SCHEMA_NAMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
+  List<String>? get SCHEMA_NAMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
   List<String>? get schemaNames => SCHEMA_NAMES;
   ///  Provider peer IDs selected by the query.
-  List<String>? get PROVIDER_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 16);
+  List<String>? get PROVIDER_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 20);
   List<String>? get providerIds => PROVIDER_IDS;
   ///  Source names selected by the query.
-  List<String>? get SOURCE_NAMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
+  List<String>? get SOURCE_NAMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 22);
   List<String>? get sourceNames => SOURCE_NAMES;
   ///  Batch IDs selected by the query.
-  List<String>? get BATCH_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 20);
+  List<String>? get BATCH_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 24);
   List<String>? get batchIds => BATCH_IDS;
   ///  Inclusive query window start in ISO 8601 UTC.
-  String? get WINDOW_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get WINDOW_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
   String? get windowStart => WINDOW_START;
   ///  Inclusive query window end in ISO 8601 UTC.
-  String? get WINDOW_END => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get WINDOW_END => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
   String? get windowEnd => WINDOW_END;
 
   @override
   String toString() {
-    return 'DPMQueryBinding{canonicalQuery: ${canonicalQuery}, querySha256: ${querySha256}, resultSha256: ${resultSha256}, queryEngine: ${queryEngine}, queryEngineVersion: ${queryEngineVersion}, schemaNames: ${schemaNames}, providerIds: ${providerIds}, sourceNames: ${sourceNames}, batchIds: ${batchIds}, windowStart: ${windowStart}, windowEnd: ${windowEnd}}';
+    return 'DPMQueryBinding{canonicalQuery: ${canonicalQuery}, querySha256: ${querySha256}, resultSha256: ${resultSha256}, queryEngine: ${queryEngine}, queryEngineVersion: ${queryEngineVersion}, canonicalOrder: ${canonicalOrder}, queryProtocol: ${queryProtocol}, schemaNames: ${schemaNames}, providerIds: ${providerIds}, sourceNames: ${sourceNames}, batchIds: ${batchIds}, windowStart: ${windowStart}, windowEnd: ${windowEnd}}';
   }
 }
 
@@ -471,7 +730,7 @@ class _DPMQueryBindingReader extends fb.TableReader<DPMQueryBinding> {
   const _DPMQueryBindingReader();
 
   @override
-  DPMQueryBinding createObject(fb.BufferContext bc, int offset) => 
+  DPMQueryBinding createObject(fb.BufferContext bc, int offset) =>
     DPMQueryBinding._(bc, offset);
 }
 
@@ -481,7 +740,7 @@ class DPMQueryBindingBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(13);
   }
 
   int addCanonicalQueryOffset(int? offset) {
@@ -504,28 +763,36 @@ class DPMQueryBindingBuilder {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addSchemaNamesOffset(int? offset) {
+  int addCanonicalOrderOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addProviderIdsOffset(int? offset) {
+  int addQueryProtocolOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addSourceNamesOffset(int? offset) {
+  int addSchemaNamesOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addBatchIdsOffset(int? offset) {
+  int addProviderIdsOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addWindowStartOffset(int? offset) {
+  int addSourceNamesOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addWindowEndOffset(int? offset) {
+  int addBatchIdsOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addWindowStartOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addWindowEndOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
 
@@ -540,6 +807,8 @@ class DPMQueryBindingObjectBuilder extends fb.ObjectBuilder {
   final String? _RESULT_SHA256;
   final String? _QUERY_ENGINE;
   final String? _QUERY_ENGINE_VERSION;
+  final String? _CANONICAL_ORDER;
+  final String? _QUERY_PROTOCOL;
   final List<String>? _SCHEMA_NAMES;
   final List<String>? _PROVIDER_IDS;
   final List<String>? _SOURCE_NAMES;
@@ -558,6 +827,10 @@ class DPMQueryBindingObjectBuilder extends fb.ObjectBuilder {
     String? queryEngine,
     String? QUERY_ENGINE_VERSION,
     String? queryEngineVersion,
+    String? CANONICAL_ORDER,
+    String? canonicalOrder,
+    String? QUERY_PROTOCOL,
+    String? queryProtocol,
     List<String>? SCHEMA_NAMES,
     List<String>? schemaNames,
     List<String>? PROVIDER_IDS,
@@ -576,6 +849,8 @@ class DPMQueryBindingObjectBuilder extends fb.ObjectBuilder {
         _RESULT_SHA256 = resultSha256 ?? RESULT_SHA256,
         _QUERY_ENGINE = queryEngine ?? QUERY_ENGINE,
         _QUERY_ENGINE_VERSION = queryEngineVersion ?? QUERY_ENGINE_VERSION,
+        _CANONICAL_ORDER = canonicalOrder ?? CANONICAL_ORDER,
+        _QUERY_PROTOCOL = queryProtocol ?? QUERY_PROTOCOL,
         _SCHEMA_NAMES = schemaNames ?? SCHEMA_NAMES,
         _PROVIDER_IDS = providerIds ?? PROVIDER_IDS,
         _SOURCE_NAMES = sourceNames ?? SOURCE_NAMES,
@@ -596,6 +871,10 @@ class DPMQueryBindingObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_QUERY_ENGINE!);
     final int? QUERY_ENGINE_VERSIONOffset = _QUERY_ENGINE_VERSION == null ? null
         : fbBuilder.writeString(_QUERY_ENGINE_VERSION!);
+    final int? CANONICAL_ORDEROffset = _CANONICAL_ORDER == null ? null
+        : fbBuilder.writeString(_CANONICAL_ORDER!);
+    final int? QUERY_PROTOCOLOffset = _QUERY_PROTOCOL == null ? null
+        : fbBuilder.writeString(_QUERY_PROTOCOL!);
     final int? SCHEMA_NAMESOffset = _SCHEMA_NAMES == null ? null
         : fbBuilder.writeList(_SCHEMA_NAMES!.map(fbBuilder.writeString).toList());
     final int? PROVIDER_IDSOffset = _PROVIDER_IDS == null ? null
@@ -608,18 +887,20 @@ class DPMQueryBindingObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_WINDOW_START!);
     final int? WINDOW_ENDOffset = _WINDOW_END == null ? null
         : fbBuilder.writeString(_WINDOW_END!);
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(13);
     fbBuilder.addOffset(0, CANONICAL_QUERYOffset);
     fbBuilder.addOffset(1, QUERY_SHA256Offset);
     fbBuilder.addOffset(2, RESULT_SHA256Offset);
     fbBuilder.addOffset(3, QUERY_ENGINEOffset);
     fbBuilder.addOffset(4, QUERY_ENGINE_VERSIONOffset);
-    fbBuilder.addOffset(5, SCHEMA_NAMESOffset);
-    fbBuilder.addOffset(6, PROVIDER_IDSOffset);
-    fbBuilder.addOffset(7, SOURCE_NAMESOffset);
-    fbBuilder.addOffset(8, BATCH_IDSOffset);
-    fbBuilder.addOffset(9, WINDOW_STARTOffset);
-    fbBuilder.addOffset(10, WINDOW_ENDOffset);
+    fbBuilder.addOffset(5, CANONICAL_ORDEROffset);
+    fbBuilder.addOffset(6, QUERY_PROTOCOLOffset);
+    fbBuilder.addOffset(7, SCHEMA_NAMESOffset);
+    fbBuilder.addOffset(8, PROVIDER_IDSOffset);
+    fbBuilder.addOffset(9, SOURCE_NAMESOffset);
+    fbBuilder.addOffset(10, BATCH_IDSOffset);
+    fbBuilder.addOffset(11, WINDOW_STARTOffset);
+    fbBuilder.addOffset(12, WINDOW_ENDOffset);
     return fbBuilder.endTable();
   }
 
@@ -671,7 +952,7 @@ class _DPMEncryptionBindingReader extends fb.TableReader<DPMEncryptionBinding> {
   const _DPMEncryptionBindingReader();
 
   @override
-  DPMEncryptionBinding createObject(fb.BufferContext bc, int offset) => 
+  DPMEncryptionBinding createObject(fb.BufferContext bc, int offset) =>
     DPMEncryptionBinding._(bc, offset);
 }
 
@@ -773,7 +1054,8 @@ class DPMEncryptionBindingObjectBuilder extends fb.ObjectBuilder {
   }
 }
 ///  Dataset Publication Manifest binding data/index CIDs, query replay,
-///  source hashes, schema hashes, encryption metadata, and provider signature.
+///  source hashes, schema hashes, encryption metadata, provider-mediated query
+///  protocols, completeness roots, and provider signature.
 class DPM {
   DPM._(this._bc, this._bcOffset);
   factory DPM(List<int> bytes) {
@@ -794,33 +1076,46 @@ class DPM {
   ///  Dataset update or batch identifier.
   String? get UPDATE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get updateId => UPDATE_ID;
+  ///  Canonical publication/update partition identity. FILE_ID is the key used
+  ///  everywhere a subscriber, provider, PNM, entitlement, cache, or query
+  ///  protocol refers to this exact update. It is not merely a human filename
+  ///  and it is not the FlatBuffer file_identifier. For completeness-verifiable
+  ///  streams, all returned records MUST belong to this FILE_ID and prove
+  ///  inclusion under this DPM's signed roots.
+  String? get FILE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get fileId => FILE_ID;
   ///  Provider peer ID.
-  String? get PROVIDER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get PROVIDER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   String? get providerPeerId => PROVIDER_PEER_ID;
   ///  Provider EPM CID.
-  String? get PROVIDER_EPM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get PROVIDER_EPM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   String? get providerEpmCid => PROVIDER_EPM_CID;
   ///  Publication timestamp in ISO 8601 UTC.
-  String? get PUBLISH_TIMESTAMP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get PUBLISH_TIMESTAMP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
   String? get publishTimestamp => PUBLISH_TIMESTAMP;
   ///  Published shard, index, and auxiliary artifacts.
-  List<DPMAsset>? get ASSETS => const fb.ListReader<DPMAsset>(DPMAsset.reader).vTableGetNullable(_bc, _bcOffset, 16);
+  List<DPMAsset>? get ASSETS => const fb.ListReader<DPMAsset>(DPMAsset.reader).vTableGetNullable(_bc, _bcOffset, 18);
   ///  Source batches used to build the dataset.
-  List<DPMSourceBatch>? get SOURCES => const fb.ListReader<DPMSourceBatch>(DPMSourceBatch.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  List<DPMSourceBatch>? get SOURCES => const fb.ListReader<DPMSourceBatch>(DPMSourceBatch.reader).vTableGetNullable(_bc, _bcOffset, 20);
   ///  Replayable query binding.
-  DPMQueryBinding? get QUERY => DPMQueryBinding.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  DPMQueryBinding? get QUERY => DPMQueryBinding.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Signed completeness-capable indexes. Inclusion proofs prove that returned
+  ///  records are authentic members of DATA_ROOT. Range-completeness proofs also
+  ///  prove that no matching records were omitted, but only for predicates
+  ///  expressible against these declared indexes.
+  List<DPMCompletenessIndex>? get INDEXES => const fb.ListReader<DPMCompletenessIndex>(DPMCompletenessIndex.reader).vTableGetNullable(_bc, _bcOffset, 24);
   ///  Encryption/key metadata.
-  DPMEncryptionBinding? get ENCRYPTION => DPMEncryptionBinding.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  DPMEncryptionBinding? get ENCRYPTION => DPMEncryptionBinding.reader.vTableGetNullable(_bc, _bcOffset, 26);
   ///  Provider signature over the canonical manifest bytes or manifest digest.
-  List<int>? get PROVIDER_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 24);
+  List<int>? get PROVIDER_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 28);
   List<int>? get providerSignature => PROVIDER_SIGNATURE;
   ///  Signature algorithm, e.g. Ed25519.
-  String? get SIGNATURE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get SIGNATURE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
   String? get signatureType => SIGNATURE_TYPE;
 
   @override
   String toString() {
-    return 'DPM{VERSION: ${VERSION}, datasetId: ${datasetId}, updateId: ${updateId}, providerPeerId: ${providerPeerId}, providerEpmCid: ${providerEpmCid}, publishTimestamp: ${publishTimestamp}, ASSETS: ${ASSETS}, SOURCES: ${SOURCES}, QUERY: ${QUERY}, ENCRYPTION: ${ENCRYPTION}, providerSignature: ${providerSignature}, signatureType: ${signatureType}}';
+    return 'DPM{VERSION: ${VERSION}, datasetId: ${datasetId}, updateId: ${updateId}, fileId: ${fileId}, providerPeerId: ${providerPeerId}, providerEpmCid: ${providerEpmCid}, publishTimestamp: ${publishTimestamp}, ASSETS: ${ASSETS}, SOURCES: ${SOURCES}, QUERY: ${QUERY}, INDEXES: ${INDEXES}, ENCRYPTION: ${ENCRYPTION}, providerSignature: ${providerSignature}, signatureType: ${signatureType}}';
   }
 }
 
@@ -828,7 +1123,7 @@ class _DPMReader extends fb.TableReader<DPM> {
   const _DPMReader();
 
   @override
-  DPM createObject(fb.BufferContext bc, int offset) => 
+  DPM createObject(fb.BufferContext bc, int offset) =>
     DPM._(bc, offset);
 }
 
@@ -838,7 +1133,7 @@ class DPMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(12);
+    fbBuilder.startTable(14);
   }
 
   int addVersionOffset(int? offset) {
@@ -853,40 +1148,48 @@ class DPMBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addProviderPeerIdOffset(int? offset) {
+  int addFileIdOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addProviderEpmCidOffset(int? offset) {
+  int addProviderPeerIdOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addPublishTimestampOffset(int? offset) {
+  int addProviderEpmCidOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addAssetsOffset(int? offset) {
+  int addPublishTimestampOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addSourcesOffset(int? offset) {
+  int addAssetsOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addQueryOffset(int? offset) {
+  int addSourcesOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addEncryptionOffset(int? offset) {
+  int addQueryOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addProviderSignatureOffset(int? offset) {
+  int addIndexesOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addSignatureTypeOffset(int? offset) {
+  int addEncryptionOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addProviderSignatureOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureTypeOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
 
@@ -899,12 +1202,14 @@ class DPMObjectBuilder extends fb.ObjectBuilder {
   final String? _VERSION;
   final String? _DATASET_ID;
   final String? _UPDATE_ID;
+  final String? _FILE_ID;
   final String? _PROVIDER_PEER_ID;
   final String? _PROVIDER_EPM_CID;
   final String? _PUBLISH_TIMESTAMP;
   final List<DPMAssetObjectBuilder>? _ASSETS;
   final List<DPMSourceBatchObjectBuilder>? _SOURCES;
   final DPMQueryBindingObjectBuilder? _QUERY;
+  final List<DPMCompletenessIndexObjectBuilder>? _INDEXES;
   final DPMEncryptionBindingObjectBuilder? _ENCRYPTION;
   final List<int>? _PROVIDER_SIGNATURE;
   final String? _SIGNATURE_TYPE;
@@ -915,6 +1220,8 @@ class DPMObjectBuilder extends fb.ObjectBuilder {
     String? datasetId,
     String? UPDATE_ID,
     String? updateId,
+    String? FILE_ID,
+    String? fileId,
     String? PROVIDER_PEER_ID,
     String? providerPeerId,
     String? PROVIDER_EPM_CID,
@@ -924,6 +1231,7 @@ class DPMObjectBuilder extends fb.ObjectBuilder {
     List<DPMAssetObjectBuilder>? ASSETS,
     List<DPMSourceBatchObjectBuilder>? SOURCES,
     DPMQueryBindingObjectBuilder? QUERY,
+    List<DPMCompletenessIndexObjectBuilder>? INDEXES,
     DPMEncryptionBindingObjectBuilder? ENCRYPTION,
     List<int>? PROVIDER_SIGNATURE,
     List<int>? providerSignature,
@@ -933,12 +1241,14 @@ class DPMObjectBuilder extends fb.ObjectBuilder {
       : _VERSION = VERSION,
         _DATASET_ID = datasetId ?? DATASET_ID,
         _UPDATE_ID = updateId ?? UPDATE_ID,
+        _FILE_ID = fileId ?? FILE_ID,
         _PROVIDER_PEER_ID = providerPeerId ?? PROVIDER_PEER_ID,
         _PROVIDER_EPM_CID = providerEpmCid ?? PROVIDER_EPM_CID,
         _PUBLISH_TIMESTAMP = publishTimestamp ?? PUBLISH_TIMESTAMP,
         _ASSETS = ASSETS,
         _SOURCES = SOURCES,
         _QUERY = QUERY,
+        _INDEXES = INDEXES,
         _ENCRYPTION = ENCRYPTION,
         _PROVIDER_SIGNATURE = providerSignature ?? PROVIDER_SIGNATURE,
         _SIGNATURE_TYPE = signatureType ?? SIGNATURE_TYPE;
@@ -952,6 +1262,8 @@ class DPMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_DATASET_ID!);
     final int? UPDATE_IDOffset = _UPDATE_ID == null ? null
         : fbBuilder.writeString(_UPDATE_ID!);
+    final int? FILE_IDOffset = _FILE_ID == null ? null
+        : fbBuilder.writeString(_FILE_ID!);
     final int? PROVIDER_PEER_IDOffset = _PROVIDER_PEER_ID == null ? null
         : fbBuilder.writeString(_PROVIDER_PEER_ID!);
     final int? PROVIDER_EPM_CIDOffset = _PROVIDER_EPM_CID == null ? null
@@ -963,24 +1275,28 @@ class DPMObjectBuilder extends fb.ObjectBuilder {
     final int? SOURCESOffset = _SOURCES == null ? null
         : fbBuilder.writeList(_SOURCES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? QUERYOffset = _QUERY?.getOrCreateOffset(fbBuilder);
+    final int? INDEXESOffset = _INDEXES == null ? null
+        : fbBuilder.writeList(_INDEXES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? ENCRYPTIONOffset = _ENCRYPTION?.getOrCreateOffset(fbBuilder);
     final int? PROVIDER_SIGNATUREOffset = _PROVIDER_SIGNATURE == null ? null
         : fbBuilder.writeListUint8(_PROVIDER_SIGNATURE!);
     final int? SIGNATURE_TYPEOffset = _SIGNATURE_TYPE == null ? null
         : fbBuilder.writeString(_SIGNATURE_TYPE!);
-    fbBuilder.startTable(12);
+    fbBuilder.startTable(14);
     fbBuilder.addOffset(0, VERSIONOffset);
     fbBuilder.addOffset(1, DATASET_IDOffset);
     fbBuilder.addOffset(2, UPDATE_IDOffset);
-    fbBuilder.addOffset(3, PROVIDER_PEER_IDOffset);
-    fbBuilder.addOffset(4, PROVIDER_EPM_CIDOffset);
-    fbBuilder.addOffset(5, PUBLISH_TIMESTAMPOffset);
-    fbBuilder.addOffset(6, ASSETSOffset);
-    fbBuilder.addOffset(7, SOURCESOffset);
-    fbBuilder.addOffset(8, QUERYOffset);
-    fbBuilder.addOffset(9, ENCRYPTIONOffset);
-    fbBuilder.addOffset(10, PROVIDER_SIGNATUREOffset);
-    fbBuilder.addOffset(11, SIGNATURE_TYPEOffset);
+    fbBuilder.addOffset(3, FILE_IDOffset);
+    fbBuilder.addOffset(4, PROVIDER_PEER_IDOffset);
+    fbBuilder.addOffset(5, PROVIDER_EPM_CIDOffset);
+    fbBuilder.addOffset(6, PUBLISH_TIMESTAMPOffset);
+    fbBuilder.addOffset(7, ASSETSOffset);
+    fbBuilder.addOffset(8, SOURCESOffset);
+    fbBuilder.addOffset(9, QUERYOffset);
+    fbBuilder.addOffset(10, INDEXESOffset);
+    fbBuilder.addOffset(11, ENCRYPTIONOffset);
+    fbBuilder.addOffset(12, PROVIDER_SIGNATUREOffset);
+    fbBuilder.addOffset(13, SIGNATURE_TYPEOffset);
     return fbBuilder.endTable();
   }
 

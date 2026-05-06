@@ -76,6 +76,25 @@ class DPMQueryBinding extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+    /// computed. Providers MUST stream records in this order unless each chunk
+    /// includes enough proof material to restore and verify the canonical order.
+    public function getCANONICAL_ORDER()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Query protocol name/version for provider-mediated retrieval, e.g.
+    /// /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+    /// protocol to the provider, submits the signed query or a permitted subset,
+    /// and imports only responses that verify against the signed roots.
+    public function getQUERY_PROTOCOL()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /// SDS schema names selected by the query.
     /**
      * @param int offset
@@ -83,7 +102,7 @@ class DPMQueryBinding extends Table
      */
     public function getSCHEMA_NAMES($j)
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -92,7 +111,7 @@ class DPMQueryBinding extends Table
      */
     public function getSCHEMA_NAMESLength()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -103,7 +122,7 @@ class DPMQueryBinding extends Table
      */
     public function getPROVIDER_IDS($j)
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -112,7 +131,7 @@ class DPMQueryBinding extends Table
      */
     public function getPROVIDER_IDSLength()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -123,7 +142,7 @@ class DPMQueryBinding extends Table
      */
     public function getSOURCE_NAMES($j)
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -132,7 +151,7 @@ class DPMQueryBinding extends Table
      */
     public function getSOURCE_NAMESLength()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -143,7 +162,7 @@ class DPMQueryBinding extends Table
      */
     public function getBATCH_IDS($j)
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -152,21 +171,21 @@ class DPMQueryBinding extends Table
      */
     public function getBATCH_IDSLength()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /// Inclusive query window start in ISO 8601 UTC.
     public function getWINDOW_START()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Inclusive query window end in ISO 8601 UTC.
     public function getWINDOW_END()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -176,21 +195,23 @@ class DPMQueryBinding extends Table
      */
     public static function startDPMQueryBinding(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(11);
+        $builder->StartObject(13);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DPMQueryBinding
      */
-    public static function createDPMQueryBinding(FlatBufferBuilder $builder, $CANONICAL_QUERY, $QUERY_SHA256, $RESULT_SHA256, $QUERY_ENGINE, $QUERY_ENGINE_VERSION, $SCHEMA_NAMES, $PROVIDER_IDS, $SOURCE_NAMES, $BATCH_IDS, $WINDOW_START, $WINDOW_END)
+    public static function createDPMQueryBinding(FlatBufferBuilder $builder, $CANONICAL_QUERY, $QUERY_SHA256, $RESULT_SHA256, $QUERY_ENGINE, $QUERY_ENGINE_VERSION, $CANONICAL_ORDER, $QUERY_PROTOCOL, $SCHEMA_NAMES, $PROVIDER_IDS, $SOURCE_NAMES, $BATCH_IDS, $WINDOW_START, $WINDOW_END)
     {
-        $builder->startObject(11);
+        $builder->startObject(13);
         self::addCANONICAL_QUERY($builder, $CANONICAL_QUERY);
         self::addQUERY_SHA256($builder, $QUERY_SHA256);
         self::addRESULT_SHA256($builder, $RESULT_SHA256);
         self::addQUERY_ENGINE($builder, $QUERY_ENGINE);
         self::addQUERY_ENGINE_VERSION($builder, $QUERY_ENGINE_VERSION);
+        self::addCANONICAL_ORDER($builder, $CANONICAL_ORDER);
+        self::addQUERY_PROTOCOL($builder, $QUERY_PROTOCOL);
         self::addSCHEMA_NAMES($builder, $SCHEMA_NAMES);
         self::addPROVIDER_IDS($builder, $PROVIDER_IDS);
         self::addSOURCE_NAMES($builder, $SOURCE_NAMES);
@@ -256,12 +277,32 @@ class DPMQueryBinding extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCANONICAL_ORDER(FlatBufferBuilder $builder, $CANONICAL_ORDER)
+    {
+        $builder->addOffsetX(5, $CANONICAL_ORDER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addQUERY_PROTOCOL(FlatBufferBuilder $builder, $QUERY_PROTOCOL)
+    {
+        $builder->addOffsetX(6, $QUERY_PROTOCOL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
     public static function addSCHEMA_NAMES(FlatBufferBuilder $builder, $SCHEMA_NAMES)
     {
-        $builder->addOffsetX(5, $SCHEMA_NAMES, 0);
+        $builder->addOffsetX(7, $SCHEMA_NAMES, 0);
     }
 
     /**
@@ -295,7 +336,7 @@ class DPMQueryBinding extends Table
      */
     public static function addPROVIDER_IDS(FlatBufferBuilder $builder, $PROVIDER_IDS)
     {
-        $builder->addOffsetX(6, $PROVIDER_IDS, 0);
+        $builder->addOffsetX(8, $PROVIDER_IDS, 0);
     }
 
     /**
@@ -329,7 +370,7 @@ class DPMQueryBinding extends Table
      */
     public static function addSOURCE_NAMES(FlatBufferBuilder $builder, $SOURCE_NAMES)
     {
-        $builder->addOffsetX(7, $SOURCE_NAMES, 0);
+        $builder->addOffsetX(9, $SOURCE_NAMES, 0);
     }
 
     /**
@@ -363,7 +404,7 @@ class DPMQueryBinding extends Table
      */
     public static function addBATCH_IDS(FlatBufferBuilder $builder, $BATCH_IDS)
     {
-        $builder->addOffsetX(8, $BATCH_IDS, 0);
+        $builder->addOffsetX(10, $BATCH_IDS, 0);
     }
 
     /**
@@ -397,7 +438,7 @@ class DPMQueryBinding extends Table
      */
     public static function addWINDOW_START(FlatBufferBuilder $builder, $WINDOW_START)
     {
-        $builder->addOffsetX(9, $WINDOW_START, 0);
+        $builder->addOffsetX(11, $WINDOW_START, 0);
     }
 
     /**
@@ -407,7 +448,7 @@ class DPMQueryBinding extends Table
      */
     public static function addWINDOW_END(FlatBufferBuilder $builder, $WINDOW_END)
     {
-        $builder->addOffsetX(10, $WINDOW_END, 0);
+        $builder->addOffsetX(12, $WINDOW_END, 0);
     }
 
     /**

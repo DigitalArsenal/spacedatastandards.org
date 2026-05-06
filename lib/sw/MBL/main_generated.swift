@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Module Bundle Listing
-/// 
+///
 ///  SDS-owned record describing the logical contents and canonicalization rules
 ///  for a single-file module delivery artifact carried inside a REC trailer.
 ///  Logical role for one payload carried in the bundle.
@@ -51,7 +51,7 @@ public struct CanonicalizationRule: FlatBufferTable, FlatbuffersVectorInitializa
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$MBL" } 
+  public static var id: String { "$MBL" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CanonicalizationRule.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -114,7 +114,7 @@ public struct ModuleBundleEntry: FlatBufferTable, FlatbuffersVectorInitializable
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$MBL" } 
+  public static var id: String { "$MBL" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ModuleBundleEntry.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -202,7 +202,7 @@ public struct ModuleBundleEntry: FlatBufferTable, FlatbuffersVectorInitializable
   }
   public static func sortVectorOfModuleBundleEntry(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
     var off = offsets
-    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 } 
+    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
     return fbb.createVector(ofOffsets: off)
   }
   fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> ModuleBundleEntry? {
@@ -249,7 +249,7 @@ public struct MBL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$MBL" } 
+  public static var id: String { "$MBL" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: MBL.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }

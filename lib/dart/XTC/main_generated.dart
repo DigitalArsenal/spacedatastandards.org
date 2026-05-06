@@ -649,7 +649,7 @@ class _IntegerDataEncodingReader extends fb.TableReader<IntegerDataEncoding> {
   const _IntegerDataEncodingReader();
 
   @override
-  IntegerDataEncoding createObject(fb.BufferContext bc, int offset) => 
+  IntegerDataEncoding createObject(fb.BufferContext bc, int offset) =>
     IntegerDataEncoding._(bc, offset);
 }
 
@@ -774,7 +774,7 @@ class _FloatDataEncodingReader extends fb.TableReader<FloatDataEncoding> {
   const _FloatDataEncodingReader();
 
   @override
-  FloatDataEncoding createObject(fb.BufferContext bc, int offset) => 
+  FloatDataEncoding createObject(fb.BufferContext bc, int offset) =>
     FloatDataEncoding._(bc, offset);
 }
 
@@ -902,7 +902,7 @@ class _StringDataEncodingReader extends fb.TableReader<StringDataEncoding> {
   const _StringDataEncodingReader();
 
   @override
-  StringDataEncoding createObject(fb.BufferContext bc, int offset) => 
+  StringDataEncoding createObject(fb.BufferContext bc, int offset) =>
     StringDataEncoding._(bc, offset);
 }
 
@@ -1027,7 +1027,7 @@ class _BinaryDataEncodingReader extends fb.TableReader<BinaryDataEncoding> {
   const _BinaryDataEncodingReader();
 
   @override
-  BinaryDataEncoding createObject(fb.BufferContext bc, int offset) => 
+  BinaryDataEncoding createObject(fb.BufferContext bc, int offset) =>
     BinaryDataEncoding._(bc, offset);
 }
 
@@ -1119,7 +1119,7 @@ class _PolynomialCalibratorReader extends fb.TableReader<PolynomialCalibrator> {
   const _PolynomialCalibratorReader();
 
   @override
-  PolynomialCalibrator createObject(fb.BufferContext bc, int offset) => 
+  PolynomialCalibrator createObject(fb.BufferContext bc, int offset) =>
     PolynomialCalibrator._(bc, offset);
 }
 
@@ -1196,7 +1196,7 @@ class _SplinePointReader extends fb.TableReader<SplinePoint> {
   const _SplinePointReader();
 
   @override
-  SplinePoint createObject(fb.BufferContext bc, int offset) => 
+  SplinePoint createObject(fb.BufferContext bc, int offset) =>
     SplinePoint._(bc, offset);
 }
 
@@ -1283,7 +1283,7 @@ class _SplineCalibratorReader extends fb.TableReader<SplineCalibrator> {
   const _SplineCalibratorReader();
 
   @override
-  SplineCalibrator createObject(fb.BufferContext bc, int offset) => 
+  SplineCalibrator createObject(fb.BufferContext bc, int offset) =>
     SplineCalibrator._(bc, offset);
 }
 
@@ -1377,7 +1377,7 @@ class _MathOperationReader extends fb.TableReader<MathOperation> {
   const _MathOperationReader();
 
   @override
-  MathOperation createObject(fb.BufferContext bc, int offset) => 
+  MathOperation createObject(fb.BufferContext bc, int offset) =>
     MathOperation._(bc, offset);
 }
 
@@ -1461,7 +1461,7 @@ class _ContextCalibratorReader extends fb.TableReader<ContextCalibrator> {
   const _ContextCalibratorReader();
 
   @override
-  ContextCalibrator createObject(fb.BufferContext bc, int offset) => 
+  ContextCalibrator createObject(fb.BufferContext bc, int offset) =>
     ContextCalibrator._(bc, offset);
 }
 
@@ -1574,7 +1574,7 @@ class _AlarmRangeReader extends fb.TableReader<AlarmRange> {
   const _AlarmRangeReader();
 
   @override
-  AlarmRange createObject(fb.BufferContext bc, int offset) => 
+  AlarmRange createObject(fb.BufferContext bc, int offset) =>
     AlarmRange._(bc, offset);
 }
 
@@ -1688,7 +1688,7 @@ class _StaticAlarmRangesReader extends fb.TableReader<StaticAlarmRanges> {
   const _StaticAlarmRangesReader();
 
   @override
-  StaticAlarmRanges createObject(fb.BufferContext bc, int offset) => 
+  StaticAlarmRanges createObject(fb.BufferContext bc, int offset) =>
     StaticAlarmRanges._(bc, offset);
 }
 
@@ -1806,7 +1806,7 @@ class _EnumerationAlarmReader extends fb.TableReader<EnumerationAlarm> {
   const _EnumerationAlarmReader();
 
   @override
-  EnumerationAlarm createObject(fb.BufferContext bc, int offset) => 
+  EnumerationAlarm createObject(fb.BufferContext bc, int offset) =>
     EnumerationAlarm._(bc, offset);
 }
 
@@ -1897,7 +1897,7 @@ class _DefaultAlarmReader extends fb.TableReader<DefaultAlarm> {
   const _DefaultAlarmReader();
 
   @override
-  DefaultAlarm createObject(fb.BufferContext bc, int offset) => 
+  DefaultAlarm createObject(fb.BufferContext bc, int offset) =>
     DefaultAlarm._(bc, offset);
 }
 
@@ -1995,7 +1995,7 @@ class _ContextAlarmReader extends fb.TableReader<ContextAlarm> {
   const _ContextAlarmReader();
 
   @override
-  ContextAlarm createObject(fb.BufferContext bc, int offset) => 
+  ContextAlarm createObject(fb.BufferContext bc, int offset) =>
     ContextAlarm._(bc, offset);
 }
 
@@ -2087,7 +2087,7 @@ class _ParameterComparisonReader extends fb.TableReader<ParameterComparison> {
   const _ParameterComparisonReader();
 
   @override
-  ParameterComparison createObject(fb.BufferContext bc, int offset) => 
+  ParameterComparison createObject(fb.BufferContext bc, int offset) =>
     ParameterComparison._(bc, offset);
 }
 
@@ -2194,7 +2194,7 @@ class _BooleanExpressionReader extends fb.TableReader<BooleanExpression> {
   const _BooleanExpressionReader();
 
   @override
-  BooleanExpression createObject(fb.BufferContext bc, int offset) => 
+  BooleanExpression createObject(fb.BufferContext bc, int offset) =>
     BooleanExpression._(bc, offset);
 }
 
@@ -2296,7 +2296,7 @@ class _MatchCriteriaReader extends fb.TableReader<MatchCriteria> {
   const _MatchCriteriaReader();
 
   @override
-  MatchCriteria createObject(fb.BufferContext bc, int offset) => 
+  MatchCriteria createObject(fb.BufferContext bc, int offset) =>
     MatchCriteria._(bc, offset);
 }
 
@@ -2408,7 +2408,7 @@ class _UnitReader extends fb.TableReader<Unit> {
   const _UnitReader();
 
   @override
-  Unit createObject(fb.BufferContext bc, int offset) => 
+  Unit createObject(fb.BufferContext bc, int offset) =>
     Unit._(bc, offset);
 }
 
@@ -2516,7 +2516,7 @@ class _EnumerationValueReader extends fb.TableReader<EnumerationValue> {
   const _EnumerationValueReader();
 
   @override
-  EnumerationValue createObject(fb.BufferContext bc, int offset) => 
+  EnumerationValue createObject(fb.BufferContext bc, int offset) =>
     EnumerationValue._(bc, offset);
 }
 
@@ -2649,7 +2649,7 @@ class _IntegerParameterTypeReader extends fb.TableReader<IntegerParameterType> {
   const _IntegerParameterTypeReader();
 
   @override
-  IntegerParameterType createObject(fb.BufferContext bc, int offset) => 
+  IntegerParameterType createObject(fb.BufferContext bc, int offset) =>
     IntegerParameterType._(bc, offset);
 }
 
@@ -2860,7 +2860,7 @@ class _FloatParameterTypeReader extends fb.TableReader<FloatParameterType> {
   const _FloatParameterTypeReader();
 
   @override
-  FloatParameterType createObject(fb.BufferContext bc, int offset) => 
+  FloatParameterType createObject(fb.BufferContext bc, int offset) =>
     FloatParameterType._(bc, offset);
 }
 
@@ -3055,7 +3055,7 @@ class _StringParameterTypeReader extends fb.TableReader<StringParameterType> {
   const _StringParameterTypeReader();
 
   @override
-  StringParameterType createObject(fb.BufferContext bc, int offset) => 
+  StringParameterType createObject(fb.BufferContext bc, int offset) =>
     StringParameterType._(bc, offset);
 }
 
@@ -3223,7 +3223,7 @@ class _BooleanParameterTypeReader extends fb.TableReader<BooleanParameterType> {
   const _BooleanParameterTypeReader();
 
   @override
-  BooleanParameterType createObject(fb.BufferContext bc, int offset) => 
+  BooleanParameterType createObject(fb.BufferContext bc, int offset) =>
     BooleanParameterType._(bc, offset);
 }
 
@@ -3382,7 +3382,7 @@ class _EnumeratedParameterTypeReader extends fb.TableReader<EnumeratedParameterT
   const _EnumeratedParameterTypeReader();
 
   @override
-  EnumeratedParameterType createObject(fb.BufferContext bc, int offset) => 
+  EnumeratedParameterType createObject(fb.BufferContext bc, int offset) =>
     EnumeratedParameterType._(bc, offset);
 }
 
@@ -3544,7 +3544,7 @@ class _BinaryParameterTypeReader extends fb.TableReader<BinaryParameterType> {
   const _BinaryParameterTypeReader();
 
   @override
-  BinaryParameterType createObject(fb.BufferContext bc, int offset) => 
+  BinaryParameterType createObject(fb.BufferContext bc, int offset) =>
     BinaryParameterType._(bc, offset);
 }
 
@@ -3686,7 +3686,7 @@ class _AbsoluteTimeParameterTypeReader extends fb.TableReader<AbsoluteTimeParame
   const _AbsoluteTimeParameterTypeReader();
 
   @override
-  AbsoluteTimeParameterType createObject(fb.BufferContext bc, int offset) => 
+  AbsoluteTimeParameterType createObject(fb.BufferContext bc, int offset) =>
     AbsoluteTimeParameterType._(bc, offset);
 }
 
@@ -3866,7 +3866,7 @@ class _RelativeTimeParameterTypeReader extends fb.TableReader<RelativeTimeParame
   const _RelativeTimeParameterTypeReader();
 
   @override
-  RelativeTimeParameterType createObject(fb.BufferContext bc, int offset) => 
+  RelativeTimeParameterType createObject(fb.BufferContext bc, int offset) =>
     RelativeTimeParameterType._(bc, offset);
 }
 
@@ -4007,7 +4007,7 @@ class _ArrayDimensionReader extends fb.TableReader<ArrayDimension> {
   const _ArrayDimensionReader();
 
   @override
-  ArrayDimension createObject(fb.BufferContext bc, int offset) => 
+  ArrayDimension createObject(fb.BufferContext bc, int offset) =>
     ArrayDimension._(bc, offset);
 }
 
@@ -4102,7 +4102,7 @@ class _ArrayParameterTypeReader extends fb.TableReader<ArrayParameterType> {
   const _ArrayParameterTypeReader();
 
   @override
-  ArrayParameterType createObject(fb.BufferContext bc, int offset) => 
+  ArrayParameterType createObject(fb.BufferContext bc, int offset) =>
     ArrayParameterType._(bc, offset);
 }
 
@@ -4226,7 +4226,7 @@ class _AggregateMemberReader extends fb.TableReader<AggregateMember> {
   const _AggregateMemberReader();
 
   @override
-  AggregateMember createObject(fb.BufferContext bc, int offset) => 
+  AggregateMember createObject(fb.BufferContext bc, int offset) =>
     AggregateMember._(bc, offset);
 }
 
@@ -4331,7 +4331,7 @@ class _AggregateParameterTypeReader extends fb.TableReader<AggregateParameterTyp
   const _AggregateParameterTypeReader();
 
   @override
-  AggregateParameterType createObject(fb.BufferContext bc, int offset) => 
+  AggregateParameterType createObject(fb.BufferContext bc, int offset) =>
     AggregateParameterType._(bc, offset);
 }
 
@@ -4466,7 +4466,7 @@ class _ParameterTypeSetReader extends fb.TableReader<ParameterTypeSet> {
   const _ParameterTypeSetReader();
 
   @override
-  ParameterTypeSet createObject(fb.BufferContext bc, int offset) => 
+  ParameterTypeSet createObject(fb.BufferContext bc, int offset) =>
     ParameterTypeSet._(bc, offset);
 }
 
@@ -4651,7 +4651,7 @@ class _ParameterPropertiesReader extends fb.TableReader<ParameterProperties> {
   const _ParameterPropertiesReader();
 
   @override
-  ParameterProperties createObject(fb.BufferContext bc, int offset) => 
+  ParameterProperties createObject(fb.BufferContext bc, int offset) =>
     ParameterProperties._(bc, offset);
 }
 
@@ -4772,7 +4772,7 @@ class _ParameterReader extends fb.TableReader<Parameter> {
   const _ParameterReader();
 
   @override
-  Parameter createObject(fb.BufferContext bc, int offset) => 
+  Parameter createObject(fb.BufferContext bc, int offset) =>
     Parameter._(bc, offset);
 }
 
@@ -4911,7 +4911,7 @@ class _ParameterSetReader extends fb.TableReader<ParameterSet> {
   const _ParameterSetReader();
 
   @override
-  ParameterSet createObject(fb.BufferContext bc, int offset) => 
+  ParameterSet createObject(fb.BufferContext bc, int offset) =>
     ParameterSet._(bc, offset);
 }
 
@@ -4990,7 +4990,7 @@ class _LocationInContainerReader extends fb.TableReader<LocationInContainer> {
   const _LocationInContainerReader();
 
   @override
-  LocationInContainer createObject(fb.BufferContext bc, int offset) => 
+  LocationInContainer createObject(fb.BufferContext bc, int offset) =>
     LocationInContainer._(bc, offset);
 }
 
@@ -5079,7 +5079,7 @@ class _RepeatEntryReader extends fb.TableReader<RepeatEntry> {
   const _RepeatEntryReader();
 
   @override
-  RepeatEntry createObject(fb.BufferContext bc, int offset) => 
+  RepeatEntry createObject(fb.BufferContext bc, int offset) =>
     RepeatEntry._(bc, offset);
 }
 
@@ -5183,7 +5183,7 @@ class _ParameterRefEntryReader extends fb.TableReader<ParameterRefEntry> {
   const _ParameterRefEntryReader();
 
   @override
-  ParameterRefEntry createObject(fb.BufferContext bc, int offset) => 
+  ParameterRefEntry createObject(fb.BufferContext bc, int offset) =>
     ParameterRefEntry._(bc, offset);
 }
 
@@ -5306,7 +5306,7 @@ class _ContainerRefEntryReader extends fb.TableReader<ContainerRefEntry> {
   const _ContainerRefEntryReader();
 
   @override
-  ContainerRefEntry createObject(fb.BufferContext bc, int offset) => 
+  ContainerRefEntry createObject(fb.BufferContext bc, int offset) =>
     ContainerRefEntry._(bc, offset);
 }
 
@@ -5418,7 +5418,7 @@ class _FixedValueEntryReader extends fb.TableReader<FixedValueEntry> {
   const _FixedValueEntryReader();
 
   @override
-  FixedValueEntry createObject(fb.BufferContext bc, int offset) => 
+  FixedValueEntry createObject(fb.BufferContext bc, int offset) =>
     FixedValueEntry._(bc, offset);
 }
 
@@ -5531,7 +5531,7 @@ class _ArrayParameterRefEntryReader extends fb.TableReader<ArrayParameterRefEntr
   const _ArrayParameterRefEntryReader();
 
   @override
-  ArrayParameterRefEntry createObject(fb.BufferContext bc, int offset) => 
+  ArrayParameterRefEntry createObject(fb.BufferContext bc, int offset) =>
     ArrayParameterRefEntry._(bc, offset);
 }
 
@@ -5644,7 +5644,7 @@ class _ContainerEntryReader extends fb.TableReader<ContainerEntry> {
   const _ContainerEntryReader();
 
   @override
-  ContainerEntry createObject(fb.BufferContext bc, int offset) => 
+  ContainerEntry createObject(fb.BufferContext bc, int offset) =>
     ContainerEntry._(bc, offset);
 }
 
@@ -5753,7 +5753,7 @@ class _BaseContainerReader extends fb.TableReader<BaseContainer> {
   const _BaseContainerReader();
 
   @override
-  BaseContainer createObject(fb.BufferContext bc, int offset) => 
+  BaseContainer createObject(fb.BufferContext bc, int offset) =>
     BaseContainer._(bc, offset);
 }
 
@@ -5844,7 +5844,7 @@ class _RateInStreamReader extends fb.TableReader<RateInStream> {
   const _RateInStreamReader();
 
   @override
-  RateInStream createObject(fb.BufferContext bc, int offset) => 
+  RateInStream createObject(fb.BufferContext bc, int offset) =>
     RateInStream._(bc, offset);
 }
 
@@ -5943,7 +5943,7 @@ class _ContainerBinaryEncodingReader extends fb.TableReader<ContainerBinaryEncod
   const _ContainerBinaryEncodingReader();
 
   @override
-  ContainerBinaryEncoding createObject(fb.BufferContext bc, int offset) => 
+  ContainerBinaryEncoding createObject(fb.BufferContext bc, int offset) =>
     ContainerBinaryEncoding._(bc, offset);
 }
 
@@ -6060,7 +6060,7 @@ class _SequenceContainerReader extends fb.TableReader<SequenceContainer> {
   const _SequenceContainerReader();
 
   @override
-  SequenceContainer createObject(fb.BufferContext bc, int offset) => 
+  SequenceContainer createObject(fb.BufferContext bc, int offset) =>
     SequenceContainer._(bc, offset);
 }
 
@@ -6217,7 +6217,7 @@ class _ContainerSetReader extends fb.TableReader<ContainerSet> {
   const _ContainerSetReader();
 
   @override
-  ContainerSet createObject(fb.BufferContext bc, int offset) => 
+  ContainerSet createObject(fb.BufferContext bc, int offset) =>
     ContainerSet._(bc, offset);
 }
 
@@ -6296,7 +6296,7 @@ class _AlgorithmInputReader extends fb.TableReader<AlgorithmInput> {
   const _AlgorithmInputReader();
 
   @override
-  AlgorithmInput createObject(fb.BufferContext bc, int offset) => 
+  AlgorithmInput createObject(fb.BufferContext bc, int offset) =>
     AlgorithmInput._(bc, offset);
 }
 
@@ -6387,7 +6387,7 @@ class _AlgorithmOutputReader extends fb.TableReader<AlgorithmOutput> {
   const _AlgorithmOutputReader();
 
   @override
-  AlgorithmOutput createObject(fb.BufferContext bc, int offset) => 
+  AlgorithmOutput createObject(fb.BufferContext bc, int offset) =>
     AlgorithmOutput._(bc, offset);
 }
 
@@ -6480,7 +6480,7 @@ class _AlgorithmTriggerReader extends fb.TableReader<AlgorithmTrigger> {
   const _AlgorithmTriggerReader();
 
   @override
-  AlgorithmTrigger createObject(fb.BufferContext bc, int offset) => 
+  AlgorithmTrigger createObject(fb.BufferContext bc, int offset) =>
     AlgorithmTrigger._(bc, offset);
 }
 
@@ -6595,7 +6595,7 @@ class _CustomAlgorithmReader extends fb.TableReader<CustomAlgorithm> {
   const _CustomAlgorithmReader();
 
   @override
-  CustomAlgorithm createObject(fb.BufferContext bc, int offset) => 
+  CustomAlgorithm createObject(fb.BufferContext bc, int offset) =>
     CustomAlgorithm._(bc, offset);
 }
 
@@ -6765,7 +6765,7 @@ class _MathAlgorithmReader extends fb.TableReader<MathAlgorithm> {
   const _MathAlgorithmReader();
 
   @override
-  MathAlgorithm createObject(fb.BufferContext bc, int offset) => 
+  MathAlgorithm createObject(fb.BufferContext bc, int offset) =>
     MathAlgorithm._(bc, offset);
 }
 
@@ -6887,7 +6887,7 @@ class _AlgorithmSetReader extends fb.TableReader<AlgorithmSet> {
   const _AlgorithmSetReader();
 
   @override
-  AlgorithmSet createObject(fb.BufferContext bc, int offset) => 
+  AlgorithmSet createObject(fb.BufferContext bc, int offset) =>
     AlgorithmSet._(bc, offset);
 }
 
@@ -6999,7 +6999,7 @@ class _IntegerArgumentTypeReader extends fb.TableReader<IntegerArgumentType> {
   const _IntegerArgumentTypeReader();
 
   @override
-  IntegerArgumentType createObject(fb.BufferContext bc, int offset) => 
+  IntegerArgumentType createObject(fb.BufferContext bc, int offset) =>
     IntegerArgumentType._(bc, offset);
 }
 
@@ -7183,7 +7183,7 @@ class _FloatArgumentTypeReader extends fb.TableReader<FloatArgumentType> {
   const _FloatArgumentTypeReader();
 
   @override
-  FloatArgumentType createObject(fb.BufferContext bc, int offset) => 
+  FloatArgumentType createObject(fb.BufferContext bc, int offset) =>
     FloatArgumentType._(bc, offset);
 }
 
@@ -7351,7 +7351,7 @@ class _StringArgumentTypeReader extends fb.TableReader<StringArgumentType> {
   const _StringArgumentTypeReader();
 
   @override
-  StringArgumentType createObject(fb.BufferContext bc, int offset) => 
+  StringArgumentType createObject(fb.BufferContext bc, int offset) =>
     StringArgumentType._(bc, offset);
 }
 
@@ -7498,7 +7498,7 @@ class _BooleanArgumentTypeReader extends fb.TableReader<BooleanArgumentType> {
   const _BooleanArgumentTypeReader();
 
   @override
-  BooleanArgumentType createObject(fb.BufferContext bc, int offset) => 
+  BooleanArgumentType createObject(fb.BufferContext bc, int offset) =>
     BooleanArgumentType._(bc, offset);
 }
 
@@ -7651,7 +7651,7 @@ class _EnumeratedArgumentTypeReader extends fb.TableReader<EnumeratedArgumentTyp
   const _EnumeratedArgumentTypeReader();
 
   @override
-  EnumeratedArgumentType createObject(fb.BufferContext bc, int offset) => 
+  EnumeratedArgumentType createObject(fb.BufferContext bc, int offset) =>
     EnumeratedArgumentType._(bc, offset);
 }
 
@@ -7792,7 +7792,7 @@ class _BinaryArgumentTypeReader extends fb.TableReader<BinaryArgumentType> {
   const _BinaryArgumentTypeReader();
 
   @override
-  BinaryArgumentType createObject(fb.BufferContext bc, int offset) => 
+  BinaryArgumentType createObject(fb.BufferContext bc, int offset) =>
     BinaryArgumentType._(bc, offset);
 }
 
@@ -7918,7 +7918,7 @@ class _AggregateArgumentTypeReader extends fb.TableReader<AggregateArgumentType>
   const _AggregateArgumentTypeReader();
 
   @override
-  AggregateArgumentType createObject(fb.BufferContext bc, int offset) => 
+  AggregateArgumentType createObject(fb.BufferContext bc, int offset) =>
     AggregateArgumentType._(bc, offset);
 }
 
@@ -8044,7 +8044,7 @@ class _ArgumentTypeSetReader extends fb.TableReader<ArgumentTypeSet> {
   const _ArgumentTypeSetReader();
 
   @override
-  ArgumentTypeSet createObject(fb.BufferContext bc, int offset) => 
+  ArgumentTypeSet createObject(fb.BufferContext bc, int offset) =>
     ArgumentTypeSet._(bc, offset);
 }
 
@@ -8198,7 +8198,7 @@ class _ArgumentReader extends fb.TableReader<Argument> {
   const _ArgumentReader();
 
   @override
-  Argument createObject(fb.BufferContext bc, int offset) => 
+  Argument createObject(fb.BufferContext bc, int offset) =>
     Argument._(bc, offset);
 }
 
@@ -8323,7 +8323,7 @@ class _ArgumentRefEntryReader extends fb.TableReader<ArgumentRefEntry> {
   const _ArgumentRefEntryReader();
 
   @override
-  ArgumentRefEntry createObject(fb.BufferContext bc, int offset) => 
+  ArgumentRefEntry createObject(fb.BufferContext bc, int offset) =>
     ArgumentRefEntry._(bc, offset);
 }
 
@@ -8426,7 +8426,7 @@ class _CommandContainerEntryReader extends fb.TableReader<CommandContainerEntry>
   const _CommandContainerEntryReader();
 
   @override
-  CommandContainerEntry createObject(fb.BufferContext bc, int offset) => 
+  CommandContainerEntry createObject(fb.BufferContext bc, int offset) =>
     CommandContainerEntry._(bc, offset);
 }
 
@@ -8527,7 +8527,7 @@ class _CommandContainerReader extends fb.TableReader<CommandContainer> {
   const _CommandContainerReader();
 
   @override
-  CommandContainer createObject(fb.BufferContext bc, int offset) => 
+  CommandContainer createObject(fb.BufferContext bc, int offset) =>
     CommandContainer._(bc, offset);
 }
 
@@ -8640,7 +8640,7 @@ class _CommandVerifierReader extends fb.TableReader<CommandVerifier> {
   const _CommandVerifierReader();
 
   @override
-  CommandVerifier createObject(fb.BufferContext bc, int offset) => 
+  CommandVerifier createObject(fb.BufferContext bc, int offset) =>
     CommandVerifier._(bc, offset);
 }
 
@@ -8775,7 +8775,7 @@ class _CommandSignificanceReader extends fb.TableReader<CommandSignificance> {
   const _CommandSignificanceReader();
 
   @override
-  CommandSignificance createObject(fb.BufferContext bc, int offset) => 
+  CommandSignificance createObject(fb.BufferContext bc, int offset) =>
     CommandSignificance._(bc, offset);
 }
 
@@ -8864,7 +8864,7 @@ class _BaseMetaCommandReader extends fb.TableReader<BaseMetaCommand> {
   const _BaseMetaCommandReader();
 
   @override
-  BaseMetaCommand createObject(fb.BufferContext bc, int offset) => 
+  BaseMetaCommand createObject(fb.BufferContext bc, int offset) =>
     BaseMetaCommand._(bc, offset);
 }
 
@@ -8954,7 +8954,7 @@ class _ArgumentAssignmentReader extends fb.TableReader<ArgumentAssignment> {
   const _ArgumentAssignmentReader();
 
   @override
-  ArgumentAssignment createObject(fb.BufferContext bc, int offset) => 
+  ArgumentAssignment createObject(fb.BufferContext bc, int offset) =>
     ArgumentAssignment._(bc, offset);
 }
 
@@ -9045,7 +9045,7 @@ class _InterlockReader extends fb.TableReader<Interlock> {
   const _InterlockReader();
 
   @override
-  Interlock createObject(fb.BufferContext bc, int offset) => 
+  Interlock createObject(fb.BufferContext bc, int offset) =>
     Interlock._(bc, offset);
 }
 
@@ -9164,7 +9164,7 @@ class _MetaCommandReader extends fb.TableReader<MetaCommand> {
   const _MetaCommandReader();
 
   @override
-  MetaCommand createObject(fb.BufferContext bc, int offset) => 
+  MetaCommand createObject(fb.BufferContext bc, int offset) =>
     MetaCommand._(bc, offset);
 }
 
@@ -9339,7 +9339,7 @@ class _MetaCommandSetReader extends fb.TableReader<MetaCommandSet> {
   const _MetaCommandSetReader();
 
   @override
-  MetaCommandSet createObject(fb.BufferContext bc, int offset) => 
+  MetaCommandSet createObject(fb.BufferContext bc, int offset) =>
     MetaCommandSet._(bc, offset);
 }
 
@@ -9424,7 +9424,7 @@ class _FixedFrameStreamReader extends fb.TableReader<FixedFrameStream> {
   const _FixedFrameStreamReader();
 
   @override
-  FixedFrameStream createObject(fb.BufferContext bc, int offset) => 
+  FixedFrameStream createObject(fb.BufferContext bc, int offset) =>
     FixedFrameStream._(bc, offset);
 }
 
@@ -9545,7 +9545,7 @@ class _VariableFrameStreamReader extends fb.TableReader<VariableFrameStream> {
   const _VariableFrameStreamReader();
 
   @override
-  VariableFrameStream createObject(fb.BufferContext bc, int offset) => 
+  VariableFrameStream createObject(fb.BufferContext bc, int offset) =>
     VariableFrameStream._(bc, offset);
 }
 
@@ -9673,7 +9673,7 @@ class _CustomStreamReader extends fb.TableReader<CustomStream> {
   const _CustomStreamReader();
 
   @override
-  CustomStream createObject(fb.BufferContext bc, int offset) => 
+  CustomStream createObject(fb.BufferContext bc, int offset) =>
     CustomStream._(bc, offset);
 }
 
@@ -9777,7 +9777,7 @@ class _StreamSetReader extends fb.TableReader<StreamSet> {
   const _StreamSetReader();
 
   @override
-  StreamSet createObject(fb.BufferContext bc, int offset) => 
+  StreamSet createObject(fb.BufferContext bc, int offset) =>
     StreamSet._(bc, offset);
 }
 
@@ -9887,7 +9887,7 @@ class _ServiceReader extends fb.TableReader<Service> {
   const _ServiceReader();
 
   @override
-  Service createObject(fb.BufferContext bc, int offset) => 
+  Service createObject(fb.BufferContext bc, int offset) =>
     Service._(bc, offset);
 }
 
@@ -10006,7 +10006,7 @@ class _ServiceSetReader extends fb.TableReader<ServiceSet> {
   const _ServiceSetReader();
 
   @override
-  ServiceSet createObject(fb.BufferContext bc, int offset) => 
+  ServiceSet createObject(fb.BufferContext bc, int offset) =>
     ServiceSet._(bc, offset);
 }
 
@@ -10092,7 +10092,7 @@ class _XTCHeaderReader extends fb.TableReader<XTCHeader> {
   const _XTCHeaderReader();
 
   @override
-  XTCHeader createObject(fb.BufferContext bc, int offset) => 
+  XTCHeader createObject(fb.BufferContext bc, int offset) =>
     XTCHeader._(bc, offset);
 }
 
@@ -10231,7 +10231,7 @@ class _TelemetryMetaDataReader extends fb.TableReader<TelemetryMetaData> {
   const _TelemetryMetaDataReader();
 
   @override
-  TelemetryMetaData createObject(fb.BufferContext bc, int offset) => 
+  TelemetryMetaData createObject(fb.BufferContext bc, int offset) =>
     TelemetryMetaData._(bc, offset);
 }
 
@@ -10365,7 +10365,7 @@ class _CommandMetaDataReader extends fb.TableReader<CommandMetaData> {
   const _CommandMetaDataReader();
 
   @override
-  CommandMetaData createObject(fb.BufferContext bc, int offset) => 
+  CommandMetaData createObject(fb.BufferContext bc, int offset) =>
     CommandMetaData._(bc, offset);
 }
 
@@ -10526,7 +10526,7 @@ class _XTCReader extends fb.TableReader<XTC> {
   const _XTCReader();
 
   @override
-  XTC createObject(fb.BufferContext bc, int offset) => 
+  XTC createObject(fb.BufferContext bc, int offset) =>
     XTC._(bc, offset);
 }
 

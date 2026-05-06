@@ -127,7 +127,7 @@ class _GDIReader extends fb.TableReader<GDI> {
   const _GDIReader();
 
   @override
-  GDI createObject(fb.BufferContext bc, int offset) => 
+  GDI createObject(fb.BufferContext bc, int offset) =>
     GDI._(bc, offset);
 }
 

@@ -28475,25 +28475,72 @@
                         "OTHER"
                     ]
                 },
+                "dpmTransportKind": {
+                    "type": "string",
+                    "enum": [
+                        "CONTENT_ADDRESS",
+                        "SDN_QUERY",
+                        "OTHER"
+                    ]
+                },
+                "DPMCompletenessIndex": {
+                    "type": "object",
+                    "description": "Completeness-capable signed index over a dataset update.",
+                    "properties": {
+                        "INDEX_NAME": {
+                            "type": "string",
+                            "description": "Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch."
+                        },
+                        "CANONICAL_ORDER": {
+                            "type": "string",
+                            "description": "Deterministic ordering expression for the index. Providers and\nsubscribers MUST use this ordering when building or verifying range\nproofs. A query is completeness-verifiable only when its predicate can be\nexpressed against one or more declared indexes."
+                        },
+                        "INDEX_ROOT": {
+                            "type": "string",
+                            "description": "SHA-256 or Merkle root of the ordered index, lowercase hex. This root is\nsigned by the DPM provider signature and is the verifier's commitment for\ninclusion and range-completeness proofs."
+                        },
+                        "MERKLE_PROFILE": {
+                            "type": "string",
+                            "description": "Hash profile for leaves and internal nodes, e.g.\nSDN-MERKLE-SHA256-v1. Profiles define domain separators, leaf material,\npair ordering, duplicate handling, and odd-leaf promotion."
+                        },
+                        "SUPPORTS_RANGE_COMPLETENESS": {
+                            "type": "boolean",
+                            "description": "Whether this index can prove that no matching records were omitted for a\nsupported range query. Inclusion proofs alone prove authenticity, not\ncompleteness."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "DPMAsset": {
                     "type": "object",
-                    "description": "One immutable content-addressed object published for a dataset update.",
+                    "description": "One immutable asset or provider-mediated query contract published for a\ndataset update.",
                     "properties": {
                         "ASSET_KIND": {
                             "$ref": "#/definitions/publicationAssetKind",
                             "description": "Asset role."
                         },
+                        "TRANSPORT_KIND": {
+                            "$ref": "#/definitions/dpmTransportKind",
+                            "description": "Transport profile for this asset. CONTENT_ADDRESS assets use CID and\nMULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the\nsigned DPM query and root fields; they are not required to be published as\ndiscoverable IPFS files."
+                        },
                         "CID": {
                             "type": "string",
-                            "description": "IPFS CIDv1/multihash content identifier."
+                            "description": "Optional IPFS CIDv1/multihash content identifier. This field is required\nfor CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose\nbytes are retrieved through a provider protocol."
                         },
                         "MULTIFORMAT_ADDRESS": {
                             "type": "string",
-                            "description": "Multiformat address, usually /ipfs/{CID}."
+                            "description": "Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For\nSDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when\nprovider routing is resolved from the DPM provider identity."
                         },
                         "FILE_NAME": {
                             "type": "string",
                             "description": "File name or logical artifact name."
+                        },
+                        "FILE_ID": {
+                            "type": "string",
+                            "description": "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used by PNMs,\nmanifests, entitlements, query requests, subscriber caches, and\ncompleteness proofs. Example:\ncelestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+                        },
+                        "TRANSPORT_PROTOCOL": {
+                            "type": "string",
+                            "description": "Provider protocol name/version used to fetch this asset when\nTRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol\nresponse MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the\nprovider signature in this DPM."
                         },
                         "BYTE_LENGTH": {
                             "type": "integer",
@@ -28504,6 +28551,10 @@
                         "BYTE_SHA256": {
                             "type": "string",
                             "description": "SHA-256 hash of the exact published bytes, lowercase hex."
+                        },
+                        "DATA_ROOT": {
+                            "type": "string",
+                            "description": "Merkle root over canonical records in this asset, lowercase hex. For\nprovider-mediated query delivery, subscribers verify returned records and\nproof paths against this root before importing data."
                         },
                         "SCHEMA_NAME": {
                             "type": "string",
@@ -28518,9 +28569,6 @@
                             "description": "Optional content-key identifier for encrypted artifacts."
                         }
                     },
-                    "required": [
-                        "CID"
-                    ],
                     "additionalProperties": false
                 },
                 "DPMSourceBatch": {
@@ -28594,6 +28642,14 @@
                         "QUERY_ENGINE_VERSION": {
                             "type": "string",
                             "description": "Query engine version or profile version."
+                        },
+                        "CANONICAL_ORDER": {
+                            "type": "string",
+                            "description": "Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is\ncomputed. Providers MUST stream records in this order unless each chunk\nincludes enough proof material to restore and verify the canonical order."
+                        },
+                        "QUERY_PROTOCOL": {
+                            "type": "string",
+                            "description": "Query protocol name/version for provider-mediated retrieval, e.g.\n/sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this\nprotocol to the provider, submits the signed query or a permitted subset,\nand imports only responses that verify against the signed roots."
                         },
                         "SCHEMA_NAMES": {
                             "type": "array",
@@ -28672,7 +28728,7 @@
                 },
                 "DPM": {
                     "type": "object",
-                    "description": "Dataset Publication Manifest binding data/index CIDs, query replay,\nsource hashes, schema hashes, encryption metadata, and provider signature.",
+                    "description": "Dataset Publication Manifest binding data/index CIDs, query replay,\nsource hashes, schema hashes, encryption metadata, provider-mediated query\nprotocols, completeness roots, and provider signature.",
                     "properties": {
                         "VERSION": {
                             "type": "string",
@@ -28685,6 +28741,10 @@
                         "UPDATE_ID": {
                             "type": "string",
                             "description": "Dataset update or batch identifier."
+                        },
+                        "FILE_ID": {
+                            "type": "string",
+                            "description": "Canonical publication/update partition identity. FILE_ID is the key used\neverywhere a subscriber, provider, PNM, entitlement, cache, or query\nprotocol refers to this exact update. It is not merely a human filename\nand it is not the FlatBuffer file_identifier. For completeness-verifiable\nstreams, all returned records MUST belong to this FILE_ID and prove\ninclusion under this DPM's signed roots."
                         },
                         "PROVIDER_PEER_ID": {
                             "type": "string",
@@ -28715,6 +28775,13 @@
                         "QUERY": {
                             "$ref": "#/definitions/DPMQueryBinding",
                             "description": "Replayable query binding."
+                        },
+                        "INDEXES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DPMCompletenessIndex"
+                            },
+                            "description": "Signed completeness-capable indexes. Inclusion proofs prove that returned\nrecords are authentic members of DATA_ROOT. Range-completeness proofs also\nprove that no matching records were omitted, but only for predicates\nexpressible against these declared indexes."
                         },
                         "ENCRYPTION": {
                             "$ref": "#/definitions/DPMEncryptionBinding",
@@ -30132,7 +30199,7 @@
             "definitions": {
                 "PNM": {
                     "type": "object",
-                    "description": "Publish Notification Message",
+                    "description": "Publish Notification Message.\n\nPNM is the compact network announcement for a published record, manifest, or\ndataset update. For dataset updates, FILE_ID identifies the canonical update\npartition and CID usually points to a small DPM manifest or digest. The DPM\ncarries the full verification contract: provider identity, retrieval\nprotocol, canonical query, result hash, Merkle roots, completeness-capable\nindexes, and signature. Large or paid dataset updates do not need to be\npublished as globally discoverable IPFS files; a PNM may instead advertise a\nprovider-mediated SDN query protocol whose response is verified against the\nsigned DPM roots.",
                     "properties": {
                         "MULTIFORMAT_ADDRESS": {
                             "type": "string",
@@ -30144,7 +30211,7 @@
                         },
                         "CID": {
                             "type": "string",
-                            "description": "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid."
+                            "description": "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
                         },
                         "FILE_NAME": {
                             "type": "string",
@@ -30152,7 +30219,7 @@
                         },
                         "FILE_ID": {
                             "type": "string",
-                            "description": "File ID\nThis field is the file ID / Standard Type"
+                            "description": "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key for entitlements,\nprovider query requests, subscriber caches, and completeness verification.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
                         },
                         "SIGNATURE": {
                             "type": "string",

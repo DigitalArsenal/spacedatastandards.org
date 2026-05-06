@@ -382,7 +382,7 @@ impl<'a> TDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TDM::VT_OBSERVER_X, Some(0.0)).unwrap()}
   }
-  /// Cartesian Y coordinate of the OBSERVER location in chosen reference frame 
+  /// Cartesian Y coordinate of the OBSERVER location in chosen reference frame
   #[inline]
   pub fn OBSERVER_Y(&self) -> f64 {
     // Safety:
@@ -390,7 +390,7 @@ impl<'a> TDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TDM::VT_OBSERVER_Y, Some(0.0)).unwrap()}
   }
-  /// Cartesian Z coordinate of the OBSERVER location in chosen reference frame 
+  /// Cartesian Z coordinate of the OBSERVER location in chosen reference frame
   #[inline]
   pub fn OBSERVER_Z(&self) -> f64 {
     // Safety:
@@ -406,7 +406,7 @@ impl<'a> TDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TDM::VT_OBSERVER_VX, Some(0.0)).unwrap()}
   }
-  /// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame 
+  /// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame
   #[inline]
   pub fn OBSERVER_VY(&self) -> f64 {
     // Safety:
@@ -414,7 +414,7 @@ impl<'a> TDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TDM::VT_OBSERVER_VY, Some(0.0)).unwrap()}
   }
-  /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
+  /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame
   #[inline]
   pub fn OBSERVER_VZ(&self) -> f64 {
     // Safety:

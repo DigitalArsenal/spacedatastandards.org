@@ -69,7 +69,7 @@ class _weightedEdgeReader extends fb.StructReader<weightedEdge> {
   int get size => 16;
 
   @override
-  weightedEdge createObject(fb.BufferContext bc, int offset) => 
+  weightedEdge createObject(fb.BufferContext bc, int offset) =>
     weightedEdge._(bc, offset);
 }
 
@@ -145,7 +145,7 @@ class _FPCGraphDefinitionReader extends fb.TableReader<FPCGraphDefinition> {
   const _FPCGraphDefinitionReader();
 
   @override
-  FPCGraphDefinition createObject(fb.BufferContext bc, int offset) => 
+  FPCGraphDefinition createObject(fb.BufferContext bc, int offset) =>
     FPCGraphDefinition._(bc, offset);
 }
 
@@ -225,7 +225,7 @@ class _FPCWeightedEdgeListReader extends fb.TableReader<FPCWeightedEdgeList> {
   const _FPCWeightedEdgeListReader();
 
   @override
-  FPCWeightedEdgeList createObject(fb.BufferContext bc, int offset) => 
+  FPCWeightedEdgeList createObject(fb.BufferContext bc, int offset) =>
     FPCWeightedEdgeList._(bc, offset);
 }
 
@@ -325,7 +325,7 @@ class _FPCCSRGraphReader extends fb.TableReader<FPCCSRGraph> {
   const _FPCCSRGraphReader();
 
   @override
-  FPCCSRGraph createObject(fb.BufferContext bc, int offset) => 
+  FPCCSRGraph createObject(fb.BufferContext bc, int offset) =>
     FPCCSRGraph._(bc, offset);
 }
 
@@ -431,7 +431,7 @@ class _FPCShortestPathRequestReader extends fb.TableReader<FPCShortestPathReques
   const _FPCShortestPathRequestReader();
 
   @override
-  FPCShortestPathRequest createObject(fb.BufferContext bc, int offset) => 
+  FPCShortestPathRequest createObject(fb.BufferContext bc, int offset) =>
     FPCShortestPathRequest._(bc, offset);
 }
 
@@ -522,7 +522,7 @@ class _FPCShortestPathResultReader extends fb.TableReader<FPCShortestPathResult>
   const _FPCShortestPathResultReader();
 
   @override
-  FPCShortestPathResult createObject(fb.BufferContext bc, int offset) => 
+  FPCShortestPathResult createObject(fb.BufferContext bc, int offset) =>
     FPCShortestPathResult._(bc, offset);
 }
 
@@ -633,7 +633,7 @@ class _FPCPathRequestReader extends fb.TableReader<FPCPathRequest> {
   const _FPCPathRequestReader();
 
   @override
-  FPCPathRequest createObject(fb.BufferContext bc, int offset) => 
+  FPCPathRequest createObject(fb.BufferContext bc, int offset) =>
     FPCPathRequest._(bc, offset);
 }
 
@@ -714,7 +714,7 @@ class _FPCPathResultReader extends fb.TableReader<FPCPathResult> {
   const _FPCPathResultReader();
 
   @override
-  FPCPathResult createObject(fb.BufferContext bc, int offset) => 
+  FPCPathResult createObject(fb.BufferContext bc, int offset) =>
     FPCPathResult._(bc, offset);
 }
 
@@ -832,7 +832,7 @@ class _FPCReader extends fb.TableReader<FPC> {
   const _FPCReader();
 
   @override
-  FPC createObject(fb.BufferContext bc, int offset) => 
+  FPC createObject(fb.BufferContext bc, int offset) =>
     FPC._(bc, offset);
 }
 

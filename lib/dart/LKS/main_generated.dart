@@ -183,7 +183,7 @@ class _LKSReader extends fb.TableReader<LKS> {
   const _LKSReader();
 
   @override
-  LKS createObject(fb.BufferContext bc, int offset) => 
+  LKS createObject(fb.BufferContext bc, int offset) =>
     LKS._(bc, offset);
 }
 

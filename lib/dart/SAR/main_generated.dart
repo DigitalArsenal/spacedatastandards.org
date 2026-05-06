@@ -285,7 +285,7 @@ class _SARReader extends fb.TableReader<SAR> {
   const _SARReader();
 
   @override
-  SAR createObject(fb.BufferContext bc, int offset) => 
+  SAR createObject(fb.BufferContext bc, int offset) =>
     SAR._(bc, offset);
 }
 

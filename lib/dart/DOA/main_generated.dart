@@ -162,7 +162,7 @@ class _DOAReader extends fb.TableReader<DOA> {
   const _DOAReader();
 
   @override
-  DOA createObject(fb.BufferContext bc, int offset) => 
+  DOA createObject(fb.BufferContext bc, int offset) =>
     DOA._(bc, offset);
 }
 

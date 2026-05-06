@@ -100,8 +100,8 @@ impl ::flatbuffers::SimpleToVerifyInSlice for shortestPathAlgorithm {}
 #[repr(transparent)]
 #[derive(Clone, Copy, PartialEq)]
 pub struct weightedEdge(pub [u8; 16]);
-impl Default for weightedEdge { 
-  fn default() -> Self { 
+impl Default for weightedEdge {
+  fn default() -> Self {
     Self([0; 16])
   }
 }

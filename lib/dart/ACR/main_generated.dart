@@ -269,7 +269,7 @@ class _ACRReader extends fb.TableReader<ACR> {
   const _ACRReader();
 
   @override
-  ACR createObject(fb.BufferContext bc, int offset) => 
+  ACR createObject(fb.BufferContext bc, int offset) =>
     ACR._(bc, offset);
 }
 

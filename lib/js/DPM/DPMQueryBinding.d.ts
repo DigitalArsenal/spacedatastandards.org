@@ -34,6 +34,21 @@ export declare class DPMQueryBinding implements flatbuffers.IUnpackableObject<DP
     QUERY_ENGINE_VERSION(): string | null;
     QUERY_ENGINE_VERSION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
+     * Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+     * computed. Providers MUST stream records in this order unless each chunk
+     * includes enough proof material to restore and verify the canonical order.
+     */
+    CANONICAL_ORDER(): string | null;
+    CANONICAL_ORDER(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Query protocol name/version for provider-mediated retrieval, e.g.
+     * /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+     * protocol to the provider, submits the signed query or a permitted subset,
+     * and imports only responses that verify against the signed roots.
+     */
+    QUERY_PROTOCOL(): string | null;
+    QUERY_PROTOCOL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
      * SDS schema names selected by the query.
      */
     SCHEMA_NAMES(index: number): string;
@@ -73,6 +88,8 @@ export declare class DPMQueryBinding implements flatbuffers.IUnpackableObject<DP
     static addResultSha256(builder: flatbuffers.Builder, RESULT_SHA256Offset: flatbuffers.Offset): void;
     static addQueryEngine(builder: flatbuffers.Builder, QUERY_ENGINEOffset: flatbuffers.Offset): void;
     static addQueryEngineVersion(builder: flatbuffers.Builder, QUERY_ENGINE_VERSIONOffset: flatbuffers.Offset): void;
+    static addCanonicalOrder(builder: flatbuffers.Builder, CANONICAL_ORDEROffset: flatbuffers.Offset): void;
+    static addQueryProtocol(builder: flatbuffers.Builder, QUERY_PROTOCOLOffset: flatbuffers.Offset): void;
     static addSchemaNames(builder: flatbuffers.Builder, SCHEMA_NAMESOffset: flatbuffers.Offset): void;
     static createSchemaNamesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startSchemaNamesVector(builder: flatbuffers.Builder, numElems: number): void;
@@ -88,7 +105,7 @@ export declare class DPMQueryBinding implements flatbuffers.IUnpackableObject<DP
     static addWindowStart(builder: flatbuffers.Builder, WINDOW_STARTOffset: flatbuffers.Offset): void;
     static addWindowEnd(builder: flatbuffers.Builder, WINDOW_ENDOffset: flatbuffers.Offset): void;
     static endDPMQueryBinding(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createDPMQueryBinding(builder: flatbuffers.Builder, CANONICAL_QUERYOffset: flatbuffers.Offset, QUERY_SHA256Offset: flatbuffers.Offset, RESULT_SHA256Offset: flatbuffers.Offset, QUERY_ENGINEOffset: flatbuffers.Offset, QUERY_ENGINE_VERSIONOffset: flatbuffers.Offset, SCHEMA_NAMESOffset: flatbuffers.Offset, PROVIDER_IDSOffset: flatbuffers.Offset, SOURCE_NAMESOffset: flatbuffers.Offset, BATCH_IDSOffset: flatbuffers.Offset, WINDOW_STARTOffset: flatbuffers.Offset, WINDOW_ENDOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createDPMQueryBinding(builder: flatbuffers.Builder, CANONICAL_QUERYOffset: flatbuffers.Offset, QUERY_SHA256Offset: flatbuffers.Offset, RESULT_SHA256Offset: flatbuffers.Offset, QUERY_ENGINEOffset: flatbuffers.Offset, QUERY_ENGINE_VERSIONOffset: flatbuffers.Offset, CANONICAL_ORDEROffset: flatbuffers.Offset, QUERY_PROTOCOLOffset: flatbuffers.Offset, SCHEMA_NAMESOffset: flatbuffers.Offset, PROVIDER_IDSOffset: flatbuffers.Offset, SOURCE_NAMESOffset: flatbuffers.Offset, BATCH_IDSOffset: flatbuffers.Offset, WINDOW_STARTOffset: flatbuffers.Offset, WINDOW_ENDOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): DPMQueryBindingT;
     unpackTo(_o: DPMQueryBindingT): void;
 }
@@ -98,13 +115,15 @@ export declare class DPMQueryBindingT implements flatbuffers.IGeneratedObject {
     RESULT_SHA256: string | Uint8Array | null;
     QUERY_ENGINE: string | Uint8Array | null;
     QUERY_ENGINE_VERSION: string | Uint8Array | null;
+    CANONICAL_ORDER: string | Uint8Array | null;
+    QUERY_PROTOCOL: string | Uint8Array | null;
     SCHEMA_NAMES: (string)[];
     PROVIDER_IDS: (string)[];
     SOURCE_NAMES: (string)[];
     BATCH_IDS: (string)[];
     WINDOW_START: string | Uint8Array | null;
     WINDOW_END: string | Uint8Array | null;
-    constructor(CANONICAL_QUERY?: string | Uint8Array | null, QUERY_SHA256?: string | Uint8Array | null, RESULT_SHA256?: string | Uint8Array | null, QUERY_ENGINE?: string | Uint8Array | null, QUERY_ENGINE_VERSION?: string | Uint8Array | null, SCHEMA_NAMES?: (string)[], PROVIDER_IDS?: (string)[], SOURCE_NAMES?: (string)[], BATCH_IDS?: (string)[], WINDOW_START?: string | Uint8Array | null, WINDOW_END?: string | Uint8Array | null);
+    constructor(CANONICAL_QUERY?: string | Uint8Array | null, QUERY_SHA256?: string | Uint8Array | null, RESULT_SHA256?: string | Uint8Array | null, QUERY_ENGINE?: string | Uint8Array | null, QUERY_ENGINE_VERSION?: string | Uint8Array | null, CANONICAL_ORDER?: string | Uint8Array | null, QUERY_PROTOCOL?: string | Uint8Array | null, SCHEMA_NAMES?: (string)[], PROVIDER_IDS?: (string)[], SOURCE_NAMES?: (string)[], BATCH_IDS?: (string)[], WINDOW_START?: string | Uint8Array | null, WINDOW_END?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=DPMQueryBinding.d.ts.map

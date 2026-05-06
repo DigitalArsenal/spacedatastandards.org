@@ -257,7 +257,7 @@ class _SEOReader extends fb.TableReader<SEO> {
   const _SEOReader();
 
   @override
-  SEO createObject(fb.BufferContext bc, int offset) => 
+  SEO createObject(fb.BufferContext bc, int offset) =>
     SEO._(bc, offset);
 }
 

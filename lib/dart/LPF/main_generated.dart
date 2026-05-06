@@ -117,7 +117,7 @@ class _LPFReader extends fb.TableReader<LPF> {
   const _LPFReader();
 
   @override
-  LPF createObject(fb.BufferContext bc, int offset) => 
+  LPF createObject(fb.BufferContext bc, int offset) =>
     LPF._(bc, offset);
 }
 

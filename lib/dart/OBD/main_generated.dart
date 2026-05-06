@@ -93,7 +93,7 @@ class _odSensorContributionReader extends fb.TableReader<odSensorContribution> {
   const _odSensorContributionReader();
 
   @override
-  odSensorContribution createObject(fb.BufferContext bc, int offset) => 
+  odSensorContribution createObject(fb.BufferContext bc, int offset) =>
     odSensorContribution._(bc, offset);
 }
 
@@ -324,7 +324,7 @@ class _OBDReader extends fb.TableReader<OBD> {
   const _OBDReader();
 
   @override
-  OBD createObject(fb.BufferContext bc, int offset) => 
+  OBD createObject(fb.BufferContext bc, int offset) =>
     OBD._(bc, offset);
 }
 

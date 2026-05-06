@@ -131,7 +131,7 @@ class _ANIReader extends fb.TableReader<ANI> {
   const _ANIReader();
 
   @override
-  ANI createObject(fb.BufferContext bc, int offset) => 
+  ANI createObject(fb.BufferContext bc, int offset) =>
     ANI._(bc, offset);
 }
 

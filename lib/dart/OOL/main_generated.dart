@@ -34,7 +34,7 @@ class _OOLReader extends fb.TableReader<OOL> {
   const _OOLReader();
 
   @override
-  OOL createObject(fb.BufferContext bc, int offset) => 
+  OOL createObject(fb.BufferContext bc, int offset) =>
     OOL._(bc, offset);
 }
 

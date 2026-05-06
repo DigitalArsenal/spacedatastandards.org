@@ -182,7 +182,7 @@ class _IROReader extends fb.TableReader<IRO> {
   const _IROReader();
 
   @override
-  IRO createObject(fb.BufferContext bc, int offset) => 
+  IRO createObject(fb.BufferContext bc, int offset) =>
     IRO._(bc, offset);
 }
 

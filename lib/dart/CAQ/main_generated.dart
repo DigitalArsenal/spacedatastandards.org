@@ -151,7 +151,7 @@ class _ETMReader extends fb.TableReader<ETM> {
   const _ETMReader();
 
   @override
-  ETM createObject(fb.BufferContext bc, int offset) => 
+  ETM createObject(fb.BufferContext bc, int offset) =>
     ETM._(bc, offset);
 }
 

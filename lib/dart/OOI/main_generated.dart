@@ -208,7 +208,7 @@ class _OOIReader extends fb.TableReader<OOI> {
   const _OOIReader();
 
   @override
-  OOI createObject(fb.BufferContext bc, int offset) => 
+  OOI createObject(fb.BufferContext bc, int offset) =>
     OOI._(bc, offset);
 }
 

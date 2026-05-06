@@ -191,7 +191,7 @@ class _ATDReader extends fb.TableReader<ATD> {
   const _ATDReader();
 
   @override
-  ATD createObject(fb.BufferContext bc, int offset) => 
+  ATD createObject(fb.BufferContext bc, int offset) =>
     ATD._(bc, offset);
 }
 

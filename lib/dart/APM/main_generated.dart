@@ -44,7 +44,7 @@ class _APMReader extends fb.TableReader<APM> {
   const _APMReader();
 
   @override
-  APM createObject(fb.BufferContext bc, int offset) => 
+  APM createObject(fb.BufferContext bc, int offset) =>
     APM._(bc, offset);
 }
 

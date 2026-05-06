@@ -90,7 +90,7 @@ func (rcv *TDM) MutateObserverX(n float64) bool {
 	return rcv.MutateOBSERVER_X(n)
 }
 
-/// Cartesian Y coordinate of the OBSERVER location in chosen reference frame 
+/// Cartesian Y coordinate of the OBSERVER location in chosen reference frame
 func (rcv *TDM) OBSERVER_Y() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -103,7 +103,7 @@ func (rcv *TDM) ObserverY() float64 {
 	return rcv.OBSERVER_Y()
 }
 
-/// Cartesian Y coordinate of the OBSERVER location in chosen reference frame 
+/// Cartesian Y coordinate of the OBSERVER location in chosen reference frame
 func (rcv *TDM) MutateOBSERVER_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }
@@ -112,7 +112,7 @@ func (rcv *TDM) MutateObserverY(n float64) bool {
 	return rcv.MutateOBSERVER_Y(n)
 }
 
-/// Cartesian Z coordinate of the OBSERVER location in chosen reference frame 
+/// Cartesian Z coordinate of the OBSERVER location in chosen reference frame
 func (rcv *TDM) OBSERVER_Z() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -125,7 +125,7 @@ func (rcv *TDM) ObserverZ() float64 {
 	return rcv.OBSERVER_Z()
 }
 
-/// Cartesian Z coordinate of the OBSERVER location in chosen reference frame 
+/// Cartesian Z coordinate of the OBSERVER location in chosen reference frame
 func (rcv *TDM) MutateOBSERVER_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
 }
@@ -156,7 +156,7 @@ func (rcv *TDM) MutateObserverVx(n float64) bool {
 	return rcv.MutateOBSERVER_VX(n)
 }
 
-/// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame 
+/// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame
 func (rcv *TDM) OBSERVER_VY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -169,7 +169,7 @@ func (rcv *TDM) ObserverVy() float64 {
 	return rcv.OBSERVER_VY()
 }
 
-/// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame 
+/// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame
 func (rcv *TDM) MutateOBSERVER_VY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
@@ -178,7 +178,7 @@ func (rcv *TDM) MutateObserverVy(n float64) bool {
 	return rcv.MutateOBSERVER_VY(n)
 }
 
-/// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
+/// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame
 func (rcv *TDM) OBSERVER_VZ() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -191,7 +191,7 @@ func (rcv *TDM) ObserverVz() float64 {
 	return rcv.OBSERVER_VZ()
 }
 
-/// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
+/// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame
 func (rcv *TDM) MutateOBSERVER_VZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
 }

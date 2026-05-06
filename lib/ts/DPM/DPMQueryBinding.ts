@@ -78,17 +78,42 @@ QUERY_ENGINE_VERSION(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
+ * Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+ * computed. Providers MUST stream records in this order unless each chunk
+ * includes enough proof material to restore and verify the canonical order.
+ */
+CANONICAL_ORDER():string|null
+CANONICAL_ORDER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CANONICAL_ORDER(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Query protocol name/version for provider-mediated retrieval, e.g.
+ * /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+ * protocol to the provider, submits the signed query or a permitted subset,
+ * and imports only responses that verify against the signed roots.
+ */
+QUERY_PROTOCOL():string|null
+QUERY_PROTOCOL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+QUERY_PROTOCOL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
  * SDS schema names selected by the query.
  */
 SCHEMA_NAMES(index: number):string
 SCHEMA_NAMES(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SCHEMA_NAMES(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 schemaNamesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -98,12 +123,12 @@ schemaNamesLength():number {
 PROVIDER_IDS(index: number):string
 PROVIDER_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 PROVIDER_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 providerIdsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -113,12 +138,12 @@ providerIdsLength():number {
 SOURCE_NAMES(index: number):string
 SOURCE_NAMES(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SOURCE_NAMES(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 sourceNamesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -128,12 +153,12 @@ sourceNamesLength():number {
 BATCH_IDS(index: number):string
 BATCH_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 BATCH_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 batchIdsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -143,7 +168,7 @@ batchIdsLength():number {
 WINDOW_START():string|null
 WINDOW_START(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 WINDOW_START(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -153,12 +178,12 @@ WINDOW_START(optionalEncoding?:any):string|Uint8Array|null {
 WINDOW_END():string|null
 WINDOW_END(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 WINDOW_END(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startDPMQueryBinding(builder:flatbuffers.Builder) {
-  builder.startObject(11);
+  builder.startObject(13);
 }
 
 static addCanonicalQuery(builder:flatbuffers.Builder, CANONICAL_QUERYOffset:flatbuffers.Offset) {
@@ -181,8 +206,16 @@ static addQueryEngineVersion(builder:flatbuffers.Builder, QUERY_ENGINE_VERSIONOf
   builder.addFieldOffset(4, QUERY_ENGINE_VERSIONOffset, 0);
 }
 
+static addCanonicalOrder(builder:flatbuffers.Builder, CANONICAL_ORDEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, CANONICAL_ORDEROffset, 0);
+}
+
+static addQueryProtocol(builder:flatbuffers.Builder, QUERY_PROTOCOLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, QUERY_PROTOCOLOffset, 0);
+}
+
 static addSchemaNames(builder:flatbuffers.Builder, SCHEMA_NAMESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, SCHEMA_NAMESOffset, 0);
+  builder.addFieldOffset(7, SCHEMA_NAMESOffset, 0);
 }
 
 static createSchemaNamesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -198,7 +231,7 @@ static startSchemaNamesVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addProviderIds(builder:flatbuffers.Builder, PROVIDER_IDSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, PROVIDER_IDSOffset, 0);
+  builder.addFieldOffset(8, PROVIDER_IDSOffset, 0);
 }
 
 static createProviderIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -214,7 +247,7 @@ static startProviderIdsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addSourceNames(builder:flatbuffers.Builder, SOURCE_NAMESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, SOURCE_NAMESOffset, 0);
+  builder.addFieldOffset(9, SOURCE_NAMESOffset, 0);
 }
 
 static createSourceNamesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -230,7 +263,7 @@ static startSourceNamesVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addBatchIds(builder:flatbuffers.Builder, BATCH_IDSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, BATCH_IDSOffset, 0);
+  builder.addFieldOffset(10, BATCH_IDSOffset, 0);
 }
 
 static createBatchIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -246,11 +279,11 @@ static startBatchIdsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addWindowStart(builder:flatbuffers.Builder, WINDOW_STARTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, WINDOW_STARTOffset, 0);
+  builder.addFieldOffset(11, WINDOW_STARTOffset, 0);
 }
 
 static addWindowEnd(builder:flatbuffers.Builder, WINDOW_ENDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, WINDOW_ENDOffset, 0);
+  builder.addFieldOffset(12, WINDOW_ENDOffset, 0);
 }
 
 static endDPMQueryBinding(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -261,13 +294,15 @@ static endDPMQueryBinding(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createDPMQueryBinding(builder:flatbuffers.Builder, CANONICAL_QUERYOffset:flatbuffers.Offset, QUERY_SHA256Offset:flatbuffers.Offset, RESULT_SHA256Offset:flatbuffers.Offset, QUERY_ENGINEOffset:flatbuffers.Offset, QUERY_ENGINE_VERSIONOffset:flatbuffers.Offset, SCHEMA_NAMESOffset:flatbuffers.Offset, PROVIDER_IDSOffset:flatbuffers.Offset, SOURCE_NAMESOffset:flatbuffers.Offset, BATCH_IDSOffset:flatbuffers.Offset, WINDOW_STARTOffset:flatbuffers.Offset, WINDOW_ENDOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createDPMQueryBinding(builder:flatbuffers.Builder, CANONICAL_QUERYOffset:flatbuffers.Offset, QUERY_SHA256Offset:flatbuffers.Offset, RESULT_SHA256Offset:flatbuffers.Offset, QUERY_ENGINEOffset:flatbuffers.Offset, QUERY_ENGINE_VERSIONOffset:flatbuffers.Offset, CANONICAL_ORDEROffset:flatbuffers.Offset, QUERY_PROTOCOLOffset:flatbuffers.Offset, SCHEMA_NAMESOffset:flatbuffers.Offset, PROVIDER_IDSOffset:flatbuffers.Offset, SOURCE_NAMESOffset:flatbuffers.Offset, BATCH_IDSOffset:flatbuffers.Offset, WINDOW_STARTOffset:flatbuffers.Offset, WINDOW_ENDOffset:flatbuffers.Offset):flatbuffers.Offset {
   DPMQueryBinding.startDPMQueryBinding(builder);
   DPMQueryBinding.addCanonicalQuery(builder, CANONICAL_QUERYOffset);
   DPMQueryBinding.addQuerySha256(builder, QUERY_SHA256Offset);
   DPMQueryBinding.addResultSha256(builder, RESULT_SHA256Offset);
   DPMQueryBinding.addQueryEngine(builder, QUERY_ENGINEOffset);
   DPMQueryBinding.addQueryEngineVersion(builder, QUERY_ENGINE_VERSIONOffset);
+  DPMQueryBinding.addCanonicalOrder(builder, CANONICAL_ORDEROffset);
+  DPMQueryBinding.addQueryProtocol(builder, QUERY_PROTOCOLOffset);
   DPMQueryBinding.addSchemaNames(builder, SCHEMA_NAMESOffset);
   DPMQueryBinding.addProviderIds(builder, PROVIDER_IDSOffset);
   DPMQueryBinding.addSourceNames(builder, SOURCE_NAMESOffset);
@@ -284,6 +319,8 @@ unpack(): DPMQueryBindingT {
     this.RESULT_SHA256(),
     this.QUERY_ENGINE(),
     this.QUERY_ENGINE_VERSION(),
+    this.CANONICAL_ORDER(),
+    this.QUERY_PROTOCOL(),
     this.bb!.createScalarList<string>(this.SCHEMA_NAMES.bind(this), this.schemaNamesLength()),
     this.bb!.createScalarList<string>(this.PROVIDER_IDS.bind(this), this.providerIdsLength()),
     this.bb!.createScalarList<string>(this.SOURCE_NAMES.bind(this), this.sourceNamesLength()),
@@ -300,6 +337,8 @@ unpackTo(_o: DPMQueryBindingT): void {
   _o.RESULT_SHA256 = this.RESULT_SHA256();
   _o.QUERY_ENGINE = this.QUERY_ENGINE();
   _o.QUERY_ENGINE_VERSION = this.QUERY_ENGINE_VERSION();
+  _o.CANONICAL_ORDER = this.CANONICAL_ORDER();
+  _o.QUERY_PROTOCOL = this.QUERY_PROTOCOL();
   _o.SCHEMA_NAMES = this.bb!.createScalarList<string>(this.SCHEMA_NAMES.bind(this), this.schemaNamesLength());
   _o.PROVIDER_IDS = this.bb!.createScalarList<string>(this.PROVIDER_IDS.bind(this), this.providerIdsLength());
   _o.SOURCE_NAMES = this.bb!.createScalarList<string>(this.SOURCE_NAMES.bind(this), this.sourceNamesLength());
@@ -316,6 +355,8 @@ constructor(
   public RESULT_SHA256: string|Uint8Array|null = null,
   public QUERY_ENGINE: string|Uint8Array|null = null,
   public QUERY_ENGINE_VERSION: string|Uint8Array|null = null,
+  public CANONICAL_ORDER: string|Uint8Array|null = null,
+  public QUERY_PROTOCOL: string|Uint8Array|null = null,
   public SCHEMA_NAMES: (string)[] = [],
   public PROVIDER_IDS: (string)[] = [],
   public SOURCE_NAMES: (string)[] = [],
@@ -331,6 +372,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const RESULT_SHA256 = (this.RESULT_SHA256 !== null ? builder.createString(this.RESULT_SHA256!) : 0);
   const QUERY_ENGINE = (this.QUERY_ENGINE !== null ? builder.createString(this.QUERY_ENGINE!) : 0);
   const QUERY_ENGINE_VERSION = (this.QUERY_ENGINE_VERSION !== null ? builder.createString(this.QUERY_ENGINE_VERSION!) : 0);
+  const CANONICAL_ORDER = (this.CANONICAL_ORDER !== null ? builder.createString(this.CANONICAL_ORDER!) : 0);
+  const QUERY_PROTOCOL = (this.QUERY_PROTOCOL !== null ? builder.createString(this.QUERY_PROTOCOL!) : 0);
   const SCHEMA_NAMES = DPMQueryBinding.createSchemaNamesVector(builder, builder.createObjectOffsetList(this.SCHEMA_NAMES));
   const PROVIDER_IDS = DPMQueryBinding.createProviderIdsVector(builder, builder.createObjectOffsetList(this.PROVIDER_IDS));
   const SOURCE_NAMES = DPMQueryBinding.createSourceNamesVector(builder, builder.createObjectOffsetList(this.SOURCE_NAMES));
@@ -344,6 +387,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     RESULT_SHA256,
     QUERY_ENGINE,
     QUERY_ENGINE_VERSION,
+    CANONICAL_ORDER,
+    QUERY_PROTOCOL,
     SCHEMA_NAMES,
     PROVIDER_IDS,
     SOURCE_NAMES,

@@ -430,7 +430,7 @@ class _KMLCoordinateReader extends fb.TableReader<KMLCoordinate> {
   const _KMLCoordinateReader();
 
   @override
-  KMLCoordinate createObject(fb.BufferContext bc, int offset) => 
+  KMLCoordinate createObject(fb.BufferContext bc, int offset) =>
     KMLCoordinate._(bc, offset);
 }
 
@@ -532,7 +532,7 @@ class _KMLLookAtReader extends fb.TableReader<KMLLookAt> {
   const _KMLLookAtReader();
 
   @override
-  KMLLookAt createObject(fb.BufferContext bc, int offset) => 
+  KMLLookAt createObject(fb.BufferContext bc, int offset) =>
     KMLLookAt._(bc, offset);
 }
 
@@ -667,7 +667,7 @@ class _KMLCameraReader extends fb.TableReader<KMLCamera> {
   const _KMLCameraReader();
 
   @override
-  KMLCamera createObject(fb.BufferContext bc, int offset) => 
+  KMLCamera createObject(fb.BufferContext bc, int offset) =>
     KMLCamera._(bc, offset);
 }
 
@@ -811,7 +811,7 @@ class _KMLIconStyleReader extends fb.TableReader<KMLIconStyle> {
   const _KMLIconStyleReader();
 
   @override
-  KMLIconStyle createObject(fb.BufferContext bc, int offset) => 
+  KMLIconStyle createObject(fb.BufferContext bc, int offset) =>
     KMLIconStyle._(bc, offset);
 }
 
@@ -975,7 +975,7 @@ class _KMLLineStyleReader extends fb.TableReader<KMLLineStyle> {
   const _KMLLineStyleReader();
 
   @override
-  KMLLineStyle createObject(fb.BufferContext bc, int offset) => 
+  KMLLineStyle createObject(fb.BufferContext bc, int offset) =>
     KMLLineStyle._(bc, offset);
 }
 
@@ -1112,7 +1112,7 @@ class _KMLPolyStyleReader extends fb.TableReader<KMLPolyStyle> {
   const _KMLPolyStyleReader();
 
   @override
-  KMLPolyStyle createObject(fb.BufferContext bc, int offset) => 
+  KMLPolyStyle createObject(fb.BufferContext bc, int offset) =>
     KMLPolyStyle._(bc, offset);
 }
 
@@ -1217,7 +1217,7 @@ class _KMLLabelStyleReader extends fb.TableReader<KMLLabelStyle> {
   const _KMLLabelStyleReader();
 
   @override
-  KMLLabelStyle createObject(fb.BufferContext bc, int offset) => 
+  KMLLabelStyle createObject(fb.BufferContext bc, int offset) =>
     KMLLabelStyle._(bc, offset);
 }
 
@@ -1318,7 +1318,7 @@ class _KMLBalloonStyleReader extends fb.TableReader<KMLBalloonStyle> {
   const _KMLBalloonStyleReader();
 
   @override
-  KMLBalloonStyle createObject(fb.BufferContext bc, int offset) => 
+  KMLBalloonStyle createObject(fb.BufferContext bc, int offset) =>
     KMLBalloonStyle._(bc, offset);
 }
 
@@ -1426,7 +1426,7 @@ class _KMLItemIconReader extends fb.TableReader<KMLItemIcon> {
   const _KMLItemIconReader();
 
   @override
-  KMLItemIcon createObject(fb.BufferContext bc, int offset) => 
+  KMLItemIcon createObject(fb.BufferContext bc, int offset) =>
     KMLItemIcon._(bc, offset);
 }
 
@@ -1521,7 +1521,7 @@ class _KMLListStyleReader extends fb.TableReader<KMLListStyle> {
   const _KMLListStyleReader();
 
   @override
-  KMLListStyle createObject(fb.BufferContext bc, int offset) => 
+  KMLListStyle createObject(fb.BufferContext bc, int offset) =>
     KMLListStyle._(bc, offset);
 }
 
@@ -1644,7 +1644,7 @@ class _KMLStyleReader extends fb.TableReader<KMLStyle> {
   const _KMLStyleReader();
 
   @override
-  KMLStyle createObject(fb.BufferContext bc, int offset) => 
+  KMLStyle createObject(fb.BufferContext bc, int offset) =>
     KMLStyle._(bc, offset);
 }
 
@@ -1782,7 +1782,7 @@ class _KMLStyleMapPairReader extends fb.TableReader<KMLStyleMapPair> {
   const _KMLStyleMapPairReader();
 
   @override
-  KMLStyleMapPair createObject(fb.BufferContext bc, int offset) => 
+  KMLStyleMapPair createObject(fb.BufferContext bc, int offset) =>
     KMLStyleMapPair._(bc, offset);
 }
 
@@ -1868,7 +1868,7 @@ class _KMLStyleMapReader extends fb.TableReader<KMLStyleMap> {
   const _KMLStyleMapReader();
 
   @override
-  KMLStyleMap createObject(fb.BufferContext bc, int offset) => 
+  KMLStyleMap createObject(fb.BufferContext bc, int offset) =>
     KMLStyleMap._(bc, offset);
 }
 
@@ -1958,7 +1958,7 @@ class _KMLPointReader extends fb.TableReader<KMLPoint> {
   const _KMLPointReader();
 
   @override
-  KMLPoint createObject(fb.BufferContext bc, int offset) => 
+  KMLPoint createObject(fb.BufferContext bc, int offset) =>
     KMLPoint._(bc, offset);
 }
 
@@ -2059,7 +2059,7 @@ class _KMLLineStringReader extends fb.TableReader<KMLLineString> {
   const _KMLLineStringReader();
 
   @override
-  KMLLineString createObject(fb.BufferContext bc, int offset) => 
+  KMLLineString createObject(fb.BufferContext bc, int offset) =>
     KMLLineString._(bc, offset);
 }
 
@@ -2175,7 +2175,7 @@ class _KMLLinearRingReader extends fb.TableReader<KMLLinearRing> {
   const _KMLLinearRingReader();
 
   @override
-  KMLLinearRing createObject(fb.BufferContext bc, int offset) => 
+  KMLLinearRing createObject(fb.BufferContext bc, int offset) =>
     KMLLinearRing._(bc, offset);
 }
 
@@ -2286,7 +2286,7 @@ class _KMLPolygonReader extends fb.TableReader<KMLPolygon> {
   const _KMLPolygonReader();
 
   @override
-  KMLPolygon createObject(fb.BufferContext bc, int offset) => 
+  KMLPolygon createObject(fb.BufferContext bc, int offset) =>
     KMLPolygon._(bc, offset);
 }
 
@@ -2401,7 +2401,7 @@ class _KMLResourceMapAliasReader extends fb.TableReader<KMLResourceMapAlias> {
   const _KMLResourceMapAliasReader();
 
   @override
-  KMLResourceMapAlias createObject(fb.BufferContext bc, int offset) => 
+  KMLResourceMapAlias createObject(fb.BufferContext bc, int offset) =>
     KMLResourceMapAlias._(bc, offset);
 }
 
@@ -2522,7 +2522,7 @@ class _KMLModelReader extends fb.TableReader<KMLModel> {
   const _KMLModelReader();
 
   @override
-  KMLModel createObject(fb.BufferContext bc, int offset) => 
+  KMLModel createObject(fb.BufferContext bc, int offset) =>
     KMLModel._(bc, offset);
 }
 
@@ -2712,7 +2712,7 @@ class _KMLTrackReader extends fb.TableReader<KMLTrack> {
   const _KMLTrackReader();
 
   @override
-  KMLTrack createObject(fb.BufferContext bc, int offset) => 
+  KMLTrack createObject(fb.BufferContext bc, int offset) =>
     KMLTrack._(bc, offset);
 }
 
@@ -2846,7 +2846,7 @@ class _KMLMultiTrackReader extends fb.TableReader<KMLMultiTrack> {
   const _KMLMultiTrackReader();
 
   @override
-  KMLMultiTrack createObject(fb.BufferContext bc, int offset) => 
+  KMLMultiTrack createObject(fb.BufferContext bc, int offset) =>
     KMLMultiTrack._(bc, offset);
 }
 
@@ -2956,7 +2956,7 @@ class _KMLMultiGeometryReader extends fb.TableReader<KMLMultiGeometry> {
   const _KMLMultiGeometryReader();
 
   @override
-  KMLMultiGeometry createObject(fb.BufferContext bc, int offset) => 
+  KMLMultiGeometry createObject(fb.BufferContext bc, int offset) =>
     KMLMultiGeometry._(bc, offset);
 }
 
@@ -3107,7 +3107,7 @@ class _KMLTimeSpanReader extends fb.TableReader<KMLTimeSpan> {
   const _KMLTimeSpanReader();
 
   @override
-  KMLTimeSpan createObject(fb.BufferContext bc, int offset) => 
+  KMLTimeSpan createObject(fb.BufferContext bc, int offset) =>
     KMLTimeSpan._(bc, offset);
 }
 
@@ -3192,7 +3192,7 @@ class _KMLTimeStampReader extends fb.TableReader<KMLTimeStamp> {
   const _KMLTimeStampReader();
 
   @override
-  KMLTimeStamp createObject(fb.BufferContext bc, int offset) => 
+  KMLTimeStamp createObject(fb.BufferContext bc, int offset) =>
     KMLTimeStamp._(bc, offset);
 }
 
@@ -3272,7 +3272,7 @@ class _KMLDataReader extends fb.TableReader<KMLData> {
   const _KMLDataReader();
 
   @override
-  KMLData createObject(fb.BufferContext bc, int offset) => 
+  KMLData createObject(fb.BufferContext bc, int offset) =>
     KMLData._(bc, offset);
 }
 
@@ -3374,7 +3374,7 @@ class _KMLSimpleFieldReader extends fb.TableReader<KMLSimpleField> {
   const _KMLSimpleFieldReader();
 
   @override
-  KMLSimpleField createObject(fb.BufferContext bc, int offset) => 
+  KMLSimpleField createObject(fb.BufferContext bc, int offset) =>
     KMLSimpleField._(bc, offset);
 }
 
@@ -3476,7 +3476,7 @@ class _KMLSchemaReader extends fb.TableReader<KMLSchema> {
   const _KMLSchemaReader();
 
   @override
-  KMLSchema createObject(fb.BufferContext bc, int offset) => 
+  KMLSchema createObject(fb.BufferContext bc, int offset) =>
     KMLSchema._(bc, offset);
 }
 
@@ -3574,7 +3574,7 @@ class _KMLSimpleDataReader extends fb.TableReader<KMLSimpleData> {
   const _KMLSimpleDataReader();
 
   @override
-  KMLSimpleData createObject(fb.BufferContext bc, int offset) => 
+  KMLSimpleData createObject(fb.BufferContext bc, int offset) =>
     KMLSimpleData._(bc, offset);
 }
 
@@ -3663,7 +3663,7 @@ class _KMLSchemaDataReader extends fb.TableReader<KMLSchemaData> {
   const _KMLSchemaDataReader();
 
   @override
-  KMLSchemaData createObject(fb.BufferContext bc, int offset) => 
+  KMLSchemaData createObject(fb.BufferContext bc, int offset) =>
     KMLSchemaData._(bc, offset);
 }
 
@@ -3750,7 +3750,7 @@ class _KMLLatLonQuadReader extends fb.TableReader<KMLLatLonQuad> {
   const _KMLLatLonQuadReader();
 
   @override
-  KMLLatLonQuad createObject(fb.BufferContext bc, int offset) => 
+  KMLLatLonQuad createObject(fb.BufferContext bc, int offset) =>
     KMLLatLonQuad._(bc, offset);
 }
 
@@ -3828,7 +3828,7 @@ class _KMLRegionReader extends fb.TableReader<KMLRegion> {
   const _KMLRegionReader();
 
   @override
-  KMLRegion createObject(fb.BufferContext bc, int offset) => 
+  KMLRegion createObject(fb.BufferContext bc, int offset) =>
     KMLRegion._(bc, offset);
 }
 
@@ -3927,7 +3927,7 @@ class _KMLLatLonAltBoxReader extends fb.TableReader<KMLLatLonAltBox> {
   const _KMLLatLonAltBoxReader();
 
   @override
-  KMLLatLonAltBox createObject(fb.BufferContext bc, int offset) => 
+  KMLLatLonAltBox createObject(fb.BufferContext bc, int offset) =>
     KMLLatLonAltBox._(bc, offset);
 }
 
@@ -4061,7 +4061,7 @@ class _KMLLodReader extends fb.TableReader<KMLLod> {
   const _KMLLodReader();
 
   @override
-  KMLLod createObject(fb.BufferContext bc, int offset) => 
+  KMLLod createObject(fb.BufferContext bc, int offset) =>
     KMLLod._(bc, offset);
 }
 
@@ -4183,7 +4183,7 @@ class _KMLLinkReader extends fb.TableReader<KMLLink> {
   const _KMLLinkReader();
 
   @override
-  KMLLink createObject(fb.BufferContext bc, int offset) => 
+  KMLLink createObject(fb.BufferContext bc, int offset) =>
     KMLLink._(bc, offset);
 }
 
@@ -4337,7 +4337,7 @@ class _KMLViewVolumeReader extends fb.TableReader<KMLViewVolume> {
   const _KMLViewVolumeReader();
 
   @override
-  KMLViewVolume createObject(fb.BufferContext bc, int offset) => 
+  KMLViewVolume createObject(fb.BufferContext bc, int offset) =>
     KMLViewVolume._(bc, offset);
 }
 
@@ -4456,7 +4456,7 @@ class _KMLImagePyramidReader extends fb.TableReader<KMLImagePyramid> {
   const _KMLImagePyramidReader();
 
   @override
-  KMLImagePyramid createObject(fb.BufferContext bc, int offset) => 
+  KMLImagePyramid createObject(fb.BufferContext bc, int offset) =>
     KMLImagePyramid._(bc, offset);
 }
 
@@ -4585,7 +4585,7 @@ class _KMLNetworkLinkReader extends fb.TableReader<KMLNetworkLink> {
   const _KMLNetworkLinkReader();
 
   @override
-  KMLNetworkLink createObject(fb.BufferContext bc, int offset) => 
+  KMLNetworkLink createObject(fb.BufferContext bc, int offset) =>
     KMLNetworkLink._(bc, offset);
 }
 
@@ -4821,7 +4821,7 @@ class _KMLScreenOverlayReader extends fb.TableReader<KMLScreenOverlay> {
   const _KMLScreenOverlayReader();
 
   @override
-  KMLScreenOverlay createObject(fb.BufferContext bc, int offset) => 
+  KMLScreenOverlay createObject(fb.BufferContext bc, int offset) =>
     KMLScreenOverlay._(bc, offset);
 }
 
@@ -5120,7 +5120,7 @@ class _KMLPhotoOverlayReader extends fb.TableReader<KMLPhotoOverlay> {
   const _KMLPhotoOverlayReader();
 
   @override
-  KMLPhotoOverlay createObject(fb.BufferContext bc, int offset) => 
+  KMLPhotoOverlay createObject(fb.BufferContext bc, int offset) =>
     KMLPhotoOverlay._(bc, offset);
 }
 
@@ -5325,7 +5325,7 @@ class _KMLGroundOverlayReader extends fb.TableReader<KMLGroundOverlay> {
   const _KMLGroundOverlayReader();
 
   @override
-  KMLGroundOverlay createObject(fb.BufferContext bc, int offset) => 
+  KMLGroundOverlay createObject(fb.BufferContext bc, int offset) =>
     KMLGroundOverlay._(bc, offset);
 }
 
@@ -5553,7 +5553,7 @@ class _KMLUpdateReader extends fb.TableReader<KMLUpdate> {
   const _KMLUpdateReader();
 
   @override
-  KMLUpdate createObject(fb.BufferContext bc, int offset) => 
+  KMLUpdate createObject(fb.BufferContext bc, int offset) =>
     KMLUpdate._(bc, offset);
 }
 
@@ -5688,7 +5688,7 @@ class _KMLNetworkLinkControlReader extends fb.TableReader<KMLNetworkLinkControl>
   const _KMLNetworkLinkControlReader();
 
   @override
-  KMLNetworkLinkControl createObject(fb.BufferContext bc, int offset) => 
+  KMLNetworkLinkControl createObject(fb.BufferContext bc, int offset) =>
     KMLNetworkLinkControl._(bc, offset);
 }
 
@@ -5870,7 +5870,7 @@ class _KMLFlyToReader extends fb.TableReader<KMLFlyTo> {
   const _KMLFlyToReader();
 
   @override
-  KMLFlyTo createObject(fb.BufferContext bc, int offset) => 
+  KMLFlyTo createObject(fb.BufferContext bc, int offset) =>
     KMLFlyTo._(bc, offset);
 }
 
@@ -5971,7 +5971,7 @@ class _KMLWaitReader extends fb.TableReader<KMLWait> {
   const _KMLWaitReader();
 
   @override
-  KMLWait createObject(fb.BufferContext bc, int offset) => 
+  KMLWait createObject(fb.BufferContext bc, int offset) =>
     KMLWait._(bc, offset);
 }
 
@@ -6049,7 +6049,7 @@ class _KMLAnimatedUpdateReader extends fb.TableReader<KMLAnimatedUpdate> {
   const _KMLAnimatedUpdateReader();
 
   @override
-  KMLAnimatedUpdate createObject(fb.BufferContext bc, int offset) => 
+  KMLAnimatedUpdate createObject(fb.BufferContext bc, int offset) =>
     KMLAnimatedUpdate._(bc, offset);
 }
 
@@ -6141,7 +6141,7 @@ class _KMLTourControlReader extends fb.TableReader<KMLTourControl> {
   const _KMLTourControlReader();
 
   @override
-  KMLTourControl createObject(fb.BufferContext bc, int offset) => 
+  KMLTourControl createObject(fb.BufferContext bc, int offset) =>
     KMLTourControl._(bc, offset);
 }
 
@@ -6220,7 +6220,7 @@ class _KMLSoundCueReader extends fb.TableReader<KMLSoundCue> {
   const _KMLSoundCueReader();
 
   @override
-  KMLSoundCue createObject(fb.BufferContext bc, int offset) => 
+  KMLSoundCue createObject(fb.BufferContext bc, int offset) =>
     KMLSoundCue._(bc, offset);
 }
 
@@ -6316,7 +6316,7 @@ class _KMLTourPrimitiveReader extends fb.TableReader<KMLTourPrimitive> {
   const _KMLTourPrimitiveReader();
 
   @override
-  KMLTourPrimitive createObject(fb.BufferContext bc, int offset) => 
+  KMLTourPrimitive createObject(fb.BufferContext bc, int offset) =>
     KMLTourPrimitive._(bc, offset);
 }
 
@@ -6430,7 +6430,7 @@ class _KMLPlaylistReader extends fb.TableReader<KMLPlaylist> {
   const _KMLPlaylistReader();
 
   @override
-  KMLPlaylist createObject(fb.BufferContext bc, int offset) => 
+  KMLPlaylist createObject(fb.BufferContext bc, int offset) =>
     KMLPlaylist._(bc, offset);
 }
 
@@ -6511,7 +6511,7 @@ class _KMLTourReader extends fb.TableReader<KMLTour> {
   const _KMLTourReader();
 
   @override
-  KMLTour createObject(fb.BufferContext bc, int offset) => 
+  KMLTour createObject(fb.BufferContext bc, int offset) =>
     KMLTour._(bc, offset);
 }
 
@@ -6670,7 +6670,7 @@ class _KMLPlacemarkReader extends fb.TableReader<KMLPlacemark> {
   const _KMLPlacemarkReader();
 
   @override
-  KMLPlacemark createObject(fb.BufferContext bc, int offset) => 
+  KMLPlacemark createObject(fb.BufferContext bc, int offset) =>
     KMLPlacemark._(bc, offset);
 }
 
@@ -7014,7 +7014,7 @@ class _KMLFolderReader extends fb.TableReader<KMLFolder> {
   const _KMLFolderReader();
 
   @override
-  KMLFolder createObject(fb.BufferContext bc, int offset) => 
+  KMLFolder createObject(fb.BufferContext bc, int offset) =>
     KMLFolder._(bc, offset);
 }
 
@@ -7314,7 +7314,7 @@ class _KMLReader extends fb.TableReader<KML> {
   const _KMLReader();
 
   @override
-  KML createObject(fb.BufferContext bc, int offset) => 
+  KML createObject(fb.BufferContext bc, int offset) =>
     KML._(bc, offset);
 }
 

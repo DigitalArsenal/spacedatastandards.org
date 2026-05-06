@@ -82,7 +82,9 @@ def main():
             data = json.load(file)
         current_version = data.get("version", "1.0.0+0")
         major_version, minor_version, patch_build = current_version.split(".")
-        patch, build_number = patch_build.split("+")
+        patch_parts = patch_build.split("+", 1)
+        patch = patch_parts[0]
+        build_number = patch_parts[1] if len(patch_parts) > 1 else "0"
     else:
         print(f"'{package_json_path}' not found.")
         return

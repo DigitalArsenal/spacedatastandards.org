@@ -205,7 +205,7 @@ class _attitudeStateReader extends fb.TableReader<attitudeState> {
   const _attitudeStateReader();
 
   @override
-  attitudeState createObject(fb.BufferContext bc, int offset) => 
+  attitudeState createObject(fb.BufferContext bc, int offset) =>
     attitudeState._(bc, offset);
 }
 
@@ -515,7 +515,7 @@ class _attPhysicalPropertiesReader extends fb.TableReader<attPhysicalProperties>
   const _attPhysicalPropertiesReader();
 
   @override
-  attPhysicalProperties createObject(fb.BufferContext bc, int offset) => 
+  attPhysicalProperties createObject(fb.BufferContext bc, int offset) =>
     attPhysicalProperties._(bc, offset);
 }
 
@@ -712,7 +712,7 @@ class _attCovarianceReader extends fb.TableReader<attCovariance> {
   const _attCovarianceReader();
 
   @override
-  attCovariance createObject(fb.BufferContext bc, int offset) => 
+  attCovariance createObject(fb.BufferContext bc, int offset) =>
     attCovariance._(bc, offset);
 }
 
@@ -832,7 +832,7 @@ class _attManeuverReader extends fb.TableReader<attManeuver> {
   const _attManeuverReader();
 
   @override
-  attManeuver createObject(fb.BufferContext bc, int offset) => 
+  attManeuver createObject(fb.BufferContext bc, int offset) =>
     attManeuver._(bc, offset);
 }
 
@@ -989,7 +989,7 @@ class _ACMReader extends fb.TableReader<ACM> {
   const _ACMReader();
 
   @override
-  ACM createObject(fb.BufferContext bc, int offset) => 
+  ACM createObject(fb.BufferContext bc, int offset) =>
     ACM._(bc, offset);
 }
 

@@ -65,7 +65,7 @@ class _OOBReader extends fb.TableReader<OOB> {
   const _OOBReader();
 
   @override
-  OOB createObject(fb.BufferContext bc, int offset) => 
+  OOB createObject(fb.BufferContext bc, int offset) =>
     OOB._(bc, offset);
 }
 

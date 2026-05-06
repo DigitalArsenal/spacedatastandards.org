@@ -204,7 +204,7 @@ class _ENVReader extends fb.TableReader<ENV> {
   const _ENVReader();
 
   @override
-  ENV createObject(fb.BufferContext bc, int offset) => 
+  ENV createObject(fb.BufferContext bc, int offset) =>
     ENV._(bc, offset);
 }
 

@@ -66,7 +66,7 @@ class _ScoreReader extends fb.TableReader<Score> {
   const _ScoreReader();
 
   @override
-  Score createObject(fb.BufferContext bc, int offset) => 
+  Score createObject(fb.BufferContext bc, int offset) =>
     Score._(bc, offset);
 }
 
@@ -193,7 +193,7 @@ class _HYPReader extends fb.TableReader<HYP> {
   const _HYPReader();
 
   @override
-  HYP createObject(fb.BufferContext bc, int offset) => 
+  HYP createObject(fb.BufferContext bc, int offset) =>
     HYP._(bc, offset);
 }
 

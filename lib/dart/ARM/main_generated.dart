@@ -218,7 +218,7 @@ class _ARMReader extends fb.TableReader<ARM> {
   const _ARMReader();
 
   @override
-  ARM createObject(fb.BufferContext bc, int offset) => 
+  ARM createObject(fb.BufferContext bc, int offset) =>
     ARM._(bc, offset);
 }
 

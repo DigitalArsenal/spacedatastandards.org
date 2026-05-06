@@ -7,7 +7,8 @@ use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
 /// Dataset Publication Manifest binding data/index CIDs, query replay,
-/// source hashes, schema hashes, encryption metadata, and provider signature.
+/// source hashes, schema hashes, encryption metadata, provider-mediated query
+/// protocols, completeness roots, and provider signature.
 class DPM extends Table
 {
     /**
@@ -63,24 +64,36 @@ class DPM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Canonical publication/update partition identity. FILE_ID is the key used
+    /// everywhere a subscriber, provider, PNM, entitlement, cache, or query
+    /// protocol refers to this exact update. It is not merely a human filename
+    /// and it is not the FlatBuffer file_identifier. For completeness-verifiable
+    /// streams, all returned records MUST belong to this FILE_ID and prove
+    /// inclusion under this DPM's signed roots.
+    public function getFILE_ID()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /// Provider peer ID.
     public function getPROVIDER_PEER_ID()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Provider EPM CID.
     public function getPROVIDER_EPM_CID()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Publication timestamp in ISO 8601 UTC.
     public function getPUBLISH_TIMESTAMP()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -90,7 +103,7 @@ class DPM extends Table
      */
     public function getASSETS($j)
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(18);
         $obj = new DPMAsset();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -100,7 +113,7 @@ class DPM extends Table
      */
     public function getASSETSLength()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -110,7 +123,7 @@ class DPM extends Table
      */
     public function getSOURCES($j)
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(20);
         $obj = new DPMSourceBatch();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -120,7 +133,7 @@ class DPM extends Table
      */
     public function getSOURCESLength()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -128,15 +141,38 @@ class DPM extends Table
     public function getQUERY()
     {
         $obj = new DPMQueryBinding();
-        $o = $this->__offset(20);
+        $o = $this->__offset(22);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Signed completeness-capable indexes. Inclusion proofs prove that returned
+    /// records are authentic members of DATA_ROOT. Range-completeness proofs also
+    /// prove that no matching records were omitted, but only for predicates
+    /// expressible against these declared indexes.
+    /**
+     * @returnVectorOffset
+     */
+    public function getINDEXES($j)
+    {
+        $o = $this->__offset(24);
+        $obj = new DPMCompletenessIndex();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getINDEXESLength()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /// Encryption/key metadata.
     public function getENCRYPTION()
     {
         $obj = new DPMEncryptionBinding();
-        $o = $this->__offset(22);
+        $o = $this->__offset(26);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -147,7 +183,7 @@ class DPM extends Table
      */
     public function getPROVIDER_SIGNATURE($j)
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
     }
 
@@ -156,7 +192,7 @@ class DPM extends Table
      */
     public function getPROVIDER_SIGNATURELength()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -165,13 +201,13 @@ class DPM extends Table
      */
     public function getPROVIDER_SIGNATUREBytes()
     {
-        return $this->__vector_as_bytes(24);
+        return $this->__vector_as_bytes(28);
     }
 
     /// Signature algorithm, e.g. Ed25519.
     public function getSIGNATURE_TYPE()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -181,33 +217,35 @@ class DPM extends Table
      */
     public static function startDPM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(12);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DPM
      */
-    public static function createDPM(FlatBufferBuilder $builder, $VERSION, $DATASET_ID, $UPDATE_ID, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $PUBLISH_TIMESTAMP, $ASSETS, $SOURCES, $QUERY, $ENCRYPTION, $PROVIDER_SIGNATURE, $SIGNATURE_TYPE)
+    public static function createDPM(FlatBufferBuilder $builder, $VERSION, $DATASET_ID, $UPDATE_ID, $FILE_ID, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $PUBLISH_TIMESTAMP, $ASSETS, $SOURCES, $QUERY, $INDEXES, $ENCRYPTION, $PROVIDER_SIGNATURE, $SIGNATURE_TYPE)
     {
-        $builder->startObject(12);
+        $builder->startObject(14);
         self::addVERSION($builder, $VERSION);
         self::addDATASET_ID($builder, $DATASET_ID);
         self::addUPDATE_ID($builder, $UPDATE_ID);
+        self::addFILE_ID($builder, $FILE_ID);
         self::addPROVIDER_PEER_ID($builder, $PROVIDER_PEER_ID);
         self::addPROVIDER_EPM_CID($builder, $PROVIDER_EPM_CID);
         self::addPUBLISH_TIMESTAMP($builder, $PUBLISH_TIMESTAMP);
         self::addASSETS($builder, $ASSETS);
         self::addSOURCES($builder, $SOURCES);
         self::addQUERY($builder, $QUERY);
+        self::addINDEXES($builder, $INDEXES);
         self::addENCRYPTION($builder, $ENCRYPTION);
         self::addPROVIDER_SIGNATURE($builder, $PROVIDER_SIGNATURE);
         self::addSIGNATURE_TYPE($builder, $SIGNATURE_TYPE);
         $o = $builder->endObject();
         $builder->required($o, 6);  // DATASET_ID
         $builder->required($o, 8);  // UPDATE_ID
-        $builder->required($o, 10);  // PROVIDER_PEER_ID
-        $builder->required($o, 14);  // PUBLISH_TIMESTAMP
+        $builder->required($o, 12);  // PROVIDER_PEER_ID
+        $builder->required($o, 16);  // PUBLISH_TIMESTAMP
         return $o;
     }
 
@@ -246,9 +284,19 @@ class DPM extends Table
      * @param StringOffset
      * @return void
      */
+    public static function addFILE_ID(FlatBufferBuilder $builder, $FILE_ID)
+    {
+        $builder->addOffsetX(3, $FILE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
     public static function addPROVIDER_PEER_ID(FlatBufferBuilder $builder, $PROVIDER_PEER_ID)
     {
-        $builder->addOffsetX(3, $PROVIDER_PEER_ID, 0);
+        $builder->addOffsetX(4, $PROVIDER_PEER_ID, 0);
     }
 
     /**
@@ -258,7 +306,7 @@ class DPM extends Table
      */
     public static function addPROVIDER_EPM_CID(FlatBufferBuilder $builder, $PROVIDER_EPM_CID)
     {
-        $builder->addOffsetX(4, $PROVIDER_EPM_CID, 0);
+        $builder->addOffsetX(5, $PROVIDER_EPM_CID, 0);
     }
 
     /**
@@ -268,7 +316,7 @@ class DPM extends Table
      */
     public static function addPUBLISH_TIMESTAMP(FlatBufferBuilder $builder, $PUBLISH_TIMESTAMP)
     {
-        $builder->addOffsetX(5, $PUBLISH_TIMESTAMP, 0);
+        $builder->addOffsetX(6, $PUBLISH_TIMESTAMP, 0);
     }
 
     /**
@@ -278,7 +326,7 @@ class DPM extends Table
      */
     public static function addASSETS(FlatBufferBuilder $builder, $ASSETS)
     {
-        $builder->addOffsetX(6, $ASSETS, 0);
+        $builder->addOffsetX(7, $ASSETS, 0);
     }
 
     /**
@@ -312,7 +360,7 @@ class DPM extends Table
      */
     public static function addSOURCES(FlatBufferBuilder $builder, $SOURCES)
     {
-        $builder->addOffsetX(7, $SOURCES, 0);
+        $builder->addOffsetX(8, $SOURCES, 0);
     }
 
     /**
@@ -346,7 +394,41 @@ class DPM extends Table
      */
     public static function addQUERY(FlatBufferBuilder $builder, $QUERY)
     {
-        $builder->addOffsetX(8, $QUERY, 0);
+        $builder->addOffsetX(9, $QUERY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addINDEXES(FlatBufferBuilder $builder, $INDEXES)
+    {
+        $builder->addOffsetX(10, $INDEXES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createINDEXESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startINDEXESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**
@@ -356,7 +438,7 @@ class DPM extends Table
      */
     public static function addENCRYPTION(FlatBufferBuilder $builder, $ENCRYPTION)
     {
-        $builder->addOffsetX(9, $ENCRYPTION, 0);
+        $builder->addOffsetX(11, $ENCRYPTION, 0);
     }
 
     /**
@@ -366,7 +448,7 @@ class DPM extends Table
      */
     public static function addPROVIDER_SIGNATURE(FlatBufferBuilder $builder, $PROVIDER_SIGNATURE)
     {
-        $builder->addOffsetX(10, $PROVIDER_SIGNATURE, 0);
+        $builder->addOffsetX(12, $PROVIDER_SIGNATURE, 0);
     }
 
     /**
@@ -400,7 +482,7 @@ class DPM extends Table
      */
     public static function addSIGNATURE_TYPE(FlatBufferBuilder $builder, $SIGNATURE_TYPE)
     {
-        $builder->addOffsetX(11, $SIGNATURE_TYPE, 0);
+        $builder->addOffsetX(13, $SIGNATURE_TYPE, 0);
     }
 
     /**
@@ -412,8 +494,8 @@ class DPM extends Table
         $o = $builder->endObject();
         $builder->required($o, 6);  // DATASET_ID
         $builder->required($o, 8);  // UPDATE_ID
-        $builder->required($o, 10);  // PROVIDER_PEER_ID
-        $builder->required($o, 14);  // PUBLISH_TIMESTAMP
+        $builder->required($o, 12);  // PROVIDER_PEER_ID
+        $builder->required($o, 16);  // PUBLISH_TIMESTAMP
         return $o;
     }
 

@@ -76,7 +76,7 @@ class _GPXLinkReader extends fb.TableReader<GPXLink> {
   const _GPXLinkReader();
 
   @override
-  GPXLink createObject(fb.BufferContext bc, int offset) => 
+  GPXLink createObject(fb.BufferContext bc, int offset) =>
     GPXLink._(bc, offset);
 }
 
@@ -216,7 +216,7 @@ class _GPXWaypointReader extends fb.TableReader<GPXWaypoint> {
   const _GPXWaypointReader();
 
   @override
-  GPXWaypoint createObject(fb.BufferContext bc, int offset) => 
+  GPXWaypoint createObject(fb.BufferContext bc, int offset) =>
     GPXWaypoint._(bc, offset);
 }
 
@@ -476,7 +476,7 @@ class _GPXTrackSegmentReader extends fb.TableReader<GPXTrackSegment> {
   const _GPXTrackSegmentReader();
 
   @override
-  GPXTrackSegment createObject(fb.BufferContext bc, int offset) => 
+  GPXTrackSegment createObject(fb.BufferContext bc, int offset) =>
     GPXTrackSegment._(bc, offset);
 }
 
@@ -565,7 +565,7 @@ class _GPXTrackReader extends fb.TableReader<GPXTrack> {
   const _GPXTrackReader();
 
   @override
-  GPXTrack createObject(fb.BufferContext bc, int offset) => 
+  GPXTrack createObject(fb.BufferContext bc, int offset) =>
     GPXTrack._(bc, offset);
 }
 
@@ -722,7 +722,7 @@ class _GPXRouteReader extends fb.TableReader<GPXRoute> {
   const _GPXRouteReader();
 
   @override
-  GPXRoute createObject(fb.BufferContext bc, int offset) => 
+  GPXRoute createObject(fb.BufferContext bc, int offset) =>
     GPXRoute._(bc, offset);
 }
 
@@ -913,7 +913,7 @@ class _GPXReader extends fb.TableReader<GPX> {
   const _GPXReader();
 
   @override
-  GPX createObject(fb.BufferContext bc, int offset) => 
+  GPX createObject(fb.BufferContext bc, int offset) =>
     GPX._(bc, offset);
 }
 

@@ -101,7 +101,7 @@ class _PCFReader extends fb.TableReader<PCF> {
   const _PCFReader();
 
   @override
-  PCF createObject(fb.BufferContext bc, int offset) => 
+  PCF createObject(fb.BufferContext bc, int offset) =>
     PCF._(bc, offset);
 }
 

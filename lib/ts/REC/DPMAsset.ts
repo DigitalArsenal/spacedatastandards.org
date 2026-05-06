@@ -4,11 +4,13 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { dpmTransportKind } from './dpmTransportKind.js';
 import { publicationAssetKind } from './publicationAssetKind.js';
 
 
 /**
- * One immutable content-addressed object published for a dataset update.
+ * One immutable asset or provider-mediated query contract published for a
+ * dataset update.
  */
 export class DPMAsset implements flatbuffers.IUnpackableObject<DPMAssetT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -37,22 +39,37 @@ ASSET_KIND():publicationAssetKind {
 }
 
 /**
- * IPFS CIDv1/multihash content identifier.
+ * Transport profile for this asset. CONTENT_ADDRESS assets use CID and
+ * MULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the
+ * signed DPM query and root fields; they are not required to be published as
+ * discoverable IPFS files.
  */
-CID():string
-CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-CID(optionalEncoding?:any):string|Uint8Array {
+TRANSPORT_KIND():dpmTransportKind {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : dpmTransportKind.CONTENT_ADDRESS;
 }
 
 /**
- * Multiformat address, usually /ipfs/{CID}.
+ * Optional IPFS CIDv1/multihash content identifier. This field is required
+ * for CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose
+ * bytes are retrieved through a provider protocol.
+ */
+CID():string|null
+CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For
+ * SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when
+ * provider routing is resolved from the DPM provider identity.
  */
 MULTIFORMAT_ADDRESS():string|null
 MULTIFORMAT_ADDRESS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 MULTIFORMAT_ADDRESS(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
+  const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -62,7 +79,34 @@ MULTIFORMAT_ADDRESS(optionalEncoding?:any):string|Uint8Array|null {
 FILE_NAME():string|null
 FILE_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 FILE_NAME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Canonical publication/update partition identity for this asset. FILE_ID is
+ * not a display filename; it is the stable identifier used by PNMs,
+ * manifests, entitlements, query requests, subscriber caches, and
+ * completeness proofs. Example:
+ * celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+ */
+FILE_ID():string|null
+FILE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+FILE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Provider protocol name/version used to fetch this asset when
+ * TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
+ * response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the
+ * provider signature in this DPM.
+ */
+TRANSPORT_PROTOCOL():string|null
+TRANSPORT_PROTOCOL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRANSPORT_PROTOCOL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -70,7 +114,7 @@ FILE_NAME(optionalEncoding?:any):string|Uint8Array|null {
  * Byte length of the published object.
  */
 BYTE_LENGTH():bigint {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
@@ -80,7 +124,19 @@ BYTE_LENGTH():bigint {
 BYTE_SHA256():string|null
 BYTE_SHA256(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 BYTE_SHA256(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Merkle root over canonical records in this asset, lowercase hex. For
+ * provider-mediated query delivery, subscribers verify returned records and
+ * proof paths against this root before importing data.
+ */
+DATA_ROOT():string|null
+DATA_ROOT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DATA_ROOT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -90,7 +146,7 @@ BYTE_SHA256(optionalEncoding?:any):string|Uint8Array|null {
 SCHEMA_NAME():string|null
 SCHEMA_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SCHEMA_NAME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -100,7 +156,7 @@ SCHEMA_NAME(optionalEncoding?:any):string|Uint8Array|null {
 SCHEMA_HASH():string|null
 SCHEMA_HASH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SCHEMA_HASH(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -110,64 +166,83 @@ SCHEMA_HASH(optionalEncoding?:any):string|Uint8Array|null {
 CONTENT_KEY_ID():string|null
 CONTENT_KEY_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CONTENT_KEY_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startDPMAsset(builder:flatbuffers.Builder) {
-  builder.startObject(9);
+  builder.startObject(13);
 }
 
 static addAssetKind(builder:flatbuffers.Builder, ASSET_KIND:publicationAssetKind) {
   builder.addFieldInt8(0, ASSET_KIND, publicationAssetKind.OTHER);
 }
 
+static addTransportKind(builder:flatbuffers.Builder, TRANSPORT_KIND:dpmTransportKind) {
+  builder.addFieldInt8(1, TRANSPORT_KIND, dpmTransportKind.CONTENT_ADDRESS);
+}
+
 static addCid(builder:flatbuffers.Builder, CIDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, CIDOffset, 0);
+  builder.addFieldOffset(2, CIDOffset, 0);
 }
 
 static addMultiformatAddress(builder:flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, MULTIFORMAT_ADDRESSOffset, 0);
+  builder.addFieldOffset(3, MULTIFORMAT_ADDRESSOffset, 0);
 }
 
 static addFileName(builder:flatbuffers.Builder, FILE_NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, FILE_NAMEOffset, 0);
+  builder.addFieldOffset(4, FILE_NAMEOffset, 0);
+}
+
+static addFileId(builder:flatbuffers.Builder, FILE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, FILE_IDOffset, 0);
+}
+
+static addTransportProtocol(builder:flatbuffers.Builder, TRANSPORT_PROTOCOLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, TRANSPORT_PROTOCOLOffset, 0);
 }
 
 static addByteLength(builder:flatbuffers.Builder, BYTE_LENGTH:bigint) {
-  builder.addFieldInt64(4, BYTE_LENGTH, BigInt('0'));
+  builder.addFieldInt64(7, BYTE_LENGTH, BigInt('0'));
 }
 
 static addByteSha256(builder:flatbuffers.Builder, BYTE_SHA256Offset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, BYTE_SHA256Offset, 0);
+  builder.addFieldOffset(8, BYTE_SHA256Offset, 0);
+}
+
+static addDataRoot(builder:flatbuffers.Builder, DATA_ROOTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, DATA_ROOTOffset, 0);
 }
 
 static addSchemaName(builder:flatbuffers.Builder, SCHEMA_NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, SCHEMA_NAMEOffset, 0);
+  builder.addFieldOffset(10, SCHEMA_NAMEOffset, 0);
 }
 
 static addSchemaHash(builder:flatbuffers.Builder, SCHEMA_HASHOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, SCHEMA_HASHOffset, 0);
+  builder.addFieldOffset(11, SCHEMA_HASHOffset, 0);
 }
 
 static addContentKeyId(builder:flatbuffers.Builder, CONTENT_KEY_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, CONTENT_KEY_IDOffset, 0);
+  builder.addFieldOffset(12, CONTENT_KEY_IDOffset, 0);
 }
 
 static endDPMAsset(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
-  builder.requiredField(offset, 6) // CID
   return offset;
 }
 
-static createDPMAsset(builder:flatbuffers.Builder, ASSET_KIND:publicationAssetKind, CIDOffset:flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, FILE_NAMEOffset:flatbuffers.Offset, BYTE_LENGTH:bigint, BYTE_SHA256Offset:flatbuffers.Offset, SCHEMA_NAMEOffset:flatbuffers.Offset, SCHEMA_HASHOffset:flatbuffers.Offset, CONTENT_KEY_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createDPMAsset(builder:flatbuffers.Builder, ASSET_KIND:publicationAssetKind, TRANSPORT_KIND:dpmTransportKind, CIDOffset:flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, FILE_NAMEOffset:flatbuffers.Offset, FILE_IDOffset:flatbuffers.Offset, TRANSPORT_PROTOCOLOffset:flatbuffers.Offset, BYTE_LENGTH:bigint, BYTE_SHA256Offset:flatbuffers.Offset, DATA_ROOTOffset:flatbuffers.Offset, SCHEMA_NAMEOffset:flatbuffers.Offset, SCHEMA_HASHOffset:flatbuffers.Offset, CONTENT_KEY_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
   DPMAsset.startDPMAsset(builder);
   DPMAsset.addAssetKind(builder, ASSET_KIND);
+  DPMAsset.addTransportKind(builder, TRANSPORT_KIND);
   DPMAsset.addCid(builder, CIDOffset);
   DPMAsset.addMultiformatAddress(builder, MULTIFORMAT_ADDRESSOffset);
   DPMAsset.addFileName(builder, FILE_NAMEOffset);
+  DPMAsset.addFileId(builder, FILE_IDOffset);
+  DPMAsset.addTransportProtocol(builder, TRANSPORT_PROTOCOLOffset);
   DPMAsset.addByteLength(builder, BYTE_LENGTH);
   DPMAsset.addByteSha256(builder, BYTE_SHA256Offset);
+  DPMAsset.addDataRoot(builder, DATA_ROOTOffset);
   DPMAsset.addSchemaName(builder, SCHEMA_NAMEOffset);
   DPMAsset.addSchemaHash(builder, SCHEMA_HASHOffset);
   DPMAsset.addContentKeyId(builder, CONTENT_KEY_IDOffset);
@@ -177,11 +252,15 @@ static createDPMAsset(builder:flatbuffers.Builder, ASSET_KIND:publicationAssetKi
 unpack(): DPMAssetT {
   return new DPMAssetT(
     this.ASSET_KIND(),
+    this.TRANSPORT_KIND(),
     this.CID(),
     this.MULTIFORMAT_ADDRESS(),
     this.FILE_NAME(),
+    this.FILE_ID(),
+    this.TRANSPORT_PROTOCOL(),
     this.BYTE_LENGTH(),
     this.BYTE_SHA256(),
+    this.DATA_ROOT(),
     this.SCHEMA_NAME(),
     this.SCHEMA_HASH(),
     this.CONTENT_KEY_ID()
@@ -191,11 +270,15 @@ unpack(): DPMAssetT {
 
 unpackTo(_o: DPMAssetT): void {
   _o.ASSET_KIND = this.ASSET_KIND();
+  _o.TRANSPORT_KIND = this.TRANSPORT_KIND();
   _o.CID = this.CID();
   _o.MULTIFORMAT_ADDRESS = this.MULTIFORMAT_ADDRESS();
   _o.FILE_NAME = this.FILE_NAME();
+  _o.FILE_ID = this.FILE_ID();
+  _o.TRANSPORT_PROTOCOL = this.TRANSPORT_PROTOCOL();
   _o.BYTE_LENGTH = this.BYTE_LENGTH();
   _o.BYTE_SHA256 = this.BYTE_SHA256();
+  _o.DATA_ROOT = this.DATA_ROOT();
   _o.SCHEMA_NAME = this.SCHEMA_NAME();
   _o.SCHEMA_HASH = this.SCHEMA_HASH();
   _o.CONTENT_KEY_ID = this.CONTENT_KEY_ID();
@@ -205,11 +288,15 @@ unpackTo(_o: DPMAssetT): void {
 export class DPMAssetT implements flatbuffers.IGeneratedObject {
 constructor(
   public ASSET_KIND: publicationAssetKind = publicationAssetKind.OTHER,
+  public TRANSPORT_KIND: dpmTransportKind = dpmTransportKind.CONTENT_ADDRESS,
   public CID: string|Uint8Array|null = null,
   public MULTIFORMAT_ADDRESS: string|Uint8Array|null = null,
   public FILE_NAME: string|Uint8Array|null = null,
+  public FILE_ID: string|Uint8Array|null = null,
+  public TRANSPORT_PROTOCOL: string|Uint8Array|null = null,
   public BYTE_LENGTH: bigint = BigInt('0'),
   public BYTE_SHA256: string|Uint8Array|null = null,
+  public DATA_ROOT: string|Uint8Array|null = null,
   public SCHEMA_NAME: string|Uint8Array|null = null,
   public SCHEMA_HASH: string|Uint8Array|null = null,
   public CONTENT_KEY_ID: string|Uint8Array|null = null
@@ -220,18 +307,25 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CID = (this.CID !== null ? builder.createString(this.CID!) : 0);
   const MULTIFORMAT_ADDRESS = (this.MULTIFORMAT_ADDRESS !== null ? builder.createString(this.MULTIFORMAT_ADDRESS!) : 0);
   const FILE_NAME = (this.FILE_NAME !== null ? builder.createString(this.FILE_NAME!) : 0);
+  const FILE_ID = (this.FILE_ID !== null ? builder.createString(this.FILE_ID!) : 0);
+  const TRANSPORT_PROTOCOL = (this.TRANSPORT_PROTOCOL !== null ? builder.createString(this.TRANSPORT_PROTOCOL!) : 0);
   const BYTE_SHA256 = (this.BYTE_SHA256 !== null ? builder.createString(this.BYTE_SHA256!) : 0);
+  const DATA_ROOT = (this.DATA_ROOT !== null ? builder.createString(this.DATA_ROOT!) : 0);
   const SCHEMA_NAME = (this.SCHEMA_NAME !== null ? builder.createString(this.SCHEMA_NAME!) : 0);
   const SCHEMA_HASH = (this.SCHEMA_HASH !== null ? builder.createString(this.SCHEMA_HASH!) : 0);
   const CONTENT_KEY_ID = (this.CONTENT_KEY_ID !== null ? builder.createString(this.CONTENT_KEY_ID!) : 0);
 
   return DPMAsset.createDPMAsset(builder,
     this.ASSET_KIND,
+    this.TRANSPORT_KIND,
     CID,
     MULTIFORMAT_ADDRESS,
     FILE_NAME,
+    FILE_ID,
+    TRANSPORT_PROTOCOL,
     this.BYTE_LENGTH,
     BYTE_SHA256,
+    DATA_ROOT,
     SCHEMA_NAME,
     SCHEMA_HASH,
     CONTENT_KEY_ID

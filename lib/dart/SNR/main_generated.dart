@@ -206,7 +206,7 @@ class _SNRReader extends fb.TableReader<SNR> {
   const _SNRReader();
 
   @override
-  SNR createObject(fb.BufferContext bc, int offset) => 
+  SNR createObject(fb.BufferContext bc, int offset) =>
     SNR._(bc, offset);
 }
 

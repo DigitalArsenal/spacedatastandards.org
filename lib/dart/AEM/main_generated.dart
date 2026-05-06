@@ -61,7 +61,7 @@ class _AEMSegmentReader extends fb.TableReader<AEMSegment> {
   const _AEMSegmentReader();
 
   @override
-  AEMSegment createObject(fb.BufferContext bc, int offset) => 
+  AEMSegment createObject(fb.BufferContext bc, int offset) =>
     AEMSegment._(bc, offset);
 }
 
@@ -258,7 +258,7 @@ class _AEMReader extends fb.TableReader<AEM> {
   const _AEMReader();
 
   @override
-  AEM createObject(fb.BufferContext bc, int offset) => 
+  AEM createObject(fb.BufferContext bc, int offset) =>
     AEM._(bc, offset);
 }
 

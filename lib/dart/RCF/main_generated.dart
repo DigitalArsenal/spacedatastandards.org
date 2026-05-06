@@ -107,7 +107,7 @@ class _RCFReader extends fb.TableReader<RCF> {
   const _RCFReader();
 
   @override
-  RCF createObject(fb.BufferContext bc, int offset) => 
+  RCF createObject(fb.BufferContext bc, int offset) =>
     RCF._(bc, offset);
 }
 

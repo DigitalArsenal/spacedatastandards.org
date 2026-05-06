@@ -112,9 +112,47 @@ func (rcv *DPMQueryBinding) QueryEngineVersion() []byte {
 }
 
 /// Query engine version or profile version.
+/// Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+/// computed. Providers MUST stream records in this order unless each chunk
+/// includes enough proof material to restore and verify the canonical order.
+func (rcv *DPMQueryBinding) CANONICAL_ORDER() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DPMQueryBinding) CanonicalOrder() []byte {
+	return rcv.CANONICAL_ORDER()
+}
+
+/// Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+/// computed. Providers MUST stream records in this order unless each chunk
+/// includes enough proof material to restore and verify the canonical order.
+/// Query protocol name/version for provider-mediated retrieval, e.g.
+/// /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+/// protocol to the provider, submits the signed query or a permitted subset,
+/// and imports only responses that verify against the signed roots.
+func (rcv *DPMQueryBinding) QUERY_PROTOCOL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DPMQueryBinding) QueryProtocol() []byte {
+	return rcv.QUERY_PROTOCOL()
+}
+
+/// Query protocol name/version for provider-mediated retrieval, e.g.
+/// /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+/// protocol to the provider, submits the signed query or a permitted subset,
+/// and imports only responses that verify against the signed roots.
 /// SDS schema names selected by the query.
 func (rcv *DPMQueryBinding) SCHEMA_NAMES(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -127,7 +165,7 @@ func (rcv *DPMQueryBinding) SchemaNames(j int) []byte {
 }
 
 func (rcv *DPMQueryBinding) SCHEMA_NAMESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -141,7 +179,7 @@ func (rcv *DPMQueryBinding) SchemaNamesLength() int {
 /// SDS schema names selected by the query.
 /// Provider peer IDs selected by the query.
 func (rcv *DPMQueryBinding) PROVIDER_IDS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -154,7 +192,7 @@ func (rcv *DPMQueryBinding) ProviderIds(j int) []byte {
 }
 
 func (rcv *DPMQueryBinding) PROVIDER_IDSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -168,7 +206,7 @@ func (rcv *DPMQueryBinding) ProviderIdsLength() int {
 /// Provider peer IDs selected by the query.
 /// Source names selected by the query.
 func (rcv *DPMQueryBinding) SOURCE_NAMES(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -181,7 +219,7 @@ func (rcv *DPMQueryBinding) SourceNames(j int) []byte {
 }
 
 func (rcv *DPMQueryBinding) SOURCE_NAMESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -195,7 +233,7 @@ func (rcv *DPMQueryBinding) SourceNamesLength() int {
 /// Source names selected by the query.
 /// Batch IDs selected by the query.
 func (rcv *DPMQueryBinding) BATCH_IDS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -208,7 +246,7 @@ func (rcv *DPMQueryBinding) BatchIds(j int) []byte {
 }
 
 func (rcv *DPMQueryBinding) BATCH_IDSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -222,7 +260,7 @@ func (rcv *DPMQueryBinding) BatchIdsLength() int {
 /// Batch IDs selected by the query.
 /// Inclusive query window start in ISO 8601 UTC.
 func (rcv *DPMQueryBinding) WINDOW_START() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -236,7 +274,7 @@ func (rcv *DPMQueryBinding) WindowStart() []byte {
 /// Inclusive query window start in ISO 8601 UTC.
 /// Inclusive query window end in ISO 8601 UTC.
 func (rcv *DPMQueryBinding) WINDOW_END() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -249,7 +287,7 @@ func (rcv *DPMQueryBinding) WindowEnd() []byte {
 
 /// Inclusive query window end in ISO 8601 UTC.
 func DPMQueryBindingStart(builder *flatbuffers.Builder) {
-	builder.StartObject(11)
+	builder.StartObject(13)
 }
 func DPMQueryBindingAddCANONICAL_QUERY(builder *flatbuffers.Builder, CANONICAL_QUERY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CANONICAL_QUERY), 0)
@@ -281,8 +319,20 @@ func DPMQueryBindingAddQUERY_ENGINE_VERSION(builder *flatbuffers.Builder, QUERY_
 func DPMQueryBindingAddQueryEngineVersion(builder *flatbuffers.Builder, QUERY_ENGINE_VERSION flatbuffers.UOffsetT) {
 	DPMQueryBindingAddQUERY_ENGINE_VERSION(builder, QUERY_ENGINE_VERSION)
 }
+func DPMQueryBindingAddCANONICAL_ORDER(builder *flatbuffers.Builder, CANONICAL_ORDER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CANONICAL_ORDER), 0)
+}
+func DPMQueryBindingAddCanonicalOrder(builder *flatbuffers.Builder, CANONICAL_ORDER flatbuffers.UOffsetT) {
+	DPMQueryBindingAddCANONICAL_ORDER(builder, CANONICAL_ORDER)
+}
+func DPMQueryBindingAddQUERY_PROTOCOL(builder *flatbuffers.Builder, QUERY_PROTOCOL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(QUERY_PROTOCOL), 0)
+}
+func DPMQueryBindingAddQueryProtocol(builder *flatbuffers.Builder, QUERY_PROTOCOL flatbuffers.UOffsetT) {
+	DPMQueryBindingAddQUERY_PROTOCOL(builder, QUERY_PROTOCOL)
+}
 func DPMQueryBindingAddSCHEMA_NAMES(builder *flatbuffers.Builder, SCHEMA_NAMES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(SCHEMA_NAMES), 0)
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(SCHEMA_NAMES), 0)
 }
 func DPMQueryBindingAddSchemaNames(builder *flatbuffers.Builder, SCHEMA_NAMES flatbuffers.UOffsetT) {
 	DPMQueryBindingAddSCHEMA_NAMES(builder, SCHEMA_NAMES)
@@ -294,7 +344,7 @@ func DPMQueryBindingStartSchemaNamesVector(builder *flatbuffers.Builder, numElem
 	return DPMQueryBindingStartSCHEMA_NAMESVector(builder, numElems)
 }
 func DPMQueryBindingAddPROVIDER_IDS(builder *flatbuffers.Builder, PROVIDER_IDS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(PROVIDER_IDS), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(PROVIDER_IDS), 0)
 }
 func DPMQueryBindingAddProviderIds(builder *flatbuffers.Builder, PROVIDER_IDS flatbuffers.UOffsetT) {
 	DPMQueryBindingAddPROVIDER_IDS(builder, PROVIDER_IDS)
@@ -306,7 +356,7 @@ func DPMQueryBindingStartProviderIdsVector(builder *flatbuffers.Builder, numElem
 	return DPMQueryBindingStartPROVIDER_IDSVector(builder, numElems)
 }
 func DPMQueryBindingAddSOURCE_NAMES(builder *flatbuffers.Builder, SOURCE_NAMES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(SOURCE_NAMES), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(SOURCE_NAMES), 0)
 }
 func DPMQueryBindingAddSourceNames(builder *flatbuffers.Builder, SOURCE_NAMES flatbuffers.UOffsetT) {
 	DPMQueryBindingAddSOURCE_NAMES(builder, SOURCE_NAMES)
@@ -318,7 +368,7 @@ func DPMQueryBindingStartSourceNamesVector(builder *flatbuffers.Builder, numElem
 	return DPMQueryBindingStartSOURCE_NAMESVector(builder, numElems)
 }
 func DPMQueryBindingAddBATCH_IDS(builder *flatbuffers.Builder, BATCH_IDS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(BATCH_IDS), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(BATCH_IDS), 0)
 }
 func DPMQueryBindingAddBatchIds(builder *flatbuffers.Builder, BATCH_IDS flatbuffers.UOffsetT) {
 	DPMQueryBindingAddBATCH_IDS(builder, BATCH_IDS)
@@ -330,13 +380,13 @@ func DPMQueryBindingStartBatchIdsVector(builder *flatbuffers.Builder, numElems i
 	return DPMQueryBindingStartBATCH_IDSVector(builder, numElems)
 }
 func DPMQueryBindingAddWINDOW_START(builder *flatbuffers.Builder, WINDOW_START flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(WINDOW_START), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(WINDOW_START), 0)
 }
 func DPMQueryBindingAddWindowStart(builder *flatbuffers.Builder, WINDOW_START flatbuffers.UOffsetT) {
 	DPMQueryBindingAddWINDOW_START(builder, WINDOW_START)
 }
 func DPMQueryBindingAddWINDOW_END(builder *flatbuffers.Builder, WINDOW_END flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(WINDOW_END), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(WINDOW_END), 0)
 }
 func DPMQueryBindingAddWindowEnd(builder *flatbuffers.Builder, WINDOW_END flatbuffers.UOffsetT) {
 	DPMQueryBindingAddWINDOW_END(builder, WINDOW_END)

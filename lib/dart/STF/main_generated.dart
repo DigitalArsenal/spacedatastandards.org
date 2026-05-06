@@ -119,7 +119,7 @@ class _SpatialCoverageReader extends fb.TableReader<SpatialCoverage> {
   const _SpatialCoverageReader();
 
   @override
-  SpatialCoverage createObject(fb.BufferContext bc, int offset) => 
+  SpatialCoverage createObject(fb.BufferContext bc, int offset) =>
     SpatialCoverage._(bc, offset);
 }
 
@@ -225,7 +225,7 @@ class _TemporalCoverageReader extends fb.TableReader<TemporalCoverage> {
   const _TemporalCoverageReader();
 
   @override
-  TemporalCoverage createObject(fb.BufferContext bc, int offset) => 
+  TemporalCoverage createObject(fb.BufferContext bc, int offset) =>
     TemporalCoverage._(bc, offset);
 }
 
@@ -334,7 +334,7 @@ class _DataCoverageReader extends fb.TableReader<DataCoverage> {
   const _DataCoverageReader();
 
   @override
-  DataCoverage createObject(fb.BufferContext bc, int offset) => 
+  DataCoverage createObject(fb.BufferContext bc, int offset) =>
     DataCoverage._(bc, offset);
 }
 
@@ -431,7 +431,7 @@ class _PricingTierReader extends fb.TableReader<PricingTier> {
   const _PricingTierReader();
 
   @override
-  PricingTier createObject(fb.BufferContext bc, int offset) => 
+  PricingTier createObject(fb.BufferContext bc, int offset) =>
     PricingTier._(bc, offset);
 }
 
@@ -594,7 +594,7 @@ class _STFReader extends fb.TableReader<STF> {
   const _STFReader();
 
   @override
-  STF createObject(fb.BufferContext bc, int offset) => 
+  STF createObject(fb.BufferContext bc, int offset) =>
     STF._(bc, offset);
 }
 

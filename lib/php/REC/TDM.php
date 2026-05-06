@@ -58,7 +58,7 @@ class TDM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Cartesian Y coordinate of the OBSERVER location in chosen reference frame 
+    /// Cartesian Y coordinate of the OBSERVER location in chosen reference frame
     /**
      * @return double
      */
@@ -68,7 +68,7 @@ class TDM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Cartesian Z coordinate of the OBSERVER location in chosen reference frame 
+    /// Cartesian Z coordinate of the OBSERVER location in chosen reference frame
     /**
      * @return double
      */
@@ -88,7 +88,7 @@ class TDM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame 
+    /// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame
     /**
      * @return double
      */
@@ -98,7 +98,7 @@ class TDM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
+    /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame
     /**
      * @return double
      */

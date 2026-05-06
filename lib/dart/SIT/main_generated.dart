@@ -273,7 +273,7 @@ class _FrequencyRangeReader extends fb.TableReader<FrequencyRange> {
   const _FrequencyRangeReader();
 
   @override
-  FrequencyRange createObject(fb.BufferContext bc, int offset) => 
+  FrequencyRange createObject(fb.BufferContext bc, int offset) =>
     FrequencyRange._(bc, offset);
 }
 
@@ -360,7 +360,7 @@ class _StokesParametersReader extends fb.TableReader<StokesParameters> {
   const _StokesParametersReader();
 
   @override
-  StokesParameters createObject(fb.BufferContext bc, int offset) => 
+  StokesParameters createObject(fb.BufferContext bc, int offset) =>
     StokesParameters._(bc, offset);
 }
 
@@ -460,7 +460,7 @@ class _BandReader extends fb.TableReader<Band> {
   const _BandReader();
 
   @override
-  Band createObject(fb.BufferContext bc, int offset) => 
+  Band createObject(fb.BufferContext bc, int offset) =>
     Band._(bc, offset);
 }
 
@@ -620,7 +620,7 @@ class _IDMReader extends fb.TableReader<IDM> {
   const _IDMReader();
 
   @override
-  IDM createObject(fb.BufferContext bc, int offset) => 
+  IDM createObject(fb.BufferContext bc, int offset) =>
     IDM._(bc, offset);
 }
 

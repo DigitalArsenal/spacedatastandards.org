@@ -193,7 +193,7 @@ class _TMEReader extends fb.TableReader<TME> {
   const _TMEReader();
 
   @override
-  TME createObject(fb.BufferContext bc, int offset) => 
+  TME createObject(fb.BufferContext bc, int offset) =>
     TME._(bc, offset);
 }
 

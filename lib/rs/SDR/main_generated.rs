@@ -234,8 +234,8 @@ impl ::flatbuffers::SimpleToVerifyInSlice for detectionResultFlags {}
 #[repr(transparent)]
 #[derive(Clone, Copy, PartialEq)]
 pub struct targetState(pub [u8; 40]);
-impl Default for targetState { 
-  fn default() -> Self { 
+impl Default for targetState {
+  fn default() -> Self {
     Self([0; 40])
   }
 }
@@ -528,8 +528,8 @@ impl targetStateT {
 #[repr(transparent)]
 #[derive(Clone, Copy, PartialEq)]
 pub struct detectionResult(pub [u8; 48]);
-impl Default for detectionResult { 
-  fn default() -> Self { 
+impl Default for detectionResult {
+  fn default() -> Self {
     Self([0; 48])
   }
 }

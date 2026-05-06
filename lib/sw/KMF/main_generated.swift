@@ -64,7 +64,7 @@ public struct KMF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   /// Encryption context for decrypting encrypted fields
   public var encryptionCtx: [UInt8]?
 
-  public static var id: String { "$KMF" } 
+  public static var id: String { "$KMF" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: KMF.id, addPrefix: prefix) }
   private init(_ t: Table, encryptionCtx: [UInt8]? = nil) { _accessor = t; self.encryptionCtx = encryptionCtx }
   public init(_ bb: ByteBuffer, o: Int32, encryptionCtx: [UInt8]? = nil) { _accessor = Table(bb: bb, position: o); self.encryptionCtx = encryptionCtx }

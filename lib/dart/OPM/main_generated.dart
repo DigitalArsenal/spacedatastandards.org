@@ -77,7 +77,7 @@ class _OPMReader extends fb.TableReader<OPM> {
   const _OPMReader();
 
   @override
-  OPM createObject(fb.BufferContext bc, int offset) => 
+  OPM createObject(fb.BufferContext bc, int offset) =>
     OPM._(bc, offset);
 }
 

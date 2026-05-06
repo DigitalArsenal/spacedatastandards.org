@@ -133,7 +133,7 @@ class _LNEReader extends fb.TableReader<LNE> {
   const _LNEReader();
 
   @override
-  LNE createObject(fb.BufferContext bc, int offset) => 
+  LNE createObject(fb.BufferContext bc, int offset) =>
     LNE._(bc, offset);
 }
 

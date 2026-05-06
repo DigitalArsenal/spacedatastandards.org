@@ -326,7 +326,7 @@ class _DMGReader extends fb.TableReader<DMG> {
   const _DMGReader();
 
   @override
-  DMG createObject(fb.BufferContext bc, int offset) => 
+  DMG createObject(fb.BufferContext bc, int offset) =>
     DMG._(bc, offset);
 }
 

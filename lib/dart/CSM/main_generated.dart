@@ -313,7 +313,7 @@ class _LCCReader extends fb.TableReader<LCC> {
   const _LCCReader();
 
   @override
-  LCC createObject(fb.BufferContext bc, int offset) => 
+  LCC createObject(fb.BufferContext bc, int offset) =>
     LCC._(bc, offset);
 }
 

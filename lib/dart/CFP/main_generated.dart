@@ -140,7 +140,7 @@ class _CFPReader extends fb.TableReader<CFP> {
   const _CFPReader();
 
   @override
-  CFP createObject(fb.BufferContext bc, int offset) => 
+  CFP createObject(fb.BufferContext bc, int offset) =>
     CFP._(bc, offset);
 }
 

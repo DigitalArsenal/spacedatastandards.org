@@ -446,8 +446,8 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t FOV_COUNT_UCTS() const {
     return GetField<int32_t>(VT_FOV_COUNT_UCTS, 0);
   }
-  /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
-  /// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+  /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods,
+  /// the exposure duration should be the total integration time. This field is highly recommended / required if the
   /// observations are going to be used for photometric processing.
   float EXP_DURATION() const {
     return GetField<float>(VT_EXP_DURATION, 0.0f);
@@ -476,12 +476,12 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   float MAG_NORM_RANGE() const {
     return GetField<float>(VT_MAG_NORM_RANGE, 0.0f);
   }
-  /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+  /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range
   /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
   float GEOLAT() const {
     return GetField<float>(VT_GEOLAT, 0.0f);
   }
-  /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+  /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range
   /// and viewing geometry. It must NOT be computed from the orbit state.
   float GEOLON() const {
     return GetField<float>(VT_GEOLON, 0.0f);
@@ -494,14 +494,14 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   float GEORANGE() const {
     return GetField<float>(VT_GEORANGE, 0.0f);
   }
-  /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+  /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently
   /// empty part of the night sky.
   float SKY_BKGRND() const {
     return GetField<float>(VT_SKY_BKGRND, 0.0f);
   }
-  /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
-  /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
-  /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+  /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass
+  /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general,
+  /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical
   /// object and the observer.
   float PRIMARY_EXTINCTION() const {
     return GetField<float>(VT_PRIMARY_EXTINCTION, 0.0f);
@@ -510,13 +510,13 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   float PRIMARY_EXTINCTION_UNC() const {
     return GetField<float>(VT_PRIMARY_EXTINCTION_UNC, 0.0f);
   }
-  /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+  /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the
   /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
   float SOLAR_PHASE_ANGLE() const {
     return GetField<float>(VT_SOLAR_PHASE_ANGLE, 0.0f);
   }
-  /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
-  /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+  /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector
+  /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition)
   /// and positive when opening (after the opposition).
   float SOLAR_EQ_PHASE_ANGLE() const {
     return GetField<float>(VT_SOLAR_EQ_PHASE_ANGLE, 0.0f);
@@ -533,7 +533,7 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   float TIMING_BIAS() const {
     return GetField<float>(VT_TIMING_BIAS, 0.0f);
   }
-  /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
+  /// Optional URI location in the document repository of the raw file parsed by the system to produce this record.
   const ::flatbuffers::String *RAW_FILE_URI() const {
     return GetPointer<const ::flatbuffers::String *>(VT_RAW_FILE_URI);
   }
@@ -554,7 +554,7 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE);
   }
   /// Originating system or organization which produced the data, if different from the source.
-  /// The origin may be different than the source if the source was a mediating system which forwarded 
+  /// The origin may be different than the source if the source was a mediating system which forwarded
   /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
   const ::flatbuffers::String *ORIGIN() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIGIN);
@@ -575,8 +575,8 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const RFM *REFERENCE_FRAME() const {
     return GetPointer<const RFM *>(VT_REFERENCE_FRAME);
   }
-  /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
-  /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+  /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),
+  /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).
   /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
   const RFM *SEN_REFERENCE_FRAME() const {
     return GetPointer<const RFM *>(VT_SEN_REFERENCE_FRAME);

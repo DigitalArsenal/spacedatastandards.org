@@ -347,7 +347,7 @@ class _MSLReader extends fb.TableReader<MSL> {
   const _MSLReader();
 
   @override
-  MSL createObject(fb.BufferContext bc, int offset) => 
+  MSL createObject(fb.BufferContext bc, int offset) =>
     MSL._(bc, offset);
 }
 

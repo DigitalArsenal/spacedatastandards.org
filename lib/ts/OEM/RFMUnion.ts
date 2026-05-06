@@ -21,7 +21,7 @@ export function unionToRfmunion(
   accessor: (obj:CelestialFrameWrapper|CustomFrameWrapper|OrbitFrameWrapper|SpacecraftFrameWrapper) => CelestialFrameWrapper|CustomFrameWrapper|OrbitFrameWrapper|SpacecraftFrameWrapper|null
 ): CelestialFrameWrapper|CustomFrameWrapper|OrbitFrameWrapper|SpacecraftFrameWrapper|null {
   switch(RFMUnion[type]) {
-    case 'NONE': return null; 
+    case 'NONE': return null;
     case 'CelestialFrameWrapper': return accessor(new CelestialFrameWrapper())! as CelestialFrameWrapper;
     case 'SpacecraftFrameWrapper': return accessor(new SpacecraftFrameWrapper())! as SpacecraftFrameWrapper;
     case 'OrbitFrameWrapper': return accessor(new OrbitFrameWrapper())! as OrbitFrameWrapper;
@@ -31,12 +31,12 @@ export function unionToRfmunion(
 }
 
 export function unionListToRfmunion(
-  type: RFMUnion, 
-  accessor: (index: number, obj:CelestialFrameWrapper|CustomFrameWrapper|OrbitFrameWrapper|SpacecraftFrameWrapper) => CelestialFrameWrapper|CustomFrameWrapper|OrbitFrameWrapper|SpacecraftFrameWrapper|null, 
+  type: RFMUnion,
+  accessor: (index: number, obj:CelestialFrameWrapper|CustomFrameWrapper|OrbitFrameWrapper|SpacecraftFrameWrapper) => CelestialFrameWrapper|CustomFrameWrapper|OrbitFrameWrapper|SpacecraftFrameWrapper|null,
   index: number
 ): CelestialFrameWrapper|CustomFrameWrapper|OrbitFrameWrapper|SpacecraftFrameWrapper|null {
   switch(RFMUnion[type]) {
-    case 'NONE': return null; 
+    case 'NONE': return null;
     case 'CelestialFrameWrapper': return accessor(index, new CelestialFrameWrapper())! as CelestialFrameWrapper;
     case 'SpacecraftFrameWrapper': return accessor(index, new SpacecraftFrameWrapper())! as SpacecraftFrameWrapper;
     case 'OrbitFrameWrapper': return accessor(index, new OrbitFrameWrapper())! as OrbitFrameWrapper;

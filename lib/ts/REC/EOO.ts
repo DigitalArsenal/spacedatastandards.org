@@ -481,8 +481,8 @@ FOV_COUNT_UCTS():number {
 }
 
 /**
- * Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
- * the exposure duration should be the total integration time. This field is highly recommended / required if the 
+ * Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods,
+ * the exposure duration should be the total integration time. This field is highly recommended / required if the
  * observations are going to be used for photometric processing.
  */
 EXP_DURATION():number {
@@ -539,7 +539,7 @@ MAG_NORM_RANGE():number {
 }
 
 /**
- * Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+ * Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range
  * and corresponding viewing geometry. It must NOT be computed from the orbit state.
  */
 GEOLAT():number {
@@ -548,7 +548,7 @@ GEOLAT():number {
 }
 
 /**
- * Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+ * Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range
  * and viewing geometry. It must NOT be computed from the orbit state.
  */
 GEOLON():number {
@@ -573,7 +573,7 @@ GEORANGE():number {
 }
 
 /**
- * Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+ * Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently
  * empty part of the night sky.
  */
 SKY_BKGRND():number {
@@ -582,9 +582,9 @@ SKY_BKGRND():number {
 }
 
 /**
- * Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
- * to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
- * describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+ * Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass
+ * to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general,
+ * describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical
  * object and the observer.
  */
 PRIMARY_EXTINCTION():number {
@@ -601,7 +601,7 @@ PRIMARY_EXTINCTION_UNC():number {
 }
 
 /**
- * The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+ * The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the
  * calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
  */
 SOLAR_PHASE_ANGLE():number {
@@ -610,8 +610,8 @@ SOLAR_PHASE_ANGLE():number {
 }
 
 /**
- * The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
- * onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+ * The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector
+ * onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition)
  * and positive when opening (after the opposition).
  */
 SOLAR_EQ_PHASE_ANGLE():number {
@@ -644,7 +644,7 @@ TIMING_BIAS():number {
 }
 
 /**
- * Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
+ * Optional URI location in the document repository of the raw file parsed by the system to produce this record.
  */
 RAW_FILE_URI():string|null
 RAW_FILE_URI(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -691,7 +691,7 @@ SOURCE(optionalEncoding?:any):string|Uint8Array|null {
 
 /**
  * Originating system or organization which produced the data, if different from the source.
- * The origin may be different than the source if the source was a mediating system which forwarded 
+ * The origin may be different than the source if the source was a mediating system which forwarded
  * the data on behalf of the origin system. If null, the source may be assumed to be the origin.
  */
 ORIGIN():string|null
@@ -738,8 +738,8 @@ REFERENCE_FRAME(obj?:RFM):RFM|null {
 }
 
 /**
- * The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
- * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+ * The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),
+ * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).
  * Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
  */
 SEN_REFERENCE_FRAME(obj?:RFM):RFM|null {

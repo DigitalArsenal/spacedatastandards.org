@@ -48,7 +48,7 @@ class _OSMReader extends fb.TableReader<OSM> {
   const _OSMReader();
 
   @override
-  OSM createObject(fb.BufferContext bc, int offset) => 
+  OSM createObject(fb.BufferContext bc, int offset) =>
     OSM._(bc, offset);
 }
 

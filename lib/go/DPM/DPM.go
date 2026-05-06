@@ -7,7 +7,8 @@ import (
 )
 
 /// Dataset Publication Manifest binding data/index CIDs, query replay,
-/// source hashes, schema hashes, encryption metadata, and provider signature.
+/// source hashes, schema hashes, encryption metadata, provider-mediated query
+/// protocols, completeness roots, and provider signature.
 type DPM struct {
 	_tab flatbuffers.Table
 }
@@ -97,9 +98,33 @@ func (rcv *DPM) UpdateId() []byte {
 }
 
 /// Dataset update or batch identifier.
+/// Canonical publication/update partition identity. FILE_ID is the key used
+/// everywhere a subscriber, provider, PNM, entitlement, cache, or query
+/// protocol refers to this exact update. It is not merely a human filename
+/// and it is not the FlatBuffer file_identifier. For completeness-verifiable
+/// streams, all returned records MUST belong to this FILE_ID and prove
+/// inclusion under this DPM's signed roots.
+func (rcv *DPM) FILE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DPM) FileId() []byte {
+	return rcv.FILE_ID()
+}
+
+/// Canonical publication/update partition identity. FILE_ID is the key used
+/// everywhere a subscriber, provider, PNM, entitlement, cache, or query
+/// protocol refers to this exact update. It is not merely a human filename
+/// and it is not the FlatBuffer file_identifier. For completeness-verifiable
+/// streams, all returned records MUST belong to this FILE_ID and prove
+/// inclusion under this DPM's signed roots.
 /// Provider peer ID.
 func (rcv *DPM) PROVIDER_PEER_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -113,7 +138,7 @@ func (rcv *DPM) ProviderPeerId() []byte {
 /// Provider peer ID.
 /// Provider EPM CID.
 func (rcv *DPM) PROVIDER_EPM_CID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -127,7 +152,7 @@ func (rcv *DPM) ProviderEpmCid() []byte {
 /// Provider EPM CID.
 /// Publication timestamp in ISO 8601 UTC.
 func (rcv *DPM) PUBLISH_TIMESTAMP() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -141,7 +166,7 @@ func (rcv *DPM) PublishTimestamp() []byte {
 /// Publication timestamp in ISO 8601 UTC.
 /// Published shard, index, and auxiliary artifacts.
 func (rcv *DPM) ASSETS(obj *DPMAsset, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -160,7 +185,7 @@ func (rcv *DPM) Assets(obj *DPMAsset, j int) bool {
 }
 
 func (rcv *DPM) ASSETSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -174,7 +199,7 @@ func (rcv *DPM) AssetsLength() int {
 /// Published shard, index, and auxiliary artifacts.
 /// Source batches used to build the dataset.
 func (rcv *DPM) SOURCES(obj *DPMSourceBatch, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -193,7 +218,7 @@ func (rcv *DPM) Sources(obj *DPMSourceBatch, j int) bool {
 }
 
 func (rcv *DPM) SOURCESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -207,7 +232,7 @@ func (rcv *DPM) SourcesLength() int {
 /// Source batches used to build the dataset.
 /// Replayable query binding.
 func (rcv *DPM) QUERY(obj *DPMQueryBinding) *DPMQueryBinding {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -224,9 +249,48 @@ func (rcv *DPM) Query(obj *DPMQueryBinding) *DPMQueryBinding {
 }
 
 /// Replayable query binding.
+/// Signed completeness-capable indexes. Inclusion proofs prove that returned
+/// records are authentic members of DATA_ROOT. Range-completeness proofs also
+/// prove that no matching records were omitted, but only for predicates
+/// expressible against these declared indexes.
+func (rcv *DPM) INDEXES(obj *DPMCompletenessIndex, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(DPMCompletenessIndex)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *DPM) Indexes(obj *DPMCompletenessIndex, j int) bool {
+	return rcv.INDEXES(obj, j)
+}
+
+func (rcv *DPM) INDEXESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *DPM) IndexesLength() int {
+	return rcv.INDEXESLength()
+}
+
+/// Signed completeness-capable indexes. Inclusion proofs prove that returned
+/// records are authentic members of DATA_ROOT. Range-completeness proofs also
+/// prove that no matching records were omitted, but only for predicates
+/// expressible against these declared indexes.
 /// Encryption/key metadata.
 func (rcv *DPM) ENCRYPTION(obj *DPMEncryptionBinding) *DPMEncryptionBinding {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -245,7 +309,7 @@ func (rcv *DPM) Encryption(obj *DPMEncryptionBinding) *DPMEncryptionBinding {
 /// Encryption/key metadata.
 /// Provider signature over the canonical manifest bytes or manifest digest.
 func (rcv *DPM) PROVIDER_SIGNATURE(j int) byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
@@ -258,7 +322,7 @@ func (rcv *DPM) ProviderSignature(j int) byte {
 }
 
 func (rcv *DPM) PROVIDER_SIGNATURELength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -270,7 +334,7 @@ func (rcv *DPM) ProviderSignatureLength() int {
 }
 
 func (rcv *DPM) PROVIDER_SIGNATUREBytes() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -283,7 +347,7 @@ func (rcv *DPM) ProviderSignatureBytes() []byte {
 
 /// Provider signature over the canonical manifest bytes or manifest digest.
 func (rcv *DPM) MutatePROVIDER_SIGNATURE(j int, n byte) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
@@ -297,7 +361,7 @@ func (rcv *DPM) MutateProviderSignature(j int, n byte) bool {
 
 /// Signature algorithm, e.g. Ed25519.
 func (rcv *DPM) SIGNATURE_TYPE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -310,7 +374,7 @@ func (rcv *DPM) SignatureType() []byte {
 
 /// Signature algorithm, e.g. Ed25519.
 func DPMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(12)
+	builder.StartObject(14)
 }
 func DPMAddVERSION(builder *flatbuffers.Builder, VERSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(VERSION), 0)
@@ -330,26 +394,32 @@ func DPMAddUPDATE_ID(builder *flatbuffers.Builder, UPDATE_ID flatbuffers.UOffset
 func DPMAddUpdateId(builder *flatbuffers.Builder, UPDATE_ID flatbuffers.UOffsetT) {
 	DPMAddUPDATE_ID(builder, UPDATE_ID)
 }
+func DPMAddFILE_ID(builder *flatbuffers.Builder, FILE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(FILE_ID), 0)
+}
+func DPMAddFileId(builder *flatbuffers.Builder, FILE_ID flatbuffers.UOffsetT) {
+	DPMAddFILE_ID(builder, FILE_ID)
+}
 func DPMAddPROVIDER_PEER_ID(builder *flatbuffers.Builder, PROVIDER_PEER_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(PROVIDER_PEER_ID), 0)
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(PROVIDER_PEER_ID), 0)
 }
 func DPMAddProviderPeerId(builder *flatbuffers.Builder, PROVIDER_PEER_ID flatbuffers.UOffsetT) {
 	DPMAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID)
 }
 func DPMAddPROVIDER_EPM_CID(builder *flatbuffers.Builder, PROVIDER_EPM_CID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(PROVIDER_EPM_CID), 0)
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(PROVIDER_EPM_CID), 0)
 }
 func DPMAddProviderEpmCid(builder *flatbuffers.Builder, PROVIDER_EPM_CID flatbuffers.UOffsetT) {
 	DPMAddPROVIDER_EPM_CID(builder, PROVIDER_EPM_CID)
 }
 func DPMAddPUBLISH_TIMESTAMP(builder *flatbuffers.Builder, PUBLISH_TIMESTAMP flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(PUBLISH_TIMESTAMP), 0)
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(PUBLISH_TIMESTAMP), 0)
 }
 func DPMAddPublishTimestamp(builder *flatbuffers.Builder, PUBLISH_TIMESTAMP flatbuffers.UOffsetT) {
 	DPMAddPUBLISH_TIMESTAMP(builder, PUBLISH_TIMESTAMP)
 }
 func DPMAddASSETS(builder *flatbuffers.Builder, ASSETS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ASSETS), 0)
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(ASSETS), 0)
 }
 func DPMAddAssets(builder *flatbuffers.Builder, ASSETS flatbuffers.UOffsetT) {
 	DPMAddASSETS(builder, ASSETS)
@@ -361,7 +431,7 @@ func DPMStartAssetsVector(builder *flatbuffers.Builder, numElems int) flatbuffer
 	return DPMStartASSETSVector(builder, numElems)
 }
 func DPMAddSOURCES(builder *flatbuffers.Builder, SOURCES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(SOURCES), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(SOURCES), 0)
 }
 func DPMAddSources(builder *flatbuffers.Builder, SOURCES flatbuffers.UOffsetT) {
 	DPMAddSOURCES(builder, SOURCES)
@@ -373,19 +443,31 @@ func DPMStartSourcesVector(builder *flatbuffers.Builder, numElems int) flatbuffe
 	return DPMStartSOURCESVector(builder, numElems)
 }
 func DPMAddQUERY(builder *flatbuffers.Builder, QUERY flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(QUERY), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(QUERY), 0)
 }
 func DPMAddQuery(builder *flatbuffers.Builder, QUERY flatbuffers.UOffsetT) {
 	DPMAddQUERY(builder, QUERY)
 }
+func DPMAddINDEXES(builder *flatbuffers.Builder, INDEXES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(INDEXES), 0)
+}
+func DPMAddIndexes(builder *flatbuffers.Builder, INDEXES flatbuffers.UOffsetT) {
+	DPMAddINDEXES(builder, INDEXES)
+}
+func DPMStartINDEXESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func DPMStartIndexesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return DPMStartINDEXESVector(builder, numElems)
+}
 func DPMAddENCRYPTION(builder *flatbuffers.Builder, ENCRYPTION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ENCRYPTION), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(ENCRYPTION), 0)
 }
 func DPMAddEncryption(builder *flatbuffers.Builder, ENCRYPTION flatbuffers.UOffsetT) {
 	DPMAddENCRYPTION(builder, ENCRYPTION)
 }
 func DPMAddPROVIDER_SIGNATURE(builder *flatbuffers.Builder, PROVIDER_SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(PROVIDER_SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(PROVIDER_SIGNATURE), 0)
 }
 func DPMAddProviderSignature(builder *flatbuffers.Builder, PROVIDER_SIGNATURE flatbuffers.UOffsetT) {
 	DPMAddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE)
@@ -397,7 +479,7 @@ func DPMStartProviderSignatureVector(builder *flatbuffers.Builder, numElems int)
 	return DPMStartPROVIDER_SIGNATUREVector(builder, numElems)
 }
 func DPMAddSIGNATURE_TYPE(builder *flatbuffers.Builder, SIGNATURE_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(SIGNATURE_TYPE), 0)
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(SIGNATURE_TYPE), 0)
 }
 func DPMAddSignatureType(builder *flatbuffers.Builder, SIGNATURE_TYPE flatbuffers.UOffsetT) {
 	DPMAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE)

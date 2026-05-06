@@ -58,45 +58,62 @@ public final class DPMQueryBinding extends com.google.flatbuffers.Table {
   public ByteBuffer QUERY_ENGINE_VERSIONAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer QUERY_ENGINE_VERSIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
+   * Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+   * computed. Providers MUST stream records in this order unless each chunk
+   * includes enough proof material to restore and verify the canonical order.
+   */
+  public String CANONICAL_ORDER() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CANONICAL_ORDERAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer CANONICAL_ORDERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Query protocol name/version for provider-mediated retrieval, e.g.
+   * /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+   * protocol to the provider, submits the signed query or a permitted subset,
+   * and imports only responses that verify against the signed roots.
+   */
+  public String QUERY_PROTOCOL() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer QUERY_PROTOCOLAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer QUERY_PROTOCOLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
    * SDS schema names selected by the query.
    */
-  public String SCHEMA_NAMES(int j) { int o = __offset(14); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int SCHEMA_NAMESLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
+  public String SCHEMA_NAMES(int j) { int o = __offset(18); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int SCHEMA_NAMESLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
   public StringVector schemaNamesVector() { return schemaNamesVector(new StringVector()); }
-  public StringVector schemaNamesVector(StringVector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector schemaNamesVector(StringVector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Provider peer IDs selected by the query.
    */
-  public String PROVIDER_IDS(int j) { int o = __offset(16); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int PROVIDER_IDSLength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
+  public String PROVIDER_IDS(int j) { int o = __offset(20); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int PROVIDER_IDSLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
   public StringVector providerIdsVector() { return providerIdsVector(new StringVector()); }
-  public StringVector providerIdsVector(StringVector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector providerIdsVector(StringVector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Source names selected by the query.
    */
-  public String SOURCE_NAMES(int j) { int o = __offset(18); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int SOURCE_NAMESLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
+  public String SOURCE_NAMES(int j) { int o = __offset(22); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int SOURCE_NAMESLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
   public StringVector sourceNamesVector() { return sourceNamesVector(new StringVector()); }
-  public StringVector sourceNamesVector(StringVector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector sourceNamesVector(StringVector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Batch IDs selected by the query.
    */
-  public String BATCH_IDS(int j) { int o = __offset(20); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int BATCH_IDSLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
+  public String BATCH_IDS(int j) { int o = __offset(24); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int BATCH_IDSLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
   public StringVector batchIdsVector() { return batchIdsVector(new StringVector()); }
-  public StringVector batchIdsVector(StringVector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector batchIdsVector(StringVector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Inclusive query window start in ISO 8601 UTC.
    */
-  public String WINDOW_START() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer WINDOW_STARTAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
-  public ByteBuffer WINDOW_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  public String WINDOW_START() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer WINDOW_STARTAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer WINDOW_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
   /**
    * Inclusive query window end in ISO 8601 UTC.
    */
-  public String WINDOW_END() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer WINDOW_ENDAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer WINDOW_ENDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  public String WINDOW_END() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer WINDOW_ENDAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer WINDOW_ENDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
 
   public static int createDPMQueryBinding(FlatBufferBuilder builder,
       int CANONICAL_QUERYOffset,
@@ -104,19 +121,23 @@ public final class DPMQueryBinding extends com.google.flatbuffers.Table {
       int RESULT_SHA256Offset,
       int QUERY_ENGINEOffset,
       int QUERY_ENGINE_VERSIONOffset,
+      int CANONICAL_ORDEROffset,
+      int QUERY_PROTOCOLOffset,
       int SCHEMA_NAMESOffset,
       int PROVIDER_IDSOffset,
       int SOURCE_NAMESOffset,
       int BATCH_IDSOffset,
       int WINDOW_STARTOffset,
       int WINDOW_ENDOffset) {
-    builder.startTable(11);
+    builder.startTable(13);
     DPMQueryBinding.addWindowEnd(builder, WINDOW_ENDOffset);
     DPMQueryBinding.addWindowStart(builder, WINDOW_STARTOffset);
     DPMQueryBinding.addBatchIds(builder, BATCH_IDSOffset);
     DPMQueryBinding.addSourceNames(builder, SOURCE_NAMESOffset);
     DPMQueryBinding.addProviderIds(builder, PROVIDER_IDSOffset);
     DPMQueryBinding.addSchemaNames(builder, SCHEMA_NAMESOffset);
+    DPMQueryBinding.addQueryProtocol(builder, QUERY_PROTOCOLOffset);
+    DPMQueryBinding.addCanonicalOrder(builder, CANONICAL_ORDEROffset);
     DPMQueryBinding.addQueryEngineVersion(builder, QUERY_ENGINE_VERSIONOffset);
     DPMQueryBinding.addQueryEngine(builder, QUERY_ENGINEOffset);
     DPMQueryBinding.addResultSha256(builder, RESULT_SHA256Offset);
@@ -125,26 +146,28 @@ public final class DPMQueryBinding extends com.google.flatbuffers.Table {
     return DPMQueryBinding.endDPMQueryBinding(builder);
   }
 
-  public static void startDPMQueryBinding(FlatBufferBuilder builder) { builder.startTable(11); }
+  public static void startDPMQueryBinding(FlatBufferBuilder builder) { builder.startTable(13); }
   public static void addCanonicalQuery(FlatBufferBuilder builder, int CANONICAL_QUERYOffset) { builder.addOffset(0, CANONICAL_QUERYOffset, 0); }
   public static void addQuerySha256(FlatBufferBuilder builder, int QUERY_SHA256Offset) { builder.addOffset(1, QUERY_SHA256Offset, 0); }
   public static void addResultSha256(FlatBufferBuilder builder, int RESULT_SHA256Offset) { builder.addOffset(2, RESULT_SHA256Offset, 0); }
   public static void addQueryEngine(FlatBufferBuilder builder, int QUERY_ENGINEOffset) { builder.addOffset(3, QUERY_ENGINEOffset, 0); }
   public static void addQueryEngineVersion(FlatBufferBuilder builder, int QUERY_ENGINE_VERSIONOffset) { builder.addOffset(4, QUERY_ENGINE_VERSIONOffset, 0); }
-  public static void addSchemaNames(FlatBufferBuilder builder, int SCHEMA_NAMESOffset) { builder.addOffset(5, SCHEMA_NAMESOffset, 0); }
+  public static void addCanonicalOrder(FlatBufferBuilder builder, int CANONICAL_ORDEROffset) { builder.addOffset(5, CANONICAL_ORDEROffset, 0); }
+  public static void addQueryProtocol(FlatBufferBuilder builder, int QUERY_PROTOCOLOffset) { builder.addOffset(6, QUERY_PROTOCOLOffset, 0); }
+  public static void addSchemaNames(FlatBufferBuilder builder, int SCHEMA_NAMESOffset) { builder.addOffset(7, SCHEMA_NAMESOffset, 0); }
   public static int createSchemaNamesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startSchemaNamesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addProviderIds(FlatBufferBuilder builder, int PROVIDER_IDSOffset) { builder.addOffset(6, PROVIDER_IDSOffset, 0); }
+  public static void addProviderIds(FlatBufferBuilder builder, int PROVIDER_IDSOffset) { builder.addOffset(8, PROVIDER_IDSOffset, 0); }
   public static int createProviderIdsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startProviderIdsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addSourceNames(FlatBufferBuilder builder, int SOURCE_NAMESOffset) { builder.addOffset(7, SOURCE_NAMESOffset, 0); }
+  public static void addSourceNames(FlatBufferBuilder builder, int SOURCE_NAMESOffset) { builder.addOffset(9, SOURCE_NAMESOffset, 0); }
   public static int createSourceNamesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startSourceNamesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addBatchIds(FlatBufferBuilder builder, int BATCH_IDSOffset) { builder.addOffset(8, BATCH_IDSOffset, 0); }
+  public static void addBatchIds(FlatBufferBuilder builder, int BATCH_IDSOffset) { builder.addOffset(10, BATCH_IDSOffset, 0); }
   public static int createBatchIdsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startBatchIdsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addWindowStart(FlatBufferBuilder builder, int WINDOW_STARTOffset) { builder.addOffset(9, WINDOW_STARTOffset, 0); }
-  public static void addWindowEnd(FlatBufferBuilder builder, int WINDOW_ENDOffset) { builder.addOffset(10, WINDOW_ENDOffset, 0); }
+  public static void addWindowStart(FlatBufferBuilder builder, int WINDOW_STARTOffset) { builder.addOffset(11, WINDOW_STARTOffset, 0); }
+  public static void addWindowEnd(FlatBufferBuilder builder, int WINDOW_ENDOffset) { builder.addOffset(12, WINDOW_ENDOffset, 0); }
   public static int endDPMQueryBinding(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // CANONICAL_QUERY

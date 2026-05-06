@@ -92,7 +92,7 @@ class _EOPReader extends fb.TableReader<EOP> {
   const _EOPReader();
 
   @override
-  EOP createObject(fb.BufferContext bc, int offset) => 
+  EOP createObject(fb.BufferContext bc, int offset) =>
     EOP._(bc, offset);
 }
 

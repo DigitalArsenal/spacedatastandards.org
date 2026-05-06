@@ -47,7 +47,7 @@ class _SDLReader extends fb.TableReader<SDL> {
   const _SDLReader();
 
   @override
-  SDL createObject(fb.BufferContext bc, int offset) => 
+  SDL createObject(fb.BufferContext bc, int offset) =>
     SDL._(bc, offset);
 }
 

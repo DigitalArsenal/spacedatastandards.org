@@ -91,7 +91,7 @@ class _STVReader extends fb.TableReader<STV> {
   const _STVReader();
 
   @override
-  STV createObject(fb.BufferContext bc, int offset) => 
+  STV createObject(fb.BufferContext bc, int offset) =>
     STV._(bc, offset);
 }
 

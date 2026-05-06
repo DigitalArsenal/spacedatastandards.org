@@ -256,7 +256,7 @@ class _PHYReader extends fb.TableReader<PHY> {
   const _PHYReader();
 
   @override
-  PHY createObject(fb.BufferContext bc, int offset) => 
+  PHY createObject(fb.BufferContext bc, int offset) =>
     PHY._(bc, offset);
 }
 

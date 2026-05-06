@@ -51,7 +51,7 @@ class _SRIReader extends fb.TableReader<SRI> {
   const _SRIReader();
 
   @override
-  SRI createObject(fb.BufferContext bc, int offset) => 
+  SRI createObject(fb.BufferContext bc, int offset) =>
     SRI._(bc, offset);
 }
 

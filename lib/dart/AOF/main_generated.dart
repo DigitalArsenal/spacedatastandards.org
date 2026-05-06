@@ -59,7 +59,7 @@ class _AOFReader extends fb.TableReader<AOF> {
   const _AOFReader();
 
   @override
-  AOF createObject(fb.BufferContext bc, int offset) => 
+  AOF createObject(fb.BufferContext bc, int offset) =>
     AOF._(bc, offset);
 }
 

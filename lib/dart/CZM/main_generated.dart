@@ -513,7 +513,7 @@ class _CZMIntervalReader extends fb.TableReader<CZMInterval> {
   const _CZMIntervalReader();
 
   @override
-  CZMInterval createObject(fb.BufferContext bc, int offset) => 
+  CZMInterval createObject(fb.BufferContext bc, int offset) =>
     CZMInterval._(bc, offset);
 }
 
@@ -590,7 +590,7 @@ class _CZMInterpolationReader extends fb.TableReader<CZMInterpolation> {
   const _CZMInterpolationReader();
 
   @override
-  CZMInterpolation createObject(fb.BufferContext bc, int offset) => 
+  CZMInterpolation createObject(fb.BufferContext bc, int offset) =>
     CZMInterpolation._(bc, offset);
 }
 
@@ -691,7 +691,7 @@ class _CZMDynIntervalReader extends fb.TableReader<CZMDynInterval> {
   const _CZMDynIntervalReader();
 
   @override
-  CZMDynInterval createObject(fb.BufferContext bc, int offset) => 
+  CZMDynInterval createObject(fb.BufferContext bc, int offset) =>
     CZMDynInterval._(bc, offset);
 }
 
@@ -832,7 +832,7 @@ class _CZMDynSampledReader extends fb.TableReader<CZMDynSampled> {
   const _CZMDynSampledReader();
 
   @override
-  CZMDynSampled createObject(fb.BufferContext bc, int offset) => 
+  CZMDynSampled createObject(fb.BufferContext bc, int offset) =>
     CZMDynSampled._(bc, offset);
 }
 
@@ -941,7 +941,7 @@ class _CZMDynamicPropertyReader extends fb.TableReader<CZMDynamicProperty> {
   const _CZMDynamicPropertyReader();
 
   @override
-  CZMDynamicProperty createObject(fb.BufferContext bc, int offset) => 
+  CZMDynamicProperty createObject(fb.BufferContext bc, int offset) =>
     CZMDynamicProperty._(bc, offset);
 }
 
@@ -1049,7 +1049,7 @@ class _CZMCartographicDegreesReader extends fb.TableReader<CZMCartographicDegree
   const _CZMCartographicDegreesReader();
 
   @override
-  CZMCartographicDegrees createObject(fb.BufferContext bc, int offset) => 
+  CZMCartographicDegrees createObject(fb.BufferContext bc, int offset) =>
     CZMCartographicDegrees._(bc, offset);
 }
 
@@ -1142,7 +1142,7 @@ class _CZMCartesianReader extends fb.TableReader<CZMCartesian> {
   const _CZMCartesianReader();
 
   @override
-  CZMCartesian createObject(fb.BufferContext bc, int offset) => 
+  CZMCartesian createObject(fb.BufferContext bc, int offset) =>
     CZMCartesian._(bc, offset);
 }
 
@@ -1237,7 +1237,7 @@ class _CZMColorReader extends fb.TableReader<CZMColor> {
   const _CZMColorReader();
 
   @override
-  CZMColor createObject(fb.BufferContext bc, int offset) => 
+  CZMColor createObject(fb.BufferContext bc, int offset) =>
     CZMColor._(bc, offset);
 }
 
@@ -1344,7 +1344,7 @@ class _CZMNearFarScalarReader extends fb.TableReader<CZMNearFarScalar> {
   const _CZMNearFarScalarReader();
 
   @override
-  CZMNearFarScalar createObject(fb.BufferContext bc, int offset) => 
+  CZMNearFarScalar createObject(fb.BufferContext bc, int offset) =>
     CZMNearFarScalar._(bc, offset);
 }
 
@@ -1449,7 +1449,7 @@ class _CZMDistanceDisplayConditionReader extends fb.TableReader<CZMDistanceDispl
   const _CZMDistanceDisplayConditionReader();
 
   @override
-  CZMDistanceDisplayCondition createObject(fb.BufferContext bc, int offset) => 
+  CZMDistanceDisplayCondition createObject(fb.BufferContext bc, int offset) =>
     CZMDistanceDisplayCondition._(bc, offset);
 }
 
@@ -1542,7 +1542,7 @@ class _CZMOrientationReader extends fb.TableReader<CZMOrientation> {
   const _CZMOrientationReader();
 
   @override
-  CZMOrientation createObject(fb.BufferContext bc, int offset) => 
+  CZMOrientation createObject(fb.BufferContext bc, int offset) =>
     CZMOrientation._(bc, offset);
 }
 
@@ -1647,7 +1647,7 @@ class _CZMViewFromReader extends fb.TableReader<CZMViewFrom> {
   const _CZMViewFromReader();
 
   @override
-  CZMViewFrom createObject(fb.BufferContext bc, int offset) => 
+  CZMViewFrom createObject(fb.BufferContext bc, int offset) =>
     CZMViewFrom._(bc, offset);
 }
 
@@ -1736,7 +1736,7 @@ class _CZMSolidColorMaterialReader extends fb.TableReader<CZMSolidColorMaterial>
   const _CZMSolidColorMaterialReader();
 
   @override
-  CZMSolidColorMaterial createObject(fb.BufferContext bc, int offset) => 
+  CZMSolidColorMaterial createObject(fb.BufferContext bc, int offset) =>
     CZMSolidColorMaterial._(bc, offset);
 }
 
@@ -1820,7 +1820,7 @@ class _CZMImageMaterialReader extends fb.TableReader<CZMImageMaterial> {
   const _CZMImageMaterialReader();
 
   @override
-  CZMImageMaterial createObject(fb.BufferContext bc, int offset) => 
+  CZMImageMaterial createObject(fb.BufferContext bc, int offset) =>
     CZMImageMaterial._(bc, offset);
 }
 
@@ -1951,7 +1951,7 @@ class _CZMGridMaterialReader extends fb.TableReader<CZMGridMaterial> {
   const _CZMGridMaterialReader();
 
   @override
-  CZMGridMaterial createObject(fb.BufferContext bc, int offset) => 
+  CZMGridMaterial createObject(fb.BufferContext bc, int offset) =>
     CZMGridMaterial._(bc, offset);
 }
 
@@ -2099,7 +2099,7 @@ class _CZMStripeMaterialReader extends fb.TableReader<CZMStripeMaterial> {
   const _CZMStripeMaterialReader();
 
   @override
-  CZMStripeMaterial createObject(fb.BufferContext bc, int offset) => 
+  CZMStripeMaterial createObject(fb.BufferContext bc, int offset) =>
     CZMStripeMaterial._(bc, offset);
 }
 
@@ -2221,7 +2221,7 @@ class _CZMCheckerboardMaterialReader extends fb.TableReader<CZMCheckerboardMater
   const _CZMCheckerboardMaterialReader();
 
   @override
-  CZMCheckerboardMaterial createObject(fb.BufferContext bc, int offset) => 
+  CZMCheckerboardMaterial createObject(fb.BufferContext bc, int offset) =>
     CZMCheckerboardMaterial._(bc, offset);
 }
 
@@ -2333,7 +2333,7 @@ class _CZMMaterialReader extends fb.TableReader<CZMMaterial> {
   const _CZMMaterialReader();
 
   @override
-  CZMMaterial createObject(fb.BufferContext bc, int offset) => 
+  CZMMaterial createObject(fb.BufferContext bc, int offset) =>
     CZMMaterial._(bc, offset);
 }
 
@@ -2450,7 +2450,7 @@ class _CZMPolylineOutlineMaterialReader extends fb.TableReader<CZMPolylineOutlin
   const _CZMPolylineOutlineMaterialReader();
 
   @override
-  CZMPolylineOutlineMaterial createObject(fb.BufferContext bc, int offset) => 
+  CZMPolylineOutlineMaterial createObject(fb.BufferContext bc, int offset) =>
     CZMPolylineOutlineMaterial._(bc, offset);
 }
 
@@ -2543,7 +2543,7 @@ class _CZMPolylineArrowMaterialReader extends fb.TableReader<CZMPolylineArrowMat
   const _CZMPolylineArrowMaterialReader();
 
   @override
-  CZMPolylineArrowMaterial createObject(fb.BufferContext bc, int offset) => 
+  CZMPolylineArrowMaterial createObject(fb.BufferContext bc, int offset) =>
     CZMPolylineArrowMaterial._(bc, offset);
 }
 
@@ -2626,7 +2626,7 @@ class _CZMPolylineDashMaterialReader extends fb.TableReader<CZMPolylineDashMater
   const _CZMPolylineDashMaterialReader();
 
   @override
-  CZMPolylineDashMaterial createObject(fb.BufferContext bc, int offset) => 
+  CZMPolylineDashMaterial createObject(fb.BufferContext bc, int offset) =>
     CZMPolylineDashMaterial._(bc, offset);
 }
 
@@ -2734,7 +2734,7 @@ class _CZMPolylineGlowMaterialReader extends fb.TableReader<CZMPolylineGlowMater
   const _CZMPolylineGlowMaterialReader();
 
   @override
-  CZMPolylineGlowMaterial createObject(fb.BufferContext bc, int offset) => 
+  CZMPolylineGlowMaterial createObject(fb.BufferContext bc, int offset) =>
     CZMPolylineGlowMaterial._(bc, offset);
 }
 
@@ -2839,7 +2839,7 @@ class _CZMPolylineMaterialReader extends fb.TableReader<CZMPolylineMaterial> {
   const _CZMPolylineMaterialReader();
 
   @override
-  CZMPolylineMaterial createObject(fb.BufferContext bc, int offset) => 
+  CZMPolylineMaterial createObject(fb.BufferContext bc, int offset) =>
     CZMPolylineMaterial._(bc, offset);
 }
 
@@ -3011,7 +3011,7 @@ class _CZMBillboardReader extends fb.TableReader<CZMBillboard> {
   const _CZMBillboardReader();
 
   @override
-  CZMBillboard createObject(fb.BufferContext bc, int offset) => 
+  CZMBillboard createObject(fb.BufferContext bc, int offset) =>
     CZMBillboard._(bc, offset);
 }
 
@@ -3344,7 +3344,7 @@ class _CZMLabelReader extends fb.TableReader<CZMLabel> {
   const _CZMLabelReader();
 
   @override
-  CZMLabel createObject(fb.BufferContext bc, int offset) => 
+  CZMLabel createObject(fb.BufferContext bc, int offset) =>
     CZMLabel._(bc, offset);
 }
 
@@ -3677,7 +3677,7 @@ class _CZMPointReader extends fb.TableReader<CZMPoint> {
   const _CZMPointReader();
 
   @override
-  CZMPoint createObject(fb.BufferContext bc, int offset) => 
+  CZMPoint createObject(fb.BufferContext bc, int offset) =>
     CZMPoint._(bc, offset);
 }
 
@@ -3874,7 +3874,7 @@ class _CZMPolylineReader extends fb.TableReader<CZMPolyline> {
   const _CZMPolylineReader();
 
   @override
-  CZMPolyline createObject(fb.BufferContext bc, int offset) => 
+  CZMPolyline createObject(fb.BufferContext bc, int offset) =>
     CZMPolyline._(bc, offset);
 }
 
@@ -4121,7 +4121,7 @@ class _CZMPolygonReader extends fb.TableReader<CZMPolygon> {
   const _CZMPolygonReader();
 
   @override
-  CZMPolygon createObject(fb.BufferContext bc, int offset) => 
+  CZMPolygon createObject(fb.BufferContext bc, int offset) =>
     CZMPolygon._(bc, offset);
 }
 
@@ -4403,7 +4403,7 @@ class _CZMPolygonHoleReader extends fb.TableReader<CZMPolygonHole> {
   const _CZMPolygonHoleReader();
 
   @override
-  CZMPolygonHole createObject(fb.BufferContext bc, int offset) => 
+  CZMPolygonHole createObject(fb.BufferContext bc, int offset) =>
     CZMPolygonHole._(bc, offset);
 }
 
@@ -4525,7 +4525,7 @@ class _CZMModelReader extends fb.TableReader<CZMModel> {
   const _CZMModelReader();
 
   @override
-  CZMModel createObject(fb.BufferContext bc, int offset) => 
+  CZMModel createObject(fb.BufferContext bc, int offset) =>
     CZMModel._(bc, offset);
 }
 
@@ -4733,7 +4733,7 @@ class _CZMPathReader extends fb.TableReader<CZMPath> {
   const _CZMPathReader();
 
   @override
-  CZMPath createObject(fb.BufferContext bc, int offset) => 
+  CZMPath createObject(fb.BufferContext bc, int offset) =>
     CZMPath._(bc, offset);
 }
 
@@ -4907,7 +4907,7 @@ class _CZMEllipseReader extends fb.TableReader<CZMEllipse> {
   const _CZMEllipseReader();
 
   @override
-  CZMEllipse createObject(fb.BufferContext bc, int offset) => 
+  CZMEllipse createObject(fb.BufferContext bc, int offset) =>
     CZMEllipse._(bc, offset);
 }
 
@@ -5184,7 +5184,7 @@ class _CZMBoxReader extends fb.TableReader<CZMBox> {
   const _CZMBoxReader();
 
   @override
-  CZMBox createObject(fb.BufferContext bc, int offset) => 
+  CZMBox createObject(fb.BufferContext bc, int offset) =>
     CZMBox._(bc, offset);
 }
 
@@ -5411,7 +5411,7 @@ class _CZMCorridorReader extends fb.TableReader<CZMCorridor> {
   const _CZMCorridorReader();
 
   @override
-  CZMCorridor createObject(fb.BufferContext bc, int offset) => 
+  CZMCorridor createObject(fb.BufferContext bc, int offset) =>
     CZMCorridor._(bc, offset);
 }
 
@@ -5676,7 +5676,7 @@ class _CZMCylinderReader extends fb.TableReader<CZMCylinder> {
   const _CZMCylinderReader();
 
   @override
-  CZMCylinder createObject(fb.BufferContext bc, int offset) => 
+  CZMCylinder createObject(fb.BufferContext bc, int offset) =>
     CZMCylinder._(bc, offset);
 }
 
@@ -5912,7 +5912,7 @@ class _CZMEllipsoidReader extends fb.TableReader<CZMEllipsoid> {
   const _CZMEllipsoidReader();
 
   @override
-  CZMEllipsoid createObject(fb.BufferContext bc, int offset) => 
+  CZMEllipsoid createObject(fb.BufferContext bc, int offset) =>
     CZMEllipsoid._(bc, offset);
 }
 
@@ -6193,7 +6193,7 @@ class _CZMPolylineVolumeReader extends fb.TableReader<CZMPolylineVolume> {
   const _CZMPolylineVolumeReader();
 
   @override
-  CZMPolylineVolume createObject(fb.BufferContext bc, int offset) => 
+  CZMPolylineVolume createObject(fb.BufferContext bc, int offset) =>
     CZMPolylineVolume._(bc, offset);
 }
 
@@ -6412,7 +6412,7 @@ class _CZMRectangleReader extends fb.TableReader<CZMRectangle> {
   const _CZMRectangleReader();
 
   @override
-  CZMRectangle createObject(fb.BufferContext bc, int offset) => 
+  CZMRectangle createObject(fb.BufferContext bc, int offset) =>
     CZMRectangle._(bc, offset);
 }
 
@@ -6639,7 +6639,7 @@ class _CZMTilesetReader extends fb.TableReader<CZMTileset> {
   const _CZMTilesetReader();
 
   @override
-  CZMTileset createObject(fb.BufferContext bc, int offset) => 
+  CZMTileset createObject(fb.BufferContext bc, int offset) =>
     CZMTileset._(bc, offset);
 }
 
@@ -6759,7 +6759,7 @@ class _CZMWallReader extends fb.TableReader<CZMWall> {
   const _CZMWallReader();
 
   @override
-  CZMWall createObject(fb.BufferContext bc, int offset) => 
+  CZMWall createObject(fb.BufferContext bc, int offset) =>
     CZMWall._(bc, offset);
 }
 
@@ -7025,7 +7025,7 @@ class _CZMPacketReader extends fb.TableReader<CZMPacket> {
   const _CZMPacketReader();
 
   @override
-  CZMPacket createObject(fb.BufferContext bc, int offset) => 
+  CZMPacket createObject(fb.BufferContext bc, int offset) =>
     CZMPacket._(bc, offset);
 }
 
@@ -7470,7 +7470,7 @@ class _CZMReader extends fb.TableReader<CZM> {
   const _CZMReader();
 
   @override
-  CZM createObject(fb.BufferContext bc, int offset) => 
+  CZM createObject(fb.BufferContext bc, int offset) =>
     CZM._(bc, offset);
 }
 

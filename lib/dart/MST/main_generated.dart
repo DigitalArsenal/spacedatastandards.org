@@ -305,7 +305,7 @@ class _MSTReader extends fb.TableReader<MST> {
   const _MSTReader();
 
   @override
-  MST createObject(fb.BufferContext bc, int offset) => 
+  MST createObject(fb.BufferContext bc, int offset) =>
     MST._(bc, offset);
 }
 

@@ -205,7 +205,7 @@ class _WPNReader extends fb.TableReader<WPN> {
   const _WPNReader();
 
   @override
-  WPN createObject(fb.BufferContext bc, int offset) => 
+  WPN createObject(fb.BufferContext bc, int offset) =>
     WPN._(bc, offset);
 }
 

@@ -7,7 +7,8 @@ using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
 /// Dataset Publication Manifest binding data/index CIDs, query replay,
-/// source hashes, schema hashes, encryption metadata, and provider signature.
+/// source hashes, schema hashes, encryption metadata, provider-mediated query
+/// protocols, completeness roots, and provider signature.
 public struct DPM : IFlatbufferObject
 {
   private Table __p;
@@ -44,121 +45,151 @@ public struct DPM : IFlatbufferObject
   public ArraySegment<byte>? GetUPDATE_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetUPDATE_IDArray() { return __p.__vector_as_array<byte>(8); }
+  /// Canonical publication/update partition identity. FILE_ID is the key used
+  /// everywhere a subscriber, provider, PNM, entitlement, cache, or query
+  /// protocol refers to this exact update. It is not merely a human filename
+  /// and it is not the FlatBuffer file_identifier. For completeness-verifiable
+  /// streams, all returned records MUST belong to this FILE_ID and prove
+  /// inclusion under this DPM's signed roots.
+  public string FILE_ID { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetFILE_IDBytes() { return __p.__vector_as_span<byte>(10, 1); }
+#else
+  public ArraySegment<byte>? GetFILE_IDBytes() { return __p.__vector_as_arraysegment(10); }
+#endif
+  public byte[] GetFILE_IDArray() { return __p.__vector_as_array<byte>(10); }
   /// Provider peer ID.
-  public string PROVIDER_PEER_ID { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string PROVIDER_PEER_ID { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetPROVIDER_PEER_IDArray() { return __p.__vector_as_array<byte>(10); }
+  public byte[] GetPROVIDER_PEER_IDArray() { return __p.__vector_as_array<byte>(12); }
   /// Provider EPM CID.
-  public string PROVIDER_EPM_CID { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string PROVIDER_EPM_CID { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPROVIDER_EPM_CIDBytes() { return __p.__vector_as_span<byte>(12, 1); }
+  public Span<byte> GetPROVIDER_EPM_CIDBytes() { return __p.__vector_as_span<byte>(14, 1); }
 #else
-  public ArraySegment<byte>? GetPROVIDER_EPM_CIDBytes() { return __p.__vector_as_arraysegment(12); }
+  public ArraySegment<byte>? GetPROVIDER_EPM_CIDBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public byte[] GetPROVIDER_EPM_CIDArray() { return __p.__vector_as_array<byte>(12); }
+  public byte[] GetPROVIDER_EPM_CIDArray() { return __p.__vector_as_array<byte>(14); }
   /// Publication timestamp in ISO 8601 UTC.
-  public string PUBLISH_TIMESTAMP { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string PUBLISH_TIMESTAMP { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPUBLISH_TIMESTAMPBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetPUBLISH_TIMESTAMPBytes() { return __p.__vector_as_span<byte>(16, 1); }
 #else
-  public ArraySegment<byte>? GetPUBLISH_TIMESTAMPBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetPUBLISH_TIMESTAMPBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
-  public byte[] GetPUBLISH_TIMESTAMPArray() { return __p.__vector_as_array<byte>(14); }
+  public byte[] GetPUBLISH_TIMESTAMPArray() { return __p.__vector_as_array<byte>(16); }
   /// Published shard, index, and auxiliary artifacts.
-  public DPMAsset? ASSETS(int j) { int o = __p.__offset(16); return o != 0 ? (DPMAsset?)(new DPMAsset()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int ASSETSLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public DPMAsset? ASSETS(int j) { int o = __p.__offset(18); return o != 0 ? (DPMAsset?)(new DPMAsset()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int ASSETSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Source batches used to build the dataset.
-  public DPMSourceBatch? SOURCES(int j) { int o = __p.__offset(18); return o != 0 ? (DPMSourceBatch?)(new DPMSourceBatch()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int SOURCESLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public DPMSourceBatch? SOURCES(int j) { int o = __p.__offset(20); return o != 0 ? (DPMSourceBatch?)(new DPMSourceBatch()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SOURCESLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Replayable query binding.
-  public DPMQueryBinding? QUERY { get { int o = __p.__offset(20); return o != 0 ? (DPMQueryBinding?)(new DPMQueryBinding()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public DPMQueryBinding? QUERY { get { int o = __p.__offset(22); return o != 0 ? (DPMQueryBinding?)(new DPMQueryBinding()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Signed completeness-capable indexes. Inclusion proofs prove that returned
+  /// records are authentic members of DATA_ROOT. Range-completeness proofs also
+  /// prove that no matching records were omitted, but only for predicates
+  /// expressible against these declared indexes.
+  public DPMCompletenessIndex? INDEXES(int j) { int o = __p.__offset(24); return o != 0 ? (DPMCompletenessIndex?)(new DPMCompletenessIndex()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int INDEXESLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Encryption/key metadata.
-  public DPMEncryptionBinding? ENCRYPTION { get { int o = __p.__offset(22); return o != 0 ? (DPMEncryptionBinding?)(new DPMEncryptionBinding()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public DPMEncryptionBinding? ENCRYPTION { get { int o = __p.__offset(26); return o != 0 ? (DPMEncryptionBinding?)(new DPMEncryptionBinding()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Provider signature over the canonical manifest bytes or manifest digest.
-  public byte PROVIDER_SIGNATURE(int j) { int o = __p.__offset(24); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
-  public int PROVIDER_SIGNATURELength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte PROVIDER_SIGNATURE(int j) { int o = __p.__offset(28); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int PROVIDER_SIGNATURELength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPROVIDER_SIGNATUREBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetPROVIDER_SIGNATUREBytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetPROVIDER_SIGNATUREBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetPROVIDER_SIGNATUREBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetPROVIDER_SIGNATUREArray() { return __p.__vector_as_array<byte>(24); }
+  public byte[] GetPROVIDER_SIGNATUREArray() { return __p.__vector_as_array<byte>(28); }
   /// Signature algorithm, e.g. Ed25519.
-  public string SIGNATURE_TYPE { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string SIGNATURE_TYPE { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSIGNATURE_TYPEBytes() { return __p.__vector_as_span<byte>(26, 1); }
+  public Span<byte> GetSIGNATURE_TYPEBytes() { return __p.__vector_as_span<byte>(30, 1); }
 #else
-  public ArraySegment<byte>? GetSIGNATURE_TYPEBytes() { return __p.__vector_as_arraysegment(26); }
+  public ArraySegment<byte>? GetSIGNATURE_TYPEBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
-  public byte[] GetSIGNATURE_TYPEArray() { return __p.__vector_as_array<byte>(26); }
+  public byte[] GetSIGNATURE_TYPEArray() { return __p.__vector_as_array<byte>(30); }
 
   public static Offset<DPM> CreateDPM(FlatBufferBuilder builder,
       StringOffset VERSIONOffset = default(StringOffset),
       StringOffset DATASET_IDOffset = default(StringOffset),
       StringOffset UPDATE_IDOffset = default(StringOffset),
+      StringOffset FILE_IDOffset = default(StringOffset),
       StringOffset PROVIDER_PEER_IDOffset = default(StringOffset),
       StringOffset PROVIDER_EPM_CIDOffset = default(StringOffset),
       StringOffset PUBLISH_TIMESTAMPOffset = default(StringOffset),
       VectorOffset ASSETSOffset = default(VectorOffset),
       VectorOffset SOURCESOffset = default(VectorOffset),
       Offset<DPMQueryBinding> QUERYOffset = default(Offset<DPMQueryBinding>),
+      VectorOffset INDEXESOffset = default(VectorOffset),
       Offset<DPMEncryptionBinding> ENCRYPTIONOffset = default(Offset<DPMEncryptionBinding>),
       VectorOffset PROVIDER_SIGNATUREOffset = default(VectorOffset),
       StringOffset SIGNATURE_TYPEOffset = default(StringOffset)) {
-    builder.StartTable(12);
+    builder.StartTable(14);
     DPM.AddSIGNATURE_TYPE(builder, SIGNATURE_TYPEOffset);
     DPM.AddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATUREOffset);
     DPM.AddENCRYPTION(builder, ENCRYPTIONOffset);
+    DPM.AddINDEXES(builder, INDEXESOffset);
     DPM.AddQUERY(builder, QUERYOffset);
     DPM.AddSOURCES(builder, SOURCESOffset);
     DPM.AddASSETS(builder, ASSETSOffset);
     DPM.AddPUBLISH_TIMESTAMP(builder, PUBLISH_TIMESTAMPOffset);
     DPM.AddPROVIDER_EPM_CID(builder, PROVIDER_EPM_CIDOffset);
     DPM.AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_IDOffset);
+    DPM.AddFILE_ID(builder, FILE_IDOffset);
     DPM.AddUPDATE_ID(builder, UPDATE_IDOffset);
     DPM.AddDATASET_ID(builder, DATASET_IDOffset);
     DPM.AddVERSION(builder, VERSIONOffset);
     return DPM.EndDPM(builder);
   }
 
-  public static void StartDPM(FlatBufferBuilder builder) { builder.StartTable(12); }
+  public static void StartDPM(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(0, VERSIONOffset.Value, 0); }
   public static void AddDATASET_ID(FlatBufferBuilder builder, StringOffset DATASET_IDOffset) { builder.AddOffset(1, DATASET_IDOffset.Value, 0); }
   public static void AddUPDATE_ID(FlatBufferBuilder builder, StringOffset UPDATE_IDOffset) { builder.AddOffset(2, UPDATE_IDOffset.Value, 0); }
-  public static void AddPROVIDER_PEER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_PEER_IDOffset) { builder.AddOffset(3, PROVIDER_PEER_IDOffset.Value, 0); }
-  public static void AddPROVIDER_EPM_CID(FlatBufferBuilder builder, StringOffset PROVIDER_EPM_CIDOffset) { builder.AddOffset(4, PROVIDER_EPM_CIDOffset.Value, 0); }
-  public static void AddPUBLISH_TIMESTAMP(FlatBufferBuilder builder, StringOffset PUBLISH_TIMESTAMPOffset) { builder.AddOffset(5, PUBLISH_TIMESTAMPOffset.Value, 0); }
-  public static void AddASSETS(FlatBufferBuilder builder, VectorOffset ASSETSOffset) { builder.AddOffset(6, ASSETSOffset.Value, 0); }
+  public static void AddFILE_ID(FlatBufferBuilder builder, StringOffset FILE_IDOffset) { builder.AddOffset(3, FILE_IDOffset.Value, 0); }
+  public static void AddPROVIDER_PEER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_PEER_IDOffset) { builder.AddOffset(4, PROVIDER_PEER_IDOffset.Value, 0); }
+  public static void AddPROVIDER_EPM_CID(FlatBufferBuilder builder, StringOffset PROVIDER_EPM_CIDOffset) { builder.AddOffset(5, PROVIDER_EPM_CIDOffset.Value, 0); }
+  public static void AddPUBLISH_TIMESTAMP(FlatBufferBuilder builder, StringOffset PUBLISH_TIMESTAMPOffset) { builder.AddOffset(6, PUBLISH_TIMESTAMPOffset.Value, 0); }
+  public static void AddASSETS(FlatBufferBuilder builder, VectorOffset ASSETSOffset) { builder.AddOffset(7, ASSETSOffset.Value, 0); }
   public static VectorOffset CreateASSETSVector(FlatBufferBuilder builder, Offset<DPMAsset>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateASSETSVectorBlock(FlatBufferBuilder builder, Offset<DPMAsset>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateASSETSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<DPMAsset>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateASSETSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<DPMAsset>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartASSETSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSOURCES(FlatBufferBuilder builder, VectorOffset SOURCESOffset) { builder.AddOffset(7, SOURCESOffset.Value, 0); }
+  public static void AddSOURCES(FlatBufferBuilder builder, VectorOffset SOURCESOffset) { builder.AddOffset(8, SOURCESOffset.Value, 0); }
   public static VectorOffset CreateSOURCESVector(FlatBufferBuilder builder, Offset<DPMSourceBatch>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateSOURCESVectorBlock(FlatBufferBuilder builder, Offset<DPMSourceBatch>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSOURCESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<DPMSourceBatch>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSOURCESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<DPMSourceBatch>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSOURCESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddQUERY(FlatBufferBuilder builder, Offset<DPMQueryBinding> QUERYOffset) { builder.AddOffset(8, QUERYOffset.Value, 0); }
-  public static void AddENCRYPTION(FlatBufferBuilder builder, Offset<DPMEncryptionBinding> ENCRYPTIONOffset) { builder.AddOffset(9, ENCRYPTIONOffset.Value, 0); }
-  public static void AddPROVIDER_SIGNATURE(FlatBufferBuilder builder, VectorOffset PROVIDER_SIGNATUREOffset) { builder.AddOffset(10, PROVIDER_SIGNATUREOffset.Value, 0); }
+  public static void AddQUERY(FlatBufferBuilder builder, Offset<DPMQueryBinding> QUERYOffset) { builder.AddOffset(9, QUERYOffset.Value, 0); }
+  public static void AddINDEXES(FlatBufferBuilder builder, VectorOffset INDEXESOffset) { builder.AddOffset(10, INDEXESOffset.Value, 0); }
+  public static VectorOffset CreateINDEXESVector(FlatBufferBuilder builder, Offset<DPMCompletenessIndex>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateINDEXESVectorBlock(FlatBufferBuilder builder, Offset<DPMCompletenessIndex>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINDEXESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<DPMCompletenessIndex>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINDEXESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<DPMCompletenessIndex>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartINDEXESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddENCRYPTION(FlatBufferBuilder builder, Offset<DPMEncryptionBinding> ENCRYPTIONOffset) { builder.AddOffset(11, ENCRYPTIONOffset.Value, 0); }
+  public static void AddPROVIDER_SIGNATURE(FlatBufferBuilder builder, VectorOffset PROVIDER_SIGNATUREOffset) { builder.AddOffset(12, PROVIDER_SIGNATUREOffset.Value, 0); }
   public static VectorOffset CreatePROVIDER_SIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreatePROVIDER_SIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePROVIDER_SIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePROVIDER_SIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPROVIDER_SIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
-  public static void AddSIGNATURE_TYPE(FlatBufferBuilder builder, StringOffset SIGNATURE_TYPEOffset) { builder.AddOffset(11, SIGNATURE_TYPEOffset.Value, 0); }
+  public static void AddSIGNATURE_TYPE(FlatBufferBuilder builder, StringOffset SIGNATURE_TYPEOffset) { builder.AddOffset(13, SIGNATURE_TYPEOffset.Value, 0); }
   public static Offset<DPM> EndDPM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 6);  // DATASET_ID
     builder.Required(o, 8);  // UPDATE_ID
-    builder.Required(o, 10);  // PROVIDER_PEER_ID
-    builder.Required(o, 14);  // PUBLISH_TIMESTAMP
+    builder.Required(o, 12);  // PROVIDER_PEER_ID
+    builder.Required(o, 16);  // PUBLISH_TIMESTAMP
     return new Offset<DPM>(o);
   }
   public static void FinishDPMBuffer(FlatBufferBuilder builder, Offset<DPM> offset) { builder.Finish(offset.Value, "$DPM"); }
@@ -172,6 +203,7 @@ public struct DPM : IFlatbufferObject
     _o.VERSION = this.VERSION;
     _o.DATASET_ID = this.DATASET_ID;
     _o.UPDATE_ID = this.UPDATE_ID;
+    _o.FILE_ID = this.FILE_ID;
     _o.PROVIDER_PEER_ID = this.PROVIDER_PEER_ID;
     _o.PROVIDER_EPM_CID = this.PROVIDER_EPM_CID;
     _o.PUBLISH_TIMESTAMP = this.PUBLISH_TIMESTAMP;
@@ -180,6 +212,8 @@ public struct DPM : IFlatbufferObject
     _o.SOURCES = new List<DPMSourceBatchT>();
     for (var _j = 0; _j < this.SOURCESLength; ++_j) {_o.SOURCES.Add(this.SOURCES(_j).HasValue ? this.SOURCES(_j).Value.UnPack() : null);}
     _o.QUERY = this.QUERY.HasValue ? this.QUERY.Value.UnPack() : null;
+    _o.INDEXES = new List<DPMCompletenessIndexT>();
+    for (var _j = 0; _j < this.INDEXESLength; ++_j) {_o.INDEXES.Add(this.INDEXES(_j).HasValue ? this.INDEXES(_j).Value.UnPack() : null);}
     _o.ENCRYPTION = this.ENCRYPTION.HasValue ? this.ENCRYPTION.Value.UnPack() : null;
     _o.PROVIDER_SIGNATURE = new List<byte>();
     for (var _j = 0; _j < this.PROVIDER_SIGNATURELength; ++_j) {_o.PROVIDER_SIGNATURE.Add(this.PROVIDER_SIGNATURE(_j));}
@@ -190,6 +224,7 @@ public struct DPM : IFlatbufferObject
     var _VERSION = _o.VERSION == null ? default(StringOffset) : builder.CreateString(_o.VERSION);
     var _DATASET_ID = _o.DATASET_ID == null ? default(StringOffset) : builder.CreateString(_o.DATASET_ID);
     var _UPDATE_ID = _o.UPDATE_ID == null ? default(StringOffset) : builder.CreateString(_o.UPDATE_ID);
+    var _FILE_ID = _o.FILE_ID == null ? default(StringOffset) : builder.CreateString(_o.FILE_ID);
     var _PROVIDER_PEER_ID = _o.PROVIDER_PEER_ID == null ? default(StringOffset) : builder.CreateString(_o.PROVIDER_PEER_ID);
     var _PROVIDER_EPM_CID = _o.PROVIDER_EPM_CID == null ? default(StringOffset) : builder.CreateString(_o.PROVIDER_EPM_CID);
     var _PUBLISH_TIMESTAMP = _o.PUBLISH_TIMESTAMP == null ? default(StringOffset) : builder.CreateString(_o.PUBLISH_TIMESTAMP);
@@ -206,6 +241,12 @@ public struct DPM : IFlatbufferObject
       _SOURCES = CreateSOURCESVector(builder, __SOURCES);
     }
     var _QUERY = _o.QUERY == null ? default(Offset<DPMQueryBinding>) : DPMQueryBinding.Pack(builder, _o.QUERY);
+    var _INDEXES = default(VectorOffset);
+    if (_o.INDEXES != null) {
+      var __INDEXES = new Offset<DPMCompletenessIndex>[_o.INDEXES.Count];
+      for (var _j = 0; _j < __INDEXES.Length; ++_j) { __INDEXES[_j] = DPMCompletenessIndex.Pack(builder, _o.INDEXES[_j]); }
+      _INDEXES = CreateINDEXESVector(builder, __INDEXES);
+    }
     var _ENCRYPTION = _o.ENCRYPTION == null ? default(Offset<DPMEncryptionBinding>) : DPMEncryptionBinding.Pack(builder, _o.ENCRYPTION);
     var _PROVIDER_SIGNATURE = default(VectorOffset);
     if (_o.PROVIDER_SIGNATURE != null) {
@@ -218,12 +259,14 @@ public struct DPM : IFlatbufferObject
       _VERSION,
       _DATASET_ID,
       _UPDATE_ID,
+      _FILE_ID,
       _PROVIDER_PEER_ID,
       _PROVIDER_EPM_CID,
       _PUBLISH_TIMESTAMP,
       _ASSETS,
       _SOURCES,
       _QUERY,
+      _INDEXES,
       _ENCRYPTION,
       _PROVIDER_SIGNATURE,
       _SIGNATURE_TYPE);
@@ -235,12 +278,14 @@ public class DPMT
   public string VERSION { get; set; }
   public string DATASET_ID { get; set; }
   public string UPDATE_ID { get; set; }
+  public string FILE_ID { get; set; }
   public string PROVIDER_PEER_ID { get; set; }
   public string PROVIDER_EPM_CID { get; set; }
   public string PUBLISH_TIMESTAMP { get; set; }
   public List<DPMAssetT> ASSETS { get; set; }
   public List<DPMSourceBatchT> SOURCES { get; set; }
   public DPMQueryBindingT QUERY { get; set; }
+  public List<DPMCompletenessIndexT> INDEXES { get; set; }
   public DPMEncryptionBindingT ENCRYPTION { get; set; }
   public List<byte> PROVIDER_SIGNATURE { get; set; }
   public string SIGNATURE_TYPE { get; set; }
@@ -249,12 +294,14 @@ public class DPMT
     this.VERSION = null;
     this.DATASET_ID = null;
     this.UPDATE_ID = null;
+    this.FILE_ID = null;
     this.PROVIDER_PEER_ID = null;
     this.PROVIDER_EPM_CID = null;
     this.PUBLISH_TIMESTAMP = null;
     this.ASSETS = null;
     this.SOURCES = null;
     this.QUERY = null;
+    this.INDEXES = null;
     this.ENCRYPTION = null;
     this.PROVIDER_SIGNATURE = null;
     this.SIGNATURE_TYPE = null;
@@ -278,15 +325,17 @@ static public class DPMVerify
       && verifier.VerifyString(tablePos, 4 /*VERSION*/, false)
       && verifier.VerifyString(tablePos, 6 /*DATASET_ID*/, true)
       && verifier.VerifyString(tablePos, 8 /*UPDATE_ID*/, true)
-      && verifier.VerifyString(tablePos, 10 /*PROVIDER_PEER_ID*/, true)
-      && verifier.VerifyString(tablePos, 12 /*PROVIDER_EPM_CID*/, false)
-      && verifier.VerifyString(tablePos, 14 /*PUBLISH_TIMESTAMP*/, true)
-      && verifier.VerifyVectorOfTables(tablePos, 16 /*ASSETS*/, DPMAssetVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 18 /*SOURCES*/, DPMSourceBatchVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 20 /*QUERY*/, DPMQueryBindingVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 22 /*ENCRYPTION*/, DPMEncryptionBindingVerify.Verify, false)
-      && verifier.VerifyVectorOfData(tablePos, 24 /*PROVIDER_SIGNATURE*/, 1 /*byte*/, false)
-      && verifier.VerifyString(tablePos, 26 /*SIGNATURE_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 10 /*FILE_ID*/, false)
+      && verifier.VerifyString(tablePos, 12 /*PROVIDER_PEER_ID*/, true)
+      && verifier.VerifyString(tablePos, 14 /*PROVIDER_EPM_CID*/, false)
+      && verifier.VerifyString(tablePos, 16 /*PUBLISH_TIMESTAMP*/, true)
+      && verifier.VerifyVectorOfTables(tablePos, 18 /*ASSETS*/, DPMAssetVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 20 /*SOURCES*/, DPMSourceBatchVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 22 /*QUERY*/, DPMQueryBindingVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 24 /*INDEXES*/, DPMCompletenessIndexVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 26 /*ENCRYPTION*/, DPMEncryptionBindingVerify.Verify, false)
+      && verifier.VerifyVectorOfData(tablePos, 28 /*PROVIDER_SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyString(tablePos, 30 /*SIGNATURE_TYPE*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

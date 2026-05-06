@@ -98,7 +98,7 @@ class _LWKReader extends fb.TableReader<LWK> {
   const _LWKReader();
 
   @override
-  LWK createObject(fb.BufferContext bc, int offset) => 
+  LWK createObject(fb.BufferContext bc, int offset) =>
     LWK._(bc, offset);
 }
 

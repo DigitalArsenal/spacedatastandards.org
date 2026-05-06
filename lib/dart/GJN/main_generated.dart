@@ -83,7 +83,7 @@ class _GJNPositionReader extends fb.TableReader<GJNPosition> {
   const _GJNPositionReader();
 
   @override
-  GJNPosition createObject(fb.BufferContext bc, int offset) => 
+  GJNPosition createObject(fb.BufferContext bc, int offset) =>
     GJNPosition._(bc, offset);
 }
 
@@ -181,7 +181,7 @@ class _GJNLinearRingReader extends fb.TableReader<GJNLinearRing> {
   const _GJNLinearRingReader();
 
   @override
-  GJNLinearRing createObject(fb.BufferContext bc, int offset) => 
+  GJNLinearRing createObject(fb.BufferContext bc, int offset) =>
     GJNLinearRing._(bc, offset);
 }
 
@@ -256,7 +256,7 @@ class _GJNPolygonRingsReader extends fb.TableReader<GJNPolygonRings> {
   const _GJNPolygonRingsReader();
 
   @override
-  GJNPolygonRings createObject(fb.BufferContext bc, int offset) => 
+  GJNPolygonRings createObject(fb.BufferContext bc, int offset) =>
     GJNPolygonRings._(bc, offset);
 }
 
@@ -344,7 +344,7 @@ class _GJNGeometryReader extends fb.TableReader<GJNGeometry> {
   const _GJNGeometryReader();
 
   @override
-  GJNGeometry createObject(fb.BufferContext bc, int offset) => 
+  GJNGeometry createObject(fb.BufferContext bc, int offset) =>
     GJNGeometry._(bc, offset);
 }
 
@@ -496,7 +496,7 @@ class _GJNPropertyReader extends fb.TableReader<GJNProperty> {
   const _GJNPropertyReader();
 
   @override
-  GJNProperty createObject(fb.BufferContext bc, int offset) => 
+  GJNProperty createObject(fb.BufferContext bc, int offset) =>
     GJNProperty._(bc, offset);
 }
 
@@ -655,7 +655,7 @@ class _GJNFeatureReader extends fb.TableReader<GJNFeature> {
   const _GJNFeatureReader();
 
   @override
-  GJNFeature createObject(fb.BufferContext bc, int offset) => 
+  GJNFeature createObject(fb.BufferContext bc, int offset) =>
     GJNFeature._(bc, offset);
 }
 
@@ -809,7 +809,7 @@ class _GJNBoundingBoxReader extends fb.TableReader<GJNBoundingBox> {
   const _GJNBoundingBoxReader();
 
   @override
-  GJNBoundingBox createObject(fb.BufferContext bc, int offset) => 
+  GJNBoundingBox createObject(fb.BufferContext bc, int offset) =>
     GJNBoundingBox._(bc, offset);
 }
 
@@ -935,7 +935,7 @@ class _GJNReader extends fb.TableReader<GJN> {
   const _GJNReader();
 
   @override
-  GJN createObject(fb.BufferContext bc, int offset) => 
+  GJN createObject(fb.BufferContext bc, int offset) =>
     GJN._(bc, offset);
 }
 

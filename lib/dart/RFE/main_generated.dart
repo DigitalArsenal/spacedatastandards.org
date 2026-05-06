@@ -176,7 +176,7 @@ class _rfEmitterDetailReader extends fb.TableReader<rfEmitterDetail> {
   const _rfEmitterDetailReader();
 
   @override
-  rfEmitterDetail createObject(fb.BufferContext bc, int offset) => 
+  rfEmitterDetail createObject(fb.BufferContext bc, int offset) =>
     rfEmitterDetail._(bc, offset);
 }
 
@@ -424,7 +424,7 @@ class _RFEReader extends fb.TableReader<RFE> {
   const _RFEReader();
 
   @override
-  RFE createObject(fb.BufferContext bc, int offset) => 
+  RFE createObject(fb.BufferContext bc, int offset) =>
     RFE._(bc, offset);
 }
 

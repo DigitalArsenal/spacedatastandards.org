@@ -84,7 +84,7 @@ class _COTPointReader extends fb.TableReader<COTPoint> {
   const _COTPointReader();
 
   @override
-  COTPoint createObject(fb.BufferContext bc, int offset) => 
+  COTPoint createObject(fb.BufferContext bc, int offset) =>
     COTPoint._(bc, offset);
 }
 
@@ -250,7 +250,7 @@ class _COTDetailReader extends fb.TableReader<COTDetail> {
   const _COTDetailReader();
 
   @override
-  COTDetail createObject(fb.BufferContext bc, int offset) => 
+  COTDetail createObject(fb.BufferContext bc, int offset) =>
     COTDetail._(bc, offset);
 }
 
@@ -575,7 +575,7 @@ class _COTReader extends fb.TableReader<COT> {
   const _COTReader();
 
   @override
-  COT createObject(fb.BufferContext bc, int offset) => 
+  COT createObject(fb.BufferContext bc, int offset) =>
     COT._(bc, offset);
 }
 

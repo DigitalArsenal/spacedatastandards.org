@@ -36,7 +36,7 @@ class _SCHEMA_STANDARDReader extends fb.TableReader<SCHEMA_STANDARD> {
   const _SCHEMA_STANDARDReader();
 
   @override
-  SCHEMA_STANDARD createObject(fb.BufferContext bc, int offset) => 
+  SCHEMA_STANDARD createObject(fb.BufferContext bc, int offset) =>
     SCHEMA_STANDARD._(bc, offset);
 }
 
@@ -137,7 +137,7 @@ class _SCMReader extends fb.TableReader<SCM> {
   const _SCMReader();
 
   @override
-  SCM createObject(fb.BufferContext bc, int offset) => 
+  SCM createObject(fb.BufferContext bc, int offset) =>
     SCM._(bc, offset);
 }
 

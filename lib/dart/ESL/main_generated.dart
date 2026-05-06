@@ -61,7 +61,7 @@ class _ESLReader extends fb.TableReader<ESL> {
   const _ESLReader();
 
   @override
-  ESL createObject(fb.BufferContext bc, int offset) => 
+  ESL createObject(fb.BufferContext bc, int offset) =>
     ESL._(bc, offset);
 }
 

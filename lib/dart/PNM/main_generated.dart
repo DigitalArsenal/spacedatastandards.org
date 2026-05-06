@@ -6,7 +6,17 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-///  Publish Notification Message
+///  Publish Notification Message.
+///
+///  PNM is the compact network announcement for a published record, manifest, or
+///  dataset update. For dataset updates, FILE_ID identifies the canonical update
+///  partition and CID usually points to a small DPM manifest or digest. The DPM
+///  carries the full verification contract: provider identity, retrieval
+///  protocol, canonical query, result hash, Merkle roots, completeness-capable
+///  indexes, and signature. Large or paid dataset updates do not need to be
+///  published as globally discoverable IPFS files; a PNM may instead advertise a
+///  provider-mediated SDN query protocol whose response is verified against the
+///  signed DPM roots.
 class PNM {
   PNM._(this._bc, this._bcOffset);
   factory PNM(List<int> bytes) {
@@ -33,14 +43,20 @@ class PNM {
   String? get publishTimestamp => PUBLISH_TIMESTAMP;
   ///  Concatenated Content Identifier (CID)
   ///  This field is a unique ID for distributed systems (CID).
-  ///  The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+  ///  The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.
+  ///  For dataset-update PNMs this SHOULD identify a compact DPM manifest,
+  ///  manifest digest, or other small verification object, not necessarily the
+  ///  full dataset bytes.
   String? get CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   ///  File ID
   ///  This field is the Name
   String? get FILE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   String? get fileName => FILE_NAME;
   ///  File ID
-  ///  This field is the file ID / Standard Type
+  ///  Canonical publication/update partition identity. For dataset-update PNMs,
+  ///  this MUST match DPM.FILE_ID and is the stable key for entitlements,
+  ///  provider query requests, subscriber caches, and completeness verification.
+  ///  Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
   String? get FILE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   String? get fileId => FILE_ID;
   ///  Digital Signature of the CID
@@ -69,7 +85,7 @@ class _PNMReader extends fb.TableReader<PNM> {
   const _PNMReader();
 
   @override
-  PNM createObject(fb.BufferContext bc, int offset) => 
+  PNM createObject(fb.BufferContext bc, int offset) =>
     PNM._(bc, offset);
 }
 

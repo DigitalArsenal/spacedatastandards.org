@@ -45,7 +45,7 @@ class _CHNReader extends fb.TableReader<CHN> {
   const _CHNReader();
 
   @override
-  CHN createObject(fb.BufferContext bc, int offset) => 
+  CHN createObject(fb.BufferContext bc, int offset) =>
     CHN._(bc, offset);
 }
 

@@ -68,13 +68,13 @@ public enum sizeShapeProfile: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 
 ///  A single time-segment record of polynomial coefficients for Cartesian position
 ///  (and optionally velocity). Coefficients are stored per axis.
-/// 
+///
 ///  To evaluate position at time t within this record's validity window:
 ///    1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN
 ///       where tau is in [-1, +1].
 ///    2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using
 ///       the coefficients for each axis.
-/// 
+///
 ///  Velocity coefficients, if present, follow the same evaluation procedure.
 ///  If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by
 ///  analytically differentiating the position polynomial.
@@ -84,7 +84,7 @@ public struct PPEPositionRecord: FlatBufferTable, FlatbuffersVectorInitializable
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PPE" } 
+  public static var id: String { "$PPE" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PPEPositionRecord.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -217,7 +217,7 @@ public struct PPEPositionRecord: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  A single time-segment record of polynomial coefficients for classical orbital elements.
-/// 
+///
 ///  The six classical elements are:
 ///    1. SMA or R_PERIAPSIS (size/shape) — see SIZE_SHAPE_TYPE
 ///    2. Eccentricity (dimensionless)
@@ -225,7 +225,7 @@ public struct PPEPositionRecord: FlatBufferTable, FlatbuffersVectorInitializable
 ///    4. Right Ascension of Ascending Node / RAAN (degrees)
 ///    5. Argument of Periapsis (degrees)
 ///    6. Anomaly (degrees) — see ANOMALY_TYPE
-/// 
+///
 ///  Evaluation follows the same normalized-time procedure as PPEPositionRecord.
 public struct PPEOrbitalElementRecord: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
@@ -233,7 +233,7 @@ public struct PPEOrbitalElementRecord: FlatBufferTable, FlatbuffersVectorInitial
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PPE" } 
+  public static var id: String { "$PPE" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PPEOrbitalElementRecord.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
@@ -370,7 +370,7 @@ public struct PPEOrbitalElementRecord: FlatBufferTable, FlatbuffersVectorInitial
 
 ///  Polynomial Ephemeris — top-level message containing metadata and
 ///  one or more polynomial coefficient records for a single space object.
-/// 
+///
 ///  A PPE message may contain position records, orbital element records, or both.
 ///  Records should be ordered chronologically by EPOCH_MID and should collectively
 ///  cover the time span [START_TIME, STOP_TIME] without gaps.
@@ -380,7 +380,7 @@ public struct PPE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PPE" } 
+  public static var id: String { "$PPE" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PPE.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }

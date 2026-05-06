@@ -137,7 +137,7 @@ class _CRDReader extends fb.TableReader<CRD> {
   const _CRDReader();
 
   @override
-  CRD createObject(fb.BufferContext bc, int offset) => 
+  CRD createObject(fb.BufferContext bc, int offset) =>
     CRD._(bc, offset);
 }
 

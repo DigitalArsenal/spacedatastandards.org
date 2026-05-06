@@ -307,7 +307,7 @@ class _ASTReader extends fb.TableReader<AST> {
   const _ASTReader();
 
   @override
-  AST createObject(fb.BufferContext bc, int offset) => 
+  AST createObject(fb.BufferContext bc, int offset) =>
     AST._(bc, offset);
 }
 

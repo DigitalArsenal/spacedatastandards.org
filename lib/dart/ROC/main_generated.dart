@@ -83,7 +83,7 @@ class _ROCReader extends fb.TableReader<ROC> {
   const _ROCReader();
 
   @override
-  ROC createObject(fb.BufferContext bc, int offset) => 
+  ROC createObject(fb.BufferContext bc, int offset) =>
     ROC._(bc, offset);
 }
 
@@ -209,7 +209,7 @@ class _STAGEReader extends fb.TableReader<STAGE> {
   const _STAGEReader();
 
   @override
-  STAGE createObject(fb.BufferContext bc, int offset) => 
+  STAGE createObject(fb.BufferContext bc, int offset) =>
     STAGE._(bc, offset);
 }
 
@@ -327,7 +327,7 @@ class _SUSTAINERReader extends fb.TableReader<SUSTAINER> {
   const _SUSTAINERReader();
 
   @override
-  SUSTAINER createObject(fb.BufferContext bc, int offset) => 
+  SUSTAINER createObject(fb.BufferContext bc, int offset) =>
     SUSTAINER._(bc, offset);
 }
 
@@ -425,7 +425,7 @@ class _ENGINEReader extends fb.TableReader<ENGINE> {
   const _ENGINEReader();
 
   @override
-  ENGINE createObject(fb.BufferContext bc, int offset) => 
+  ENGINE createObject(fb.BufferContext bc, int offset) =>
     ENGINE._(bc, offset);
 }
 

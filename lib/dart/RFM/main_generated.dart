@@ -353,7 +353,7 @@ class _CelestialFrameWrapperReader extends fb.TableReader<CelestialFrameWrapper>
   const _CelestialFrameWrapperReader();
 
   @override
-  CelestialFrameWrapper createObject(fb.BufferContext bc, int offset) => 
+  CelestialFrameWrapper createObject(fb.BufferContext bc, int offset) =>
     CelestialFrameWrapper._(bc, offset);
 }
 
@@ -424,7 +424,7 @@ class _SpacecraftFrameWrapperReader extends fb.TableReader<SpacecraftFrameWrappe
   const _SpacecraftFrameWrapperReader();
 
   @override
-  SpacecraftFrameWrapper createObject(fb.BufferContext bc, int offset) => 
+  SpacecraftFrameWrapper createObject(fb.BufferContext bc, int offset) =>
     SpacecraftFrameWrapper._(bc, offset);
 }
 
@@ -495,7 +495,7 @@ class _OrbitFrameWrapperReader extends fb.TableReader<OrbitFrameWrapper> {
   const _OrbitFrameWrapperReader();
 
   @override
-  OrbitFrameWrapper createObject(fb.BufferContext bc, int offset) => 
+  OrbitFrameWrapper createObject(fb.BufferContext bc, int offset) =>
     OrbitFrameWrapper._(bc, offset);
 }
 
@@ -566,7 +566,7 @@ class _CustomFrameWrapperReader extends fb.TableReader<CustomFrameWrapper> {
   const _CustomFrameWrapperReader();
 
   @override
-  CustomFrameWrapper createObject(fb.BufferContext bc, int offset) => 
+  CustomFrameWrapper createObject(fb.BufferContext bc, int offset) =>
     CustomFrameWrapper._(bc, offset);
 }
 
@@ -652,7 +652,7 @@ class _RFMReader extends fb.TableReader<RFM> {
   const _RFMReader();
 
   @override
-  RFM createObject(fb.BufferContext bc, int offset) => 
+  RFM createObject(fb.BufferContext bc, int offset) =>
     RFM._(bc, offset);
 }
 

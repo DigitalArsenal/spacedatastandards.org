@@ -9,7 +9,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 ///  Propagator Runtime Wire — arena-addressed init / batch request / batch
 ///  response envelopes for orbital propagators that produce state vectors
 ///  into a shared memory arena.
-/// 
+///
 ///  Data interchange for the underlying content (state vectors, covariance,
 ///  maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris)
 ///  lives in SDS `OCM` + `OMM` + `PPE` + `RFM` + `ATM`. PRW is the runtime
@@ -153,7 +153,7 @@ class _prwSourceKindReader extends fb.Reader<prwSourceKind> {
 
 ///  Propagator initialization request — assigns TLE / OMM / Keplerian /
 ///  polynomial inputs to entity handles.
-/// 
+///
 ///  The actual per-entity source record is carried inline as raw bytes
 ///  tagged with SOURCE_KIND and, where useful, a SDS file_identifier.
 ///  Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the
@@ -187,7 +187,7 @@ class _PRWInitReader extends fb.TableReader<PRWInit> {
   const _PRWInitReader();
 
   @override
-  PRWInit createObject(fb.BufferContext bc, int offset) => 
+  PRWInit createObject(fb.BufferContext bc, int offset) =>
     PRWInit._(bc, offset);
 }
 
@@ -289,7 +289,7 @@ class _PRWKeplerianElementsReader extends fb.TableReader<PRWKeplerianElements> {
   const _PRWKeplerianElementsReader();
 
   @override
-  PRWKeplerianElements createObject(fb.BufferContext bc, int offset) => 
+  PRWKeplerianElements createObject(fb.BufferContext bc, int offset) =>
     PRWKeplerianElements._(bc, offset);
 }
 
@@ -427,7 +427,7 @@ class _PRWTleLinesReader extends fb.TableReader<PRWTleLines> {
   const _PRWTleLinesReader();
 
   @override
-  PRWTleLines createObject(fb.BufferContext bc, int offset) => 
+  PRWTleLines createObject(fb.BufferContext bc, int offset) =>
     PRWTleLines._(bc, offset);
 }
 
@@ -539,7 +539,7 @@ class _PRWInitSourceReader extends fb.TableReader<PRWInitSource> {
   const _PRWInitSourceReader();
 
   @override
-  PRWInitSource createObject(fb.BufferContext bc, int offset) => 
+  PRWInitSource createObject(fb.BufferContext bc, int offset) =>
     PRWInitSource._(bc, offset);
 }
 
@@ -666,7 +666,7 @@ class _PRWBatchRequestReader extends fb.TableReader<PRWBatchRequest> {
   const _PRWBatchRequestReader();
 
   @override
-  PRWBatchRequest createObject(fb.BufferContext bc, int offset) => 
+  PRWBatchRequest createObject(fb.BufferContext bc, int offset) =>
     PRWBatchRequest._(bc, offset);
 }
 
@@ -798,7 +798,7 @@ class _PRWBatchResponseReader extends fb.TableReader<PRWBatchResponse> {
   const _PRWBatchResponseReader();
 
   @override
-  PRWBatchResponse createObject(fb.BufferContext bc, int offset) => 
+  PRWBatchResponse createObject(fb.BufferContext bc, int offset) =>
     PRWBatchResponse._(bc, offset);
 }
 
@@ -934,7 +934,7 @@ class _PRWReader extends fb.TableReader<PRW> {
   const _PRWReader();
 
   @override
-  PRW createObject(fb.BufferContext bc, int offset) => 
+  PRW createObject(fb.BufferContext bc, int offset) =>
     PRW._(bc, offset);
 }
 

@@ -1234,8 +1234,8 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<i32>(EOO::VT_FOV_COUNT_UCTS, Some(0)).unwrap()}
   }
-  /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
-  /// the exposure duration should be the total integration time. This field is highly recommended / required if the 
+  /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods,
+  /// the exposure duration should be the total integration time. This field is highly recommended / required if the
   /// observations are going to be used for photometric processing.
   #[inline]
   pub fn EXP_DURATION(&self) -> f32 {
@@ -1292,7 +1292,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_MAG_NORM_RANGE, Some(0.0)).unwrap()}
   }
-  /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+  /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range
   /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
   #[inline]
   pub fn GEOLAT(&self) -> f32 {
@@ -1301,7 +1301,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_GEOLAT, Some(0.0)).unwrap()}
   }
-  /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+  /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range
   /// and viewing geometry. It must NOT be computed from the orbit state.
   #[inline]
   pub fn GEOLON(&self) -> f32 {
@@ -1326,7 +1326,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_GEORANGE, Some(0.0)).unwrap()}
   }
-  /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+  /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently
   /// empty part of the night sky.
   #[inline]
   pub fn SKY_BKGRND(&self) -> f32 {
@@ -1335,9 +1335,9 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_SKY_BKGRND, Some(0.0)).unwrap()}
   }
-  /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
-  /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
-  /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+  /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass
+  /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general,
+  /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical
   /// object and the observer.
   #[inline]
   pub fn PRIMARY_EXTINCTION(&self) -> f32 {
@@ -1354,7 +1354,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_PRIMARY_EXTINCTION_UNC, Some(0.0)).unwrap()}
   }
-  /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+  /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the
   /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
   #[inline]
   pub fn SOLAR_PHASE_ANGLE(&self) -> f32 {
@@ -1363,8 +1363,8 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_SOLAR_PHASE_ANGLE, Some(0.0)).unwrap()}
   }
-  /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
-  /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+  /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector
+  /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition)
   /// and positive when opening (after the opposition).
   #[inline]
   pub fn SOLAR_EQ_PHASE_ANGLE(&self) -> f32 {
@@ -1397,7 +1397,7 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f32>(EOO::VT_TIMING_BIAS, Some(0.0)).unwrap()}
   }
-  /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
+  /// Optional URI location in the document repository of the raw file parsed by the system to produce this record.
   #[inline]
   pub fn RAW_FILE_URI(&self) -> Option<&'a str> {
     // Safety:
@@ -1438,7 +1438,7 @@ impl<'a> EOO<'a> {
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EOO::VT_SOURCE, None)}
   }
   /// Originating system or organization which produced the data, if different from the source.
-  /// The origin may be different than the source if the source was a mediating system which forwarded 
+  /// The origin may be different than the source if the source was a mediating system which forwarded
   /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
   #[inline]
   pub fn ORIGIN(&self) -> Option<&'a str> {
@@ -1479,8 +1479,8 @@ impl<'a> EOO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(EOO::VT_REFERENCE_FRAME, None)}
   }
-  /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
-  /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+  /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),
+  /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).
   /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
   #[inline]
   pub fn SEN_REFERENCE_FRAME(&self) -> Option<RFM<'a>> {

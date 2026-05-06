@@ -29,15 +29,15 @@ public struct TDM : IFlatbufferObject
   public byte[] GetOBSERVER_IDArray() { return __p.__vector_as_array<byte>(4); }
   /// Cartesian X coordinate of the OBSERVER location in chosen reference frame
   public double OBSERVER_X { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Cartesian Y coordinate of the OBSERVER location in chosen reference frame 
+  /// Cartesian Y coordinate of the OBSERVER location in chosen reference frame
   public double OBSERVER_Y { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Cartesian Z coordinate of the OBSERVER location in chosen reference frame 
+  /// Cartesian Z coordinate of the OBSERVER location in chosen reference frame
   public double OBSERVER_Z { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Cartesian X coordinate of the OBSERVER velocity in chosen reference frame
   public double OBSERVER_VX { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame 
+  /// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame
   public double OBSERVER_VY { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
+  /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame
   public double OBSERVER_VZ { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
   public RFM? OBSERVER_POSITION_REFERENCE_FRAME { get { int o = __p.__offset(18); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }

@@ -310,7 +310,7 @@ class _RFOReader extends fb.TableReader<RFO> {
   const _RFOReader();
 
   @override
-  RFO createObject(fb.BufferContext bc, int offset) => 
+  RFO createObject(fb.BufferContext bc, int offset) =>
     RFO._(bc, offset);
 }
 

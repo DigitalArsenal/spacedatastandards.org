@@ -190,7 +190,7 @@ class _GRVReader extends fb.TableReader<GRV> {
   const _GRVReader();
 
   @override
-  GRV createObject(fb.BufferContext bc, int offset) => 
+  GRV createObject(fb.BufferContext bc, int offset) =>
     GRV._(bc, offset);
 }
 

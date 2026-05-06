@@ -344,7 +344,7 @@ class _COMReader extends fb.TableReader<COM> {
   const _COMReader();
 
   @override
-  COM createObject(fb.BufferContext bc, int offset) => 
+  COM createObject(fb.BufferContext bc, int offset) =>
     COM._(bc, offset);
 }
 

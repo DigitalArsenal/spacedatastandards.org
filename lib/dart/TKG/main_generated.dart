@@ -330,7 +330,7 @@ class _TKGReader extends fb.TableReader<TKG> {
   const _TKGReader();
 
   @override
-  TKG createObject(fb.BufferContext bc, int offset) => 
+  TKG createObject(fb.BufferContext bc, int offset) =>
     TKG._(bc, offset);
 }
 

@@ -111,7 +111,7 @@ class _manifoldElsetReader extends fb.TableReader<manifoldElset> {
   const _manifoldElsetReader();
 
   @override
-  manifoldElset createObject(fb.BufferContext bc, int offset) => 
+  manifoldElset createObject(fb.BufferContext bc, int offset) =>
     manifoldElset._(bc, offset);
 }
 
@@ -368,7 +368,7 @@ class _MNFReader extends fb.TableReader<MNF> {
   const _MNFReader();
 
   @override
-  MNF createObject(fb.BufferContext bc, int offset) => 
+  MNF createObject(fb.BufferContext bc, int offset) =>
     MNF._(bc, offset);
 }
 

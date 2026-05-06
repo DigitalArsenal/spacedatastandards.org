@@ -12,6 +12,20 @@
 - Run `npm run build` to build all artifacts
 - Run `npm run deploy` to build, commit, and push
 - Create a GitHub release to trigger publishing to package registries
+- When publishing SDS, do not report the release complete or tell downstream
+  repos to install the latest version until the release workflow has finished
+  and the published JavaScript/TypeScript package and Go module tag are both
+  visible from their registries/module proxies. The release flow is:
+  1. Build and test SDS locally.
+  2. Commit and push the SDS schema/generated-artifact change.
+  3. Create the GitHub release or dispatch the publish workflow for all package
+     targets.
+  4. Monitor GitHub Actions until the publish workflow is complete.
+  5. Verify `npm view spacedatastandards.org version` and
+     `go list -m -versions github.com/DigitalArsenal/spacedatastandards.org/lib/go`
+     show the new release.
+  6. Only then update downstream consumers such as SDN, SDK, modules, OrbPro,
+     and stack pins.
 
 ## Schema Authoring Rules
 

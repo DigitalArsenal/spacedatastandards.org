@@ -8,7 +8,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 ///  Signed Distance Field — detection and containment queries for sensor /
 ///  geometric volumes.
-/// 
+///
 ///  Convention for signed-distance values:
 ///    - Negative values are inside the volume.
 ///    - Zero is on the boundary.
@@ -129,7 +129,7 @@ class _sdfResultReader extends fb.StructReader<sdfResult> {
   int get size => 24;
 
   @override
-  sdfResult createObject(fb.BufferContext bc, int offset) => 
+  sdfResult createObject(fb.BufferContext bc, int offset) =>
     sdfResult._(bc, offset);
 }
 
@@ -226,7 +226,7 @@ class _sdfTimeRangeResultReader extends fb.StructReader<sdfTimeRangeResult> {
   int get size => 40;
 
   @override
-  sdfTimeRangeResult createObject(fb.BufferContext bc, int offset) => 
+  sdfTimeRangeResult createObject(fb.BufferContext bc, int offset) =>
     sdfTimeRangeResult._(bc, offset);
 }
 
@@ -333,7 +333,7 @@ class _SDFConicalReader extends fb.TableReader<SDFConical> {
   const _SDFConicalReader();
 
   @override
-  SDFConical createObject(fb.BufferContext bc, int offset) => 
+  SDFConical createObject(fb.BufferContext bc, int offset) =>
     SDFConical._(bc, offset);
 }
 
@@ -449,7 +449,7 @@ class _SDFRectangularReader extends fb.TableReader<SDFRectangular> {
   const _SDFRectangularReader();
 
   @override
-  SDFRectangular createObject(fb.BufferContext bc, int offset) => 
+  SDFRectangular createObject(fb.BufferContext bc, int offset) =>
     SDFRectangular._(bc, offset);
 }
 
@@ -552,7 +552,7 @@ class _SDFSphericalReader extends fb.TableReader<SDFSpherical> {
   const _SDFSphericalReader();
 
   @override
-  SDFSpherical createObject(fb.BufferContext bc, int offset) => 
+  SDFSpherical createObject(fb.BufferContext bc, int offset) =>
     SDFSpherical._(bc, offset);
 }
 
@@ -635,7 +635,7 @@ class _SDFCylindricalReader extends fb.TableReader<SDFCylindrical> {
   const _SDFCylindricalReader();
 
   @override
-  SDFCylindrical createObject(fb.BufferContext bc, int offset) => 
+  SDFCylindrical createObject(fb.BufferContext bc, int offset) =>
     SDFCylindrical._(bc, offset);
 }
 
@@ -719,7 +719,7 @@ class _SDFCustomReader extends fb.TableReader<SDFCustom> {
   const _SDFCustomReader();
 
   @override
-  SDFCustom createObject(fb.BufferContext bc, int offset) => 
+  SDFCustom createObject(fb.BufferContext bc, int offset) =>
     SDFCustom._(bc, offset);
 }
 
@@ -811,7 +811,7 @@ class _SDFCompositionReader extends fb.TableReader<SDFComposition> {
   const _SDFCompositionReader();
 
   @override
-  SDFComposition createObject(fb.BufferContext bc, int offset) => 
+  SDFComposition createObject(fb.BufferContext bc, int offset) =>
     SDFComposition._(bc, offset);
 }
 
@@ -915,7 +915,7 @@ class _SDFComponentReader extends fb.TableReader<SDFComponent> {
   const _SDFComponentReader();
 
   @override
-  SDFComponent createObject(fb.BufferContext bc, int offset) => 
+  SDFComponent createObject(fb.BufferContext bc, int offset) =>
     SDFComponent._(bc, offset);
 }
 
@@ -1040,7 +1040,7 @@ class _SDFConfigReader extends fb.TableReader<SDFConfig> {
   const _SDFConfigReader();
 
   @override
-  SDFConfig createObject(fb.BufferContext bc, int offset) => 
+  SDFConfig createObject(fb.BufferContext bc, int offset) =>
     SDFConfig._(bc, offset);
 }
 
@@ -1157,7 +1157,7 @@ class _SDFBatchRequestReader extends fb.TableReader<SDFBatchRequest> {
   const _SDFBatchRequestReader();
 
   @override
-  SDFBatchRequest createObject(fb.BufferContext bc, int offset) => 
+  SDFBatchRequest createObject(fb.BufferContext bc, int offset) =>
     SDFBatchRequest._(bc, offset);
 }
 
@@ -1279,7 +1279,7 @@ class _SDFBatchResponseReader extends fb.TableReader<SDFBatchResponse> {
   const _SDFBatchResponseReader();
 
   @override
-  SDFBatchResponse createObject(fb.BufferContext bc, int offset) => 
+  SDFBatchResponse createObject(fb.BufferContext bc, int offset) =>
     SDFBatchResponse._(bc, offset);
 }
 
@@ -1397,7 +1397,7 @@ class _SDFReader extends fb.TableReader<SDF> {
   const _SDFReader();
 
   @override
-  SDF createObject(fb.BufferContext bc, int offset) => 
+  SDF createObject(fb.BufferContext bc, int offset) =>
     SDF._(bc, offset);
 }
 

@@ -7,7 +7,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 ///  Module Bundle Listing
-/// 
+///
 ///  SDS-owned record describing the logical contents and canonicalization rules
 ///  for a single-file module delivery artifact carried inside a REC trailer.
 ///  Logical role for one payload carried in the bundle.
@@ -129,7 +129,7 @@ class _CanonicalizationRuleReader extends fb.TableReader<CanonicalizationRule> {
   const _CanonicalizationRuleReader();
 
   @override
-  CanonicalizationRule createObject(fb.BufferContext bc, int offset) => 
+  CanonicalizationRule createObject(fb.BufferContext bc, int offset) =>
     CanonicalizationRule._(bc, offset);
 }
 
@@ -261,7 +261,7 @@ class _ModuleBundleEntryReader extends fb.TableReader<ModuleBundleEntry> {
   const _ModuleBundleEntryReader();
 
   @override
-  ModuleBundleEntry createObject(fb.BufferContext bc, int offset) => 
+  ModuleBundleEntry createObject(fb.BufferContext bc, int offset) =>
     ModuleBundleEntry._(bc, offset);
 }
 
@@ -445,7 +445,7 @@ class _MBLReader extends fb.TableReader<MBL> {
   const _MBLReader();
 
   @override
-  MBL createObject(fb.BufferContext bc, int offset) => 
+  MBL createObject(fb.BufferContext bc, int offset) =>
     MBL._(bc, offset);
 }
 

@@ -17,7 +17,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * One immutable content-addressed object published for a dataset update.
+ * One immutable asset or provider-mediated query contract published for a
+ * dataset update.
  */
 @SuppressWarnings("unused")
 public final class DPMAsset extends com.google.flatbuffers.Table {
@@ -32,88 +33,137 @@ public final class DPMAsset extends com.google.flatbuffers.Table {
    */
   public byte ASSET_KIND() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 3; }
   /**
-   * IPFS CIDv1/multihash content identifier.
+   * Transport profile for this asset. CONTENT_ADDRESS assets use CID and
+   * MULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the
+   * signed DPM query and root fields; they are not required to be published as
+   * discoverable IPFS files.
    */
-  public String CID() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CIDAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  public byte TRANSPORT_KIND() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * Multiformat address, usually /ipfs/{CID}.
+   * Optional IPFS CIDv1/multihash content identifier. This field is required
+   * for CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose
+   * bytes are retrieved through a provider protocol.
    */
-  public String MULTIFORMAT_ADDRESS() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer MULTIFORMAT_ADDRESSAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer MULTIFORMAT_ADDRESSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  public String CID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CIDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For
+   * SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when
+   * provider routing is resolved from the DPM provider identity.
+   */
+  public String MULTIFORMAT_ADDRESS() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MULTIFORMAT_ADDRESSAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer MULTIFORMAT_ADDRESSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
   /**
    * File name or logical artifact name.
    */
-  public String FILE_NAME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer FILE_NAMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer FILE_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  public String FILE_NAME() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FILE_NAMEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer FILE_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Canonical publication/update partition identity for this asset. FILE_ID is
+   * not a display filename; it is the stable identifier used by PNMs,
+   * manifests, entitlements, query requests, subscriber caches, and
+   * completeness proofs. Example:
+   * celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+   */
+  public String FILE_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FILE_IDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer FILE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Provider protocol name/version used to fetch this asset when
+   * TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
+   * response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the
+   * provider signature in this DPM.
+   */
+  public String TRANSPORT_PROTOCOL() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TRANSPORT_PROTOCOLAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer TRANSPORT_PROTOCOLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
   /**
    * Byte length of the published object.
    */
-  public long BYTE_LENGTH() { int o = __offset(12); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public long BYTE_LENGTH() { int o = __offset(18); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
    * SHA-256 hash of the exact published bytes, lowercase hex.
    */
-  public String BYTE_SHA256() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer BYTE_SHA256AsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer BYTE_SHA256InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  public String BYTE_SHA256() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BYTE_SHA256AsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer BYTE_SHA256InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  /**
+   * Merkle root over canonical records in this asset, lowercase hex. For
+   * provider-mediated query delivery, subscribers verify returned records and
+   * proof paths against this root before importing data.
+   */
+  public String DATA_ROOT() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DATA_ROOTAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer DATA_ROOTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
   /**
    * SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
    */
-  public String SCHEMA_NAME() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SCHEMA_NAMEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer SCHEMA_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  public String SCHEMA_NAME() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SCHEMA_NAMEAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer SCHEMA_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
   /**
    * Hash of the SDS schema used to encode this object.
    */
-  public String SCHEMA_HASH() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SCHEMA_HASHAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
-  public ByteBuffer SCHEMA_HASHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  public String SCHEMA_HASH() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SCHEMA_HASHAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer SCHEMA_HASHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
   /**
    * Optional content-key identifier for encrypted artifacts.
    */
-  public String CONTENT_KEY_ID() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CONTENT_KEY_IDAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer CONTENT_KEY_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  public String CONTENT_KEY_ID() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CONTENT_KEY_IDAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer CONTENT_KEY_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
 
   public static int createDPMAsset(FlatBufferBuilder builder,
       byte ASSET_KIND,
+      byte TRANSPORT_KIND,
       int CIDOffset,
       int MULTIFORMAT_ADDRESSOffset,
       int FILE_NAMEOffset,
+      int FILE_IDOffset,
+      int TRANSPORT_PROTOCOLOffset,
       long BYTE_LENGTH,
       int BYTE_SHA256Offset,
+      int DATA_ROOTOffset,
       int SCHEMA_NAMEOffset,
       int SCHEMA_HASHOffset,
       int CONTENT_KEY_IDOffset) {
-    builder.startTable(9);
+    builder.startTable(13);
     DPMAsset.addByteLength(builder, BYTE_LENGTH);
     DPMAsset.addContentKeyId(builder, CONTENT_KEY_IDOffset);
     DPMAsset.addSchemaHash(builder, SCHEMA_HASHOffset);
     DPMAsset.addSchemaName(builder, SCHEMA_NAMEOffset);
+    DPMAsset.addDataRoot(builder, DATA_ROOTOffset);
     DPMAsset.addByteSha256(builder, BYTE_SHA256Offset);
+    DPMAsset.addTransportProtocol(builder, TRANSPORT_PROTOCOLOffset);
+    DPMAsset.addFileId(builder, FILE_IDOffset);
     DPMAsset.addFileName(builder, FILE_NAMEOffset);
     DPMAsset.addMultiformatAddress(builder, MULTIFORMAT_ADDRESSOffset);
     DPMAsset.addCid(builder, CIDOffset);
+    DPMAsset.addTransportKind(builder, TRANSPORT_KIND);
     DPMAsset.addAssetKind(builder, ASSET_KIND);
     return DPMAsset.endDPMAsset(builder);
   }
 
-  public static void startDPMAsset(FlatBufferBuilder builder) { builder.startTable(9); }
+  public static void startDPMAsset(FlatBufferBuilder builder) { builder.startTable(13); }
   public static void addAssetKind(FlatBufferBuilder builder, byte ASSET_KIND) { builder.addByte(0, ASSET_KIND, 3); }
-  public static void addCid(FlatBufferBuilder builder, int CIDOffset) { builder.addOffset(1, CIDOffset, 0); }
-  public static void addMultiformatAddress(FlatBufferBuilder builder, int MULTIFORMAT_ADDRESSOffset) { builder.addOffset(2, MULTIFORMAT_ADDRESSOffset, 0); }
-  public static void addFileName(FlatBufferBuilder builder, int FILE_NAMEOffset) { builder.addOffset(3, FILE_NAMEOffset, 0); }
-  public static void addByteLength(FlatBufferBuilder builder, long BYTE_LENGTH) { builder.addLong(4, BYTE_LENGTH, 0L); }
-  public static void addByteSha256(FlatBufferBuilder builder, int BYTE_SHA256Offset) { builder.addOffset(5, BYTE_SHA256Offset, 0); }
-  public static void addSchemaName(FlatBufferBuilder builder, int SCHEMA_NAMEOffset) { builder.addOffset(6, SCHEMA_NAMEOffset, 0); }
-  public static void addSchemaHash(FlatBufferBuilder builder, int SCHEMA_HASHOffset) { builder.addOffset(7, SCHEMA_HASHOffset, 0); }
-  public static void addContentKeyId(FlatBufferBuilder builder, int CONTENT_KEY_IDOffset) { builder.addOffset(8, CONTENT_KEY_IDOffset, 0); }
+  public static void addTransportKind(FlatBufferBuilder builder, byte TRANSPORT_KIND) { builder.addByte(1, TRANSPORT_KIND, 0); }
+  public static void addCid(FlatBufferBuilder builder, int CIDOffset) { builder.addOffset(2, CIDOffset, 0); }
+  public static void addMultiformatAddress(FlatBufferBuilder builder, int MULTIFORMAT_ADDRESSOffset) { builder.addOffset(3, MULTIFORMAT_ADDRESSOffset, 0); }
+  public static void addFileName(FlatBufferBuilder builder, int FILE_NAMEOffset) { builder.addOffset(4, FILE_NAMEOffset, 0); }
+  public static void addFileId(FlatBufferBuilder builder, int FILE_IDOffset) { builder.addOffset(5, FILE_IDOffset, 0); }
+  public static void addTransportProtocol(FlatBufferBuilder builder, int TRANSPORT_PROTOCOLOffset) { builder.addOffset(6, TRANSPORT_PROTOCOLOffset, 0); }
+  public static void addByteLength(FlatBufferBuilder builder, long BYTE_LENGTH) { builder.addLong(7, BYTE_LENGTH, 0L); }
+  public static void addByteSha256(FlatBufferBuilder builder, int BYTE_SHA256Offset) { builder.addOffset(8, BYTE_SHA256Offset, 0); }
+  public static void addDataRoot(FlatBufferBuilder builder, int DATA_ROOTOffset) { builder.addOffset(9, DATA_ROOTOffset, 0); }
+  public static void addSchemaName(FlatBufferBuilder builder, int SCHEMA_NAMEOffset) { builder.addOffset(10, SCHEMA_NAMEOffset, 0); }
+  public static void addSchemaHash(FlatBufferBuilder builder, int SCHEMA_HASHOffset) { builder.addOffset(11, SCHEMA_HASHOffset, 0); }
+  public static void addContentKeyId(FlatBufferBuilder builder, int CONTENT_KEY_IDOffset) { builder.addOffset(12, CONTENT_KEY_IDOffset, 0); }
   public static int endDPMAsset(FlatBufferBuilder builder) {
     int o = builder.endTable();
-    builder.required(o, 6);  // CID
     return o;
   }
 

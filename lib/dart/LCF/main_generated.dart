@@ -139,7 +139,7 @@ class _KRFReader extends fb.TableReader<KRF> {
   const _KRFReader();
 
   @override
-  KRF createObject(fb.BufferContext bc, int offset) => 
+  KRF createObject(fb.BufferContext bc, int offset) =>
     KRF._(bc, offset);
 }
 

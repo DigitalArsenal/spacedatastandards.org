@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { DPMAsset, DPMAssetT } from './DPMAsset.js';
+import { DPMCompletenessIndex, DPMCompletenessIndexT } from './DPMCompletenessIndex.js';
 import { DPMEncryptionBinding, DPMEncryptionBindingT } from './DPMEncryptionBinding.js';
 import { DPMQueryBinding, DPMQueryBindingT } from './DPMQueryBinding.js';
 import { DPMSourceBatch, DPMSourceBatchT } from './DPMSourceBatch.js';
@@ -12,7 +13,8 @@ import { DPMSourceBatch, DPMSourceBatchT } from './DPMSourceBatch.js';
 
 /**
  * Dataset Publication Manifest binding data/index CIDs, query replay,
- * source hashes, schema hashes, encryption metadata, and provider signature.
+ * source hashes, schema hashes, encryption metadata, provider-mediated query
+ * protocols, completeness roots, and provider signature.
  */
 export class DPM implements flatbuffers.IUnpackableObject<DPMT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -67,12 +69,27 @@ UPDATE_ID(optionalEncoding?:any):string|Uint8Array {
 }
 
 /**
+ * Canonical publication/update partition identity. FILE_ID is the key used
+ * everywhere a subscriber, provider, PNM, entitlement, cache, or query
+ * protocol refers to this exact update. It is not merely a human filename
+ * and it is not the FlatBuffer file_identifier. For completeness-verifiable
+ * streams, all returned records MUST belong to this FILE_ID and prove
+ * inclusion under this DPM's signed roots.
+ */
+FILE_ID():string|null
+FILE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+FILE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
  * Provider peer ID.
  */
 PROVIDER_PEER_ID():string
 PROVIDER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 PROVIDER_PEER_ID(optionalEncoding?:any):string|Uint8Array {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
@@ -82,7 +99,7 @@ PROVIDER_PEER_ID(optionalEncoding?:any):string|Uint8Array {
 PROVIDER_EPM_CID():string|null
 PROVIDER_EPM_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 PROVIDER_EPM_CID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -92,7 +109,7 @@ PROVIDER_EPM_CID(optionalEncoding?:any):string|Uint8Array|null {
 PUBLISH_TIMESTAMP():string
 PUBLISH_TIMESTAMP(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 PUBLISH_TIMESTAMP(optionalEncoding?:any):string|Uint8Array {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
@@ -100,12 +117,12 @@ PUBLISH_TIMESTAMP(optionalEncoding?:any):string|Uint8Array {
  * Published shard, index, and auxiliary artifacts.
  */
 ASSETS(index: number, obj?:DPMAsset):DPMAsset|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? (obj || new DPMAsset()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 assetsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -113,12 +130,12 @@ assetsLength():number {
  * Source batches used to build the dataset.
  */
 SOURCES(index: number, obj?:DPMSourceBatch):DPMSourceBatch|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? (obj || new DPMSourceBatch()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 sourcesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -126,15 +143,31 @@ sourcesLength():number {
  * Replayable query binding.
  */
 QUERY(obj?:DPMQueryBinding):DPMQueryBinding|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? (obj || new DPMQueryBinding()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Signed completeness-capable indexes. Inclusion proofs prove that returned
+ * records are authentic members of DATA_ROOT. Range-completeness proofs also
+ * prove that no matching records were omitted, but only for predicates
+ * expressible against these declared indexes.
+ */
+INDEXES(index: number, obj?:DPMCompletenessIndex):DPMCompletenessIndex|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? (obj || new DPMCompletenessIndex()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+indexesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 /**
  * Encryption/key metadata.
  */
 ENCRYPTION(obj?:DPMEncryptionBinding):DPMEncryptionBinding|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? (obj || new DPMEncryptionBinding()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -142,17 +175,17 @@ ENCRYPTION(obj?:DPMEncryptionBinding):DPMEncryptionBinding|null {
  * Provider signature over the canonical manifest bytes or manifest digest.
  */
 PROVIDER_SIGNATURE(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
 }
 
 providerSignatureLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 providerSignatureArray():Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
@@ -162,12 +195,12 @@ providerSignatureArray():Uint8Array|null {
 SIGNATURE_TYPE():string|null
 SIGNATURE_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SIGNATURE_TYPE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startDPM(builder:flatbuffers.Builder) {
-  builder.startObject(12);
+  builder.startObject(14);
 }
 
 static addVersion(builder:flatbuffers.Builder, VERSIONOffset:flatbuffers.Offset) {
@@ -182,20 +215,24 @@ static addUpdateId(builder:flatbuffers.Builder, UPDATE_IDOffset:flatbuffers.Offs
   builder.addFieldOffset(2, UPDATE_IDOffset, 0);
 }
 
+static addFileId(builder:flatbuffers.Builder, FILE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, FILE_IDOffset, 0);
+}
+
 static addProviderPeerId(builder:flatbuffers.Builder, PROVIDER_PEER_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, PROVIDER_PEER_IDOffset, 0);
+  builder.addFieldOffset(4, PROVIDER_PEER_IDOffset, 0);
 }
 
 static addProviderEpmCid(builder:flatbuffers.Builder, PROVIDER_EPM_CIDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, PROVIDER_EPM_CIDOffset, 0);
+  builder.addFieldOffset(5, PROVIDER_EPM_CIDOffset, 0);
 }
 
 static addPublishTimestamp(builder:flatbuffers.Builder, PUBLISH_TIMESTAMPOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, PUBLISH_TIMESTAMPOffset, 0);
+  builder.addFieldOffset(6, PUBLISH_TIMESTAMPOffset, 0);
 }
 
 static addAssets(builder:flatbuffers.Builder, ASSETSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, ASSETSOffset, 0);
+  builder.addFieldOffset(7, ASSETSOffset, 0);
 }
 
 static createAssetsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -211,7 +248,7 @@ static startAssetsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addSources(builder:flatbuffers.Builder, SOURCESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, SOURCESOffset, 0);
+  builder.addFieldOffset(8, SOURCESOffset, 0);
 }
 
 static createSourcesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -227,15 +264,31 @@ static startSourcesVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addQuery(builder:flatbuffers.Builder, QUERYOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, QUERYOffset, 0);
+  builder.addFieldOffset(9, QUERYOffset, 0);
+}
+
+static addIndexes(builder:flatbuffers.Builder, INDEXESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, INDEXESOffset, 0);
+}
+
+static createIndexesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startIndexesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
 }
 
 static addEncryption(builder:flatbuffers.Builder, ENCRYPTIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, ENCRYPTIONOffset, 0);
+  builder.addFieldOffset(11, ENCRYPTIONOffset, 0);
 }
 
 static addProviderSignature(builder:flatbuffers.Builder, PROVIDER_SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, PROVIDER_SIGNATUREOffset, 0);
+  builder.addFieldOffset(12, PROVIDER_SIGNATUREOffset, 0);
 }
 
 static createProviderSignatureVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
@@ -251,15 +304,15 @@ static startProviderSignatureVector(builder:flatbuffers.Builder, numElems:number
 }
 
 static addSignatureType(builder:flatbuffers.Builder, SIGNATURE_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, SIGNATURE_TYPEOffset, 0);
+  builder.addFieldOffset(13, SIGNATURE_TYPEOffset, 0);
 }
 
 static endDPM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 6) // DATASET_ID
   builder.requiredField(offset, 8) // UPDATE_ID
-  builder.requiredField(offset, 10) // PROVIDER_PEER_ID
-  builder.requiredField(offset, 14) // PUBLISH_TIMESTAMP
+  builder.requiredField(offset, 12) // PROVIDER_PEER_ID
+  builder.requiredField(offset, 16) // PUBLISH_TIMESTAMP
   return offset;
 }
 
@@ -277,12 +330,14 @@ unpack(): DPMT {
     this.VERSION(),
     this.DATASET_ID(),
     this.UPDATE_ID(),
+    this.FILE_ID(),
     this.PROVIDER_PEER_ID(),
     this.PROVIDER_EPM_CID(),
     this.PUBLISH_TIMESTAMP(),
     this.bb!.createObjList<DPMAsset, DPMAssetT>(this.ASSETS.bind(this), this.assetsLength()),
     this.bb!.createObjList<DPMSourceBatch, DPMSourceBatchT>(this.SOURCES.bind(this), this.sourcesLength()),
     (this.QUERY() !== null ? this.QUERY()!.unpack() : null),
+    this.bb!.createObjList<DPMCompletenessIndex, DPMCompletenessIndexT>(this.INDEXES.bind(this), this.indexesLength()),
     (this.ENCRYPTION() !== null ? this.ENCRYPTION()!.unpack() : null),
     this.bb!.createScalarList<number>(this.PROVIDER_SIGNATURE.bind(this), this.providerSignatureLength()),
     this.SIGNATURE_TYPE()
@@ -294,12 +349,14 @@ unpackTo(_o: DPMT): void {
   _o.VERSION = this.VERSION();
   _o.DATASET_ID = this.DATASET_ID();
   _o.UPDATE_ID = this.UPDATE_ID();
+  _o.FILE_ID = this.FILE_ID();
   _o.PROVIDER_PEER_ID = this.PROVIDER_PEER_ID();
   _o.PROVIDER_EPM_CID = this.PROVIDER_EPM_CID();
   _o.PUBLISH_TIMESTAMP = this.PUBLISH_TIMESTAMP();
   _o.ASSETS = this.bb!.createObjList<DPMAsset, DPMAssetT>(this.ASSETS.bind(this), this.assetsLength());
   _o.SOURCES = this.bb!.createObjList<DPMSourceBatch, DPMSourceBatchT>(this.SOURCES.bind(this), this.sourcesLength());
   _o.QUERY = (this.QUERY() !== null ? this.QUERY()!.unpack() : null);
+  _o.INDEXES = this.bb!.createObjList<DPMCompletenessIndex, DPMCompletenessIndexT>(this.INDEXES.bind(this), this.indexesLength());
   _o.ENCRYPTION = (this.ENCRYPTION() !== null ? this.ENCRYPTION()!.unpack() : null);
   _o.PROVIDER_SIGNATURE = this.bb!.createScalarList<number>(this.PROVIDER_SIGNATURE.bind(this), this.providerSignatureLength());
   _o.SIGNATURE_TYPE = this.SIGNATURE_TYPE();
@@ -311,12 +368,14 @@ constructor(
   public VERSION: string|Uint8Array|null = null,
   public DATASET_ID: string|Uint8Array|null = null,
   public UPDATE_ID: string|Uint8Array|null = null,
+  public FILE_ID: string|Uint8Array|null = null,
   public PROVIDER_PEER_ID: string|Uint8Array|null = null,
   public PROVIDER_EPM_CID: string|Uint8Array|null = null,
   public PUBLISH_TIMESTAMP: string|Uint8Array|null = null,
   public ASSETS: (DPMAssetT)[] = [],
   public SOURCES: (DPMSourceBatchT)[] = [],
   public QUERY: DPMQueryBindingT|null = null,
+  public INDEXES: (DPMCompletenessIndexT)[] = [],
   public ENCRYPTION: DPMEncryptionBindingT|null = null,
   public PROVIDER_SIGNATURE: (number)[] = [],
   public SIGNATURE_TYPE: string|Uint8Array|null = null
@@ -327,12 +386,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const VERSION = (this.VERSION !== null ? builder.createString(this.VERSION!) : 0);
   const DATASET_ID = (this.DATASET_ID !== null ? builder.createString(this.DATASET_ID!) : 0);
   const UPDATE_ID = (this.UPDATE_ID !== null ? builder.createString(this.UPDATE_ID!) : 0);
+  const FILE_ID = (this.FILE_ID !== null ? builder.createString(this.FILE_ID!) : 0);
   const PROVIDER_PEER_ID = (this.PROVIDER_PEER_ID !== null ? builder.createString(this.PROVIDER_PEER_ID!) : 0);
   const PROVIDER_EPM_CID = (this.PROVIDER_EPM_CID !== null ? builder.createString(this.PROVIDER_EPM_CID!) : 0);
   const PUBLISH_TIMESTAMP = (this.PUBLISH_TIMESTAMP !== null ? builder.createString(this.PUBLISH_TIMESTAMP!) : 0);
   const ASSETS = DPM.createAssetsVector(builder, builder.createObjectOffsetList(this.ASSETS));
   const SOURCES = DPM.createSourcesVector(builder, builder.createObjectOffsetList(this.SOURCES));
   const QUERY = (this.QUERY !== null ? this.QUERY!.pack(builder) : 0);
+  const INDEXES = DPM.createIndexesVector(builder, builder.createObjectOffsetList(this.INDEXES));
   const ENCRYPTION = (this.ENCRYPTION !== null ? this.ENCRYPTION!.pack(builder) : 0);
   const PROVIDER_SIGNATURE = DPM.createProviderSignatureVector(builder, this.PROVIDER_SIGNATURE);
   const SIGNATURE_TYPE = (this.SIGNATURE_TYPE !== null ? builder.createString(this.SIGNATURE_TYPE!) : 0);
@@ -341,12 +402,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   DPM.addVersion(builder, VERSION);
   DPM.addDatasetId(builder, DATASET_ID);
   DPM.addUpdateId(builder, UPDATE_ID);
+  DPM.addFileId(builder, FILE_ID);
   DPM.addProviderPeerId(builder, PROVIDER_PEER_ID);
   DPM.addProviderEpmCid(builder, PROVIDER_EPM_CID);
   DPM.addPublishTimestamp(builder, PUBLISH_TIMESTAMP);
   DPM.addAssets(builder, ASSETS);
   DPM.addSources(builder, SOURCES);
   DPM.addQuery(builder, QUERY);
+  DPM.addIndexes(builder, INDEXES);
   DPM.addEncryption(builder, ENCRYPTION);
   DPM.addProviderSignature(builder, PROVIDER_SIGNATURE);
   DPM.addSignatureType(builder, SIGNATURE_TYPE);

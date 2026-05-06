@@ -6,7 +6,17 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Publish Notification Message
+/// Publish Notification Message.
+///
+/// PNM is the compact network announcement for a published record, manifest, or
+/// dataset update. For dataset updates, FILE_ID identifies the canonical update
+/// partition and CID usually points to a small DPM manifest or digest. The DPM
+/// carries the full verification contract: provider identity, retrieval
+/// protocol, canonical query, result hash, Merkle roots, completeness-capable
+/// indexes, and signature. Large or paid dataset updates do not need to be
+/// published as globally discoverable IPFS files; a PNM may instead advertise a
+/// provider-mediated SDN query protocol whose response is verified against the
+/// signed DPM roots.
 type PNM struct {
 	_tab flatbuffers.Table
 }
@@ -96,7 +106,10 @@ func (rcv *PNM) PublishTimestamp() []byte {
 /// Publish Time OF THE Publish Notification Message
 /// Concatenated Content Identifier (CID)
 /// This field is a unique ID for distributed systems (CID).
-/// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+/// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.
+/// For dataset-update PNMs this SHOULD identify a compact DPM manifest,
+/// manifest digest, or other small verification object, not necessarily the
+/// full dataset bytes.
 func (rcv *PNM) CID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -111,7 +124,10 @@ func (rcv *PNM) Cid() []byte {
 
 /// Concatenated Content Identifier (CID)
 /// This field is a unique ID for distributed systems (CID).
-/// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid. 
+/// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.
+/// For dataset-update PNMs this SHOULD identify a compact DPM manifest,
+/// manifest digest, or other small verification object, not necessarily the
+/// full dataset bytes.
 /// File ID
 /// This field is the Name
 func (rcv *PNM) FILE_NAME() []byte {
@@ -129,7 +145,10 @@ func (rcv *PNM) FileName() []byte {
 /// File ID
 /// This field is the Name
 /// File ID
-/// This field is the file ID / Standard Type
+/// Canonical publication/update partition identity. For dataset-update PNMs,
+/// this MUST match DPM.FILE_ID and is the stable key for entitlements,
+/// provider query requests, subscriber caches, and completeness verification.
+/// Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
 func (rcv *PNM) FILE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -143,7 +162,10 @@ func (rcv *PNM) FileId() []byte {
 }
 
 /// File ID
-/// This field is the file ID / Standard Type
+/// Canonical publication/update partition identity. For dataset-update PNMs,
+/// this MUST match DPM.FILE_ID and is the stable key for entitlements,
+/// provider query requests, subscriber caches, and completeness verification.
+/// Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
 /// Digital Signature of the CID
 /// This is the digital signature of the CID, signed using the specified cryptographic method.
 func (rcv *PNM) SIGNATURE() []byte {

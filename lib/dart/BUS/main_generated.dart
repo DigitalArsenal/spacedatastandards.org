@@ -189,7 +189,7 @@ class _BUSReader extends fb.TableReader<BUS> {
   const _BUSReader();
 
   @override
-  BUS createObject(fb.BufferContext bc, int offset) => 
+  BUS createObject(fb.BufferContext bc, int offset) =>
     BUS._(bc, offset);
 }
 

@@ -70,7 +70,7 @@ class _METReader extends fb.TableReader<MET> {
   const _METReader();
 
   @override
-  MET createObject(fb.BufferContext bc, int offset) => 
+  MET createObject(fb.BufferContext bc, int offset) =>
     MET._(bc, offset);
 }
 

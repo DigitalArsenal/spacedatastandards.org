@@ -287,7 +287,7 @@ class _KMFReader extends fb.TableReader<KMF> {
   const _KMFReader();
 
   @override
-  KMF createObject(fb.BufferContext bc, int offset) => 
+  KMF createObject(fb.BufferContext bc, int offset) =>
     KMF._(bc, offset);
 }
 

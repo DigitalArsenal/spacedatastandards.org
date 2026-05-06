@@ -154,7 +154,7 @@ class _FlatBufferTypeRefReader extends fb.TableReader<FlatBufferTypeRef> {
   const _FlatBufferTypeRefReader();
 
   @override
-  FlatBufferTypeRef createObject(fb.BufferContext bc, int offset) => 
+  FlatBufferTypeRef createObject(fb.BufferContext bc, int offset) =>
     FlatBufferTypeRef._(bc, offset);
 }
 
@@ -286,7 +286,7 @@ class _TABReader extends fb.TableReader<TAB> {
   const _TABReader();
 
   @override
-  TAB createObject(fb.BufferContext bc, int offset) => 
+  TAB createObject(fb.BufferContext bc, int offset) =>
     TAB._(bc, offset);
 }
 

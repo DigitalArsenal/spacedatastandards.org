@@ -139,7 +139,7 @@ class _ionoDataPointReader extends fb.TableReader<ionoDataPoint> {
   const _ionoDataPointReader();
 
   @override
-  ionoDataPoint createObject(fb.BufferContext bc, int offset) => 
+  ionoDataPoint createObject(fb.BufferContext bc, int offset) =>
     ionoDataPoint._(bc, offset);
 }
 
@@ -279,7 +279,7 @@ class _ionoDensityProfileReader extends fb.TableReader<ionoDensityProfile> {
   const _ionoDensityProfileReader();
 
   @override
-  ionoDensityProfile createObject(fb.BufferContext bc, int offset) => 
+  ionoDensityProfile createObject(fb.BufferContext bc, int offset) =>
     ionoDensityProfile._(bc, offset);
 }
 
@@ -426,7 +426,7 @@ class _IONReader extends fb.TableReader<ION> {
   const _IONReader();
 
   @override
-  ION createObject(fb.BufferContext bc, int offset) => 
+  ION createObject(fb.BufferContext bc, int offset) =>
     ION._(bc, offset);
 }
 

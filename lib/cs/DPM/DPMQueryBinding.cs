@@ -57,34 +57,55 @@ public struct DPMQueryBinding : IFlatbufferObject
   public ArraySegment<byte>? GetQUERY_ENGINE_VERSIONBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetQUERY_ENGINE_VERSIONArray() { return __p.__vector_as_array<byte>(12); }
+  /// Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+  /// computed. Providers MUST stream records in this order unless each chunk
+  /// includes enough proof material to restore and verify the canonical order.
+  public string CANONICAL_ORDER { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCANONICAL_ORDERBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetCANONICAL_ORDERBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetCANONICAL_ORDERArray() { return __p.__vector_as_array<byte>(14); }
+  /// Query protocol name/version for provider-mediated retrieval, e.g.
+  /// /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+  /// protocol to the provider, submits the signed query or a permitted subset,
+  /// and imports only responses that verify against the signed roots.
+  public string QUERY_PROTOCOL { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetQUERY_PROTOCOLBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetQUERY_PROTOCOLBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetQUERY_PROTOCOLArray() { return __p.__vector_as_array<byte>(16); }
   /// SDS schema names selected by the query.
-  public string SCHEMA_NAMES(int j) { int o = __p.__offset(14); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SCHEMA_NAMESLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string SCHEMA_NAMES(int j) { int o = __p.__offset(18); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int SCHEMA_NAMESLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Provider peer IDs selected by the query.
-  public string PROVIDER_IDS(int j) { int o = __p.__offset(16); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int PROVIDER_IDSLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string PROVIDER_IDS(int j) { int o = __p.__offset(20); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int PROVIDER_IDSLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Source names selected by the query.
-  public string SOURCE_NAMES(int j) { int o = __p.__offset(18); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SOURCE_NAMESLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string SOURCE_NAMES(int j) { int o = __p.__offset(22); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int SOURCE_NAMESLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Batch IDs selected by the query.
-  public string BATCH_IDS(int j) { int o = __p.__offset(20); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int BATCH_IDSLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string BATCH_IDS(int j) { int o = __p.__offset(24); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int BATCH_IDSLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Inclusive query window start in ISO 8601 UTC.
-  public string WINDOW_START { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string WINDOW_START { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetWINDOW_STARTBytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetWINDOW_STARTBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetWINDOW_STARTBytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetWINDOW_STARTBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetWINDOW_STARTArray() { return __p.__vector_as_array<byte>(22); }
+  public byte[] GetWINDOW_STARTArray() { return __p.__vector_as_array<byte>(26); }
   /// Inclusive query window end in ISO 8601 UTC.
-  public string WINDOW_END { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string WINDOW_END { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetWINDOW_ENDBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetWINDOW_ENDBytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetWINDOW_ENDBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetWINDOW_ENDBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetWINDOW_ENDArray() { return __p.__vector_as_array<byte>(24); }
+  public byte[] GetWINDOW_ENDArray() { return __p.__vector_as_array<byte>(28); }
 
   public static Offset<DPMQueryBinding> CreateDPMQueryBinding(FlatBufferBuilder builder,
       StringOffset CANONICAL_QUERYOffset = default(StringOffset),
@@ -92,19 +113,23 @@ public struct DPMQueryBinding : IFlatbufferObject
       StringOffset RESULT_SHA256Offset = default(StringOffset),
       StringOffset QUERY_ENGINEOffset = default(StringOffset),
       StringOffset QUERY_ENGINE_VERSIONOffset = default(StringOffset),
+      StringOffset CANONICAL_ORDEROffset = default(StringOffset),
+      StringOffset QUERY_PROTOCOLOffset = default(StringOffset),
       VectorOffset SCHEMA_NAMESOffset = default(VectorOffset),
       VectorOffset PROVIDER_IDSOffset = default(VectorOffset),
       VectorOffset SOURCE_NAMESOffset = default(VectorOffset),
       VectorOffset BATCH_IDSOffset = default(VectorOffset),
       StringOffset WINDOW_STARTOffset = default(StringOffset),
       StringOffset WINDOW_ENDOffset = default(StringOffset)) {
-    builder.StartTable(11);
+    builder.StartTable(13);
     DPMQueryBinding.AddWINDOW_END(builder, WINDOW_ENDOffset);
     DPMQueryBinding.AddWINDOW_START(builder, WINDOW_STARTOffset);
     DPMQueryBinding.AddBATCH_IDS(builder, BATCH_IDSOffset);
     DPMQueryBinding.AddSOURCE_NAMES(builder, SOURCE_NAMESOffset);
     DPMQueryBinding.AddPROVIDER_IDS(builder, PROVIDER_IDSOffset);
     DPMQueryBinding.AddSCHEMA_NAMES(builder, SCHEMA_NAMESOffset);
+    DPMQueryBinding.AddQUERY_PROTOCOL(builder, QUERY_PROTOCOLOffset);
+    DPMQueryBinding.AddCANONICAL_ORDER(builder, CANONICAL_ORDEROffset);
     DPMQueryBinding.AddQUERY_ENGINE_VERSION(builder, QUERY_ENGINE_VERSIONOffset);
     DPMQueryBinding.AddQUERY_ENGINE(builder, QUERY_ENGINEOffset);
     DPMQueryBinding.AddRESULT_SHA256(builder, RESULT_SHA256Offset);
@@ -113,38 +138,40 @@ public struct DPMQueryBinding : IFlatbufferObject
     return DPMQueryBinding.EndDPMQueryBinding(builder);
   }
 
-  public static void StartDPMQueryBinding(FlatBufferBuilder builder) { builder.StartTable(11); }
+  public static void StartDPMQueryBinding(FlatBufferBuilder builder) { builder.StartTable(13); }
   public static void AddCANONICAL_QUERY(FlatBufferBuilder builder, StringOffset CANONICAL_QUERYOffset) { builder.AddOffset(0, CANONICAL_QUERYOffset.Value, 0); }
   public static void AddQUERY_SHA256(FlatBufferBuilder builder, StringOffset QUERY_SHA256Offset) { builder.AddOffset(1, QUERY_SHA256Offset.Value, 0); }
   public static void AddRESULT_SHA256(FlatBufferBuilder builder, StringOffset RESULT_SHA256Offset) { builder.AddOffset(2, RESULT_SHA256Offset.Value, 0); }
   public static void AddQUERY_ENGINE(FlatBufferBuilder builder, StringOffset QUERY_ENGINEOffset) { builder.AddOffset(3, QUERY_ENGINEOffset.Value, 0); }
   public static void AddQUERY_ENGINE_VERSION(FlatBufferBuilder builder, StringOffset QUERY_ENGINE_VERSIONOffset) { builder.AddOffset(4, QUERY_ENGINE_VERSIONOffset.Value, 0); }
-  public static void AddSCHEMA_NAMES(FlatBufferBuilder builder, VectorOffset SCHEMA_NAMESOffset) { builder.AddOffset(5, SCHEMA_NAMESOffset.Value, 0); }
+  public static void AddCANONICAL_ORDER(FlatBufferBuilder builder, StringOffset CANONICAL_ORDEROffset) { builder.AddOffset(5, CANONICAL_ORDEROffset.Value, 0); }
+  public static void AddQUERY_PROTOCOL(FlatBufferBuilder builder, StringOffset QUERY_PROTOCOLOffset) { builder.AddOffset(6, QUERY_PROTOCOLOffset.Value, 0); }
+  public static void AddSCHEMA_NAMES(FlatBufferBuilder builder, VectorOffset SCHEMA_NAMESOffset) { builder.AddOffset(7, SCHEMA_NAMESOffset.Value, 0); }
   public static VectorOffset CreateSCHEMA_NAMESVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateSCHEMA_NAMESVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSCHEMA_NAMESVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSCHEMA_NAMESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSCHEMA_NAMESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddPROVIDER_IDS(FlatBufferBuilder builder, VectorOffset PROVIDER_IDSOffset) { builder.AddOffset(6, PROVIDER_IDSOffset.Value, 0); }
+  public static void AddPROVIDER_IDS(FlatBufferBuilder builder, VectorOffset PROVIDER_IDSOffset) { builder.AddOffset(8, PROVIDER_IDSOffset.Value, 0); }
   public static VectorOffset CreatePROVIDER_IDSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreatePROVIDER_IDSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePROVIDER_IDSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePROVIDER_IDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPROVIDER_IDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSOURCE_NAMES(FlatBufferBuilder builder, VectorOffset SOURCE_NAMESOffset) { builder.AddOffset(7, SOURCE_NAMESOffset.Value, 0); }
+  public static void AddSOURCE_NAMES(FlatBufferBuilder builder, VectorOffset SOURCE_NAMESOffset) { builder.AddOffset(9, SOURCE_NAMESOffset.Value, 0); }
   public static VectorOffset CreateSOURCE_NAMESVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateSOURCE_NAMESVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSOURCE_NAMESVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSOURCE_NAMESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSOURCE_NAMESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddBATCH_IDS(FlatBufferBuilder builder, VectorOffset BATCH_IDSOffset) { builder.AddOffset(8, BATCH_IDSOffset.Value, 0); }
+  public static void AddBATCH_IDS(FlatBufferBuilder builder, VectorOffset BATCH_IDSOffset) { builder.AddOffset(10, BATCH_IDSOffset.Value, 0); }
   public static VectorOffset CreateBATCH_IDSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateBATCH_IDSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateBATCH_IDSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateBATCH_IDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartBATCH_IDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddWINDOW_START(FlatBufferBuilder builder, StringOffset WINDOW_STARTOffset) { builder.AddOffset(9, WINDOW_STARTOffset.Value, 0); }
-  public static void AddWINDOW_END(FlatBufferBuilder builder, StringOffset WINDOW_ENDOffset) { builder.AddOffset(10, WINDOW_ENDOffset.Value, 0); }
+  public static void AddWINDOW_START(FlatBufferBuilder builder, StringOffset WINDOW_STARTOffset) { builder.AddOffset(11, WINDOW_STARTOffset.Value, 0); }
+  public static void AddWINDOW_END(FlatBufferBuilder builder, StringOffset WINDOW_ENDOffset) { builder.AddOffset(12, WINDOW_ENDOffset.Value, 0); }
   public static Offset<DPMQueryBinding> EndDPMQueryBinding(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // CANONICAL_QUERY
@@ -163,6 +190,8 @@ public struct DPMQueryBinding : IFlatbufferObject
     _o.RESULT_SHA256 = this.RESULT_SHA256;
     _o.QUERY_ENGINE = this.QUERY_ENGINE;
     _o.QUERY_ENGINE_VERSION = this.QUERY_ENGINE_VERSION;
+    _o.CANONICAL_ORDER = this.CANONICAL_ORDER;
+    _o.QUERY_PROTOCOL = this.QUERY_PROTOCOL;
     _o.SCHEMA_NAMES = new List<string>();
     for (var _j = 0; _j < this.SCHEMA_NAMESLength; ++_j) {_o.SCHEMA_NAMES.Add(this.SCHEMA_NAMES(_j));}
     _o.PROVIDER_IDS = new List<string>();
@@ -181,6 +210,8 @@ public struct DPMQueryBinding : IFlatbufferObject
     var _RESULT_SHA256 = _o.RESULT_SHA256 == null ? default(StringOffset) : builder.CreateString(_o.RESULT_SHA256);
     var _QUERY_ENGINE = _o.QUERY_ENGINE == null ? default(StringOffset) : builder.CreateString(_o.QUERY_ENGINE);
     var _QUERY_ENGINE_VERSION = _o.QUERY_ENGINE_VERSION == null ? default(StringOffset) : builder.CreateString(_o.QUERY_ENGINE_VERSION);
+    var _CANONICAL_ORDER = _o.CANONICAL_ORDER == null ? default(StringOffset) : builder.CreateString(_o.CANONICAL_ORDER);
+    var _QUERY_PROTOCOL = _o.QUERY_PROTOCOL == null ? default(StringOffset) : builder.CreateString(_o.QUERY_PROTOCOL);
     var _SCHEMA_NAMES = default(VectorOffset);
     if (_o.SCHEMA_NAMES != null) {
       var __SCHEMA_NAMES = new StringOffset[_o.SCHEMA_NAMES.Count];
@@ -214,6 +245,8 @@ public struct DPMQueryBinding : IFlatbufferObject
       _RESULT_SHA256,
       _QUERY_ENGINE,
       _QUERY_ENGINE_VERSION,
+      _CANONICAL_ORDER,
+      _QUERY_PROTOCOL,
       _SCHEMA_NAMES,
       _PROVIDER_IDS,
       _SOURCE_NAMES,
@@ -230,6 +263,8 @@ public class DPMQueryBindingT
   public string RESULT_SHA256 { get; set; }
   public string QUERY_ENGINE { get; set; }
   public string QUERY_ENGINE_VERSION { get; set; }
+  public string CANONICAL_ORDER { get; set; }
+  public string QUERY_PROTOCOL { get; set; }
   public List<string> SCHEMA_NAMES { get; set; }
   public List<string> PROVIDER_IDS { get; set; }
   public List<string> SOURCE_NAMES { get; set; }
@@ -243,6 +278,8 @@ public class DPMQueryBindingT
     this.RESULT_SHA256 = null;
     this.QUERY_ENGINE = null;
     this.QUERY_ENGINE_VERSION = null;
+    this.CANONICAL_ORDER = null;
+    this.QUERY_PROTOCOL = null;
     this.SCHEMA_NAMES = null;
     this.PROVIDER_IDS = null;
     this.SOURCE_NAMES = null;
@@ -263,12 +300,14 @@ static public class DPMQueryBindingVerify
       && verifier.VerifyString(tablePos, 8 /*RESULT_SHA256*/, true)
       && verifier.VerifyString(tablePos, 10 /*QUERY_ENGINE*/, false)
       && verifier.VerifyString(tablePos, 12 /*QUERY_ENGINE_VERSION*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 14 /*SCHEMA_NAMES*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 16 /*PROVIDER_IDS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 18 /*SOURCE_NAMES*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 20 /*BATCH_IDS*/, false)
-      && verifier.VerifyString(tablePos, 22 /*WINDOW_START*/, false)
-      && verifier.VerifyString(tablePos, 24 /*WINDOW_END*/, false)
+      && verifier.VerifyString(tablePos, 14 /*CANONICAL_ORDER*/, false)
+      && verifier.VerifyString(tablePos, 16 /*QUERY_PROTOCOL*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 18 /*SCHEMA_NAMES*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 20 /*PROVIDER_IDS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 22 /*SOURCE_NAMES*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 24 /*BATCH_IDS*/, false)
+      && verifier.VerifyString(tablePos, 26 /*WINDOW_START*/, false)
+      && verifier.VerifyString(tablePos, 28 /*WINDOW_END*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

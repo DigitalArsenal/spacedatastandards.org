@@ -128,7 +128,7 @@ class _reentryStateVectorReader extends fb.TableReader<reentryStateVector> {
   const _reentryStateVectorReader();
 
   @override
-  reentryStateVector createObject(fb.BufferContext bc, int offset) => 
+  reentryStateVector createObject(fb.BufferContext bc, int offset) =>
     reentryStateVector._(bc, offset);
 }
 
@@ -282,7 +282,7 @@ class _reentryImpactReader extends fb.TableReader<reentryImpact> {
   const _reentryImpactReader();
 
   @override
-  reentryImpact createObject(fb.BufferContext bc, int offset) => 
+  reentryImpact createObject(fb.BufferContext bc, int offset) =>
     reentryImpact._(bc, offset);
 }
 
@@ -421,7 +421,7 @@ class _survivingDebrisReader extends fb.TableReader<survivingDebris> {
   const _survivingDebrisReader();
 
   @override
-  survivingDebris createObject(fb.BufferContext bc, int offset) => 
+  survivingDebris createObject(fb.BufferContext bc, int offset) =>
     survivingDebris._(bc, offset);
 }
 
@@ -607,7 +607,7 @@ class _RDMReader extends fb.TableReader<RDM> {
   const _RDMReader();
 
   @override
-  RDM createObject(fb.BufferContext bc, int offset) => 
+  RDM createObject(fb.BufferContext bc, int offset) =>
     RDM._(bc, offset);
 }
 

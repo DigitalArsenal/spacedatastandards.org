@@ -182,8 +182,8 @@ impl ::flatbuffers::SimpleToVerifyInSlice for lambertBranchKind {}
 #[repr(transparent)]
 #[derive(Clone, Copy, PartialEq)]
 pub struct lambertVector3(pub [u8; 24]);
-impl Default for lambertVector3 { 
-  fn default() -> Self { 
+impl Default for lambertVector3 {
+  fn default() -> Self {
     Self([0; 24])
   }
 }

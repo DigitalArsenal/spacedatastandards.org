@@ -186,7 +186,7 @@ class _TRNReader extends fb.TableReader<TRN> {
   const _TRNReader();
 
   @override
-  TRN createObject(fb.BufferContext bc, int offset) => 
+  TRN createObject(fb.BufferContext bc, int offset) =>
     TRN._(bc, offset);
 }
 

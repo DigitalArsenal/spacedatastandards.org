@@ -235,7 +235,7 @@ class _CRMReader extends fb.TableReader<CRM> {
   const _CRMReader();
 
   @override
-  CRM createObject(fb.BufferContext bc, int offset) => 
+  CRM createObject(fb.BufferContext bc, int offset) =>
     CRM._(bc, offset);
 }
 

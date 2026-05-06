@@ -52,7 +52,7 @@ class TDM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Cartesian Y coordinate of the OBSERVER location in chosen reference frame 
+     * Cartesian Y coordinate of the OBSERVER location in chosen reference frame
      */
     val observerY : Double
         get() {
@@ -60,7 +60,7 @@ class TDM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Cartesian Z coordinate of the OBSERVER location in chosen reference frame 
+     * Cartesian Z coordinate of the OBSERVER location in chosen reference frame
      */
     val observerZ : Double
         get() {
@@ -76,7 +76,7 @@ class TDM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame 
+     * Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame
      */
     val observerVy : Double
         get() {
@@ -84,7 +84,7 @@ class TDM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
+     * Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame
      */
     val observerVz : Double
         get() {

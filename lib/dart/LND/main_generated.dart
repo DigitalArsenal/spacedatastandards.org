@@ -135,7 +135,7 @@ class _LNDReader extends fb.TableReader<LND> {
   const _LNDReader();
 
   @override
-  LND createObject(fb.BufferContext bc, int offset) => 
+  LND createObject(fb.BufferContext bc, int offset) =>
     LND._(bc, offset);
 }
 

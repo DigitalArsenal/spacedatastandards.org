@@ -104,7 +104,7 @@ class _lambertVector3Reader extends fb.StructReader<lambertVector3> {
   int get size => 24;
 
   @override
-  lambertVector3 createObject(fb.BufferContext bc, int offset) => 
+  lambertVector3 createObject(fb.BufferContext bc, int offset) =>
     lambertVector3._(bc, offset);
 }
 
@@ -189,7 +189,7 @@ class _lambertSolutionBranchReader extends fb.TableReader<lambertSolutionBranch>
   const _lambertSolutionBranchReader();
 
   @override
-  lambertSolutionBranch createObject(fb.BufferContext bc, int offset) => 
+  lambertSolutionBranch createObject(fb.BufferContext bc, int offset) =>
     lambertSolutionBranch._(bc, offset);
 }
 
@@ -318,7 +318,7 @@ class _LMOReader extends fb.TableReader<LMO> {
   const _LMOReader();
 
   @override
-  LMO createObject(fb.BufferContext bc, int offset) => 
+  LMO createObject(fb.BufferContext bc, int offset) =>
     LMO._(bc, offset);
 }
 

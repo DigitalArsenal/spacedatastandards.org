@@ -13,6 +13,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
+struct DPMCompletenessIndex;
+struct DPMCompletenessIndexBuilder;
+
 struct DPMAsset;
 struct DPMAssetBuilder;
 
@@ -66,35 +69,226 @@ inline const char *EnumNamepublicationAssetKind(publicationAssetKind e) {
   return EnumNamespublicationAssetKind()[index];
 }
 
-/// One immutable content-addressed object published for a dataset update.
+/// Transport profile used to resolve a dataset update asset.
+enum dpmTransportKind : int8_t {
+  /// Asset bytes are resolved by content address, usually an IPFS CID.
+  dpmTransportKind_CONTENT_ADDRESS = 0,
+  /// Asset bytes are resolved from the provider through a signed SDN query
+  /// protocol. This mode is used when the update is not published as a
+  /// globally discoverable file.
+  dpmTransportKind_SDN_QUERY = 1,
+  /// Asset bytes are resolved by another protocol named in TRANSPORT_PROTOCOL.
+  dpmTransportKind_OTHER = 2,
+  dpmTransportKind_MIN = dpmTransportKind_CONTENT_ADDRESS,
+  dpmTransportKind_MAX = dpmTransportKind_OTHER
+};
+
+inline const dpmTransportKind (&EnumValuesdpmTransportKind())[3] {
+  static const dpmTransportKind values[] = {
+    dpmTransportKind_CONTENT_ADDRESS,
+    dpmTransportKind_SDN_QUERY,
+    dpmTransportKind_OTHER
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesdpmTransportKind() {
+  static const char * const names[4] = {
+    "CONTENT_ADDRESS",
+    "SDN_QUERY",
+    "OTHER",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamedpmTransportKind(dpmTransportKind e) {
+  if (::flatbuffers::IsOutRange(e, dpmTransportKind_CONTENT_ADDRESS, dpmTransportKind_OTHER)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesdpmTransportKind()[index];
+}
+
+/// Completeness-capable signed index over a dataset update.
+struct DPMCompletenessIndex FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef DPMCompletenessIndexBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_INDEX_NAME = 4,
+    VT_CANONICAL_ORDER = 6,
+    VT_INDEX_ROOT = 8,
+    VT_MERKLE_PROFILE = 10,
+    VT_SUPPORTS_RANGE_COMPLETENESS = 12
+  };
+  /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+  const ::flatbuffers::String *INDEX_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INDEX_NAME);
+  }
+  /// Deterministic ordering expression for the index. Providers and
+  /// subscribers MUST use this ordering when building or verifying range
+  /// proofs. A query is completeness-verifiable only when its predicate can be
+  /// expressed against one or more declared indexes.
+  const ::flatbuffers::String *CANONICAL_ORDER() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CANONICAL_ORDER);
+  }
+  /// SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
+  /// signed by the DPM provider signature and is the verifier's commitment for
+  /// inclusion and range-completeness proofs.
+  const ::flatbuffers::String *INDEX_ROOT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INDEX_ROOT);
+  }
+  /// Hash profile for leaves and internal nodes, e.g.
+  /// SDN-MERKLE-SHA256-v1. Profiles define domain separators, leaf material,
+  /// pair ordering, duplicate handling, and odd-leaf promotion.
+  const ::flatbuffers::String *MERKLE_PROFILE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MERKLE_PROFILE);
+  }
+  /// Whether this index can prove that no matching records were omitted for a
+  /// supported range query. Inclusion proofs alone prove authenticity, not
+  /// completeness.
+  bool SUPPORTS_RANGE_COMPLETENESS() const {
+    return GetField<uint8_t>(VT_SUPPORTS_RANGE_COMPLETENESS, 0) != 0;
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_INDEX_NAME) &&
+           verifier.VerifyString(INDEX_NAME()) &&
+           VerifyOffset(verifier, VT_CANONICAL_ORDER) &&
+           verifier.VerifyString(CANONICAL_ORDER()) &&
+           VerifyOffset(verifier, VT_INDEX_ROOT) &&
+           verifier.VerifyString(INDEX_ROOT()) &&
+           VerifyOffset(verifier, VT_MERKLE_PROFILE) &&
+           verifier.VerifyString(MERKLE_PROFILE()) &&
+           VerifyField<uint8_t>(verifier, VT_SUPPORTS_RANGE_COMPLETENESS, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct DPMCompletenessIndexBuilder {
+  typedef DPMCompletenessIndex Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_INDEX_NAME(::flatbuffers::Offset<::flatbuffers::String> INDEX_NAME) {
+    fbb_.AddOffset(DPMCompletenessIndex::VT_INDEX_NAME, INDEX_NAME);
+  }
+  void add_CANONICAL_ORDER(::flatbuffers::Offset<::flatbuffers::String> CANONICAL_ORDER) {
+    fbb_.AddOffset(DPMCompletenessIndex::VT_CANONICAL_ORDER, CANONICAL_ORDER);
+  }
+  void add_INDEX_ROOT(::flatbuffers::Offset<::flatbuffers::String> INDEX_ROOT) {
+    fbb_.AddOffset(DPMCompletenessIndex::VT_INDEX_ROOT, INDEX_ROOT);
+  }
+  void add_MERKLE_PROFILE(::flatbuffers::Offset<::flatbuffers::String> MERKLE_PROFILE) {
+    fbb_.AddOffset(DPMCompletenessIndex::VT_MERKLE_PROFILE, MERKLE_PROFILE);
+  }
+  void add_SUPPORTS_RANGE_COMPLETENESS(bool SUPPORTS_RANGE_COMPLETENESS) {
+    fbb_.AddElement<uint8_t>(DPMCompletenessIndex::VT_SUPPORTS_RANGE_COMPLETENESS, static_cast<uint8_t>(SUPPORTS_RANGE_COMPLETENESS), 0);
+  }
+  explicit DPMCompletenessIndexBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<DPMCompletenessIndex> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<DPMCompletenessIndex>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<DPMCompletenessIndex> CreateDPMCompletenessIndex(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> INDEX_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CANONICAL_ORDER = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> INDEX_ROOT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MERKLE_PROFILE = 0,
+    bool SUPPORTS_RANGE_COMPLETENESS = false) {
+  DPMCompletenessIndexBuilder builder_(_fbb);
+  builder_.add_MERKLE_PROFILE(MERKLE_PROFILE);
+  builder_.add_INDEX_ROOT(INDEX_ROOT);
+  builder_.add_CANONICAL_ORDER(CANONICAL_ORDER);
+  builder_.add_INDEX_NAME(INDEX_NAME);
+  builder_.add_SUPPORTS_RANGE_COMPLETENESS(SUPPORTS_RANGE_COMPLETENESS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<DPMCompletenessIndex> CreateDPMCompletenessIndexDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *INDEX_NAME = nullptr,
+    const char *CANONICAL_ORDER = nullptr,
+    const char *INDEX_ROOT = nullptr,
+    const char *MERKLE_PROFILE = nullptr,
+    bool SUPPORTS_RANGE_COMPLETENESS = false) {
+  auto INDEX_NAME__ = INDEX_NAME ? _fbb.CreateString(INDEX_NAME) : 0;
+  auto CANONICAL_ORDER__ = CANONICAL_ORDER ? _fbb.CreateString(CANONICAL_ORDER) : 0;
+  auto INDEX_ROOT__ = INDEX_ROOT ? _fbb.CreateString(INDEX_ROOT) : 0;
+  auto MERKLE_PROFILE__ = MERKLE_PROFILE ? _fbb.CreateString(MERKLE_PROFILE) : 0;
+  return CreateDPMCompletenessIndex(
+      _fbb,
+      INDEX_NAME__,
+      CANONICAL_ORDER__,
+      INDEX_ROOT__,
+      MERKLE_PROFILE__,
+      SUPPORTS_RANGE_COMPLETENESS);
+}
+
+/// One immutable asset or provider-mediated query contract published for a
+/// dataset update.
 struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef DPMAssetBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ASSET_KIND = 4,
-    VT_CID = 6,
-    VT_MULTIFORMAT_ADDRESS = 8,
-    VT_FILE_NAME = 10,
-    VT_BYTE_LENGTH = 12,
-    VT_BYTE_SHA256 = 14,
-    VT_SCHEMA_NAME = 16,
-    VT_SCHEMA_HASH = 18,
-    VT_CONTENT_KEY_ID = 20
+    VT_TRANSPORT_KIND = 6,
+    VT_CID = 8,
+    VT_MULTIFORMAT_ADDRESS = 10,
+    VT_FILE_NAME = 12,
+    VT_FILE_ID = 14,
+    VT_TRANSPORT_PROTOCOL = 16,
+    VT_BYTE_LENGTH = 18,
+    VT_BYTE_SHA256 = 20,
+    VT_DATA_ROOT = 22,
+    VT_SCHEMA_NAME = 24,
+    VT_SCHEMA_HASH = 26,
+    VT_CONTENT_KEY_ID = 28
   };
   /// Asset role.
   publicationAssetKind ASSET_KIND() const {
     return static_cast<publicationAssetKind>(GetField<int8_t>(VT_ASSET_KIND, 3));
   }
-  /// IPFS CIDv1/multihash content identifier.
+  /// Transport profile for this asset. CONTENT_ADDRESS assets use CID and
+  /// MULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the
+  /// signed DPM query and root fields; they are not required to be published as
+  /// discoverable IPFS files.
+  dpmTransportKind TRANSPORT_KIND() const {
+    return static_cast<dpmTransportKind>(GetField<int8_t>(VT_TRANSPORT_KIND, 0));
+  }
+  /// Optional IPFS CIDv1/multihash content identifier. This field is required
+  /// for CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose
+  /// bytes are retrieved through a provider protocol.
   const ::flatbuffers::String *CID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CID);
   }
-  /// Multiformat address, usually /ipfs/{CID}.
+  /// Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For
+  /// SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when
+  /// provider routing is resolved from the DPM provider identity.
   const ::flatbuffers::String *MULTIFORMAT_ADDRESS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MULTIFORMAT_ADDRESS);
   }
   /// File name or logical artifact name.
   const ::flatbuffers::String *FILE_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_FILE_NAME);
+  }
+  /// Canonical publication/update partition identity for this asset. FILE_ID is
+  /// not a display filename; it is the stable identifier used by PNMs,
+  /// manifests, entitlements, query requests, subscriber caches, and
+  /// completeness proofs. Example:
+  /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  const ::flatbuffers::String *FILE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FILE_ID);
+  }
+  /// Provider protocol name/version used to fetch this asset when
+  /// TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
+  /// response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the
+  /// provider signature in this DPM.
+  const ::flatbuffers::String *TRANSPORT_PROTOCOL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRANSPORT_PROTOCOL);
   }
   /// Byte length of the published object.
   uint64_t BYTE_LENGTH() const {
@@ -103,6 +297,12 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// SHA-256 hash of the exact published bytes, lowercase hex.
   const ::flatbuffers::String *BYTE_SHA256() const {
     return GetPointer<const ::flatbuffers::String *>(VT_BYTE_SHA256);
+  }
+  /// Merkle root over canonical records in this asset, lowercase hex. For
+  /// provider-mediated query delivery, subscribers verify returned records and
+  /// proof paths against this root before importing data.
+  const ::flatbuffers::String *DATA_ROOT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DATA_ROOT);
   }
   /// SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
   const ::flatbuffers::String *SCHEMA_NAME() const {
@@ -120,15 +320,22 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_ASSET_KIND, 1) &&
-           VerifyOffsetRequired(verifier, VT_CID) &&
+           VerifyField<int8_t>(verifier, VT_TRANSPORT_KIND, 1) &&
+           VerifyOffset(verifier, VT_CID) &&
            verifier.VerifyString(CID()) &&
            VerifyOffset(verifier, VT_MULTIFORMAT_ADDRESS) &&
            verifier.VerifyString(MULTIFORMAT_ADDRESS()) &&
            VerifyOffset(verifier, VT_FILE_NAME) &&
            verifier.VerifyString(FILE_NAME()) &&
+           VerifyOffset(verifier, VT_FILE_ID) &&
+           verifier.VerifyString(FILE_ID()) &&
+           VerifyOffset(verifier, VT_TRANSPORT_PROTOCOL) &&
+           verifier.VerifyString(TRANSPORT_PROTOCOL()) &&
            VerifyField<uint64_t>(verifier, VT_BYTE_LENGTH, 8) &&
            VerifyOffset(verifier, VT_BYTE_SHA256) &&
            verifier.VerifyString(BYTE_SHA256()) &&
+           VerifyOffset(verifier, VT_DATA_ROOT) &&
+           verifier.VerifyString(DATA_ROOT()) &&
            VerifyOffset(verifier, VT_SCHEMA_NAME) &&
            verifier.VerifyString(SCHEMA_NAME()) &&
            VerifyOffset(verifier, VT_SCHEMA_HASH) &&
@@ -146,6 +353,9 @@ struct DPMAssetBuilder {
   void add_ASSET_KIND(publicationAssetKind ASSET_KIND) {
     fbb_.AddElement<int8_t>(DPMAsset::VT_ASSET_KIND, static_cast<int8_t>(ASSET_KIND), 3);
   }
+  void add_TRANSPORT_KIND(dpmTransportKind TRANSPORT_KIND) {
+    fbb_.AddElement<int8_t>(DPMAsset::VT_TRANSPORT_KIND, static_cast<int8_t>(TRANSPORT_KIND), 0);
+  }
   void add_CID(::flatbuffers::Offset<::flatbuffers::String> CID) {
     fbb_.AddOffset(DPMAsset::VT_CID, CID);
   }
@@ -155,11 +365,20 @@ struct DPMAssetBuilder {
   void add_FILE_NAME(::flatbuffers::Offset<::flatbuffers::String> FILE_NAME) {
     fbb_.AddOffset(DPMAsset::VT_FILE_NAME, FILE_NAME);
   }
+  void add_FILE_ID(::flatbuffers::Offset<::flatbuffers::String> FILE_ID) {
+    fbb_.AddOffset(DPMAsset::VT_FILE_ID, FILE_ID);
+  }
+  void add_TRANSPORT_PROTOCOL(::flatbuffers::Offset<::flatbuffers::String> TRANSPORT_PROTOCOL) {
+    fbb_.AddOffset(DPMAsset::VT_TRANSPORT_PROTOCOL, TRANSPORT_PROTOCOL);
+  }
   void add_BYTE_LENGTH(uint64_t BYTE_LENGTH) {
     fbb_.AddElement<uint64_t>(DPMAsset::VT_BYTE_LENGTH, BYTE_LENGTH, 0);
   }
   void add_BYTE_SHA256(::flatbuffers::Offset<::flatbuffers::String> BYTE_SHA256) {
     fbb_.AddOffset(DPMAsset::VT_BYTE_SHA256, BYTE_SHA256);
+  }
+  void add_DATA_ROOT(::flatbuffers::Offset<::flatbuffers::String> DATA_ROOT) {
+    fbb_.AddOffset(DPMAsset::VT_DATA_ROOT, DATA_ROOT);
   }
   void add_SCHEMA_NAME(::flatbuffers::Offset<::flatbuffers::String> SCHEMA_NAME) {
     fbb_.AddOffset(DPMAsset::VT_SCHEMA_NAME, SCHEMA_NAME);
@@ -177,7 +396,6 @@ struct DPMAssetBuilder {
   ::flatbuffers::Offset<DPMAsset> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = ::flatbuffers::Offset<DPMAsset>(end);
-    fbb_.Required(o, DPMAsset::VT_CID);
     return o;
   }
 };
@@ -185,11 +403,15 @@ struct DPMAssetBuilder {
 inline ::flatbuffers::Offset<DPMAsset> CreateDPMAsset(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     publicationAssetKind ASSET_KIND = publicationAssetKind_OTHER,
+    dpmTransportKind TRANSPORT_KIND = dpmTransportKind_CONTENT_ADDRESS,
     ::flatbuffers::Offset<::flatbuffers::String> CID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> MULTIFORMAT_ADDRESS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> FILE_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> FILE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TRANSPORT_PROTOCOL = 0,
     uint64_t BYTE_LENGTH = 0,
     ::flatbuffers::Offset<::flatbuffers::String> BYTE_SHA256 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DATA_ROOT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_HASH = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CONTENT_KEY_ID = 0) {
@@ -198,10 +420,14 @@ inline ::flatbuffers::Offset<DPMAsset> CreateDPMAsset(
   builder_.add_CONTENT_KEY_ID(CONTENT_KEY_ID);
   builder_.add_SCHEMA_HASH(SCHEMA_HASH);
   builder_.add_SCHEMA_NAME(SCHEMA_NAME);
+  builder_.add_DATA_ROOT(DATA_ROOT);
   builder_.add_BYTE_SHA256(BYTE_SHA256);
+  builder_.add_TRANSPORT_PROTOCOL(TRANSPORT_PROTOCOL);
+  builder_.add_FILE_ID(FILE_ID);
   builder_.add_FILE_NAME(FILE_NAME);
   builder_.add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS);
   builder_.add_CID(CID);
+  builder_.add_TRANSPORT_KIND(TRANSPORT_KIND);
   builder_.add_ASSET_KIND(ASSET_KIND);
   return builder_.Finish();
 }
@@ -209,29 +435,40 @@ inline ::flatbuffers::Offset<DPMAsset> CreateDPMAsset(
 inline ::flatbuffers::Offset<DPMAsset> CreateDPMAssetDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     publicationAssetKind ASSET_KIND = publicationAssetKind_OTHER,
+    dpmTransportKind TRANSPORT_KIND = dpmTransportKind_CONTENT_ADDRESS,
     const char *CID = nullptr,
     const char *MULTIFORMAT_ADDRESS = nullptr,
     const char *FILE_NAME = nullptr,
+    const char *FILE_ID = nullptr,
+    const char *TRANSPORT_PROTOCOL = nullptr,
     uint64_t BYTE_LENGTH = 0,
     const char *BYTE_SHA256 = nullptr,
+    const char *DATA_ROOT = nullptr,
     const char *SCHEMA_NAME = nullptr,
     const char *SCHEMA_HASH = nullptr,
     const char *CONTENT_KEY_ID = nullptr) {
   auto CID__ = CID ? _fbb.CreateString(CID) : 0;
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateString(MULTIFORMAT_ADDRESS) : 0;
   auto FILE_NAME__ = FILE_NAME ? _fbb.CreateString(FILE_NAME) : 0;
+  auto FILE_ID__ = FILE_ID ? _fbb.CreateString(FILE_ID) : 0;
+  auto TRANSPORT_PROTOCOL__ = TRANSPORT_PROTOCOL ? _fbb.CreateString(TRANSPORT_PROTOCOL) : 0;
   auto BYTE_SHA256__ = BYTE_SHA256 ? _fbb.CreateString(BYTE_SHA256) : 0;
+  auto DATA_ROOT__ = DATA_ROOT ? _fbb.CreateString(DATA_ROOT) : 0;
   auto SCHEMA_NAME__ = SCHEMA_NAME ? _fbb.CreateString(SCHEMA_NAME) : 0;
   auto SCHEMA_HASH__ = SCHEMA_HASH ? _fbb.CreateString(SCHEMA_HASH) : 0;
   auto CONTENT_KEY_ID__ = CONTENT_KEY_ID ? _fbb.CreateString(CONTENT_KEY_ID) : 0;
   return CreateDPMAsset(
       _fbb,
       ASSET_KIND,
+      TRANSPORT_KIND,
       CID__,
       MULTIFORMAT_ADDRESS__,
       FILE_NAME__,
+      FILE_ID__,
+      TRANSPORT_PROTOCOL__,
       BYTE_LENGTH,
       BYTE_SHA256__,
+      DATA_ROOT__,
       SCHEMA_NAME__,
       SCHEMA_HASH__,
       CONTENT_KEY_ID__);
@@ -419,12 +656,14 @@ struct DPMQueryBinding FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_RESULT_SHA256 = 8,
     VT_QUERY_ENGINE = 10,
     VT_QUERY_ENGINE_VERSION = 12,
-    VT_SCHEMA_NAMES = 14,
-    VT_PROVIDER_IDS = 16,
-    VT_SOURCE_NAMES = 18,
-    VT_BATCH_IDS = 20,
-    VT_WINDOW_START = 22,
-    VT_WINDOW_END = 24
+    VT_CANONICAL_ORDER = 14,
+    VT_QUERY_PROTOCOL = 16,
+    VT_SCHEMA_NAMES = 18,
+    VT_PROVIDER_IDS = 20,
+    VT_SOURCE_NAMES = 22,
+    VT_BATCH_IDS = 24,
+    VT_WINDOW_START = 26,
+    VT_WINDOW_END = 28
   };
   /// Canonical query text or canonical JSON representation.
   const ::flatbuffers::String *CANONICAL_QUERY() const {
@@ -445,6 +684,19 @@ struct DPMQueryBinding FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Query engine version or profile version.
   const ::flatbuffers::String *QUERY_ENGINE_VERSION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_QUERY_ENGINE_VERSION);
+  }
+  /// Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+  /// computed. Providers MUST stream records in this order unless each chunk
+  /// includes enough proof material to restore and verify the canonical order.
+  const ::flatbuffers::String *CANONICAL_ORDER() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CANONICAL_ORDER);
+  }
+  /// Query protocol name/version for provider-mediated retrieval, e.g.
+  /// /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+  /// protocol to the provider, submits the signed query or a permitted subset,
+  /// and imports only responses that verify against the signed roots.
+  const ::flatbuffers::String *QUERY_PROTOCOL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_QUERY_PROTOCOL);
   }
   /// SDS schema names selected by the query.
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SCHEMA_NAMES() const {
@@ -483,6 +735,10 @@ struct DPMQueryBinding FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(QUERY_ENGINE()) &&
            VerifyOffset(verifier, VT_QUERY_ENGINE_VERSION) &&
            verifier.VerifyString(QUERY_ENGINE_VERSION()) &&
+           VerifyOffset(verifier, VT_CANONICAL_ORDER) &&
+           verifier.VerifyString(CANONICAL_ORDER()) &&
+           VerifyOffset(verifier, VT_QUERY_PROTOCOL) &&
+           verifier.VerifyString(QUERY_PROTOCOL()) &&
            VerifyOffset(verifier, VT_SCHEMA_NAMES) &&
            verifier.VerifyVector(SCHEMA_NAMES()) &&
            verifier.VerifyVectorOfStrings(SCHEMA_NAMES()) &&
@@ -521,6 +777,12 @@ struct DPMQueryBindingBuilder {
   }
   void add_QUERY_ENGINE_VERSION(::flatbuffers::Offset<::flatbuffers::String> QUERY_ENGINE_VERSION) {
     fbb_.AddOffset(DPMQueryBinding::VT_QUERY_ENGINE_VERSION, QUERY_ENGINE_VERSION);
+  }
+  void add_CANONICAL_ORDER(::flatbuffers::Offset<::flatbuffers::String> CANONICAL_ORDER) {
+    fbb_.AddOffset(DPMQueryBinding::VT_CANONICAL_ORDER, CANONICAL_ORDER);
+  }
+  void add_QUERY_PROTOCOL(::flatbuffers::Offset<::flatbuffers::String> QUERY_PROTOCOL) {
+    fbb_.AddOffset(DPMQueryBinding::VT_QUERY_PROTOCOL, QUERY_PROTOCOL);
   }
   void add_SCHEMA_NAMES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SCHEMA_NAMES) {
     fbb_.AddOffset(DPMQueryBinding::VT_SCHEMA_NAMES, SCHEMA_NAMES);
@@ -561,6 +823,8 @@ inline ::flatbuffers::Offset<DPMQueryBinding> CreateDPMQueryBinding(
     ::flatbuffers::Offset<::flatbuffers::String> RESULT_SHA256 = 0,
     ::flatbuffers::Offset<::flatbuffers::String> QUERY_ENGINE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> QUERY_ENGINE_VERSION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CANONICAL_ORDER = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> QUERY_PROTOCOL = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SCHEMA_NAMES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> PROVIDER_IDS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SOURCE_NAMES = 0,
@@ -574,6 +838,8 @@ inline ::flatbuffers::Offset<DPMQueryBinding> CreateDPMQueryBinding(
   builder_.add_SOURCE_NAMES(SOURCE_NAMES);
   builder_.add_PROVIDER_IDS(PROVIDER_IDS);
   builder_.add_SCHEMA_NAMES(SCHEMA_NAMES);
+  builder_.add_QUERY_PROTOCOL(QUERY_PROTOCOL);
+  builder_.add_CANONICAL_ORDER(CANONICAL_ORDER);
   builder_.add_QUERY_ENGINE_VERSION(QUERY_ENGINE_VERSION);
   builder_.add_QUERY_ENGINE(QUERY_ENGINE);
   builder_.add_RESULT_SHA256(RESULT_SHA256);
@@ -589,6 +855,8 @@ inline ::flatbuffers::Offset<DPMQueryBinding> CreateDPMQueryBindingDirect(
     const char *RESULT_SHA256 = nullptr,
     const char *QUERY_ENGINE = nullptr,
     const char *QUERY_ENGINE_VERSION = nullptr,
+    const char *CANONICAL_ORDER = nullptr,
+    const char *QUERY_PROTOCOL = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SCHEMA_NAMES = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *PROVIDER_IDS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SOURCE_NAMES = nullptr,
@@ -600,6 +868,8 @@ inline ::flatbuffers::Offset<DPMQueryBinding> CreateDPMQueryBindingDirect(
   auto RESULT_SHA256__ = RESULT_SHA256 ? _fbb.CreateString(RESULT_SHA256) : 0;
   auto QUERY_ENGINE__ = QUERY_ENGINE ? _fbb.CreateString(QUERY_ENGINE) : 0;
   auto QUERY_ENGINE_VERSION__ = QUERY_ENGINE_VERSION ? _fbb.CreateString(QUERY_ENGINE_VERSION) : 0;
+  auto CANONICAL_ORDER__ = CANONICAL_ORDER ? _fbb.CreateString(CANONICAL_ORDER) : 0;
+  auto QUERY_PROTOCOL__ = QUERY_PROTOCOL ? _fbb.CreateString(QUERY_PROTOCOL) : 0;
   auto SCHEMA_NAMES__ = SCHEMA_NAMES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SCHEMA_NAMES) : 0;
   auto PROVIDER_IDS__ = PROVIDER_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*PROVIDER_IDS) : 0;
   auto SOURCE_NAMES__ = SOURCE_NAMES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SOURCE_NAMES) : 0;
@@ -613,6 +883,8 @@ inline ::flatbuffers::Offset<DPMQueryBinding> CreateDPMQueryBindingDirect(
       RESULT_SHA256__,
       QUERY_ENGINE__,
       QUERY_ENGINE_VERSION__,
+      CANONICAL_ORDER__,
+      QUERY_PROTOCOL__,
       SCHEMA_NAMES__,
       PROVIDER_IDS__,
       SOURCE_NAMES__,
@@ -749,22 +1021,25 @@ inline ::flatbuffers::Offset<DPMEncryptionBinding> CreateDPMEncryptionBindingDir
 }
 
 /// Dataset Publication Manifest binding data/index CIDs, query replay,
-/// source hashes, schema hashes, encryption metadata, and provider signature.
+/// source hashes, schema hashes, encryption metadata, provider-mediated query
+/// protocols, completeness roots, and provider signature.
 struct DPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef DPMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_VERSION = 4,
     VT_DATASET_ID = 6,
     VT_UPDATE_ID = 8,
-    VT_PROVIDER_PEER_ID = 10,
-    VT_PROVIDER_EPM_CID = 12,
-    VT_PUBLISH_TIMESTAMP = 14,
-    VT_ASSETS = 16,
-    VT_SOURCES = 18,
-    VT_QUERY = 20,
-    VT_ENCRYPTION = 22,
-    VT_PROVIDER_SIGNATURE = 24,
-    VT_SIGNATURE_TYPE = 26
+    VT_FILE_ID = 10,
+    VT_PROVIDER_PEER_ID = 12,
+    VT_PROVIDER_EPM_CID = 14,
+    VT_PUBLISH_TIMESTAMP = 16,
+    VT_ASSETS = 18,
+    VT_SOURCES = 20,
+    VT_QUERY = 22,
+    VT_INDEXES = 24,
+    VT_ENCRYPTION = 26,
+    VT_PROVIDER_SIGNATURE = 28,
+    VT_SIGNATURE_TYPE = 30
   };
   /// Manifest format version.
   const ::flatbuffers::String *VERSION() const {
@@ -777,6 +1052,15 @@ struct DPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Dataset update or batch identifier.
   const ::flatbuffers::String *UPDATE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_UPDATE_ID);
+  }
+  /// Canonical publication/update partition identity. FILE_ID is the key used
+  /// everywhere a subscriber, provider, PNM, entitlement, cache, or query
+  /// protocol refers to this exact update. It is not merely a human filename
+  /// and it is not the FlatBuffer file_identifier. For completeness-verifiable
+  /// streams, all returned records MUST belong to this FILE_ID and prove
+  /// inclusion under this DPM's signed roots.
+  const ::flatbuffers::String *FILE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FILE_ID);
   }
   /// Provider peer ID.
   const ::flatbuffers::String *PROVIDER_PEER_ID() const {
@@ -802,6 +1086,13 @@ struct DPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const DPMQueryBinding *QUERY() const {
     return GetPointer<const DPMQueryBinding *>(VT_QUERY);
   }
+  /// Signed completeness-capable indexes. Inclusion proofs prove that returned
+  /// records are authentic members of DATA_ROOT. Range-completeness proofs also
+  /// prove that no matching records were omitted, but only for predicates
+  /// expressible against these declared indexes.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<DPMCompletenessIndex>> *INDEXES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<DPMCompletenessIndex>> *>(VT_INDEXES);
+  }
   /// Encryption/key metadata.
   const DPMEncryptionBinding *ENCRYPTION() const {
     return GetPointer<const DPMEncryptionBinding *>(VT_ENCRYPTION);
@@ -823,6 +1114,8 @@ struct DPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(DATASET_ID()) &&
            VerifyOffsetRequired(verifier, VT_UPDATE_ID) &&
            verifier.VerifyString(UPDATE_ID()) &&
+           VerifyOffset(verifier, VT_FILE_ID) &&
+           verifier.VerifyString(FILE_ID()) &&
            VerifyOffsetRequired(verifier, VT_PROVIDER_PEER_ID) &&
            verifier.VerifyString(PROVIDER_PEER_ID()) &&
            VerifyOffset(verifier, VT_PROVIDER_EPM_CID) &&
@@ -837,6 +1130,9 @@ struct DPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(SOURCES()) &&
            VerifyOffset(verifier, VT_QUERY) &&
            verifier.VerifyTable(QUERY()) &&
+           VerifyOffset(verifier, VT_INDEXES) &&
+           verifier.VerifyVector(INDEXES()) &&
+           verifier.VerifyVectorOfTables(INDEXES()) &&
            VerifyOffset(verifier, VT_ENCRYPTION) &&
            verifier.VerifyTable(ENCRYPTION()) &&
            VerifyOffset(verifier, VT_PROVIDER_SIGNATURE) &&
@@ -860,6 +1156,9 @@ struct DPMBuilder {
   void add_UPDATE_ID(::flatbuffers::Offset<::flatbuffers::String> UPDATE_ID) {
     fbb_.AddOffset(DPM::VT_UPDATE_ID, UPDATE_ID);
   }
+  void add_FILE_ID(::flatbuffers::Offset<::flatbuffers::String> FILE_ID) {
+    fbb_.AddOffset(DPM::VT_FILE_ID, FILE_ID);
+  }
   void add_PROVIDER_PEER_ID(::flatbuffers::Offset<::flatbuffers::String> PROVIDER_PEER_ID) {
     fbb_.AddOffset(DPM::VT_PROVIDER_PEER_ID, PROVIDER_PEER_ID);
   }
@@ -877,6 +1176,9 @@ struct DPMBuilder {
   }
   void add_QUERY(::flatbuffers::Offset<DPMQueryBinding> QUERY) {
     fbb_.AddOffset(DPM::VT_QUERY, QUERY);
+  }
+  void add_INDEXES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<DPMCompletenessIndex>>> INDEXES) {
+    fbb_.AddOffset(DPM::VT_INDEXES, INDEXES);
   }
   void add_ENCRYPTION(::flatbuffers::Offset<DPMEncryptionBinding> ENCRYPTION) {
     fbb_.AddOffset(DPM::VT_ENCRYPTION, ENCRYPTION);
@@ -907,12 +1209,14 @@ inline ::flatbuffers::Offset<DPM> CreateDPM(
     ::flatbuffers::Offset<::flatbuffers::String> VERSION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DATASET_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> UPDATE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> FILE_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PROVIDER_PEER_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PROVIDER_EPM_CID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PUBLISH_TIMESTAMP = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<DPMAsset>>> ASSETS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<DPMSourceBatch>>> SOURCES = 0,
     ::flatbuffers::Offset<DPMQueryBinding> QUERY = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<DPMCompletenessIndex>>> INDEXES = 0,
     ::flatbuffers::Offset<DPMEncryptionBinding> ENCRYPTION = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PROVIDER_SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SIGNATURE_TYPE = 0) {
@@ -920,12 +1224,14 @@ inline ::flatbuffers::Offset<DPM> CreateDPM(
   builder_.add_SIGNATURE_TYPE(SIGNATURE_TYPE);
   builder_.add_PROVIDER_SIGNATURE(PROVIDER_SIGNATURE);
   builder_.add_ENCRYPTION(ENCRYPTION);
+  builder_.add_INDEXES(INDEXES);
   builder_.add_QUERY(QUERY);
   builder_.add_SOURCES(SOURCES);
   builder_.add_ASSETS(ASSETS);
   builder_.add_PUBLISH_TIMESTAMP(PUBLISH_TIMESTAMP);
   builder_.add_PROVIDER_EPM_CID(PROVIDER_EPM_CID);
   builder_.add_PROVIDER_PEER_ID(PROVIDER_PEER_ID);
+  builder_.add_FILE_ID(FILE_ID);
   builder_.add_UPDATE_ID(UPDATE_ID);
   builder_.add_DATASET_ID(DATASET_ID);
   builder_.add_VERSION(VERSION);
@@ -937,23 +1243,27 @@ inline ::flatbuffers::Offset<DPM> CreateDPMDirect(
     const char *VERSION = nullptr,
     const char *DATASET_ID = nullptr,
     const char *UPDATE_ID = nullptr,
+    const char *FILE_ID = nullptr,
     const char *PROVIDER_PEER_ID = nullptr,
     const char *PROVIDER_EPM_CID = nullptr,
     const char *PUBLISH_TIMESTAMP = nullptr,
     const std::vector<::flatbuffers::Offset<DPMAsset>> *ASSETS = nullptr,
     const std::vector<::flatbuffers::Offset<DPMSourceBatch>> *SOURCES = nullptr,
     ::flatbuffers::Offset<DPMQueryBinding> QUERY = 0,
+    const std::vector<::flatbuffers::Offset<DPMCompletenessIndex>> *INDEXES = nullptr,
     ::flatbuffers::Offset<DPMEncryptionBinding> ENCRYPTION = 0,
     const std::vector<uint8_t> *PROVIDER_SIGNATURE = nullptr,
     const char *SIGNATURE_TYPE = nullptr) {
   auto VERSION__ = VERSION ? _fbb.CreateString(VERSION) : 0;
   auto DATASET_ID__ = DATASET_ID ? _fbb.CreateString(DATASET_ID) : 0;
   auto UPDATE_ID__ = UPDATE_ID ? _fbb.CreateString(UPDATE_ID) : 0;
+  auto FILE_ID__ = FILE_ID ? _fbb.CreateString(FILE_ID) : 0;
   auto PROVIDER_PEER_ID__ = PROVIDER_PEER_ID ? _fbb.CreateString(PROVIDER_PEER_ID) : 0;
   auto PROVIDER_EPM_CID__ = PROVIDER_EPM_CID ? _fbb.CreateString(PROVIDER_EPM_CID) : 0;
   auto PUBLISH_TIMESTAMP__ = PUBLISH_TIMESTAMP ? _fbb.CreateString(PUBLISH_TIMESTAMP) : 0;
   auto ASSETS__ = ASSETS ? _fbb.CreateVector<::flatbuffers::Offset<DPMAsset>>(*ASSETS) : 0;
   auto SOURCES__ = SOURCES ? _fbb.CreateVector<::flatbuffers::Offset<DPMSourceBatch>>(*SOURCES) : 0;
+  auto INDEXES__ = INDEXES ? _fbb.CreateVector<::flatbuffers::Offset<DPMCompletenessIndex>>(*INDEXES) : 0;
   auto PROVIDER_SIGNATURE__ = PROVIDER_SIGNATURE ? _fbb.CreateVector<uint8_t>(*PROVIDER_SIGNATURE) : 0;
   auto SIGNATURE_TYPE__ = SIGNATURE_TYPE ? _fbb.CreateString(SIGNATURE_TYPE) : 0;
   return CreateDPM(
@@ -961,12 +1271,14 @@ inline ::flatbuffers::Offset<DPM> CreateDPMDirect(
       VERSION__,
       DATASET_ID__,
       UPDATE_ID__,
+      FILE_ID__,
       PROVIDER_PEER_ID__,
       PROVIDER_EPM_CID__,
       PUBLISH_TIMESTAMP__,
       ASSETS__,
       SOURCES__,
       QUERY,
+      INDEXES__,
       ENCRYPTION,
       PROVIDER_SIGNATURE__,
       SIGNATURE_TYPE__);

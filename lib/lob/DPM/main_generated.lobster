@@ -9,6 +9,19 @@ enum publicationAssetKind:
     publicationAssetKind_MANIFEST = 2
     publicationAssetKind_OTHER = 3
 
+/// Transport profile used to resolve a dataset update asset.
+enum dpmTransportKind:
+    /// Asset bytes are resolved by content address, usually an IPFS CID.
+    dpmTransportKind_CONTENT_ADDRESS = 0
+    /// Asset bytes are resolved from the provider through a signed SDN query
+    /// protocol. This mode is used when the update is not published as a
+    /// globally discoverable file.
+    dpmTransportKind_SDN_QUERY = 1
+    /// Asset bytes are resolved by another protocol named in TRANSPORT_PROTOCOL.
+    dpmTransportKind_OTHER = 2
+
+class DPMCompletenessIndex
+
 class DPMAsset
 
 class DPMSourceBatch
@@ -19,69 +32,162 @@ class DPMEncryptionBinding
 
 class DPM
 
-/// One immutable content-addressed object published for a dataset update.
+/// Completeness-capable signed index over a dataset update.
+class DPMCompletenessIndex : flatbuffers.handle
+    /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+    def INDEX_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Deterministic ordering expression for the index. Providers and
+    /// subscribers MUST use this ordering when building or verifying range
+    /// proofs. A query is completeness-verifiable only when its predicate can be
+    /// expressed against one or more declared indexes.
+    def CANONICAL_ORDER() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
+    /// signed by the DPM provider signature and is the verifier's commitment for
+    /// inclusion and range-completeness proofs.
+    def INDEX_ROOT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// Hash profile for leaves and internal nodes, e.g.
+    /// SDN-MERKLE-SHA256-v1. Profiles define domain separators, leaf material,
+    /// pair ordering, duplicate handling, and odd-leaf promotion.
+    def MERKLE_PROFILE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// Whether this index can prove that no matching records were omitted for a
+    /// supported range query. Inclusion proofs alone prove authenticity, not
+    /// completeness.
+    def SUPPORTS_RANGE_COMPLETENESS() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
+
+def GetRootAsDPMCompletenessIndex(buf:string): return DPMCompletenessIndex { buf, flatbuffers.indirect(buf, 0) }
+
+struct DPMCompletenessIndexBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_INDEX_NAME(INDEX_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, INDEX_NAME)
+        return this
+    def add_CANONICAL_ORDER(CANONICAL_ORDER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, CANONICAL_ORDER)
+        return this
+    def add_INDEX_ROOT(INDEX_ROOT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, INDEX_ROOT)
+        return this
+    def add_MERKLE_PROFILE(MERKLE_PROFILE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, MERKLE_PROFILE)
+        return this
+    def add_SUPPORTS_RANGE_COMPLETENESS(SUPPORTS_RANGE_COMPLETENESS:bool):
+        b_.PrependBoolSlot(4, SUPPORTS_RANGE_COMPLETENESS, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// One immutable asset or provider-mediated query contract published for a
+/// dataset update.
 class DPMAsset : flatbuffers.handle
     /// Asset role.
     def ASSET_KIND() -> publicationAssetKind:
         return publicationAssetKind(flatbuffers.field_int8(buf_, pos_, 4, 3))
-    /// IPFS CIDv1/multihash content identifier.
+    /// Transport profile for this asset. CONTENT_ADDRESS assets use CID and
+    /// MULTIFORMAT_ADDRESS. SDN_QUERY assets use TRANSPORT_PROTOCOL plus the
+    /// signed DPM query and root fields; they are not required to be published as
+    /// discoverable IPFS files.
+    def TRANSPORT_KIND() -> dpmTransportKind:
+        return dpmTransportKind(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    /// Optional IPFS CIDv1/multihash content identifier. This field is required
+    /// for CONTENT_ADDRESS assets and SHOULD be empty for SDN_QUERY assets whose
+    /// bytes are retrieved through a provider protocol.
     def CID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 6)
-    /// Multiformat address, usually /ipfs/{CID}.
-    def MULTIFORMAT_ADDRESS() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
+    /// Multiformat address. For CONTENT_ADDRESS this is usually /ipfs/{CID}. For
+    /// SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when
+    /// provider routing is resolved from the DPM provider identity.
+    def MULTIFORMAT_ADDRESS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
     /// File name or logical artifact name.
     def FILE_NAME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 10)
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Canonical publication/update partition identity for this asset. FILE_ID is
+    /// not a display filename; it is the stable identifier used by PNMs,
+    /// manifests, entitlements, query requests, subscriber caches, and
+    /// completeness proofs. Example:
+    /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+    def FILE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// Provider protocol name/version used to fetch this asset when
+    /// TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
+    /// response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the
+    /// provider signature in this DPM.
+    def TRANSPORT_PROTOCOL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
     /// Byte length of the published object.
     def BYTE_LENGTH() -> int:
-        return flatbuffers.field_uint64(buf_, pos_, 12, 0)
+        return flatbuffers.field_uint64(buf_, pos_, 18, 0)
     /// SHA-256 hash of the exact published bytes, lowercase hex.
     def BYTE_SHA256() -> string:
-        return flatbuffers.field_string(buf_, pos_, 14)
+        return flatbuffers.field_string(buf_, pos_, 20)
+    /// Merkle root over canonical records in this asset, lowercase hex. For
+    /// provider-mediated query delivery, subscribers verify returned records and
+    /// proof paths against this root before importing data.
+    def DATA_ROOT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
     /// SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
     def SCHEMA_NAME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 16)
+        return flatbuffers.field_string(buf_, pos_, 24)
     /// Hash of the SDS schema used to encode this object.
     def SCHEMA_HASH() -> string:
-        return flatbuffers.field_string(buf_, pos_, 18)
+        return flatbuffers.field_string(buf_, pos_, 26)
     /// Optional content-key identifier for encrypted artifacts.
     def CONTENT_KEY_ID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 20)
+        return flatbuffers.field_string(buf_, pos_, 28)
 
 def GetRootAsDPMAsset(buf:string): return DPMAsset { buf, flatbuffers.indirect(buf, 0) }
 
 struct DPMAssetBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(9)
+        b_.StartObject(13)
         return this
     def add_ASSET_KIND(ASSET_KIND:publicationAssetKind):
         b_.PrependInt8Slot(0, ASSET_KIND, 3)
         return this
+    def add_TRANSPORT_KIND(TRANSPORT_KIND:dpmTransportKind):
+        b_.PrependInt8Slot(1, TRANSPORT_KIND, 0)
+        return this
     def add_CID(CID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(1, CID)
+        b_.PrependUOffsetTRelativeSlot(2, CID)
         return this
     def add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(2, MULTIFORMAT_ADDRESS)
+        b_.PrependUOffsetTRelativeSlot(3, MULTIFORMAT_ADDRESS)
         return this
     def add_FILE_NAME(FILE_NAME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(3, FILE_NAME)
+        b_.PrependUOffsetTRelativeSlot(4, FILE_NAME)
+        return this
+    def add_FILE_ID(FILE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, FILE_ID)
+        return this
+    def add_TRANSPORT_PROTOCOL(TRANSPORT_PROTOCOL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, TRANSPORT_PROTOCOL)
         return this
     def add_BYTE_LENGTH(BYTE_LENGTH:int):
-        b_.PrependUint64Slot(4, BYTE_LENGTH, 0)
+        b_.PrependUint64Slot(7, BYTE_LENGTH, 0)
         return this
     def add_BYTE_SHA256(BYTE_SHA256:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(5, BYTE_SHA256)
+        b_.PrependUOffsetTRelativeSlot(8, BYTE_SHA256)
+        return this
+    def add_DATA_ROOT(DATA_ROOT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, DATA_ROOT)
         return this
     def add_SCHEMA_NAME(SCHEMA_NAME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(6, SCHEMA_NAME)
+        b_.PrependUOffsetTRelativeSlot(10, SCHEMA_NAME)
         return this
     def add_SCHEMA_HASH(SCHEMA_HASH:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(7, SCHEMA_HASH)
+        b_.PrependUOffsetTRelativeSlot(11, SCHEMA_HASH)
         return this
     def add_CONTENT_KEY_ID(CONTENT_KEY_ID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(8, CONTENT_KEY_ID)
+        b_.PrependUOffsetTRelativeSlot(12, CONTENT_KEY_ID)
         return this
     def end():
         return b_.EndObject()
@@ -179,39 +285,50 @@ class DPMQueryBinding : flatbuffers.handle
     /// Query engine version or profile version.
     def QUERY_ENGINE_VERSION() -> string:
         return flatbuffers.field_string(buf_, pos_, 12)
+    /// Canonical ordering of result records before RESULT_SHA256 or DATA_ROOT is
+    /// computed. Providers MUST stream records in this order unless each chunk
+    /// includes enough proof material to restore and verify the canonical order.
+    def CANONICAL_ORDER() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// Query protocol name/version for provider-mediated retrieval, e.g.
+    /// /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
+    /// protocol to the provider, submits the signed query or a permitted subset,
+    /// and imports only responses that verify against the signed roots.
+    def QUERY_PROTOCOL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
     /// SDS schema names selected by the query.
     def SCHEMA_NAMES(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 4)
     def SCHEMA_NAMES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 14)
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
     /// Provider peer IDs selected by the query.
     def PROVIDER_IDS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 4)
     def PROVIDER_IDS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 16)
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
     /// Source names selected by the query.
     def SOURCE_NAMES(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 4)
     def SOURCE_NAMES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 18)
+        return flatbuffers.field_vector_len(buf_, pos_, 22)
     /// Batch IDs selected by the query.
     def BATCH_IDS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 4)
     def BATCH_IDS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 20)
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
     /// Inclusive query window start in ISO 8601 UTC.
     def WINDOW_START() -> string:
-        return flatbuffers.field_string(buf_, pos_, 22)
+        return flatbuffers.field_string(buf_, pos_, 26)
     /// Inclusive query window end in ISO 8601 UTC.
     def WINDOW_END() -> string:
-        return flatbuffers.field_string(buf_, pos_, 24)
+        return flatbuffers.field_string(buf_, pos_, 28)
 
 def GetRootAsDPMQueryBinding(buf:string): return DPMQueryBinding { buf, flatbuffers.indirect(buf, 0) }
 
 struct DPMQueryBindingBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(11)
+        b_.StartObject(13)
         return this
     def add_CANONICAL_QUERY(CANONICAL_QUERY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, CANONICAL_QUERY)
@@ -228,23 +345,29 @@ struct DPMQueryBindingBuilder:
     def add_QUERY_ENGINE_VERSION(QUERY_ENGINE_VERSION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, QUERY_ENGINE_VERSION)
         return this
+    def add_CANONICAL_ORDER(CANONICAL_ORDER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, CANONICAL_ORDER)
+        return this
+    def add_QUERY_PROTOCOL(QUERY_PROTOCOL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, QUERY_PROTOCOL)
+        return this
     def add_SCHEMA_NAMES(SCHEMA_NAMES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(5, SCHEMA_NAMES)
+        b_.PrependUOffsetTRelativeSlot(7, SCHEMA_NAMES)
         return this
     def add_PROVIDER_IDS(PROVIDER_IDS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(6, PROVIDER_IDS)
+        b_.PrependUOffsetTRelativeSlot(8, PROVIDER_IDS)
         return this
     def add_SOURCE_NAMES(SOURCE_NAMES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(7, SOURCE_NAMES)
+        b_.PrependUOffsetTRelativeSlot(9, SOURCE_NAMES)
         return this
     def add_BATCH_IDS(BATCH_IDS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(8, BATCH_IDS)
+        b_.PrependUOffsetTRelativeSlot(10, BATCH_IDS)
         return this
     def add_WINDOW_START(WINDOW_START:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(9, WINDOW_START)
+        b_.PrependUOffsetTRelativeSlot(11, WINDOW_START)
         return this
     def add_WINDOW_END(WINDOW_END:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(10, WINDOW_END)
+        b_.PrependUOffsetTRelativeSlot(12, WINDOW_END)
         return this
     def end():
         return b_.EndObject()
@@ -327,7 +450,8 @@ struct DPMEncryptionBindingBuilder:
         return b_.EndObject()
 
 /// Dataset Publication Manifest binding data/index CIDs, query replay,
-/// source hashes, schema hashes, encryption metadata, and provider signature.
+/// source hashes, schema hashes, encryption metadata, provider-mediated query
+/// protocols, completeness roots, and provider signature.
 class DPM : flatbuffers.handle
     /// Manifest format version.
     def VERSION() -> string:
@@ -338,48 +462,64 @@ class DPM : flatbuffers.handle
     /// Dataset update or batch identifier.
     def UPDATE_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
+    /// Canonical publication/update partition identity. FILE_ID is the key used
+    /// everywhere a subscriber, provider, PNM, entitlement, cache, or query
+    /// protocol refers to this exact update. It is not merely a human filename
+    /// and it is not the FlatBuffer file_identifier. For completeness-verifiable
+    /// streams, all returned records MUST belong to this FILE_ID and prove
+    /// inclusion under this DPM's signed roots.
+    def FILE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
     /// Provider peer ID.
     def PROVIDER_PEER_ID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 10)
+        return flatbuffers.field_string(buf_, pos_, 12)
     /// Provider EPM CID.
     def PROVIDER_EPM_CID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 12)
+        return flatbuffers.field_string(buf_, pos_, 14)
     /// Publication timestamp in ISO 8601 UTC.
     def PUBLISH_TIMESTAMP() -> string:
-        return flatbuffers.field_string(buf_, pos_, 14)
+        return flatbuffers.field_string(buf_, pos_, 16)
     /// Published shard, index, and auxiliary artifacts.
     def ASSETS(i:int) -> DPMAsset:
-        return DPMAsset { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 16) + i * 4) }
+        return DPMAsset { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 18) + i * 4) }
     def ASSETS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 16)
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
     /// Source batches used to build the dataset.
     def SOURCES(i:int) -> DPMSourceBatch:
-        return DPMSourceBatch { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 18) + i * 4) }
+        return DPMSourceBatch { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 20) + i * 4) }
     def SOURCES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 18)
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
     /// Replayable query binding.
     def QUERY() -> DPMQueryBinding?:
-        let o = flatbuffers.field_table(buf_, pos_, 20)
+        let o = flatbuffers.field_table(buf_, pos_, 22)
         return if o: DPMQueryBinding { buf_, o } else: nil
+    /// Signed completeness-capable indexes. Inclusion proofs prove that returned
+    /// records are authentic members of DATA_ROOT. Range-completeness proofs also
+    /// prove that no matching records were omitted, but only for predicates
+    /// expressible against these declared indexes.
+    def INDEXES(i:int) -> DPMCompletenessIndex:
+        return DPMCompletenessIndex { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 24) + i * 4) }
+    def INDEXES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
     /// Encryption/key metadata.
     def ENCRYPTION() -> DPMEncryptionBinding?:
-        let o = flatbuffers.field_table(buf_, pos_, 22)
+        let o = flatbuffers.field_table(buf_, pos_, 26)
         return if o: DPMEncryptionBinding { buf_, o } else: nil
     /// Provider signature over the canonical manifest bytes or manifest digest.
     def PROVIDER_SIGNATURE(i:int) -> int:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 1)
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 1)
     def PROVIDER_SIGNATURE_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 24)
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
     /// Signature algorithm, e.g. Ed25519.
     def SIGNATURE_TYPE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 26)
+        return flatbuffers.field_string(buf_, pos_, 30)
 
 def GetRootAsDPM(buf:string): return DPM { buf, flatbuffers.indirect(buf, 0) }
 
 struct DPMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(12)
+        b_.StartObject(14)
         return this
     def add_VERSION(VERSION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, VERSION)
@@ -390,32 +530,38 @@ struct DPMBuilder:
     def add_UPDATE_ID(UPDATE_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, UPDATE_ID)
         return this
+    def add_FILE_ID(FILE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, FILE_ID)
+        return this
     def add_PROVIDER_PEER_ID(PROVIDER_PEER_ID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(3, PROVIDER_PEER_ID)
+        b_.PrependUOffsetTRelativeSlot(4, PROVIDER_PEER_ID)
         return this
     def add_PROVIDER_EPM_CID(PROVIDER_EPM_CID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(4, PROVIDER_EPM_CID)
+        b_.PrependUOffsetTRelativeSlot(5, PROVIDER_EPM_CID)
         return this
     def add_PUBLISH_TIMESTAMP(PUBLISH_TIMESTAMP:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(5, PUBLISH_TIMESTAMP)
+        b_.PrependUOffsetTRelativeSlot(6, PUBLISH_TIMESTAMP)
         return this
     def add_ASSETS(ASSETS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(6, ASSETS)
+        b_.PrependUOffsetTRelativeSlot(7, ASSETS)
         return this
     def add_SOURCES(SOURCES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(7, SOURCES)
+        b_.PrependUOffsetTRelativeSlot(8, SOURCES)
         return this
     def add_QUERY(QUERY:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(8, QUERY)
+        b_.PrependUOffsetTRelativeSlot(9, QUERY)
+        return this
+    def add_INDEXES(INDEXES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, INDEXES)
         return this
     def add_ENCRYPTION(ENCRYPTION:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(9, ENCRYPTION)
+        b_.PrependUOffsetTRelativeSlot(11, ENCRYPTION)
         return this
     def add_PROVIDER_SIGNATURE(PROVIDER_SIGNATURE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(10, PROVIDER_SIGNATURE)
+        b_.PrependUOffsetTRelativeSlot(12, PROVIDER_SIGNATURE)
         return this
     def add_SIGNATURE_TYPE(SIGNATURE_TYPE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(11, SIGNATURE_TYPE)
+        b_.PrependUOffsetTRelativeSlot(13, SIGNATURE_TYPE)
         return this
     def end():
         return b_.EndObject()
@@ -430,6 +576,13 @@ def DPMCreateASSETSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
 def DPMStartSOURCESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def DPMCreateSOURCESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def DPMStartINDEXESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def DPMCreateINDEXESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
