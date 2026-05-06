@@ -15,17 +15,26 @@
 - When publishing SDS, do not report the release complete or tell downstream
   repos to install the latest version until the release workflow has finished
   and the published JavaScript/TypeScript package and Go module tag are both
-  visible from their registries/module proxies. The release flow is:
+  visible from their registries/module proxies. Publishing SDS is not done
+  when the tag is pushed; it is done only after the package artifacts are
+  visible and the first downstream consumer has been refreshed and verified.
+  The release flow is:
   1. Build and test SDS locally.
   2. Commit and push the SDS schema/generated-artifact change.
   3. Create the GitHub release or dispatch the publish workflow for all package
      targets.
   4. Monitor GitHub Actions until the publish workflow is complete.
-  5. Verify `npm view spacedatastandards.org version` and
-     `go list -m -versions github.com/DigitalArsenal/spacedatastandards.org/lib/go`
-     show the new release.
-  6. Only then update downstream consumers such as SDN, SDK, modules, OrbPro,
-     and stack pins.
+  5. Verify each intended publication target. At minimum:
+     `npm view spacedatastandards.org version`,
+     `npm view @digitalarsenal/spacedatastandards version --registry=https://npm.pkg.github.com`,
+     and
+     `GONOSUMDB=github.com/DigitalArsenal/spacedatastandards.org go list -m -versions github.com/DigitalArsenal/spacedatastandards.org/lib/go`
+     must show the new release.
+  6. Download/install the newly published JavaScript/TypeScript SDS package and
+     Go SDS module in SDN, update lockfiles, run the SDN checks that cover the
+     touched consumers, commit, push, and update the stack submodule pin.
+  7. Only then report completion or tell other downstream consumers such as SDK,
+     modules, OrbPro, and demos to install the latest SDS version.
 
 ## Schema Authoring Rules
 
