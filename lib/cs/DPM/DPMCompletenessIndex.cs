@@ -17,7 +17,10 @@ public struct DPMCompletenessIndex : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public DPMCompletenessIndex __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+  /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
+  /// completeness-verifiable dataset update SHOULD include a file_id index so
+  /// subscribers can prove that all returned records belong to the announced
+  /// FILE_ID partition.
   public string INDEX_NAME { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetINDEX_NAMEBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -38,7 +41,10 @@ public struct DPMCompletenessIndex : IFlatbufferObject
   public byte[] GetCANONICAL_ORDERArray() { return __p.__vector_as_array<byte>(6); }
   /// SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
   /// signed by the DPM provider signature and is the verifier's commitment for
-  /// inclusion and range-completeness proofs.
+  /// inclusion and range-completeness proofs. To verify a provider-mediated
+  /// response, the subscriber recomputes each returned leaf, walks the supplied
+  /// sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
+  /// and confirms any range-boundary proofs required by CANONICAL_ORDER.
   public string INDEX_ROOT { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetINDEX_ROOTBytes() { return __p.__vector_as_span<byte>(8, 1); }

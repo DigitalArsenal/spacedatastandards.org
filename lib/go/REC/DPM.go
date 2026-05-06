@@ -99,11 +99,12 @@ func (rcv *DPM) UpdateId() []byte {
 
 /// Dataset update or batch identifier.
 /// Canonical publication/update partition identity. FILE_ID is the key used
-/// everywhere a subscriber, provider, PNM, entitlement, cache, or query
-/// protocol refers to this exact update. It is not merely a human filename
-/// and it is not the FlatBuffer file_identifier. For completeness-verifiable
-/// streams, all returned records MUST belong to this FILE_ID and prove
-/// inclusion under this DPM's signed roots.
+/// everywhere a subscriber, provider, PNM, entitlement, cache, audit log, or
+/// query protocol refers to this exact update. It is not merely a human
+/// filename and it is not the FlatBuffer file_identifier. For
+/// completeness-verifiable streams, all returned records MUST belong to this
+/// FILE_ID and prove inclusion under this DPM's signed roots, normally through
+/// a declared file_id completeness index.
 func (rcv *DPM) FILE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -117,11 +118,12 @@ func (rcv *DPM) FileId() []byte {
 }
 
 /// Canonical publication/update partition identity. FILE_ID is the key used
-/// everywhere a subscriber, provider, PNM, entitlement, cache, or query
-/// protocol refers to this exact update. It is not merely a human filename
-/// and it is not the FlatBuffer file_identifier. For completeness-verifiable
-/// streams, all returned records MUST belong to this FILE_ID and prove
-/// inclusion under this DPM's signed roots.
+/// everywhere a subscriber, provider, PNM, entitlement, cache, audit log, or
+/// query protocol refers to this exact update. It is not merely a human
+/// filename and it is not the FlatBuffer file_identifier. For
+/// completeness-verifiable streams, all returned records MUST belong to this
+/// FILE_ID and prove inclusion under this DPM's signed roots, normally through
+/// a declared file_id completeness index.
 /// Provider peer ID.
 func (rcv *DPM) PROVIDER_PEER_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))

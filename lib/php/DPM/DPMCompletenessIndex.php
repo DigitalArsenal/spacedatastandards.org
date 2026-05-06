@@ -41,7 +41,10 @@ class DPMCompletenessIndex extends Table
         return $this;
     }
 
-    /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+    /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
+    /// completeness-verifiable dataset update SHOULD include a file_id index so
+    /// subscribers can prove that all returned records belong to the announced
+    /// FILE_ID partition.
     public function getINDEX_NAME()
     {
         $o = $this->__offset(4);
@@ -60,7 +63,10 @@ class DPMCompletenessIndex extends Table
 
     /// SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
     /// signed by the DPM provider signature and is the verifier's commitment for
-    /// inclusion and range-completeness proofs.
+    /// inclusion and range-completeness proofs. To verify a provider-mediated
+    /// response, the subscriber recomputes each returned leaf, walks the supplied
+    /// sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
+    /// and confirms any range-boundary proofs required by CANONICAL_ORDER.
     public function getINDEX_ROOT()
     {
         $o = $this->__offset(8);

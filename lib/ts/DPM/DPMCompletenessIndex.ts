@@ -28,7 +28,10 @@ static getSizePrefixedRootAsDPMCompletenessIndex(bb:flatbuffers.ByteBuffer, obj?
 }
 
 /**
- * Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+ * Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
+ * completeness-verifiable dataset update SHOULD include a file_id index so
+ * subscribers can prove that all returned records belong to the announced
+ * FILE_ID partition.
  */
 INDEX_NAME():string|null
 INDEX_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -53,7 +56,10 @@ CANONICAL_ORDER(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
  * signed by the DPM provider signature and is the verifier's commitment for
- * inclusion and range-completeness proofs.
+ * inclusion and range-completeness proofs. To verify a provider-mediated
+ * response, the subscriber recomputes each returned leaf, walks the supplied
+ * sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
+ * and confirms any range-boundary proofs required by CANONICAL_ORDER.
  */
 INDEX_ROOT():string|null
 INDEX_ROOT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null

@@ -9,8 +9,10 @@
 
 ## Build & Deploy
 
-- Run `npm run build` to build all artifacts
-- Run `npm run deploy` to build, commit, and push
+- Run `npm run build` to build all artifacts.
+- Run `npm run deploy` only when its automated commit/push/publish behavior is
+  exactly what the release needs; otherwise run the steps manually and keep the
+  same gates.
 - Create a GitHub release to trigger publishing to package registries
 - When publishing SDS, do not report the release complete or tell downstream
   repos to install the latest version until the release workflow has finished
@@ -30,11 +32,16 @@
      and
      `GONOSUMDB=github.com/DigitalArsenal/spacedatastandards.org go list -m -versions github.com/DigitalArsenal/spacedatastandards.org/lib/go`
      must show the new release.
-  6. Download/install the newly published JavaScript/TypeScript SDS package and
-     Go SDS module in SDN, update lockfiles, run the SDN checks that cover the
-     touched consumers, commit, push, and update the stack submodule pin.
-  7. Only then report completion or tell other downstream consumers such as SDK,
-     modules, OrbPro, and demos to install the latest SDS version.
+  6. Only after all intended package targets are visible, download/install the
+     newly published JavaScript/TypeScript SDS package and Go SDS module in SDN,
+     update lockfiles, run the SDN checks that cover the touched consumers,
+     commit, push, and update the stack submodule pin.
+  7. Do not report back, declare the SDS release done, or tell any downstream
+     repo to install the latest SDS until publication visibility, downstream
+     SDN refresh, SDN verification, and stack pinning are complete.
+  8. After SDN is complete, continue the dependency chain for other consumers
+     such as SDK, modules, OrbPro, and demos when the schema change affects
+     them.
 
 ## Schema Authoring Rules
 

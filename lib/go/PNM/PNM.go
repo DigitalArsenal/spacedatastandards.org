@@ -13,10 +13,11 @@ import (
 /// partition and CID usually points to a small DPM manifest or digest. The DPM
 /// carries the full verification contract: provider identity, retrieval
 /// protocol, canonical query, result hash, Merkle roots, completeness-capable
-/// indexes, and signature. Large or paid dataset updates do not need to be
-/// published as globally discoverable IPFS files; a PNM may instead advertise a
-/// provider-mediated SDN query protocol whose response is verified against the
-/// signed DPM roots.
+/// indexes, file_id partition key, and signature. Large or paid dataset
+/// updates do not need to be published as globally discoverable IPFS files; a
+/// PNM may instead advertise a provider-mediated SDN query protocol whose
+/// response is verified against the signed DPM roots and the returned Merkle
+/// proof material.
 type PNM struct {
 	_tab flatbuffers.Table
 }
@@ -146,8 +147,11 @@ func (rcv *PNM) FileName() []byte {
 /// This field is the Name
 /// File ID
 /// Canonical publication/update partition identity. For dataset-update PNMs,
-/// this MUST match DPM.FILE_ID and is the stable key for entitlements,
-/// provider query requests, subscriber caches, and completeness verification.
+/// this MUST match DPM.FILE_ID and is the stable key for everything that
+/// refers to the update: entitlements, provider query requests, subscriber
+/// caches, replay, audit, and completeness verification. Subscribers MUST
+/// reject provider-mediated query responses whose records or proofs bind to a
+/// different FILE_ID.
 /// Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
 func (rcv *PNM) FILE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
@@ -163,8 +167,11 @@ func (rcv *PNM) FileId() []byte {
 
 /// File ID
 /// Canonical publication/update partition identity. For dataset-update PNMs,
-/// this MUST match DPM.FILE_ID and is the stable key for entitlements,
-/// provider query requests, subscriber caches, and completeness verification.
+/// this MUST match DPM.FILE_ID and is the stable key for everything that
+/// refers to the update: entitlements, provider query requests, subscriber
+/// caches, replay, audit, and completeness verification. Subscribers MUST
+/// reject provider-mediated query responses whose records or proofs bind to a
+/// different FILE_ID.
 /// Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
 /// Digital Signature of the CID
 /// This is the digital signature of the CID, signed using the specified cryptographic method.

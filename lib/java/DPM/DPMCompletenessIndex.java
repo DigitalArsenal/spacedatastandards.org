@@ -28,7 +28,10 @@ public final class DPMCompletenessIndex extends com.google.flatbuffers.Table {
   public DPMCompletenessIndex __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+   * Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
+   * completeness-verifiable dataset update SHOULD include a file_id index so
+   * subscribers can prove that all returned records belong to the announced
+   * FILE_ID partition.
    */
   public String INDEX_NAME() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer INDEX_NAMEAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
@@ -45,7 +48,10 @@ public final class DPMCompletenessIndex extends com.google.flatbuffers.Table {
   /**
    * SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
    * signed by the DPM provider signature and is the verifier's commitment for
-   * inclusion and range-completeness proofs.
+   * inclusion and range-completeness proofs. To verify a provider-mediated
+   * response, the subscriber recomputes each returned leaf, walks the supplied
+   * sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
+   * and confirms any range-boundary proofs required by CANONICAL_ORDER.
    */
   public String INDEX_ROOT() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer INDEX_ROOTAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }

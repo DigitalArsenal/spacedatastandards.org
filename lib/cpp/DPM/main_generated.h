@@ -118,7 +118,10 @@ struct DPMCompletenessIndex FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
     VT_MERKLE_PROFILE = 10,
     VT_SUPPORTS_RANGE_COMPLETENESS = 12
   };
-  /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+  /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
+  /// completeness-verifiable dataset update SHOULD include a file_id index so
+  /// subscribers can prove that all returned records belong to the announced
+  /// FILE_ID partition.
   const ::flatbuffers::String *INDEX_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INDEX_NAME);
   }
@@ -131,7 +134,10 @@ struct DPMCompletenessIndex FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
   }
   /// SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
   /// signed by the DPM provider signature and is the verifier's commitment for
-  /// inclusion and range-completeness proofs.
+  /// inclusion and range-completeness proofs. To verify a provider-mediated
+  /// response, the subscriber recomputes each returned leaf, walks the supplied
+  /// sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
+  /// and confirms any range-boundary proofs required by CANONICAL_ORDER.
   const ::flatbuffers::String *INDEX_ROOT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INDEX_ROOT);
   }
@@ -1054,11 +1060,12 @@ struct DPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_UPDATE_ID);
   }
   /// Canonical publication/update partition identity. FILE_ID is the key used
-  /// everywhere a subscriber, provider, PNM, entitlement, cache, or query
-  /// protocol refers to this exact update. It is not merely a human filename
-  /// and it is not the FlatBuffer file_identifier. For completeness-verifiable
-  /// streams, all returned records MUST belong to this FILE_ID and prove
-  /// inclusion under this DPM's signed roots.
+  /// everywhere a subscriber, provider, PNM, entitlement, cache, audit log, or
+  /// query protocol refers to this exact update. It is not merely a human
+  /// filename and it is not the FlatBuffer file_identifier. For
+  /// completeness-verifiable streams, all returned records MUST belong to this
+  /// FILE_ID and prove inclusion under this DPM's signed roots, normally through
+  /// a declared file_id completeness index.
   const ::flatbuffers::String *FILE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_FILE_ID);
   }

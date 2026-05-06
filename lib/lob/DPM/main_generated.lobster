@@ -34,7 +34,10 @@ class DPM
 
 /// Completeness-capable signed index over a dataset update.
 class DPMCompletenessIndex : flatbuffers.handle
-    /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+    /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
+    /// completeness-verifiable dataset update SHOULD include a file_id index so
+    /// subscribers can prove that all returned records belong to the announced
+    /// FILE_ID partition.
     def INDEX_NAME() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
     /// Deterministic ordering expression for the index. Providers and
@@ -45,7 +48,10 @@ class DPMCompletenessIndex : flatbuffers.handle
         return flatbuffers.field_string(buf_, pos_, 6)
     /// SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
     /// signed by the DPM provider signature and is the verifier's commitment for
-    /// inclusion and range-completeness proofs.
+    /// inclusion and range-completeness proofs. To verify a provider-mediated
+    /// response, the subscriber recomputes each returned leaf, walks the supplied
+    /// sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
+    /// and confirms any range-boundary proofs required by CANONICAL_ORDER.
     def INDEX_ROOT() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
     /// Hash profile for leaves and internal nodes, e.g.
@@ -463,11 +469,12 @@ class DPM : flatbuffers.handle
     def UPDATE_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
     /// Canonical publication/update partition identity. FILE_ID is the key used
-    /// everywhere a subscriber, provider, PNM, entitlement, cache, or query
-    /// protocol refers to this exact update. It is not merely a human filename
-    /// and it is not the FlatBuffer file_identifier. For completeness-verifiable
-    /// streams, all returned records MUST belong to this FILE_ID and prove
-    /// inclusion under this DPM's signed roots.
+    /// everywhere a subscriber, provider, PNM, entitlement, cache, audit log, or
+    /// query protocol refers to this exact update. It is not merely a human
+    /// filename and it is not the FlatBuffer file_identifier. For
+    /// completeness-verifiable streams, all returned records MUST belong to this
+    /// FILE_ID and prove inclusion under this DPM's signed roots, normally through
+    /// a declared file_id completeness index.
     def FILE_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
     /// Provider peer ID.

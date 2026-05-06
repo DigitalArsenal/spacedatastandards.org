@@ -63,7 +63,10 @@ public struct DPMCompletenessIndex: FlatBufferTable, FlatbuffersVectorInitializa
     static let SUPPORTS_RANGE_COMPLETENESS: VOffset = 12
   }
 
-  ///  Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+  ///  Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
+  ///  completeness-verifiable dataset update SHOULD include a file_id index so
+  ///  subscribers can prove that all returned records belong to the announced
+  ///  FILE_ID partition.
   public var INDEX_NAME: String? { let o = _accessor.offset(VT.INDEX_NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var INDEX_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INDEX_NAME) }
   ///  Deterministic ordering expression for the index. Providers and
@@ -74,7 +77,10 @@ public struct DPMCompletenessIndex: FlatBufferTable, FlatbuffersVectorInitializa
   public var CANONICAL_ORDERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CANONICAL_ORDER) }
   ///  SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
   ///  signed by the DPM provider signature and is the verifier's commitment for
-  ///  inclusion and range-completeness proofs.
+  ///  inclusion and range-completeness proofs. To verify a provider-mediated
+  ///  response, the subscriber recomputes each returned leaf, walks the supplied
+  ///  sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
+  ///  and confirms any range-boundary proofs required by CANONICAL_ORDER.
   public var INDEX_ROOT: String? { let o = _accessor.offset(VT.INDEX_ROOT); return o == 0 ? nil : _accessor.string(at: o) }
   public var INDEX_ROOTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INDEX_ROOT) }
   ///  Hash profile for leaves and internal nodes, e.g.
@@ -624,11 +630,12 @@ public struct DPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var UPDATE_ID: String! { let o = _accessor.offset(VT.UPDATE_ID); return _accessor.string(at: o) }
   public var UPDATE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.UPDATE_ID) }
   ///  Canonical publication/update partition identity. FILE_ID is the key used
-  ///  everywhere a subscriber, provider, PNM, entitlement, cache, or query
-  ///  protocol refers to this exact update. It is not merely a human filename
-  ///  and it is not the FlatBuffer file_identifier. For completeness-verifiable
-  ///  streams, all returned records MUST belong to this FILE_ID and prove
-  ///  inclusion under this DPM's signed roots.
+  ///  everywhere a subscriber, provider, PNM, entitlement, cache, audit log, or
+  ///  query protocol refers to this exact update. It is not merely a human
+  ///  filename and it is not the FlatBuffer file_identifier. For
+  ///  completeness-verifiable streams, all returned records MUST belong to this
+  ///  FILE_ID and prove inclusion under this DPM's signed roots, normally through
+  ///  a declared file_id completeness index.
   public var FILE_ID: String? { let o = _accessor.offset(VT.FILE_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var FILE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_ID) }
   ///  Provider peer ID.

@@ -55775,7 +55775,7 @@
                     "properties": {
                         "INDEX_NAME": {
                             "type": "string",
-                            "description": "Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.",
+                            "description": "Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every\ncompleteness-verifiable dataset update SHOULD include a file_id index so\nsubscribers can prove that all returned records belong to the announced\nFILE_ID partition.",
                             "x-flatbuffer-type": "string"
                         },
                         "CANONICAL_ORDER": {
@@ -55785,7 +55785,7 @@
                         },
                         "INDEX_ROOT": {
                             "type": "string",
-                            "description": "SHA-256 or Merkle root of the ordered index, lowercase hex. This root is\nsigned by the DPM provider signature and is the verifier's commitment for\ninclusion and range-completeness proofs.",
+                            "description": "SHA-256 or Merkle root of the ordered index, lowercase hex. This root is\nsigned by the DPM provider signature and is the verifier's commitment for\ninclusion and range-completeness proofs. To verify a provider-mediated\nresponse, the subscriber recomputes each returned leaf, walks the supplied\nsibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,\nand confirms any range-boundary proofs required by CANONICAL_ORDER.",
                             "x-flatbuffer-type": "string"
                         },
                         "MERKLE_PROFILE": {
@@ -56104,7 +56104,7 @@
                         },
                         "FILE_ID": {
                             "type": "string",
-                            "description": "Canonical publication/update partition identity. FILE_ID is the key used\neverywhere a subscriber, provider, PNM, entitlement, cache, or query\nprotocol refers to this exact update. It is not merely a human filename\nand it is not the FlatBuffer file_identifier. For completeness-verifiable\nstreams, all returned records MUST belong to this FILE_ID and prove\ninclusion under this DPM's signed roots.",
+                            "description": "Canonical publication/update partition identity. FILE_ID is the key used\neverywhere a subscriber, provider, PNM, entitlement, cache, audit log, or\nquery protocol refers to this exact update. It is not merely a human\nfilename and it is not the FlatBuffer file_identifier. For\ncompleteness-verifiable streams, all returned records MUST belong to this\nFILE_ID and prove inclusion under this DPM's signed roots, normally through\na declared file_id completeness index.",
                             "x-flatbuffer-type": "string"
                         },
                         "PROVIDER_PEER_ID": {
@@ -58371,7 +58371,7 @@
             "definitions": {
                 "PNM": {
                     "type": "object",
-                    "description": "Publish Notification Message.\n\nPNM is the compact network announcement for a published record, manifest, or\ndataset update. For dataset updates, FILE_ID identifies the canonical update\npartition and CID usually points to a small DPM manifest or digest. The DPM\ncarries the full verification contract: provider identity, retrieval\nprotocol, canonical query, result hash, Merkle roots, completeness-capable\nindexes, and signature. Large or paid dataset updates do not need to be\npublished as globally discoverable IPFS files; a PNM may instead advertise a\nprovider-mediated SDN query protocol whose response is verified against the\nsigned DPM roots.",
+                    "description": "Publish Notification Message.\n\nPNM is the compact network announcement for a published record, manifest, or\ndataset update. For dataset updates, FILE_ID identifies the canonical update\npartition and CID usually points to a small DPM manifest or digest. The DPM\ncarries the full verification contract: provider identity, retrieval\nprotocol, canonical query, result hash, Merkle roots, completeness-capable\nindexes, file_id partition key, and signature. Large or paid dataset\nupdates do not need to be published as globally discoverable IPFS files; a\nPNM may instead advertise a provider-mediated SDN query protocol whose\nresponse is verified against the signed DPM roots and the returned Merkle\nproof material.",
                     "properties": {
                         "MULTIFORMAT_ADDRESS": {
                             "type": "string",
@@ -58395,7 +58395,7 @@
                         },
                         "FILE_ID": {
                             "type": "string",
-                            "description": "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key for entitlements,\nprovider query requests, subscriber caches, and completeness verification.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.",
+                            "description": "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key for everything that\nrefers to the update: entitlements, provider query requests, subscriber\ncaches, replay, audit, and completeness verification. Subscribers MUST\nreject provider-mediated query responses whose records or proofs bind to a\ndifferent FILE_ID.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.",
                             "x-flatbuffer-type": "string"
                         },
                         "SIGNATURE": {

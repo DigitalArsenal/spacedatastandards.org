@@ -96,7 +96,10 @@ class DPMCompletenessIndex {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+  ///  Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
+  ///  completeness-verifiable dataset update SHOULD include a file_id index so
+  ///  subscribers can prove that all returned records belong to the announced
+  ///  FILE_ID partition.
   String? get INDEX_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   String? get indexName => INDEX_NAME;
   ///  Deterministic ordering expression for the index. Providers and
@@ -107,7 +110,10 @@ class DPMCompletenessIndex {
   String? get canonicalOrder => CANONICAL_ORDER;
   ///  SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
   ///  signed by the DPM provider signature and is the verifier's commitment for
-  ///  inclusion and range-completeness proofs.
+  ///  inclusion and range-completeness proofs. To verify a provider-mediated
+  ///  response, the subscriber recomputes each returned leaf, walks the supplied
+  ///  sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
+  ///  and confirms any range-boundary proofs required by CANONICAL_ORDER.
   String? get INDEX_ROOT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get indexRoot => INDEX_ROOT;
   ///  Hash profile for leaves and internal nodes, e.g.
@@ -1077,11 +1083,12 @@ class DPM {
   String? get UPDATE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get updateId => UPDATE_ID;
   ///  Canonical publication/update partition identity. FILE_ID is the key used
-  ///  everywhere a subscriber, provider, PNM, entitlement, cache, or query
-  ///  protocol refers to this exact update. It is not merely a human filename
-  ///  and it is not the FlatBuffer file_identifier. For completeness-verifiable
-  ///  streams, all returned records MUST belong to this FILE_ID and prove
-  ///  inclusion under this DPM's signed roots.
+  ///  everywhere a subscriber, provider, PNM, entitlement, cache, audit log, or
+  ///  query protocol refers to this exact update. It is not merely a human
+  ///  filename and it is not the FlatBuffer file_identifier. For
+  ///  completeness-verifiable streams, all returned records MUST belong to this
+  ///  FILE_ID and prove inclusion under this DPM's signed roots, normally through
+  ///  a declared file_id completeness index.
   String? get FILE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   String? get fileId => FILE_ID;
   ///  Provider peer ID.

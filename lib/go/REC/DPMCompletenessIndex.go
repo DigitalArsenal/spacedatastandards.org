@@ -42,7 +42,10 @@ func (rcv *DPMCompletenessIndex) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+/// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
+/// completeness-verifiable dataset update SHOULD include a file_id index so
+/// subscribers can prove that all returned records belong to the announced
+/// FILE_ID partition.
 func (rcv *DPMCompletenessIndex) INDEX_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -55,7 +58,10 @@ func (rcv *DPMCompletenessIndex) IndexName() []byte {
 	return rcv.INDEX_NAME()
 }
 
-/// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch.
+/// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
+/// completeness-verifiable dataset update SHOULD include a file_id index so
+/// subscribers can prove that all returned records belong to the announced
+/// FILE_ID partition.
 /// Deterministic ordering expression for the index. Providers and
 /// subscribers MUST use this ordering when building or verifying range
 /// proofs. A query is completeness-verifiable only when its predicate can be
@@ -78,7 +84,10 @@ func (rcv *DPMCompletenessIndex) CanonicalOrder() []byte {
 /// expressed against one or more declared indexes.
 /// SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
 /// signed by the DPM provider signature and is the verifier's commitment for
-/// inclusion and range-completeness proofs.
+/// inclusion and range-completeness proofs. To verify a provider-mediated
+/// response, the subscriber recomputes each returned leaf, walks the supplied
+/// sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
+/// and confirms any range-boundary proofs required by CANONICAL_ORDER.
 func (rcv *DPMCompletenessIndex) INDEX_ROOT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -93,7 +102,10 @@ func (rcv *DPMCompletenessIndex) IndexRoot() []byte {
 
 /// SHA-256 or Merkle root of the ordered index, lowercase hex. This root is
 /// signed by the DPM provider signature and is the verifier's commitment for
-/// inclusion and range-completeness proofs.
+/// inclusion and range-completeness proofs. To verify a provider-mediated
+/// response, the subscriber recomputes each returned leaf, walks the supplied
+/// sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
+/// and confirms any range-boundary proofs required by CANONICAL_ORDER.
 /// Hash profile for leaves and internal nodes, e.g.
 /// SDN-MERKLE-SHA256-v1. Profiles define domain separators, leaf material,
 /// pair ordering, duplicate handling, and odd-leaf promotion.

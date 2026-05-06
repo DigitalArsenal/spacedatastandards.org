@@ -75,11 +75,12 @@ class DPM : Table() {
     fun updateIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Canonical publication/update partition identity. FILE_ID is the key used
-     * everywhere a subscriber, provider, PNM, entitlement, cache, or query
-     * protocol refers to this exact update. It is not merely a human filename
-     * and it is not the FlatBuffer file_identifier. For completeness-verifiable
-     * streams, all returned records MUST belong to this FILE_ID and prove
-     * inclusion under this DPM's signed roots.
+     * everywhere a subscriber, provider, PNM, entitlement, cache, audit log, or
+     * query protocol refers to this exact update. It is not merely a human
+     * filename and it is not the FlatBuffer file_identifier. For
+     * completeness-verifiable streams, all returned records MUST belong to this
+     * FILE_ID and prove inclusion under this DPM's signed roots, normally through
+     * a declared file_id completeness index.
      */
     val fileId : String?
         get() {
