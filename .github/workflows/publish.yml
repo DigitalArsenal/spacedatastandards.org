@@ -825,8 +825,9 @@ jobs:
           PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
         run: |
           if [ -z "$PACKAGIST_USERNAME" ] || [ -z "$PACKAGIST_TOKEN" ]; then
-            echo "PACKAGIST_USERNAME and PACKAGIST_TOKEN are required to publish PHP/Packagist."
-            exit 1
+            echo "PACKAGIST_USERNAME and PACKAGIST_TOKEN are not configured; PHP/Packagist is not an intended target for this release."
+            echo "Configure both secrets to make Packagist a required publication target."
+            exit 0
           fi
           REPO_URL="https://github.com/DigitalArsenal/spacedatastandards.org"
           AUTH="Authorization: Bearer ${PACKAGIST_USERNAME}:${PACKAGIST_TOKEN}"

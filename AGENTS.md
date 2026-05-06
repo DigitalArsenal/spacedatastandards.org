@@ -45,6 +45,10 @@
      `https://repo.packagist.org/p2/digitalarsenal/spacedatastandards.json`
      and include the new version. A workflow job that only uploads or validates
      metadata is not enough; the public consumer registry must see the version.
+     PHP/Packagist is not an intended target unless both
+     `PACKAGIST_USERNAME` and `PACKAGIST_TOKEN` repository secrets are
+     configured; if they are absent, the workflow must say Packagist is not
+     configured instead of marking metadata validation as a publish.
      If a configured target is not externally visible, leave the release
      incomplete, record the failing registry and evidence, and fix the publish
      path before downstream installation except when the target is explicitly
