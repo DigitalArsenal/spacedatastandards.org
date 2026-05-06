@@ -119,7 +119,9 @@ class DPMQueryBinding : Table() {
      * Query protocol name/version for provider-mediated retrieval, e.g.
      * /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
      * protocol to the provider, submits the signed query or a permitted subset,
-     * and imports only responses that verify against the signed roots.
+     * and imports only responses that verify against the signed roots. Responses
+     * MUST include enough Merkle proof material for each returned record and, for
+     * completeness-verifiable range queries, the declared range-boundary proofs.
      */
     val queryProtocol : String?
         get() {

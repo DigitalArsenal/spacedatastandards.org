@@ -69,7 +69,9 @@ public final class DPMQueryBinding extends com.google.flatbuffers.Table {
    * Query protocol name/version for provider-mediated retrieval, e.g.
    * /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
    * protocol to the provider, submits the signed query or a permitted subset,
-   * and imports only responses that verify against the signed roots.
+   * and imports only responses that verify against the signed roots. Responses
+   * MUST include enough Merkle proof material for each returned record and, for
+   * completeness-verifiable range queries, the declared range-boundary proofs.
    */
   public String QUERY_PROTOCOL() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer QUERY_PROTOCOLAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }

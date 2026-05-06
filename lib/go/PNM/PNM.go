@@ -16,8 +16,10 @@ import (
 /// roots, completeness-capable indexes, file_id partition key, and signature.
 /// Large or paid dataset updates do not need to be published as globally
 /// discoverable IPFS files; a PNM may instead advertise a provider-mediated SDN
-/// query protocol whose response is verified against the signed DPM roots and
-/// the returned Merkle proof material.
+/// query protocol. In that mode the PNM is only the announcement. The DPM is
+/// the signed commitment, and each provider response carries records plus
+/// Merkle proof material that the subscriber verifies against the DPM roots and
+/// the announced FILE_ID before import.
 type PNM struct {
 	_tab flatbuffers.Table
 }
@@ -150,8 +152,9 @@ func (rcv *PNM) FileName() []byte {
 /// this MUST match DPM.FILE_ID and is the stable key used everywhere an SDN
 /// component refers to the update: PNMs, DPMs, assets, entitlements, provider
 /// query requests, subscriber caches, replay, audit, and completeness
-/// verification. Subscribers MUST reject provider-mediated query responses
-/// whose records or proofs bind to a different FILE_ID.
+/// verification. Provider-mediated query requests and responses MUST bind
+/// their Merkle leaves and proof paths to this FILE_ID, and subscribers MUST
+/// reject responses whose DPM, records, or proofs bind to a different FILE_ID.
 /// Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
 func (rcv *PNM) FILE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
@@ -170,8 +173,9 @@ func (rcv *PNM) FileId() []byte {
 /// this MUST match DPM.FILE_ID and is the stable key used everywhere an SDN
 /// component refers to the update: PNMs, DPMs, assets, entitlements, provider
 /// query requests, subscriber caches, replay, audit, and completeness
-/// verification. Subscribers MUST reject provider-mediated query responses
-/// whose records or proofs bind to a different FILE_ID.
+/// verification. Provider-mediated query requests and responses MUST bind
+/// their Merkle leaves and proof paths to this FILE_ID, and subscribers MUST
+/// reject responses whose DPM, records, or proofs bind to a different FILE_ID.
 /// Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
 /// Digital Signature of the CID
 /// This is the digital signature of the CID, signed using the specified cryptographic method.

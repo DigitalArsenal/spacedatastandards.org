@@ -16,8 +16,10 @@ np = import_numpy()
 # roots, completeness-capable indexes, file_id partition key, and signature.
 # Large or paid dataset updates do not need to be published as globally
 # discoverable IPFS files; a PNM may instead advertise a provider-mediated SDN
-# query protocol whose response is verified against the signed DPM roots and
-# the returned Merkle proof material.
+# query protocol. In that mode the PNM is only the announcement. The DPM is
+# the signed commitment, and each provider response carries records plus
+# Merkle proof material that the subscriber verifies against the DPM roots and
+# the announced FILE_ID before import.
 class PNM(object):
     __slots__ = ['_tab']
 
@@ -89,8 +91,9 @@ class PNM(object):
     # this MUST match DPM.FILE_ID and is the stable key used everywhere an SDN
     # component refers to the update: PNMs, DPMs, assets, entitlements, provider
     # query requests, subscriber caches, replay, audit, and completeness
-    # verification. Subscribers MUST reject provider-mediated query responses
-    # whose records or proofs bind to a different FILE_ID.
+    # verification. Provider-mediated query requests and responses MUST bind
+    # their Merkle leaves and proof paths to this FILE_ID, and subscribers MUST
+    # reject responses whose DPM, records, or proofs bind to a different FILE_ID.
     # Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
     # PNM
     def FILE_ID(self):

@@ -89,7 +89,9 @@ func (rcv *DPMCompletenessIndex) CanonicalOrder() []byte {
 /// inclusion and range-completeness proofs. To verify a provider-mediated
 /// response, the subscriber recomputes each returned leaf, walks the supplied
 /// sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
-/// and confirms any range-boundary proofs required by CANONICAL_ORDER.
+/// confirms the leaf material includes the DPM.FILE_ID partition when this is
+/// the file_id index, and confirms any range-boundary proofs required by
+/// CANONICAL_ORDER.
 func (rcv *DPMCompletenessIndex) INDEX_ROOT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -107,7 +109,9 @@ func (rcv *DPMCompletenessIndex) IndexRoot() []byte {
 /// inclusion and range-completeness proofs. To verify a provider-mediated
 /// response, the subscriber recomputes each returned leaf, walks the supplied
 /// sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
-/// and confirms any range-boundary proofs required by CANONICAL_ORDER.
+/// confirms the leaf material includes the DPM.FILE_ID partition when this is
+/// the file_id index, and confirms any range-boundary proofs required by
+/// CANONICAL_ORDER.
 /// Hash profile for leaves and internal nodes, e.g.
 /// SDN-MERKLE-SHA256-v1. Profiles define domain separators, leaf material,
 /// pair ordering, duplicate handling, and odd-leaf promotion.

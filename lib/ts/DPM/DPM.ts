@@ -75,7 +75,10 @@ UPDATE_ID(optionalEncoding?:any):string|Uint8Array {
  * human filename and it is not the FlatBuffer file_identifier. For
  * completeness-verifiable streams, all returned records MUST belong to this
  * FILE_ID and prove inclusion under this DPM's signed roots, normally through
- * a declared file_id completeness index.
+ * a declared file_id completeness index. Use this field for all update
+ * addressing instead of inventing per-protocol IDs; provider responses,
+ * Merkle leaves, proof paths, PNM.FILE_ID, and DPMAsset.FILE_ID must all bind
+ * to the same value.
  */
 FILE_ID():string|null
 FILE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null

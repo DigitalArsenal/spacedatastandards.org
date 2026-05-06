@@ -89,7 +89,9 @@ public struct DPMAsset : IFlatbufferObject
   public byte[] GetBYTE_SHA256Array() { return __p.__vector_as_array<byte>(20); }
   /// Merkle root over canonical records in this asset, lowercase hex. For
   /// provider-mediated query delivery, subscribers verify returned records and
-  /// proof paths against this root before importing data.
+  /// proof paths against this root before importing data. The proof material is
+  /// carried by the provider query response, not by the DPM itself; this field
+  /// is the signed root that makes those proofs meaningful.
   public string DATA_ROOT { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDATA_ROOTBytes() { return __p.__vector_as_span<byte>(22, 1); }

@@ -156,7 +156,9 @@ class DPMAsset : Table() {
     /**
      * Merkle root over canonical records in this asset, lowercase hex. For
      * provider-mediated query delivery, subscribers verify returned records and
-     * proof paths against this root before importing data.
+     * proof paths against this root before importing data. The proof material is
+     * carried by the provider query response, not by the DPM itself; this field
+     * is the signed root that makes those proofs meaningful.
      */
     val dataRoot : String?
         get() {

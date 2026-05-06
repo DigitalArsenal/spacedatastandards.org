@@ -52,7 +52,9 @@ public final class DPMCompletenessIndex extends com.google.flatbuffers.Table {
    * inclusion and range-completeness proofs. To verify a provider-mediated
    * response, the subscriber recomputes each returned leaf, walks the supplied
    * sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
-   * and confirms any range-boundary proofs required by CANONICAL_ORDER.
+   * confirms the leaf material includes the DPM.FILE_ID partition when this is
+   * the file_id index, and confirms any range-boundary proofs required by
+   * CANONICAL_ORDER.
    */
   public String INDEX_ROOT() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer INDEX_ROOTAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }

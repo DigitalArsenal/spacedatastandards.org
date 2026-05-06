@@ -138,7 +138,9 @@ struct DPMCompletenessIndex FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
   /// inclusion and range-completeness proofs. To verify a provider-mediated
   /// response, the subscriber recomputes each returned leaf, walks the supplied
   /// sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
-  /// and confirms any range-boundary proofs required by CANONICAL_ORDER.
+  /// confirms the leaf material includes the DPM.FILE_ID partition when this is
+  /// the file_id index, and confirms any range-boundary proofs required by
+  /// CANONICAL_ORDER.
   const ::flatbuffers::String *INDEX_ROOT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INDEX_ROOT);
   }
@@ -308,7 +310,9 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   /// Merkle root over canonical records in this asset, lowercase hex. For
   /// provider-mediated query delivery, subscribers verify returned records and
-  /// proof paths against this root before importing data.
+  /// proof paths against this root before importing data. The proof material is
+  /// carried by the provider query response, not by the DPM itself; this field
+  /// is the signed root that makes those proofs meaningful.
   const ::flatbuffers::String *DATA_ROOT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DATA_ROOT);
   }
@@ -702,7 +706,9 @@ struct DPMQueryBinding FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Query protocol name/version for provider-mediated retrieval, e.g.
   /// /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
   /// protocol to the provider, submits the signed query or a permitted subset,
-  /// and imports only responses that verify against the signed roots.
+  /// and imports only responses that verify against the signed roots. Responses
+  /// MUST include enough Merkle proof material for each returned record and, for
+  /// completeness-verifiable range queries, the declared range-boundary proofs.
   const ::flatbuffers::String *QUERY_PROTOCOL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_QUERY_PROTOCOL);
   }
@@ -1067,7 +1073,10 @@ struct DPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// human filename and it is not the FlatBuffer file_identifier. For
   /// completeness-verifiable streams, all returned records MUST belong to this
   /// FILE_ID and prove inclusion under this DPM's signed roots, normally through
-  /// a declared file_id completeness index.
+  /// a declared file_id completeness index. Use this field for all update
+  /// addressing instead of inventing per-protocol IDs; provider responses,
+  /// Merkle leaves, proof paths, PNM.FILE_ID, and DPMAsset.FILE_ID must all bind
+  /// to the same value.
   const ::flatbuffers::String *FILE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_FILE_ID);
   }

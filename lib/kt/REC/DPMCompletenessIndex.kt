@@ -70,7 +70,9 @@ class DPMCompletenessIndex : Table() {
      * inclusion and range-completeness proofs. To verify a provider-mediated
      * response, the subscriber recomputes each returned leaf, walks the supplied
      * sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
-     * and confirms any range-boundary proofs required by CANONICAL_ORDER.
+     * confirms the leaf material includes the DPM.FILE_ID partition when this is
+     * the file_id index, and confirms any range-boundary proofs required by
+     * CANONICAL_ORDER.
      */
     val indexRoot : String?
         get() {

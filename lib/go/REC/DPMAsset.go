@@ -225,7 +225,9 @@ func (rcv *DPMAsset) ByteSha256() []byte {
 /// SHA-256 hash of the exact published bytes, lowercase hex.
 /// Merkle root over canonical records in this asset, lowercase hex. For
 /// provider-mediated query delivery, subscribers verify returned records and
-/// proof paths against this root before importing data.
+/// proof paths against this root before importing data. The proof material is
+/// carried by the provider query response, not by the DPM itself; this field
+/// is the signed root that makes those proofs meaningful.
 func (rcv *DPMAsset) DATA_ROOT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -240,7 +242,9 @@ func (rcv *DPMAsset) DataRoot() []byte {
 
 /// Merkle root over canonical records in this asset, lowercase hex. For
 /// provider-mediated query delivery, subscribers verify returned records and
-/// proof paths against this root before importing data.
+/// proof paths against this root before importing data. The proof material is
+/// carried by the provider query response, not by the DPM itself; this field
+/// is the signed root that makes those proofs meaningful.
 /// SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
 func (rcv *DPMAsset) SCHEMA_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))

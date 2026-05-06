@@ -28497,7 +28497,7 @@
                         },
                         "INDEX_ROOT": {
                             "type": "string",
-                            "description": "SHA-256 or Merkle root of the ordered index, lowercase hex. This root is\nsigned by the DPM provider signature and is the verifier's commitment for\ninclusion and range-completeness proofs. To verify a provider-mediated\nresponse, the subscriber recomputes each returned leaf, walks the supplied\nsibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,\nand confirms any range-boundary proofs required by CANONICAL_ORDER."
+                            "description": "SHA-256 or Merkle root of the ordered index, lowercase hex. This root is\nsigned by the DPM provider signature and is the verifier's commitment for\ninclusion and range-completeness proofs. To verify a provider-mediated\nresponse, the subscriber recomputes each returned leaf, walks the supplied\nsibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,\nconfirms the leaf material includes the DPM.FILE_ID partition when this is\nthe file_id index, and confirms any range-boundary proofs required by\nCANONICAL_ORDER."
                         },
                         "MERKLE_PROFILE": {
                             "type": "string",
@@ -28554,7 +28554,7 @@
                         },
                         "DATA_ROOT": {
                             "type": "string",
-                            "description": "Merkle root over canonical records in this asset, lowercase hex. For\nprovider-mediated query delivery, subscribers verify returned records and\nproof paths against this root before importing data."
+                            "description": "Merkle root over canonical records in this asset, lowercase hex. For\nprovider-mediated query delivery, subscribers verify returned records and\nproof paths against this root before importing data. The proof material is\ncarried by the provider query response, not by the DPM itself; this field\nis the signed root that makes those proofs meaningful."
                         },
                         "SCHEMA_NAME": {
                             "type": "string",
@@ -28649,7 +28649,7 @@
                         },
                         "QUERY_PROTOCOL": {
                             "type": "string",
-                            "description": "Query protocol name/version for provider-mediated retrieval, e.g.\n/sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this\nprotocol to the provider, submits the signed query or a permitted subset,\nand imports only responses that verify against the signed roots."
+                            "description": "Query protocol name/version for provider-mediated retrieval, e.g.\n/sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this\nprotocol to the provider, submits the signed query or a permitted subset,\nand imports only responses that verify against the signed roots. Responses\nMUST include enough Merkle proof material for each returned record and, for\ncompleteness-verifiable range queries, the declared range-boundary proofs."
                         },
                         "SCHEMA_NAMES": {
                             "type": "array",
@@ -28744,7 +28744,7 @@
                         },
                         "FILE_ID": {
                             "type": "string",
-                            "description": "Canonical publication/update partition identity. FILE_ID is the key used\neverywhere a subscriber, provider, PNM, asset, entitlement, cache, audit\nlog, or query protocol refers to this exact update. It is not merely a\nhuman filename and it is not the FlatBuffer file_identifier. For\ncompleteness-verifiable streams, all returned records MUST belong to this\nFILE_ID and prove inclusion under this DPM's signed roots, normally through\na declared file_id completeness index."
+                            "description": "Canonical publication/update partition identity. FILE_ID is the key used\neverywhere a subscriber, provider, PNM, asset, entitlement, cache, audit\nlog, or query protocol refers to this exact update. It is not merely a\nhuman filename and it is not the FlatBuffer file_identifier. For\ncompleteness-verifiable streams, all returned records MUST belong to this\nFILE_ID and prove inclusion under this DPM's signed roots, normally through\na declared file_id completeness index. Use this field for all update\naddressing instead of inventing per-protocol IDs; provider responses,\nMerkle leaves, proof paths, PNM.FILE_ID, and DPMAsset.FILE_ID must all bind\nto the same value."
                         },
                         "PROVIDER_PEER_ID": {
                             "type": "string",
@@ -30199,7 +30199,7 @@
             "definitions": {
                 "PNM": {
                     "type": "object",
-                    "description": "Publish Notification Message.\n\nPNM is the compact network announcement for a published record, manifest, or\ndataset update. For dataset updates, FILE_ID is the complete canonical\nidentity for the published update and CID usually points to a small DPM\nmanifest or digest. The DPM carries the full verification contract:\nprovider identity, retrieval protocol, canonical query, result hash, Merkle\nroots, completeness-capable indexes, file_id partition key, and signature.\nLarge or paid dataset updates do not need to be published as globally\ndiscoverable IPFS files; a PNM may instead advertise a provider-mediated SDN\nquery protocol whose response is verified against the signed DPM roots and\nthe returned Merkle proof material.",
+                    "description": "Publish Notification Message.\n\nPNM is the compact network announcement for a published record, manifest, or\ndataset update. For dataset updates, FILE_ID is the complete canonical\nidentity for the published update and CID usually points to a small DPM\nmanifest or digest. The DPM carries the full verification contract:\nprovider identity, retrieval protocol, canonical query, result hash, Merkle\nroots, completeness-capable indexes, file_id partition key, and signature.\nLarge or paid dataset updates do not need to be published as globally\ndiscoverable IPFS files; a PNM may instead advertise a provider-mediated SDN\nquery protocol. In that mode the PNM is only the announcement. The DPM is\nthe signed commitment, and each provider response carries records plus\nMerkle proof material that the subscriber verifies against the DPM roots and\nthe announced FILE_ID before import.",
                     "properties": {
                         "MULTIFORMAT_ADDRESS": {
                             "type": "string",
@@ -30219,7 +30219,7 @@
                         },
                         "FILE_ID": {
                             "type": "string",
-                            "description": "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Subscribers MUST reject provider-mediated query responses\nwhose records or proofs bind to a different FILE_ID.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+                            "description": "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
                         },
                         "SIGNATURE": {
                             "type": "string",

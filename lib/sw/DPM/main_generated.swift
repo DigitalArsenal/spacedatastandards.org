@@ -81,7 +81,9 @@ public struct DPMCompletenessIndex: FlatBufferTable, FlatbuffersVectorInitializa
   ///  inclusion and range-completeness proofs. To verify a provider-mediated
   ///  response, the subscriber recomputes each returned leaf, walks the supplied
   ///  sibling hashes using MERKLE_PROFILE, confirms the root equals INDEX_ROOT,
-  ///  and confirms any range-boundary proofs required by CANONICAL_ORDER.
+  ///  confirms the leaf material includes the DPM.FILE_ID partition when this is
+  ///  the file_id index, and confirms any range-boundary proofs required by
+  ///  CANONICAL_ORDER.
   public var INDEX_ROOT: String? { let o = _accessor.offset(VT.INDEX_ROOT); return o == 0 ? nil : _accessor.string(at: o) }
   public var INDEX_ROOTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INDEX_ROOT) }
   ///  Hash profile for leaves and internal nodes, e.g.
@@ -199,7 +201,9 @@ public struct DPMAsset: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   public var BYTE_SHA256SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BYTE_SHA256) }
   ///  Merkle root over canonical records in this asset, lowercase hex. For
   ///  provider-mediated query delivery, subscribers verify returned records and
-  ///  proof paths against this root before importing data.
+  ///  proof paths against this root before importing data. The proof material is
+  ///  carried by the provider query response, not by the DPM itself; this field
+  ///  is the signed root that makes those proofs meaningful.
   public var DATA_ROOT: String? { let o = _accessor.offset(VT.DATA_ROOT); return o == 0 ? nil : _accessor.string(at: o) }
   public var DATA_ROOTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATA_ROOT) }
   ///  SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.
@@ -429,7 +433,9 @@ public struct DPMQueryBinding: FlatBufferTable, FlatbuffersVectorInitializable, 
   ///  Query protocol name/version for provider-mediated retrieval, e.g.
   ///  /sdn/dataset-query/1.0.0. A subscriber verifies the PNM and DPM, opens this
   ///  protocol to the provider, submits the signed query or a permitted subset,
-  ///  and imports only responses that verify against the signed roots.
+  ///  and imports only responses that verify against the signed roots. Responses
+  ///  MUST include enough Merkle proof material for each returned record and, for
+  ///  completeness-verifiable range queries, the declared range-boundary proofs.
   public var QUERY_PROTOCOL: String? { let o = _accessor.offset(VT.QUERY_PROTOCOL); return o == 0 ? nil : _accessor.string(at: o) }
   public var QUERY_PROTOCOLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.QUERY_PROTOCOL) }
   ///  SDS schema names selected by the query.
@@ -637,7 +643,10 @@ public struct DPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  human filename and it is not the FlatBuffer file_identifier. For
   ///  completeness-verifiable streams, all returned records MUST belong to this
   ///  FILE_ID and prove inclusion under this DPM's signed roots, normally through
-  ///  a declared file_id completeness index.
+  ///  a declared file_id completeness index. Use this field for all update
+  ///  addressing instead of inventing per-protocol IDs; provider responses,
+  ///  Merkle leaves, proof paths, PNM.FILE_ID, and DPMAsset.FILE_ID must all bind
+  ///  to the same value.
   public var FILE_ID: String? { let o = _accessor.offset(VT.FILE_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var FILE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_ID) }
   ///  Provider peer ID.

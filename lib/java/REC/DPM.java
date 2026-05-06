@@ -55,7 +55,10 @@ public final class DPM extends com.google.flatbuffers.Table {
    * human filename and it is not the FlatBuffer file_identifier. For
    * completeness-verifiable streams, all returned records MUST belong to this
    * FILE_ID and prove inclusion under this DPM's signed roots, normally through
-   * a declared file_id completeness index.
+   * a declared file_id completeness index. Use this field for all update
+   * addressing instead of inventing per-protocol IDs; provider responses,
+   * Merkle leaves, proof paths, PNM.FILE_ID, and DPMAsset.FILE_ID must all bind
+   * to the same value.
    */
   public String FILE_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer FILE_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
