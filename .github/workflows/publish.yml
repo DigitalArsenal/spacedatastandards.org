@@ -716,9 +716,9 @@ jobs:
           if [ ! -f "${BUNDLE_DIR}/spacedatastandards-${VERSION}.pom.asc" ]; then
             gpg --armor --detach-sign "${BUNDLE_DIR}/spacedatastandards-${VERSION}.pom"
           fi
-          # Create the bundle zip
-          cd "$(dirname "${BUNDLE_DIR}")"
-          zip -r "${GITHUB_WORKSPACE}/bundle.zip" "${VERSION}/"
+          # Central Portal bundles must preserve the full Maven repository path
+          # from the archive root: groupId/artifactId/version/artifacts.
+          zip -r "${GITHUB_WORKSPACE}/bundle.zip" "io/spacedatastandards/spacedatastandards/${VERSION}/"
 
       - name: Upload bundle to Central Portal
         run: |
@@ -816,32 +816,46 @@ jobs:
 
       - name: Create and validate Packagist metadata
         run: |
-          cat > lib/php/composer.json << 'EOF'
-          {
-              "name": "digitalarsenal/spacedatastandards",
-              "description": "Space data standards framework based on CCSDS and FlatBuffers",
-              "type": "library",
-              "license": "Apache-2.0",
-              "homepage": "https://spacedatastandards.org",
-              "authors": [
-                  {
-                      "name": "Digital Arsenal",
-                      "email": "sds@digitalarsenal.io"
-                  }
-              ],
-              "require": {
-                  "php": ">=8.0",
-                  "google/flatbuffers": "^24.3"
-              },
-              "autoload": {
-                  "psr-4": {
-                      "SpaceDataStandards\\": ""
-                  }
-              }
-          }
-          EOF
-          test -f lib/php/composer.json
-          php -r 'json_decode(file_get_contents("lib/php/composer.json"), true); if (json_last_error() !== JSON_ERROR_NONE) { fwrite(STDERR, json_last_error_msg() . PHP_EOL); exit(1); }'
+          test -f composer.json
+          php -r 'json_decode(file_get_contents("composer.json"), true); if (json_last_error() !== JSON_ERROR_NONE) { fwrite(STDERR, json_last_error_msg() . PHP_EOL); exit(1); }'
+
+      - name: Register or update Packagist package
+        env:
+          PACKAGIST_USERNAME: ${{ secrets.PACKAGIST_USERNAME }}
+          PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
+        run: |
+          if [ -z "$PACKAGIST_USERNAME" ] || [ -z "$PACKAGIST_TOKEN" ]; then
+            echo "PACKAGIST_USERNAME and PACKAGIST_TOKEN are required to publish PHP/Packagist."
+            exit 1
+          fi
+          REPO_URL="https://github.com/DigitalArsenal/spacedatastandards.org"
+          AUTH="Authorization: Bearer ${PACKAGIST_USERNAME}:${PACKAGIST_TOKEN}"
+          CREATE_RESPONSE=$(curl -sS -w "\n%{http_code}" \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "$AUTH" \
+            https://packagist.org/api/create-package \
+            -d "{\"repository\":\"${REPO_URL}\"}")
+          CREATE_CODE=$(echo "$CREATE_RESPONSE" | tail -1)
+          CREATE_BODY=$(echo "$CREATE_RESPONSE" | head -n -1)
+          echo "Create HTTP Status: $CREATE_CODE"
+          echo "Create Response: $CREATE_BODY"
+          if [ "$CREATE_CODE" -ge 400 ]; then
+            UPDATE_RESPONSE=$(curl -sS -w "\n%{http_code}" \
+              -X PUT \
+              -H "Content-Type: application/json" \
+              -H "$AUTH" \
+              https://packagist.org/api/packages/digitalarsenal/spacedatastandards \
+              -d "{\"repository\":\"${REPO_URL}\"}")
+            UPDATE_CODE=$(echo "$UPDATE_RESPONSE" | tail -1)
+            UPDATE_BODY=$(echo "$UPDATE_RESPONSE" | head -n -1)
+            echo "Update HTTP Status: $UPDATE_CODE"
+            echo "Update Response: $UPDATE_BODY"
+            if [ "$UPDATE_CODE" -ge 400 ]; then
+              echo "Packagist create/update failed."
+              exit 1
+            fi
+          fi
 
   # ============================================
   # Summary job

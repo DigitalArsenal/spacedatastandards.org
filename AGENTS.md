@@ -39,6 +39,12 @@
      and
      `GONOSUMDB=github.com/DigitalArsenal/spacedatastandards.org go list -m -versions github.com/DigitalArsenal/spacedatastandards.org/lib/go`
      must show the new release.
+     Maven Central must be verified from the public repository path, e.g.
+     `https://repo1.maven.org/maven2/io/spacedatastandards/spacedatastandards/<version>/`.
+     Packagist must resolve
+     `https://repo.packagist.org/p2/digitalarsenal/spacedatastandards.json`
+     and include the new version. A workflow job that only uploads or validates
+     metadata is not enough; the public consumer registry must see the version.
      If a configured target is not externally visible, leave the release
      incomplete, record the failing registry and evidence, and fix the publish
      path before downstream installation except when the target is explicitly
