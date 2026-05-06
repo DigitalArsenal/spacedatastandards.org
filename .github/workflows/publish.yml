@@ -550,7 +550,7 @@ jobs:
                    http://maven.apache.org/xsd/maven-4.0.0.xsd">
               <modelVersion>4.0.0</modelVersion>
 
-              <groupId>io.spacedatastandards</groupId>
+              <groupId>io.github.digitalarsenal</groupId>
               <artifactId>spacedatastandards</artifactId>
               <version>${{ needs.build.outputs.version }}</version>
               <packaging>jar</packaging>
@@ -697,7 +697,7 @@ jobs:
           cd lib/java/target
           VERSION="${{ needs.build.outputs.version }}"
           # Create the bundle directory structure
-          BUNDLE_DIR="io/spacedatastandards/spacedatastandards/${VERSION}"
+          BUNDLE_DIR="io/github/digitalarsenal/spacedatastandards/${VERSION}"
           mkdir -p "${BUNDLE_DIR}"
           # Copy artifacts
           cp "spacedatastandards-${VERSION}.jar" "${BUNDLE_DIR}/"
@@ -716,7 +716,7 @@ jobs:
           done
           # Central Portal bundles must preserve the full Maven repository path
           # from the archive root: groupId/artifactId/version/artifacts.
-          zip -r "${GITHUB_WORKSPACE}/bundle.zip" "io/spacedatastandards/spacedatastandards/${VERSION}/"
+          zip -r "${GITHUB_WORKSPACE}/bundle.zip" "io/github/digitalarsenal/spacedatastandards/${VERSION}/"
 
       - name: Upload bundle to Central Portal
         run: |

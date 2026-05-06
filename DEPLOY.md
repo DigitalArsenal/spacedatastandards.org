@@ -238,7 +238,7 @@ cargo publish --dry-run
 ## Java (Maven Central)
 
 **Package Manager:** [Maven Central](https://central.sonatype.com/)
-**Recommended Coordinates:** `io.spacedatastandards:spacedatastandards`
+**Recommended Coordinates:** `io.github.digitalarsenal:spacedatastandards`
 
 ### Setup
 
@@ -252,7 +252,7 @@ cargo publish --dry-run
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.spacedatastandards</groupId>
+    <groupId>io.github.digitalarsenal</groupId>
     <artifactId>spacedatastandards</artifactId>
     <version>1.65.0</version>
     <packaging>jar</packaging>
@@ -313,7 +313,7 @@ mvn clean deploy -P release
 ## Kotlin (Maven Central)
 
 **Package Manager:** [Maven Central](https://central.sonatype.com/)
-**Recommended Coordinates:** `io.spacedatastandards:spacedatastandards-kt`
+**Recommended Coordinates:** `io.github.digitalarsenal:spacedatastandards-kt`
 
 ### Setup
 
@@ -326,7 +326,7 @@ plugins {
     signing
 }
 
-group = "io.spacedatastandards"
+group = "io.github.digitalarsenal"
 version = "1.65.0"
 
 repositories {
@@ -668,7 +668,7 @@ You can trigger publishing manually from the Actions tab:
 | crates.io | `digitalarsenal-standards` | `cargo add digitalarsenal-standards` |
 | NuGet | `SpaceDataStandards` | `dotnet add package SpaceDataStandards` |
 | pub.dev | `spacedatastandards` | `dart pub add spacedatastandards` |
-| Maven Central | `io.spacedatastandards:spacedatastandards` | See Maven/Gradle docs |
+| Maven Central | `io.github.digitalarsenal:spacedatastandards` | See Maven/Gradle docs |
 | Go Modules | `github.com/.../lib/go` | `go get github.com/DigitalArsenal/spacedatastandards.org/lib/go` |
 | Packagist | `digitalarsenal/spacedatastandards` | `composer require digitalarsenal/spacedatastandards` |
 

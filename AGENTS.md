@@ -34,13 +34,13 @@
      `curl https://pypi.org/pypi/spacedatastandards.org/json`,
      `curl https://crates.io/api/v1/crates/spacedatastandards-org`,
      `curl https://pub.dev/api/packages/spacedatastandards`,
-     Maven Central lookup for `io.spacedatastandards:spacedatastandards`,
+     Maven Central lookup for `io.github.digitalarsenal:spacedatastandards`,
      Packagist lookup for the configured PHP package name,
      and
      `GONOSUMDB=github.com/DigitalArsenal/spacedatastandards.org go list -m -versions github.com/DigitalArsenal/spacedatastandards.org/lib/go`
      must show the new release.
      Maven Central must be verified from the public repository path, e.g.
-     `https://repo1.maven.org/maven2/io/spacedatastandards/spacedatastandards/<version>/`.
+     `https://repo1.maven.org/maven2/io/github/digitalarsenal/spacedatastandards/<version>/`.
      Packagist must resolve
      `https://repo.packagist.org/p2/digitalarsenal/spacedatastandards.json`
      and include the new version. A workflow job that only uploads or validates
