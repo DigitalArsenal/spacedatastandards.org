@@ -18,6 +18,12 @@
   monitor CI, verify every configured registry/proxy, and update downstream SDN
   from the externally published Go and TypeScript artifacts before reporting
   completion.
+- SDS releases may partially publish before one target fails. That is still a
+  failed release. If any intended registry is blocked by a rate limit,
+  authentication failure, package validation problem, delayed indexing, or
+  missing public consumer endpoint, agents must leave the release incomplete,
+  retry or fix only the missing target when appropriate, and must not update SDN
+  to the new SDS version.
 - When publishing SDS, do not report the release complete or tell downstream
   repos to install the latest version until the release workflow has finished
   and the intended package artifacts are externally visible from their
@@ -57,6 +63,10 @@
      `PACKAGIST_USERNAME` and `PACKAGIST_TOKEN` repository secrets are
      configured; if they are absent, the workflow must say Packagist is not
      configured instead of marking metadata validation as a publish.
+     A pub.dev rate-limit response, GitHub Packages auth-only local query,
+     Packagist 404, or Maven Central 404 is not acceptable evidence of
+     publication; either prove the target is not configured/consumer-facing for
+     the release or keep the release open.
      If a configured target is not externally visible, leave the release
      incomplete, record the failing registry and evidence, and fix the publish
      path before downstream installation except when the target is explicitly
