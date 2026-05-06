@@ -18,6 +18,11 @@
   monitor CI, verify every configured registry/proxy, and update downstream SDN
   from the externally published Go and TypeScript artifacts before reporting
   completion.
+- Agents must not report back with a completion status, ask downstream
+  consumers to install latest, or refresh SDN dependencies to the new SDS
+  version until every configured SDS publication target is externally visible.
+  Partial publication is release failure until the missing target is repaired
+  or explicitly documented as not configured for that release.
 - SDS releases may partially publish before one target fails. That is still a
   failed release. If any intended registry is blocked by a rate limit,
   authentication failure, package validation problem, delayed indexing, or
