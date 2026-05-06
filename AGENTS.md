@@ -16,22 +16,33 @@
 - Create a GitHub release to trigger publishing to package registries
 - When publishing SDS, do not report the release complete or tell downstream
   repos to install the latest version until the release workflow has finished
-  and the published JavaScript/TypeScript package and Go module tag are both
-  visible from their registries/module proxies. Publishing SDS is not done
-  when the tag is pushed; it is done only after the package artifacts are
-  visible and the first downstream consumer has been refreshed and verified.
+  and the intended package artifacts are externally visible from their
+  registries/module proxies. Publishing SDS is not done when the tag is pushed,
+  and it is not done just because GitHub Actions is green. It is done only
+  after package artifacts are visible from the registries consumers use and the
+  first downstream consumer has been refreshed and verified.
   The release flow is:
   1. Build and test SDS locally.
   2. Commit and push the SDS schema/generated-artifact change.
   3. Create the GitHub release or dispatch the publish workflow for all package
      targets.
   4. Monitor GitHub Actions until the publish workflow is complete.
-  5. Verify each intended publication target. At minimum:
+  5. Verify each intended publication target directly from its public registry,
+     not just from workflow status. At minimum:
      `npm view spacedatastandards.org version`,
      `npm view @digitalarsenal/spacedatastandards version --registry=https://npm.pkg.github.com`,
+     `curl https://pypi.org/pypi/spacedatastandards.org/json`,
+     `curl https://crates.io/api/v1/crates/spacedatastandards-org`,
+     `curl https://pub.dev/api/packages/spacedatastandards`,
+     Maven Central lookup for `io.spacedatastandards:spacedatastandards`,
+     Packagist lookup for the configured PHP package name,
      and
      `GONOSUMDB=github.com/DigitalArsenal/spacedatastandards.org go list -m -versions github.com/DigitalArsenal/spacedatastandards.org/lib/go`
      must show the new release.
+     If a configured target is not externally visible, leave the release
+     incomplete, record the failing registry and evidence, and fix the publish
+     path before downstream installation except when the target is explicitly
+     documented as not consumer-facing for that release.
   6. Only after all intended package targets are visible, download/install the
      newly published JavaScript/TypeScript SDS package and Go SDS module in SDN,
      update lockfiles, run the SDN checks that cover the touched consumers,
