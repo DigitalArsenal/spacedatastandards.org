@@ -814,8 +814,32 @@ jobs:
           name: lib-artifacts
           path: lib/
 
-      - name: Validate Packagist metadata
+      - name: Create and validate Packagist metadata
         run: |
+          cat > lib/php/composer.json << 'EOF'
+          {
+              "name": "digitalarsenal/spacedatastandards",
+              "description": "Space data standards framework based on CCSDS and FlatBuffers",
+              "type": "library",
+              "license": "Apache-2.0",
+              "homepage": "https://spacedatastandards.org",
+              "authors": [
+                  {
+                      "name": "Digital Arsenal",
+                      "email": "sds@digitalarsenal.io"
+                  }
+              ],
+              "require": {
+                  "php": ">=8.0",
+                  "google/flatbuffers": "^24.3"
+              },
+              "autoload": {
+                  "psr-4": {
+                      "SpaceDataStandards\\": ""
+                  }
+              }
+          }
+          EOF
           test -f lib/php/composer.json
           php -r 'json_decode(file_get_contents("lib/php/composer.json"), true); if (json_last_error() !== JSON_ERROR_NONE) { fwrite(STDERR, json_last_error_msg() . PHP_EOL); exit(1); }'
 
