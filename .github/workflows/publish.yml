@@ -782,11 +782,14 @@ jobs:
       - name: Create and push Go module tag
         run: |
           VERSION="v${{ needs.build.outputs.version }}"
-          git checkout main
           git add lib/go/
-          git commit -m "chore: Update Go module to ${VERSION}" || true
+          git diff --cached --exit-code lib/go/ || {
+            echo "Generated Go module differs from committed lib/go artifacts."
+            echo "Commit regenerated lib/go before creating an SDS release."
+            exit 1
+          }
           git tag -f "lib/go/${VERSION}"
-          git push origin main "lib/go/${VERSION}" --force
+          git push origin "lib/go/${VERSION}" --force
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -811,47 +814,10 @@ jobs:
           name: lib-artifacts
           path: lib/
 
-      - name: Create composer.json
+      - name: Validate Packagist metadata
         run: |
-          cat > lib/php/composer.json << 'EOF'
-          {
-              "name": "digitalarsenal/spacedatastandards",
-              "description": "Space data standards framework based on CCSDS and FlatBuffers",
-              "type": "library",
-              "license": "Apache-2.0",
-              "homepage": "https://spacedatastandards.org",
-              "authors": [
-                  {
-                      "name": "Digital Arsenal",
-                      "email": "sds@digitalarsenal.io"
-                  }
-              ],
-              "require": {
-                  "php": ">=8.0",
-                  "google/flatbuffers": "^24.3"
-              },
-              "autoload": {
-                  "psr-4": {
-                      "SpaceDataStandards\\": ""
-                  }
-              }
-          }
-          EOF
-
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Commit and tag for Packagist
-        run: |
-          VERSION="v${{ needs.build.outputs.version }}"
-          git checkout main
-          git add lib/php/
-          git commit -m "chore: Update PHP package to ${VERSION}" || true
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          test -f lib/php/composer.json
+          php -r 'json_decode(file_get_contents("lib/php/composer.json"), true); if (json_last_error() !== JSON_ERROR_NONE) { fwrite(STDERR, json_last_error_msg() . PHP_EOL); exit(1); }'
 
   # ============================================
   # Summary job
