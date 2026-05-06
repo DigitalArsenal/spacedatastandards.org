@@ -707,15 +707,13 @@ jobs:
           # Copy signatures
           for f in "${BUNDLE_DIR}"/*.jar "${BUNDLE_DIR}"/*.pom; do
             [ -f "$f" ] || continue
-            if [ -f "$f.asc" ]; then cp "$f.asc" "${BUNDLE_DIR}/"; fi
+            if [ ! -f "$f.asc" ]; then
+              gpg --armor --detach-sign "$f"
+            fi
             # Generate checksums
             md5sum "$f" | cut -d' ' -f1 > "$f.md5"
             sha1sum "$f" | cut -d' ' -f1 > "$f.sha1"
           done
-          # Sign the pom if not already signed
-          if [ ! -f "${BUNDLE_DIR}/spacedatastandards-${VERSION}.pom.asc" ]; then
-            gpg --armor --detach-sign "${BUNDLE_DIR}/spacedatastandards-${VERSION}.pom"
-          fi
           # Central Portal bundles must preserve the full Maven repository path
           # from the archive root: groupId/artifactId/version/artifacts.
           zip -r "${GITHUB_WORKSPACE}/bundle.zip" "io/spacedatastandards/spacedatastandards/${VERSION}/"
