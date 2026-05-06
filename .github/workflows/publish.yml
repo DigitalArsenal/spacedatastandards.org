@@ -519,14 +519,30 @@ jobs:
   publish-maven-java:
     needs: build
     runs-on: ubuntu-latest
+    env:
+      MAVEN_GROUP_ID: ${{ vars.MAVEN_GROUP_ID }}
     if: |
       github.event_name == 'release' ||
       contains(inputs.packages, 'maven') ||
       inputs.packages == 'all'
     steps:
+      - name: Check Maven Central configuration
+        id: maven-config
+        run: |
+          if [ -z "${MAVEN_GROUP_ID}" ]; then
+            echo "MAVEN_GROUP_ID is not configured; Java/Maven Central is not an intended target for this release."
+            echo "Configure MAVEN_GROUP_ID to a Central-verified namespace to make Maven a required publication target."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Publishing Maven artifacts as ${MAVEN_GROUP_ID}:spacedatastandards."
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v4
+        if: steps.maven-config.outputs.enabled == 'true'
 
       - name: Setup Java
+        if: steps.maven-config.outputs.enabled == 'true'
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -535,14 +551,16 @@ jobs:
           gpg-passphrase: GPG_PASSPHRASE
 
       - name: Download artifacts
+        if: steps.maven-config.outputs.enabled == 'true'
         uses: actions/download-artifact@v4
         with:
           name: lib-artifacts
           path: lib/
 
       - name: Create pom.xml
+        if: steps.maven-config.outputs.enabled == 'true'
         run: |
-          cat > lib/java/pom.xml << 'EOF'
+          cat > lib/java/pom.xml << EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <project xmlns="http://maven.apache.org/POM/4.0.0"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -550,7 +568,7 @@ jobs:
                    http://maven.apache.org/xsd/maven-4.0.0.xsd">
               <modelVersion>4.0.0</modelVersion>
 
-              <groupId>io.github.digitalarsenal</groupId>
+              <groupId>${MAVEN_GROUP_ID}</groupId>
               <artifactId>spacedatastandards</artifactId>
               <version>${{ needs.build.outputs.version }}</version>
               <packaging>jar</packaging>
@@ -656,6 +674,7 @@ jobs:
           EOF
 
       - name: Add Java package declarations and restructure
+        if: steps.maven-config.outputs.enabled == 'true'
         run: |
           cd lib/java
           for dir in */; do
@@ -673,12 +692,14 @@ jobs:
           done
 
       - name: Fix Java byte overflow in union types
+        if: steps.maven-config.outputs.enabled == 'true'
         run: |
           # FlatBuffers unions with >127 members overflow Java's signed byte.
           # Change RecordType constants from byte to int to support >127 union members.
           find lib/java -name 'RecordType.java' -exec sed -i 's/public static final byte/public static final int/g' {} +
 
       - name: Align ValidateVersion to Maven-available runtime
+        if: steps.maven-config.outputs.enabled == 'true'
         run: |
           # flatc 25.12.19 emits Constants.FLATBUFFERS_25_12_19() version-compat
           # checks, but Google has not published flatbuffers-java:25.12.19 to
@@ -686,6 +707,7 @@ jobs:
           find lib/java -name '*.java' -exec sed -i 's/FLATBUFFERS_25_12_19/FLATBUFFERS_25_2_10/g' {} +
 
       - name: Build and sign artifacts
+        if: steps.maven-config.outputs.enabled == 'true'
         run: |
           cd lib/java
           mvn clean verify -DskipTests
@@ -693,11 +715,13 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Create bundle for Central Portal
+        if: steps.maven-config.outputs.enabled == 'true'
         run: |
           cd lib/java/target
           VERSION="${{ needs.build.outputs.version }}"
+          GROUP_PATH="${MAVEN_GROUP_ID//./\/}"
           # Create the bundle directory structure
-          BUNDLE_DIR="io/github/digitalarsenal/spacedatastandards/${VERSION}"
+          BUNDLE_DIR="${GROUP_PATH}/spacedatastandards/${VERSION}"
           mkdir -p "${BUNDLE_DIR}"
           # Copy artifacts
           cp "spacedatastandards-${VERSION}.jar" "${BUNDLE_DIR}/"
@@ -716,9 +740,10 @@ jobs:
           done
           # Central Portal bundles must preserve the full Maven repository path
           # from the archive root: groupId/artifactId/version/artifacts.
-          zip -r "${GITHUB_WORKSPACE}/bundle.zip" "io/github/digitalarsenal/spacedatastandards/${VERSION}/"
+          zip -r "${GITHUB_WORKSPACE}/bundle.zip" "${GROUP_PATH}/spacedatastandards/${VERSION}/"
 
       - name: Upload bundle to Central Portal
+        if: steps.maven-config.outputs.enabled == 'true'
         run: |
           # Upload via Central Portal API
           RESPONSE=$(curl -s -w "\n%{http_code}" \
