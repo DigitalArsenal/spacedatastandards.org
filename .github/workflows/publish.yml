@@ -733,7 +733,36 @@ jobs:
             echo "Upload failed with status $HTTP_CODE"
             exit 1
           fi
-          echo "Deployment ID: $BODY"
+          DEPLOYMENT_ID="$BODY"
+          echo "Deployment ID: $DEPLOYMENT_ID"
+
+          for attempt in $(seq 1 60); do
+            STATUS_RESPONSE=$(curl -sS -w "\n%{http_code}" \
+              -u "${{ secrets.MAVEN_USERNAME }}:${{ secrets.MAVEN_PASSWORD }}" \
+              -X POST \
+              "https://central.sonatype.com/api/v1/publisher/status?id=${DEPLOYMENT_ID}")
+            STATUS_CODE=$(echo "$STATUS_RESPONSE" | tail -1)
+            STATUS_BODY=$(echo "$STATUS_RESPONSE" | head -n -1)
+            echo "Central deployment status attempt ${attempt}: HTTP ${STATUS_CODE} ${STATUS_BODY}"
+            if [ "$STATUS_CODE" -ge 400 ]; then
+              echo "Central status check failed with status $STATUS_CODE"
+              exit 1
+            fi
+            DEPLOYMENT_STATE=$(node -e "const input = process.argv[1] || '{}'; const body = JSON.parse(input); console.log(body.deploymentState || body.state || body.status || 'UNKNOWN')" "$STATUS_BODY")
+            case "$DEPLOYMENT_STATE" in
+              PUBLISHED)
+                echo "Central deployment published."
+                exit 0
+                ;;
+              FAILED)
+                echo "Central deployment failed."
+                exit 1
+                ;;
+            esac
+            sleep 30
+          done
+          echo "Central deployment did not publish before the timeout."
+          exit 1
 
   # ============================================
   # Go Modules (tag-based)
