@@ -121,7 +121,8 @@ struct DPMCompletenessIndex FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
   /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
   /// completeness-verifiable dataset update SHOULD include a file_id index so
   /// subscribers can prove that all returned records belong to the announced
-  /// FILE_ID partition.
+  /// FILE_ID partition. The file_id index is the preferred completeness anchor
+  /// for provider-mediated data that is not published as a discoverable file.
   const ::flatbuffers::String *INDEX_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INDEX_NAME);
   }
@@ -282,9 +283,10 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_FILE_NAME);
   }
   /// Canonical publication/update partition identity for this asset. FILE_ID is
-  /// not a display filename; it is the stable identifier used by PNMs,
-  /// manifests, entitlements, query requests, subscriber caches, and
-  /// completeness proofs. Example:
+  /// not a display filename; it is the stable identifier used everywhere this
+  /// update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
+  /// requests, subscriber caches, replay, audit, and completeness proofs.
+  /// Example:
   /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
   const ::flatbuffers::String *FILE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_FILE_ID);
@@ -1060,9 +1062,9 @@ struct DPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_UPDATE_ID);
   }
   /// Canonical publication/update partition identity. FILE_ID is the key used
-  /// everywhere a subscriber, provider, PNM, entitlement, cache, audit log, or
-  /// query protocol refers to this exact update. It is not merely a human
-  /// filename and it is not the FlatBuffer file_identifier. For
+  /// everywhere a subscriber, provider, PNM, asset, entitlement, cache, audit
+  /// log, or query protocol refers to this exact update. It is not merely a
+  /// human filename and it is not the FlatBuffer file_identifier. For
   /// completeness-verifiable streams, all returned records MUST belong to this
   /// FILE_ID and prove inclusion under this DPM's signed roots, normally through
   /// a declared file_id completeness index.

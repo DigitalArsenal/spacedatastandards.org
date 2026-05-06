@@ -144,9 +144,10 @@ func (rcv *DPMAsset) FileName() []byte {
 
 /// File name or logical artifact name.
 /// Canonical publication/update partition identity for this asset. FILE_ID is
-/// not a display filename; it is the stable identifier used by PNMs,
-/// manifests, entitlements, query requests, subscriber caches, and
-/// completeness proofs. Example:
+/// not a display filename; it is the stable identifier used everywhere this
+/// update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
+/// requests, subscriber caches, replay, audit, and completeness proofs.
+/// Example:
 /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
 func (rcv *DPMAsset) FILE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
@@ -161,9 +162,10 @@ func (rcv *DPMAsset) FileId() []byte {
 }
 
 /// Canonical publication/update partition identity for this asset. FILE_ID is
-/// not a display filename; it is the stable identifier used by PNMs,
-/// manifests, entitlements, query requests, subscriber caches, and
-/// completeness proofs. Example:
+/// not a display filename; it is the stable identifier used everywhere this
+/// update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
+/// requests, subscriber caches, replay, audit, and completeness proofs.
+/// Example:
 /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
 /// Provider protocol name/version used to fetch this asset when
 /// TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol

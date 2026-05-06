@@ -33,7 +33,8 @@ class DPMCompletenessIndex : Table() {
      * Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
      * completeness-verifiable dataset update SHOULD include a file_id index so
      * subscribers can prove that all returned records belong to the announced
-     * FILE_ID partition.
+     * FILE_ID partition. The file_id index is the preferred completeness anchor
+     * for provider-mediated data that is not published as a discoverable file.
      */
     val indexName : String?
         get() {

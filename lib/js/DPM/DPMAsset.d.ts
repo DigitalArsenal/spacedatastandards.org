@@ -43,9 +43,10 @@ export declare class DPMAsset implements flatbuffers.IUnpackableObject<DPMAssetT
     FILE_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Canonical publication/update partition identity for this asset. FILE_ID is
-     * not a display filename; it is the stable identifier used by PNMs,
-     * manifests, entitlements, query requests, subscriber caches, and
-     * completeness proofs. Example:
+     * not a display filename; it is the stable identifier used everywhere this
+     * update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
+     * requests, subscriber caches, replay, audit, and completeness proofs.
+     * Example:
      * celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
      */
     FILE_ID(): string | null;

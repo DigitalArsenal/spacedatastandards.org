@@ -20,7 +20,8 @@ public struct DPMCompletenessIndex : IFlatbufferObject
   /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
   /// completeness-verifiable dataset update SHOULD include a file_id index so
   /// subscribers can prove that all returned records belong to the announced
-  /// FILE_ID partition.
+  /// FILE_ID partition. The file_id index is the preferred completeness anchor
+  /// for provider-mediated data that is not published as a discoverable file.
   public string INDEX_NAME { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetINDEX_NAMEBytes() { return __p.__vector_as_span<byte>(4, 1); }

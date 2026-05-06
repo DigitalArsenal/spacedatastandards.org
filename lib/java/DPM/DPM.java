@@ -50,9 +50,9 @@ public final class DPM extends com.google.flatbuffers.Table {
   public ByteBuffer UPDATE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
    * Canonical publication/update partition identity. FILE_ID is the key used
-   * everywhere a subscriber, provider, PNM, entitlement, cache, audit log, or
-   * query protocol refers to this exact update. It is not merely a human
-   * filename and it is not the FlatBuffer file_identifier. For
+   * everywhere a subscriber, provider, PNM, asset, entitlement, cache, audit
+   * log, or query protocol refers to this exact update. It is not merely a
+   * human filename and it is not the FlatBuffer file_identifier. For
    * completeness-verifiable streams, all returned records MUST belong to this
    * FILE_ID and prove inclusion under this DPM's signed roots, normally through
    * a declared file_id completeness index.

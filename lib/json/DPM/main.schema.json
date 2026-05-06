@@ -15,7 +15,7 @@
       "properties" : {
         "INDEX_NAME" : {
                 "type" : "string",
-                "description" : "Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every\ncompleteness-verifiable dataset update SHOULD include a file_id index so\nsubscribers can prove that all returned records belong to the announced\nFILE_ID partition."
+                "description" : "Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every\ncompleteness-verifiable dataset update SHOULD include a file_id index so\nsubscribers can prove that all returned records belong to the announced\nFILE_ID partition. The file_id index is the preferred completeness anchor\nfor provider-mediated data that is not published as a discoverable file."
               },
         "CANONICAL_ORDER" : {
                 "type" : "string",
@@ -62,7 +62,7 @@
               },
         "FILE_ID" : {
                 "type" : "string",
-                "description" : "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used by PNMs,\nmanifests, entitlements, query requests, subscriber caches, and\ncompleteness proofs. Example:\ncelestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+                "description" : "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\ncelestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
               },
         "TRANSPORT_PROTOCOL" : {
                 "type" : "string",
@@ -247,7 +247,7 @@
               },
         "FILE_ID" : {
                 "type" : "string",
-                "description" : "Canonical publication/update partition identity. FILE_ID is the key used\neverywhere a subscriber, provider, PNM, entitlement, cache, audit log, or\nquery protocol refers to this exact update. It is not merely a human\nfilename and it is not the FlatBuffer file_identifier. For\ncompleteness-verifiable streams, all returned records MUST belong to this\nFILE_ID and prove inclusion under this DPM's signed roots, normally through\na declared file_id completeness index."
+                "description" : "Canonical publication/update partition identity. FILE_ID is the key used\neverywhere a subscriber, provider, PNM, asset, entitlement, cache, audit\nlog, or query protocol refers to this exact update. It is not merely a\nhuman filename and it is not the FlatBuffer file_identifier. For\ncompleteness-verifiable streams, all returned records MUST belong to this\nFILE_ID and prove inclusion under this DPM's signed roots, normally through\na declared file_id completeness index."
               },
         "PROVIDER_PEER_ID" : {
                 "type" : "string",

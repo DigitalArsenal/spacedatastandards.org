@@ -13,7 +13,11 @@
 - Run `npm run deploy` only when its automated commit/push/publish behavior is
   exactly what the release needs; otherwise run the steps manually and keep the
   same gates.
-- Create a GitHub release to trigger publishing to package registries
+- Create a GitHub release to trigger publishing to package registries.
+- Every SDS publish must be treated as a full supply-chain release. Agents must
+  monitor CI, verify every configured registry/proxy, and update downstream SDN
+  from the externally published Go and TypeScript artifacts before reporting
+  completion.
 - When publishing SDS, do not report the release complete or tell downstream
   repos to install the latest version until the release workflow has finished
   and the intended package artifacts are externally visible from their

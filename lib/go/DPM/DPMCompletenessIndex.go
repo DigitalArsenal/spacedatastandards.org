@@ -45,7 +45,8 @@ func (rcv *DPMCompletenessIndex) Table() flatbuffers.Table {
 /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
 /// completeness-verifiable dataset update SHOULD include a file_id index so
 /// subscribers can prove that all returned records belong to the announced
-/// FILE_ID partition.
+/// FILE_ID partition. The file_id index is the preferred completeness anchor
+/// for provider-mediated data that is not published as a discoverable file.
 func (rcv *DPMCompletenessIndex) INDEX_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -61,7 +62,8 @@ func (rcv *DPMCompletenessIndex) IndexName() []byte {
 /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
 /// completeness-verifiable dataset update SHOULD include a file_id index so
 /// subscribers can prove that all returned records belong to the announced
-/// FILE_ID partition.
+/// FILE_ID partition. The file_id index is the preferred completeness anchor
+/// for provider-mediated data that is not published as a discoverable file.
 /// Deterministic ordering expression for the index. Providers and
 /// subscribers MUST use this ordering when building or verifying range
 /// proofs. A query is completeness-verifiable only when its predicate can be

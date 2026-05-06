@@ -66,7 +66,8 @@ public struct DPMCompletenessIndex: FlatBufferTable, FlatbuffersVectorInitializa
   ///  Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
   ///  completeness-verifiable dataset update SHOULD include a file_id index so
   ///  subscribers can prove that all returned records belong to the announced
-  ///  FILE_ID partition.
+  ///  FILE_ID partition. The file_id index is the preferred completeness anchor
+  ///  for provider-mediated data that is not published as a discoverable file.
   public var INDEX_NAME: String? { let o = _accessor.offset(VT.INDEX_NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var INDEX_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INDEX_NAME) }
   ///  Deterministic ordering expression for the index. Providers and
@@ -178,9 +179,10 @@ public struct DPMAsset: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   public var FILE_NAME: String? { let o = _accessor.offset(VT.FILE_NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var FILE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_NAME) }
   ///  Canonical publication/update partition identity for this asset. FILE_ID is
-  ///  not a display filename; it is the stable identifier used by PNMs,
-  ///  manifests, entitlements, query requests, subscriber caches, and
-  ///  completeness proofs. Example:
+  ///  not a display filename; it is the stable identifier used everywhere this
+  ///  update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
+  ///  requests, subscriber caches, replay, audit, and completeness proofs.
+  ///  Example:
   ///  celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
   public var FILE_ID: String? { let o = _accessor.offset(VT.FILE_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var FILE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_ID) }
@@ -630,9 +632,9 @@ public struct DPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var UPDATE_ID: String! { let o = _accessor.offset(VT.UPDATE_ID); return _accessor.string(at: o) }
   public var UPDATE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.UPDATE_ID) }
   ///  Canonical publication/update partition identity. FILE_ID is the key used
-  ///  everywhere a subscriber, provider, PNM, entitlement, cache, audit log, or
-  ///  query protocol refers to this exact update. It is not merely a human
-  ///  filename and it is not the FlatBuffer file_identifier. For
+  ///  everywhere a subscriber, provider, PNM, asset, entitlement, cache, audit
+  ///  log, or query protocol refers to this exact update. It is not merely a
+  ///  human filename and it is not the FlatBuffer file_identifier. For
   ///  completeness-verifiable streams, all returned records MUST belong to this
   ///  FILE_ID and prove inclusion under this DPM's signed roots, normally through
   ///  a declared file_id completeness index.

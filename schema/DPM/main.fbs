@@ -1,5 +1,5 @@
-// Hash: bc57e05020349d74af7a0f7d73cd3f18cb142ecb3942d5ed680a0754bb643eb7
-// Version: 1.0.3
+// Hash: a836d9dc734a255d436d4049c1ddac09f76778a55bf83c148162ef375576fedf
+// Version: 1.0.4
 // -----------------------------------END_HEADER
 /// Dataset Publication Manifest
 
@@ -28,7 +28,8 @@ table DPMCompletenessIndex {
   /// Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
   /// completeness-verifiable dataset update SHOULD include a file_id index so
   /// subscribers can prove that all returned records belong to the announced
-  /// FILE_ID partition.
+  /// FILE_ID partition. The file_id index is the preferred completeness anchor
+  /// for provider-mediated data that is not published as a discoverable file.
   INDEX_NAME: string;
   /// Deterministic ordering expression for the index. Providers and
   /// subscribers MUST use this ordering when building or verifying range
@@ -73,9 +74,10 @@ table DPMAsset {
   /// File name or logical artifact name.
   FILE_NAME: string;
   /// Canonical publication/update partition identity for this asset. FILE_ID is
-  /// not a display filename; it is the stable identifier used by PNMs,
-  /// manifests, entitlements, query requests, subscriber caches, and
-  /// completeness proofs. Example:
+  /// not a display filename; it is the stable identifier used everywhere this
+  /// update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
+  /// requests, subscriber caches, replay, audit, and completeness proofs.
+  /// Example:
   /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
   FILE_ID: string;
   /// Provider protocol name/version used to fetch this asset when
@@ -183,9 +185,9 @@ table DPM {
   /// Dataset update or batch identifier.
   UPDATE_ID: string (required);
   /// Canonical publication/update partition identity. FILE_ID is the key used
-  /// everywhere a subscriber, provider, PNM, entitlement, cache, audit log, or
-  /// query protocol refers to this exact update. It is not merely a human
-  /// filename and it is not the FlatBuffer file_identifier. For
+  /// everywhere a subscriber, provider, PNM, asset, entitlement, cache, audit
+  /// log, or query protocol refers to this exact update. It is not merely a
+  /// human filename and it is not the FlatBuffer file_identifier. For
   /// completeness-verifiable streams, all returned records MUST belong to this
   /// FILE_ID and prove inclusion under this DPM's signed roots, normally through
   /// a declared file_id completeness index.

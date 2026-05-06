@@ -63,9 +63,10 @@ public final class DPMAsset extends com.google.flatbuffers.Table {
   public ByteBuffer FILE_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
    * Canonical publication/update partition identity for this asset. FILE_ID is
-   * not a display filename; it is the stable identifier used by PNMs,
-   * manifests, entitlements, query requests, subscriber caches, and
-   * completeness proofs. Example:
+   * not a display filename; it is the stable identifier used everywhere this
+   * update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
+   * requests, subscriber caches, replay, audit, and completeness proofs.
+   * Example:
    * celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
    */
   public String FILE_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }

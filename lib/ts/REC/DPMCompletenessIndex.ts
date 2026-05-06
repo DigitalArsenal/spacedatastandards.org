@@ -31,7 +31,8 @@ static getSizePrefixedRootAsDPMCompletenessIndex(bb:flatbuffers.ByteBuffer, obj?
  * Stable index name, e.g. file_id, norad_cat_id, epoch, source_batch. Every
  * completeness-verifiable dataset update SHOULD include a file_id index so
  * subscribers can prove that all returned records belong to the announced
- * FILE_ID partition.
+ * FILE_ID partition. The file_id index is the preferred completeness anchor
+ * for provider-mediated data that is not published as a discoverable file.
  */
 INDEX_NAME():string|null
 INDEX_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
