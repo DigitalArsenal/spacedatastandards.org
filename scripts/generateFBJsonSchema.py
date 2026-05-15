@@ -219,6 +219,118 @@ FB_TYPE_MAP = {
     "string": "string",
 }
 
+JSON_TYPE_MAP = {
+    "bool": {"type": "boolean"},
+    "byte": {"type": "integer"},
+    "ubyte": {"type": "integer"},
+    "int8": {"type": "integer"},
+    "uint8": {"type": "integer"},
+    "short": {"type": "integer"},
+    "ushort": {"type": "integer"},
+    "int16": {"type": "integer"},
+    "uint16": {"type": "integer"},
+    "int": {"type": "integer"},
+    "uint": {"type": "integer"},
+    "int32": {"type": "integer"},
+    "uint32": {"type": "integer"},
+    "long": {"type": "integer"},
+    "ulong": {"type": "integer"},
+    "int64": {"type": "integer"},
+    "uint64": {"type": "integer"},
+    "float": {"type": "number"},
+    "float32": {"type": "number"},
+    "double": {"type": "number"},
+    "float64": {"type": "number"},
+    "string": {"type": "string"},
+}
+
+
+def get_flatbuffer_type(ftype, fbs_info):
+    """Return a canonical x-flatbuffer-type value for an FBS field type."""
+    if ftype.startswith("[") and ftype.endswith("]"):
+        inner = ftype[1:-1]
+        return f"[{FB_TYPE_MAP.get(inner, inner)}]"
+    if ftype in FB_TYPE_MAP:
+        return FB_TYPE_MAP[ftype]
+    if ftype in fbs_info["enums"]:
+        return "enum"
+    if ftype in fbs_info["tables"]:
+        return ftype
+    return ftype
+
+
+def schema_for_field_type(ftype, fbs_info):
+    """Create a JSON Schema property skeleton from a FlatBuffers field type."""
+    if ftype.startswith("[") and ftype.endswith("]"):
+        inner = ftype[1:-1]
+        return {"type": "array", "items": schema_for_field_type(inner, fbs_info)}
+    if ftype in JSON_TYPE_MAP:
+        return copy.deepcopy(JSON_TYPE_MAP[ftype])
+    if ftype in fbs_info["enums"] or ftype in fbs_info["tables"]:
+        return {"$ref": f"#/definitions/{ftype}"}
+    return {"type": "object"}
+
+
+def create_enum_definition(name, enum_info):
+    """Create a JSON Schema definition for an enum that flatc omitted."""
+    values = enum_info.get("values", {})
+    definition = {
+        "type": "integer",
+        "x-flatbuffer-type": "enum",
+        "x-flatbuffer-enum-type": enum_info["underlying_type"],
+    }
+    if enum_info.get("description"):
+        definition["description"] = enum_info["description"]
+    if values:
+        definition["enum"] = [value_info["value"] for value_info in values.values()]
+        definition["x-flatbuffer-enum-values"] = {}
+        for val_name, val_info in values.items():
+            entry = {"value": val_info["value"]}
+            if val_info["description"]:
+                entry["description"] = val_info["description"]
+            definition["x-flatbuffer-enum-values"][val_name] = entry
+    return definition
+
+
+def create_table_definition(name, table_info, fbs_info):
+    """Create a JSON Schema definition for a table that flatc omitted."""
+    definition = {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {},
+    }
+    if table_info.get("description"):
+        definition["description"] = table_info["description"]
+
+    required_fields = []
+    for field in table_info["fields"]:
+        prop = schema_for_field_type(field["type"], fbs_info)
+        if field["description"]:
+            prop["description"] = field["description"]
+        prop["x-flatbuffer-type"] = get_flatbuffer_type(field["type"], fbs_info)
+        if field["required"]:
+            prop["x-flatbuffer-required"] = True
+            required_fields.append(field["name"])
+        if field.get("default") is not None:
+            prop["x-flatbuffer-default"] = field["default"]
+
+        if field["type"] in fbs_info["enums"]:
+            enum_info = fbs_info["enums"][field["type"]]
+            prop["x-flatbuffer-enum-type"] = enum_info["underlying_type"]
+            if enum_info["values"]:
+                prop["x-flatbuffer-enum-values"] = {}
+                for val_name, val_info in enum_info["values"].items():
+                    entry = {"value": val_info["value"]}
+                    if val_info["description"]:
+                        entry["description"] = val_info["description"]
+                    prop["x-flatbuffer-enum-values"][val_name] = entry
+
+        definition["properties"][field["name"]] = prop
+
+    if required_fields:
+        definition["required"] = required_fields
+    return definition
+
 
 def augment_definition(defn, name, fbs_info):
     """Add x-flatbuffer extensions to a JSON Schema definition."""
@@ -247,13 +359,8 @@ def augment_definition(defn, name, fbs_info):
             prop = props[fname]
             ftype = field["type"]
 
-            # Determine x-flatbuffer-type
-            if ftype.startswith("[") and ftype.endswith("]"):
-                inner = ftype[1:-1]
-                prop["x-flatbuffer-type"] = f"[{FB_TYPE_MAP.get(inner, inner)}]"
-            elif ftype in FB_TYPE_MAP:
-                prop["x-flatbuffer-type"] = FB_TYPE_MAP[ftype]
-            elif ftype in fbs_info["enums"]:
+            prop["x-flatbuffer-type"] = get_flatbuffer_type(ftype, fbs_info)
+            if ftype in fbs_info["enums"]:
                 prop["x-flatbuffer-type"] = "enum"
                 enum_info = fbs_info["enums"][ftype]
                 prop["x-flatbuffer-enum-type"] = enum_info["underlying_type"]
@@ -264,11 +371,6 @@ def augment_definition(defn, name, fbs_info):
                         if val_info["description"]:
                             entry["description"] = val_info["description"]
                         prop["x-flatbuffer-enum-values"][val_name] = entry
-            elif ftype in fbs_info["tables"]:
-                prop["x-flatbuffer-type"] = ftype
-            else:
-                prop["x-flatbuffer-type"] = ftype
-
             if field["required"]:
                 prop["x-flatbuffer-required"] = True
 
@@ -285,8 +387,23 @@ def augment_schema(schema, fbs_info):
     if fbs_info["namespace"]:
         result["x-flatbuffer-namespace"] = fbs_info["namespace"]
 
-    # Augment each definition
     definitions = result.get("definitions", {})
+    result["definitions"] = definitions
+
+    # flatc's JSON schema output can omit the main schema's root definition when
+    # includes are present. Rebuild missing canonical definitions from the FBS
+    # source so consumers can always resolve x-flatbuffer-root-type.
+    for enum_name, enum_info in fbs_info["enums"].items():
+        if enum_name not in definitions:
+            definitions[enum_name] = create_enum_definition(enum_name, enum_info)
+    for table_name, table_info in fbs_info["tables"].items():
+        if table_name not in definitions:
+            definitions[table_name] = create_table_definition(table_name, table_info, fbs_info)
+
+    if fbs_info["root_type"] and fbs_info["root_type"] in definitions:
+        result["$ref"] = f"#/definitions/{fbs_info['root_type']}"
+
+    # Augment each definition
     for def_name, defn in definitions.items():
         augment_definition(defn, def_name, fbs_info)
 

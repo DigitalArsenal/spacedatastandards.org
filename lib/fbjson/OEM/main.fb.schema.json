@@ -4339,9 +4339,384 @@
         }
       },
       "additionalProperties": false
+    },
+    "ephemerisDataLine": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch time, in ISO 8601 UTC format (required for non-uniform steps)",
+          "x-flatbuffer-type": "string"
+        },
+        "X": {
+          "type": "number",
+          "description": "Position vector X-component km",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "description": "Position vector Y-component km",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "description": "Position vector Z-component km",
+          "x-flatbuffer-type": "double"
+        },
+        "X_DOT": {
+          "type": "number",
+          "description": "Velocity vector X-component km/s",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_DOT": {
+          "type": "number",
+          "description": "Velocity vector Y-component km/s",
+          "x-flatbuffer-type": "double"
+        },
+        "Z_DOT": {
+          "type": "number",
+          "description": "Velocity vector Z-component km/s",
+          "x-flatbuffer-type": "double"
+        },
+        "X_DDOT": {
+          "type": "number",
+          "description": "Optional: Acceleration vector X-component km/s\u00b2",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_DDOT": {
+          "type": "number",
+          "description": "Optional: Acceleration vector Y-component km/s\u00b2",
+          "x-flatbuffer-type": "double"
+        },
+        "Z_DDOT": {
+          "type": "number",
+          "description": "Optional: Acceleration vector Z-component km/s\u00b2",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "A single ephemeris data line (for non-uniform time steps only)\n/// Use this format when time intervals between states are irregular.\n/// For uniform time steps, use the compact EPHEMERIS_DATA array instead."
+    },
+    "covarianceMatrixLine": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch",
+          "x-flatbuffer-type": "string"
+        },
+        "CX_X": {
+          "type": "number",
+          "description": "Covariance matrix [1,1] km**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_X": {
+          "type": "number",
+          "description": "Covariance matrix [2,1] km**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_Y": {
+          "type": "number",
+          "description": "Covariance matrix [2,2] km**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_X": {
+          "type": "number",
+          "description": "Covariance matrix [3,1] km**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_Y": {
+          "type": "number",
+          "description": "Covariance matrix [3,2] km**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_Z": {
+          "type": "number",
+          "description": "Covariance matrix [3,3] km**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CX_DOT_X": {
+          "type": "number",
+          "description": "Covariance matrix [4,1] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CX_DOT_Y": {
+          "type": "number",
+          "description": "Covariance matrix [4,2] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CX_DOT_Z": {
+          "type": "number",
+          "description": "Covariance matrix [4,3] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CX_DOT_X_DOT": {
+          "type": "number",
+          "description": "Covariance matrix [4,4] km**2/s**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_DOT_X": {
+          "type": "number",
+          "description": "Covariance matrix [5,1] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_DOT_Y": {
+          "type": "number",
+          "description": "Covariance matrix [5,2] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_DOT_Z": {
+          "type": "number",
+          "description": "Covariance matrix [5,3] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_DOT_X_DOT": {
+          "type": "number",
+          "description": "Covariance matrix [5,4] km**2/s**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_DOT_Y_DOT": {
+          "type": "number",
+          "description": "Covariance matrix [5,5] km**2/s**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_DOT_X": {
+          "type": "number",
+          "description": "Covariance matrix [6,1] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_DOT_Y": {
+          "type": "number",
+          "description": "Covariance matrix [6,2] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_DOT_Z": {
+          "type": "number",
+          "description": "Covariance matrix [6,3] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_DOT_X_DOT": {
+          "type": "number",
+          "description": "Covariance matrix [6,4] km**2/s**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_DOT_Y_DOT": {
+          "type": "number",
+          "description": "Covariance matrix [6,5] km**2/s**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_DOT_Z_DOT": {
+          "type": "number",
+          "description": "Covariance matrix [6,6] km**2/s**2",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "Position/Velocity Covariance Matrix Line"
+    },
+    "ephemerisDataBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "COMMENT": {
+          "type": "string",
+          "description": "Plain-Text Comment",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT": {
+          "$ref": "#/definitions/CAT",
+          "description": "Satellite name for the first object",
+          "x-flatbuffer-type": "CAT"
+        },
+        "CENTER_NAME": {
+          "type": "string",
+          "description": "Origin of reference frame (EARTH, MARS, MOON, etc.)",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "description": "Name of the reference frame (TEME, EME2000, etc.)",
+          "x-flatbuffer-type": "RFM"
+        },
+        "REFERENCE_FRAME_EPOCH": {
+          "type": "string",
+          "description": "Epoch of reference frame, if not intrinsic to the definition of the reference frame",
+          "x-flatbuffer-type": "string"
+        },
+        "COV_REFERENCE_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "description": "Reference frame for the covariance matrix",
+          "x-flatbuffer-type": "RFM"
+        },
+        "TIME_SYSTEM": {
+          "$ref": "#/definitions/timingStandard",
+          "description": "Time system used for the orbit state and covariance matrix. (UTC)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GMST": {
+              "value": 0,
+              "description": "Greenwich Mean Sidereal Time"
+            },
+            "GPS": {
+              "value": 1,
+              "description": "Global Positioning System"
+            },
+            "MET": {
+              "value": 2,
+              "description": "Mission Elapsed Time"
+            },
+            "MRT": {
+              "value": 3,
+              "description": "Mission Relative Time"
+            },
+            "SCLK": {
+              "value": 4,
+              "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+            },
+            "TAI": {
+              "value": 5,
+              "description": "International Atomic Time"
+            },
+            "TCB": {
+              "value": 6,
+              "description": "Barycentric Coordinate Time"
+            },
+            "TDB": {
+              "value": 7,
+              "description": "Barycentric Dynamical Time"
+            },
+            "TCG": {
+              "value": 8,
+              "description": "Geocentric Coordinate Time"
+            },
+            "TT": {
+              "value": 9,
+              "description": "Terrestrial Time"
+            },
+            "UT1": {
+              "value": 10,
+              "description": "Universal Time"
+            },
+            "UTC": {
+              "value": 11,
+              "description": "Coordinated Universal Time"
+            }
+          }
+        },
+        "START_TIME": {
+          "type": "string",
+          "description": "Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "USEABLE_START_TIME": {
+          "type": "string",
+          "description": "Optional start USEABLE time span covered by ephemeris data (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "USEABLE_STOP_TIME": {
+          "type": "string",
+          "description": "Optional end of USEABLE time span covered by ephemeris data (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "STOP_TIME": {
+          "type": "string",
+          "description": "End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERPOLATION": {
+          "type": "string",
+          "description": "discrete state vectors.",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERPOLATION_DEGREE": {
+          "type": "integer",
+          "description": "Recommended interpolation degree for ephemeris data",
+          "x-flatbuffer-type": "uint"
+        },
+        "STEP_SIZE": {
+          "type": "number",
+          "description": "If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.",
+          "x-flatbuffer-type": "double"
+        },
+        "STATE_VECTOR_SIZE": {
+          "type": "integer",
+          "description": "Only used when STEP_SIZE > 0. Default is 6.",
+          "x-flatbuffer-type": "uint8",
+          "x-flatbuffer-default": "6"
+        },
+        "EPHEMERIS_DATA": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE",
+          "x-flatbuffer-type": "[double]"
+        },
+        "EPHEMERIS_DATA_LINES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ephemerisDataLine"
+          },
+          "description": "Each line contains its own EPOCH timestamp.",
+          "x-flatbuffer-type": "[ephemerisDataLine]"
+        },
+        "COVARIANCE_MATRIX_LINES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/covarianceMatrixLine"
+          },
+          "description": "Array of covariance matrix lines (optional)",
+          "x-flatbuffer-type": "[covarianceMatrixLine]"
+        },
+        "POLYNOMIAL_POSITION_RECORDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PPEPositionRecord"
+          },
+          "description": "See PPE schema for record structure and evaluation procedure.",
+          "x-flatbuffer-type": "[PPEPositionRecord]"
+        }
+      },
+      "description": "OEM Ephemeris Data Block"
+    },
+    "OEM": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "CLASSIFICATION": {
+          "type": "string",
+          "description": "Classification marking of the data in IC/CAPCO Portion-marked format.",
+          "x-flatbuffer-type": "string"
+        },
+        "CCSDS_OEM_VERS": {
+          "type": "number",
+          "description": "OEM Version",
+          "x-flatbuffer-type": "double"
+        },
+        "CREATION_DATE": {
+          "type": "string",
+          "description": "Creation Date",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "description": "Originator",
+          "x-flatbuffer-type": "string"
+        },
+        "EPHEMERIS_DATA_BLOCK": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ephemerisDataBlock"
+          },
+          "description": "Array of ephemeris data blocks",
+          "x-flatbuffer-type": "[ephemerisDataBlock]"
+        }
+      },
+      "description": "Orbit Ephemeris Message"
     }
   },
-  "$ref": "#/definitions/PPE",
+  "$ref": "#/definitions/OEM",
   "x-flatbuffer-root-type": "OEM",
   "x-flatbuffer-file-identifier": "$OEM"
 }

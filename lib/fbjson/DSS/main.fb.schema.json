@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "dssSyncState": {
+      "type": "string",
+      "enum": [
+        "IDLE",
+        "SYNCING",
+        "SYNCED",
+        "CAPPED",
+        "ERROR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "IDLE": {
+          "value": 0
+        },
+        "SYNCING": {
+          "value": 1
+        },
+        "SYNCED": {
+          "value": 2
+        },
+        "CAPPED": {
+          "value": 3
+        },
+        "ERROR": {
+          "value": 4
+        }
+      }
+    },
+    "DSS": {
+      "type": "object",
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/dssSyncState",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "IDLE": {
+              "value": 0
+            },
+            "SYNCING": {
+              "value": 1
+            },
+            "SYNCED": {
+              "value": 2
+            },
+            "CAPPED": {
+              "value": 3
+            },
+            "ERROR": {
+              "value": 4
+            }
+          }
+        },
+        "SYNCED_ROWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "TOTAL_ROWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "LOCAL_ROWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "PINNED_ROWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "MISSING_ROWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "CACHED_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "PINNED_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "DOWNLOADED_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "DOWNLOAD_SPEED_BYTES_PER_SECOND": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "MEASURED_WIRE_SPEED_BYTES_PER_SECOND": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "HAS_WIRE_SPEED_UTILIZATION": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "WIRE_SPEED_UTILIZATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "WIRE_SPEED_TARGET": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_WIRE_SPEED_TARGET_MET": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "WIRE_SPEED_TARGET_MET": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "MANIFEST_DISCOVERY_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "NETWORK_TRANSFER_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "VERIFICATION_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "FLATSQL_MATERIALIZATION_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_PUBLIC_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SNAPSHOT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "HEAD": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CURSOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NEXT_CURSOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "HIGH_WATER_MARK": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "QUERY_PROFILE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CHUNK_HASH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SYNC_PROTOCOL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SYNC_FILTER": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VERIFIED_CHUNKS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "LAST_SYNCED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ERROR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/DSS",
+  "x-flatbuffer-root-type": "DSS",
+  "x-flatbuffer-file-identifier": "$DSS"
+}

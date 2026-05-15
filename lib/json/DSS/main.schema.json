@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "dssSyncState" : {
+      "type" : "string",
+      "enum": ["IDLE", "SYNCING", "SYNCED", "CAPPED", "ERROR"]
+    },
+    "DSS" : {
+      "type" : "object",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/dssSyncState"
+              },
+        "SYNCED_ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "TOTAL_ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "LOCAL_ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "PINNED_ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "MISSING_ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "CACHED_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "PINNED_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "DOWNLOADED_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "DOWNLOAD_SPEED_BYTES_PER_SECOND" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "MEASURED_WIRE_SPEED_BYTES_PER_SECOND" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "HAS_WIRE_SPEED_UTILIZATION" : {
+                "type" : "boolean"
+              },
+        "WIRE_SPEED_UTILIZATION" : {
+                "type" : "number"
+              },
+        "WIRE_SPEED_TARGET" : {
+                "type" : "number"
+              },
+        "HAS_WIRE_SPEED_TARGET_MET" : {
+                "type" : "boolean"
+              },
+        "WIRE_SPEED_TARGET_MET" : {
+                "type" : "boolean"
+              },
+        "MANIFEST_DISCOVERY_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "NETWORK_TRANSFER_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "VERIFICATION_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "FLATSQL_MATERIALIZATION_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string"
+              },
+        "PROVIDER_PUBLIC_KEY" : {
+                "type" : "string"
+              },
+        "SNAPSHOT_ID" : {
+                "type" : "string"
+              },
+        "HEAD" : {
+                "type" : "string"
+              },
+        "CURSOR" : {
+                "type" : "string"
+              },
+        "NEXT_CURSOR" : {
+                "type" : "string"
+              },
+        "HIGH_WATER_MARK" : {
+                "type" : "string"
+              },
+        "QUERY_PROFILE" : {
+                "type" : "string"
+              },
+        "CHUNK_HASH" : {
+                "type" : "string"
+              },
+        "SYNC_PROTOCOL" : {
+                "type" : "string"
+              },
+        "SYNC_FILTER" : {
+                "type" : "string"
+              },
+        "VERIFIED_CHUNKS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LAST_SYNCED_AT" : {
+                "type" : "string"
+              },
+        "ERROR" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DSS"
+}

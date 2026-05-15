@@ -1876,7 +1876,7 @@ CN_N           = 6.789e-3`
   .feature-card {
     background: var(--ui-bg);
     border: 1px solid var(--ui-border);
-    border-radius: 28px;
+    border-radius: var(--radius-sm);
     padding: 28px;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -1892,7 +1892,7 @@ CN_N           = 6.789e-3`
   .feature-icon {
     width: 48px;
     height: 48px;
-    border-radius: 14px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2162,7 +2162,7 @@ CN_N           = 6.789e-3`
     padding: 14px 28px;
     font-size: 16px;
     font-weight: 600;
-    border-radius: 28px;
+    border-radius: var(--radius-sm);
     backdrop-filter: blur(20px);
     transition: all 0.2s ease;
     cursor: pointer;
@@ -2576,7 +2576,7 @@ CN_N           = 6.789e-3`
     background: var(--accent);
     color: white;
     border: none;
-    border-radius: 28px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     transition: all 0.2s;
   }

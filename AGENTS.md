@@ -10,6 +10,11 @@
 ## Build & Deploy
 
 - Run `npm run build` to build all artifacts.
+- For any schema-docs, `lib/fbjson`, `scripts/generateFBJsonSchema.py`, or
+  website Field Explorer change, run
+  `npm test -- test/website-schema-fields.test.js`. This is the guardrail that
+  proves every generated augmented schema resolves its declared
+  `x-flatbuffer-root-type` and exposes root fields in the docs Field Explorer.
 - Run `npm run deploy` only when its automated commit/push/publish behavior is
   exactly what the release needs; otherwise run the steps manually and keep the
   same gates.

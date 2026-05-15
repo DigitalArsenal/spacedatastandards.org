@@ -1,6 +1,6 @@
 {
     "name": "spacedatastandards.org",
-    "version": "1.99.0",
+    "version": "1.100.0",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
@@ -119,27 +119,27 @@
     "author": "sds@digitalarsenal.io",
     "repository": {
         "type": "git",
-        "url": "https://github.com/DigitalArsenal/spacedatastandards.org"
+        "url": "git+https://github.com/DigitalArsenal/spacedatastandards.org.git"
     },
     "homepage": "https://spacedatastandards.org",
     "license": "Apache-2.0",
     "dependencies": {
-        "@huggingface/transformers": "^3.8.1",
-        "ajv": "^8.12.0",
         "buffer": "^6.0.3",
-        "esbuild": "^0.20.2",
         "flatbuffers": "^25.9.23",
-        "flatc-wasm": "^26.1.32",
-        "flatsql": "^0.4.2",
-        "hd-wallet-wasm": "^2.0.4",
-        "sdn-emception": "1.0.0"
+        "hd-wallet-wasm": "^2.0.4"
     },
     "devDependencies": {
+        "@huggingface/transformers": "^3.8.1",
         "@faker-js/faker": "^8.4.1",
+        "ajv": "^8.12.0",
         "chai": "^5.1.1",
+        "esbuild": "^0.20.2",
+        "flatc-wasm": "^26.1.32",
+        "flatsql": "^0.4.2",
         "husky": "^9.1.7",
         "mocha": "^10.4.0",
         "pure-ipfs-only-hash": "^4.0.2",
+        "sdn-emception": "1.0.0",
         "typescript": "^5.2.2"
     }
 }

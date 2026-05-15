@@ -2,6 +2,7 @@
   import { link } from "svelte-spa-router";
   import { onMount } from "svelte";
   import { schemaTagMap } from "./schemaTaxonomy";
+  import { parseSchemaFields } from "./schemaFields.js";
 
   export let params: { name: string } = { name: "" };
 
@@ -58,6 +59,20 @@
   let fields: FieldInfo[] = [];
   const localStandardsExplorerSrc = "/packages/standards-explorer/dist/standards-explorer.min.js";
 
+  async function fetchSchemaJson(name: string): Promise<any> {
+    const candidates = [
+      `/lib/fbjson/${name}/main.fb.schema.json`,
+      `/lib/json/${name}/main.schema.json`,
+    ];
+
+    for (const url of candidates) {
+      const response = await fetch(url);
+      if (response.ok) return response.json();
+    }
+
+    return null;
+  }
+
   // Load the locally bundled standards-explorer to keep codegen in sync with this repo.
   async function loadStandardsExplorer(): Promise<any> {
     if ((window as any).StandardsExplorerLib?.StandardsExplorer) {
@@ -105,11 +120,9 @@
 
   onMount(async () => {
     try {
-      // Try to load the JSON schema
-      const response = await fetch(`/lib/json/${params.name}/main.schema.json`);
-      if (response.ok) {
-        schema = await response.json();
-        fields = parseSchemaFields(schema);
+      schema = await fetchSchemaJson(params.name);
+      if (schema) {
+        fields = parseSchemaFields(schema, params.name);
       }
     } catch (e) {
       console.error("Error loading schema:", e);
@@ -130,31 +143,6 @@
     // Generate code with default language
     generateCode();
   });
-
-  function parseSchemaFields(schema: any): FieldInfo[] {
-    const mainDef = schema.definitions?.[params.name];
-    if (!mainDef?.properties) return [];
-
-    return Object.entries(mainDef.properties).map(([name, prop]: [string, any]) => ({
-      name,
-      type: getTypeString(prop),
-      description: prop.description || "",
-      required: mainDef.required?.includes(name) || false,
-      flatbufferType: prop["x-flatbuffer-type"],
-      flatbufferId: prop["x-flatbuffer-field-id"],
-    }));
-  }
-
-  function getTypeString(prop: any): string {
-    if (prop.$ref) {
-      const refName = prop.$ref.split("/").pop();
-      return refName || "object";
-    }
-    if (prop.type === "array") {
-      return `array<${getTypeString(prop.items || {})}>`;
-    }
-    return prop.type || "any";
-  }
 
   function toggleField(fieldName: string) {
     if (expandedFields.has(fieldName)) {
@@ -600,7 +588,7 @@
     padding: 10px 18px;
     background: var(--ui-bg);
     border: 1px solid var(--ui-border);
-    border-radius: 28px;
+    border-radius: var(--radius-sm);
     font-size: 14px;
     font-weight: 500;
     color: var(--text-primary);
@@ -620,10 +608,15 @@
   }
 
   .language-select {
-    padding: 10px 16px;
+    appearance: none;
+    padding: 10px 42px 10px 16px;
     background: var(--ui-bg);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' fill='none' stroke='rgba(255,255,255,0.72)' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-position: right 14px center;
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
     border: 1px solid var(--ui-border);
-    border-radius: 28px;
+    border-radius: var(--radius-sm);
     font-size: 14px;
     font-weight: 500;
     color: var(--text-primary);
@@ -654,7 +647,7 @@
     padding: 10px 20px;
     background: var(--ui-bg);
     border: 1px solid var(--ui-border);
-    border-radius: 28px;
+    border-radius: var(--radius-sm);
     font-size: 14px;
     font-weight: 500;
     color: var(--text-secondary);
@@ -714,7 +707,7 @@
     padding: 6px 14px;
     background: var(--ui-bg);
     border: 1px solid var(--ui-border);
-    border-radius: 16px;
+    border-radius: var(--radius-sm);
     font-size: 13px;
     color: var(--text-secondary);
     cursor: pointer;

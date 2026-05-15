@@ -220,6 +220,8 @@ export * from './DragModel.js';
 export * from './drainBehavior.js';
 export * from './driftRecord.js';
 export * from './DriveType.js';
+export * from './DSS.js';
+export * from './dssSyncState.js';
 export * from './elementType.js';
 export * from './Ellipsoid.js';
 export * from './EME.js';

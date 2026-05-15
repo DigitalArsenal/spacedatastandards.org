@@ -195,9 +195,173 @@
         }
       },
       "additionalProperties": false
+    },
+    "pivStatus": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "int",
+      "description": "host having to decode method-specific numbers.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "Invocation completed; STATUS_CODE carries the method-specific value."
+        },
+        "NOT_FOUND": {
+          "value": 1,
+          "description": "Method id not registered on the target plugin."
+        },
+        "YIELDED": {
+          "value": 2,
+          "description": "Invocation succeeded but yielded before draining queued work. Caller should inspect BACKLOG_REMAINING and re-invoke to continue."
+        },
+        "FAILED": {
+          "value": 3,
+          "description": "Invocation failed; ERROR_CODE + ERROR_MESSAGE describe the failure."
+        }
+      }
+    },
+    "PIVRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "METHOD_ID": {
+          "type": "string",
+          "description": "Stable method identifier from PLG.METHODS[].METHOD_ID.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "INPUTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TAB"
+          },
+          "description": "PAYLOAD_ARENA is empty).",
+          "x-flatbuffer-type": "[TAB]"
+        },
+        "PAYLOAD_ARENA": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "caller manages arena state out-of-band.",
+          "x-flatbuffer-type": "[uint8]"
+        },
+        "TRACE_ID": {
+          "type": "integer",
+          "description": "Optional trace identifier for request correlation.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "OUTPUT_STREAM_CAP": {
+          "type": "integer",
+          "description": "to resume. 0 = no hint.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "description": "Plugin Invoke \u2014 request / response envelopes for calling into a\n/// Space Data Module plugin over its `plugin_invoke_stream` entrypoint.\n///\n/// Every invoke frame (input or output) is a `TAB` descriptor referencing\n/// an offset inside PAYLOAD_ARENA. Each `TAB.WIRE_FORMAT` selects\n/// FLATBUFFER or ALIGNED_BINARY for its body; a method accepts either as\n/// long as the paired `PLG` method manifest advertises both. This mirrors\n/// the SDK's documented contract \u2014 \"aligned-binary payloads are a\n/// separate invoke-ABI optimization; they do not replace the canonical\n/// FlatBuffer schema, and a port advertising one must also advertise the\n/// other.\"\n///\n/// PAYLOAD_ARENA is a single backing byte buffer shared by all frames in\n/// the envelope. TAB.OFFSET is arena-relative. Host runtimes that manage\n/// their own arena may set PAYLOAD_ARENA to an empty vector and treat\n/// TAB.OFFSET as an absolute pointer into the shared WASM linear memory.\ninclude \"../TAB/main.fbs\";\n\n/// Coarse envelope status for an invoke response. Per-method numeric\n/// return codes travel in STATUS_CODE; STATUS categorizes the outcome\n/// for host routing (retry, yield-and-resume, fail-closed) without the\n/// host having to decode method-specific numbers.\nenum pivStatus : int {\n  /// Invocation completed; STATUS_CODE carries the method-specific value.\n  OK,\n  /// Method id not registered on the target plugin.\n  NOT_FOUND,\n  /// Invocation succeeded but yielded before draining queued work.\n  /// Caller should inspect BACKLOG_REMAINING and re-invoke to continue.\n  YIELDED,\n  /// Invocation failed; ERROR_CODE + ERROR_MESSAGE describe the failure.\n  FAILED\n}\n\n/// Request envelope carried by `plugin_invoke_stream`.",
+      "required": [
+        "METHOD_ID"
+      ]
+    },
+    "PIVResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATUS_CODE": {
+          "type": "integer",
+          "description": "Method-specific status code. Zero conventionally indicates success.",
+          "x-flatbuffer-type": "int"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/pivStatus",
+          "description": "Coarse envelope status.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "int",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Invocation completed; STATUS_CODE carries the method-specific value."
+            },
+            "NOT_FOUND": {
+              "value": 1,
+              "description": "Method id not registered on the target plugin."
+            },
+            "YIELDED": {
+              "value": 2,
+              "description": "Invocation succeeded but yielded before draining queued work. Caller should inspect BACKLOG_REMAINING and re-invoke to continue."
+            },
+            "FAILED": {
+              "value": 3,
+              "description": "Invocation failed; ERROR_CODE + ERROR_MESSAGE describe the failure."
+            }
+          }
+        },
+        "YIELDED": {
+          "type": "boolean",
+          "description": "True when the method yielded before fully draining queued work.",
+          "x-flatbuffer-type": "bool"
+        },
+        "BACKLOG_REMAINING": {
+          "type": "integer",
+          "description": "only when STATUS == YIELDED.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "OUTPUTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TAB"
+          },
+          "description": "Output frames. Each TAB carries schema identity and wire format.",
+          "x-flatbuffer-type": "[TAB]"
+        },
+        "PAYLOAD_ARENA": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Optional arena backing OUTPUTS payload bodies.",
+          "x-flatbuffer-type": "[uint8]"
+        },
+        "ERROR_CODE": {
+          "type": "string",
+          "description": "Stable machine-readable error code when STATUS == FAILED.",
+          "x-flatbuffer-type": "string"
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Human-readable diagnostic when STATUS == FAILED.",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACE_ID": {
+          "type": "integer",
+          "description": "Echo of the request's TRACE_ID for correlation.",
+          "x-flatbuffer-type": "uint64"
+        }
+      },
+      "description": "Response envelope emitted by `plugin_invoke_stream`."
+    },
+    "PIV": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "REQUEST": {
+          "$ref": "#/definitions/PIVRequest",
+          "x-flatbuffer-type": "PIVRequest"
+        },
+        "RESPONSE": {
+          "$ref": "#/definitions/PIVResponse",
+          "x-flatbuffer-type": "PIVResponse"
+        }
+      },
+      "description": "Envelope \u2014 carries either a request or a response. Either REQUEST or\n/// RESPONSE is populated per message; both populated is undefined."
     }
   },
-  "$ref": "#/definitions/TAB",
+  "$ref": "#/definitions/PIV",
   "x-flatbuffer-root-type": "PIV",
   "x-flatbuffer-file-identifier": "$PIV"
 }

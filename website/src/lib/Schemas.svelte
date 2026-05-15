@@ -562,7 +562,7 @@
     padding: 12px 20px;
     background: var(--ui-bg);
     border: 1px solid var(--ui-border);
-    border-radius: 28px;
+    border-radius: var(--radius-sm);
     font-size: 15px;
     color: var(--text-primary);
     font-family: var(--font-sans);
@@ -589,7 +589,7 @@
     padding: 10px 18px;
     background: var(--ui-bg);
     border: 1px solid var(--ui-border);
-    border-radius: 28px;
+    border-radius: var(--radius-sm);
     font-size: 14px;
     font-weight: 500;
     color: var(--text-secondary);

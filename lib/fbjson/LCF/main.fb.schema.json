@@ -178,9 +178,150 @@
         }
       },
       "additionalProperties": false
+    },
+    "licensingConfigMessageType": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1
+      ],
+      "x-flatbuffer-enum-values": {
+        "Configure": {
+          "value": 0
+        },
+        "Status": {
+          "value": 1
+        }
+      }
+    },
+    "licensingConfigRole": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1
+      ],
+      "x-flatbuffer-enum-values": {
+        "Provider": {
+          "value": 0
+        },
+        "Requester": {
+          "value": 1
+        }
+      }
+    },
+    "LCF": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MESSAGE_TYPE": {
+          "$ref": "#/definitions/licensingConfigMessageType",
+          "description": "Distinguishes configuration inputs from runtime status outputs.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "Configure",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Configure": {
+              "value": 0
+            },
+            "Status": {
+              "value": 1
+            }
+          }
+        },
+        "ROLE": {
+          "$ref": "#/definitions/licensingConfigRole",
+          "description": "Indicates whether the configuration/status applies to server/provider or requester/client behavior.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "Provider",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Provider": {
+              "value": 0
+            },
+            "Requester": {
+              "value": 1
+            }
+          }
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID advertised by the licensing provider.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNING_KEY": {
+          "$ref": "#/definitions/KRF",
+          "description": "Host-managed long-lived signing key used for grant signatures.",
+          "x-flatbuffer-type": "KRF"
+        },
+        "PROVIDER_WRAPPING_KEY": {
+          "$ref": "#/definitions/KRF",
+          "description": "Host-managed wrapping key used to protect per-publication content keys for requesters.",
+          "x-flatbuffer-type": "KRF"
+        },
+        "REQUESTER_SIGNING_KEY": {
+          "$ref": "#/definitions/KRF",
+          "description": "Optional requester signing key reference for requester-hosted flows.",
+          "x-flatbuffer-type": "KRF"
+        },
+        "ACTIVE_KEY_VERSION": {
+          "type": "integer",
+          "description": "Logical active publication/grant key version.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "EXPIRES_AT": {
+          "type": "integer",
+          "description": "Runtime expiry in unix milliseconds, or 0 if unbounded.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MAX_CLOCK_SKEW_MS": {
+          "type": "integer",
+          "description": "Maximum accepted requester/provider clock skew in milliseconds.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CHALLENGE_TTL_MS": {
+          "type": "integer",
+          "description": "Challenge time-to-live in milliseconds.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CAPABILITY_TOKEN": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Optional capability token bytes returned with successful grants.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "INITIALIZED": {
+          "type": "boolean",
+          "description": "Whether the runtime has been initialized successfully.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "NEEDS_ROTATION": {
+          "type": "boolean",
+          "description": "Whether the runtime needs issuer key rotation or refreshed configuration.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "STATUS_CODE": {
+          "type": "string",
+          "description": "Optional machine-readable status code for status/error responses.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS_MESSAGE": {
+          "type": "string",
+          "description": "Optional human-readable status or error message.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Licensing Configuration Frame"
     }
   },
-  "$ref": "#/definitions/KRF",
+  "$ref": "#/definitions/LCF",
   "x-flatbuffer-root-type": "LCF",
   "x-flatbuffer-file-identifier": "$LCF"
 }

@@ -351,6 +351,9 @@
     height: 20px;
     color: var(--text-muted);
     transition: transform 0.2s;
+    display: block;
+    flex-shrink: 0;
+    align-self: center;
   }
 
   .dropdown.open .chevron {
@@ -448,7 +451,7 @@
     padding: 18px 32px;
     background: var(--accent);
     border: none;
-    border-radius: 14px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     text-decoration: none;
     overflow: hidden;

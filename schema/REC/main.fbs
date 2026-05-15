@@ -1,5 +1,5 @@
-// Hash: 38d74af3ff90f384d082e9ecc2be420282b61ed0ee1c99e18f6021c310ad540f
-// Version: 1.44.22
+// Hash: e7af6ff30dbd1ec91408f3a4967fe4e967394e7294c6753bc8a0b0421bcd524f
+// Version: 1.44.23
 // -----------------------------------END_HEADER
 include "../ACL/main.fbs";
 include "../ACM/main.fbs";
@@ -35,6 +35,7 @@ include "../DFH/main.fbs";
 include "../DMG/main.fbs";
 include "../DOA/main.fbs";
 include "../DPM/main.fbs";
+include "../DSS/main.fbs";
 include "../EME/main.fbs";
 include "../ENC/main.fbs";
 include "../ENV/main.fbs";
@@ -167,37 +168,38 @@ union RecordType {
   CHN, CLT, CMS, COM,
   COT, CRD, CRM, CSM,
   CTR, CZM, DFH, DMG,
-  DOA, DPM, EME, ENC,
-  ENV, EOO, EOP, EPM,
-  ESL, ETM, EWR, FCS,
-  FPC, GDI, GEO, GJN,
-  GNO, GPX, GRV, GVH,
-  HEL, HYP, IDM, ION,
-  IRO, KMF, KML, KRF,
-  LCC, LCF, LCH, LDM,
-  LGR, LKS, LMO, LMR,
-  LMS, LND, LNE, LPF,
-  LWK, MBL, MET, MFE,
-  MNF, MNV, MPE, MSL,
-  MST, MTI, NAV, OBD,
-  OBT, OCM, OEM, OMM,
-  OOA, OOB, OOD, OOE,
-  OOI, OOL, OON, OOS,
-  OOT, OPM, OSM, PCF,
-  PHY, PIV, PLD, PLG,
-  PLK, PNM, PPE, PRG,
-  PRW, PUR, RAF, RCF,
-  RDM, RDO, REV, RFB,
-  RFE, RFM, RFO, ROC,
-  SAR, SCM, SDF, SDL,
-  SDR, SEN, SEO, SEV,
-  SHW, SIT, SKI, SNR,
-  SNW, SOI, SON, SPP,
-  SPW, SRI, STF, STR,
-  STV, SWR, TAB, TCF,
-  TDM, TIM, TKG, TME,
-  TMF, TPN, TRK, TRN,
-  VCM, WPN, WTH, XTC
+  DOA, DPM, DSS, EME,
+  ENC, ENV, EOO, EOP,
+  EPM, ESL, ETM, EWR,
+  FCS, FPC, GDI, GEO,
+  GJN, GNO, GPX, GRV,
+  GVH, HEL, HYP, IDM,
+  ION, IRO, KMF, KML,
+  KRF, LCC, LCF, LCH,
+  LDM, LGR, LKS, LMO,
+  LMR, LMS, LND, LNE,
+  LPF, LWK, MBL, MET,
+  MFE, MNF, MNV, MPE,
+  MSL, MST, MTI, NAV,
+  OBD, OBT, OCM, OEM,
+  OMM, OOA, OOB, OOD,
+  OOE, OOI, OOL, OON,
+  OOS, OOT, OPM, OSM,
+  PCF, PHY, PIV, PLD,
+  PLG, PLK, PNM, PPE,
+  PRG, PRW, PUR, RAF,
+  RCF, RDM, RDO, REV,
+  RFB, RFE, RFM, RFO,
+  ROC, SAR, SCM, SDF,
+  SDL, SDR, SEN, SEO,
+  SEV, SHW, SIT, SKI,
+  SNR, SNW, SOI, SON,
+  SPP, SPW, SRI, STF,
+  STR, STV, SWR, TAB,
+  TCF, TDM, TIM, TKG,
+  TME, TMF, TPN, TRK,
+  TRN, VCM, WPN, WTH,
+  XTC
 }  // Union of all record types
 
 /// Individual record wrapper for any standard type

@@ -770,9 +770,301 @@
         }
       },
       "additionalProperties": false
+    },
+    "SiteType": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Enum for the type of site",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "x-flatbuffer-enum-values": {
+        "LAUNCH_SITE": {
+          "value": 0
+        },
+        "OBSERVATION_STATION": {
+          "value": 1
+        },
+        "HOBBYIST_OBSERVER": {
+          "value": 2
+        },
+        "RESEARCH_FACILITY": {
+          "value": 3
+        },
+        "SATELLITE_GROUND_STATION": {
+          "value": 4
+        },
+        "SPACEPORT": {
+          "value": 5
+        },
+        "MILITARY_BASE": {
+          "value": 6
+        },
+        "WEATHER_STATION": {
+          "value": 7
+        },
+        "ASTRONOMICAL_OBSERVATORY": {
+          "value": 8
+        },
+        "EDUCATIONAL_INSTITUTE": {
+          "value": 9
+        },
+        "COMMUNICATION_HUB": {
+          "value": 10
+        },
+        "POWER_PLANT": {
+          "value": 11
+        },
+        "INDUSTRIAL_COMPLEX": {
+          "value": 12
+        },
+        "TRANSPORTATION_HUB": {
+          "value": 13
+        },
+        "URBAN_AREA": {
+          "value": 14
+        },
+        "NATIONAL_PARK": {
+          "value": 15
+        },
+        "HISTORICAL_SITE": {
+          "value": 16
+        },
+        "OTHER": {
+          "value": 17
+        }
+      }
+    },
+    "Geometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "GEOMETRY_TYPE": {
+          "type": "string",
+          "description": "Type of geometry",
+          "x-flatbuffer-type": "string"
+        },
+        "COORDINATES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Coordinates of the geometry",
+          "x-flatbuffer-type": "[float]"
+        }
+      },
+      "description": "Enum for the type of site\nenum SiteType: byte {\n  LAUNCH_SITE,\n  OBSERVATION_STATION,\n  HOBBYIST_OBSERVER,\n  RESEARCH_FACILITY,\n  SATELLITE_GROUND_STATION,\n  SPACEPORT,\n  MILITARY_BASE,\n  WEATHER_STATION,\n  ASTRONOMICAL_OBSERVATORY,\n  EDUCATIONAL_INSTITUTE,\n  COMMUNICATION_HUB,\n  POWER_PLANT,\n  INDUSTRIAL_COMPLEX,\n  TRANSPORTATION_HUB,\n  URBAN_AREA,\n  NATIONAL_PARK,\n  HISTORICAL_SITE,\n  OTHER\n}\n\n/// Geometry table with information about geometric properties"
+    },
+    "SIT": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier for the site, BE_NUMBER",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Name of the site",
+          "x-flatbuffer-type": "string"
+        },
+        "ABBREVIATION": {
+          "type": "string",
+          "description": "Abbreviation",
+          "x-flatbuffer-type": "string"
+        },
+        "SITE_TYPE": {
+          "$ref": "#/definitions/SiteType",
+          "description": "Site type as defined in SiteType enum",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "LAUNCH_SITE": {
+              "value": 0
+            },
+            "OBSERVATION_STATION": {
+              "value": 1
+            },
+            "HOBBYIST_OBSERVER": {
+              "value": 2
+            },
+            "RESEARCH_FACILITY": {
+              "value": 3
+            },
+            "SATELLITE_GROUND_STATION": {
+              "value": 4
+            },
+            "SPACEPORT": {
+              "value": 5
+            },
+            "MILITARY_BASE": {
+              "value": 6
+            },
+            "WEATHER_STATION": {
+              "value": 7
+            },
+            "ASTRONOMICAL_OBSERVATORY": {
+              "value": 8
+            },
+            "EDUCATIONAL_INSTITUTE": {
+              "value": 9
+            },
+            "COMMUNICATION_HUB": {
+              "value": 10
+            },
+            "POWER_PLANT": {
+              "value": 11
+            },
+            "INDUSTRIAL_COMPLEX": {
+              "value": 12
+            },
+            "TRANSPORTATION_HUB": {
+              "value": 13
+            },
+            "URBAN_AREA": {
+              "value": 14
+            },
+            "NATIONAL_PARK": {
+              "value": 15
+            },
+            "HISTORICAL_SITE": {
+              "value": 16
+            },
+            "OTHER": {
+              "value": 17
+            }
+          }
+        },
+        "CATCODE": {
+          "type": "string",
+          "description": "Site type CATCODE",
+          "x-flatbuffer-type": "string"
+        },
+        "NETWORK": {
+          "type": "string",
+          "description": "Network identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude of the site",
+          "x-flatbuffer-type": "float"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude of the site",
+          "x-flatbuffer-type": "float"
+        },
+        "ALTITUDE": {
+          "type": "number",
+          "description": "Altitude of the site",
+          "x-flatbuffer-type": "float"
+        },
+        "GEOMETRY": {
+          "$ref": "#/definitions/Geometry",
+          "description": "Geometry of the site",
+          "x-flatbuffer-type": "Geometry"
+        },
+        "CENTER_POINT_GEOMETRY": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Center point geometry coordinates",
+          "x-flatbuffer-type": "[float]"
+        },
+        "CLASSIFICATION": {
+          "type": "string",
+          "description": "Classification marking of the site",
+          "x-flatbuffer-type": "string"
+        },
+        "CTR_ID": {
+          "type": "string",
+          "description": "CTR ISO 3166 Numeric code as string",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATED_BY": {
+          "type": "string",
+          "description": "Identifier of the user who created the site data",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description of the site",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_URL": {
+          "type": "string",
+          "description": "URL for the 3D model of the site",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Source of the site data",
+          "x-flatbuffer-type": "string"
+        },
+        "TASKABLE": {
+          "type": "boolean",
+          "description": "Indicates if the site is taskable",
+          "x-flatbuffer-type": "bool"
+        },
+        "OPERATIONAL_STATUS": {
+          "type": "string",
+          "description": "Operational status of the site (e.g., active, inactive, under construction)",
+          "x-flatbuffer-type": "string"
+        },
+        "ESTABLISHMENT_DATE": {
+          "type": "string",
+          "description": "Date of establishment",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTACT_INFO": {
+          "type": "string",
+          "description": "Contact information for the site",
+          "x-flatbuffer-type": "string"
+        },
+        "ENVIRONMENTAL_IMPACT": {
+          "type": "string",
+          "description": "Environmental impact or considerations",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCESSIBILITY_INFRA": {
+          "type": "string",
+          "description": "Accessibility and infrastructure details",
+          "x-flatbuffer-type": "string"
+        },
+        "INTEGRATED_DEVICES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IDM"
+          },
+          "description": "Vector of Integrated Devices (IDM)",
+          "x-flatbuffer-type": "[IDM]"
+        }
+      },
+      "description": "Site Information Message"
     }
   },
-  "$ref": "#/definitions/IDM",
+  "$ref": "#/definitions/SIT",
   "x-flatbuffer-root-type": "SIT",
   "x-flatbuffer-file-identifier": "$SIT"
 }

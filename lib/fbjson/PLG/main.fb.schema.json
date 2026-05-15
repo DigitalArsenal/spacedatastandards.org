@@ -195,9 +195,1226 @@
         }
       },
       "additionalProperties": false
+    },
+    "pluginCategory": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Plugin type category",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "x-flatbuffer-enum-values": {
+        "Sensor": {
+          "value": 0,
+          "description": "Sensor simulation and analysis"
+        },
+        "Propagator": {
+          "value": 1,
+          "description": "Orbital propagation algorithms"
+        },
+        "Renderer": {
+          "value": 2,
+          "description": "Custom rendering/visualization"
+        },
+        "Analysis": {
+          "value": 3,
+          "description": "Data analysis and processing"
+        },
+        "DataSource": {
+          "value": 4,
+          "description": "External data source integration"
+        },
+        "EW": {
+          "value": 5,
+          "description": "Electronic warfare simulation"
+        },
+        "Comms": {
+          "value": 6,
+          "description": "Communications modeling"
+        },
+        "Physics": {
+          "value": 7,
+          "description": "Physics simulation"
+        },
+        "Shader": {
+          "value": 8,
+          "description": "GLSL shader plugins for custom visualization"
+        }
+      }
+    },
+    "purchaseTier": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Storefront payment model for the plugin listing",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "Free": {
+          "value": 0,
+          "description": "No payment required"
+        },
+        "OneTime": {
+          "value": 1,
+          "description": "Single one-time purchase"
+        },
+        "Subscription": {
+          "value": 2,
+          "description": "Recurring subscription purchase"
+        }
+      }
+    },
+    "publicationState": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Publication visibility for the plugin listing",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "Public": {
+          "value": 0,
+          "description": "Discoverable in public storefront listings"
+        },
+        "Unlisted": {
+          "value": 1,
+          "description": "Addressable directly but hidden from public browse surfaces"
+        },
+        "Retired": {
+          "value": 2,
+          "description": "No longer offered for new installs or purchases"
+        }
+      }
+    },
+    "invokeSurfaceKind": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "description": "artifact can support multiple.",
+      "enum": [
+        0,
+        1
+      ],
+      "x-flatbuffer-enum-values": {
+        "DIRECT": {
+          "value": 0,
+          "description": "Direct ABI \u2014 host calls `plugin_invoke_stream` in-process."
+        },
+        "COMMAND": {
+          "value": 1,
+          "description": "Command surface \u2014 envelope is queued by a runtime host."
+        }
+      }
+    },
+    "drainBehavior": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "description": "(`DRAIN_POLICY` would collide otherwise).",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "SINGLE_SHOT": {
+          "value": 0,
+          "description": "One invocation consumes exactly one input frame."
+        },
+        "DRAIN_UNTIL_YIELD": {
+          "value": 1,
+          "description": "Invocation drains queued work until it voluntarily yields."
+        },
+        "DRAIN_TO_EMPTY": {
+          "value": 2,
+          "description": "Invocation drains to empty before returning."
+        }
+      }
+    },
+    "hostCapabilityKind": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ushort",
+      "description": "enum-based surface that runtime hosts gate on.",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "x-flatbuffer-enum-values": {
+        "CLOCK": {
+          "value": 0
+        },
+        "RANDOM": {
+          "value": 1
+        },
+        "LOGGING": {
+          "value": 2
+        },
+        "TIMERS": {
+          "value": 3
+        },
+        "PUBSUB": {
+          "value": 4
+        },
+        "PROTOCOL_DIAL": {
+          "value": 5
+        },
+        "PROTOCOL_HANDLE": {
+          "value": 6
+        },
+        "STORAGE_QUERY": {
+          "value": 7
+        },
+        "SCENE_ACCESS": {
+          "value": 8
+        },
+        "ENTITY_ACCESS": {
+          "value": 9
+        },
+        "RENDER_HOOKS": {
+          "value": 10
+        },
+        "HTTP": {
+          "value": 11
+        },
+        "FILESYSTEM": {
+          "value": 12
+        },
+        "PIPE": {
+          "value": 13
+        },
+        "NETWORK": {
+          "value": 14
+        },
+        "DATABASE": {
+          "value": 15
+        },
+        "STORAGE_ADAPTER": {
+          "value": 16
+        },
+        "STORAGE_WRITE": {
+          "value": 17
+        },
+        "WALLET_SIGN": {
+          "value": 18
+        },
+        "IPFS": {
+          "value": 19
+        },
+        "TLS": {
+          "value": 20
+        },
+        "MQTT": {
+          "value": 21
+        },
+        "WEBSOCKET": {
+          "value": 22
+        },
+        "TCP": {
+          "value": 23
+        },
+        "UDP": {
+          "value": 24
+        },
+        "PROCESS_EXEC": {
+          "value": 25
+        },
+        "CONTEXT_READ": {
+          "value": 26
+        },
+        "CONTEXT_WRITE": {
+          "value": 27
+        },
+        "CRYPTO_HASH": {
+          "value": 28
+        },
+        "CRYPTO_SIGN": {
+          "value": 29
+        },
+        "CRYPTO_VERIFY": {
+          "value": 30
+        },
+        "CRYPTO_ENCRYPT": {
+          "value": 31
+        },
+        "CRYPTO_DECRYPT": {
+          "value": 32
+        },
+        "CRYPTO_KEY_AGREEMENT": {
+          "value": 33
+        },
+        "CRYPTO_KDF": {
+          "value": 34
+        },
+        "SCHEDULE_CRON": {
+          "value": 35
+        }
+      }
+    },
+    "PluginCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Capability name, e.g., \"gpu_compute\", \"wasm_simd\"",
+          "x-flatbuffer-type": "string"
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "Capability version",
+          "x-flatbuffer-type": "string"
+        },
+        "REQUIRED": {
+          "type": "boolean",
+          "description": "Whether this capability is required",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "description": "Plugin type category\nenum pluginCategory : byte {\n  /// Sensor simulation and analysis\n  Sensor,\n  /// Orbital propagation algorithms\n  Propagator,\n  /// Custom rendering/visualization\n  Renderer,\n  /// Data analysis and processing\n  Analysis,\n  /// External data source integration\n  DataSource,\n  /// Electronic warfare simulation\n  EW,\n  /// Communications modeling\n  Comms,\n  /// Physics simulation\n  Physics,\n  /// GLSL shader plugins for custom visualization\n  Shader\n}\n\n/// Storefront payment model for the plugin listing\nenum purchaseTier : byte {\n  /// No payment required\n  Free,\n  /// Single one-time purchase\n  OneTime,\n  /// Recurring subscription purchase\n  Subscription\n}\n\n/// Publication visibility for the plugin listing\nenum publicationState : byte {\n  /// Discoverable in public storefront listings\n  Public,\n  /// Addressable directly but hidden from public browse surfaces\n  Unlisted,\n  /// No longer offered for new installs or purchases\n  Retired\n}\n\n/// Plugin capability declaration"
+    },
+    "PLGAcceptedTypeSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SET_ID": {
+          "type": "string",
+          "description": "Stable type-set identifier within the port.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ALLOWED_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FlatBufferTypeRef"
+          },
+          "description": "Specific FlatBuffer types accepted by the set.",
+          "x-flatbuffer-type": "[FlatBufferTypeRef]"
+        },
+        "ALLOWED_WIRE_FORMATS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/payloadWireFormat"
+          },
+          "description": "FLATBUFFER MUST also be present for the same schemas.",
+          "x-flatbuffer-type": "[payloadWireFormat]"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Human-readable explanation of the accepted schema family.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Canonical invoke surfaces a plugin artifact can expose. A single\n/// artifact can support multiple.\nenum invokeSurfaceKind : ubyte {\n  /// Direct ABI \u2014 host calls `plugin_invoke_stream` in-process.\n  DIRECT,\n  /// Command surface \u2014 envelope is queued by a runtime host.\n  COMMAND\n}\n\n/// Drain semantics for a method that operates over queued stream frames.\n/// Enum name is deliberately distinct from any camelCase field name\n/// (`DRAIN_POLICY` would collide otherwise).\nenum drainBehavior : ubyte {\n  /// One invocation consumes exactly one input frame.\n  SINGLE_SHOT,\n  /// Invocation drains queued work until it voluntarily yields.\n  DRAIN_UNTIL_YIELD,\n  /// Invocation drains to empty before returning.\n  DRAIN_TO_EMPTY\n}\n\n/// Host capability classes a plugin may request. Extends the simpler\n/// `PluginCapability` (which is name+version metadata) with the richer\n/// enum-based surface that runtime hosts gate on.\nenum hostCapabilityKind : ushort {\n  CLOCK,\n  RANDOM,\n  LOGGING,\n  TIMERS,\n  PUBSUB,\n  PROTOCOL_DIAL,\n  PROTOCOL_HANDLE,\n  STORAGE_QUERY,\n  SCENE_ACCESS,\n  ENTITY_ACCESS,\n  RENDER_HOOKS,\n  HTTP,\n  FILESYSTEM,\n  PIPE,\n  NETWORK,\n  DATABASE,\n  STORAGE_ADAPTER,\n  STORAGE_WRITE,\n  WALLET_SIGN,\n  IPFS,\n  TLS,\n  MQTT,\n  WEBSOCKET,\n  TCP,\n  UDP,\n  PROCESS_EXEC,\n  CONTEXT_READ,\n  CONTEXT_WRITE,\n  CRYPTO_HASH,\n  CRYPTO_SIGN,\n  CRYPTO_VERIFY,\n  CRYPTO_ENCRYPT,\n  CRYPTO_DECRYPT,\n  CRYPTO_KEY_AGREEMENT,\n  CRYPTO_KDF,\n  SCHEDULE_CRON\n}\n\n/// Accepted schema family for a port. When a port accepts multiple wire\n/// formats (canonical FlatBuffer + aligned-binary), each ALLOWED_TYPE\n/// entry carries its own TAB.FlatBufferTypeRef with the schema identity,\n/// and the enclosing PLGPortManifest advertises both wire formats via\n/// ALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises\n/// aligned-binary MUST also advertise the canonical flatbuffer fallback\n/// for the same schema and file identifier in the same set.",
+      "required": [
+        "SET_ID"
+      ]
+    },
+    "PLGPortManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "PORT_ID": {
+          "type": "string",
+          "description": "Stable port identifier within the method.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DISPLAY_NAME": {
+          "type": "string",
+          "description": "Human-readable name for UIs.",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCEPTED_TYPE_SETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLGAcceptedTypeSet"
+          },
+          "description": "Type sets accepted on this port.",
+          "x-flatbuffer-type": "[PLGAcceptedTypeSet]"
+        },
+        "MIN_STREAMS": {
+          "type": "integer",
+          "description": "Minimum number of streams that must be connected.",
+          "x-flatbuffer-type": "uint16",
+          "x-flatbuffer-default": "1"
+        },
+        "MAX_STREAMS": {
+          "type": "integer",
+          "description": "Maximum number of streams that may be connected.",
+          "x-flatbuffer-type": "uint16",
+          "x-flatbuffer-default": "1"
+        },
+        "REQUIRED": {
+          "type": "boolean",
+          "description": "Whether the port must be connected for invocation.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Optional human-readable description.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "One input or output port on a method.",
+      "required": [
+        "PORT_ID"
+      ]
+    },
+    "PLGHostCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "CAPABILITY": {
+          "$ref": "#/definitions/hostCapabilityKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "CLOCK": {
+              "value": 0
+            },
+            "RANDOM": {
+              "value": 1
+            },
+            "LOGGING": {
+              "value": 2
+            },
+            "TIMERS": {
+              "value": 3
+            },
+            "PUBSUB": {
+              "value": 4
+            },
+            "PROTOCOL_DIAL": {
+              "value": 5
+            },
+            "PROTOCOL_HANDLE": {
+              "value": 6
+            },
+            "STORAGE_QUERY": {
+              "value": 7
+            },
+            "SCENE_ACCESS": {
+              "value": 8
+            },
+            "ENTITY_ACCESS": {
+              "value": 9
+            },
+            "RENDER_HOOKS": {
+              "value": 10
+            },
+            "HTTP": {
+              "value": 11
+            },
+            "FILESYSTEM": {
+              "value": 12
+            },
+            "PIPE": {
+              "value": 13
+            },
+            "NETWORK": {
+              "value": 14
+            },
+            "DATABASE": {
+              "value": 15
+            },
+            "STORAGE_ADAPTER": {
+              "value": 16
+            },
+            "STORAGE_WRITE": {
+              "value": 17
+            },
+            "WALLET_SIGN": {
+              "value": 18
+            },
+            "IPFS": {
+              "value": 19
+            },
+            "TLS": {
+              "value": 20
+            },
+            "MQTT": {
+              "value": 21
+            },
+            "WEBSOCKET": {
+              "value": 22
+            },
+            "TCP": {
+              "value": 23
+            },
+            "UDP": {
+              "value": 24
+            },
+            "PROCESS_EXEC": {
+              "value": 25
+            },
+            "CONTEXT_READ": {
+              "value": 26
+            },
+            "CONTEXT_WRITE": {
+              "value": 27
+            },
+            "CRYPTO_HASH": {
+              "value": 28
+            },
+            "CRYPTO_SIGN": {
+              "value": 29
+            },
+            "CRYPTO_VERIFY": {
+              "value": 30
+            },
+            "CRYPTO_ENCRYPT": {
+              "value": 31
+            },
+            "CRYPTO_DECRYPT": {
+              "value": 32
+            },
+            "CRYPTO_KEY_AGREEMENT": {
+              "value": 33
+            },
+            "CRYPTO_KDF": {
+              "value": 34
+            },
+            "SCHEDULE_CRON": {
+              "value": 35
+            }
+          }
+        },
+        "SCOPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REQUIRED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "One host capability dependency (richer form of PluginCapability)."
+    },
+    "PLGTimerSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "TIMER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "METHOD_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "INPUT_PORT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DEFAULT_INTERVAL_MS": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Timer entry declared by a plugin.",
+      "required": [
+        "TIMER_ID",
+        "METHOD_ID"
+      ]
+    },
+    "PLGProtocolSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "PROTOCOL_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "METHOD_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "INPUT_PORT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OUTPUT_PORT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "WIRE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSPORT_KIND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ROLE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SPEC_URI": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTO_INSTALL": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "ADVERTISE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "DISCOVERY_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DEFAULT_PORT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint16"
+        },
+        "REQUIRE_SECURE_TRANSPORT": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        }
+      },
+      "description": "Protocol handler declared by a plugin.",
+      "required": [
+        "PROTOCOL_ID",
+        "METHOD_ID"
+      ]
+    },
+    "PLGBuildArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ARTIFACT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "KIND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PATH": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TARGET": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTRY_SYMBOL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Build artifact emitted by the plugin toolchain.",
+      "required": [
+        "ARTIFACT_ID",
+        "PATH"
+      ]
+    },
+    "PLGMethodManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "METHOD_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DISPLAY_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INPUT_PORTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLGPortManifest"
+          },
+          "x-flatbuffer-type": "[PLGPortManifest]"
+        },
+        "OUTPUT_PORTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLGPortManifest"
+          },
+          "x-flatbuffer-type": "[PLGPortManifest]"
+        },
+        "MAX_BATCH": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "1"
+        },
+        "DRAIN_POLICY": {
+          "$ref": "#/definitions/drainBehavior",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "DRAIN_UNTIL_YIELD",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "SINGLE_SHOT": {
+              "value": 0,
+              "description": "One invocation consumes exactly one input frame."
+            },
+            "DRAIN_UNTIL_YIELD": {
+              "value": 1,
+              "description": "Invocation drains queued work until it voluntarily yields."
+            },
+            "DRAIN_TO_EMPTY": {
+              "value": 2,
+              "description": "Invocation drains to empty before returning."
+            }
+          }
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Canonical method declaration.",
+      "required": [
+        "METHOD_ID"
+      ]
+    },
+    "PluginDependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "PLUGIN_ID": {
+          "type": "string",
+          "description": "Plugin ID of the dependency",
+          "x-flatbuffer-type": "string"
+        },
+        "MIN_VERSION": {
+          "type": "string",
+          "description": "Minimum version required (semver)",
+          "x-flatbuffer-type": "string"
+        },
+        "MAX_VERSION": {
+          "type": "string",
+          "description": "Maximum version allowed (optional)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Plugin dependency on another plugin"
+    },
+    "EntryFunction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Function name as exported from WASM",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Human-readable description",
+          "x-flatbuffer-type": "string"
+        },
+        "INPUT_SCHEMAS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Input parameter types (FlatBuffer schema names)",
+          "x-flatbuffer-type": "[string]"
+        },
+        "OUTPUT_SCHEMA": {
+          "type": "string",
+          "description": "Output type (FlatBuffer schema name)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Plugin entry point function definition",
+      "required": [
+        "NAME"
+      ]
+    },
+    "PLG": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "PLUGIN_ID": {
+          "type": "string",
+          "description": "Unique identifier for the plugin",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable plugin name",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "Plugin version (semver format)",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Detailed description of plugin functionality",
+          "x-flatbuffer-type": "string"
+        },
+        "TAGLINE": {
+          "type": "string",
+          "description": "Short marketing summary shown in storefront listings",
+          "x-flatbuffer-type": "string"
+        },
+        "PLUGIN_TYPE": {
+          "$ref": "#/definitions/pluginCategory",
+          "description": "Type/category of the plugin",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Sensor": {
+              "value": 0,
+              "description": "Sensor simulation and analysis"
+            },
+            "Propagator": {
+              "value": 1,
+              "description": "Orbital propagation algorithms"
+            },
+            "Renderer": {
+              "value": 2,
+              "description": "Custom rendering/visualization"
+            },
+            "Analysis": {
+              "value": 3,
+              "description": "Data analysis and processing"
+            },
+            "DataSource": {
+              "value": 4,
+              "description": "External data source integration"
+            },
+            "EW": {
+              "value": 5,
+              "description": "Electronic warfare simulation"
+            },
+            "Comms": {
+              "value": 6,
+              "description": "Communications modeling"
+            },
+            "Physics": {
+              "value": 7,
+              "description": "Physics simulation"
+            },
+            "Shader": {
+              "value": 8,
+              "description": "GLSL shader plugins for custom visualization"
+            }
+          }
+        },
+        "PUBLISHER_NAME": {
+          "type": "string",
+          "description": "Human-readable publisher or organization name",
+          "x-flatbuffer-type": "string"
+        },
+        "PUBLISHER_HANDLE": {
+          "type": "string",
+          "description": "Publisher handle or username",
+          "x-flatbuffer-type": "string"
+        },
+        "PUBLISHER_URL": {
+          "type": "string",
+          "description": "Canonical publisher website",
+          "x-flatbuffer-type": "string"
+        },
+        "SUPPORT_URL": {
+          "type": "string",
+          "description": "Support or helpdesk URL for this plugin",
+          "x-flatbuffer-type": "string"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Search and categorization tags for discovery",
+          "x-flatbuffer-type": "[string]"
+        },
+        "FEATURES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Short feature bullets highlighted in storefront listings",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SCREENSHOT_URLS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Screenshot URLs showing the plugin in use",
+          "x-flatbuffer-type": "[string]"
+        },
+        "BANNER_URL": {
+          "type": "string",
+          "description": "Optional hero/banner image URL for the listing",
+          "x-flatbuffer-type": "string"
+        },
+        "ABI_VERSION": {
+          "type": "integer",
+          "description": "ABI version for compatibility checking",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "1"
+        },
+        "WASM_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "SHA256 hash of the decrypted WASM binary",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "WASM_SIZE": {
+          "type": "integer",
+          "description": "Size of decrypted WASM binary in bytes",
+          "x-flatbuffer-type": "uint64"
+        },
+        "WASM_CID": {
+          "type": "string",
+          "description": "IPFS CID of the encrypted WASM binary",
+          "x-flatbuffer-type": "string"
+        },
+        "ENCRYPTED_WASM_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "SHA256 hash of the encrypted delivery artifact bytes",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "ENCRYPTED_WASM_SIZE": {
+          "type": "integer",
+          "description": "Size of the encrypted delivery artifact in bytes",
+          "x-flatbuffer-type": "uint64"
+        },
+        "ENTRY_FUNCTIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EntryFunction"
+          },
+          "description": "Entry point functions exported by the plugin",
+          "x-flatbuffer-type": "[EntryFunction]"
+        },
+        "REQUIRED_SCHEMAS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "FlatBuffer schemas required by this plugin",
+          "x-flatbuffer-type": "[string]"
+        },
+        "DEPENDENCIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PluginDependency"
+          },
+          "description": "Other plugins this depends on",
+          "x-flatbuffer-type": "[PluginDependency]"
+        },
+        "CAPABILITIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PluginCapability"
+          },
+          "description": "Capabilities provided by this plugin",
+          "x-flatbuffer-type": "[PluginCapability]"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the plugin provider",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_EPM_CID": {
+          "type": "string",
+          "description": "IPFS CID of provider's EPM (Entity Profile Message)",
+          "x-flatbuffer-type": "string"
+        },
+        "ENCRYPTED": {
+          "type": "boolean",
+          "description": "Whether the WASM binary is encrypted",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "REQUIRED_SCOPE": {
+          "type": "string",
+          "description": "Canonical required scope for grant issuance",
+          "x-flatbuffer-type": "string"
+        },
+        "KEY_ID": {
+          "type": "string",
+          "description": "Provider-local identifier for the module content key",
+          "x-flatbuffer-type": "string"
+        },
+        "ALLOWED_DOMAINS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Allowed requester domains for module grants",
+          "x-flatbuffer-type": "[string]"
+        },
+        "MAX_GRANT_TIMEOUT_MS": {
+          "type": "integer",
+          "description": "Maximum grant timeout allowed for this module publication",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MIN_PERMISSIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Minimum permissions required to run",
+          "x-flatbuffer-type": "[string]"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp when plugin was created",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp when plugin was last updated",
+          "x-flatbuffer-type": "uint64"
+        },
+        "DOCUMENTATION_URL": {
+          "type": "string",
+          "description": "URL to plugin documentation",
+          "x-flatbuffer-type": "string"
+        },
+        "CHANGELOG_URL": {
+          "type": "string",
+          "description": "URL to plugin changelog or release notes",
+          "x-flatbuffer-type": "string"
+        },
+        "ICON_URL": {
+          "type": "string",
+          "description": "URL to plugin icon/logo",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "License identifier (SPDX format)",
+          "x-flatbuffer-type": "string"
+        },
+        "PAYMENT_MODEL": {
+          "$ref": "#/definitions/purchaseTier",
+          "description": "Commercial model used for storefront purchase flows",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "Free",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Free": {
+              "value": 0,
+              "description": "No payment required"
+            },
+            "OneTime": {
+              "value": 1,
+              "description": "Single one-time purchase"
+            },
+            "Subscription": {
+              "value": 2,
+              "description": "Recurring subscription purchase"
+            }
+          }
+        },
+        "PRICE_USD_CENTS": {
+          "type": "integer",
+          "description": "Price in USD cents for one-time purchase or subscription period",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SUBSCRIPTION_PERIOD_DAYS": {
+          "type": "integer",
+          "description": "Subscription billing period length in days",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ACCEPTED_PAYMENT_METHODS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Accepted payment methods, e.g. \"stripe\", \"sol\", \"usdc\"",
+          "x-flatbuffer-type": "[string]"
+        },
+        "LISTING_STATUS": {
+          "$ref": "#/definitions/publicationState",
+          "description": "Storefront publication state for this manifest version",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "Public",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Public": {
+              "value": 0,
+              "description": "Discoverable in public storefront listings"
+            },
+            "Unlisted": {
+              "value": 1,
+              "description": "Addressable directly but hidden from public browse surfaces"
+            },
+            "Retired": {
+              "value": 2,
+              "description": "No longer offered for new installs or purchases"
+            }
+          }
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Ed25519 signature from provider over manifest",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "INVOKE_SURFACES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/invokeSurfaceKind"
+          },
+          "description": "MAY list both DIRECT and COMMAND when it supports both.",
+          "x-flatbuffer-type": "[invokeSurfaceKind]"
+        },
+        "METHODS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLGMethodManifest"
+          },
+          "description": "invoke-surface detail including aligned-binary advertisement.",
+          "x-flatbuffer-type": "[PLGMethodManifest]"
+        },
+        "HOST_CAPABILITIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLGHostCapability"
+          },
+          "description": "which is string-tagged metadata).",
+          "x-flatbuffer-type": "[PLGHostCapability]"
+        },
+        "TIMERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLGTimerSpec"
+          },
+          "description": "Timer declarations for scheduled invocations.",
+          "x-flatbuffer-type": "[PLGTimerSpec]"
+        },
+        "PROTOCOLS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLGProtocolSpec"
+          },
+          "description": "Protocol handler declarations.",
+          "x-flatbuffer-type": "[PLGProtocolSpec]"
+        },
+        "SCHEMAS_USED": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FlatBufferTypeRef"
+          },
+          "description": "FlatBuffer schemas this plugin depends on at the invoke surface.",
+          "x-flatbuffer-type": "[FlatBufferTypeRef]"
+        },
+        "BUILD_ARTIFACTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLGBuildArtifact"
+          },
+          "description": "Build artifacts emitted by the toolchain (WASM, bindings, etc.).",
+          "x-flatbuffer-type": "[PLGBuildArtifact]"
+        },
+        "RUNTIME_TARGETS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Opaque runtime-target tags (e.g. \"wasmtime\", \"wasmedge\", \"browser\").",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "description": "Plugin Manifest - canonical signed storefront and WASM distribution record",
+      "required": [
+        "PLUGIN_ID",
+        "NAME",
+        "VERSION"
+      ]
     }
   },
-  "$ref": "#/definitions/TAB",
+  "$ref": "#/definitions/PLG",
   "x-flatbuffer-root-type": "PLG",
   "x-flatbuffer-file-identifier": "$PLG"
 }

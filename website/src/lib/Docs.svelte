@@ -1886,7 +1886,7 @@ for (const container of containers) {
     padding: 60px 20px;
     background: var(--ui-bg);
     border: 1px solid var(--ui-border);
-    border-radius: 28px;
+    border-radius: var(--radius-sm);
     margin-top: 48px;
   }
 
@@ -1917,7 +1917,7 @@ for (const container of containers) {
     padding: 14px 28px;
     font-size: 16px;
     font-weight: 600;
-    border-radius: 28px;
+    border-radius: var(--radius-sm);
     transition: all 0.2s ease;
     cursor: pointer;
     text-decoration: none;

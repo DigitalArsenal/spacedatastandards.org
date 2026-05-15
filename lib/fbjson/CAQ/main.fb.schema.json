@@ -226,9 +226,173 @@
         }
       },
       "additionalProperties": false
+    },
+    "catalogQueryKind": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "description": "runtime (for example the shared FlatSQL entity collection).",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "ROWS": {
+          "value": 0,
+          "description": "Return matched entity metadata rows."
+        },
+        "ENTITY_INDICES": {
+          "value": 1,
+          "description": "Return only the matched entity indices."
+        },
+        "VISIBILITY_MASK": {
+          "value": 2,
+          "description": "Return a packed visibility mask (one byte per entity)."
+        },
+        "CATALOG_ROW": {
+          "value": 3,
+          "description": "Return a single catalog row by entity index."
+        }
+      }
+    },
+    "CAQRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/catalogQueryKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "ROWS": {
+              "value": 0,
+              "description": "Return matched entity metadata rows."
+            },
+            "ENTITY_INDICES": {
+              "value": 1,
+              "description": "Return only the matched entity indices."
+            },
+            "VISIBILITY_MASK": {
+              "value": 2,
+              "description": "Return a packed visibility mask (one byte per entity)."
+            },
+            "CATALOG_ROW": {
+              "value": 3,
+              "description": "Return a single catalog row by entity index."
+            }
+          }
+        },
+        "QUERY": {
+          "type": "string",
+          "description": "Host-specific query string (for example a FlatSQL or DSL expression).",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTITY_INDEX": {
+          "type": "integer",
+          "description": "Entity index for single-row queries.",
+          "x-flatbuffer-type": "uint"
+        },
+        "MAX_COUNT": {
+          "type": "integer",
+          "description": "Upper bound on the number of rows / indices to return (0 = unbounded).",
+          "x-flatbuffer-type": "uint"
+        },
+        "ENTITY_COUNT": {
+          "type": "integer",
+          "description": "issued, used to size visibility masks.",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "description": "Catalog query discriminator. Callers and host plugins use this enum to\n/// select a query shape for in-memory catalog queries answered by a host\n/// runtime (for example the shared FlatSQL entity collection).\nenum catalogQueryKind : ubyte {\n  /// Return matched entity metadata rows.\n  ROWS,\n  /// Return only the matched entity indices.\n  ENTITY_INDICES,\n  /// Return a packed visibility mask (one byte per entity).\n  VISIBILITY_MASK,\n  /// Return a single catalog row by entity index.\n  CATALOG_ROW\n}\n\n/// Catalog query request payload."
+    },
+    "CAQResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/catalogQueryKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "ROWS": {
+              "value": 0,
+              "description": "Return matched entity metadata rows."
+            },
+            "ENTITY_INDICES": {
+              "value": 1,
+              "description": "Return only the matched entity indices."
+            },
+            "VISIBILITY_MASK": {
+              "value": 2,
+              "description": "Return a packed visibility mask (one byte per entity)."
+            },
+            "CATALOG_ROW": {
+              "value": 3,
+              "description": "Return a single catalog row by entity index."
+            }
+          }
+        },
+        "ROWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ETM"
+          },
+          "description": "Populated when KIND == ROWS.",
+          "x-flatbuffer-type": "[ETM]"
+        },
+        "ENTITY_INDICES": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Populated when KIND == ENTITY_INDICES.",
+          "x-flatbuffer-type": "[uint]"
+        },
+        "MASK": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Populated when KIND == VISIBILITY_MASK (one byte per entity).",
+          "x-flatbuffer-type": "[uint8]"
+        },
+        "VISIBLE_COUNT": {
+          "type": "integer",
+          "description": "Number of visible (masked-in) entities in MASK.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ENTITY_INDEX": {
+          "type": "integer",
+          "description": "Populated when KIND == CATALOG_ROW.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ROW": {
+          "$ref": "#/definitions/ETM",
+          "description": "Single matched row when KIND == CATALOG_ROW.",
+          "x-flatbuffer-type": "ETM"
+        }
+      },
+      "description": "Catalog query result payload."
+    },
+    "CAQ": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "REQUEST": {
+          "$ref": "#/definitions/CAQRequest",
+          "x-flatbuffer-type": "CAQRequest"
+        },
+        "RESULT": {
+          "$ref": "#/definitions/CAQResult",
+          "x-flatbuffer-type": "CAQResult"
+        }
+      },
+      "description": "Catalog query envelope \u2014 carries either a request or a result payload."
     }
   },
-  "$ref": "#/definitions/ETM",
+  "$ref": "#/definitions/CAQ",
   "x-flatbuffer-root-type": "CAQ",
   "x-flatbuffer-file-identifier": "$CAQ"
 }

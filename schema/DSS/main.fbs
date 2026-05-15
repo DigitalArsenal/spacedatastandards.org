@@ -1,0 +1,55 @@
+// Hash: 819a40979c746d4e712fb62c1af54592b0067a6e8166afad9d83ed494bff7a37
+// Version: 1.99.0
+// -----------------------------------END_HEADER
+/// Data Sync Status
+///
+/// Runtime status envelope for a FlatSQL-backed dataset synchronization. This
+/// message is used for worker/backend-to-frontend status transport; record
+/// bytes themselves remain in their original SDS FlatBuffer schema.
+enum dssSyncState : byte {
+  IDLE,
+  SYNCING,
+  SYNCED,
+  CAPPED,
+  ERROR
+}
+
+table DSS {
+  STATUS:dssSyncState = IDLE;
+  SYNCED_ROWS:uint64;
+  TOTAL_ROWS:uint64;
+  LOCAL_ROWS:uint64;
+  PINNED_ROWS:uint64;
+  MISSING_ROWS:uint64;
+  CACHED_BYTES:uint64;
+  PINNED_BYTES:uint64;
+  DOWNLOADED_BYTES:uint64;
+  DOWNLOAD_SPEED_BYTES_PER_SECOND:uint64;
+  MEASURED_WIRE_SPEED_BYTES_PER_SECOND:uint64;
+  HAS_WIRE_SPEED_UTILIZATION:bool;
+  WIRE_SPEED_UTILIZATION:double;
+  WIRE_SPEED_TARGET:double;
+  HAS_WIRE_SPEED_TARGET_MET:bool;
+  WIRE_SPEED_TARGET_MET:bool;
+  MANIFEST_DISCOVERY_MS:uint64;
+  NETWORK_TRANSFER_MS:uint64;
+  VERIFICATION_MS:uint64;
+  FLATSQL_MATERIALIZATION_MS:uint64;
+  PROVIDER_PEER_ID:string;
+  PROVIDER_PUBLIC_KEY:string;
+  SNAPSHOT_ID:string;
+  HEAD:string;
+  CURSOR:string;
+  NEXT_CURSOR:string;
+  HIGH_WATER_MARK:string;
+  QUERY_PROFILE:string;
+  CHUNK_HASH:string;
+  SYNC_PROTOCOL:string;
+  SYNC_FILTER:string;
+  VERIFIED_CHUNKS:[string];
+  LAST_SYNCED_AT:string;
+  ERROR:string;
+}
+
+root_type DSS;
+file_identifier "$DSS";

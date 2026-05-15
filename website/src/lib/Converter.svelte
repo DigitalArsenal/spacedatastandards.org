@@ -1131,7 +1131,9 @@ builder.finish(omm);`
     height: 16px;
     color: var(--text-muted);
     transition: transform 0.2s;
+    display: block;
     flex-shrink: 0;
+    align-self: center;
   }
 
   .dropdown.open .chevron {
