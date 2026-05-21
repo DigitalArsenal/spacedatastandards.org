@@ -1,0 +1,126 @@
+// Hash: 813497646bfa599d98019350ba0f9d2d4c7f78a8dc9c7f72179efe45f3c6e1b4
+// Version: 1.100.0
+// -----------------------------------END_HEADER
+include "../ATM/main.fbs";
+include "../OEM/main.fbs";
+include "../OCM/main.fbs";
+
+/// Hypersonic flight regime classification.
+enum hfcFlowRegime : byte {
+  UNKNOWN,
+  SUPERSONIC,
+  HYPERSONIC,
+  RAREFIED,
+  TRANSITIONAL,
+  CONTINUUM
+}
+
+/// How the hypersonic propagator is coupled to atmosphere providers.
+enum hfcAtmosphereCouplingMode : byte {
+  UNKNOWN,
+  STATIC_PROFILE,
+  BATCH_QUERY,
+  STEP_QUERY,
+  EXTERNAL_PROVIDER
+}
+
+/// Hypersonic Flight Conditions
+table HFC {
+  /// Producer-defined message identifier.
+  MESSAGE_ID:string;
+  /// Message creation date in ISO 8601 UTC format.
+  CREATION_DATE:string;
+  /// Creating agency, application, or service.
+  ORIGINATOR:string;
+  /// Object, vehicle, or trajectory name.
+  OBJECT_NAME:string;
+  /// Time system used by all epochs.
+  TIME_SYSTEM:string;
+  /// Reference frame for state vectors.
+  REF_FRAME:string;
+  /// Start epoch for compact trajectory and condition arrays.
+  START_TIME:string;
+  /// Stop epoch for compact trajectory and condition arrays.
+  STOP_TIME:string;
+  /// Uniform step size in seconds. Use zero when samples are epoch-tagged elsewhere.
+  STEP_SIZE:double;
+  /// Source OEM ephemeris when conditions were evaluated from orbit ephemeris data.
+  SOURCE_OEM:OEM;
+  /// Source OCM trajectory when conditions were evaluated from comprehensive orbit data.
+  SOURCE_OCM:OCM;
+  /// Atmosphere model request used by the propagator.
+  ATMOSPHERE:ATM;
+  /// Atmosphere provider or module identifier.
+  ATMOSPHERE_PROVIDER:string;
+  /// Atmosphere model revision, data release, or configuration hash.
+  ATMOSPHERE_MODEL_REVISION:string;
+  /// Coupling mode used between the propagator and atmosphere provider.
+  ATMOSPHERE_COUPLING:hfcAtmosphereCouplingMode;
+  /// Aerothermal model name.
+  AEROTHERMAL_MODEL:string;
+  /// Gas model name.
+  GAS_MODEL:string;
+  /// Flow regime classification for the sampled trajectory.
+  FLOW_REGIME:hfcFlowRegime;
+  /// Number of position/velocity components per state sample.
+  STATE_VECTOR_SIZE:uint = 6;
+  /// Flat state array [x, y, z, vx, vy, vz, ...] in km and km/s.
+  STATE_DATA:[double];
+  /// Epochs for irregularly sampled condition arrays.
+  SAMPLE_EPOCHS:[string];
+  /// Geodetic latitude samples in degrees.
+  LATITUDE_DEG:[double];
+  /// Geodetic longitude samples in degrees.
+  LONGITUDE_DEG:[double];
+  /// Altitude samples in meters.
+  ALTITUDE_M:[double];
+  /// Inertial or relative speed samples in meters per second.
+  SPEED_M_PER_S:[double];
+  /// Mach number samples.
+  MACH:[double];
+  /// Dynamic pressure samples in pascals.
+  DYNAMIC_PRESSURE_PA:[double];
+  /// Atmospheric density samples in kilograms per cubic meter.
+  DENSITY_KG_PER_M3:[double];
+  /// Atmospheric temperature samples in kelvin.
+  TEMPERATURE_K:[double];
+  /// Static pressure samples in pascals.
+  PRESSURE_PA:[double];
+  /// Speed of sound samples in meters per second.
+  SPEED_OF_SOUND_M_PER_S:[double];
+  /// Knudsen number samples.
+  KNUDSEN_NUMBER:[double];
+  /// Reynolds number samples.
+  REYNOLDS_NUMBER:[double];
+  /// Convective heat flux samples in watts per square meter.
+  CONVECTIVE_HEAT_FLUX_W_PER_M2:[double];
+  /// Radiative heat flux samples in watts per square meter.
+  RADIATIVE_HEAT_FLUX_W_PER_M2:[double];
+  /// Stagnation heat flux samples in watts per square meter.
+  STAGNATION_HEAT_FLUX_W_PER_M2:[double];
+  /// Normal load factor samples in g.
+  LOAD_FACTOR_G:[double];
+  /// Angle of attack samples in degrees.
+  ANGLE_OF_ATTACK_DEG:[double];
+  /// Sideslip angle samples in degrees.
+  SIDESLIP_DEG:[double];
+  /// Bank angle samples in degrees.
+  BANK_ANGLE_DEG:[double];
+  /// Vehicle reference area in square meters.
+  REFERENCE_AREA_M2:double;
+  /// Vehicle reference length in meters.
+  REFERENCE_LENGTH_M:double;
+  /// Nose radius in meters.
+  NOSE_RADIUS_M:double;
+  /// Vehicle mass in kilograms.
+  MASS_KG:double;
+  /// Wall or surface temperature in kelvin.
+  SURFACE_TEMPERATURE_K:double;
+  /// Free-form model assumptions or limitations.
+  ASSUMPTIONS:[string];
+  /// Additional comments.
+  COMMENT:string;
+}
+
+root_type HFC;
+file_identifier "$HFC";

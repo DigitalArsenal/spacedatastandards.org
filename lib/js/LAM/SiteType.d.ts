@@ -1,0 +1,24 @@
+/**
+ * Enum for the type of site
+ */
+export declare enum SiteType {
+    LAUNCH_SITE = 0,
+    OBSERVATION_STATION = 1,
+    HOBBYIST_OBSERVER = 2,
+    RESEARCH_FACILITY = 3,
+    SATELLITE_GROUND_STATION = 4,
+    SPACEPORT = 5,
+    MILITARY_BASE = 6,
+    WEATHER_STATION = 7,
+    ASTRONOMICAL_OBSERVATORY = 8,
+    EDUCATIONAL_INSTITUTE = 9,
+    COMMUNICATION_HUB = 10,
+    POWER_PLANT = 11,
+    INDUSTRIAL_COMPLEX = 12,
+    TRANSPORTATION_HUB = 13,
+    URBAN_AREA = 14,
+    NATIONAL_PARK = 15,
+    HISTORICAL_SITE = 16,
+    OTHER = 17
+}
+//# sourceMappingURL=SiteType.d.ts.map

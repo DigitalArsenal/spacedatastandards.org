@@ -58,109 +58,112 @@ class RecordType(object):
     GRV = 52
     GVH = 53
     HEL = 54
-    HYP = 55
-    IDM = 56
-    ION = 57
-    IRO = 58
-    KMF = 59
-    KML = 60
-    KRF = 61
-    LCC = 62
-    LCF = 63
-    LCH = 64
-    LDM = 65
-    LGR = 66
-    LKS = 67
-    LMO = 68
-    LMR = 69
-    LMS = 70
-    LND = 71
-    LNE = 72
-    LPF = 73
-    LWK = 74
-    MBL = 75
-    MET = 76
-    MFE = 77
-    MNF = 78
-    MNV = 79
-    MPE = 80
-    MSL = 81
-    MST = 82
-    MTI = 83
-    NAV = 84
-    OBD = 85
-    OBT = 86
-    OCM = 87
-    OEM = 88
-    OMM = 89
-    OOA = 90
-    OOB = 91
-    OOD = 92
-    OOE = 93
-    OOI = 94
-    OOL = 95
-    OON = 96
-    OOS = 97
-    OOT = 98
-    OPM = 99
-    OSM = 100
-    PCF = 101
-    PHY = 102
-    PIV = 103
-    PLD = 104
-    PLG = 105
-    PLK = 106
-    PNM = 107
-    PPE = 108
-    PRG = 109
-    PRW = 110
-    PUR = 111
-    RAF = 112
-    RCF = 113
-    RDM = 114
-    RDO = 115
-    REV = 116
-    RFB = 117
-    RFE = 118
-    RFM = 119
-    RFO = 120
-    ROC = 121
-    SAR = 122
-    SCM = 123
-    SDF = 124
-    SDL = 125
-    SDR = 126
-    SEN = 127
-    SEO = 128
-    SEV = 129
-    SHW = 130
-    SIT = 131
-    SKI = 132
-    SNR = 133
-    SNW = 134
-    SOI = 135
-    SON = 136
-    SPP = 137
-    SPW = 138
-    SRI = 139
-    STF = 140
-    STR = 141
-    STV = 142
-    SWR = 143
-    TAB = 144
-    TCF = 145
-    TDM = 146
-    TIM = 147
-    TKG = 148
-    TME = 149
-    TMF = 150
-    TPN = 151
-    TRK = 152
-    TRN = 153
-    VCM = 154
-    WPN = 155
-    WTH = 156
-    XTC = 157
+    HFC = 55
+    HYP = 56
+    IDM = 57
+    ION = 58
+    IRO = 59
+    KMF = 60
+    KML = 61
+    KRF = 62
+    LAM = 63
+    LCC = 64
+    LCF = 65
+    LCH = 66
+    LDM = 67
+    LGR = 68
+    LKS = 69
+    LMO = 70
+    LMR = 71
+    LMS = 72
+    LND = 73
+    LNE = 74
+    LPF = 75
+    LWK = 76
+    MBL = 77
+    MET = 78
+    MFE = 79
+    MNF = 80
+    MNV = 81
+    MPE = 82
+    MSL = 83
+    MST = 84
+    MTI = 85
+    NAV = 86
+    OBD = 87
+    OBT = 88
+    OCM = 89
+    OEM = 90
+    OMM = 91
+    OOA = 92
+    OOB = 93
+    OOD = 94
+    OOE = 95
+    OOI = 96
+    OOL = 97
+    OON = 98
+    OOS = 99
+    OOT = 100
+    OPM = 101
+    OSM = 102
+    PCF = 103
+    PHY = 104
+    PIV = 105
+    PLD = 106
+    PLG = 107
+    PLK = 108
+    PNM = 109
+    PPE = 110
+    PRG = 111
+    PRW = 112
+    PUR = 113
+    RAF = 114
+    RCF = 115
+    RDM = 116
+    RDO = 117
+    REM = 118
+    REV = 119
+    RFB = 120
+    RFE = 121
+    RFM = 122
+    RFO = 123
+    ROC = 124
+    SAR = 125
+    SCM = 126
+    SDF = 127
+    SDL = 128
+    SDR = 129
+    SEN = 130
+    SEO = 131
+    SEV = 132
+    SHW = 133
+    SIT = 134
+    SKI = 135
+    SNR = 136
+    SNW = 137
+    SOI = 138
+    SON = 139
+    SPP = 140
+    SPW = 141
+    SRI = 142
+    STF = 143
+    STR = 144
+    STV = 145
+    SWR = 146
+    TAB = 147
+    TCF = 148
+    TDM = 149
+    TIM = 150
+    TKG = 151
+    TME = 152
+    TMF = 153
+    TPN = 154
+    TRK = 155
+    TRN = 156
+    VCM = 157
+    WPN = 158
+    WTH = 159
+    XTC = 160
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -328,6 +331,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.HEL:
         import HEL
         return HEL.HELT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.HFC:
+        import HFC
+        return HFC.HFCT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.HYP:
         import HYP
         return HYP.HYPT.InitFromBuf(table.Bytes, table.Pos)
@@ -349,6 +355,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.KRF:
         import KRF
         return KRF.KRFT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.LAM:
+        import LAM
+        return LAM.LAMT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.LCC:
         import LCC
         return LCC.LCCT.InitFromBuf(table.Bytes, table.Pos)
@@ -511,6 +520,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.RDO:
         import RDO
         return RDO.RDOT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.REM:
+        import REM
+        return REM.REMT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.REV:
         import REV
         return REV.REVT.InitFromBuf(table.Bytes, table.Pos)

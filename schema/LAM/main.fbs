@@ -1,0 +1,201 @@
+// Hash: 2232ca42f3774e550dff3015b015ac9cc4abc1c59815c98e2e26451c5aa48f85
+// Version: 1.100.0
+// -----------------------------------END_HEADER
+include "../ATM/main.fbs";
+include "../BOV/main.fbs";
+include "../HFC/main.fbs";
+include "../LDM/main.fbs";
+include "../LND/main.fbs";
+include "../LNE/main.fbs";
+include "../MST/main.fbs";
+include "../OCM/main.fbs";
+include "../OEM/main.fbs";
+include "../ROC/main.fbs";
+
+/// Launch-ascent mission phase.
+enum lamMissionPhase : byte {
+  UNKNOWN,
+  PRELAUNCH,
+  LIFTOFF,
+  BOOST,
+  STAGE_SEPARATION,
+  UPPER_STAGE,
+  COAST,
+  ORBIT_INSERTION,
+  ABORT,
+  COMPLETE
+}
+
+/// Launch-ascent constraint status.
+enum lamConstraintStatus : byte {
+  UNKNOWN,
+  NOMINAL,
+  WARNING,
+  VIOLATED,
+  WAIVED
+}
+
+/// Launch-ascent event.
+table lamAscentEvent {
+  /// Event identifier.
+  EVENT_ID:string;
+  /// Event type or name.
+  EVENT_TYPE:string;
+  /// Event epoch in ISO 8601 UTC format.
+  EPOCH:string;
+  /// Time from launch in seconds.
+  TIME_FROM_LAUNCH_S:double;
+  /// Mission phase at the event.
+  PHASE:lamMissionPhase;
+  /// Altitude in meters.
+  ALTITUDE_M:double;
+  /// Speed in meters per second.
+  SPEED_M_PER_S:double;
+  /// Vehicle mass in kilograms.
+  MASS_KG:double;
+  /// Free-form event description.
+  DESCRIPTION:string;
+}
+
+/// Launch-ascent constraint violation.
+table lamConstraintViolation {
+  /// Constraint identifier.
+  CONSTRAINT_ID:string;
+  /// Constraint name.
+  CONSTRAINT_NAME:string;
+  /// Constraint status.
+  STATUS:lamConstraintStatus;
+  /// Epoch of closest approach or violation in ISO 8601 UTC format.
+  EPOCH:string;
+  /// Time from launch in seconds.
+  TIME_FROM_LAUNCH_S:double;
+  /// Observed constraint value.
+  VALUE:double;
+  /// Constraint limit.
+  LIMIT:double;
+  /// Units for value and limit.
+  UNITS:string;
+  /// Free-form description.
+  DESCRIPTION:string;
+}
+
+/// Launch Ascent Message
+table LAM {
+  /// Producer-defined message identifier.
+  MESSAGE_ID:string;
+  /// Message creation date in ISO 8601 UTC format.
+  CREATION_DATE:string;
+  /// Creating agency, application, or service.
+  ORIGINATOR:string;
+  /// Mission name.
+  MISSION_NAME:string;
+  /// Vehicle name.
+  VEHICLE_NAME:string;
+  /// Time system used by all epochs.
+  TIME_SYSTEM:string;
+  /// Reference frame for trajectory data.
+  REF_FRAME:string;
+  /// Launch epoch in ISO 8601 UTC format.
+  LAUNCH_EPOCH:string;
+  /// Evaluation start epoch in ISO 8601 UTC format.
+  START_TIME:string;
+  /// Evaluation stop epoch in ISO 8601 UTC format.
+  STOP_TIME:string;
+  /// Uniform propagation step size in seconds.
+  STEP_SIZE:double;
+  /// Source launch data message.
+  LAUNCH_DATA:LDM;
+  /// Rocket configuration used by the simulation.
+  ROCKET_CONFIGURATION:ROC;
+  /// Launch event records used as source or result context.
+  EVENT_RECORDS:[LNE];
+  /// Launch detection records used as source or result context.
+  DETECTIONS:[LND];
+  /// Boost or missile-track style records used as source or result context.
+  BOOST_TRACKS:[MST];
+  /// Burnout vectors produced or consumed by the ascent simulation.
+  BURN_OUT_VECTORS:[BOV];
+  /// Produced or consumed ephemeris.
+  TRAJECTORY_OEM:OEM;
+  /// Produced or consumed comprehensive trajectory.
+  TRAJECTORY_OCM:OCM;
+  /// Atmosphere model request used by the ascent analysis.
+  ATMOSPHERE:ATM;
+  /// Hypersonic conditions computed along the ascent trajectory.
+  HYPERSONIC_CONDITIONS:HFC;
+  /// Propagator module, engine, or adapter name.
+  PROPAGATOR_NAME:string;
+  /// Propagator module, engine, or adapter version.
+  PROPAGATOR_VERSION:string;
+  /// Guidance model name.
+  GUIDANCE_MODEL:string;
+  /// Thrust model name.
+  THRUST_MODEL:string;
+  /// Aerodynamic model name.
+  AERODYNAMIC_MODEL:string;
+  /// Current or terminal mission phase.
+  PHASE:lamMissionPhase;
+  /// Aggregate constraint status.
+  CONSTRAINT_STATUS:lamConstraintStatus;
+  /// Time from launch samples in seconds.
+  TIME_FROM_LAUNCH_S:[double];
+  /// Geodetic latitude samples in degrees.
+  LATITUDE_DEG:[double];
+  /// Geodetic longitude samples in degrees.
+  LONGITUDE_DEG:[double];
+  /// Altitude samples in meters.
+  ALTITUDE_M:[double];
+  /// Downrange distance samples in meters.
+  DOWNRANGE_M:[double];
+  /// Speed samples in meters per second.
+  SPEED_M_PER_S:[double];
+  /// Mach number samples.
+  MACH:[double];
+  /// Dynamic pressure samples in pascals.
+  DYNAMIC_PRESSURE_PA:[double];
+  /// Heat flux samples in watts per square meter.
+  HEAT_FLUX_W_PER_M2:[double];
+  /// Vehicle mass samples in kilograms.
+  MASS_KG:[double];
+  /// Thrust samples in newtons.
+  THRUST_N:[double];
+  /// Acceleration samples in g.
+  ACCELERATION_G:[double];
+  /// Pitch angle samples in degrees.
+  PITCH_DEG:[double];
+  /// Flight path angle samples in degrees.
+  FLIGHT_PATH_ANGLE_DEG:[double];
+  /// Instantaneous impact point latitude samples in degrees.
+  IIP_LATITUDE_DEG:[double];
+  /// Instantaneous impact point longitude samples in degrees.
+  IIP_LONGITUDE_DEG:[double];
+  /// Maximum dynamic pressure in pascals.
+  MAX_DYNAMIC_PRESSURE_PA:double;
+  /// Epoch of maximum dynamic pressure in ISO 8601 UTC format.
+  MAX_DYNAMIC_PRESSURE_EPOCH:string;
+  /// Maximum heat flux in watts per square meter.
+  MAX_HEAT_FLUX_W_PER_M2:double;
+  /// Epoch of maximum heat flux in ISO 8601 UTC format.
+  MAX_HEAT_FLUX_EPOCH:string;
+  /// Orbit insertion epoch in ISO 8601 UTC format.
+  ORBIT_INSERTION_EPOCH:string;
+  /// Achieved apoapsis in meters.
+  APOAPSIS_M:double;
+  /// Achieved periapsis in meters.
+  PERIAPSIS_M:double;
+  /// Achieved inclination in degrees.
+  INCLINATION_DEG:double;
+  /// Payload injection velocity error in meters per second.
+  PAYLOAD_INJECTION_ERROR_M_PER_S:double;
+  /// Key ascent events.
+  ASCENT_EVENTS:[lamAscentEvent];
+  /// Constraint warnings and violations.
+  CONSTRAINT_VIOLATIONS:[lamConstraintViolation];
+  /// Free-form model assumptions or limitations.
+  ASSUMPTIONS:[string];
+  /// Additional comments.
+  COMMENT:string;
+}
+
+root_type LAM;
+file_identifier "$LAM";

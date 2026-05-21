@@ -158,6 +158,9 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -292,10 +295,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 157;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 160;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 158] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 161] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -351,6 +354,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 158] = [
   RecordType::GRV,
   RecordType::GVH,
   RecordType::HEL,
+  RecordType::HFC,
   RecordType::HYP,
   RecordType::IDM,
   RecordType::ION,
@@ -358,6 +362,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 158] = [
   RecordType::KMF,
   RecordType::KML,
   RecordType::KRF,
+  RecordType::LAM,
   RecordType::LCC,
   RecordType::LCF,
   RecordType::LCH,
@@ -412,6 +417,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 158] = [
   RecordType::RCF,
   RecordType::RDM,
   RecordType::RDO,
+  RecordType::REM,
   RecordType::REV,
   RecordType::RFB,
   RecordType::RFE,
@@ -516,112 +522,115 @@ impl RecordType {
   pub const GRV: Self = Self(52);
   pub const GVH: Self = Self(53);
   pub const HEL: Self = Self(54);
-  pub const HYP: Self = Self(55);
-  pub const IDM: Self = Self(56);
-  pub const ION: Self = Self(57);
-  pub const IRO: Self = Self(58);
-  pub const KMF: Self = Self(59);
-  pub const KML: Self = Self(60);
-  pub const KRF: Self = Self(61);
-  pub const LCC: Self = Self(62);
-  pub const LCF: Self = Self(63);
-  pub const LCH: Self = Self(64);
-  pub const LDM: Self = Self(65);
-  pub const LGR: Self = Self(66);
-  pub const LKS: Self = Self(67);
-  pub const LMO: Self = Self(68);
-  pub const LMR: Self = Self(69);
-  pub const LMS: Self = Self(70);
-  pub const LND: Self = Self(71);
-  pub const LNE: Self = Self(72);
-  pub const LPF: Self = Self(73);
-  pub const LWK: Self = Self(74);
-  pub const MBL: Self = Self(75);
-  pub const MET: Self = Self(76);
-  pub const MFE: Self = Self(77);
-  pub const MNF: Self = Self(78);
-  pub const MNV: Self = Self(79);
-  pub const MPE: Self = Self(80);
-  pub const MSL: Self = Self(81);
-  pub const MST: Self = Self(82);
-  pub const MTI: Self = Self(83);
-  pub const NAV: Self = Self(84);
-  pub const OBD: Self = Self(85);
-  pub const OBT: Self = Self(86);
-  pub const OCM: Self = Self(87);
-  pub const OEM: Self = Self(88);
-  pub const OMM: Self = Self(89);
-  pub const OOA: Self = Self(90);
-  pub const OOB: Self = Self(91);
-  pub const OOD: Self = Self(92);
-  pub const OOE: Self = Self(93);
-  pub const OOI: Self = Self(94);
-  pub const OOL: Self = Self(95);
-  pub const OON: Self = Self(96);
-  pub const OOS: Self = Self(97);
-  pub const OOT: Self = Self(98);
-  pub const OPM: Self = Self(99);
-  pub const OSM: Self = Self(100);
-  pub const PCF: Self = Self(101);
-  pub const PHY: Self = Self(102);
-  pub const PIV: Self = Self(103);
-  pub const PLD: Self = Self(104);
-  pub const PLG: Self = Self(105);
-  pub const PLK: Self = Self(106);
-  pub const PNM: Self = Self(107);
-  pub const PPE: Self = Self(108);
-  pub const PRG: Self = Self(109);
-  pub const PRW: Self = Self(110);
-  pub const PUR: Self = Self(111);
-  pub const RAF: Self = Self(112);
-  pub const RCF: Self = Self(113);
-  pub const RDM: Self = Self(114);
-  pub const RDO: Self = Self(115);
-  pub const REV: Self = Self(116);
-  pub const RFB: Self = Self(117);
-  pub const RFE: Self = Self(118);
-  pub const RFM: Self = Self(119);
-  pub const RFO: Self = Self(120);
-  pub const ROC: Self = Self(121);
-  pub const SAR: Self = Self(122);
-  pub const SCM: Self = Self(123);
-  pub const SDF: Self = Self(124);
-  pub const SDL: Self = Self(125);
-  pub const SDR: Self = Self(126);
-  pub const SEN: Self = Self(127);
-  pub const SEO: Self = Self(128);
-  pub const SEV: Self = Self(129);
-  pub const SHW: Self = Self(130);
-  pub const SIT: Self = Self(131);
-  pub const SKI: Self = Self(132);
-  pub const SNR: Self = Self(133);
-  pub const SNW: Self = Self(134);
-  pub const SOI: Self = Self(135);
-  pub const SON: Self = Self(136);
-  pub const SPP: Self = Self(137);
-  pub const SPW: Self = Self(138);
-  pub const SRI: Self = Self(139);
-  pub const STF: Self = Self(140);
-  pub const STR: Self = Self(141);
-  pub const STV: Self = Self(142);
-  pub const SWR: Self = Self(143);
-  pub const TAB: Self = Self(144);
-  pub const TCF: Self = Self(145);
-  pub const TDM: Self = Self(146);
-  pub const TIM: Self = Self(147);
-  pub const TKG: Self = Self(148);
-  pub const TME: Self = Self(149);
-  pub const TMF: Self = Self(150);
-  pub const TPN: Self = Self(151);
-  pub const TRK: Self = Self(152);
-  pub const TRN: Self = Self(153);
-  pub const VCM: Self = Self(154);
-  pub const WPN: Self = Self(155);
-  pub const WTH: Self = Self(156);
-  pub const XTC: Self = Self(157);
+  pub const HFC: Self = Self(55);
+  pub const HYP: Self = Self(56);
+  pub const IDM: Self = Self(57);
+  pub const ION: Self = Self(58);
+  pub const IRO: Self = Self(59);
+  pub const KMF: Self = Self(60);
+  pub const KML: Self = Self(61);
+  pub const KRF: Self = Self(62);
+  pub const LAM: Self = Self(63);
+  pub const LCC: Self = Self(64);
+  pub const LCF: Self = Self(65);
+  pub const LCH: Self = Self(66);
+  pub const LDM: Self = Self(67);
+  pub const LGR: Self = Self(68);
+  pub const LKS: Self = Self(69);
+  pub const LMO: Self = Self(70);
+  pub const LMR: Self = Self(71);
+  pub const LMS: Self = Self(72);
+  pub const LND: Self = Self(73);
+  pub const LNE: Self = Self(74);
+  pub const LPF: Self = Self(75);
+  pub const LWK: Self = Self(76);
+  pub const MBL: Self = Self(77);
+  pub const MET: Self = Self(78);
+  pub const MFE: Self = Self(79);
+  pub const MNF: Self = Self(80);
+  pub const MNV: Self = Self(81);
+  pub const MPE: Self = Self(82);
+  pub const MSL: Self = Self(83);
+  pub const MST: Self = Self(84);
+  pub const MTI: Self = Self(85);
+  pub const NAV: Self = Self(86);
+  pub const OBD: Self = Self(87);
+  pub const OBT: Self = Self(88);
+  pub const OCM: Self = Self(89);
+  pub const OEM: Self = Self(90);
+  pub const OMM: Self = Self(91);
+  pub const OOA: Self = Self(92);
+  pub const OOB: Self = Self(93);
+  pub const OOD: Self = Self(94);
+  pub const OOE: Self = Self(95);
+  pub const OOI: Self = Self(96);
+  pub const OOL: Self = Self(97);
+  pub const OON: Self = Self(98);
+  pub const OOS: Self = Self(99);
+  pub const OOT: Self = Self(100);
+  pub const OPM: Self = Self(101);
+  pub const OSM: Self = Self(102);
+  pub const PCF: Self = Self(103);
+  pub const PHY: Self = Self(104);
+  pub const PIV: Self = Self(105);
+  pub const PLD: Self = Self(106);
+  pub const PLG: Self = Self(107);
+  pub const PLK: Self = Self(108);
+  pub const PNM: Self = Self(109);
+  pub const PPE: Self = Self(110);
+  pub const PRG: Self = Self(111);
+  pub const PRW: Self = Self(112);
+  pub const PUR: Self = Self(113);
+  pub const RAF: Self = Self(114);
+  pub const RCF: Self = Self(115);
+  pub const RDM: Self = Self(116);
+  pub const RDO: Self = Self(117);
+  pub const REM: Self = Self(118);
+  pub const REV: Self = Self(119);
+  pub const RFB: Self = Self(120);
+  pub const RFE: Self = Self(121);
+  pub const RFM: Self = Self(122);
+  pub const RFO: Self = Self(123);
+  pub const ROC: Self = Self(124);
+  pub const SAR: Self = Self(125);
+  pub const SCM: Self = Self(126);
+  pub const SDF: Self = Self(127);
+  pub const SDL: Self = Self(128);
+  pub const SDR: Self = Self(129);
+  pub const SEN: Self = Self(130);
+  pub const SEO: Self = Self(131);
+  pub const SEV: Self = Self(132);
+  pub const SHW: Self = Self(133);
+  pub const SIT: Self = Self(134);
+  pub const SKI: Self = Self(135);
+  pub const SNR: Self = Self(136);
+  pub const SNW: Self = Self(137);
+  pub const SOI: Self = Self(138);
+  pub const SON: Self = Self(139);
+  pub const SPP: Self = Self(140);
+  pub const SPW: Self = Self(141);
+  pub const SRI: Self = Self(142);
+  pub const STF: Self = Self(143);
+  pub const STR: Self = Self(144);
+  pub const STV: Self = Self(145);
+  pub const SWR: Self = Self(146);
+  pub const TAB: Self = Self(147);
+  pub const TCF: Self = Self(148);
+  pub const TDM: Self = Self(149);
+  pub const TIM: Self = Self(150);
+  pub const TKG: Self = Self(151);
+  pub const TME: Self = Self(152);
+  pub const TMF: Self = Self(153);
+  pub const TPN: Self = Self(154);
+  pub const TRK: Self = Self(155);
+  pub const TRN: Self = Self(156);
+  pub const VCM: Self = Self(157);
+  pub const WPN: Self = Self(158);
+  pub const WTH: Self = Self(159);
+  pub const XTC: Self = Self(160);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 157;
+  pub const ENUM_MAX: u8 = 160;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -678,6 +687,7 @@ impl RecordType {
     Self::GRV,
     Self::GVH,
     Self::HEL,
+    Self::HFC,
     Self::HYP,
     Self::IDM,
     Self::ION,
@@ -685,6 +695,7 @@ impl RecordType {
     Self::KMF,
     Self::KML,
     Self::KRF,
+    Self::LAM,
     Self::LCC,
     Self::LCF,
     Self::LCH,
@@ -739,6 +750,7 @@ impl RecordType {
     Self::RCF,
     Self::RDM,
     Self::RDO,
+    Self::REM,
     Self::REV,
     Self::RFB,
     Self::RFE,
@@ -840,6 +852,7 @@ impl RecordType {
       Self::GRV => Some("GRV"),
       Self::GVH => Some("GVH"),
       Self::HEL => Some("HEL"),
+      Self::HFC => Some("HFC"),
       Self::HYP => Some("HYP"),
       Self::IDM => Some("IDM"),
       Self::ION => Some("ION"),
@@ -847,6 +860,7 @@ impl RecordType {
       Self::KMF => Some("KMF"),
       Self::KML => Some("KML"),
       Self::KRF => Some("KRF"),
+      Self::LAM => Some("LAM"),
       Self::LCC => Some("LCC"),
       Self::LCF => Some("LCF"),
       Self::LCH => Some("LCH"),
@@ -901,6 +915,7 @@ impl RecordType {
       Self::RCF => Some("RCF"),
       Self::RDM => Some("RDM"),
       Self::RDO => Some("RDO"),
+      Self::REM => Some("REM"),
       Self::REV => Some("REV"),
       Self::RFB => Some("RFB"),
       Self::RFE => Some("RFE"),
@@ -1058,6 +1073,7 @@ pub enum RecordTypeT {
   GRV(alloc::boxed::Box<GRVT>),
   GVH(alloc::boxed::Box<GVHT>),
   HEL(alloc::boxed::Box<HELT>),
+  HFC(alloc::boxed::Box<HFCT>),
   HYP(alloc::boxed::Box<HYPT>),
   IDM(alloc::boxed::Box<IDMT>),
   ION(alloc::boxed::Box<IONT>),
@@ -1065,6 +1081,7 @@ pub enum RecordTypeT {
   KMF(alloc::boxed::Box<KMFT>),
   KML(alloc::boxed::Box<KMLT>),
   KRF(alloc::boxed::Box<KRFT>),
+  LAM(alloc::boxed::Box<LAMT>),
   LCC(alloc::boxed::Box<LCCT>),
   LCF(alloc::boxed::Box<LCFT>),
   LCH(alloc::boxed::Box<LCHT>),
@@ -1119,6 +1136,7 @@ pub enum RecordTypeT {
   RCF(alloc::boxed::Box<RCFT>),
   RDM(alloc::boxed::Box<RDMT>),
   RDO(alloc::boxed::Box<RDOT>),
+  REM(alloc::boxed::Box<REMT>),
   REV(alloc::boxed::Box<REVT>),
   RFB(alloc::boxed::Box<RFBT>),
   RFE(alloc::boxed::Box<RFET>),
@@ -1225,6 +1243,7 @@ impl RecordTypeT {
       Self::GRV(_) => RecordType::GRV,
       Self::GVH(_) => RecordType::GVH,
       Self::HEL(_) => RecordType::HEL,
+      Self::HFC(_) => RecordType::HFC,
       Self::HYP(_) => RecordType::HYP,
       Self::IDM(_) => RecordType::IDM,
       Self::ION(_) => RecordType::ION,
@@ -1232,6 +1251,7 @@ impl RecordTypeT {
       Self::KMF(_) => RecordType::KMF,
       Self::KML(_) => RecordType::KML,
       Self::KRF(_) => RecordType::KRF,
+      Self::LAM(_) => RecordType::LAM,
       Self::LCC(_) => RecordType::LCC,
       Self::LCF(_) => RecordType::LCF,
       Self::LCH(_) => RecordType::LCH,
@@ -1286,6 +1306,7 @@ impl RecordTypeT {
       Self::RCF(_) => RecordType::RCF,
       Self::RDM(_) => RecordType::RDM,
       Self::RDO(_) => RecordType::RDO,
+      Self::REM(_) => RecordType::REM,
       Self::REV(_) => RecordType::REV,
       Self::RFB(_) => RecordType::RFB,
       Self::RFE(_) => RecordType::RFE,
@@ -1387,6 +1408,7 @@ impl RecordTypeT {
       Self::GRV(v) => Some(v.pack(fbb).as_union_value()),
       Self::GVH(v) => Some(v.pack(fbb).as_union_value()),
       Self::HEL(v) => Some(v.pack(fbb).as_union_value()),
+      Self::HFC(v) => Some(v.pack(fbb).as_union_value()),
       Self::HYP(v) => Some(v.pack(fbb).as_union_value()),
       Self::IDM(v) => Some(v.pack(fbb).as_union_value()),
       Self::ION(v) => Some(v.pack(fbb).as_union_value()),
@@ -1394,6 +1416,7 @@ impl RecordTypeT {
       Self::KMF(v) => Some(v.pack(fbb).as_union_value()),
       Self::KML(v) => Some(v.pack(fbb).as_union_value()),
       Self::KRF(v) => Some(v.pack(fbb).as_union_value()),
+      Self::LAM(v) => Some(v.pack(fbb).as_union_value()),
       Self::LCC(v) => Some(v.pack(fbb).as_union_value()),
       Self::LCF(v) => Some(v.pack(fbb).as_union_value()),
       Self::LCH(v) => Some(v.pack(fbb).as_union_value()),
@@ -1448,6 +1471,7 @@ impl RecordTypeT {
       Self::RCF(v) => Some(v.pack(fbb).as_union_value()),
       Self::RDM(v) => Some(v.pack(fbb).as_union_value()),
       Self::RDO(v) => Some(v.pack(fbb).as_union_value()),
+      Self::REM(v) => Some(v.pack(fbb).as_union_value()),
       Self::REV(v) => Some(v.pack(fbb).as_union_value()),
       Self::RFB(v) => Some(v.pack(fbb).as_union_value()),
       Self::RFE(v) => Some(v.pack(fbb).as_union_value()),
@@ -2626,6 +2650,27 @@ impl RecordTypeT {
   pub fn as_hel_mut(&mut self) -> Option<&mut HELT> {
     if let Self::HEL(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned HFCT, setting the union to NONE.
+  pub fn take_hfc(&mut self) -> Option<alloc::boxed::Box<HFCT>> {
+    if let Self::HFC(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::HFC(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the HFCT.
+  pub fn as_hfc(&self) -> Option<&HFCT> {
+    if let Self::HFC(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the HFCT.
+  pub fn as_hfc_mut(&mut self) -> Option<&mut HFCT> {
+    if let Self::HFC(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned HYPT, setting the union to NONE.
   pub fn take_hyp(&mut self) -> Option<alloc::boxed::Box<HYPT>> {
     if let Self::HYP(_) = self {
@@ -2772,6 +2817,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the KRFT.
   pub fn as_krf_mut(&mut self) -> Option<&mut KRFT> {
     if let Self::KRF(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned LAMT, setting the union to NONE.
+  pub fn take_lam(&mut self) -> Option<alloc::boxed::Box<LAMT>> {
+    if let Self::LAM(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::LAM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the LAMT.
+  pub fn as_lam(&self) -> Option<&LAMT> {
+    if let Self::LAM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the LAMT.
+  pub fn as_lam_mut(&mut self) -> Option<&mut LAMT> {
+    if let Self::LAM(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned LCCT, setting the union to NONE.
   pub fn take_lcc(&mut self) -> Option<alloc::boxed::Box<LCCT>> {
@@ -3906,6 +3972,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the RDOT.
   pub fn as_rdo_mut(&mut self) -> Option<&mut RDOT> {
     if let Self::RDO(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned REMT, setting the union to NONE.
+  pub fn take_rem(&mut self) -> Option<alloc::boxed::Box<REMT>> {
+    if let Self::REM(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::REM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the REMT.
+  pub fn as_rem(&self) -> Option<&REMT> {
+    if let Self::REM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the REMT.
+  pub fn as_rem_mut(&mut self) -> Option<&mut REMT> {
+    if let Self::REM(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned REVT, setting the union to NONE.
   pub fn take_rev(&mut self) -> Option<alloc::boxed::Box<REVT>> {
@@ -5100,6 +5187,11 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::HEL`.")
             .unpack()
       )),
+      RecordType::HFC => RecordTypeT::HFC(alloc::boxed::Box::new(
+        self.value_as_hfc()
+            .expect("Invalid union table, expected `RecordType::HFC`.")
+            .unpack()
+      )),
       RecordType::HYP => RecordTypeT::HYP(alloc::boxed::Box::new(
         self.value_as_hyp()
             .expect("Invalid union table, expected `RecordType::HYP`.")
@@ -5133,6 +5225,11 @@ impl<'a> Record<'a> {
       RecordType::KRF => RecordTypeT::KRF(alloc::boxed::Box::new(
         self.value_as_krf()
             .expect("Invalid union table, expected `RecordType::KRF`.")
+            .unpack()
+      )),
+      RecordType::LAM => RecordTypeT::LAM(alloc::boxed::Box::new(
+        self.value_as_lam()
+            .expect("Invalid union table, expected `RecordType::LAM`.")
             .unpack()
       )),
       RecordType::LCC => RecordTypeT::LCC(alloc::boxed::Box::new(
@@ -5403,6 +5500,11 @@ impl<'a> Record<'a> {
       RecordType::RDO => RecordTypeT::RDO(alloc::boxed::Box::new(
         self.value_as_rdo()
             .expect("Invalid union table, expected `RecordType::RDO`.")
+            .unpack()
+      )),
+      RecordType::REM => RecordTypeT::REM(alloc::boxed::Box::new(
+        self.value_as_rem()
+            .expect("Invalid union table, expected `RecordType::REM`.")
             .unpack()
       )),
       RecordType::REV => RecordTypeT::REV(alloc::boxed::Box::new(
@@ -6461,6 +6563,21 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_hfc(&self) -> Option<HFC<'a>> {
+    if self.value_type() == RecordType::HFC {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { HFC::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_hyp(&self) -> Option<HYP<'a>> {
     if self.value_type() == RecordType::HYP {
       self.value().map(|t| {
@@ -6558,6 +6675,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { KRF::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_lam(&self) -> Option<LAM<'a>> {
+    if self.value_type() == RecordType::LAM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { LAM::init_from_table(t) }
      })
     } else {
       None
@@ -7376,6 +7508,21 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_rem(&self) -> Option<REM<'a>> {
+    if self.value_type() == RecordType::REM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { REM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_rev(&self) -> Option<REV<'a>> {
     if self.value_type() == RecordType::REV {
       self.value().map(|t| {
@@ -8068,6 +8215,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::GRV => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<GRV>>("RecordType::GRV", pos),
           RecordType::GVH => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<GVH>>("RecordType::GVH", pos),
           RecordType::HEL => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<HEL>>("RecordType::HEL", pos),
+          RecordType::HFC => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<HFC>>("RecordType::HFC", pos),
           RecordType::HYP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<HYP>>("RecordType::HYP", pos),
           RecordType::IDM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<IDM>>("RecordType::IDM", pos),
           RecordType::ION => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<ION>>("RecordType::ION", pos),
@@ -8075,6 +8223,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::KMF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<KMF>>("RecordType::KMF", pos),
           RecordType::KML => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<KML>>("RecordType::KML", pos),
           RecordType::KRF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<KRF>>("RecordType::KRF", pos),
+          RecordType::LAM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<LAM>>("RecordType::LAM", pos),
           RecordType::LCC => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<LCC>>("RecordType::LCC", pos),
           RecordType::LCF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<LCF>>("RecordType::LCF", pos),
           RecordType::LCH => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<LCH>>("RecordType::LCH", pos),
@@ -8129,6 +8278,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::RCF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RCF>>("RecordType::RCF", pos),
           RecordType::RDM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RDM>>("RecordType::RDM", pos),
           RecordType::RDO => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RDO>>("RecordType::RDO", pos),
+          RecordType::REM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<REM>>("RecordType::REM", pos),
           RecordType::REV => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<REV>>("RecordType::REV", pos),
           RecordType::RFB => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RFB>>("RecordType::RFB", pos),
           RecordType::RFE => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RFE>>("RecordType::RFE", pos),
@@ -8610,6 +8760,13 @@ impl ::core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::HFC => {
+          if let Some(x) = self.value_as_hfc() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::HYP => {
           if let Some(x) = self.value_as_hyp() {
             ds.field("value", &x)
@@ -8654,6 +8811,13 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::KRF => {
           if let Some(x) = self.value_as_krf() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::LAM => {
+          if let Some(x) = self.value_as_lam() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
@@ -9032,6 +9196,13 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::RDO => {
           if let Some(x) = self.value_as_rdo() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::REM => {
+          if let Some(x) = self.value_as_rem() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

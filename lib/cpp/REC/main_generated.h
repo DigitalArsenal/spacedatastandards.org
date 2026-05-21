@@ -170,6 +170,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -233,114 +236,117 @@ enum RecordType : uint8_t {
   RecordType_GRV = 52,
   RecordType_GVH = 53,
   RecordType_HEL = 54,
-  RecordType_HYP = 55,
-  RecordType_IDM = 56,
-  RecordType_ION = 57,
-  RecordType_IRO = 58,
-  RecordType_KMF = 59,
-  RecordType_KML = 60,
-  RecordType_KRF = 61,
-  RecordType_LCC = 62,
-  RecordType_LCF = 63,
-  RecordType_LCH = 64,
-  RecordType_LDM = 65,
-  RecordType_LGR = 66,
-  RecordType_LKS = 67,
-  RecordType_LMO = 68,
-  RecordType_LMR = 69,
-  RecordType_LMS = 70,
-  RecordType_LND = 71,
-  RecordType_LNE = 72,
-  RecordType_LPF = 73,
-  RecordType_LWK = 74,
-  RecordType_MBL = 75,
-  RecordType_MET = 76,
-  RecordType_MFE = 77,
-  RecordType_MNF = 78,
-  RecordType_MNV = 79,
-  RecordType_MPE = 80,
-  RecordType_MSL = 81,
-  RecordType_MST = 82,
-  RecordType_MTI = 83,
-  RecordType_NAV = 84,
-  RecordType_OBD = 85,
-  RecordType_OBT = 86,
-  RecordType_OCM = 87,
-  RecordType_OEM = 88,
-  RecordType_OMM = 89,
-  RecordType_OOA = 90,
-  RecordType_OOB = 91,
-  RecordType_OOD = 92,
-  RecordType_OOE = 93,
-  RecordType_OOI = 94,
-  RecordType_OOL = 95,
-  RecordType_OON = 96,
-  RecordType_OOS = 97,
-  RecordType_OOT = 98,
-  RecordType_OPM = 99,
-  RecordType_OSM = 100,
-  RecordType_PCF = 101,
-  RecordType_PHY = 102,
-  RecordType_PIV = 103,
-  RecordType_PLD = 104,
-  RecordType_PLG = 105,
-  RecordType_PLK = 106,
-  RecordType_PNM = 107,
-  RecordType_PPE = 108,
-  RecordType_PRG = 109,
-  RecordType_PRW = 110,
-  RecordType_PUR = 111,
-  RecordType_RAF = 112,
-  RecordType_RCF = 113,
-  RecordType_RDM = 114,
-  RecordType_RDO = 115,
-  RecordType_REV = 116,
-  RecordType_RFB = 117,
-  RecordType_RFE = 118,
-  RecordType_RFM = 119,
-  RecordType_RFO = 120,
-  RecordType_ROC = 121,
-  RecordType_SAR = 122,
-  RecordType_SCM = 123,
-  RecordType_SDF = 124,
-  RecordType_SDL = 125,
-  RecordType_SDR = 126,
-  RecordType_SEN = 127,
-  RecordType_SEO = 128,
-  RecordType_SEV = 129,
-  RecordType_SHW = 130,
-  RecordType_SIT = 131,
-  RecordType_SKI = 132,
-  RecordType_SNR = 133,
-  RecordType_SNW = 134,
-  RecordType_SOI = 135,
-  RecordType_SON = 136,
-  RecordType_SPP = 137,
-  RecordType_SPW = 138,
-  RecordType_SRI = 139,
-  RecordType_STF = 140,
-  RecordType_STR = 141,
-  RecordType_STV = 142,
-  RecordType_SWR = 143,
-  RecordType_TAB = 144,
-  RecordType_TCF = 145,
-  RecordType_TDM = 146,
-  RecordType_TIM = 147,
-  RecordType_TKG = 148,
-  RecordType_TME = 149,
-  RecordType_TMF = 150,
-  RecordType_TPN = 151,
-  RecordType_TRK = 152,
-  RecordType_TRN = 153,
-  RecordType_VCM = 154,
-  RecordType_WPN = 155,
-  RecordType_WTH = 156,
-  RecordType_XTC = 157,
+  RecordType_HFC = 55,
+  RecordType_HYP = 56,
+  RecordType_IDM = 57,
+  RecordType_ION = 58,
+  RecordType_IRO = 59,
+  RecordType_KMF = 60,
+  RecordType_KML = 61,
+  RecordType_KRF = 62,
+  RecordType_LAM = 63,
+  RecordType_LCC = 64,
+  RecordType_LCF = 65,
+  RecordType_LCH = 66,
+  RecordType_LDM = 67,
+  RecordType_LGR = 68,
+  RecordType_LKS = 69,
+  RecordType_LMO = 70,
+  RecordType_LMR = 71,
+  RecordType_LMS = 72,
+  RecordType_LND = 73,
+  RecordType_LNE = 74,
+  RecordType_LPF = 75,
+  RecordType_LWK = 76,
+  RecordType_MBL = 77,
+  RecordType_MET = 78,
+  RecordType_MFE = 79,
+  RecordType_MNF = 80,
+  RecordType_MNV = 81,
+  RecordType_MPE = 82,
+  RecordType_MSL = 83,
+  RecordType_MST = 84,
+  RecordType_MTI = 85,
+  RecordType_NAV = 86,
+  RecordType_OBD = 87,
+  RecordType_OBT = 88,
+  RecordType_OCM = 89,
+  RecordType_OEM = 90,
+  RecordType_OMM = 91,
+  RecordType_OOA = 92,
+  RecordType_OOB = 93,
+  RecordType_OOD = 94,
+  RecordType_OOE = 95,
+  RecordType_OOI = 96,
+  RecordType_OOL = 97,
+  RecordType_OON = 98,
+  RecordType_OOS = 99,
+  RecordType_OOT = 100,
+  RecordType_OPM = 101,
+  RecordType_OSM = 102,
+  RecordType_PCF = 103,
+  RecordType_PHY = 104,
+  RecordType_PIV = 105,
+  RecordType_PLD = 106,
+  RecordType_PLG = 107,
+  RecordType_PLK = 108,
+  RecordType_PNM = 109,
+  RecordType_PPE = 110,
+  RecordType_PRG = 111,
+  RecordType_PRW = 112,
+  RecordType_PUR = 113,
+  RecordType_RAF = 114,
+  RecordType_RCF = 115,
+  RecordType_RDM = 116,
+  RecordType_RDO = 117,
+  RecordType_REM = 118,
+  RecordType_REV = 119,
+  RecordType_RFB = 120,
+  RecordType_RFE = 121,
+  RecordType_RFM = 122,
+  RecordType_RFO = 123,
+  RecordType_ROC = 124,
+  RecordType_SAR = 125,
+  RecordType_SCM = 126,
+  RecordType_SDF = 127,
+  RecordType_SDL = 128,
+  RecordType_SDR = 129,
+  RecordType_SEN = 130,
+  RecordType_SEO = 131,
+  RecordType_SEV = 132,
+  RecordType_SHW = 133,
+  RecordType_SIT = 134,
+  RecordType_SKI = 135,
+  RecordType_SNR = 136,
+  RecordType_SNW = 137,
+  RecordType_SOI = 138,
+  RecordType_SON = 139,
+  RecordType_SPP = 140,
+  RecordType_SPW = 141,
+  RecordType_SRI = 142,
+  RecordType_STF = 143,
+  RecordType_STR = 144,
+  RecordType_STV = 145,
+  RecordType_SWR = 146,
+  RecordType_TAB = 147,
+  RecordType_TCF = 148,
+  RecordType_TDM = 149,
+  RecordType_TIM = 150,
+  RecordType_TKG = 151,
+  RecordType_TME = 152,
+  RecordType_TMF = 153,
+  RecordType_TPN = 154,
+  RecordType_TRK = 155,
+  RecordType_TRN = 156,
+  RecordType_VCM = 157,
+  RecordType_WPN = 158,
+  RecordType_WTH = 159,
+  RecordType_XTC = 160,
   RecordType_MIN = RecordType_NONE,
   RecordType_MAX = RecordType_XTC
 };
 
-inline const RecordType (&EnumValuesRecordType())[158] {
+inline const RecordType (&EnumValuesRecordType())[161] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -397,6 +403,7 @@ inline const RecordType (&EnumValuesRecordType())[158] {
     RecordType_GRV,
     RecordType_GVH,
     RecordType_HEL,
+    RecordType_HFC,
     RecordType_HYP,
     RecordType_IDM,
     RecordType_ION,
@@ -404,6 +411,7 @@ inline const RecordType (&EnumValuesRecordType())[158] {
     RecordType_KMF,
     RecordType_KML,
     RecordType_KRF,
+    RecordType_LAM,
     RecordType_LCC,
     RecordType_LCF,
     RecordType_LCH,
@@ -458,6 +466,7 @@ inline const RecordType (&EnumValuesRecordType())[158] {
     RecordType_RCF,
     RecordType_RDM,
     RecordType_RDO,
+    RecordType_REM,
     RecordType_REV,
     RecordType_RFB,
     RecordType_RFE,
@@ -505,7 +514,7 @@ inline const RecordType (&EnumValuesRecordType())[158] {
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[159] = {
+  static const char * const names[162] = {
     "NONE",
     "ACL",
     "ACM",
@@ -561,6 +570,7 @@ inline const char * const *EnumNamesRecordType() {
     "GRV",
     "GVH",
     "HEL",
+    "HFC",
     "HYP",
     "IDM",
     "ION",
@@ -568,6 +578,7 @@ inline const char * const *EnumNamesRecordType() {
     "KMF",
     "KML",
     "KRF",
+    "LAM",
     "LCC",
     "LCF",
     "LCH",
@@ -622,6 +633,7 @@ inline const char * const *EnumNamesRecordType() {
     "RCF",
     "RDM",
     "RDO",
+    "REM",
     "REV",
     "RFB",
     "RFE",
@@ -895,6 +907,10 @@ template<> struct RecordTypeTraits<HEL> {
   static const RecordType enum_value = RecordType_HEL;
 };
 
+template<> struct RecordTypeTraits<HFC> {
+  static const RecordType enum_value = RecordType_HFC;
+};
+
 template<> struct RecordTypeTraits<HYP> {
   static const RecordType enum_value = RecordType_HYP;
 };
@@ -921,6 +937,10 @@ template<> struct RecordTypeTraits<KML> {
 
 template<> struct RecordTypeTraits<KRF> {
   static const RecordType enum_value = RecordType_KRF;
+};
+
+template<> struct RecordTypeTraits<LAM> {
+  static const RecordType enum_value = RecordType_LAM;
 };
 
 template<> struct RecordTypeTraits<LCC> {
@@ -1137,6 +1157,10 @@ template<> struct RecordTypeTraits<RDM> {
 
 template<> struct RecordTypeTraits<RDO> {
   static const RecordType enum_value = RecordType_RDO;
+};
+
+template<> struct RecordTypeTraits<REM> {
+  static const RecordType enum_value = RecordType_REM;
 };
 
 template<> struct RecordTypeTraits<REV> {
@@ -1490,6 +1514,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const HEL *value_as_HEL() const {
     return value_type() == RecordType_HEL ? static_cast<const HEL *>(value()) : nullptr;
   }
+  const HFC *value_as_HFC() const {
+    return value_type() == RecordType_HFC ? static_cast<const HFC *>(value()) : nullptr;
+  }
   const HYP *value_as_HYP() const {
     return value_type() == RecordType_HYP ? static_cast<const HYP *>(value()) : nullptr;
   }
@@ -1510,6 +1537,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const KRF *value_as_KRF() const {
     return value_type() == RecordType_KRF ? static_cast<const KRF *>(value()) : nullptr;
+  }
+  const LAM *value_as_LAM() const {
+    return value_type() == RecordType_LAM ? static_cast<const LAM *>(value()) : nullptr;
   }
   const LCC *value_as_LCC() const {
     return value_type() == RecordType_LCC ? static_cast<const LCC *>(value()) : nullptr;
@@ -1672,6 +1702,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const RDO *value_as_RDO() const {
     return value_type() == RecordType_RDO ? static_cast<const RDO *>(value()) : nullptr;
+  }
+  const REM *value_as_REM() const {
+    return value_type() == RecordType_REM ? static_cast<const REM *>(value()) : nullptr;
   }
   const REV *value_as_REV() const {
     return value_type() == RecordType_REV ? static_cast<const REV *>(value()) : nullptr;
@@ -2031,6 +2064,10 @@ template<> inline const HEL *Record::value_as<HEL>() const {
   return value_as_HEL();
 }
 
+template<> inline const HFC *Record::value_as<HFC>() const {
+  return value_as_HFC();
+}
+
 template<> inline const HYP *Record::value_as<HYP>() const {
   return value_as_HYP();
 }
@@ -2057,6 +2094,10 @@ template<> inline const KML *Record::value_as<KML>() const {
 
 template<> inline const KRF *Record::value_as<KRF>() const {
   return value_as_KRF();
+}
+
+template<> inline const LAM *Record::value_as<LAM>() const {
+  return value_as_LAM();
 }
 
 template<> inline const LCC *Record::value_as<LCC>() const {
@@ -2273,6 +2314,10 @@ template<> inline const RDM *Record::value_as<RDM>() const {
 
 template<> inline const RDO *Record::value_as<RDO>() const {
   return value_as_RDO();
+}
+
+template<> inline const REM *Record::value_as<REM>() const {
+  return value_as_REM();
 }
 
 template<> inline const REV *Record::value_as<REV>() const {
@@ -2784,6 +2829,10 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
       auto ptr = reinterpret_cast<const HEL *>(obj);
       return verifier.VerifyTable(ptr);
     }
+    case RecordType_HFC: {
+      auto ptr = reinterpret_cast<const HFC *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
     case RecordType_HYP: {
       auto ptr = reinterpret_cast<const HYP *>(obj);
       return verifier.VerifyTable(ptr);
@@ -2810,6 +2859,10 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_KRF: {
       auto ptr = reinterpret_cast<const KRF *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_LAM: {
+      auto ptr = reinterpret_cast<const LAM *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case RecordType_LCC: {
@@ -3026,6 +3079,10 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_RDO: {
       auto ptr = reinterpret_cast<const RDO *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_REM: {
+      auto ptr = reinterpret_cast<const REM *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case RecordType_REV: {

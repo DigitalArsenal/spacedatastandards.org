@@ -74,6 +74,7 @@ public struct Record : IFlatbufferObject
   public GRV valueAsGRV() { return value<GRV>().Value; }
   public GVH valueAsGVH() { return value<GVH>().Value; }
   public HEL valueAsHEL() { return value<HEL>().Value; }
+  public HFC valueAsHFC() { return value<HFC>().Value; }
   public HYP valueAsHYP() { return value<HYP>().Value; }
   public IDM valueAsIDM() { return value<IDM>().Value; }
   public ION valueAsION() { return value<ION>().Value; }
@@ -81,6 +82,7 @@ public struct Record : IFlatbufferObject
   public KMF valueAsKMF() { return value<KMF>().Value; }
   public KML valueAsKML() { return value<KML>().Value; }
   public KRF valueAsKRF() { return value<KRF>().Value; }
+  public LAM valueAsLAM() { return value<LAM>().Value; }
   public LCC valueAsLCC() { return value<LCC>().Value; }
   public LCF valueAsLCF() { return value<LCF>().Value; }
   public LCH valueAsLCH() { return value<LCH>().Value; }
@@ -135,6 +137,7 @@ public struct Record : IFlatbufferObject
   public RCF valueAsRCF() { return value<RCF>().Value; }
   public RDM valueAsRDM() { return value<RDM>().Value; }
   public RDO valueAsRDO() { return value<RDO>().Value; }
+  public REM valueAsREM() { return value<REM>().Value; }
   public REV valueAsREV() { return value<REV>().Value; }
   public RFB valueAsRFB() { return value<RFB>().Value; }
   public RFE valueAsRFE() { return value<RFE>().Value; }
@@ -377,6 +380,9 @@ public struct Record : IFlatbufferObject
       case RecordType.HEL:
         _o.value.Value = this.value<HEL>().HasValue ? this.value<HEL>().Value.UnPack() : null;
         break;
+      case RecordType.HFC:
+        _o.value.Value = this.value<HFC>().HasValue ? this.value<HFC>().Value.UnPack() : null;
+        break;
       case RecordType.HYP:
         _o.value.Value = this.value<HYP>().HasValue ? this.value<HYP>().Value.UnPack() : null;
         break;
@@ -397,6 +403,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.KRF:
         _o.value.Value = this.value<KRF>().HasValue ? this.value<KRF>().Value.UnPack() : null;
+        break;
+      case RecordType.LAM:
+        _o.value.Value = this.value<LAM>().HasValue ? this.value<LAM>().Value.UnPack() : null;
         break;
       case RecordType.LCC:
         _o.value.Value = this.value<LCC>().HasValue ? this.value<LCC>().Value.UnPack() : null;
@@ -559,6 +568,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.RDO:
         _o.value.Value = this.value<RDO>().HasValue ? this.value<RDO>().Value.UnPack() : null;
+        break;
+      case RecordType.REM:
+        _o.value.Value = this.value<REM>().HasValue ? this.value<REM>().Value.UnPack() : null;
         break;
       case RecordType.REV:
         _o.value.Value = this.value<REV>().HasValue ? this.value<REV>().Value.UnPack() : null;
