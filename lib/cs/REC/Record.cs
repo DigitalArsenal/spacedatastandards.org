@@ -23,6 +23,7 @@ public struct Record : IFlatbufferObject
   public ACL valueAsACL() { return value<ACL>().Value; }
   public ACM valueAsACM() { return value<ACM>().Value; }
   public ACR valueAsACR() { return value<ACR>().Value; }
+  public ACW valueAsACW() { return value<ACW>().Value; }
   public AEM valueAsAEM() { return value<AEM>().Value; }
   public ANI valueAsANI() { return value<ANI>().Value; }
   public AOF valueAsAOF() { return value<AOF>().Value; }
@@ -35,6 +36,7 @@ public struct Record : IFlatbufferObject
   public BEM valueAsBEM() { return value<BEM>().Value; }
   public BMC valueAsBMC() { return value<BMC>().Value; }
   public BOV valueAsBOV() { return value<BOV>().Value; }
+  public BSP valueAsBSP() { return value<BSP>().Value; }
   public BUS valueAsBUS() { return value<BUS>().Value; }
   public CAQ valueAsCAQ() { return value<CAQ>().Value; }
   public CAT valueAsCAT() { return value<CAT>().Value; }
@@ -66,6 +68,7 @@ public struct Record : IFlatbufferObject
   public EWR valueAsEWR() { return value<EWR>().Value; }
   public FCS valueAsFCS() { return value<FCS>().Value; }
   public FPC valueAsFPC() { return value<FPC>().Value; }
+  public FRM valueAsFRM() { return value<FRM>().Value; }
   public GDI valueAsGDI() { return value<GDI>().Value; }
   public GEO valueAsGEO() { return value<GEO>().Value; }
   public GJN valueAsGJN() { return value<GJN>().Value; }
@@ -106,6 +109,7 @@ public struct Record : IFlatbufferObject
   public MST valueAsMST() { return value<MST>().Value; }
   public MTI valueAsMTI() { return value<MTI>().Value; }
   public NAV valueAsNAV() { return value<NAV>().Value; }
+  public NUM valueAsNUM() { return value<NUM>().Value; }
   public OBD valueAsOBD() { return value<OBD>().Value; }
   public OBT valueAsOBT() { return value<OBT>().Value; }
   public OCM valueAsOCM() { return value<OCM>().Value; }
@@ -134,6 +138,7 @@ public struct Record : IFlatbufferObject
   public PRW valueAsPRW() { return value<PRW>().Value; }
   public PUR valueAsPUR() { return value<PUR>().Value; }
   public RAF valueAsRAF() { return value<RAF>().Value; }
+  public RBK valueAsRBK() { return value<RBK>().Value; }
   public RCF valueAsRCF() { return value<RCF>().Value; }
   public RDM valueAsRDM() { return value<RDM>().Value; }
   public RDO valueAsRDO() { return value<RDO>().Value; }
@@ -180,6 +185,7 @@ public struct Record : IFlatbufferObject
   public WPN valueAsWPN() { return value<WPN>().Value; }
   public WTH valueAsWTH() { return value<WTH>().Value; }
   public XTC valueAsXTC() { return value<XTC>().Value; }
+  public SCV valueAsSCV() { return value<SCV>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -227,6 +233,9 @@ public struct Record : IFlatbufferObject
       case RecordType.ACR:
         _o.value.Value = this.value<ACR>().HasValue ? this.value<ACR>().Value.UnPack() : null;
         break;
+      case RecordType.ACW:
+        _o.value.Value = this.value<ACW>().HasValue ? this.value<ACW>().Value.UnPack() : null;
+        break;
       case RecordType.AEM:
         _o.value.Value = this.value<AEM>().HasValue ? this.value<AEM>().Value.UnPack() : null;
         break;
@@ -262,6 +271,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.BOV:
         _o.value.Value = this.value<BOV>().HasValue ? this.value<BOV>().Value.UnPack() : null;
+        break;
+      case RecordType.BSP:
+        _o.value.Value = this.value<BSP>().HasValue ? this.value<BSP>().Value.UnPack() : null;
         break;
       case RecordType.BUS:
         _o.value.Value = this.value<BUS>().HasValue ? this.value<BUS>().Value.UnPack() : null;
@@ -355,6 +367,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.FPC:
         _o.value.Value = this.value<FPC>().HasValue ? this.value<FPC>().Value.UnPack() : null;
+        break;
+      case RecordType.FRM:
+        _o.value.Value = this.value<FRM>().HasValue ? this.value<FRM>().Value.UnPack() : null;
         break;
       case RecordType.GDI:
         _o.value.Value = this.value<GDI>().HasValue ? this.value<GDI>().Value.UnPack() : null;
@@ -476,6 +491,9 @@ public struct Record : IFlatbufferObject
       case RecordType.NAV:
         _o.value.Value = this.value<NAV>().HasValue ? this.value<NAV>().Value.UnPack() : null;
         break;
+      case RecordType.NUM:
+        _o.value.Value = this.value<NUM>().HasValue ? this.value<NUM>().Value.UnPack() : null;
+        break;
       case RecordType.OBD:
         _o.value.Value = this.value<OBD>().HasValue ? this.value<OBD>().Value.UnPack() : null;
         break;
@@ -559,6 +577,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.RAF:
         _o.value.Value = this.value<RAF>().HasValue ? this.value<RAF>().Value.UnPack() : null;
+        break;
+      case RecordType.RBK:
+        _o.value.Value = this.value<RBK>().HasValue ? this.value<RBK>().Value.UnPack() : null;
         break;
       case RecordType.RCF:
         _o.value.Value = this.value<RCF>().HasValue ? this.value<RCF>().Value.UnPack() : null;
@@ -697,6 +718,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.XTC:
         _o.value.Value = this.value<XTC>().HasValue ? this.value<XTC>().Value.UnPack() : null;
+        break;
+      case RecordType.SCV:
+        _o.value.Value = this.value<SCV>().HasValue ? this.value<SCV>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

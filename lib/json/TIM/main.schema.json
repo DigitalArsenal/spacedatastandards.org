@@ -3,14 +3,191 @@
   "definitions": {
     "timingStandard" : {
       "type" : "string",
-      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC"]
+      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC", "GLONASS", "GST", "QZSS", "BDT", "NAVIC", "SBAS"]
+    },
+    "timEpochRepresentation" : {
+      "type" : "string",
+      "enum": ["JULIAN_DATE", "MODIFIED_JULIAN_DATE", "UNIX_SECONDS", "ISO8601", "GPS_SECONDS", "GNSS_WEEK_SECONDS", "CCSDS_TIME_CODE", "MISSION_ELAPSED_SECONDS"]
+    },
+    "timCcsdsTimeCodeKind" : {
+      "type" : "string",
+      "enum": ["NONE", "UNSEGMENTED", "DAY_SEGMENTED", "CALENDAR_SEGMENTED"]
+    },
+    "timConversionStatus" : {
+      "type" : "string",
+      "enum": ["OK", "INVALID_INPUT", "UNSUPPORTED_TIME_SYSTEM", "LEAP_SECOND_DATA_REQUIRED", "EOP_DATA_REQUIRED", "OUT_OF_RANGE"]
+    },
+    "TIMCcsdsTimeCode" : {
+      "type" : "object",
+      "description" : "CCSDS time-code payload and preamble metadata.",
+      "properties" : {
+        "CODE_KIND" : {
+                "$ref" : "#/definitions/timCcsdsTimeCodeKind",
+                "description" : "CCSDS time-code family."
+              },
+        "PREAMBLE_FIELD1" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "First CCSDS preamble field octet."
+              },
+        "PREAMBLE_FIELD2" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Second CCSDS preamble field octet; ignored when not signaled by preamble 1."
+              },
+        "TIME_FIELD" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Raw CCSDS time field octets."
+              },
+        "AGENCY_DEFINED_EPOCH_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional agency-defined epoch timestamp for agency epoch time codes."
+              },
+        "CCSDS_EPOCH_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMInstant" : {
+      "type" : "object",
+      "description" : "Numeric or textual instant tagged with its time system and representation.",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Time system for this instant."
+              },
+        "EPOCH_FORMAT" : {
+                "$ref" : "#/definitions/timEpochRepresentation",
+                "description" : "Interpretation of JULIAN_DATE, SECONDS, and ISO8601."
+              },
+        "JULIAN_DATE" : {
+                "type" : "number",
+                "description" : "Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT."
+              },
+        "SECONDS" : {
+                "type" : "number",
+                "description" : "Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS."
+              },
+        "ISO8601" : {
+                "type" : "string",
+                "description" : "ISO 8601 timestamp text for ISO8601 inputs or display outputs."
+              },
+        "SUBSECOND_NANOS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Additional nanoseconds beyond the fractional scalar/text value."
+              },
+        "EPOCH_LABEL" : {
+                "type" : "string",
+                "description" : "Optional application-defined epoch label for MET, MRT, or SCLK values."
+              },
+        "GNSS_WEEK" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS."
+              },
+        "HAS_GNSS_ROLLOVER_REFERENCE" : {
+                "type" : "boolean",
+                "description" : "Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied."
+              },
+        "GNSS_ROLLOVER_REFERENCE_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional Orekit-style GNSS week rollover reference timestamp."
+              },
+        "CCSDS_TIME_CODE" : {
+                "$ref" : "#/definitions/TIMCcsdsTimeCode",
+                "description" : "CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMConversionRequest" : {
+      "type" : "object",
+      "description" : "Request to convert one instant into another time system/representation.",
+      "properties" : {
+        "SOURCE" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Source instant to convert."
+              },
+        "TARGET_TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Target time system."
+              },
+        "TARGET_EPOCH_FORMAT" : {
+                "$ref" : "#/definitions/timEpochRepresentation",
+                "description" : "Preferred target representation."
+              },
+        "TAI_MINUS_UTC_SECONDS" : {
+                "type" : "number",
+                "description" : "Optional TAI-UTC override in seconds for the source instant."
+              },
+        "HAS_TAI_MINUS_UTC" : {
+                "type" : "boolean",
+                "description" : "Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data."
+              },
+        "DUT1_SECONDS" : {
+                "type" : "number",
+                "description" : "Optional UT1-UTC override in seconds for UT1 conversions."
+              },
+        "HAS_DUT1" : {
+                "type" : "boolean",
+                "description" : "Whether DUT1_SECONDS should override runtime Earth-orientation data."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Optional caller trace/correlation identifier."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMConversionResult" : {
+      "type" : "object",
+      "description" : "Result of a time conversion request.",
+      "properties" : {
+        "SOURCE" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Original source instant."
+              },
+        "TARGET" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Converted target instant."
+              },
+        "DELTA_SECONDS" : {
+                "type" : "number",
+                "description" : "Target minus source offset in SI seconds for the requested conversion."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/timConversionStatus",
+                "description" : "Conversion status."
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string",
+                "description" : "Optional error detail when STATUS is not OK."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Caller trace/correlation identifier copied from the request when present."
+              }
+      },
+      "additionalProperties" : false
     },
     "TIM" : {
       "type" : "object",
-      "description" : "Time System",
+      "description" : "Time System and time-conversion envelope.",
       "properties" : {
         "TIME_SYSTEM" : {
-                "$ref" : "#/definitions/timingStandard"
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Legacy time-system selector retained for existing TIM consumers."
+              },
+        "INSTANT" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "A single tagged instant."
+              },
+        "CONVERSION_REQUEST" : {
+                "$ref" : "#/definitions/TIMConversionRequest",
+                "description" : "Time conversion request."
+              },
+        "CONVERSION_RESULT" : {
+                "$ref" : "#/definitions/TIMConversionResult",
+                "description" : "Time conversion result."
               }
       },
       "additionalProperties" : false

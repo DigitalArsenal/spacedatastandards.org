@@ -451,7 +451,13 @@
         "TCG",
         "TT",
         "UT1",
-        "UTC"
+        "UTC",
+        "GLONASS",
+        "GST",
+        "QZSS",
+        "BDT",
+        "NAVIC",
+        "SBAS"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -503,6 +509,147 @@
         "UTC": {
           "value": 11,
           "description": "Coordinated Universal Time"
+        },
+        "GLONASS": {
+          "value": 12,
+          "description": "GLONASS Time"
+        },
+        "GST": {
+          "value": 13,
+          "description": "Galileo System Time"
+        },
+        "QZSS": {
+          "value": 14,
+          "description": "Quasi-Zenith Satellite System Time"
+        },
+        "BDT": {
+          "value": 15,
+          "description": "BeiDou Time"
+        },
+        "NAVIC": {
+          "value": 16,
+          "description": "Navigation with Indian Constellation Time"
+        },
+        "SBAS": {
+          "value": 17,
+          "description": "Satellite-Based Augmentation System Time"
+        }
+      }
+    },
+    "timEpochRepresentation": {
+      "type": "string",
+      "enum": [
+        "JULIAN_DATE",
+        "MODIFIED_JULIAN_DATE",
+        "UNIX_SECONDS",
+        "ISO8601",
+        "GPS_SECONDS",
+        "GNSS_WEEK_SECONDS",
+        "CCSDS_TIME_CODE",
+        "MISSION_ELAPSED_SECONDS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "JULIAN_DATE": {
+          "value": 0,
+          "description": "Julian Date day count."
+        },
+        "MODIFIED_JULIAN_DATE": {
+          "value": 1,
+          "description": "Modified Julian Date day count (JD - 2400000.5)."
+        },
+        "UNIX_SECONDS": {
+          "value": 2,
+          "description": "Seconds since 1970-01-01T00:00:00 UTC."
+        },
+        "ISO8601": {
+          "value": 3,
+          "description": "ISO 8601 timestamp text."
+        },
+        "GPS_SECONDS": {
+          "value": 4,
+          "description": "Seconds since 1980-01-06T00:00:00 GPS."
+        },
+        "GNSS_WEEK_SECONDS": {
+          "value": 5,
+          "description": "GNSS week number plus seconds within the week."
+        },
+        "CCSDS_TIME_CODE": {
+          "value": 6,
+          "description": "CCSDS binary time-code field with preamble metadata."
+        },
+        "MISSION_ELAPSED_SECONDS": {
+          "value": 7,
+          "description": "Seconds from an application-defined mission epoch."
+        }
+      }
+    },
+    "timCcsdsTimeCodeKind": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "UNSEGMENTED",
+        "DAY_SEGMENTED",
+        "CALENDAR_SEGMENTED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0,
+          "description": "No CCSDS time code selected."
+        },
+        "UNSEGMENTED": {
+          "value": 1,
+          "description": "CCSDS Unsegmented Time Code (CUC)."
+        },
+        "DAY_SEGMENTED": {
+          "value": 2,
+          "description": "CCSDS Day Segmented Time Code (CDS)."
+        },
+        "CALENDAR_SEGMENTED": {
+          "value": 3,
+          "description": "CCSDS Calendar Segmented Time Code (CCS)."
+        }
+      }
+    },
+    "timConversionStatus": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "INVALID_INPUT",
+        "UNSUPPORTED_TIME_SYSTEM",
+        "LEAP_SECOND_DATA_REQUIRED",
+        "EOP_DATA_REQUIRED",
+        "OUT_OF_RANGE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "Conversion completed."
+        },
+        "INVALID_INPUT": {
+          "value": 1,
+          "description": "Input epoch or requested representation is invalid."
+        },
+        "UNSUPPORTED_TIME_SYSTEM": {
+          "value": 2,
+          "description": "Requested source or target time system is not supported."
+        },
+        "LEAP_SECOND_DATA_REQUIRED": {
+          "value": 3,
+          "description": "Conversion requires leap-second data that was not available."
+        },
+        "EOP_DATA_REQUIRED": {
+          "value": 4,
+          "description": "Conversion requires Earth-orientation data that was not available."
+        },
+        "OUT_OF_RANGE": {
+          "value": 5,
+          "description": "Requested instant is outside the supported conversion range."
         }
       }
     },
@@ -2099,12 +2246,78 @@
       },
       "additionalProperties": false
     },
-    "TIM": {
+    "TIMCcsdsTimeCode": {
       "type": "object",
-      "description": "Time System",
+      "description": "CCSDS time-code payload and preamble metadata.",
+      "properties": {
+        "CODE_KIND": {
+          "$ref": "#/definitions/timCcsdsTimeCodeKind",
+          "description": "CCSDS time-code family.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0,
+              "description": "No CCSDS time code selected."
+            },
+            "UNSEGMENTED": {
+              "value": 1,
+              "description": "CCSDS Unsegmented Time Code (CUC)."
+            },
+            "DAY_SEGMENTED": {
+              "value": 2,
+              "description": "CCSDS Day Segmented Time Code (CDS)."
+            },
+            "CALENDAR_SEGMENTED": {
+              "value": 3,
+              "description": "CCSDS Calendar Segmented Time Code (CCS)."
+            }
+          }
+        },
+        "PREAMBLE_FIELD1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "First CCSDS preamble field octet.",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "PREAMBLE_FIELD2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Second CCSDS preamble field octet; ignored when not signaled by preamble 1.",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "TIME_FIELD": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Raw CCSDS time field octets.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "AGENCY_DEFINED_EPOCH_ISO8601": {
+          "type": "string",
+          "description": "Optional agency-defined epoch timestamp for agency epoch time codes.",
+          "x-flatbuffer-type": "string"
+        },
+        "CCSDS_EPOCH_ISO8601": {
+          "type": "string",
+          "description": "Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TIMInstant": {
+      "type": "object",
+      "description": "Numeric or textual instant tagged with its time system and representation.",
       "properties": {
         "TIME_SYSTEM": {
           "$ref": "#/definitions/timingStandard",
+          "description": "Time system for this instant.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -2155,8 +2368,444 @@
             "UTC": {
               "value": 11,
               "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
             }
           }
+        },
+        "EPOCH_FORMAT": {
+          "$ref": "#/definitions/timEpochRepresentation",
+          "description": "Interpretation of JULIAN_DATE, SECONDS, and ISO8601.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "JULIAN_DATE": {
+              "value": 0,
+              "description": "Julian Date day count."
+            },
+            "MODIFIED_JULIAN_DATE": {
+              "value": 1,
+              "description": "Modified Julian Date day count (JD - 2400000.5)."
+            },
+            "UNIX_SECONDS": {
+              "value": 2,
+              "description": "Seconds since 1970-01-01T00:00:00 UTC."
+            },
+            "ISO8601": {
+              "value": 3,
+              "description": "ISO 8601 timestamp text."
+            },
+            "GPS_SECONDS": {
+              "value": 4,
+              "description": "Seconds since 1980-01-06T00:00:00 GPS."
+            },
+            "GNSS_WEEK_SECONDS": {
+              "value": 5,
+              "description": "GNSS week number plus seconds within the week."
+            },
+            "CCSDS_TIME_CODE": {
+              "value": 6,
+              "description": "CCSDS binary time-code field with preamble metadata."
+            },
+            "MISSION_ELAPSED_SECONDS": {
+              "value": 7,
+              "description": "Seconds from an application-defined mission epoch."
+            }
+          }
+        },
+        "JULIAN_DATE": {
+          "type": "number",
+          "description": "Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.",
+          "x-flatbuffer-type": "double"
+        },
+        "SECONDS": {
+          "type": "number",
+          "description": "Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.",
+          "x-flatbuffer-type": "double"
+        },
+        "ISO8601": {
+          "type": "string",
+          "description": "ISO 8601 timestamp text for ISO8601 inputs or display outputs.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUBSECOND_NANOS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Additional nanoseconds beyond the fractional scalar/text value.",
+          "x-flatbuffer-type": "int"
+        },
+        "EPOCH_LABEL": {
+          "type": "string",
+          "description": "Optional application-defined epoch label for MET, MRT, or SCLK values.",
+          "x-flatbuffer-type": "string"
+        },
+        "GNSS_WEEK": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.",
+          "x-flatbuffer-type": "int"
+        },
+        "HAS_GNSS_ROLLOVER_REFERENCE": {
+          "type": "boolean",
+          "description": "Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.",
+          "x-flatbuffer-type": "bool"
+        },
+        "GNSS_ROLLOVER_REFERENCE_ISO8601": {
+          "type": "string",
+          "description": "Optional Orekit-style GNSS week rollover reference timestamp.",
+          "x-flatbuffer-type": "string"
+        },
+        "CCSDS_TIME_CODE": {
+          "$ref": "#/definitions/TIMCcsdsTimeCode",
+          "description": "CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.",
+          "x-flatbuffer-type": "TIMCcsdsTimeCode"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TIMConversionRequest": {
+      "type": "object",
+      "description": "Request to convert one instant into another time system/representation.",
+      "properties": {
+        "SOURCE": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Source instant to convert.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "TARGET_TIME_SYSTEM": {
+          "$ref": "#/definitions/timingStandard",
+          "description": "Target time system.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GMST": {
+              "value": 0,
+              "description": "Greenwich Mean Sidereal Time"
+            },
+            "GPS": {
+              "value": 1,
+              "description": "Global Positioning System"
+            },
+            "MET": {
+              "value": 2,
+              "description": "Mission Elapsed Time"
+            },
+            "MRT": {
+              "value": 3,
+              "description": "Mission Relative Time"
+            },
+            "SCLK": {
+              "value": 4,
+              "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+            },
+            "TAI": {
+              "value": 5,
+              "description": "International Atomic Time"
+            },
+            "TCB": {
+              "value": 6,
+              "description": "Barycentric Coordinate Time"
+            },
+            "TDB": {
+              "value": 7,
+              "description": "Barycentric Dynamical Time"
+            },
+            "TCG": {
+              "value": 8,
+              "description": "Geocentric Coordinate Time"
+            },
+            "TT": {
+              "value": 9,
+              "description": "Terrestrial Time"
+            },
+            "UT1": {
+              "value": 10,
+              "description": "Universal Time"
+            },
+            "UTC": {
+              "value": 11,
+              "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
+            }
+          }
+        },
+        "TARGET_EPOCH_FORMAT": {
+          "$ref": "#/definitions/timEpochRepresentation",
+          "description": "Preferred target representation.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "JULIAN_DATE": {
+              "value": 0,
+              "description": "Julian Date day count."
+            },
+            "MODIFIED_JULIAN_DATE": {
+              "value": 1,
+              "description": "Modified Julian Date day count (JD - 2400000.5)."
+            },
+            "UNIX_SECONDS": {
+              "value": 2,
+              "description": "Seconds since 1970-01-01T00:00:00 UTC."
+            },
+            "ISO8601": {
+              "value": 3,
+              "description": "ISO 8601 timestamp text."
+            },
+            "GPS_SECONDS": {
+              "value": 4,
+              "description": "Seconds since 1980-01-06T00:00:00 GPS."
+            },
+            "GNSS_WEEK_SECONDS": {
+              "value": 5,
+              "description": "GNSS week number plus seconds within the week."
+            },
+            "CCSDS_TIME_CODE": {
+              "value": 6,
+              "description": "CCSDS binary time-code field with preamble metadata."
+            },
+            "MISSION_ELAPSED_SECONDS": {
+              "value": 7,
+              "description": "Seconds from an application-defined mission epoch."
+            }
+          }
+        },
+        "TAI_MINUS_UTC_SECONDS": {
+          "type": "number",
+          "description": "Optional TAI-UTC override in seconds for the source instant.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_TAI_MINUS_UTC": {
+          "type": "boolean",
+          "description": "Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.",
+          "x-flatbuffer-type": "bool"
+        },
+        "DUT1_SECONDS": {
+          "type": "number",
+          "description": "Optional UT1-UTC override in seconds for UT1 conversions.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_DUT1": {
+          "type": "boolean",
+          "description": "Whether DUT1_SECONDS should override runtime Earth-orientation data.",
+          "x-flatbuffer-type": "bool"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional caller trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TIMConversionResult": {
+      "type": "object",
+      "description": "Result of a time conversion request.",
+      "properties": {
+        "SOURCE": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Original source instant.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "TARGET": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Converted target instant.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "DELTA_SECONDS": {
+          "type": "number",
+          "description": "Target minus source offset in SI seconds for the requested conversion.",
+          "x-flatbuffer-type": "double"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/timConversionStatus",
+          "description": "Conversion status.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Conversion completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Input epoch or requested representation is invalid."
+            },
+            "UNSUPPORTED_TIME_SYSTEM": {
+              "value": 2,
+              "description": "Requested source or target time system is not supported."
+            },
+            "LEAP_SECOND_DATA_REQUIRED": {
+              "value": 3,
+              "description": "Conversion requires leap-second data that was not available."
+            },
+            "EOP_DATA_REQUIRED": {
+              "value": 4,
+              "description": "Conversion requires Earth-orientation data that was not available."
+            },
+            "OUT_OF_RANGE": {
+              "value": 5,
+              "description": "Requested instant is outside the supported conversion range."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Optional error detail when STATUS is not OK.",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TIM": {
+      "type": "object",
+      "description": "Time System and time-conversion envelope.",
+      "properties": {
+        "TIME_SYSTEM": {
+          "$ref": "#/definitions/timingStandard",
+          "description": "Legacy time-system selector retained for existing TIM consumers.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GMST": {
+              "value": 0,
+              "description": "Greenwich Mean Sidereal Time"
+            },
+            "GPS": {
+              "value": 1,
+              "description": "Global Positioning System"
+            },
+            "MET": {
+              "value": 2,
+              "description": "Mission Elapsed Time"
+            },
+            "MRT": {
+              "value": 3,
+              "description": "Mission Relative Time"
+            },
+            "SCLK": {
+              "value": 4,
+              "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+            },
+            "TAI": {
+              "value": 5,
+              "description": "International Atomic Time"
+            },
+            "TCB": {
+              "value": 6,
+              "description": "Barycentric Coordinate Time"
+            },
+            "TDB": {
+              "value": 7,
+              "description": "Barycentric Dynamical Time"
+            },
+            "TCG": {
+              "value": 8,
+              "description": "Geocentric Coordinate Time"
+            },
+            "TT": {
+              "value": 9,
+              "description": "Terrestrial Time"
+            },
+            "UT1": {
+              "value": 10,
+              "description": "Universal Time"
+            },
+            "UTC": {
+              "value": 11,
+              "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
+            }
+          }
+        },
+        "INSTANT": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "A single tagged instant.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "CONVERSION_REQUEST": {
+          "$ref": "#/definitions/TIMConversionRequest",
+          "description": "Time conversion request.",
+          "x-flatbuffer-type": "TIMConversionRequest"
+        },
+        "CONVERSION_RESULT": {
+          "$ref": "#/definitions/TIMConversionResult",
+          "description": "Time conversion result.",
+          "x-flatbuffer-type": "TIMConversionResult"
         }
       },
       "additionalProperties": false
@@ -4263,6 +4912,30 @@
             "UTC": {
               "value": 11,
               "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
             }
           }
         },
@@ -4601,6 +5274,30 @@
             "UTC": {
               "value": 11,
               "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
             }
           }
         },

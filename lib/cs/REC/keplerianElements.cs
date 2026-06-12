@@ -24,6 +24,7 @@ public struct keplerianElements : IFlatbufferObject
   public double ARG_OF_PERICENTER { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public anomalyConvention ANOMALY_TYPE { get { int o = __p.__offset(14); return o != 0 ? (anomalyConvention)__p.bb.GetSbyte(o + __p.bb_pos) : anomalyConvention.TRUE_ANOMALY; } }
   public double ANOMALY { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double PERIAPSIS_RADIUS { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<keplerianElements> CreatekeplerianElements(FlatBufferBuilder builder,
       double SEMI_MAJOR_AXIS = 0.0,
@@ -32,8 +33,10 @@ public struct keplerianElements : IFlatbufferObject
       double RA_OF_ASC_NODE = 0.0,
       double ARG_OF_PERICENTER = 0.0,
       anomalyConvention ANOMALY_TYPE = anomalyConvention.TRUE_ANOMALY,
-      double ANOMALY = 0.0) {
-    builder.StartTable(7);
+      double ANOMALY = 0.0,
+      double PERIAPSIS_RADIUS = 0.0) {
+    builder.StartTable(8);
+    keplerianElements.AddPERIAPSIS_RADIUS(builder, PERIAPSIS_RADIUS);
     keplerianElements.AddANOMALY(builder, ANOMALY);
     keplerianElements.AddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER);
     keplerianElements.AddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE);
@@ -44,7 +47,7 @@ public struct keplerianElements : IFlatbufferObject
     return keplerianElements.EndkeplerianElements(builder);
   }
 
-  public static void StartkeplerianElements(FlatBufferBuilder builder) { builder.StartTable(7); }
+  public static void StartkeplerianElements(FlatBufferBuilder builder) { builder.StartTable(8); }
   public static void AddSEMI_MAJOR_AXIS(FlatBufferBuilder builder, double SEMI_MAJOR_AXIS) { builder.AddDouble(0, SEMI_MAJOR_AXIS, 0.0); }
   public static void AddECCENTRICITY(FlatBufferBuilder builder, double ECCENTRICITY) { builder.AddDouble(1, ECCENTRICITY, 0.0); }
   public static void AddINCLINATION(FlatBufferBuilder builder, double INCLINATION) { builder.AddDouble(2, INCLINATION, 0.0); }
@@ -52,6 +55,7 @@ public struct keplerianElements : IFlatbufferObject
   public static void AddARG_OF_PERICENTER(FlatBufferBuilder builder, double ARG_OF_PERICENTER) { builder.AddDouble(4, ARG_OF_PERICENTER, 0.0); }
   public static void AddANOMALY_TYPE(FlatBufferBuilder builder, anomalyConvention ANOMALY_TYPE) { builder.AddSbyte(5, (sbyte)ANOMALY_TYPE, 0); }
   public static void AddANOMALY(FlatBufferBuilder builder, double ANOMALY) { builder.AddDouble(6, ANOMALY, 0.0); }
+  public static void AddPERIAPSIS_RADIUS(FlatBufferBuilder builder, double PERIAPSIS_RADIUS) { builder.AddDouble(7, PERIAPSIS_RADIUS, 0.0); }
   public static Offset<keplerianElements> EndkeplerianElements(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<keplerianElements>(o);
@@ -69,6 +73,7 @@ public struct keplerianElements : IFlatbufferObject
     _o.ARG_OF_PERICENTER = this.ARG_OF_PERICENTER;
     _o.ANOMALY_TYPE = this.ANOMALY_TYPE;
     _o.ANOMALY = this.ANOMALY;
+    _o.PERIAPSIS_RADIUS = this.PERIAPSIS_RADIUS;
   }
   public static Offset<keplerianElements> Pack(FlatBufferBuilder builder, keplerianElementsT _o) {
     if (_o == null) return default(Offset<keplerianElements>);
@@ -80,7 +85,8 @@ public struct keplerianElements : IFlatbufferObject
       _o.RA_OF_ASC_NODE,
       _o.ARG_OF_PERICENTER,
       _o.ANOMALY_TYPE,
-      _o.ANOMALY);
+      _o.ANOMALY,
+      _o.PERIAPSIS_RADIUS);
   }
 }
 
@@ -93,6 +99,7 @@ public class keplerianElementsT
   public double ARG_OF_PERICENTER { get; set; }
   public anomalyConvention ANOMALY_TYPE { get; set; }
   public double ANOMALY { get; set; }
+  public double PERIAPSIS_RADIUS { get; set; }
 
   public keplerianElementsT() {
     this.SEMI_MAJOR_AXIS = 0.0;
@@ -102,6 +109,7 @@ public class keplerianElementsT
     this.ARG_OF_PERICENTER = 0.0;
     this.ANOMALY_TYPE = anomalyConvention.TRUE_ANOMALY;
     this.ANOMALY = 0.0;
+    this.PERIAPSIS_RADIUS = 0.0;
   }
 }
 
@@ -118,6 +126,7 @@ static public class keplerianElementsVerify
       && verifier.VerifyField(tablePos, 12 /*ARG_OF_PERICENTER*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 14 /*ANOMALY_TYPE*/, 1 /*anomalyConvention*/, 1, false)
       && verifier.VerifyField(tablePos, 16 /*ANOMALY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*PERIAPSIS_RADIUS*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -4,11 +4,14 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { TIMConversionRequest, TIMConversionRequestT } from './TIMConversionRequest.js';
+import { TIMConversionResult, TIMConversionResultT } from './TIMConversionResult.js';
+import { TIMInstant, TIMInstantT } from './TIMInstant.js';
 import { timingStandard } from './timingStandard.js';
 
 
 /**
- * Time System
+ * Time System and time-conversion envelope.
  */
 export class TIM implements flatbuffers.IUnpackableObject<TIMT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -32,17 +35,56 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$TIM');
 }
 
+/**
+ * Legacy time-system selector retained for existing TIM consumers.
+ */
 TIME_SYSTEM():timingStandard {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : timingStandard.GMST;
 }
 
+/**
+ * A single tagged instant.
+ */
+INSTANT(obj?:TIMInstant):TIMInstant|null {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? (obj || new TIMInstant()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Time conversion request.
+ */
+CONVERSION_REQUEST(obj?:TIMConversionRequest):TIMConversionRequest|null {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? (obj || new TIMConversionRequest()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Time conversion result.
+ */
+CONVERSION_RESULT(obj?:TIMConversionResult):TIMConversionResult|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? (obj || new TIMConversionResult()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startTIM(builder:flatbuffers.Builder) {
-  builder.startObject(1);
+  builder.startObject(4);
 }
 
 static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEM:timingStandard) {
   builder.addFieldInt8(0, TIME_SYSTEM, timingStandard.GMST);
+}
+
+static addInstant(builder:flatbuffers.Builder, INSTANTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, INSTANTOffset, 0);
+}
+
+static addConversionRequest(builder:flatbuffers.Builder, CONVERSION_REQUESTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, CONVERSION_REQUESTOffset, 0);
+}
+
+static addConversionResult(builder:flatbuffers.Builder, CONVERSION_RESULTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, CONVERSION_RESULTOffset, 0);
 }
 
 static endTIM(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -58,33 +100,45 @@ static finishSizePrefixedTIMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$TIM', true);
 }
 
-static createTIM(builder:flatbuffers.Builder, TIME_SYSTEM:timingStandard):flatbuffers.Offset {
-  TIM.startTIM(builder);
-  TIM.addTimeSystem(builder, TIME_SYSTEM);
-  return TIM.endTIM(builder);
-}
 
 unpack(): TIMT {
   return new TIMT(
-    this.TIME_SYSTEM()
+    this.TIME_SYSTEM(),
+    (this.INSTANT() !== null ? this.INSTANT()!.unpack() : null),
+    (this.CONVERSION_REQUEST() !== null ? this.CONVERSION_REQUEST()!.unpack() : null),
+    (this.CONVERSION_RESULT() !== null ? this.CONVERSION_RESULT()!.unpack() : null)
   );
 }
 
 
 unpackTo(_o: TIMT): void {
   _o.TIME_SYSTEM = this.TIME_SYSTEM();
+  _o.INSTANT = (this.INSTANT() !== null ? this.INSTANT()!.unpack() : null);
+  _o.CONVERSION_REQUEST = (this.CONVERSION_REQUEST() !== null ? this.CONVERSION_REQUEST()!.unpack() : null);
+  _o.CONVERSION_RESULT = (this.CONVERSION_RESULT() !== null ? this.CONVERSION_RESULT()!.unpack() : null);
 }
 }
 
 export class TIMT implements flatbuffers.IGeneratedObject {
 constructor(
-  public TIME_SYSTEM: timingStandard = timingStandard.GMST
+  public TIME_SYSTEM: timingStandard = timingStandard.GMST,
+  public INSTANT: TIMInstantT|null = null,
+  public CONVERSION_REQUEST: TIMConversionRequestT|null = null,
+  public CONVERSION_RESULT: TIMConversionResultT|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  return TIM.createTIM(builder,
-    this.TIME_SYSTEM
-  );
+  const INSTANT = (this.INSTANT !== null ? this.INSTANT!.pack(builder) : 0);
+  const CONVERSION_REQUEST = (this.CONVERSION_REQUEST !== null ? this.CONVERSION_REQUEST!.pack(builder) : 0);
+  const CONVERSION_RESULT = (this.CONVERSION_RESULT !== null ? this.CONVERSION_RESULT!.pack(builder) : 0);
+
+  TIM.startTIM(builder);
+  TIM.addTimeSystem(builder, this.TIME_SYSTEM);
+  TIM.addInstant(builder, INSTANT);
+  TIM.addConversionRequest(builder, CONVERSION_REQUEST);
+  TIM.addConversionResult(builder, CONVERSION_RESULT);
+
+  return TIM.endTIM(builder);
 }
 }

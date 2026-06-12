@@ -1,0 +1,216 @@
+// Hash: 49079382d1d22164afa1b9db6494b3243d8f83cd2aa6a8b529539cf4e692c75e
+// Version: 1.113.4
+// -----------------------------------END_HEADER
+// Shared numerical utility records for reusable math modules.
+
+enum numOperationCode : byte {
+  UNKNOWN = 0,
+  /// Solve for a scalar root using Newton-Raphson iteration.
+  NEWTON_RAPHSON = 1,
+  /// Linearly interpolate one scalar between two scalar samples.
+  LINEAR_INTERPOLATION = 2,
+  /// Bilinearly interpolate one scalar from four rectangular-corner samples.
+  BILINEAR_INTERPOLATION = 3,
+  /// Generate a bounded Gauss-Markov random sequence and summary statistics.
+  GAUSS_MARKOV_SEQUENCE = 4
+}
+
+enum numFunctionCode : byte {
+  UNKNOWN = 0,
+  /// f(x) = x * x - TARGET_VALUE, with derivative f'(x) = 2 * x.
+  QUADRATIC_MINUS_CONSTANT = 1
+}
+
+enum numResultStatus : byte {
+  /// Operation completed.
+  OK = 0,
+  /// Request fields are missing, non-finite, or numerically invalid.
+  INVALID_INPUT = 1,
+  /// The requested operation or function is not supported.
+  UNSUPPORTED_OPERATION = 2,
+  /// Iteration did not reach ACCURACY within MAX_ITERATIONS.
+  DID_NOT_CONVERGE = 3
+}
+
+enum numDiscretizeRoundDirection : byte {
+  /// Round magnitude toward zero before restoring sign.
+  TO_ZERO = 0,
+  /// Round magnitude away from zero before restoring sign.
+  FROM_ZERO = 1,
+  /// Round magnitude to the nearest least-significant-bit multiple before restoring sign.
+  NEAR = 2
+}
+
+/// Request for one scalar numerical root-solving operation.
+table NUMRootSolveRequest {
+  OPERATION:numOperationCode;
+  FUNCTION:numFunctionCode;
+  INITIAL_ESTIMATE:double;
+  TARGET_VALUE:double;
+  ACCURACY:double;
+  MAX_ITERATIONS:uint32;
+  TRACE_ID:string;
+}
+
+/// Result of one scalar numerical root-solving operation.
+table NUMRootSolveResult {
+  STATUS:numResultStatus;
+  ERROR_MESSAGE:string;
+  ROOT:double;
+  RESIDUAL:double;
+  ITERATIONS:uint32;
+  TRACE_ID:string;
+}
+
+/// Request for component-wise vector saturation.
+table NUMVectorSaturateRequest {
+  /// Input vector to clamp.
+  STATE:[double];
+  /// Per-component lower bounds. Length must match STATE.
+  LOWER_BOUNDS:[double];
+  /// Per-component upper bounds. Length must match STATE.
+  UPPER_BOUNDS:[double];
+  /// Optional trace/correlation identifier.
+  TRACE_ID:string;
+}
+
+/// Result of one component-wise vector saturation operation.
+table NUMVectorSaturateResult {
+  STATUS:numResultStatus;
+  ERROR_MESSAGE:string;
+  /// Saturated output vector.
+  SATURATED_STATE:[double];
+  /// Caller trace/correlation identifier copied from the request when present.
+  TRACE_ID:string;
+}
+
+/// Request for component-wise vector discretization.
+table NUMVectorDiscretizeRequest {
+  /// Input vector to quantize.
+  STATE:[double];
+  /// Per-component least-significant-bit size. Length must match STATE.
+  LSB:[double];
+  /// Rounding direction used before the original sign is restored.
+  ROUND_DIRECTION:numDiscretizeRoundDirection;
+  /// When true, PREVIOUS_ERROR is added to STATE before discretization.
+  CARRY_ERROR:bool;
+  /// Optional prior discretization error vector from an earlier result.
+  PREVIOUS_ERROR:[double];
+  /// Optional trace/correlation identifier.
+  TRACE_ID:string;
+}
+
+/// Result of one component-wise vector discretization operation.
+table NUMVectorDiscretizeResult {
+  STATUS:numResultStatus;
+  ERROR_MESSAGE:string;
+  /// Quantized output vector.
+  DISCRETIZED_STATE:[double];
+  /// Input-minus-output error after any requested carried error was applied.
+  DISCRETIZATION_ERROR:[double];
+  /// Caller trace/correlation identifier copied from the request when present.
+  TRACE_ID:string;
+}
+
+/// Request for one scalar interpolation operation.
+table NUMScalarInterpolationRequest {
+  /// LINEAR_INTERPOLATION or BILINEAR_INTERPOLATION.
+  OPERATION:numOperationCode;
+  /// First x-coordinate bound.
+  X1:double;
+  /// Second x-coordinate bound.
+  X2:double;
+  /// First y-coordinate bound for bilinear interpolation.
+  Y1:double;
+  /// Second y-coordinate bound for bilinear interpolation.
+  Y2:double;
+  /// Linear interpolation value at X1.
+  VALUE1:double;
+  /// Linear interpolation value at X2.
+  VALUE2:double;
+  /// Bilinear corner value at X1,Y1.
+  Z11:double;
+  /// Bilinear corner value at X1,Y2.
+  Z12:double;
+  /// Bilinear corner value at X2,Y1.
+  Z21:double;
+  /// Bilinear corner value at X2,Y2.
+  Z22:double;
+  /// X coordinate to interpolate.
+  INTERPOLATION_X:double;
+  /// Y coordinate to interpolate for bilinear interpolation.
+  INTERPOLATION_Y:double;
+  /// Optional trace/correlation identifier.
+  TRACE_ID:string;
+}
+
+/// Result of one scalar interpolation operation.
+table NUMScalarInterpolationResult {
+  STATUS:numResultStatus;
+  ERROR_MESSAGE:string;
+  /// Interpolated scalar value.
+  VALUE:double;
+  /// Caller trace/correlation identifier copied from the request when present.
+  TRACE_ID:string;
+}
+
+/// Request for one Basilisk-compatible Gauss-Markov random sequence.
+table NUMGaussMarkovRequest {
+  /// GAUSS_MARKOV_SEQUENCE.
+  OPERATION:numOperationCode;
+  /// Number of scalar states per sample.
+  DIMENSION:uint32;
+  /// Number of post-warmup samples used in the result statistics.
+  SAMPLE_COUNT:uint32;
+  /// Number of initial state propagations excluded from the result statistics.
+  WARMUP_COUNT:uint32;
+  /// Seed for the Basilisk-compatible standard normal generator.
+  RNG_SEED:uint32;
+  /// Row-major DIMENSION x DIMENSION state propagation matrix.
+  PROPAGATION_MATRIX:[double];
+  /// Row-major DIMENSION x DIMENSION standard-normal noise mixing matrix.
+  NOISE_MATRIX:[double];
+  /// Per-state symmetric bounds. Values <= 0 disable clamping for that state.
+  STATE_BOUNDS:[double];
+  /// When true, emit flattened sample-major states in SAMPLES.
+  EMIT_SAMPLES:bool;
+  /// Optional trace/correlation identifier.
+  TRACE_ID:string;
+}
+
+/// Result of one Basilisk-compatible Gauss-Markov random sequence.
+table NUMGaussMarkovResult {
+  STATUS:numResultStatus;
+  ERROR_MESSAGE:string;
+  /// Post-warmup per-state sample means.
+  MEAN:[double];
+  /// Post-warmup per-state sample standard deviations with n - 1 denominator.
+  STANDARD_DEVIATION:[double];
+  /// Post-warmup per-state minima.
+  MINIMUM:[double];
+  /// Post-warmup per-state maxima.
+  MAXIMUM:[double];
+  /// State after the final generated sample.
+  FINAL_STATE:[double];
+  /// Optional flattened sample-major state history.
+  SAMPLES:[double];
+  /// Caller trace/correlation identifier copied from the request when present.
+  TRACE_ID:string;
+}
+
+/// Numerical utility envelope.
+table NUM {
+  ROOT_SOLVE_REQUEST:NUMRootSolveRequest;
+  ROOT_SOLVE_RESULT:NUMRootSolveResult;
+  VECTOR_SATURATE_REQUEST:NUMVectorSaturateRequest;
+  VECTOR_SATURATE_RESULT:NUMVectorSaturateResult;
+  VECTOR_DISCRETIZE_REQUEST:NUMVectorDiscretizeRequest;
+  VECTOR_DISCRETIZE_RESULT:NUMVectorDiscretizeResult;
+  SCALAR_INTERPOLATION_REQUEST:NUMScalarInterpolationRequest;
+  SCALAR_INTERPOLATION_RESULT:NUMScalarInterpolationResult;
+  GAUSS_MARKOV_REQUEST:NUMGaussMarkovRequest;
+  GAUSS_MARKOV_RESULT:NUMGaussMarkovResult;
+}
+
+root_type NUM;
+file_identifier "$NUM";

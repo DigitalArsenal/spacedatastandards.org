@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "frmOperationCode" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "PCI_TO_PCPF", "PCPF_TO_PCI", "LLA_TO_PCPF", "PCPF_TO_LLA"]
+    },
+    "frmResultStatus" : {
+      "type" : "string",
+      "enum": ["OK", "INVALID_INPUT", "UNSUPPORTED_OPERATION"]
+    },
+    "FRMVector3" : {
+      "type" : "object",
+      "properties" : {
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FRMMatrix3" : {
+      "type" : "object",
+      "properties" : {
+        "M11" : {
+                "type" : "number"
+              },
+        "M12" : {
+                "type" : "number"
+              },
+        "M13" : {
+                "type" : "number"
+              },
+        "M21" : {
+                "type" : "number"
+              },
+        "M22" : {
+                "type" : "number"
+              },
+        "M23" : {
+                "type" : "number"
+              },
+        "M31" : {
+                "type" : "number"
+              },
+        "M32" : {
+                "type" : "number"
+              },
+        "M33" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FRMFrameTransformRequest" : {
+      "type" : "object",
+      "properties" : {
+        "OPERATION" : {
+                "$ref" : "#/definitions/frmOperationCode"
+              },
+        "POSITION" : {
+                "$ref" : "#/definitions/FRMVector3"
+              },
+        "TRANSFORM_DCM" : {
+                "$ref" : "#/definitions/FRMMatrix3"
+              },
+        "EQUATORIAL_RADIUS_M" : {
+                "type" : "number"
+              },
+        "POLAR_RADIUS_M" : {
+                "type" : "number"
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FRMFrameTransformResult" : {
+      "type" : "object",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/frmResultStatus"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string"
+              },
+        "POSITION" : {
+                "$ref" : "#/definitions/FRMVector3"
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FRM" : {
+      "type" : "object",
+      "properties" : {
+        "FRAME_TRANSFORM_REQUEST" : {
+                "$ref" : "#/definitions/FRMFrameTransformRequest"
+              },
+        "FRAME_TRANSFORM_RESULT" : {
+                "$ref" : "#/definitions/FRMFrameTransformResult"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FRM"
+}

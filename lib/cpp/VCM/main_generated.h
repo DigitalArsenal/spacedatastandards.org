@@ -743,7 +743,8 @@ struct keplerianElements FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
     VT_RA_OF_ASC_NODE = 10,
     VT_ARG_OF_PERICENTER = 12,
     VT_ANOMALY_TYPE = 14,
-    VT_ANOMALY = 16
+    VT_ANOMALY = 16,
+    VT_PERIAPSIS_RADIUS = 18
   };
   double SEMI_MAJOR_AXIS() const {
     return GetField<double>(VT_SEMI_MAJOR_AXIS, 0.0);
@@ -766,6 +767,9 @@ struct keplerianElements FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   double ANOMALY() const {
     return GetField<double>(VT_ANOMALY, 0.0);
   }
+  double PERIAPSIS_RADIUS() const {
+    return GetField<double>(VT_PERIAPSIS_RADIUS, 0.0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -776,6 +780,7 @@ struct keplerianElements FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
            VerifyField<double>(verifier, VT_ARG_OF_PERICENTER, 8) &&
            VerifyField<int8_t>(verifier, VT_ANOMALY_TYPE, 1) &&
            VerifyField<double>(verifier, VT_ANOMALY, 8) &&
+           VerifyField<double>(verifier, VT_PERIAPSIS_RADIUS, 8) &&
            verifier.EndTable();
   }
 };
@@ -805,6 +810,9 @@ struct keplerianElementsBuilder {
   void add_ANOMALY(double ANOMALY) {
     fbb_.AddElement<double>(keplerianElements::VT_ANOMALY, ANOMALY, 0.0);
   }
+  void add_PERIAPSIS_RADIUS(double PERIAPSIS_RADIUS) {
+    fbb_.AddElement<double>(keplerianElements::VT_PERIAPSIS_RADIUS, PERIAPSIS_RADIUS, 0.0);
+  }
   explicit keplerianElementsBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -824,8 +832,10 @@ inline ::flatbuffers::Offset<keplerianElements> CreatekeplerianElements(
     double RA_OF_ASC_NODE = 0.0,
     double ARG_OF_PERICENTER = 0.0,
     anomalyConvention ANOMALY_TYPE = anomalyConvention_TRUE_ANOMALY,
-    double ANOMALY = 0.0) {
+    double ANOMALY = 0.0,
+    double PERIAPSIS_RADIUS = 0.0) {
   keplerianElementsBuilder builder_(_fbb);
+  builder_.add_PERIAPSIS_RADIUS(PERIAPSIS_RADIUS);
   builder_.add_ANOMALY(ANOMALY);
   builder_.add_ARG_OF_PERICENTER(ARG_OF_PERICENTER);
   builder_.add_RA_OF_ASC_NODE(RA_OF_ASC_NODE);

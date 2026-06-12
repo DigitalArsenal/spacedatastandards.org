@@ -64,6 +64,11 @@ class keplerianElements : Table() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    val periapsisRadius : Double
+        get() {
+            val o = __offset(18)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAskeplerianElements(_bb: ByteBuffer): keplerianElements = getRootAskeplerianElements(_bb, keplerianElements())
@@ -71,8 +76,9 @@ class keplerianElements : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createkeplerianElements(builder: FlatBufferBuilder, semiMajorAxis: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, anomalyType: Byte, anomaly: Double) : Int {
-            builder.startTable(7)
+        fun createkeplerianElements(builder: FlatBufferBuilder, semiMajorAxis: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, anomalyType: Byte, anomaly: Double, periapsisRadius: Double) : Int {
+            builder.startTable(8)
+            addPERIAPSISRADIUS(builder, periapsisRadius)
             addANOMALY(builder, anomaly)
             addARGOFPERICENTER(builder, argOfPericenter)
             addRAOFASCNODE(builder, raOfAscNode)
@@ -82,7 +88,7 @@ class keplerianElements : Table() {
             addANOMALYTYPE(builder, anomalyType)
             return endkeplerianElements(builder)
         }
-        fun startkeplerianElements(builder: FlatBufferBuilder) = builder.startTable(7)
+        fun startkeplerianElements(builder: FlatBufferBuilder) = builder.startTable(8)
         fun addSEMIMAJORAXIS(builder: FlatBufferBuilder, semiMajorAxis: Double) = builder.addDouble(0, semiMajorAxis, 0.0)
         fun addECCENTRICITY(builder: FlatBufferBuilder, eccentricity: Double) = builder.addDouble(1, eccentricity, 0.0)
         fun addINCLINATION(builder: FlatBufferBuilder, inclination: Double) = builder.addDouble(2, inclination, 0.0)
@@ -90,6 +96,7 @@ class keplerianElements : Table() {
         fun addARGOFPERICENTER(builder: FlatBufferBuilder, argOfPericenter: Double) = builder.addDouble(4, argOfPericenter, 0.0)
         fun addANOMALYTYPE(builder: FlatBufferBuilder, anomalyType: Byte) = builder.addByte(5, anomalyType, 0)
         fun addANOMALY(builder: FlatBufferBuilder, anomaly: Double) = builder.addDouble(6, anomaly, 0.0)
+        fun addPERIAPSISRADIUS(builder: FlatBufferBuilder, periapsisRadius: Double) = builder.addDouble(7, periapsisRadius, 0.0)
         fun endkeplerianElements(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

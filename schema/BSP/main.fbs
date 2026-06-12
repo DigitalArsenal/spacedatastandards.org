@@ -1,0 +1,88 @@
+// Hash: 0b5e65ffed2fecd1834e569b92284da23314468c2d5493acbeb054c25a7c1efb
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum bspInterpolationStatus : byte {
+  /// Interpolation completed.
+  OK,
+  /// The request is missing required waypoint, time, order, or sample data.
+  INVALID_INPUT,
+  /// The requested polynomial order is outside the supported B-spline range.
+  UNSUPPORTED_ORDER,
+  /// The interpolation linear system is singular or numerically unstable.
+  SINGULAR_SYSTEM
+}
+
+/// Three coordinate arrays sharing one time vector.
+table BSPVector3Series {
+  /// Sample or waypoint time tags in seconds.
+  T:[double];
+  /// Coordinate 1 samples.
+  X1:[double];
+  /// Coordinate 2 samples.
+  X2:[double];
+  /// Coordinate 3 samples.
+  X3:[double];
+}
+
+/// Request for one 3D B-spline interpolation.
+table BSPInterpolationRequest {
+  /// Waypoint times and coordinates. T, X1, X2, and X3 must have equal length.
+  WAYPOINTS:BSPVector3Series;
+  /// Number of equally spaced output samples.
+  SAMPLE_COUNT:uint;
+  /// Polynomial order of the B-spline basis.
+  POLYNOMIAL_ORDER:ushort;
+  /// Whether X_DOT_0 contains the first derivative at the first waypoint.
+  HAS_X_DOT_0:bool;
+  /// Optional first derivative at the first waypoint, length 3.
+  X_DOT_0:[double];
+  /// Whether X_DOT_N contains the first derivative at the last waypoint.
+  HAS_X_DOT_N:bool;
+  /// Optional first derivative at the last waypoint, length 3.
+  X_DOT_N:[double];
+  /// Whether X_D_DOT_0 contains the second derivative at the first waypoint.
+  HAS_X_D_DOT_0:bool;
+  /// Optional second derivative at the first waypoint, length 3.
+  X_D_DOT_0:[double];
+  /// Whether X_D_DOT_N contains the second derivative at the last waypoint.
+  HAS_X_D_DOT_N:bool;
+  /// Optional second derivative at the last waypoint, length 3.
+  X_D_DOT_N:[double];
+  /// Optional trace/correlation identifier.
+  TRACE_ID:string;
+}
+
+/// Result of one 3D B-spline interpolation.
+table BSPInterpolationResult {
+  /// Interpolation status.
+  STATUS:bspInterpolationStatus;
+  /// Optional error detail when STATUS is not OK.
+  ERROR_MESSAGE:string;
+  /// Output sample positions.
+  SAMPLES:BSPVector3Series;
+  /// First derivative of coordinate 1 at each output sample.
+  XD1:[double];
+  /// First derivative of coordinate 2 at each output sample.
+  XD2:[double];
+  /// First derivative of coordinate 3 at each output sample.
+  XD3:[double];
+  /// Second derivative of coordinate 1 at each output sample.
+  XDD1:[double];
+  /// Second derivative of coordinate 2 at each output sample.
+  XDD2:[double];
+  /// Second derivative of coordinate 3 at each output sample.
+  XDD3:[double];
+  /// Caller trace/correlation identifier copied from the request when present.
+  TRACE_ID:string;
+}
+
+/// B-spline interpolation envelope.
+table BSP {
+  /// B-spline interpolation request.
+  INTERPOLATION_REQUEST:BSPInterpolationRequest;
+  /// B-spline interpolation result.
+  INTERPOLATION_RESULT:BSPInterpolationResult;
+}
+
+root_type BSP;
+file_identifier "$BSP";

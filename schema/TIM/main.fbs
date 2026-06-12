@@ -1,5 +1,5 @@
-// Hash: d9bc5932351f9978e33a7d171deae5336586bd77537cb00adb7a4cd5fa2323b0
-// Version: 1.0.3
+// Hash: f38b417630f4f99c53bdccf82a96fb793531bc5ee52777491f81f7558ff43dac
+// Version: 1.0.9
 // -----------------------------------END_HEADER
 enum timingStandard : byte {
   /// Greenwich Mean Sidereal Time
@@ -25,12 +25,154 @@ enum timingStandard : byte {
   /// Universal Time
   UT1,
   /// Coordinated Universal Time
-  UTC
+  UTC,
+  /// GLONASS Time
+  GLONASS,
+  /// Galileo System Time
+  GST,
+  /// Quasi-Zenith Satellite System Time
+  QZSS,
+  /// BeiDou Time
+  BDT,
+  /// Navigation with Indian Constellation Time
+  NAVIC,
+  /// Satellite-Based Augmentation System Time
+  SBAS
 }
 
-/// Time System
-table TIM {
+enum timEpochRepresentation : byte {
+  /// Julian Date day count.
+  JULIAN_DATE,
+  /// Modified Julian Date day count (JD - 2400000.5).
+  MODIFIED_JULIAN_DATE,
+  /// Seconds since 1970-01-01T00:00:00 UTC.
+  UNIX_SECONDS,
+  /// ISO 8601 timestamp text.
+  ISO8601,
+  /// Seconds since 1980-01-06T00:00:00 GPS.
+  GPS_SECONDS,
+  /// GNSS week number plus seconds within the week.
+  GNSS_WEEK_SECONDS,
+  /// CCSDS binary time-code field with preamble metadata.
+  CCSDS_TIME_CODE,
+  /// Seconds from an application-defined mission epoch.
+  MISSION_ELAPSED_SECONDS
+}
+
+enum timCcsdsTimeCodeKind : byte {
+  /// No CCSDS time code selected.
+  NONE,
+  /// CCSDS Unsegmented Time Code (CUC).
+  UNSEGMENTED,
+  /// CCSDS Day Segmented Time Code (CDS).
+  DAY_SEGMENTED,
+  /// CCSDS Calendar Segmented Time Code (CCS).
+  CALENDAR_SEGMENTED
+}
+
+enum timConversionStatus : byte {
+  /// Conversion completed.
+  OK,
+  /// Input epoch or requested representation is invalid.
+  INVALID_INPUT,
+  /// Requested source or target time system is not supported.
+  UNSUPPORTED_TIME_SYSTEM,
+  /// Conversion requires leap-second data that was not available.
+  LEAP_SECOND_DATA_REQUIRED,
+  /// Conversion requires Earth-orientation data that was not available.
+  EOP_DATA_REQUIRED,
+  /// Requested instant is outside the supported conversion range.
+  OUT_OF_RANGE
+}
+
+/// CCSDS time-code payload and preamble metadata.
+table TIMCcsdsTimeCode {
+  /// CCSDS time-code family.
+  CODE_KIND:timCcsdsTimeCodeKind;
+  /// First CCSDS preamble field octet.
+  PREAMBLE_FIELD1:ubyte;
+  /// Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
+  PREAMBLE_FIELD2:ubyte;
+  /// Raw CCSDS time field octets.
+  TIME_FIELD:[ubyte];
+  /// Optional agency-defined epoch timestamp for agency epoch time codes.
+  AGENCY_DEFINED_EPOCH_ISO8601:string;
+  /// Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
+  CCSDS_EPOCH_ISO8601:string;
+}
+
+/// Numeric or textual instant tagged with its time system and representation.
+table TIMInstant {
+  /// Time system for this instant.
   TIME_SYSTEM: timingStandard;
+  /// Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
+  EPOCH_FORMAT:timEpochRepresentation;
+  /// Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
+  JULIAN_DATE:double;
+  /// Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
+  SECONDS:double;
+  /// ISO 8601 timestamp text for ISO8601 inputs or display outputs.
+  ISO8601:string;
+  /// Additional nanoseconds beyond the fractional scalar/text value.
+  SUBSECOND_NANOS:int;
+  /// Optional application-defined epoch label for MET, MRT, or SCLK values.
+  EPOCH_LABEL:string;
+  /// GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
+  GNSS_WEEK:int;
+  /// Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
+  HAS_GNSS_ROLLOVER_REFERENCE:bool;
+  /// Optional Orekit-style GNSS week rollover reference timestamp.
+  GNSS_ROLLOVER_REFERENCE_ISO8601:string;
+  /// CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
+  CCSDS_TIME_CODE:TIMCcsdsTimeCode;
+}
+
+/// Request to convert one instant into another time system/representation.
+table TIMConversionRequest {
+  /// Source instant to convert.
+  SOURCE:TIMInstant;
+  /// Target time system.
+  TARGET_TIME_SYSTEM:timingStandard;
+  /// Preferred target representation.
+  TARGET_EPOCH_FORMAT:timEpochRepresentation;
+  /// Optional TAI-UTC override in seconds for the source instant.
+  TAI_MINUS_UTC_SECONDS:double;
+  /// Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
+  HAS_TAI_MINUS_UTC:bool;
+  /// Optional UT1-UTC override in seconds for UT1 conversions.
+  DUT1_SECONDS:double;
+  /// Whether DUT1_SECONDS should override runtime Earth-orientation data.
+  HAS_DUT1:bool;
+  /// Optional caller trace/correlation identifier.
+  TRACE_ID:string;
+}
+
+/// Result of a time conversion request.
+table TIMConversionResult {
+  /// Original source instant.
+  SOURCE:TIMInstant;
+  /// Converted target instant.
+  TARGET:TIMInstant;
+  /// Target minus source offset in SI seconds for the requested conversion.
+  DELTA_SECONDS:double;
+  /// Conversion status.
+  STATUS:timConversionStatus;
+  /// Optional error detail when STATUS is not OK.
+  ERROR_MESSAGE:string;
+  /// Caller trace/correlation identifier copied from the request when present.
+  TRACE_ID:string;
+}
+
+/// Time System and time-conversion envelope.
+table TIM {
+  /// Legacy time-system selector retained for existing TIM consumers.
+  TIME_SYSTEM: timingStandard;
+  /// A single tagged instant.
+  INSTANT:TIMInstant;
+  /// Time conversion request.
+  CONVERSION_REQUEST:TIMConversionRequest;
+  /// Time conversion result.
+  CONVERSION_RESULT:TIMConversionResult;
 }
 root_type TIM;
 file_identifier "$TIM";

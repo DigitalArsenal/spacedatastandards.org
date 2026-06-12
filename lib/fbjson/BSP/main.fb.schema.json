@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "bspInterpolationStatus": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "INVALID_INPUT",
+        "UNSUPPORTED_ORDER",
+        "SINGULAR_SYSTEM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "Interpolation completed."
+        },
+        "INVALID_INPUT": {
+          "value": 1,
+          "description": "The request is missing required waypoint, time, order, or sample data."
+        },
+        "UNSUPPORTED_ORDER": {
+          "value": 2,
+          "description": "The requested polynomial order is outside the supported B-spline range."
+        },
+        "SINGULAR_SYSTEM": {
+          "value": 3,
+          "description": "The interpolation linear system is singular or numerically unstable."
+        }
+      }
+    },
+    "BSPVector3Series": {
+      "type": "object",
+      "description": "Three coordinate arrays sharing one time vector.",
+      "properties": {
+        "T": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Sample or waypoint time tags in seconds.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "X1": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Coordinate 1 samples.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "X2": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Coordinate 2 samples.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "X3": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Coordinate 3 samples.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BSPInterpolationRequest": {
+      "type": "object",
+      "description": "Request for one 3D B-spline interpolation.",
+      "properties": {
+        "WAYPOINTS": {
+          "$ref": "#/definitions/BSPVector3Series",
+          "description": "Waypoint times and coordinates. T, X1, X2, and X3 must have equal length.",
+          "x-flatbuffer-type": "BSPVector3Series"
+        },
+        "SAMPLE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of equally spaced output samples.",
+          "x-flatbuffer-type": "uint"
+        },
+        "POLYNOMIAL_ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Polynomial order of the B-spline basis.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "HAS_X_DOT_0": {
+          "type": "boolean",
+          "description": "Whether X_DOT_0 contains the first derivative at the first waypoint.",
+          "x-flatbuffer-type": "bool"
+        },
+        "X_DOT_0": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional first derivative at the first waypoint, length 3.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "HAS_X_DOT_N": {
+          "type": "boolean",
+          "description": "Whether X_DOT_N contains the first derivative at the last waypoint.",
+          "x-flatbuffer-type": "bool"
+        },
+        "X_DOT_N": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional first derivative at the last waypoint, length 3.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "HAS_X_D_DOT_0": {
+          "type": "boolean",
+          "description": "Whether X_D_DOT_0 contains the second derivative at the first waypoint.",
+          "x-flatbuffer-type": "bool"
+        },
+        "X_D_DOT_0": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional second derivative at the first waypoint, length 3.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "HAS_X_D_DOT_N": {
+          "type": "boolean",
+          "description": "Whether X_D_DOT_N contains the second derivative at the last waypoint.",
+          "x-flatbuffer-type": "bool"
+        },
+        "X_D_DOT_N": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional second derivative at the last waypoint, length 3.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BSPInterpolationResult": {
+      "type": "object",
+      "description": "Result of one 3D B-spline interpolation.",
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/bspInterpolationStatus",
+          "description": "Interpolation status.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Interpolation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "The request is missing required waypoint, time, order, or sample data."
+            },
+            "UNSUPPORTED_ORDER": {
+              "value": 2,
+              "description": "The requested polynomial order is outside the supported B-spline range."
+            },
+            "SINGULAR_SYSTEM": {
+              "value": 3,
+              "description": "The interpolation linear system is singular or numerically unstable."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Optional error detail when STATUS is not OK.",
+          "x-flatbuffer-type": "string"
+        },
+        "SAMPLES": {
+          "$ref": "#/definitions/BSPVector3Series",
+          "description": "Output sample positions.",
+          "x-flatbuffer-type": "BSPVector3Series"
+        },
+        "XD1": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "First derivative of coordinate 1 at each output sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "XD2": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "First derivative of coordinate 2 at each output sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "XD3": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "First derivative of coordinate 3 at each output sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "XDD1": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Second derivative of coordinate 1 at each output sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "XDD2": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Second derivative of coordinate 2 at each output sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "XDD3": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Second derivative of coordinate 3 at each output sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BSP": {
+      "type": "object",
+      "description": "B-spline interpolation envelope.",
+      "properties": {
+        "INTERPOLATION_REQUEST": {
+          "$ref": "#/definitions/BSPInterpolationRequest",
+          "description": "B-spline interpolation request.",
+          "x-flatbuffer-type": "BSPInterpolationRequest"
+        },
+        "INTERPOLATION_RESULT": {
+          "$ref": "#/definitions/BSPInterpolationResult",
+          "description": "B-spline interpolation result.",
+          "x-flatbuffer-type": "BSPInterpolationResult"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/BSP",
+  "x-flatbuffer-root-type": "BSP",
+  "x-flatbuffer-file-identifier": "$BSP"
+}

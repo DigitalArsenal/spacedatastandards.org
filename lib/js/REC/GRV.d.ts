@@ -23,6 +23,13 @@ export declare class GRV implements flatbuffers.IUnpackableObject<GRVT> {
     SOLID_TIDES(): boolean;
     OCEAN_TIDES(): boolean;
     POLE_TIDES(): boolean;
+    EQUATORIAL_RADIUS(): number;
+    J2(): number;
+    MU(): number;
+    J3(): number;
+    J4(): number;
+    J5(): number;
+    J6(): number;
     static startGRV(builder: flatbuffers.Builder): void;
     static addModelType(builder: flatbuffers.Builder, MODEL_TYPE: GravityModelType): void;
     static addModelName(builder: flatbuffers.Builder, MODEL_NAME: GravityModelName): void;
@@ -35,10 +42,17 @@ export declare class GRV implements flatbuffers.IUnpackableObject<GRVT> {
     static addSolidTides(builder: flatbuffers.Builder, SOLID_TIDES: boolean): void;
     static addOceanTides(builder: flatbuffers.Builder, OCEAN_TIDES: boolean): void;
     static addPoleTides(builder: flatbuffers.Builder, POLE_TIDES: boolean): void;
+    static addEquatorialRadius(builder: flatbuffers.Builder, EQUATORIAL_RADIUS: number): void;
+    static addJ2(builder: flatbuffers.Builder, J2: number): void;
+    static addMu(builder: flatbuffers.Builder, MU: number): void;
+    static addJ3(builder: flatbuffers.Builder, J3: number): void;
+    static addJ4(builder: flatbuffers.Builder, J4: number): void;
+    static addJ5(builder: flatbuffers.Builder, J5: number): void;
+    static addJ6(builder: flatbuffers.Builder, J6: number): void;
     static endGRV(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishGRVBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedGRVBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createGRV(builder: flatbuffers.Builder, MODEL_TYPE: GravityModelType, MODEL_NAME: GravityModelName, CENTRAL_BODY: CentralBody, MAX_DEGREE: number, MAX_ORDER: number, INCLUDE_SUN: boolean, INCLUDE_MOON: boolean, INCLUDE_PLANETS: boolean, SOLID_TIDES: boolean, OCEAN_TIDES: boolean, POLE_TIDES: boolean): flatbuffers.Offset;
+    static createGRV(builder: flatbuffers.Builder, MODEL_TYPE: GravityModelType, MODEL_NAME: GravityModelName, CENTRAL_BODY: CentralBody, MAX_DEGREE: number, MAX_ORDER: number, INCLUDE_SUN: boolean, INCLUDE_MOON: boolean, INCLUDE_PLANETS: boolean, SOLID_TIDES: boolean, OCEAN_TIDES: boolean, POLE_TIDES: boolean, EQUATORIAL_RADIUS: number, J2: number, MU: number, J3: number, J4: number, J5: number, J6: number): flatbuffers.Offset;
     unpack(): GRVT;
     unpackTo(_o: GRVT): void;
 }
@@ -54,7 +68,14 @@ export declare class GRVT implements flatbuffers.IGeneratedObject {
     SOLID_TIDES: boolean;
     OCEAN_TIDES: boolean;
     POLE_TIDES: boolean;
-    constructor(MODEL_TYPE?: GravityModelType, MODEL_NAME?: GravityModelName, CENTRAL_BODY?: CentralBody, MAX_DEGREE?: number, MAX_ORDER?: number, INCLUDE_SUN?: boolean, INCLUDE_MOON?: boolean, INCLUDE_PLANETS?: boolean, SOLID_TIDES?: boolean, OCEAN_TIDES?: boolean, POLE_TIDES?: boolean);
+    EQUATORIAL_RADIUS: number;
+    J2: number;
+    MU: number;
+    J3: number;
+    J4: number;
+    J5: number;
+    J6: number;
+    constructor(MODEL_TYPE?: GravityModelType, MODEL_NAME?: GravityModelName, CENTRAL_BODY?: CentralBody, MAX_DEGREE?: number, MAX_ORDER?: number, INCLUDE_SUN?: boolean, INCLUDE_MOON?: boolean, INCLUDE_PLANETS?: boolean, SOLID_TIDES?: boolean, OCEAN_TIDES?: boolean, POLE_TIDES?: boolean, EQUATORIAL_RADIUS?: number, J2?: number, MU?: number, J3?: number, J4?: number, J5?: number, J6?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=GRV.d.ts.map

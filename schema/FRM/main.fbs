@@ -1,0 +1,58 @@
+// Hash: 69c8fc014a5b3bc275028a21d3b5ffb9e707fffd98b8c48957b2e34aa0427e34
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum frmOperationCode : byte {
+  UNKNOWN = 0,
+  PCI_TO_PCPF = 1,
+  PCPF_TO_PCI = 2,
+  LLA_TO_PCPF = 3,
+  PCPF_TO_LLA = 4,
+}
+
+enum frmResultStatus : byte {
+  OK = 0,
+  INVALID_INPUT = 1,
+  UNSUPPORTED_OPERATION = 2,
+}
+
+table FRMVector3 {
+  X:double;
+  Y:double;
+  Z:double;
+}
+
+table FRMMatrix3 {
+  M11:double;
+  M12:double;
+  M13:double;
+  M21:double;
+  M22:double;
+  M23:double;
+  M31:double;
+  M32:double;
+  M33:double;
+}
+
+table FRMFrameTransformRequest {
+  OPERATION:frmOperationCode;
+  POSITION:FRMVector3;
+  TRANSFORM_DCM:FRMMatrix3;
+  EQUATORIAL_RADIUS_M:double;
+  POLAR_RADIUS_M:double;
+  TRACE_ID:string;
+}
+
+table FRMFrameTransformResult {
+  STATUS:frmResultStatus;
+  ERROR_MESSAGE:string;
+  POSITION:FRMVector3;
+  TRACE_ID:string;
+}
+
+table FRM {
+  FRAME_TRANSFORM_REQUEST:FRMFrameTransformRequest;
+  FRAME_TRANSFORM_RESULT:FRMFrameTransformResult;
+}
+
+root_type FRM;
+file_identifier "$FRM";

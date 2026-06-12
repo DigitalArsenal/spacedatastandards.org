@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "rbkOperationCode" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "ADD_MRP", "SUB_MRP", "MRP_SHADOW", "MRP_SWITCH", "EP_TO_MRP", "MRP_TO_EP", "DCM_TO_EP", "EP_TO_DCM", "DCM_TO_MRP", "MRP_TO_DCM", "B_MATRIX_MRP", "B_INV_MATRIX_MRP", "D_MRP", "D_MRP_TO_OMEGA", "B_DOT_MATRIX_MRP", "DD_MRP", "DD_MRP_TO_D_OMEGA", "ADD_GIBBS", "SUB_GIBBS", "EP_TO_GIBBS", "GIBBS_TO_EP", "DCM_TO_GIBBS", "GIBBS_TO_DCM", "MRP_TO_GIBBS", "GIBBS_TO_MRP", "B_MATRIX_GIBBS", "B_INV_MATRIX_GIBBS", "D_GIBBS", "ADD_PRV", "SUB_PRV", "EP_TO_PRV", "PRV_TO_EP", "DCM_TO_PRV", "PRV_TO_DCM", "MRP_TO_PRV", "PRV_TO_MRP", "GIBBS_TO_PRV", "PRV_TO_GIBBS", "B_MATRIX_PRV", "B_INV_MATRIX_PRV", "D_PRV", "ADD_EULER", "SUB_EULER", "EULER_TO_DCM", "DCM_TO_EULER", "EULER_TO_EP", "EP_TO_EULER", "EULER_TO_MRP", "MRP_TO_EULER", "EULER_TO_GIBBS", "GIBBS_TO_EULER", "EULER_TO_PRV", "PRV_TO_EULER", "B_MATRIX_EULER", "B_INV_MATRIX_EULER", "D_EULER", "TILDE_MATRIX", "M1_ROTATION_MATRIX", "M2_ROTATION_MATRIX", "M3_ROTATION_MATRIX"]
+    },
+    "rbkEulerSequenceCode" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "EULER_121", "EULER_123", "EULER_131", "EULER_132", "EULER_212", "EULER_213", "EULER_231", "EULER_232", "EULER_312", "EULER_313", "EULER_321", "EULER_323"]
+    },
+    "rbkResultStatus" : {
+      "type" : "string",
+      "enum": ["OK", "INVALID_INPUT", "UNSUPPORTED_OPERATION"]
+    },
+    "RBKVector3" : {
+      "type" : "object",
+      "description" : "Three-vector used for MRP, Gibbs, PRV, angular rate, and related attitude math values.",
+      "properties" : {
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RBKQuaternion" : {
+      "type" : "object",
+      "description" : "Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.",
+      "properties" : {
+        "Q0" : {
+                "type" : "number"
+              },
+        "Q1" : {
+                "type" : "number"
+              },
+        "Q2" : {
+                "type" : "number"
+              },
+        "Q3" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RBKMatrix3" : {
+      "type" : "object",
+      "description" : "Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.",
+      "properties" : {
+        "M11" : {
+                "type" : "number"
+              },
+        "M12" : {
+                "type" : "number"
+              },
+        "M13" : {
+                "type" : "number"
+              },
+        "M21" : {
+                "type" : "number"
+              },
+        "M22" : {
+                "type" : "number"
+              },
+        "M23" : {
+                "type" : "number"
+              },
+        "M31" : {
+                "type" : "number"
+              },
+        "M32" : {
+                "type" : "number"
+              },
+        "M33" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RBKRigidBodyKinematicsRequest" : {
+      "type" : "object",
+      "description" : "Request for one rigid-body kinematics utility operation.",
+      "properties" : {
+        "OPERATION" : {
+                "$ref" : "#/definitions/rbkOperationCode"
+              },
+        "VECTOR_A" : {
+                "$ref" : "#/definitions/RBKVector3"
+              },
+        "VECTOR_B" : {
+                "$ref" : "#/definitions/RBKVector3"
+              },
+        "QUATERNION_A" : {
+                "$ref" : "#/definitions/RBKQuaternion"
+              },
+        "MATRIX_A" : {
+                "$ref" : "#/definitions/RBKMatrix3"
+              },
+        "SWITCH_THRESHOLD" : {
+                "type" : "number"
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              },
+        "VECTOR_C" : {
+                "$ref" : "#/definitions/RBKVector3"
+              },
+        "VECTOR_D" : {
+                "$ref" : "#/definitions/RBKVector3"
+              },
+        "EULER_SEQUENCE" : {
+                "$ref" : "#/definitions/rbkEulerSequenceCode"
+              },
+        "ANGLE_RAD" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RBKRigidBodyKinematicsResult" : {
+      "type" : "object",
+      "description" : "Result for one rigid-body kinematics utility operation.",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/rbkResultStatus"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string"
+              },
+        "VECTOR" : {
+                "$ref" : "#/definitions/RBKVector3"
+              },
+        "QUATERNION" : {
+                "$ref" : "#/definitions/RBKQuaternion"
+              },
+        "MATRIX" : {
+                "$ref" : "#/definitions/RBKMatrix3"
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RBK" : {
+      "type" : "object",
+      "description" : "Rigid-body kinematics utility envelope.",
+      "properties" : {
+        "RIGID_BODY_REQUEST" : {
+                "$ref" : "#/definitions/RBKRigidBodyKinematicsRequest"
+              },
+        "RIGID_BODY_RESULT" : {
+                "$ref" : "#/definitions/RBKRigidBodyKinematicsResult"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RBK"
+}

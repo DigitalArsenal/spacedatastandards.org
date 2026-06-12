@@ -4823,7 +4823,46 @@
                         "TCG",
                         "TT",
                         "UT1",
-                        "UTC"
+                        "UTC",
+                        "GLONASS",
+                        "GST",
+                        "QZSS",
+                        "BDT",
+                        "NAVIC",
+                        "SBAS"
+                    ]
+                },
+                "timEpochRepresentation": {
+                    "type": "string",
+                    "enum": [
+                        "JULIAN_DATE",
+                        "MODIFIED_JULIAN_DATE",
+                        "UNIX_SECONDS",
+                        "ISO8601",
+                        "GPS_SECONDS",
+                        "GNSS_WEEK_SECONDS",
+                        "CCSDS_TIME_CODE",
+                        "MISSION_ELAPSED_SECONDS"
+                    ]
+                },
+                "timCcsdsTimeCodeKind": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "UNSEGMENTED",
+                        "DAY_SEGMENTED",
+                        "CALENDAR_SEGMENTED"
+                    ]
+                },
+                "timConversionStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "INVALID_INPUT",
+                        "UNSUPPORTED_TIME_SYSTEM",
+                        "LEAP_SECOND_DATA_REQUIRED",
+                        "EOP_DATA_REQUIRED",
+                        "OUT_OF_RANGE"
                     ]
                 },
                 "PolarizationType": {
@@ -5206,12 +5245,190 @@
                     },
                     "additionalProperties": false
                 },
-                "TIM": {
+                "TIMCcsdsTimeCode": {
                     "type": "object",
-                    "description": "Time System",
+                    "description": "CCSDS time-code payload and preamble metadata.",
+                    "properties": {
+                        "CODE_KIND": {
+                            "$ref": "#/definitions/timCcsdsTimeCodeKind",
+                            "description": "CCSDS time-code family."
+                        },
+                        "PREAMBLE_FIELD1": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "First CCSDS preamble field octet."
+                        },
+                        "PREAMBLE_FIELD2": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Second CCSDS preamble field octet; ignored when not signaled by preamble 1."
+                        },
+                        "TIME_FIELD": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Raw CCSDS time field octets."
+                        },
+                        "AGENCY_DEFINED_EPOCH_ISO8601": {
+                            "type": "string",
+                            "description": "Optional agency-defined epoch timestamp for agency epoch time codes."
+                        },
+                        "CCSDS_EPOCH_ISO8601": {
+                            "type": "string",
+                            "description": "Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TIMInstant": {
+                    "type": "object",
+                    "description": "Numeric or textual instant tagged with its time system and representation.",
                     "properties": {
                         "TIME_SYSTEM": {
-                            "$ref": "#/definitions/timingStandard"
+                            "$ref": "#/definitions/timingStandard",
+                            "description": "Time system for this instant."
+                        },
+                        "EPOCH_FORMAT": {
+                            "$ref": "#/definitions/timEpochRepresentation",
+                            "description": "Interpretation of JULIAN_DATE, SECONDS, and ISO8601."
+                        },
+                        "JULIAN_DATE": {
+                            "type": "number",
+                            "description": "Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT."
+                        },
+                        "SECONDS": {
+                            "type": "number",
+                            "description": "Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS."
+                        },
+                        "ISO8601": {
+                            "type": "string",
+                            "description": "ISO 8601 timestamp text for ISO8601 inputs or display outputs."
+                        },
+                        "SUBSECOND_NANOS": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Additional nanoseconds beyond the fractional scalar/text value."
+                        },
+                        "EPOCH_LABEL": {
+                            "type": "string",
+                            "description": "Optional application-defined epoch label for MET, MRT, or SCLK values."
+                        },
+                        "GNSS_WEEK": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS."
+                        },
+                        "HAS_GNSS_ROLLOVER_REFERENCE": {
+                            "type": "boolean",
+                            "description": "Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied."
+                        },
+                        "GNSS_ROLLOVER_REFERENCE_ISO8601": {
+                            "type": "string",
+                            "description": "Optional Orekit-style GNSS week rollover reference timestamp."
+                        },
+                        "CCSDS_TIME_CODE": {
+                            "$ref": "#/definitions/TIMCcsdsTimeCode",
+                            "description": "CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TIMConversionRequest": {
+                    "type": "object",
+                    "description": "Request to convert one instant into another time system/representation.",
+                    "properties": {
+                        "SOURCE": {
+                            "$ref": "#/definitions/TIMInstant",
+                            "description": "Source instant to convert."
+                        },
+                        "TARGET_TIME_SYSTEM": {
+                            "$ref": "#/definitions/timingStandard",
+                            "description": "Target time system."
+                        },
+                        "TARGET_EPOCH_FORMAT": {
+                            "$ref": "#/definitions/timEpochRepresentation",
+                            "description": "Preferred target representation."
+                        },
+                        "TAI_MINUS_UTC_SECONDS": {
+                            "type": "number",
+                            "description": "Optional TAI-UTC override in seconds for the source instant."
+                        },
+                        "HAS_TAI_MINUS_UTC": {
+                            "type": "boolean",
+                            "description": "Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data."
+                        },
+                        "DUT1_SECONDS": {
+                            "type": "number",
+                            "description": "Optional UT1-UTC override in seconds for UT1 conversions."
+                        },
+                        "HAS_DUT1": {
+                            "type": "boolean",
+                            "description": "Whether DUT1_SECONDS should override runtime Earth-orientation data."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Optional caller trace/correlation identifier."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TIMConversionResult": {
+                    "type": "object",
+                    "description": "Result of a time conversion request.",
+                    "properties": {
+                        "SOURCE": {
+                            "$ref": "#/definitions/TIMInstant",
+                            "description": "Original source instant."
+                        },
+                        "TARGET": {
+                            "$ref": "#/definitions/TIMInstant",
+                            "description": "Converted target instant."
+                        },
+                        "DELTA_SECONDS": {
+                            "type": "number",
+                            "description": "Target minus source offset in SI seconds for the requested conversion."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/timConversionStatus",
+                            "description": "Conversion status."
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Optional error detail when STATUS is not OK."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Caller trace/correlation identifier copied from the request when present."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TIM": {
+                    "type": "object",
+                    "description": "Time System and time-conversion envelope.",
+                    "properties": {
+                        "TIME_SYSTEM": {
+                            "$ref": "#/definitions/timingStandard",
+                            "description": "Legacy time-system selector retained for existing TIM consumers."
+                        },
+                        "INSTANT": {
+                            "$ref": "#/definitions/TIMInstant",
+                            "description": "A single tagged instant."
+                        },
+                        "CONVERSION_REQUEST": {
+                            "$ref": "#/definitions/TIMConversionRequest",
+                            "description": "Time conversion request."
+                        },
+                        "CONVERSION_RESULT": {
+                            "$ref": "#/definitions/TIMConversionResult",
+                            "description": "Time conversion result."
                         }
                     },
                     "additionalProperties": false
@@ -7957,6 +8174,27 @@
                         },
                         "POLE_TIDES": {
                             "type": "boolean"
+                        },
+                        "EQUATORIAL_RADIUS": {
+                            "type": "number"
+                        },
+                        "J2": {
+                            "type": "number"
+                        },
+                        "MU": {
+                            "type": "number"
+                        },
+                        "J3": {
+                            "type": "number"
+                        },
+                        "J4": {
+                            "type": "number"
+                        },
+                        "J5": {
+                            "type": "number"
+                        },
+                        "J6": {
+                            "type": "number"
                         }
                     },
                     "additionalProperties": false
@@ -11077,6 +11315,474 @@
             },
             "$ref": "#/definitions/OOE"
         },
+        "NUM": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "numOperationCode": {
+                    "type": "string",
+                    "enum": [
+                        "UNKNOWN",
+                        "NEWTON_RAPHSON",
+                        "LINEAR_INTERPOLATION",
+                        "BILINEAR_INTERPOLATION",
+                        "GAUSS_MARKOV_SEQUENCE"
+                    ]
+                },
+                "numFunctionCode": {
+                    "type": "string",
+                    "enum": [
+                        "UNKNOWN",
+                        "QUADRATIC_MINUS_CONSTANT"
+                    ]
+                },
+                "numResultStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "INVALID_INPUT",
+                        "UNSUPPORTED_OPERATION",
+                        "DID_NOT_CONVERGE"
+                    ]
+                },
+                "numDiscretizeRoundDirection": {
+                    "type": "string",
+                    "enum": [
+                        "TO_ZERO",
+                        "FROM_ZERO",
+                        "NEAR"
+                    ]
+                },
+                "NUMRootSolveRequest": {
+                    "type": "object",
+                    "description": "Request for one scalar numerical root-solving operation.",
+                    "properties": {
+                        "OPERATION": {
+                            "$ref": "#/definitions/numOperationCode"
+                        },
+                        "FUNCTION": {
+                            "$ref": "#/definitions/numFunctionCode"
+                        },
+                        "INITIAL_ESTIMATE": {
+                            "type": "number"
+                        },
+                        "TARGET_VALUE": {
+                            "type": "number"
+                        },
+                        "ACCURACY": {
+                            "type": "number"
+                        },
+                        "MAX_ITERATIONS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TRACE_ID": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "NUMRootSolveResult": {
+                    "type": "object",
+                    "description": "Result of one scalar numerical root-solving operation.",
+                    "properties": {
+                        "STATUS": {
+                            "$ref": "#/definitions/numResultStatus"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string"
+                        },
+                        "ROOT": {
+                            "type": "number"
+                        },
+                        "RESIDUAL": {
+                            "type": "number"
+                        },
+                        "ITERATIONS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TRACE_ID": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "NUMVectorSaturateRequest": {
+                    "type": "object",
+                    "description": "Request for component-wise vector saturation.",
+                    "properties": {
+                        "STATE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Input vector to clamp."
+                        },
+                        "LOWER_BOUNDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Per-component lower bounds. Length must match STATE."
+                        },
+                        "UPPER_BOUNDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Per-component upper bounds. Length must match STATE."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Optional trace/correlation identifier."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "NUMVectorSaturateResult": {
+                    "type": "object",
+                    "description": "Result of one component-wise vector saturation operation.",
+                    "properties": {
+                        "STATUS": {
+                            "$ref": "#/definitions/numResultStatus"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string"
+                        },
+                        "SATURATED_STATE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Saturated output vector."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Caller trace/correlation identifier copied from the request when present."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "NUMVectorDiscretizeRequest": {
+                    "type": "object",
+                    "description": "Request for component-wise vector discretization.",
+                    "properties": {
+                        "STATE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Input vector to quantize."
+                        },
+                        "LSB": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Per-component least-significant-bit size. Length must match STATE."
+                        },
+                        "ROUND_DIRECTION": {
+                            "$ref": "#/definitions/numDiscretizeRoundDirection",
+                            "description": "Rounding direction used before the original sign is restored."
+                        },
+                        "CARRY_ERROR": {
+                            "type": "boolean",
+                            "description": "When true, PREVIOUS_ERROR is added to STATE before discretization."
+                        },
+                        "PREVIOUS_ERROR": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Optional prior discretization error vector from an earlier result."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Optional trace/correlation identifier."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "NUMVectorDiscretizeResult": {
+                    "type": "object",
+                    "description": "Result of one component-wise vector discretization operation.",
+                    "properties": {
+                        "STATUS": {
+                            "$ref": "#/definitions/numResultStatus"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string"
+                        },
+                        "DISCRETIZED_STATE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Quantized output vector."
+                        },
+                        "DISCRETIZATION_ERROR": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Input-minus-output error after any requested carried error was applied."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Caller trace/correlation identifier copied from the request when present."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "NUMScalarInterpolationRequest": {
+                    "type": "object",
+                    "description": "Request for one scalar interpolation operation.",
+                    "properties": {
+                        "OPERATION": {
+                            "$ref": "#/definitions/numOperationCode",
+                            "description": "LINEAR_INTERPOLATION or BILINEAR_INTERPOLATION."
+                        },
+                        "X1": {
+                            "type": "number",
+                            "description": "First x-coordinate bound."
+                        },
+                        "X2": {
+                            "type": "number",
+                            "description": "Second x-coordinate bound."
+                        },
+                        "Y1": {
+                            "type": "number",
+                            "description": "First y-coordinate bound for bilinear interpolation."
+                        },
+                        "Y2": {
+                            "type": "number",
+                            "description": "Second y-coordinate bound for bilinear interpolation."
+                        },
+                        "VALUE1": {
+                            "type": "number",
+                            "description": "Linear interpolation value at X1."
+                        },
+                        "VALUE2": {
+                            "type": "number",
+                            "description": "Linear interpolation value at X2."
+                        },
+                        "Z11": {
+                            "type": "number",
+                            "description": "Bilinear corner value at X1,Y1."
+                        },
+                        "Z12": {
+                            "type": "number",
+                            "description": "Bilinear corner value at X1,Y2."
+                        },
+                        "Z21": {
+                            "type": "number",
+                            "description": "Bilinear corner value at X2,Y1."
+                        },
+                        "Z22": {
+                            "type": "number",
+                            "description": "Bilinear corner value at X2,Y2."
+                        },
+                        "INTERPOLATION_X": {
+                            "type": "number",
+                            "description": "X coordinate to interpolate."
+                        },
+                        "INTERPOLATION_Y": {
+                            "type": "number",
+                            "description": "Y coordinate to interpolate for bilinear interpolation."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Optional trace/correlation identifier."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "NUMScalarInterpolationResult": {
+                    "type": "object",
+                    "description": "Result of one scalar interpolation operation.",
+                    "properties": {
+                        "STATUS": {
+                            "$ref": "#/definitions/numResultStatus"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string"
+                        },
+                        "VALUE": {
+                            "type": "number",
+                            "description": "Interpolated scalar value."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Caller trace/correlation identifier copied from the request when present."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "NUMGaussMarkovRequest": {
+                    "type": "object",
+                    "description": "Request for one Basilisk-compatible Gauss-Markov random sequence.",
+                    "properties": {
+                        "OPERATION": {
+                            "$ref": "#/definitions/numOperationCode",
+                            "description": "GAUSS_MARKOV_SEQUENCE."
+                        },
+                        "DIMENSION": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of scalar states per sample."
+                        },
+                        "SAMPLE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of post-warmup samples used in the result statistics."
+                        },
+                        "WARMUP_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of initial state propagations excluded from the result statistics."
+                        },
+                        "RNG_SEED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Seed for the Basilisk-compatible standard normal generator."
+                        },
+                        "PROPAGATION_MATRIX": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Row-major DIMENSION x DIMENSION state propagation matrix."
+                        },
+                        "NOISE_MATRIX": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Row-major DIMENSION x DIMENSION standard-normal noise mixing matrix."
+                        },
+                        "STATE_BOUNDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Per-state symmetric bounds. Values <= 0 disable clamping for that state."
+                        },
+                        "EMIT_SAMPLES": {
+                            "type": "boolean",
+                            "description": "When true, emit flattened sample-major states in SAMPLES."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Optional trace/correlation identifier."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "NUMGaussMarkovResult": {
+                    "type": "object",
+                    "description": "Result of one Basilisk-compatible Gauss-Markov random sequence.",
+                    "properties": {
+                        "STATUS": {
+                            "$ref": "#/definitions/numResultStatus"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string"
+                        },
+                        "MEAN": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Post-warmup per-state sample means."
+                        },
+                        "STANDARD_DEVIATION": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Post-warmup per-state sample standard deviations with n - 1 denominator."
+                        },
+                        "MINIMUM": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Post-warmup per-state minima."
+                        },
+                        "MAXIMUM": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Post-warmup per-state maxima."
+                        },
+                        "FINAL_STATE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "State after the final generated sample."
+                        },
+                        "SAMPLES": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Optional flattened sample-major state history."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Caller trace/correlation identifier copied from the request when present."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "NUM": {
+                    "type": "object",
+                    "description": "Numerical utility envelope.",
+                    "properties": {
+                        "ROOT_SOLVE_REQUEST": {
+                            "$ref": "#/definitions/NUMRootSolveRequest"
+                        },
+                        "ROOT_SOLVE_RESULT": {
+                            "$ref": "#/definitions/NUMRootSolveResult"
+                        },
+                        "VECTOR_SATURATE_REQUEST": {
+                            "$ref": "#/definitions/NUMVectorSaturateRequest"
+                        },
+                        "VECTOR_SATURATE_RESULT": {
+                            "$ref": "#/definitions/NUMVectorSaturateResult"
+                        },
+                        "VECTOR_DISCRETIZE_REQUEST": {
+                            "$ref": "#/definitions/NUMVectorDiscretizeRequest"
+                        },
+                        "VECTOR_DISCRETIZE_RESULT": {
+                            "$ref": "#/definitions/NUMVectorDiscretizeResult"
+                        },
+                        "SCALAR_INTERPOLATION_REQUEST": {
+                            "$ref": "#/definitions/NUMScalarInterpolationRequest"
+                        },
+                        "SCALAR_INTERPOLATION_RESULT": {
+                            "$ref": "#/definitions/NUMScalarInterpolationResult"
+                        },
+                        "GAUSS_MARKOV_REQUEST": {
+                            "$ref": "#/definitions/NUMGaussMarkovRequest"
+                        },
+                        "GAUSS_MARKOV_RESULT": {
+                            "$ref": "#/definitions/NUMGaussMarkovResult"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/NUM"
+        },
         "OOB": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -11932,7 +12638,46 @@
                         "TCG",
                         "TT",
                         "UT1",
-                        "UTC"
+                        "UTC",
+                        "GLONASS",
+                        "GST",
+                        "QZSS",
+                        "BDT",
+                        "NAVIC",
+                        "SBAS"
+                    ]
+                },
+                "timEpochRepresentation": {
+                    "type": "string",
+                    "enum": [
+                        "JULIAN_DATE",
+                        "MODIFIED_JULIAN_DATE",
+                        "UNIX_SECONDS",
+                        "ISO8601",
+                        "GPS_SECONDS",
+                        "GNSS_WEEK_SECONDS",
+                        "CCSDS_TIME_CODE",
+                        "MISSION_ELAPSED_SECONDS"
+                    ]
+                },
+                "timCcsdsTimeCodeKind": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "UNSEGMENTED",
+                        "DAY_SEGMENTED",
+                        "CALENDAR_SEGMENTED"
+                    ]
+                },
+                "timConversionStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "INVALID_INPUT",
+                        "UNSUPPORTED_TIME_SYSTEM",
+                        "LEAP_SECOND_DATA_REQUIRED",
+                        "EOP_DATA_REQUIRED",
+                        "OUT_OF_RANGE"
                     ]
                 },
                 "PolarizationType": {
@@ -12287,12 +13032,190 @@
                     },
                     "additionalProperties": false
                 },
-                "TIM": {
+                "TIMCcsdsTimeCode": {
                     "type": "object",
-                    "description": "Time System",
+                    "description": "CCSDS time-code payload and preamble metadata.",
+                    "properties": {
+                        "CODE_KIND": {
+                            "$ref": "#/definitions/timCcsdsTimeCodeKind",
+                            "description": "CCSDS time-code family."
+                        },
+                        "PREAMBLE_FIELD1": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "First CCSDS preamble field octet."
+                        },
+                        "PREAMBLE_FIELD2": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Second CCSDS preamble field octet; ignored when not signaled by preamble 1."
+                        },
+                        "TIME_FIELD": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Raw CCSDS time field octets."
+                        },
+                        "AGENCY_DEFINED_EPOCH_ISO8601": {
+                            "type": "string",
+                            "description": "Optional agency-defined epoch timestamp for agency epoch time codes."
+                        },
+                        "CCSDS_EPOCH_ISO8601": {
+                            "type": "string",
+                            "description": "Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TIMInstant": {
+                    "type": "object",
+                    "description": "Numeric or textual instant tagged with its time system and representation.",
                     "properties": {
                         "TIME_SYSTEM": {
-                            "$ref": "#/definitions/timingStandard"
+                            "$ref": "#/definitions/timingStandard",
+                            "description": "Time system for this instant."
+                        },
+                        "EPOCH_FORMAT": {
+                            "$ref": "#/definitions/timEpochRepresentation",
+                            "description": "Interpretation of JULIAN_DATE, SECONDS, and ISO8601."
+                        },
+                        "JULIAN_DATE": {
+                            "type": "number",
+                            "description": "Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT."
+                        },
+                        "SECONDS": {
+                            "type": "number",
+                            "description": "Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS."
+                        },
+                        "ISO8601": {
+                            "type": "string",
+                            "description": "ISO 8601 timestamp text for ISO8601 inputs or display outputs."
+                        },
+                        "SUBSECOND_NANOS": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Additional nanoseconds beyond the fractional scalar/text value."
+                        },
+                        "EPOCH_LABEL": {
+                            "type": "string",
+                            "description": "Optional application-defined epoch label for MET, MRT, or SCLK values."
+                        },
+                        "GNSS_WEEK": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS."
+                        },
+                        "HAS_GNSS_ROLLOVER_REFERENCE": {
+                            "type": "boolean",
+                            "description": "Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied."
+                        },
+                        "GNSS_ROLLOVER_REFERENCE_ISO8601": {
+                            "type": "string",
+                            "description": "Optional Orekit-style GNSS week rollover reference timestamp."
+                        },
+                        "CCSDS_TIME_CODE": {
+                            "$ref": "#/definitions/TIMCcsdsTimeCode",
+                            "description": "CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TIMConversionRequest": {
+                    "type": "object",
+                    "description": "Request to convert one instant into another time system/representation.",
+                    "properties": {
+                        "SOURCE": {
+                            "$ref": "#/definitions/TIMInstant",
+                            "description": "Source instant to convert."
+                        },
+                        "TARGET_TIME_SYSTEM": {
+                            "$ref": "#/definitions/timingStandard",
+                            "description": "Target time system."
+                        },
+                        "TARGET_EPOCH_FORMAT": {
+                            "$ref": "#/definitions/timEpochRepresentation",
+                            "description": "Preferred target representation."
+                        },
+                        "TAI_MINUS_UTC_SECONDS": {
+                            "type": "number",
+                            "description": "Optional TAI-UTC override in seconds for the source instant."
+                        },
+                        "HAS_TAI_MINUS_UTC": {
+                            "type": "boolean",
+                            "description": "Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data."
+                        },
+                        "DUT1_SECONDS": {
+                            "type": "number",
+                            "description": "Optional UT1-UTC override in seconds for UT1 conversions."
+                        },
+                        "HAS_DUT1": {
+                            "type": "boolean",
+                            "description": "Whether DUT1_SECONDS should override runtime Earth-orientation data."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Optional caller trace/correlation identifier."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TIMConversionResult": {
+                    "type": "object",
+                    "description": "Result of a time conversion request.",
+                    "properties": {
+                        "SOURCE": {
+                            "$ref": "#/definitions/TIMInstant",
+                            "description": "Original source instant."
+                        },
+                        "TARGET": {
+                            "$ref": "#/definitions/TIMInstant",
+                            "description": "Converted target instant."
+                        },
+                        "DELTA_SECONDS": {
+                            "type": "number",
+                            "description": "Target minus source offset in SI seconds for the requested conversion."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/timConversionStatus",
+                            "description": "Conversion status."
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Optional error detail when STATUS is not OK."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Caller trace/correlation identifier copied from the request when present."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TIM": {
+                    "type": "object",
+                    "description": "Time System and time-conversion envelope.",
+                    "properties": {
+                        "TIME_SYSTEM": {
+                            "$ref": "#/definitions/timingStandard",
+                            "description": "Legacy time-system selector retained for existing TIM consumers."
+                        },
+                        "INSTANT": {
+                            "$ref": "#/definitions/TIMInstant",
+                            "description": "A single tagged instant."
+                        },
+                        "CONVERSION_REQUEST": {
+                            "$ref": "#/definitions/TIMConversionRequest",
+                            "description": "Time conversion request."
+                        },
+                        "CONVERSION_RESULT": {
+                            "$ref": "#/definitions/TIMConversionResult",
+                            "description": "Time conversion result."
                         }
                     },
                     "additionalProperties": false
@@ -12973,6 +13896,207 @@
                 }
             },
             "$ref": "#/definitions/TAB"
+        },
+        "BSP": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "bspInterpolationStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "INVALID_INPUT",
+                        "UNSUPPORTED_ORDER",
+                        "SINGULAR_SYSTEM"
+                    ]
+                },
+                "BSPVector3Series": {
+                    "type": "object",
+                    "description": "Three coordinate arrays sharing one time vector.",
+                    "properties": {
+                        "T": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Sample or waypoint time tags in seconds."
+                        },
+                        "X1": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Coordinate 1 samples."
+                        },
+                        "X2": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Coordinate 2 samples."
+                        },
+                        "X3": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Coordinate 3 samples."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "BSPInterpolationRequest": {
+                    "type": "object",
+                    "description": "Request for one 3D B-spline interpolation.",
+                    "properties": {
+                        "WAYPOINTS": {
+                            "$ref": "#/definitions/BSPVector3Series",
+                            "description": "Waypoint times and coordinates. T, X1, X2, and X3 must have equal length."
+                        },
+                        "SAMPLE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of equally spaced output samples."
+                        },
+                        "POLYNOMIAL_ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Polynomial order of the B-spline basis."
+                        },
+                        "HAS_X_DOT_0": {
+                            "type": "boolean",
+                            "description": "Whether X_DOT_0 contains the first derivative at the first waypoint."
+                        },
+                        "X_DOT_0": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Optional first derivative at the first waypoint, length 3."
+                        },
+                        "HAS_X_DOT_N": {
+                            "type": "boolean",
+                            "description": "Whether X_DOT_N contains the first derivative at the last waypoint."
+                        },
+                        "X_DOT_N": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Optional first derivative at the last waypoint, length 3."
+                        },
+                        "HAS_X_D_DOT_0": {
+                            "type": "boolean",
+                            "description": "Whether X_D_DOT_0 contains the second derivative at the first waypoint."
+                        },
+                        "X_D_DOT_0": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Optional second derivative at the first waypoint, length 3."
+                        },
+                        "HAS_X_D_DOT_N": {
+                            "type": "boolean",
+                            "description": "Whether X_D_DOT_N contains the second derivative at the last waypoint."
+                        },
+                        "X_D_DOT_N": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Optional second derivative at the last waypoint, length 3."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Optional trace/correlation identifier."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "BSPInterpolationResult": {
+                    "type": "object",
+                    "description": "Result of one 3D B-spline interpolation.",
+                    "properties": {
+                        "STATUS": {
+                            "$ref": "#/definitions/bspInterpolationStatus",
+                            "description": "Interpolation status."
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Optional error detail when STATUS is not OK."
+                        },
+                        "SAMPLES": {
+                            "$ref": "#/definitions/BSPVector3Series",
+                            "description": "Output sample positions."
+                        },
+                        "XD1": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "First derivative of coordinate 1 at each output sample."
+                        },
+                        "XD2": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "First derivative of coordinate 2 at each output sample."
+                        },
+                        "XD3": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "First derivative of coordinate 3 at each output sample."
+                        },
+                        "XDD1": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Second derivative of coordinate 1 at each output sample."
+                        },
+                        "XDD2": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Second derivative of coordinate 2 at each output sample."
+                        },
+                        "XDD3": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Second derivative of coordinate 3 at each output sample."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Caller trace/correlation identifier copied from the request when present."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "BSP": {
+                    "type": "object",
+                    "description": "B-spline interpolation envelope.",
+                    "properties": {
+                        "INTERPOLATION_REQUEST": {
+                            "$ref": "#/definitions/BSPInterpolationRequest",
+                            "description": "B-spline interpolation request."
+                        },
+                        "INTERPOLATION_RESULT": {
+                            "$ref": "#/definitions/BSPInterpolationResult",
+                            "description": "B-spline interpolation result."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/BSP"
         },
         "COT": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -16996,6 +18120,132 @@
             },
             "$ref": "#/definitions/XTC"
         },
+        "FRM": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "frmOperationCode": {
+                    "type": "string",
+                    "enum": [
+                        "UNKNOWN",
+                        "PCI_TO_PCPF",
+                        "PCPF_TO_PCI",
+                        "LLA_TO_PCPF",
+                        "PCPF_TO_LLA"
+                    ]
+                },
+                "frmResultStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "INVALID_INPUT",
+                        "UNSUPPORTED_OPERATION"
+                    ]
+                },
+                "FRMVector3": {
+                    "type": "object",
+                    "properties": {
+                        "X": {
+                            "type": "number"
+                        },
+                        "Y": {
+                            "type": "number"
+                        },
+                        "Z": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FRMMatrix3": {
+                    "type": "object",
+                    "properties": {
+                        "M11": {
+                            "type": "number"
+                        },
+                        "M12": {
+                            "type": "number"
+                        },
+                        "M13": {
+                            "type": "number"
+                        },
+                        "M21": {
+                            "type": "number"
+                        },
+                        "M22": {
+                            "type": "number"
+                        },
+                        "M23": {
+                            "type": "number"
+                        },
+                        "M31": {
+                            "type": "number"
+                        },
+                        "M32": {
+                            "type": "number"
+                        },
+                        "M33": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FRMFrameTransformRequest": {
+                    "type": "object",
+                    "properties": {
+                        "OPERATION": {
+                            "$ref": "#/definitions/frmOperationCode"
+                        },
+                        "POSITION": {
+                            "$ref": "#/definitions/FRMVector3"
+                        },
+                        "TRANSFORM_DCM": {
+                            "$ref": "#/definitions/FRMMatrix3"
+                        },
+                        "EQUATORIAL_RADIUS_M": {
+                            "type": "number"
+                        },
+                        "POLAR_RADIUS_M": {
+                            "type": "number"
+                        },
+                        "TRACE_ID": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FRMFrameTransformResult": {
+                    "type": "object",
+                    "properties": {
+                        "STATUS": {
+                            "$ref": "#/definitions/frmResultStatus"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string"
+                        },
+                        "POSITION": {
+                            "$ref": "#/definitions/FRMVector3"
+                        },
+                        "TRACE_ID": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FRM": {
+                    "type": "object",
+                    "properties": {
+                        "FRAME_TRANSFORM_REQUEST": {
+                            "$ref": "#/definitions/FRMFrameTransformRequest"
+                        },
+                        "FRAME_TRANSFORM_RESULT": {
+                            "$ref": "#/definitions/FRMFrameTransformResult"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/FRM"
+        },
         "OBT": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -17369,15 +18619,232 @@
                         "TCG",
                         "TT",
                         "UT1",
-                        "UTC"
+                        "UTC",
+                        "GLONASS",
+                        "GST",
+                        "QZSS",
+                        "BDT",
+                        "NAVIC",
+                        "SBAS"
                     ]
+                },
+                "timEpochRepresentation": {
+                    "type": "string",
+                    "enum": [
+                        "JULIAN_DATE",
+                        "MODIFIED_JULIAN_DATE",
+                        "UNIX_SECONDS",
+                        "ISO8601",
+                        "GPS_SECONDS",
+                        "GNSS_WEEK_SECONDS",
+                        "CCSDS_TIME_CODE",
+                        "MISSION_ELAPSED_SECONDS"
+                    ]
+                },
+                "timCcsdsTimeCodeKind": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "UNSEGMENTED",
+                        "DAY_SEGMENTED",
+                        "CALENDAR_SEGMENTED"
+                    ]
+                },
+                "timConversionStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "INVALID_INPUT",
+                        "UNSUPPORTED_TIME_SYSTEM",
+                        "LEAP_SECOND_DATA_REQUIRED",
+                        "EOP_DATA_REQUIRED",
+                        "OUT_OF_RANGE"
+                    ]
+                },
+                "TIMCcsdsTimeCode": {
+                    "type": "object",
+                    "description": "CCSDS time-code payload and preamble metadata.",
+                    "properties": {
+                        "CODE_KIND": {
+                            "$ref": "#/definitions/timCcsdsTimeCodeKind",
+                            "description": "CCSDS time-code family."
+                        },
+                        "PREAMBLE_FIELD1": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "First CCSDS preamble field octet."
+                        },
+                        "PREAMBLE_FIELD2": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Second CCSDS preamble field octet; ignored when not signaled by preamble 1."
+                        },
+                        "TIME_FIELD": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Raw CCSDS time field octets."
+                        },
+                        "AGENCY_DEFINED_EPOCH_ISO8601": {
+                            "type": "string",
+                            "description": "Optional agency-defined epoch timestamp for agency epoch time codes."
+                        },
+                        "CCSDS_EPOCH_ISO8601": {
+                            "type": "string",
+                            "description": "Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TIMInstant": {
+                    "type": "object",
+                    "description": "Numeric or textual instant tagged with its time system and representation.",
+                    "properties": {
+                        "TIME_SYSTEM": {
+                            "$ref": "#/definitions/timingStandard",
+                            "description": "Time system for this instant."
+                        },
+                        "EPOCH_FORMAT": {
+                            "$ref": "#/definitions/timEpochRepresentation",
+                            "description": "Interpretation of JULIAN_DATE, SECONDS, and ISO8601."
+                        },
+                        "JULIAN_DATE": {
+                            "type": "number",
+                            "description": "Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT."
+                        },
+                        "SECONDS": {
+                            "type": "number",
+                            "description": "Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS."
+                        },
+                        "ISO8601": {
+                            "type": "string",
+                            "description": "ISO 8601 timestamp text for ISO8601 inputs or display outputs."
+                        },
+                        "SUBSECOND_NANOS": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Additional nanoseconds beyond the fractional scalar/text value."
+                        },
+                        "EPOCH_LABEL": {
+                            "type": "string",
+                            "description": "Optional application-defined epoch label for MET, MRT, or SCLK values."
+                        },
+                        "GNSS_WEEK": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS."
+                        },
+                        "HAS_GNSS_ROLLOVER_REFERENCE": {
+                            "type": "boolean",
+                            "description": "Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied."
+                        },
+                        "GNSS_ROLLOVER_REFERENCE_ISO8601": {
+                            "type": "string",
+                            "description": "Optional Orekit-style GNSS week rollover reference timestamp."
+                        },
+                        "CCSDS_TIME_CODE": {
+                            "$ref": "#/definitions/TIMCcsdsTimeCode",
+                            "description": "CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TIMConversionRequest": {
+                    "type": "object",
+                    "description": "Request to convert one instant into another time system/representation.",
+                    "properties": {
+                        "SOURCE": {
+                            "$ref": "#/definitions/TIMInstant",
+                            "description": "Source instant to convert."
+                        },
+                        "TARGET_TIME_SYSTEM": {
+                            "$ref": "#/definitions/timingStandard",
+                            "description": "Target time system."
+                        },
+                        "TARGET_EPOCH_FORMAT": {
+                            "$ref": "#/definitions/timEpochRepresentation",
+                            "description": "Preferred target representation."
+                        },
+                        "TAI_MINUS_UTC_SECONDS": {
+                            "type": "number",
+                            "description": "Optional TAI-UTC override in seconds for the source instant."
+                        },
+                        "HAS_TAI_MINUS_UTC": {
+                            "type": "boolean",
+                            "description": "Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data."
+                        },
+                        "DUT1_SECONDS": {
+                            "type": "number",
+                            "description": "Optional UT1-UTC override in seconds for UT1 conversions."
+                        },
+                        "HAS_DUT1": {
+                            "type": "boolean",
+                            "description": "Whether DUT1_SECONDS should override runtime Earth-orientation data."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Optional caller trace/correlation identifier."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TIMConversionResult": {
+                    "type": "object",
+                    "description": "Result of a time conversion request.",
+                    "properties": {
+                        "SOURCE": {
+                            "$ref": "#/definitions/TIMInstant",
+                            "description": "Original source instant."
+                        },
+                        "TARGET": {
+                            "$ref": "#/definitions/TIMInstant",
+                            "description": "Converted target instant."
+                        },
+                        "DELTA_SECONDS": {
+                            "type": "number",
+                            "description": "Target minus source offset in SI seconds for the requested conversion."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/timConversionStatus",
+                            "description": "Conversion status."
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Optional error detail when STATUS is not OK."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Caller trace/correlation identifier copied from the request when present."
+                        }
+                    },
+                    "additionalProperties": false
                 },
                 "TIM": {
                     "type": "object",
-                    "description": "Time System",
+                    "description": "Time System and time-conversion envelope.",
                     "properties": {
                         "TIME_SYSTEM": {
-                            "$ref": "#/definitions/timingStandard"
+                            "$ref": "#/definitions/timingStandard",
+                            "description": "Legacy time-system selector retained for existing TIM consumers."
+                        },
+                        "INSTANT": {
+                            "$ref": "#/definitions/TIMInstant",
+                            "description": "A single tagged instant."
+                        },
+                        "CONVERSION_REQUEST": {
+                            "$ref": "#/definitions/TIMConversionRequest",
+                            "description": "Time conversion request."
+                        },
+                        "CONVERSION_RESULT": {
+                            "$ref": "#/definitions/TIMConversionResult",
+                            "description": "Time conversion result."
                         }
                     },
                     "additionalProperties": false
@@ -30182,6 +31649,1130 @@
             },
             "$ref": "#/definitions/SEO"
         },
+        "SCV": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "scvEnvelopeKind": {
+                    "type": "string",
+                    "enum": [
+                        "REQUEST",
+                        "RESULT",
+                        "PROGRESS",
+                        "CANCEL",
+                        "GEOMETRY"
+                    ]
+                },
+                "scvAnalysisMode": {
+                    "type": "string",
+                    "enum": [
+                        "COVERAGE",
+                        "ACCESS",
+                        "SWATH",
+                        "COMBINED"
+                    ]
+                },
+                "scvCoordinateFrame": {
+                    "type": "string",
+                    "enum": [
+                        "UNKNOWN",
+                        "BODY_FIXED",
+                        "INERTIAL",
+                        "ECEF",
+                        "ECI",
+                        "CUSTOM"
+                    ]
+                },
+                "scvBodyKind": {
+                    "type": "string",
+                    "enum": [
+                        "EARTH",
+                        "MOON",
+                        "MARS",
+                        "CUSTOM"
+                    ]
+                },
+                "scvSensorShapeKind": {
+                    "type": "string",
+                    "enum": [
+                        "CONIC",
+                        "RECTANGULAR",
+                        "CUSTOM_POLYGON"
+                    ]
+                },
+                "scvGeometryDomain": {
+                    "type": "string",
+                    "enum": [
+                        "SURFACE",
+                        "SPACE",
+                        "ELLIPSOID",
+                        "PLANE",
+                        "CUSTOM_MESH"
+                    ]
+                },
+                "scvResultState": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "PARTIAL",
+                        "CANCELLED",
+                        "FAILED"
+                    ]
+                },
+                "scvIntervalCategory": {
+                    "type": "string",
+                    "enum": [
+                        "ACCESS",
+                        "COVERAGE",
+                        "GAP",
+                        "REVISIT",
+                        "OVERLAP"
+                    ]
+                },
+                "scvMetricSeriesKind": {
+                    "type": "string",
+                    "enum": [
+                        "PERCENT_COVERED",
+                        "COVERED_CELL_COUNT",
+                        "ACCESS_COUNT",
+                        "CONTACT_DURATION_SECONDS",
+                        "REVISIT_SECONDS",
+                        "GAP_SECONDS",
+                        "REDUNDANCY",
+                        "OVERLAP_COUNT",
+                        "LATITUDE_BAND_COVERAGE"
+                    ]
+                },
+                "scvGeometryEncoding": {
+                    "type": "string",
+                    "enum": [
+                        "FLAT_FLOAT32",
+                        "INTERLEAVED_FLOAT32",
+                        "QUANTIZED_UINT16",
+                        "SHARED_MEMORY_OFFSET"
+                    ]
+                },
+                "SCVVec3": {
+                    "type": "object",
+                    "properties": {
+                        "X": {
+                            "type": "number"
+                        },
+                        "Y": {
+                            "type": "number"
+                        },
+                        "Z": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVEllipsoid": {
+                    "type": "object",
+                    "properties": {
+                        "BODY": {
+                            "$ref": "#/definitions/scvBodyKind"
+                        },
+                        "NAME": {
+                            "type": "string"
+                        },
+                        "SEMI_MAJOR_M": {
+                            "type": "number"
+                        },
+                        "SEMI_MINOR_M": {
+                            "type": "number"
+                        },
+                        "SEMI_INTERMEDIATE_M": {
+                            "type": "number"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVTimeGrid": {
+                    "type": "object",
+                    "properties": {
+                        "EPOCH_ISO": {
+                            "type": "string"
+                        },
+                        "EPOCH_JULIAN_DATE": {
+                            "type": "number"
+                        },
+                        "START_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "STOP_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "STEP_SEC": {
+                            "type": "number"
+                        },
+                        "GRID_INDEX_START": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "GRID_INDEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVSensor": {
+                    "type": "object",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "OBJECT_ID": {
+                            "type": "string"
+                        },
+                        "NAME": {
+                            "type": "string"
+                        },
+                        "SHAPE": {
+                            "$ref": "#/definitions/scvSensorShapeKind"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        },
+                        "POSITION_M": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "VELOCITY_MPS": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "BORESIGHT_UNIT": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "UP_UNIT": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "HALF_ANGLE_DEG": {
+                            "type": "number"
+                        },
+                        "CROSS_TRACK_HALF_ANGLE_DEG": {
+                            "type": "number"
+                        },
+                        "ALONG_TRACK_HALF_ANGLE_DEG": {
+                            "type": "number"
+                        },
+                        "MIN_RANGE_M": {
+                            "type": "number"
+                        },
+                        "MAX_RANGE_M": {
+                            "type": "number"
+                        },
+                        "POLYGON_VERTICES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVVec3"
+                            }
+                        },
+                        "POLYGON_FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVStateSample": {
+                    "type": "object",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TIME_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "POSITION_M": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "VELOCITY_MPS": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "QUATERNION_X": {
+                            "type": "number"
+                        },
+                        "QUATERNION_Y": {
+                            "type": "number"
+                        },
+                        "QUATERNION_Z": {
+                            "type": "number"
+                        },
+                        "QUATERNION_W": {
+                            "type": "number"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVTarget": {
+                    "type": "object",
+                    "properties": {
+                        "TARGET_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "OBJECT_ID": {
+                            "type": "string"
+                        },
+                        "NAME": {
+                            "type": "string"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        },
+                        "POSITION_M": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "VELOCITY_MPS": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "RADIUS_M": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVTargetStateSample": {
+                    "type": "object",
+                    "properties": {
+                        "TARGET_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TIME_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "POSITION_M": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "VELOCITY_MPS": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "QUATERNION_X": {
+                            "type": "number"
+                        },
+                        "QUATERNION_Y": {
+                            "type": "number"
+                        },
+                        "QUATERNION_Z": {
+                            "type": "number"
+                        },
+                        "QUATERNION_W": {
+                            "type": "number"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVCoverageGrid": {
+                    "type": "object",
+                    "properties": {
+                        "GRID_ID": {
+                            "type": "string"
+                        },
+                        "DOMAIN": {
+                            "$ref": "#/definitions/scvGeometryDomain"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        },
+                        "MIN_LAT_DEG": {
+                            "type": "number"
+                        },
+                        "MAX_LAT_DEG": {
+                            "type": "number"
+                        },
+                        "MIN_LON_DEG": {
+                            "type": "number"
+                        },
+                        "MAX_LON_DEG": {
+                            "type": "number"
+                        },
+                        "LAT_STEP_DEG": {
+                            "type": "number"
+                        },
+                        "LON_STEP_DEG": {
+                            "type": "number"
+                        },
+                        "ALTITUDE_M": {
+                            "type": "number"
+                        },
+                        "CELL_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "RESOLUTION_DEG": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVCoverageRequest": {
+                    "type": "object",
+                    "properties": {
+                        "JOB_ID": {
+                            "type": "string"
+                        },
+                        "TRACE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "ANALYSIS_MODE": {
+                            "$ref": "#/definitions/scvAnalysisMode"
+                        },
+                        "TARGET_BODY": {
+                            "$ref": "#/definitions/SCVEllipsoid"
+                        },
+                        "TIME_GRID": {
+                            "$ref": "#/definitions/SCVTimeGrid"
+                        },
+                        "COVERAGE_GRID": {
+                            "$ref": "#/definitions/SCVCoverageGrid"
+                        },
+                        "SENSORS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVSensor"
+                            }
+                        },
+                        "STATE_SAMPLES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVStateSample"
+                            }
+                        },
+                        "TARGETS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVTarget"
+                            }
+                        },
+                        "TARGET_STATE_SAMPLES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVTargetStateSample"
+                            }
+                        },
+                        "REQUESTED_PRODUCTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/scvMetricSeriesKind"
+                            }
+                        },
+                        "SENSOR_BATCH_START": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "SENSOR_BATCH_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WINDOW_BATCH_START": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WINDOW_BATCH_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "GEOMETRY_ENCODING": {
+                            "$ref": "#/definitions/scvGeometryEncoding"
+                        },
+                        "INCLUDE_PACKED_GEOMETRY": {
+                            "type": "boolean"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVProgress": {
+                    "type": "object",
+                    "properties": {
+                        "JOB_ID": {
+                            "type": "string"
+                        },
+                        "TRACE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/scvResultState"
+                        },
+                        "COMPLETED_SENSORS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_SENSORS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "COMPLETED_WINDOWS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_WINDOWS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "BACKLOG_REMAINING": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "COMPLETION_FRACTION": {
+                            "type": "number"
+                        },
+                        "MESSAGE": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVCancel": {
+                    "type": "object",
+                    "properties": {
+                        "JOB_ID": {
+                            "type": "string"
+                        },
+                        "TRACE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "REASON": {
+                            "type": "string"
+                        },
+                        "CANCEL_AFTER_WINDOW_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVSensorContribution": {
+                    "type": "object",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "FIRST_WINDOW_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "LAST_WINDOW_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "CONTRIBUTION_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVCellStat": {
+                    "type": "object",
+                    "properties": {
+                        "CELL_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "LATITUDE_DEG": {
+                            "type": "number"
+                        },
+                        "LONGITUDE_DEG": {
+                            "type": "number"
+                        },
+                        "ALTITUDE_M": {
+                            "type": "number"
+                        },
+                        "COVERED_WINDOW_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_WINDOW_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "COVERAGE_FRACTION": {
+                            "type": "number"
+                        },
+                        "MEAN_REVISIT_SEC": {
+                            "type": "number"
+                        },
+                        "MAX_GAP_SEC": {
+                            "type": "number"
+                        },
+                        "MEAN_GAP_SEC": {
+                            "type": "number"
+                        },
+                        "REDUNDANCY": {
+                            "type": "number"
+                        },
+                        "SENSOR_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        },
+                        "SENSOR_BITSET_WORDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 18446744073709551615
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVInterval": {
+                    "type": "object",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TARGET_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "INTERVAL_KIND": {
+                            "$ref": "#/definitions/scvIntervalCategory"
+                        },
+                        "START_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "STOP_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "DURATION_SEC": {
+                            "type": "number"
+                        },
+                        "MIN_RANGE_M": {
+                            "type": "number"
+                        },
+                        "MAX_ELEVATION_DEG": {
+                            "type": "number"
+                        },
+                        "CELL_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVLatitudeBandStat": {
+                    "type": "object",
+                    "properties": {
+                        "MIN_LAT_DEG": {
+                            "type": "number"
+                        },
+                        "MAX_LAT_DEG": {
+                            "type": "number"
+                        },
+                        "COVERAGE_FRACTION": {
+                            "type": "number"
+                        },
+                        "MEAN_REVISIT_SEC": {
+                            "type": "number"
+                        },
+                        "MAX_GAP_SEC": {
+                            "type": "number"
+                        },
+                        "MEAN_REDUNDANCY": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVTimeSeriesPoint": {
+                    "type": "object",
+                    "properties": {
+                        "METRIC_KIND": {
+                            "$ref": "#/definitions/scvMetricSeriesKind"
+                        },
+                        "TIME_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "WINDOW_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "VALUE": {
+                            "type": "number"
+                        },
+                        "SENSOR_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "CELL_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVHistogramBin": {
+                    "type": "object",
+                    "properties": {
+                        "METRIC_KIND": {
+                            "$ref": "#/definitions/scvMetricSeriesKind"
+                        },
+                        "MIN_VALUE": {
+                            "type": "number"
+                        },
+                        "MAX_VALUE": {
+                            "type": "number"
+                        },
+                        "COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WEIGHT": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVHeatmapCell": {
+                    "type": "object",
+                    "properties": {
+                        "METRIC_KIND": {
+                            "$ref": "#/definitions/scvMetricSeriesKind"
+                        },
+                        "X_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "Y_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "VALUE": {
+                            "type": "number"
+                        },
+                        "SENSOR_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVSwathSegment": {
+                    "type": "object",
+                    "properties": {
+                        "SEGMENT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "SENSOR_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WINDOW_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "DOMAIN": {
+                            "$ref": "#/definitions/scvGeometryDomain"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        },
+                        "START_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "STOP_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "VERTEX_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "VERTEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "INDEX_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "INDEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "SENSOR_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVMemoryRegion": {
+                    "type": "object",
+                    "properties": {
+                        "REGION_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "RECORD_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "REGION_KEY": {
+                            "type": "string"
+                        },
+                        "BYTE_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "BYTE_LENGTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "BYTE_STRIDE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "ALIGNMENT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "SHARED": {
+                            "type": "boolean"
+                        },
+                        "MUTABLE": {
+                            "type": "boolean"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVPackedGeometryChunk": {
+                    "type": "object",
+                    "properties": {
+                        "JOB_ID": {
+                            "type": "string"
+                        },
+                        "TRACE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "CHUNK_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WINDOW_START_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WINDOW_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "DOMAIN": {
+                            "$ref": "#/definitions/scvGeometryDomain"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        },
+                        "ENCODING": {
+                            "$ref": "#/definitions/scvGeometryEncoding"
+                        },
+                        "TIME_START_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "TIME_STOP_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "MEMORY_REGIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVMemoryRegion"
+                            }
+                        },
+                        "POSITIONS_REGION_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "POSITIONS_RECORD_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "NORMALS_REGION_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "NORMALS_RECORD_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "ST_REGION_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "ST_RECORD_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "REVEAL_COORDS_REGION_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "REVEAL_COORDS_RECORD_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "INDICES_REGION_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "INDICES_RECORD_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "POSITIONS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "NORMALS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "ST": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "REVEAL_COORDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "INDICES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        },
+                        "SEGMENT_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        },
+                        "SENSOR_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        },
+                        "SEGMENTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVSwathSegment"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVResult": {
+                    "type": "object",
+                    "properties": {
+                        "JOB_ID": {
+                            "type": "string"
+                        },
+                        "TRACE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/scvResultState"
+                        },
+                        "TIME_GRID": {
+                            "$ref": "#/definitions/SCVTimeGrid"
+                        },
+                        "TARGET_BODY": {
+                            "$ref": "#/definitions/SCVEllipsoid"
+                        },
+                        "TOTAL_SENSORS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_WINDOWS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "CELL_STATS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVCellStat"
+                            }
+                        },
+                        "INTERVALS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVInterval"
+                            }
+                        },
+                        "LATITUDE_BANDS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVLatitudeBandStat"
+                            }
+                        },
+                        "TIME_SERIES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVTimeSeriesPoint"
+                            }
+                        },
+                        "HISTOGRAMS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVHistogramBin"
+                            }
+                        },
+                        "HEATMAP": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVHeatmapCell"
+                            }
+                        },
+                        "CONTRIBUTIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVSensorContribution"
+                            }
+                        },
+                        "GEOMETRY": {
+                            "$ref": "#/definitions/SCVPackedGeometryChunk"
+                        },
+                        "MESSAGE": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCV": {
+                    "type": "object",
+                    "properties": {
+                        "ENVELOPE_KIND": {
+                            "$ref": "#/definitions/scvEnvelopeKind"
+                        },
+                        "REQUEST": {
+                            "$ref": "#/definitions/SCVCoverageRequest"
+                        },
+                        "PROGRESS": {
+                            "$ref": "#/definitions/SCVProgress"
+                        },
+                        "CANCEL": {
+                            "$ref": "#/definitions/SCVCancel"
+                        },
+                        "RESULT": {
+                            "$ref": "#/definitions/SCVResult"
+                        },
+                        "GEOMETRY": {
+                            "$ref": "#/definitions/SCVPackedGeometryChunk"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SCV"
+        },
         "EOO": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -30858,6 +33449,258 @@
                 }
             },
             "$ref": "#/definitions/LCC"
+        },
+        "ACW": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "acwOperationCode": {
+                    "type": "string",
+                    "enum": [
+                        "UNKNOWN",
+                        "COMPUTE_ACCESS_WINDOWS"
+                    ]
+                },
+                "acwResultStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "INVALID_INPUT",
+                        "UNSUPPORTED_OPERATION"
+                    ]
+                },
+                "acwRefractionModelKind": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "EARTH_STANDARD_ATMOSPHERE"
+                    ]
+                },
+                "ACWStateSample": {
+                    "type": "object",
+                    "description": "Target Cartesian state sample in an Earth-fixed frame.",
+                    "properties": {
+                        "JULIAN_DATE_TT": {
+                            "type": "number",
+                            "description": "Sample epoch as Julian Date in TT."
+                        },
+                        "POSITION_X_M": {
+                            "type": "number",
+                            "description": "Earth-fixed X position, meters."
+                        },
+                        "POSITION_Y_M": {
+                            "type": "number",
+                            "description": "Earth-fixed Y position, meters."
+                        },
+                        "POSITION_Z_M": {
+                            "type": "number",
+                            "description": "Earth-fixed Z position, meters."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWElevationMaskPoint": {
+                    "type": "object",
+                    "description": "Azimuth-dependent minimum elevation mask point.",
+                    "properties": {
+                        "AZIMUTH_RAD": {
+                            "type": "number",
+                            "description": "Azimuth, radians in the TopocentricFrame convention."
+                        },
+                        "ELEVATION_RAD": {
+                            "type": "number",
+                            "description": "Minimum visible elevation at the azimuth, radians."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWRefractionModel": {
+                    "type": "object",
+                    "description": "Atmospheric refraction model for apparent-elevation access checks.",
+                    "properties": {
+                        "MODEL_KIND": {
+                            "$ref": "#/definitions/acwRefractionModelKind"
+                        },
+                        "PRESSURE_PA": {
+                            "type": "number",
+                            "description": "Local pressure in pascals."
+                        },
+                        "TEMPERATURE_K": {
+                            "type": "number",
+                            "description": "Local temperature in kelvin."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWBlackoutWindow": {
+                    "type": "object",
+                    "description": "Ground-station blackout interval.",
+                    "properties": {
+                        "START_JULIAN_DATE_TT": {
+                            "type": "number",
+                            "description": "Interval start as Julian Date in TT."
+                        },
+                        "END_JULIAN_DATE_TT": {
+                            "type": "number",
+                            "description": "Interval end as Julian Date in TT."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWGroundStation": {
+                    "type": "object",
+                    "description": "Ground-station geodetic definition and scheduling constraints.",
+                    "properties": {
+                        "STATION_ID": {
+                            "type": "string"
+                        },
+                        "NAME": {
+                            "type": "string"
+                        },
+                        "LATITUDE_RAD": {
+                            "type": "number",
+                            "description": "Geodetic latitude, radians."
+                        },
+                        "LONGITUDE_RAD": {
+                            "type": "number",
+                            "description": "Geodetic longitude, radians."
+                        },
+                        "ALTITUDE_M": {
+                            "type": "number",
+                            "description": "Height above the WGS-84 ellipsoid, meters."
+                        },
+                        "MIN_ELEVATION_RAD": {
+                            "type": "number",
+                            "description": "Default minimum visible elevation, radians."
+                        },
+                        "CHANNEL_CAPACITY": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of simultaneous contacts this station can schedule."
+                        },
+                        "BLACKOUT_WINDOWS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWBlackoutWindow"
+                            },
+                            "description": "Station-specific unavailable intervals."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWRequest": {
+                    "type": "object",
+                    "description": "One access-window compute request.",
+                    "properties": {
+                        "OPERATION": {
+                            "$ref": "#/definitions/acwOperationCode"
+                        },
+                        "GROUND_STATIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWGroundStation"
+                            },
+                            "description": "Candidate ground stations."
+                        },
+                        "STATES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWStateSample"
+                            },
+                            "description": "Pre-sampled target Earth-fixed Cartesian states."
+                        },
+                        "TARGET_STATION_ID": {
+                            "type": "string",
+                            "description": "Optional target station id. Empty means all stations when supported."
+                        },
+                        "MIN_ELEVATION_OVERRIDE_RAD": {
+                            "type": "number",
+                            "description": "Optional caller override for minimum elevation, radians."
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Optional trace/correlation identifier."
+                        },
+                        "ELEVATION_MASK": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWElevationMaskPoint"
+                            },
+                            "description": "Optional azimuth-dependent minimum elevation mask."
+                        },
+                        "REFRACTION_MODEL": {
+                            "$ref": "#/definitions/ACWRefractionModel",
+                            "description": "Optional apparent-elevation refraction model."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWAccessWindow": {
+                    "type": "object",
+                    "description": "One computed access interval.",
+                    "properties": {
+                        "STATION_ID": {
+                            "type": "string"
+                        },
+                        "START_JULIAN_DATE_TT": {
+                            "type": "number",
+                            "description": "Access start as Julian Date in TT."
+                        },
+                        "END_JULIAN_DATE_TT": {
+                            "type": "number",
+                            "description": "Access end as Julian Date in TT."
+                        },
+                        "MAX_ELEVATION_RAD": {
+                            "type": "number",
+                            "description": "Maximum elevation sampled or interpolated during the pass, radians."
+                        },
+                        "SAMPLE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of visible input samples contributing to the window."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACWResult": {
+                    "type": "object",
+                    "description": "Result for one access-window compute request.",
+                    "properties": {
+                        "STATUS": {
+                            "$ref": "#/definitions/acwResultStatus"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string"
+                        },
+                        "WINDOWS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ACWAccessWindow"
+                            }
+                        },
+                        "TRACE_ID": {
+                            "type": "string",
+                            "description": "Caller trace/correlation identifier copied from the request when present."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ACW": {
+                    "type": "object",
+                    "description": "Access-window analysis envelope.",
+                    "properties": {
+                        "REQUEST": {
+                            "$ref": "#/definitions/ACWRequest"
+                        },
+                        "RESULT": {
+                            "$ref": "#/definitions/ACWResult"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/ACW"
         },
         "TKG": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -32716,6 +35559,251 @@
                 }
             },
             "$ref": "#/definitions/COM"
+        },
+        "RBK": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "rbkOperationCode": {
+                    "type": "string",
+                    "enum": [
+                        "UNKNOWN",
+                        "ADD_MRP",
+                        "SUB_MRP",
+                        "MRP_SHADOW",
+                        "MRP_SWITCH",
+                        "EP_TO_MRP",
+                        "MRP_TO_EP",
+                        "DCM_TO_EP",
+                        "EP_TO_DCM",
+                        "DCM_TO_MRP",
+                        "MRP_TO_DCM",
+                        "B_MATRIX_MRP",
+                        "B_INV_MATRIX_MRP",
+                        "D_MRP",
+                        "D_MRP_TO_OMEGA",
+                        "B_DOT_MATRIX_MRP",
+                        "DD_MRP",
+                        "DD_MRP_TO_D_OMEGA",
+                        "ADD_GIBBS",
+                        "SUB_GIBBS",
+                        "EP_TO_GIBBS",
+                        "GIBBS_TO_EP",
+                        "DCM_TO_GIBBS",
+                        "GIBBS_TO_DCM",
+                        "MRP_TO_GIBBS",
+                        "GIBBS_TO_MRP",
+                        "B_MATRIX_GIBBS",
+                        "B_INV_MATRIX_GIBBS",
+                        "D_GIBBS",
+                        "ADD_PRV",
+                        "SUB_PRV",
+                        "EP_TO_PRV",
+                        "PRV_TO_EP",
+                        "DCM_TO_PRV",
+                        "PRV_TO_DCM",
+                        "MRP_TO_PRV",
+                        "PRV_TO_MRP",
+                        "GIBBS_TO_PRV",
+                        "PRV_TO_GIBBS",
+                        "B_MATRIX_PRV",
+                        "B_INV_MATRIX_PRV",
+                        "D_PRV",
+                        "ADD_EULER",
+                        "SUB_EULER",
+                        "EULER_TO_DCM",
+                        "DCM_TO_EULER",
+                        "EULER_TO_EP",
+                        "EP_TO_EULER",
+                        "EULER_TO_MRP",
+                        "MRP_TO_EULER",
+                        "EULER_TO_GIBBS",
+                        "GIBBS_TO_EULER",
+                        "EULER_TO_PRV",
+                        "PRV_TO_EULER",
+                        "B_MATRIX_EULER",
+                        "B_INV_MATRIX_EULER",
+                        "D_EULER",
+                        "TILDE_MATRIX",
+                        "M1_ROTATION_MATRIX",
+                        "M2_ROTATION_MATRIX",
+                        "M3_ROTATION_MATRIX"
+                    ]
+                },
+                "rbkEulerSequenceCode": {
+                    "type": "string",
+                    "enum": [
+                        "UNKNOWN",
+                        "EULER_121",
+                        "EULER_123",
+                        "EULER_131",
+                        "EULER_132",
+                        "EULER_212",
+                        "EULER_213",
+                        "EULER_231",
+                        "EULER_232",
+                        "EULER_312",
+                        "EULER_313",
+                        "EULER_321",
+                        "EULER_323"
+                    ]
+                },
+                "rbkResultStatus": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "INVALID_INPUT",
+                        "UNSUPPORTED_OPERATION"
+                    ]
+                },
+                "RBKVector3": {
+                    "type": "object",
+                    "description": "Three-vector used for MRP, Gibbs, PRV, angular rate, and related attitude math values.",
+                    "properties": {
+                        "X": {
+                            "type": "number"
+                        },
+                        "Y": {
+                            "type": "number"
+                        },
+                        "Z": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RBKQuaternion": {
+                    "type": "object",
+                    "description": "Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.",
+                    "properties": {
+                        "Q0": {
+                            "type": "number"
+                        },
+                        "Q1": {
+                            "type": "number"
+                        },
+                        "Q2": {
+                            "type": "number"
+                        },
+                        "Q3": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RBKMatrix3": {
+                    "type": "object",
+                    "description": "Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.",
+                    "properties": {
+                        "M11": {
+                            "type": "number"
+                        },
+                        "M12": {
+                            "type": "number"
+                        },
+                        "M13": {
+                            "type": "number"
+                        },
+                        "M21": {
+                            "type": "number"
+                        },
+                        "M22": {
+                            "type": "number"
+                        },
+                        "M23": {
+                            "type": "number"
+                        },
+                        "M31": {
+                            "type": "number"
+                        },
+                        "M32": {
+                            "type": "number"
+                        },
+                        "M33": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RBKRigidBodyKinematicsRequest": {
+                    "type": "object",
+                    "description": "Request for one rigid-body kinematics utility operation.",
+                    "properties": {
+                        "OPERATION": {
+                            "$ref": "#/definitions/rbkOperationCode"
+                        },
+                        "VECTOR_A": {
+                            "$ref": "#/definitions/RBKVector3"
+                        },
+                        "VECTOR_B": {
+                            "$ref": "#/definitions/RBKVector3"
+                        },
+                        "QUATERNION_A": {
+                            "$ref": "#/definitions/RBKQuaternion"
+                        },
+                        "MATRIX_A": {
+                            "$ref": "#/definitions/RBKMatrix3"
+                        },
+                        "SWITCH_THRESHOLD": {
+                            "type": "number"
+                        },
+                        "TRACE_ID": {
+                            "type": "string"
+                        },
+                        "VECTOR_C": {
+                            "$ref": "#/definitions/RBKVector3"
+                        },
+                        "VECTOR_D": {
+                            "$ref": "#/definitions/RBKVector3"
+                        },
+                        "EULER_SEQUENCE": {
+                            "$ref": "#/definitions/rbkEulerSequenceCode"
+                        },
+                        "ANGLE_RAD": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RBKRigidBodyKinematicsResult": {
+                    "type": "object",
+                    "description": "Result for one rigid-body kinematics utility operation.",
+                    "properties": {
+                        "STATUS": {
+                            "$ref": "#/definitions/rbkResultStatus"
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string"
+                        },
+                        "VECTOR": {
+                            "$ref": "#/definitions/RBKVector3"
+                        },
+                        "QUATERNION": {
+                            "$ref": "#/definitions/RBKQuaternion"
+                        },
+                        "MATRIX": {
+                            "$ref": "#/definitions/RBKMatrix3"
+                        },
+                        "TRACE_ID": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RBK": {
+                    "type": "object",
+                    "description": "Rigid-body kinematics utility envelope.",
+                    "properties": {
+                        "RIGID_BODY_REQUEST": {
+                            "$ref": "#/definitions/RBKRigidBodyKinematicsRequest"
+                        },
+                        "RIGID_BODY_RESULT": {
+                            "$ref": "#/definitions/RBKRigidBodyKinematicsResult"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/RBK"
         },
         "PNM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",

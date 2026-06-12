@@ -57,13 +57,27 @@ class GRV : flatbuffers.handle
         return bool(flatbuffers.field_int8(buf_, pos_, 22, 0))
     def POLE_TIDES() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 24, 0))
+    def EQUATORIAL_RADIUS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    def J2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+    def MU() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
+    def J3() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
+    def J4() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
+    def J5() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
+    def J6() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
 
 def GetRootAsGRV(buf:string): return GRV { buf, flatbuffers.indirect(buf, 0) }
 
 struct GRVBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(11)
+        b_.StartObject(18)
         return this
     def add_MODEL_TYPE(MODEL_TYPE:GravityModelType):
         b_.PrependInt8Slot(0, MODEL_TYPE, 2)
@@ -97,6 +111,27 @@ struct GRVBuilder:
         return this
     def add_POLE_TIDES(POLE_TIDES:bool):
         b_.PrependBoolSlot(10, POLE_TIDES, 0)
+        return this
+    def add_EQUATORIAL_RADIUS(EQUATORIAL_RADIUS:float):
+        b_.PrependFloat64Slot(11, EQUATORIAL_RADIUS, 0.0)
+        return this
+    def add_J2(J2:float):
+        b_.PrependFloat64Slot(12, J2, 0.0)
+        return this
+    def add_MU(MU:float):
+        b_.PrependFloat64Slot(13, MU, 0.0)
+        return this
+    def add_J3(J3:float):
+        b_.PrependFloat64Slot(14, J3, 0.0)
+        return this
+    def add_J4(J4:float):
+        b_.PrependFloat64Slot(15, J4, 0.0)
+        return this
+    def add_J5(J5:float):
+        b_.PrependFloat64Slot(16, J5, 0.0)
+        return this
+    def add_J6(J6:float):
+        b_.PrependFloat64Slot(17, J6, 0.0)
         return this
     def end():
         return b_.EndObject()

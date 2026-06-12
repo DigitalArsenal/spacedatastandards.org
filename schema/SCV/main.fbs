@@ -1,0 +1,377 @@
+// Hash: 7208b0519d74fa98108376f679174b26f172b017b7f3fd19192d0ca040f72706
+// Version: 1.101.2
+// -----------------------------------END_HEADER
+/// Sensor Coverage Analytics — canonical request/result/progress ABI for
+/// access, coverage, swath, and coverage-geometry products produced by SDN
+/// modules and consumed by OrbPro analytics sessions.
+
+enum scvEnvelopeKind : ubyte {
+  REQUEST,
+  RESULT,
+  PROGRESS,
+  CANCEL,
+  GEOMETRY
+}
+
+enum scvAnalysisMode : ubyte {
+  COVERAGE,
+  ACCESS,
+  SWATH,
+  COMBINED
+}
+
+enum scvCoordinateFrame : ubyte {
+  UNKNOWN,
+  BODY_FIXED,
+  INERTIAL,
+  ECEF,
+  ECI,
+  CUSTOM
+}
+
+enum scvBodyKind : ubyte {
+  EARTH,
+  MOON,
+  MARS,
+  CUSTOM
+}
+
+enum scvSensorShapeKind : ubyte {
+  CONIC,
+  RECTANGULAR,
+  CUSTOM_POLYGON
+}
+
+enum scvGeometryDomain : ubyte {
+  SURFACE,
+  SPACE,
+  ELLIPSOID,
+  PLANE,
+  CUSTOM_MESH
+}
+
+enum scvResultState : ubyte {
+  OK,
+  PARTIAL,
+  CANCELLED,
+  FAILED
+}
+
+enum scvIntervalCategory : ubyte {
+  ACCESS,
+  COVERAGE,
+  GAP,
+  REVISIT,
+  OVERLAP
+}
+
+enum scvMetricSeriesKind : ushort {
+  PERCENT_COVERED,
+  COVERED_CELL_COUNT,
+  ACCESS_COUNT,
+  CONTACT_DURATION_SECONDS,
+  REVISIT_SECONDS,
+  GAP_SECONDS,
+  REDUNDANCY,
+  OVERLAP_COUNT,
+  LATITUDE_BAND_COVERAGE
+}
+
+enum scvGeometryEncoding : ubyte {
+  FLAT_FLOAT32,
+  INTERLEAVED_FLOAT32,
+  QUANTIZED_UINT16,
+  SHARED_MEMORY_OFFSET
+}
+
+table SCVVec3 {
+  X:double;
+  Y:double;
+  Z:double;
+}
+
+table SCVEllipsoid {
+  BODY:scvBodyKind;
+  NAME:string;
+  SEMI_MAJOR_M:double;
+  SEMI_MINOR_M:double;
+  SEMI_INTERMEDIATE_M:double;
+  FRAME:scvCoordinateFrame;
+}
+
+table SCVTimeGrid {
+  EPOCH_ISO:string;
+  EPOCH_JULIAN_DATE:double;
+  START_OFFSET_SEC:double;
+  STOP_OFFSET_SEC:double;
+  STEP_SEC:double;
+  GRID_INDEX_START:uint32;
+  GRID_INDEX_COUNT:uint32;
+}
+
+table SCVSensor {
+  SENSOR_ID:uint32;
+  OBJECT_ID:string;
+  NAME:string;
+  SHAPE:scvSensorShapeKind;
+  FRAME:scvCoordinateFrame;
+  POSITION_M:SCVVec3;
+  VELOCITY_MPS:SCVVec3;
+  BORESIGHT_UNIT:SCVVec3;
+  UP_UNIT:SCVVec3;
+  HALF_ANGLE_DEG:double;
+  CROSS_TRACK_HALF_ANGLE_DEG:double;
+  ALONG_TRACK_HALF_ANGLE_DEG:double;
+  MIN_RANGE_M:double;
+  MAX_RANGE_M:double;
+  POLYGON_VERTICES:[SCVVec3];
+  POLYGON_FRAME:scvCoordinateFrame;
+}
+
+table SCVStateSample {
+  SENSOR_ID:uint32;
+  TIME_OFFSET_SEC:double;
+  POSITION_M:SCVVec3;
+  VELOCITY_MPS:SCVVec3;
+  QUATERNION_X:double;
+  QUATERNION_Y:double;
+  QUATERNION_Z:double;
+  QUATERNION_W:double;
+  FRAME:scvCoordinateFrame;
+}
+
+table SCVTarget {
+  TARGET_ID:uint32;
+  OBJECT_ID:string;
+  NAME:string;
+  FRAME:scvCoordinateFrame;
+  POSITION_M:SCVVec3;
+  VELOCITY_MPS:SCVVec3;
+  RADIUS_M:double;
+}
+
+table SCVTargetStateSample {
+  TARGET_ID:uint32;
+  TIME_OFFSET_SEC:double;
+  POSITION_M:SCVVec3;
+  VELOCITY_MPS:SCVVec3;
+  QUATERNION_X:double;
+  QUATERNION_Y:double;
+  QUATERNION_Z:double;
+  QUATERNION_W:double;
+  FRAME:scvCoordinateFrame;
+}
+
+table SCVCoverageGrid {
+  GRID_ID:string;
+  DOMAIN:scvGeometryDomain;
+  FRAME:scvCoordinateFrame;
+  MIN_LAT_DEG:double;
+  MAX_LAT_DEG:double;
+  MIN_LON_DEG:double;
+  MAX_LON_DEG:double;
+  LAT_STEP_DEG:double;
+  LON_STEP_DEG:double;
+  ALTITUDE_M:double;
+  CELL_COUNT:uint32;
+  RESOLUTION_DEG:double;
+}
+
+table SCVCoverageRequest {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  ANALYSIS_MODE:scvAnalysisMode;
+  TARGET_BODY:SCVEllipsoid;
+  TIME_GRID:SCVTimeGrid;
+  COVERAGE_GRID:SCVCoverageGrid;
+  SENSORS:[SCVSensor];
+  STATE_SAMPLES:[SCVStateSample];
+  TARGETS:[SCVTarget];
+  TARGET_STATE_SAMPLES:[SCVTargetStateSample];
+  REQUESTED_PRODUCTS:[scvMetricSeriesKind];
+  SENSOR_BATCH_START:uint32;
+  SENSOR_BATCH_COUNT:uint32;
+  WINDOW_BATCH_START:uint32;
+  WINDOW_BATCH_COUNT:uint32;
+  GEOMETRY_ENCODING:scvGeometryEncoding;
+  INCLUDE_PACKED_GEOMETRY:bool;
+}
+
+table SCVProgress {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  STATUS:scvResultState;
+  COMPLETED_SENSORS:uint32;
+  TOTAL_SENSORS:uint32;
+  COMPLETED_WINDOWS:uint32;
+  TOTAL_WINDOWS:uint32;
+  BACKLOG_REMAINING:uint32;
+  COMPLETION_FRACTION:double;
+  MESSAGE:string;
+}
+
+table SCVCancel {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  REASON:string;
+  CANCEL_AFTER_WINDOW_INDEX:uint32;
+}
+
+table SCVSensorContribution {
+  SENSOR_ID:uint32;
+  FIRST_WINDOW_INDEX:uint32;
+  LAST_WINDOW_INDEX:uint32;
+  CONTRIBUTION_COUNT:uint32;
+}
+
+table SCVCellStat {
+  CELL_ID:uint32;
+  LATITUDE_DEG:double;
+  LONGITUDE_DEG:double;
+  ALTITUDE_M:double;
+  COVERED_WINDOW_COUNT:uint32;
+  TOTAL_WINDOW_COUNT:uint32;
+  COVERAGE_FRACTION:double;
+  MEAN_REVISIT_SEC:double;
+  MAX_GAP_SEC:double;
+  MEAN_GAP_SEC:double;
+  REDUNDANCY:double;
+  SENSOR_IDS:[uint32];
+  SENSOR_BITSET_WORDS:[uint64];
+}
+
+table SCVInterval {
+  SENSOR_ID:uint32;
+  TARGET_ID:uint32;
+  INTERVAL_KIND:scvIntervalCategory;
+  START_OFFSET_SEC:double;
+  STOP_OFFSET_SEC:double;
+  DURATION_SEC:double;
+  MIN_RANGE_M:double;
+  MAX_ELEVATION_DEG:double;
+  CELL_ID:uint32;
+}
+
+table SCVLatitudeBandStat {
+  MIN_LAT_DEG:double;
+  MAX_LAT_DEG:double;
+  COVERAGE_FRACTION:double;
+  MEAN_REVISIT_SEC:double;
+  MAX_GAP_SEC:double;
+  MEAN_REDUNDANCY:double;
+}
+
+table SCVTimeSeriesPoint {
+  METRIC_KIND:scvMetricSeriesKind;
+  TIME_OFFSET_SEC:double;
+  WINDOW_INDEX:uint32;
+  VALUE:double;
+  SENSOR_ID:uint32;
+  CELL_ID:uint32;
+}
+
+table SCVHistogramBin {
+  METRIC_KIND:scvMetricSeriesKind;
+  MIN_VALUE:double;
+  MAX_VALUE:double;
+  COUNT:uint32;
+  WEIGHT:double;
+}
+
+table SCVHeatmapCell {
+  METRIC_KIND:scvMetricSeriesKind;
+  X_INDEX:uint32;
+  Y_INDEX:uint32;
+  VALUE:double;
+  SENSOR_COUNT:uint32;
+}
+
+table SCVSwathSegment {
+  SEGMENT_ID:uint32;
+  SENSOR_ID:uint32;
+  WINDOW_INDEX:uint32;
+  DOMAIN:scvGeometryDomain;
+  FRAME:scvCoordinateFrame;
+  START_OFFSET_SEC:double;
+  STOP_OFFSET_SEC:double;
+  VERTEX_OFFSET:uint32;
+  VERTEX_COUNT:uint32;
+  INDEX_OFFSET:uint32;
+  INDEX_COUNT:uint32;
+  SENSOR_IDS:[uint32];
+}
+
+table SCVMemoryRegion {
+  REGION_ID:uint32;
+  RECORD_INDEX:uint32;
+  REGION_KEY:string;
+  BYTE_OFFSET:uint64;
+  BYTE_LENGTH:uint64;
+  BYTE_STRIDE:uint32;
+  ALIGNMENT:uint32;
+  SHARED:bool;
+  MUTABLE:bool;
+}
+
+table SCVPackedGeometryChunk {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  CHUNK_INDEX:uint32;
+  WINDOW_START_INDEX:uint32;
+  WINDOW_COUNT:uint32;
+  DOMAIN:scvGeometryDomain;
+  FRAME:scvCoordinateFrame;
+  ENCODING:scvGeometryEncoding;
+  TIME_START_OFFSET_SEC:double;
+  TIME_STOP_OFFSET_SEC:double;
+  MEMORY_REGIONS:[SCVMemoryRegion];
+  POSITIONS_REGION_ID:uint32;
+  POSITIONS_RECORD_INDEX:uint32;
+  NORMALS_REGION_ID:uint32;
+  NORMALS_RECORD_INDEX:uint32;
+  ST_REGION_ID:uint32;
+  ST_RECORD_INDEX:uint32;
+  REVEAL_COORDS_REGION_ID:uint32;
+  REVEAL_COORDS_RECORD_INDEX:uint32;
+  INDICES_REGION_ID:uint32;
+  INDICES_RECORD_INDEX:uint32;
+  POSITIONS:[float];
+  NORMALS:[float];
+  ST:[float];
+  REVEAL_COORDS:[float];
+  INDICES:[uint32];
+  SEGMENT_IDS:[uint32];
+  SENSOR_IDS:[uint32];
+  SEGMENTS:[SCVSwathSegment];
+}
+
+table SCVResult {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  STATUS:scvResultState;
+  TIME_GRID:SCVTimeGrid;
+  TARGET_BODY:SCVEllipsoid;
+  TOTAL_SENSORS:uint32;
+  TOTAL_WINDOWS:uint32;
+  CELL_STATS:[SCVCellStat];
+  INTERVALS:[SCVInterval];
+  LATITUDE_BANDS:[SCVLatitudeBandStat];
+  TIME_SERIES:[SCVTimeSeriesPoint];
+  HISTOGRAMS:[SCVHistogramBin];
+  HEATMAP:[SCVHeatmapCell];
+  CONTRIBUTIONS:[SCVSensorContribution];
+  GEOMETRY:SCVPackedGeometryChunk;
+  MESSAGE:string;
+}
+
+table SCV {
+  ENVELOPE_KIND:scvEnvelopeKind;
+  REQUEST:SCVCoverageRequest;
+  PROGRESS:SCVProgress;
+  CANCEL:SCVCancel;
+  RESULT:SCVResult;
+  GEOMETRY:SCVPackedGeometryChunk;
+}
+
+root_type SCV;
+file_identifier "$SCV";

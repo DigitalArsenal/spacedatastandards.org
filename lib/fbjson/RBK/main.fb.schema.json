@@ -1,0 +1,891 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "rbkOperationCode": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "ADD_MRP",
+        "SUB_MRP",
+        "MRP_SHADOW",
+        "MRP_SWITCH",
+        "EP_TO_MRP",
+        "MRP_TO_EP",
+        "DCM_TO_EP",
+        "EP_TO_DCM",
+        "DCM_TO_MRP",
+        "MRP_TO_DCM",
+        "B_MATRIX_MRP",
+        "B_INV_MATRIX_MRP",
+        "D_MRP",
+        "D_MRP_TO_OMEGA",
+        "B_DOT_MATRIX_MRP",
+        "DD_MRP",
+        "DD_MRP_TO_D_OMEGA",
+        "ADD_GIBBS",
+        "SUB_GIBBS",
+        "EP_TO_GIBBS",
+        "GIBBS_TO_EP",
+        "DCM_TO_GIBBS",
+        "GIBBS_TO_DCM",
+        "MRP_TO_GIBBS",
+        "GIBBS_TO_MRP",
+        "B_MATRIX_GIBBS",
+        "B_INV_MATRIX_GIBBS",
+        "D_GIBBS",
+        "ADD_PRV",
+        "SUB_PRV",
+        "EP_TO_PRV",
+        "PRV_TO_EP",
+        "DCM_TO_PRV",
+        "PRV_TO_DCM",
+        "MRP_TO_PRV",
+        "PRV_TO_MRP",
+        "GIBBS_TO_PRV",
+        "PRV_TO_GIBBS",
+        "B_MATRIX_PRV",
+        "B_INV_MATRIX_PRV",
+        "D_PRV",
+        "ADD_EULER",
+        "SUB_EULER",
+        "EULER_TO_DCM",
+        "DCM_TO_EULER",
+        "EULER_TO_EP",
+        "EP_TO_EULER",
+        "EULER_TO_MRP",
+        "MRP_TO_EULER",
+        "EULER_TO_GIBBS",
+        "GIBBS_TO_EULER",
+        "EULER_TO_PRV",
+        "PRV_TO_EULER",
+        "B_MATRIX_EULER",
+        "B_INV_MATRIX_EULER",
+        "D_EULER",
+        "TILDE_MATRIX",
+        "M1_ROTATION_MATRIX",
+        "M2_ROTATION_MATRIX",
+        "M3_ROTATION_MATRIX"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "ADD_MRP": {
+          "value": 1,
+          "description": "Compose two Modified Rodrigues Parameter rotations."
+        },
+        "SUB_MRP": {
+          "value": 2,
+          "description": "Compute the relative Modified Rodrigues Parameter rotation from VECTOR_B to VECTOR_A."
+        },
+        "MRP_SHADOW": {
+          "value": 3,
+          "description": "Force a Modified Rodrigues Parameter vector to its shadow set."
+        },
+        "MRP_SWITCH": {
+          "value": 4,
+          "description": "Switch to the MRP shadow set when norm exceeds SWITCH_THRESHOLD."
+        },
+        "EP_TO_MRP": {
+          "value": 5,
+          "description": "Convert scalar-first Euler parameters/quaternion to MRP."
+        },
+        "MRP_TO_EP": {
+          "value": 6,
+          "description": "Convert MRP to scalar-first Euler parameters/quaternion."
+        },
+        "DCM_TO_EP": {
+          "value": 7,
+          "description": "Convert direction cosine matrix to scalar-first Euler parameters/quaternion."
+        },
+        "EP_TO_DCM": {
+          "value": 8,
+          "description": "Convert scalar-first Euler parameters/quaternion to direction cosine matrix."
+        },
+        "DCM_TO_MRP": {
+          "value": 9,
+          "description": "Convert direction cosine matrix to Modified Rodrigues Parameters."
+        },
+        "MRP_TO_DCM": {
+          "value": 10,
+          "description": "Convert Modified Rodrigues Parameters to direction cosine matrix."
+        },
+        "B_MATRIX_MRP": {
+          "value": 11,
+          "description": "Return the MRP B matrix that maps body angular rate to MRP derivative."
+        },
+        "B_INV_MATRIX_MRP": {
+          "value": 12,
+          "description": "Return the inverse MRP B matrix that maps MRP derivative to body angular rate."
+        },
+        "D_MRP": {
+          "value": 13,
+          "description": "Compute MRP derivative from MRP and body angular rate vectors."
+        },
+        "D_MRP_TO_OMEGA": {
+          "value": 14,
+          "description": "Compute body angular rate from MRP and MRP derivative vectors."
+        },
+        "B_DOT_MATRIX_MRP": {
+          "value": 15,
+          "description": "Return the MRP B-dot matrix from MRP and MRP derivative vectors."
+        },
+        "DD_MRP": {
+          "value": 16,
+          "description": "Compute second MRP derivative from MRP, MRP derivative, body rate, and body acceleration."
+        },
+        "DD_MRP_TO_D_OMEGA": {
+          "value": 17,
+          "description": "Compute body angular acceleration from MRP, MRP derivative, and second MRP derivative."
+        },
+        "ADD_GIBBS": {
+          "value": 18,
+          "description": "Compose two Gibbs-vector rotations."
+        },
+        "SUB_GIBBS": {
+          "value": 19,
+          "description": "Compute the relative Gibbs-vector rotation from VECTOR_B to VECTOR_A."
+        },
+        "EP_TO_GIBBS": {
+          "value": 20,
+          "description": "Convert scalar-first Euler parameters/quaternion to Gibbs vector."
+        },
+        "GIBBS_TO_EP": {
+          "value": 21,
+          "description": "Convert Gibbs vector to scalar-first Euler parameters/quaternion."
+        },
+        "DCM_TO_GIBBS": {
+          "value": 22,
+          "description": "Convert direction cosine matrix to Gibbs vector."
+        },
+        "GIBBS_TO_DCM": {
+          "value": 23,
+          "description": "Convert Gibbs vector to direction cosine matrix."
+        },
+        "MRP_TO_GIBBS": {
+          "value": 24,
+          "description": "Convert Modified Rodrigues Parameters to Gibbs vector."
+        },
+        "GIBBS_TO_MRP": {
+          "value": 25,
+          "description": "Convert Gibbs vector to Modified Rodrigues Parameters."
+        },
+        "B_MATRIX_GIBBS": {
+          "value": 26,
+          "description": "Return the Gibbs-vector B matrix that maps body angular rate to Gibbs derivative."
+        },
+        "B_INV_MATRIX_GIBBS": {
+          "value": 27,
+          "description": "Return the inverse Gibbs-vector B matrix that maps Gibbs derivative to body angular rate."
+        },
+        "D_GIBBS": {
+          "value": 28,
+          "description": "Compute Gibbs derivative from Gibbs vector and body angular rate vectors."
+        },
+        "ADD_PRV": {
+          "value": 29,
+          "description": "Compose two principal rotation vector rotations."
+        },
+        "SUB_PRV": {
+          "value": 30,
+          "description": "Compute the relative principal rotation vector from VECTOR_B to VECTOR_A."
+        },
+        "EP_TO_PRV": {
+          "value": 31,
+          "description": "Convert scalar-first Euler parameters/quaternion to principal rotation vector."
+        },
+        "PRV_TO_EP": {
+          "value": 32,
+          "description": "Convert principal rotation vector to scalar-first Euler parameters/quaternion."
+        },
+        "DCM_TO_PRV": {
+          "value": 33,
+          "description": "Convert direction cosine matrix to principal rotation vector."
+        },
+        "PRV_TO_DCM": {
+          "value": 34,
+          "description": "Convert principal rotation vector to direction cosine matrix."
+        },
+        "MRP_TO_PRV": {
+          "value": 35,
+          "description": "Convert Modified Rodrigues Parameters to principal rotation vector."
+        },
+        "PRV_TO_MRP": {
+          "value": 36,
+          "description": "Convert principal rotation vector to Modified Rodrigues Parameters."
+        },
+        "GIBBS_TO_PRV": {
+          "value": 37,
+          "description": "Convert Gibbs vector to principal rotation vector."
+        },
+        "PRV_TO_GIBBS": {
+          "value": 38,
+          "description": "Convert principal rotation vector to Gibbs vector."
+        },
+        "B_MATRIX_PRV": {
+          "value": 39,
+          "description": "Return the principal-rotation-vector B matrix that maps body angular rate to PRV derivative."
+        },
+        "B_INV_MATRIX_PRV": {
+          "value": 40,
+          "description": "Return the inverse principal-rotation-vector B matrix that maps PRV derivative to body angular rate."
+        },
+        "D_PRV": {
+          "value": 41,
+          "description": "Compute principal rotation vector derivative from PRV and body angular rate vectors."
+        },
+        "ADD_EULER": {
+          "value": 42,
+          "description": "Compose two Euler-angle rotations using EULER_SEQUENCE."
+        },
+        "SUB_EULER": {
+          "value": 43,
+          "description": "Compute the relative Euler-angle rotation from VECTOR_B to VECTOR_A using EULER_SEQUENCE."
+        },
+        "EULER_TO_DCM": {
+          "value": 44,
+          "description": "Convert Euler angles to direction cosine matrix using EULER_SEQUENCE."
+        },
+        "DCM_TO_EULER": {
+          "value": 45,
+          "description": "Convert direction cosine matrix to Euler angles using EULER_SEQUENCE."
+        },
+        "EULER_TO_EP": {
+          "value": 46,
+          "description": "Convert Euler angles to scalar-first Euler parameters/quaternion using EULER_SEQUENCE."
+        },
+        "EP_TO_EULER": {
+          "value": 47,
+          "description": "Convert scalar-first Euler parameters/quaternion to Euler angles using EULER_SEQUENCE."
+        },
+        "EULER_TO_MRP": {
+          "value": 48,
+          "description": "Convert Euler angles to Modified Rodrigues Parameters using EULER_SEQUENCE."
+        },
+        "MRP_TO_EULER": {
+          "value": 49,
+          "description": "Convert Modified Rodrigues Parameters to Euler angles using EULER_SEQUENCE."
+        },
+        "EULER_TO_GIBBS": {
+          "value": 50,
+          "description": "Convert Euler angles to Gibbs vector using EULER_SEQUENCE."
+        },
+        "GIBBS_TO_EULER": {
+          "value": 51,
+          "description": "Convert Gibbs vector to Euler angles using EULER_SEQUENCE."
+        },
+        "EULER_TO_PRV": {
+          "value": 52,
+          "description": "Convert Euler angles to principal rotation vector using EULER_SEQUENCE."
+        },
+        "PRV_TO_EULER": {
+          "value": 53,
+          "description": "Convert principal rotation vector to Euler angles using EULER_SEQUENCE."
+        },
+        "B_MATRIX_EULER": {
+          "value": 54,
+          "description": "Return the Euler-angle B matrix that maps body angular rate to Euler-angle derivative."
+        },
+        "B_INV_MATRIX_EULER": {
+          "value": 55,
+          "description": "Return the inverse Euler-angle B matrix that maps Euler-angle derivative to body angular rate."
+        },
+        "D_EULER": {
+          "value": 56,
+          "description": "Compute Euler-angle derivative from Euler angles and body angular rate vectors."
+        },
+        "TILDE_MATRIX": {
+          "value": 57,
+          "description": "Return the skew-symmetric tilde matrix that maps VECTOR_A cross products."
+        },
+        "M1_ROTATION_MATRIX": {
+          "value": 58,
+          "description": "Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD."
+        },
+        "M2_ROTATION_MATRIX": {
+          "value": 59,
+          "description": "Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD."
+        },
+        "M3_ROTATION_MATRIX": {
+          "value": 60,
+          "description": "Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD."
+        }
+      }
+    },
+    "rbkEulerSequenceCode": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "EULER_121",
+        "EULER_123",
+        "EULER_131",
+        "EULER_132",
+        "EULER_212",
+        "EULER_213",
+        "EULER_231",
+        "EULER_232",
+        "EULER_312",
+        "EULER_313",
+        "EULER_321",
+        "EULER_323"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "EULER_121": {
+          "value": 1
+        },
+        "EULER_123": {
+          "value": 2
+        },
+        "EULER_131": {
+          "value": 3
+        },
+        "EULER_132": {
+          "value": 4
+        },
+        "EULER_212": {
+          "value": 5
+        },
+        "EULER_213": {
+          "value": 6
+        },
+        "EULER_231": {
+          "value": 7
+        },
+        "EULER_232": {
+          "value": 8
+        },
+        "EULER_312": {
+          "value": 9
+        },
+        "EULER_313": {
+          "value": 10
+        },
+        "EULER_321": {
+          "value": 11
+        },
+        "EULER_323": {
+          "value": 12
+        }
+      }
+    },
+    "rbkResultStatus": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "INVALID_INPUT",
+        "UNSUPPORTED_OPERATION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "Operation completed."
+        },
+        "INVALID_INPUT": {
+          "value": 1,
+          "description": "Request is missing required vector/quaternion data or has invalid values."
+        },
+        "UNSUPPORTED_OPERATION": {
+          "value": 2,
+          "description": "Operation is unknown or not supported by the module implementation."
+        }
+      }
+    },
+    "RBKVector3": {
+      "type": "object",
+      "description": "Three-vector used for MRP, Gibbs, PRV, angular rate, and related attitude math values.",
+      "properties": {
+        "X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RBKQuaternion": {
+      "type": "object",
+      "description": "Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.",
+      "properties": {
+        "Q0": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q1": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RBKMatrix3": {
+      "type": "object",
+      "description": "Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.",
+      "properties": {
+        "M11": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M12": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M13": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M21": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M22": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M23": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M31": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M32": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M33": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RBKRigidBodyKinematicsRequest": {
+      "type": "object",
+      "description": "Request for one rigid-body kinematics utility operation.",
+      "properties": {
+        "OPERATION": {
+          "$ref": "#/definitions/rbkOperationCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "ADD_MRP": {
+              "value": 1,
+              "description": "Compose two Modified Rodrigues Parameter rotations."
+            },
+            "SUB_MRP": {
+              "value": 2,
+              "description": "Compute the relative Modified Rodrigues Parameter rotation from VECTOR_B to VECTOR_A."
+            },
+            "MRP_SHADOW": {
+              "value": 3,
+              "description": "Force a Modified Rodrigues Parameter vector to its shadow set."
+            },
+            "MRP_SWITCH": {
+              "value": 4,
+              "description": "Switch to the MRP shadow set when norm exceeds SWITCH_THRESHOLD."
+            },
+            "EP_TO_MRP": {
+              "value": 5,
+              "description": "Convert scalar-first Euler parameters/quaternion to MRP."
+            },
+            "MRP_TO_EP": {
+              "value": 6,
+              "description": "Convert MRP to scalar-first Euler parameters/quaternion."
+            },
+            "DCM_TO_EP": {
+              "value": 7,
+              "description": "Convert direction cosine matrix to scalar-first Euler parameters/quaternion."
+            },
+            "EP_TO_DCM": {
+              "value": 8,
+              "description": "Convert scalar-first Euler parameters/quaternion to direction cosine matrix."
+            },
+            "DCM_TO_MRP": {
+              "value": 9,
+              "description": "Convert direction cosine matrix to Modified Rodrigues Parameters."
+            },
+            "MRP_TO_DCM": {
+              "value": 10,
+              "description": "Convert Modified Rodrigues Parameters to direction cosine matrix."
+            },
+            "B_MATRIX_MRP": {
+              "value": 11,
+              "description": "Return the MRP B matrix that maps body angular rate to MRP derivative."
+            },
+            "B_INV_MATRIX_MRP": {
+              "value": 12,
+              "description": "Return the inverse MRP B matrix that maps MRP derivative to body angular rate."
+            },
+            "D_MRP": {
+              "value": 13,
+              "description": "Compute MRP derivative from MRP and body angular rate vectors."
+            },
+            "D_MRP_TO_OMEGA": {
+              "value": 14,
+              "description": "Compute body angular rate from MRP and MRP derivative vectors."
+            },
+            "B_DOT_MATRIX_MRP": {
+              "value": 15,
+              "description": "Return the MRP B-dot matrix from MRP and MRP derivative vectors."
+            },
+            "DD_MRP": {
+              "value": 16,
+              "description": "Compute second MRP derivative from MRP, MRP derivative, body rate, and body acceleration."
+            },
+            "DD_MRP_TO_D_OMEGA": {
+              "value": 17,
+              "description": "Compute body angular acceleration from MRP, MRP derivative, and second MRP derivative."
+            },
+            "ADD_GIBBS": {
+              "value": 18,
+              "description": "Compose two Gibbs-vector rotations."
+            },
+            "SUB_GIBBS": {
+              "value": 19,
+              "description": "Compute the relative Gibbs-vector rotation from VECTOR_B to VECTOR_A."
+            },
+            "EP_TO_GIBBS": {
+              "value": 20,
+              "description": "Convert scalar-first Euler parameters/quaternion to Gibbs vector."
+            },
+            "GIBBS_TO_EP": {
+              "value": 21,
+              "description": "Convert Gibbs vector to scalar-first Euler parameters/quaternion."
+            },
+            "DCM_TO_GIBBS": {
+              "value": 22,
+              "description": "Convert direction cosine matrix to Gibbs vector."
+            },
+            "GIBBS_TO_DCM": {
+              "value": 23,
+              "description": "Convert Gibbs vector to direction cosine matrix."
+            },
+            "MRP_TO_GIBBS": {
+              "value": 24,
+              "description": "Convert Modified Rodrigues Parameters to Gibbs vector."
+            },
+            "GIBBS_TO_MRP": {
+              "value": 25,
+              "description": "Convert Gibbs vector to Modified Rodrigues Parameters."
+            },
+            "B_MATRIX_GIBBS": {
+              "value": 26,
+              "description": "Return the Gibbs-vector B matrix that maps body angular rate to Gibbs derivative."
+            },
+            "B_INV_MATRIX_GIBBS": {
+              "value": 27,
+              "description": "Return the inverse Gibbs-vector B matrix that maps Gibbs derivative to body angular rate."
+            },
+            "D_GIBBS": {
+              "value": 28,
+              "description": "Compute Gibbs derivative from Gibbs vector and body angular rate vectors."
+            },
+            "ADD_PRV": {
+              "value": 29,
+              "description": "Compose two principal rotation vector rotations."
+            },
+            "SUB_PRV": {
+              "value": 30,
+              "description": "Compute the relative principal rotation vector from VECTOR_B to VECTOR_A."
+            },
+            "EP_TO_PRV": {
+              "value": 31,
+              "description": "Convert scalar-first Euler parameters/quaternion to principal rotation vector."
+            },
+            "PRV_TO_EP": {
+              "value": 32,
+              "description": "Convert principal rotation vector to scalar-first Euler parameters/quaternion."
+            },
+            "DCM_TO_PRV": {
+              "value": 33,
+              "description": "Convert direction cosine matrix to principal rotation vector."
+            },
+            "PRV_TO_DCM": {
+              "value": 34,
+              "description": "Convert principal rotation vector to direction cosine matrix."
+            },
+            "MRP_TO_PRV": {
+              "value": 35,
+              "description": "Convert Modified Rodrigues Parameters to principal rotation vector."
+            },
+            "PRV_TO_MRP": {
+              "value": 36,
+              "description": "Convert principal rotation vector to Modified Rodrigues Parameters."
+            },
+            "GIBBS_TO_PRV": {
+              "value": 37,
+              "description": "Convert Gibbs vector to principal rotation vector."
+            },
+            "PRV_TO_GIBBS": {
+              "value": 38,
+              "description": "Convert principal rotation vector to Gibbs vector."
+            },
+            "B_MATRIX_PRV": {
+              "value": 39,
+              "description": "Return the principal-rotation-vector B matrix that maps body angular rate to PRV derivative."
+            },
+            "B_INV_MATRIX_PRV": {
+              "value": 40,
+              "description": "Return the inverse principal-rotation-vector B matrix that maps PRV derivative to body angular rate."
+            },
+            "D_PRV": {
+              "value": 41,
+              "description": "Compute principal rotation vector derivative from PRV and body angular rate vectors."
+            },
+            "ADD_EULER": {
+              "value": 42,
+              "description": "Compose two Euler-angle rotations using EULER_SEQUENCE."
+            },
+            "SUB_EULER": {
+              "value": 43,
+              "description": "Compute the relative Euler-angle rotation from VECTOR_B to VECTOR_A using EULER_SEQUENCE."
+            },
+            "EULER_TO_DCM": {
+              "value": 44,
+              "description": "Convert Euler angles to direction cosine matrix using EULER_SEQUENCE."
+            },
+            "DCM_TO_EULER": {
+              "value": 45,
+              "description": "Convert direction cosine matrix to Euler angles using EULER_SEQUENCE."
+            },
+            "EULER_TO_EP": {
+              "value": 46,
+              "description": "Convert Euler angles to scalar-first Euler parameters/quaternion using EULER_SEQUENCE."
+            },
+            "EP_TO_EULER": {
+              "value": 47,
+              "description": "Convert scalar-first Euler parameters/quaternion to Euler angles using EULER_SEQUENCE."
+            },
+            "EULER_TO_MRP": {
+              "value": 48,
+              "description": "Convert Euler angles to Modified Rodrigues Parameters using EULER_SEQUENCE."
+            },
+            "MRP_TO_EULER": {
+              "value": 49,
+              "description": "Convert Modified Rodrigues Parameters to Euler angles using EULER_SEQUENCE."
+            },
+            "EULER_TO_GIBBS": {
+              "value": 50,
+              "description": "Convert Euler angles to Gibbs vector using EULER_SEQUENCE."
+            },
+            "GIBBS_TO_EULER": {
+              "value": 51,
+              "description": "Convert Gibbs vector to Euler angles using EULER_SEQUENCE."
+            },
+            "EULER_TO_PRV": {
+              "value": 52,
+              "description": "Convert Euler angles to principal rotation vector using EULER_SEQUENCE."
+            },
+            "PRV_TO_EULER": {
+              "value": 53,
+              "description": "Convert principal rotation vector to Euler angles using EULER_SEQUENCE."
+            },
+            "B_MATRIX_EULER": {
+              "value": 54,
+              "description": "Return the Euler-angle B matrix that maps body angular rate to Euler-angle derivative."
+            },
+            "B_INV_MATRIX_EULER": {
+              "value": 55,
+              "description": "Return the inverse Euler-angle B matrix that maps Euler-angle derivative to body angular rate."
+            },
+            "D_EULER": {
+              "value": 56,
+              "description": "Compute Euler-angle derivative from Euler angles and body angular rate vectors."
+            },
+            "TILDE_MATRIX": {
+              "value": 57,
+              "description": "Return the skew-symmetric tilde matrix that maps VECTOR_A cross products."
+            },
+            "M1_ROTATION_MATRIX": {
+              "value": 58,
+              "description": "Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD."
+            },
+            "M2_ROTATION_MATRIX": {
+              "value": 59,
+              "description": "Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD."
+            },
+            "M3_ROTATION_MATRIX": {
+              "value": 60,
+              "description": "Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD."
+            }
+          }
+        },
+        "VECTOR_A": {
+          "$ref": "#/definitions/RBKVector3",
+          "x-flatbuffer-type": "RBKVector3"
+        },
+        "VECTOR_B": {
+          "$ref": "#/definitions/RBKVector3",
+          "x-flatbuffer-type": "RBKVector3"
+        },
+        "QUATERNION_A": {
+          "$ref": "#/definitions/RBKQuaternion",
+          "x-flatbuffer-type": "RBKQuaternion"
+        },
+        "MATRIX_A": {
+          "$ref": "#/definitions/RBKMatrix3",
+          "x-flatbuffer-type": "RBKMatrix3"
+        },
+        "SWITCH_THRESHOLD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VECTOR_C": {
+          "$ref": "#/definitions/RBKVector3",
+          "x-flatbuffer-type": "RBKVector3"
+        },
+        "VECTOR_D": {
+          "$ref": "#/definitions/RBKVector3",
+          "x-flatbuffer-type": "RBKVector3"
+        },
+        "EULER_SEQUENCE": {
+          "$ref": "#/definitions/rbkEulerSequenceCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "EULER_121": {
+              "value": 1
+            },
+            "EULER_123": {
+              "value": 2
+            },
+            "EULER_131": {
+              "value": 3
+            },
+            "EULER_132": {
+              "value": 4
+            },
+            "EULER_212": {
+              "value": 5
+            },
+            "EULER_213": {
+              "value": 6
+            },
+            "EULER_231": {
+              "value": 7
+            },
+            "EULER_232": {
+              "value": 8
+            },
+            "EULER_312": {
+              "value": 9
+            },
+            "EULER_313": {
+              "value": 10
+            },
+            "EULER_321": {
+              "value": 11
+            },
+            "EULER_323": {
+              "value": 12
+            }
+          }
+        },
+        "ANGLE_RAD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RBKRigidBodyKinematicsResult": {
+      "type": "object",
+      "description": "Result for one rigid-body kinematics utility operation.",
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/rbkResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request is missing required vector/quaternion data or has invalid values."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "Operation is unknown or not supported by the module implementation."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VECTOR": {
+          "$ref": "#/definitions/RBKVector3",
+          "x-flatbuffer-type": "RBKVector3"
+        },
+        "QUATERNION": {
+          "$ref": "#/definitions/RBKQuaternion",
+          "x-flatbuffer-type": "RBKQuaternion"
+        },
+        "MATRIX": {
+          "$ref": "#/definitions/RBKMatrix3",
+          "x-flatbuffer-type": "RBKMatrix3"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RBK": {
+      "type": "object",
+      "description": "Rigid-body kinematics utility envelope.",
+      "properties": {
+        "RIGID_BODY_REQUEST": {
+          "$ref": "#/definitions/RBKRigidBodyKinematicsRequest",
+          "x-flatbuffer-type": "RBKRigidBodyKinematicsRequest"
+        },
+        "RIGID_BODY_RESULT": {
+          "$ref": "#/definitions/RBKRigidBodyKinematicsResult",
+          "x-flatbuffer-type": "RBKRigidBodyKinematicsResult"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/RBK",
+  "x-flatbuffer-root-type": "RBK",
+  "x-flatbuffer-file-identifier": "$RBK"
+}

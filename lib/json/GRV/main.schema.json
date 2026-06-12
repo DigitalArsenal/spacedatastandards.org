@@ -49,6 +49,27 @@
               },
         "POLE_TIDES" : {
                 "type" : "boolean"
+              },
+        "EQUATORIAL_RADIUS" : {
+                "type" : "number"
+              },
+        "J2" : {
+                "type" : "number"
+              },
+        "MU" : {
+                "type" : "number"
+              },
+        "J3" : {
+                "type" : "number"
+              },
+        "J4" : {
+                "type" : "number"
+              },
+        "J5" : {
+                "type" : "number"
+              },
+        "J6" : {
+                "type" : "number"
               }
       },
       "additionalProperties" : false

@@ -19,6 +19,29 @@ function generateUnion(schemaNames) {
   ].join("\n");
 }
 
+function parseRecordUnionSchemaNames(source) {
+  const match = source.match(/union\s+RecordType\s*\{([^}]+)\}/s);
+  if (!match) {
+    return [];
+  }
+  return match[1]
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter((entry) => /^[A-Z][A-Z0-9]{2}$/.test(entry));
+}
+
+function stableRecordUnionOrder(schemaNames, original) {
+  const schemaNameSet = new Set(schemaNames);
+  const ordered = [];
+  for (const schemaName of parseRecordUnionSchemaNames(original)) {
+    if (schemaNameSet.has(schemaName) && !ordered.includes(schemaName)) {
+      ordered.push(schemaName);
+    }
+  }
+  const appended = schemaNames.filter((schemaName) => !ordered.includes(schemaName));
+  return [...ordered, ...appended];
+}
+
 function replaceSection(source, pattern, replacement) {
   return source.replace(pattern, replacement);
 }
@@ -28,7 +51,8 @@ async function main() {
   const recPath = path.join(SCHEMA_DIR, "REC", "main.fbs");
   const original = await fs.readFile(recPath, "utf8");
   const includes = generateIncludes(schemaNames).join("\n");
-  const union = generateUnion(schemaNames);
+  const recordUnionOrder = stableRecordUnionOrder(schemaNames, original);
+  const union = generateUnion(recordUnionOrder);
 
   let updated = replaceSection(
     original,
@@ -44,11 +68,10 @@ async function main() {
   if (updated !== original) {
     await fs.writeFile(recPath, updated, "utf8");
   }
-  console.log(`Updated REC union with ${schemaNames.length} schema types.`);
+  console.log(`Updated REC union with ${recordUnionOrder.length} schema types.`);
 }
 
 main().catch((error) => {
   console.error(error.stack || error.message);
   process.exitCode = 1;
 });
-

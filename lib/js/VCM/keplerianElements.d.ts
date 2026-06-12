@@ -16,6 +16,7 @@ export declare class keplerianElements implements flatbuffers.IUnpackableObject<
     ARG_OF_PERICENTER(): number;
     ANOMALY_TYPE(): anomalyConvention;
     ANOMALY(): number;
+    PERIAPSIS_RADIUS(): number;
     static startkeplerianElements(builder: flatbuffers.Builder): void;
     static addSemiMajorAxis(builder: flatbuffers.Builder, SEMI_MAJOR_AXIS: number): void;
     static addEccentricity(builder: flatbuffers.Builder, ECCENTRICITY: number): void;
@@ -24,8 +25,9 @@ export declare class keplerianElements implements flatbuffers.IUnpackableObject<
     static addArgOfPericenter(builder: flatbuffers.Builder, ARG_OF_PERICENTER: number): void;
     static addAnomalyType(builder: flatbuffers.Builder, ANOMALY_TYPE: anomalyConvention): void;
     static addAnomaly(builder: flatbuffers.Builder, ANOMALY: number): void;
+    static addPeriapsisRadius(builder: flatbuffers.Builder, PERIAPSIS_RADIUS: number): void;
     static endkeplerianElements(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createkeplerianElements(builder: flatbuffers.Builder, SEMI_MAJOR_AXIS: number, ECCENTRICITY: number, INCLINATION: number, RA_OF_ASC_NODE: number, ARG_OF_PERICENTER: number, ANOMALY_TYPE: anomalyConvention, ANOMALY: number): flatbuffers.Offset;
+    static createkeplerianElements(builder: flatbuffers.Builder, SEMI_MAJOR_AXIS: number, ECCENTRICITY: number, INCLINATION: number, RA_OF_ASC_NODE: number, ARG_OF_PERICENTER: number, ANOMALY_TYPE: anomalyConvention, ANOMALY: number, PERIAPSIS_RADIUS: number): flatbuffers.Offset;
     unpack(): keplerianElementsT;
     unpackTo(_o: keplerianElementsT): void;
 }
@@ -37,7 +39,8 @@ export declare class keplerianElementsT implements flatbuffers.IGeneratedObject 
     ARG_OF_PERICENTER: number;
     ANOMALY_TYPE: anomalyConvention;
     ANOMALY: number;
-    constructor(SEMI_MAJOR_AXIS?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, ANOMALY_TYPE?: anomalyConvention, ANOMALY?: number);
+    PERIAPSIS_RADIUS: number;
+    constructor(SEMI_MAJOR_AXIS?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, ANOMALY_TYPE?: anomalyConvention, ANOMALY?: number, PERIAPSIS_RADIUS?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=keplerianElements.d.ts.map

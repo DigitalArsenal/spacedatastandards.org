@@ -1636,6 +1636,7 @@ impl<'a> keplerianElements<'a> {
   pub const VT_ARG_OF_PERICENTER: ::flatbuffers::VOffsetT = 12;
   pub const VT_ANOMALY_TYPE: ::flatbuffers::VOffsetT = 14;
   pub const VT_ANOMALY: ::flatbuffers::VOffsetT = 16;
+  pub const VT_PERIAPSIS_RADIUS: ::flatbuffers::VOffsetT = 18;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1647,6 +1648,7 @@ impl<'a> keplerianElements<'a> {
     args: &'args keplerianElementsArgs
   ) -> ::flatbuffers::WIPOffset<keplerianElements<'bldr>> {
     let mut builder = keplerianElementsBuilder::new(_fbb);
+    builder.add_PERIAPSIS_RADIUS(args.PERIAPSIS_RADIUS);
     builder.add_ANOMALY(args.ANOMALY);
     builder.add_ARG_OF_PERICENTER(args.ARG_OF_PERICENTER);
     builder.add_RA_OF_ASC_NODE(args.RA_OF_ASC_NODE);
@@ -1665,6 +1667,7 @@ impl<'a> keplerianElements<'a> {
     let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER();
     let ANOMALY_TYPE = self.ANOMALY_TYPE();
     let ANOMALY = self.ANOMALY();
+    let PERIAPSIS_RADIUS = self.PERIAPSIS_RADIUS();
     keplerianElementsT {
       SEMI_MAJOR_AXIS,
       ECCENTRICITY,
@@ -1673,6 +1676,7 @@ impl<'a> keplerianElements<'a> {
       ARG_OF_PERICENTER,
       ANOMALY_TYPE,
       ANOMALY,
+      PERIAPSIS_RADIUS,
     }
   }
 
@@ -1725,6 +1729,13 @@ impl<'a> keplerianElements<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(keplerianElements::VT_ANOMALY, Some(0.0)).unwrap()}
   }
+  #[inline]
+  pub fn PERIAPSIS_RADIUS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(keplerianElements::VT_PERIAPSIS_RADIUS, Some(0.0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for keplerianElements<'_> {
@@ -1740,6 +1751,7 @@ impl ::flatbuffers::Verifiable for keplerianElements<'_> {
      .visit_field::<f64>("ARG_OF_PERICENTER", Self::VT_ARG_OF_PERICENTER, false)?
      .visit_field::<anomalyConvention>("ANOMALY_TYPE", Self::VT_ANOMALY_TYPE, false)?
      .visit_field::<f64>("ANOMALY", Self::VT_ANOMALY, false)?
+     .visit_field::<f64>("PERIAPSIS_RADIUS", Self::VT_PERIAPSIS_RADIUS, false)?
      .finish();
     Ok(())
   }
@@ -1752,6 +1764,7 @@ pub struct keplerianElementsArgs {
     pub ARG_OF_PERICENTER: f64,
     pub ANOMALY_TYPE: anomalyConvention,
     pub ANOMALY: f64,
+    pub PERIAPSIS_RADIUS: f64,
 }
 impl<'a> Default for keplerianElementsArgs {
   #[inline]
@@ -1764,6 +1777,7 @@ impl<'a> Default for keplerianElementsArgs {
       ARG_OF_PERICENTER: 0.0,
       ANOMALY_TYPE: anomalyConvention::TRUE_ANOMALY,
       ANOMALY: 0.0,
+      PERIAPSIS_RADIUS: 0.0,
     }
   }
 }
@@ -1802,6 +1816,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> keplerianElementsBuilder<'a, 
     self.fbb_.push_slot::<f64>(keplerianElements::VT_ANOMALY, ANOMALY, 0.0);
   }
   #[inline]
+  pub fn add_PERIAPSIS_RADIUS(&mut self, PERIAPSIS_RADIUS: f64) {
+    self.fbb_.push_slot::<f64>(keplerianElements::VT_PERIAPSIS_RADIUS, PERIAPSIS_RADIUS, 0.0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> keplerianElementsBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     keplerianElementsBuilder {
@@ -1826,6 +1844,7 @@ impl ::core::fmt::Debug for keplerianElements<'_> {
       ds.field("ARG_OF_PERICENTER", &self.ARG_OF_PERICENTER());
       ds.field("ANOMALY_TYPE", &self.ANOMALY_TYPE());
       ds.field("ANOMALY", &self.ANOMALY());
+      ds.field("PERIAPSIS_RADIUS", &self.PERIAPSIS_RADIUS());
       ds.finish()
   }
 }
@@ -1839,6 +1858,7 @@ pub struct keplerianElementsT {
   pub ARG_OF_PERICENTER: f64,
   pub ANOMALY_TYPE: anomalyConvention,
   pub ANOMALY: f64,
+  pub PERIAPSIS_RADIUS: f64,
 }
 impl Default for keplerianElementsT {
   fn default() -> Self {
@@ -1850,6 +1870,7 @@ impl Default for keplerianElementsT {
       ARG_OF_PERICENTER: 0.0,
       ANOMALY_TYPE: anomalyConvention::TRUE_ANOMALY,
       ANOMALY: 0.0,
+      PERIAPSIS_RADIUS: 0.0,
     }
   }
 }
@@ -1865,6 +1886,7 @@ impl keplerianElementsT {
     let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER;
     let ANOMALY_TYPE = self.ANOMALY_TYPE;
     let ANOMALY = self.ANOMALY;
+    let PERIAPSIS_RADIUS = self.PERIAPSIS_RADIUS;
     keplerianElements::create(_fbb, &keplerianElementsArgs{
       SEMI_MAJOR_AXIS,
       ECCENTRICITY,
@@ -1873,6 +1895,7 @@ impl keplerianElementsT {
       ARG_OF_PERICENTER,
       ANOMALY_TYPE,
       ANOMALY,
+      PERIAPSIS_RADIUS,
     })
   }
 }

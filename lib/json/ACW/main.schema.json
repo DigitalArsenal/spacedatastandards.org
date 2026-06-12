@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "acwOperationCode" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "COMPUTE_ACCESS_WINDOWS"]
+    },
+    "acwResultStatus" : {
+      "type" : "string",
+      "enum": ["OK", "INVALID_INPUT", "UNSUPPORTED_OPERATION"]
+    },
+    "acwRefractionModelKind" : {
+      "type" : "string",
+      "enum": ["NONE", "EARTH_STANDARD_ATMOSPHERE"]
+    },
+    "ACWStateSample" : {
+      "type" : "object",
+      "description" : "Target Cartesian state sample in an Earth-fixed frame.",
+      "properties" : {
+        "JULIAN_DATE_TT" : {
+                "type" : "number",
+                "description" : "Sample epoch as Julian Date in TT."
+              },
+        "POSITION_X_M" : {
+                "type" : "number",
+                "description" : "Earth-fixed X position, meters."
+              },
+        "POSITION_Y_M" : {
+                "type" : "number",
+                "description" : "Earth-fixed Y position, meters."
+              },
+        "POSITION_Z_M" : {
+                "type" : "number",
+                "description" : "Earth-fixed Z position, meters."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACWElevationMaskPoint" : {
+      "type" : "object",
+      "description" : "Azimuth-dependent minimum elevation mask point.",
+      "properties" : {
+        "AZIMUTH_RAD" : {
+                "type" : "number",
+                "description" : "Azimuth, radians in the TopocentricFrame convention."
+              },
+        "ELEVATION_RAD" : {
+                "type" : "number",
+                "description" : "Minimum visible elevation at the azimuth, radians."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACWRefractionModel" : {
+      "type" : "object",
+      "description" : "Atmospheric refraction model for apparent-elevation access checks.",
+      "properties" : {
+        "MODEL_KIND" : {
+                "$ref" : "#/definitions/acwRefractionModelKind"
+              },
+        "PRESSURE_PA" : {
+                "type" : "number",
+                "description" : "Local pressure in pascals."
+              },
+        "TEMPERATURE_K" : {
+                "type" : "number",
+                "description" : "Local temperature in kelvin."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACWBlackoutWindow" : {
+      "type" : "object",
+      "description" : "Ground-station blackout interval.",
+      "properties" : {
+        "START_JULIAN_DATE_TT" : {
+                "type" : "number",
+                "description" : "Interval start as Julian Date in TT."
+              },
+        "END_JULIAN_DATE_TT" : {
+                "type" : "number",
+                "description" : "Interval end as Julian Date in TT."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACWGroundStation" : {
+      "type" : "object",
+      "description" : "Ground-station geodetic definition and scheduling constraints.",
+      "properties" : {
+        "STATION_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "LATITUDE_RAD" : {
+                "type" : "number",
+                "description" : "Geodetic latitude, radians."
+              },
+        "LONGITUDE_RAD" : {
+                "type" : "number",
+                "description" : "Geodetic longitude, radians."
+              },
+        "ALTITUDE_M" : {
+                "type" : "number",
+                "description" : "Height above the WGS-84 ellipsoid, meters."
+              },
+        "MIN_ELEVATION_RAD" : {
+                "type" : "number",
+                "description" : "Default minimum visible elevation, radians."
+              },
+        "CHANNEL_CAPACITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of simultaneous contacts this station can schedule."
+              },
+        "BLACKOUT_WINDOWS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACWBlackoutWindow"},
+                "description" : "Station-specific unavailable intervals."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACWRequest" : {
+      "type" : "object",
+      "description" : "One access-window compute request.",
+      "properties" : {
+        "OPERATION" : {
+                "$ref" : "#/definitions/acwOperationCode"
+              },
+        "GROUND_STATIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACWGroundStation"},
+                "description" : "Candidate ground stations."
+              },
+        "STATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACWStateSample"},
+                "description" : "Pre-sampled target Earth-fixed Cartesian states."
+              },
+        "TARGET_STATION_ID" : {
+                "type" : "string",
+                "description" : "Optional target station id. Empty means all stations when supported."
+              },
+        "MIN_ELEVATION_OVERRIDE_RAD" : {
+                "type" : "number",
+                "description" : "Optional caller override for minimum elevation, radians."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Optional trace/correlation identifier."
+              },
+        "ELEVATION_MASK" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACWElevationMaskPoint"},
+                "description" : "Optional azimuth-dependent minimum elevation mask."
+              },
+        "REFRACTION_MODEL" : {
+                "$ref" : "#/definitions/ACWRefractionModel",
+                "description" : "Optional apparent-elevation refraction model."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACWAccessWindow" : {
+      "type" : "object",
+      "description" : "One computed access interval.",
+      "properties" : {
+        "STATION_ID" : {
+                "type" : "string"
+              },
+        "START_JULIAN_DATE_TT" : {
+                "type" : "number",
+                "description" : "Access start as Julian Date in TT."
+              },
+        "END_JULIAN_DATE_TT" : {
+                "type" : "number",
+                "description" : "Access end as Julian Date in TT."
+              },
+        "MAX_ELEVATION_RAD" : {
+                "type" : "number",
+                "description" : "Maximum elevation sampled or interpolated during the pass, radians."
+              },
+        "SAMPLE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of visible input samples contributing to the window."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACWResult" : {
+      "type" : "object",
+      "description" : "Result for one access-window compute request.",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/acwResultStatus"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string"
+              },
+        "WINDOWS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACWAccessWindow"}
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Caller trace/correlation identifier copied from the request when present."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACW" : {
+      "type" : "object",
+      "description" : "Access-window analysis envelope.",
+      "properties" : {
+        "REQUEST" : {
+                "$ref" : "#/definitions/ACWRequest"
+              },
+        "RESULT" : {
+                "$ref" : "#/definitions/ACWResult"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ACW"
+}

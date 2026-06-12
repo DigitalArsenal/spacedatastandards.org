@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Time System
+# Time System and time-conversion envelope.
 class TIM(object):
     __slots__ = ['_tab']
 
@@ -29,6 +29,7 @@ class TIM(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Legacy time-system selector retained for existing TIM consumers.
     # TIM
     def TIME_SYSTEM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,8 +37,44 @@ class TIM(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # A single tagged instant.
+    # TIM
+    def INSTANT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from TIMInstant import TIMInstant
+            obj = TIMInstant()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Time conversion request.
+    # TIM
+    def CONVERSION_REQUEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from TIMConversionRequest import TIMConversionRequest
+            obj = TIMConversionRequest()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Time conversion result.
+    # TIM
+    def CONVERSION_RESULT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from TIMConversionResult import TIMConversionResult
+            obj = TIMConversionResult()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def TIMStart(builder):
-    builder.StartObject(1)
+    builder.StartObject(4)
 
 def Start(builder):
     TIMStart(builder)
@@ -48,12 +85,37 @@ def TIMAddTIME_SYSTEM(builder, TIME_SYSTEM):
 def AddTIME_SYSTEM(builder, TIME_SYSTEM):
     TIMAddTIME_SYSTEM(builder, TIME_SYSTEM)
 
+def TIMAddINSTANT(builder, INSTANT):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(INSTANT), 0)
+
+def AddINSTANT(builder, INSTANT):
+    TIMAddINSTANT(builder, INSTANT)
+
+def TIMAddCONVERSION_REQUEST(builder, CONVERSION_REQUEST):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CONVERSION_REQUEST), 0)
+
+def AddCONVERSION_REQUEST(builder, CONVERSION_REQUEST):
+    TIMAddCONVERSION_REQUEST(builder, CONVERSION_REQUEST)
+
+def TIMAddCONVERSION_RESULT(builder, CONVERSION_RESULT):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CONVERSION_RESULT), 0)
+
+def AddCONVERSION_RESULT(builder, CONVERSION_RESULT):
+    TIMAddCONVERSION_RESULT(builder, CONVERSION_RESULT)
+
 def TIMEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return TIMEnd(builder)
 
+import TIMConversionRequest
+import TIMConversionResult
+import TIMInstant
+try:
+    from typing import Optional
+except:
+    pass
 
 class TIMT(object):
 
@@ -61,8 +123,14 @@ class TIMT(object):
     def __init__(
         self,
         TIME_SYSTEM = 0,
+        INSTANT = None,
+        CONVERSION_REQUEST = None,
+        CONVERSION_RESULT = None,
     ):
         self.TIME_SYSTEM = TIME_SYSTEM  # type: int
+        self.INSTANT = INSTANT  # type: Optional[TIMInstant.TIMInstantT]
+        self.CONVERSION_REQUEST = CONVERSION_REQUEST  # type: Optional[TIMConversionRequest.TIMConversionRequestT]
+        self.CONVERSION_RESULT = CONVERSION_RESULT  # type: Optional[TIMConversionResult.TIMConversionResultT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -86,10 +154,28 @@ class TIMT(object):
         if TIM is None:
             return
         self.TIME_SYSTEM = TIM.TIME_SYSTEM()
+        if TIM.INSTANT() is not None:
+            self.INSTANT = TIMInstant.TIMInstantT.InitFromObj(TIM.INSTANT())
+        if TIM.CONVERSION_REQUEST() is not None:
+            self.CONVERSION_REQUEST = TIMConversionRequest.TIMConversionRequestT.InitFromObj(TIM.CONVERSION_REQUEST())
+        if TIM.CONVERSION_RESULT() is not None:
+            self.CONVERSION_RESULT = TIMConversionResult.TIMConversionResultT.InitFromObj(TIM.CONVERSION_RESULT())
 
     # TIMT
     def Pack(self, builder):
+        if self.INSTANT is not None:
+            INSTANT = self.INSTANT.Pack(builder)
+        if self.CONVERSION_REQUEST is not None:
+            CONVERSION_REQUEST = self.CONVERSION_REQUEST.Pack(builder)
+        if self.CONVERSION_RESULT is not None:
+            CONVERSION_RESULT = self.CONVERSION_RESULT.Pack(builder)
         TIMStart(builder)
         TIMAddTIME_SYSTEM(builder, self.TIME_SYSTEM)
+        if self.INSTANT is not None:
+            TIMAddINSTANT(builder, INSTANT)
+        if self.CONVERSION_REQUEST is not None:
+            TIMAddCONVERSION_REQUEST(builder, CONVERSION_REQUEST)
+        if self.CONVERSION_RESULT is not None:
+            TIMAddCONVERSION_RESULT(builder, CONVERSION_RESULT)
         TIM = TIMEnd(builder)
         return TIM

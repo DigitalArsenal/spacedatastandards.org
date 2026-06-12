@@ -13,6 +13,18 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
+struct TIMCcsdsTimeCode;
+struct TIMCcsdsTimeCodeBuilder;
+
+struct TIMInstant;
+struct TIMInstantBuilder;
+
+struct TIMConversionRequest;
+struct TIMConversionRequestBuilder;
+
+struct TIMConversionResult;
+struct TIMConversionResultBuilder;
+
 struct TIM;
 struct TIMBuilder;
 
@@ -41,11 +53,23 @@ enum timingStandard : int8_t {
   timingStandard_UT1 = 10,
   /// Coordinated Universal Time
   timingStandard_UTC = 11,
+  /// GLONASS Time
+  timingStandard_GLONASS = 12,
+  /// Galileo System Time
+  timingStandard_GST = 13,
+  /// Quasi-Zenith Satellite System Time
+  timingStandard_QZSS = 14,
+  /// BeiDou Time
+  timingStandard_BDT = 15,
+  /// Navigation with Indian Constellation Time
+  timingStandard_NAVIC = 16,
+  /// Satellite-Based Augmentation System Time
+  timingStandard_SBAS = 17,
   timingStandard_MIN = timingStandard_GMST,
-  timingStandard_MAX = timingStandard_UTC
+  timingStandard_MAX = timingStandard_SBAS
 };
 
-inline const timingStandard (&EnumValuestimingStandard())[12] {
+inline const timingStandard (&EnumValuestimingStandard())[18] {
   static const timingStandard values[] = {
     timingStandard_GMST,
     timingStandard_GPS,
@@ -58,13 +82,19 @@ inline const timingStandard (&EnumValuestimingStandard())[12] {
     timingStandard_TCG,
     timingStandard_TT,
     timingStandard_UT1,
-    timingStandard_UTC
+    timingStandard_UTC,
+    timingStandard_GLONASS,
+    timingStandard_GST,
+    timingStandard_QZSS,
+    timingStandard_BDT,
+    timingStandard_NAVIC,
+    timingStandard_SBAS
   };
   return values;
 }
 
 inline const char * const *EnumNamestimingStandard() {
-  static const char * const names[13] = {
+  static const char * const names[19] = {
     "GMST",
     "GPS",
     "MET",
@@ -77,30 +107,783 @@ inline const char * const *EnumNamestimingStandard() {
     "TT",
     "UT1",
     "UTC",
+    "GLONASS",
+    "GST",
+    "QZSS",
+    "BDT",
+    "NAVIC",
+    "SBAS",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNametimingStandard(timingStandard e) {
-  if (::flatbuffers::IsOutRange(e, timingStandard_GMST, timingStandard_UTC)) return "";
+  if (::flatbuffers::IsOutRange(e, timingStandard_GMST, timingStandard_SBAS)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamestimingStandard()[index];
 }
 
-/// Time System
-struct TIM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef TIMBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_TIME_SYSTEM = 4
+enum timEpochRepresentation : int8_t {
+  /// Julian Date day count.
+  timEpochRepresentation_JULIAN_DATE = 0,
+  /// Modified Julian Date day count (JD - 2400000.5).
+  timEpochRepresentation_MODIFIED_JULIAN_DATE = 1,
+  /// Seconds since 1970-01-01T00:00:00 UTC.
+  timEpochRepresentation_UNIX_SECONDS = 2,
+  /// ISO 8601 timestamp text.
+  timEpochRepresentation_ISO8601 = 3,
+  /// Seconds since 1980-01-06T00:00:00 GPS.
+  timEpochRepresentation_GPS_SECONDS = 4,
+  /// GNSS week number plus seconds within the week.
+  timEpochRepresentation_GNSS_WEEK_SECONDS = 5,
+  /// CCSDS binary time-code field with preamble metadata.
+  timEpochRepresentation_CCSDS_TIME_CODE = 6,
+  /// Seconds from an application-defined mission epoch.
+  timEpochRepresentation_MISSION_ELAPSED_SECONDS = 7,
+  timEpochRepresentation_MIN = timEpochRepresentation_JULIAN_DATE,
+  timEpochRepresentation_MAX = timEpochRepresentation_MISSION_ELAPSED_SECONDS
+};
+
+inline const timEpochRepresentation (&EnumValuestimEpochRepresentation())[8] {
+  static const timEpochRepresentation values[] = {
+    timEpochRepresentation_JULIAN_DATE,
+    timEpochRepresentation_MODIFIED_JULIAN_DATE,
+    timEpochRepresentation_UNIX_SECONDS,
+    timEpochRepresentation_ISO8601,
+    timEpochRepresentation_GPS_SECONDS,
+    timEpochRepresentation_GNSS_WEEK_SECONDS,
+    timEpochRepresentation_CCSDS_TIME_CODE,
+    timEpochRepresentation_MISSION_ELAPSED_SECONDS
   };
+  return values;
+}
+
+inline const char * const *EnumNamestimEpochRepresentation() {
+  static const char * const names[9] = {
+    "JULIAN_DATE",
+    "MODIFIED_JULIAN_DATE",
+    "UNIX_SECONDS",
+    "ISO8601",
+    "GPS_SECONDS",
+    "GNSS_WEEK_SECONDS",
+    "CCSDS_TIME_CODE",
+    "MISSION_ELAPSED_SECONDS",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNametimEpochRepresentation(timEpochRepresentation e) {
+  if (::flatbuffers::IsOutRange(e, timEpochRepresentation_JULIAN_DATE, timEpochRepresentation_MISSION_ELAPSED_SECONDS)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamestimEpochRepresentation()[index];
+}
+
+enum timCcsdsTimeCodeKind : int8_t {
+  /// No CCSDS time code selected.
+  timCcsdsTimeCodeKind_NONE = 0,
+  /// CCSDS Unsegmented Time Code (CUC).
+  timCcsdsTimeCodeKind_UNSEGMENTED = 1,
+  /// CCSDS Day Segmented Time Code (CDS).
+  timCcsdsTimeCodeKind_DAY_SEGMENTED = 2,
+  /// CCSDS Calendar Segmented Time Code (CCS).
+  timCcsdsTimeCodeKind_CALENDAR_SEGMENTED = 3,
+  timCcsdsTimeCodeKind_MIN = timCcsdsTimeCodeKind_NONE,
+  timCcsdsTimeCodeKind_MAX = timCcsdsTimeCodeKind_CALENDAR_SEGMENTED
+};
+
+inline const timCcsdsTimeCodeKind (&EnumValuestimCcsdsTimeCodeKind())[4] {
+  static const timCcsdsTimeCodeKind values[] = {
+    timCcsdsTimeCodeKind_NONE,
+    timCcsdsTimeCodeKind_UNSEGMENTED,
+    timCcsdsTimeCodeKind_DAY_SEGMENTED,
+    timCcsdsTimeCodeKind_CALENDAR_SEGMENTED
+  };
+  return values;
+}
+
+inline const char * const *EnumNamestimCcsdsTimeCodeKind() {
+  static const char * const names[5] = {
+    "NONE",
+    "UNSEGMENTED",
+    "DAY_SEGMENTED",
+    "CALENDAR_SEGMENTED",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNametimCcsdsTimeCodeKind(timCcsdsTimeCodeKind e) {
+  if (::flatbuffers::IsOutRange(e, timCcsdsTimeCodeKind_NONE, timCcsdsTimeCodeKind_CALENDAR_SEGMENTED)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamestimCcsdsTimeCodeKind()[index];
+}
+
+enum timConversionStatus : int8_t {
+  /// Conversion completed.
+  timConversionStatus_OK = 0,
+  /// Input epoch or requested representation is invalid.
+  timConversionStatus_INVALID_INPUT = 1,
+  /// Requested source or target time system is not supported.
+  timConversionStatus_UNSUPPORTED_TIME_SYSTEM = 2,
+  /// Conversion requires leap-second data that was not available.
+  timConversionStatus_LEAP_SECOND_DATA_REQUIRED = 3,
+  /// Conversion requires Earth-orientation data that was not available.
+  timConversionStatus_EOP_DATA_REQUIRED = 4,
+  /// Requested instant is outside the supported conversion range.
+  timConversionStatus_OUT_OF_RANGE = 5,
+  timConversionStatus_MIN = timConversionStatus_OK,
+  timConversionStatus_MAX = timConversionStatus_OUT_OF_RANGE
+};
+
+inline const timConversionStatus (&EnumValuestimConversionStatus())[6] {
+  static const timConversionStatus values[] = {
+    timConversionStatus_OK,
+    timConversionStatus_INVALID_INPUT,
+    timConversionStatus_UNSUPPORTED_TIME_SYSTEM,
+    timConversionStatus_LEAP_SECOND_DATA_REQUIRED,
+    timConversionStatus_EOP_DATA_REQUIRED,
+    timConversionStatus_OUT_OF_RANGE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamestimConversionStatus() {
+  static const char * const names[7] = {
+    "OK",
+    "INVALID_INPUT",
+    "UNSUPPORTED_TIME_SYSTEM",
+    "LEAP_SECOND_DATA_REQUIRED",
+    "EOP_DATA_REQUIRED",
+    "OUT_OF_RANGE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNametimConversionStatus(timConversionStatus e) {
+  if (::flatbuffers::IsOutRange(e, timConversionStatus_OK, timConversionStatus_OUT_OF_RANGE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamestimConversionStatus()[index];
+}
+
+/// CCSDS time-code payload and preamble metadata.
+struct TIMCcsdsTimeCode FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef TIMCcsdsTimeCodeBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CODE_KIND = 4,
+    VT_PREAMBLE_FIELD1 = 6,
+    VT_PREAMBLE_FIELD2 = 8,
+    VT_TIME_FIELD = 10,
+    VT_AGENCY_DEFINED_EPOCH_ISO8601 = 12,
+    VT_CCSDS_EPOCH_ISO8601 = 14
+  };
+  /// CCSDS time-code family.
+  timCcsdsTimeCodeKind CODE_KIND() const {
+    return static_cast<timCcsdsTimeCodeKind>(GetField<int8_t>(VT_CODE_KIND, 0));
+  }
+  /// First CCSDS preamble field octet.
+  uint8_t PREAMBLE_FIELD1() const {
+    return GetField<uint8_t>(VT_PREAMBLE_FIELD1, 0);
+  }
+  /// Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
+  uint8_t PREAMBLE_FIELD2() const {
+    return GetField<uint8_t>(VT_PREAMBLE_FIELD2, 0);
+  }
+  /// Raw CCSDS time field octets.
+  const ::flatbuffers::Vector<uint8_t> *TIME_FIELD() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_TIME_FIELD);
+  }
+  /// Optional agency-defined epoch timestamp for agency epoch time codes.
+  const ::flatbuffers::String *AGENCY_DEFINED_EPOCH_ISO8601() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_AGENCY_DEFINED_EPOCH_ISO8601);
+  }
+  /// Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
+  const ::flatbuffers::String *CCSDS_EPOCH_ISO8601() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CCSDS_EPOCH_ISO8601);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_CODE_KIND, 1) &&
+           VerifyField<uint8_t>(verifier, VT_PREAMBLE_FIELD1, 1) &&
+           VerifyField<uint8_t>(verifier, VT_PREAMBLE_FIELD2, 1) &&
+           VerifyOffset(verifier, VT_TIME_FIELD) &&
+           verifier.VerifyVector(TIME_FIELD()) &&
+           VerifyOffset(verifier, VT_AGENCY_DEFINED_EPOCH_ISO8601) &&
+           verifier.VerifyString(AGENCY_DEFINED_EPOCH_ISO8601()) &&
+           VerifyOffset(verifier, VT_CCSDS_EPOCH_ISO8601) &&
+           verifier.VerifyString(CCSDS_EPOCH_ISO8601()) &&
+           verifier.EndTable();
+  }
+};
+
+struct TIMCcsdsTimeCodeBuilder {
+  typedef TIMCcsdsTimeCode Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_CODE_KIND(timCcsdsTimeCodeKind CODE_KIND) {
+    fbb_.AddElement<int8_t>(TIMCcsdsTimeCode::VT_CODE_KIND, static_cast<int8_t>(CODE_KIND), 0);
+  }
+  void add_PREAMBLE_FIELD1(uint8_t PREAMBLE_FIELD1) {
+    fbb_.AddElement<uint8_t>(TIMCcsdsTimeCode::VT_PREAMBLE_FIELD1, PREAMBLE_FIELD1, 0);
+  }
+  void add_PREAMBLE_FIELD2(uint8_t PREAMBLE_FIELD2) {
+    fbb_.AddElement<uint8_t>(TIMCcsdsTimeCode::VT_PREAMBLE_FIELD2, PREAMBLE_FIELD2, 0);
+  }
+  void add_TIME_FIELD(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> TIME_FIELD) {
+    fbb_.AddOffset(TIMCcsdsTimeCode::VT_TIME_FIELD, TIME_FIELD);
+  }
+  void add_AGENCY_DEFINED_EPOCH_ISO8601(::flatbuffers::Offset<::flatbuffers::String> AGENCY_DEFINED_EPOCH_ISO8601) {
+    fbb_.AddOffset(TIMCcsdsTimeCode::VT_AGENCY_DEFINED_EPOCH_ISO8601, AGENCY_DEFINED_EPOCH_ISO8601);
+  }
+  void add_CCSDS_EPOCH_ISO8601(::flatbuffers::Offset<::flatbuffers::String> CCSDS_EPOCH_ISO8601) {
+    fbb_.AddOffset(TIMCcsdsTimeCode::VT_CCSDS_EPOCH_ISO8601, CCSDS_EPOCH_ISO8601);
+  }
+  explicit TIMCcsdsTimeCodeBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<TIMCcsdsTimeCode> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<TIMCcsdsTimeCode>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<TIMCcsdsTimeCode> CreateTIMCcsdsTimeCode(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    timCcsdsTimeCodeKind CODE_KIND = timCcsdsTimeCodeKind_NONE,
+    uint8_t PREAMBLE_FIELD1 = 0,
+    uint8_t PREAMBLE_FIELD2 = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> TIME_FIELD = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> AGENCY_DEFINED_EPOCH_ISO8601 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CCSDS_EPOCH_ISO8601 = 0) {
+  TIMCcsdsTimeCodeBuilder builder_(_fbb);
+  builder_.add_CCSDS_EPOCH_ISO8601(CCSDS_EPOCH_ISO8601);
+  builder_.add_AGENCY_DEFINED_EPOCH_ISO8601(AGENCY_DEFINED_EPOCH_ISO8601);
+  builder_.add_TIME_FIELD(TIME_FIELD);
+  builder_.add_PREAMBLE_FIELD2(PREAMBLE_FIELD2);
+  builder_.add_PREAMBLE_FIELD1(PREAMBLE_FIELD1);
+  builder_.add_CODE_KIND(CODE_KIND);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<TIMCcsdsTimeCode> CreateTIMCcsdsTimeCodeDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    timCcsdsTimeCodeKind CODE_KIND = timCcsdsTimeCodeKind_NONE,
+    uint8_t PREAMBLE_FIELD1 = 0,
+    uint8_t PREAMBLE_FIELD2 = 0,
+    const std::vector<uint8_t> *TIME_FIELD = nullptr,
+    const char *AGENCY_DEFINED_EPOCH_ISO8601 = nullptr,
+    const char *CCSDS_EPOCH_ISO8601 = nullptr) {
+  auto TIME_FIELD__ = TIME_FIELD ? _fbb.CreateVector<uint8_t>(*TIME_FIELD) : 0;
+  auto AGENCY_DEFINED_EPOCH_ISO8601__ = AGENCY_DEFINED_EPOCH_ISO8601 ? _fbb.CreateString(AGENCY_DEFINED_EPOCH_ISO8601) : 0;
+  auto CCSDS_EPOCH_ISO8601__ = CCSDS_EPOCH_ISO8601 ? _fbb.CreateString(CCSDS_EPOCH_ISO8601) : 0;
+  return CreateTIMCcsdsTimeCode(
+      _fbb,
+      CODE_KIND,
+      PREAMBLE_FIELD1,
+      PREAMBLE_FIELD2,
+      TIME_FIELD__,
+      AGENCY_DEFINED_EPOCH_ISO8601__,
+      CCSDS_EPOCH_ISO8601__);
+}
+
+/// Numeric or textual instant tagged with its time system and representation.
+struct TIMInstant FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef TIMInstantBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TIME_SYSTEM = 4,
+    VT_EPOCH_FORMAT = 6,
+    VT_JULIAN_DATE = 8,
+    VT_SECONDS = 10,
+    VT_ISO8601 = 12,
+    VT_SUBSECOND_NANOS = 14,
+    VT_EPOCH_LABEL = 16,
+    VT_GNSS_WEEK = 18,
+    VT_HAS_GNSS_ROLLOVER_REFERENCE = 20,
+    VT_GNSS_ROLLOVER_REFERENCE_ISO8601 = 22,
+    VT_CCSDS_TIME_CODE = 24
+  };
+  /// Time system for this instant.
   timingStandard TIME_SYSTEM() const {
     return static_cast<timingStandard>(GetField<int8_t>(VT_TIME_SYSTEM, 0));
+  }
+  /// Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
+  timEpochRepresentation EPOCH_FORMAT() const {
+    return static_cast<timEpochRepresentation>(GetField<int8_t>(VT_EPOCH_FORMAT, 0));
+  }
+  /// Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
+  double JULIAN_DATE() const {
+    return GetField<double>(VT_JULIAN_DATE, 0.0);
+  }
+  /// Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
+  double SECONDS() const {
+    return GetField<double>(VT_SECONDS, 0.0);
+  }
+  /// ISO 8601 timestamp text for ISO8601 inputs or display outputs.
+  const ::flatbuffers::String *ISO8601() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ISO8601);
+  }
+  /// Additional nanoseconds beyond the fractional scalar/text value.
+  int32_t SUBSECOND_NANOS() const {
+    return GetField<int32_t>(VT_SUBSECOND_NANOS, 0);
+  }
+  /// Optional application-defined epoch label for MET, MRT, or SCLK values.
+  const ::flatbuffers::String *EPOCH_LABEL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH_LABEL);
+  }
+  /// GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
+  int32_t GNSS_WEEK() const {
+    return GetField<int32_t>(VT_GNSS_WEEK, 0);
+  }
+  /// Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
+  bool HAS_GNSS_ROLLOVER_REFERENCE() const {
+    return GetField<uint8_t>(VT_HAS_GNSS_ROLLOVER_REFERENCE, 0) != 0;
+  }
+  /// Optional Orekit-style GNSS week rollover reference timestamp.
+  const ::flatbuffers::String *GNSS_ROLLOVER_REFERENCE_ISO8601() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_GNSS_ROLLOVER_REFERENCE_ISO8601);
+  }
+  /// CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
+  const TIMCcsdsTimeCode *CCSDS_TIME_CODE() const {
+    return GetPointer<const TIMCcsdsTimeCode *>(VT_CCSDS_TIME_CODE);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_TIME_SYSTEM, 1) &&
+           VerifyField<int8_t>(verifier, VT_EPOCH_FORMAT, 1) &&
+           VerifyField<double>(verifier, VT_JULIAN_DATE, 8) &&
+           VerifyField<double>(verifier, VT_SECONDS, 8) &&
+           VerifyOffset(verifier, VT_ISO8601) &&
+           verifier.VerifyString(ISO8601()) &&
+           VerifyField<int32_t>(verifier, VT_SUBSECOND_NANOS, 4) &&
+           VerifyOffset(verifier, VT_EPOCH_LABEL) &&
+           verifier.VerifyString(EPOCH_LABEL()) &&
+           VerifyField<int32_t>(verifier, VT_GNSS_WEEK, 4) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_GNSS_ROLLOVER_REFERENCE, 1) &&
+           VerifyOffset(verifier, VT_GNSS_ROLLOVER_REFERENCE_ISO8601) &&
+           verifier.VerifyString(GNSS_ROLLOVER_REFERENCE_ISO8601()) &&
+           VerifyOffset(verifier, VT_CCSDS_TIME_CODE) &&
+           verifier.VerifyTable(CCSDS_TIME_CODE()) &&
+           verifier.EndTable();
+  }
+};
+
+struct TIMInstantBuilder {
+  typedef TIMInstant Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_TIME_SYSTEM(timingStandard TIME_SYSTEM) {
+    fbb_.AddElement<int8_t>(TIMInstant::VT_TIME_SYSTEM, static_cast<int8_t>(TIME_SYSTEM), 0);
+  }
+  void add_EPOCH_FORMAT(timEpochRepresentation EPOCH_FORMAT) {
+    fbb_.AddElement<int8_t>(TIMInstant::VT_EPOCH_FORMAT, static_cast<int8_t>(EPOCH_FORMAT), 0);
+  }
+  void add_JULIAN_DATE(double JULIAN_DATE) {
+    fbb_.AddElement<double>(TIMInstant::VT_JULIAN_DATE, JULIAN_DATE, 0.0);
+  }
+  void add_SECONDS(double SECONDS) {
+    fbb_.AddElement<double>(TIMInstant::VT_SECONDS, SECONDS, 0.0);
+  }
+  void add_ISO8601(::flatbuffers::Offset<::flatbuffers::String> ISO8601) {
+    fbb_.AddOffset(TIMInstant::VT_ISO8601, ISO8601);
+  }
+  void add_SUBSECOND_NANOS(int32_t SUBSECOND_NANOS) {
+    fbb_.AddElement<int32_t>(TIMInstant::VT_SUBSECOND_NANOS, SUBSECOND_NANOS, 0);
+  }
+  void add_EPOCH_LABEL(::flatbuffers::Offset<::flatbuffers::String> EPOCH_LABEL) {
+    fbb_.AddOffset(TIMInstant::VT_EPOCH_LABEL, EPOCH_LABEL);
+  }
+  void add_GNSS_WEEK(int32_t GNSS_WEEK) {
+    fbb_.AddElement<int32_t>(TIMInstant::VT_GNSS_WEEK, GNSS_WEEK, 0);
+  }
+  void add_HAS_GNSS_ROLLOVER_REFERENCE(bool HAS_GNSS_ROLLOVER_REFERENCE) {
+    fbb_.AddElement<uint8_t>(TIMInstant::VT_HAS_GNSS_ROLLOVER_REFERENCE, static_cast<uint8_t>(HAS_GNSS_ROLLOVER_REFERENCE), 0);
+  }
+  void add_GNSS_ROLLOVER_REFERENCE_ISO8601(::flatbuffers::Offset<::flatbuffers::String> GNSS_ROLLOVER_REFERENCE_ISO8601) {
+    fbb_.AddOffset(TIMInstant::VT_GNSS_ROLLOVER_REFERENCE_ISO8601, GNSS_ROLLOVER_REFERENCE_ISO8601);
+  }
+  void add_CCSDS_TIME_CODE(::flatbuffers::Offset<TIMCcsdsTimeCode> CCSDS_TIME_CODE) {
+    fbb_.AddOffset(TIMInstant::VT_CCSDS_TIME_CODE, CCSDS_TIME_CODE);
+  }
+  explicit TIMInstantBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<TIMInstant> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<TIMInstant>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<TIMInstant> CreateTIMInstant(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    timingStandard TIME_SYSTEM = timingStandard_GMST,
+    timEpochRepresentation EPOCH_FORMAT = timEpochRepresentation_JULIAN_DATE,
+    double JULIAN_DATE = 0.0,
+    double SECONDS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> ISO8601 = 0,
+    int32_t SUBSECOND_NANOS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH_LABEL = 0,
+    int32_t GNSS_WEEK = 0,
+    bool HAS_GNSS_ROLLOVER_REFERENCE = false,
+    ::flatbuffers::Offset<::flatbuffers::String> GNSS_ROLLOVER_REFERENCE_ISO8601 = 0,
+    ::flatbuffers::Offset<TIMCcsdsTimeCode> CCSDS_TIME_CODE = 0) {
+  TIMInstantBuilder builder_(_fbb);
+  builder_.add_SECONDS(SECONDS);
+  builder_.add_JULIAN_DATE(JULIAN_DATE);
+  builder_.add_CCSDS_TIME_CODE(CCSDS_TIME_CODE);
+  builder_.add_GNSS_ROLLOVER_REFERENCE_ISO8601(GNSS_ROLLOVER_REFERENCE_ISO8601);
+  builder_.add_GNSS_WEEK(GNSS_WEEK);
+  builder_.add_EPOCH_LABEL(EPOCH_LABEL);
+  builder_.add_SUBSECOND_NANOS(SUBSECOND_NANOS);
+  builder_.add_ISO8601(ISO8601);
+  builder_.add_HAS_GNSS_ROLLOVER_REFERENCE(HAS_GNSS_ROLLOVER_REFERENCE);
+  builder_.add_EPOCH_FORMAT(EPOCH_FORMAT);
+  builder_.add_TIME_SYSTEM(TIME_SYSTEM);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<TIMInstant> CreateTIMInstantDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    timingStandard TIME_SYSTEM = timingStandard_GMST,
+    timEpochRepresentation EPOCH_FORMAT = timEpochRepresentation_JULIAN_DATE,
+    double JULIAN_DATE = 0.0,
+    double SECONDS = 0.0,
+    const char *ISO8601 = nullptr,
+    int32_t SUBSECOND_NANOS = 0,
+    const char *EPOCH_LABEL = nullptr,
+    int32_t GNSS_WEEK = 0,
+    bool HAS_GNSS_ROLLOVER_REFERENCE = false,
+    const char *GNSS_ROLLOVER_REFERENCE_ISO8601 = nullptr,
+    ::flatbuffers::Offset<TIMCcsdsTimeCode> CCSDS_TIME_CODE = 0) {
+  auto ISO8601__ = ISO8601 ? _fbb.CreateString(ISO8601) : 0;
+  auto EPOCH_LABEL__ = EPOCH_LABEL ? _fbb.CreateString(EPOCH_LABEL) : 0;
+  auto GNSS_ROLLOVER_REFERENCE_ISO8601__ = GNSS_ROLLOVER_REFERENCE_ISO8601 ? _fbb.CreateString(GNSS_ROLLOVER_REFERENCE_ISO8601) : 0;
+  return CreateTIMInstant(
+      _fbb,
+      TIME_SYSTEM,
+      EPOCH_FORMAT,
+      JULIAN_DATE,
+      SECONDS,
+      ISO8601__,
+      SUBSECOND_NANOS,
+      EPOCH_LABEL__,
+      GNSS_WEEK,
+      HAS_GNSS_ROLLOVER_REFERENCE,
+      GNSS_ROLLOVER_REFERENCE_ISO8601__,
+      CCSDS_TIME_CODE);
+}
+
+/// Request to convert one instant into another time system/representation.
+struct TIMConversionRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef TIMConversionRequestBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SOURCE = 4,
+    VT_TARGET_TIME_SYSTEM = 6,
+    VT_TARGET_EPOCH_FORMAT = 8,
+    VT_TAI_MINUS_UTC_SECONDS = 10,
+    VT_HAS_TAI_MINUS_UTC = 12,
+    VT_DUT1_SECONDS = 14,
+    VT_HAS_DUT1 = 16,
+    VT_TRACE_ID = 18
+  };
+  /// Source instant to convert.
+  const TIMInstant *SOURCE() const {
+    return GetPointer<const TIMInstant *>(VT_SOURCE);
+  }
+  /// Target time system.
+  timingStandard TARGET_TIME_SYSTEM() const {
+    return static_cast<timingStandard>(GetField<int8_t>(VT_TARGET_TIME_SYSTEM, 0));
+  }
+  /// Preferred target representation.
+  timEpochRepresentation TARGET_EPOCH_FORMAT() const {
+    return static_cast<timEpochRepresentation>(GetField<int8_t>(VT_TARGET_EPOCH_FORMAT, 0));
+  }
+  /// Optional TAI-UTC override in seconds for the source instant.
+  double TAI_MINUS_UTC_SECONDS() const {
+    return GetField<double>(VT_TAI_MINUS_UTC_SECONDS, 0.0);
+  }
+  /// Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
+  bool HAS_TAI_MINUS_UTC() const {
+    return GetField<uint8_t>(VT_HAS_TAI_MINUS_UTC, 0) != 0;
+  }
+  /// Optional UT1-UTC override in seconds for UT1 conversions.
+  double DUT1_SECONDS() const {
+    return GetField<double>(VT_DUT1_SECONDS, 0.0);
+  }
+  /// Whether DUT1_SECONDS should override runtime Earth-orientation data.
+  bool HAS_DUT1() const {
+    return GetField<uint8_t>(VT_HAS_DUT1, 0) != 0;
+  }
+  /// Optional caller trace/correlation identifier.
+  const ::flatbuffers::String *TRACE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRACE_ID);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_SOURCE) &&
+           verifier.VerifyTable(SOURCE()) &&
+           VerifyField<int8_t>(verifier, VT_TARGET_TIME_SYSTEM, 1) &&
+           VerifyField<int8_t>(verifier, VT_TARGET_EPOCH_FORMAT, 1) &&
+           VerifyField<double>(verifier, VT_TAI_MINUS_UTC_SECONDS, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_TAI_MINUS_UTC, 1) &&
+           VerifyField<double>(verifier, VT_DUT1_SECONDS, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_DUT1, 1) &&
+           VerifyOffset(verifier, VT_TRACE_ID) &&
+           verifier.VerifyString(TRACE_ID()) &&
+           verifier.EndTable();
+  }
+};
+
+struct TIMConversionRequestBuilder {
+  typedef TIMConversionRequest Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SOURCE(::flatbuffers::Offset<TIMInstant> SOURCE) {
+    fbb_.AddOffset(TIMConversionRequest::VT_SOURCE, SOURCE);
+  }
+  void add_TARGET_TIME_SYSTEM(timingStandard TARGET_TIME_SYSTEM) {
+    fbb_.AddElement<int8_t>(TIMConversionRequest::VT_TARGET_TIME_SYSTEM, static_cast<int8_t>(TARGET_TIME_SYSTEM), 0);
+  }
+  void add_TARGET_EPOCH_FORMAT(timEpochRepresentation TARGET_EPOCH_FORMAT) {
+    fbb_.AddElement<int8_t>(TIMConversionRequest::VT_TARGET_EPOCH_FORMAT, static_cast<int8_t>(TARGET_EPOCH_FORMAT), 0);
+  }
+  void add_TAI_MINUS_UTC_SECONDS(double TAI_MINUS_UTC_SECONDS) {
+    fbb_.AddElement<double>(TIMConversionRequest::VT_TAI_MINUS_UTC_SECONDS, TAI_MINUS_UTC_SECONDS, 0.0);
+  }
+  void add_HAS_TAI_MINUS_UTC(bool HAS_TAI_MINUS_UTC) {
+    fbb_.AddElement<uint8_t>(TIMConversionRequest::VT_HAS_TAI_MINUS_UTC, static_cast<uint8_t>(HAS_TAI_MINUS_UTC), 0);
+  }
+  void add_DUT1_SECONDS(double DUT1_SECONDS) {
+    fbb_.AddElement<double>(TIMConversionRequest::VT_DUT1_SECONDS, DUT1_SECONDS, 0.0);
+  }
+  void add_HAS_DUT1(bool HAS_DUT1) {
+    fbb_.AddElement<uint8_t>(TIMConversionRequest::VT_HAS_DUT1, static_cast<uint8_t>(HAS_DUT1), 0);
+  }
+  void add_TRACE_ID(::flatbuffers::Offset<::flatbuffers::String> TRACE_ID) {
+    fbb_.AddOffset(TIMConversionRequest::VT_TRACE_ID, TRACE_ID);
+  }
+  explicit TIMConversionRequestBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<TIMConversionRequest> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<TIMConversionRequest>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<TIMConversionRequest> CreateTIMConversionRequest(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<TIMInstant> SOURCE = 0,
+    timingStandard TARGET_TIME_SYSTEM = timingStandard_GMST,
+    timEpochRepresentation TARGET_EPOCH_FORMAT = timEpochRepresentation_JULIAN_DATE,
+    double TAI_MINUS_UTC_SECONDS = 0.0,
+    bool HAS_TAI_MINUS_UTC = false,
+    double DUT1_SECONDS = 0.0,
+    bool HAS_DUT1 = false,
+    ::flatbuffers::Offset<::flatbuffers::String> TRACE_ID = 0) {
+  TIMConversionRequestBuilder builder_(_fbb);
+  builder_.add_DUT1_SECONDS(DUT1_SECONDS);
+  builder_.add_TAI_MINUS_UTC_SECONDS(TAI_MINUS_UTC_SECONDS);
+  builder_.add_TRACE_ID(TRACE_ID);
+  builder_.add_SOURCE(SOURCE);
+  builder_.add_HAS_DUT1(HAS_DUT1);
+  builder_.add_HAS_TAI_MINUS_UTC(HAS_TAI_MINUS_UTC);
+  builder_.add_TARGET_EPOCH_FORMAT(TARGET_EPOCH_FORMAT);
+  builder_.add_TARGET_TIME_SYSTEM(TARGET_TIME_SYSTEM);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<TIMConversionRequest> CreateTIMConversionRequestDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<TIMInstant> SOURCE = 0,
+    timingStandard TARGET_TIME_SYSTEM = timingStandard_GMST,
+    timEpochRepresentation TARGET_EPOCH_FORMAT = timEpochRepresentation_JULIAN_DATE,
+    double TAI_MINUS_UTC_SECONDS = 0.0,
+    bool HAS_TAI_MINUS_UTC = false,
+    double DUT1_SECONDS = 0.0,
+    bool HAS_DUT1 = false,
+    const char *TRACE_ID = nullptr) {
+  auto TRACE_ID__ = TRACE_ID ? _fbb.CreateString(TRACE_ID) : 0;
+  return CreateTIMConversionRequest(
+      _fbb,
+      SOURCE,
+      TARGET_TIME_SYSTEM,
+      TARGET_EPOCH_FORMAT,
+      TAI_MINUS_UTC_SECONDS,
+      HAS_TAI_MINUS_UTC,
+      DUT1_SECONDS,
+      HAS_DUT1,
+      TRACE_ID__);
+}
+
+/// Result of a time conversion request.
+struct TIMConversionResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef TIMConversionResultBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SOURCE = 4,
+    VT_TARGET = 6,
+    VT_DELTA_SECONDS = 8,
+    VT_STATUS = 10,
+    VT_ERROR_MESSAGE = 12,
+    VT_TRACE_ID = 14
+  };
+  /// Original source instant.
+  const TIMInstant *SOURCE() const {
+    return GetPointer<const TIMInstant *>(VT_SOURCE);
+  }
+  /// Converted target instant.
+  const TIMInstant *TARGET() const {
+    return GetPointer<const TIMInstant *>(VT_TARGET);
+  }
+  /// Target minus source offset in SI seconds for the requested conversion.
+  double DELTA_SECONDS() const {
+    return GetField<double>(VT_DELTA_SECONDS, 0.0);
+  }
+  /// Conversion status.
+  timConversionStatus STATUS() const {
+    return static_cast<timConversionStatus>(GetField<int8_t>(VT_STATUS, 0));
+  }
+  /// Optional error detail when STATUS is not OK.
+  const ::flatbuffers::String *ERROR_MESSAGE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ERROR_MESSAGE);
+  }
+  /// Caller trace/correlation identifier copied from the request when present.
+  const ::flatbuffers::String *TRACE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRACE_ID);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_SOURCE) &&
+           verifier.VerifyTable(SOURCE()) &&
+           VerifyOffset(verifier, VT_TARGET) &&
+           verifier.VerifyTable(TARGET()) &&
+           VerifyField<double>(verifier, VT_DELTA_SECONDS, 8) &&
+           VerifyField<int8_t>(verifier, VT_STATUS, 1) &&
+           VerifyOffset(verifier, VT_ERROR_MESSAGE) &&
+           verifier.VerifyString(ERROR_MESSAGE()) &&
+           VerifyOffset(verifier, VT_TRACE_ID) &&
+           verifier.VerifyString(TRACE_ID()) &&
+           verifier.EndTable();
+  }
+};
+
+struct TIMConversionResultBuilder {
+  typedef TIMConversionResult Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SOURCE(::flatbuffers::Offset<TIMInstant> SOURCE) {
+    fbb_.AddOffset(TIMConversionResult::VT_SOURCE, SOURCE);
+  }
+  void add_TARGET(::flatbuffers::Offset<TIMInstant> TARGET) {
+    fbb_.AddOffset(TIMConversionResult::VT_TARGET, TARGET);
+  }
+  void add_DELTA_SECONDS(double DELTA_SECONDS) {
+    fbb_.AddElement<double>(TIMConversionResult::VT_DELTA_SECONDS, DELTA_SECONDS, 0.0);
+  }
+  void add_STATUS(timConversionStatus STATUS) {
+    fbb_.AddElement<int8_t>(TIMConversionResult::VT_STATUS, static_cast<int8_t>(STATUS), 0);
+  }
+  void add_ERROR_MESSAGE(::flatbuffers::Offset<::flatbuffers::String> ERROR_MESSAGE) {
+    fbb_.AddOffset(TIMConversionResult::VT_ERROR_MESSAGE, ERROR_MESSAGE);
+  }
+  void add_TRACE_ID(::flatbuffers::Offset<::flatbuffers::String> TRACE_ID) {
+    fbb_.AddOffset(TIMConversionResult::VT_TRACE_ID, TRACE_ID);
+  }
+  explicit TIMConversionResultBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<TIMConversionResult> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<TIMConversionResult>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<TIMConversionResult> CreateTIMConversionResult(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<TIMInstant> SOURCE = 0,
+    ::flatbuffers::Offset<TIMInstant> TARGET = 0,
+    double DELTA_SECONDS = 0.0,
+    timConversionStatus STATUS = timConversionStatus_OK,
+    ::flatbuffers::Offset<::flatbuffers::String> ERROR_MESSAGE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TRACE_ID = 0) {
+  TIMConversionResultBuilder builder_(_fbb);
+  builder_.add_DELTA_SECONDS(DELTA_SECONDS);
+  builder_.add_TRACE_ID(TRACE_ID);
+  builder_.add_ERROR_MESSAGE(ERROR_MESSAGE);
+  builder_.add_TARGET(TARGET);
+  builder_.add_SOURCE(SOURCE);
+  builder_.add_STATUS(STATUS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<TIMConversionResult> CreateTIMConversionResultDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<TIMInstant> SOURCE = 0,
+    ::flatbuffers::Offset<TIMInstant> TARGET = 0,
+    double DELTA_SECONDS = 0.0,
+    timConversionStatus STATUS = timConversionStatus_OK,
+    const char *ERROR_MESSAGE = nullptr,
+    const char *TRACE_ID = nullptr) {
+  auto ERROR_MESSAGE__ = ERROR_MESSAGE ? _fbb.CreateString(ERROR_MESSAGE) : 0;
+  auto TRACE_ID__ = TRACE_ID ? _fbb.CreateString(TRACE_ID) : 0;
+  return CreateTIMConversionResult(
+      _fbb,
+      SOURCE,
+      TARGET,
+      DELTA_SECONDS,
+      STATUS,
+      ERROR_MESSAGE__,
+      TRACE_ID__);
+}
+
+/// Time System and time-conversion envelope.
+struct TIM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef TIMBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TIME_SYSTEM = 4,
+    VT_INSTANT = 6,
+    VT_CONVERSION_REQUEST = 8,
+    VT_CONVERSION_RESULT = 10
+  };
+  /// Legacy time-system selector retained for existing TIM consumers.
+  timingStandard TIME_SYSTEM() const {
+    return static_cast<timingStandard>(GetField<int8_t>(VT_TIME_SYSTEM, 0));
+  }
+  /// A single tagged instant.
+  const TIMInstant *INSTANT() const {
+    return GetPointer<const TIMInstant *>(VT_INSTANT);
+  }
+  /// Time conversion request.
+  const TIMConversionRequest *CONVERSION_REQUEST() const {
+    return GetPointer<const TIMConversionRequest *>(VT_CONVERSION_REQUEST);
+  }
+  /// Time conversion result.
+  const TIMConversionResult *CONVERSION_RESULT() const {
+    return GetPointer<const TIMConversionResult *>(VT_CONVERSION_RESULT);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_TIME_SYSTEM, 1) &&
+           VerifyOffset(verifier, VT_INSTANT) &&
+           verifier.VerifyTable(INSTANT()) &&
+           VerifyOffset(verifier, VT_CONVERSION_REQUEST) &&
+           verifier.VerifyTable(CONVERSION_REQUEST()) &&
+           VerifyOffset(verifier, VT_CONVERSION_RESULT) &&
+           verifier.VerifyTable(CONVERSION_RESULT()) &&
            verifier.EndTable();
   }
 };
@@ -111,6 +894,15 @@ struct TIMBuilder {
   ::flatbuffers::uoffset_t start_;
   void add_TIME_SYSTEM(timingStandard TIME_SYSTEM) {
     fbb_.AddElement<int8_t>(TIM::VT_TIME_SYSTEM, static_cast<int8_t>(TIME_SYSTEM), 0);
+  }
+  void add_INSTANT(::flatbuffers::Offset<TIMInstant> INSTANT) {
+    fbb_.AddOffset(TIM::VT_INSTANT, INSTANT);
+  }
+  void add_CONVERSION_REQUEST(::flatbuffers::Offset<TIMConversionRequest> CONVERSION_REQUEST) {
+    fbb_.AddOffset(TIM::VT_CONVERSION_REQUEST, CONVERSION_REQUEST);
+  }
+  void add_CONVERSION_RESULT(::flatbuffers::Offset<TIMConversionResult> CONVERSION_RESULT) {
+    fbb_.AddOffset(TIM::VT_CONVERSION_RESULT, CONVERSION_RESULT);
   }
   explicit TIMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -125,8 +917,14 @@ struct TIMBuilder {
 
 inline ::flatbuffers::Offset<TIM> CreateTIM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    timingStandard TIME_SYSTEM = timingStandard_GMST) {
+    timingStandard TIME_SYSTEM = timingStandard_GMST,
+    ::flatbuffers::Offset<TIMInstant> INSTANT = 0,
+    ::flatbuffers::Offset<TIMConversionRequest> CONVERSION_REQUEST = 0,
+    ::flatbuffers::Offset<TIMConversionResult> CONVERSION_RESULT = 0) {
   TIMBuilder builder_(_fbb);
+  builder_.add_CONVERSION_RESULT(CONVERSION_RESULT);
+  builder_.add_CONVERSION_REQUEST(CONVERSION_REQUEST);
+  builder_.add_INSTANT(INSTANT);
   builder_.add_TIME_SYSTEM(TIME_SYSTEM);
   return builder_.Finish();
 }

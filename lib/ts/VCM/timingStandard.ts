@@ -61,5 +61,35 @@ export enum timingStandard {
   /**
    * Coordinated Universal Time
    */
-  UTC = 11
+  UTC = 11,
+
+  /**
+   * GLONASS Time
+   */
+  GLONASS = 12,
+
+  /**
+   * Galileo System Time
+   */
+  GST = 13,
+
+  /**
+   * Quasi-Zenith Satellite System Time
+   */
+  QZSS = 14,
+
+  /**
+   * BeiDou Time
+   */
+  BDT = 15,
+
+  /**
+   * Navigation with Indian Constellation Time
+   */
+  NAVIC = 16,
+
+  /**
+   * Satellite-Based Augmentation System Time
+   */
+  SBAS = 17
 }

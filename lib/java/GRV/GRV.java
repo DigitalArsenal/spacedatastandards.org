@@ -39,6 +39,13 @@ public final class GRV extends com.google.flatbuffers.Table {
   public boolean SOLID_TIDES() { int o = __offset(20); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   public boolean OCEAN_TIDES() { int o = __offset(22); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   public boolean POLE_TIDES() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public double EQUATORIAL_RADIUS() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double J2() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double MU() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double J3() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double J4() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double J5() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double J6() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createGRV(FlatBufferBuilder builder,
       byte MODEL_TYPE,
@@ -51,8 +58,22 @@ public final class GRV extends com.google.flatbuffers.Table {
       boolean INCLUDE_PLANETS,
       boolean SOLID_TIDES,
       boolean OCEAN_TIDES,
-      boolean POLE_TIDES) {
-    builder.startTable(11);
+      boolean POLE_TIDES,
+      double EQUATORIAL_RADIUS,
+      double J2,
+      double MU,
+      double J3,
+      double J4,
+      double J5,
+      double J6) {
+    builder.startTable(18);
+    GRV.addJ6(builder, J6);
+    GRV.addJ5(builder, J5);
+    GRV.addJ4(builder, J4);
+    GRV.addJ3(builder, J3);
+    GRV.addMu(builder, MU);
+    GRV.addJ2(builder, J2);
+    GRV.addEquatorialRadius(builder, EQUATORIAL_RADIUS);
     GRV.addMaxOrder(builder, MAX_ORDER);
     GRV.addMaxDegree(builder, MAX_DEGREE);
     GRV.addPoleTides(builder, POLE_TIDES);
@@ -67,7 +88,7 @@ public final class GRV extends com.google.flatbuffers.Table {
     return GRV.endGRV(builder);
   }
 
-  public static void startGRV(FlatBufferBuilder builder) { builder.startTable(11); }
+  public static void startGRV(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addModelType(FlatBufferBuilder builder, byte MODEL_TYPE) { builder.addByte(0, MODEL_TYPE, 2); }
   public static void addModelName(FlatBufferBuilder builder, byte MODEL_NAME) { builder.addByte(1, MODEL_NAME, 2); }
   public static void addCentralBody(FlatBufferBuilder builder, byte CENTRAL_BODY) { builder.addByte(2, CENTRAL_BODY, 0); }
@@ -79,6 +100,13 @@ public final class GRV extends com.google.flatbuffers.Table {
   public static void addSolidTides(FlatBufferBuilder builder, boolean SOLID_TIDES) { builder.addBoolean(8, SOLID_TIDES, false); }
   public static void addOceanTides(FlatBufferBuilder builder, boolean OCEAN_TIDES) { builder.addBoolean(9, OCEAN_TIDES, false); }
   public static void addPoleTides(FlatBufferBuilder builder, boolean POLE_TIDES) { builder.addBoolean(10, POLE_TIDES, false); }
+  public static void addEquatorialRadius(FlatBufferBuilder builder, double EQUATORIAL_RADIUS) { builder.addDouble(11, EQUATORIAL_RADIUS, 0.0); }
+  public static void addJ2(FlatBufferBuilder builder, double J2) { builder.addDouble(12, J2, 0.0); }
+  public static void addMu(FlatBufferBuilder builder, double MU) { builder.addDouble(13, MU, 0.0); }
+  public static void addJ3(FlatBufferBuilder builder, double J3) { builder.addDouble(14, J3, 0.0); }
+  public static void addJ4(FlatBufferBuilder builder, double J4) { builder.addDouble(15, J4, 0.0); }
+  public static void addJ5(FlatBufferBuilder builder, double J5) { builder.addDouble(16, J5, 0.0); }
+  public static void addJ6(FlatBufferBuilder builder, double J6) { builder.addDouble(17, J6, 0.0); }
   public static int endGRV(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

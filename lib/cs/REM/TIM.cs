@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Time System
+/// Time System and time-conversion envelope.
 public struct TIM : IFlatbufferObject
 {
   private Table __p;
@@ -19,17 +19,33 @@ public struct TIM : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public TIM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Legacy time-system selector retained for existing TIM consumers.
   public timingStandard TIME_SYSTEM { get { int o = __p.__offset(4); return o != 0 ? (timingStandard)__p.bb.GetSbyte(o + __p.bb_pos) : timingStandard.GMST; } }
+  /// A single tagged instant.
+  public TIMInstant? INSTANT { get { int o = __p.__offset(6); return o != 0 ? (TIMInstant?)(new TIMInstant()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Time conversion request.
+  public TIMConversionRequest? CONVERSION_REQUEST { get { int o = __p.__offset(8); return o != 0 ? (TIMConversionRequest?)(new TIMConversionRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Time conversion result.
+  public TIMConversionResult? CONVERSION_RESULT { get { int o = __p.__offset(10); return o != 0 ? (TIMConversionResult?)(new TIMConversionResult()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<TIM> CreateTIM(FlatBufferBuilder builder,
-      timingStandard TIME_SYSTEM = timingStandard.GMST) {
-    builder.StartTable(1);
+      timingStandard TIME_SYSTEM = timingStandard.GMST,
+      Offset<TIMInstant> INSTANTOffset = default(Offset<TIMInstant>),
+      Offset<TIMConversionRequest> CONVERSION_REQUESTOffset = default(Offset<TIMConversionRequest>),
+      Offset<TIMConversionResult> CONVERSION_RESULTOffset = default(Offset<TIMConversionResult>)) {
+    builder.StartTable(4);
+    TIM.AddCONVERSION_RESULT(builder, CONVERSION_RESULTOffset);
+    TIM.AddCONVERSION_REQUEST(builder, CONVERSION_REQUESTOffset);
+    TIM.AddINSTANT(builder, INSTANTOffset);
     TIM.AddTIME_SYSTEM(builder, TIME_SYSTEM);
     return TIM.EndTIM(builder);
   }
 
-  public static void StartTIM(FlatBufferBuilder builder) { builder.StartTable(1); }
+  public static void StartTIM(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void AddTIME_SYSTEM(FlatBufferBuilder builder, timingStandard TIME_SYSTEM) { builder.AddSbyte(0, (sbyte)TIME_SYSTEM, 0); }
+  public static void AddINSTANT(FlatBufferBuilder builder, Offset<TIMInstant> INSTANTOffset) { builder.AddOffset(1, INSTANTOffset.Value, 0); }
+  public static void AddCONVERSION_REQUEST(FlatBufferBuilder builder, Offset<TIMConversionRequest> CONVERSION_REQUESTOffset) { builder.AddOffset(2, CONVERSION_REQUESTOffset.Value, 0); }
+  public static void AddCONVERSION_RESULT(FlatBufferBuilder builder, Offset<TIMConversionResult> CONVERSION_RESULTOffset) { builder.AddOffset(3, CONVERSION_RESULTOffset.Value, 0); }
   public static Offset<TIM> EndTIM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<TIM>(o);
@@ -43,21 +59,36 @@ public struct TIM : IFlatbufferObject
   }
   public void UnPackTo(TIMT _o) {
     _o.TIME_SYSTEM = this.TIME_SYSTEM;
+    _o.INSTANT = this.INSTANT.HasValue ? this.INSTANT.Value.UnPack() : null;
+    _o.CONVERSION_REQUEST = this.CONVERSION_REQUEST.HasValue ? this.CONVERSION_REQUEST.Value.UnPack() : null;
+    _o.CONVERSION_RESULT = this.CONVERSION_RESULT.HasValue ? this.CONVERSION_RESULT.Value.UnPack() : null;
   }
   public static Offset<TIM> Pack(FlatBufferBuilder builder, TIMT _o) {
     if (_o == null) return default(Offset<TIM>);
+    var _INSTANT = _o.INSTANT == null ? default(Offset<TIMInstant>) : TIMInstant.Pack(builder, _o.INSTANT);
+    var _CONVERSION_REQUEST = _o.CONVERSION_REQUEST == null ? default(Offset<TIMConversionRequest>) : TIMConversionRequest.Pack(builder, _o.CONVERSION_REQUEST);
+    var _CONVERSION_RESULT = _o.CONVERSION_RESULT == null ? default(Offset<TIMConversionResult>) : TIMConversionResult.Pack(builder, _o.CONVERSION_RESULT);
     return CreateTIM(
       builder,
-      _o.TIME_SYSTEM);
+      _o.TIME_SYSTEM,
+      _INSTANT,
+      _CONVERSION_REQUEST,
+      _CONVERSION_RESULT);
   }
 }
 
 public class TIMT
 {
   public timingStandard TIME_SYSTEM { get; set; }
+  public TIMInstantT INSTANT { get; set; }
+  public TIMConversionRequestT CONVERSION_REQUEST { get; set; }
+  public TIMConversionResultT CONVERSION_RESULT { get; set; }
 
   public TIMT() {
     this.TIME_SYSTEM = timingStandard.GMST;
+    this.INSTANT = null;
+    this.CONVERSION_REQUEST = null;
+    this.CONVERSION_RESULT = null;
   }
   public static TIMT DeserializeFromBinary(byte[] fbBuffer) {
     return TIM.GetRootAsTIM(new ByteBuffer(fbBuffer)).UnPack();
@@ -76,6 +107,9 @@ static public class TIMVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*TIME_SYSTEM*/, 1 /*timingStandard*/, 1, false)
+      && verifier.VerifyTable(tablePos, 6 /*INSTANT*/, TIMInstantVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 8 /*CONVERSION_REQUEST*/, TIMConversionRequestVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 10 /*CONVERSION_RESULT*/, TIMConversionResultVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

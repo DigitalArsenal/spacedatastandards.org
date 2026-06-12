@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Time System
+/// Time System and time-conversion envelope.
 class TIM extends Table
 {
     /**
@@ -41,6 +41,7 @@ class TIM extends Table
         return $this;
     }
 
+    /// Legacy time-system selector retained for existing TIM consumers.
     /**
      * @return sbyte
      */
@@ -50,23 +51,50 @@ class TIM extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \timingStandard::GMST;
     }
 
+    /// A single tagged instant.
+    public function getINSTANT()
+    {
+        $obj = new TIMInstant();
+        $o = $this->__offset(6);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Time conversion request.
+    public function getCONVERSION_REQUEST()
+    {
+        $obj = new TIMConversionRequest();
+        $o = $this->__offset(8);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Time conversion result.
+    public function getCONVERSION_RESULT()
+    {
+        $obj = new TIMConversionResult();
+        $o = $this->__offset(10);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startTIM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(1);
+        $builder->StartObject(4);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return TIM
      */
-    public static function createTIM(FlatBufferBuilder $builder, $TIME_SYSTEM)
+    public static function createTIM(FlatBufferBuilder $builder, $TIME_SYSTEM, $INSTANT, $CONVERSION_REQUEST, $CONVERSION_RESULT)
     {
-        $builder->startObject(1);
+        $builder->startObject(4);
         self::addTIME_SYSTEM($builder, $TIME_SYSTEM);
+        self::addINSTANT($builder, $INSTANT);
+        self::addCONVERSION_REQUEST($builder, $CONVERSION_REQUEST);
+        self::addCONVERSION_RESULT($builder, $CONVERSION_RESULT);
         $o = $builder->endObject();
         return $o;
     }
@@ -79,6 +107,36 @@ class TIM extends Table
     public static function addTIME_SYSTEM(FlatBufferBuilder $builder, $TIME_SYSTEM)
     {
         $builder->addSbyteX(0, $TIME_SYSTEM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addINSTANT(FlatBufferBuilder $builder, $INSTANT)
+    {
+        $builder->addOffsetX(1, $INSTANT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCONVERSION_REQUEST(FlatBufferBuilder $builder, $CONVERSION_REQUEST)
+    {
+        $builder->addOffsetX(2, $CONVERSION_REQUEST, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCONVERSION_RESULT(FlatBufferBuilder $builder, $CONVERSION_RESULT)
+    {
+        $builder->addOffsetX(3, $CONVERSION_RESULT, 0);
     }
 
     /**

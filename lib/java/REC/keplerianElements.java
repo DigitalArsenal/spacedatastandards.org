@@ -34,6 +34,7 @@ public final class keplerianElements extends com.google.flatbuffers.Table {
   public double ARG_OF_PERICENTER() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public byte ANOMALY_TYPE() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) : 0; }
   public double ANOMALY() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double PERIAPSIS_RADIUS() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createkeplerianElements(FlatBufferBuilder builder,
       double SEMI_MAJOR_AXIS,
@@ -42,8 +43,10 @@ public final class keplerianElements extends com.google.flatbuffers.Table {
       double RA_OF_ASC_NODE,
       double ARG_OF_PERICENTER,
       byte ANOMALY_TYPE,
-      double ANOMALY) {
-    builder.startTable(7);
+      double ANOMALY,
+      double PERIAPSIS_RADIUS) {
+    builder.startTable(8);
+    keplerianElements.addPeriapsisRadius(builder, PERIAPSIS_RADIUS);
     keplerianElements.addAnomaly(builder, ANOMALY);
     keplerianElements.addArgOfPericenter(builder, ARG_OF_PERICENTER);
     keplerianElements.addRaOfAscNode(builder, RA_OF_ASC_NODE);
@@ -54,7 +57,7 @@ public final class keplerianElements extends com.google.flatbuffers.Table {
     return keplerianElements.endkeplerianElements(builder);
   }
 
-  public static void startkeplerianElements(FlatBufferBuilder builder) { builder.startTable(7); }
+  public static void startkeplerianElements(FlatBufferBuilder builder) { builder.startTable(8); }
   public static void addSemiMajorAxis(FlatBufferBuilder builder, double SEMI_MAJOR_AXIS) { builder.addDouble(0, SEMI_MAJOR_AXIS, 0.0); }
   public static void addEccentricity(FlatBufferBuilder builder, double ECCENTRICITY) { builder.addDouble(1, ECCENTRICITY, 0.0); }
   public static void addInclination(FlatBufferBuilder builder, double INCLINATION) { builder.addDouble(2, INCLINATION, 0.0); }
@@ -62,6 +65,7 @@ public final class keplerianElements extends com.google.flatbuffers.Table {
   public static void addArgOfPericenter(FlatBufferBuilder builder, double ARG_OF_PERICENTER) { builder.addDouble(4, ARG_OF_PERICENTER, 0.0); }
   public static void addAnomalyType(FlatBufferBuilder builder, byte ANOMALY_TYPE) { builder.addByte(5, ANOMALY_TYPE, 0); }
   public static void addAnomaly(FlatBufferBuilder builder, double ANOMALY) { builder.addDouble(6, ANOMALY, 0.0); }
+  public static void addPeriapsisRadius(FlatBufferBuilder builder, double PERIAPSIS_RADIUS) { builder.addDouble(7, PERIAPSIS_RADIUS, 0.0); }
   public static int endkeplerianElements(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

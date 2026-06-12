@@ -30,6 +30,13 @@ public struct GRV : IFlatbufferObject
   public bool SOLID_TIDES { get { int o = __p.__offset(20); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public bool OCEAN_TIDES { get { int o = __p.__offset(22); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public bool POLE_TIDES { get { int o = __p.__offset(24); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public double EQUATORIAL_RADIUS { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double J2 { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double MU { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double J3 { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double J4 { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double J5 { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double J6 { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<GRV> CreateGRV(FlatBufferBuilder builder,
       GravityModelType MODEL_TYPE = GravityModelType.J2_J4,
@@ -42,8 +49,22 @@ public struct GRV : IFlatbufferObject
       bool INCLUDE_PLANETS = false,
       bool SOLID_TIDES = false,
       bool OCEAN_TIDES = false,
-      bool POLE_TIDES = false) {
-    builder.StartTable(11);
+      bool POLE_TIDES = false,
+      double EQUATORIAL_RADIUS = 0.0,
+      double J2 = 0.0,
+      double MU = 0.0,
+      double J3 = 0.0,
+      double J4 = 0.0,
+      double J5 = 0.0,
+      double J6 = 0.0) {
+    builder.StartTable(18);
+    GRV.AddJ6(builder, J6);
+    GRV.AddJ5(builder, J5);
+    GRV.AddJ4(builder, J4);
+    GRV.AddJ3(builder, J3);
+    GRV.AddMU(builder, MU);
+    GRV.AddJ2(builder, J2);
+    GRV.AddEQUATORIAL_RADIUS(builder, EQUATORIAL_RADIUS);
     GRV.AddMAX_ORDER(builder, MAX_ORDER);
     GRV.AddMAX_DEGREE(builder, MAX_DEGREE);
     GRV.AddPOLE_TIDES(builder, POLE_TIDES);
@@ -58,7 +79,7 @@ public struct GRV : IFlatbufferObject
     return GRV.EndGRV(builder);
   }
 
-  public static void StartGRV(FlatBufferBuilder builder) { builder.StartTable(11); }
+  public static void StartGRV(FlatBufferBuilder builder) { builder.StartTable(18); }
   public static void AddMODEL_TYPE(FlatBufferBuilder builder, GravityModelType MODEL_TYPE) { builder.AddSbyte(0, (sbyte)MODEL_TYPE, 2); }
   public static void AddMODEL_NAME(FlatBufferBuilder builder, GravityModelName MODEL_NAME) { builder.AddSbyte(1, (sbyte)MODEL_NAME, 2); }
   public static void AddCENTRAL_BODY(FlatBufferBuilder builder, CentralBody CENTRAL_BODY) { builder.AddSbyte(2, (sbyte)CENTRAL_BODY, 0); }
@@ -70,6 +91,13 @@ public struct GRV : IFlatbufferObject
   public static void AddSOLID_TIDES(FlatBufferBuilder builder, bool SOLID_TIDES) { builder.AddBool(8, SOLID_TIDES, false); }
   public static void AddOCEAN_TIDES(FlatBufferBuilder builder, bool OCEAN_TIDES) { builder.AddBool(9, OCEAN_TIDES, false); }
   public static void AddPOLE_TIDES(FlatBufferBuilder builder, bool POLE_TIDES) { builder.AddBool(10, POLE_TIDES, false); }
+  public static void AddEQUATORIAL_RADIUS(FlatBufferBuilder builder, double EQUATORIAL_RADIUS) { builder.AddDouble(11, EQUATORIAL_RADIUS, 0.0); }
+  public static void AddJ2(FlatBufferBuilder builder, double J2) { builder.AddDouble(12, J2, 0.0); }
+  public static void AddMU(FlatBufferBuilder builder, double MU) { builder.AddDouble(13, MU, 0.0); }
+  public static void AddJ3(FlatBufferBuilder builder, double J3) { builder.AddDouble(14, J3, 0.0); }
+  public static void AddJ4(FlatBufferBuilder builder, double J4) { builder.AddDouble(15, J4, 0.0); }
+  public static void AddJ5(FlatBufferBuilder builder, double J5) { builder.AddDouble(16, J5, 0.0); }
+  public static void AddJ6(FlatBufferBuilder builder, double J6) { builder.AddDouble(17, J6, 0.0); }
   public static Offset<GRV> EndGRV(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GRV>(o);
@@ -93,6 +121,13 @@ public struct GRV : IFlatbufferObject
     _o.SOLID_TIDES = this.SOLID_TIDES;
     _o.OCEAN_TIDES = this.OCEAN_TIDES;
     _o.POLE_TIDES = this.POLE_TIDES;
+    _o.EQUATORIAL_RADIUS = this.EQUATORIAL_RADIUS;
+    _o.J2 = this.J2;
+    _o.MU = this.MU;
+    _o.J3 = this.J3;
+    _o.J4 = this.J4;
+    _o.J5 = this.J5;
+    _o.J6 = this.J6;
   }
   public static Offset<GRV> Pack(FlatBufferBuilder builder, GRVT _o) {
     if (_o == null) return default(Offset<GRV>);
@@ -108,7 +143,14 @@ public struct GRV : IFlatbufferObject
       _o.INCLUDE_PLANETS,
       _o.SOLID_TIDES,
       _o.OCEAN_TIDES,
-      _o.POLE_TIDES);
+      _o.POLE_TIDES,
+      _o.EQUATORIAL_RADIUS,
+      _o.J2,
+      _o.MU,
+      _o.J3,
+      _o.J4,
+      _o.J5,
+      _o.J6);
   }
 }
 
@@ -125,6 +167,13 @@ public class GRVT
   public bool SOLID_TIDES { get; set; }
   public bool OCEAN_TIDES { get; set; }
   public bool POLE_TIDES { get; set; }
+  public double EQUATORIAL_RADIUS { get; set; }
+  public double J2 { get; set; }
+  public double MU { get; set; }
+  public double J3 { get; set; }
+  public double J4 { get; set; }
+  public double J5 { get; set; }
+  public double J6 { get; set; }
 
   public GRVT() {
     this.MODEL_TYPE = GravityModelType.J2_J4;
@@ -138,6 +187,13 @@ public class GRVT
     this.SOLID_TIDES = false;
     this.OCEAN_TIDES = false;
     this.POLE_TIDES = false;
+    this.EQUATORIAL_RADIUS = 0.0;
+    this.J2 = 0.0;
+    this.MU = 0.0;
+    this.J3 = 0.0;
+    this.J4 = 0.0;
+    this.J5 = 0.0;
+    this.J6 = 0.0;
   }
   public static GRVT DeserializeFromBinary(byte[] fbBuffer) {
     return GRV.GetRootAsGRV(new ByteBuffer(fbBuffer)).UnPack();
@@ -166,6 +222,13 @@ static public class GRVVerify
       && verifier.VerifyField(tablePos, 20 /*SOLID_TIDES*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 22 /*OCEAN_TIDES*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 24 /*POLE_TIDES*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 26 /*EQUATORIAL_RADIUS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*J2*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*MU*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*J3*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*J4*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*J5*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*J6*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

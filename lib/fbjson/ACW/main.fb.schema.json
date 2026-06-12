@@ -1,0 +1,363 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "acwOperationCode": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "COMPUTE_ACCESS_WINDOWS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "COMPUTE_ACCESS_WINDOWS": {
+          "value": 1,
+          "description": "Compute access windows from pre-sampled target Cartesian states."
+        }
+      }
+    },
+    "acwResultStatus": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "INVALID_INPUT",
+        "UNSUPPORTED_OPERATION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "Operation completed."
+        },
+        "INVALID_INPUT": {
+          "value": 1,
+          "description": "Request fields are missing, non-finite, or numerically invalid."
+        },
+        "UNSUPPORTED_OPERATION": {
+          "value": 2,
+          "description": "The requested operation is not supported by the module."
+        }
+      }
+    },
+    "acwRefractionModelKind": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "EARTH_STANDARD_ATMOSPHERE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "EARTH_STANDARD_ATMOSPHERE": {
+          "value": 1,
+          "description": "Orekit-compatible EarthStandardAtmosphereRefraction correction."
+        }
+      }
+    },
+    "ACWStateSample": {
+      "type": "object",
+      "description": "Target Cartesian state sample in an Earth-fixed frame.",
+      "properties": {
+        "JULIAN_DATE_TT": {
+          "type": "number",
+          "description": "Sample epoch as Julian Date in TT.",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_X_M": {
+          "type": "number",
+          "description": "Earth-fixed X position, meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Y_M": {
+          "type": "number",
+          "description": "Earth-fixed Y position, meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Z_M": {
+          "type": "number",
+          "description": "Earth-fixed Z position, meters.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACWElevationMaskPoint": {
+      "type": "object",
+      "description": "Azimuth-dependent minimum elevation mask point.",
+      "properties": {
+        "AZIMUTH_RAD": {
+          "type": "number",
+          "description": "Azimuth, radians in the TopocentricFrame convention.",
+          "x-flatbuffer-type": "double"
+        },
+        "ELEVATION_RAD": {
+          "type": "number",
+          "description": "Minimum visible elevation at the azimuth, radians.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACWRefractionModel": {
+      "type": "object",
+      "description": "Atmospheric refraction model for apparent-elevation access checks.",
+      "properties": {
+        "MODEL_KIND": {
+          "$ref": "#/definitions/acwRefractionModelKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "EARTH_STANDARD_ATMOSPHERE": {
+              "value": 1,
+              "description": "Orekit-compatible EarthStandardAtmosphereRefraction correction."
+            }
+          }
+        },
+        "PRESSURE_PA": {
+          "type": "number",
+          "description": "Local pressure in pascals."
+        },
+        "TEMPERATURE_K": {
+          "type": "number",
+          "description": "Local temperature in kelvin."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACWBlackoutWindow": {
+      "type": "object",
+      "description": "Ground-station blackout interval.",
+      "properties": {
+        "START_JULIAN_DATE_TT": {
+          "type": "number",
+          "description": "Interval start as Julian Date in TT.",
+          "x-flatbuffer-type": "double"
+        },
+        "END_JULIAN_DATE_TT": {
+          "type": "number",
+          "description": "Interval end as Julian Date in TT.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACWGroundStation": {
+      "type": "object",
+      "description": "Ground-station geodetic definition and scheduling constraints.",
+      "properties": {
+        "STATION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LATITUDE_RAD": {
+          "type": "number",
+          "description": "Geodetic latitude, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE_RAD": {
+          "type": "number",
+          "description": "Geodetic longitude, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_M": {
+          "type": "number",
+          "description": "Height above the WGS-84 ellipsoid, meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_ELEVATION_RAD": {
+          "type": "number",
+          "description": "Default minimum visible elevation, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "CHANNEL_CAPACITY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of simultaneous contacts this station can schedule.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "BLACKOUT_WINDOWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWBlackoutWindow"
+          },
+          "description": "Station-specific unavailable intervals.",
+          "x-flatbuffer-type": "[ACWBlackoutWindow]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACWRequest": {
+      "type": "object",
+      "description": "One access-window compute request.",
+      "properties": {
+        "OPERATION": {
+          "$ref": "#/definitions/acwOperationCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "COMPUTE_ACCESS_WINDOWS": {
+              "value": 1,
+              "description": "Compute access windows from pre-sampled target Cartesian states."
+            }
+          }
+        },
+        "GROUND_STATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWGroundStation"
+          },
+          "description": "Candidate ground stations.",
+          "x-flatbuffer-type": "[ACWGroundStation]"
+        },
+        "STATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWStateSample"
+          },
+          "description": "Pre-sampled target Earth-fixed Cartesian states.",
+          "x-flatbuffer-type": "[ACWStateSample]"
+        },
+        "TARGET_STATION_ID": {
+          "type": "string",
+          "description": "Optional target station id. Empty means all stations when supported.",
+          "x-flatbuffer-type": "string"
+        },
+        "MIN_ELEVATION_OVERRIDE_RAD": {
+          "type": "number",
+          "description": "Optional caller override for minimum elevation, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "ELEVATION_MASK": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWElevationMaskPoint"
+          },
+          "description": "Optional azimuth-dependent minimum elevation mask.",
+          "x-flatbuffer-type": "[ACWElevationMaskPoint]"
+        },
+        "REFRACTION_MODEL": {
+          "$ref": "#/definitions/ACWRefractionModel",
+          "description": "Optional apparent-elevation refraction model.",
+          "x-flatbuffer-type": "ACWRefractionModel"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACWAccessWindow": {
+      "type": "object",
+      "description": "One computed access interval.",
+      "properties": {
+        "STATION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "START_JULIAN_DATE_TT": {
+          "type": "number",
+          "description": "Access start as Julian Date in TT.",
+          "x-flatbuffer-type": "double"
+        },
+        "END_JULIAN_DATE_TT": {
+          "type": "number",
+          "description": "Access end as Julian Date in TT.",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_ELEVATION_RAD": {
+          "type": "number",
+          "description": "Maximum elevation sampled or interpolated during the pass, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "SAMPLE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of visible input samples contributing to the window.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACWResult": {
+      "type": "object",
+      "description": "Result for one access-window compute request.",
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/acwResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request fields are missing, non-finite, or numerically invalid."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "The requested operation is not supported by the module."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWAccessWindow"
+          },
+          "x-flatbuffer-type": "[ACWAccessWindow]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ACW": {
+      "type": "object",
+      "description": "Access-window analysis envelope.",
+      "properties": {
+        "REQUEST": {
+          "$ref": "#/definitions/ACWRequest",
+          "x-flatbuffer-type": "ACWRequest"
+        },
+        "RESULT": {
+          "$ref": "#/definitions/ACWResult",
+          "x-flatbuffer-type": "ACWResult"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ACW",
+  "x-flatbuffer-root-type": "ACW",
+  "x-flatbuffer-file-identifier": "$ACW"
+}

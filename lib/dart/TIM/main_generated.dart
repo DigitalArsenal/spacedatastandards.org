@@ -18,7 +18,13 @@ enum timingStandard {
   TCG(8),
   TT(9),
   UT1(10),
-  UTC(11);
+  UTC(11),
+  GLONASS(12),
+  GST(13),
+  QZSS(14),
+  BDT(15),
+  NAVIC(16),
+  SBAS(17);
 
   final int value;
   const timingStandard(this.value);
@@ -37,6 +43,12 @@ enum timingStandard {
       case 9: return timingStandard.TT;
       case 10: return timingStandard.UT1;
       case 11: return timingStandard.UTC;
+      case 12: return timingStandard.GLONASS;
+      case 13: return timingStandard.GST;
+      case 14: return timingStandard.QZSS;
+      case 15: return timingStandard.BDT;
+      case 16: return timingStandard.NAVIC;
+      case 17: return timingStandard.SBAS;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -45,7 +57,7 @@ enum timingStandard {
       value == null ? null : timingStandard.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 11;
+  static const int maxValue = 17;
   static const fb.Reader<timingStandard> reader = _timingStandardReader();
 }
 
@@ -60,7 +72,767 @@ class _timingStandardReader extends fb.Reader<timingStandard> {
       timingStandard.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Time System
+enum timEpochRepresentation {
+  JULIAN_DATE(0),
+  MODIFIED_JULIAN_DATE(1),
+  UNIX_SECONDS(2),
+  ISO8601(3),
+  GPS_SECONDS(4),
+  GNSS_WEEK_SECONDS(5),
+  CCSDS_TIME_CODE(6),
+  MISSION_ELAPSED_SECONDS(7);
+
+  final int value;
+  const timEpochRepresentation(this.value);
+
+  factory timEpochRepresentation.fromValue(int value) {
+    switch (value) {
+      case 0: return timEpochRepresentation.JULIAN_DATE;
+      case 1: return timEpochRepresentation.MODIFIED_JULIAN_DATE;
+      case 2: return timEpochRepresentation.UNIX_SECONDS;
+      case 3: return timEpochRepresentation.ISO8601;
+      case 4: return timEpochRepresentation.GPS_SECONDS;
+      case 5: return timEpochRepresentation.GNSS_WEEK_SECONDS;
+      case 6: return timEpochRepresentation.CCSDS_TIME_CODE;
+      case 7: return timEpochRepresentation.MISSION_ELAPSED_SECONDS;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static timEpochRepresentation? _createOrNull(int? value) =>
+      value == null ? null : timEpochRepresentation.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 7;
+  static const fb.Reader<timEpochRepresentation> reader = _timEpochRepresentationReader();
+}
+
+class _timEpochRepresentationReader extends fb.Reader<timEpochRepresentation> {
+  const _timEpochRepresentationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  timEpochRepresentation read(fb.BufferContext bc, int offset) =>
+      timEpochRepresentation.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+enum timCcsdsTimeCodeKind {
+  NONE(0),
+  UNSEGMENTED(1),
+  DAY_SEGMENTED(2),
+  CALENDAR_SEGMENTED(3);
+
+  final int value;
+  const timCcsdsTimeCodeKind(this.value);
+
+  factory timCcsdsTimeCodeKind.fromValue(int value) {
+    switch (value) {
+      case 0: return timCcsdsTimeCodeKind.NONE;
+      case 1: return timCcsdsTimeCodeKind.UNSEGMENTED;
+      case 2: return timCcsdsTimeCodeKind.DAY_SEGMENTED;
+      case 3: return timCcsdsTimeCodeKind.CALENDAR_SEGMENTED;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static timCcsdsTimeCodeKind? _createOrNull(int? value) =>
+      value == null ? null : timCcsdsTimeCodeKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<timCcsdsTimeCodeKind> reader = _timCcsdsTimeCodeKindReader();
+}
+
+class _timCcsdsTimeCodeKindReader extends fb.Reader<timCcsdsTimeCodeKind> {
+  const _timCcsdsTimeCodeKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  timCcsdsTimeCodeKind read(fb.BufferContext bc, int offset) =>
+      timCcsdsTimeCodeKind.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+enum timConversionStatus {
+  OK(0),
+  INVALID_INPUT(1),
+  UNSUPPORTED_TIME_SYSTEM(2),
+  LEAP_SECOND_DATA_REQUIRED(3),
+  EOP_DATA_REQUIRED(4),
+  OUT_OF_RANGE(5);
+
+  final int value;
+  const timConversionStatus(this.value);
+
+  factory timConversionStatus.fromValue(int value) {
+    switch (value) {
+      case 0: return timConversionStatus.OK;
+      case 1: return timConversionStatus.INVALID_INPUT;
+      case 2: return timConversionStatus.UNSUPPORTED_TIME_SYSTEM;
+      case 3: return timConversionStatus.LEAP_SECOND_DATA_REQUIRED;
+      case 4: return timConversionStatus.EOP_DATA_REQUIRED;
+      case 5: return timConversionStatus.OUT_OF_RANGE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static timConversionStatus? _createOrNull(int? value) =>
+      value == null ? null : timConversionStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static const fb.Reader<timConversionStatus> reader = _timConversionStatusReader();
+}
+
+class _timConversionStatusReader extends fb.Reader<timConversionStatus> {
+  const _timConversionStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  timConversionStatus read(fb.BufferContext bc, int offset) =>
+      timConversionStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  CCSDS time-code payload and preamble metadata.
+class TIMCcsdsTimeCode {
+  TIMCcsdsTimeCode._(this._bc, this._bcOffset);
+  factory TIMCcsdsTimeCode(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<TIMCcsdsTimeCode> reader = _TIMCcsdsTimeCodeReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  CCSDS time-code family.
+  timCcsdsTimeCodeKind get CODE_KIND => timCcsdsTimeCodeKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  timCcsdsTimeCodeKind get codeKind => CODE_KIND;
+  ///  First CCSDS preamble field octet.
+  int get PREAMBLE_FIELD1 => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get preambleField1 => PREAMBLE_FIELD1;
+  ///  Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
+  int get PREAMBLE_FIELD2 => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get preambleField2 => PREAMBLE_FIELD2;
+  ///  Raw CCSDS time field octets.
+  List<int>? get TIME_FIELD => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
+  List<int>? get timeField => TIME_FIELD;
+  ///  Optional agency-defined epoch timestamp for agency epoch time codes.
+  String? get AGENCY_DEFINED_EPOCH_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get agencyDefinedEpochIso8601 => AGENCY_DEFINED_EPOCH_ISO8601;
+  ///  Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
+  String? get CCSDS_EPOCH_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get ccsdsEpochIso8601 => CCSDS_EPOCH_ISO8601;
+
+  @override
+  String toString() {
+    return 'TIMCcsdsTimeCode{codeKind: ${codeKind}, preambleField1: ${preambleField1}, preambleField2: ${preambleField2}, timeField: ${timeField}, agencyDefinedEpochIso8601: ${agencyDefinedEpochIso8601}, ccsdsEpochIso8601: ${ccsdsEpochIso8601}}';
+  }
+}
+
+class _TIMCcsdsTimeCodeReader extends fb.TableReader<TIMCcsdsTimeCode> {
+  const _TIMCcsdsTimeCodeReader();
+
+  @override
+  TIMCcsdsTimeCode createObject(fb.BufferContext bc, int offset) =>
+    TIMCcsdsTimeCode._(bc, offset);
+}
+
+class TIMCcsdsTimeCodeBuilder {
+  TIMCcsdsTimeCodeBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addCodeKind(timCcsdsTimeCodeKind? CODE_KIND) {
+    fbBuilder.addInt8(0, CODE_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addPreambleField1(int? PREAMBLE_FIELD1) {
+    fbBuilder.addUint8(1, PREAMBLE_FIELD1);
+    return fbBuilder.offset;
+  }
+  int addPreambleField2(int? PREAMBLE_FIELD2) {
+    fbBuilder.addUint8(2, PREAMBLE_FIELD2);
+    return fbBuilder.offset;
+  }
+  int addTimeFieldOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addAgencyDefinedEpochIso8601Offset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addCcsdsEpochIso8601Offset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class TIMCcsdsTimeCodeObjectBuilder extends fb.ObjectBuilder {
+  final timCcsdsTimeCodeKind? _CODE_KIND;
+  final int? _PREAMBLE_FIELD1;
+  final int? _PREAMBLE_FIELD2;
+  final List<int>? _TIME_FIELD;
+  final String? _AGENCY_DEFINED_EPOCH_ISO8601;
+  final String? _CCSDS_EPOCH_ISO8601;
+
+  TIMCcsdsTimeCodeObjectBuilder({
+    timCcsdsTimeCodeKind? CODE_KIND,
+    timCcsdsTimeCodeKind? codeKind,
+    int? PREAMBLE_FIELD1,
+    int? preambleField1,
+    int? PREAMBLE_FIELD2,
+    int? preambleField2,
+    List<int>? TIME_FIELD,
+    List<int>? timeField,
+    String? AGENCY_DEFINED_EPOCH_ISO8601,
+    String? agencyDefinedEpochIso8601,
+    String? CCSDS_EPOCH_ISO8601,
+    String? ccsdsEpochIso8601,
+  })
+      : _CODE_KIND = codeKind ?? CODE_KIND,
+        _PREAMBLE_FIELD1 = preambleField1 ?? PREAMBLE_FIELD1,
+        _PREAMBLE_FIELD2 = preambleField2 ?? PREAMBLE_FIELD2,
+        _TIME_FIELD = timeField ?? TIME_FIELD,
+        _AGENCY_DEFINED_EPOCH_ISO8601 = agencyDefinedEpochIso8601 ?? AGENCY_DEFINED_EPOCH_ISO8601,
+        _CCSDS_EPOCH_ISO8601 = ccsdsEpochIso8601 ?? CCSDS_EPOCH_ISO8601;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? TIME_FIELDOffset = _TIME_FIELD == null ? null
+        : fbBuilder.writeListUint8(_TIME_FIELD!);
+    final int? AGENCY_DEFINED_EPOCH_ISO8601Offset = _AGENCY_DEFINED_EPOCH_ISO8601 == null ? null
+        : fbBuilder.writeString(_AGENCY_DEFINED_EPOCH_ISO8601!);
+    final int? CCSDS_EPOCH_ISO8601Offset = _CCSDS_EPOCH_ISO8601 == null ? null
+        : fbBuilder.writeString(_CCSDS_EPOCH_ISO8601!);
+    fbBuilder.startTable(6);
+    fbBuilder.addInt8(0, _CODE_KIND?.value);
+    fbBuilder.addUint8(1, _PREAMBLE_FIELD1);
+    fbBuilder.addUint8(2, _PREAMBLE_FIELD2);
+    fbBuilder.addOffset(3, TIME_FIELDOffset);
+    fbBuilder.addOffset(4, AGENCY_DEFINED_EPOCH_ISO8601Offset);
+    fbBuilder.addOffset(5, CCSDS_EPOCH_ISO8601Offset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Numeric or textual instant tagged with its time system and representation.
+class TIMInstant {
+  TIMInstant._(this._bc, this._bcOffset);
+  factory TIMInstant(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<TIMInstant> reader = _TIMInstantReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Time system for this instant.
+  timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  timingStandard get timeSystem => TIME_SYSTEM;
+  ///  Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
+  timEpochRepresentation get EPOCH_FORMAT => timEpochRepresentation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  timEpochRepresentation get epochFormat => EPOCH_FORMAT;
+  ///  Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
+  double get JULIAN_DATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get julianDate => JULIAN_DATE;
+  ///  Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
+  double get SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  ISO 8601 timestamp text for ISO8601 inputs or display outputs.
+  String? get ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Additional nanoseconds beyond the fractional scalar/text value.
+  int get SUBSECOND_NANOS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get subsecondNanos => SUBSECOND_NANOS;
+  ///  Optional application-defined epoch label for MET, MRT, or SCLK values.
+  String? get EPOCH_LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get epochLabel => EPOCH_LABEL;
+  ///  GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
+  int get GNSS_WEEK => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get gnssWeek => GNSS_WEEK;
+  ///  Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
+  bool get HAS_GNSS_ROLLOVER_REFERENCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get hasGnssRolloverReference => HAS_GNSS_ROLLOVER_REFERENCE;
+  ///  Optional Orekit-style GNSS week rollover reference timestamp.
+  String? get GNSS_ROLLOVER_REFERENCE_ISO8601 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get gnssRolloverReferenceIso8601 => GNSS_ROLLOVER_REFERENCE_ISO8601;
+  ///  CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
+  TIMCcsdsTimeCode? get CCSDS_TIME_CODE => TIMCcsdsTimeCode.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  TIMCcsdsTimeCode? get ccsdsTimeCode => CCSDS_TIME_CODE;
+
+  @override
+  String toString() {
+    return 'TIMInstant{timeSystem: ${timeSystem}, epochFormat: ${epochFormat}, julianDate: ${julianDate}, SECONDS: ${SECONDS}, ISO8601: ${ISO8601}, subsecondNanos: ${subsecondNanos}, epochLabel: ${epochLabel}, gnssWeek: ${gnssWeek}, hasGnssRolloverReference: ${hasGnssRolloverReference}, gnssRolloverReferenceIso8601: ${gnssRolloverReferenceIso8601}, ccsdsTimeCode: ${ccsdsTimeCode}}';
+  }
+}
+
+class _TIMInstantReader extends fb.TableReader<TIMInstant> {
+  const _TIMInstantReader();
+
+  @override
+  TIMInstant createObject(fb.BufferContext bc, int offset) =>
+    TIMInstant._(bc, offset);
+}
+
+class TIMInstantBuilder {
+  TIMInstantBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addTimeSystem(timingStandard? TIME_SYSTEM) {
+    fbBuilder.addInt8(0, TIME_SYSTEM?.value);
+    return fbBuilder.offset;
+  }
+  int addEpochFormat(timEpochRepresentation? EPOCH_FORMAT) {
+    fbBuilder.addInt8(1, EPOCH_FORMAT?.value);
+    return fbBuilder.offset;
+  }
+  int addJulianDate(double? JULIAN_DATE) {
+    fbBuilder.addFloat64(2, JULIAN_DATE);
+    return fbBuilder.offset;
+  }
+  int addSeconds(double? SECONDS) {
+    fbBuilder.addFloat64(3, SECONDS);
+    return fbBuilder.offset;
+  }
+  int addIso8601Offset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addSubsecondNanos(int? SUBSECOND_NANOS) {
+    fbBuilder.addInt32(5, SUBSECOND_NANOS);
+    return fbBuilder.offset;
+  }
+  int addEpochLabelOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addGnssWeek(int? GNSS_WEEK) {
+    fbBuilder.addInt32(7, GNSS_WEEK);
+    return fbBuilder.offset;
+  }
+  int addHasGnssRolloverReference(bool? HAS_GNSS_ROLLOVER_REFERENCE) {
+    fbBuilder.addBool(8, HAS_GNSS_ROLLOVER_REFERENCE);
+    return fbBuilder.offset;
+  }
+  int addGnssRolloverReferenceIso8601Offset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addCcsdsTimeCodeOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class TIMInstantObjectBuilder extends fb.ObjectBuilder {
+  final timingStandard? _TIME_SYSTEM;
+  final timEpochRepresentation? _EPOCH_FORMAT;
+  final double? _JULIAN_DATE;
+  final double? _SECONDS;
+  final String? _ISO8601;
+  final int? _SUBSECOND_NANOS;
+  final String? _EPOCH_LABEL;
+  final int? _GNSS_WEEK;
+  final bool? _HAS_GNSS_ROLLOVER_REFERENCE;
+  final String? _GNSS_ROLLOVER_REFERENCE_ISO8601;
+  final TIMCcsdsTimeCodeObjectBuilder? _CCSDS_TIME_CODE;
+
+  TIMInstantObjectBuilder({
+    timingStandard? TIME_SYSTEM,
+    timingStandard? timeSystem,
+    timEpochRepresentation? EPOCH_FORMAT,
+    timEpochRepresentation? epochFormat,
+    double? JULIAN_DATE,
+    double? julianDate,
+    double? SECONDS,
+    String? ISO8601,
+    int? SUBSECOND_NANOS,
+    int? subsecondNanos,
+    String? EPOCH_LABEL,
+    String? epochLabel,
+    int? GNSS_WEEK,
+    int? gnssWeek,
+    bool? HAS_GNSS_ROLLOVER_REFERENCE,
+    bool? hasGnssRolloverReference,
+    String? GNSS_ROLLOVER_REFERENCE_ISO8601,
+    String? gnssRolloverReferenceIso8601,
+    TIMCcsdsTimeCodeObjectBuilder? CCSDS_TIME_CODE,
+    TIMCcsdsTimeCodeObjectBuilder? ccsdsTimeCode,
+  })
+      : _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _EPOCH_FORMAT = epochFormat ?? EPOCH_FORMAT,
+        _JULIAN_DATE = julianDate ?? JULIAN_DATE,
+        _SECONDS = SECONDS,
+        _ISO8601 = ISO8601,
+        _SUBSECOND_NANOS = subsecondNanos ?? SUBSECOND_NANOS,
+        _EPOCH_LABEL = epochLabel ?? EPOCH_LABEL,
+        _GNSS_WEEK = gnssWeek ?? GNSS_WEEK,
+        _HAS_GNSS_ROLLOVER_REFERENCE = hasGnssRolloverReference ?? HAS_GNSS_ROLLOVER_REFERENCE,
+        _GNSS_ROLLOVER_REFERENCE_ISO8601 = gnssRolloverReferenceIso8601 ?? GNSS_ROLLOVER_REFERENCE_ISO8601,
+        _CCSDS_TIME_CODE = ccsdsTimeCode ?? CCSDS_TIME_CODE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ISO8601Offset = _ISO8601 == null ? null
+        : fbBuilder.writeString(_ISO8601!);
+    final int? EPOCH_LABELOffset = _EPOCH_LABEL == null ? null
+        : fbBuilder.writeString(_EPOCH_LABEL!);
+    final int? GNSS_ROLLOVER_REFERENCE_ISO8601Offset = _GNSS_ROLLOVER_REFERENCE_ISO8601 == null ? null
+        : fbBuilder.writeString(_GNSS_ROLLOVER_REFERENCE_ISO8601!);
+    final int? CCSDS_TIME_CODEOffset = _CCSDS_TIME_CODE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(11);
+    fbBuilder.addInt8(0, _TIME_SYSTEM?.value);
+    fbBuilder.addInt8(1, _EPOCH_FORMAT?.value);
+    fbBuilder.addFloat64(2, _JULIAN_DATE);
+    fbBuilder.addFloat64(3, _SECONDS);
+    fbBuilder.addOffset(4, ISO8601Offset);
+    fbBuilder.addInt32(5, _SUBSECOND_NANOS);
+    fbBuilder.addOffset(6, EPOCH_LABELOffset);
+    fbBuilder.addInt32(7, _GNSS_WEEK);
+    fbBuilder.addBool(8, _HAS_GNSS_ROLLOVER_REFERENCE);
+    fbBuilder.addOffset(9, GNSS_ROLLOVER_REFERENCE_ISO8601Offset);
+    fbBuilder.addOffset(10, CCSDS_TIME_CODEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Request to convert one instant into another time system/representation.
+class TIMConversionRequest {
+  TIMConversionRequest._(this._bc, this._bcOffset);
+  factory TIMConversionRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<TIMConversionRequest> reader = _TIMConversionRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Source instant to convert.
+  TIMInstant? get SOURCE => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Target time system.
+  timingStandard get TARGET_TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  timingStandard get targetTimeSystem => TARGET_TIME_SYSTEM;
+  ///  Preferred target representation.
+  timEpochRepresentation get TARGET_EPOCH_FORMAT => timEpochRepresentation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  timEpochRepresentation get targetEpochFormat => TARGET_EPOCH_FORMAT;
+  ///  Optional TAI-UTC override in seconds for the source instant.
+  double get TAI_MINUS_UTC_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get taiMinusUtcSeconds => TAI_MINUS_UTC_SECONDS;
+  ///  Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
+  bool get HAS_TAI_MINUS_UTC => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get hasTaiMinusUtc => HAS_TAI_MINUS_UTC;
+  ///  Optional UT1-UTC override in seconds for UT1 conversions.
+  double get DUT1_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get dut1Seconds => DUT1_SECONDS;
+  ///  Whether DUT1_SECONDS should override runtime Earth-orientation data.
+  bool get HAS_DUT1 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  bool get hasDut1 => HAS_DUT1;
+  ///  Optional caller trace/correlation identifier.
+  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get traceId => TRACE_ID;
+
+  @override
+  String toString() {
+    return 'TIMConversionRequest{SOURCE: ${SOURCE}, targetTimeSystem: ${targetTimeSystem}, targetEpochFormat: ${targetEpochFormat}, taiMinusUtcSeconds: ${taiMinusUtcSeconds}, hasTaiMinusUtc: ${hasTaiMinusUtc}, dut1Seconds: ${dut1Seconds}, hasDut1: ${hasDut1}, traceId: ${traceId}}';
+  }
+}
+
+class _TIMConversionRequestReader extends fb.TableReader<TIMConversionRequest> {
+  const _TIMConversionRequestReader();
+
+  @override
+  TIMConversionRequest createObject(fb.BufferContext bc, int offset) =>
+    TIMConversionRequest._(bc, offset);
+}
+
+class TIMConversionRequestBuilder {
+  TIMConversionRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addSourceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetTimeSystem(timingStandard? TARGET_TIME_SYSTEM) {
+    fbBuilder.addInt8(1, TARGET_TIME_SYSTEM?.value);
+    return fbBuilder.offset;
+  }
+  int addTargetEpochFormat(timEpochRepresentation? TARGET_EPOCH_FORMAT) {
+    fbBuilder.addInt8(2, TARGET_EPOCH_FORMAT?.value);
+    return fbBuilder.offset;
+  }
+  int addTaiMinusUtcSeconds(double? TAI_MINUS_UTC_SECONDS) {
+    fbBuilder.addFloat64(3, TAI_MINUS_UTC_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addHasTaiMinusUtc(bool? HAS_TAI_MINUS_UTC) {
+    fbBuilder.addBool(4, HAS_TAI_MINUS_UTC);
+    return fbBuilder.offset;
+  }
+  int addDut1Seconds(double? DUT1_SECONDS) {
+    fbBuilder.addFloat64(5, DUT1_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addHasDut1(bool? HAS_DUT1) {
+    fbBuilder.addBool(6, HAS_DUT1);
+    return fbBuilder.offset;
+  }
+  int addTraceIdOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class TIMConversionRequestObjectBuilder extends fb.ObjectBuilder {
+  final TIMInstantObjectBuilder? _SOURCE;
+  final timingStandard? _TARGET_TIME_SYSTEM;
+  final timEpochRepresentation? _TARGET_EPOCH_FORMAT;
+  final double? _TAI_MINUS_UTC_SECONDS;
+  final bool? _HAS_TAI_MINUS_UTC;
+  final double? _DUT1_SECONDS;
+  final bool? _HAS_DUT1;
+  final String? _TRACE_ID;
+
+  TIMConversionRequestObjectBuilder({
+    TIMInstantObjectBuilder? SOURCE,
+    timingStandard? TARGET_TIME_SYSTEM,
+    timingStandard? targetTimeSystem,
+    timEpochRepresentation? TARGET_EPOCH_FORMAT,
+    timEpochRepresentation? targetEpochFormat,
+    double? TAI_MINUS_UTC_SECONDS,
+    double? taiMinusUtcSeconds,
+    bool? HAS_TAI_MINUS_UTC,
+    bool? hasTaiMinusUtc,
+    double? DUT1_SECONDS,
+    double? dut1Seconds,
+    bool? HAS_DUT1,
+    bool? hasDut1,
+    String? TRACE_ID,
+    String? traceId,
+  })
+      : _SOURCE = SOURCE,
+        _TARGET_TIME_SYSTEM = targetTimeSystem ?? TARGET_TIME_SYSTEM,
+        _TARGET_EPOCH_FORMAT = targetEpochFormat ?? TARGET_EPOCH_FORMAT,
+        _TAI_MINUS_UTC_SECONDS = taiMinusUtcSeconds ?? TAI_MINUS_UTC_SECONDS,
+        _HAS_TAI_MINUS_UTC = hasTaiMinusUtc ?? HAS_TAI_MINUS_UTC,
+        _DUT1_SECONDS = dut1Seconds ?? DUT1_SECONDS,
+        _HAS_DUT1 = hasDut1 ?? HAS_DUT1,
+        _TRACE_ID = traceId ?? TRACE_ID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOURCEOffset = _SOURCE?.getOrCreateOffset(fbBuilder);
+    final int? TRACE_IDOffset = _TRACE_ID == null ? null
+        : fbBuilder.writeString(_TRACE_ID!);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, SOURCEOffset);
+    fbBuilder.addInt8(1, _TARGET_TIME_SYSTEM?.value);
+    fbBuilder.addInt8(2, _TARGET_EPOCH_FORMAT?.value);
+    fbBuilder.addFloat64(3, _TAI_MINUS_UTC_SECONDS);
+    fbBuilder.addBool(4, _HAS_TAI_MINUS_UTC);
+    fbBuilder.addFloat64(5, _DUT1_SECONDS);
+    fbBuilder.addBool(6, _HAS_DUT1);
+    fbBuilder.addOffset(7, TRACE_IDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Result of a time conversion request.
+class TIMConversionResult {
+  TIMConversionResult._(this._bc, this._bcOffset);
+  factory TIMConversionResult(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<TIMConversionResult> reader = _TIMConversionResultReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Original source instant.
+  TIMInstant? get SOURCE => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Converted target instant.
+  TIMInstant? get TARGET => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Target minus source offset in SI seconds for the requested conversion.
+  double get DELTA_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get deltaSeconds => DELTA_SECONDS;
+  ///  Conversion status.
+  timConversionStatus get STATUS => timConversionStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  ///  Optional error detail when STATUS is not OK.
+  String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get errorMessage => ERROR_MESSAGE;
+  ///  Caller trace/correlation identifier copied from the request when present.
+  String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get traceId => TRACE_ID;
+
+  @override
+  String toString() {
+    return 'TIMConversionResult{SOURCE: ${SOURCE}, TARGET: ${TARGET}, deltaSeconds: ${deltaSeconds}, STATUS: ${STATUS}, errorMessage: ${errorMessage}, traceId: ${traceId}}';
+  }
+}
+
+class _TIMConversionResultReader extends fb.TableReader<TIMConversionResult> {
+  const _TIMConversionResultReader();
+
+  @override
+  TIMConversionResult createObject(fb.BufferContext bc, int offset) =>
+    TIMConversionResult._(bc, offset);
+}
+
+class TIMConversionResultBuilder {
+  TIMConversionResultBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addSourceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addDeltaSeconds(double? DELTA_SECONDS) {
+    fbBuilder.addFloat64(2, DELTA_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addStatus(timConversionStatus? STATUS) {
+    fbBuilder.addInt8(3, STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addErrorMessageOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addTraceIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class TIMConversionResultObjectBuilder extends fb.ObjectBuilder {
+  final TIMInstantObjectBuilder? _SOURCE;
+  final TIMInstantObjectBuilder? _TARGET;
+  final double? _DELTA_SECONDS;
+  final timConversionStatus? _STATUS;
+  final String? _ERROR_MESSAGE;
+  final String? _TRACE_ID;
+
+  TIMConversionResultObjectBuilder({
+    TIMInstantObjectBuilder? SOURCE,
+    TIMInstantObjectBuilder? TARGET,
+    double? DELTA_SECONDS,
+    double? deltaSeconds,
+    timConversionStatus? STATUS,
+    String? ERROR_MESSAGE,
+    String? errorMessage,
+    String? TRACE_ID,
+    String? traceId,
+  })
+      : _SOURCE = SOURCE,
+        _TARGET = TARGET,
+        _DELTA_SECONDS = deltaSeconds ?? DELTA_SECONDS,
+        _STATUS = STATUS,
+        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
+        _TRACE_ID = traceId ?? TRACE_ID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOURCEOffset = _SOURCE?.getOrCreateOffset(fbBuilder);
+    final int? TARGETOffset = _TARGET?.getOrCreateOffset(fbBuilder);
+    final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
+        : fbBuilder.writeString(_ERROR_MESSAGE!);
+    final int? TRACE_IDOffset = _TRACE_ID == null ? null
+        : fbBuilder.writeString(_TRACE_ID!);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, SOURCEOffset);
+    fbBuilder.addOffset(1, TARGETOffset);
+    fbBuilder.addFloat64(2, _DELTA_SECONDS);
+    fbBuilder.addInt8(3, _STATUS?.value);
+    fbBuilder.addOffset(4, ERROR_MESSAGEOffset);
+    fbBuilder.addOffset(5, TRACE_IDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Time System and time-conversion envelope.
 class TIM {
   TIM._(this._bc, this._bcOffset);
   factory TIM(List<int> bytes) {
@@ -73,12 +845,21 @@ class TIM {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Legacy time-system selector retained for existing TIM consumers.
   timingStandard get TIME_SYSTEM => timingStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
   timingStandard get timeSystem => TIME_SYSTEM;
+  ///  A single tagged instant.
+  TIMInstant? get INSTANT => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Time conversion request.
+  TIMConversionRequest? get CONVERSION_REQUEST => TIMConversionRequest.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  TIMConversionRequest? get conversionRequest => CONVERSION_REQUEST;
+  ///  Time conversion result.
+  TIMConversionResult? get CONVERSION_RESULT => TIMConversionResult.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  TIMConversionResult? get conversionResult => CONVERSION_RESULT;
 
   @override
   String toString() {
-    return 'TIM{timeSystem: ${timeSystem}}';
+    return 'TIM{timeSystem: ${timeSystem}, INSTANT: ${INSTANT}, conversionRequest: ${conversionRequest}, conversionResult: ${conversionResult}}';
   }
 }
 
@@ -96,11 +877,23 @@ class TIMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(1);
+    fbBuilder.startTable(4);
   }
 
   int addTimeSystem(timingStandard? TIME_SYSTEM) {
     fbBuilder.addInt8(0, TIME_SYSTEM?.value);
+    return fbBuilder.offset;
+  }
+  int addInstantOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addConversionRequestOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addConversionResultOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
 
@@ -111,18 +904,35 @@ class TIMBuilder {
 
 class TIMObjectBuilder extends fb.ObjectBuilder {
   final timingStandard? _TIME_SYSTEM;
+  final TIMInstantObjectBuilder? _INSTANT;
+  final TIMConversionRequestObjectBuilder? _CONVERSION_REQUEST;
+  final TIMConversionResultObjectBuilder? _CONVERSION_RESULT;
 
   TIMObjectBuilder({
     timingStandard? TIME_SYSTEM,
     timingStandard? timeSystem,
+    TIMInstantObjectBuilder? INSTANT,
+    TIMConversionRequestObjectBuilder? CONVERSION_REQUEST,
+    TIMConversionRequestObjectBuilder? conversionRequest,
+    TIMConversionResultObjectBuilder? CONVERSION_RESULT,
+    TIMConversionResultObjectBuilder? conversionResult,
   })
-      : _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM;
+      : _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _INSTANT = INSTANT,
+        _CONVERSION_REQUEST = conversionRequest ?? CONVERSION_REQUEST,
+        _CONVERSION_RESULT = conversionResult ?? CONVERSION_RESULT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(1);
+    final int? INSTANTOffset = _INSTANT?.getOrCreateOffset(fbBuilder);
+    final int? CONVERSION_REQUESTOffset = _CONVERSION_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? CONVERSION_RESULTOffset = _CONVERSION_RESULT?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(4);
     fbBuilder.addInt8(0, _TIME_SYSTEM?.value);
+    fbBuilder.addOffset(1, INSTANTOffset);
+    fbBuilder.addOffset(2, CONVERSION_REQUESTOffset);
+    fbBuilder.addOffset(3, CONVERSION_RESULTOffset);
     return fbBuilder.endTable();
   }
 

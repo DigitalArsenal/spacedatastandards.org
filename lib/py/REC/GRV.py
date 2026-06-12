@@ -106,8 +106,57 @@ class GRV(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # GRV
+    def EQUATORIAL_RADIUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GRV
+    def J2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GRV
+    def MU(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GRV
+    def J3(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GRV
+    def J4(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GRV
+    def J5(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GRV
+    def J6(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def GRVStart(builder):
-    builder.StartObject(11)
+    builder.StartObject(18)
 
 def Start(builder):
     GRVStart(builder)
@@ -178,6 +227,48 @@ def GRVAddPOLE_TIDES(builder, POLE_TIDES):
 def AddPOLE_TIDES(builder, POLE_TIDES):
     GRVAddPOLE_TIDES(builder, POLE_TIDES)
 
+def GRVAddEQUATORIAL_RADIUS(builder, EQUATORIAL_RADIUS):
+    builder.PrependFloat64Slot(11, EQUATORIAL_RADIUS, 0.0)
+
+def AddEQUATORIAL_RADIUS(builder, EQUATORIAL_RADIUS):
+    GRVAddEQUATORIAL_RADIUS(builder, EQUATORIAL_RADIUS)
+
+def GRVAddJ2(builder, J2):
+    builder.PrependFloat64Slot(12, J2, 0.0)
+
+def AddJ2(builder, J2):
+    GRVAddJ2(builder, J2)
+
+def GRVAddMU(builder, MU):
+    builder.PrependFloat64Slot(13, MU, 0.0)
+
+def AddMU(builder, MU):
+    GRVAddMU(builder, MU)
+
+def GRVAddJ3(builder, J3):
+    builder.PrependFloat64Slot(14, J3, 0.0)
+
+def AddJ3(builder, J3):
+    GRVAddJ3(builder, J3)
+
+def GRVAddJ4(builder, J4):
+    builder.PrependFloat64Slot(15, J4, 0.0)
+
+def AddJ4(builder, J4):
+    GRVAddJ4(builder, J4)
+
+def GRVAddJ5(builder, J5):
+    builder.PrependFloat64Slot(16, J5, 0.0)
+
+def AddJ5(builder, J5):
+    GRVAddJ5(builder, J5)
+
+def GRVAddJ6(builder, J6):
+    builder.PrependFloat64Slot(17, J6, 0.0)
+
+def AddJ6(builder, J6):
+    GRVAddJ6(builder, J6)
+
 def GRVEnd(builder):
     return builder.EndObject()
 
@@ -201,6 +292,13 @@ class GRVT(object):
         SOLID_TIDES = False,
         OCEAN_TIDES = False,
         POLE_TIDES = False,
+        EQUATORIAL_RADIUS = 0.0,
+        J2 = 0.0,
+        MU = 0.0,
+        J3 = 0.0,
+        J4 = 0.0,
+        J5 = 0.0,
+        J6 = 0.0,
     ):
         self.MODEL_TYPE = MODEL_TYPE  # type: int
         self.MODEL_NAME = MODEL_NAME  # type: int
@@ -213,6 +311,13 @@ class GRVT(object):
         self.SOLID_TIDES = SOLID_TIDES  # type: bool
         self.OCEAN_TIDES = OCEAN_TIDES  # type: bool
         self.POLE_TIDES = POLE_TIDES  # type: bool
+        self.EQUATORIAL_RADIUS = EQUATORIAL_RADIUS  # type: float
+        self.J2 = J2  # type: float
+        self.MU = MU  # type: float
+        self.J3 = J3  # type: float
+        self.J4 = J4  # type: float
+        self.J5 = J5  # type: float
+        self.J6 = J6  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -246,6 +351,13 @@ class GRVT(object):
         self.SOLID_TIDES = GRV.SOLID_TIDES()
         self.OCEAN_TIDES = GRV.OCEAN_TIDES()
         self.POLE_TIDES = GRV.POLE_TIDES()
+        self.EQUATORIAL_RADIUS = GRV.EQUATORIAL_RADIUS()
+        self.J2 = GRV.J2()
+        self.MU = GRV.MU()
+        self.J3 = GRV.J3()
+        self.J4 = GRV.J4()
+        self.J5 = GRV.J5()
+        self.J6 = GRV.J6()
 
     # GRVT
     def Pack(self, builder):
@@ -261,5 +373,12 @@ class GRVT(object):
         GRVAddSOLID_TIDES(builder, self.SOLID_TIDES)
         GRVAddOCEAN_TIDES(builder, self.OCEAN_TIDES)
         GRVAddPOLE_TIDES(builder, self.POLE_TIDES)
+        GRVAddEQUATORIAL_RADIUS(builder, self.EQUATORIAL_RADIUS)
+        GRVAddJ2(builder, self.J2)
+        GRVAddMU(builder, self.MU)
+        GRVAddJ3(builder, self.J3)
+        GRVAddJ4(builder, self.J4)
+        GRVAddJ5(builder, self.J5)
+        GRVAddJ6(builder, self.J6)
         GRV = GRVEnd(builder)
         return GRV

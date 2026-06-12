@@ -51,8 +51,32 @@ public final class timingStandard {
    * Coordinated Universal Time
    */
   public static final byte UTC = 11;
+  /**
+   * GLONASS Time
+   */
+  public static final byte GLONASS = 12;
+  /**
+   * Galileo System Time
+   */
+  public static final byte GST = 13;
+  /**
+   * Quasi-Zenith Satellite System Time
+   */
+  public static final byte QZSS = 14;
+  /**
+   * BeiDou Time
+   */
+  public static final byte BDT = 15;
+  /**
+   * Navigation with Indian Constellation Time
+   */
+  public static final byte NAVIC = 16;
+  /**
+   * Satellite-Based Augmentation System Time
+   */
+  public static final byte SBAS = 17;
 
-  public static final String[] names = { "GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC", };
+  public static final String[] names = { "GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC", "GLONASS", "GST", "QZSS", "BDT", "NAVIC", "SBAS", };
 
   public static String name(int e) { return names[e]; }
 }

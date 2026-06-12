@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Time System
+ * Time System and time-conversion envelope.
  */
 @Suppress("unused")
 class TIM : Table() {
@@ -29,11 +29,50 @@ class TIM : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Legacy time-system selector retained for existing TIM consumers.
+     */
     val timeSystem : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * A single tagged instant.
+     */
+    val instant : TIMInstant? get() = instant(TIMInstant())
+    fun instant(obj: TIMInstant) : TIMInstant? {
+        val o = __offset(6)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Time conversion request.
+     */
+    val conversionRequest : TIMConversionRequest? get() = conversionRequest(TIMConversionRequest())
+    fun conversionRequest(obj: TIMConversionRequest) : TIMConversionRequest? {
+        val o = __offset(8)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Time conversion result.
+     */
+    val conversionResult : TIMConversionResult? get() = conversionResult(TIMConversionResult())
+    fun conversionResult(obj: TIMConversionResult) : TIMConversionResult? {
+        val o = __offset(10)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTIM(_bb: ByteBuffer): TIM = getRootAsTIM(_bb, TIM())
@@ -42,13 +81,19 @@ class TIM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TIMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TIM")
-        fun createTIM(builder: FlatBufferBuilder, timeSystem: Byte) : Int {
-            builder.startTable(1)
+        fun createTIM(builder: FlatBufferBuilder, timeSystem: Byte, instantOffset: Int, conversionRequestOffset: Int, conversionResultOffset: Int) : Int {
+            builder.startTable(4)
+            addCONVERSIONRESULT(builder, conversionResultOffset)
+            addCONVERSIONREQUEST(builder, conversionRequestOffset)
+            addINSTANT(builder, instantOffset)
             addTIMESYSTEM(builder, timeSystem)
             return endTIM(builder)
         }
-        fun startTIM(builder: FlatBufferBuilder) = builder.startTable(1)
+        fun startTIM(builder: FlatBufferBuilder) = builder.startTable(4)
         fun addTIMESYSTEM(builder: FlatBufferBuilder, timeSystem: Byte) = builder.addByte(0, timeSystem, 0)
+        fun addINSTANT(builder: FlatBufferBuilder, instant: Int) = builder.addOffset(1, instant, 0)
+        fun addCONVERSIONREQUEST(builder: FlatBufferBuilder, conversionRequest: Int) = builder.addOffset(2, conversionRequest, 0)
+        fun addCONVERSIONRESULT(builder: FlatBufferBuilder, conversionResult: Int) = builder.addOffset(3, conversionResult, 0)
         fun endTIM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

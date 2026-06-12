@@ -26,23 +26,358 @@ enum timingStandard:
     timingStandard_UT1 = 10
     /// Coordinated Universal Time
     timingStandard_UTC = 11
+    /// GLONASS Time
+    timingStandard_GLONASS = 12
+    /// Galileo System Time
+    timingStandard_GST = 13
+    /// Quasi-Zenith Satellite System Time
+    timingStandard_QZSS = 14
+    /// BeiDou Time
+    timingStandard_BDT = 15
+    /// Navigation with Indian Constellation Time
+    timingStandard_NAVIC = 16
+    /// Satellite-Based Augmentation System Time
+    timingStandard_SBAS = 17
+
+enum timEpochRepresentation:
+    /// Julian Date day count.
+    timEpochRepresentation_JULIAN_DATE = 0
+    /// Modified Julian Date day count (JD - 2400000.5).
+    timEpochRepresentation_MODIFIED_JULIAN_DATE = 1
+    /// Seconds since 1970-01-01T00:00:00 UTC.
+    timEpochRepresentation_UNIX_SECONDS = 2
+    /// ISO 8601 timestamp text.
+    timEpochRepresentation_ISO8601 = 3
+    /// Seconds since 1980-01-06T00:00:00 GPS.
+    timEpochRepresentation_GPS_SECONDS = 4
+    /// GNSS week number plus seconds within the week.
+    timEpochRepresentation_GNSS_WEEK_SECONDS = 5
+    /// CCSDS binary time-code field with preamble metadata.
+    timEpochRepresentation_CCSDS_TIME_CODE = 6
+    /// Seconds from an application-defined mission epoch.
+    timEpochRepresentation_MISSION_ELAPSED_SECONDS = 7
+
+enum timCcsdsTimeCodeKind:
+    /// No CCSDS time code selected.
+    timCcsdsTimeCodeKind_NONE = 0
+    /// CCSDS Unsegmented Time Code (CUC).
+    timCcsdsTimeCodeKind_UNSEGMENTED = 1
+    /// CCSDS Day Segmented Time Code (CDS).
+    timCcsdsTimeCodeKind_DAY_SEGMENTED = 2
+    /// CCSDS Calendar Segmented Time Code (CCS).
+    timCcsdsTimeCodeKind_CALENDAR_SEGMENTED = 3
+
+enum timConversionStatus:
+    /// Conversion completed.
+    timConversionStatus_OK = 0
+    /// Input epoch or requested representation is invalid.
+    timConversionStatus_INVALID_INPUT = 1
+    /// Requested source or target time system is not supported.
+    timConversionStatus_UNSUPPORTED_TIME_SYSTEM = 2
+    /// Conversion requires leap-second data that was not available.
+    timConversionStatus_LEAP_SECOND_DATA_REQUIRED = 3
+    /// Conversion requires Earth-orientation data that was not available.
+    timConversionStatus_EOP_DATA_REQUIRED = 4
+    /// Requested instant is outside the supported conversion range.
+    timConversionStatus_OUT_OF_RANGE = 5
+
+class TIMCcsdsTimeCode
+
+class TIMInstant
+
+class TIMConversionRequest
+
+class TIMConversionResult
 
 class TIM
 
-/// Time System
-class TIM : flatbuffers.handle
+/// CCSDS time-code payload and preamble metadata.
+class TIMCcsdsTimeCode : flatbuffers.handle
+    /// CCSDS time-code family.
+    def CODE_KIND() -> timCcsdsTimeCodeKind:
+        return timCcsdsTimeCodeKind(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// First CCSDS preamble field octet.
+    def PREAMBLE_FIELD1() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 6, 0)
+    /// Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
+    def PREAMBLE_FIELD2() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 8, 0)
+    /// Raw CCSDS time field octets.
+    def TIME_FIELD(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 1)
+    def TIME_FIELD_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
+    /// Optional agency-defined epoch timestamp for agency epoch time codes.
+    def AGENCY_DEFINED_EPOCH_ISO8601() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
+    def CCSDS_EPOCH_ISO8601() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+
+def GetRootAsTIMCcsdsTimeCode(buf:string): return TIMCcsdsTimeCode { buf, flatbuffers.indirect(buf, 0) }
+
+struct TIMCcsdsTimeCodeBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(6)
+        return this
+    def add_CODE_KIND(CODE_KIND:timCcsdsTimeCodeKind):
+        b_.PrependInt8Slot(0, CODE_KIND, 0)
+        return this
+    def add_PREAMBLE_FIELD1(PREAMBLE_FIELD1:int):
+        b_.PrependUint8Slot(1, PREAMBLE_FIELD1, 0)
+        return this
+    def add_PREAMBLE_FIELD2(PREAMBLE_FIELD2:int):
+        b_.PrependUint8Slot(2, PREAMBLE_FIELD2, 0)
+        return this
+    def add_TIME_FIELD(TIME_FIELD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, TIME_FIELD)
+        return this
+    def add_AGENCY_DEFINED_EPOCH_ISO8601(AGENCY_DEFINED_EPOCH_ISO8601:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, AGENCY_DEFINED_EPOCH_ISO8601)
+        return this
+    def add_CCSDS_EPOCH_ISO8601(CCSDS_EPOCH_ISO8601:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, CCSDS_EPOCH_ISO8601)
+        return this
+    def end():
+        return b_.EndObject()
+
+def TIMCcsdsTimeCodeStartTIMEFIELDVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def TIMCcsdsTimeCodeCreateTIMEFIELDVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+/// Numeric or textual instant tagged with its time system and representation.
+class TIMInstant : flatbuffers.handle
+    /// Time system for this instant.
     def TIME_SYSTEM() -> timingStandard:
         return timingStandard(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
+    def EPOCH_FORMAT() -> timEpochRepresentation:
+        return timEpochRepresentation(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    /// Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
+    def JULIAN_DATE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
+    def SECONDS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// ISO 8601 timestamp text for ISO8601 inputs or display outputs.
+    def ISO8601() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Additional nanoseconds beyond the fractional scalar/text value.
+    def SUBSECOND_NANOS() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 14, 0)
+    /// Optional application-defined epoch label for MET, MRT, or SCLK values.
+    def EPOCH_LABEL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
+    def GNSS_WEEK() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 18, 0)
+    /// Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
+    def HAS_GNSS_ROLLOVER_REFERENCE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    /// Optional Orekit-style GNSS week rollover reference timestamp.
+    def GNSS_ROLLOVER_REFERENCE_ISO8601() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    /// CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
+    def CCSDS_TIME_CODE() -> TIMCcsdsTimeCode?:
+        let o = flatbuffers.field_table(buf_, pos_, 24)
+        return if o: TIMCcsdsTimeCode { buf_, o } else: nil
+
+def GetRootAsTIMInstant(buf:string): return TIMInstant { buf, flatbuffers.indirect(buf, 0) }
+
+struct TIMInstantBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(11)
+        return this
+    def add_TIME_SYSTEM(TIME_SYSTEM:timingStandard):
+        b_.PrependInt8Slot(0, TIME_SYSTEM, 0)
+        return this
+    def add_EPOCH_FORMAT(EPOCH_FORMAT:timEpochRepresentation):
+        b_.PrependInt8Slot(1, EPOCH_FORMAT, 0)
+        return this
+    def add_JULIAN_DATE(JULIAN_DATE:float):
+        b_.PrependFloat64Slot(2, JULIAN_DATE, 0.0)
+        return this
+    def add_SECONDS(SECONDS:float):
+        b_.PrependFloat64Slot(3, SECONDS, 0.0)
+        return this
+    def add_ISO8601(ISO8601:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, ISO8601)
+        return this
+    def add_SUBSECOND_NANOS(SUBSECOND_NANOS:int):
+        b_.PrependInt32Slot(5, SUBSECOND_NANOS, 0)
+        return this
+    def add_EPOCH_LABEL(EPOCH_LABEL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, EPOCH_LABEL)
+        return this
+    def add_GNSS_WEEK(GNSS_WEEK:int):
+        b_.PrependInt32Slot(7, GNSS_WEEK, 0)
+        return this
+    def add_HAS_GNSS_ROLLOVER_REFERENCE(HAS_GNSS_ROLLOVER_REFERENCE:bool):
+        b_.PrependBoolSlot(8, HAS_GNSS_ROLLOVER_REFERENCE, 0)
+        return this
+    def add_GNSS_ROLLOVER_REFERENCE_ISO8601(GNSS_ROLLOVER_REFERENCE_ISO8601:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, GNSS_ROLLOVER_REFERENCE_ISO8601)
+        return this
+    def add_CCSDS_TIME_CODE(CCSDS_TIME_CODE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, CCSDS_TIME_CODE)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Request to convert one instant into another time system/representation.
+class TIMConversionRequest : flatbuffers.handle
+    /// Source instant to convert.
+    def SOURCE() -> TIMInstant?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: TIMInstant { buf_, o } else: nil
+    /// Target time system.
+    def TARGET_TIME_SYSTEM() -> timingStandard:
+        return timingStandard(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    /// Preferred target representation.
+    def TARGET_EPOCH_FORMAT() -> timEpochRepresentation:
+        return timEpochRepresentation(flatbuffers.field_int8(buf_, pos_, 8, 0))
+    /// Optional TAI-UTC override in seconds for the source instant.
+    def TAI_MINUS_UTC_SECONDS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
+    def HAS_TAI_MINUS_UTC() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
+    /// Optional UT1-UTC override in seconds for UT1 conversions.
+    def DUT1_SECONDS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Whether DUT1_SECONDS should override runtime Earth-orientation data.
+    def HAS_DUT1() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 16, 0))
+    /// Optional caller trace/correlation identifier.
+    def TRACE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+
+def GetRootAsTIMConversionRequest(buf:string): return TIMConversionRequest { buf, flatbuffers.indirect(buf, 0) }
+
+struct TIMConversionRequestBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(8)
+        return this
+    def add_SOURCE(SOURCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, SOURCE)
+        return this
+    def add_TARGET_TIME_SYSTEM(TARGET_TIME_SYSTEM:timingStandard):
+        b_.PrependInt8Slot(1, TARGET_TIME_SYSTEM, 0)
+        return this
+    def add_TARGET_EPOCH_FORMAT(TARGET_EPOCH_FORMAT:timEpochRepresentation):
+        b_.PrependInt8Slot(2, TARGET_EPOCH_FORMAT, 0)
+        return this
+    def add_TAI_MINUS_UTC_SECONDS(TAI_MINUS_UTC_SECONDS:float):
+        b_.PrependFloat64Slot(3, TAI_MINUS_UTC_SECONDS, 0.0)
+        return this
+    def add_HAS_TAI_MINUS_UTC(HAS_TAI_MINUS_UTC:bool):
+        b_.PrependBoolSlot(4, HAS_TAI_MINUS_UTC, 0)
+        return this
+    def add_DUT1_SECONDS(DUT1_SECONDS:float):
+        b_.PrependFloat64Slot(5, DUT1_SECONDS, 0.0)
+        return this
+    def add_HAS_DUT1(HAS_DUT1:bool):
+        b_.PrependBoolSlot(6, HAS_DUT1, 0)
+        return this
+    def add_TRACE_ID(TRACE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, TRACE_ID)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Result of a time conversion request.
+class TIMConversionResult : flatbuffers.handle
+    /// Original source instant.
+    def SOURCE() -> TIMInstant?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: TIMInstant { buf_, o } else: nil
+    /// Converted target instant.
+    def TARGET() -> TIMInstant?:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return if o: TIMInstant { buf_, o } else: nil
+    /// Target minus source offset in SI seconds for the requested conversion.
+    def DELTA_SECONDS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Conversion status.
+    def STATUS() -> timConversionStatus:
+        return timConversionStatus(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    /// Optional error detail when STATUS is not OK.
+    def ERROR_MESSAGE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Caller trace/correlation identifier copied from the request when present.
+    def TRACE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+
+def GetRootAsTIMConversionResult(buf:string): return TIMConversionResult { buf, flatbuffers.indirect(buf, 0) }
+
+struct TIMConversionResultBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(6)
+        return this
+    def add_SOURCE(SOURCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, SOURCE)
+        return this
+    def add_TARGET(TARGET:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, TARGET)
+        return this
+    def add_DELTA_SECONDS(DELTA_SECONDS:float):
+        b_.PrependFloat64Slot(2, DELTA_SECONDS, 0.0)
+        return this
+    def add_STATUS(STATUS:timConversionStatus):
+        b_.PrependInt8Slot(3, STATUS, 0)
+        return this
+    def add_ERROR_MESSAGE(ERROR_MESSAGE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, ERROR_MESSAGE)
+        return this
+    def add_TRACE_ID(TRACE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, TRACE_ID)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Time System and time-conversion envelope.
+class TIM : flatbuffers.handle
+    /// Legacy time-system selector retained for existing TIM consumers.
+    def TIME_SYSTEM() -> timingStandard:
+        return timingStandard(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// A single tagged instant.
+    def INSTANT() -> TIMInstant?:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return if o: TIMInstant { buf_, o } else: nil
+    /// Time conversion request.
+    def CONVERSION_REQUEST() -> TIMConversionRequest?:
+        let o = flatbuffers.field_table(buf_, pos_, 8)
+        return if o: TIMConversionRequest { buf_, o } else: nil
+    /// Time conversion result.
+    def CONVERSION_RESULT() -> TIMConversionResult?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: TIMConversionResult { buf_, o } else: nil
 
 def GetRootAsTIM(buf:string): return TIM { buf, flatbuffers.indirect(buf, 0) }
 
 struct TIMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(1)
+        b_.StartObject(4)
         return this
     def add_TIME_SYSTEM(TIME_SYSTEM:timingStandard):
         b_.PrependInt8Slot(0, TIME_SYSTEM, 0)
+        return this
+    def add_INSTANT(INSTANT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, INSTANT)
+        return this
+    def add_CONVERSION_REQUEST(CONVERSION_REQUEST:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, CONVERSION_REQUEST)
+        return this
+    def add_CONVERSION_RESULT(CONVERSION_RESULT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, CONVERSION_RESULT)
         return this
     def end():
         return b_.EndObject()

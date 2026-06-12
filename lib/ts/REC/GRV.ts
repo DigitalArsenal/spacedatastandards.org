@@ -89,8 +89,43 @@ POLE_TIDES():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+EQUATORIAL_RADIUS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+J2():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+MU():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+J3():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+J4():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+J5():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+J6():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startGRV(builder:flatbuffers.Builder) {
-  builder.startObject(11);
+  builder.startObject(18);
 }
 
 static addModelType(builder:flatbuffers.Builder, MODEL_TYPE:GravityModelType) {
@@ -137,6 +172,34 @@ static addPoleTides(builder:flatbuffers.Builder, POLE_TIDES:boolean) {
   builder.addFieldInt8(10, +POLE_TIDES, +false);
 }
 
+static addEquatorialRadius(builder:flatbuffers.Builder, EQUATORIAL_RADIUS:number) {
+  builder.addFieldFloat64(11, EQUATORIAL_RADIUS, 0.0);
+}
+
+static addJ2(builder:flatbuffers.Builder, J2:number) {
+  builder.addFieldFloat64(12, J2, 0.0);
+}
+
+static addMu(builder:flatbuffers.Builder, MU:number) {
+  builder.addFieldFloat64(13, MU, 0.0);
+}
+
+static addJ3(builder:flatbuffers.Builder, J3:number) {
+  builder.addFieldFloat64(14, J3, 0.0);
+}
+
+static addJ4(builder:flatbuffers.Builder, J4:number) {
+  builder.addFieldFloat64(15, J4, 0.0);
+}
+
+static addJ5(builder:flatbuffers.Builder, J5:number) {
+  builder.addFieldFloat64(16, J5, 0.0);
+}
+
+static addJ6(builder:flatbuffers.Builder, J6:number) {
+  builder.addFieldFloat64(17, J6, 0.0);
+}
+
 static endGRV(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -150,7 +213,7 @@ static finishSizePrefixedGRVBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$GRV', true);
 }
 
-static createGRV(builder:flatbuffers.Builder, MODEL_TYPE:GravityModelType, MODEL_NAME:GravityModelName, CENTRAL_BODY:CentralBody, MAX_DEGREE:number, MAX_ORDER:number, INCLUDE_SUN:boolean, INCLUDE_MOON:boolean, INCLUDE_PLANETS:boolean, SOLID_TIDES:boolean, OCEAN_TIDES:boolean, POLE_TIDES:boolean):flatbuffers.Offset {
+static createGRV(builder:flatbuffers.Builder, MODEL_TYPE:GravityModelType, MODEL_NAME:GravityModelName, CENTRAL_BODY:CentralBody, MAX_DEGREE:number, MAX_ORDER:number, INCLUDE_SUN:boolean, INCLUDE_MOON:boolean, INCLUDE_PLANETS:boolean, SOLID_TIDES:boolean, OCEAN_TIDES:boolean, POLE_TIDES:boolean, EQUATORIAL_RADIUS:number, J2:number, MU:number, J3:number, J4:number, J5:number, J6:number):flatbuffers.Offset {
   GRV.startGRV(builder);
   GRV.addModelType(builder, MODEL_TYPE);
   GRV.addModelName(builder, MODEL_NAME);
@@ -163,6 +226,13 @@ static createGRV(builder:flatbuffers.Builder, MODEL_TYPE:GravityModelType, MODEL
   GRV.addSolidTides(builder, SOLID_TIDES);
   GRV.addOceanTides(builder, OCEAN_TIDES);
   GRV.addPoleTides(builder, POLE_TIDES);
+  GRV.addEquatorialRadius(builder, EQUATORIAL_RADIUS);
+  GRV.addJ2(builder, J2);
+  GRV.addMu(builder, MU);
+  GRV.addJ3(builder, J3);
+  GRV.addJ4(builder, J4);
+  GRV.addJ5(builder, J5);
+  GRV.addJ6(builder, J6);
   return GRV.endGRV(builder);
 }
 
@@ -178,7 +248,14 @@ unpack(): GRVT {
     this.INCLUDE_PLANETS(),
     this.SOLID_TIDES(),
     this.OCEAN_TIDES(),
-    this.POLE_TIDES()
+    this.POLE_TIDES(),
+    this.EQUATORIAL_RADIUS(),
+    this.J2(),
+    this.MU(),
+    this.J3(),
+    this.J4(),
+    this.J5(),
+    this.J6()
   );
 }
 
@@ -195,6 +272,13 @@ unpackTo(_o: GRVT): void {
   _o.SOLID_TIDES = this.SOLID_TIDES();
   _o.OCEAN_TIDES = this.OCEAN_TIDES();
   _o.POLE_TIDES = this.POLE_TIDES();
+  _o.EQUATORIAL_RADIUS = this.EQUATORIAL_RADIUS();
+  _o.J2 = this.J2();
+  _o.MU = this.MU();
+  _o.J3 = this.J3();
+  _o.J4 = this.J4();
+  _o.J5 = this.J5();
+  _o.J6 = this.J6();
 }
 }
 
@@ -210,7 +294,14 @@ constructor(
   public INCLUDE_PLANETS: boolean = false,
   public SOLID_TIDES: boolean = false,
   public OCEAN_TIDES: boolean = false,
-  public POLE_TIDES: boolean = false
+  public POLE_TIDES: boolean = false,
+  public EQUATORIAL_RADIUS: number = 0.0,
+  public J2: number = 0.0,
+  public MU: number = 0.0,
+  public J3: number = 0.0,
+  public J4: number = 0.0,
+  public J5: number = 0.0,
+  public J6: number = 0.0
 ){}
 
 
@@ -226,7 +317,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.INCLUDE_PLANETS,
     this.SOLID_TIDES,
     this.OCEAN_TIDES,
-    this.POLE_TIDES
+    this.POLE_TIDES,
+    this.EQUATORIAL_RADIUS,
+    this.J2,
+    this.MU,
+    this.J3,
+    this.J4,
+    this.J5,
+    this.J6
   );
 }
 }

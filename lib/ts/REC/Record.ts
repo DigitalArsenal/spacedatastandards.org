@@ -7,6 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 import { ACL, ACLT } from './ACL.js';
 import { ACM, ACMT } from './ACM.js';
 import { ACR, ACRT } from './ACR.js';
+import { ACW, ACWT } from './ACW.js';
 import { AEM, AEMT } from './AEM.js';
 import { ANI, ANIT } from './ANI.js';
 import { AOF, AOFT } from './AOF.js';
@@ -19,6 +20,7 @@ import { BAL, BALT } from './BAL.js';
 import { BEM, BEMT } from './BEM.js';
 import { BMC, BMCT } from './BMC.js';
 import { BOV, BOVT } from './BOV.js';
+import { BSP, BSPT } from './BSP.js';
 import { BUS, BUST } from './BUS.js';
 import { CAQ, CAQT } from './CAQ.js';
 import { CAT, CATT } from './CAT.js';
@@ -50,6 +52,7 @@ import { ETM, ETMT } from './ETM.js';
 import { EWR, EWRT } from './EWR.js';
 import { FCS, FCST } from './FCS.js';
 import { FPC, FPCT } from './FPC.js';
+import { FRM, FRMT } from './FRM.js';
 import { GDI, GDIT } from './GDI.js';
 import { GEO, GEOT } from './GEO.js';
 import { GJN, GJNT } from './GJN.js';
@@ -90,6 +93,7 @@ import { MSL, MSLT } from './MSL.js';
 import { MST, MSTT } from './MST.js';
 import { MTI, MTIT } from './MTI.js';
 import { NAV, NAVT } from './NAV.js';
+import { NUM, NUMT } from './NUM.js';
 import { OBD, OBDT } from './OBD.js';
 import { OBT, OBTT } from './OBT.js';
 import { OCM, OCMT } from './OCM.js';
@@ -118,6 +122,7 @@ import { PRG, PRGT } from './PRG.js';
 import { PRW, PRWT } from './PRW.js';
 import { PUR, PURT } from './PUR.js';
 import { RAF, RAFT } from './RAF.js';
+import { RBK, RBKT } from './RBK.js';
 import { RCF, RCFT } from './RCF.js';
 import { RDM, RDMT } from './RDM.js';
 import { RDO, RDOT } from './RDO.js';
@@ -131,6 +136,7 @@ import { ROC, ROCT } from './ROC.js';
 import { RecordType, unionToRecordType, unionListToRecordType } from './RecordType.js';
 import { SAR, SART } from './SAR.js';
 import { SCM, SCMT } from './SCM.js';
+import { SCV, SCVT } from './SCV.js';
 import { SDF, SDFT } from './SDF.js';
 import { SDL, SDLT } from './SDL.js';
 import { SDR, SDRT } from './SDR.js';
@@ -267,7 +273,7 @@ unpackTo(_o: RecordT): void {
 export class RecordT implements flatbuffers.IGeneratedObject {
 constructor(
   public value_type: RecordType = RecordType.NONE,
-  public value: ACLT|ACMT|ACRT|AEMT|ANIT|AOFT|APMT|ARMT|ASTT|ATDT|ATMT|BALT|BEMT|BMCT|BOVT|BUST|CAQT|CATT|CDMT|CFPT|CHNT|CLTT|CMST|COMT|COTT|CRDT|CRMT|CSMT|CTRT|CZMT|DFHT|DMGT|DOAT|DPMT|DSST|EMET|ENCT|ENVT|EOOT|EOPT|EPMT|ESLT|ETMT|EWRT|FCST|FPCT|GDIT|GEOT|GJNT|GNOT|GPXT|GRVT|GVHT|HELT|HFCT|HYPT|IDMT|IONT|IROT|KMFT|KMLT|KRFT|LAMT|LCCT|LCFT|LCHT|LDMT|LGRT|LKST|LMOT|LMRT|LMST|LNDT|LNET|LPFT|LWKT|MBLT|METT|MFET|MNFT|MNVT|MPET|MSLT|MSTT|MTIT|NAVT|OBDT|OBTT|OCMT|OEMT|OMMT|OOAT|OOBT|OODT|OOET|OOIT|OOLT|OONT|OOST|OOTT|OPMT|OSMT|PCFT|PHYT|PIVT|PLDT|PLGT|PLKT|PNMT|PPET|PRGT|PRWT|PURT|RAFT|RCFT|RDMT|RDOT|REMT|REVT|RFBT|RFET|RFMT|RFOT|ROCT|SART|SCMT|SDFT|SDLT|SDRT|SENT|SEOT|SEVT|SHWT|SITT|SKIT|SNRT|SNWT|SOIT|SONT|SPPT|SPWT|SRIT|STFT|STRT|STVT|SWRT|TABT|TCFT|TDMT|TIMT|TKGT|TMET|TMFT|TPNT|TRKT|TRNT|VCMT|WPNT|WTHT|XTCT|null = null,
+  public value: ACLT|ACMT|ACRT|ACWT|AEMT|ANIT|AOFT|APMT|ARMT|ASTT|ATDT|ATMT|BALT|BEMT|BMCT|BOVT|BSPT|BUST|CAQT|CATT|CDMT|CFPT|CHNT|CLTT|CMST|COMT|COTT|CRDT|CRMT|CSMT|CTRT|CZMT|DFHT|DMGT|DOAT|DPMT|DSST|EMET|ENCT|ENVT|EOOT|EOPT|EPMT|ESLT|ETMT|EWRT|FCST|FPCT|FRMT|GDIT|GEOT|GJNT|GNOT|GPXT|GRVT|GVHT|HELT|HFCT|HYPT|IDMT|IONT|IROT|KMFT|KMLT|KRFT|LAMT|LCCT|LCFT|LCHT|LDMT|LGRT|LKST|LMOT|LMRT|LMST|LNDT|LNET|LPFT|LWKT|MBLT|METT|MFET|MNFT|MNVT|MPET|MSLT|MSTT|MTIT|NAVT|NUMT|OBDT|OBTT|OCMT|OEMT|OMMT|OOAT|OOBT|OODT|OOET|OOIT|OOLT|OONT|OOST|OOTT|OPMT|OSMT|PCFT|PHYT|PIVT|PLDT|PLGT|PLKT|PNMT|PPET|PRGT|PRWT|PURT|RAFT|RBKT|RCFT|RDMT|RDOT|REMT|REVT|RFBT|RFET|RFMT|RFOT|ROCT|SART|SCMT|SCVT|SDFT|SDLT|SDRT|SENT|SEOT|SEVT|SHWT|SITT|SKIT|SNRT|SNWT|SOIT|SONT|SPPT|SPWT|SRIT|STFT|STRT|STVT|SWRT|TABT|TCFT|TDMT|TIMT|TKGT|TMET|TMFT|TPNT|TRKT|TRNT|VCMT|WPNT|WTHT|XTCT|null = null,
   public standard: string|Uint8Array|null = null
 ){}
 

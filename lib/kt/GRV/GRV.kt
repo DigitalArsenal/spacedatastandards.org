@@ -84,6 +84,41 @@ class GRV : Table() {
             val o = __offset(24)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    val equatorialRadius : Double
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val j2 : Double
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val mu : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val j3 : Double
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val j4 : Double
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val j5 : Double
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val j6 : Double
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGRV(_bb: ByteBuffer): GRV = getRootAsGRV(_bb, GRV())
@@ -92,8 +127,15 @@ class GRV : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun GRVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GRV")
-        fun createGRV(builder: FlatBufferBuilder, modelType: Byte, modelName: Byte, centralBody: Byte, maxDegree: UShort, maxOrder: UShort, includeSun: Boolean, includeMoon: Boolean, includePlanets: Boolean, solidTides: Boolean, oceanTides: Boolean, poleTides: Boolean) : Int {
-            builder.startTable(11)
+        fun createGRV(builder: FlatBufferBuilder, modelType: Byte, modelName: Byte, centralBody: Byte, maxDegree: UShort, maxOrder: UShort, includeSun: Boolean, includeMoon: Boolean, includePlanets: Boolean, solidTides: Boolean, oceanTides: Boolean, poleTides: Boolean, equatorialRadius: Double, j2: Double, mu: Double, j3: Double, j4: Double, j5: Double, j6: Double) : Int {
+            builder.startTable(18)
+            addJ6(builder, j6)
+            addJ5(builder, j5)
+            addJ4(builder, j4)
+            addJ3(builder, j3)
+            addMU(builder, mu)
+            addJ2(builder, j2)
+            addEQUATORIALRADIUS(builder, equatorialRadius)
             addMAXORDER(builder, maxOrder)
             addMAXDEGREE(builder, maxDegree)
             addPOLETIDES(builder, poleTides)
@@ -107,7 +149,7 @@ class GRV : Table() {
             addMODELTYPE(builder, modelType)
             return endGRV(builder)
         }
-        fun startGRV(builder: FlatBufferBuilder) = builder.startTable(11)
+        fun startGRV(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addMODELTYPE(builder: FlatBufferBuilder, modelType: Byte) = builder.addByte(0, modelType, 2)
         fun addMODELNAME(builder: FlatBufferBuilder, modelName: Byte) = builder.addByte(1, modelName, 2)
         fun addCENTRALBODY(builder: FlatBufferBuilder, centralBody: Byte) = builder.addByte(2, centralBody, 0)
@@ -119,6 +161,13 @@ class GRV : Table() {
         fun addSOLIDTIDES(builder: FlatBufferBuilder, solidTides: Boolean) = builder.addBoolean(8, solidTides, false)
         fun addOCEANTIDES(builder: FlatBufferBuilder, oceanTides: Boolean) = builder.addBoolean(9, oceanTides, false)
         fun addPOLETIDES(builder: FlatBufferBuilder, poleTides: Boolean) = builder.addBoolean(10, poleTides, false)
+        fun addEQUATORIALRADIUS(builder: FlatBufferBuilder, equatorialRadius: Double) = builder.addDouble(11, equatorialRadius, 0.0)
+        fun addJ2(builder: FlatBufferBuilder, j2: Double) = builder.addDouble(12, j2, 0.0)
+        fun addMU(builder: FlatBufferBuilder, mu: Double) = builder.addDouble(13, mu, 0.0)
+        fun addJ3(builder: FlatBufferBuilder, j3: Double) = builder.addDouble(14, j3, 0.0)
+        fun addJ4(builder: FlatBufferBuilder, j4: Double) = builder.addDouble(15, j4, 0.0)
+        fun addJ5(builder: FlatBufferBuilder, j5: Double) = builder.addDouble(16, j5, 0.0)
+        fun addJ6(builder: FlatBufferBuilder, j6: Double) = builder.addDouble(17, j6, 0.0)
         fun endGRV(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -86,6 +86,13 @@ public struct GRV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let SOLID_TIDES: VOffset = 20
     static let OCEAN_TIDES: VOffset = 22
     static let POLE_TIDES: VOffset = 24
+    static let EQUATORIAL_RADIUS: VOffset = 26
+    static let J2: VOffset = 28
+    static let MU: VOffset = 30
+    static let J3: VOffset = 32
+    static let J4: VOffset = 34
+    static let J5: VOffset = 36
+    static let J6: VOffset = 38
   }
 
   public var MODEL_TYPE: GravityModelType { let o = _accessor.offset(VT.MODEL_TYPE); return o == 0 ? .j2J4 : GravityModelType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .j2J4 }
@@ -99,7 +106,14 @@ public struct GRV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var SOLID_TIDES: Bool { let o = _accessor.offset(VT.SOLID_TIDES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public var OCEAN_TIDES: Bool { let o = _accessor.offset(VT.OCEAN_TIDES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public var POLE_TIDES: Bool { let o = _accessor.offset(VT.POLE_TIDES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startGRV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public var EQUATORIAL_RADIUS: Double { let o = _accessor.offset(VT.EQUATORIAL_RADIUS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var J2: Double { let o = _accessor.offset(VT.J2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MU: Double { let o = _accessor.offset(VT.MU); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var J3: Double { let o = _accessor.offset(VT.J3); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var J4: Double { let o = _accessor.offset(VT.J4); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var J5: Double { let o = _accessor.offset(VT.J5); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var J6: Double { let o = _accessor.offset(VT.J6); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startGRV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
   public static func add(MODEL_TYPE: GravityModelType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL_TYPE.rawValue, def: 2, at: VT.MODEL_TYPE) }
   public static func add(MODEL_NAME: GravityModelName, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL_NAME.rawValue, def: 2, at: VT.MODEL_NAME) }
   public static func add(CENTRAL_BODY: CentralBody, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTRAL_BODY.rawValue, def: 0, at: VT.CENTRAL_BODY) }
@@ -117,6 +131,13 @@ public struct GRV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
    at: VT.OCEAN_TIDES) }
   public static func add(POLE_TIDES: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLE_TIDES, def: false,
    at: VT.POLE_TIDES) }
+  public static func add(EQUATORIAL_RADIUS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EQUATORIAL_RADIUS, def: 0.0, at: VT.EQUATORIAL_RADIUS) }
+  public static func add(J2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: J2, def: 0.0, at: VT.J2) }
+  public static func add(MU: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MU, def: 0.0, at: VT.MU) }
+  public static func add(J3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: J3, def: 0.0, at: VT.J3) }
+  public static func add(J4: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: J4, def: 0.0, at: VT.J4) }
+  public static func add(J5: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: J5, def: 0.0, at: VT.J5) }
+  public static func add(J6: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: J6, def: 0.0, at: VT.J6) }
   public static func endGRV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGRV(
     _ fbb: inout FlatBufferBuilder,
@@ -130,7 +151,14 @@ public struct GRV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     INCLUDE_PLANETS: Bool = false,
     SOLID_TIDES: Bool = false,
     OCEAN_TIDES: Bool = false,
-    POLE_TIDES: Bool = false
+    POLE_TIDES: Bool = false,
+    EQUATORIAL_RADIUS: Double = 0.0,
+    J2: Double = 0.0,
+    MU: Double = 0.0,
+    J3: Double = 0.0,
+    J4: Double = 0.0,
+    J5: Double = 0.0,
+    J6: Double = 0.0
   ) -> Offset {
     let __start = GRV.startGRV(&fbb)
     GRV.add(MODEL_TYPE: MODEL_TYPE, &fbb)
@@ -144,6 +172,13 @@ public struct GRV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     GRV.add(SOLID_TIDES: SOLID_TIDES, &fbb)
     GRV.add(OCEAN_TIDES: OCEAN_TIDES, &fbb)
     GRV.add(POLE_TIDES: POLE_TIDES, &fbb)
+    GRV.add(EQUATORIAL_RADIUS: EQUATORIAL_RADIUS, &fbb)
+    GRV.add(J2: J2, &fbb)
+    GRV.add(MU: MU, &fbb)
+    GRV.add(J3: J3, &fbb)
+    GRV.add(J4: J4, &fbb)
+    GRV.add(J5: J5, &fbb)
+    GRV.add(J6: J6, &fbb)
     return GRV.endGRV(&fbb, start: __start)
   }
 
@@ -160,6 +195,13 @@ public struct GRV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.SOLID_TIDES, fieldName: "SOLID_TIDES", required: false, type: Bool.self)
     try _v.visit(field: VT.OCEAN_TIDES, fieldName: "OCEAN_TIDES", required: false, type: Bool.self)
     try _v.visit(field: VT.POLE_TIDES, fieldName: "POLE_TIDES", required: false, type: Bool.self)
+    try _v.visit(field: VT.EQUATORIAL_RADIUS, fieldName: "EQUATORIAL_RADIUS", required: false, type: Double.self)
+    try _v.visit(field: VT.J2, fieldName: "J2", required: false, type: Double.self)
+    try _v.visit(field: VT.MU, fieldName: "MU", required: false, type: Double.self)
+    try _v.visit(field: VT.J3, fieldName: "J3", required: false, type: Double.self)
+    try _v.visit(field: VT.J4, fieldName: "J4", required: false, type: Double.self)
+    try _v.visit(field: VT.J5, fieldName: "J5", required: false, type: Double.self)
+    try _v.visit(field: VT.J6, fieldName: "J6", required: false, type: Double.self)
     _v.finish()
   }
 }

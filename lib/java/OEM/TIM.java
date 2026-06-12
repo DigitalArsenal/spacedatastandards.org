@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Time System
+ * Time System and time-conversion envelope.
  */
 @SuppressWarnings("unused")
 public final class TIM extends com.google.flatbuffers.Table {
@@ -28,17 +28,44 @@ public final class TIM extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public TIM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Legacy time-system selector retained for existing TIM consumers.
+   */
   public byte TIME_SYSTEM() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * A single tagged instant.
+   */
+  public TIMInstant INSTANT() { return INSTANT(new TIMInstant()); }
+  public TIMInstant INSTANT(TIMInstant obj) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Time conversion request.
+   */
+  public TIMConversionRequest CONVERSION_REQUEST() { return CONVERSION_REQUEST(new TIMConversionRequest()); }
+  public TIMConversionRequest CONVERSION_REQUEST(TIMConversionRequest obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Time conversion result.
+   */
+  public TIMConversionResult CONVERSION_RESULT() { return CONVERSION_RESULT(new TIMConversionResult()); }
+  public TIMConversionResult CONVERSION_RESULT(TIMConversionResult obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createTIM(FlatBufferBuilder builder,
-      byte TIME_SYSTEM) {
-    builder.startTable(1);
+      byte TIME_SYSTEM,
+      int INSTANTOffset,
+      int CONVERSION_REQUESTOffset,
+      int CONVERSION_RESULTOffset) {
+    builder.startTable(4);
+    TIM.addConversionResult(builder, CONVERSION_RESULTOffset);
+    TIM.addConversionRequest(builder, CONVERSION_REQUESTOffset);
+    TIM.addInstant(builder, INSTANTOffset);
     TIM.addTimeSystem(builder, TIME_SYSTEM);
     return TIM.endTIM(builder);
   }
 
-  public static void startTIM(FlatBufferBuilder builder) { builder.startTable(1); }
+  public static void startTIM(FlatBufferBuilder builder) { builder.startTable(4); }
   public static void addTimeSystem(FlatBufferBuilder builder, byte TIME_SYSTEM) { builder.addByte(0, TIME_SYSTEM, 0); }
+  public static void addInstant(FlatBufferBuilder builder, int INSTANTOffset) { builder.addOffset(1, INSTANTOffset, 0); }
+  public static void addConversionRequest(FlatBufferBuilder builder, int CONVERSION_REQUESTOffset) { builder.addOffset(2, CONVERSION_REQUESTOffset, 0); }
+  public static void addConversionResult(FlatBufferBuilder builder, int CONVERSION_RESULTOffset) { builder.addOffset(3, CONVERSION_RESULTOffset, 0); }
   public static int endTIM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

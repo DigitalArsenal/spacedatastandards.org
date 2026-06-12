@@ -141,21 +141,84 @@ class GRV extends Table
     }
 
     /**
+     * @return double
+     */
+    public function getEQUATORIAL_RADIUS()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getJ2()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getMU()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getJ3()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getJ4()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getJ5()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getJ6()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startGRV(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(11);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return GRV
      */
-    public static function createGRV(FlatBufferBuilder $builder, $MODEL_TYPE, $MODEL_NAME, $CENTRAL_BODY, $MAX_DEGREE, $MAX_ORDER, $INCLUDE_SUN, $INCLUDE_MOON, $INCLUDE_PLANETS, $SOLID_TIDES, $OCEAN_TIDES, $POLE_TIDES)
+    public static function createGRV(FlatBufferBuilder $builder, $MODEL_TYPE, $MODEL_NAME, $CENTRAL_BODY, $MAX_DEGREE, $MAX_ORDER, $INCLUDE_SUN, $INCLUDE_MOON, $INCLUDE_PLANETS, $SOLID_TIDES, $OCEAN_TIDES, $POLE_TIDES, $EQUATORIAL_RADIUS, $J2, $MU, $J3, $J4, $J5, $J6)
     {
-        $builder->startObject(11);
+        $builder->startObject(18);
         self::addMODEL_TYPE($builder, $MODEL_TYPE);
         self::addMODEL_NAME($builder, $MODEL_NAME);
         self::addCENTRAL_BODY($builder, $CENTRAL_BODY);
@@ -167,6 +230,13 @@ class GRV extends Table
         self::addSOLID_TIDES($builder, $SOLID_TIDES);
         self::addOCEAN_TIDES($builder, $OCEAN_TIDES);
         self::addPOLE_TIDES($builder, $POLE_TIDES);
+        self::addEQUATORIAL_RADIUS($builder, $EQUATORIAL_RADIUS);
+        self::addJ2($builder, $J2);
+        self::addMU($builder, $MU);
+        self::addJ3($builder, $J3);
+        self::addJ4($builder, $J4);
+        self::addJ5($builder, $J5);
+        self::addJ6($builder, $J6);
         $o = $builder->endObject();
         return $o;
     }
@@ -279,6 +349,76 @@ class GRV extends Table
     public static function addPOLE_TIDES(FlatBufferBuilder $builder, $POLE_TIDES)
     {
         $builder->addBoolX(10, $POLE_TIDES, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEQUATORIAL_RADIUS(FlatBufferBuilder $builder, $EQUATORIAL_RADIUS)
+    {
+        $builder->addDoubleX(11, $EQUATORIAL_RADIUS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addJ2(FlatBufferBuilder $builder, $J2)
+    {
+        $builder->addDoubleX(12, $J2, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMU(FlatBufferBuilder $builder, $MU)
+    {
+        $builder->addDoubleX(13, $MU, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addJ3(FlatBufferBuilder $builder, $J3)
+    {
+        $builder->addDoubleX(14, $J3, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addJ4(FlatBufferBuilder $builder, $J4)
+    {
+        $builder->addDoubleX(15, $J4, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addJ5(FlatBufferBuilder $builder, $J5)
+    {
+        $builder->addDoubleX(16, $J5, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addJ6(FlatBufferBuilder $builder, $J6)
+    {
+        $builder->addDoubleX(17, $J6, 0.0);
     }
 
     /**

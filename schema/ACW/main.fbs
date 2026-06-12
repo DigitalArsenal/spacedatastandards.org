@@ -1,0 +1,130 @@
+// Hash: 20277e69a4c6d21cf60ecef9fe043dcd831c9c458ec103e0c78ad0b92074238b
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+// Access-window request/result records for ground-station visibility analysis.
+
+enum acwOperationCode : byte {
+  UNKNOWN = 0,
+  /// Compute access windows from pre-sampled target Cartesian states.
+  COMPUTE_ACCESS_WINDOWS = 1
+}
+
+enum acwResultStatus : byte {
+  /// Operation completed.
+  OK = 0,
+  /// Request fields are missing, non-finite, or numerically invalid.
+  INVALID_INPUT = 1,
+  /// The requested operation is not supported by the module.
+  UNSUPPORTED_OPERATION = 2
+}
+
+enum acwRefractionModelKind : byte {
+  NONE = 0,
+  /// Orekit-compatible EarthStandardAtmosphereRefraction correction.
+  EARTH_STANDARD_ATMOSPHERE = 1
+}
+
+/// Target Cartesian state sample in an Earth-fixed frame.
+table ACWStateSample {
+  /// Sample epoch as Julian Date in TT.
+  JULIAN_DATE_TT:double;
+  /// Earth-fixed X position, meters.
+  POSITION_X_M:double;
+  /// Earth-fixed Y position, meters.
+  POSITION_Y_M:double;
+  /// Earth-fixed Z position, meters.
+  POSITION_Z_M:double;
+}
+
+/// Azimuth-dependent minimum elevation mask point.
+table ACWElevationMaskPoint {
+  /// Azimuth, radians in the TopocentricFrame convention.
+  AZIMUTH_RAD:double;
+  /// Minimum visible elevation at the azimuth, radians.
+  ELEVATION_RAD:double;
+}
+
+/// Atmospheric refraction model for apparent-elevation access checks.
+table ACWRefractionModel {
+  MODEL_KIND:acwRefractionModelKind;
+  /// Local pressure in pascals.
+  PRESSURE_PA:double = 101000.0;
+  /// Local temperature in kelvin.
+  TEMPERATURE_K:double = 283.0;
+}
+
+/// Ground-station blackout interval.
+table ACWBlackoutWindow {
+  /// Interval start as Julian Date in TT.
+  START_JULIAN_DATE_TT:double;
+  /// Interval end as Julian Date in TT.
+  END_JULIAN_DATE_TT:double;
+}
+
+/// Ground-station geodetic definition and scheduling constraints.
+table ACWGroundStation {
+  STATION_ID:string;
+  NAME:string;
+  /// Geodetic latitude, radians.
+  LATITUDE_RAD:double;
+  /// Geodetic longitude, radians.
+  LONGITUDE_RAD:double;
+  /// Height above the WGS-84 ellipsoid, meters.
+  ALTITUDE_M:double;
+  /// Default minimum visible elevation, radians.
+  MIN_ELEVATION_RAD:double;
+  /// Number of simultaneous contacts this station can schedule.
+  CHANNEL_CAPACITY:uint32;
+  /// Station-specific unavailable intervals.
+  BLACKOUT_WINDOWS:[ACWBlackoutWindow];
+}
+
+/// One access-window compute request.
+table ACWRequest {
+  OPERATION:acwOperationCode;
+  /// Candidate ground stations.
+  GROUND_STATIONS:[ACWGroundStation];
+  /// Pre-sampled target Earth-fixed Cartesian states.
+  STATES:[ACWStateSample];
+  /// Optional target station id. Empty means all stations when supported.
+  TARGET_STATION_ID:string;
+  /// Optional caller override for minimum elevation, radians.
+  MIN_ELEVATION_OVERRIDE_RAD:double;
+  /// Optional trace/correlation identifier.
+  TRACE_ID:string;
+  /// Optional azimuth-dependent minimum elevation mask.
+  ELEVATION_MASK:[ACWElevationMaskPoint];
+  /// Optional apparent-elevation refraction model.
+  REFRACTION_MODEL:ACWRefractionModel;
+}
+
+/// One computed access interval.
+table ACWAccessWindow {
+  STATION_ID:string;
+  /// Access start as Julian Date in TT.
+  START_JULIAN_DATE_TT:double;
+  /// Access end as Julian Date in TT.
+  END_JULIAN_DATE_TT:double;
+  /// Maximum elevation sampled or interpolated during the pass, radians.
+  MAX_ELEVATION_RAD:double;
+  /// Number of visible input samples contributing to the window.
+  SAMPLE_COUNT:uint32;
+}
+
+/// Result for one access-window compute request.
+table ACWResult {
+  STATUS:acwResultStatus;
+  ERROR_MESSAGE:string;
+  WINDOWS:[ACWAccessWindow];
+  /// Caller trace/correlation identifier copied from the request when present.
+  TRACE_ID:string;
+}
+
+/// Access-window analysis envelope.
+table ACW {
+  REQUEST:ACWRequest;
+  RESULT:ACWResult;
+}
+
+root_type ACW;
+file_identifier "$ACW";

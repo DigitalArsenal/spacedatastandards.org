@@ -74,8 +74,15 @@ class keplerianElements(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # keplerianElements
+    def PERIAPSIS_RADIUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def keplerianElementsStart(builder):
-    builder.StartObject(7)
+    builder.StartObject(8)
 
 def Start(builder):
     keplerianElementsStart(builder)
@@ -122,6 +129,12 @@ def keplerianElementsAddANOMALY(builder, ANOMALY):
 def AddANOMALY(builder, ANOMALY):
     keplerianElementsAddANOMALY(builder, ANOMALY)
 
+def keplerianElementsAddPERIAPSIS_RADIUS(builder, PERIAPSIS_RADIUS):
+    builder.PrependFloat64Slot(7, PERIAPSIS_RADIUS, 0.0)
+
+def AddPERIAPSIS_RADIUS(builder, PERIAPSIS_RADIUS):
+    keplerianElementsAddPERIAPSIS_RADIUS(builder, PERIAPSIS_RADIUS)
+
 def keplerianElementsEnd(builder):
     return builder.EndObject()
 
@@ -141,6 +154,7 @@ class keplerianElementsT(object):
         ARG_OF_PERICENTER = 0.0,
         ANOMALY_TYPE = 0,
         ANOMALY = 0.0,
+        PERIAPSIS_RADIUS = 0.0,
     ):
         self.SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS  # type: float
         self.ECCENTRICITY = ECCENTRICITY  # type: float
@@ -149,6 +163,7 @@ class keplerianElementsT(object):
         self.ARG_OF_PERICENTER = ARG_OF_PERICENTER  # type: float
         self.ANOMALY_TYPE = ANOMALY_TYPE  # type: int
         self.ANOMALY = ANOMALY  # type: float
+        self.PERIAPSIS_RADIUS = PERIAPSIS_RADIUS  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -178,6 +193,7 @@ class keplerianElementsT(object):
         self.ARG_OF_PERICENTER = keplerianElements.ARG_OF_PERICENTER()
         self.ANOMALY_TYPE = keplerianElements.ANOMALY_TYPE()
         self.ANOMALY = keplerianElements.ANOMALY()
+        self.PERIAPSIS_RADIUS = keplerianElements.PERIAPSIS_RADIUS()
 
     # keplerianElementsT
     def Pack(self, builder):
@@ -189,5 +205,6 @@ class keplerianElementsT(object):
         keplerianElementsAddARG_OF_PERICENTER(builder, self.ARG_OF_PERICENTER)
         keplerianElementsAddANOMALY_TYPE(builder, self.ANOMALY_TYPE)
         keplerianElementsAddANOMALY(builder, self.ANOMALY)
+        keplerianElementsAddPERIAPSIS_RADIUS(builder, self.PERIAPSIS_RADIUS)
         keplerianElements = keplerianElementsEnd(builder)
         return keplerianElements

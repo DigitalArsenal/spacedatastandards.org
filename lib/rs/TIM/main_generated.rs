@@ -6,10 +6,10 @@ extern crate alloc;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_TIMING_STANDARD: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TIMING_STANDARD: i8 = 11;
+pub const ENUM_MAX_TIMING_STANDARD: i8 = 17;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TIMING_STANDARD: [timingStandard; 12] = [
+pub const ENUM_VALUES_TIMING_STANDARD: [timingStandard; 18] = [
   timingStandard::GMST,
   timingStandard::GPS,
   timingStandard::MET,
@@ -22,6 +22,12 @@ pub const ENUM_VALUES_TIMING_STANDARD: [timingStandard; 12] = [
   timingStandard::TT,
   timingStandard::UT1,
   timingStandard::UTC,
+  timingStandard::GLONASS,
+  timingStandard::GST,
+  timingStandard::QZSS,
+  timingStandard::BDT,
+  timingStandard::NAVIC,
+  timingStandard::SBAS,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -53,9 +59,21 @@ impl timingStandard {
   pub const UT1: Self = Self(10);
   /// Coordinated Universal Time
   pub const UTC: Self = Self(11);
+  /// GLONASS Time
+  pub const GLONASS: Self = Self(12);
+  /// Galileo System Time
+  pub const GST: Self = Self(13);
+  /// Quasi-Zenith Satellite System Time
+  pub const QZSS: Self = Self(14);
+  /// BeiDou Time
+  pub const BDT: Self = Self(15);
+  /// Navigation with Indian Constellation Time
+  pub const NAVIC: Self = Self(16);
+  /// Satellite-Based Augmentation System Time
+  pub const SBAS: Self = Self(17);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 11;
+  pub const ENUM_MAX: i8 = 17;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::GMST,
     Self::GPS,
@@ -69,6 +87,12 @@ impl timingStandard {
     Self::TT,
     Self::UT1,
     Self::UTC,
+    Self::GLONASS,
+    Self::GST,
+    Self::QZSS,
+    Self::BDT,
+    Self::NAVIC,
+    Self::SBAS,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -85,6 +109,12 @@ impl timingStandard {
       Self::TT => Some("TT"),
       Self::UT1 => Some("UT1"),
       Self::UTC => Some("UTC"),
+      Self::GLONASS => Some("GLONASS"),
+      Self::GST => Some("GST"),
+      Self::QZSS => Some("QZSS"),
+      Self::BDT => Some("BDT"),
+      Self::NAVIC => Some("NAVIC"),
+      Self::SBAS => Some("SBAS"),
       _ => None,
     }
   }
@@ -139,10 +169,1536 @@ impl<'a> ::flatbuffers::Verifiable for timingStandard {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for timingStandard {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_TIM_EPOCH_REPRESENTATION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_TIM_EPOCH_REPRESENTATION: i8 = 7;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_TIM_EPOCH_REPRESENTATION: [timEpochRepresentation; 8] = [
+  timEpochRepresentation::JULIAN_DATE,
+  timEpochRepresentation::MODIFIED_JULIAN_DATE,
+  timEpochRepresentation::UNIX_SECONDS,
+  timEpochRepresentation::ISO8601,
+  timEpochRepresentation::GPS_SECONDS,
+  timEpochRepresentation::GNSS_WEEK_SECONDS,
+  timEpochRepresentation::CCSDS_TIME_CODE,
+  timEpochRepresentation::MISSION_ELAPSED_SECONDS,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct timEpochRepresentation(pub i8);
+#[allow(non_upper_case_globals)]
+impl timEpochRepresentation {
+  /// Julian Date day count.
+  pub const JULIAN_DATE: Self = Self(0);
+  /// Modified Julian Date day count (JD - 2400000.5).
+  pub const MODIFIED_JULIAN_DATE: Self = Self(1);
+  /// Seconds since 1970-01-01T00:00:00 UTC.
+  pub const UNIX_SECONDS: Self = Self(2);
+  /// ISO 8601 timestamp text.
+  pub const ISO8601: Self = Self(3);
+  /// Seconds since 1980-01-06T00:00:00 GPS.
+  pub const GPS_SECONDS: Self = Self(4);
+  /// GNSS week number plus seconds within the week.
+  pub const GNSS_WEEK_SECONDS: Self = Self(5);
+  /// CCSDS binary time-code field with preamble metadata.
+  pub const CCSDS_TIME_CODE: Self = Self(6);
+  /// Seconds from an application-defined mission epoch.
+  pub const MISSION_ELAPSED_SECONDS: Self = Self(7);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 7;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::JULIAN_DATE,
+    Self::MODIFIED_JULIAN_DATE,
+    Self::UNIX_SECONDS,
+    Self::ISO8601,
+    Self::GPS_SECONDS,
+    Self::GNSS_WEEK_SECONDS,
+    Self::CCSDS_TIME_CODE,
+    Self::MISSION_ELAPSED_SECONDS,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::JULIAN_DATE => Some("JULIAN_DATE"),
+      Self::MODIFIED_JULIAN_DATE => Some("MODIFIED_JULIAN_DATE"),
+      Self::UNIX_SECONDS => Some("UNIX_SECONDS"),
+      Self::ISO8601 => Some("ISO8601"),
+      Self::GPS_SECONDS => Some("GPS_SECONDS"),
+      Self::GNSS_WEEK_SECONDS => Some("GNSS_WEEK_SECONDS"),
+      Self::CCSDS_TIME_CODE => Some("CCSDS_TIME_CODE"),
+      Self::MISSION_ELAPSED_SECONDS => Some("MISSION_ELAPSED_SECONDS"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for timEpochRepresentation {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for timEpochRepresentation {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for timEpochRepresentation {
+    type Output = timEpochRepresentation;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for timEpochRepresentation {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for timEpochRepresentation {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for timEpochRepresentation {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_TIM_CCSDS_TIME_CODE_KIND: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_TIM_CCSDS_TIME_CODE_KIND: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_TIM_CCSDS_TIME_CODE_KIND: [timCcsdsTimeCodeKind; 4] = [
+  timCcsdsTimeCodeKind::NONE,
+  timCcsdsTimeCodeKind::UNSEGMENTED,
+  timCcsdsTimeCodeKind::DAY_SEGMENTED,
+  timCcsdsTimeCodeKind::CALENDAR_SEGMENTED,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct timCcsdsTimeCodeKind(pub i8);
+#[allow(non_upper_case_globals)]
+impl timCcsdsTimeCodeKind {
+  /// No CCSDS time code selected.
+  pub const NONE: Self = Self(0);
+  /// CCSDS Unsegmented Time Code (CUC).
+  pub const UNSEGMENTED: Self = Self(1);
+  /// CCSDS Day Segmented Time Code (CDS).
+  pub const DAY_SEGMENTED: Self = Self(2);
+  /// CCSDS Calendar Segmented Time Code (CCS).
+  pub const CALENDAR_SEGMENTED: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::NONE,
+    Self::UNSEGMENTED,
+    Self::DAY_SEGMENTED,
+    Self::CALENDAR_SEGMENTED,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::NONE => Some("NONE"),
+      Self::UNSEGMENTED => Some("UNSEGMENTED"),
+      Self::DAY_SEGMENTED => Some("DAY_SEGMENTED"),
+      Self::CALENDAR_SEGMENTED => Some("CALENDAR_SEGMENTED"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for timCcsdsTimeCodeKind {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for timCcsdsTimeCodeKind {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for timCcsdsTimeCodeKind {
+    type Output = timCcsdsTimeCodeKind;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for timCcsdsTimeCodeKind {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for timCcsdsTimeCodeKind {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for timCcsdsTimeCodeKind {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_TIM_CONVERSION_STATUS: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_TIM_CONVERSION_STATUS: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_TIM_CONVERSION_STATUS: [timConversionStatus; 6] = [
+  timConversionStatus::OK,
+  timConversionStatus::INVALID_INPUT,
+  timConversionStatus::UNSUPPORTED_TIME_SYSTEM,
+  timConversionStatus::LEAP_SECOND_DATA_REQUIRED,
+  timConversionStatus::EOP_DATA_REQUIRED,
+  timConversionStatus::OUT_OF_RANGE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct timConversionStatus(pub i8);
+#[allow(non_upper_case_globals)]
+impl timConversionStatus {
+  /// Conversion completed.
+  pub const OK: Self = Self(0);
+  /// Input epoch or requested representation is invalid.
+  pub const INVALID_INPUT: Self = Self(1);
+  /// Requested source or target time system is not supported.
+  pub const UNSUPPORTED_TIME_SYSTEM: Self = Self(2);
+  /// Conversion requires leap-second data that was not available.
+  pub const LEAP_SECOND_DATA_REQUIRED: Self = Self(3);
+  /// Conversion requires Earth-orientation data that was not available.
+  pub const EOP_DATA_REQUIRED: Self = Self(4);
+  /// Requested instant is outside the supported conversion range.
+  pub const OUT_OF_RANGE: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::OK,
+    Self::INVALID_INPUT,
+    Self::UNSUPPORTED_TIME_SYSTEM,
+    Self::LEAP_SECOND_DATA_REQUIRED,
+    Self::EOP_DATA_REQUIRED,
+    Self::OUT_OF_RANGE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::OK => Some("OK"),
+      Self::INVALID_INPUT => Some("INVALID_INPUT"),
+      Self::UNSUPPORTED_TIME_SYSTEM => Some("UNSUPPORTED_TIME_SYSTEM"),
+      Self::LEAP_SECOND_DATA_REQUIRED => Some("LEAP_SECOND_DATA_REQUIRED"),
+      Self::EOP_DATA_REQUIRED => Some("EOP_DATA_REQUIRED"),
+      Self::OUT_OF_RANGE => Some("OUT_OF_RANGE"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for timConversionStatus {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for timConversionStatus {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for timConversionStatus {
+    type Output = timConversionStatus;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for timConversionStatus {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for timConversionStatus {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for timConversionStatus {}
+pub enum TIMCcsdsTimeCodeOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// CCSDS time-code payload and preamble metadata.
+pub struct TIMCcsdsTimeCode<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for TIMCcsdsTimeCode<'a> {
+  type Inner = TIMCcsdsTimeCode<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> TIMCcsdsTimeCode<'a> {
+  pub const VT_CODE_KIND: ::flatbuffers::VOffsetT = 4;
+  pub const VT_PREAMBLE_FIELD1: ::flatbuffers::VOffsetT = 6;
+  pub const VT_PREAMBLE_FIELD2: ::flatbuffers::VOffsetT = 8;
+  pub const VT_TIME_FIELD: ::flatbuffers::VOffsetT = 10;
+  pub const VT_AGENCY_DEFINED_EPOCH_ISO8601: ::flatbuffers::VOffsetT = 12;
+  pub const VT_CCSDS_EPOCH_ISO8601: ::flatbuffers::VOffsetT = 14;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    TIMCcsdsTimeCode { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args TIMCcsdsTimeCodeArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<TIMCcsdsTimeCode<'bldr>> {
+    let mut builder = TIMCcsdsTimeCodeBuilder::new(_fbb);
+    if let Some(x) = args.CCSDS_EPOCH_ISO8601 { builder.add_CCSDS_EPOCH_ISO8601(x); }
+    if let Some(x) = args.AGENCY_DEFINED_EPOCH_ISO8601 { builder.add_AGENCY_DEFINED_EPOCH_ISO8601(x); }
+    if let Some(x) = args.TIME_FIELD { builder.add_TIME_FIELD(x); }
+    builder.add_PREAMBLE_FIELD2(args.PREAMBLE_FIELD2);
+    builder.add_PREAMBLE_FIELD1(args.PREAMBLE_FIELD1);
+    builder.add_CODE_KIND(args.CODE_KIND);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> TIMCcsdsTimeCodeT {
+    let CODE_KIND = self.CODE_KIND();
+    let PREAMBLE_FIELD1 = self.PREAMBLE_FIELD1();
+    let PREAMBLE_FIELD2 = self.PREAMBLE_FIELD2();
+    let TIME_FIELD = self.TIME_FIELD().map(|x| {
+      x.into_iter().collect()
+    });
+    let AGENCY_DEFINED_EPOCH_ISO8601 = self.AGENCY_DEFINED_EPOCH_ISO8601().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CCSDS_EPOCH_ISO8601 = self.CCSDS_EPOCH_ISO8601().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    TIMCcsdsTimeCodeT {
+      CODE_KIND,
+      PREAMBLE_FIELD1,
+      PREAMBLE_FIELD2,
+      TIME_FIELD,
+      AGENCY_DEFINED_EPOCH_ISO8601,
+      CCSDS_EPOCH_ISO8601,
+    }
+  }
+
+  /// CCSDS time-code family.
+  #[inline]
+  pub fn CODE_KIND(&self) -> timCcsdsTimeCodeKind {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<timCcsdsTimeCodeKind>(TIMCcsdsTimeCode::VT_CODE_KIND, Some(timCcsdsTimeCodeKind::NONE)).unwrap()}
+  }
+  /// First CCSDS preamble field octet.
+  #[inline]
+  pub fn PREAMBLE_FIELD1(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(TIMCcsdsTimeCode::VT_PREAMBLE_FIELD1, Some(0)).unwrap()}
+  }
+  /// Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
+  #[inline]
+  pub fn PREAMBLE_FIELD2(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(TIMCcsdsTimeCode::VT_PREAMBLE_FIELD2, Some(0)).unwrap()}
+  }
+  /// Raw CCSDS time field octets.
+  #[inline]
+  pub fn TIME_FIELD(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(TIMCcsdsTimeCode::VT_TIME_FIELD, None)}
+  }
+  /// Optional agency-defined epoch timestamp for agency epoch time codes.
+  #[inline]
+  pub fn AGENCY_DEFINED_EPOCH_ISO8601(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TIMCcsdsTimeCode::VT_AGENCY_DEFINED_EPOCH_ISO8601, None)}
+  }
+  /// Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
+  #[inline]
+  pub fn CCSDS_EPOCH_ISO8601(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TIMCcsdsTimeCode::VT_CCSDS_EPOCH_ISO8601, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for TIMCcsdsTimeCode<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<timCcsdsTimeCodeKind>("CODE_KIND", Self::VT_CODE_KIND, false)?
+     .visit_field::<u8>("PREAMBLE_FIELD1", Self::VT_PREAMBLE_FIELD1, false)?
+     .visit_field::<u8>("PREAMBLE_FIELD2", Self::VT_PREAMBLE_FIELD2, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("TIME_FIELD", Self::VT_TIME_FIELD, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("AGENCY_DEFINED_EPOCH_ISO8601", Self::VT_AGENCY_DEFINED_EPOCH_ISO8601, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CCSDS_EPOCH_ISO8601", Self::VT_CCSDS_EPOCH_ISO8601, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct TIMCcsdsTimeCodeArgs<'a> {
+    pub CODE_KIND: timCcsdsTimeCodeKind,
+    pub PREAMBLE_FIELD1: u8,
+    pub PREAMBLE_FIELD2: u8,
+    pub TIME_FIELD: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub AGENCY_DEFINED_EPOCH_ISO8601: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CCSDS_EPOCH_ISO8601: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for TIMCcsdsTimeCodeArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    TIMCcsdsTimeCodeArgs {
+      CODE_KIND: timCcsdsTimeCodeKind::NONE,
+      PREAMBLE_FIELD1: 0,
+      PREAMBLE_FIELD2: 0,
+      TIME_FIELD: None,
+      AGENCY_DEFINED_EPOCH_ISO8601: None,
+      CCSDS_EPOCH_ISO8601: None,
+    }
+  }
+}
+
+pub struct TIMCcsdsTimeCodeBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TIMCcsdsTimeCodeBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_CODE_KIND(&mut self, CODE_KIND: timCcsdsTimeCodeKind) {
+    self.fbb_.push_slot::<timCcsdsTimeCodeKind>(TIMCcsdsTimeCode::VT_CODE_KIND, CODE_KIND, timCcsdsTimeCodeKind::NONE);
+  }
+  #[inline]
+  pub fn add_PREAMBLE_FIELD1(&mut self, PREAMBLE_FIELD1: u8) {
+    self.fbb_.push_slot::<u8>(TIMCcsdsTimeCode::VT_PREAMBLE_FIELD1, PREAMBLE_FIELD1, 0);
+  }
+  #[inline]
+  pub fn add_PREAMBLE_FIELD2(&mut self, PREAMBLE_FIELD2: u8) {
+    self.fbb_.push_slot::<u8>(TIMCcsdsTimeCode::VT_PREAMBLE_FIELD2, PREAMBLE_FIELD2, 0);
+  }
+  #[inline]
+  pub fn add_TIME_FIELD(&mut self, TIME_FIELD: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TIMCcsdsTimeCode::VT_TIME_FIELD, TIME_FIELD);
+  }
+  #[inline]
+  pub fn add_AGENCY_DEFINED_EPOCH_ISO8601(&mut self, AGENCY_DEFINED_EPOCH_ISO8601: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TIMCcsdsTimeCode::VT_AGENCY_DEFINED_EPOCH_ISO8601, AGENCY_DEFINED_EPOCH_ISO8601);
+  }
+  #[inline]
+  pub fn add_CCSDS_EPOCH_ISO8601(&mut self, CCSDS_EPOCH_ISO8601: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TIMCcsdsTimeCode::VT_CCSDS_EPOCH_ISO8601, CCSDS_EPOCH_ISO8601);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TIMCcsdsTimeCodeBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    TIMCcsdsTimeCodeBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<TIMCcsdsTimeCode<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for TIMCcsdsTimeCode<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("TIMCcsdsTimeCode");
+      ds.field("CODE_KIND", &self.CODE_KIND());
+      ds.field("PREAMBLE_FIELD1", &self.PREAMBLE_FIELD1());
+      ds.field("PREAMBLE_FIELD2", &self.PREAMBLE_FIELD2());
+      ds.field("TIME_FIELD", &self.TIME_FIELD());
+      ds.field("AGENCY_DEFINED_EPOCH_ISO8601", &self.AGENCY_DEFINED_EPOCH_ISO8601());
+      ds.field("CCSDS_EPOCH_ISO8601", &self.CCSDS_EPOCH_ISO8601());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct TIMCcsdsTimeCodeT {
+  pub CODE_KIND: timCcsdsTimeCodeKind,
+  pub PREAMBLE_FIELD1: u8,
+  pub PREAMBLE_FIELD2: u8,
+  pub TIME_FIELD: Option<alloc::vec::Vec<u8>>,
+  pub AGENCY_DEFINED_EPOCH_ISO8601: Option<alloc::string::String>,
+  pub CCSDS_EPOCH_ISO8601: Option<alloc::string::String>,
+}
+impl Default for TIMCcsdsTimeCodeT {
+  fn default() -> Self {
+    Self {
+      CODE_KIND: timCcsdsTimeCodeKind::NONE,
+      PREAMBLE_FIELD1: 0,
+      PREAMBLE_FIELD2: 0,
+      TIME_FIELD: None,
+      AGENCY_DEFINED_EPOCH_ISO8601: None,
+      CCSDS_EPOCH_ISO8601: None,
+    }
+  }
+}
+impl TIMCcsdsTimeCodeT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<TIMCcsdsTimeCode<'b>> {
+    let CODE_KIND = self.CODE_KIND;
+    let PREAMBLE_FIELD1 = self.PREAMBLE_FIELD1;
+    let PREAMBLE_FIELD2 = self.PREAMBLE_FIELD2;
+    let TIME_FIELD = self.TIME_FIELD.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let AGENCY_DEFINED_EPOCH_ISO8601 = self.AGENCY_DEFINED_EPOCH_ISO8601.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CCSDS_EPOCH_ISO8601 = self.CCSDS_EPOCH_ISO8601.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    TIMCcsdsTimeCode::create(_fbb, &TIMCcsdsTimeCodeArgs{
+      CODE_KIND,
+      PREAMBLE_FIELD1,
+      PREAMBLE_FIELD2,
+      TIME_FIELD,
+      AGENCY_DEFINED_EPOCH_ISO8601,
+      CCSDS_EPOCH_ISO8601,
+    })
+  }
+}
+pub enum TIMInstantOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Numeric or textual instant tagged with its time system and representation.
+pub struct TIMInstant<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for TIMInstant<'a> {
+  type Inner = TIMInstant<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> TIMInstant<'a> {
+  pub const VT_TIME_SYSTEM: ::flatbuffers::VOffsetT = 4;
+  pub const VT_EPOCH_FORMAT: ::flatbuffers::VOffsetT = 6;
+  pub const VT_JULIAN_DATE: ::flatbuffers::VOffsetT = 8;
+  pub const VT_SECONDS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_ISO8601: ::flatbuffers::VOffsetT = 12;
+  pub const VT_SUBSECOND_NANOS: ::flatbuffers::VOffsetT = 14;
+  pub const VT_EPOCH_LABEL: ::flatbuffers::VOffsetT = 16;
+  pub const VT_GNSS_WEEK: ::flatbuffers::VOffsetT = 18;
+  pub const VT_HAS_GNSS_ROLLOVER_REFERENCE: ::flatbuffers::VOffsetT = 20;
+  pub const VT_GNSS_ROLLOVER_REFERENCE_ISO8601: ::flatbuffers::VOffsetT = 22;
+  pub const VT_CCSDS_TIME_CODE: ::flatbuffers::VOffsetT = 24;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    TIMInstant { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args TIMInstantArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<TIMInstant<'bldr>> {
+    let mut builder = TIMInstantBuilder::new(_fbb);
+    builder.add_SECONDS(args.SECONDS);
+    builder.add_JULIAN_DATE(args.JULIAN_DATE);
+    if let Some(x) = args.CCSDS_TIME_CODE { builder.add_CCSDS_TIME_CODE(x); }
+    if let Some(x) = args.GNSS_ROLLOVER_REFERENCE_ISO8601 { builder.add_GNSS_ROLLOVER_REFERENCE_ISO8601(x); }
+    builder.add_GNSS_WEEK(args.GNSS_WEEK);
+    if let Some(x) = args.EPOCH_LABEL { builder.add_EPOCH_LABEL(x); }
+    builder.add_SUBSECOND_NANOS(args.SUBSECOND_NANOS);
+    if let Some(x) = args.ISO8601 { builder.add_ISO8601(x); }
+    builder.add_HAS_GNSS_ROLLOVER_REFERENCE(args.HAS_GNSS_ROLLOVER_REFERENCE);
+    builder.add_EPOCH_FORMAT(args.EPOCH_FORMAT);
+    builder.add_TIME_SYSTEM(args.TIME_SYSTEM);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> TIMInstantT {
+    let TIME_SYSTEM = self.TIME_SYSTEM();
+    let EPOCH_FORMAT = self.EPOCH_FORMAT();
+    let JULIAN_DATE = self.JULIAN_DATE();
+    let SECONDS = self.SECONDS();
+    let ISO8601 = self.ISO8601().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SUBSECOND_NANOS = self.SUBSECOND_NANOS();
+    let EPOCH_LABEL = self.EPOCH_LABEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let GNSS_WEEK = self.GNSS_WEEK();
+    let HAS_GNSS_ROLLOVER_REFERENCE = self.HAS_GNSS_ROLLOVER_REFERENCE();
+    let GNSS_ROLLOVER_REFERENCE_ISO8601 = self.GNSS_ROLLOVER_REFERENCE_ISO8601().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CCSDS_TIME_CODE = self.CCSDS_TIME_CODE().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    TIMInstantT {
+      TIME_SYSTEM,
+      EPOCH_FORMAT,
+      JULIAN_DATE,
+      SECONDS,
+      ISO8601,
+      SUBSECOND_NANOS,
+      EPOCH_LABEL,
+      GNSS_WEEK,
+      HAS_GNSS_ROLLOVER_REFERENCE,
+      GNSS_ROLLOVER_REFERENCE_ISO8601,
+      CCSDS_TIME_CODE,
+    }
+  }
+
+  /// Time system for this instant.
+  #[inline]
+  pub fn TIME_SYSTEM(&self) -> timingStandard {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<timingStandard>(TIMInstant::VT_TIME_SYSTEM, Some(timingStandard::GMST)).unwrap()}
+  }
+  /// Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
+  #[inline]
+  pub fn EPOCH_FORMAT(&self) -> timEpochRepresentation {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<timEpochRepresentation>(TIMInstant::VT_EPOCH_FORMAT, Some(timEpochRepresentation::JULIAN_DATE)).unwrap()}
+  }
+  /// Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
+  #[inline]
+  pub fn JULIAN_DATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TIMInstant::VT_JULIAN_DATE, Some(0.0)).unwrap()}
+  }
+  /// Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
+  #[inline]
+  pub fn SECONDS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TIMInstant::VT_SECONDS, Some(0.0)).unwrap()}
+  }
+  /// ISO 8601 timestamp text for ISO8601 inputs or display outputs.
+  #[inline]
+  pub fn ISO8601(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TIMInstant::VT_ISO8601, None)}
+  }
+  /// Additional nanoseconds beyond the fractional scalar/text value.
+  #[inline]
+  pub fn SUBSECOND_NANOS(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(TIMInstant::VT_SUBSECOND_NANOS, Some(0)).unwrap()}
+  }
+  /// Optional application-defined epoch label for MET, MRT, or SCLK values.
+  #[inline]
+  pub fn EPOCH_LABEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TIMInstant::VT_EPOCH_LABEL, None)}
+  }
+  /// GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
+  #[inline]
+  pub fn GNSS_WEEK(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(TIMInstant::VT_GNSS_WEEK, Some(0)).unwrap()}
+  }
+  /// Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
+  #[inline]
+  pub fn HAS_GNSS_ROLLOVER_REFERENCE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(TIMInstant::VT_HAS_GNSS_ROLLOVER_REFERENCE, Some(false)).unwrap()}
+  }
+  /// Optional Orekit-style GNSS week rollover reference timestamp.
+  #[inline]
+  pub fn GNSS_ROLLOVER_REFERENCE_ISO8601(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TIMInstant::VT_GNSS_ROLLOVER_REFERENCE_ISO8601, None)}
+  }
+  /// CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
+  #[inline]
+  pub fn CCSDS_TIME_CODE(&self) -> Option<TIMCcsdsTimeCode<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMCcsdsTimeCode>>(TIMInstant::VT_CCSDS_TIME_CODE, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for TIMInstant<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<timingStandard>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
+     .visit_field::<timEpochRepresentation>("EPOCH_FORMAT", Self::VT_EPOCH_FORMAT, false)?
+     .visit_field::<f64>("JULIAN_DATE", Self::VT_JULIAN_DATE, false)?
+     .visit_field::<f64>("SECONDS", Self::VT_SECONDS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ISO8601", Self::VT_ISO8601, false)?
+     .visit_field::<i32>("SUBSECOND_NANOS", Self::VT_SUBSECOND_NANOS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH_LABEL", Self::VT_EPOCH_LABEL, false)?
+     .visit_field::<i32>("GNSS_WEEK", Self::VT_GNSS_WEEK, false)?
+     .visit_field::<bool>("HAS_GNSS_ROLLOVER_REFERENCE", Self::VT_HAS_GNSS_ROLLOVER_REFERENCE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GNSS_ROLLOVER_REFERENCE_ISO8601", Self::VT_GNSS_ROLLOVER_REFERENCE_ISO8601, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMCcsdsTimeCode>>("CCSDS_TIME_CODE", Self::VT_CCSDS_TIME_CODE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct TIMInstantArgs<'a> {
+    pub TIME_SYSTEM: timingStandard,
+    pub EPOCH_FORMAT: timEpochRepresentation,
+    pub JULIAN_DATE: f64,
+    pub SECONDS: f64,
+    pub ISO8601: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SUBSECOND_NANOS: i32,
+    pub EPOCH_LABEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub GNSS_WEEK: i32,
+    pub HAS_GNSS_ROLLOVER_REFERENCE: bool,
+    pub GNSS_ROLLOVER_REFERENCE_ISO8601: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CCSDS_TIME_CODE: Option<::flatbuffers::WIPOffset<TIMCcsdsTimeCode<'a>>>,
+}
+impl<'a> Default for TIMInstantArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    TIMInstantArgs {
+      TIME_SYSTEM: timingStandard::GMST,
+      EPOCH_FORMAT: timEpochRepresentation::JULIAN_DATE,
+      JULIAN_DATE: 0.0,
+      SECONDS: 0.0,
+      ISO8601: None,
+      SUBSECOND_NANOS: 0,
+      EPOCH_LABEL: None,
+      GNSS_WEEK: 0,
+      HAS_GNSS_ROLLOVER_REFERENCE: false,
+      GNSS_ROLLOVER_REFERENCE_ISO8601: None,
+      CCSDS_TIME_CODE: None,
+    }
+  }
+}
+
+pub struct TIMInstantBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TIMInstantBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timingStandard) {
+    self.fbb_.push_slot::<timingStandard>(TIMInstant::VT_TIME_SYSTEM, TIME_SYSTEM, timingStandard::GMST);
+  }
+  #[inline]
+  pub fn add_EPOCH_FORMAT(&mut self, EPOCH_FORMAT: timEpochRepresentation) {
+    self.fbb_.push_slot::<timEpochRepresentation>(TIMInstant::VT_EPOCH_FORMAT, EPOCH_FORMAT, timEpochRepresentation::JULIAN_DATE);
+  }
+  #[inline]
+  pub fn add_JULIAN_DATE(&mut self, JULIAN_DATE: f64) {
+    self.fbb_.push_slot::<f64>(TIMInstant::VT_JULIAN_DATE, JULIAN_DATE, 0.0);
+  }
+  #[inline]
+  pub fn add_SECONDS(&mut self, SECONDS: f64) {
+    self.fbb_.push_slot::<f64>(TIMInstant::VT_SECONDS, SECONDS, 0.0);
+  }
+  #[inline]
+  pub fn add_ISO8601(&mut self, ISO8601: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TIMInstant::VT_ISO8601, ISO8601);
+  }
+  #[inline]
+  pub fn add_SUBSECOND_NANOS(&mut self, SUBSECOND_NANOS: i32) {
+    self.fbb_.push_slot::<i32>(TIMInstant::VT_SUBSECOND_NANOS, SUBSECOND_NANOS, 0);
+  }
+  #[inline]
+  pub fn add_EPOCH_LABEL(&mut self, EPOCH_LABEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TIMInstant::VT_EPOCH_LABEL, EPOCH_LABEL);
+  }
+  #[inline]
+  pub fn add_GNSS_WEEK(&mut self, GNSS_WEEK: i32) {
+    self.fbb_.push_slot::<i32>(TIMInstant::VT_GNSS_WEEK, GNSS_WEEK, 0);
+  }
+  #[inline]
+  pub fn add_HAS_GNSS_ROLLOVER_REFERENCE(&mut self, HAS_GNSS_ROLLOVER_REFERENCE: bool) {
+    self.fbb_.push_slot::<bool>(TIMInstant::VT_HAS_GNSS_ROLLOVER_REFERENCE, HAS_GNSS_ROLLOVER_REFERENCE, false);
+  }
+  #[inline]
+  pub fn add_GNSS_ROLLOVER_REFERENCE_ISO8601(&mut self, GNSS_ROLLOVER_REFERENCE_ISO8601: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TIMInstant::VT_GNSS_ROLLOVER_REFERENCE_ISO8601, GNSS_ROLLOVER_REFERENCE_ISO8601);
+  }
+  #[inline]
+  pub fn add_CCSDS_TIME_CODE(&mut self, CCSDS_TIME_CODE: ::flatbuffers::WIPOffset<TIMCcsdsTimeCode<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMCcsdsTimeCode>>(TIMInstant::VT_CCSDS_TIME_CODE, CCSDS_TIME_CODE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TIMInstantBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    TIMInstantBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<TIMInstant<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for TIMInstant<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("TIMInstant");
+      ds.field("TIME_SYSTEM", &self.TIME_SYSTEM());
+      ds.field("EPOCH_FORMAT", &self.EPOCH_FORMAT());
+      ds.field("JULIAN_DATE", &self.JULIAN_DATE());
+      ds.field("SECONDS", &self.SECONDS());
+      ds.field("ISO8601", &self.ISO8601());
+      ds.field("SUBSECOND_NANOS", &self.SUBSECOND_NANOS());
+      ds.field("EPOCH_LABEL", &self.EPOCH_LABEL());
+      ds.field("GNSS_WEEK", &self.GNSS_WEEK());
+      ds.field("HAS_GNSS_ROLLOVER_REFERENCE", &self.HAS_GNSS_ROLLOVER_REFERENCE());
+      ds.field("GNSS_ROLLOVER_REFERENCE_ISO8601", &self.GNSS_ROLLOVER_REFERENCE_ISO8601());
+      ds.field("CCSDS_TIME_CODE", &self.CCSDS_TIME_CODE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct TIMInstantT {
+  pub TIME_SYSTEM: timingStandard,
+  pub EPOCH_FORMAT: timEpochRepresentation,
+  pub JULIAN_DATE: f64,
+  pub SECONDS: f64,
+  pub ISO8601: Option<alloc::string::String>,
+  pub SUBSECOND_NANOS: i32,
+  pub EPOCH_LABEL: Option<alloc::string::String>,
+  pub GNSS_WEEK: i32,
+  pub HAS_GNSS_ROLLOVER_REFERENCE: bool,
+  pub GNSS_ROLLOVER_REFERENCE_ISO8601: Option<alloc::string::String>,
+  pub CCSDS_TIME_CODE: Option<alloc::boxed::Box<TIMCcsdsTimeCodeT>>,
+}
+impl Default for TIMInstantT {
+  fn default() -> Self {
+    Self {
+      TIME_SYSTEM: timingStandard::GMST,
+      EPOCH_FORMAT: timEpochRepresentation::JULIAN_DATE,
+      JULIAN_DATE: 0.0,
+      SECONDS: 0.0,
+      ISO8601: None,
+      SUBSECOND_NANOS: 0,
+      EPOCH_LABEL: None,
+      GNSS_WEEK: 0,
+      HAS_GNSS_ROLLOVER_REFERENCE: false,
+      GNSS_ROLLOVER_REFERENCE_ISO8601: None,
+      CCSDS_TIME_CODE: None,
+    }
+  }
+}
+impl TIMInstantT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<TIMInstant<'b>> {
+    let TIME_SYSTEM = self.TIME_SYSTEM;
+    let EPOCH_FORMAT = self.EPOCH_FORMAT;
+    let JULIAN_DATE = self.JULIAN_DATE;
+    let SECONDS = self.SECONDS;
+    let ISO8601 = self.ISO8601.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SUBSECOND_NANOS = self.SUBSECOND_NANOS;
+    let EPOCH_LABEL = self.EPOCH_LABEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GNSS_WEEK = self.GNSS_WEEK;
+    let HAS_GNSS_ROLLOVER_REFERENCE = self.HAS_GNSS_ROLLOVER_REFERENCE;
+    let GNSS_ROLLOVER_REFERENCE_ISO8601 = self.GNSS_ROLLOVER_REFERENCE_ISO8601.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CCSDS_TIME_CODE = self.CCSDS_TIME_CODE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    TIMInstant::create(_fbb, &TIMInstantArgs{
+      TIME_SYSTEM,
+      EPOCH_FORMAT,
+      JULIAN_DATE,
+      SECONDS,
+      ISO8601,
+      SUBSECOND_NANOS,
+      EPOCH_LABEL,
+      GNSS_WEEK,
+      HAS_GNSS_ROLLOVER_REFERENCE,
+      GNSS_ROLLOVER_REFERENCE_ISO8601,
+      CCSDS_TIME_CODE,
+    })
+  }
+}
+pub enum TIMConversionRequestOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Request to convert one instant into another time system/representation.
+pub struct TIMConversionRequest<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for TIMConversionRequest<'a> {
+  type Inner = TIMConversionRequest<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> TIMConversionRequest<'a> {
+  pub const VT_SOURCE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_TARGET_TIME_SYSTEM: ::flatbuffers::VOffsetT = 6;
+  pub const VT_TARGET_EPOCH_FORMAT: ::flatbuffers::VOffsetT = 8;
+  pub const VT_TAI_MINUS_UTC_SECONDS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_HAS_TAI_MINUS_UTC: ::flatbuffers::VOffsetT = 12;
+  pub const VT_DUT1_SECONDS: ::flatbuffers::VOffsetT = 14;
+  pub const VT_HAS_DUT1: ::flatbuffers::VOffsetT = 16;
+  pub const VT_TRACE_ID: ::flatbuffers::VOffsetT = 18;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    TIMConversionRequest { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args TIMConversionRequestArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<TIMConversionRequest<'bldr>> {
+    let mut builder = TIMConversionRequestBuilder::new(_fbb);
+    builder.add_DUT1_SECONDS(args.DUT1_SECONDS);
+    builder.add_TAI_MINUS_UTC_SECONDS(args.TAI_MINUS_UTC_SECONDS);
+    if let Some(x) = args.TRACE_ID { builder.add_TRACE_ID(x); }
+    if let Some(x) = args.SOURCE { builder.add_SOURCE(x); }
+    builder.add_HAS_DUT1(args.HAS_DUT1);
+    builder.add_HAS_TAI_MINUS_UTC(args.HAS_TAI_MINUS_UTC);
+    builder.add_TARGET_EPOCH_FORMAT(args.TARGET_EPOCH_FORMAT);
+    builder.add_TARGET_TIME_SYSTEM(args.TARGET_TIME_SYSTEM);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> TIMConversionRequestT {
+    let SOURCE = self.SOURCE().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let TARGET_TIME_SYSTEM = self.TARGET_TIME_SYSTEM();
+    let TARGET_EPOCH_FORMAT = self.TARGET_EPOCH_FORMAT();
+    let TAI_MINUS_UTC_SECONDS = self.TAI_MINUS_UTC_SECONDS();
+    let HAS_TAI_MINUS_UTC = self.HAS_TAI_MINUS_UTC();
+    let DUT1_SECONDS = self.DUT1_SECONDS();
+    let HAS_DUT1 = self.HAS_DUT1();
+    let TRACE_ID = self.TRACE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    TIMConversionRequestT {
+      SOURCE,
+      TARGET_TIME_SYSTEM,
+      TARGET_EPOCH_FORMAT,
+      TAI_MINUS_UTC_SECONDS,
+      HAS_TAI_MINUS_UTC,
+      DUT1_SECONDS,
+      HAS_DUT1,
+      TRACE_ID,
+    }
+  }
+
+  /// Source instant to convert.
+  #[inline]
+  pub fn SOURCE(&self) -> Option<TIMInstant<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(TIMConversionRequest::VT_SOURCE, None)}
+  }
+  /// Target time system.
+  #[inline]
+  pub fn TARGET_TIME_SYSTEM(&self) -> timingStandard {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<timingStandard>(TIMConversionRequest::VT_TARGET_TIME_SYSTEM, Some(timingStandard::GMST)).unwrap()}
+  }
+  /// Preferred target representation.
+  #[inline]
+  pub fn TARGET_EPOCH_FORMAT(&self) -> timEpochRepresentation {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<timEpochRepresentation>(TIMConversionRequest::VT_TARGET_EPOCH_FORMAT, Some(timEpochRepresentation::JULIAN_DATE)).unwrap()}
+  }
+  /// Optional TAI-UTC override in seconds for the source instant.
+  #[inline]
+  pub fn TAI_MINUS_UTC_SECONDS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TIMConversionRequest::VT_TAI_MINUS_UTC_SECONDS, Some(0.0)).unwrap()}
+  }
+  /// Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
+  #[inline]
+  pub fn HAS_TAI_MINUS_UTC(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(TIMConversionRequest::VT_HAS_TAI_MINUS_UTC, Some(false)).unwrap()}
+  }
+  /// Optional UT1-UTC override in seconds for UT1 conversions.
+  #[inline]
+  pub fn DUT1_SECONDS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TIMConversionRequest::VT_DUT1_SECONDS, Some(0.0)).unwrap()}
+  }
+  /// Whether DUT1_SECONDS should override runtime Earth-orientation data.
+  #[inline]
+  pub fn HAS_DUT1(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(TIMConversionRequest::VT_HAS_DUT1, Some(false)).unwrap()}
+  }
+  /// Optional caller trace/correlation identifier.
+  #[inline]
+  pub fn TRACE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TIMConversionRequest::VT_TRACE_ID, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for TIMConversionRequest<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("SOURCE", Self::VT_SOURCE, false)?
+     .visit_field::<timingStandard>("TARGET_TIME_SYSTEM", Self::VT_TARGET_TIME_SYSTEM, false)?
+     .visit_field::<timEpochRepresentation>("TARGET_EPOCH_FORMAT", Self::VT_TARGET_EPOCH_FORMAT, false)?
+     .visit_field::<f64>("TAI_MINUS_UTC_SECONDS", Self::VT_TAI_MINUS_UTC_SECONDS, false)?
+     .visit_field::<bool>("HAS_TAI_MINUS_UTC", Self::VT_HAS_TAI_MINUS_UTC, false)?
+     .visit_field::<f64>("DUT1_SECONDS", Self::VT_DUT1_SECONDS, false)?
+     .visit_field::<bool>("HAS_DUT1", Self::VT_HAS_DUT1, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRACE_ID", Self::VT_TRACE_ID, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct TIMConversionRequestArgs<'a> {
+    pub SOURCE: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub TARGET_TIME_SYSTEM: timingStandard,
+    pub TARGET_EPOCH_FORMAT: timEpochRepresentation,
+    pub TAI_MINUS_UTC_SECONDS: f64,
+    pub HAS_TAI_MINUS_UTC: bool,
+    pub DUT1_SECONDS: f64,
+    pub HAS_DUT1: bool,
+    pub TRACE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for TIMConversionRequestArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    TIMConversionRequestArgs {
+      SOURCE: None,
+      TARGET_TIME_SYSTEM: timingStandard::GMST,
+      TARGET_EPOCH_FORMAT: timEpochRepresentation::JULIAN_DATE,
+      TAI_MINUS_UTC_SECONDS: 0.0,
+      HAS_TAI_MINUS_UTC: false,
+      DUT1_SECONDS: 0.0,
+      HAS_DUT1: false,
+      TRACE_ID: None,
+    }
+  }
+}
+
+pub struct TIMConversionRequestBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TIMConversionRequestBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SOURCE(&mut self, SOURCE: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(TIMConversionRequest::VT_SOURCE, SOURCE);
+  }
+  #[inline]
+  pub fn add_TARGET_TIME_SYSTEM(&mut self, TARGET_TIME_SYSTEM: timingStandard) {
+    self.fbb_.push_slot::<timingStandard>(TIMConversionRequest::VT_TARGET_TIME_SYSTEM, TARGET_TIME_SYSTEM, timingStandard::GMST);
+  }
+  #[inline]
+  pub fn add_TARGET_EPOCH_FORMAT(&mut self, TARGET_EPOCH_FORMAT: timEpochRepresentation) {
+    self.fbb_.push_slot::<timEpochRepresentation>(TIMConversionRequest::VT_TARGET_EPOCH_FORMAT, TARGET_EPOCH_FORMAT, timEpochRepresentation::JULIAN_DATE);
+  }
+  #[inline]
+  pub fn add_TAI_MINUS_UTC_SECONDS(&mut self, TAI_MINUS_UTC_SECONDS: f64) {
+    self.fbb_.push_slot::<f64>(TIMConversionRequest::VT_TAI_MINUS_UTC_SECONDS, TAI_MINUS_UTC_SECONDS, 0.0);
+  }
+  #[inline]
+  pub fn add_HAS_TAI_MINUS_UTC(&mut self, HAS_TAI_MINUS_UTC: bool) {
+    self.fbb_.push_slot::<bool>(TIMConversionRequest::VT_HAS_TAI_MINUS_UTC, HAS_TAI_MINUS_UTC, false);
+  }
+  #[inline]
+  pub fn add_DUT1_SECONDS(&mut self, DUT1_SECONDS: f64) {
+    self.fbb_.push_slot::<f64>(TIMConversionRequest::VT_DUT1_SECONDS, DUT1_SECONDS, 0.0);
+  }
+  #[inline]
+  pub fn add_HAS_DUT1(&mut self, HAS_DUT1: bool) {
+    self.fbb_.push_slot::<bool>(TIMConversionRequest::VT_HAS_DUT1, HAS_DUT1, false);
+  }
+  #[inline]
+  pub fn add_TRACE_ID(&mut self, TRACE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TIMConversionRequest::VT_TRACE_ID, TRACE_ID);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TIMConversionRequestBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    TIMConversionRequestBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<TIMConversionRequest<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for TIMConversionRequest<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("TIMConversionRequest");
+      ds.field("SOURCE", &self.SOURCE());
+      ds.field("TARGET_TIME_SYSTEM", &self.TARGET_TIME_SYSTEM());
+      ds.field("TARGET_EPOCH_FORMAT", &self.TARGET_EPOCH_FORMAT());
+      ds.field("TAI_MINUS_UTC_SECONDS", &self.TAI_MINUS_UTC_SECONDS());
+      ds.field("HAS_TAI_MINUS_UTC", &self.HAS_TAI_MINUS_UTC());
+      ds.field("DUT1_SECONDS", &self.DUT1_SECONDS());
+      ds.field("HAS_DUT1", &self.HAS_DUT1());
+      ds.field("TRACE_ID", &self.TRACE_ID());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct TIMConversionRequestT {
+  pub SOURCE: Option<alloc::boxed::Box<TIMInstantT>>,
+  pub TARGET_TIME_SYSTEM: timingStandard,
+  pub TARGET_EPOCH_FORMAT: timEpochRepresentation,
+  pub TAI_MINUS_UTC_SECONDS: f64,
+  pub HAS_TAI_MINUS_UTC: bool,
+  pub DUT1_SECONDS: f64,
+  pub HAS_DUT1: bool,
+  pub TRACE_ID: Option<alloc::string::String>,
+}
+impl Default for TIMConversionRequestT {
+  fn default() -> Self {
+    Self {
+      SOURCE: None,
+      TARGET_TIME_SYSTEM: timingStandard::GMST,
+      TARGET_EPOCH_FORMAT: timEpochRepresentation::JULIAN_DATE,
+      TAI_MINUS_UTC_SECONDS: 0.0,
+      HAS_TAI_MINUS_UTC: false,
+      DUT1_SECONDS: 0.0,
+      HAS_DUT1: false,
+      TRACE_ID: None,
+    }
+  }
+}
+impl TIMConversionRequestT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<TIMConversionRequest<'b>> {
+    let SOURCE = self.SOURCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let TARGET_TIME_SYSTEM = self.TARGET_TIME_SYSTEM;
+    let TARGET_EPOCH_FORMAT = self.TARGET_EPOCH_FORMAT;
+    let TAI_MINUS_UTC_SECONDS = self.TAI_MINUS_UTC_SECONDS;
+    let HAS_TAI_MINUS_UTC = self.HAS_TAI_MINUS_UTC;
+    let DUT1_SECONDS = self.DUT1_SECONDS;
+    let HAS_DUT1 = self.HAS_DUT1;
+    let TRACE_ID = self.TRACE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    TIMConversionRequest::create(_fbb, &TIMConversionRequestArgs{
+      SOURCE,
+      TARGET_TIME_SYSTEM,
+      TARGET_EPOCH_FORMAT,
+      TAI_MINUS_UTC_SECONDS,
+      HAS_TAI_MINUS_UTC,
+      DUT1_SECONDS,
+      HAS_DUT1,
+      TRACE_ID,
+    })
+  }
+}
+pub enum TIMConversionResultOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Result of a time conversion request.
+pub struct TIMConversionResult<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for TIMConversionResult<'a> {
+  type Inner = TIMConversionResult<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> TIMConversionResult<'a> {
+  pub const VT_SOURCE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_TARGET: ::flatbuffers::VOffsetT = 6;
+  pub const VT_DELTA_SECONDS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_STATUS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_ERROR_MESSAGE: ::flatbuffers::VOffsetT = 12;
+  pub const VT_TRACE_ID: ::flatbuffers::VOffsetT = 14;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    TIMConversionResult { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args TIMConversionResultArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<TIMConversionResult<'bldr>> {
+    let mut builder = TIMConversionResultBuilder::new(_fbb);
+    builder.add_DELTA_SECONDS(args.DELTA_SECONDS);
+    if let Some(x) = args.TRACE_ID { builder.add_TRACE_ID(x); }
+    if let Some(x) = args.ERROR_MESSAGE { builder.add_ERROR_MESSAGE(x); }
+    if let Some(x) = args.TARGET { builder.add_TARGET(x); }
+    if let Some(x) = args.SOURCE { builder.add_SOURCE(x); }
+    builder.add_STATUS(args.STATUS);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> TIMConversionResultT {
+    let SOURCE = self.SOURCE().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let TARGET = self.TARGET().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let DELTA_SECONDS = self.DELTA_SECONDS();
+    let STATUS = self.STATUS();
+    let ERROR_MESSAGE = self.ERROR_MESSAGE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TRACE_ID = self.TRACE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    TIMConversionResultT {
+      SOURCE,
+      TARGET,
+      DELTA_SECONDS,
+      STATUS,
+      ERROR_MESSAGE,
+      TRACE_ID,
+    }
+  }
+
+  /// Original source instant.
+  #[inline]
+  pub fn SOURCE(&self) -> Option<TIMInstant<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(TIMConversionResult::VT_SOURCE, None)}
+  }
+  /// Converted target instant.
+  #[inline]
+  pub fn TARGET(&self) -> Option<TIMInstant<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(TIMConversionResult::VT_TARGET, None)}
+  }
+  /// Target minus source offset in SI seconds for the requested conversion.
+  #[inline]
+  pub fn DELTA_SECONDS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TIMConversionResult::VT_DELTA_SECONDS, Some(0.0)).unwrap()}
+  }
+  /// Conversion status.
+  #[inline]
+  pub fn STATUS(&self) -> timConversionStatus {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<timConversionStatus>(TIMConversionResult::VT_STATUS, Some(timConversionStatus::OK)).unwrap()}
+  }
+  /// Optional error detail when STATUS is not OK.
+  #[inline]
+  pub fn ERROR_MESSAGE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TIMConversionResult::VT_ERROR_MESSAGE, None)}
+  }
+  /// Caller trace/correlation identifier copied from the request when present.
+  #[inline]
+  pub fn TRACE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TIMConversionResult::VT_TRACE_ID, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for TIMConversionResult<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("SOURCE", Self::VT_SOURCE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("TARGET", Self::VT_TARGET, false)?
+     .visit_field::<f64>("DELTA_SECONDS", Self::VT_DELTA_SECONDS, false)?
+     .visit_field::<timConversionStatus>("STATUS", Self::VT_STATUS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ERROR_MESSAGE", Self::VT_ERROR_MESSAGE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRACE_ID", Self::VT_TRACE_ID, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct TIMConversionResultArgs<'a> {
+    pub SOURCE: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub TARGET: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub DELTA_SECONDS: f64,
+    pub STATUS: timConversionStatus,
+    pub ERROR_MESSAGE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRACE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for TIMConversionResultArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    TIMConversionResultArgs {
+      SOURCE: None,
+      TARGET: None,
+      DELTA_SECONDS: 0.0,
+      STATUS: timConversionStatus::OK,
+      ERROR_MESSAGE: None,
+      TRACE_ID: None,
+    }
+  }
+}
+
+pub struct TIMConversionResultBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TIMConversionResultBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SOURCE(&mut self, SOURCE: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(TIMConversionResult::VT_SOURCE, SOURCE);
+  }
+  #[inline]
+  pub fn add_TARGET(&mut self, TARGET: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(TIMConversionResult::VT_TARGET, TARGET);
+  }
+  #[inline]
+  pub fn add_DELTA_SECONDS(&mut self, DELTA_SECONDS: f64) {
+    self.fbb_.push_slot::<f64>(TIMConversionResult::VT_DELTA_SECONDS, DELTA_SECONDS, 0.0);
+  }
+  #[inline]
+  pub fn add_STATUS(&mut self, STATUS: timConversionStatus) {
+    self.fbb_.push_slot::<timConversionStatus>(TIMConversionResult::VT_STATUS, STATUS, timConversionStatus::OK);
+  }
+  #[inline]
+  pub fn add_ERROR_MESSAGE(&mut self, ERROR_MESSAGE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TIMConversionResult::VT_ERROR_MESSAGE, ERROR_MESSAGE);
+  }
+  #[inline]
+  pub fn add_TRACE_ID(&mut self, TRACE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TIMConversionResult::VT_TRACE_ID, TRACE_ID);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TIMConversionResultBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    TIMConversionResultBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<TIMConversionResult<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for TIMConversionResult<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("TIMConversionResult");
+      ds.field("SOURCE", &self.SOURCE());
+      ds.field("TARGET", &self.TARGET());
+      ds.field("DELTA_SECONDS", &self.DELTA_SECONDS());
+      ds.field("STATUS", &self.STATUS());
+      ds.field("ERROR_MESSAGE", &self.ERROR_MESSAGE());
+      ds.field("TRACE_ID", &self.TRACE_ID());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct TIMConversionResultT {
+  pub SOURCE: Option<alloc::boxed::Box<TIMInstantT>>,
+  pub TARGET: Option<alloc::boxed::Box<TIMInstantT>>,
+  pub DELTA_SECONDS: f64,
+  pub STATUS: timConversionStatus,
+  pub ERROR_MESSAGE: Option<alloc::string::String>,
+  pub TRACE_ID: Option<alloc::string::String>,
+}
+impl Default for TIMConversionResultT {
+  fn default() -> Self {
+    Self {
+      SOURCE: None,
+      TARGET: None,
+      DELTA_SECONDS: 0.0,
+      STATUS: timConversionStatus::OK,
+      ERROR_MESSAGE: None,
+      TRACE_ID: None,
+    }
+  }
+}
+impl TIMConversionResultT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<TIMConversionResult<'b>> {
+    let SOURCE = self.SOURCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let TARGET = self.TARGET.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let DELTA_SECONDS = self.DELTA_SECONDS;
+    let STATUS = self.STATUS;
+    let ERROR_MESSAGE = self.ERROR_MESSAGE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRACE_ID = self.TRACE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    TIMConversionResult::create(_fbb, &TIMConversionResultArgs{
+      SOURCE,
+      TARGET,
+      DELTA_SECONDS,
+      STATUS,
+      ERROR_MESSAGE,
+      TRACE_ID,
+    })
+  }
+}
 pub enum TIMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Time System
+/// Time System and time-conversion envelope.
 pub struct TIM<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -157,6 +1713,9 @@ impl<'a> ::flatbuffers::Follow<'a> for TIM<'a> {
 
 impl<'a> TIM<'a> {
   pub const VT_TIME_SYSTEM: ::flatbuffers::VOffsetT = 4;
+  pub const VT_INSTANT: ::flatbuffers::VOffsetT = 6;
+  pub const VT_CONVERSION_REQUEST: ::flatbuffers::VOffsetT = 8;
+  pub const VT_CONVERSION_RESULT: ::flatbuffers::VOffsetT = 10;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -165,26 +1724,66 @@ impl<'a> TIM<'a> {
   #[allow(unused_mut)]
   pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
     _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args TIMArgs
+    args: &'args TIMArgs<'args>
   ) -> ::flatbuffers::WIPOffset<TIM<'bldr>> {
     let mut builder = TIMBuilder::new(_fbb);
+    if let Some(x) = args.CONVERSION_RESULT { builder.add_CONVERSION_RESULT(x); }
+    if let Some(x) = args.CONVERSION_REQUEST { builder.add_CONVERSION_REQUEST(x); }
+    if let Some(x) = args.INSTANT { builder.add_INSTANT(x); }
     builder.add_TIME_SYSTEM(args.TIME_SYSTEM);
     builder.finish()
   }
 
   pub fn unpack(&self) -> TIMT {
     let TIME_SYSTEM = self.TIME_SYSTEM();
+    let INSTANT = self.INSTANT().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let CONVERSION_REQUEST = self.CONVERSION_REQUEST().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let CONVERSION_RESULT = self.CONVERSION_RESULT().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
     TIMT {
       TIME_SYSTEM,
+      INSTANT,
+      CONVERSION_REQUEST,
+      CONVERSION_RESULT,
     }
   }
 
+  /// Legacy time-system selector retained for existing TIM consumers.
   #[inline]
   pub fn TIME_SYSTEM(&self) -> timingStandard {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<timingStandard>(TIM::VT_TIME_SYSTEM, Some(timingStandard::GMST)).unwrap()}
+  }
+  /// A single tagged instant.
+  #[inline]
+  pub fn INSTANT(&self) -> Option<TIMInstant<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(TIM::VT_INSTANT, None)}
+  }
+  /// Time conversion request.
+  #[inline]
+  pub fn CONVERSION_REQUEST(&self) -> Option<TIMConversionRequest<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMConversionRequest>>(TIM::VT_CONVERSION_REQUEST, None)}
+  }
+  /// Time conversion result.
+  #[inline]
+  pub fn CONVERSION_RESULT(&self) -> Option<TIMConversionResult<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMConversionResult>>(TIM::VT_CONVERSION_RESULT, None)}
   }
 }
 
@@ -195,18 +1794,27 @@ impl ::flatbuffers::Verifiable for TIM<'_> {
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
      .visit_field::<timingStandard>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("INSTANT", Self::VT_INSTANT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMConversionRequest>>("CONVERSION_REQUEST", Self::VT_CONVERSION_REQUEST, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<TIMConversionResult>>("CONVERSION_RESULT", Self::VT_CONVERSION_RESULT, false)?
      .finish();
     Ok(())
   }
 }
-pub struct TIMArgs {
+pub struct TIMArgs<'a> {
     pub TIME_SYSTEM: timingStandard,
+    pub INSTANT: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub CONVERSION_REQUEST: Option<::flatbuffers::WIPOffset<TIMConversionRequest<'a>>>,
+    pub CONVERSION_RESULT: Option<::flatbuffers::WIPOffset<TIMConversionResult<'a>>>,
 }
-impl<'a> Default for TIMArgs {
+impl<'a> Default for TIMArgs<'a> {
   #[inline]
   fn default() -> Self {
     TIMArgs {
       TIME_SYSTEM: timingStandard::GMST,
+      INSTANT: None,
+      CONVERSION_REQUEST: None,
+      CONVERSION_RESULT: None,
     }
   }
 }
@@ -219,6 +1827,18 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TIMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: timingStandard) {
     self.fbb_.push_slot::<timingStandard>(TIM::VT_TIME_SYSTEM, TIME_SYSTEM, timingStandard::GMST);
+  }
+  #[inline]
+  pub fn add_INSTANT(&mut self, INSTANT: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(TIM::VT_INSTANT, INSTANT);
+  }
+  #[inline]
+  pub fn add_CONVERSION_REQUEST(&mut self, CONVERSION_REQUEST: ::flatbuffers::WIPOffset<TIMConversionRequest<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMConversionRequest>>(TIM::VT_CONVERSION_REQUEST, CONVERSION_REQUEST);
+  }
+  #[inline]
+  pub fn add_CONVERSION_RESULT(&mut self, CONVERSION_RESULT: ::flatbuffers::WIPOffset<TIMConversionResult<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMConversionResult>>(TIM::VT_CONVERSION_RESULT, CONVERSION_RESULT);
   }
   #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TIMBuilder<'a, 'b, A> {
@@ -239,6 +1859,9 @@ impl ::core::fmt::Debug for TIM<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
     let mut ds = f.debug_struct("TIM");
       ds.field("TIME_SYSTEM", &self.TIME_SYSTEM());
+      ds.field("INSTANT", &self.INSTANT());
+      ds.field("CONVERSION_REQUEST", &self.CONVERSION_REQUEST());
+      ds.field("CONVERSION_RESULT", &self.CONVERSION_RESULT());
       ds.finish()
   }
 }
@@ -246,11 +1869,17 @@ impl ::core::fmt::Debug for TIM<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct TIMT {
   pub TIME_SYSTEM: timingStandard,
+  pub INSTANT: Option<alloc::boxed::Box<TIMInstantT>>,
+  pub CONVERSION_REQUEST: Option<alloc::boxed::Box<TIMConversionRequestT>>,
+  pub CONVERSION_RESULT: Option<alloc::boxed::Box<TIMConversionResultT>>,
 }
 impl Default for TIMT {
   fn default() -> Self {
     Self {
       TIME_SYSTEM: timingStandard::GMST,
+      INSTANT: None,
+      CONVERSION_REQUEST: None,
+      CONVERSION_RESULT: None,
     }
   }
 }
@@ -260,8 +1889,20 @@ impl TIMT {
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
   ) -> ::flatbuffers::WIPOffset<TIM<'b>> {
     let TIME_SYSTEM = self.TIME_SYSTEM;
+    let INSTANT = self.INSTANT.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CONVERSION_REQUEST = self.CONVERSION_REQUEST.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CONVERSION_RESULT = self.CONVERSION_RESULT.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     TIM::create(_fbb, &TIMArgs{
       TIME_SYSTEM,
+      INSTANT,
+      CONVERSION_REQUEST,
+      CONVERSION_RESULT,
     })
   }
 }

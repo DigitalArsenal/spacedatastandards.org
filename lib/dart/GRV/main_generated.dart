@@ -179,10 +179,18 @@ class GRV {
   bool get oceanTides => OCEAN_TIDES;
   bool get POLE_TIDES => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
   bool get poleTides => POLE_TIDES;
+  double get EQUATORIAL_RADIUS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get equatorialRadius => EQUATORIAL_RADIUS;
+  double get J2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get MU => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get J3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get J4 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get J5 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get J6 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
 
   @override
   String toString() {
-    return 'GRV{modelType: ${modelType}, modelName: ${modelName}, centralBody: ${centralBody}, maxDegree: ${maxDegree}, maxOrder: ${maxOrder}, includeSun: ${includeSun}, includeMoon: ${includeMoon}, includePlanets: ${includePlanets}, solidTides: ${solidTides}, oceanTides: ${oceanTides}, poleTides: ${poleTides}}';
+    return 'GRV{modelType: ${modelType}, modelName: ${modelName}, centralBody: ${centralBody}, maxDegree: ${maxDegree}, maxOrder: ${maxOrder}, includeSun: ${includeSun}, includeMoon: ${includeMoon}, includePlanets: ${includePlanets}, solidTides: ${solidTides}, oceanTides: ${oceanTides}, poleTides: ${poleTides}, equatorialRadius: ${equatorialRadius}, J2: ${J2}, MU: ${MU}, J3: ${J3}, J4: ${J4}, J5: ${J5}, J6: ${J6}}';
   }
 }
 
@@ -200,7 +208,7 @@ class GRVBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(18);
   }
 
   int addModelType(GravityModelType? MODEL_TYPE) {
@@ -247,6 +255,34 @@ class GRVBuilder {
     fbBuilder.addBool(10, POLE_TIDES);
     return fbBuilder.offset;
   }
+  int addEquatorialRadius(double? EQUATORIAL_RADIUS) {
+    fbBuilder.addFloat64(11, EQUATORIAL_RADIUS);
+    return fbBuilder.offset;
+  }
+  int addJ2(double? J2) {
+    fbBuilder.addFloat64(12, J2);
+    return fbBuilder.offset;
+  }
+  int addMu(double? MU) {
+    fbBuilder.addFloat64(13, MU);
+    return fbBuilder.offset;
+  }
+  int addJ3(double? J3) {
+    fbBuilder.addFloat64(14, J3);
+    return fbBuilder.offset;
+  }
+  int addJ4(double? J4) {
+    fbBuilder.addFloat64(15, J4);
+    return fbBuilder.offset;
+  }
+  int addJ5(double? J5) {
+    fbBuilder.addFloat64(16, J5);
+    return fbBuilder.offset;
+  }
+  int addJ6(double? J6) {
+    fbBuilder.addFloat64(17, J6);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -265,6 +301,13 @@ class GRVObjectBuilder extends fb.ObjectBuilder {
   final bool? _SOLID_TIDES;
   final bool? _OCEAN_TIDES;
   final bool? _POLE_TIDES;
+  final double? _EQUATORIAL_RADIUS;
+  final double? _J2;
+  final double? _MU;
+  final double? _J3;
+  final double? _J4;
+  final double? _J5;
+  final double? _J6;
 
   GRVObjectBuilder({
     GravityModelType? MODEL_TYPE,
@@ -289,6 +332,14 @@ class GRVObjectBuilder extends fb.ObjectBuilder {
     bool? oceanTides,
     bool? POLE_TIDES,
     bool? poleTides,
+    double? EQUATORIAL_RADIUS,
+    double? equatorialRadius,
+    double? J2,
+    double? MU,
+    double? J3,
+    double? J4,
+    double? J5,
+    double? J6,
   })
       : _MODEL_TYPE = modelType ?? MODEL_TYPE,
         _MODEL_NAME = modelName ?? MODEL_NAME,
@@ -300,12 +351,19 @@ class GRVObjectBuilder extends fb.ObjectBuilder {
         _INCLUDE_PLANETS = includePlanets ?? INCLUDE_PLANETS,
         _SOLID_TIDES = solidTides ?? SOLID_TIDES,
         _OCEAN_TIDES = oceanTides ?? OCEAN_TIDES,
-        _POLE_TIDES = poleTides ?? POLE_TIDES;
+        _POLE_TIDES = poleTides ?? POLE_TIDES,
+        _EQUATORIAL_RADIUS = equatorialRadius ?? EQUATORIAL_RADIUS,
+        _J2 = J2,
+        _MU = MU,
+        _J3 = J3,
+        _J4 = J4,
+        _J5 = J5,
+        _J6 = J6;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(18);
     fbBuilder.addInt8(0, _MODEL_TYPE?.value);
     fbBuilder.addInt8(1, _MODEL_NAME?.value);
     fbBuilder.addInt8(2, _CENTRAL_BODY?.value);
@@ -317,6 +375,13 @@ class GRVObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addBool(8, _SOLID_TIDES);
     fbBuilder.addBool(9, _OCEAN_TIDES);
     fbBuilder.addBool(10, _POLE_TIDES);
+    fbBuilder.addFloat64(11, _EQUATORIAL_RADIUS);
+    fbBuilder.addFloat64(12, _J2);
+    fbBuilder.addFloat64(13, _MU);
+    fbBuilder.addFloat64(14, _J3);
+    fbBuilder.addFloat64(15, _J4);
+    fbBuilder.addFloat64(16, _J5);
+    fbBuilder.addFloat64(17, _J6);
     return fbBuilder.endTable();
   }
 

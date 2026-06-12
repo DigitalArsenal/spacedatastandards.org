@@ -36,13 +36,440 @@ public enum timingStandard: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
   case ut1 = 10
   ///  Coordinated Universal Time
   case utc = 11
+  ///  GLONASS Time
+  case glonass = 12
+  ///  Galileo System Time
+  case gst = 13
+  ///  Quasi-Zenith Satellite System Time
+  case qzss = 14
+  ///  BeiDou Time
+  case bdt = 15
+  ///  Navigation with Indian Constellation Time
+  case navic = 16
+  ///  Satellite-Based Augmentation System Time
+  case sbas = 17
 
-  public static var max: timingStandard { return .utc }
+  public static var max: timingStandard { return .sbas }
   public static var min: timingStandard { return .gmst }
 }
 
 
-///  Time System
+public enum timEpochRepresentation: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Julian Date day count.
+  case julianDate = 0
+  ///  Modified Julian Date day count (JD - 2400000.5).
+  case modifiedJulianDate = 1
+  ///  Seconds since 1970-01-01T00:00:00 UTC.
+  case unixSeconds = 2
+  ///  ISO 8601 timestamp text.
+  case iso8601 = 3
+  ///  Seconds since 1980-01-06T00:00:00 GPS.
+  case gpsSeconds = 4
+  ///  GNSS week number plus seconds within the week.
+  case gnssWeekSeconds = 5
+  ///  CCSDS binary time-code field with preamble metadata.
+  case ccsdsTimeCode = 6
+  ///  Seconds from an application-defined mission epoch.
+  case missionElapsedSeconds = 7
+
+  public static var max: timEpochRepresentation { return .missionElapsedSeconds }
+  public static var min: timEpochRepresentation { return .julianDate }
+}
+
+
+public enum timCcsdsTimeCodeKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  No CCSDS time code selected.
+  case none_ = 0
+  ///  CCSDS Unsegmented Time Code (CUC).
+  case unsegmented = 1
+  ///  CCSDS Day Segmented Time Code (CDS).
+  case daySegmented = 2
+  ///  CCSDS Calendar Segmented Time Code (CCS).
+  case calendarSegmented = 3
+
+  public static var max: timCcsdsTimeCodeKind { return .calendarSegmented }
+  public static var min: timCcsdsTimeCodeKind { return .none_ }
+}
+
+
+public enum timConversionStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Conversion completed.
+  case ok = 0
+  ///  Input epoch or requested representation is invalid.
+  case invalidInput = 1
+  ///  Requested source or target time system is not supported.
+  case unsupportedTimeSystem = 2
+  ///  Conversion requires leap-second data that was not available.
+  case leapSecondDataRequired = 3
+  ///  Conversion requires Earth-orientation data that was not available.
+  case eopDataRequired = 4
+  ///  Requested instant is outside the supported conversion range.
+  case outOfRange = 5
+
+  public static var max: timConversionStatus { return .outOfRange }
+  public static var min: timConversionStatus { return .ok }
+}
+
+
+///  CCSDS time-code payload and preamble metadata.
+public struct TIMCcsdsTimeCode: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$TIM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMCcsdsTimeCode.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let CODE_KIND: VOffset = 4
+    static let PREAMBLE_FIELD1: VOffset = 6
+    static let PREAMBLE_FIELD2: VOffset = 8
+    static let TIME_FIELD: VOffset = 10
+    static let AGENCY_DEFINED_EPOCH_ISO8601: VOffset = 12
+    static let CCSDS_EPOCH_ISO8601: VOffset = 14
+  }
+
+  ///  CCSDS time-code family.
+  public var CODE_KIND: timCcsdsTimeCodeKind { let o = _accessor.offset(VT.CODE_KIND); return o == 0 ? .none_ : timCcsdsTimeCodeKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  ///  First CCSDS preamble field octet.
+  public var PREAMBLE_FIELD1: UInt8 { let o = _accessor.offset(VT.PREAMBLE_FIELD1); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Second CCSDS preamble field octet; ignored when not signaled by preamble 1.
+  public var PREAMBLE_FIELD2: UInt8 { let o = _accessor.offset(VT.PREAMBLE_FIELD2); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Raw CCSDS time field octets.
+  public var TIME_FIELD: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.TIME_FIELD, byteSize: 1) }
+  public func withUnsafePointerToTimeField<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TIME_FIELD, body: body) }
+  ///  Optional agency-defined epoch timestamp for agency epoch time codes.
+  public var AGENCY_DEFINED_EPOCH_ISO8601: String? { let o = _accessor.offset(VT.AGENCY_DEFINED_EPOCH_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AGENCY_DEFINED_EPOCH_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AGENCY_DEFINED_EPOCH_ISO8601) }
+  ///  Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.
+  public var CCSDS_EPOCH_ISO8601: String? { let o = _accessor.offset(VT.CCSDS_EPOCH_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CCSDS_EPOCH_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CCSDS_EPOCH_ISO8601) }
+  public static func startTIMCcsdsTimeCode(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(CODE_KIND: timCcsdsTimeCodeKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CODE_KIND.rawValue, def: 0, at: VT.CODE_KIND) }
+  public static func add(PREAMBLE_FIELD1: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREAMBLE_FIELD1, def: 0, at: VT.PREAMBLE_FIELD1) }
+  public static func add(PREAMBLE_FIELD2: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREAMBLE_FIELD2, def: 0, at: VT.PREAMBLE_FIELD2) }
+  public static func addVectorOf(TIME_FIELD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_FIELD, at: VT.TIME_FIELD) }
+  public static func add(AGENCY_DEFINED_EPOCH_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGENCY_DEFINED_EPOCH_ISO8601, at: VT.AGENCY_DEFINED_EPOCH_ISO8601) }
+  public static func add(CCSDS_EPOCH_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_EPOCH_ISO8601, at: VT.CCSDS_EPOCH_ISO8601) }
+  public static func endTIMCcsdsTimeCode(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createTIMCcsdsTimeCode(
+    _ fbb: inout FlatBufferBuilder,
+    CODE_KIND: timCcsdsTimeCodeKind = .none_,
+    PREAMBLE_FIELD1: UInt8 = 0,
+    PREAMBLE_FIELD2: UInt8 = 0,
+    TIME_FIELDVectorOffset TIME_FIELD: Offset = Offset(),
+    AGENCY_DEFINED_EPOCH_ISO8601Offset AGENCY_DEFINED_EPOCH_ISO8601: Offset = Offset(),
+    CCSDS_EPOCH_ISO8601Offset CCSDS_EPOCH_ISO8601: Offset = Offset()
+  ) -> Offset {
+    let __start = TIMCcsdsTimeCode.startTIMCcsdsTimeCode(&fbb)
+    TIMCcsdsTimeCode.add(CODE_KIND: CODE_KIND, &fbb)
+    TIMCcsdsTimeCode.add(PREAMBLE_FIELD1: PREAMBLE_FIELD1, &fbb)
+    TIMCcsdsTimeCode.add(PREAMBLE_FIELD2: PREAMBLE_FIELD2, &fbb)
+    TIMCcsdsTimeCode.addVectorOf(TIME_FIELD: TIME_FIELD, &fbb)
+    TIMCcsdsTimeCode.add(AGENCY_DEFINED_EPOCH_ISO8601: AGENCY_DEFINED_EPOCH_ISO8601, &fbb)
+    TIMCcsdsTimeCode.add(CCSDS_EPOCH_ISO8601: CCSDS_EPOCH_ISO8601, &fbb)
+    return TIMCcsdsTimeCode.endTIMCcsdsTimeCode(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CODE_KIND, fieldName: "CODE_KIND", required: false, type: timCcsdsTimeCodeKind.self)
+    try _v.visit(field: VT.PREAMBLE_FIELD1, fieldName: "PREAMBLE_FIELD1", required: false, type: UInt8.self)
+    try _v.visit(field: VT.PREAMBLE_FIELD2, fieldName: "PREAMBLE_FIELD2", required: false, type: UInt8.self)
+    try _v.visit(field: VT.TIME_FIELD, fieldName: "TIME_FIELD", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.AGENCY_DEFINED_EPOCH_ISO8601, fieldName: "AGENCY_DEFINED_EPOCH_ISO8601", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CCSDS_EPOCH_ISO8601, fieldName: "CCSDS_EPOCH_ISO8601", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Numeric or textual instant tagged with its time system and representation.
+public struct TIMInstant: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$TIM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMInstant.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let TIME_SYSTEM: VOffset = 4
+    static let EPOCH_FORMAT: VOffset = 6
+    static let JULIAN_DATE: VOffset = 8
+    static let SECONDS: VOffset = 10
+    static let ISO8601: VOffset = 12
+    static let SUBSECOND_NANOS: VOffset = 14
+    static let EPOCH_LABEL: VOffset = 16
+    static let GNSS_WEEK: VOffset = 18
+    static let HAS_GNSS_ROLLOVER_REFERENCE: VOffset = 20
+    static let GNSS_ROLLOVER_REFERENCE_ISO8601: VOffset = 22
+    static let CCSDS_TIME_CODE: VOffset = 24
+  }
+
+  ///  Time system for this instant.
+  public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
+  ///  Interpretation of JULIAN_DATE, SECONDS, and ISO8601.
+  public var EPOCH_FORMAT: timEpochRepresentation { let o = _accessor.offset(VT.EPOCH_FORMAT); return o == 0 ? .julianDate : timEpochRepresentation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .julianDate }
+  ///  Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.
+  public var JULIAN_DATE: Double { let o = _accessor.offset(VT.JULIAN_DATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.
+  public var SECONDS: Double { let o = _accessor.offset(VT.SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ISO 8601 timestamp text for ISO8601 inputs or display outputs.
+  public var ISO8601: String? { let o = _accessor.offset(VT.ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ISO8601) }
+  ///  Additional nanoseconds beyond the fractional scalar/text value.
+  public var SUBSECOND_NANOS: Int32 { let o = _accessor.offset(VT.SUBSECOND_NANOS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Optional application-defined epoch label for MET, MRT, or SCLK values.
+  public var EPOCH_LABEL: String? { let o = _accessor.offset(VT.EPOCH_LABEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCH_LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_LABEL) }
+  ///  GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.
+  public var GNSS_WEEK: Int32 { let o = _accessor.offset(VT.GNSS_WEEK); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.
+  public var HAS_GNSS_ROLLOVER_REFERENCE: Bool { let o = _accessor.offset(VT.HAS_GNSS_ROLLOVER_REFERENCE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Optional Orekit-style GNSS week rollover reference timestamp.
+  public var GNSS_ROLLOVER_REFERENCE_ISO8601: String? { let o = _accessor.offset(VT.GNSS_ROLLOVER_REFERENCE_ISO8601); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GNSS_ROLLOVER_REFERENCE_ISO8601SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GNSS_ROLLOVER_REFERENCE_ISO8601) }
+  ///  CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.
+  public var CCSDS_TIME_CODE: TIMCcsdsTimeCode? { let o = _accessor.offset(VT.CCSDS_TIME_CODE); return o == 0 ? nil : TIMCcsdsTimeCode(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startTIMInstant(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VT.TIME_SYSTEM) }
+  public static func add(EPOCH_FORMAT: timEpochRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_FORMAT.rawValue, def: 0, at: VT.EPOCH_FORMAT) }
+  public static func add(JULIAN_DATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: JULIAN_DATE, def: 0.0, at: VT.JULIAN_DATE) }
+  public static func add(SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDS, def: 0.0, at: VT.SECONDS) }
+  public static func add(ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ISO8601, at: VT.ISO8601) }
+  public static func add(SUBSECOND_NANOS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUBSECOND_NANOS, def: 0, at: VT.SUBSECOND_NANOS) }
+  public static func add(EPOCH_LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_LABEL, at: VT.EPOCH_LABEL) }
+  public static func add(GNSS_WEEK: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GNSS_WEEK, def: 0, at: VT.GNSS_WEEK) }
+  public static func add(HAS_GNSS_ROLLOVER_REFERENCE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_GNSS_ROLLOVER_REFERENCE, def: false,
+   at: VT.HAS_GNSS_ROLLOVER_REFERENCE) }
+  public static func add(GNSS_ROLLOVER_REFERENCE_ISO8601: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GNSS_ROLLOVER_REFERENCE_ISO8601, at: VT.GNSS_ROLLOVER_REFERENCE_ISO8601) }
+  public static func add(CCSDS_TIME_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_TIME_CODE, at: VT.CCSDS_TIME_CODE) }
+  public static func endTIMInstant(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createTIMInstant(
+    _ fbb: inout FlatBufferBuilder,
+    TIME_SYSTEM: timingStandard = .gmst,
+    EPOCH_FORMAT: timEpochRepresentation = .julianDate,
+    JULIAN_DATE: Double = 0.0,
+    SECONDS: Double = 0.0,
+    ISO8601Offset ISO8601: Offset = Offset(),
+    SUBSECOND_NANOS: Int32 = 0,
+    EPOCH_LABELOffset EPOCH_LABEL: Offset = Offset(),
+    GNSS_WEEK: Int32 = 0,
+    HAS_GNSS_ROLLOVER_REFERENCE: Bool = false,
+    GNSS_ROLLOVER_REFERENCE_ISO8601Offset GNSS_ROLLOVER_REFERENCE_ISO8601: Offset = Offset(),
+    CCSDS_TIME_CODEOffset CCSDS_TIME_CODE: Offset = Offset()
+  ) -> Offset {
+    let __start = TIMInstant.startTIMInstant(&fbb)
+    TIMInstant.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    TIMInstant.add(EPOCH_FORMAT: EPOCH_FORMAT, &fbb)
+    TIMInstant.add(JULIAN_DATE: JULIAN_DATE, &fbb)
+    TIMInstant.add(SECONDS: SECONDS, &fbb)
+    TIMInstant.add(ISO8601: ISO8601, &fbb)
+    TIMInstant.add(SUBSECOND_NANOS: SUBSECOND_NANOS, &fbb)
+    TIMInstant.add(EPOCH_LABEL: EPOCH_LABEL, &fbb)
+    TIMInstant.add(GNSS_WEEK: GNSS_WEEK, &fbb)
+    TIMInstant.add(HAS_GNSS_ROLLOVER_REFERENCE: HAS_GNSS_ROLLOVER_REFERENCE, &fbb)
+    TIMInstant.add(GNSS_ROLLOVER_REFERENCE_ISO8601: GNSS_ROLLOVER_REFERENCE_ISO8601, &fbb)
+    TIMInstant.add(CCSDS_TIME_CODE: CCSDS_TIME_CODE, &fbb)
+    return TIMInstant.endTIMInstant(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: timingStandard.self)
+    try _v.visit(field: VT.EPOCH_FORMAT, fieldName: "EPOCH_FORMAT", required: false, type: timEpochRepresentation.self)
+    try _v.visit(field: VT.JULIAN_DATE, fieldName: "JULIAN_DATE", required: false, type: Double.self)
+    try _v.visit(field: VT.SECONDS, fieldName: "SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.ISO8601, fieldName: "ISO8601", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SUBSECOND_NANOS, fieldName: "SUBSECOND_NANOS", required: false, type: Int32.self)
+    try _v.visit(field: VT.EPOCH_LABEL, fieldName: "EPOCH_LABEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GNSS_WEEK, fieldName: "GNSS_WEEK", required: false, type: Int32.self)
+    try _v.visit(field: VT.HAS_GNSS_ROLLOVER_REFERENCE, fieldName: "HAS_GNSS_ROLLOVER_REFERENCE", required: false, type: Bool.self)
+    try _v.visit(field: VT.GNSS_ROLLOVER_REFERENCE_ISO8601, fieldName: "GNSS_ROLLOVER_REFERENCE_ISO8601", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CCSDS_TIME_CODE, fieldName: "CCSDS_TIME_CODE", required: false, type: ForwardOffset<TIMCcsdsTimeCode>.self)
+    _v.finish()
+  }
+}
+
+///  Request to convert one instant into another time system/representation.
+public struct TIMConversionRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$TIM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMConversionRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SOURCE: VOffset = 4
+    static let TARGET_TIME_SYSTEM: VOffset = 6
+    static let TARGET_EPOCH_FORMAT: VOffset = 8
+    static let TAI_MINUS_UTC_SECONDS: VOffset = 10
+    static let HAS_TAI_MINUS_UTC: VOffset = 12
+    static let DUT1_SECONDS: VOffset = 14
+    static let HAS_DUT1: VOffset = 16
+    static let TRACE_ID: VOffset = 18
+  }
+
+  ///  Source instant to convert.
+  public var SOURCE: TIMInstant? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Target time system.
+  public var TARGET_TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TARGET_TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
+  ///  Preferred target representation.
+  public var TARGET_EPOCH_FORMAT: timEpochRepresentation { let o = _accessor.offset(VT.TARGET_EPOCH_FORMAT); return o == 0 ? .julianDate : timEpochRepresentation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .julianDate }
+  ///  Optional TAI-UTC override in seconds for the source instant.
+  public var TAI_MINUS_UTC_SECONDS: Double { let o = _accessor.offset(VT.TAI_MINUS_UTC_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.
+  public var HAS_TAI_MINUS_UTC: Bool { let o = _accessor.offset(VT.HAS_TAI_MINUS_UTC); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Optional UT1-UTC override in seconds for UT1 conversions.
+  public var DUT1_SECONDS: Double { let o = _accessor.offset(VT.DUT1_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Whether DUT1_SECONDS should override runtime Earth-orientation data.
+  public var HAS_DUT1: Bool { let o = _accessor.offset(VT.HAS_DUT1); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Optional caller trace/correlation identifier.
+  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
+  public static func startTIMConversionRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
+  public static func add(TARGET_TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_TIME_SYSTEM.rawValue, def: 0, at: VT.TARGET_TIME_SYSTEM) }
+  public static func add(TARGET_EPOCH_FORMAT: timEpochRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_EPOCH_FORMAT.rawValue, def: 0, at: VT.TARGET_EPOCH_FORMAT) }
+  public static func add(TAI_MINUS_UTC_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAI_MINUS_UTC_SECONDS, def: 0.0, at: VT.TAI_MINUS_UTC_SECONDS) }
+  public static func add(HAS_TAI_MINUS_UTC: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_TAI_MINUS_UTC, def: false,
+   at: VT.HAS_TAI_MINUS_UTC) }
+  public static func add(DUT1_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DUT1_SECONDS, def: 0.0, at: VT.DUT1_SECONDS) }
+  public static func add(HAS_DUT1: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DUT1, def: false,
+   at: VT.HAS_DUT1) }
+  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
+  public static func endTIMConversionRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createTIMConversionRequest(
+    _ fbb: inout FlatBufferBuilder,
+    SOURCEOffset SOURCE: Offset = Offset(),
+    TARGET_TIME_SYSTEM: timingStandard = .gmst,
+    TARGET_EPOCH_FORMAT: timEpochRepresentation = .julianDate,
+    TAI_MINUS_UTC_SECONDS: Double = 0.0,
+    HAS_TAI_MINUS_UTC: Bool = false,
+    DUT1_SECONDS: Double = 0.0,
+    HAS_DUT1: Bool = false,
+    TRACE_IDOffset TRACE_ID: Offset = Offset()
+  ) -> Offset {
+    let __start = TIMConversionRequest.startTIMConversionRequest(&fbb)
+    TIMConversionRequest.add(SOURCE: SOURCE, &fbb)
+    TIMConversionRequest.add(TARGET_TIME_SYSTEM: TARGET_TIME_SYSTEM, &fbb)
+    TIMConversionRequest.add(TARGET_EPOCH_FORMAT: TARGET_EPOCH_FORMAT, &fbb)
+    TIMConversionRequest.add(TAI_MINUS_UTC_SECONDS: TAI_MINUS_UTC_SECONDS, &fbb)
+    TIMConversionRequest.add(HAS_TAI_MINUS_UTC: HAS_TAI_MINUS_UTC, &fbb)
+    TIMConversionRequest.add(DUT1_SECONDS: DUT1_SECONDS, &fbb)
+    TIMConversionRequest.add(HAS_DUT1: HAS_DUT1, &fbb)
+    TIMConversionRequest.add(TRACE_ID: TRACE_ID, &fbb)
+    return TIMConversionRequest.endTIMConversionRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.TARGET_TIME_SYSTEM, fieldName: "TARGET_TIME_SYSTEM", required: false, type: timingStandard.self)
+    try _v.visit(field: VT.TARGET_EPOCH_FORMAT, fieldName: "TARGET_EPOCH_FORMAT", required: false, type: timEpochRepresentation.self)
+    try _v.visit(field: VT.TAI_MINUS_UTC_SECONDS, fieldName: "TAI_MINUS_UTC_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_TAI_MINUS_UTC, fieldName: "HAS_TAI_MINUS_UTC", required: false, type: Bool.self)
+    try _v.visit(field: VT.DUT1_SECONDS, fieldName: "DUT1_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_DUT1, fieldName: "HAS_DUT1", required: false, type: Bool.self)
+    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Result of a time conversion request.
+public struct TIMConversionResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$TIM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TIMConversionResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SOURCE: VOffset = 4
+    static let TARGET: VOffset = 6
+    static let DELTA_SECONDS: VOffset = 8
+    static let STATUS: VOffset = 10
+    static let ERROR_MESSAGE: VOffset = 12
+    static let TRACE_ID: VOffset = 14
+  }
+
+  ///  Original source instant.
+  public var SOURCE: TIMInstant? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Converted target instant.
+  public var TARGET: TIMInstant? { let o = _accessor.offset(VT.TARGET); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Target minus source offset in SI seconds for the requested conversion.
+  public var DELTA_SECONDS: Double { let o = _accessor.offset(VT.DELTA_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Conversion status.
+  public var STATUS: timConversionStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .ok : timConversionStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ok }
+  ///  Optional error detail when STATUS is not OK.
+  public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
+  ///  Caller trace/correlation identifier copied from the request when present.
+  public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
+  public static func startTIMConversionResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
+  public static func add(TARGET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET, at: VT.TARGET) }
+  public static func add(DELTA_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_SECONDS, def: 0.0, at: VT.DELTA_SECONDS) }
+  public static func add(STATUS: timConversionStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
+  public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
+  public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
+  public static func endTIMConversionResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createTIMConversionResult(
+    _ fbb: inout FlatBufferBuilder,
+    SOURCEOffset SOURCE: Offset = Offset(),
+    TARGETOffset TARGET: Offset = Offset(),
+    DELTA_SECONDS: Double = 0.0,
+    STATUS: timConversionStatus = .ok,
+    ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset(),
+    TRACE_IDOffset TRACE_ID: Offset = Offset()
+  ) -> Offset {
+    let __start = TIMConversionResult.startTIMConversionResult(&fbb)
+    TIMConversionResult.add(SOURCE: SOURCE, &fbb)
+    TIMConversionResult.add(TARGET: TARGET, &fbb)
+    TIMConversionResult.add(DELTA_SECONDS: DELTA_SECONDS, &fbb)
+    TIMConversionResult.add(STATUS: STATUS, &fbb)
+    TIMConversionResult.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
+    TIMConversionResult.add(TRACE_ID: TRACE_ID, &fbb)
+    return TIMConversionResult.endTIMConversionResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.TARGET, fieldName: "TARGET", required: false, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.DELTA_SECONDS, fieldName: "DELTA_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: timConversionStatus.self)
+    try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Time System and time-conversion envelope.
 public struct TIM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -56,24 +483,46 @@ public struct TIM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   private struct VT {
     static let TIME_SYSTEM: VOffset = 4
+    static let INSTANT: VOffset = 6
+    static let CONVERSION_REQUEST: VOffset = 8
+    static let CONVERSION_RESULT: VOffset = 10
   }
 
+  ///  Legacy time-system selector retained for existing TIM consumers.
   public var TIME_SYSTEM: timingStandard { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? .gmst : timingStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  public static func startTIM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  ///  A single tagged instant.
+  public var INSTANT: TIMInstant? { let o = _accessor.offset(VT.INSTANT); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Time conversion request.
+  public var CONVERSION_REQUEST: TIMConversionRequest? { let o = _accessor.offset(VT.CONVERSION_REQUEST); return o == 0 ? nil : TIMConversionRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Time conversion result.
+  public var CONVERSION_RESULT: TIMConversionResult? { let o = _accessor.offset(VT.CONVERSION_RESULT); return o == 0 ? nil : TIMConversionResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startTIM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(TIME_SYSTEM: timingStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VT.TIME_SYSTEM) }
+  public static func add(INSTANT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANT, at: VT.INSTANT) }
+  public static func add(CONVERSION_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONVERSION_REQUEST, at: VT.CONVERSION_REQUEST) }
+  public static func add(CONVERSION_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONVERSION_RESULT, at: VT.CONVERSION_RESULT) }
   public static func endTIM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTIM(
     _ fbb: inout FlatBufferBuilder,
-    TIME_SYSTEM: timingStandard = .gmst
+    TIME_SYSTEM: timingStandard = .gmst,
+    INSTANTOffset INSTANT: Offset = Offset(),
+    CONVERSION_REQUESTOffset CONVERSION_REQUEST: Offset = Offset(),
+    CONVERSION_RESULTOffset CONVERSION_RESULT: Offset = Offset()
   ) -> Offset {
     let __start = TIM.startTIM(&fbb)
     TIM.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    TIM.add(INSTANT: INSTANT, &fbb)
+    TIM.add(CONVERSION_REQUEST: CONVERSION_REQUEST, &fbb)
+    TIM.add(CONVERSION_RESULT: CONVERSION_RESULT, &fbb)
     return TIM.endTIM(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: timingStandard.self)
+    try _v.visit(field: VT.INSTANT, fieldName: "INSTANT", required: false, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.CONVERSION_REQUEST, fieldName: "CONVERSION_REQUEST", required: false, type: ForwardOffset<TIMConversionRequest>.self)
+    try _v.visit(field: VT.CONVERSION_RESULT, fieldName: "CONVERSION_RESULT", required: false, type: ForwardOffset<TIMConversionResult>.self)
     _v.finish()
   }
 }

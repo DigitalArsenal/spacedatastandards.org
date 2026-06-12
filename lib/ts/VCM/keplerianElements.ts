@@ -63,8 +63,13 @@ ANOMALY():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+PERIAPSIS_RADIUS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startkeplerianElements(builder:flatbuffers.Builder) {
-  builder.startObject(7);
+  builder.startObject(8);
 }
 
 static addSemiMajorAxis(builder:flatbuffers.Builder, SEMI_MAJOR_AXIS:number) {
@@ -95,12 +100,16 @@ static addAnomaly(builder:flatbuffers.Builder, ANOMALY:number) {
   builder.addFieldFloat64(6, ANOMALY, 0.0);
 }
 
+static addPeriapsisRadius(builder:flatbuffers.Builder, PERIAPSIS_RADIUS:number) {
+  builder.addFieldFloat64(7, PERIAPSIS_RADIUS, 0.0);
+}
+
 static endkeplerianElements(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createkeplerianElements(builder:flatbuffers.Builder, SEMI_MAJOR_AXIS:number, ECCENTRICITY:number, INCLINATION:number, RA_OF_ASC_NODE:number, ARG_OF_PERICENTER:number, ANOMALY_TYPE:anomalyConvention, ANOMALY:number):flatbuffers.Offset {
+static createkeplerianElements(builder:flatbuffers.Builder, SEMI_MAJOR_AXIS:number, ECCENTRICITY:number, INCLINATION:number, RA_OF_ASC_NODE:number, ARG_OF_PERICENTER:number, ANOMALY_TYPE:anomalyConvention, ANOMALY:number, PERIAPSIS_RADIUS:number):flatbuffers.Offset {
   keplerianElements.startkeplerianElements(builder);
   keplerianElements.addSemiMajorAxis(builder, SEMI_MAJOR_AXIS);
   keplerianElements.addEccentricity(builder, ECCENTRICITY);
@@ -109,6 +118,7 @@ static createkeplerianElements(builder:flatbuffers.Builder, SEMI_MAJOR_AXIS:numb
   keplerianElements.addArgOfPericenter(builder, ARG_OF_PERICENTER);
   keplerianElements.addAnomalyType(builder, ANOMALY_TYPE);
   keplerianElements.addAnomaly(builder, ANOMALY);
+  keplerianElements.addPeriapsisRadius(builder, PERIAPSIS_RADIUS);
   return keplerianElements.endkeplerianElements(builder);
 }
 
@@ -120,7 +130,8 @@ unpack(): keplerianElementsT {
     this.RA_OF_ASC_NODE(),
     this.ARG_OF_PERICENTER(),
     this.ANOMALY_TYPE(),
-    this.ANOMALY()
+    this.ANOMALY(),
+    this.PERIAPSIS_RADIUS()
   );
 }
 
@@ -133,6 +144,7 @@ unpackTo(_o: keplerianElementsT): void {
   _o.ARG_OF_PERICENTER = this.ARG_OF_PERICENTER();
   _o.ANOMALY_TYPE = this.ANOMALY_TYPE();
   _o.ANOMALY = this.ANOMALY();
+  _o.PERIAPSIS_RADIUS = this.PERIAPSIS_RADIUS();
 }
 }
 
@@ -144,7 +156,8 @@ constructor(
   public RA_OF_ASC_NODE: number = 0.0,
   public ARG_OF_PERICENTER: number = 0.0,
   public ANOMALY_TYPE: anomalyConvention = anomalyConvention.TRUE_ANOMALY,
-  public ANOMALY: number = 0.0
+  public ANOMALY: number = 0.0,
+  public PERIAPSIS_RADIUS: number = 0.0
 ){}
 
 
@@ -156,7 +169,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.RA_OF_ASC_NODE,
     this.ARG_OF_PERICENTER,
     this.ANOMALY_TYPE,
-    this.ANOMALY
+    this.ANOMALY,
+    this.PERIAPSIS_RADIUS
   );
 }
 }

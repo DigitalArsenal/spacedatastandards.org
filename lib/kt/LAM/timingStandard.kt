@@ -51,5 +51,29 @@ class timingStandard private constructor() {
          * Coordinated Universal Time
          */
         const val UTC: Byte = 11
+        /**
+         * GLONASS Time
+         */
+        const val GLONASS: Byte = 12
+        /**
+         * Galileo System Time
+         */
+        const val GST: Byte = 13
+        /**
+         * Quasi-Zenith Satellite System Time
+         */
+        const val QZSS: Byte = 14
+        /**
+         * BeiDou Time
+         */
+        const val BDT: Byte = 15
+        /**
+         * Navigation with Indian Constellation Time
+         */
+        const val NAVIC: Byte = 16
+        /**
+         * Satellite-Based Augmentation System Time
+         */
+        const val SBAS: Byte = 17
     }
 }

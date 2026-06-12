@@ -1,5 +1,5 @@
-// Hash: 69456166cb20cbc46856e74928b8f13f15df2b133a918b55b9220abe854e08f3
-// Version: 0.0.2
+// Hash: 2f8585994747b20a6f52a3a5875be763dbfa12de9de6b5979e305296081f1033
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 enum GravityModelType : byte {
   POINT_MASS,
@@ -49,6 +49,14 @@ table GRV {
   SOLID_TIDES:bool = false;
   OCEAN_TIDES:bool = false;
   POLE_TIDES:bool = false;
+  // Numeric gravity context for model-backed propagation and element maps.
+  EQUATORIAL_RADIUS:double;
+  J2:double;
+  MU:double;
+  J3:double;
+  J4:double;
+  J5:double;
+  J6:double;
 }
 
 root_type GRV;

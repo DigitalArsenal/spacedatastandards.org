@@ -59,7 +59,14 @@ export * from './StateVector.js';
 export * from './StokesParameters.js';
 export * from './survivingDebris.js';
 export * from './TIM.js';
+export * from './TIMCcsdsTimeCode.js';
+export * from './timCcsdsTimeCodeKind.js';
+export * from './TIMConversionRequest.js';
+export * from './TIMConversionResult.js';
+export * from './timConversionStatus.js';
+export * from './timEpochRepresentation.js';
 export * from './timingStandard.js';
+export * from './TIMInstant.js';
 export * from './trajectoryType.js';
 export * from './UserDefinedParameters.js';
 //# sourceMappingURL=main.d.ts.map

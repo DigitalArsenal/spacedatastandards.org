@@ -1,0 +1,805 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "numOperationCode": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "NEWTON_RAPHSON",
+        "LINEAR_INTERPOLATION",
+        "BILINEAR_INTERPOLATION",
+        "GAUSS_MARKOV_SEQUENCE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "NEWTON_RAPHSON": {
+          "value": 1,
+          "description": "Solve for a scalar root using Newton-Raphson iteration."
+        },
+        "LINEAR_INTERPOLATION": {
+          "value": 2,
+          "description": "Linearly interpolate one scalar between two scalar samples."
+        },
+        "BILINEAR_INTERPOLATION": {
+          "value": 3,
+          "description": "Bilinearly interpolate one scalar from four rectangular-corner samples."
+        },
+        "GAUSS_MARKOV_SEQUENCE": {
+          "value": 4,
+          "description": "Generate a bounded Gauss-Markov random sequence and summary statistics."
+        }
+      }
+    },
+    "numFunctionCode": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "QUADRATIC_MINUS_CONSTANT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "QUADRATIC_MINUS_CONSTANT": {
+          "value": 1,
+          "description": "f(x) = x * x - TARGET_VALUE, with derivative f'(x) = 2 * x."
+        }
+      }
+    },
+    "numResultStatus": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "INVALID_INPUT",
+        "UNSUPPORTED_OPERATION",
+        "DID_NOT_CONVERGE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "Operation completed."
+        },
+        "INVALID_INPUT": {
+          "value": 1,
+          "description": "Request fields are missing, non-finite, or numerically invalid."
+        },
+        "UNSUPPORTED_OPERATION": {
+          "value": 2,
+          "description": "The requested operation or function is not supported."
+        },
+        "DID_NOT_CONVERGE": {
+          "value": 3,
+          "description": "Iteration did not reach ACCURACY within MAX_ITERATIONS."
+        }
+      }
+    },
+    "numDiscretizeRoundDirection": {
+      "type": "string",
+      "enum": [
+        "TO_ZERO",
+        "FROM_ZERO",
+        "NEAR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "TO_ZERO": {
+          "value": 0,
+          "description": "Round magnitude toward zero before restoring sign."
+        },
+        "FROM_ZERO": {
+          "value": 1,
+          "description": "Round magnitude away from zero before restoring sign."
+        },
+        "NEAR": {
+          "value": 2,
+          "description": "Round magnitude to the nearest least-significant-bit multiple before restoring sign."
+        }
+      }
+    },
+    "NUMRootSolveRequest": {
+      "type": "object",
+      "description": "Request for one scalar numerical root-solving operation.",
+      "properties": {
+        "OPERATION": {
+          "$ref": "#/definitions/numOperationCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "NEWTON_RAPHSON": {
+              "value": 1,
+              "description": "Solve for a scalar root using Newton-Raphson iteration."
+            },
+            "LINEAR_INTERPOLATION": {
+              "value": 2,
+              "description": "Linearly interpolate one scalar between two scalar samples."
+            },
+            "BILINEAR_INTERPOLATION": {
+              "value": 3,
+              "description": "Bilinearly interpolate one scalar from four rectangular-corner samples."
+            },
+            "GAUSS_MARKOV_SEQUENCE": {
+              "value": 4,
+              "description": "Generate a bounded Gauss-Markov random sequence and summary statistics."
+            }
+          }
+        },
+        "FUNCTION": {
+          "$ref": "#/definitions/numFunctionCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "QUADRATIC_MINUS_CONSTANT": {
+              "value": 1,
+              "description": "f(x) = x * x - TARGET_VALUE, with derivative f'(x) = 2 * x."
+            }
+          }
+        },
+        "INITIAL_ESTIMATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ACCURACY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_ITERATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NUMRootSolveResult": {
+      "type": "object",
+      "description": "Result of one scalar numerical root-solving operation.",
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/numResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request fields are missing, non-finite, or numerically invalid."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "The requested operation or function is not supported."
+            },
+            "DID_NOT_CONVERGE": {
+              "value": 3,
+              "description": "Iteration did not reach ACCURACY within MAX_ITERATIONS."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ROOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ITERATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NUMVectorSaturateRequest": {
+      "type": "object",
+      "description": "Request for component-wise vector saturation.",
+      "properties": {
+        "STATE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Input vector to clamp.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "LOWER_BOUNDS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-component lower bounds. Length must match STATE.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "UPPER_BOUNDS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-component upper bounds. Length must match STATE.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NUMVectorSaturateResult": {
+      "type": "object",
+      "description": "Result of one component-wise vector saturation operation.",
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/numResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request fields are missing, non-finite, or numerically invalid."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "The requested operation or function is not supported."
+            },
+            "DID_NOT_CONVERGE": {
+              "value": 3,
+              "description": "Iteration did not reach ACCURACY within MAX_ITERATIONS."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SATURATED_STATE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Saturated output vector.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NUMVectorDiscretizeRequest": {
+      "type": "object",
+      "description": "Request for component-wise vector discretization.",
+      "properties": {
+        "STATE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Input vector to quantize.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "LSB": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-component least-significant-bit size. Length must match STATE.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "ROUND_DIRECTION": {
+          "$ref": "#/definitions/numDiscretizeRoundDirection",
+          "description": "Rounding direction used before the original sign is restored.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "TO_ZERO": {
+              "value": 0,
+              "description": "Round magnitude toward zero before restoring sign."
+            },
+            "FROM_ZERO": {
+              "value": 1,
+              "description": "Round magnitude away from zero before restoring sign."
+            },
+            "NEAR": {
+              "value": 2,
+              "description": "Round magnitude to the nearest least-significant-bit multiple before restoring sign."
+            }
+          }
+        },
+        "CARRY_ERROR": {
+          "type": "boolean",
+          "description": "When true, PREVIOUS_ERROR is added to STATE before discretization.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PREVIOUS_ERROR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional prior discretization error vector from an earlier result.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NUMVectorDiscretizeResult": {
+      "type": "object",
+      "description": "Result of one component-wise vector discretization operation.",
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/numResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request fields are missing, non-finite, or numerically invalid."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "The requested operation or function is not supported."
+            },
+            "DID_NOT_CONVERGE": {
+              "value": 3,
+              "description": "Iteration did not reach ACCURACY within MAX_ITERATIONS."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DISCRETIZED_STATE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Quantized output vector.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "DISCRETIZATION_ERROR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Input-minus-output error after any requested carried error was applied.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NUMScalarInterpolationRequest": {
+      "type": "object",
+      "description": "Request for one scalar interpolation operation.",
+      "properties": {
+        "OPERATION": {
+          "$ref": "#/definitions/numOperationCode",
+          "description": "LINEAR_INTERPOLATION or BILINEAR_INTERPOLATION.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "NEWTON_RAPHSON": {
+              "value": 1,
+              "description": "Solve for a scalar root using Newton-Raphson iteration."
+            },
+            "LINEAR_INTERPOLATION": {
+              "value": 2,
+              "description": "Linearly interpolate one scalar between two scalar samples."
+            },
+            "BILINEAR_INTERPOLATION": {
+              "value": 3,
+              "description": "Bilinearly interpolate one scalar from four rectangular-corner samples."
+            },
+            "GAUSS_MARKOV_SEQUENCE": {
+              "value": 4,
+              "description": "Generate a bounded Gauss-Markov random sequence and summary statistics."
+            }
+          }
+        },
+        "X1": {
+          "type": "number",
+          "description": "First x-coordinate bound.",
+          "x-flatbuffer-type": "double"
+        },
+        "X2": {
+          "type": "number",
+          "description": "Second x-coordinate bound.",
+          "x-flatbuffer-type": "double"
+        },
+        "Y1": {
+          "type": "number",
+          "description": "First y-coordinate bound for bilinear interpolation.",
+          "x-flatbuffer-type": "double"
+        },
+        "Y2": {
+          "type": "number",
+          "description": "Second y-coordinate bound for bilinear interpolation.",
+          "x-flatbuffer-type": "double"
+        },
+        "VALUE1": {
+          "type": "number",
+          "description": "Linear interpolation value at X1.",
+          "x-flatbuffer-type": "double"
+        },
+        "VALUE2": {
+          "type": "number",
+          "description": "Linear interpolation value at X2.",
+          "x-flatbuffer-type": "double"
+        },
+        "Z11": {
+          "type": "number",
+          "description": "Bilinear corner value at X1,Y1.",
+          "x-flatbuffer-type": "double"
+        },
+        "Z12": {
+          "type": "number",
+          "description": "Bilinear corner value at X1,Y2.",
+          "x-flatbuffer-type": "double"
+        },
+        "Z21": {
+          "type": "number",
+          "description": "Bilinear corner value at X2,Y1.",
+          "x-flatbuffer-type": "double"
+        },
+        "Z22": {
+          "type": "number",
+          "description": "Bilinear corner value at X2,Y2.",
+          "x-flatbuffer-type": "double"
+        },
+        "INTERPOLATION_X": {
+          "type": "number",
+          "description": "X coordinate to interpolate.",
+          "x-flatbuffer-type": "double"
+        },
+        "INTERPOLATION_Y": {
+          "type": "number",
+          "description": "Y coordinate to interpolate for bilinear interpolation.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NUMScalarInterpolationResult": {
+      "type": "object",
+      "description": "Result of one scalar interpolation operation.",
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/numResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request fields are missing, non-finite, or numerically invalid."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "The requested operation or function is not supported."
+            },
+            "DID_NOT_CONVERGE": {
+              "value": 3,
+              "description": "Iteration did not reach ACCURACY within MAX_ITERATIONS."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "number",
+          "description": "Interpolated scalar value.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NUMGaussMarkovRequest": {
+      "type": "object",
+      "description": "Request for one Basilisk-compatible Gauss-Markov random sequence.",
+      "properties": {
+        "OPERATION": {
+          "$ref": "#/definitions/numOperationCode",
+          "description": "GAUSS_MARKOV_SEQUENCE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "NEWTON_RAPHSON": {
+              "value": 1,
+              "description": "Solve for a scalar root using Newton-Raphson iteration."
+            },
+            "LINEAR_INTERPOLATION": {
+              "value": 2,
+              "description": "Linearly interpolate one scalar between two scalar samples."
+            },
+            "BILINEAR_INTERPOLATION": {
+              "value": 3,
+              "description": "Bilinearly interpolate one scalar from four rectangular-corner samples."
+            },
+            "GAUSS_MARKOV_SEQUENCE": {
+              "value": 4,
+              "description": "Generate a bounded Gauss-Markov random sequence and summary statistics."
+            }
+          }
+        },
+        "DIMENSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of scalar states per sample.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SAMPLE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of post-warmup samples used in the result statistics.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "WARMUP_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of initial state propagations excluded from the result statistics.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "RNG_SEED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Seed for the Basilisk-compatible standard normal generator.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "PROPAGATION_MATRIX": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Row-major DIMENSION x DIMENSION state propagation matrix.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "NOISE_MATRIX": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Row-major DIMENSION x DIMENSION standard-normal noise mixing matrix.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "STATE_BOUNDS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-state symmetric bounds. Values <= 0 disable clamping for that state.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "EMIT_SAMPLES": {
+          "type": "boolean",
+          "description": "When true, emit flattened sample-major states in SAMPLES.",
+          "x-flatbuffer-type": "bool"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NUMGaussMarkovResult": {
+      "type": "object",
+      "description": "Result of one Basilisk-compatible Gauss-Markov random sequence.",
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/numResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request fields are missing, non-finite, or numerically invalid."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "The requested operation or function is not supported."
+            },
+            "DID_NOT_CONVERGE": {
+              "value": 3,
+              "description": "Iteration did not reach ACCURACY within MAX_ITERATIONS."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MEAN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Post-warmup per-state sample means.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "STANDARD_DEVIATION": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Post-warmup per-state sample standard deviations with n - 1 denominator.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "MINIMUM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Post-warmup per-state minima.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "MAXIMUM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Post-warmup per-state maxima.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "FINAL_STATE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "State after the final generated sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "SAMPLES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional flattened sample-major state history.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NUM": {
+      "type": "object",
+      "description": "Numerical utility envelope.",
+      "properties": {
+        "ROOT_SOLVE_REQUEST": {
+          "$ref": "#/definitions/NUMRootSolveRequest",
+          "x-flatbuffer-type": "NUMRootSolveRequest"
+        },
+        "ROOT_SOLVE_RESULT": {
+          "$ref": "#/definitions/NUMRootSolveResult",
+          "x-flatbuffer-type": "NUMRootSolveResult"
+        },
+        "VECTOR_SATURATE_REQUEST": {
+          "$ref": "#/definitions/NUMVectorSaturateRequest",
+          "x-flatbuffer-type": "NUMVectorSaturateRequest"
+        },
+        "VECTOR_SATURATE_RESULT": {
+          "$ref": "#/definitions/NUMVectorSaturateResult",
+          "x-flatbuffer-type": "NUMVectorSaturateResult"
+        },
+        "VECTOR_DISCRETIZE_REQUEST": {
+          "$ref": "#/definitions/NUMVectorDiscretizeRequest",
+          "x-flatbuffer-type": "NUMVectorDiscretizeRequest"
+        },
+        "VECTOR_DISCRETIZE_RESULT": {
+          "$ref": "#/definitions/NUMVectorDiscretizeResult",
+          "x-flatbuffer-type": "NUMVectorDiscretizeResult"
+        },
+        "SCALAR_INTERPOLATION_REQUEST": {
+          "$ref": "#/definitions/NUMScalarInterpolationRequest",
+          "x-flatbuffer-type": "NUMScalarInterpolationRequest"
+        },
+        "SCALAR_INTERPOLATION_RESULT": {
+          "$ref": "#/definitions/NUMScalarInterpolationResult",
+          "x-flatbuffer-type": "NUMScalarInterpolationResult"
+        },
+        "GAUSS_MARKOV_REQUEST": {
+          "$ref": "#/definitions/NUMGaussMarkovRequest",
+          "x-flatbuffer-type": "NUMGaussMarkovRequest"
+        },
+        "GAUSS_MARKOV_RESULT": {
+          "$ref": "#/definitions/NUMGaussMarkovResult",
+          "x-flatbuffer-type": "NUMGaussMarkovResult"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/NUM",
+  "x-flatbuffer-root-type": "NUM",
+  "x-flatbuffer-file-identifier": "$NUM"
+}

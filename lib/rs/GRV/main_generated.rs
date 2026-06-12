@@ -355,6 +355,13 @@ impl<'a> GRV<'a> {
   pub const VT_SOLID_TIDES: ::flatbuffers::VOffsetT = 20;
   pub const VT_OCEAN_TIDES: ::flatbuffers::VOffsetT = 22;
   pub const VT_POLE_TIDES: ::flatbuffers::VOffsetT = 24;
+  pub const VT_EQUATORIAL_RADIUS: ::flatbuffers::VOffsetT = 26;
+  pub const VT_J2: ::flatbuffers::VOffsetT = 28;
+  pub const VT_MU: ::flatbuffers::VOffsetT = 30;
+  pub const VT_J3: ::flatbuffers::VOffsetT = 32;
+  pub const VT_J4: ::flatbuffers::VOffsetT = 34;
+  pub const VT_J5: ::flatbuffers::VOffsetT = 36;
+  pub const VT_J6: ::flatbuffers::VOffsetT = 38;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -366,6 +373,13 @@ impl<'a> GRV<'a> {
     args: &'args GRVArgs
   ) -> ::flatbuffers::WIPOffset<GRV<'bldr>> {
     let mut builder = GRVBuilder::new(_fbb);
+    builder.add_J6(args.J6);
+    builder.add_J5(args.J5);
+    builder.add_J4(args.J4);
+    builder.add_J3(args.J3);
+    builder.add_MU(args.MU);
+    builder.add_J2(args.J2);
+    builder.add_EQUATORIAL_RADIUS(args.EQUATORIAL_RADIUS);
     builder.add_MAX_ORDER(args.MAX_ORDER);
     builder.add_MAX_DEGREE(args.MAX_DEGREE);
     builder.add_POLE_TIDES(args.POLE_TIDES);
@@ -392,6 +406,13 @@ impl<'a> GRV<'a> {
     let SOLID_TIDES = self.SOLID_TIDES();
     let OCEAN_TIDES = self.OCEAN_TIDES();
     let POLE_TIDES = self.POLE_TIDES();
+    let EQUATORIAL_RADIUS = self.EQUATORIAL_RADIUS();
+    let J2 = self.J2();
+    let MU = self.MU();
+    let J3 = self.J3();
+    let J4 = self.J4();
+    let J5 = self.J5();
+    let J6 = self.J6();
     GRVT {
       MODEL_TYPE,
       MODEL_NAME,
@@ -404,6 +425,13 @@ impl<'a> GRV<'a> {
       SOLID_TIDES,
       OCEAN_TIDES,
       POLE_TIDES,
+      EQUATORIAL_RADIUS,
+      J2,
+      MU,
+      J3,
+      J4,
+      J5,
+      J6,
     }
   }
 
@@ -484,6 +512,55 @@ impl<'a> GRV<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(GRV::VT_POLE_TIDES, Some(false)).unwrap()}
   }
+  #[inline]
+  pub fn EQUATORIAL_RADIUS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GRV::VT_EQUATORIAL_RADIUS, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn J2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GRV::VT_J2, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MU(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GRV::VT_MU, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn J3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GRV::VT_J3, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn J4(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GRV::VT_J4, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn J5(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GRV::VT_J5, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn J6(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GRV::VT_J6, Some(0.0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for GRV<'_> {
@@ -503,6 +580,13 @@ impl ::flatbuffers::Verifiable for GRV<'_> {
      .visit_field::<bool>("SOLID_TIDES", Self::VT_SOLID_TIDES, false)?
      .visit_field::<bool>("OCEAN_TIDES", Self::VT_OCEAN_TIDES, false)?
      .visit_field::<bool>("POLE_TIDES", Self::VT_POLE_TIDES, false)?
+     .visit_field::<f64>("EQUATORIAL_RADIUS", Self::VT_EQUATORIAL_RADIUS, false)?
+     .visit_field::<f64>("J2", Self::VT_J2, false)?
+     .visit_field::<f64>("MU", Self::VT_MU, false)?
+     .visit_field::<f64>("J3", Self::VT_J3, false)?
+     .visit_field::<f64>("J4", Self::VT_J4, false)?
+     .visit_field::<f64>("J5", Self::VT_J5, false)?
+     .visit_field::<f64>("J6", Self::VT_J6, false)?
      .finish();
     Ok(())
   }
@@ -519,6 +603,13 @@ pub struct GRVArgs {
     pub SOLID_TIDES: bool,
     pub OCEAN_TIDES: bool,
     pub POLE_TIDES: bool,
+    pub EQUATORIAL_RADIUS: f64,
+    pub J2: f64,
+    pub MU: f64,
+    pub J3: f64,
+    pub J4: f64,
+    pub J5: f64,
+    pub J6: f64,
 }
 impl<'a> Default for GRVArgs {
   #[inline]
@@ -535,6 +626,13 @@ impl<'a> Default for GRVArgs {
       SOLID_TIDES: false,
       OCEAN_TIDES: false,
       POLE_TIDES: false,
+      EQUATORIAL_RADIUS: 0.0,
+      J2: 0.0,
+      MU: 0.0,
+      J3: 0.0,
+      J4: 0.0,
+      J5: 0.0,
+      J6: 0.0,
     }
   }
 }
@@ -589,6 +687,34 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> GRVBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<bool>(GRV::VT_POLE_TIDES, POLE_TIDES, false);
   }
   #[inline]
+  pub fn add_EQUATORIAL_RADIUS(&mut self, EQUATORIAL_RADIUS: f64) {
+    self.fbb_.push_slot::<f64>(GRV::VT_EQUATORIAL_RADIUS, EQUATORIAL_RADIUS, 0.0);
+  }
+  #[inline]
+  pub fn add_J2(&mut self, J2: f64) {
+    self.fbb_.push_slot::<f64>(GRV::VT_J2, J2, 0.0);
+  }
+  #[inline]
+  pub fn add_MU(&mut self, MU: f64) {
+    self.fbb_.push_slot::<f64>(GRV::VT_MU, MU, 0.0);
+  }
+  #[inline]
+  pub fn add_J3(&mut self, J3: f64) {
+    self.fbb_.push_slot::<f64>(GRV::VT_J3, J3, 0.0);
+  }
+  #[inline]
+  pub fn add_J4(&mut self, J4: f64) {
+    self.fbb_.push_slot::<f64>(GRV::VT_J4, J4, 0.0);
+  }
+  #[inline]
+  pub fn add_J5(&mut self, J5: f64) {
+    self.fbb_.push_slot::<f64>(GRV::VT_J5, J5, 0.0);
+  }
+  #[inline]
+  pub fn add_J6(&mut self, J6: f64) {
+    self.fbb_.push_slot::<f64>(GRV::VT_J6, J6, 0.0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> GRVBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     GRVBuilder {
@@ -617,6 +743,13 @@ impl ::core::fmt::Debug for GRV<'_> {
       ds.field("SOLID_TIDES", &self.SOLID_TIDES());
       ds.field("OCEAN_TIDES", &self.OCEAN_TIDES());
       ds.field("POLE_TIDES", &self.POLE_TIDES());
+      ds.field("EQUATORIAL_RADIUS", &self.EQUATORIAL_RADIUS());
+      ds.field("J2", &self.J2());
+      ds.field("MU", &self.MU());
+      ds.field("J3", &self.J3());
+      ds.field("J4", &self.J4());
+      ds.field("J5", &self.J5());
+      ds.field("J6", &self.J6());
       ds.finish()
   }
 }
@@ -634,6 +767,13 @@ pub struct GRVT {
   pub SOLID_TIDES: bool,
   pub OCEAN_TIDES: bool,
   pub POLE_TIDES: bool,
+  pub EQUATORIAL_RADIUS: f64,
+  pub J2: f64,
+  pub MU: f64,
+  pub J3: f64,
+  pub J4: f64,
+  pub J5: f64,
+  pub J6: f64,
 }
 impl Default for GRVT {
   fn default() -> Self {
@@ -649,6 +789,13 @@ impl Default for GRVT {
       SOLID_TIDES: false,
       OCEAN_TIDES: false,
       POLE_TIDES: false,
+      EQUATORIAL_RADIUS: 0.0,
+      J2: 0.0,
+      MU: 0.0,
+      J3: 0.0,
+      J4: 0.0,
+      J5: 0.0,
+      J6: 0.0,
     }
   }
 }
@@ -668,6 +815,13 @@ impl GRVT {
     let SOLID_TIDES = self.SOLID_TIDES;
     let OCEAN_TIDES = self.OCEAN_TIDES;
     let POLE_TIDES = self.POLE_TIDES;
+    let EQUATORIAL_RADIUS = self.EQUATORIAL_RADIUS;
+    let J2 = self.J2;
+    let MU = self.MU;
+    let J3 = self.J3;
+    let J4 = self.J4;
+    let J5 = self.J5;
+    let J6 = self.J6;
     GRV::create(_fbb, &GRVArgs{
       MODEL_TYPE,
       MODEL_NAME,
@@ -680,6 +834,13 @@ impl GRVT {
       SOLID_TIDES,
       OCEAN_TIDES,
       POLE_TIDES,
+      EQUATORIAL_RADIUS,
+      J2,
+      MU,
+      J3,
+      J4,
+      J5,
+      J6,
     })
   }
 }

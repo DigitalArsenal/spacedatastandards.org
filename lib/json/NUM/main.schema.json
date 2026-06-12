@@ -1,0 +1,384 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "numOperationCode" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "NEWTON_RAPHSON", "LINEAR_INTERPOLATION", "BILINEAR_INTERPOLATION", "GAUSS_MARKOV_SEQUENCE"]
+    },
+    "numFunctionCode" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "QUADRATIC_MINUS_CONSTANT"]
+    },
+    "numResultStatus" : {
+      "type" : "string",
+      "enum": ["OK", "INVALID_INPUT", "UNSUPPORTED_OPERATION", "DID_NOT_CONVERGE"]
+    },
+    "numDiscretizeRoundDirection" : {
+      "type" : "string",
+      "enum": ["TO_ZERO", "FROM_ZERO", "NEAR"]
+    },
+    "NUMRootSolveRequest" : {
+      "type" : "object",
+      "description" : "Request for one scalar numerical root-solving operation.",
+      "properties" : {
+        "OPERATION" : {
+                "$ref" : "#/definitions/numOperationCode"
+              },
+        "FUNCTION" : {
+                "$ref" : "#/definitions/numFunctionCode"
+              },
+        "INITIAL_ESTIMATE" : {
+                "type" : "number"
+              },
+        "TARGET_VALUE" : {
+                "type" : "number"
+              },
+        "ACCURACY" : {
+                "type" : "number"
+              },
+        "MAX_ITERATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NUMRootSolveResult" : {
+      "type" : "object",
+      "description" : "Result of one scalar numerical root-solving operation.",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/numResultStatus"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string"
+              },
+        "ROOT" : {
+                "type" : "number"
+              },
+        "RESIDUAL" : {
+                "type" : "number"
+              },
+        "ITERATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NUMVectorSaturateRequest" : {
+      "type" : "object",
+      "description" : "Request for component-wise vector saturation.",
+      "properties" : {
+        "STATE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Input vector to clamp."
+              },
+        "LOWER_BOUNDS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Per-component lower bounds. Length must match STATE."
+              },
+        "UPPER_BOUNDS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Per-component upper bounds. Length must match STATE."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Optional trace/correlation identifier."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NUMVectorSaturateResult" : {
+      "type" : "object",
+      "description" : "Result of one component-wise vector saturation operation.",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/numResultStatus"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string"
+              },
+        "SATURATED_STATE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Saturated output vector."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Caller trace/correlation identifier copied from the request when present."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NUMVectorDiscretizeRequest" : {
+      "type" : "object",
+      "description" : "Request for component-wise vector discretization.",
+      "properties" : {
+        "STATE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Input vector to quantize."
+              },
+        "LSB" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Per-component least-significant-bit size. Length must match STATE."
+              },
+        "ROUND_DIRECTION" : {
+                "$ref" : "#/definitions/numDiscretizeRoundDirection",
+                "description" : "Rounding direction used before the original sign is restored."
+              },
+        "CARRY_ERROR" : {
+                "type" : "boolean",
+                "description" : "When true, PREVIOUS_ERROR is added to STATE before discretization."
+              },
+        "PREVIOUS_ERROR" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Optional prior discretization error vector from an earlier result."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Optional trace/correlation identifier."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NUMVectorDiscretizeResult" : {
+      "type" : "object",
+      "description" : "Result of one component-wise vector discretization operation.",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/numResultStatus"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string"
+              },
+        "DISCRETIZED_STATE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Quantized output vector."
+              },
+        "DISCRETIZATION_ERROR" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Input-minus-output error after any requested carried error was applied."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Caller trace/correlation identifier copied from the request when present."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NUMScalarInterpolationRequest" : {
+      "type" : "object",
+      "description" : "Request for one scalar interpolation operation.",
+      "properties" : {
+        "OPERATION" : {
+                "$ref" : "#/definitions/numOperationCode",
+                "description" : "LINEAR_INTERPOLATION or BILINEAR_INTERPOLATION."
+              },
+        "X1" : {
+                "type" : "number",
+                "description" : "First x-coordinate bound."
+              },
+        "X2" : {
+                "type" : "number",
+                "description" : "Second x-coordinate bound."
+              },
+        "Y1" : {
+                "type" : "number",
+                "description" : "First y-coordinate bound for bilinear interpolation."
+              },
+        "Y2" : {
+                "type" : "number",
+                "description" : "Second y-coordinate bound for bilinear interpolation."
+              },
+        "VALUE1" : {
+                "type" : "number",
+                "description" : "Linear interpolation value at X1."
+              },
+        "VALUE2" : {
+                "type" : "number",
+                "description" : "Linear interpolation value at X2."
+              },
+        "Z11" : {
+                "type" : "number",
+                "description" : "Bilinear corner value at X1,Y1."
+              },
+        "Z12" : {
+                "type" : "number",
+                "description" : "Bilinear corner value at X1,Y2."
+              },
+        "Z21" : {
+                "type" : "number",
+                "description" : "Bilinear corner value at X2,Y1."
+              },
+        "Z22" : {
+                "type" : "number",
+                "description" : "Bilinear corner value at X2,Y2."
+              },
+        "INTERPOLATION_X" : {
+                "type" : "number",
+                "description" : "X coordinate to interpolate."
+              },
+        "INTERPOLATION_Y" : {
+                "type" : "number",
+                "description" : "Y coordinate to interpolate for bilinear interpolation."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Optional trace/correlation identifier."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NUMScalarInterpolationResult" : {
+      "type" : "object",
+      "description" : "Result of one scalar interpolation operation.",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/numResultStatus"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string"
+              },
+        "VALUE" : {
+                "type" : "number",
+                "description" : "Interpolated scalar value."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Caller trace/correlation identifier copied from the request when present."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NUMGaussMarkovRequest" : {
+      "type" : "object",
+      "description" : "Request for one Basilisk-compatible Gauss-Markov random sequence.",
+      "properties" : {
+        "OPERATION" : {
+                "$ref" : "#/definitions/numOperationCode",
+                "description" : "GAUSS_MARKOV_SEQUENCE."
+              },
+        "DIMENSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of scalar states per sample."
+              },
+        "SAMPLE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of post-warmup samples used in the result statistics."
+              },
+        "WARMUP_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of initial state propagations excluded from the result statistics."
+              },
+        "RNG_SEED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Seed for the Basilisk-compatible standard normal generator."
+              },
+        "PROPAGATION_MATRIX" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Row-major DIMENSION x DIMENSION state propagation matrix."
+              },
+        "NOISE_MATRIX" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Row-major DIMENSION x DIMENSION standard-normal noise mixing matrix."
+              },
+        "STATE_BOUNDS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Per-state symmetric bounds. Values <= 0 disable clamping for that state."
+              },
+        "EMIT_SAMPLES" : {
+                "type" : "boolean",
+                "description" : "When true, emit flattened sample-major states in SAMPLES."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Optional trace/correlation identifier."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NUMGaussMarkovResult" : {
+      "type" : "object",
+      "description" : "Result of one Basilisk-compatible Gauss-Markov random sequence.",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/numResultStatus"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string"
+              },
+        "MEAN" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Post-warmup per-state sample means."
+              },
+        "STANDARD_DEVIATION" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Post-warmup per-state sample standard deviations with n - 1 denominator."
+              },
+        "MINIMUM" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Post-warmup per-state minima."
+              },
+        "MAXIMUM" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Post-warmup per-state maxima."
+              },
+        "FINAL_STATE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "State after the final generated sample."
+              },
+        "SAMPLES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Optional flattened sample-major state history."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Caller trace/correlation identifier copied from the request when present."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NUM" : {
+      "type" : "object",
+      "description" : "Numerical utility envelope.",
+      "properties" : {
+        "ROOT_SOLVE_REQUEST" : {
+                "$ref" : "#/definitions/NUMRootSolveRequest"
+              },
+        "ROOT_SOLVE_RESULT" : {
+                "$ref" : "#/definitions/NUMRootSolveResult"
+              },
+        "VECTOR_SATURATE_REQUEST" : {
+                "$ref" : "#/definitions/NUMVectorSaturateRequest"
+              },
+        "VECTOR_SATURATE_RESULT" : {
+                "$ref" : "#/definitions/NUMVectorSaturateResult"
+              },
+        "VECTOR_DISCRETIZE_REQUEST" : {
+                "$ref" : "#/definitions/NUMVectorDiscretizeRequest"
+              },
+        "VECTOR_DISCRETIZE_RESULT" : {
+                "$ref" : "#/definitions/NUMVectorDiscretizeResult"
+              },
+        "SCALAR_INTERPOLATION_REQUEST" : {
+                "$ref" : "#/definitions/NUMScalarInterpolationRequest"
+              },
+        "SCALAR_INTERPOLATION_RESULT" : {
+                "$ref" : "#/definitions/NUMScalarInterpolationResult"
+              },
+        "GAUSS_MARKOV_REQUEST" : {
+                "$ref" : "#/definitions/NUMGaussMarkovRequest"
+              },
+        "GAUSS_MARKOV_RESULT" : {
+                "$ref" : "#/definitions/NUMGaussMarkovResult"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/NUM"
+}

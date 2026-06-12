@@ -256,6 +256,34 @@
         "POLE_TIDES": {
           "type": "boolean",
           "x-flatbuffer-type": "bool"
+        },
+        "EQUATORIAL_RADIUS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "J2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MU": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "J3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "J4": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "J5": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "J6": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
         }
       },
       "additionalProperties": false

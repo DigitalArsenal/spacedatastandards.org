@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "frmOperationCode": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "PCI_TO_PCPF",
+        "PCPF_TO_PCI",
+        "LLA_TO_PCPF",
+        "PCPF_TO_LLA"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "PCI_TO_PCPF": {
+          "value": 1
+        },
+        "PCPF_TO_PCI": {
+          "value": 2
+        },
+        "LLA_TO_PCPF": {
+          "value": 3
+        },
+        "PCPF_TO_LLA": {
+          "value": 4
+        }
+      }
+    },
+    "frmResultStatus": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "INVALID_INPUT",
+        "UNSUPPORTED_OPERATION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0
+        },
+        "INVALID_INPUT": {
+          "value": 1
+        },
+        "UNSUPPORTED_OPERATION": {
+          "value": 2
+        }
+      }
+    },
+    "FRMVector3": {
+      "type": "object",
+      "properties": {
+        "X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FRMMatrix3": {
+      "type": "object",
+      "properties": {
+        "M11": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M12": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M13": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M21": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M22": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M23": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M31": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M32": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M33": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FRMFrameTransformRequest": {
+      "type": "object",
+      "properties": {
+        "OPERATION": {
+          "$ref": "#/definitions/frmOperationCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "PCI_TO_PCPF": {
+              "value": 1
+            },
+            "PCPF_TO_PCI": {
+              "value": 2
+            },
+            "LLA_TO_PCPF": {
+              "value": 3
+            },
+            "PCPF_TO_LLA": {
+              "value": 4
+            }
+          }
+        },
+        "POSITION": {
+          "$ref": "#/definitions/FRMVector3",
+          "x-flatbuffer-type": "FRMVector3"
+        },
+        "TRANSFORM_DCM": {
+          "$ref": "#/definitions/FRMMatrix3",
+          "x-flatbuffer-type": "FRMMatrix3"
+        },
+        "EQUATORIAL_RADIUS_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POLAR_RADIUS_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FRMFrameTransformResult": {
+      "type": "object",
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/frmResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0
+            },
+            "INVALID_INPUT": {
+              "value": 1
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION": {
+          "$ref": "#/definitions/FRMVector3",
+          "x-flatbuffer-type": "FRMVector3"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FRM": {
+      "type": "object",
+      "properties": {
+        "FRAME_TRANSFORM_REQUEST": {
+          "$ref": "#/definitions/FRMFrameTransformRequest",
+          "x-flatbuffer-type": "FRMFrameTransformRequest"
+        },
+        "FRAME_TRANSFORM_RESULT": {
+          "$ref": "#/definitions/FRMFrameTransformResult",
+          "x-flatbuffer-type": "FRMFrameTransformResult"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/FRM",
+  "x-flatbuffer-root-type": "FRM",
+  "x-flatbuffer-file-identifier": "$FRM"
+}

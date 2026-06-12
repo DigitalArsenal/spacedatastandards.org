@@ -95,21 +95,30 @@ class keplerianElements extends Table
     }
 
     /**
+     * @return double
+     */
+    public function getPERIAPSIS_RADIUS()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startkeplerianElements(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(7);
+        $builder->StartObject(8);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return keplerianElements
      */
-    public static function createkeplerianElements(FlatBufferBuilder $builder, $SEMI_MAJOR_AXIS, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $ANOMALY_TYPE, $ANOMALY)
+    public static function createkeplerianElements(FlatBufferBuilder $builder, $SEMI_MAJOR_AXIS, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $ANOMALY_TYPE, $ANOMALY, $PERIAPSIS_RADIUS)
     {
-        $builder->startObject(7);
+        $builder->startObject(8);
         self::addSEMI_MAJOR_AXIS($builder, $SEMI_MAJOR_AXIS);
         self::addECCENTRICITY($builder, $ECCENTRICITY);
         self::addINCLINATION($builder, $INCLINATION);
@@ -117,6 +126,7 @@ class keplerianElements extends Table
         self::addARG_OF_PERICENTER($builder, $ARG_OF_PERICENTER);
         self::addANOMALY_TYPE($builder, $ANOMALY_TYPE);
         self::addANOMALY($builder, $ANOMALY);
+        self::addPERIAPSIS_RADIUS($builder, $PERIAPSIS_RADIUS);
         $o = $builder->endObject();
         return $o;
     }
@@ -189,6 +199,16 @@ class keplerianElements extends Table
     public static function addANOMALY(FlatBufferBuilder $builder, $ANOMALY)
     {
         $builder->addDoubleX(6, $ANOMALY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPERIAPSIS_RADIUS(FlatBufferBuilder $builder, $PERIAPSIS_RADIUS)
+    {
+        $builder->addDoubleX(7, $PERIAPSIS_RADIUS, 0.0);
     }
 
     /**

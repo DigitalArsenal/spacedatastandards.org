@@ -1,5 +1,5 @@
-// Hash: bda7e14b94fca95d472bffd6a6a9e11bbb4c5085a11831c23a78d624f35e3e04
-// Version: 2.0.2
+// Hash: fb734998a79de979a28198e7261c19971df393f6ef193423f5b40f7bbf440c1f
+// Version: 2.0.3
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -155,6 +155,7 @@ table keplerianElements {
   ARG_OF_PERICENTER: double; // degrees
   ANOMALY_TYPE: anomalyConvention;
   ANOMALY: double;         // degrees
+  PERIAPSIS_RADIUS: double; // km, used when ECCENTRICITY is 1 and SEMI_MAJOR_AXIS is 0 for parabolic states
 }
 
 /// Equinoctial Elements

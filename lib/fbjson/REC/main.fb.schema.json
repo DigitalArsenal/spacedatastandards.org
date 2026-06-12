@@ -3933,6 +3933,66 @@
         }
       }
     },
+    "acwOperationCode": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "COMPUTE_ACCESS_WINDOWS": {
+          "value": 1,
+          "description": "Compute access windows from pre-sampled target Cartesian states."
+        }
+      }
+    },
+    "acwResultStatus": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "Operation completed."
+        },
+        "INVALID_INPUT": {
+          "value": 1,
+          "description": "Request fields are missing, non-finite, or numerically invalid."
+        },
+        "UNSUPPORTED_OPERATION": {
+          "value": 2,
+          "description": "The requested operation is not supported by the module."
+        }
+      }
+    },
+    "acwRefractionModelKind": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1
+      ],
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "EARTH_STANDARD_ATMOSPHERE": {
+          "value": 1,
+          "description": "Orekit-compatible EarthStandardAtmosphereRefraction correction."
+        }
+      }
+    },
     "analyticProfile": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -4827,6 +4887,35 @@
         },
         "CROSS_POL": {
           "value": 6
+        }
+      }
+    },
+    "bspInterpolationStatus": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "Interpolation completed."
+        },
+        "INVALID_INPUT": {
+          "value": 1,
+          "description": "The request is missing required waypoint, time, order, or sample data."
+        },
+        "UNSUPPORTED_ORDER": {
+          "value": 2,
+          "description": "The requested polynomial order is outside the supported B-spline range."
+        },
+        "SINGULAR_SYSTEM": {
+          "value": 3,
+          "description": "The interpolation linear system is singular or numerically unstable."
         }
       }
     },
@@ -8599,6 +8688,56 @@
         }
       }
     },
+    "frmOperationCode": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "PCI_TO_PCPF": {
+          "value": 1
+        },
+        "PCPF_TO_PCI": {
+          "value": 2
+        },
+        "LLA_TO_PCPF": {
+          "value": 3
+        },
+        "PCPF_TO_LLA": {
+          "value": 4
+        }
+      }
+    },
+    "frmResultStatus": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0
+        },
+        "INVALID_INPUT": {
+          "value": 1
+        },
+        "UNSUPPORTED_OPERATION": {
+          "value": 2
+        }
+      }
+    },
     "imageFormat": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -9203,7 +9342,13 @@
         8,
         9,
         10,
-        11
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
       ],
       "x-flatbuffer-enum-values": {
         "GMST": {
@@ -9253,6 +9398,147 @@
         "UTC": {
           "value": 11,
           "description": "Coordinated Universal Time"
+        },
+        "GLONASS": {
+          "value": 12,
+          "description": "GLONASS Time"
+        },
+        "GST": {
+          "value": 13,
+          "description": "Galileo System Time"
+        },
+        "QZSS": {
+          "value": 14,
+          "description": "Quasi-Zenith Satellite System Time"
+        },
+        "BDT": {
+          "value": 15,
+          "description": "BeiDou Time"
+        },
+        "NAVIC": {
+          "value": 16,
+          "description": "Navigation with Indian Constellation Time"
+        },
+        "SBAS": {
+          "value": 17,
+          "description": "Satellite-Based Augmentation System Time"
+        }
+      }
+    },
+    "timEpochRepresentation": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "x-flatbuffer-enum-values": {
+        "JULIAN_DATE": {
+          "value": 0,
+          "description": "Julian Date day count."
+        },
+        "MODIFIED_JULIAN_DATE": {
+          "value": 1,
+          "description": "Modified Julian Date day count (JD - 2400000.5)."
+        },
+        "UNIX_SECONDS": {
+          "value": 2,
+          "description": "Seconds since 1970-01-01T00:00:00 UTC."
+        },
+        "ISO8601": {
+          "value": 3,
+          "description": "ISO 8601 timestamp text."
+        },
+        "GPS_SECONDS": {
+          "value": 4,
+          "description": "Seconds since 1980-01-06T00:00:00 GPS."
+        },
+        "GNSS_WEEK_SECONDS": {
+          "value": 5,
+          "description": "GNSS week number plus seconds within the week."
+        },
+        "CCSDS_TIME_CODE": {
+          "value": 6,
+          "description": "CCSDS binary time-code field with preamble metadata."
+        },
+        "MISSION_ELAPSED_SECONDS": {
+          "value": 7,
+          "description": "Seconds from an application-defined mission epoch."
+        }
+      }
+    },
+    "timCcsdsTimeCodeKind": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0,
+          "description": "No CCSDS time code selected."
+        },
+        "UNSEGMENTED": {
+          "value": 1,
+          "description": "CCSDS Unsegmented Time Code (CUC)."
+        },
+        "DAY_SEGMENTED": {
+          "value": 2,
+          "description": "CCSDS Day Segmented Time Code (CDS)."
+        },
+        "CALENDAR_SEGMENTED": {
+          "value": 3,
+          "description": "CCSDS Calendar Segmented Time Code (CCS)."
+        }
+      }
+    },
+    "timConversionStatus": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "Conversion completed."
+        },
+        "INVALID_INPUT": {
+          "value": 1,
+          "description": "Input epoch or requested representation is invalid."
+        },
+        "UNSUPPORTED_TIME_SYSTEM": {
+          "value": 2,
+          "description": "Requested source or target time system is not supported."
+        },
+        "LEAP_SECOND_DATA_REQUIRED": {
+          "value": 3,
+          "description": "Conversion requires leap-second data that was not available."
+        },
+        "EOP_DATA_REQUIRED": {
+          "value": 4,
+          "description": "Conversion requires Earth-orientation data that was not available."
+        },
+        "OUT_OF_RANGE": {
+          "value": 5,
+          "description": "Requested instant is outside the supported conversion range."
         }
       }
     },
@@ -11640,6 +11926,110 @@
         }
       }
     },
+    "numOperationCode": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "NEWTON_RAPHSON": {
+          "value": 1,
+          "description": "Solve for a scalar root using Newton-Raphson iteration."
+        },
+        "LINEAR_INTERPOLATION": {
+          "value": 2,
+          "description": "Linearly interpolate one scalar between two scalar samples."
+        },
+        "BILINEAR_INTERPOLATION": {
+          "value": 3,
+          "description": "Bilinearly interpolate one scalar from four rectangular-corner samples."
+        },
+        "GAUSS_MARKOV_SEQUENCE": {
+          "value": 4,
+          "description": "Generate a bounded Gauss-Markov random sequence and summary statistics."
+        }
+      }
+    },
+    "numFunctionCode": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "QUADRATIC_MINUS_CONSTANT": {
+          "value": 1,
+          "description": "f(x) = x * x - TARGET_VALUE, with derivative f'(x) = 2 * x."
+        }
+      }
+    },
+    "numResultStatus": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "Operation completed."
+        },
+        "INVALID_INPUT": {
+          "value": 1,
+          "description": "Request fields are missing, non-finite, or numerically invalid."
+        },
+        "UNSUPPORTED_OPERATION": {
+          "value": 2,
+          "description": "The requested operation or function is not supported."
+        },
+        "DID_NOT_CONVERGE": {
+          "value": 3,
+          "description": "Iteration did not reach ACCURACY within MAX_ITERATIONS."
+        }
+      }
+    },
+    "numDiscretizeRoundDirection": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "TO_ZERO": {
+          "value": 0,
+          "description": "Round magnitude toward zero before restoring sign."
+        },
+        "FROM_ZERO": {
+          "value": 1,
+          "description": "Round magnitude away from zero before restoring sign."
+        },
+        "NEAR": {
+          "value": 2,
+          "description": "Round magnitude to the nearest least-significant-bit multiple before restoring sign."
+        }
+      }
+    },
     "odMethod": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -12409,6 +12799,404 @@
         }
       }
     },
+    "rbkOperationCode": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "ADD_MRP": {
+          "value": 1,
+          "description": "Compose two Modified Rodrigues Parameter rotations."
+        },
+        "SUB_MRP": {
+          "value": 2,
+          "description": "Compute the relative Modified Rodrigues Parameter rotation from VECTOR_B to VECTOR_A."
+        },
+        "MRP_SHADOW": {
+          "value": 3,
+          "description": "Force a Modified Rodrigues Parameter vector to its shadow set."
+        },
+        "MRP_SWITCH": {
+          "value": 4,
+          "description": "Switch to the MRP shadow set when norm exceeds SWITCH_THRESHOLD."
+        },
+        "EP_TO_MRP": {
+          "value": 5,
+          "description": "Convert scalar-first Euler parameters/quaternion to MRP."
+        },
+        "MRP_TO_EP": {
+          "value": 6,
+          "description": "Convert MRP to scalar-first Euler parameters/quaternion."
+        },
+        "DCM_TO_EP": {
+          "value": 7,
+          "description": "Convert direction cosine matrix to scalar-first Euler parameters/quaternion."
+        },
+        "EP_TO_DCM": {
+          "value": 8,
+          "description": "Convert scalar-first Euler parameters/quaternion to direction cosine matrix."
+        },
+        "DCM_TO_MRP": {
+          "value": 9,
+          "description": "Convert direction cosine matrix to Modified Rodrigues Parameters."
+        },
+        "MRP_TO_DCM": {
+          "value": 10,
+          "description": "Convert Modified Rodrigues Parameters to direction cosine matrix."
+        },
+        "B_MATRIX_MRP": {
+          "value": 11,
+          "description": "Return the MRP B matrix that maps body angular rate to MRP derivative."
+        },
+        "B_INV_MATRIX_MRP": {
+          "value": 12,
+          "description": "Return the inverse MRP B matrix that maps MRP derivative to body angular rate."
+        },
+        "D_MRP": {
+          "value": 13,
+          "description": "Compute MRP derivative from MRP and body angular rate vectors."
+        },
+        "D_MRP_TO_OMEGA": {
+          "value": 14,
+          "description": "Compute body angular rate from MRP and MRP derivative vectors."
+        },
+        "B_DOT_MATRIX_MRP": {
+          "value": 15,
+          "description": "Return the MRP B-dot matrix from MRP and MRP derivative vectors."
+        },
+        "DD_MRP": {
+          "value": 16,
+          "description": "Compute second MRP derivative from MRP, MRP derivative, body rate, and body acceleration."
+        },
+        "DD_MRP_TO_D_OMEGA": {
+          "value": 17,
+          "description": "Compute body angular acceleration from MRP, MRP derivative, and second MRP derivative."
+        },
+        "ADD_GIBBS": {
+          "value": 18,
+          "description": "Compose two Gibbs-vector rotations."
+        },
+        "SUB_GIBBS": {
+          "value": 19,
+          "description": "Compute the relative Gibbs-vector rotation from VECTOR_B to VECTOR_A."
+        },
+        "EP_TO_GIBBS": {
+          "value": 20,
+          "description": "Convert scalar-first Euler parameters/quaternion to Gibbs vector."
+        },
+        "GIBBS_TO_EP": {
+          "value": 21,
+          "description": "Convert Gibbs vector to scalar-first Euler parameters/quaternion."
+        },
+        "DCM_TO_GIBBS": {
+          "value": 22,
+          "description": "Convert direction cosine matrix to Gibbs vector."
+        },
+        "GIBBS_TO_DCM": {
+          "value": 23,
+          "description": "Convert Gibbs vector to direction cosine matrix."
+        },
+        "MRP_TO_GIBBS": {
+          "value": 24,
+          "description": "Convert Modified Rodrigues Parameters to Gibbs vector."
+        },
+        "GIBBS_TO_MRP": {
+          "value": 25,
+          "description": "Convert Gibbs vector to Modified Rodrigues Parameters."
+        },
+        "B_MATRIX_GIBBS": {
+          "value": 26,
+          "description": "Return the Gibbs-vector B matrix that maps body angular rate to Gibbs derivative."
+        },
+        "B_INV_MATRIX_GIBBS": {
+          "value": 27,
+          "description": "Return the inverse Gibbs-vector B matrix that maps Gibbs derivative to body angular rate."
+        },
+        "D_GIBBS": {
+          "value": 28,
+          "description": "Compute Gibbs derivative from Gibbs vector and body angular rate vectors."
+        },
+        "ADD_PRV": {
+          "value": 29,
+          "description": "Compose two principal rotation vector rotations."
+        },
+        "SUB_PRV": {
+          "value": 30,
+          "description": "Compute the relative principal rotation vector from VECTOR_B to VECTOR_A."
+        },
+        "EP_TO_PRV": {
+          "value": 31,
+          "description": "Convert scalar-first Euler parameters/quaternion to principal rotation vector."
+        },
+        "PRV_TO_EP": {
+          "value": 32,
+          "description": "Convert principal rotation vector to scalar-first Euler parameters/quaternion."
+        },
+        "DCM_TO_PRV": {
+          "value": 33,
+          "description": "Convert direction cosine matrix to principal rotation vector."
+        },
+        "PRV_TO_DCM": {
+          "value": 34,
+          "description": "Convert principal rotation vector to direction cosine matrix."
+        },
+        "MRP_TO_PRV": {
+          "value": 35,
+          "description": "Convert Modified Rodrigues Parameters to principal rotation vector."
+        },
+        "PRV_TO_MRP": {
+          "value": 36,
+          "description": "Convert principal rotation vector to Modified Rodrigues Parameters."
+        },
+        "GIBBS_TO_PRV": {
+          "value": 37,
+          "description": "Convert Gibbs vector to principal rotation vector."
+        },
+        "PRV_TO_GIBBS": {
+          "value": 38,
+          "description": "Convert principal rotation vector to Gibbs vector."
+        },
+        "B_MATRIX_PRV": {
+          "value": 39,
+          "description": "Return the principal-rotation-vector B matrix that maps body angular rate to PRV derivative."
+        },
+        "B_INV_MATRIX_PRV": {
+          "value": 40,
+          "description": "Return the inverse principal-rotation-vector B matrix that maps PRV derivative to body angular rate."
+        },
+        "D_PRV": {
+          "value": 41,
+          "description": "Compute principal rotation vector derivative from PRV and body angular rate vectors."
+        },
+        "ADD_EULER": {
+          "value": 42,
+          "description": "Compose two Euler-angle rotations using EULER_SEQUENCE."
+        },
+        "SUB_EULER": {
+          "value": 43,
+          "description": "Compute the relative Euler-angle rotation from VECTOR_B to VECTOR_A using EULER_SEQUENCE."
+        },
+        "EULER_TO_DCM": {
+          "value": 44,
+          "description": "Convert Euler angles to direction cosine matrix using EULER_SEQUENCE."
+        },
+        "DCM_TO_EULER": {
+          "value": 45,
+          "description": "Convert direction cosine matrix to Euler angles using EULER_SEQUENCE."
+        },
+        "EULER_TO_EP": {
+          "value": 46,
+          "description": "Convert Euler angles to scalar-first Euler parameters/quaternion using EULER_SEQUENCE."
+        },
+        "EP_TO_EULER": {
+          "value": 47,
+          "description": "Convert scalar-first Euler parameters/quaternion to Euler angles using EULER_SEQUENCE."
+        },
+        "EULER_TO_MRP": {
+          "value": 48,
+          "description": "Convert Euler angles to Modified Rodrigues Parameters using EULER_SEQUENCE."
+        },
+        "MRP_TO_EULER": {
+          "value": 49,
+          "description": "Convert Modified Rodrigues Parameters to Euler angles using EULER_SEQUENCE."
+        },
+        "EULER_TO_GIBBS": {
+          "value": 50,
+          "description": "Convert Euler angles to Gibbs vector using EULER_SEQUENCE."
+        },
+        "GIBBS_TO_EULER": {
+          "value": 51,
+          "description": "Convert Gibbs vector to Euler angles using EULER_SEQUENCE."
+        },
+        "EULER_TO_PRV": {
+          "value": 52,
+          "description": "Convert Euler angles to principal rotation vector using EULER_SEQUENCE."
+        },
+        "PRV_TO_EULER": {
+          "value": 53,
+          "description": "Convert principal rotation vector to Euler angles using EULER_SEQUENCE."
+        },
+        "B_MATRIX_EULER": {
+          "value": 54,
+          "description": "Return the Euler-angle B matrix that maps body angular rate to Euler-angle derivative."
+        },
+        "B_INV_MATRIX_EULER": {
+          "value": 55,
+          "description": "Return the inverse Euler-angle B matrix that maps Euler-angle derivative to body angular rate."
+        },
+        "D_EULER": {
+          "value": 56,
+          "description": "Compute Euler-angle derivative from Euler angles and body angular rate vectors."
+        },
+        "TILDE_MATRIX": {
+          "value": 57,
+          "description": "Return the skew-symmetric tilde matrix that maps VECTOR_A cross products."
+        },
+        "M1_ROTATION_MATRIX": {
+          "value": 58,
+          "description": "Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD."
+        },
+        "M2_ROTATION_MATRIX": {
+          "value": 59,
+          "description": "Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD."
+        },
+        "M3_ROTATION_MATRIX": {
+          "value": 60,
+          "description": "Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD."
+        }
+      }
+    },
+    "rbkEulerSequenceCode": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "EULER_121": {
+          "value": 1
+        },
+        "EULER_123": {
+          "value": 2
+        },
+        "EULER_131": {
+          "value": 3
+        },
+        "EULER_132": {
+          "value": 4
+        },
+        "EULER_212": {
+          "value": 5
+        },
+        "EULER_213": {
+          "value": 6
+        },
+        "EULER_231": {
+          "value": 7
+        },
+        "EULER_232": {
+          "value": 8
+        },
+        "EULER_312": {
+          "value": 9
+        },
+        "EULER_313": {
+          "value": 10
+        },
+        "EULER_321": {
+          "value": 11
+        },
+        "EULER_323": {
+          "value": 12
+        }
+      }
+    },
+    "rbkResultStatus": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "Operation completed."
+        },
+        "INVALID_INPUT": {
+          "value": 1,
+          "description": "Request is missing required vector/quaternion data or has invalid values."
+        },
+        "UNSUPPORTED_OPERATION": {
+          "value": 2,
+          "description": "Operation is unknown or not supported by the module implementation."
+        }
+      }
+    },
     "rcfPduType": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -12970,6 +13758,293 @@
         },
         "COMPACT": {
           "value": 8
+        }
+      }
+    },
+    "scvEnvelopeKind": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "description": "modules and consumed by OrbPro analytics sessions.",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x-flatbuffer-enum-values": {
+        "REQUEST": {
+          "value": 0
+        },
+        "RESULT": {
+          "value": 1
+        },
+        "PROGRESS": {
+          "value": 2
+        },
+        "CANCEL": {
+          "value": 3
+        },
+        "GEOMETRY": {
+          "value": 4
+        }
+      }
+    },
+    "scvAnalysisMode": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "COVERAGE": {
+          "value": 0
+        },
+        "ACCESS": {
+          "value": 1
+        },
+        "SWATH": {
+          "value": 2
+        },
+        "COMBINED": {
+          "value": 3
+        }
+      }
+    },
+    "scvCoordinateFrame": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "BODY_FIXED": {
+          "value": 1
+        },
+        "INERTIAL": {
+          "value": 2
+        },
+        "ECEF": {
+          "value": 3
+        },
+        "ECI": {
+          "value": 4
+        },
+        "CUSTOM": {
+          "value": 5
+        }
+      }
+    },
+    "scvBodyKind": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "EARTH": {
+          "value": 0
+        },
+        "MOON": {
+          "value": 1
+        },
+        "MARS": {
+          "value": 2
+        },
+        "CUSTOM": {
+          "value": 3
+        }
+      }
+    },
+    "scvSensorShapeKind": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "CONIC": {
+          "value": 0
+        },
+        "RECTANGULAR": {
+          "value": 1
+        },
+        "CUSTOM_POLYGON": {
+          "value": 2
+        }
+      }
+    },
+    "scvGeometryDomain": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x-flatbuffer-enum-values": {
+        "SURFACE": {
+          "value": 0
+        },
+        "SPACE": {
+          "value": 1
+        },
+        "ELLIPSOID": {
+          "value": 2
+        },
+        "PLANE": {
+          "value": 3
+        },
+        "CUSTOM_MESH": {
+          "value": 4
+        }
+      }
+    },
+    "scvResultState": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0
+        },
+        "PARTIAL": {
+          "value": 1
+        },
+        "CANCELLED": {
+          "value": 2
+        },
+        "FAILED": {
+          "value": 3
+        }
+      }
+    },
+    "scvIntervalCategory": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x-flatbuffer-enum-values": {
+        "ACCESS": {
+          "value": 0
+        },
+        "COVERAGE": {
+          "value": 1
+        },
+        "GAP": {
+          "value": 2
+        },
+        "REVISIT": {
+          "value": 3
+        },
+        "OVERLAP": {
+          "value": 4
+        }
+      }
+    },
+    "scvMetricSeriesKind": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ushort",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "x-flatbuffer-enum-values": {
+        "PERCENT_COVERED": {
+          "value": 0
+        },
+        "COVERED_CELL_COUNT": {
+          "value": 1
+        },
+        "ACCESS_COUNT": {
+          "value": 2
+        },
+        "CONTACT_DURATION_SECONDS": {
+          "value": 3
+        },
+        "REVISIT_SECONDS": {
+          "value": 4
+        },
+        "GAP_SECONDS": {
+          "value": 5
+        },
+        "REDUNDANCY": {
+          "value": 6
+        },
+        "OVERLAP_COUNT": {
+          "value": 7
+        },
+        "LATITUDE_BAND_COVERAGE": {
+          "value": 8
+        }
+      }
+    },
+    "scvGeometryEncoding": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "FLAT_FLOAT32": {
+          "value": 0
+        },
+        "INTERLEAVED_FLOAT32": {
+          "value": 1
+        },
+        "QUANTIZED_UINT16": {
+          "value": 2
+        },
+        "SHARED_MEMORY_OFFSET": {
+          "value": 3
         }
       }
     },
@@ -16102,6 +17177,289 @@
       },
       "description": "Aircraft Dynamics"
     },
+    "ACWStateSample": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "JULIAN_DATE_TT": {
+          "type": "number",
+          "description": "Sample epoch as Julian Date in TT.",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_X_M": {
+          "type": "number",
+          "description": "Earth-fixed X position, meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Y_M": {
+          "type": "number",
+          "description": "Earth-fixed Y position, meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Z_M": {
+          "type": "number",
+          "description": "Earth-fixed Z position, meters.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "Compute access windows from pre-sampled target Cartesian states.\n  COMPUTE_ACCESS_WINDOWS = 1\n}\n\nenum acwResultStatus : byte {\n  /// Operation completed.\n  OK = 0,\n  /// Request fields are missing, non-finite, or numerically invalid.\n  INVALID_INPUT = 1,\n  /// The requested operation is not supported by the module.\n  UNSUPPORTED_OPERATION = 2\n}\n\nenum acwRefractionModelKind : byte {\n  NONE = 0,\n  /// Orekit-compatible EarthStandardAtmosphereRefraction correction.\n  EARTH_STANDARD_ATMOSPHERE = 1\n}\n\n/// Target Cartesian state sample in an Earth-fixed frame."
+    },
+    "ACWElevationMaskPoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "AZIMUTH_RAD": {
+          "type": "number",
+          "description": "Azimuth, radians in the TopocentricFrame convention.",
+          "x-flatbuffer-type": "double"
+        },
+        "ELEVATION_RAD": {
+          "type": "number",
+          "description": "Minimum visible elevation at the azimuth, radians.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "Azimuth-dependent minimum elevation mask point."
+    },
+    "ACWRefractionModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MODEL_KIND": {
+          "$ref": "#/definitions/acwRefractionModelKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "EARTH_STANDARD_ATMOSPHERE": {
+              "value": 1,
+              "description": "Orekit-compatible EarthStandardAtmosphereRefraction correction."
+            }
+          }
+        }
+      },
+      "description": "Atmospheric refraction model for apparent-elevation access checks."
+    },
+    "ACWBlackoutWindow": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "START_JULIAN_DATE_TT": {
+          "type": "number",
+          "description": "Interval start as Julian Date in TT.",
+          "x-flatbuffer-type": "double"
+        },
+        "END_JULIAN_DATE_TT": {
+          "type": "number",
+          "description": "Interval end as Julian Date in TT.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "Ground-station blackout interval."
+    },
+    "ACWGroundStation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LATITUDE_RAD": {
+          "type": "number",
+          "description": "Geodetic latitude, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE_RAD": {
+          "type": "number",
+          "description": "Geodetic longitude, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_M": {
+          "type": "number",
+          "description": "Height above the WGS-84 ellipsoid, meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_ELEVATION_RAD": {
+          "type": "number",
+          "description": "Default minimum visible elevation, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "CHANNEL_CAPACITY": {
+          "type": "integer",
+          "description": "Number of simultaneous contacts this station can schedule.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "BLACKOUT_WINDOWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWBlackoutWindow"
+          },
+          "description": "Station-specific unavailable intervals.",
+          "x-flatbuffer-type": "[ACWBlackoutWindow]"
+        }
+      },
+      "description": "Ground-station geodetic definition and scheduling constraints."
+    },
+    "ACWRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "OPERATION": {
+          "$ref": "#/definitions/acwOperationCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "COMPUTE_ACCESS_WINDOWS": {
+              "value": 1,
+              "description": "Compute access windows from pre-sampled target Cartesian states."
+            }
+          }
+        },
+        "GROUND_STATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWGroundStation"
+          },
+          "description": "Candidate ground stations.",
+          "x-flatbuffer-type": "[ACWGroundStation]"
+        },
+        "STATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWStateSample"
+          },
+          "description": "Pre-sampled target Earth-fixed Cartesian states.",
+          "x-flatbuffer-type": "[ACWStateSample]"
+        },
+        "TARGET_STATION_ID": {
+          "type": "string",
+          "description": "Optional target station id. Empty means all stations when supported.",
+          "x-flatbuffer-type": "string"
+        },
+        "MIN_ELEVATION_OVERRIDE_RAD": {
+          "type": "number",
+          "description": "Optional caller override for minimum elevation, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "ELEVATION_MASK": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWElevationMaskPoint"
+          },
+          "description": "Optional azimuth-dependent minimum elevation mask.",
+          "x-flatbuffer-type": "[ACWElevationMaskPoint]"
+        },
+        "REFRACTION_MODEL": {
+          "$ref": "#/definitions/ACWRefractionModel",
+          "description": "Optional apparent-elevation refraction model.",
+          "x-flatbuffer-type": "ACWRefractionModel"
+        }
+      },
+      "description": "One access-window compute request."
+    },
+    "ACWAccessWindow": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "START_JULIAN_DATE_TT": {
+          "type": "number",
+          "description": "Access start as Julian Date in TT.",
+          "x-flatbuffer-type": "double"
+        },
+        "END_JULIAN_DATE_TT": {
+          "type": "number",
+          "description": "Access end as Julian Date in TT.",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_ELEVATION_RAD": {
+          "type": "number",
+          "description": "Maximum elevation sampled or interpolated during the pass, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "SAMPLE_COUNT": {
+          "type": "integer",
+          "description": "Number of visible input samples contributing to the window.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "description": "One computed access interval."
+    },
+    "ACWResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/acwResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request fields are missing, non-finite, or numerically invalid."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "The requested operation is not supported by the module."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACWAccessWindow"
+          },
+          "x-flatbuffer-type": "[ACWAccessWindow]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Result for one access-window compute request."
+    },
+    "ACW": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "REQUEST": {
+          "$ref": "#/definitions/ACWRequest",
+          "x-flatbuffer-type": "ACWRequest"
+        },
+        "RESULT": {
+          "$ref": "#/definitions/ACWResult",
+          "x-flatbuffer-type": "ACWResult"
+        }
+      },
+      "description": "Access-window analysis envelope."
+    },
     "AEMSegment": {
       "type": "object",
       "additionalProperties": false,
@@ -17184,6 +18542,235 @@
         }
       },
       "description": "Burn Out Vector Message"
+    },
+    "BSPVector3Series": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "T": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Sample or waypoint time tags in seconds.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "X1": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Coordinate 1 samples.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "X2": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Coordinate 2 samples.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "X3": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Coordinate 3 samples.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "description": "Interpolation completed.\n  OK,\n  /// The request is missing required waypoint, time, order, or sample data.\n  INVALID_INPUT,\n  /// The requested polynomial order is outside the supported B-spline range.\n  UNSUPPORTED_ORDER,\n  /// The interpolation linear system is singular or numerically unstable.\n  SINGULAR_SYSTEM\n}\n\n/// Three coordinate arrays sharing one time vector."
+    },
+    "BSPInterpolationRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "WAYPOINTS": {
+          "$ref": "#/definitions/BSPVector3Series",
+          "description": "Waypoint times and coordinates. T, X1, X2, and X3 must have equal length.",
+          "x-flatbuffer-type": "BSPVector3Series"
+        },
+        "SAMPLE_COUNT": {
+          "type": "integer",
+          "description": "Number of equally spaced output samples.",
+          "x-flatbuffer-type": "uint"
+        },
+        "POLYNOMIAL_ORDER": {
+          "type": "integer",
+          "description": "Polynomial order of the B-spline basis.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "HAS_X_DOT_0": {
+          "type": "boolean",
+          "description": "Whether X_DOT_0 contains the first derivative at the first waypoint.",
+          "x-flatbuffer-type": "bool"
+        },
+        "X_DOT_0": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional first derivative at the first waypoint, length 3.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "HAS_X_DOT_N": {
+          "type": "boolean",
+          "description": "Whether X_DOT_N contains the first derivative at the last waypoint.",
+          "x-flatbuffer-type": "bool"
+        },
+        "X_DOT_N": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional first derivative at the last waypoint, length 3.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "HAS_X_D_DOT_0": {
+          "type": "boolean",
+          "description": "Whether X_D_DOT_0 contains the second derivative at the first waypoint.",
+          "x-flatbuffer-type": "bool"
+        },
+        "X_D_DOT_0": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional second derivative at the first waypoint, length 3.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "HAS_X_D_DOT_N": {
+          "type": "boolean",
+          "description": "Whether X_D_DOT_N contains the second derivative at the last waypoint.",
+          "x-flatbuffer-type": "bool"
+        },
+        "X_D_DOT_N": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional second derivative at the last waypoint, length 3.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Request for one 3D B-spline interpolation."
+    },
+    "BSPInterpolationResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/bspInterpolationStatus",
+          "description": "Interpolation status.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Interpolation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "The request is missing required waypoint, time, order, or sample data."
+            },
+            "UNSUPPORTED_ORDER": {
+              "value": 2,
+              "description": "The requested polynomial order is outside the supported B-spline range."
+            },
+            "SINGULAR_SYSTEM": {
+              "value": 3,
+              "description": "The interpolation linear system is singular or numerically unstable."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Optional error detail when STATUS is not OK.",
+          "x-flatbuffer-type": "string"
+        },
+        "SAMPLES": {
+          "$ref": "#/definitions/BSPVector3Series",
+          "description": "Output sample positions.",
+          "x-flatbuffer-type": "BSPVector3Series"
+        },
+        "XD1": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "First derivative of coordinate 1 at each output sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "XD2": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "First derivative of coordinate 2 at each output sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "XD3": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "First derivative of coordinate 3 at each output sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "XDD1": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Second derivative of coordinate 1 at each output sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "XDD2": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Second derivative of coordinate 2 at each output sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "XDD3": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Second derivative of coordinate 3 at each output sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Result of one 3D B-spline interpolation."
+    },
+    "BSP": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "INTERPOLATION_REQUEST": {
+          "$ref": "#/definitions/BSPInterpolationRequest",
+          "description": "B-spline interpolation request.",
+          "x-flatbuffer-type": "BSPInterpolationRequest"
+        },
+        "INTERPOLATION_RESULT": {
+          "$ref": "#/definitions/BSPInterpolationResult",
+          "description": "B-spline interpolation result.",
+          "x-flatbuffer-type": "BSPInterpolationResult"
+        }
+      },
+      "description": "B-spline interpolation envelope."
     },
     "BUS": {
       "type": "object",
@@ -26894,6 +28481,162 @@
       },
       "description": "Fastest Path Compute \u2014 envelope message for weighted graph ingestion and\n/// single-source shortest path execution."
     },
+    "FRMVector3": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      }
+    },
+    "FRMMatrix3": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "M11": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M12": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M13": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M21": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M22": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M23": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M31": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M32": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M33": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      }
+    },
+    "FRMFrameTransformRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "OPERATION": {
+          "$ref": "#/definitions/frmOperationCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "PCI_TO_PCPF": {
+              "value": 1
+            },
+            "PCPF_TO_PCI": {
+              "value": 2
+            },
+            "LLA_TO_PCPF": {
+              "value": 3
+            },
+            "PCPF_TO_LLA": {
+              "value": 4
+            }
+          }
+        },
+        "POSITION": {
+          "$ref": "#/definitions/FRMVector3",
+          "x-flatbuffer-type": "FRMVector3"
+        },
+        "TRANSFORM_DCM": {
+          "$ref": "#/definitions/FRMMatrix3",
+          "x-flatbuffer-type": "FRMMatrix3"
+        },
+        "EQUATORIAL_RADIUS_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POLAR_RADIUS_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      }
+    },
+    "FRMFrameTransformResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/frmResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0
+            },
+            "INVALID_INPUT": {
+              "value": 1
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION": {
+          "$ref": "#/definitions/FRMVector3",
+          "x-flatbuffer-type": "FRMVector3"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      }
+    },
+    "FRM": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "FRAME_TRANSFORM_REQUEST": {
+          "$ref": "#/definitions/FRMFrameTransformRequest",
+          "x-flatbuffer-type": "FRMFrameTransformRequest"
+        },
+        "FRAME_TRANSFORM_RESULT": {
+          "$ref": "#/definitions/FRMFrameTransformResult",
+          "x-flatbuffer-type": "FRMFrameTransformResult"
+        }
+      }
+    },
     "GDI": {
       "type": "object",
       "additionalProperties": false,
@@ -28281,6 +30024,34 @@
           "type": "boolean",
           "x-flatbuffer-type": "bool",
           "x-flatbuffer-default": "false"
+        },
+        "EQUATORIAL_RADIUS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "J2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MU": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "J3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "J4": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "J5": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "J6": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
         }
       },
       "description": "Gravity Models"
@@ -28487,12 +30258,72 @@
       },
       "description": "Helicopter Dynamics"
     },
-    "TIM": {
+    "TIMCcsdsTimeCode": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "CODE_KIND": {
+          "$ref": "#/definitions/timCcsdsTimeCodeKind",
+          "description": "CCSDS time-code family.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0,
+              "description": "No CCSDS time code selected."
+            },
+            "UNSEGMENTED": {
+              "value": 1,
+              "description": "CCSDS Unsegmented Time Code (CUC)."
+            },
+            "DAY_SEGMENTED": {
+              "value": 2,
+              "description": "CCSDS Day Segmented Time Code (CDS)."
+            },
+            "CALENDAR_SEGMENTED": {
+              "value": 3,
+              "description": "CCSDS Calendar Segmented Time Code (CCS)."
+            }
+          }
+        },
+        "PREAMBLE_FIELD1": {
+          "type": "integer",
+          "description": "First CCSDS preamble field octet.",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "PREAMBLE_FIELD2": {
+          "type": "integer",
+          "description": "Second CCSDS preamble field octet; ignored when not signaled by preamble 1.",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "TIME_FIELD": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Raw CCSDS time field octets.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "AGENCY_DEFINED_EPOCH_ISO8601": {
+          "type": "string",
+          "description": "Optional agency-defined epoch timestamp for agency epoch time codes.",
+          "x-flatbuffer-type": "string"
+        },
+        "CCSDS_EPOCH_ISO8601": {
+          "type": "string",
+          "description": "Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Greenwich Mean Sidereal Time\n  GMST,\n  /// Global Positioning System\n  GPS,\n  /// Mission Elapsed Time\n  MET,\n  /// Mission Relative Time\n  MRT,\n  /// Spacecraft Clock (receiver) (requires rules for interpretation in ICD)\n  SCLK,\n  /// International Atomic Time\n  TAI,\n  /// Barycentric Coordinate Time\n  TCB,\n  /// Barycentric Dynamical Time\n  TDB,\n  /// Geocentric Coordinate Time\n  TCG,\n  /// Terrestrial Time\n  TT,\n  /// Universal Time\n  UT1,\n  /// Coordinated Universal Time\n  UTC,\n  /// GLONASS Time\n  GLONASS,\n  /// Galileo System Time\n  GST,\n  /// Quasi-Zenith Satellite System Time\n  QZSS,\n  /// BeiDou Time\n  BDT,\n  /// Navigation with Indian Constellation Time\n  NAVIC,\n  /// Satellite-Based Augmentation System Time\n  SBAS\n}\n\nenum timEpochRepresentation : byte {\n  /// Julian Date day count.\n  JULIAN_DATE,\n  /// Modified Julian Date day count (JD - 2400000.5).\n  MODIFIED_JULIAN_DATE,\n  /// Seconds since 1970-01-01T00:00:00 UTC.\n  UNIX_SECONDS,\n  /// ISO 8601 timestamp text.\n  ISO8601,\n  /// Seconds since 1980-01-06T00:00:00 GPS.\n  GPS_SECONDS,\n  /// GNSS week number plus seconds within the week.\n  GNSS_WEEK_SECONDS,\n  /// CCSDS binary time-code field with preamble metadata.\n  CCSDS_TIME_CODE,\n  /// Seconds from an application-defined mission epoch.\n  MISSION_ELAPSED_SECONDS\n}\n\nenum timCcsdsTimeCodeKind : byte {\n  /// No CCSDS time code selected.\n  NONE,\n  /// CCSDS Unsegmented Time Code (CUC).\n  UNSEGMENTED,\n  /// CCSDS Day Segmented Time Code (CDS).\n  DAY_SEGMENTED,\n  /// CCSDS Calendar Segmented Time Code (CCS).\n  CALENDAR_SEGMENTED\n}\n\nenum timConversionStatus : byte {\n  /// Conversion completed.\n  OK,\n  /// Input epoch or requested representation is invalid.\n  INVALID_INPUT,\n  /// Requested source or target time system is not supported.\n  UNSUPPORTED_TIME_SYSTEM,\n  /// Conversion requires leap-second data that was not available.\n  LEAP_SECOND_DATA_REQUIRED,\n  /// Conversion requires Earth-orientation data that was not available.\n  EOP_DATA_REQUIRED,\n  /// Requested instant is outside the supported conversion range.\n  OUT_OF_RANGE\n}\n\n/// CCSDS time-code payload and preamble metadata."
+    },
+    "TIMInstant": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "TIME_SYSTEM": {
           "$ref": "#/definitions/timingStandard",
+          "description": "Time system for this instant.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -28543,11 +30374,443 @@
             "UTC": {
               "value": 11,
               "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
             }
           }
+        },
+        "EPOCH_FORMAT": {
+          "$ref": "#/definitions/timEpochRepresentation",
+          "description": "Interpretation of JULIAN_DATE, SECONDS, and ISO8601.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "JULIAN_DATE": {
+              "value": 0,
+              "description": "Julian Date day count."
+            },
+            "MODIFIED_JULIAN_DATE": {
+              "value": 1,
+              "description": "Modified Julian Date day count (JD - 2400000.5)."
+            },
+            "UNIX_SECONDS": {
+              "value": 2,
+              "description": "Seconds since 1970-01-01T00:00:00 UTC."
+            },
+            "ISO8601": {
+              "value": 3,
+              "description": "ISO 8601 timestamp text."
+            },
+            "GPS_SECONDS": {
+              "value": 4,
+              "description": "Seconds since 1980-01-06T00:00:00 GPS."
+            },
+            "GNSS_WEEK_SECONDS": {
+              "value": 5,
+              "description": "GNSS week number plus seconds within the week."
+            },
+            "CCSDS_TIME_CODE": {
+              "value": 6,
+              "description": "CCSDS binary time-code field with preamble metadata."
+            },
+            "MISSION_ELAPSED_SECONDS": {
+              "value": 7,
+              "description": "Seconds from an application-defined mission epoch."
+            }
+          }
+        },
+        "JULIAN_DATE": {
+          "type": "number",
+          "description": "Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.",
+          "x-flatbuffer-type": "double"
+        },
+        "SECONDS": {
+          "type": "number",
+          "description": "Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.",
+          "x-flatbuffer-type": "double"
+        },
+        "ISO8601": {
+          "type": "string",
+          "description": "ISO 8601 timestamp text for ISO8601 inputs or display outputs.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUBSECOND_NANOS": {
+          "type": "integer",
+          "description": "Additional nanoseconds beyond the fractional scalar/text value.",
+          "x-flatbuffer-type": "int"
+        },
+        "EPOCH_LABEL": {
+          "type": "string",
+          "description": "Optional application-defined epoch label for MET, MRT, or SCLK values.",
+          "x-flatbuffer-type": "string"
+        },
+        "GNSS_WEEK": {
+          "type": "integer",
+          "description": "GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.",
+          "x-flatbuffer-type": "int"
+        },
+        "HAS_GNSS_ROLLOVER_REFERENCE": {
+          "type": "boolean",
+          "description": "Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.",
+          "x-flatbuffer-type": "bool"
+        },
+        "GNSS_ROLLOVER_REFERENCE_ISO8601": {
+          "type": "string",
+          "description": "Optional Orekit-style GNSS week rollover reference timestamp.",
+          "x-flatbuffer-type": "string"
+        },
+        "CCSDS_TIME_CODE": {
+          "$ref": "#/definitions/TIMCcsdsTimeCode",
+          "description": "CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.",
+          "x-flatbuffer-type": "TIMCcsdsTimeCode"
         }
       },
-      "description": "Greenwich Mean Sidereal Time\n  GMST,\n  /// Global Positioning System\n  GPS,\n  /// Mission Elapsed Time\n  MET,\n  /// Mission Relative Time\n  MRT,\n  /// Spacecraft Clock (receiver) (requires rules for interpretation in ICD)\n  SCLK,\n  /// International Atomic Time\n  TAI,\n  /// Barycentric Coordinate Time\n  TCB,\n  /// Barycentric Dynamical Time\n  TDB,\n  /// Geocentric Coordinate Time\n  TCG,\n  /// Terrestrial Time\n  TT,\n  /// Universal Time\n  UT1,\n  /// Coordinated Universal Time\n  UTC\n}\n\n/// Time System"
+      "description": "Numeric or textual instant tagged with its time system and representation."
+    },
+    "TIMConversionRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SOURCE": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Source instant to convert.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "TARGET_TIME_SYSTEM": {
+          "$ref": "#/definitions/timingStandard",
+          "description": "Target time system.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GMST": {
+              "value": 0,
+              "description": "Greenwich Mean Sidereal Time"
+            },
+            "GPS": {
+              "value": 1,
+              "description": "Global Positioning System"
+            },
+            "MET": {
+              "value": 2,
+              "description": "Mission Elapsed Time"
+            },
+            "MRT": {
+              "value": 3,
+              "description": "Mission Relative Time"
+            },
+            "SCLK": {
+              "value": 4,
+              "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+            },
+            "TAI": {
+              "value": 5,
+              "description": "International Atomic Time"
+            },
+            "TCB": {
+              "value": 6,
+              "description": "Barycentric Coordinate Time"
+            },
+            "TDB": {
+              "value": 7,
+              "description": "Barycentric Dynamical Time"
+            },
+            "TCG": {
+              "value": 8,
+              "description": "Geocentric Coordinate Time"
+            },
+            "TT": {
+              "value": 9,
+              "description": "Terrestrial Time"
+            },
+            "UT1": {
+              "value": 10,
+              "description": "Universal Time"
+            },
+            "UTC": {
+              "value": 11,
+              "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
+            }
+          }
+        },
+        "TARGET_EPOCH_FORMAT": {
+          "$ref": "#/definitions/timEpochRepresentation",
+          "description": "Preferred target representation.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "JULIAN_DATE": {
+              "value": 0,
+              "description": "Julian Date day count."
+            },
+            "MODIFIED_JULIAN_DATE": {
+              "value": 1,
+              "description": "Modified Julian Date day count (JD - 2400000.5)."
+            },
+            "UNIX_SECONDS": {
+              "value": 2,
+              "description": "Seconds since 1970-01-01T00:00:00 UTC."
+            },
+            "ISO8601": {
+              "value": 3,
+              "description": "ISO 8601 timestamp text."
+            },
+            "GPS_SECONDS": {
+              "value": 4,
+              "description": "Seconds since 1980-01-06T00:00:00 GPS."
+            },
+            "GNSS_WEEK_SECONDS": {
+              "value": 5,
+              "description": "GNSS week number plus seconds within the week."
+            },
+            "CCSDS_TIME_CODE": {
+              "value": 6,
+              "description": "CCSDS binary time-code field with preamble metadata."
+            },
+            "MISSION_ELAPSED_SECONDS": {
+              "value": 7,
+              "description": "Seconds from an application-defined mission epoch."
+            }
+          }
+        },
+        "TAI_MINUS_UTC_SECONDS": {
+          "type": "number",
+          "description": "Optional TAI-UTC override in seconds for the source instant.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_TAI_MINUS_UTC": {
+          "type": "boolean",
+          "description": "Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.",
+          "x-flatbuffer-type": "bool"
+        },
+        "DUT1_SECONDS": {
+          "type": "number",
+          "description": "Optional UT1-UTC override in seconds for UT1 conversions.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_DUT1": {
+          "type": "boolean",
+          "description": "Whether DUT1_SECONDS should override runtime Earth-orientation data.",
+          "x-flatbuffer-type": "bool"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional caller trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Request to convert one instant into another time system/representation."
+    },
+    "TIMConversionResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SOURCE": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Original source instant.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "TARGET": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Converted target instant.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "DELTA_SECONDS": {
+          "type": "number",
+          "description": "Target minus source offset in SI seconds for the requested conversion.",
+          "x-flatbuffer-type": "double"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/timConversionStatus",
+          "description": "Conversion status.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Conversion completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Input epoch or requested representation is invalid."
+            },
+            "UNSUPPORTED_TIME_SYSTEM": {
+              "value": 2,
+              "description": "Requested source or target time system is not supported."
+            },
+            "LEAP_SECOND_DATA_REQUIRED": {
+              "value": 3,
+              "description": "Conversion requires leap-second data that was not available."
+            },
+            "EOP_DATA_REQUIRED": {
+              "value": 4,
+              "description": "Conversion requires Earth-orientation data that was not available."
+            },
+            "OUT_OF_RANGE": {
+              "value": 5,
+              "description": "Requested instant is outside the supported conversion range."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Optional error detail when STATUS is not OK.",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Result of a time conversion request."
+    },
+    "TIM": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "TIME_SYSTEM": {
+          "$ref": "#/definitions/timingStandard",
+          "description": "Legacy time-system selector retained for existing TIM consumers.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GMST": {
+              "value": 0,
+              "description": "Greenwich Mean Sidereal Time"
+            },
+            "GPS": {
+              "value": 1,
+              "description": "Global Positioning System"
+            },
+            "MET": {
+              "value": 2,
+              "description": "Mission Elapsed Time"
+            },
+            "MRT": {
+              "value": 3,
+              "description": "Mission Relative Time"
+            },
+            "SCLK": {
+              "value": 4,
+              "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+            },
+            "TAI": {
+              "value": 5,
+              "description": "International Atomic Time"
+            },
+            "TCB": {
+              "value": 6,
+              "description": "Barycentric Coordinate Time"
+            },
+            "TDB": {
+              "value": 7,
+              "description": "Barycentric Dynamical Time"
+            },
+            "TCG": {
+              "value": 8,
+              "description": "Geocentric Coordinate Time"
+            },
+            "TT": {
+              "value": 9,
+              "description": "Terrestrial Time"
+            },
+            "UT1": {
+              "value": 10,
+              "description": "Universal Time"
+            },
+            "UTC": {
+              "value": 11,
+              "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
+            }
+          }
+        },
+        "INSTANT": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "A single tagged instant.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "CONVERSION_REQUEST": {
+          "$ref": "#/definitions/TIMConversionRequest",
+          "description": "Time conversion request.",
+          "x-flatbuffer-type": "TIMConversionRequest"
+        },
+        "CONVERSION_RESULT": {
+          "$ref": "#/definitions/TIMConversionResult",
+          "description": "Time conversion result.",
+          "x-flatbuffer-type": "TIMConversionResult"
+        }
+      },
+      "description": "Time System and time-conversion envelope."
     },
     "PPEPositionRecord": {
       "type": "object",
@@ -28847,6 +31110,30 @@
             "UTC": {
               "value": 11,
               "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
             }
           }
         },
@@ -29184,6 +31471,30 @@
             "UTC": {
               "value": 11,
               "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
             }
           }
         },
@@ -39165,6 +41476,687 @@
       },
       "description": "Naval Vessels"
     },
+    "NUMRootSolveRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "OPERATION": {
+          "$ref": "#/definitions/numOperationCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "NEWTON_RAPHSON": {
+              "value": 1,
+              "description": "Solve for a scalar root using Newton-Raphson iteration."
+            },
+            "LINEAR_INTERPOLATION": {
+              "value": 2,
+              "description": "Linearly interpolate one scalar between two scalar samples."
+            },
+            "BILINEAR_INTERPOLATION": {
+              "value": 3,
+              "description": "Bilinearly interpolate one scalar from four rectangular-corner samples."
+            },
+            "GAUSS_MARKOV_SEQUENCE": {
+              "value": 4,
+              "description": "Generate a bounded Gauss-Markov random sequence and summary statistics."
+            }
+          }
+        },
+        "FUNCTION": {
+          "$ref": "#/definitions/numFunctionCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "QUADRATIC_MINUS_CONSTANT": {
+              "value": 1,
+              "description": "f(x) = x * x - TARGET_VALUE, with derivative f'(x) = 2 * x."
+            }
+          }
+        },
+        "INITIAL_ESTIMATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ACCURACY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_ITERATIONS": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Solve for a scalar root using Newton-Raphson iteration.\n  NEWTON_RAPHSON = 1,\n  /// Linearly interpolate one scalar between two scalar samples.\n  LINEAR_INTERPOLATION = 2,\n  /// Bilinearly interpolate one scalar from four rectangular-corner samples.\n  BILINEAR_INTERPOLATION = 3,\n  /// Generate a bounded Gauss-Markov random sequence and summary statistics.\n  GAUSS_MARKOV_SEQUENCE = 4\n}\n\nenum numFunctionCode : byte {\n  UNKNOWN = 0,\n  /// f(x) = x * x - TARGET_VALUE, with derivative f'(x) = 2 * x.\n  QUADRATIC_MINUS_CONSTANT = 1\n}\n\nenum numResultStatus : byte {\n  /// Operation completed.\n  OK = 0,\n  /// Request fields are missing, non-finite, or numerically invalid.\n  INVALID_INPUT = 1,\n  /// The requested operation or function is not supported.\n  UNSUPPORTED_OPERATION = 2,\n  /// Iteration did not reach ACCURACY within MAX_ITERATIONS.\n  DID_NOT_CONVERGE = 3\n}\n\nenum numDiscretizeRoundDirection : byte {\n  /// Round magnitude toward zero before restoring sign.\n  TO_ZERO = 0,\n  /// Round magnitude away from zero before restoring sign.\n  FROM_ZERO = 1,\n  /// Round magnitude to the nearest least-significant-bit multiple before restoring sign.\n  NEAR = 2\n}\n\n/// Request for one scalar numerical root-solving operation."
+    },
+    "NUMRootSolveResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/numResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request fields are missing, non-finite, or numerically invalid."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "The requested operation or function is not supported."
+            },
+            "DID_NOT_CONVERGE": {
+              "value": 3,
+              "description": "Iteration did not reach ACCURACY within MAX_ITERATIONS."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ROOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RESIDUAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ITERATIONS": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Result of one scalar numerical root-solving operation."
+    },
+    "NUMVectorSaturateRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Input vector to clamp.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "LOWER_BOUNDS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-component lower bounds. Length must match STATE.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "UPPER_BOUNDS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-component upper bounds. Length must match STATE.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Request for component-wise vector saturation."
+    },
+    "NUMVectorSaturateResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/numResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request fields are missing, non-finite, or numerically invalid."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "The requested operation or function is not supported."
+            },
+            "DID_NOT_CONVERGE": {
+              "value": 3,
+              "description": "Iteration did not reach ACCURACY within MAX_ITERATIONS."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SATURATED_STATE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Saturated output vector.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Result of one component-wise vector saturation operation."
+    },
+    "NUMVectorDiscretizeRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Input vector to quantize.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "LSB": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-component least-significant-bit size. Length must match STATE.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "ROUND_DIRECTION": {
+          "$ref": "#/definitions/numDiscretizeRoundDirection",
+          "description": "Rounding direction used before the original sign is restored.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "TO_ZERO": {
+              "value": 0,
+              "description": "Round magnitude toward zero before restoring sign."
+            },
+            "FROM_ZERO": {
+              "value": 1,
+              "description": "Round magnitude away from zero before restoring sign."
+            },
+            "NEAR": {
+              "value": 2,
+              "description": "Round magnitude to the nearest least-significant-bit multiple before restoring sign."
+            }
+          }
+        },
+        "CARRY_ERROR": {
+          "type": "boolean",
+          "description": "When true, PREVIOUS_ERROR is added to STATE before discretization.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PREVIOUS_ERROR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional prior discretization error vector from an earlier result.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Request for component-wise vector discretization."
+    },
+    "NUMVectorDiscretizeResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/numResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request fields are missing, non-finite, or numerically invalid."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "The requested operation or function is not supported."
+            },
+            "DID_NOT_CONVERGE": {
+              "value": 3,
+              "description": "Iteration did not reach ACCURACY within MAX_ITERATIONS."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DISCRETIZED_STATE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Quantized output vector.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "DISCRETIZATION_ERROR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Input-minus-output error after any requested carried error was applied.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Result of one component-wise vector discretization operation."
+    },
+    "NUMScalarInterpolationRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "OPERATION": {
+          "$ref": "#/definitions/numOperationCode",
+          "description": "LINEAR_INTERPOLATION or BILINEAR_INTERPOLATION.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "NEWTON_RAPHSON": {
+              "value": 1,
+              "description": "Solve for a scalar root using Newton-Raphson iteration."
+            },
+            "LINEAR_INTERPOLATION": {
+              "value": 2,
+              "description": "Linearly interpolate one scalar between two scalar samples."
+            },
+            "BILINEAR_INTERPOLATION": {
+              "value": 3,
+              "description": "Bilinearly interpolate one scalar from four rectangular-corner samples."
+            },
+            "GAUSS_MARKOV_SEQUENCE": {
+              "value": 4,
+              "description": "Generate a bounded Gauss-Markov random sequence and summary statistics."
+            }
+          }
+        },
+        "X1": {
+          "type": "number",
+          "description": "First x-coordinate bound.",
+          "x-flatbuffer-type": "double"
+        },
+        "X2": {
+          "type": "number",
+          "description": "Second x-coordinate bound.",
+          "x-flatbuffer-type": "double"
+        },
+        "Y1": {
+          "type": "number",
+          "description": "First y-coordinate bound for bilinear interpolation.",
+          "x-flatbuffer-type": "double"
+        },
+        "Y2": {
+          "type": "number",
+          "description": "Second y-coordinate bound for bilinear interpolation.",
+          "x-flatbuffer-type": "double"
+        },
+        "VALUE1": {
+          "type": "number",
+          "description": "Linear interpolation value at X1.",
+          "x-flatbuffer-type": "double"
+        },
+        "VALUE2": {
+          "type": "number",
+          "description": "Linear interpolation value at X2.",
+          "x-flatbuffer-type": "double"
+        },
+        "Z11": {
+          "type": "number",
+          "description": "Bilinear corner value at X1,Y1.",
+          "x-flatbuffer-type": "double"
+        },
+        "Z12": {
+          "type": "number",
+          "description": "Bilinear corner value at X1,Y2.",
+          "x-flatbuffer-type": "double"
+        },
+        "Z21": {
+          "type": "number",
+          "description": "Bilinear corner value at X2,Y1.",
+          "x-flatbuffer-type": "double"
+        },
+        "Z22": {
+          "type": "number",
+          "description": "Bilinear corner value at X2,Y2.",
+          "x-flatbuffer-type": "double"
+        },
+        "INTERPOLATION_X": {
+          "type": "number",
+          "description": "X coordinate to interpolate.",
+          "x-flatbuffer-type": "double"
+        },
+        "INTERPOLATION_Y": {
+          "type": "number",
+          "description": "Y coordinate to interpolate for bilinear interpolation.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Request for one scalar interpolation operation."
+    },
+    "NUMScalarInterpolationResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/numResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request fields are missing, non-finite, or numerically invalid."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "The requested operation or function is not supported."
+            },
+            "DID_NOT_CONVERGE": {
+              "value": 3,
+              "description": "Iteration did not reach ACCURACY within MAX_ITERATIONS."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "number",
+          "description": "Interpolated scalar value.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Result of one scalar interpolation operation."
+    },
+    "NUMGaussMarkovRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "OPERATION": {
+          "$ref": "#/definitions/numOperationCode",
+          "description": "GAUSS_MARKOV_SEQUENCE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "NEWTON_RAPHSON": {
+              "value": 1,
+              "description": "Solve for a scalar root using Newton-Raphson iteration."
+            },
+            "LINEAR_INTERPOLATION": {
+              "value": 2,
+              "description": "Linearly interpolate one scalar between two scalar samples."
+            },
+            "BILINEAR_INTERPOLATION": {
+              "value": 3,
+              "description": "Bilinearly interpolate one scalar from four rectangular-corner samples."
+            },
+            "GAUSS_MARKOV_SEQUENCE": {
+              "value": 4,
+              "description": "Generate a bounded Gauss-Markov random sequence and summary statistics."
+            }
+          }
+        },
+        "DIMENSION": {
+          "type": "integer",
+          "description": "Number of scalar states per sample.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SAMPLE_COUNT": {
+          "type": "integer",
+          "description": "Number of post-warmup samples used in the result statistics.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "WARMUP_COUNT": {
+          "type": "integer",
+          "description": "Number of initial state propagations excluded from the result statistics.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "RNG_SEED": {
+          "type": "integer",
+          "description": "Seed for the Basilisk-compatible standard normal generator.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "PROPAGATION_MATRIX": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Row-major DIMENSION x DIMENSION state propagation matrix.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "NOISE_MATRIX": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Row-major DIMENSION x DIMENSION standard-normal noise mixing matrix.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "STATE_BOUNDS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-state symmetric bounds. Values <= 0 disable clamping for that state.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "EMIT_SAMPLES": {
+          "type": "boolean",
+          "description": "When true, emit flattened sample-major states in SAMPLES.",
+          "x-flatbuffer-type": "bool"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Request for one Basilisk-compatible Gauss-Markov random sequence."
+    },
+    "NUMGaussMarkovResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/numResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request fields are missing, non-finite, or numerically invalid."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "The requested operation or function is not supported."
+            },
+            "DID_NOT_CONVERGE": {
+              "value": 3,
+              "description": "Iteration did not reach ACCURACY within MAX_ITERATIONS."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MEAN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Post-warmup per-state sample means.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "STANDARD_DEVIATION": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Post-warmup per-state sample standard deviations with n - 1 denominator.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "MINIMUM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Post-warmup per-state minima.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "MAXIMUM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Post-warmup per-state maxima.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "FINAL_STATE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "State after the final generated sample.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "SAMPLES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional flattened sample-major state history.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Result of one Basilisk-compatible Gauss-Markov random sequence."
+    },
+    "NUM": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ROOT_SOLVE_REQUEST": {
+          "$ref": "#/definitions/NUMRootSolveRequest",
+          "x-flatbuffer-type": "NUMRootSolveRequest"
+        },
+        "ROOT_SOLVE_RESULT": {
+          "$ref": "#/definitions/NUMRootSolveResult",
+          "x-flatbuffer-type": "NUMRootSolveResult"
+        },
+        "VECTOR_SATURATE_REQUEST": {
+          "$ref": "#/definitions/NUMVectorSaturateRequest",
+          "x-flatbuffer-type": "NUMVectorSaturateRequest"
+        },
+        "VECTOR_SATURATE_RESULT": {
+          "$ref": "#/definitions/NUMVectorSaturateResult",
+          "x-flatbuffer-type": "NUMVectorSaturateResult"
+        },
+        "VECTOR_DISCRETIZE_REQUEST": {
+          "$ref": "#/definitions/NUMVectorDiscretizeRequest",
+          "x-flatbuffer-type": "NUMVectorDiscretizeRequest"
+        },
+        "VECTOR_DISCRETIZE_RESULT": {
+          "$ref": "#/definitions/NUMVectorDiscretizeResult",
+          "x-flatbuffer-type": "NUMVectorDiscretizeResult"
+        },
+        "SCALAR_INTERPOLATION_REQUEST": {
+          "$ref": "#/definitions/NUMScalarInterpolationRequest",
+          "x-flatbuffer-type": "NUMScalarInterpolationRequest"
+        },
+        "SCALAR_INTERPOLATION_RESULT": {
+          "$ref": "#/definitions/NUMScalarInterpolationResult",
+          "x-flatbuffer-type": "NUMScalarInterpolationResult"
+        },
+        "GAUSS_MARKOV_REQUEST": {
+          "$ref": "#/definitions/NUMGaussMarkovRequest",
+          "x-flatbuffer-type": "NUMGaussMarkovRequest"
+        },
+        "GAUSS_MARKOV_RESULT": {
+          "$ref": "#/definitions/NUMGaussMarkovResult",
+          "x-flatbuffer-type": "NUMGaussMarkovResult"
+        }
+      },
+      "description": "Numerical utility envelope."
+    },
     "odSensorContribution": {
       "type": "object",
       "additionalProperties": false,
@@ -39773,6 +42765,30 @@
             "UTC": {
               "value": 11,
               "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
             }
           }
         },
@@ -42298,6 +45314,491 @@
       },
       "description": "Return All Frames Service (CCSDS 913.1-B-2)"
     },
+    "RBKVector3": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "Compose two Modified Rodrigues Parameter rotations.\n  ADD_MRP = 1,\n  /// Compute the relative Modified Rodrigues Parameter rotation from VECTOR_B to VECTOR_A.\n  SUB_MRP = 2,\n  /// Force a Modified Rodrigues Parameter vector to its shadow set.\n  MRP_SHADOW = 3,\n  /// Switch to the MRP shadow set when norm exceeds SWITCH_THRESHOLD.\n  MRP_SWITCH = 4,\n  /// Convert scalar-first Euler parameters/quaternion to MRP.\n  EP_TO_MRP = 5,\n  /// Convert MRP to scalar-first Euler parameters/quaternion.\n  MRP_TO_EP = 6,\n  /// Convert direction cosine matrix to scalar-first Euler parameters/quaternion.\n  DCM_TO_EP = 7,\n  /// Convert scalar-first Euler parameters/quaternion to direction cosine matrix.\n  EP_TO_DCM = 8,\n  /// Convert direction cosine matrix to Modified Rodrigues Parameters.\n  DCM_TO_MRP = 9,\n  /// Convert Modified Rodrigues Parameters to direction cosine matrix.\n  MRP_TO_DCM = 10,\n  /// Return the MRP B matrix that maps body angular rate to MRP derivative.\n  B_MATRIX_MRP = 11,\n  /// Return the inverse MRP B matrix that maps MRP derivative to body angular rate.\n  B_INV_MATRIX_MRP = 12,\n  /// Compute MRP derivative from MRP and body angular rate vectors.\n  D_MRP = 13,\n  /// Compute body angular rate from MRP and MRP derivative vectors.\n  D_MRP_TO_OMEGA = 14,\n  /// Return the MRP B-dot matrix from MRP and MRP derivative vectors.\n  B_DOT_MATRIX_MRP = 15,\n  /// Compute second MRP derivative from MRP, MRP derivative, body rate, and body acceleration.\n  DD_MRP = 16,\n  /// Compute body angular acceleration from MRP, MRP derivative, and second MRP derivative.\n  DD_MRP_TO_D_OMEGA = 17,\n  /// Compose two Gibbs-vector rotations.\n  ADD_GIBBS = 18,\n  /// Compute the relative Gibbs-vector rotation from VECTOR_B to VECTOR_A.\n  SUB_GIBBS = 19,\n  /// Convert scalar-first Euler parameters/quaternion to Gibbs vector.\n  EP_TO_GIBBS = 20,\n  /// Convert Gibbs vector to scalar-first Euler parameters/quaternion.\n  GIBBS_TO_EP = 21,\n  /// Convert direction cosine matrix to Gibbs vector.\n  DCM_TO_GIBBS = 22,\n  /// Convert Gibbs vector to direction cosine matrix.\n  GIBBS_TO_DCM = 23,\n  /// Convert Modified Rodrigues Parameters to Gibbs vector.\n  MRP_TO_GIBBS = 24,\n  /// Convert Gibbs vector to Modified Rodrigues Parameters.\n  GIBBS_TO_MRP = 25,\n  /// Return the Gibbs-vector B matrix that maps body angular rate to Gibbs derivative.\n  B_MATRIX_GIBBS = 26,\n  /// Return the inverse Gibbs-vector B matrix that maps Gibbs derivative to body angular rate.\n  B_INV_MATRIX_GIBBS = 27,\n  /// Compute Gibbs derivative from Gibbs vector and body angular rate vectors.\n  D_GIBBS = 28,\n  /// Compose two principal rotation vector rotations.\n  ADD_PRV = 29,\n  /// Compute the relative principal rotation vector from VECTOR_B to VECTOR_A.\n  SUB_PRV = 30,\n  /// Convert scalar-first Euler parameters/quaternion to principal rotation vector.\n  EP_TO_PRV = 31,\n  /// Convert principal rotation vector to scalar-first Euler parameters/quaternion.\n  PRV_TO_EP = 32,\n  /// Convert direction cosine matrix to principal rotation vector.\n  DCM_TO_PRV = 33,\n  /// Convert principal rotation vector to direction cosine matrix.\n  PRV_TO_DCM = 34,\n  /// Convert Modified Rodrigues Parameters to principal rotation vector.\n  MRP_TO_PRV = 35,\n  /// Convert principal rotation vector to Modified Rodrigues Parameters.\n  PRV_TO_MRP = 36,\n  /// Convert Gibbs vector to principal rotation vector.\n  GIBBS_TO_PRV = 37,\n  /// Convert principal rotation vector to Gibbs vector.\n  PRV_TO_GIBBS = 38,\n  /// Return the principal-rotation-vector B matrix that maps body angular rate to PRV derivative.\n  B_MATRIX_PRV = 39,\n  /// Return the inverse principal-rotation-vector B matrix that maps PRV derivative to body angular rate.\n  B_INV_MATRIX_PRV = 40,\n  /// Compute principal rotation vector derivative from PRV and body angular rate vectors.\n  D_PRV = 41,\n  /// Compose two Euler-angle rotations using EULER_SEQUENCE.\n  ADD_EULER = 42,\n  /// Compute the relative Euler-angle rotation from VECTOR_B to VECTOR_A using EULER_SEQUENCE.\n  SUB_EULER = 43,\n  /// Convert Euler angles to direction cosine matrix using EULER_SEQUENCE.\n  EULER_TO_DCM = 44,\n  /// Convert direction cosine matrix to Euler angles using EULER_SEQUENCE.\n  DCM_TO_EULER = 45,\n  /// Convert Euler angles to scalar-first Euler parameters/quaternion using EULER_SEQUENCE.\n  EULER_TO_EP = 46,\n  /// Convert scalar-first Euler parameters/quaternion to Euler angles using EULER_SEQUENCE.\n  EP_TO_EULER = 47,\n  /// Convert Euler angles to Modified Rodrigues Parameters using EULER_SEQUENCE.\n  EULER_TO_MRP = 48,\n  /// Convert Modified Rodrigues Parameters to Euler angles using EULER_SEQUENCE.\n  MRP_TO_EULER = 49,\n  /// Convert Euler angles to Gibbs vector using EULER_SEQUENCE.\n  EULER_TO_GIBBS = 50,\n  /// Convert Gibbs vector to Euler angles using EULER_SEQUENCE.\n  GIBBS_TO_EULER = 51,\n  /// Convert Euler angles to principal rotation vector using EULER_SEQUENCE.\n  EULER_TO_PRV = 52,\n  /// Convert principal rotation vector to Euler angles using EULER_SEQUENCE.\n  PRV_TO_EULER = 53,\n  /// Return the Euler-angle B matrix that maps body angular rate to Euler-angle derivative.\n  B_MATRIX_EULER = 54,\n  /// Return the inverse Euler-angle B matrix that maps Euler-angle derivative to body angular rate.\n  B_INV_MATRIX_EULER = 55,\n  /// Compute Euler-angle derivative from Euler angles and body angular rate vectors.\n  D_EULER = 56,\n  /// Return the skew-symmetric tilde matrix that maps VECTOR_A cross products.\n  TILDE_MATRIX = 57,\n  /// Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD.\n  M1_ROTATION_MATRIX = 58,\n  /// Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD.\n  M2_ROTATION_MATRIX = 59,\n  /// Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD.\n  M3_ROTATION_MATRIX = 60\n}\n\nenum rbkEulerSequenceCode : byte {\n  UNKNOWN = 0,\n  EULER_121 = 1,\n  EULER_123 = 2,\n  EULER_131 = 3,\n  EULER_132 = 4,\n  EULER_212 = 5,\n  EULER_213 = 6,\n  EULER_231 = 7,\n  EULER_232 = 8,\n  EULER_312 = 9,\n  EULER_313 = 10,\n  EULER_321 = 11,\n  EULER_323 = 12\n}\n\nenum rbkResultStatus : byte {\n  /// Operation completed.\n  OK = 0,\n  /// Request is missing required vector/quaternion data or has invalid values.\n  INVALID_INPUT = 1,\n  /// Operation is unknown or not supported by the module implementation.\n  UNSUPPORTED_OPERATION = 2\n}\n\n/// Three-vector used for MRP, Gibbs, PRV, angular rate, and related attitude math values."
+    },
+    "RBKQuaternion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Q0": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q1": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering."
+    },
+    "RBKMatrix3": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "M11": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M12": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M13": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M21": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M22": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M23": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M31": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M32": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M33": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering."
+    },
+    "RBKRigidBodyKinematicsRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "OPERATION": {
+          "$ref": "#/definitions/rbkOperationCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "ADD_MRP": {
+              "value": 1,
+              "description": "Compose two Modified Rodrigues Parameter rotations."
+            },
+            "SUB_MRP": {
+              "value": 2,
+              "description": "Compute the relative Modified Rodrigues Parameter rotation from VECTOR_B to VECTOR_A."
+            },
+            "MRP_SHADOW": {
+              "value": 3,
+              "description": "Force a Modified Rodrigues Parameter vector to its shadow set."
+            },
+            "MRP_SWITCH": {
+              "value": 4,
+              "description": "Switch to the MRP shadow set when norm exceeds SWITCH_THRESHOLD."
+            },
+            "EP_TO_MRP": {
+              "value": 5,
+              "description": "Convert scalar-first Euler parameters/quaternion to MRP."
+            },
+            "MRP_TO_EP": {
+              "value": 6,
+              "description": "Convert MRP to scalar-first Euler parameters/quaternion."
+            },
+            "DCM_TO_EP": {
+              "value": 7,
+              "description": "Convert direction cosine matrix to scalar-first Euler parameters/quaternion."
+            },
+            "EP_TO_DCM": {
+              "value": 8,
+              "description": "Convert scalar-first Euler parameters/quaternion to direction cosine matrix."
+            },
+            "DCM_TO_MRP": {
+              "value": 9,
+              "description": "Convert direction cosine matrix to Modified Rodrigues Parameters."
+            },
+            "MRP_TO_DCM": {
+              "value": 10,
+              "description": "Convert Modified Rodrigues Parameters to direction cosine matrix."
+            },
+            "B_MATRIX_MRP": {
+              "value": 11,
+              "description": "Return the MRP B matrix that maps body angular rate to MRP derivative."
+            },
+            "B_INV_MATRIX_MRP": {
+              "value": 12,
+              "description": "Return the inverse MRP B matrix that maps MRP derivative to body angular rate."
+            },
+            "D_MRP": {
+              "value": 13,
+              "description": "Compute MRP derivative from MRP and body angular rate vectors."
+            },
+            "D_MRP_TO_OMEGA": {
+              "value": 14,
+              "description": "Compute body angular rate from MRP and MRP derivative vectors."
+            },
+            "B_DOT_MATRIX_MRP": {
+              "value": 15,
+              "description": "Return the MRP B-dot matrix from MRP and MRP derivative vectors."
+            },
+            "DD_MRP": {
+              "value": 16,
+              "description": "Compute second MRP derivative from MRP, MRP derivative, body rate, and body acceleration."
+            },
+            "DD_MRP_TO_D_OMEGA": {
+              "value": 17,
+              "description": "Compute body angular acceleration from MRP, MRP derivative, and second MRP derivative."
+            },
+            "ADD_GIBBS": {
+              "value": 18,
+              "description": "Compose two Gibbs-vector rotations."
+            },
+            "SUB_GIBBS": {
+              "value": 19,
+              "description": "Compute the relative Gibbs-vector rotation from VECTOR_B to VECTOR_A."
+            },
+            "EP_TO_GIBBS": {
+              "value": 20,
+              "description": "Convert scalar-first Euler parameters/quaternion to Gibbs vector."
+            },
+            "GIBBS_TO_EP": {
+              "value": 21,
+              "description": "Convert Gibbs vector to scalar-first Euler parameters/quaternion."
+            },
+            "DCM_TO_GIBBS": {
+              "value": 22,
+              "description": "Convert direction cosine matrix to Gibbs vector."
+            },
+            "GIBBS_TO_DCM": {
+              "value": 23,
+              "description": "Convert Gibbs vector to direction cosine matrix."
+            },
+            "MRP_TO_GIBBS": {
+              "value": 24,
+              "description": "Convert Modified Rodrigues Parameters to Gibbs vector."
+            },
+            "GIBBS_TO_MRP": {
+              "value": 25,
+              "description": "Convert Gibbs vector to Modified Rodrigues Parameters."
+            },
+            "B_MATRIX_GIBBS": {
+              "value": 26,
+              "description": "Return the Gibbs-vector B matrix that maps body angular rate to Gibbs derivative."
+            },
+            "B_INV_MATRIX_GIBBS": {
+              "value": 27,
+              "description": "Return the inverse Gibbs-vector B matrix that maps Gibbs derivative to body angular rate."
+            },
+            "D_GIBBS": {
+              "value": 28,
+              "description": "Compute Gibbs derivative from Gibbs vector and body angular rate vectors."
+            },
+            "ADD_PRV": {
+              "value": 29,
+              "description": "Compose two principal rotation vector rotations."
+            },
+            "SUB_PRV": {
+              "value": 30,
+              "description": "Compute the relative principal rotation vector from VECTOR_B to VECTOR_A."
+            },
+            "EP_TO_PRV": {
+              "value": 31,
+              "description": "Convert scalar-first Euler parameters/quaternion to principal rotation vector."
+            },
+            "PRV_TO_EP": {
+              "value": 32,
+              "description": "Convert principal rotation vector to scalar-first Euler parameters/quaternion."
+            },
+            "DCM_TO_PRV": {
+              "value": 33,
+              "description": "Convert direction cosine matrix to principal rotation vector."
+            },
+            "PRV_TO_DCM": {
+              "value": 34,
+              "description": "Convert principal rotation vector to direction cosine matrix."
+            },
+            "MRP_TO_PRV": {
+              "value": 35,
+              "description": "Convert Modified Rodrigues Parameters to principal rotation vector."
+            },
+            "PRV_TO_MRP": {
+              "value": 36,
+              "description": "Convert principal rotation vector to Modified Rodrigues Parameters."
+            },
+            "GIBBS_TO_PRV": {
+              "value": 37,
+              "description": "Convert Gibbs vector to principal rotation vector."
+            },
+            "PRV_TO_GIBBS": {
+              "value": 38,
+              "description": "Convert principal rotation vector to Gibbs vector."
+            },
+            "B_MATRIX_PRV": {
+              "value": 39,
+              "description": "Return the principal-rotation-vector B matrix that maps body angular rate to PRV derivative."
+            },
+            "B_INV_MATRIX_PRV": {
+              "value": 40,
+              "description": "Return the inverse principal-rotation-vector B matrix that maps PRV derivative to body angular rate."
+            },
+            "D_PRV": {
+              "value": 41,
+              "description": "Compute principal rotation vector derivative from PRV and body angular rate vectors."
+            },
+            "ADD_EULER": {
+              "value": 42,
+              "description": "Compose two Euler-angle rotations using EULER_SEQUENCE."
+            },
+            "SUB_EULER": {
+              "value": 43,
+              "description": "Compute the relative Euler-angle rotation from VECTOR_B to VECTOR_A using EULER_SEQUENCE."
+            },
+            "EULER_TO_DCM": {
+              "value": 44,
+              "description": "Convert Euler angles to direction cosine matrix using EULER_SEQUENCE."
+            },
+            "DCM_TO_EULER": {
+              "value": 45,
+              "description": "Convert direction cosine matrix to Euler angles using EULER_SEQUENCE."
+            },
+            "EULER_TO_EP": {
+              "value": 46,
+              "description": "Convert Euler angles to scalar-first Euler parameters/quaternion using EULER_SEQUENCE."
+            },
+            "EP_TO_EULER": {
+              "value": 47,
+              "description": "Convert scalar-first Euler parameters/quaternion to Euler angles using EULER_SEQUENCE."
+            },
+            "EULER_TO_MRP": {
+              "value": 48,
+              "description": "Convert Euler angles to Modified Rodrigues Parameters using EULER_SEQUENCE."
+            },
+            "MRP_TO_EULER": {
+              "value": 49,
+              "description": "Convert Modified Rodrigues Parameters to Euler angles using EULER_SEQUENCE."
+            },
+            "EULER_TO_GIBBS": {
+              "value": 50,
+              "description": "Convert Euler angles to Gibbs vector using EULER_SEQUENCE."
+            },
+            "GIBBS_TO_EULER": {
+              "value": 51,
+              "description": "Convert Gibbs vector to Euler angles using EULER_SEQUENCE."
+            },
+            "EULER_TO_PRV": {
+              "value": 52,
+              "description": "Convert Euler angles to principal rotation vector using EULER_SEQUENCE."
+            },
+            "PRV_TO_EULER": {
+              "value": 53,
+              "description": "Convert principal rotation vector to Euler angles using EULER_SEQUENCE."
+            },
+            "B_MATRIX_EULER": {
+              "value": 54,
+              "description": "Return the Euler-angle B matrix that maps body angular rate to Euler-angle derivative."
+            },
+            "B_INV_MATRIX_EULER": {
+              "value": 55,
+              "description": "Return the inverse Euler-angle B matrix that maps Euler-angle derivative to body angular rate."
+            },
+            "D_EULER": {
+              "value": 56,
+              "description": "Compute Euler-angle derivative from Euler angles and body angular rate vectors."
+            },
+            "TILDE_MATRIX": {
+              "value": 57,
+              "description": "Return the skew-symmetric tilde matrix that maps VECTOR_A cross products."
+            },
+            "M1_ROTATION_MATRIX": {
+              "value": 58,
+              "description": "Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD."
+            },
+            "M2_ROTATION_MATRIX": {
+              "value": 59,
+              "description": "Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD."
+            },
+            "M3_ROTATION_MATRIX": {
+              "value": 60,
+              "description": "Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD."
+            }
+          }
+        },
+        "VECTOR_A": {
+          "$ref": "#/definitions/RBKVector3",
+          "x-flatbuffer-type": "RBKVector3"
+        },
+        "VECTOR_B": {
+          "$ref": "#/definitions/RBKVector3",
+          "x-flatbuffer-type": "RBKVector3"
+        },
+        "QUATERNION_A": {
+          "$ref": "#/definitions/RBKQuaternion",
+          "x-flatbuffer-type": "RBKQuaternion"
+        },
+        "MATRIX_A": {
+          "$ref": "#/definitions/RBKMatrix3",
+          "x-flatbuffer-type": "RBKMatrix3"
+        },
+        "SWITCH_THRESHOLD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VECTOR_C": {
+          "$ref": "#/definitions/RBKVector3",
+          "x-flatbuffer-type": "RBKVector3"
+        },
+        "VECTOR_D": {
+          "$ref": "#/definitions/RBKVector3",
+          "x-flatbuffer-type": "RBKVector3"
+        },
+        "EULER_SEQUENCE": {
+          "$ref": "#/definitions/rbkEulerSequenceCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "EULER_121": {
+              "value": 1
+            },
+            "EULER_123": {
+              "value": 2
+            },
+            "EULER_131": {
+              "value": 3
+            },
+            "EULER_132": {
+              "value": 4
+            },
+            "EULER_212": {
+              "value": 5
+            },
+            "EULER_213": {
+              "value": 6
+            },
+            "EULER_231": {
+              "value": 7
+            },
+            "EULER_232": {
+              "value": 8
+            },
+            "EULER_312": {
+              "value": 9
+            },
+            "EULER_313": {
+              "value": 10
+            },
+            "EULER_321": {
+              "value": 11
+            },
+            "EULER_323": {
+              "value": 12
+            }
+          }
+        },
+        "ANGLE_RAD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "Request for one rigid-body kinematics utility operation."
+    },
+    "RBKRigidBodyKinematicsResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/rbkResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Operation completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Request is missing required vector/quaternion data or has invalid values."
+            },
+            "UNSUPPORTED_OPERATION": {
+              "value": 2,
+              "description": "Operation is unknown or not supported by the module implementation."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VECTOR": {
+          "$ref": "#/definitions/RBKVector3",
+          "x-flatbuffer-type": "RBKVector3"
+        },
+        "QUATERNION": {
+          "$ref": "#/definitions/RBKQuaternion",
+          "x-flatbuffer-type": "RBKQuaternion"
+        },
+        "MATRIX": {
+          "$ref": "#/definitions/RBKMatrix3",
+          "x-flatbuffer-type": "RBKMatrix3"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Result for one rigid-body kinematics utility operation."
+    },
+    "RBK": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "RIGID_BODY_REQUEST": {
+          "$ref": "#/definitions/RBKRigidBodyKinematicsRequest",
+          "x-flatbuffer-type": "RBKRigidBodyKinematicsRequest"
+        },
+        "RIGID_BODY_RESULT": {
+          "$ref": "#/definitions/RBKRigidBodyKinematicsResult",
+          "x-flatbuffer-type": "RBKRigidBodyKinematicsResult"
+        }
+      },
+      "description": "Rigid-body kinematics utility envelope."
+    },
     "RCF": {
       "type": "object",
       "additionalProperties": false,
@@ -44683,6 +48184,1571 @@
         }
       },
       "description": "Schema Manifest"
+    },
+    "SCVVec3": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "Sensor Coverage Analytics \u2014 canonical request/result/progress ABI for\n/// access, coverage, swath, and coverage-geometry products produced by SDN\n/// modules and consumed by OrbPro analytics sessions.\n\nenum scvEnvelopeKind : ubyte {\n  REQUEST,\n  RESULT,\n  PROGRESS,\n  CANCEL,\n  GEOMETRY\n}\n\nenum scvAnalysisMode : ubyte {\n  COVERAGE,\n  ACCESS,\n  SWATH,\n  COMBINED\n}\n\nenum scvCoordinateFrame : ubyte {\n  UNKNOWN,\n  BODY_FIXED,\n  INERTIAL,\n  ECEF,\n  ECI,\n  CUSTOM\n}\n\nenum scvBodyKind : ubyte {\n  EARTH,\n  MOON,\n  MARS,\n  CUSTOM\n}\n\nenum scvSensorShapeKind : ubyte {\n  CONIC,\n  RECTANGULAR,\n  CUSTOM_POLYGON\n}\n\nenum scvGeometryDomain : ubyte {\n  SURFACE,\n  SPACE,\n  ELLIPSOID,\n  PLANE,\n  CUSTOM_MESH\n}\n\nenum scvResultState : ubyte {\n  OK,\n  PARTIAL,\n  CANCELLED,\n  FAILED\n}\n\nenum scvIntervalCategory : ubyte {\n  ACCESS,\n  COVERAGE,\n  GAP,\n  REVISIT,\n  OVERLAP\n}\n\nenum scvMetricSeriesKind : ushort {\n  PERCENT_COVERED,\n  COVERED_CELL_COUNT,\n  ACCESS_COUNT,\n  CONTACT_DURATION_SECONDS,\n  REVISIT_SECONDS,\n  GAP_SECONDS,\n  REDUNDANCY,\n  OVERLAP_COUNT,\n  LATITUDE_BAND_COVERAGE\n}\n\nenum scvGeometryEncoding : ubyte {\n  FLAT_FLOAT32,\n  INTERLEAVED_FLOAT32,\n  QUANTIZED_UINT16,\n  SHARED_MEMORY_OFFSET\n}"
+    },
+    "SCVEllipsoid": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "BODY": {
+          "$ref": "#/definitions/scvBodyKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "EARTH": {
+              "value": 0
+            },
+            "MOON": {
+              "value": 1
+            },
+            "MARS": {
+              "value": 2
+            },
+            "CUSTOM": {
+              "value": 3
+            }
+          }
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SEMI_MAJOR_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEMI_MINOR_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEMI_INTERMEDIATE_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FRAME": {
+          "$ref": "#/definitions/scvCoordinateFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "BODY_FIXED": {
+              "value": 1
+            },
+            "INERTIAL": {
+              "value": 2
+            },
+            "ECEF": {
+              "value": 3
+            },
+            "ECI": {
+              "value": 4
+            },
+            "CUSTOM": {
+              "value": 5
+            }
+          }
+        }
+      }
+    },
+    "SCVTimeGrid": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EPOCH_ISO": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_JULIAN_DATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "START_OFFSET_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "STOP_OFFSET_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "STEP_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "GRID_INDEX_START": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "GRID_INDEX_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        }
+      }
+    },
+    "SCVSensor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SENSOR_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SHAPE": {
+          "$ref": "#/definitions/scvSensorShapeKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "CONIC": {
+              "value": 0
+            },
+            "RECTANGULAR": {
+              "value": 1
+            },
+            "CUSTOM_POLYGON": {
+              "value": 2
+            }
+          }
+        },
+        "FRAME": {
+          "$ref": "#/definitions/scvCoordinateFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "BODY_FIXED": {
+              "value": 1
+            },
+            "INERTIAL": {
+              "value": 2
+            },
+            "ECEF": {
+              "value": 3
+            },
+            "ECI": {
+              "value": 4
+            },
+            "CUSTOM": {
+              "value": 5
+            }
+          }
+        },
+        "POSITION_M": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "VELOCITY_MPS": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "BORESIGHT_UNIT": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "UP_UNIT": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "HALF_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CROSS_TRACK_HALF_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ALONG_TRACK_HALF_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_RANGE_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RANGE_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POLYGON_VERTICES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVVec3"
+          },
+          "x-flatbuffer-type": "[SCVVec3]"
+        },
+        "POLYGON_FRAME": {
+          "$ref": "#/definitions/scvCoordinateFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "BODY_FIXED": {
+              "value": 1
+            },
+            "INERTIAL": {
+              "value": 2
+            },
+            "ECEF": {
+              "value": 3
+            },
+            "ECI": {
+              "value": 4
+            },
+            "CUSTOM": {
+              "value": 5
+            }
+          }
+        }
+      }
+    },
+    "SCVStateSample": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SENSOR_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TIME_OFFSET_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_M": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "VELOCITY_MPS": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "QUATERNION_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_W": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FRAME": {
+          "$ref": "#/definitions/scvCoordinateFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "BODY_FIXED": {
+              "value": 1
+            },
+            "INERTIAL": {
+              "value": 2
+            },
+            "ECEF": {
+              "value": 3
+            },
+            "ECI": {
+              "value": 4
+            },
+            "CUSTOM": {
+              "value": 5
+            }
+          }
+        }
+      }
+    },
+    "SCVTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "TARGET_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FRAME": {
+          "$ref": "#/definitions/scvCoordinateFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "BODY_FIXED": {
+              "value": 1
+            },
+            "INERTIAL": {
+              "value": 2
+            },
+            "ECEF": {
+              "value": 3
+            },
+            "ECI": {
+              "value": 4
+            },
+            "CUSTOM": {
+              "value": 5
+            }
+          }
+        },
+        "POSITION_M": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "VELOCITY_MPS": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "RADIUS_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      }
+    },
+    "SCVTargetStateSample": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "TARGET_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TIME_OFFSET_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_M": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "VELOCITY_MPS": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "QUATERNION_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_W": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FRAME": {
+          "$ref": "#/definitions/scvCoordinateFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "BODY_FIXED": {
+              "value": 1
+            },
+            "INERTIAL": {
+              "value": 2
+            },
+            "ECEF": {
+              "value": 3
+            },
+            "ECI": {
+              "value": 4
+            },
+            "CUSTOM": {
+              "value": 5
+            }
+          }
+        }
+      }
+    },
+    "SCVCoverageGrid": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "GRID_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DOMAIN": {
+          "$ref": "#/definitions/scvGeometryDomain",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "SURFACE": {
+              "value": 0
+            },
+            "SPACE": {
+              "value": 1
+            },
+            "ELLIPSOID": {
+              "value": 2
+            },
+            "PLANE": {
+              "value": 3
+            },
+            "CUSTOM_MESH": {
+              "value": 4
+            }
+          }
+        },
+        "FRAME": {
+          "$ref": "#/definitions/scvCoordinateFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "BODY_FIXED": {
+              "value": 1
+            },
+            "INERTIAL": {
+              "value": 2
+            },
+            "ECEF": {
+              "value": 3
+            },
+            "ECI": {
+              "value": 4
+            },
+            "CUSTOM": {
+              "value": 5
+            }
+          }
+        },
+        "MIN_LAT_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_LAT_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_LON_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_LON_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LAT_STEP_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LON_STEP_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CELL_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "RESOLUTION_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      }
+    },
+    "SCVCoverageRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "JOB_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACE_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "ANALYSIS_MODE": {
+          "$ref": "#/definitions/scvAnalysisMode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "COVERAGE": {
+              "value": 0
+            },
+            "ACCESS": {
+              "value": 1
+            },
+            "SWATH": {
+              "value": 2
+            },
+            "COMBINED": {
+              "value": 3
+            }
+          }
+        },
+        "TARGET_BODY": {
+          "$ref": "#/definitions/SCVEllipsoid",
+          "x-flatbuffer-type": "SCVEllipsoid"
+        },
+        "TIME_GRID": {
+          "$ref": "#/definitions/SCVTimeGrid",
+          "x-flatbuffer-type": "SCVTimeGrid"
+        },
+        "COVERAGE_GRID": {
+          "$ref": "#/definitions/SCVCoverageGrid",
+          "x-flatbuffer-type": "SCVCoverageGrid"
+        },
+        "SENSORS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVSensor"
+          },
+          "x-flatbuffer-type": "[SCVSensor]"
+        },
+        "STATE_SAMPLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVStateSample"
+          },
+          "x-flatbuffer-type": "[SCVStateSample]"
+        },
+        "TARGETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVTarget"
+          },
+          "x-flatbuffer-type": "[SCVTarget]"
+        },
+        "TARGET_STATE_SAMPLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVTargetStateSample"
+          },
+          "x-flatbuffer-type": "[SCVTargetStateSample]"
+        },
+        "REQUESTED_PRODUCTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/scvMetricSeriesKind"
+          },
+          "x-flatbuffer-type": "[scvMetricSeriesKind]"
+        },
+        "SENSOR_BATCH_START": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SENSOR_BATCH_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "WINDOW_BATCH_START": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "WINDOW_BATCH_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "GEOMETRY_ENCODING": {
+          "$ref": "#/definitions/scvGeometryEncoding",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "FLAT_FLOAT32": {
+              "value": 0
+            },
+            "INTERLEAVED_FLOAT32": {
+              "value": 1
+            },
+            "QUANTIZED_UINT16": {
+              "value": 2
+            },
+            "SHARED_MEMORY_OFFSET": {
+              "value": 3
+            }
+          }
+        },
+        "INCLUDE_PACKED_GEOMETRY": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        }
+      }
+    },
+    "SCVProgress": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "JOB_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACE_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/scvResultState",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0
+            },
+            "PARTIAL": {
+              "value": 1
+            },
+            "CANCELLED": {
+              "value": 2
+            },
+            "FAILED": {
+              "value": 3
+            }
+          }
+        },
+        "COMPLETED_SENSORS": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_SENSORS": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "COMPLETED_WINDOWS": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_WINDOWS": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "BACKLOG_REMAINING": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "COMPLETION_FRACTION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      }
+    },
+    "SCVCancel": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "JOB_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACE_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "REASON": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CANCEL_AFTER_WINDOW_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        }
+      }
+    },
+    "SCVSensorContribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SENSOR_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "FIRST_WINDOW_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LAST_WINDOW_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "CONTRIBUTION_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        }
+      }
+    },
+    "SCVCellStat": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "CELL_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LATITUDE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "COVERED_WINDOW_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_WINDOW_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "COVERAGE_FRACTION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_REVISIT_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_GAP_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_GAP_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "REDUNDANCY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_IDS": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "SENSOR_BITSET_WORDS": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[uint64]"
+        }
+      }
+    },
+    "SCVInterval": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SENSOR_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TARGET_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "INTERVAL_KIND": {
+          "$ref": "#/definitions/scvIntervalCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "ACCESS": {
+              "value": 0
+            },
+            "COVERAGE": {
+              "value": 1
+            },
+            "GAP": {
+              "value": 2
+            },
+            "REVISIT": {
+              "value": 3
+            },
+            "OVERLAP": {
+              "value": 4
+            }
+          }
+        },
+        "START_OFFSET_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "STOP_OFFSET_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DURATION_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_RANGE_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_ELEVATION_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CELL_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        }
+      }
+    },
+    "SCVLatitudeBandStat": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MIN_LAT_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_LAT_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "COVERAGE_FRACTION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_REVISIT_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_GAP_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_REDUNDANCY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      }
+    },
+    "SCVTimeSeriesPoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "METRIC_KIND": {
+          "$ref": "#/definitions/scvMetricSeriesKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "PERCENT_COVERED": {
+              "value": 0
+            },
+            "COVERED_CELL_COUNT": {
+              "value": 1
+            },
+            "ACCESS_COUNT": {
+              "value": 2
+            },
+            "CONTACT_DURATION_SECONDS": {
+              "value": 3
+            },
+            "REVISIT_SECONDS": {
+              "value": 4
+            },
+            "GAP_SECONDS": {
+              "value": 5
+            },
+            "REDUNDANCY": {
+              "value": 6
+            },
+            "OVERLAP_COUNT": {
+              "value": 7
+            },
+            "LATITUDE_BAND_COVERAGE": {
+              "value": 8
+            }
+          }
+        },
+        "TIME_OFFSET_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "WINDOW_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "CELL_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        }
+      }
+    },
+    "SCVHistogramBin": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "METRIC_KIND": {
+          "$ref": "#/definitions/scvMetricSeriesKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "PERCENT_COVERED": {
+              "value": 0
+            },
+            "COVERED_CELL_COUNT": {
+              "value": 1
+            },
+            "ACCESS_COUNT": {
+              "value": 2
+            },
+            "CONTACT_DURATION_SECONDS": {
+              "value": 3
+            },
+            "REVISIT_SECONDS": {
+              "value": 4
+            },
+            "GAP_SECONDS": {
+              "value": 5
+            },
+            "REDUNDANCY": {
+              "value": 6
+            },
+            "OVERLAP_COUNT": {
+              "value": 7
+            },
+            "LATITUDE_BAND_COVERAGE": {
+              "value": 8
+            }
+          }
+        },
+        "MIN_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "WEIGHT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      }
+    },
+    "SCVHeatmapCell": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "METRIC_KIND": {
+          "$ref": "#/definitions/scvMetricSeriesKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "PERCENT_COVERED": {
+              "value": 0
+            },
+            "COVERED_CELL_COUNT": {
+              "value": 1
+            },
+            "ACCESS_COUNT": {
+              "value": 2
+            },
+            "CONTACT_DURATION_SECONDS": {
+              "value": 3
+            },
+            "REVISIT_SECONDS": {
+              "value": 4
+            },
+            "GAP_SECONDS": {
+              "value": 5
+            },
+            "REDUNDANCY": {
+              "value": 6
+            },
+            "OVERLAP_COUNT": {
+              "value": 7
+            },
+            "LATITUDE_BAND_COVERAGE": {
+              "value": 8
+            }
+          }
+        },
+        "X_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "Y_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        }
+      }
+    },
+    "SCVSwathSegment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SEGMENT_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SENSOR_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "WINDOW_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DOMAIN": {
+          "$ref": "#/definitions/scvGeometryDomain",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "SURFACE": {
+              "value": 0
+            },
+            "SPACE": {
+              "value": 1
+            },
+            "ELLIPSOID": {
+              "value": 2
+            },
+            "PLANE": {
+              "value": 3
+            },
+            "CUSTOM_MESH": {
+              "value": 4
+            }
+          }
+        },
+        "FRAME": {
+          "$ref": "#/definitions/scvCoordinateFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "BODY_FIXED": {
+              "value": 1
+            },
+            "INERTIAL": {
+              "value": 2
+            },
+            "ECEF": {
+              "value": 3
+            },
+            "ECI": {
+              "value": 4
+            },
+            "CUSTOM": {
+              "value": 5
+            }
+          }
+        },
+        "START_OFFSET_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "STOP_OFFSET_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VERTEX_OFFSET": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "VERTEX_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "INDEX_OFFSET": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "INDEX_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SENSOR_IDS": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[uint32]"
+        }
+      }
+    },
+    "SCVMemoryRegion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "REGION_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "RECORD_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REGION_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "BYTE_OFFSET": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "BYTE_LENGTH": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "BYTE_STRIDE": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ALIGNMENT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SHARED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "MUTABLE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        }
+      }
+    },
+    "SCVPackedGeometryChunk": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "JOB_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACE_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CHUNK_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "WINDOW_START_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "WINDOW_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DOMAIN": {
+          "$ref": "#/definitions/scvGeometryDomain",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "SURFACE": {
+              "value": 0
+            },
+            "SPACE": {
+              "value": 1
+            },
+            "ELLIPSOID": {
+              "value": 2
+            },
+            "PLANE": {
+              "value": 3
+            },
+            "CUSTOM_MESH": {
+              "value": 4
+            }
+          }
+        },
+        "FRAME": {
+          "$ref": "#/definitions/scvCoordinateFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "BODY_FIXED": {
+              "value": 1
+            },
+            "INERTIAL": {
+              "value": 2
+            },
+            "ECEF": {
+              "value": 3
+            },
+            "ECI": {
+              "value": 4
+            },
+            "CUSTOM": {
+              "value": 5
+            }
+          }
+        },
+        "ENCODING": {
+          "$ref": "#/definitions/scvGeometryEncoding",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "FLAT_FLOAT32": {
+              "value": 0
+            },
+            "INTERLEAVED_FLOAT32": {
+              "value": 1
+            },
+            "QUANTIZED_UINT16": {
+              "value": 2
+            },
+            "SHARED_MEMORY_OFFSET": {
+              "value": 3
+            }
+          }
+        },
+        "TIME_START_OFFSET_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TIME_STOP_OFFSET_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEMORY_REGIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVMemoryRegion"
+          },
+          "x-flatbuffer-type": "[SCVMemoryRegion]"
+        },
+        "POSITIONS_REGION_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "POSITIONS_RECORD_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "NORMALS_REGION_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "NORMALS_RECORD_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ST_REGION_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ST_RECORD_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REVEAL_COORDS_REGION_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REVEAL_COORDS_RECORD_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "INDICES_REGION_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "INDICES_RECORD_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "POSITIONS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[float]"
+        },
+        "NORMALS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[float]"
+        },
+        "ST": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[float]"
+        },
+        "REVEAL_COORDS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[float]"
+        },
+        "INDICES": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "SEGMENT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "SENSOR_IDS": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "SEGMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVSwathSegment"
+          },
+          "x-flatbuffer-type": "[SCVSwathSegment]"
+        }
+      }
+    },
+    "SCVResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "JOB_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACE_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/scvResultState",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0
+            },
+            "PARTIAL": {
+              "value": 1
+            },
+            "CANCELLED": {
+              "value": 2
+            },
+            "FAILED": {
+              "value": 3
+            }
+          }
+        },
+        "TIME_GRID": {
+          "$ref": "#/definitions/SCVTimeGrid",
+          "x-flatbuffer-type": "SCVTimeGrid"
+        },
+        "TARGET_BODY": {
+          "$ref": "#/definitions/SCVEllipsoid",
+          "x-flatbuffer-type": "SCVEllipsoid"
+        },
+        "TOTAL_SENSORS": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_WINDOWS": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "CELL_STATS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVCellStat"
+          },
+          "x-flatbuffer-type": "[SCVCellStat]"
+        },
+        "INTERVALS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVInterval"
+          },
+          "x-flatbuffer-type": "[SCVInterval]"
+        },
+        "LATITUDE_BANDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVLatitudeBandStat"
+          },
+          "x-flatbuffer-type": "[SCVLatitudeBandStat]"
+        },
+        "TIME_SERIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVTimeSeriesPoint"
+          },
+          "x-flatbuffer-type": "[SCVTimeSeriesPoint]"
+        },
+        "HISTOGRAMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVHistogramBin"
+          },
+          "x-flatbuffer-type": "[SCVHistogramBin]"
+        },
+        "HEATMAP": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVHeatmapCell"
+          },
+          "x-flatbuffer-type": "[SCVHeatmapCell]"
+        },
+        "CONTRIBUTIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVSensorContribution"
+          },
+          "x-flatbuffer-type": "[SCVSensorContribution]"
+        },
+        "GEOMETRY": {
+          "$ref": "#/definitions/SCVPackedGeometryChunk",
+          "x-flatbuffer-type": "SCVPackedGeometryChunk"
+        },
+        "MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      }
+    },
+    "SCV": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ENVELOPE_KIND": {
+          "$ref": "#/definitions/scvEnvelopeKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "REQUEST": {
+              "value": 0
+            },
+            "RESULT": {
+              "value": 1
+            },
+            "PROGRESS": {
+              "value": 2
+            },
+            "CANCEL": {
+              "value": 3
+            },
+            "GEOMETRY": {
+              "value": 4
+            }
+          }
+        },
+        "REQUEST": {
+          "$ref": "#/definitions/SCVCoverageRequest",
+          "x-flatbuffer-type": "SCVCoverageRequest"
+        },
+        "PROGRESS": {
+          "$ref": "#/definitions/SCVProgress",
+          "x-flatbuffer-type": "SCVProgress"
+        },
+        "CANCEL": {
+          "$ref": "#/definitions/SCVCancel",
+          "x-flatbuffer-type": "SCVCancel"
+        },
+        "RESULT": {
+          "$ref": "#/definitions/SCVResult",
+          "x-flatbuffer-type": "SCVResult"
+        },
+        "GEOMETRY": {
+          "$ref": "#/definitions/SCVPackedGeometryChunk",
+          "x-flatbuffer-type": "SCVPackedGeometryChunk"
+        }
+      }
     },
     "SDFConical": {
       "type": "object",
@@ -49019,6 +54085,10 @@
           }
         },
         "ANOMALY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIAPSIS_RADIUS": {
           "type": "number",
           "x-flatbuffer-type": "double"
         }

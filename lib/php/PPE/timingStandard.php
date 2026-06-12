@@ -27,6 +27,18 @@ class timingStandard
     const UT1 = 10;
     /// Coordinated Universal Time
     const UTC = 11;
+    /// GLONASS Time
+    const GLONASS = 12;
+    /// Galileo System Time
+    const GST = 13;
+    /// Quasi-Zenith Satellite System Time
+    const QZSS = 14;
+    /// BeiDou Time
+    const BDT = 15;
+    /// Navigation with Indian Constellation Time
+    const NAVIC = 16;
+    /// Satellite-Based Augmentation System Time
+    const SBAS = 17;
 
     private static $names = array(
         timingStandard::GMST=>"GMST",
@@ -41,6 +53,12 @@ class timingStandard
         timingStandard::TT=>"TT",
         timingStandard::UT1=>"UT1",
         timingStandard::UTC=>"UTC",
+        timingStandard::GLONASS=>"GLONASS",
+        timingStandard::GST=>"GST",
+        timingStandard::QZSS=>"QZSS",
+        timingStandard::BDT=>"BDT",
+        timingStandard::NAVIC=>"NAVIC",
+        timingStandard::SBAS=>"SBAS",
     );
 
     public static function Name($e)
