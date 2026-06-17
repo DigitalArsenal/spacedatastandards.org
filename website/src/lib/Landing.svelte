@@ -866,7 +866,7 @@ CN_N           = 6.789e-3`
       const manifest = await response.json();
       schemaCount = Object.keys(manifest.STANDARDS || {}).length;
     } catch (e) {
-      schemaCount = 118; // Fallback count
+      schemaCount = 166; // Fallback count
     }
     const cleanup = initTechBackground();
     loadEditorSample('tle');
