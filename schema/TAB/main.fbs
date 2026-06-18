@@ -1,5 +1,5 @@
-// Hash: c4bb7e216c40e11c61223dd2e230cc75635f5efb0e389b3064e8d336d3858592
-// Version: 0.0.3
+// Hash: 126e277db5ca4feb3857f58b5295275abed97ebeb69989fab1e5ad64ee61fd7f
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 /// Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
 /// through an arena-backed plugin stream. Carries enough identity for a
@@ -43,6 +43,18 @@ table FlatBufferTypeRef {
   SCHEMA_VERSION:string;
   /// Optional root type name within the schema.
   ROOT_TYPE:string;
+  /// Optional schema hash bytes for stronger compatibility checks.
+  SCHEMA_HASH:[ubyte];
+  /// True when this port/type set accepts any FlatBuffer frame.
+  ACCEPTS_ANY_FLATBUFFER:bool = false;
+  /// Logical wire format for this accepted type.
+  WIRE_FORMAT:payloadWireFormat = FLATBUFFER;
+  /// Fixed string length for aligned-binary string fields, when applicable.
+  FIXED_STRING_LENGTH:uint16;
+  /// Byte length for fixed-size aligned-binary records, when applicable.
+  BYTE_LENGTH:uint;
+  /// Required start alignment for aligned-binary records, when applicable.
+  REQUIRED_ALIGNMENT:uint16;
 }
 
 /// Typed Arena Buffer — one descriptor for a payload slot in a shared arena.

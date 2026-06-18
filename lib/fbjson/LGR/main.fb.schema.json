@@ -571,6 +571,52 @@
           "type": "string",
           "description": "Optional root type name within the schema.",
           "x-flatbuffer-type": "string"
+        },
+        "SCHEMA_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Optional schema hash bytes for stronger compatibility checks.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "ACCEPTS_ANY_FLATBUFFER": {
+          "type": "boolean",
+          "description": "True when this port/type set accepts any FlatBuffer frame.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "WIRE_FORMAT": {
+          "$ref": "#/definitions/payloadWireFormat",
+          "description": "Logical wire format for this accepted type.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "FLATBUFFER",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "FLATBUFFER": {
+              "value": 0,
+              "description": "Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF."
+            },
+            "ALIGNED_BINARY": {
+              "value": 1,
+              "description": "Body is a raw aligned binary chunk (for example zero-copy structs)."
+            }
+          }
+        },
+        "FIXED_STRING_LENGTH": {
+          "type": "integer",
+          "description": "Fixed string length for aligned-binary string fields, when applicable.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "BYTE_LENGTH": {
+          "type": "integer",
+          "description": "Byte length for fixed-size aligned-binary records, when applicable.",
+          "x-flatbuffer-type": "uint"
+        },
+        "REQUIRED_ALIGNMENT": {
+          "type": "integer",
+          "description": "Required start alignment for aligned-binary records, when applicable.",
+          "x-flatbuffer-type": "uint16"
         }
       },
       "description": "Payload-schema identity for a stream frame or an accepted port type."

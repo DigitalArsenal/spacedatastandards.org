@@ -69,26 +69,110 @@ class FlatBufferTypeRef extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Optional schema hash bytes for stronger compatibility checks.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getSCHEMA_HASH($j)
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSCHEMA_HASHLength()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSCHEMA_HASHBytes()
+    {
+        return $this->__vector_as_bytes(12);
+    }
+
+    /// True when this port/type set accepts any FlatBuffer frame.
+    /**
+     * @return bool
+     */
+    public function getACCEPTS_ANY_FLATBUFFER()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Logical wire format for this accepted type.
+    /**
+     * @return byte
+     */
+    public function getWIRE_FORMAT()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \payloadWireFormat::FLATBUFFER;
+    }
+
+    /// Fixed string length for aligned-binary string fields, when applicable.
+    /**
+     * @return ushort
+     */
+    public function getFIXED_STRING_LENGTH()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// Byte length for fixed-size aligned-binary records, when applicable.
+    /**
+     * @return uint
+     */
+    public function getBYTE_LENGTH()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Required start alignment for aligned-binary records, when applicable.
+    /**
+     * @return ushort
+     */
+    public function getREQUIRED_ALIGNMENT()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startFlatBufferTypeRef(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(10);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return FlatBufferTypeRef
      */
-    public static function createFlatBufferTypeRef(FlatBufferBuilder $builder, $SCHEMA_NAME, $FILE_IDENTIFIER, $SCHEMA_VERSION, $ROOT_TYPE)
+    public static function createFlatBufferTypeRef(FlatBufferBuilder $builder, $SCHEMA_NAME, $FILE_IDENTIFIER, $SCHEMA_VERSION, $ROOT_TYPE, $SCHEMA_HASH, $ACCEPTS_ANY_FLATBUFFER, $WIRE_FORMAT, $FIXED_STRING_LENGTH, $BYTE_LENGTH, $REQUIRED_ALIGNMENT)
     {
-        $builder->startObject(4);
+        $builder->startObject(10);
         self::addSCHEMA_NAME($builder, $SCHEMA_NAME);
         self::addFILE_IDENTIFIER($builder, $FILE_IDENTIFIER);
         self::addSCHEMA_VERSION($builder, $SCHEMA_VERSION);
         self::addROOT_TYPE($builder, $ROOT_TYPE);
+        self::addSCHEMA_HASH($builder, $SCHEMA_HASH);
+        self::addACCEPTS_ANY_FLATBUFFER($builder, $ACCEPTS_ANY_FLATBUFFER);
+        self::addWIRE_FORMAT($builder, $WIRE_FORMAT);
+        self::addFIXED_STRING_LENGTH($builder, $FIXED_STRING_LENGTH);
+        self::addBYTE_LENGTH($builder, $BYTE_LENGTH);
+        self::addREQUIRED_ALIGNMENT($builder, $REQUIRED_ALIGNMENT);
         $o = $builder->endObject();
         return $o;
     }
@@ -131,6 +215,90 @@ class FlatBufferTypeRef extends Table
     public static function addROOT_TYPE(FlatBufferBuilder $builder, $ROOT_TYPE)
     {
         $builder->addOffsetX(3, $ROOT_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSCHEMA_HASH(FlatBufferBuilder $builder, $SCHEMA_HASH)
+    {
+        $builder->addOffsetX(4, $SCHEMA_HASH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSCHEMA_HASHVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSCHEMA_HASHVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addACCEPTS_ANY_FLATBUFFER(FlatBufferBuilder $builder, $ACCEPTS_ANY_FLATBUFFER)
+    {
+        $builder->addBoolX(5, $ACCEPTS_ANY_FLATBUFFER, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addWIRE_FORMAT(FlatBufferBuilder $builder, $WIRE_FORMAT)
+    {
+        $builder->addByteX(6, $WIRE_FORMAT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addFIXED_STRING_LENGTH(FlatBufferBuilder $builder, $FIXED_STRING_LENGTH)
+    {
+        $builder->addUshortX(7, $FIXED_STRING_LENGTH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addBYTE_LENGTH(FlatBufferBuilder $builder, $BYTE_LENGTH)
+    {
+        $builder->addUintX(8, $BYTE_LENGTH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addREQUIRED_ALIGNMENT(FlatBufferBuilder $builder, $REQUIRED_ALIGNMENT)
+    {
+        $builder->addUshortX(9, $REQUIRED_ALIGNMENT, 0);
     }
 
     /**

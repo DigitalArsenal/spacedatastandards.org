@@ -136,7 +136,13 @@ struct FlatBufferTypeRef FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
     VT_SCHEMA_NAME = 4,
     VT_FILE_IDENTIFIER = 6,
     VT_SCHEMA_VERSION = 8,
-    VT_ROOT_TYPE = 10
+    VT_ROOT_TYPE = 10,
+    VT_SCHEMA_HASH = 12,
+    VT_ACCEPTS_ANY_FLATBUFFER = 14,
+    VT_WIRE_FORMAT = 16,
+    VT_FIXED_STRING_LENGTH = 18,
+    VT_BYTE_LENGTH = 20,
+    VT_REQUIRED_ALIGNMENT = 22
   };
   /// Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
   const ::flatbuffers::String *SCHEMA_NAME() const {
@@ -154,6 +160,30 @@ struct FlatBufferTypeRef FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   const ::flatbuffers::String *ROOT_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ROOT_TYPE);
   }
+  /// Optional schema hash bytes for stronger compatibility checks.
+  const ::flatbuffers::Vector<uint8_t> *SCHEMA_HASH() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_SCHEMA_HASH);
+  }
+  /// True when this port/type set accepts any FlatBuffer frame.
+  bool ACCEPTS_ANY_FLATBUFFER() const {
+    return GetField<uint8_t>(VT_ACCEPTS_ANY_FLATBUFFER, 0) != 0;
+  }
+  /// Logical wire format for this accepted type.
+  payloadWireFormat WIRE_FORMAT() const {
+    return static_cast<payloadWireFormat>(GetField<uint8_t>(VT_WIRE_FORMAT, 0));
+  }
+  /// Fixed string length for aligned-binary string fields, when applicable.
+  uint16_t FIXED_STRING_LENGTH() const {
+    return GetField<uint16_t>(VT_FIXED_STRING_LENGTH, 0);
+  }
+  /// Byte length for fixed-size aligned-binary records, when applicable.
+  uint32_t BYTE_LENGTH() const {
+    return GetField<uint32_t>(VT_BYTE_LENGTH, 0);
+  }
+  /// Required start alignment for aligned-binary records, when applicable.
+  uint16_t REQUIRED_ALIGNMENT() const {
+    return GetField<uint16_t>(VT_REQUIRED_ALIGNMENT, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -165,6 +195,13 @@ struct FlatBufferTypeRef FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
            verifier.VerifyString(SCHEMA_VERSION()) &&
            VerifyOffset(verifier, VT_ROOT_TYPE) &&
            verifier.VerifyString(ROOT_TYPE()) &&
+           VerifyOffset(verifier, VT_SCHEMA_HASH) &&
+           verifier.VerifyVector(SCHEMA_HASH()) &&
+           VerifyField<uint8_t>(verifier, VT_ACCEPTS_ANY_FLATBUFFER, 1) &&
+           VerifyField<uint8_t>(verifier, VT_WIRE_FORMAT, 1) &&
+           VerifyField<uint16_t>(verifier, VT_FIXED_STRING_LENGTH, 2) &&
+           VerifyField<uint32_t>(verifier, VT_BYTE_LENGTH, 4) &&
+           VerifyField<uint16_t>(verifier, VT_REQUIRED_ALIGNMENT, 2) &&
            verifier.EndTable();
   }
 };
@@ -185,6 +222,24 @@ struct FlatBufferTypeRefBuilder {
   void add_ROOT_TYPE(::flatbuffers::Offset<::flatbuffers::String> ROOT_TYPE) {
     fbb_.AddOffset(FlatBufferTypeRef::VT_ROOT_TYPE, ROOT_TYPE);
   }
+  void add_SCHEMA_HASH(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SCHEMA_HASH) {
+    fbb_.AddOffset(FlatBufferTypeRef::VT_SCHEMA_HASH, SCHEMA_HASH);
+  }
+  void add_ACCEPTS_ANY_FLATBUFFER(bool ACCEPTS_ANY_FLATBUFFER) {
+    fbb_.AddElement<uint8_t>(FlatBufferTypeRef::VT_ACCEPTS_ANY_FLATBUFFER, static_cast<uint8_t>(ACCEPTS_ANY_FLATBUFFER), 0);
+  }
+  void add_WIRE_FORMAT(payloadWireFormat WIRE_FORMAT) {
+    fbb_.AddElement<uint8_t>(FlatBufferTypeRef::VT_WIRE_FORMAT, static_cast<uint8_t>(WIRE_FORMAT), 0);
+  }
+  void add_FIXED_STRING_LENGTH(uint16_t FIXED_STRING_LENGTH) {
+    fbb_.AddElement<uint16_t>(FlatBufferTypeRef::VT_FIXED_STRING_LENGTH, FIXED_STRING_LENGTH, 0);
+  }
+  void add_BYTE_LENGTH(uint32_t BYTE_LENGTH) {
+    fbb_.AddElement<uint32_t>(FlatBufferTypeRef::VT_BYTE_LENGTH, BYTE_LENGTH, 0);
+  }
+  void add_REQUIRED_ALIGNMENT(uint16_t REQUIRED_ALIGNMENT) {
+    fbb_.AddElement<uint16_t>(FlatBufferTypeRef::VT_REQUIRED_ALIGNMENT, REQUIRED_ALIGNMENT, 0);
+  }
   explicit FlatBufferTypeRefBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -201,12 +256,24 @@ inline ::flatbuffers::Offset<FlatBufferTypeRef> CreateFlatBufferTypeRef(
     ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> FILE_IDENTIFIER = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_VERSION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ROOT_TYPE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> ROOT_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SCHEMA_HASH = 0,
+    bool ACCEPTS_ANY_FLATBUFFER = false,
+    payloadWireFormat WIRE_FORMAT = payloadWireFormat_FLATBUFFER,
+    uint16_t FIXED_STRING_LENGTH = 0,
+    uint32_t BYTE_LENGTH = 0,
+    uint16_t REQUIRED_ALIGNMENT = 0) {
   FlatBufferTypeRefBuilder builder_(_fbb);
+  builder_.add_BYTE_LENGTH(BYTE_LENGTH);
+  builder_.add_SCHEMA_HASH(SCHEMA_HASH);
   builder_.add_ROOT_TYPE(ROOT_TYPE);
   builder_.add_SCHEMA_VERSION(SCHEMA_VERSION);
   builder_.add_FILE_IDENTIFIER(FILE_IDENTIFIER);
   builder_.add_SCHEMA_NAME(SCHEMA_NAME);
+  builder_.add_REQUIRED_ALIGNMENT(REQUIRED_ALIGNMENT);
+  builder_.add_FIXED_STRING_LENGTH(FIXED_STRING_LENGTH);
+  builder_.add_WIRE_FORMAT(WIRE_FORMAT);
+  builder_.add_ACCEPTS_ANY_FLATBUFFER(ACCEPTS_ANY_FLATBUFFER);
   return builder_.Finish();
 }
 
@@ -215,17 +282,30 @@ inline ::flatbuffers::Offset<FlatBufferTypeRef> CreateFlatBufferTypeRefDirect(
     const char *SCHEMA_NAME = nullptr,
     const char *FILE_IDENTIFIER = nullptr,
     const char *SCHEMA_VERSION = nullptr,
-    const char *ROOT_TYPE = nullptr) {
+    const char *ROOT_TYPE = nullptr,
+    const std::vector<uint8_t> *SCHEMA_HASH = nullptr,
+    bool ACCEPTS_ANY_FLATBUFFER = false,
+    payloadWireFormat WIRE_FORMAT = payloadWireFormat_FLATBUFFER,
+    uint16_t FIXED_STRING_LENGTH = 0,
+    uint32_t BYTE_LENGTH = 0,
+    uint16_t REQUIRED_ALIGNMENT = 0) {
   auto SCHEMA_NAME__ = SCHEMA_NAME ? _fbb.CreateString(SCHEMA_NAME) : 0;
   auto FILE_IDENTIFIER__ = FILE_IDENTIFIER ? _fbb.CreateString(FILE_IDENTIFIER) : 0;
   auto SCHEMA_VERSION__ = SCHEMA_VERSION ? _fbb.CreateString(SCHEMA_VERSION) : 0;
   auto ROOT_TYPE__ = ROOT_TYPE ? _fbb.CreateString(ROOT_TYPE) : 0;
+  auto SCHEMA_HASH__ = SCHEMA_HASH ? _fbb.CreateVector<uint8_t>(*SCHEMA_HASH) : 0;
   return CreateFlatBufferTypeRef(
       _fbb,
       SCHEMA_NAME__,
       FILE_IDENTIFIER__,
       SCHEMA_VERSION__,
-      ROOT_TYPE__);
+      ROOT_TYPE__,
+      SCHEMA_HASH__,
+      ACCEPTS_ANY_FLATBUFFER,
+      WIRE_FORMAT,
+      FIXED_STRING_LENGTH,
+      BYTE_LENGTH,
+      REQUIRED_ALIGNMENT);
 }
 
 /// Typed Arena Buffer — one descriptor for a payload slot in a shared arena.

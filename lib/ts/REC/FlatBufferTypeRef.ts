@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { payloadWireFormat } from './payloadWireFormat.js';
 
 
 /**
@@ -67,8 +68,66 @@ ROOT_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Optional schema hash bytes for stronger compatibility checks.
+ */
+SCHEMA_HASH(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+schemaHashLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+schemaHashArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * True when this port/type set accepts any FlatBuffer frame.
+ */
+ACCEPTS_ANY_FLATBUFFER():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Logical wire format for this accepted type.
+ */
+WIRE_FORMAT():payloadWireFormat {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : payloadWireFormat.FLATBUFFER;
+}
+
+/**
+ * Fixed string length for aligned-binary string fields, when applicable.
+ */
+FIXED_STRING_LENGTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Byte length for fixed-size aligned-binary records, when applicable.
+ */
+BYTE_LENGTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Required start alignment for aligned-binary records, when applicable.
+ */
+REQUIRED_ALIGNMENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
 static startFlatBufferTypeRef(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+  builder.startObject(10);
 }
 
 static addSchemaName(builder:flatbuffers.Builder, SCHEMA_NAMEOffset:flatbuffers.Offset) {
@@ -87,17 +146,59 @@ static addRootType(builder:flatbuffers.Builder, ROOT_TYPEOffset:flatbuffers.Offs
   builder.addFieldOffset(3, ROOT_TYPEOffset, 0);
 }
 
+static addSchemaHash(builder:flatbuffers.Builder, SCHEMA_HASHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, SCHEMA_HASHOffset, 0);
+}
+
+static createSchemaHashVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSchemaHashVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
+static addAcceptsAnyFlatbuffer(builder:flatbuffers.Builder, ACCEPTS_ANY_FLATBUFFER:boolean) {
+  builder.addFieldInt8(5, +ACCEPTS_ANY_FLATBUFFER, +false);
+}
+
+static addWireFormat(builder:flatbuffers.Builder, WIRE_FORMAT:payloadWireFormat) {
+  builder.addFieldInt8(6, WIRE_FORMAT, payloadWireFormat.FLATBUFFER);
+}
+
+static addFixedStringLength(builder:flatbuffers.Builder, FIXED_STRING_LENGTH:number) {
+  builder.addFieldInt16(7, FIXED_STRING_LENGTH, 0);
+}
+
+static addByteLength(builder:flatbuffers.Builder, BYTE_LENGTH:number) {
+  builder.addFieldInt32(8, BYTE_LENGTH, 0);
+}
+
+static addRequiredAlignment(builder:flatbuffers.Builder, REQUIRED_ALIGNMENT:number) {
+  builder.addFieldInt16(9, REQUIRED_ALIGNMENT, 0);
+}
+
 static endFlatBufferTypeRef(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createFlatBufferTypeRef(builder:flatbuffers.Builder, SCHEMA_NAMEOffset:flatbuffers.Offset, FILE_IDENTIFIEROffset:flatbuffers.Offset, SCHEMA_VERSIONOffset:flatbuffers.Offset, ROOT_TYPEOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createFlatBufferTypeRef(builder:flatbuffers.Builder, SCHEMA_NAMEOffset:flatbuffers.Offset, FILE_IDENTIFIEROffset:flatbuffers.Offset, SCHEMA_VERSIONOffset:flatbuffers.Offset, ROOT_TYPEOffset:flatbuffers.Offset, SCHEMA_HASHOffset:flatbuffers.Offset, ACCEPTS_ANY_FLATBUFFER:boolean, WIRE_FORMAT:payloadWireFormat, FIXED_STRING_LENGTH:number, BYTE_LENGTH:number, REQUIRED_ALIGNMENT:number):flatbuffers.Offset {
   FlatBufferTypeRef.startFlatBufferTypeRef(builder);
   FlatBufferTypeRef.addSchemaName(builder, SCHEMA_NAMEOffset);
   FlatBufferTypeRef.addFileIdentifier(builder, FILE_IDENTIFIEROffset);
   FlatBufferTypeRef.addSchemaVersion(builder, SCHEMA_VERSIONOffset);
   FlatBufferTypeRef.addRootType(builder, ROOT_TYPEOffset);
+  FlatBufferTypeRef.addSchemaHash(builder, SCHEMA_HASHOffset);
+  FlatBufferTypeRef.addAcceptsAnyFlatbuffer(builder, ACCEPTS_ANY_FLATBUFFER);
+  FlatBufferTypeRef.addWireFormat(builder, WIRE_FORMAT);
+  FlatBufferTypeRef.addFixedStringLength(builder, FIXED_STRING_LENGTH);
+  FlatBufferTypeRef.addByteLength(builder, BYTE_LENGTH);
+  FlatBufferTypeRef.addRequiredAlignment(builder, REQUIRED_ALIGNMENT);
   return FlatBufferTypeRef.endFlatBufferTypeRef(builder);
 }
 
@@ -106,7 +207,13 @@ unpack(): FlatBufferTypeRefT {
     this.SCHEMA_NAME(),
     this.FILE_IDENTIFIER(),
     this.SCHEMA_VERSION(),
-    this.ROOT_TYPE()
+    this.ROOT_TYPE(),
+    this.bb!.createScalarList<number>(this.SCHEMA_HASH.bind(this), this.schemaHashLength()),
+    this.ACCEPTS_ANY_FLATBUFFER(),
+    this.WIRE_FORMAT(),
+    this.FIXED_STRING_LENGTH(),
+    this.BYTE_LENGTH(),
+    this.REQUIRED_ALIGNMENT()
   );
 }
 
@@ -116,6 +223,12 @@ unpackTo(_o: FlatBufferTypeRefT): void {
   _o.FILE_IDENTIFIER = this.FILE_IDENTIFIER();
   _o.SCHEMA_VERSION = this.SCHEMA_VERSION();
   _o.ROOT_TYPE = this.ROOT_TYPE();
+  _o.SCHEMA_HASH = this.bb!.createScalarList<number>(this.SCHEMA_HASH.bind(this), this.schemaHashLength());
+  _o.ACCEPTS_ANY_FLATBUFFER = this.ACCEPTS_ANY_FLATBUFFER();
+  _o.WIRE_FORMAT = this.WIRE_FORMAT();
+  _o.FIXED_STRING_LENGTH = this.FIXED_STRING_LENGTH();
+  _o.BYTE_LENGTH = this.BYTE_LENGTH();
+  _o.REQUIRED_ALIGNMENT = this.REQUIRED_ALIGNMENT();
 }
 }
 
@@ -124,7 +237,13 @@ constructor(
   public SCHEMA_NAME: string|Uint8Array|null = null,
   public FILE_IDENTIFIER: string|Uint8Array|null = null,
   public SCHEMA_VERSION: string|Uint8Array|null = null,
-  public ROOT_TYPE: string|Uint8Array|null = null
+  public ROOT_TYPE: string|Uint8Array|null = null,
+  public SCHEMA_HASH: (number)[] = [],
+  public ACCEPTS_ANY_FLATBUFFER: boolean = false,
+  public WIRE_FORMAT: payloadWireFormat = payloadWireFormat.FLATBUFFER,
+  public FIXED_STRING_LENGTH: number = 0,
+  public BYTE_LENGTH: number = 0,
+  public REQUIRED_ALIGNMENT: number = 0
 ){}
 
 
@@ -133,12 +252,19 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const FILE_IDENTIFIER = (this.FILE_IDENTIFIER !== null ? builder.createString(this.FILE_IDENTIFIER!) : 0);
   const SCHEMA_VERSION = (this.SCHEMA_VERSION !== null ? builder.createString(this.SCHEMA_VERSION!) : 0);
   const ROOT_TYPE = (this.ROOT_TYPE !== null ? builder.createString(this.ROOT_TYPE!) : 0);
+  const SCHEMA_HASH = FlatBufferTypeRef.createSchemaHashVector(builder, this.SCHEMA_HASH);
 
   return FlatBufferTypeRef.createFlatBufferTypeRef(builder,
     SCHEMA_NAME,
     FILE_IDENTIFIER,
     SCHEMA_VERSION,
-    ROOT_TYPE
+    ROOT_TYPE,
+    SCHEMA_HASH,
+    this.ACCEPTS_ANY_FLATBUFFER,
+    this.WIRE_FORMAT,
+    this.FIXED_STRING_LENGTH,
+    this.BYTE_LENGTH,
+    this.REQUIRED_ALIGNMENT
   );
 }
 }

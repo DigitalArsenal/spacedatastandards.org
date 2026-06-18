@@ -51,25 +51,75 @@ public final class FlatBufferTypeRef extends com.google.flatbuffers.Table {
   public String ROOT_TYPE() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ROOT_TYPEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer ROOT_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Optional schema hash bytes for stronger compatibility checks.
+   */
+  public int SCHEMA_HASH(int j) { int o = __offset(12); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int SCHEMA_HASHLength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector schemaHashVector() { return schemaHashVector(new ByteVector()); }
+  public ByteVector schemaHashVector(ByteVector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SCHEMA_HASHAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer SCHEMA_HASHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * True when this port/type set accepts any FlatBuffer frame.
+   */
+  public boolean ACCEPTS_ANY_FLATBUFFER() { int o = __offset(14); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Logical wire format for this accepted type.
+   */
+  public int WIRE_FORMAT() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Fixed string length for aligned-binary string fields, when applicable.
+   */
+  public int FIXED_STRING_LENGTH() { int o = __offset(18); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Byte length for fixed-size aligned-binary records, when applicable.
+   */
+  public long BYTE_LENGTH() { int o = __offset(20); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Required start alignment for aligned-binary records, when applicable.
+   */
+  public int REQUIRED_ALIGNMENT() { int o = __offset(22); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
 
   public static int createFlatBufferTypeRef(FlatBufferBuilder builder,
       int SCHEMA_NAMEOffset,
       int FILE_IDENTIFIEROffset,
       int SCHEMA_VERSIONOffset,
-      int ROOT_TYPEOffset) {
-    builder.startTable(4);
+      int ROOT_TYPEOffset,
+      int SCHEMA_HASHOffset,
+      boolean ACCEPTS_ANY_FLATBUFFER,
+      int WIRE_FORMAT,
+      int FIXED_STRING_LENGTH,
+      long BYTE_LENGTH,
+      int REQUIRED_ALIGNMENT) {
+    builder.startTable(10);
+    FlatBufferTypeRef.addByteLength(builder, BYTE_LENGTH);
+    FlatBufferTypeRef.addSchemaHash(builder, SCHEMA_HASHOffset);
     FlatBufferTypeRef.addRootType(builder, ROOT_TYPEOffset);
     FlatBufferTypeRef.addSchemaVersion(builder, SCHEMA_VERSIONOffset);
     FlatBufferTypeRef.addFileIdentifier(builder, FILE_IDENTIFIEROffset);
     FlatBufferTypeRef.addSchemaName(builder, SCHEMA_NAMEOffset);
+    FlatBufferTypeRef.addRequiredAlignment(builder, REQUIRED_ALIGNMENT);
+    FlatBufferTypeRef.addFixedStringLength(builder, FIXED_STRING_LENGTH);
+    FlatBufferTypeRef.addWireFormat(builder, WIRE_FORMAT);
+    FlatBufferTypeRef.addAcceptsAnyFlatbuffer(builder, ACCEPTS_ANY_FLATBUFFER);
     return FlatBufferTypeRef.endFlatBufferTypeRef(builder);
   }
 
-  public static void startFlatBufferTypeRef(FlatBufferBuilder builder) { builder.startTable(4); }
+  public static void startFlatBufferTypeRef(FlatBufferBuilder builder) { builder.startTable(10); }
   public static void addSchemaName(FlatBufferBuilder builder, int SCHEMA_NAMEOffset) { builder.addOffset(0, SCHEMA_NAMEOffset, 0); }
   public static void addFileIdentifier(FlatBufferBuilder builder, int FILE_IDENTIFIEROffset) { builder.addOffset(1, FILE_IDENTIFIEROffset, 0); }
   public static void addSchemaVersion(FlatBufferBuilder builder, int SCHEMA_VERSIONOffset) { builder.addOffset(2, SCHEMA_VERSIONOffset, 0); }
   public static void addRootType(FlatBufferBuilder builder, int ROOT_TYPEOffset) { builder.addOffset(3, ROOT_TYPEOffset, 0); }
+  public static void addSchemaHash(FlatBufferBuilder builder, int SCHEMA_HASHOffset) { builder.addOffset(4, SCHEMA_HASHOffset, 0); }
+  public static int createSchemaHashVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createSchemaHashVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startSchemaHashVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addAcceptsAnyFlatbuffer(FlatBufferBuilder builder, boolean ACCEPTS_ANY_FLATBUFFER) { builder.addBoolean(5, ACCEPTS_ANY_FLATBUFFER, false); }
+  public static void addWireFormat(FlatBufferBuilder builder, int WIRE_FORMAT) { builder.addByte(6, (byte) WIRE_FORMAT, (byte) 0); }
+  public static void addFixedStringLength(FlatBufferBuilder builder, int FIXED_STRING_LENGTH) { builder.addShort(7, (short) FIXED_STRING_LENGTH, (short) 0); }
+  public static void addByteLength(FlatBufferBuilder builder, long BYTE_LENGTH) { builder.addInt(8, (int) BYTE_LENGTH, (int) 0L); }
+  public static void addRequiredAlignment(FlatBufferBuilder builder, int REQUIRED_ALIGNMENT) { builder.addShort(9, (short) REQUIRED_ALIGNMENT, (short) 0); }
   public static int endFlatBufferTypeRef(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

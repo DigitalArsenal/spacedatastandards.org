@@ -49,25 +49,67 @@ public struct FlatBufferTypeRef : IFlatbufferObject
   public ArraySegment<byte>? GetROOT_TYPEBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetROOT_TYPEArray() { return __p.__vector_as_array<byte>(10); }
+  /// Optional schema hash bytes for stronger compatibility checks.
+  public byte SCHEMA_HASH(int j) { int o = __p.__offset(12); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int SCHEMA_HASHLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSCHEMA_HASHBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetSCHEMA_HASHBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetSCHEMA_HASHArray() { return __p.__vector_as_array<byte>(12); }
+  /// True when this port/type set accepts any FlatBuffer frame.
+  public bool ACCEPTS_ANY_FLATBUFFER { get { int o = __p.__offset(14); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Logical wire format for this accepted type.
+  public payloadWireFormat WIRE_FORMAT { get { int o = __p.__offset(16); return o != 0 ? (payloadWireFormat)__p.bb.Get(o + __p.bb_pos) : payloadWireFormat.FLATBUFFER; } }
+  /// Fixed string length for aligned-binary string fields, when applicable.
+  public ushort FIXED_STRING_LENGTH { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Byte length for fixed-size aligned-binary records, when applicable.
+  public uint BYTE_LENGTH { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Required start alignment for aligned-binary records, when applicable.
+  public ushort REQUIRED_ALIGNMENT { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
 
   public static Offset<FlatBufferTypeRef> CreateFlatBufferTypeRef(FlatBufferBuilder builder,
       StringOffset SCHEMA_NAMEOffset = default(StringOffset),
       StringOffset FILE_IDENTIFIEROffset = default(StringOffset),
       StringOffset SCHEMA_VERSIONOffset = default(StringOffset),
-      StringOffset ROOT_TYPEOffset = default(StringOffset)) {
-    builder.StartTable(4);
+      StringOffset ROOT_TYPEOffset = default(StringOffset),
+      VectorOffset SCHEMA_HASHOffset = default(VectorOffset),
+      bool ACCEPTS_ANY_FLATBUFFER = false,
+      payloadWireFormat WIRE_FORMAT = payloadWireFormat.FLATBUFFER,
+      ushort FIXED_STRING_LENGTH = 0,
+      uint BYTE_LENGTH = 0,
+      ushort REQUIRED_ALIGNMENT = 0) {
+    builder.StartTable(10);
+    FlatBufferTypeRef.AddBYTE_LENGTH(builder, BYTE_LENGTH);
+    FlatBufferTypeRef.AddSCHEMA_HASH(builder, SCHEMA_HASHOffset);
     FlatBufferTypeRef.AddROOT_TYPE(builder, ROOT_TYPEOffset);
     FlatBufferTypeRef.AddSCHEMA_VERSION(builder, SCHEMA_VERSIONOffset);
     FlatBufferTypeRef.AddFILE_IDENTIFIER(builder, FILE_IDENTIFIEROffset);
     FlatBufferTypeRef.AddSCHEMA_NAME(builder, SCHEMA_NAMEOffset);
+    FlatBufferTypeRef.AddREQUIRED_ALIGNMENT(builder, REQUIRED_ALIGNMENT);
+    FlatBufferTypeRef.AddFIXED_STRING_LENGTH(builder, FIXED_STRING_LENGTH);
+    FlatBufferTypeRef.AddWIRE_FORMAT(builder, WIRE_FORMAT);
+    FlatBufferTypeRef.AddACCEPTS_ANY_FLATBUFFER(builder, ACCEPTS_ANY_FLATBUFFER);
     return FlatBufferTypeRef.EndFlatBufferTypeRef(builder);
   }
 
-  public static void StartFlatBufferTypeRef(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartFlatBufferTypeRef(FlatBufferBuilder builder) { builder.StartTable(10); }
   public static void AddSCHEMA_NAME(FlatBufferBuilder builder, StringOffset SCHEMA_NAMEOffset) { builder.AddOffset(0, SCHEMA_NAMEOffset.Value, 0); }
   public static void AddFILE_IDENTIFIER(FlatBufferBuilder builder, StringOffset FILE_IDENTIFIEROffset) { builder.AddOffset(1, FILE_IDENTIFIEROffset.Value, 0); }
   public static void AddSCHEMA_VERSION(FlatBufferBuilder builder, StringOffset SCHEMA_VERSIONOffset) { builder.AddOffset(2, SCHEMA_VERSIONOffset.Value, 0); }
   public static void AddROOT_TYPE(FlatBufferBuilder builder, StringOffset ROOT_TYPEOffset) { builder.AddOffset(3, ROOT_TYPEOffset.Value, 0); }
+  public static void AddSCHEMA_HASH(FlatBufferBuilder builder, VectorOffset SCHEMA_HASHOffset) { builder.AddOffset(4, SCHEMA_HASHOffset.Value, 0); }
+  public static VectorOffset CreateSCHEMA_HASHVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSCHEMA_HASHVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSCHEMA_HASHVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSCHEMA_HASHVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSCHEMA_HASHVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddACCEPTS_ANY_FLATBUFFER(FlatBufferBuilder builder, bool ACCEPTS_ANY_FLATBUFFER) { builder.AddBool(5, ACCEPTS_ANY_FLATBUFFER, false); }
+  public static void AddWIRE_FORMAT(FlatBufferBuilder builder, payloadWireFormat WIRE_FORMAT) { builder.AddByte(6, (byte)WIRE_FORMAT, 0); }
+  public static void AddFIXED_STRING_LENGTH(FlatBufferBuilder builder, ushort FIXED_STRING_LENGTH) { builder.AddUshort(7, FIXED_STRING_LENGTH, 0); }
+  public static void AddBYTE_LENGTH(FlatBufferBuilder builder, uint BYTE_LENGTH) { builder.AddUint(8, BYTE_LENGTH, 0); }
+  public static void AddREQUIRED_ALIGNMENT(FlatBufferBuilder builder, ushort REQUIRED_ALIGNMENT) { builder.AddUshort(9, REQUIRED_ALIGNMENT, 0); }
   public static Offset<FlatBufferTypeRef> EndFlatBufferTypeRef(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<FlatBufferTypeRef>(o);
@@ -82,6 +124,13 @@ public struct FlatBufferTypeRef : IFlatbufferObject
     _o.FILE_IDENTIFIER = this.FILE_IDENTIFIER;
     _o.SCHEMA_VERSION = this.SCHEMA_VERSION;
     _o.ROOT_TYPE = this.ROOT_TYPE;
+    _o.SCHEMA_HASH = new List<byte>();
+    for (var _j = 0; _j < this.SCHEMA_HASHLength; ++_j) {_o.SCHEMA_HASH.Add(this.SCHEMA_HASH(_j));}
+    _o.ACCEPTS_ANY_FLATBUFFER = this.ACCEPTS_ANY_FLATBUFFER;
+    _o.WIRE_FORMAT = this.WIRE_FORMAT;
+    _o.FIXED_STRING_LENGTH = this.FIXED_STRING_LENGTH;
+    _o.BYTE_LENGTH = this.BYTE_LENGTH;
+    _o.REQUIRED_ALIGNMENT = this.REQUIRED_ALIGNMENT;
   }
   public static Offset<FlatBufferTypeRef> Pack(FlatBufferBuilder builder, FlatBufferTypeRefT _o) {
     if (_o == null) return default(Offset<FlatBufferTypeRef>);
@@ -89,12 +138,23 @@ public struct FlatBufferTypeRef : IFlatbufferObject
     var _FILE_IDENTIFIER = _o.FILE_IDENTIFIER == null ? default(StringOffset) : builder.CreateString(_o.FILE_IDENTIFIER);
     var _SCHEMA_VERSION = _o.SCHEMA_VERSION == null ? default(StringOffset) : builder.CreateString(_o.SCHEMA_VERSION);
     var _ROOT_TYPE = _o.ROOT_TYPE == null ? default(StringOffset) : builder.CreateString(_o.ROOT_TYPE);
+    var _SCHEMA_HASH = default(VectorOffset);
+    if (_o.SCHEMA_HASH != null) {
+      var __SCHEMA_HASH = _o.SCHEMA_HASH.ToArray();
+      _SCHEMA_HASH = CreateSCHEMA_HASHVector(builder, __SCHEMA_HASH);
+    }
     return CreateFlatBufferTypeRef(
       builder,
       _SCHEMA_NAME,
       _FILE_IDENTIFIER,
       _SCHEMA_VERSION,
-      _ROOT_TYPE);
+      _ROOT_TYPE,
+      _SCHEMA_HASH,
+      _o.ACCEPTS_ANY_FLATBUFFER,
+      _o.WIRE_FORMAT,
+      _o.FIXED_STRING_LENGTH,
+      _o.BYTE_LENGTH,
+      _o.REQUIRED_ALIGNMENT);
   }
 }
 
@@ -104,12 +164,24 @@ public class FlatBufferTypeRefT
   public string FILE_IDENTIFIER { get; set; }
   public string SCHEMA_VERSION { get; set; }
   public string ROOT_TYPE { get; set; }
+  public List<byte> SCHEMA_HASH { get; set; }
+  public bool ACCEPTS_ANY_FLATBUFFER { get; set; }
+  public payloadWireFormat WIRE_FORMAT { get; set; }
+  public ushort FIXED_STRING_LENGTH { get; set; }
+  public uint BYTE_LENGTH { get; set; }
+  public ushort REQUIRED_ALIGNMENT { get; set; }
 
   public FlatBufferTypeRefT() {
     this.SCHEMA_NAME = null;
     this.FILE_IDENTIFIER = null;
     this.SCHEMA_VERSION = null;
     this.ROOT_TYPE = null;
+    this.SCHEMA_HASH = null;
+    this.ACCEPTS_ANY_FLATBUFFER = false;
+    this.WIRE_FORMAT = payloadWireFormat.FLATBUFFER;
+    this.FIXED_STRING_LENGTH = 0;
+    this.BYTE_LENGTH = 0;
+    this.REQUIRED_ALIGNMENT = 0;
   }
 }
 
@@ -123,6 +195,12 @@ static public class FlatBufferTypeRefVerify
       && verifier.VerifyString(tablePos, 6 /*FILE_IDENTIFIER*/, false)
       && verifier.VerifyString(tablePos, 8 /*SCHEMA_VERSION*/, false)
       && verifier.VerifyString(tablePos, 10 /*ROOT_TYPE*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 12 /*SCHEMA_HASH*/, 1 /*byte*/, false)
+      && verifier.VerifyField(tablePos, 14 /*ACCEPTS_ANY_FLATBUFFER*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 16 /*WIRE_FORMAT*/, 1 /*payloadWireFormat*/, 1, false)
+      && verifier.VerifyField(tablePos, 18 /*FIXED_STRING_LENGTH*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 20 /*BYTE_LENGTH*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 22 /*REQUIRED_ALIGNMENT*/, 2 /*ushort*/, 2, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

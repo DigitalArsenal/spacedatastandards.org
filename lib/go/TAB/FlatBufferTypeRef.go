@@ -98,8 +98,170 @@ func (rcv *FlatBufferTypeRef) RootType() []byte {
 }
 
 /// Optional root type name within the schema.
+/// Optional schema hash bytes for stronger compatibility checks.
+func (rcv *FlatBufferTypeRef) SCHEMA_HASH(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *FlatBufferTypeRef) SchemaHash(j int) byte {
+	return rcv.SCHEMA_HASH(j)
+}
+
+func (rcv *FlatBufferTypeRef) SCHEMA_HASHLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *FlatBufferTypeRef) SchemaHashLength() int {
+	return rcv.SCHEMA_HASHLength()
+}
+
+func (rcv *FlatBufferTypeRef) SCHEMA_HASHBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *FlatBufferTypeRef) SchemaHashBytes() []byte {
+	return rcv.SCHEMA_HASHBytes()
+}
+
+/// Optional schema hash bytes for stronger compatibility checks.
+func (rcv *FlatBufferTypeRef) MutateSCHEMA_HASH(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *FlatBufferTypeRef) MutateSchemaHash(j int, n byte) bool {
+	return rcv.MutateSCHEMA_HASH(j, n)
+}
+
+/// True when this port/type set accepts any FlatBuffer frame.
+func (rcv *FlatBufferTypeRef) ACCEPTS_ANY_FLATBUFFER() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *FlatBufferTypeRef) AcceptsAnyFlatbuffer() bool {
+	return rcv.ACCEPTS_ANY_FLATBUFFER()
+}
+
+/// True when this port/type set accepts any FlatBuffer frame.
+func (rcv *FlatBufferTypeRef) MutateACCEPTS_ANY_FLATBUFFER(n bool) bool {
+	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *FlatBufferTypeRef) MutateAcceptsAnyFlatbuffer(n bool) bool {
+	return rcv.MutateACCEPTS_ANY_FLATBUFFER(n)
+}
+
+/// Logical wire format for this accepted type.
+func (rcv *FlatBufferTypeRef) WIRE_FORMAT() payloadWireFormat {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return payloadWireFormat(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *FlatBufferTypeRef) WireFormat() payloadWireFormat {
+	return rcv.WIRE_FORMAT()
+}
+
+/// Logical wire format for this accepted type.
+func (rcv *FlatBufferTypeRef) MutateWIRE_FORMAT(n payloadWireFormat) bool {
+	return rcv._tab.MutateByteSlot(16, byte(n))
+}
+
+func (rcv *FlatBufferTypeRef) MutateWireFormat(n payloadWireFormat) bool {
+	return rcv.MutateWIRE_FORMAT(n)
+}
+
+/// Fixed string length for aligned-binary string fields, when applicable.
+func (rcv *FlatBufferTypeRef) FIXED_STRING_LENGTH() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *FlatBufferTypeRef) FixedStringLength() uint16 {
+	return rcv.FIXED_STRING_LENGTH()
+}
+
+/// Fixed string length for aligned-binary string fields, when applicable.
+func (rcv *FlatBufferTypeRef) MutateFIXED_STRING_LENGTH(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(18, n)
+}
+
+func (rcv *FlatBufferTypeRef) MutateFixedStringLength(n uint16) bool {
+	return rcv.MutateFIXED_STRING_LENGTH(n)
+}
+
+/// Byte length for fixed-size aligned-binary records, when applicable.
+func (rcv *FlatBufferTypeRef) BYTE_LENGTH() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *FlatBufferTypeRef) ByteLength() uint32 {
+	return rcv.BYTE_LENGTH()
+}
+
+/// Byte length for fixed-size aligned-binary records, when applicable.
+func (rcv *FlatBufferTypeRef) MutateBYTE_LENGTH(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(20, n)
+}
+
+func (rcv *FlatBufferTypeRef) MutateByteLength(n uint32) bool {
+	return rcv.MutateBYTE_LENGTH(n)
+}
+
+/// Required start alignment for aligned-binary records, when applicable.
+func (rcv *FlatBufferTypeRef) REQUIRED_ALIGNMENT() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *FlatBufferTypeRef) RequiredAlignment() uint16 {
+	return rcv.REQUIRED_ALIGNMENT()
+}
+
+/// Required start alignment for aligned-binary records, when applicable.
+func (rcv *FlatBufferTypeRef) MutateREQUIRED_ALIGNMENT(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(22, n)
+}
+
+func (rcv *FlatBufferTypeRef) MutateRequiredAlignment(n uint16) bool {
+	return rcv.MutateREQUIRED_ALIGNMENT(n)
+}
+
 func FlatBufferTypeRefStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(10)
 }
 func FlatBufferTypeRefAddSCHEMA_NAME(builder *flatbuffers.Builder, SCHEMA_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SCHEMA_NAME), 0)
@@ -124,6 +286,48 @@ func FlatBufferTypeRefAddROOT_TYPE(builder *flatbuffers.Builder, ROOT_TYPE flatb
 }
 func FlatBufferTypeRefAddRootType(builder *flatbuffers.Builder, ROOT_TYPE flatbuffers.UOffsetT) {
 	FlatBufferTypeRefAddROOT_TYPE(builder, ROOT_TYPE)
+}
+func FlatBufferTypeRefAddSCHEMA_HASH(builder *flatbuffers.Builder, SCHEMA_HASH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SCHEMA_HASH), 0)
+}
+func FlatBufferTypeRefAddSchemaHash(builder *flatbuffers.Builder, SCHEMA_HASH flatbuffers.UOffsetT) {
+	FlatBufferTypeRefAddSCHEMA_HASH(builder, SCHEMA_HASH)
+}
+func FlatBufferTypeRefStartSCHEMA_HASHVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func FlatBufferTypeRefStartSchemaHashVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return FlatBufferTypeRefStartSCHEMA_HASHVector(builder, numElems)
+}
+func FlatBufferTypeRefAddACCEPTS_ANY_FLATBUFFER(builder *flatbuffers.Builder, ACCEPTS_ANY_FLATBUFFER bool) {
+	builder.PrependBoolSlot(5, ACCEPTS_ANY_FLATBUFFER, false)
+}
+func FlatBufferTypeRefAddAcceptsAnyFlatbuffer(builder *flatbuffers.Builder, ACCEPTS_ANY_FLATBUFFER bool) {
+	FlatBufferTypeRefAddACCEPTS_ANY_FLATBUFFER(builder, ACCEPTS_ANY_FLATBUFFER)
+}
+func FlatBufferTypeRefAddWIRE_FORMAT(builder *flatbuffers.Builder, WIRE_FORMAT payloadWireFormat) {
+	builder.PrependByteSlot(6, byte(WIRE_FORMAT), 0)
+}
+func FlatBufferTypeRefAddWireFormat(builder *flatbuffers.Builder, WIRE_FORMAT payloadWireFormat) {
+	FlatBufferTypeRefAddWIRE_FORMAT(builder, WIRE_FORMAT)
+}
+func FlatBufferTypeRefAddFIXED_STRING_LENGTH(builder *flatbuffers.Builder, FIXED_STRING_LENGTH uint16) {
+	builder.PrependUint16Slot(7, FIXED_STRING_LENGTH, 0)
+}
+func FlatBufferTypeRefAddFixedStringLength(builder *flatbuffers.Builder, FIXED_STRING_LENGTH uint16) {
+	FlatBufferTypeRefAddFIXED_STRING_LENGTH(builder, FIXED_STRING_LENGTH)
+}
+func FlatBufferTypeRefAddBYTE_LENGTH(builder *flatbuffers.Builder, BYTE_LENGTH uint32) {
+	builder.PrependUint32Slot(8, BYTE_LENGTH, 0)
+}
+func FlatBufferTypeRefAddByteLength(builder *flatbuffers.Builder, BYTE_LENGTH uint32) {
+	FlatBufferTypeRefAddBYTE_LENGTH(builder, BYTE_LENGTH)
+}
+func FlatBufferTypeRefAddREQUIRED_ALIGNMENT(builder *flatbuffers.Builder, REQUIRED_ALIGNMENT uint16) {
+	builder.PrependUint16Slot(9, REQUIRED_ALIGNMENT, 0)
+}
+func FlatBufferTypeRefAddRequiredAlignment(builder *flatbuffers.Builder, REQUIRED_ALIGNMENT uint16) {
+	FlatBufferTypeRefAddREQUIRED_ALIGNMENT(builder, REQUIRED_ALIGNMENT)
 }
 func FlatBufferTypeRefEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

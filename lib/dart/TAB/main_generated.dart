@@ -143,10 +143,28 @@ class FlatBufferTypeRef {
   ///  Optional root type name within the schema.
   String? get ROOT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   String? get rootType => ROOT_TYPE;
+  ///  Optional schema hash bytes for stronger compatibility checks.
+  List<int>? get SCHEMA_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
+  List<int>? get schemaHash => SCHEMA_HASH;
+  ///  True when this port/type set accepts any FlatBuffer frame.
+  bool get ACCEPTS_ANY_FLATBUFFER => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  bool get acceptsAnyFlatbuffer => ACCEPTS_ANY_FLATBUFFER;
+  ///  Logical wire format for this accepted type.
+  payloadWireFormat get WIRE_FORMAT => payloadWireFormat.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 0));
+  payloadWireFormat get wireFormat => WIRE_FORMAT;
+  ///  Fixed string length for aligned-binary string fields, when applicable.
+  int get FIXED_STRING_LENGTH => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get fixedStringLength => FIXED_STRING_LENGTH;
+  ///  Byte length for fixed-size aligned-binary records, when applicable.
+  int get BYTE_LENGTH => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get byteLength => BYTE_LENGTH;
+  ///  Required start alignment for aligned-binary records, when applicable.
+  int get REQUIRED_ALIGNMENT => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get requiredAlignment => REQUIRED_ALIGNMENT;
 
   @override
   String toString() {
-    return 'FlatBufferTypeRef{schemaName: ${schemaName}, fileIdentifier: ${fileIdentifier}, schemaVersion: ${schemaVersion}, rootType: ${rootType}}';
+    return 'FlatBufferTypeRef{schemaName: ${schemaName}, fileIdentifier: ${fileIdentifier}, schemaVersion: ${schemaVersion}, rootType: ${rootType}, schemaHash: ${schemaHash}, acceptsAnyFlatbuffer: ${acceptsAnyFlatbuffer}, wireFormat: ${wireFormat}, fixedStringLength: ${fixedStringLength}, byteLength: ${byteLength}, requiredAlignment: ${requiredAlignment}}';
   }
 }
 
@@ -164,7 +182,7 @@ class FlatBufferTypeRefBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(10);
   }
 
   int addSchemaNameOffset(int? offset) {
@@ -183,6 +201,30 @@ class FlatBufferTypeRefBuilder {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
+  int addSchemaHashOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addAcceptsAnyFlatbuffer(bool? ACCEPTS_ANY_FLATBUFFER) {
+    fbBuilder.addBool(5, ACCEPTS_ANY_FLATBUFFER);
+    return fbBuilder.offset;
+  }
+  int addWireFormat(payloadWireFormat? WIRE_FORMAT) {
+    fbBuilder.addUint8(6, WIRE_FORMAT?.value);
+    return fbBuilder.offset;
+  }
+  int addFixedStringLength(int? FIXED_STRING_LENGTH) {
+    fbBuilder.addUint16(7, FIXED_STRING_LENGTH);
+    return fbBuilder.offset;
+  }
+  int addByteLength(int? BYTE_LENGTH) {
+    fbBuilder.addUint32(8, BYTE_LENGTH);
+    return fbBuilder.offset;
+  }
+  int addRequiredAlignment(int? REQUIRED_ALIGNMENT) {
+    fbBuilder.addUint16(9, REQUIRED_ALIGNMENT);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -194,6 +236,12 @@ class FlatBufferTypeRefObjectBuilder extends fb.ObjectBuilder {
   final String? _FILE_IDENTIFIER;
   final String? _SCHEMA_VERSION;
   final String? _ROOT_TYPE;
+  final List<int>? _SCHEMA_HASH;
+  final bool? _ACCEPTS_ANY_FLATBUFFER;
+  final payloadWireFormat? _WIRE_FORMAT;
+  final int? _FIXED_STRING_LENGTH;
+  final int? _BYTE_LENGTH;
+  final int? _REQUIRED_ALIGNMENT;
 
   FlatBufferTypeRefObjectBuilder({
     String? SCHEMA_NAME,
@@ -204,11 +252,29 @@ class FlatBufferTypeRefObjectBuilder extends fb.ObjectBuilder {
     String? schemaVersion,
     String? ROOT_TYPE,
     String? rootType,
+    List<int>? SCHEMA_HASH,
+    List<int>? schemaHash,
+    bool? ACCEPTS_ANY_FLATBUFFER,
+    bool? acceptsAnyFlatbuffer,
+    payloadWireFormat? WIRE_FORMAT,
+    payloadWireFormat? wireFormat,
+    int? FIXED_STRING_LENGTH,
+    int? fixedStringLength,
+    int? BYTE_LENGTH,
+    int? byteLength,
+    int? REQUIRED_ALIGNMENT,
+    int? requiredAlignment,
   })
       : _SCHEMA_NAME = schemaName ?? SCHEMA_NAME,
         _FILE_IDENTIFIER = fileIdentifier ?? FILE_IDENTIFIER,
         _SCHEMA_VERSION = schemaVersion ?? SCHEMA_VERSION,
-        _ROOT_TYPE = rootType ?? ROOT_TYPE;
+        _ROOT_TYPE = rootType ?? ROOT_TYPE,
+        _SCHEMA_HASH = schemaHash ?? SCHEMA_HASH,
+        _ACCEPTS_ANY_FLATBUFFER = acceptsAnyFlatbuffer ?? ACCEPTS_ANY_FLATBUFFER,
+        _WIRE_FORMAT = wireFormat ?? WIRE_FORMAT,
+        _FIXED_STRING_LENGTH = fixedStringLength ?? FIXED_STRING_LENGTH,
+        _BYTE_LENGTH = byteLength ?? BYTE_LENGTH,
+        _REQUIRED_ALIGNMENT = requiredAlignment ?? REQUIRED_ALIGNMENT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -221,11 +287,19 @@ class FlatBufferTypeRefObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SCHEMA_VERSION!);
     final int? ROOT_TYPEOffset = _ROOT_TYPE == null ? null
         : fbBuilder.writeString(_ROOT_TYPE!);
-    fbBuilder.startTable(4);
+    final int? SCHEMA_HASHOffset = _SCHEMA_HASH == null ? null
+        : fbBuilder.writeListUint8(_SCHEMA_HASH!);
+    fbBuilder.startTable(10);
     fbBuilder.addOffset(0, SCHEMA_NAMEOffset);
     fbBuilder.addOffset(1, FILE_IDENTIFIEROffset);
     fbBuilder.addOffset(2, SCHEMA_VERSIONOffset);
     fbBuilder.addOffset(3, ROOT_TYPEOffset);
+    fbBuilder.addOffset(4, SCHEMA_HASHOffset);
+    fbBuilder.addBool(5, _ACCEPTS_ANY_FLATBUFFER);
+    fbBuilder.addUint8(6, _WIRE_FORMAT?.value);
+    fbBuilder.addUint16(7, _FIXED_STRING_LENGTH);
+    fbBuilder.addUint32(8, _BYTE_LENGTH);
+    fbBuilder.addUint16(9, _REQUIRED_ALIGNMENT);
     return fbBuilder.endTable();
   }
 

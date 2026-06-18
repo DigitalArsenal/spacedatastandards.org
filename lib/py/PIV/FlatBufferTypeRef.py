@@ -61,8 +61,76 @@ class FlatBufferTypeRef(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Optional schema hash bytes for stronger compatibility checks.
+    # FlatBufferTypeRef
+    def SCHEMA_HASH(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # FlatBufferTypeRef
+    def SCHEMA_HASHAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # FlatBufferTypeRef
+    def SCHEMA_HASHLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # FlatBufferTypeRef
+    def SCHEMA_HASHIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+    # True when this port/type set accepts any FlatBuffer frame.
+    # FlatBufferTypeRef
+    def ACCEPTS_ANY_FLATBUFFER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Logical wire format for this accepted type.
+    # FlatBufferTypeRef
+    def WIRE_FORMAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Fixed string length for aligned-binary string fields, when applicable.
+    # FlatBufferTypeRef
+    def FIXED_STRING_LENGTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Byte length for fixed-size aligned-binary records, when applicable.
+    # FlatBufferTypeRef
+    def BYTE_LENGTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Required start alignment for aligned-binary records, when applicable.
+    # FlatBufferTypeRef
+    def REQUIRED_ALIGNMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
 def FlatBufferTypeRefStart(builder):
-    builder.StartObject(4)
+    builder.StartObject(10)
 
 def Start(builder):
     FlatBufferTypeRefStart(builder)
@@ -91,12 +159,68 @@ def FlatBufferTypeRefAddROOT_TYPE(builder, ROOT_TYPE):
 def AddROOT_TYPE(builder, ROOT_TYPE):
     FlatBufferTypeRefAddROOT_TYPE(builder, ROOT_TYPE)
 
+def FlatBufferTypeRefAddSCHEMA_HASH(builder, SCHEMA_HASH):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SCHEMA_HASH), 0)
+
+def AddSCHEMA_HASH(builder, SCHEMA_HASH):
+    FlatBufferTypeRefAddSCHEMA_HASH(builder, SCHEMA_HASH)
+
+def FlatBufferTypeRefStartSCHEMA_HASHVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartSCHEMA_HASHVector(builder, numElems):
+    return FlatBufferTypeRefStartSCHEMA_HASHVector(builder, numElems)
+
+def FlatBufferTypeRefCreateSCHEMA_HASHVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateSCHEMA_HASHVector(builder, data):
+    FlatBufferTypeRefCreateSCHEMA_HASHVector(builder, data)
+
+def FlatBufferTypeRefAddACCEPTS_ANY_FLATBUFFER(builder, ACCEPTS_ANY_FLATBUFFER):
+    builder.PrependBoolSlot(5, ACCEPTS_ANY_FLATBUFFER, 0)
+
+def AddACCEPTS_ANY_FLATBUFFER(builder, ACCEPTS_ANY_FLATBUFFER):
+    FlatBufferTypeRefAddACCEPTS_ANY_FLATBUFFER(builder, ACCEPTS_ANY_FLATBUFFER)
+
+def FlatBufferTypeRefAddWIRE_FORMAT(builder, WIRE_FORMAT):
+    builder.PrependUint8Slot(6, WIRE_FORMAT, 0)
+
+def AddWIRE_FORMAT(builder, WIRE_FORMAT):
+    FlatBufferTypeRefAddWIRE_FORMAT(builder, WIRE_FORMAT)
+
+def FlatBufferTypeRefAddFIXED_STRING_LENGTH(builder, FIXED_STRING_LENGTH):
+    builder.PrependUint16Slot(7, FIXED_STRING_LENGTH, 0)
+
+def AddFIXED_STRING_LENGTH(builder, FIXED_STRING_LENGTH):
+    FlatBufferTypeRefAddFIXED_STRING_LENGTH(builder, FIXED_STRING_LENGTH)
+
+def FlatBufferTypeRefAddBYTE_LENGTH(builder, BYTE_LENGTH):
+    builder.PrependUint32Slot(8, BYTE_LENGTH, 0)
+
+def AddBYTE_LENGTH(builder, BYTE_LENGTH):
+    FlatBufferTypeRefAddBYTE_LENGTH(builder, BYTE_LENGTH)
+
+def FlatBufferTypeRefAddREQUIRED_ALIGNMENT(builder, REQUIRED_ALIGNMENT):
+    builder.PrependUint16Slot(9, REQUIRED_ALIGNMENT, 0)
+
+def AddREQUIRED_ALIGNMENT(builder, REQUIRED_ALIGNMENT):
+    FlatBufferTypeRefAddREQUIRED_ALIGNMENT(builder, REQUIRED_ALIGNMENT)
+
 def FlatBufferTypeRefEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return FlatBufferTypeRefEnd(builder)
 
+try:
+    from typing import List
+except:
+    pass
 
 class FlatBufferTypeRefT(object):
 
@@ -107,11 +231,23 @@ class FlatBufferTypeRefT(object):
         FILE_IDENTIFIER = None,
         SCHEMA_VERSION = None,
         ROOT_TYPE = None,
+        SCHEMA_HASH = None,
+        ACCEPTS_ANY_FLATBUFFER = False,
+        WIRE_FORMAT = 0,
+        FIXED_STRING_LENGTH = 0,
+        BYTE_LENGTH = 0,
+        REQUIRED_ALIGNMENT = 0,
     ):
         self.SCHEMA_NAME = SCHEMA_NAME  # type: Optional[str]
         self.FILE_IDENTIFIER = FILE_IDENTIFIER  # type: Optional[str]
         self.SCHEMA_VERSION = SCHEMA_VERSION  # type: Optional[str]
         self.ROOT_TYPE = ROOT_TYPE  # type: Optional[str]
+        self.SCHEMA_HASH = SCHEMA_HASH  # type: Optional[List[int]]
+        self.ACCEPTS_ANY_FLATBUFFER = ACCEPTS_ANY_FLATBUFFER  # type: bool
+        self.WIRE_FORMAT = WIRE_FORMAT  # type: int
+        self.FIXED_STRING_LENGTH = FIXED_STRING_LENGTH  # type: int
+        self.BYTE_LENGTH = BYTE_LENGTH  # type: int
+        self.REQUIRED_ALIGNMENT = REQUIRED_ALIGNMENT  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -138,6 +274,18 @@ class FlatBufferTypeRefT(object):
         self.FILE_IDENTIFIER = FlatBufferTypeRef.FILE_IDENTIFIER()
         self.SCHEMA_VERSION = FlatBufferTypeRef.SCHEMA_VERSION()
         self.ROOT_TYPE = FlatBufferTypeRef.ROOT_TYPE()
+        if not FlatBufferTypeRef.SCHEMA_HASHIsNone():
+            if np is None:
+                self.SCHEMA_HASH = []
+                for i in range(FlatBufferTypeRef.SCHEMA_HASHLength()):
+                    self.SCHEMA_HASH.append(FlatBufferTypeRef.SCHEMA_HASH(i))
+            else:
+                self.SCHEMA_HASH = FlatBufferTypeRef.SCHEMA_HASHAsNumpy()
+        self.ACCEPTS_ANY_FLATBUFFER = FlatBufferTypeRef.ACCEPTS_ANY_FLATBUFFER()
+        self.WIRE_FORMAT = FlatBufferTypeRef.WIRE_FORMAT()
+        self.FIXED_STRING_LENGTH = FlatBufferTypeRef.FIXED_STRING_LENGTH()
+        self.BYTE_LENGTH = FlatBufferTypeRef.BYTE_LENGTH()
+        self.REQUIRED_ALIGNMENT = FlatBufferTypeRef.REQUIRED_ALIGNMENT()
 
     # FlatBufferTypeRefT
     def Pack(self, builder):
@@ -149,6 +297,14 @@ class FlatBufferTypeRefT(object):
             SCHEMA_VERSION = builder.CreateString(self.SCHEMA_VERSION)
         if self.ROOT_TYPE is not None:
             ROOT_TYPE = builder.CreateString(self.ROOT_TYPE)
+        if self.SCHEMA_HASH is not None:
+            if np is not None and type(self.SCHEMA_HASH) is np.ndarray:
+                SCHEMA_HASH = builder.CreateNumpyVector(self.SCHEMA_HASH)
+            else:
+                FlatBufferTypeRefStartSCHEMA_HASHVector(builder, len(self.SCHEMA_HASH))
+                for i in reversed(range(len(self.SCHEMA_HASH))):
+                    builder.PrependUint8(self.SCHEMA_HASH[i])
+                SCHEMA_HASH = builder.EndVector()
         FlatBufferTypeRefStart(builder)
         if self.SCHEMA_NAME is not None:
             FlatBufferTypeRefAddSCHEMA_NAME(builder, SCHEMA_NAME)
@@ -158,5 +314,12 @@ class FlatBufferTypeRefT(object):
             FlatBufferTypeRefAddSCHEMA_VERSION(builder, SCHEMA_VERSION)
         if self.ROOT_TYPE is not None:
             FlatBufferTypeRefAddROOT_TYPE(builder, ROOT_TYPE)
+        if self.SCHEMA_HASH is not None:
+            FlatBufferTypeRefAddSCHEMA_HASH(builder, SCHEMA_HASH)
+        FlatBufferTypeRefAddACCEPTS_ANY_FLATBUFFER(builder, self.ACCEPTS_ANY_FLATBUFFER)
+        FlatBufferTypeRefAddWIRE_FORMAT(builder, self.WIRE_FORMAT)
+        FlatBufferTypeRefAddFIXED_STRING_LENGTH(builder, self.FIXED_STRING_LENGTH)
+        FlatBufferTypeRefAddBYTE_LENGTH(builder, self.BYTE_LENGTH)
+        FlatBufferTypeRefAddREQUIRED_ALIGNMENT(builder, self.REQUIRED_ALIGNMENT)
         FlatBufferTypeRef = FlatBufferTypeRefEnd(builder)
         return FlatBufferTypeRef

@@ -56,6 +56,29 @@ describe("standards-explorer bundle", () => {
     );
 
     assert.deepEqual(missing, []);
-    assert.ok(explorer.getStandard("PIV"), "PIV should be available for code generation");
+    assert.ok(
+      explorer.getStandard("PIV"),
+      "PIV should be available for code generation",
+    );
+  });
+
+  it("runs browser flatc-wasm code generation with preserve-case enabled", () => {
+    const source = readFileSync(
+      new URL(
+        "../packages/standards-explorer/src/flatc-runner.js",
+        import.meta.url,
+      ),
+      "utf8",
+    );
+    const bundle = readFileSync(
+      new URL(
+        "../packages/standards-explorer/dist/standards-explorer.js",
+        import.meta.url,
+      ),
+      "utf8",
+    );
+
+    assert.match(source, /"--preserve-case"/);
+    assert.match(bundle, /"--preserve-case"/);
   });
 });

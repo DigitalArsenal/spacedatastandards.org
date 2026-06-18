@@ -298,6 +298,12 @@ impl<'a> FlatBufferTypeRef<'a> {
   pub const VT_FILE_IDENTIFIER: ::flatbuffers::VOffsetT = 6;
   pub const VT_SCHEMA_VERSION: ::flatbuffers::VOffsetT = 8;
   pub const VT_ROOT_TYPE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_SCHEMA_HASH: ::flatbuffers::VOffsetT = 12;
+  pub const VT_ACCEPTS_ANY_FLATBUFFER: ::flatbuffers::VOffsetT = 14;
+  pub const VT_WIRE_FORMAT: ::flatbuffers::VOffsetT = 16;
+  pub const VT_FIXED_STRING_LENGTH: ::flatbuffers::VOffsetT = 18;
+  pub const VT_BYTE_LENGTH: ::flatbuffers::VOffsetT = 20;
+  pub const VT_REQUIRED_ALIGNMENT: ::flatbuffers::VOffsetT = 22;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -309,10 +315,16 @@ impl<'a> FlatBufferTypeRef<'a> {
     args: &'args FlatBufferTypeRefArgs<'args>
   ) -> ::flatbuffers::WIPOffset<FlatBufferTypeRef<'bldr>> {
     let mut builder = FlatBufferTypeRefBuilder::new(_fbb);
+    builder.add_BYTE_LENGTH(args.BYTE_LENGTH);
+    if let Some(x) = args.SCHEMA_HASH { builder.add_SCHEMA_HASH(x); }
     if let Some(x) = args.ROOT_TYPE { builder.add_ROOT_TYPE(x); }
     if let Some(x) = args.SCHEMA_VERSION { builder.add_SCHEMA_VERSION(x); }
     if let Some(x) = args.FILE_IDENTIFIER { builder.add_FILE_IDENTIFIER(x); }
     if let Some(x) = args.SCHEMA_NAME { builder.add_SCHEMA_NAME(x); }
+    builder.add_REQUIRED_ALIGNMENT(args.REQUIRED_ALIGNMENT);
+    builder.add_FIXED_STRING_LENGTH(args.FIXED_STRING_LENGTH);
+    builder.add_WIRE_FORMAT(args.WIRE_FORMAT);
+    builder.add_ACCEPTS_ANY_FLATBUFFER(args.ACCEPTS_ANY_FLATBUFFER);
     builder.finish()
   }
 
@@ -329,11 +341,25 @@ impl<'a> FlatBufferTypeRef<'a> {
     let ROOT_TYPE = self.ROOT_TYPE().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let SCHEMA_HASH = self.SCHEMA_HASH().map(|x| {
+      x.into_iter().collect()
+    });
+    let ACCEPTS_ANY_FLATBUFFER = self.ACCEPTS_ANY_FLATBUFFER();
+    let WIRE_FORMAT = self.WIRE_FORMAT();
+    let FIXED_STRING_LENGTH = self.FIXED_STRING_LENGTH();
+    let BYTE_LENGTH = self.BYTE_LENGTH();
+    let REQUIRED_ALIGNMENT = self.REQUIRED_ALIGNMENT();
     FlatBufferTypeRefT {
       SCHEMA_NAME,
       FILE_IDENTIFIER,
       SCHEMA_VERSION,
       ROOT_TYPE,
+      SCHEMA_HASH,
+      ACCEPTS_ANY_FLATBUFFER,
+      WIRE_FORMAT,
+      FIXED_STRING_LENGTH,
+      BYTE_LENGTH,
+      REQUIRED_ALIGNMENT,
     }
   }
 
@@ -369,6 +395,54 @@ impl<'a> FlatBufferTypeRef<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(FlatBufferTypeRef::VT_ROOT_TYPE, None)}
   }
+  /// Optional schema hash bytes for stronger compatibility checks.
+  #[inline]
+  pub fn SCHEMA_HASH(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(FlatBufferTypeRef::VT_SCHEMA_HASH, None)}
+  }
+  /// True when this port/type set accepts any FlatBuffer frame.
+  #[inline]
+  pub fn ACCEPTS_ANY_FLATBUFFER(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(FlatBufferTypeRef::VT_ACCEPTS_ANY_FLATBUFFER, Some(false)).unwrap()}
+  }
+  /// Logical wire format for this accepted type.
+  #[inline]
+  pub fn WIRE_FORMAT(&self) -> payloadWireFormat {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<payloadWireFormat>(FlatBufferTypeRef::VT_WIRE_FORMAT, Some(payloadWireFormat::FLATBUFFER)).unwrap()}
+  }
+  /// Fixed string length for aligned-binary string fields, when applicable.
+  #[inline]
+  pub fn FIXED_STRING_LENGTH(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(FlatBufferTypeRef::VT_FIXED_STRING_LENGTH, Some(0)).unwrap()}
+  }
+  /// Byte length for fixed-size aligned-binary records, when applicable.
+  #[inline]
+  pub fn BYTE_LENGTH(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(FlatBufferTypeRef::VT_BYTE_LENGTH, Some(0)).unwrap()}
+  }
+  /// Required start alignment for aligned-binary records, when applicable.
+  #[inline]
+  pub fn REQUIRED_ALIGNMENT(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(FlatBufferTypeRef::VT_REQUIRED_ALIGNMENT, Some(0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for FlatBufferTypeRef<'_> {
@@ -381,6 +455,12 @@ impl ::flatbuffers::Verifiable for FlatBufferTypeRef<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FILE_IDENTIFIER", Self::VT_FILE_IDENTIFIER, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCHEMA_VERSION", Self::VT_SCHEMA_VERSION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ROOT_TYPE", Self::VT_ROOT_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SCHEMA_HASH", Self::VT_SCHEMA_HASH, false)?
+     .visit_field::<bool>("ACCEPTS_ANY_FLATBUFFER", Self::VT_ACCEPTS_ANY_FLATBUFFER, false)?
+     .visit_field::<payloadWireFormat>("WIRE_FORMAT", Self::VT_WIRE_FORMAT, false)?
+     .visit_field::<u16>("FIXED_STRING_LENGTH", Self::VT_FIXED_STRING_LENGTH, false)?
+     .visit_field::<u32>("BYTE_LENGTH", Self::VT_BYTE_LENGTH, false)?
+     .visit_field::<u16>("REQUIRED_ALIGNMENT", Self::VT_REQUIRED_ALIGNMENT, false)?
      .finish();
     Ok(())
   }
@@ -390,6 +470,12 @@ pub struct FlatBufferTypeRefArgs<'a> {
     pub FILE_IDENTIFIER: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SCHEMA_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ROOT_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SCHEMA_HASH: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub ACCEPTS_ANY_FLATBUFFER: bool,
+    pub WIRE_FORMAT: payloadWireFormat,
+    pub FIXED_STRING_LENGTH: u16,
+    pub BYTE_LENGTH: u32,
+    pub REQUIRED_ALIGNMENT: u16,
 }
 impl<'a> Default for FlatBufferTypeRefArgs<'a> {
   #[inline]
@@ -399,6 +485,12 @@ impl<'a> Default for FlatBufferTypeRefArgs<'a> {
       FILE_IDENTIFIER: None,
       SCHEMA_VERSION: None,
       ROOT_TYPE: None,
+      SCHEMA_HASH: None,
+      ACCEPTS_ANY_FLATBUFFER: false,
+      WIRE_FORMAT: payloadWireFormat::FLATBUFFER,
+      FIXED_STRING_LENGTH: 0,
+      BYTE_LENGTH: 0,
+      REQUIRED_ALIGNMENT: 0,
     }
   }
 }
@@ -425,6 +517,30 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> FlatBufferTypeRefBuilder<'a, 
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(FlatBufferTypeRef::VT_ROOT_TYPE, ROOT_TYPE);
   }
   #[inline]
+  pub fn add_SCHEMA_HASH(&mut self, SCHEMA_HASH: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(FlatBufferTypeRef::VT_SCHEMA_HASH, SCHEMA_HASH);
+  }
+  #[inline]
+  pub fn add_ACCEPTS_ANY_FLATBUFFER(&mut self, ACCEPTS_ANY_FLATBUFFER: bool) {
+    self.fbb_.push_slot::<bool>(FlatBufferTypeRef::VT_ACCEPTS_ANY_FLATBUFFER, ACCEPTS_ANY_FLATBUFFER, false);
+  }
+  #[inline]
+  pub fn add_WIRE_FORMAT(&mut self, WIRE_FORMAT: payloadWireFormat) {
+    self.fbb_.push_slot::<payloadWireFormat>(FlatBufferTypeRef::VT_WIRE_FORMAT, WIRE_FORMAT, payloadWireFormat::FLATBUFFER);
+  }
+  #[inline]
+  pub fn add_FIXED_STRING_LENGTH(&mut self, FIXED_STRING_LENGTH: u16) {
+    self.fbb_.push_slot::<u16>(FlatBufferTypeRef::VT_FIXED_STRING_LENGTH, FIXED_STRING_LENGTH, 0);
+  }
+  #[inline]
+  pub fn add_BYTE_LENGTH(&mut self, BYTE_LENGTH: u32) {
+    self.fbb_.push_slot::<u32>(FlatBufferTypeRef::VT_BYTE_LENGTH, BYTE_LENGTH, 0);
+  }
+  #[inline]
+  pub fn add_REQUIRED_ALIGNMENT(&mut self, REQUIRED_ALIGNMENT: u16) {
+    self.fbb_.push_slot::<u16>(FlatBufferTypeRef::VT_REQUIRED_ALIGNMENT, REQUIRED_ALIGNMENT, 0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> FlatBufferTypeRefBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     FlatBufferTypeRefBuilder {
@@ -446,6 +562,12 @@ impl ::core::fmt::Debug for FlatBufferTypeRef<'_> {
       ds.field("FILE_IDENTIFIER", &self.FILE_IDENTIFIER());
       ds.field("SCHEMA_VERSION", &self.SCHEMA_VERSION());
       ds.field("ROOT_TYPE", &self.ROOT_TYPE());
+      ds.field("SCHEMA_HASH", &self.SCHEMA_HASH());
+      ds.field("ACCEPTS_ANY_FLATBUFFER", &self.ACCEPTS_ANY_FLATBUFFER());
+      ds.field("WIRE_FORMAT", &self.WIRE_FORMAT());
+      ds.field("FIXED_STRING_LENGTH", &self.FIXED_STRING_LENGTH());
+      ds.field("BYTE_LENGTH", &self.BYTE_LENGTH());
+      ds.field("REQUIRED_ALIGNMENT", &self.REQUIRED_ALIGNMENT());
       ds.finish()
   }
 }
@@ -456,6 +578,12 @@ pub struct FlatBufferTypeRefT {
   pub FILE_IDENTIFIER: Option<alloc::string::String>,
   pub SCHEMA_VERSION: Option<alloc::string::String>,
   pub ROOT_TYPE: Option<alloc::string::String>,
+  pub SCHEMA_HASH: Option<alloc::vec::Vec<u8>>,
+  pub ACCEPTS_ANY_FLATBUFFER: bool,
+  pub WIRE_FORMAT: payloadWireFormat,
+  pub FIXED_STRING_LENGTH: u16,
+  pub BYTE_LENGTH: u32,
+  pub REQUIRED_ALIGNMENT: u16,
 }
 impl Default for FlatBufferTypeRefT {
   fn default() -> Self {
@@ -464,6 +592,12 @@ impl Default for FlatBufferTypeRefT {
       FILE_IDENTIFIER: None,
       SCHEMA_VERSION: None,
       ROOT_TYPE: None,
+      SCHEMA_HASH: None,
+      ACCEPTS_ANY_FLATBUFFER: false,
+      WIRE_FORMAT: payloadWireFormat::FLATBUFFER,
+      FIXED_STRING_LENGTH: 0,
+      BYTE_LENGTH: 0,
+      REQUIRED_ALIGNMENT: 0,
     }
   }
 }
@@ -484,11 +618,25 @@ impl FlatBufferTypeRefT {
     let ROOT_TYPE = self.ROOT_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let SCHEMA_HASH = self.SCHEMA_HASH.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let ACCEPTS_ANY_FLATBUFFER = self.ACCEPTS_ANY_FLATBUFFER;
+    let WIRE_FORMAT = self.WIRE_FORMAT;
+    let FIXED_STRING_LENGTH = self.FIXED_STRING_LENGTH;
+    let BYTE_LENGTH = self.BYTE_LENGTH;
+    let REQUIRED_ALIGNMENT = self.REQUIRED_ALIGNMENT;
     FlatBufferTypeRef::create(_fbb, &FlatBufferTypeRefArgs{
       SCHEMA_NAME,
       FILE_IDENTIFIER,
       SCHEMA_VERSION,
       ROOT_TYPE,
+      SCHEMA_HASH,
+      ACCEPTS_ANY_FLATBUFFER,
+      WIRE_FORMAT,
+      FIXED_STRING_LENGTH,
+      BYTE_LENGTH,
+      REQUIRED_ALIGNMENT,
     })
   }
 }

@@ -32,6 +32,30 @@
         "ROOT_TYPE" : {
                 "type" : "string",
                 "description" : "Optional root type name within the schema."
+              },
+        "SCHEMA_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional schema hash bytes for stronger compatibility checks."
+              },
+        "ACCEPTS_ANY_FLATBUFFER" : {
+                "type" : "boolean",
+                "description" : "True when this port/type set accepts any FlatBuffer frame."
+              },
+        "WIRE_FORMAT" : {
+                "$ref" : "#/definitions/payloadWireFormat",
+                "description" : "Logical wire format for this accepted type."
+              },
+        "FIXED_STRING_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Fixed string length for aligned-binary string fields, when applicable."
+              },
+        "BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Byte length for fixed-size aligned-binary records, when applicable."
+              },
+        "REQUIRED_ALIGNMENT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Required start alignment for aligned-binary records, when applicable."
               }
       },
       "additionalProperties" : false

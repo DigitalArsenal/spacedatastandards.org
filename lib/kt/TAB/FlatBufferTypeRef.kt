@@ -85,6 +85,63 @@ class FlatBufferTypeRef : Table() {
         }
     val rootTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
     fun rootTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Optional schema hash bytes for stronger compatibility checks.
+     */
+    fun schemaHash(j: Int) : UByte {
+        val o = __offset(12)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val schemaHashLength : Int
+        get() {
+            val o = __offset(12); return if (o != 0) __vector_len(o) else 0
+        }
+    val schemaHashAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun schemaHashInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * True when this port/type set accepts any FlatBuffer frame.
+     */
+    val acceptsAnyFlatbuffer : Boolean
+        get() {
+            val o = __offset(14)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Logical wire format for this accepted type.
+     */
+    val wireFormat : UByte
+        get() {
+            val o = __offset(16)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Fixed string length for aligned-binary string fields, when applicable.
+     */
+    val fixedStringLength : UShort
+        get() {
+            val o = __offset(18)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * Byte length for fixed-size aligned-binary records, when applicable.
+     */
+    val byteLength : UInt
+        get() {
+            val o = __offset(20)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Required start alignment for aligned-binary records, when applicable.
+     */
+    val requiredAlignment : UShort
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsFlatBufferTypeRef(_bb: ByteBuffer): FlatBufferTypeRef = getRootAsFlatBufferTypeRef(_bb, FlatBufferTypeRef())
@@ -92,19 +149,40 @@ class FlatBufferTypeRef : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createFlatBufferTypeRef(builder: FlatBufferBuilder, schemaNameOffset: Int, fileIdentifierOffset: Int, schemaVersionOffset: Int, rootTypeOffset: Int) : Int {
-            builder.startTable(4)
+        fun createFlatBufferTypeRef(builder: FlatBufferBuilder, schemaNameOffset: Int, fileIdentifierOffset: Int, schemaVersionOffset: Int, rootTypeOffset: Int, schemaHashOffset: Int, acceptsAnyFlatbuffer: Boolean, wireFormat: UByte, fixedStringLength: UShort, byteLength: UInt, requiredAlignment: UShort) : Int {
+            builder.startTable(10)
+            addBYTELENGTH(builder, byteLength)
+            addSCHEMAHASH(builder, schemaHashOffset)
             addROOTTYPE(builder, rootTypeOffset)
             addSCHEMAVERSION(builder, schemaVersionOffset)
             addFILEIDENTIFIER(builder, fileIdentifierOffset)
             addSCHEMANAME(builder, schemaNameOffset)
+            addREQUIREDALIGNMENT(builder, requiredAlignment)
+            addFIXEDSTRINGLENGTH(builder, fixedStringLength)
+            addWIREFORMAT(builder, wireFormat)
+            addACCEPTSANYFLATBUFFER(builder, acceptsAnyFlatbuffer)
             return endFlatBufferTypeRef(builder)
         }
-        fun startFlatBufferTypeRef(builder: FlatBufferBuilder) = builder.startTable(4)
+        fun startFlatBufferTypeRef(builder: FlatBufferBuilder) = builder.startTable(10)
         fun addSCHEMANAME(builder: FlatBufferBuilder, schemaName: Int) = builder.addOffset(0, schemaName, 0)
         fun addFILEIDENTIFIER(builder: FlatBufferBuilder, fileIdentifier: Int) = builder.addOffset(1, fileIdentifier, 0)
         fun addSCHEMAVERSION(builder: FlatBufferBuilder, schemaVersion: Int) = builder.addOffset(2, schemaVersion, 0)
         fun addROOTTYPE(builder: FlatBufferBuilder, rootType: Int) = builder.addOffset(3, rootType, 0)
+        fun addSCHEMAHASH(builder: FlatBufferBuilder, schemaHash: Int) = builder.addOffset(4, schemaHash, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createSchemaHashVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startSchemaHashVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addACCEPTSANYFLATBUFFER(builder: FlatBufferBuilder, acceptsAnyFlatbuffer: Boolean) = builder.addBoolean(5, acceptsAnyFlatbuffer, false)
+        fun addWIREFORMAT(builder: FlatBufferBuilder, wireFormat: UByte) = builder.addByte(6, wireFormat.toByte(), 0)
+        fun addFIXEDSTRINGLENGTH(builder: FlatBufferBuilder, fixedStringLength: UShort) = builder.addShort(7, fixedStringLength.toShort(), 0)
+        fun addBYTELENGTH(builder: FlatBufferBuilder, byteLength: UInt) = builder.addInt(8, byteLength.toInt(), 0)
+        fun addREQUIREDALIGNMENT(builder: FlatBufferBuilder, requiredAlignment: UShort) = builder.addShort(9, requiredAlignment.toShort(), 0)
         fun endFlatBufferTypeRef(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

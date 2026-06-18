@@ -77,6 +77,12 @@ public struct FlatBufferTypeRef: FlatBufferTable, FlatbuffersVectorInitializable
     static let FILE_IDENTIFIER: VOffset = 6
     static let SCHEMA_VERSION: VOffset = 8
     static let ROOT_TYPE: VOffset = 10
+    static let SCHEMA_HASH: VOffset = 12
+    static let ACCEPTS_ANY_FLATBUFFER: VOffset = 14
+    static let WIRE_FORMAT: VOffset = 16
+    static let FIXED_STRING_LENGTH: VOffset = 18
+    static let BYTE_LENGTH: VOffset = 20
+    static let REQUIRED_ALIGNMENT: VOffset = 22
   }
 
   ///  Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
@@ -91,24 +97,56 @@ public struct FlatBufferTypeRef: FlatBufferTable, FlatbuffersVectorInitializable
   ///  Optional root type name within the schema.
   public var ROOT_TYPE: String? { let o = _accessor.offset(VT.ROOT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
   public var ROOT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ROOT_TYPE) }
-  public static func startFlatBufferTypeRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  ///  Optional schema hash bytes for stronger compatibility checks.
+  public var SCHEMA_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SCHEMA_HASH, byteSize: 1) }
+  public func withUnsafePointerToSchemaHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SCHEMA_HASH, body: body) }
+  ///  True when this port/type set accepts any FlatBuffer frame.
+  public var ACCEPTS_ANY_FLATBUFFER: Bool { let o = _accessor.offset(VT.ACCEPTS_ANY_FLATBUFFER); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Logical wire format for this accepted type.
+  public var WIRE_FORMAT: payloadWireFormat { let o = _accessor.offset(VT.WIRE_FORMAT); return o == 0 ? .flatbuffer : payloadWireFormat(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .flatbuffer }
+  ///  Fixed string length for aligned-binary string fields, when applicable.
+  public var FIXED_STRING_LENGTH: UInt16 { let o = _accessor.offset(VT.FIXED_STRING_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Byte length for fixed-size aligned-binary records, when applicable.
+  public var BYTE_LENGTH: UInt32 { let o = _accessor.offset(VT.BYTE_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Required start alignment for aligned-binary records, when applicable.
+  public var REQUIRED_ALIGNMENT: UInt16 { let o = _accessor.offset(VT.REQUIRED_ALIGNMENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public static func startFlatBufferTypeRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
   public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VT.SCHEMA_NAME) }
   public static func add(FILE_IDENTIFIER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_IDENTIFIER, at: VT.FILE_IDENTIFIER) }
   public static func add(SCHEMA_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_VERSION, at: VT.SCHEMA_VERSION) }
   public static func add(ROOT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROOT_TYPE, at: VT.ROOT_TYPE) }
+  public static func addVectorOf(SCHEMA_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_HASH, at: VT.SCHEMA_HASH) }
+  public static func add(ACCEPTS_ANY_FLATBUFFER: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCEPTS_ANY_FLATBUFFER, def: false,
+   at: VT.ACCEPTS_ANY_FLATBUFFER) }
+  public static func add(WIRE_FORMAT: payloadWireFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIRE_FORMAT.rawValue, def: 0, at: VT.WIRE_FORMAT) }
+  public static func add(FIXED_STRING_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_STRING_LENGTH, def: 0, at: VT.FIXED_STRING_LENGTH) }
+  public static func add(BYTE_LENGTH: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_LENGTH, def: 0, at: VT.BYTE_LENGTH) }
+  public static func add(REQUIRED_ALIGNMENT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED_ALIGNMENT, def: 0, at: VT.REQUIRED_ALIGNMENT) }
   public static func endFlatBufferTypeRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFlatBufferTypeRef(
     _ fbb: inout FlatBufferBuilder,
     SCHEMA_NAMEOffset SCHEMA_NAME: Offset = Offset(),
     FILE_IDENTIFIEROffset FILE_IDENTIFIER: Offset = Offset(),
     SCHEMA_VERSIONOffset SCHEMA_VERSION: Offset = Offset(),
-    ROOT_TYPEOffset ROOT_TYPE: Offset = Offset()
+    ROOT_TYPEOffset ROOT_TYPE: Offset = Offset(),
+    SCHEMA_HASHVectorOffset SCHEMA_HASH: Offset = Offset(),
+    ACCEPTS_ANY_FLATBUFFER: Bool = false,
+    WIRE_FORMAT: payloadWireFormat = .flatbuffer,
+    FIXED_STRING_LENGTH: UInt16 = 0,
+    BYTE_LENGTH: UInt32 = 0,
+    REQUIRED_ALIGNMENT: UInt16 = 0
   ) -> Offset {
     let __start = FlatBufferTypeRef.startFlatBufferTypeRef(&fbb)
     FlatBufferTypeRef.add(SCHEMA_NAME: SCHEMA_NAME, &fbb)
     FlatBufferTypeRef.add(FILE_IDENTIFIER: FILE_IDENTIFIER, &fbb)
     FlatBufferTypeRef.add(SCHEMA_VERSION: SCHEMA_VERSION, &fbb)
     FlatBufferTypeRef.add(ROOT_TYPE: ROOT_TYPE, &fbb)
+    FlatBufferTypeRef.addVectorOf(SCHEMA_HASH: SCHEMA_HASH, &fbb)
+    FlatBufferTypeRef.add(ACCEPTS_ANY_FLATBUFFER: ACCEPTS_ANY_FLATBUFFER, &fbb)
+    FlatBufferTypeRef.add(WIRE_FORMAT: WIRE_FORMAT, &fbb)
+    FlatBufferTypeRef.add(FIXED_STRING_LENGTH: FIXED_STRING_LENGTH, &fbb)
+    FlatBufferTypeRef.add(BYTE_LENGTH: BYTE_LENGTH, &fbb)
+    FlatBufferTypeRef.add(REQUIRED_ALIGNMENT: REQUIRED_ALIGNMENT, &fbb)
     return FlatBufferTypeRef.endFlatBufferTypeRef(&fbb, start: __start)
   }
 
@@ -118,6 +156,12 @@ public struct FlatBufferTypeRef: FlatBufferTable, FlatbuffersVectorInitializable
     try _v.visit(field: VT.FILE_IDENTIFIER, fieldName: "FILE_IDENTIFIER", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SCHEMA_VERSION, fieldName: "SCHEMA_VERSION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ROOT_TYPE, fieldName: "ROOT_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCHEMA_HASH, fieldName: "SCHEMA_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.ACCEPTS_ANY_FLATBUFFER, fieldName: "ACCEPTS_ANY_FLATBUFFER", required: false, type: Bool.self)
+    try _v.visit(field: VT.WIRE_FORMAT, fieldName: "WIRE_FORMAT", required: false, type: payloadWireFormat.self)
+    try _v.visit(field: VT.FIXED_STRING_LENGTH, fieldName: "FIXED_STRING_LENGTH", required: false, type: UInt16.self)
+    try _v.visit(field: VT.BYTE_LENGTH, fieldName: "BYTE_LENGTH", required: false, type: UInt32.self)
+    try _v.visit(field: VT.REQUIRED_ALIGNMENT, fieldName: "REQUIRED_ALIGNMENT", required: false, type: UInt16.self)
     _v.finish()
   }
 }

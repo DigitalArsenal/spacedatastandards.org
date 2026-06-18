@@ -47,13 +47,33 @@ class FlatBufferTypeRef : flatbuffers.handle
     /// Optional root type name within the schema.
     def ROOT_TYPE() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
+    /// Optional schema hash bytes for stronger compatibility checks.
+    def SCHEMA_HASH(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 1)
+    def SCHEMA_HASH_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    /// True when this port/type set accepts any FlatBuffer frame.
+    def ACCEPTS_ANY_FLATBUFFER() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    /// Logical wire format for this accepted type.
+    def WIRE_FORMAT() -> payloadWireFormat:
+        return payloadWireFormat(flatbuffers.field_uint8(buf_, pos_, 16, 0))
+    /// Fixed string length for aligned-binary string fields, when applicable.
+    def FIXED_STRING_LENGTH() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 18, 0)
+    /// Byte length for fixed-size aligned-binary records, when applicable.
+    def BYTE_LENGTH() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 20, 0)
+    /// Required start alignment for aligned-binary records, when applicable.
+    def REQUIRED_ALIGNMENT() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 22, 0)
 
 def GetRootAsFlatBufferTypeRef(buf:string): return FlatBufferTypeRef { buf, flatbuffers.indirect(buf, 0) }
 
 struct FlatBufferTypeRefBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(4)
+        b_.StartObject(10)
         return this
     def add_SCHEMA_NAME(SCHEMA_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, SCHEMA_NAME)
@@ -67,8 +87,33 @@ struct FlatBufferTypeRefBuilder:
     def add_ROOT_TYPE(ROOT_TYPE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, ROOT_TYPE)
         return this
+    def add_SCHEMA_HASH(SCHEMA_HASH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, SCHEMA_HASH)
+        return this
+    def add_ACCEPTS_ANY_FLATBUFFER(ACCEPTS_ANY_FLATBUFFER:bool):
+        b_.PrependBoolSlot(5, ACCEPTS_ANY_FLATBUFFER, 0)
+        return this
+    def add_WIRE_FORMAT(WIRE_FORMAT:payloadWireFormat):
+        b_.PrependUint8Slot(6, WIRE_FORMAT, 0)
+        return this
+    def add_FIXED_STRING_LENGTH(FIXED_STRING_LENGTH:int):
+        b_.PrependUint16Slot(7, FIXED_STRING_LENGTH, 0)
+        return this
+    def add_BYTE_LENGTH(BYTE_LENGTH:int):
+        b_.PrependUint32Slot(8, BYTE_LENGTH, 0)
+        return this
+    def add_REQUIRED_ALIGNMENT(REQUIRED_ALIGNMENT:int):
+        b_.PrependUint16Slot(9, REQUIRED_ALIGNMENT, 0)
+        return this
     def end():
         return b_.EndObject()
+
+def FlatBufferTypeRefStartSCHEMAHASHVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def FlatBufferTypeRefCreateSCHEMAHASHVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
 
 /// Typed Arena Buffer — one descriptor for a payload slot in a shared arena.
 class TAB : flatbuffers.handle

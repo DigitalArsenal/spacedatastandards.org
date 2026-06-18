@@ -264,7 +264,7 @@ export class FlatcRunner {
     try {
       this._mountSchemaIfNeeded(schemaInput);
 
-      const args = [`--${language}`, "-o", outDir];
+      const args = ["--preserve-case", `--${language}`, "-o", outDir];
       for (const dir of this._cachedIncludeDirs) {
         args.push("-I", dir);
       }
