@@ -58,6 +58,17 @@ def parse_enum_body(body):
     return values
 
 
+def parse_doc_comment_block(block):
+    """Convert a contiguous /// doc comment block into a single description."""
+    if not block:
+        return ""
+    return " ".join(
+        line.strip()[3:].strip()
+        for line in block.splitlines()
+        if line.strip().startswith("///")
+    ).strip()
+
+
 def parse_fbs_file(fbs_path):
     """Parse a .fbs file and extract type information."""
     with open(fbs_path, "r") as f:
@@ -124,12 +135,13 @@ def parse_fbs_file(fbs_path):
 
     # Parse tables
     for table_match in re.finditer(
-        r"(?:///\s*(.*?)\s*\n\s*)?table\s+(\w+)\s*\{([^}]*)\}",
-        content, re.DOTALL
+        r"(?P<doc>(?:^[ \t]*///[^\n]*\n)+)?^[ \t]*table\s+(?P<name>\w+)\s*\{(?P<body>[^}]*)\}",
+        content,
+        re.MULTILINE,
     ):
-        table_desc = table_match.group(1) or ""
-        table_name = table_match.group(2)
-        table_body = table_match.group(3)
+        table_desc = parse_doc_comment_block(table_match.group("doc"))
+        table_name = table_match.group("name")
+        table_body = table_match.group("body")
         fields = []
         for field_match in re.finditer(
             r"(?:///\s*(.*?)\s*\n\s*)?(\w+)\s*:\s*(\[?\w+\]?)\s*(?:\(([^)]*)\))?\s*(?:=\s*(\w+))?\s*;",

@@ -6259,7 +6259,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "A single ephemeris data line (for non-uniform time steps only)\n/// Use this format when time intervals between states are irregular.\n/// For uniform time steps, use the compact EPHEMERIS_DATA array instead."
+      "description": "A single ephemeris data line (for non-uniform time steps only) Use this format when time intervals between states are irregular. For uniform time steps, use the compact EPHEMERIS_DATA array instead."
     },
     "covarianceMatrixLine": {
       "type": "object",
@@ -6949,7 +6949,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Hypersonic flight regime classification.\nenum hfcFlowRegime : byte {\n  UNKNOWN,\n  SUPERSONIC,\n  HYPERSONIC,\n  RAREFIED,\n  TRANSITIONAL,\n  CONTINUUM\n}\n\n/// How the hypersonic propagator is coupled to atmosphere providers.\nenum hfcAtmosphereCouplingMode : byte {\n  UNKNOWN,\n  STATIC_PROFILE,\n  BATCH_QUERY,\n  STEP_QUERY,\n  EXTERNAL_PROVIDER\n}\n\n/// Hypersonic Flight Conditions"
+      "description": "Hypersonic Flight Conditions"
     }
   },
   "$ref": "#/definitions/HFC",

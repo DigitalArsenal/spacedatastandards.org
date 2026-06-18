@@ -5068,7 +5068,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "A single ephemeris data line (for non-uniform time steps only)\n/// Use this format when time intervals between states are irregular.\n/// For uniform time steps, use the compact EPHEMERIS_DATA array instead."
+      "description": "A single ephemeris data line (for non-uniform time steps only) Use this format when time intervals between states are irregular. For uniform time steps, use the compact EPHEMERIS_DATA array instead."
     },
     "covarianceMatrixLine": {
       "type": "object",

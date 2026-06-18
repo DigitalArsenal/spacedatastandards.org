@@ -871,7 +871,7 @@
           "x-flatbuffer-type": "[float]"
         }
       },
-      "description": "Enum for the type of site\nenum SiteType: byte {\n  LAUNCH_SITE,\n  OBSERVATION_STATION,\n  HOBBYIST_OBSERVER,\n  RESEARCH_FACILITY,\n  SATELLITE_GROUND_STATION,\n  SPACEPORT,\n  MILITARY_BASE,\n  WEATHER_STATION,\n  ASTRONOMICAL_OBSERVATORY,\n  EDUCATIONAL_INSTITUTE,\n  COMMUNICATION_HUB,\n  POWER_PLANT,\n  INDUSTRIAL_COMPLEX,\n  TRANSPORTATION_HUB,\n  URBAN_AREA,\n  NATIONAL_PARK,\n  HISTORICAL_SITE,\n  OTHER\n}\n\n/// Geometry table with information about geometric properties"
+      "description": "Geometry table with information about geometric properties"
     },
     "SIT": {
       "type": "object",

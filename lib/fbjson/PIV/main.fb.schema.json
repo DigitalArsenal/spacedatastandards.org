@@ -263,7 +263,7 @@
           "x-flatbuffer-type": "uint32"
         }
       },
-      "description": "Plugin Invoke \u2014 request / response envelopes for calling into a\n/// Space Data Module plugin over its `plugin_invoke_stream` entrypoint.\n///\n/// Every invoke frame (input or output) is a `TAB` descriptor referencing\n/// an offset inside PAYLOAD_ARENA. Each `TAB.WIRE_FORMAT` selects\n/// FLATBUFFER or ALIGNED_BINARY for its body; a method accepts either as\n/// long as the paired `PLG` method manifest advertises both. This mirrors\n/// the SDK's documented contract \u2014 \"aligned-binary payloads are a\n/// separate invoke-ABI optimization; they do not replace the canonical\n/// FlatBuffer schema, and a port advertising one must also advertise the\n/// other.\"\n///\n/// PAYLOAD_ARENA is a single backing byte buffer shared by all frames in\n/// the envelope. TAB.OFFSET is arena-relative. Host runtimes that manage\n/// their own arena may set PAYLOAD_ARENA to an empty vector and treat\n/// TAB.OFFSET as an absolute pointer into the shared WASM linear memory.\ninclude \"../TAB/main.fbs\";\n\n/// Coarse envelope status for an invoke response. Per-method numeric\n/// return codes travel in STATUS_CODE; STATUS categorizes the outcome\n/// for host routing (retry, yield-and-resume, fail-closed) without the\n/// host having to decode method-specific numbers.\nenum pivStatus : int {\n  /// Invocation completed; STATUS_CODE carries the method-specific value.\n  OK,\n  /// Method id not registered on the target plugin.\n  NOT_FOUND,\n  /// Invocation succeeded but yielded before draining queued work.\n  /// Caller should inspect BACKLOG_REMAINING and re-invoke to continue.\n  YIELDED,\n  /// Invocation failed; ERROR_CODE + ERROR_MESSAGE describe the failure.\n  FAILED\n}\n\n/// Request envelope carried by `plugin_invoke_stream`.",
+      "description": "Request envelope carried by `plugin_invoke_stream`.",
       "required": [
         "METHOD_ID"
       ]
@@ -358,7 +358,7 @@
           "x-flatbuffer-type": "PIVResponse"
         }
       },
-      "description": "Envelope \u2014 carries either a request or a response. Either REQUEST or\n/// RESPONSE is populated per message; both populated is undefined."
+      "description": "Envelope \u2014 carries either a request or a response. Either REQUEST or RESPONSE is populated per message; both populated is undefined."
     }
   },
   "$ref": "#/definitions/PIV",

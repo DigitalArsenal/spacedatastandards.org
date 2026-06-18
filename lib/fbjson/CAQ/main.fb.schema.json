@@ -305,7 +305,7 @@
           "x-flatbuffer-type": "uint"
         }
       },
-      "description": "Catalog query discriminator. Callers and host plugins use this enum to\n/// select a query shape for in-memory catalog queries answered by a host\n/// runtime (for example the shared FlatSQL entity collection).\nenum catalogQueryKind : ubyte {\n  /// Return matched entity metadata rows.\n  ROWS,\n  /// Return only the matched entity indices.\n  ENTITY_INDICES,\n  /// Return a packed visibility mask (one byte per entity).\n  VISIBILITY_MASK,\n  /// Return a single catalog row by entity index.\n  CATALOG_ROW\n}\n\n/// Catalog query request payload."
+      "description": "Catalog query request payload."
     },
     "CAQResult": {
       "type": "object",

@@ -1652,7 +1652,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Different types of polarization in EMT\nenum PolarizationType: byte {\n  linear,\n  circular,\n  elliptical,\n  unpolarized\n}\n\n/// Simple polarization types\nenum SimplePolarization: byte {\n  vertical,\n  horizontal,\n  leftHandCircular,\n  rightHandCircular\n}\n\n/// Frequency range with lower and upper limits"
+      "description": "Frequency range with lower and upper limits"
     },
     "StokesParameters": {
       "type": "object",
@@ -2087,7 +2087,7 @@
           "x-flatbuffer-type": "bool"
         }
       },
-      "description": "Enum for the mode of data (real, simulated, synthetic)\nenum DataMode: byte {\n  /// Data collected during an exercise scenario.\n  EXERCISE,\n  /// Data collected from real-world observations.\n  REAL,\n  /// Data generated through simulation.\n  SIMULATED,\n  /// Data collected for testing purposes.\n  TEST\n}\n\nenum DeviceType: byte {\n  \n  // Basic and General Sensors\n  \n  /// Basic or undefined sensor type\n  UNKNOWN,\n  /// General optical sensors\n  OPTICAL,\n\n  // Electromagnetic Spectrum Sensors\n\n  /// Detects infrared radiation\n  INFRARED_SENSOR,\n  /// Sensitive to ultraviolet light\n  ULTRAVIOLET_SENSOR,\n  /// For X-ray detection\n  X_RAY_SENSOR,\n  /// For gamma-ray detection\n  GAMMA_RAY_SENSOR,\n\n  // Radar and Radio Telescopes\n\n  /// Basic radar systems\n  RADAR,\n  /// Advanced radar with phased array technology\n  PHASED_ARRAY_RADAR,\n  /// For high-resolution imaging\n  SYNTHETIC_APERTURE_RADAR,\n  /// For astronomical observations using bistatic setup\n  BISTATIC_RADIO_TELESCOPE,\n  /// For radio astronomy\n  RADIO_TELESCOPE,\n\n  // Environmental and Atmospheric Sensors\n\n  /// For atmospheric studies\n  ATMOSPHERIC_SENSOR,\n  /// For observing space weather phenomena\n  SPACE_WEATHER_SENSOR,\n  /// General environmental monitoring\n  ENVIRONMENTAL_SENSOR,\n\n  // Specialized Scientific Sensors\n\n  /// For measuring seismic activities\n  SEISMIC_SENSOR,\n  /// For gravity measurements\n  GRAVIMETRIC_SENSOR,\n  /// For magnetic field detection\n  MAGNETIC_SENSOR,\n  /// For electromagnetic field analysis\n  ELECTROMAGNETIC_SENSOR,\n  /// For temperature and heat detection\n  THERMAL_SENSOR,\n  /// For detecting chemicals and substances\n  CHEMICAL_SENSOR,\n  /// For biological research and detection\n  BIOLOGICAL_SENSOR,\n  /// For detecting ionizing radiation\n  RADIATION_SENSOR,\n  /// For detecting subatomic particles\n  PARTICLE_DETECTOR,\n\n  // Advanced Optical and Imaging Sensors\n\n  /// Light Detection and Ranging\n  LIDAR,\n  /// Sound Navigation and Ranging\n  SONAR,\n  /// General telescopes for astronomical observations\n  TELESCOPE,\n  /// For spectral analysis\n  SPECTROSCOPIC_SENSOR,\n  /// For measuring light intensity\n  PHOTOMETRIC_SENSOR,\n  /// For analyzing polarization of light\n  POLARIMETRIC_SENSOR,\n  /// For detailed imaging using interference\n  INTERFEROMETRIC_SENSOR,\n  /// Capturing image data at multiple wavelengths\n  MULTISPECTRAL_SENSOR,\n  /// Advanced imaging across many spectral bands\n  HYPERSPECTRAL_SENSOR,\n\n  // Positioning and Tracking Sensors\n\n  /// For Global Positioning System reception\n  GPS_RECEIVER,\n\n  // Communication Devices\n\n  /// Standard radio communication device\n  RADIO_COMMUNICATIONS,\n  /// Advanced laser communication system\n  LASER_COMMUNICATIONS,\n  /// Satellite communication system\n  SATELLITE_COMMUNICATIONS,\n\n  // Specialized Scientific Instruments\n\n  /// Device for laser-based experiments and measurements\n  LASER_INSTRUMENT,\n  /// Radio frequency analysis and measurement device\n  RF_ANALYZER,\n  /// Device for ionospheric research\n  IONOSPHERIC_SENSOR,\n\n  // Optical Devices\n\n  /// Device for laser-based imaging\n  LASER_IMAGING,\n  /// Advanced optical telescope\n  OPTICAL_TELESCOPE,\n  /// Device for high-resolution optical observations\n  HIGH_RESOLUTION_OPTICAL,\n\n  // Radio and Microwave Devices\n\n  RADIO,\n  /// Microwave communication device\n  MICROWAVE_TRANSMITTER,\n  /// Device for radio frequency monitoring\n  RF_MONITOR,\n  /// High-frequency radio communication device\n  HF_RADIO_COMMUNICATIONS,\n}\n\n/// Integrated Device Message"
+      "description": "Integrated Device Message"
     },
     "PLD": {
       "type": "object",
@@ -2865,7 +2865,7 @@
           "x-flatbuffer-type": "[PLD]"
         }
       },
-      "description": "0\n  PAYLOAD,\n  /// 1\n  ROCKET_BODY,\n  /// 2\n  DEBRIS,\n  /// 3\n  UNKNOWN\n}\n\nenum operationalState: byte {\n  /// +\n  OPERATIONAL,\n  /// -\n  NONOPERATIONAL,\n  /// P\n  PARTIALLY_OPERATIONAL,\n  /// B\n  BACKUP_STANDBY,\n  /// S\n  SPARE,\n  /// X\n  EXTENDED_MISSION,\n  /// D\n  DECAYED,\n  /// ?\n  UNKNOWN\n}\n\nenum dataAvailability: byte {\n  /// NCE\n  NO_CURRENT_ELEMENTS,\n  /// NIE\n  NO_INITIAL_ELEMENTS,\n  /// NEA\n  NO_ELEMENTS_AVAILABLE,\n  /// OK\n  OK\n}\n\nenum orbitRegime: byte {\n  /// 0\n  ORBIT,\n  /// 1\n  LANDING,\n  /// 2\n  IMPACT,\n  /// 3\n  DOCKED,\n  /// 4\n  ROUNDTRIP\n}\n\nenum massCategory: byte {\n  DRY,\n  WET\n}\n\n/// Catalog Entity Message"
+      "description": "Catalog Entity Message"
     }
   },
   "$ref": "#/definitions/CAT",

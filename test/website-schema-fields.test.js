@@ -49,4 +49,11 @@ describe("website schema field explorer", () => {
       }
     });
   }
+
+  it("keeps CAT table description scoped to the table doc comment", () => {
+    const schema = loadFbJsonSchema("CAT");
+    const description = schema.definitions?.CAT?.description;
+
+    assert.equal(description, "Catalog Entity Message");
+  });
 });

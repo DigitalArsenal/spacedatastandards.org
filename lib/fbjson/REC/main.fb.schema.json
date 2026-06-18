@@ -16334,7 +16334,7 @@
           "x-flatbuffer-type": "[string]"
         }
       },
-      "description": "Access type for data listings\nenum accessCategory : byte {\n  /// One-time purchase\n  OneTime,\n  /// Recurring subscription\n  Subscription,\n  /// Real-time streaming access\n  Streaming,\n  /// Query-based access\n  Query\n}\n\n/// Payment method accepted\nenum paymentMethod : byte {\n  /// Ethereum cryptocurrency\n  Crypto_ETH,\n  /// Solana cryptocurrency\n  Crypto_SOL,\n  /// Bitcoin cryptocurrency\n  Crypto_BTC,\n  /// Internal SDN credits system\n  SDN_Credits,\n  /// Fiat payment via Stripe\n  Fiat_Stripe,\n  /// Free/open data\n  Free\n}\n\n/// Spatial coverage definition"
+      "description": "Spatial coverage definition"
     },
     "TemporalCoverage": {
       "type": "object",
@@ -17202,7 +17202,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Compute access windows from pre-sampled target Cartesian states.\n  COMPUTE_ACCESS_WINDOWS = 1\n}\n\nenum acwResultStatus : byte {\n  /// Operation completed.\n  OK = 0,\n  /// Request fields are missing, non-finite, or numerically invalid.\n  INVALID_INPUT = 1,\n  /// The requested operation is not supported by the module.\n  UNSUPPORTED_OPERATION = 2\n}\n\nenum acwRefractionModelKind : byte {\n  NONE = 0,\n  /// Orekit-compatible EarthStandardAtmosphereRefraction correction.\n  EARTH_STANDARD_ATMOSPHERE = 1\n}\n\n/// Target Cartesian state sample in an Earth-fixed frame."
+      "description": "Target Cartesian state sample in an Earth-fixed frame."
     },
     "ACWElevationMaskPoint": {
       "type": "object",
@@ -18225,7 +18225,7 @@
           "x-flatbuffer-type": "int"
         }
       },
-      "description": "Canonical list of atmosphere model families per CCSDS SANA registry.\n/// Use the `YEAR` field in the ATM message to specify the variant implementation.\n\nenum AtmosphericModelFamily : byte {\n  /// OID: 1.3.112.4.57.9.1\n  /// COSPAR International Reference Atmosphere\n  /// Known years: 1965, 1972, 1986, 1990\n  CIRA_XX,\n\n  /// OID: 1.3.112.4.57.9.2\n  /// Drag Temperature Model\n  /// Known years: 1978, 1994, 2000, 2009, 2012, 2013, 2020\n  DTM_XX,\n\n  /// OID: 1.3.112.4.57.9.3\n  /// Global Ionosphere-Thermosphere Model\n  /// GITM has no specific year versions defined\n  GITM,\n\n  /// OID: 1.3.112.4.57.9.4\n  /// GOST atmospheric density model\n  /// Known version: 2004 (GOST R 25645.166-2004)\n  GOST,\n\n  /// OID: 1.3.112.4.57.9.5\n  /// Global Reference Atmospheric Model\n  /// Known version: 2016\n  GRAM_XX,\n\n  /// OID: 1.3.112.4.57.9.6\n  /// Harris-Priester empirical model\n  /// Known version: 1962\n  HP,\n\n  /// OID: 1.3.112.4.57.9.7\n  /// Jacchia atmosphere model with HASDM correction overlay\n  /// Based on Jacchia 1970 with HASDM (DCA) overlay\n  JAC_HASDM,\n\n  /// OID: 1.3.112.4.57.9.8\n  /// Jacchia-Gill bi-polynomial interpolation\n  /// Interpolates Jacchia 1971\n  JAC_GILL,\n\n  /// OID: 1.3.112.4.57.9.9\n  /// Jacchia-Bowman empirical model\n  /// Known versions: 2006 (JB2006), 2008 (JB2008)\n  JB08,\n\n  /// OID: 1.3.112.4.57.9.10\n  /// Jacchia-Roberts analytic model\n  /// Known version: 1971\n  JR71,\n\n  /// OID: 1.3.112.4.57.9.11\n  /// Jacchia static diffusion models\n  /// Known years: 1970, 1971, 1977\n  JXX,\n\n  /// OID: 1.3.112.4.57.9.12\n  /// Marshall Engineering Thermosphere\n  /// Known version: 2007\n  MET_XX,\n\n  /// OID: 1.3.112.4.57.9.13\n  /// MSIS empirical model\n  /// Known version: 1986\n  MSIS_86,\n\n  /// OID: 1.3.112.4.57.9.14\n  /// MSISE empirical model with exosphere extension\n  /// Known version: 1990\n  MSISE_90,\n\n  /// OID: 1.3.112.4.57.9.15\n  /// NRLMSISE empirical model\n  /// Known version: 2000 (NRLMSISE-00E)\n  NRLMSIS00E,\n\n  /// OID: 1.3.112.4.57.9.16\n  /// Thermosphere-Ionosphere Electrodynamic General Circulation Model\n  /// Based on TIME-GCM, no version specified\n  TIECGM,\n\n  /// OID: 1.3.112.4.57.9.17\n  /// U.S. Standard Atmosphere\n  /// Known versions: 1962, 1976\n  USSA_XX\n}\n\n/// Atmospheric Model Message"
+      "description": "Atmospheric Model Message"
     },
     "BAL": {
       "type": "object",
@@ -18580,7 +18580,7 @@
           "x-flatbuffer-type": "[double]"
         }
       },
-      "description": "Interpolation completed.\n  OK,\n  /// The request is missing required waypoint, time, order, or sample data.\n  INVALID_INPUT,\n  /// The requested polynomial order is outside the supported B-spline range.\n  UNSUPPORTED_ORDER,\n  /// The interpolation linear system is singular or numerically unstable.\n  SINGULAR_SYSTEM\n}\n\n/// Three coordinate arrays sharing one time vector."
+      "description": "Three coordinate arrays sharing one time vector."
     },
     "BSPInterpolationRequest": {
       "type": "object",
@@ -19128,7 +19128,7 @@
           "x-flatbuffer-type": "[uint8]"
         }
       },
-      "description": "Entity category for shared entity metadata index rows.\nenum entityKind : byte {\n  ENTITY,\n  SPACE,\n  GROUND,\n  AIRCRAFT,\n  MISSILE,\n  SHIP,\n  VEHICLE,\n  SENSOR,\n  OTHER = 127\n}\n\n/// Entity Metadata \u2014 generic queryable metadata for a host-local entity.\n/// Participates in shared FlatSQL/WASM runtimes where multiple plugins\n/// cross-query the same entity collection."
+      "description": "Entity Metadata \u2014 generic queryable metadata for a host-local entity. Participates in shared FlatSQL/WASM runtimes where multiple plugins cross-query the same entity collection."
     },
     "CAQRequest": {
       "type": "object",
@@ -19178,7 +19178,7 @@
           "x-flatbuffer-type": "uint"
         }
       },
-      "description": "Catalog query discriminator. Callers and host plugins use this enum to\n/// select a query shape for in-memory catalog queries answered by a host\n/// runtime (for example the shared FlatSQL entity collection).\nenum catalogQueryKind : ubyte {\n  /// Return matched entity metadata rows.\n  ROWS,\n  /// Return only the matched entity indices.\n  ENTITY_INDICES,\n  /// Return a packed visibility mask (one byte per entity).\n  VISIBILITY_MASK,\n  /// Return a single catalog row by entity index.\n  CATALOG_ROW\n}\n\n/// Catalog query request payload."
+      "description": "Catalog query request payload."
     },
     "CAQResult": {
       "type": "object",
@@ -19279,7 +19279,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Different types of polarization in EMT\nenum PolarizationType: byte {\n  linear,\n  circular,\n  elliptical,\n  unpolarized\n}\n\n/// Simple polarization types\nenum SimplePolarization: byte {\n  vertical,\n  horizontal,\n  leftHandCircular,\n  rightHandCircular\n}\n\n/// Frequency range with lower and upper limits"
+      "description": "Frequency range with lower and upper limits"
     },
     "StokesParameters": {
       "type": "object",
@@ -19714,7 +19714,7 @@
           "x-flatbuffer-type": "bool"
         }
       },
-      "description": "Enum for the mode of data (real, simulated, synthetic)\nenum DataMode: byte {\n  /// Data collected during an exercise scenario.\n  EXERCISE,\n  /// Data collected from real-world observations.\n  REAL,\n  /// Data generated through simulation.\n  SIMULATED,\n  /// Data collected for testing purposes.\n  TEST\n}\n\nenum DeviceType: byte {\n  \n  // Basic and General Sensors\n  \n  /// Basic or undefined sensor type\n  UNKNOWN,\n  /// General optical sensors\n  OPTICAL,\n\n  // Electromagnetic Spectrum Sensors\n\n  /// Detects infrared radiation\n  INFRARED_SENSOR,\n  /// Sensitive to ultraviolet light\n  ULTRAVIOLET_SENSOR,\n  /// For X-ray detection\n  X_RAY_SENSOR,\n  /// For gamma-ray detection\n  GAMMA_RAY_SENSOR,\n\n  // Radar and Radio Telescopes\n\n  /// Basic radar systems\n  RADAR,\n  /// Advanced radar with phased array technology\n  PHASED_ARRAY_RADAR,\n  /// For high-resolution imaging\n  SYNTHETIC_APERTURE_RADAR,\n  /// For astronomical observations using bistatic setup\n  BISTATIC_RADIO_TELESCOPE,\n  /// For radio astronomy\n  RADIO_TELESCOPE,\n\n  // Environmental and Atmospheric Sensors\n\n  /// For atmospheric studies\n  ATMOSPHERIC_SENSOR,\n  /// For observing space weather phenomena\n  SPACE_WEATHER_SENSOR,\n  /// General environmental monitoring\n  ENVIRONMENTAL_SENSOR,\n\n  // Specialized Scientific Sensors\n\n  /// For measuring seismic activities\n  SEISMIC_SENSOR,\n  /// For gravity measurements\n  GRAVIMETRIC_SENSOR,\n  /// For magnetic field detection\n  MAGNETIC_SENSOR,\n  /// For electromagnetic field analysis\n  ELECTROMAGNETIC_SENSOR,\n  /// For temperature and heat detection\n  THERMAL_SENSOR,\n  /// For detecting chemicals and substances\n  CHEMICAL_SENSOR,\n  /// For biological research and detection\n  BIOLOGICAL_SENSOR,\n  /// For detecting ionizing radiation\n  RADIATION_SENSOR,\n  /// For detecting subatomic particles\n  PARTICLE_DETECTOR,\n\n  // Advanced Optical and Imaging Sensors\n\n  /// Light Detection and Ranging\n  LIDAR,\n  /// Sound Navigation and Ranging\n  SONAR,\n  /// General telescopes for astronomical observations\n  TELESCOPE,\n  /// For spectral analysis\n  SPECTROSCOPIC_SENSOR,\n  /// For measuring light intensity\n  PHOTOMETRIC_SENSOR,\n  /// For analyzing polarization of light\n  POLARIMETRIC_SENSOR,\n  /// For detailed imaging using interference\n  INTERFEROMETRIC_SENSOR,\n  /// Capturing image data at multiple wavelengths\n  MULTISPECTRAL_SENSOR,\n  /// Advanced imaging across many spectral bands\n  HYPERSPECTRAL_SENSOR,\n\n  // Positioning and Tracking Sensors\n\n  /// For Global Positioning System reception\n  GPS_RECEIVER,\n\n  // Communication Devices\n\n  /// Standard radio communication device\n  RADIO_COMMUNICATIONS,\n  /// Advanced laser communication system\n  LASER_COMMUNICATIONS,\n  /// Satellite communication system\n  SATELLITE_COMMUNICATIONS,\n\n  // Specialized Scientific Instruments\n\n  /// Device for laser-based experiments and measurements\n  LASER_INSTRUMENT,\n  /// Radio frequency analysis and measurement device\n  RF_ANALYZER,\n  /// Device for ionospheric research\n  IONOSPHERIC_SENSOR,\n\n  // Optical Devices\n\n  /// Device for laser-based imaging\n  LASER_IMAGING,\n  /// Advanced optical telescope\n  OPTICAL_TELESCOPE,\n  /// Device for high-resolution optical observations\n  HIGH_RESOLUTION_OPTICAL,\n\n  // Radio and Microwave Devices\n\n  RADIO,\n  /// Microwave communication device\n  MICROWAVE_TRANSMITTER,\n  /// Device for radio frequency monitoring\n  RF_MONITOR,\n  /// High-frequency radio communication device\n  HF_RADIO_COMMUNICATIONS,\n}\n\n/// Integrated Device Message"
+      "description": "Integrated Device Message"
     },
     "PLD": {
       "type": "object",
@@ -20270,7 +20270,7 @@
           }
         }
       },
-      "description": "Arab Satellite Communications Organization\n  AB,\n  /// Asia Broadcast Satellite\n  ABS,\n  /// Asia Satellite Telecommunications Company (ASIASAT)\n  AC,\n  /// Algeria\n  ALG,\n  /// Angola\n  ANG,\n  /// Argentina\n  ARGN,\n  /// Republic of Armenia\n  ARM,\n  /// Austria\n  ASRA,\n  /// Australia\n  AUS,\n  /// Azerbaijan\n  AZER,\n  /// Belgium\n  BEL,\n  /// Belarus\n  BELA,\n  /// Bermuda\n  BERM,\n  /// People's Republic of Bangladesh\n  BGD,\n  /// Kingdom of Bhutan\n  BHUT,\n  /// Bolivia\n  BOL,\n  /// Brazil\n  BRAZ,\n  /// Bulgaria\n  BUL,\n  /// Canada\n  CA,\n  /// China/Brazil\n  CHBZ,\n  /// China/Turkey\n  CHTU,\n  /// Chile\n  CHLE,\n  /// Commonwealth of Independent States (former USSR)\n  CIS,\n  /// Colombia\n  COL,\n  /// Republic of Costa Rica\n  CRI,\n  /// Czech Republic (former Czechoslovakia)\n  CZCH,\n  /// Denmark\n  DEN,\n  /// Republic of Djibouti\n  DJI,\n  /// Ecuador\n  ECU,\n  /// Egypt\n  EGYP,\n  /// European Space Agency\n  ESA,\n  /// European Space Research Organization\n  ESRO,\n  /// Estonia\n  EST,\n  /// Ethiopia\n  ETH,\n  /// European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)\n  EUME,\n  /// European Telecommunications Satellite Organization (EUTELSAT)\n  EUTE,\n  /// France/Germany\n  FGER,\n  /// Finland\n  FIN,\n  /// France\n  FR,\n  /// France/Italy\n  FRIT,\n  /// Germany\n  GER,\n  /// Republic of Ghana\n  GHA,\n  /// Globalstar\n  GLOB,\n  /// Greece\n  GREC,\n  /// Greece/Saudi Arabia\n  GRSA,\n  /// Guatemala\n  GUAT,\n  /// Hungary\n  HUN,\n  /// International Mobile Satellite Organization (INMARSAT)\n  IM,\n  /// India\n  IND,\n  /// Indonesia\n  INDO,\n  /// Iran\n  IRAN,\n  /// Iraq\n  IRAQ,\n  /// Iridium\n  IRID,\n  /// Ireland\n  IRL,\n  /// Israel\n  ISRA,\n  /// Indian Space Research Organisation\n  ISRO,\n  /// International Space Station\n  ISS,\n  /// Italy\n  IT,\n  /// International Telecommunications Satellite Organization (INTELSAT)\n  ITSO,\n  /// Japan\n  JPN,\n  /// Kazakhstan\n  KAZ,\n  /// Republic of Kenya\n  KEN,\n  /// Laos\n  LAOS,\n  /// Democratic Socialist Republic of Sri Lanka\n  LKA,\n  /// Lithuania\n  LTU,\n  /// Luxembourg\n  LUXE,\n  /// Morocco\n  MA,\n  /// Malaysia\n  MALA,\n  /// Principality of Monaco\n  MCO,\n  /// Republic of Moldova\n  MDA,\n  /// Mexico\n  MEX,\n  /// Republic of the Union of Myanmar\n  MMR,\n  /// Mongolia\n  MNG,\n  /// Mauritius\n  MUS,\n  /// North Atlantic Treaty Organization\n  NATO,\n  /// Netherlands\n  NETH,\n  /// New ICO\n  NICO,\n  /// Nigeria\n  NIG,\n  /// Democratic People's Republic of Korea\n  NKOR,\n  /// Norway\n  NOR,\n  /// Federal Democratic Republic of Nepal\n  NPL,\n  /// New Zealand\n  NZ,\n  /// O3b Networks\n  O3B,\n  /// ORBCOMM\n  ORB,\n  /// Pakistan\n  PAKI,\n  /// Peru\n  PERU,\n  /// Poland\n  POL,\n  /// Portugal\n  POR,\n  /// People's Republic of China\n  PRC,\n  /// Republic of Paraguay\n  PRY,\n  /// People's Republic of China/European Space Agency\n  PRES,\n  /// State of Qatar\n  QAT,\n  /// RascomStar-QAF\n  RASC,\n  /// Taiwan (Republic of China)\n  ROC,\n  /// Romania\n  ROM,\n  /// Philippines (Republic of the Philippines)\n  RP,\n  /// Republic of Rwanda\n  RWA,\n  /// South Africa\n  SAFR,\n  /// Saudi Arabia\n  SAUD,\n  /// Republic of Sudan\n  SDN,\n  /// Sea Launch\n  SEAL,\n  /// SES\n  SES,\n  /// Singapore/Japan\n  SGJP,\n  /// Singapore\n  SING,\n  /// Republic of Korea\n  SKOR,\n  /// Spain\n  SPN,\n  /// Singapore/Taiwan\n  STCT,\n  /// Slovenia\n  SVN,\n  /// Sweden\n  SWED,\n  /// Switzerland\n  SWTZ,\n  /// To Be Determined\n  TBD,\n  /// Thailand\n  THAI,\n  /// Turkmenistan/Monaco\n  TMMC,\n  /// Republic of Tunisia\n  TUN,\n  /// Turkey\n  TURK,\n  /// United Arab Emirates\n  UAE,\n  /// United Kingdom\n  UK,\n  /// Ukraine\n  UKR,\n  /// Unknown\n  UNK,\n  /// Uruguay\n  URY,\n  /// United States\n  US,\n  /// United States/Brazil\n  USBZ,\n  /// Vatican City State\n  VAT,\n  /// Venezuela\n  VENZ,\n  /// Vietnam\n  VTNM,\n  /// Republic of Zimbabwe\n  ZWE\n}\n\n/// Legacy Country Code"
+      "description": "Legacy Country Code"
     },
     "CAT": {
       "type": "object",
@@ -21010,7 +21010,7 @@
           "x-flatbuffer-type": "[PLD]"
         }
       },
-      "description": "0\n  PAYLOAD,\n  /// 1\n  ROCKET_BODY,\n  /// 2\n  DEBRIS,\n  /// 3\n  UNKNOWN\n}\n\nenum operationalState: byte {\n  /// +\n  OPERATIONAL,\n  /// -\n  NONOPERATIONAL,\n  /// P\n  PARTIALLY_OPERATIONAL,\n  /// B\n  BACKUP_STANDBY,\n  /// S\n  SPARE,\n  /// X\n  EXTENDED_MISSION,\n  /// D\n  DECAYED,\n  /// ?\n  UNKNOWN\n}\n\nenum dataAvailability: byte {\n  /// NCE\n  NO_CURRENT_ELEMENTS,\n  /// NIE\n  NO_INITIAL_ELEMENTS,\n  /// NEA\n  NO_ELEMENTS_AVAILABLE,\n  /// OK\n  OK\n}\n\nenum orbitRegime: byte {\n  /// 0\n  ORBIT,\n  /// 1\n  LANDING,\n  /// 2\n  IMPACT,\n  /// 3\n  DOCKED,\n  /// 4\n  ROUNDTRIP\n}\n\nenum massCategory: byte {\n  DRY,\n  WET\n}\n\n/// Catalog Entity Message"
+      "description": "Catalog Entity Message"
     },
     "PNM": {
       "type": "object",
@@ -21062,7 +21062,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Publish Notification Message.\n///\n/// PNM is the compact network announcement for a published record, manifest, or\n/// dataset update. For dataset updates, FILE_ID is the complete canonical\n/// identity for the published update and CID usually points to a small DPM\n/// manifest or digest. The DPM carries the full verification contract:\n/// provider identity, retrieval protocol, canonical query, result hash, Merkle\n/// roots, completeness-capable indexes, file_id partition key, and signature.\n/// Large or paid dataset updates do not need to be published as globally\n/// discoverable IPFS files; a PNM may instead advertise a provider-mediated SDN\n/// query protocol. In that mode the PNM is only the announcement. The DPM is\n/// the signed commitment, and each provider response carries records plus\n/// Merkle proof material that the subscriber verifies against the DPM roots and\n/// the announced FILE_ID before import."
+      "description": "Publish Notification Message.  PNM is the compact network announcement for a published record, manifest, or dataset update. For dataset updates, FILE_ID is the complete canonical identity for the published update and CID usually points to a small DPM manifest or digest. The DPM carries the full verification contract: provider identity, retrieval protocol, canonical query, result hash, Merkle roots, completeness-capable indexes, file_id partition key, and signature. Large or paid dataset updates do not need to be published as globally discoverable IPFS files; a PNM may instead advertise a provider-mediated SDN query protocol. In that mode the PNM is only the announcement. The DPM is the signed commitment, and each provider response carries records plus Merkle proof material that the subscriber verifies against the DPM roots and the announced FILE_ID before import."
     },
     "CryptoKey": {
       "type": "object",
@@ -21446,8 +21446,7 @@
             }
           }
         }
-      },
-      "description": "https://www.sanaregistry.org/r/celestial_body_reference_frames/\n/// Celestial Reference Frames (SANA registry 1.3.112.4.57.2)\nenum CelestialFrame : byte {\n  /// OID: 1.3.112.4.57.2.9\n  /// Inertial Earth-centered frame aligned with Earth's center of mass.\n  GCRF,\n\n  /// OID: 1.3.112.4.57.2.11\n  /// International Celestial Reference Frame based on distant quasars.\n  ICRF,\n\n  /// OID: 1.3.112.4.57.2.14\n  /// Classical J2000 inertial frame defined at epoch J2000.0.\n  J2000,\n\n  /// OID: 1.3.112.4.57.2.15\n  /// Updated J2000 frame using IAU2000A precession-nutation models.\n  J2000A,\n\n  /// OID: 1.3.112.4.57.2.7\n  /// Earth Mean Equator frame at epoch J2000 used in orbit determination.\n  EME2000,\n\n  /// OID: 1.3.112.4.57.2.25\n  /// True Equator Mean Equinox of Date frame for satellite tracking.\n  TEMEOFDATE,\n\n  /// OID: 1.3.112.4.57.2.10\n  /// Greenwich True of Date: Earth rotation relative to celestial reference.\n  GTOD,\n\n  /// OID: 1.3.112.4.57.2.4\n  /// Celestial Intermediate Reference System based on CIP and CIO.\n  CIRS,\n\n  /// OID: 1.3.112.4.57.2.18\n  /// Mean of Date (MOD) Earth frame using IAU1976 precession.\n  MOD_EARTH,\n\n  /// OID: 1.3.112.4.57.2.17\n  /// Mean of Date (MOD) celestial body frame evaluated at each epoch.\n  MOD_CB,\n\n  /// OID: 1.3.112.4.57.2.19\n  /// Mean of Date (MOD) Moon frame evaluated at each epoch.\n  MOD_MOON,\n\n  /// OID: 1.3.112.4.57.2.29\n  /// True of Date (TOD) Earth frame with polar motion included.\n  TOD_EARTH,\n\n  /// OID: 1.3.112.4.57.2.28\n  /// True of Date (TOD) celestial body frame.\n  TOD_CB,\n\n  /// OID: 1.3.112.4.57.2.30\n  /// True of Date (TOD) Moon frame.\n  TOD_MOON,\n\n  /// OID: 1.3.112.4.57.2.32\n  /// True of Epoch (TOE) Earth frame at specific epoch.\n  TOE_EARTH,\n\n  /// OID: 1.3.112.4.57.2.31\n  /// True of Epoch (TOE) celestial body frame at specific epoch.\n  TOE_CB,\n\n  /// OID: 1.3.112.4.57.2.33\n  /// True of Epoch (TOE) Moon frame at specific epoch.\n  TOE_MOON,\n\n  /// OID: 1.3.112.4.57.2.13\n  /// International Terrestrial Reference Frame 2000 (Earth-fixed).\n  ITRF2000,\n\n  /// OID: 1.3.112.4.57.2.13\n  /// International Terrestrial Reference Frame 1993 (Earth-fixed).\n  ITRF93,\n\n  /// OID: 1.3.112.4.57.2.13\n  /// International Terrestrial Reference Frame 1997 (Earth-fixed).\n  ITRF97,\n\n  /// OID: 1.3.112.4.57.2.6\n  /// Earth-Fixed Geocentric frame using geodetic coordinates.\n  EFG,\n\n  /// OID: 1.3.112.4.57.2.8\n  /// Fixed frame of a celestial body.\n  FIXED_CB,\n\n  /// OID: 1.3.112.4.57.2.39\n  /// Fixed Earth frame aligned with WGS84 ellipsoid.\n  FIXED_EARTH,\n\n  /// WGS84 Earth-fixed terrestrial system.\n  WGS84,\n\n  /// OID: 1.3.112.4.57.2.5\n  /// Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY).\n  DTRFYYYY,\n\n  /// OID: 1.3.112.4.57.2.2\n  /// Mean Earth Equator and Equinox (ALIGN_EARTH) frame.\n  ALIGN_EARTH,\n\n  /// OID: 1.3.112.4.57.2.1\n  /// Mean Central Body Equator and Equinox (ALIGN_CB) frame.\n  ALIGN_CB,\n\n  /// OID: 1.3.112.4.57.2.3\n  /// Classical Besselian 1950 equator and equinox frame.\n  B1950\n}\n\n/// https://sanaregistry.org/r/spacecraft_body_reference_frames/\n/// Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)\nenum SpacecraftFrame : byte {\n  /// OID: 1.3.112.4.57.8.1\n  /// Accelerometer instrument frame.\n  ACC_i,\n\n  /// OID: 1.3.112.4.57.8.2\n  /// Actuator system frame.\n  ACTUATOR_i,\n\n  /// OID: 1.3.112.4.57.8.3\n  /// Attitude Sensor Target frame.\n  AST_i,\n\n  /// OID: 1.3.112.4.57.8.4\n  /// Coarse Sun Sensor frame.\n  CSS_i,\n\n  /// OID: 1.3.112.4.57.8.5\n  /// Digital Sun Sensor frame.\n  DSS_i,\n\n  /// OID: 1.3.112.4.57.8.6\n  /// Earth Sensor Assembly frame.\n  ESA_i,\n\n  /// OID: 1.3.112.4.57.8.7\n  /// Gyroscope instrument frame.\n  GYRO_FRAME_i,\n\n  /// OID: 1.3.112.4.57.8.8\n  /// Inertial Measurement Unit frame.\n  IMU_FRAME_i,\n\n  /// OID: 1.3.112.4.57.8.9\n  /// Generic instrument mounting frame.\n  INSTRUMENT_i,\n\n  /// OID: 1.3.112.4.57.8.10\n  /// Magnetic Torquer Assembly frame.\n  MTA_i,\n\n  /// OID: 1.3.112.4.57.8.11\n  /// Reaction Wheel assembly frame.\n  RW_i,\n\n  /// OID: 1.3.112.4.57.8.12\n  /// Solar Array frame.\n  SA_i,\n\n  /// OID: 1.3.112.4.57.8.13\n  /// Spacecraft body fixed frame.\n  SC_BODY_i,\n\n  /// OID: 1.3.112.4.57.8.14\n  /// Generic sensor assembly frame.\n  SENSOR_i,\n\n  /// OID: 1.3.112.4.57.8.15\n  /// Star Tracker instrument frame.\n  STARTRACKER_i,\n\n  /// OID: 1.3.112.4.57.8.16\n  /// Thermal Assembly Module frame.\n  TAM_i\n}\n\n/// https://sanaregistry.org/r/orbit_relative_reference_frames/\n/// Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)\nenum OrbitFrame : byte {\n  /// OID: 1.3.112.4.57.3.1\n  /// Earth Equatorial Inertial frame aligned with J2000 epoch.\n  EQW_INERTIAL,\n\n  /// OID: 1.3.112.4.57.3.3\n  /// Local Vertical Local Horizontal inertial frame.\n  LVLH_INERTIAL,\n\n  /// OID: 1.3.112.4.57.3.2\n  /// Local Vertical Local Horizontal rotating frame.\n  LVLH_ROTATING,\n\n  /// OID: 1.3.112.4.57.3.5\n  /// Normal along-track cross-track inertial frame.\n  NSW_INERTIAL,\n\n  /// OID: 1.3.112.4.57.3.4\n  /// Normal along-track cross-track rotating frame.\n  NSW_ROTATING,\n\n  /// OID: 1.3.112.4.57.3.7\n  /// Orbit normal Tangential cross-track inertial frame.\n  NTW_INERTIAL,\n\n  /// OID: 1.3.112.4.57.3.6\n  /// Orbit normal Tangential cross-track rotating frame.\n  NTW_ROTATING,\n\n  /// OID: 1.3.112.4.57.3.8\n  /// Perifocal frame aligned with orbit's perigee.\n  PQW_INERTIAL,\n\n  /// OID: 1.3.112.4.57.3.10\n  /// Radial along-track cross-track inertial frame.\n  RSW_INERTIAL,\n\n  /// OID: 1.3.112.4.57.3.9\n  /// Radial along-track cross-track rotating frame.\n  RSW_ROTATING,\n\n  /// OID: 1.3.112.4.57.3.14\n  /// South-East-Zenith inertial (topocentric) frame.\n  SEZ_INERTIAL,\n\n  /// OID: 1.3.112.4.57.3.13\n  /// South-East-Zenith rotating (topocentric) frame.\n  SEZ_ROTATING,\n\n  /// OID: 1.3.112.4.57.3.12\n  /// Transverse normal cross-track inertial frame.\n  TNW_INERTIAL,\n\n  /// OID: 1.3.112.4.57.3.11\n  /// Transverse normal cross-track rotating frame.\n  TNW_ROTATING,\n\n  /// OID: 1.3.112.4.57.3.16\n  /// Velocity-normal co-normal inertial frame.\n  VNC_INERTIAL,\n\n  /// OID: 1.3.112.4.57.3.15\n  /// Velocity-normal co-normal rotating frame.\n  VNC_ROTATING\n}\n\n/// Non-registered or local use frames\nenum CustomFrame : byte {\n  /// Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.\n  ECEF,\n\n  /// True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking.\n  TEME,\n\n  /// True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch.\n  TEMEOFEPOCH,\n\n  /// East-North-Up: Local tangent plane for surface points.\n  ENU,\n\n  /// North-East-Down: Aviation/navigation frame aligned with gravity.\n  NED,\n\n  /// North-East-Up: Local tangent plane variant with Up positive.\n  NEU,\n\n  /// Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.\n  RIC,\n\n  /// Radial-Transverse-Normal: Orbit frame for spacecraft dynamics.\n  RTN,\n\n  /// Transverse-Velocity-Normal: Alternative orbit frame.\n  TVN,\n\n  /// Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector.\n  VVLH,\n\n  /// Radial-Tangential-Cross-track: Equivalent to LVLH/QSW.\n  QSW,\n\n  /// Local Tangent Plane: Surface-fixed frame centered on a point.\n  LTP,\n\n  /// Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity.\n  LVLH,\n\n  /// Polar-North-East: Surface coordinate frame.\n  PNE,\n\n  /// Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.\n  BRF,\n\n  /// Radial-Along-track-Cross-track: Same as RSW.\n  RSW,\n\n  /// Tangential-Normal-Cross-track: Same as TNW.\n  TNW,\n\n  /// Radial-UTF: Radial, Along-track, Cross-track variant.\n  UVW\n}\n\n// wrapper tables for each enum"
+      }
     },
     "SpacecraftFrameWrapper": {
       "type": "object",
@@ -22709,7 +22708,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Human entered or generated\n  HE,\n  /// Human estimated\n  H_E,\n  /// Machine generated via GPS\n  M_G,\n  /// Machine generated via sensor\n  M_S,\n  /// Machine fused\n  M_F,\n  /// Machine inferred\n  M_I,\n  /// Configured\n  M_C\n}\n\n/// CoT Point - geographical point with error estimates"
+      "description": "CoT Point - geographical point with error estimates"
     },
     "COTDetail": {
       "type": "object",
@@ -23577,7 +23576,7 @@
           "x-flatbuffer-type": "[double]"
         }
       },
-      "description": "Dynamic value types for time-varying properties\nenum CZMDynValueType : byte {\n  NUMBER,\n  BOOLEAN,\n  STRING,\n  COLOR,\n  CARTESIAN3,\n  CARTESIAN2,\n  NEAR_FAR_SCALAR,\n  UNIT_QUATERNION\n}\n\n/// A single interval in a time-varying property"
+      "description": "A single interval in a time-varying property"
     },
     "CZMDynSampled": {
       "type": "object",
@@ -26368,7 +26367,7 @@
           "x-flatbuffer-type": "bool"
         }
       },
-      "description": "Dataset Publication Manifest\n\n/// Published artifact role within a dataset update.\nenum publicationAssetKind : byte {\n  DATA_SHARD,\n  QUERY_INDEX,\n  MANIFEST,\n  OTHER\n}\n\n/// Transport profile used to resolve a dataset update asset.\nenum dpmTransportKind : byte {\n  /// Asset bytes are resolved by content address, usually an IPFS CID.\n  CONTENT_ADDRESS,\n  /// Asset bytes are resolved from the provider through a signed SDN query\n  /// protocol. This mode is used when the update is not published as a\n  /// globally discoverable file.\n  SDN_QUERY,\n  /// Asset bytes are resolved by another protocol named in TRANSPORT_PROTOCOL.\n  OTHER\n}\n\n/// Completeness-capable signed index over a dataset update."
+      "description": "Completeness-capable signed index over a dataset update."
     },
     "DPMAsset": {
       "type": "object",
@@ -26422,7 +26421,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "One immutable asset or provider-mediated query contract published for a\n/// dataset update."
+      "description": "One immutable asset or provider-mediated query contract published for a dataset update."
     },
     "DPMSourceBatch": {
       "type": "object",
@@ -26477,7 +26476,7 @@
           "x-flatbuffer-type": "[string]"
         }
       },
-      "description": "SDN_QUERY this MAY be a provider peer multiaddr, relay hint, or empty when\n  /// provider routing is resolved from the DPM provider identity.\n  MULTIFORMAT_ADDRESS: string;\n  /// File name or logical artifact name.\n  FILE_NAME: string;\n  /// Canonical publication/update partition identity for this asset. FILE_ID is\n  /// not a display filename; it is the stable identifier used everywhere this\n  /// update is referenced: PNMs, DPMs, assets, manifests, entitlements, query\n  /// requests, subscriber caches, replay, audit, and completeness proofs.\n  /// Example:\n  /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.\n  FILE_ID: string;\n  /// Provider protocol name/version used to fetch this asset when\n  /// TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol\n  /// response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the\n  /// provider signature in this DPM.\n  TRANSPORT_PROTOCOL: string;\n  /// Byte length of the published object.\n  BYTE_LENGTH: uint64;\n  /// SHA-256 hash of the exact published bytes, lowercase hex.\n  BYTE_SHA256: string;\n  /// Merkle root over canonical records in this asset, lowercase hex. For\n  /// provider-mediated query delivery, subscribers verify returned records and\n  /// proof paths against this root before importing data. The proof material is\n  /// carried by the provider query response, not by the DPM itself; this field\n  /// is the signed root that makes those proofs meaningful.\n  DATA_ROOT: string;\n  /// SDS schema name for data artifacts, e.g. OMM.fbs, CAT.fbs, SPW.fbs.\n  SCHEMA_NAME: string;\n  /// Hash of the SDS schema used to encode this object.\n  SCHEMA_HASH: string;\n  /// Optional content-key identifier for encrypted artifacts.\n  CONTENT_KEY_ID: string;\n}\n\n/// Source batch metadata bound into the dataset publication."
+      "description": "Source batch metadata bound into the dataset publication."
     },
     "DPMQueryBinding": {
       "type": "object",
@@ -26699,7 +26698,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Dataset Publication Manifest binding data/index CIDs, query replay,\n/// source hashes, schema hashes, encryption metadata, provider-mediated query\n/// protocols, completeness roots, and provider signature.",
+      "description": "Dataset Publication Manifest binding data/index CIDs, query replay, source hashes, schema hashes, encryption metadata, provider-mediated query protocols, completeness roots, and provider signature.",
       "required": [
         "DATASET_ID",
         "UPDATE_ID",
@@ -26869,8 +26868,7 @@
           "type": "string",
           "x-flatbuffer-type": "string"
         }
-      },
-      "description": "Data Sync Status\n///\n/// Runtime status envelope for a FlatSQL-backed dataset synchronization. This\n/// message is used for worker/backend-to-frontend status transport; record\n/// bytes themselves remain in their original SDS FlatBuffer schema.\nenum dssSyncState : byte {\n  IDLE,\n  SYNCING,\n  SYNCED,\n  CAPPED,\n  ERROR\n}"
+      }
     },
     "EME": {
       "type": "object",
@@ -27036,7 +27034,7 @@
           "x-flatbuffer-type": "uint64"
         }
       },
-      "description": "Encryption Header for FlatBuffers field-level encryption\n\n/// Key exchange algorithm used to derive the shared secret\nenum KeyExchange : byte { X25519, Secp256k1, P256 }\n\n/// Symmetric encryption algorithm\nenum SymmetricAlgo : byte { AES_256_CTR }\n\n/// Key derivation function\nenum KDF : byte { HKDF_SHA256 }\n\n/// Encryption Header containing all parameters needed for decryption",
+      "description": "Encryption Header containing all parameters needed for decryption",
       "required": [
         "EPHEMERAL_PUBLIC_KEY",
         "NONCE_START"
@@ -28014,7 +28012,7 @@
           "x-flatbuffer-type": "float"
         }
       },
-      "description": "Enumeration for data collection methods\nenum CollectMethod : byte {\n  SIDEREAL,\n  RATE_TRACK,\n  FIXED_STARE,\n  OTHER\n}\n\nenum ObservationPosition : byte {\n  FENCE,\n  FIRST,\n  IN,\n  LAST,\n  SINGLE\n}\n\n/// Electro-Optical Observation"
+      "description": "Electro-Optical Observation"
     },
     "EOP": {
       "type": "object",
@@ -28140,7 +28138,7 @@
           "x-flatbuffer-type": "[uint8]"
         }
       },
-      "description": "Entity / Standards Link \u2014 join-table row connecting a host-local entity\n/// metadata record to a standards record index row, enabling cascade-safe\n/// mutation and cross-plugin query ownership."
+      "description": "Entity / Standards Link \u2014 join-table row connecting a host-local entity metadata record to a standards record index row, enabling cascade-safe mutation and cross-plugin query ownership."
     },
     "EWR": {
       "type": "object",
@@ -28266,7 +28264,7 @@
           "x-flatbuffer-type": "uint"
         }
       },
-      "description": "Algorithm selection hint for single-source shortest-path solves.\nenum shortestPathAlgorithm : ubyte {\n  /// Let the runtime choose.\n  AUTO,\n  /// Frontier-shrinking solver.\n  FRONTIER,\n  /// Dijkstra's algorithm.\n  DIJKSTRA\n}\n\n/// Weighted directed edge (16 bytes, 8-byte aligned for zero-copy ingestion).\nstruct weightedEdge {\n  SRC:uint;\n  DST:uint;\n  WEIGHT:double;\n}\n\n/// Graph creation / reset request."
+      "description": "Graph creation / reset request."
     },
     "FPCWeightedEdgeList": {
       "type": "object",
@@ -28479,7 +28477,7 @@
           "x-flatbuffer-type": "FPCPathResult"
         }
       },
-      "description": "Fastest Path Compute \u2014 envelope message for weighted graph ingestion and\n/// single-source shortest path execution."
+      "description": "Fastest Path Compute \u2014 envelope message for weighted graph ingestion and single-source shortest path execution."
     },
     "FRMVector3": {
       "type": "object",
@@ -29501,7 +29499,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "2D fix\n  FIX_2D,\n  /// 3D fix\n  FIX_3D,\n  /// Differential GPS fix\n  DGPS,\n  /// PPP fix\n  PPS\n}\n\n/// GPX link to an external resource"
+      "description": "GPX link to an external resource"
     },
     "GPXWaypoint": {
       "type": "object",
@@ -30315,7 +30313,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Greenwich Mean Sidereal Time\n  GMST,\n  /// Global Positioning System\n  GPS,\n  /// Mission Elapsed Time\n  MET,\n  /// Mission Relative Time\n  MRT,\n  /// Spacecraft Clock (receiver) (requires rules for interpretation in ICD)\n  SCLK,\n  /// International Atomic Time\n  TAI,\n  /// Barycentric Coordinate Time\n  TCB,\n  /// Barycentric Dynamical Time\n  TDB,\n  /// Geocentric Coordinate Time\n  TCG,\n  /// Terrestrial Time\n  TT,\n  /// Universal Time\n  UT1,\n  /// Coordinated Universal Time\n  UTC,\n  /// GLONASS Time\n  GLONASS,\n  /// Galileo System Time\n  GST,\n  /// Quasi-Zenith Satellite System Time\n  QZSS,\n  /// BeiDou Time\n  BDT,\n  /// Navigation with Indian Constellation Time\n  NAVIC,\n  /// Satellite-Based Augmentation System Time\n  SBAS\n}\n\nenum timEpochRepresentation : byte {\n  /// Julian Date day count.\n  JULIAN_DATE,\n  /// Modified Julian Date day count (JD - 2400000.5).\n  MODIFIED_JULIAN_DATE,\n  /// Seconds since 1970-01-01T00:00:00 UTC.\n  UNIX_SECONDS,\n  /// ISO 8601 timestamp text.\n  ISO8601,\n  /// Seconds since 1980-01-06T00:00:00 GPS.\n  GPS_SECONDS,\n  /// GNSS week number plus seconds within the week.\n  GNSS_WEEK_SECONDS,\n  /// CCSDS binary time-code field with preamble metadata.\n  CCSDS_TIME_CODE,\n  /// Seconds from an application-defined mission epoch.\n  MISSION_ELAPSED_SECONDS\n}\n\nenum timCcsdsTimeCodeKind : byte {\n  /// No CCSDS time code selected.\n  NONE,\n  /// CCSDS Unsegmented Time Code (CUC).\n  UNSEGMENTED,\n  /// CCSDS Day Segmented Time Code (CDS).\n  DAY_SEGMENTED,\n  /// CCSDS Calendar Segmented Time Code (CCS).\n  CALENDAR_SEGMENTED\n}\n\nenum timConversionStatus : byte {\n  /// Conversion completed.\n  OK,\n  /// Input epoch or requested representation is invalid.\n  INVALID_INPUT,\n  /// Requested source or target time system is not supported.\n  UNSUPPORTED_TIME_SYSTEM,\n  /// Conversion requires leap-second data that was not available.\n  LEAP_SECOND_DATA_REQUIRED,\n  /// Conversion requires Earth-orientation data that was not available.\n  EOP_DATA_REQUIRED,\n  /// Requested instant is outside the supported conversion range.\n  OUT_OF_RANGE\n}\n\n/// CCSDS time-code payload and preamble metadata."
+      "description": "CCSDS time-code payload and preamble metadata."
     },
     "TIMInstant": {
       "type": "object",
@@ -30862,7 +30860,7 @@
           }
         }
       },
-      "description": "Polynomial basis type for coefficient interpretation.\n/// Determines how the coefficient arrays are evaluated.\nenum polynomialBasisType : byte {\n  /// Chebyshev polynomials of the first kind T_n(x).\n  /// Most common for ephemeris fitting due to minimax approximation properties.\n  CHEBYSHEV,\n\n  /// Legendre polynomials P_n(x).\n  /// Orthogonal on [-1, 1] with unit weight function.\n  LEGENDRE,\n\n  /// Hermite interpolating polynomials.\n  /// Matches both function values and derivatives at nodes.\n  HERMITE,\n\n  /// Lagrange interpolating polynomials.\n  /// Exact interpolation through specified nodes.\n  LAGRANGE,\n\n  /// Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ...\n  POWER_SERIES\n}\n\n/// Anomaly type flag for orbital element records.\nenum ppeAnomalyType : byte {\n  /// True anomaly (geometric angle from periapsis).\n  TRUE_ANOMALY,\n\n  /// Mean anomaly (linear in time for Keplerian motion).\n  MEAN_ANOMALY,\n\n  /// Eccentric anomaly (auxiliary angle in the Kepler equation).\n  ECCENTRIC_ANOMALY\n}\n\n/// Orbital element parameterization for the first element (size/shape).\nenum sizeShapeProfile : byte {\n  /// Semi-major axis (km). Standard for elliptical orbits.\n  SMA,\n\n  /// Radius of periapsis (km). Preferred for hyperbolic orbits.\n  R_PERIAPSIS\n}\n\n// =============================================================================\n// POSITION POLYNOMIAL RECORDS\n// =============================================================================\n\n/// A single time-segment record of polynomial coefficients for Cartesian position\n/// (and optionally velocity). Coefficients are stored per axis.\n///\n/// To evaluate position at time t within this record's validity window:\n///   1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN\n///      where tau is in [-1, +1].\n///   2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using\n///      the coefficients for each axis.\n///\n/// Velocity coefficients, if present, follow the same evaluation procedure.\n/// If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by\n/// analytically differentiating the position polynomial.",
+      "description": "A single time-segment record of polynomial coefficients for Cartesian position (and optionally velocity). Coefficients are stored per axis.  To evaluate position at time t within this record's validity window: 1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN where tau is in [-1, +1]. 2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using the coefficients for each axis.  Velocity coefficients, if present, follow the same evaluation procedure. If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by analytically differentiating the position polynomial.",
       "required": [
         "EPOCH_MID"
       ]
@@ -31019,7 +31017,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Position coefficients for Y-axis (km).\n  /// Length must equal NUM_COEFFICIENTS.\n  POS_COEFF_Y: [double] (required);\n\n  /// Position coefficients for Z-axis (km).\n  /// Length must equal NUM_COEFFICIENTS.\n  POS_COEFF_Z: [double] (required);\n\n  /// Whether explicit velocity coefficients are provided.\n  /// If false, velocity should be derived by differentiating the position polynomial.\n  HAS_VELOCITY_COEFFICIENTS: bool = false;\n\n  /// Velocity coefficients for X-axis (km/s). Optional.\n  /// Length must equal NUM_COEFFICIENTS if present.\n  VEL_COEFF_X: [double];\n\n  /// Velocity coefficients for Y-axis (km/s). Optional.\n  VEL_COEFF_Y: [double];\n\n  /// Velocity coefficients for Z-axis (km/s). Optional.\n  VEL_COEFF_Z: [double];\n\n  /// Maximum position fit residual over this segment (km). Optional quality metric.\n  MAX_POSITION_RESIDUAL: double;\n\n  /// RMS position fit residual over this segment (km). Optional quality metric.\n  RMS_POSITION_RESIDUAL: double;\n}\n\n// =============================================================================\n// ORBITAL ELEMENT POLYNOMIAL RECORDS\n// =============================================================================\n\n/// A single time-segment record of polynomial coefficients for classical orbital elements.\n///\n/// The six classical elements are:\n///   1. SMA or R_PERIAPSIS (size/shape) \u2014 see SIZE_SHAPE_TYPE\n///   2. Eccentricity (dimensionless)\n///   3. Inclination (degrees)\n///   4. Right Ascension of Ascending Node / RAAN (degrees)\n///   5. Argument of Periapsis (degrees)\n///   6. Anomaly (degrees) \u2014 see ANOMALY_TYPE\n///\n/// Evaluation follows the same normalized-time procedure as PPEPositionRecord.",
+      "description": "A single time-segment record of polynomial coefficients for classical orbital elements.  The six classical elements are: 1. SMA or R_PERIAPSIS (size/shape) \u2014 see SIZE_SHAPE_TYPE 2. Eccentricity (dimensionless) 3. Inclination (degrees) 4. Right Ascension of Ascending Node / RAAN (degrees) 5. Argument of Periapsis (degrees) 6. Anomaly (degrees) \u2014 see ANOMALY_TYPE  Evaluation follows the same normalized-time procedure as PPEPositionRecord.",
       "required": [
         "EPOCH_MID",
         "COEFF_SIZE_SHAPE",
@@ -31208,7 +31206,7 @@
           "x-flatbuffer-type": "uint16"
         }
       },
-      "description": "Polynomial Ephemeris \u2014 top-level message containing metadata and\n/// one or more polynomial coefficient records for a single space object.\n///\n/// A PPE message may contain position records, orbital element records, or both.\n/// Records should be ordered chronologically by EPOCH_MID and should collectively\n/// cover the time span [START_TIME, STOP_TIME] without gaps."
+      "description": "Polynomial Ephemeris \u2014 top-level message containing metadata and one or more polynomial coefficient records for a single space object.  A PPE message may contain position records, orbital element records, or both. Records should be ordered chronologically by EPOCH_MID and should collectively cover the time span [START_TIME, STOP_TIME] without gaps."
     },
     "ephemerisDataLine": {
       "type": "object",
@@ -31265,7 +31263,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "A single ephemeris data line (for non-uniform time steps only)\n/// Use this format when time intervals between states are irregular.\n/// For uniform time steps, use the compact EPHEMERIS_DATA array instead."
+      "description": "A single ephemeris data line (for non-uniform time steps only) Use this format when time intervals between states are irregular. For uniform time steps, use the compact EPHEMERIS_DATA array instead."
     },
     "covarianceMatrixLine": {
       "type": "object",
@@ -31646,8 +31644,7 @@
           "description": "Free-text field containing an ID that uniquely identifies a message from this originator.",
           "x-flatbuffer-type": "string"
         }
-      },
-      "description": "Trajectory state representation type.\n/// Defines how trajectory data is parameterized in this OCM.\n/// CCSDS 502.0-B-3 Section 7 specifies multiple trajectory state types.\nenum trajectoryType : byte {\n  /// Cartesian position and velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT).\n  CARTESIAN_PV,\n\n  /// Cartesian position, velocity, and acceleration (9 components).\n  CARTESIAN_PVA,\n\n  /// Polynomial coefficients for Cartesian position (and optionally velocity).\n  /// Associated data in POLYNOMIAL_POSITION_RECORDS.\n  POLYNOMIAL_POS,\n\n  /// Polynomial coefficients for classical orbital elements.\n  /// Associated data in POLYNOMIAL_OE_RECORDS.\n  POLYNOMIAL_OE,\n\n  /// Hermite interpolating polynomial representation.\n  HERMITE,\n\n  /// Lagrange interpolating polynomial representation.\n  LAGRANGE\n}"
+      }
     },
     "Metadata": {
       "type": "object",
@@ -32852,7 +32849,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Hypersonic flight regime classification.\nenum hfcFlowRegime : byte {\n  UNKNOWN,\n  SUPERSONIC,\n  HYPERSONIC,\n  RAREFIED,\n  TRANSITIONAL,\n  CONTINUUM\n}\n\n/// How the hypersonic propagator is coupled to atmosphere providers.\nenum hfcAtmosphereCouplingMode : byte {\n  UNKNOWN,\n  STATIC_PROFILE,\n  BATCH_QUERY,\n  STEP_QUERY,\n  EXTERNAL_PROVIDER\n}\n\n/// Hypersonic Flight Conditions"
+      "description": "Hypersonic Flight Conditions"
     },
     "Score": {
       "type": "object",
@@ -33540,7 +33537,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Altitude relative to ground surface\n  CLAMP_TO_GROUND,\n  /// Altitude relative to ground elevation\n  RELATIVE_TO_GROUND,\n  /// Altitude as absolute meters above WGS84 ellipsoid\n  ABSOLUTE,\n  /// Clamp to sea floor\n  CLAMP_TO_SEA_FLOOR,\n  /// Relative to sea floor\n  RELATIVE_TO_SEA_FLOOR\n}\n\nenum KMLColorMode : byte {\n  NORMAL,\n  RANDOM\n}\n\nenum KMLStyleState : byte {\n  NORMAL,\n  HIGHLIGHT\n}\n\nenum KMLUnits : byte {\n  PIXELS,\n  FRACTION,\n  INSET_PIXELS\n}\n\nenum KMLRefreshMode : byte {\n  ON_CHANGE,\n  ON_INTERVAL,\n  ON_EXPIRE\n}\n\nenum KMLViewRefreshMode : byte {\n  NEVER,\n  ON_STOP,\n  ON_REQUEST,\n  ON_REGION\n}\n\nenum KMLListItemType : byte {\n  CHECK,\n  CHECK_OFF_ONLY,\n  CHECK_HIDE_CHILDREN,\n  RADIO_FOLDER\n}\n\nenum KMLDisplayMode : byte {\n  DEFAULT,\n  HIDE\n}\n\nenum KMLGridOrigin : byte {\n  LOWER_LEFT,\n  UPPER_LEFT\n}\n\nenum KMLShape : byte {\n  RECTANGLE,\n  CYLINDER,\n  SPHERE\n}\n\nenum KMLFlyToMode : byte {\n  BOUNCE,\n  SMOOTH\n}\n\n/// KML coordinate (longitude, latitude, optional altitude)"
+      "description": "KML coordinate (longitude, latitude, optional altitude)"
     },
     "KMLLookAt": {
       "type": "object",
@@ -36240,7 +36237,7 @@
           "x-flatbuffer-type": "[float]"
         }
       },
-      "description": "Enum for the type of site\nenum SiteType: byte {\n  LAUNCH_SITE,\n  OBSERVATION_STATION,\n  HOBBYIST_OBSERVER,\n  RESEARCH_FACILITY,\n  SATELLITE_GROUND_STATION,\n  SPACEPORT,\n  MILITARY_BASE,\n  WEATHER_STATION,\n  ASTRONOMICAL_OBSERVATORY,\n  EDUCATIONAL_INSTITUTE,\n  COMMUNICATION_HUB,\n  POWER_PLANT,\n  INDUSTRIAL_COMPLEX,\n  TRANSPORTATION_HUB,\n  URBAN_AREA,\n  NATIONAL_PARK,\n  HISTORICAL_SITE,\n  OTHER\n}\n\n/// Geometry table with information about geometric properties"
+      "description": "Geometry table with information about geometric properties"
     },
     "SIT": {
       "type": "object",
@@ -36503,7 +36500,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Enumeration of Engine Types\nenum ENGINE_TYPE: byte {\n  LIQUID,\n  SOLID,\n  HYBRID,\n  ION,\n  NUCLEAR_THERMAL,\n  OTHER\n}\n\n/// Stage Details"
+      "description": "Stage Details"
     },
     "SUSTAINER": {
       "type": "object",
@@ -37484,7 +37481,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Launch-ascent mission phase.\nenum lamMissionPhase : byte {\n  UNKNOWN,\n  PRELAUNCH,\n  LIFTOFF,\n  BOOST,\n  STAGE_SEPARATION,\n  UPPER_STAGE,\n  COAST,\n  ORBIT_INSERTION,\n  ABORT,\n  COMPLETE\n}\n\n/// Launch-ascent constraint status.\nenum lamConstraintStatus : byte {\n  UNKNOWN,\n  NOMINAL,\n  WARNING,\n  VIOLATED,\n  WAIVED\n}\n\n/// Launch-ascent event."
+      "description": "Launch-ascent event."
     },
     "lamConstraintViolation": {
       "type": "object",
@@ -38199,7 +38196,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Licensing challenge participant role\nenum licensingChallengeRole : byte {\n  Requester,\n  Provider\n}\n\n/// Licensing challenge message type\nenum licensingChallengeMessageType : byte {\n  Request,\n  Response,\n  Error\n}\n\n/// Licensing challenge message",
+      "description": "Licensing challenge message",
       "required": [
         "REQUEST_ID",
         "MODULE_ID"
@@ -38230,7 +38227,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Typed Arena Buffer \u2014 descriptor for a schema-tagged payload frame moving\n/// through an arena-backed plugin stream. Carries enough identity for a\n/// receiver to dispatch on schema without inspecting the payload bytes.\n\n/// Logical payload wire format for a stream frame or an accepted port type.\nenum payloadWireFormat : ubyte {\n  /// Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF.\n  FLATBUFFER,\n  /// Body is a raw aligned binary chunk (for example zero-copy structs).\n  ALIGNED_BINARY\n}\n\n/// Buffer mutability contract advertised by a stream port.\nenum bufferMutability : ubyte {\n  /// Buffer is immutable after produce.\n  IMMUTABLE,\n  /// Buffer may be written in place by the owner (single writer).\n  SINGLE_WRITER_MUTABLE,\n  /// Buffer is append-only (rings / logs).\n  APPEND_ONLY\n}\n\n/// Buffer ownership contract advertised by a stream port.\nenum bufferOwnership : ubyte {\n  /// Arena / host owns the backing bytes; receiver must not free.\n  HOST_OWNED,\n  /// Plugin owns the backing bytes; host must not free.\n  PLUGIN_OWNED,\n  /// Ownership transfers with the frame (hand-off semantics).\n  TRANSFERRED\n}\n\n/// Payload-schema identity for a stream frame or an accepted port type."
+      "description": "Payload-schema identity for a stream frame or an accepted port type."
     },
     "TAB": {
       "type": "object",
@@ -38345,7 +38342,7 @@
           "x-flatbuffer-type": "bool"
         }
       },
-      "description": "Plugin type category\nenum pluginCategory : byte {\n  /// Sensor simulation and analysis\n  Sensor,\n  /// Orbital propagation algorithms\n  Propagator,\n  /// Custom rendering/visualization\n  Renderer,\n  /// Data analysis and processing\n  Analysis,\n  /// External data source integration\n  DataSource,\n  /// Electronic warfare simulation\n  EW,\n  /// Communications modeling\n  Comms,\n  /// Physics simulation\n  Physics,\n  /// GLSL shader plugins for custom visualization\n  Shader\n}\n\n/// Storefront payment model for the plugin listing\nenum purchaseTier : byte {\n  /// No payment required\n  Free,\n  /// Single one-time purchase\n  OneTime,\n  /// Recurring subscription purchase\n  Subscription\n}\n\n/// Publication visibility for the plugin listing\nenum publicationState : byte {\n  /// Discoverable in public storefront listings\n  Public,\n  /// Addressable directly but hidden from public browse surfaces\n  Unlisted,\n  /// No longer offered for new installs or purchases\n  Retired\n}\n\n/// Plugin capability declaration"
+      "description": "Plugin capability declaration"
     },
     "PLGAcceptedTypeSet": {
       "type": "object",
@@ -38379,7 +38376,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Canonical invoke surfaces a plugin artifact can expose. A single\n/// artifact can support multiple.\nenum invokeSurfaceKind : ubyte {\n  /// Direct ABI \u2014 host calls `plugin_invoke_stream` in-process.\n  DIRECT,\n  /// Command surface \u2014 envelope is queued by a runtime host.\n  COMMAND\n}\n\n/// Drain semantics for a method that operates over queued stream frames.\n/// Enum name is deliberately distinct from any camelCase field name\n/// (`DRAIN_POLICY` would collide otherwise).\nenum drainBehavior : ubyte {\n  /// One invocation consumes exactly one input frame.\n  SINGLE_SHOT,\n  /// Invocation drains queued work until it voluntarily yields.\n  DRAIN_UNTIL_YIELD,\n  /// Invocation drains to empty before returning.\n  DRAIN_TO_EMPTY\n}\n\n/// Host capability classes a plugin may request. Extends the simpler\n/// `PluginCapability` (which is name+version metadata) with the richer\n/// enum-based surface that runtime hosts gate on.\nenum hostCapabilityKind : ushort {\n  CLOCK,\n  RANDOM,\n  LOGGING,\n  TIMERS,\n  PUBSUB,\n  PROTOCOL_DIAL,\n  PROTOCOL_HANDLE,\n  STORAGE_QUERY,\n  SCENE_ACCESS,\n  ENTITY_ACCESS,\n  RENDER_HOOKS,\n  HTTP,\n  FILESYSTEM,\n  PIPE,\n  NETWORK,\n  DATABASE,\n  STORAGE_ADAPTER,\n  STORAGE_WRITE,\n  WALLET_SIGN,\n  IPFS,\n  TLS,\n  MQTT,\n  WEBSOCKET,\n  TCP,\n  UDP,\n  PROCESS_EXEC,\n  CONTEXT_READ,\n  CONTEXT_WRITE,\n  CRYPTO_HASH,\n  CRYPTO_SIGN,\n  CRYPTO_VERIFY,\n  CRYPTO_ENCRYPT,\n  CRYPTO_DECRYPT,\n  CRYPTO_KEY_AGREEMENT,\n  CRYPTO_KDF,\n  SCHEDULE_CRON\n}\n\n/// Accepted schema family for a port. When a port accepts multiple wire\n/// formats (canonical FlatBuffer + aligned-binary), each ALLOWED_TYPE\n/// entry carries its own TAB.FlatBufferTypeRef with the schema identity,\n/// and the enclosing PLGPortManifest advertises both wire formats via\n/// ALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises\n/// aligned-binary MUST also advertise the canonical flatbuffer fallback\n/// for the same schema and file identifier in the same set.",
+      "description": "Accepted schema family for a port. When a port accepts multiple wire formats (canonical FlatBuffer + aligned-binary), each ALLOWED_TYPE entry carries its own TAB.FlatBufferTypeRef with the schema identity, and the enclosing PLGPortManifest advertises both wire formats via ALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises aligned-binary MUST also advertise the canonical flatbuffer fallback for the same schema and file identifier in the same set.",
       "required": [
         "SET_ID"
       ]
@@ -39370,7 +39367,7 @@
           "x-flatbuffer-type": "[ubyte]"
         }
       },
-      "description": "Licensing grant message type\nenum licensingGrantMessageType : byte {\n  Request,\n  Granted,\n  Denied\n}\n\n/// Licensing grant message",
+      "description": "Licensing grant message",
       "required": [
         "REQUEST_ID",
         "MODULE_ID"
@@ -39588,7 +39585,7 @@
           "x-flatbuffer-type": "uint32"
         }
       },
-      "description": "Lambert solve status.\nenum lambertSolveState : byte {\n  OK = 0,\n  ERROR = 1,\n}\n\n/// Lambert solver branch kind.\nenum lambertBranchKind : byte {\n  SINGLE = 0,\n  MULTI_LONG_PERIOD = 1,\n  MULTI_SHORT_PERIOD = 2,\n}\n\n/// Three-component vector in the request frame.\nstruct lambertVector3 {\n  X:double;\n  Y:double;\n  Z:double;\n}\n\n/// One returned Lambert solution branch."
+      "description": "One returned Lambert solution branch."
     },
     "LMO": {
       "type": "object",
@@ -39721,7 +39718,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Module lifecycle request action\nenum licensingModuleRequestAction : byte {\n  Fetch,\n  Register,\n  Load,\n  Error\n}\n\n/// Module fetch/register/load control message",
+      "description": "Module fetch/register/load control message",
       "required": [
         "REQUEST_ID",
         "MODULE_ID"
@@ -39812,7 +39809,7 @@
           "x-flatbuffer-type": "uint16"
         }
       },
-      "description": "Lambert transfer path selection.\nenum lambertTransferPath : byte {\n  SHORT = 0,\n  LONG = 1,\n}\n\n/// Lambert boundary-value solve request."
+      "description": "Lambert boundary-value solve request."
     },
     "LPF": {
       "type": "object",
@@ -39931,7 +39928,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Licensing proof message type\nenum licensingProofMessageType : byte {\n  ProofRequest,\n  ProofAccepted,\n  ProofRejected\n}\n\n/// Licensing proof message",
+      "description": "Licensing proof message",
       "required": [
         "REQUEST_ID",
         "MODULE_ID"
@@ -40034,7 +40031,7 @@
           "x-flatbuffer-type": "uint64"
         }
       },
-      "description": "Wrapped content-key envelope algorithm\nenum licensingWrappedKeyAlgorithm : byte {\n  X25519_HKDF_SHA256_AES_256_GCM\n}\n\n/// Wrapped module content key",
+      "description": "Wrapped module content key",
       "required": [
         "REQUEST_ID",
         "MODULE_ID"
@@ -40066,7 +40063,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Module Bundle Listing\n///\n/// SDS-owned record describing the logical contents and canonicalization rules\n/// for a single-file module delivery artifact carried inside a REC trailer.\n\n/// Logical role for one payload carried in the bundle.\nenum ModuleBundleEntryRole : ubyte {\n  MANIFEST = 0,\n  AUTHORIZATION = 1,\n  SIGNATURE = 2,\n  TRANSPORT = 3,\n  ATTESTATION = 4,\n  AUXILIARY = 5\n}\n\n/// Serialization format used by an entry payload.\nenum ModulePayloadEncoding : ubyte {\n  RAW_BYTES = 0,\n  FLATBUFFER = 1,\n  JSON_UTF8 = 2,\n  CBOR = 3\n}\n\n/// Canonicalization rule applied before hashing or signature verification."
+      "description": "Canonicalization rule applied before hashing or signature verification."
     },
     "ModuleBundleEntry": {
       "type": "object",
@@ -40259,7 +40256,7 @@
           }
         }
       },
-      "description": "Simplified General Perturbation Model 4\n  SGP4,\n  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)\n  SGP4XP,\n  /// Draper Semi-analytical Satellite Theory\n  DSST,\n  /// Universal Semianalytical Method\n  USM\n}\n\n/// Mean Element Theory"
+      "description": "Mean Element Theory"
     },
     "MFE": {
       "type": "object",
@@ -41541,7 +41538,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Solve for a scalar root using Newton-Raphson iteration.\n  NEWTON_RAPHSON = 1,\n  /// Linearly interpolate one scalar between two scalar samples.\n  LINEAR_INTERPOLATION = 2,\n  /// Bilinearly interpolate one scalar from four rectangular-corner samples.\n  BILINEAR_INTERPOLATION = 3,\n  /// Generate a bounded Gauss-Markov random sequence and summary statistics.\n  GAUSS_MARKOV_SEQUENCE = 4\n}\n\nenum numFunctionCode : byte {\n  UNKNOWN = 0,\n  /// f(x) = x * x - TARGET_VALUE, with derivative f'(x) = 2 * x.\n  QUADRATIC_MINUS_CONSTANT = 1\n}\n\nenum numResultStatus : byte {\n  /// Operation completed.\n  OK = 0,\n  /// Request fields are missing, non-finite, or numerically invalid.\n  INVALID_INPUT = 1,\n  /// The requested operation or function is not supported.\n  UNSUPPORTED_OPERATION = 2,\n  /// Iteration did not reach ACCURACY within MAX_ITERATIONS.\n  DID_NOT_CONVERGE = 3\n}\n\nenum numDiscretizeRoundDirection : byte {\n  /// Round magnitude toward zero before restoring sign.\n  TO_ZERO = 0,\n  /// Round magnitude away from zero before restoring sign.\n  FROM_ZERO = 1,\n  /// Round magnitude to the nearest least-significant-bit multiple before restoring sign.\n  NEAR = 2\n}\n\n/// Request for one scalar numerical root-solving operation."
+      "description": "Request for one scalar numerical root-solving operation."
     },
     "NUMRootSolveResult": {
       "type": "object",
@@ -42995,7 +42992,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Simplified General Perturbation Model\n  SGP,\n  /// Simplified General Perturbation Model 4\n  SGP4,\n  /// Simplified Deep Space Perturbation Model 4\n  SDP4,\n  /// Simplified General Perturbation Model 8\n  SGP8,\n  /// Simplified Deep Space Perturbation Model 8\n  SDP8\n}\n\n/// Orbit Mean Elements Message"
+      "description": "Orbit Mean Elements Message"
     },
     "OOA": {
       "type": "object",
@@ -44541,7 +44538,7 @@
           "x-flatbuffer-type": "uint32"
         }
       },
-      "description": "Plugin Invoke \u2014 request / response envelopes for calling into a\n/// Space Data Module plugin over its `plugin_invoke_stream` entrypoint.\n///\n/// Every invoke frame (input or output) is a `TAB` descriptor referencing\n/// an offset inside PAYLOAD_ARENA. Each `TAB.WIRE_FORMAT` selects\n/// FLATBUFFER or ALIGNED_BINARY for its body; a method accepts either as\n/// long as the paired `PLG` method manifest advertises both. This mirrors\n/// the SDK's documented contract \u2014 \"aligned-binary payloads are a\n/// separate invoke-ABI optimization; they do not replace the canonical\n/// FlatBuffer schema, and a port advertising one must also advertise the\n/// other.\"\n///\n/// PAYLOAD_ARENA is a single backing byte buffer shared by all frames in\n/// the envelope. TAB.OFFSET is arena-relative. Host runtimes that manage\n/// their own arena may set PAYLOAD_ARENA to an empty vector and treat\n/// TAB.OFFSET as an absolute pointer into the shared WASM linear memory.\ninclude \"../TAB/main.fbs\";\n\n/// Coarse envelope status for an invoke response. Per-method numeric\n/// return codes travel in STATUS_CODE; STATUS categorizes the outcome\n/// for host routing (retry, yield-and-resume, fail-closed) without the\n/// host having to decode method-specific numbers.\nenum pivStatus : int {\n  /// Invocation completed; STATUS_CODE carries the method-specific value.\n  OK,\n  /// Method id not registered on the target plugin.\n  NOT_FOUND,\n  /// Invocation succeeded but yielded before draining queued work.\n  /// Caller should inspect BACKLOG_REMAINING and re-invoke to continue.\n  YIELDED,\n  /// Invocation failed; ERROR_CODE + ERROR_MESSAGE describe the failure.\n  FAILED\n}\n\n/// Request envelope carried by `plugin_invoke_stream`.",
+      "description": "Request envelope carried by `plugin_invoke_stream`.",
       "required": [
         "METHOD_ID"
       ]
@@ -44636,7 +44633,7 @@
           "x-flatbuffer-type": "PIVResponse"
         }
       },
-      "description": "Envelope \u2014 carries either a request or a response. Either REQUEST or\n/// RESPONSE is populated per message; both populated is undefined."
+      "description": "Envelope \u2014 carries either a request or a response. Either REQUEST or RESPONSE is populated per message; both populated is undefined."
     },
     "PLK": {
       "type": "object",
@@ -44773,7 +44770,7 @@
           "x-flatbuffer-type": "[ubyte]"
         }
       },
-      "description": "License type for plugin access\nenum licenseCategory : byte {\n  /// Evaluation/trial license\n  Trial,\n  /// Standard commercial license\n  Commercial,\n  /// Enterprise site license\n  Enterprise,\n  /// Educational/academic license\n  Educational,\n  /// Open source project license\n  OpenSource,\n  /// Internal OrbPro default plugins\n  Internal\n}\n\n/// Plugin License Key - Issued license for plugin access\n/// Uses ECIES: both parties derive symmetric key via X25519 ECDH\n/// Key derivation: X25519(private, peer_public) \u2192 HKDF-SHA256 \u2192 AES-256-GCM",
+      "description": "Plugin License Key - Issued license for plugin access Uses ECIES: both parties derive symmetric key via X25519 ECDH Key derivation: X25519(private, peer_public) \u2192 HKDF-SHA256 \u2192 AES-256-GCM",
       "required": [
         "LICENSE_ID",
         "PLUGIN_ID",
@@ -44851,7 +44848,7 @@
           "x-flatbuffer-type": "[PRWInitSource]"
         }
       },
-      "description": "Propagator Runtime Wire \u2014 arena-addressed init / batch request / batch\n/// response envelopes for orbital propagators that produce state vectors\n/// into a shared memory arena.\n///\n/// Data interchange for the underlying content (state vectors, covariance,\n/// maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris)\n/// lives in SDS `OCM` + `OMM` + `PPE` + `RFM` + `ATM`. PRW is the runtime\n/// wire that moves those across a JS \u2194 WASM boundary, not a substitute for\n/// any of them.\n\n/// Runtime state-flag bitfield (sized to match a single uint).\n/// Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;\n/// HAS_COVARIANCE is implicit from OCM.COVARIANCE_DATA. The remaining\n/// flags live here because they describe runtime propagation health, not\n/// a persisted record.\nenum propagatorStateFlags : uint (bit_flags) {\n  /// State vector data is valid.\n  VALID,\n  /// Satellite is in Earth's shadow at this epoch.\n  IN_ECLIPSE,\n  /// Orbit has decayed (re-entry imminent or complete).\n  DECAYED,\n  /// Propagation extrapolated beyond the input epoch.\n  EXTRAPOLATED,\n  /// Reserved.\n  RESERVED_4,\n  /// Reserved.\n  RESERVED_5,\n  /// Reserved.\n  RESERVED_6,\n  /// Reserved.\n  RESERVED_7\n}\n\n/// Error codes surfaced by runtime propagation calls.\nenum propagatorErrorCode : int {\n  /// No error.\n  OK,\n  /// Unknown / unspecified error.\n  UNKNOWN,\n  /// One or more entity handles not found.\n  UNKNOWN_ENTITY,\n  /// Invalid epoch (NaN, out of range, before earliest init epoch, etc.).\n  INVALID_EPOCH,\n  /// Output buffer too small for the requested count.\n  OUTPUT_BUFFER_OVERFLOW,\n  /// Propagator not initialized.\n  NOT_INITIALIZED\n}\n\n/// Propagator initialization request \u2014 assigns TLE / OMM / Keplerian /\n/// polynomial inputs to entity handles.\n///\n/// The actual per-entity source record is carried inline as raw bytes\n/// tagged with SOURCE_KIND and, where useful, a SDS file_identifier.\n/// Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the\n/// bytes verbatim; the propagator uses SOURCE_KIND to decide how to\n/// consume them."
+      "description": "Propagator initialization request \u2014 assigns TLE / OMM / Keplerian / polynomial inputs to entity handles.  The actual per-entity source record is carried inline as raw bytes tagged with SOURCE_KIND and, where useful, a SDS file_identifier. Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the bytes verbatim; the propagator uses SOURCE_KIND to decide how to consume them."
     },
     "PRWKeplerianElements": {
       "type": "object",
@@ -44897,8 +44894,7 @@
           "description": "Epoch as Julian date.",
           "x-flatbuffer-type": "double"
         }
-      },
-      "description": "Source is an OMM (CCSDS mean elements) FlatBuffer.\n  OMM,\n  /// Source is a raw TLE line pair (3LE supported via NAME).\n  TLE,\n  /// Source is an OCM FlatBuffer.\n  OCM,\n  /// Source is an OEM FlatBuffer.\n  OEM,\n  /// Source is a PPE (polynomial ephemeris) FlatBuffer.\n  PPE,\n  /// Source is a single classical Keplerian element set.\n  KEPLERIAN\n}"
+      }
     },
     "PRWTleLines": {
       "type": "object",
@@ -45020,7 +45016,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Batch propagation request \u2014 propagate every entity in ENTITY_HANDLES[] to\n/// EPOCH and write the result StateVector stream to OUTPUT_OFFSET in the\n/// shared arena."
+      "description": "Batch propagation request \u2014 propagate every entity in ENTITY_HANDLES[] to EPOCH and write the result StateVector stream to OUTPUT_OFFSET in the shared arena."
     },
     "PRWBatchResponse": {
       "type": "object",
@@ -45092,7 +45088,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Batch propagation response header \u2014 describes the stream written to\n/// OUTPUT_OFFSET and reports errors. The stream itself is\n/// `STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout."
+      "description": "Batch propagation response header \u2014 describes the stream written to OUTPUT_OFFSET and reports errors. The stream itself is `STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout."
     },
     "PRW": {
       "type": "object",
@@ -45111,7 +45107,7 @@
           "x-flatbuffer-type": "PRWBatchResponse"
         }
       },
-      "description": "Propagator Runtime Wire \u2014 envelope that carries either an init request,\n/// a batch request, or a batch response across a runtime boundary."
+      "description": "Propagator Runtime Wire \u2014 envelope that carries either an init request, a batch request, or a batch response across a runtime boundary."
     },
     "PUR": {
       "type": "object",
@@ -45331,7 +45327,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Compose two Modified Rodrigues Parameter rotations.\n  ADD_MRP = 1,\n  /// Compute the relative Modified Rodrigues Parameter rotation from VECTOR_B to VECTOR_A.\n  SUB_MRP = 2,\n  /// Force a Modified Rodrigues Parameter vector to its shadow set.\n  MRP_SHADOW = 3,\n  /// Switch to the MRP shadow set when norm exceeds SWITCH_THRESHOLD.\n  MRP_SWITCH = 4,\n  /// Convert scalar-first Euler parameters/quaternion to MRP.\n  EP_TO_MRP = 5,\n  /// Convert MRP to scalar-first Euler parameters/quaternion.\n  MRP_TO_EP = 6,\n  /// Convert direction cosine matrix to scalar-first Euler parameters/quaternion.\n  DCM_TO_EP = 7,\n  /// Convert scalar-first Euler parameters/quaternion to direction cosine matrix.\n  EP_TO_DCM = 8,\n  /// Convert direction cosine matrix to Modified Rodrigues Parameters.\n  DCM_TO_MRP = 9,\n  /// Convert Modified Rodrigues Parameters to direction cosine matrix.\n  MRP_TO_DCM = 10,\n  /// Return the MRP B matrix that maps body angular rate to MRP derivative.\n  B_MATRIX_MRP = 11,\n  /// Return the inverse MRP B matrix that maps MRP derivative to body angular rate.\n  B_INV_MATRIX_MRP = 12,\n  /// Compute MRP derivative from MRP and body angular rate vectors.\n  D_MRP = 13,\n  /// Compute body angular rate from MRP and MRP derivative vectors.\n  D_MRP_TO_OMEGA = 14,\n  /// Return the MRP B-dot matrix from MRP and MRP derivative vectors.\n  B_DOT_MATRIX_MRP = 15,\n  /// Compute second MRP derivative from MRP, MRP derivative, body rate, and body acceleration.\n  DD_MRP = 16,\n  /// Compute body angular acceleration from MRP, MRP derivative, and second MRP derivative.\n  DD_MRP_TO_D_OMEGA = 17,\n  /// Compose two Gibbs-vector rotations.\n  ADD_GIBBS = 18,\n  /// Compute the relative Gibbs-vector rotation from VECTOR_B to VECTOR_A.\n  SUB_GIBBS = 19,\n  /// Convert scalar-first Euler parameters/quaternion to Gibbs vector.\n  EP_TO_GIBBS = 20,\n  /// Convert Gibbs vector to scalar-first Euler parameters/quaternion.\n  GIBBS_TO_EP = 21,\n  /// Convert direction cosine matrix to Gibbs vector.\n  DCM_TO_GIBBS = 22,\n  /// Convert Gibbs vector to direction cosine matrix.\n  GIBBS_TO_DCM = 23,\n  /// Convert Modified Rodrigues Parameters to Gibbs vector.\n  MRP_TO_GIBBS = 24,\n  /// Convert Gibbs vector to Modified Rodrigues Parameters.\n  GIBBS_TO_MRP = 25,\n  /// Return the Gibbs-vector B matrix that maps body angular rate to Gibbs derivative.\n  B_MATRIX_GIBBS = 26,\n  /// Return the inverse Gibbs-vector B matrix that maps Gibbs derivative to body angular rate.\n  B_INV_MATRIX_GIBBS = 27,\n  /// Compute Gibbs derivative from Gibbs vector and body angular rate vectors.\n  D_GIBBS = 28,\n  /// Compose two principal rotation vector rotations.\n  ADD_PRV = 29,\n  /// Compute the relative principal rotation vector from VECTOR_B to VECTOR_A.\n  SUB_PRV = 30,\n  /// Convert scalar-first Euler parameters/quaternion to principal rotation vector.\n  EP_TO_PRV = 31,\n  /// Convert principal rotation vector to scalar-first Euler parameters/quaternion.\n  PRV_TO_EP = 32,\n  /// Convert direction cosine matrix to principal rotation vector.\n  DCM_TO_PRV = 33,\n  /// Convert principal rotation vector to direction cosine matrix.\n  PRV_TO_DCM = 34,\n  /// Convert Modified Rodrigues Parameters to principal rotation vector.\n  MRP_TO_PRV = 35,\n  /// Convert principal rotation vector to Modified Rodrigues Parameters.\n  PRV_TO_MRP = 36,\n  /// Convert Gibbs vector to principal rotation vector.\n  GIBBS_TO_PRV = 37,\n  /// Convert principal rotation vector to Gibbs vector.\n  PRV_TO_GIBBS = 38,\n  /// Return the principal-rotation-vector B matrix that maps body angular rate to PRV derivative.\n  B_MATRIX_PRV = 39,\n  /// Return the inverse principal-rotation-vector B matrix that maps PRV derivative to body angular rate.\n  B_INV_MATRIX_PRV = 40,\n  /// Compute principal rotation vector derivative from PRV and body angular rate vectors.\n  D_PRV = 41,\n  /// Compose two Euler-angle rotations using EULER_SEQUENCE.\n  ADD_EULER = 42,\n  /// Compute the relative Euler-angle rotation from VECTOR_B to VECTOR_A using EULER_SEQUENCE.\n  SUB_EULER = 43,\n  /// Convert Euler angles to direction cosine matrix using EULER_SEQUENCE.\n  EULER_TO_DCM = 44,\n  /// Convert direction cosine matrix to Euler angles using EULER_SEQUENCE.\n  DCM_TO_EULER = 45,\n  /// Convert Euler angles to scalar-first Euler parameters/quaternion using EULER_SEQUENCE.\n  EULER_TO_EP = 46,\n  /// Convert scalar-first Euler parameters/quaternion to Euler angles using EULER_SEQUENCE.\n  EP_TO_EULER = 47,\n  /// Convert Euler angles to Modified Rodrigues Parameters using EULER_SEQUENCE.\n  EULER_TO_MRP = 48,\n  /// Convert Modified Rodrigues Parameters to Euler angles using EULER_SEQUENCE.\n  MRP_TO_EULER = 49,\n  /// Convert Euler angles to Gibbs vector using EULER_SEQUENCE.\n  EULER_TO_GIBBS = 50,\n  /// Convert Gibbs vector to Euler angles using EULER_SEQUENCE.\n  GIBBS_TO_EULER = 51,\n  /// Convert Euler angles to principal rotation vector using EULER_SEQUENCE.\n  EULER_TO_PRV = 52,\n  /// Convert principal rotation vector to Euler angles using EULER_SEQUENCE.\n  PRV_TO_EULER = 53,\n  /// Return the Euler-angle B matrix that maps body angular rate to Euler-angle derivative.\n  B_MATRIX_EULER = 54,\n  /// Return the inverse Euler-angle B matrix that maps Euler-angle derivative to body angular rate.\n  B_INV_MATRIX_EULER = 55,\n  /// Compute Euler-angle derivative from Euler angles and body angular rate vectors.\n  D_EULER = 56,\n  /// Return the skew-symmetric tilde matrix that maps VECTOR_A cross products.\n  TILDE_MATRIX = 57,\n  /// Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD.\n  M1_ROTATION_MATRIX = 58,\n  /// Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD.\n  M2_ROTATION_MATRIX = 59,\n  /// Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD.\n  M3_ROTATION_MATRIX = 60\n}\n\nenum rbkEulerSequenceCode : byte {\n  UNKNOWN = 0,\n  EULER_121 = 1,\n  EULER_123 = 2,\n  EULER_131 = 3,\n  EULER_132 = 4,\n  EULER_212 = 5,\n  EULER_213 = 6,\n  EULER_231 = 7,\n  EULER_232 = 8,\n  EULER_312 = 9,\n  EULER_313 = 10,\n  EULER_321 = 11,\n  EULER_323 = 12\n}\n\nenum rbkResultStatus : byte {\n  /// Operation completed.\n  OK = 0,\n  /// Request is missing required vector/quaternion data or has invalid values.\n  INVALID_INPUT = 1,\n  /// Operation is unknown or not supported by the module implementation.\n  UNSUPPORTED_OPERATION = 2\n}\n\n/// Three-vector used for MRP, Gibbs, PRV, angular rate, and related attitude math values."
+      "description": "Three-vector used for MRP, Gibbs, PRV, angular rate, and related attitude math values."
     },
     "RBKQuaternion": {
       "type": "object",
@@ -46553,7 +46549,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Reentry evaluation outcome.\nenum remEvaluationOutcome : byte {\n  UNKNOWN,\n  PROPAGATED,\n  IMPACT_CONFIRMED,\n  DEMISE_EXPECTED,\n  SURVIVAL_EXPECTED,\n  BLOCKED\n}\n\n/// Dominant breakup or demise mechanism.\nenum remBreakupMode : byte {\n  UNKNOWN,\n  AEROTHERMAL,\n  STRUCTURAL,\n  AERODYNAMIC_LOAD,\n  COMMAND_DESTRUCT,\n  NONE\n}\n\n/// Reentry fragment evaluation."
+      "description": "Reentry fragment evaluation."
     },
     "REM": {
       "type": "object",
@@ -48201,8 +48197,7 @@
           "type": "number",
           "x-flatbuffer-type": "double"
         }
-      },
-      "description": "Sensor Coverage Analytics \u2014 canonical request/result/progress ABI for\n/// access, coverage, swath, and coverage-geometry products produced by SDN\n/// modules and consumed by OrbPro analytics sessions.\n\nenum scvEnvelopeKind : ubyte {\n  REQUEST,\n  RESULT,\n  PROGRESS,\n  CANCEL,\n  GEOMETRY\n}\n\nenum scvAnalysisMode : ubyte {\n  COVERAGE,\n  ACCESS,\n  SWATH,\n  COMBINED\n}\n\nenum scvCoordinateFrame : ubyte {\n  UNKNOWN,\n  BODY_FIXED,\n  INERTIAL,\n  ECEF,\n  ECI,\n  CUSTOM\n}\n\nenum scvBodyKind : ubyte {\n  EARTH,\n  MOON,\n  MARS,\n  CUSTOM\n}\n\nenum scvSensorShapeKind : ubyte {\n  CONIC,\n  RECTANGULAR,\n  CUSTOM_POLYGON\n}\n\nenum scvGeometryDomain : ubyte {\n  SURFACE,\n  SPACE,\n  ELLIPSOID,\n  PLANE,\n  CUSTOM_MESH\n}\n\nenum scvResultState : ubyte {\n  OK,\n  PARTIAL,\n  CANCELLED,\n  FAILED\n}\n\nenum scvIntervalCategory : ubyte {\n  ACCESS,\n  COVERAGE,\n  GAP,\n  REVISIT,\n  OVERLAP\n}\n\nenum scvMetricSeriesKind : ushort {\n  PERCENT_COVERED,\n  COVERED_CELL_COUNT,\n  ACCESS_COUNT,\n  CONTACT_DURATION_SECONDS,\n  REVISIT_SECONDS,\n  GAP_SECONDS,\n  REDUNDANCY,\n  OVERLAP_COUNT,\n  LATITUDE_BAND_COVERAGE\n}\n\nenum scvGeometryEncoding : ubyte {\n  FLAT_FLOAT32,\n  INTERLEAVED_FLOAT32,\n  QUANTIZED_UINT16,\n  SHARED_MEMORY_OFFSET\n}"
+      }
     },
     "SCVEllipsoid": {
       "type": "object",
@@ -49779,7 +49774,7 @@
           "x-flatbuffer-type": "bool"
         }
       },
-      "description": "Signed Distance Field \u2014 detection and containment queries for sensor /\n/// geometric volumes.\n///\n/// Convention for signed-distance values:\n///   - Negative values are inside the volume.\n///   - Zero is on the boundary.\n///   - Positive values are outside the volume.\n\n/// Primitive shape family for an SDF volume.\nenum sdfPrimitive : ubyte {\n  /// Cone with apex at origin, +Z boresight.\n  CONE,\n  /// Rectangular pyramid (four planes + range cap).\n  RECTANGULAR,\n  /// Sphere centered at origin.\n  SPHERE,\n  /// Cylinder along Z axis.\n  CYLINDER,\n  /// Plugin-defined custom SDF.\n  CUSTOM = 255\n}\n\n/// Constructive solid-geometry composition operation for SDFs.\nenum sdfOperation : ubyte {\n  /// No composition (primitive only).\n  NONE,\n  /// Union (min of SDFs) \u2014 inside either.\n  UNION,\n  /// Intersection (max of SDFs) \u2014 inside both.\n  INTERSECTION,\n  /// Subtraction (A - B) \u2014 inside A but not B.\n  SUBTRACTION,\n  /// Smooth union with a blend radius.\n  SMOOTH_UNION\n}\n\n/// Result of a single SDF point-in-volume query (24 bytes, 8-byte aligned).\nstruct sdfResult {\n  /// Entity identifier.\n  ENTITY_ID:uint;\n  /// Detection flag (1 == inside, 0 == outside).\n  DETECTED:uint;\n  /// Signed distance (negative inside, zero on boundary, positive outside).\n  SIGNED_DISTANCE:double;\n  /// Distance to the closest boundary point (always positive).\n  CLOSEST_DISTANCE:double;\n}\n\n/// Result of a time-range SDF query (40 bytes, 8-byte aligned).\nstruct sdfTimeRangeResult {\n  /// Entity identifier.\n  ENTITY_ID:uint;\n  /// Flags (reserved).\n  FLAGS:uint;\n  /// Julian date when the entity entered the volume (0 == never entered).\n  ENTRY_TIME:double;\n  /// Julian date when the entity exited the volume (0 == still inside).\n  EXIT_TIME:double;\n  /// Most negative signed distance (closest approach to center).\n  MIN_DISTANCE:double;\n  /// Total time inside volume (seconds).\n  DWELL_TIME:double;\n}\n\n/// Conical SDF parameters."
+      "description": "Conical SDF parameters."
     },
     "SDFRectangular": {
       "type": "object",
@@ -50111,7 +50106,7 @@
           "x-flatbuffer-type": "[sdfTimeRangeResult]"
         }
       },
-      "description": "Signed Distance Field envelope message \u2014 carries a configuration, a batch\n/// request, a batch response, or single / time-range result records."
+      "description": "Signed Distance Field envelope message \u2014 carries a configuration, a batch request, a batch response, or single / time-range result records."
     },
     "SDL": {
       "type": "object",
@@ -50224,7 +50219,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Sensor Detection Report \u2014 runtime I/O contract for sensor detection\n/// plugins. Distinct from SNR (sensor hardware catalog) and SEN (sensor\n/// maintenance log); SDR carries per-frame target states, configuration,\n/// and detection results.\n\n/// Sensor category for a report.\nenum sensorCategory : ubyte {\n  RADAR,\n  ELECTRO_OPTICAL,\n  INFRARED,\n  ACOUSTIC,\n  RF,\n  LIDAR,\n  CUSTOM = 255\n}\n\n/// Sensor operational-state bit flags.\nenum sensorOperationalFlags : uint (bit_flags) {\n  ACTIVE,\n  TRACK_MODE,\n  SEARCH_MODE,\n  JAMMED,\n  SLEWING,\n  CALIBRATING\n}\n\n/// Detection result bit flags.\nenum detectionResultFlags : uint (bit_flags) {\n  VALID,\n  TRACKED,\n  MARGINAL,\n  IN_CLUTTER,\n  JAMMED,\n  SIDELOBE,\n  MERGED\n}\n\n/// Target state input (40 bytes, 8-byte aligned).\nstruct targetState {\n  /// Target position X in ECEF (meters).\n  POS_X:double;\n  /// Target position Y in ECEF (meters).\n  POS_Y:double;\n  /// Target position Z in ECEF (meters).\n  POS_Z:double;\n  /// Radar cross section (m^2).\n  RCS:double;\n  /// Unique target identifier.\n  TARGET_ID:uint;\n  /// Target flags (reserved).\n  FLAGS:uint;\n}\n\n/// Detection result output (48 bytes, 8-byte aligned).\nstruct detectionResult {\n  /// Index of target in input array.\n  TARGET_INDEX:uint;\n  /// Detection flag (1 == detected, 0 == not detected).\n  DETECTED:uint;\n  /// Range to target (meters).\n  RANGE:double;\n  /// Signal-to-noise ratio (dB).\n  SNR:double;\n  /// Doppler shift (Hz).\n  DOPPLER:double;\n  /// Probability of detection (0.0 \u2013 1.0).\n  PROBABILITY:double;\n  /// Detection flags (detectionResultFlags bitfield).\n  FLAGS:uint;\n  /// Reserved for future use.\n  RESERVED:uint;\n}\n\n/// Radar sensor configuration."
+      "description": "Radar sensor configuration."
     },
     "SDRSensorConfig": {
       "type": "object",
@@ -50443,7 +50438,7 @@
           "x-flatbuffer-type": "ulong"
         }
       },
-      "description": "Compact single-frame detection input used by pluggable sensor models that\n/// do not drive arena-backed batches."
+      "description": "Compact single-frame detection input used by pluggable sensor models that do not drive arena-backed batches."
     },
     "SDRSingleResult": {
       "type": "object",
@@ -51188,7 +51183,7 @@
           "x-flatbuffer-type": "[uint8]"
         }
       },
-      "description": "Shader Wire \u2014 wire contract for GLSL / WebGL shader plugins that compile\n/// and expose parameterized fragments that a host injects into its own\n/// pipeline. Carries compile request + response, a uniform description\n/// table, and the injection-point enum a host consumes to know where to\n/// splice a shader fragment into its stage graph.\n\n/// Shader stage into which a compiled fragment should be injected.\nenum glslStage : ubyte {\n  VERTEX,\n  FRAGMENT,\n  COMPUTE,\n  GEOMETRY,\n  TESS_CONTROL,\n  TESS_EVALUATION\n}\n\n/// Logical location inside a host pipeline where a compiled shader\n/// fragment is meant to be spliced. A host maps these onto its own\n/// concrete splice points.\nenum shaderHookPoint : ubyte {\n  NONE,\n  VERTEX_PRE_TRANSFORM,\n  VERTEX_POST_TRANSFORM,\n  FRAGMENT_PRE_SHADE,\n  FRAGMENT_POST_SHADE,\n  FRAGMENT_FINAL_COLOR,\n  POSTPROCESS\n}\n\n/// Scalar / vector type of a uniform value.\nenum shaderUniformType : ubyte {\n  FLOAT,\n  VEC2,\n  VEC3,\n  VEC4,\n  INT,\n  IVEC2,\n  IVEC3,\n  IVEC4,\n  UINT,\n  UVEC2,\n  UVEC3,\n  UVEC4,\n  BOOL,\n  BVEC2,\n  BVEC3,\n  BVEC4,\n  MAT2,\n  MAT3,\n  MAT4,\n  SAMPLER_2D,\n  SAMPLER_CUBE,\n  SAMPLER_2D_ARRAY\n}\n\n/// Uniform descriptor \u2014 name + type + optional default value."
+      "description": "Uniform descriptor \u2014 name + type + optional default value."
     },
     "SHWCompileRequest": {
       "type": "object",
@@ -51273,7 +51268,7 @@
           "x-flatbuffer-type": "[SHWUniform]"
         }
       },
-      "description": "Compile request \u2014 one shader source (typically a fragment of a\n/// larger stage) plus metadata for the host splice."
+      "description": "Compile request \u2014 one shader source (typically a fragment of a larger stage) plus metadata for the host splice."
     },
     "SHWCompileResponse": {
       "type": "object",
@@ -51325,7 +51320,7 @@
           "x-flatbuffer-type": "SHWCompileResponse"
         }
       },
-      "description": "Shader Wire envelope \u2014 carries either a compile request or a compile\n/// response across the runtime boundary."
+      "description": "Shader Wire envelope \u2014 carries either a compile request or a compile response across the runtime boundary."
     },
     "SKI": {
       "type": "object",
@@ -51716,7 +51711,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Sensor Runtime Wire \u2014 arena-addressed batch request / response envelopes\n/// for sensor detection plugins. Complements the already-published `SDR`\n/// (Sensor Detection Report, which carries per-frame configuration +\n/// single-frame + detection-result payload shapes). SNW is the runtime\n/// transport that moves a batch of target states into a sensor and pulls a\n/// batch of detection results back out across a JS \u2194 WASM boundary.\n///\n/// Persistent sensor hardware catalog \u2192 SDS `SNR`.\n/// Sensor maintenance event log \u2192 SDS `SEN`.\n/// Per-plugin wire contract + config + compact single-frame \u2192 SDS `SDR`.\n\nenum snwErrorCode : int {\n  OK,\n  UNKNOWN,\n  UNKNOWN_SENSOR,\n  INVALID_EPOCH,\n  OUTPUT_BUFFER_OVERFLOW,\n  NOT_INITIALIZED\n}\n\n/// Batch target detection request.\n///\n/// Sensor position and orientation are passed inline (not via an arena\n/// offset) because they are small and uniform across a batch. The target\n/// stream lives at INPUT_OFFSET as a tightly packed array of `targetState`\n/// structs from SDR; the output detection stream is written to\n/// OUTPUT_OFFSET as a tightly packed array of SDR `detectionResult` structs."
+      "description": "Batch target detection request.  Sensor position and orientation are passed inline (not via an arena offset) because they are small and uniform across a batch. The target stream lives at INPUT_OFFSET as a tightly packed array of `targetState` structs from SDR; the output detection stream is written to OUTPUT_OFFSET as a tightly packed array of SDR `detectionResult` structs."
     },
     "SNWBatchResponse": {
       "type": "object",
@@ -51784,7 +51779,7 @@
           "x-flatbuffer-type": "SNWBatchResponse"
         }
       },
-      "description": "Sensor Runtime Wire envelope \u2014 carries either a batch request or a batch\n/// response across the runtime boundary."
+      "description": "Sensor Runtime Wire envelope \u2014 carries either a batch request or a batch response across the runtime boundary."
     },
     "SOI": {
       "type": "object",
@@ -52508,7 +52503,7 @@
           "x-flatbuffer-type": "[uint8]"
         }
       },
-      "description": "Standards Record Index \u2014 local wrapper for a standards payload's identity\n/// and mutation metadata, participating in shared FlatSQL query and cascade\n/// paths across plugins that read the same record universe."
+      "description": "Standards Record Index \u2014 local wrapper for a standards payload's identity and mutation metadata, participating in shared FlatSQL query and cascade paths across plugins that read the same record universe."
     },
     "STR": {
       "type": "object",
@@ -54010,7 +54005,7 @@
           "x-flatbuffer-type": "[zonalHarmonic]"
         }
       },
-      "description": "Enum to represent common atmospheric models\nenum atmosphericSource : byte {\n  NONE = 0,\n  JACCHIA_70 = 1,\n  JB2008 = 2,\n  NRLMSISE_00 = 3,\n  DTM_2000 = 4,\n  HWM14 = 5,\n  HASDM = 6\n}\n\n/// Enum to represent common geopotential models\nenum geopotentialSource : byte {\n  NONE = 0,\n  EGM96 = 1,\n  WGS84 = 2,\n  JGM2 = 3,\n  GEMT3 = 4,\n  EGM96_J5 = 5\n}\n\n/// Enum to represent zonal harmonics\nenum zonalHarmonic : byte {\n  NONE = 0,\n  J2 = 1,\n  J3 = 2,\n  J4 = 3,\n  J5 = 4,\n  J6 = 5,\n  J7 = 6,\n  J8 = 7,\n  J9 = 8,\n  J10 = 9,\n  J11 = 10,\n  J12 = 11\n}\n\n/// Enum to represent solar radiation pressure models\nenum solarRadiationPressureModel : byte {\n  NONE = 0,\n  SPHERICAL_MODEL = 1,\n  FLAT_PLATE_MODEL = 2\n}\n\n/// Enum to represent common lunar perturbation models\nenum lunarPerturbationSource : byte {\n  NONE = 0,\n  DE430 = 1,\n  DE431 = 2,\n  LP150Q = 3\n}\n\n/// Enum to represent various solar perturbation models\nenum solarPerturbationSource : byte {\n  NONE = 0,\n  DE430 = 1,\n  DE431 = 2\n}\n\n/// Enum to represent resonance models\nenum resonanceSource : byte {\n  NONE = 0,\n  HIGH_ALTITUDE_RESONANCE = 1,\n  LOW_ALTITUDE_RESONANCE = 2,\n  LUNAR_RESONANCE = 3,\n  SOLAR_RESONANCE = 4\n}\n\n/// Enum to represent the status of various perturbations (ON/OFF)\nenum perturbationStatus : byte {\n  OFF = 0,\n  ON = 1\n}\n\n/// Enum to represent propagator types\nenum propagatorFamily : byte {\n  NONE = 0,\n  SEMI_ANALYTICAL = 1,\n  VINTI = 2,\n  SGP4 = 3,\n  COWELL = 4,\n  RK4 = 5,\n  NYX = 6,\n  GMAT = 7,\n  SPICE = 8,\n  SGP = 9,\n  SDP4 = 10,\n  SGP8 = 11,\n  SDP8 = 12\n}\n\n/// Propagator configuration structure to describe propagation settings"
+      "description": "Propagator configuration structure to describe propagation settings"
     },
     "VCMStateVector": {
       "type": "object",
